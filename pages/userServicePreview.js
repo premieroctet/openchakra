@@ -433,8 +433,10 @@ class userServices extends React.Component {
                           </Grid> : null
                         }
                     </Grid>
-                    <Grid style={{width : 400}}>
-                      <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
+                    <Grid className={classes.middleHr}>
+                      <Grid>
+                        <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
+                      </Grid>
                     </Grid>
                     <Grid>
                       <Grid>
@@ -524,18 +526,20 @@ class userServices extends React.Component {
                     </Grid>
                   </Grid> : null
                 }
-                <Grid style={{marginTop: 30}}>
-                  <Grid>
-                    <Typography variant="h6">Les disponibilités de {alfred.firstname}</Typography>
-                  </Grid>
-                  <Grid className={classes.hrStyle}>
-                    <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
+                <Grid className={classes.scheduleContainer}>
+                  <Grid className={classes.scheduleContainerTitle}>
+                    <Grid>
+                      <Typography variant="h6">Les disponibilités de {alfred.firstname}</Typography>
+                    </Grid>
+                    <Grid className={classes.hrStyle}>
+                      <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
+                    </Grid>
                   </Grid>
                   <Grid>
                     <Schedule  availabilities={[]} services={[]} selectable={false} height={400}/>
                   </Grid>
                 </Grid>
-                <Grid style={{marginTop: 30}}>
+                <Grid className={classes.basketMinimumContainer}>
                   <Grid>
                     <Typography variant="h6">Panier minimum de réservation</Typography>
                   </Grid>
@@ -543,9 +547,11 @@ class userServices extends React.Component {
                     <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
                   <Grid>
-                    <p>Le montant minimum de réservation correspond au panier minimum requis pour réserver ce service. Si votre Alfred indique un montant de 10€, vous ne pourrez pas réserver ce service si la somme des prestations n’atteint pas ce montant.</p>
+                    <Grid className={classes.textContentBasket}>
+                      <p>Le montant minimum de réservation correspond au panier minimum requis pour réserver ce service. Si votre Alfred indique un montant de 10€, vous ne pourrez pas réserver ce service si la somme des prestations n’atteint pas ce montant.</p>
+                    </Grid>
                   </Grid>
-                  <Grid style={{display: 'flex', alignItems: 'center'}}>
+                  <Grid className={classes.priceBasketContent}>
                     <Grid>
                       <ShoppingCartIcon fontSize="large"  color={'primary'}/>
                     </Grid>
@@ -554,7 +560,7 @@ class userServices extends React.Component {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid style={{marginTop: 30}}>
+                <Grid className={classes.delayPrevenance}>
                   <Grid>
                     <Typography variant="h6">Délai de prévenance de votre Alfred</Typography>
                   </Grid>
@@ -562,9 +568,11 @@ class userServices extends React.Component {
                     <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
                   <Grid>
-                    <p>Le délai de prévenance correspond au délai nécessaire entre la réservation et la réalisation du service. Par exemple, si votre Alfred impose un délai de 24 heures, vous pourrez réserver votre service au minimum 24 heures avant son intervention. </p>
+                    <Grid className={classes.textContentDelay}>
+                      <p>Le délai de prévenance correspond au délai nécessaire entre la réservation et la réalisation du service. Par exemple, si votre Alfred impose un délai de 24 heures, vous pourrez réserver votre service au minimum 24 heures avant son intervention. </p>
+                    </Grid>
                   </Grid>
-                  <Grid style={{display: 'flex', alignItems: 'center'}}>
+                  <Grid className={classes.delayPrevenanceContent}>
                     <Grid>
                       <CalendarTodayIcon fontSize="large"  color={'primary'}/>
                     </Grid>
@@ -573,7 +581,7 @@ class userServices extends React.Component {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid style={{marginTop: 30}}>
+                <Grid className={classes.perimeterContent}>
                   <Grid>
                     <Typography variant="h6">Le périmètre d’intervention de votre Alfred</Typography>
                   </Grid>
@@ -581,21 +589,23 @@ class userServices extends React.Component {
                     <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
                   <Grid>
-                    <p>Le périmètre d’intervention de votre Alfred est la zone dans laquelle votre Alfred accepte de se déplacer pour réaliser ses services. Par mesure de sécurité et conformément à notre politique de confidentialité, l’adresse de votre Alfred n’est pas communiquée. </p>
+                    <Grid className={classes.textContentPerimeter}>
+                      <p>Le périmètre d’intervention de votre Alfred est la zone dans laquelle votre Alfred accepte de se déplacer pour réaliser ses services. Par mesure de sécurité et conformément à notre politique de confidentialité, l’adresse de votre Alfred n’est pas communiquée. </p>
+                    </Grid>
                   </Grid>
                   <Grid>
                     {/* -------------------------------------   ICI LEAFLET ------------------------------------------------------ */}
                   </Grid>
                 </Grid>
-                <Grid style={{marginTop: 30}}>
-                  <Grid>
+                <Grid className={classes.bookingConditionContent} >
+                  <Grid className={classes.bookingConditionContentTitle}>
                     <Typography variant="h6">Les conditions d’annulation de votre Alfred</Typography>
                   </Grid>
                   <Grid className={classes.hrStyle}>
                     <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                   </Grid>
-                  <Grid style={{display: 'flex', flexDirection : 'column'}}>
-                    <Grid style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+                  <Grid className={classes.listContent}>
+                    <Grid className={classes.listStyle}>
                       <Grid>
                         <Checkbox
                           disabled={true}
@@ -660,7 +670,7 @@ class userServices extends React.Component {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid style={{marginTop: 30}}>
+                <Grid className={classes.commentaryContent}>
                   <Grid style={{display: 'flex', alignItems: 'center'}}>
                     <Grid>
                       <Typography variant="h6">{alfred.number_of_reviews} Commentaires</Typography>
@@ -699,7 +709,12 @@ class userServices extends React.Component {
                             <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
                           </Box>
                         </Grid>
-                      </Grid> : null
+                      </Grid> :
+                      <Grid>
+                        <Grid>
+                          <p>{alfred.firstname} n'a reçu aucun commentaire. </p>
+                        </Grid>
+                      </Grid>
                   }
                   {
                     alfred.number_of_reviews_client < 0 ?

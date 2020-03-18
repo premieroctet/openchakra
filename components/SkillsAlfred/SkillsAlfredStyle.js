@@ -24,5 +24,17 @@ export default theme=>({
   },
   chipStyle:{
     margin : 15
+  },
+  bigWidth: {
+    width :500,
+    [theme.breakpoints.down('xs')]: {
+      width: 'auto'
+    },
+  },
+  middleWidth: {
+    width : 400,
+    [theme.breakpoints.down('xs')]: {
+      width: 'auto'
+    },
   }
 })
