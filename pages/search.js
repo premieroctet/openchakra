@@ -243,15 +243,12 @@ class SearchLogin extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const {address} = this.state;
-        const {user} = this.state;
-        const {otherAddress} = this.state;
-        var {research} = this.state;
-        const categories = this.state.categories;
+        const {address, user, otherAddress, categories, gps} = this.state;
+        var research = this.state.research;
         const serviceUsers = this.state.serviceUsersDisplay;
 
         research = research.trim();  
-        console.log("Address:"+JSON.stringify(this.state.selectedAddress));
+        console.log("GPS:"+JSON.stringify(gps));
 
         return (
             <Fragment>
@@ -488,7 +485,7 @@ class SearchLogin extends React.Component {
                                                     if (a.service.category === e._id) {
                                                         return (
                                                             <Grid item xs={12} sm={6} md={3}>
-                                                                <CardPreview services={a} alfred={user} />
+                                                                <CardPreview services={a} alfred={user} gps={gps} />
                                                                 <Card className={classes.card} style={{height: '420px'}}>
                                                                             <CardMedia className={classes.media} style={{height:150}} image={a.service.picture} title={a.service.label} >
                                                                                 <img style={{position: 'absolute', width: '130px', height: '130px', borderRadius: '50%', objectFit: 'cover', top: '60px', left: 0, right: 0, margin: 'auto'}} src={"../"+a.user.picture}/>

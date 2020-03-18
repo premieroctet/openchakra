@@ -25,6 +25,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
+const {computeDistanceKm}=require('../../utils/functions');
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -65,9 +66,11 @@ class CardPreview extends React.Component{
   }
 
   render(){
-    const {classes, services, userState, isOwner, alfred} = this.props;
+    const {classes, services, userState, isOwner, alfred, gps} = this.props;
     const service = services.service;
     const { shop } = this.state;
+
+    const distance = gps ? computeDistanceKm(gps, services.service_address.gps) : '';
 
     const StyledRating = withStyles({
       iconFilled: {
@@ -123,7 +126,8 @@ class CardPreview extends React.Component{
               <Grid className={classes.cardContentRight}>
                 <Grid className={classes.flexPosition}>
                   <Typography variant="body2" color="textSecondary" component="p" className={classes.sizeText}>
-                    {alfred.billing_address.city}
+                    {services.service_address.city}
+                    { distance ? `(à ${distance} km)` : null }
                   </Typography>
                   <RoomIcon className={classes.checkCircleIcon}/>
                 </Grid>

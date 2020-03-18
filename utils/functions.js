@@ -21,4 +21,4 @@ const computeDistanceKm = (latlon1, latlon2) => {
   }
 }
 
-export {computeDistanceKm};
+module.exports={computeDistanceKm};

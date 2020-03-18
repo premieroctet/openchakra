@@ -99,7 +99,14 @@ class serenityNeed extends React.Component {
     this.state = {
       prestations: [],
       tags: {},
+      gps:null,
     }
+  }
+  
+  static getDerivedStateFromProps(nextProps, prevState) {
+    return {
+      gps: nextProps.gps,
+    };
   }
 
   componentDidMount() {
@@ -121,9 +128,11 @@ class serenityNeed extends React.Component {
   }
   render() {
     const {classes} = this.props;
-    const {prestations} = this.state;
+    const {prestations, gps} = this.state;
     const {tags} = this.state;
     const resdata = shuffleArray(prestations);
+    console.log("In serenity:"+JSON.stringify(gps));
+
     const services = resdata.slice(0, 12).map(e => (
         <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
           <Link href={'/serviceByPrestation?prestation='+e._id}>
