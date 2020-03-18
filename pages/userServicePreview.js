@@ -502,7 +502,7 @@ class userServices extends React.Component {
                   </Grid>
                 </Grid>
                 {equipments.length !== 0 ?
-                  <Grid style={{marginTop: 30}}>
+                  <Grid className={classes.equipmentsContainer}>
                     <Grid>
                       <Typography variant="h6">{alfred.firstname} fournit :</Typography>
                     </Grid>
@@ -510,7 +510,9 @@ class userServices extends React.Component {
                       <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                     </Grid>
                     <Grid>
-                      <p>Dans le cadre de son service, votre Alfred peut fournir du matériel et des produits en fonction des prestations. Ces produits & matériels sont fournis sans surcoût. </p>
+                      <Grid className={classes.textEquipments}>
+                        <p>Dans le cadre de son service, votre Alfred peut fournir du matériel et des produits en fonction des prestations. Ces produits & matériels sont fournis sans surcoût. </p>
+                      </Grid>
                     </Grid>
                     <Grid>
                       <Grid container spacing={1}>

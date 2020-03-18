@@ -307,5 +307,22 @@ export default theme => ({
       alignItems: 'center',
       marginBottom: 100
     }
+  },
+  equipmentsContainer:{
+    marginTop: 30,
+    [theme.breakpoints.down('xs')]: {
+      display: 'flex',
+      justifyContent: 'center',
+      flexDirection : 'column',
+      alignItems: 'center',
+      marginBottom: 100
+    }
+  },
+  textEquipments:{
+    [theme.breakpoints.down('xs')]: {
+      textAlign: 'center',
+      marginLeft : 15,
+      marginRight : 15
+    }
   }
 })
