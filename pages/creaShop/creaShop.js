@@ -48,14 +48,14 @@ class creaShop extends React.Component {
         minimum_basket: 0,
         diplomaName: null,
         diplomaYear: null,
-	      diplomaPicture: null,
+	diplomaPicture: null,
         certificationName: null,
         certificationYear: null,
         certificationPicture: null,
         deadline_value: 1, // Valeur de prévenance
         deadline_unit: "jours", // Unité de prévenance (h:heures, j:jours, s:semaines)
-	      level: '',
-        service_address: {address:"", city:"", zip:"", country:""}, // Adresse différente ; null si non spécifiée
+	level: '',
+        service_address: null,
         perimeter: 1,
         availabilities: [],
       },
@@ -87,7 +87,12 @@ class creaShop extends React.Component {
     axios.get(url+'myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
-        this.setState({user_id: user._id});
+        let shop = this.state.shop;
+        shop.service_address = user.billing_address;
+        this.setState({
+          user_id: user._id,
+          shop: shop
+        });
       })
       .catch(error => {
         console.log(error);
@@ -108,24 +113,28 @@ class creaShop extends React.Component {
   }
 
   availabilityCreated(avail) {
+    console.log("Availability created:"+JSON.stringify(avail, null, 2));
     let shop = this.state.shop;
     shop.availabilities.push(avail);
     this.setState({shop: shop});
   }
 
   availabilityDeleted(avail_id) {
+    console.log("Availability id deleted:"+JSON.stringify(avail_id, null, 2));
     let shop = this.state.shop;
     shop.availabilities=shop.availabilities.filter(avail => avail.ui_id !== avail_id);
     this.setState({shop: shop});
   }
 
   handleNext = () => {
+    console.log("Handle next");
     if (this.state.activeStep<9) {
       this.setState({activeStep: this.state.activeStep + 1});
     }
     // last page => post
     else {
       let cloned_shop = _.cloneDeep(this.state.shop);
+      console.log("CreaShop:sending shop "+JSON.stringify(cloned_shop, null, 2));
       Object.keys(cloned_shop.prestations).forEach(key => { if (key<0) cloned_shop.prestations[key]._id = null });
       cloned_shop.prestations = JSON.stringify(cloned_shop.prestations);
       cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
@@ -133,8 +142,8 @@ class creaShop extends React.Component {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
       axios.post(url+'myAlfred/api/shop/add', cloned_shop)
         .then(res => {
-
-          var su_id = res.data.services[0]._id;
+          
+          var su_id = res.data.services[0]._id; 
           if(cloned_shop.diplomaPicture !== null) {
             var dpChanged = typeof(cloned_shop.diplomaPicture)=='object';
             const formData = new FormData();
@@ -218,8 +227,8 @@ class creaShop extends React.Component {
         description: state.description,
         level: state.level,
         diplomaName: state.diplomaName,
-        diplomaYear: state.diplomaYear,
-        diplomaPicture: state.diplomaPicture,
+	diplomaYear: state.diplomaYear,
+	diplomaPicture: state.diplomaPicture,
         certificationName: state.certificationName,
         certificationYear: state.certificationYear,
         certificationPicture: state.certificationPicture
@@ -286,6 +295,8 @@ class creaShop extends React.Component {
 
     const {classes} = this.props;
     let hideRightPanel = this.isRightPanelHidden();
+
+    console.log("service address:"+JSON.stringify(this.state.service_address));
 
     return(
       <Grid>

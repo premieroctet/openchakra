@@ -41,7 +41,6 @@ class UserAvatar extends React.Component{
 
     if (user) {
       const picture = user.picture==undefined || user.picture=='' ? null : user.picture;
-      console.log("Avatar:"+picture); 
       return picture?
            <Avatar alt="photo de profil" src={"/"+user.picture} className={className} />
            :
@@ -52,9 +51,5 @@ class UserAvatar extends React.Component{
     }
   }
 }
-
-UserAvatar.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default UserAvatar;

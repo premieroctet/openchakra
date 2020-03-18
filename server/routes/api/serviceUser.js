@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
@@ -9,14 +8,19 @@ const Shop = require('../../models/Shop');
 const User = require('../../models/User');
 const Availability = require('../../models/Availability');
 const axios = require('axios');
+const https = require('https');
 const multer = require("multer");
 const crypto = require('crypto');
 const geolib = require('geolib');
 const _ = require('lodash');
 const moment = require('moment');
 const isEmpty = require('../../validation/is-empty');
-const emptyPromise = require('../../../utils/promise.js');
 const {data2ServiceUser} = require('../../../utils/mapping');
+const emptyPromise = require('../../../utils/promise');
+const { config } = require('../../../config/config');
+const { filterServicesGPS} = require('../../../utils/filters');
+
+
 moment.locale('fr');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -438,9 +442,7 @@ router.get('/category/:id', (req, res) => {
 // @Route GET /myAlfred/api/serviceUser/near
 // View all service by city
 // @Access private
-router.get('/near', passport.authenticate('jwt', {
-    session: false
-}), (req, res) => {
+router.get('/near', passport.authenticate('jwt', { session: false }), (req, res) => {
 
     User.findById(req.user.id)
         .then(user => {
@@ -453,33 +455,34 @@ router.get('/near', passport.authenticate('jwt', {
                     const lngUser = gps.lng;
                     const allService = [];
                     service.forEach(e => {
+                        //console.log("Service:"+e.perimeter,JSON.stringify(service));
                         const gpsAlfred = e.service_address.gps;
+                        //console.log("GPS service:"+JSON.stringify(gpsAlfred));
                         const latAlfred = gpsAlfred.lat;
                         const lngAlfred = gpsAlfred.lng;
+                        if (latAlfred==null || lngAlfred==null) {
+                          //console.warn("Incorect GPS in "+e._id+":"+JSON.stringify(gpsAlfred));
+                        }
+                        else {
 
-                        /*const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000));
+                          /*const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(e.perimeter*1000));
 
-                        if(!isNear) {
+                          if(!isNear) {
                             const removeIndex = service.findIndex(i => i._id == e._id);
                             service.splice(removeIndex, 1);
-                        }*/
-                        if(geolib.convertDistance(
-                            geolib.getDistance(
-                                {latitude:latUser,longitude:lngUser},
-                                {latitude:latAlfred, longitude: lngAlfred}
-                            ),
-                            'km'
-                        ).toFixed(2) < e.perimeter) {
+                          }*/
+                          var distance = geolib.convertDistance( geolib.getDistance( {latitude:latUser,longitude:lngUser}, {latitude:latAlfred, longitude: lngAlfred}), 'km').toFixed(2);
+                          if(distance < e.perimeter) {
                             allService.push(e)
+                          }
                         }
 
-
                     });
-
+                    console.log("Got services:"+allService.length);
                     res.json(allService);
 
                 })
-                .catch(err => res.status(404).json({ service: 'No service found' }));
+                .catch(err => { console.log(err); res.status(404).json({ service: 'No service found' })});
         });
 
 });
@@ -524,6 +527,63 @@ router.get('/near/:service',passport.authenticate('jwt',{session:false}),(req,re
 
 });
 
+// @Route POST /myAlfred/api/serviceUser/search
+// Search serviceUser according to optional coordinates, dates, etc...
+// FIX : filter availabilities
+// FIX : filter status (pro or individual)
+// TODO : include services if visio or @alfred
+router.post('/search',(req,res)=> {
+
+    url = "https://"+req.headers.host;
+    console.log("ServiceUSer search with filter:"+JSON.stringify(req.body));
+    const instance = axios.create({
+      httpsAgent: new https.Agent({rejectUnauthorized: false})
+    });
+
+    var kwUrl = `${url}/myAlfred/api/service/keyword/${req.body.keyword}`;
+    console.log("Keyword url:"+kwUrl);
+    var keywordPromise = 'keyword' in req.body ?  instance.get(kwUrl) : emptyPromise({data: null});
+
+    var datesPromise = emptyPromise({data: null});
+    if ('startDate' in req.body || 'endDate' in req.body) {
+      const begin = req.body.startDate || null;
+      const end = req.body.endDate || null;
+      const beginDay =  begin ? moment(begin).format('dddd') : null;
+      const endDay =  end ? moment(end).format('dddd') : null;
+
+      const obj = {begin,end,beginDay,endDay};
+
+      datesPromise=axios.post(url+'/myAlfred/api/availability/filterDate',obj) 
+    }
+
+    keywordPromise.then( result => {
+      var allowedServices=result.data;
+      // Result is object category => [arr of services] or null
+      if (allowedServices!=null) {
+        allowedServices= Object.values(allowedServices);
+        if (allowedServices.length>0) {
+          allowedServices=allowedServices.reduce( (acc, arr) => acc.concat(arr));
+          allowedServices=allowedServices.map( service => service.id.toString());
+        }
+      }
+      ServiceUser.find()
+        .populate('user','-id_card').populate('service')
+        .then(services => {
+          console.log("Services[0]:"+JSON.stringify(services[0], null, 2));
+          if ('gps' in req.body) {
+            services = filterServicesGPS(services, req.body.gps);
+          }
+          if (allowedServices!=null) {
+            console.log("Svcs:"+JSON.stringify(allowedServices));
+            services = services.filter( su => allowedServices.includes(su.service._id.toString()) );
+          }
+          console.log("Services count:"+services.length);
+          res.json(services);
+        })
+        .catch(err => { console.error(err); res.status(404).json({ service: 'No service found' })});
+    });
+});
+
 // @Route GET /myAlfred/api/serviceUser/near/:city
 // View all serviceUser by city
 router.post('/nearCity',(req,res)=> {
@@ -533,9 +593,7 @@ router.post('/nearCity',(req,res)=> {
                 .populate('user','-id_card')
                 .populate('service')
                 .then(service => {
-
                     res.json(service);
-
                 })
                 .catch(err => res.status(404).json({ service: 'No service found' }));
 
@@ -578,13 +636,8 @@ router.get('/nearOther/:id',passport.authenticate('jwt',{session:false}),(req,re
                         ).toFixed(2) < e.perimeter) {
                             allService.push(e)
                         }
-
-
-
                     });
-
-                    setTimeout(()=>res.json(allService),500);
-
+                    res.json(allService);
                 })
                 .catch(err => res.status(404).json({ service: 'No service found' }));
         });
@@ -618,12 +671,8 @@ router.get('/all/nearOther/:id/:service',passport.authenticate('jwt',{session:fa
                             const removeIndex = service.findIndex(i => i._id === e._id);
                             service.splice(removeIndex, 1);
                         }
-
-
                     });
-
                     res.json(service);
-
                 })
                 .catch(err => res.status(404).json({
                     service: 'No service found'
@@ -761,7 +810,7 @@ router.post('/home/search',(req,res)=> {
                     })
                     .catch(errors => console.log(errors))
             });
-            setTimeout(()=>res.json(allServices),2000);
+            res.json(allServices);
 
         })
         .catch(err => res.status(404).json({ service: 'No service found' }));

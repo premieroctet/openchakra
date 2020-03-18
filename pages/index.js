@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { Fragment } from 'react';
 import Layout from "../hoc/Layout/Layouthome";
 import Footer from "../hoc/Layout/Footer/Footer";
@@ -32,7 +33,8 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            logged:false
+          gps:null, 
+          logged:false
         }
     }
 
@@ -42,6 +44,22 @@ class Home extends React.Component {
         if (token) {
             this.setState({logged:true})
         }
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios
+            .get('/myAlfred/api/users/current')
+            .then(res => {
+                let user = res.data;
+                this.setState({
+                  user:user,
+                  address: user.billing_address,
+                  addressSelected: user.billing_address,
+                  otherAddress: user.service_address,
+                  gps: user.billing_address.gps,
+                });
+            })
+            .catch(err => { console.log(err); }
+            );
+
         console.clear();
     }
 
@@ -53,6 +71,9 @@ class Home extends React.Component {
     };
 
     render()  {
+        const gps = this.state.gs;
+        console.log("GPS:"+JSON.stringify(this.state.gps));
+
         return (
             <Fragment>
 		<Helmet>
@@ -62,28 +83,28 @@ class Home extends React.Component {
 
                 <Layout />
                 <Homeheader />
-                <SerenityNeed />
+                <SerenityNeed gps={gps}/>
                 <BecomeAlfred />
-                <Section3/>
-                <NearbyYou />
-                <Profiteandlearn />
-                <Section6/>
-                <Wellbeing />
-                <Section8/>
-                <Feelingood />
-                <Section10/>
+                <Section3 gps={gps}/>
+                <NearbyYou gps={gps}/>
+                <Profiteandlearn gps={gps}/>
+                <Section6 gps={gps}/>
+                <Wellbeing gps={gps}/>
+                <Section8 gps={gps}/>
+                <Feelingood gps={gps}/>
+                <Section10 gps={gps}/>
                 <Proposeservice />
-                <Section12/>
-                <NearbyYou />
+                <Section12 gps={gps}/>
+                <NearbyYou gps={gps}/>
                 <Passions/>
-                <Section15/>
-                <Section16 />
+                <Section15 gps={gps}/>
+                <Section16 gps={gps}/>
                 <Facons/>
-                <Section18 />
-                <Section19 />
+                <Section18 gps={gps}/>
+                <Section19 gps={gps}/>
                 <Otter/>
-                <Section21 />
-                <Section22/>
+                <Section21 gps={gps}/>
+                <Section22 gps={gps}/>
                 <Assureback/>
                 <Footer  />
             </Fragment>
