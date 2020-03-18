@@ -31,9 +31,15 @@ const isServiceAroundGPS = (serviceUser, coordinates) => {
   }
 }
 
+isServiceAtAlfredOrVisio = su => {
+  // FIX : test only
+  return false;
+  // FIX : end
+  return su.location.alfred || su.location.visio;
+}
 
 const filterServicesGPS = (serviceUsers, coordinates) => {
-  return serviceUsers.filter( su => isServiceAroundGPS(su, coordinates) );
+  return serviceUsers.filter( su => isServiceAtAlfredOrVisio(su) || isServiceAroundGPS(su, coordinates) );
 }
 
 module.exports = { filterServicesGPS };

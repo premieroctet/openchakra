@@ -9,6 +9,7 @@ import axios from 'axios';
 import DatePicker, {registerLocale} from "react-datepicker";
 import AlgoliaPlaces from "algolia-places-react";
 import fr from 'date-fns/locale/fr';
+import MenuItem from "@material-ui/core/MenuItem";
 import moment from 'moment';
 registerLocale('fr', fr);
 const { config } = require('../../../config/config');
@@ -174,11 +175,15 @@ class Homeheader extends React.Component {
       allService: [],
       serviceUser: [],
       service: '',
-      place: '',
+      city: '',
+      gps: null,
       date: Date.now(),
       dateSelected: '',
       hour: '',
       hourSelected: '',
+      user:null,
+      address:null,
+      adressSelected:null,
     };
 
   }
@@ -189,15 +194,35 @@ class Homeheader extends React.Component {
           this.setState({allService: res.data})
         })
         .catch()
+
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios
+            .get(url+'myAlfred/api/users/current')
+            .then(res => {
+                let user = res.data;
+                this.setState({
+                  user:user,
+                  address: user.billing_address,
+                  addressSelected: user.billing_address,
+                  otherAddress: user.service_address,
+                  gps: user.billing_address.gps,
+                });
+            })
+            .catch(err => { console.log(err); }
+            );
   }
 
 
   onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+    var {name, value} = e.target;
+    this.setState({ [name]: value });
+    if (name=='addressSelected') {
+      this.setState({gps: value=='all'?null: 'gps' in value ? value.gps : {'lat':value['lat'], 'lng':value['lng']}})
+    };
   };
 
   onChangeCity({suggestion}) {
-    this.setState({place: suggestion.name});
+    this.setState({gps:suggestion.latlng, city: suggestion.name});
   };
 
   search() {
@@ -206,7 +231,8 @@ class Homeheader extends React.Component {
     let day;
     let hour;
     const service = this.state.service;
-    const city = this.state.place;
+    const city = this.state.city;
+    const gps = JSON.stringify(this.state.gps);
     if(this.state.dateSelected !== ''){
        date = moment(this.state.dateSelected).format('DD/MM/YYYY');
       dateISO = moment(this.state.dateSelected).format();
@@ -223,8 +249,8 @@ class Homeheader extends React.Component {
      }
 
     Router.push({
-      pathname: '/searchHome',
-      query: { service: service,city:city,date:date,dateISO:dateISO,day:day,hour:hour }
+      pathname: '/search',
+      query: { service: service,city:city,date:date,dateISO:dateISO,day:day,hour:hour,gps: gps, address: JSON.stringify(this.state.addressSelected) }
     })
 
 
@@ -232,8 +258,9 @@ class Homeheader extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {popopen} = this.state;
+    const {otherAddress, address,popopen, logged} = this.state;
 
+    console.log(this.state.gps);
 
     return (
         <Fragment>
@@ -246,7 +273,8 @@ class Homeheader extends React.Component {
             </video>
           </div>
           <div className={classes.headeroverlay}></div>
-          <div className={classes.headerhome}>
+          { /** Start search not connected */ }
+            <div className={classes.headerhome}>
             <Grid container>
               <Grid item xs={12}>
                 <h3 className={classes.homeform} style={{marginTop:0}}>Et si vous pouviez réserver n'importe quel service immédiatement ?</h3>
@@ -271,6 +299,32 @@ class Homeheader extends React.Component {
 
                   <Grid container alignItems="center">
                     <Grid item className={classes.pickerhomelocation} style={{textAlign: 'left', fontFamily: 'Helvetica Neue, Helvetica,sans-serif', fontSize: '0.9rem', fontWeight: '400', color: '#505050'}}>
+                      { this.state.user?
+                            <TextField
+                                    InputProps={{ style:{height: 40}, }}
+                                    id="outlined-select-currency"
+                                    select
+                                    style={{width:'100%', marginTop: '6px'}}
+                                    value={this.state.addressSelected}
+                                    name={'addressSelected'}
+                                    onChange={(e) => {this.onChange(e);}}
+                                    margin="normal"
+                                    variant="outlined"
+                                >
+                                    <MenuItem value={address}>
+                                        Adresse principale, <em> {' '+address.address} {address.zip_code},{address.city}</em>
+                                    </MenuItem>
+                                    {otherAddress.map(e => (
+                                        <MenuItem key={e._id} value={e}>
+                                            {e.label+', '} <em> {' '+e.address},{e.zip_code} {e.city}</em>
+
+                                        </MenuItem>
+                                    ))}
+                                    <MenuItem value={'all'}>
+                                        Partout, Rechercher des Alfred partout
+                                    </MenuItem>
+                                </TextField>
+                       :
                       <AlgoliaPlaces
                           placeholder='Dans quelle ville ?'
                           style={{color: '#505050', height: '55px'}}
@@ -283,8 +337,8 @@ class Homeheader extends React.Component {
                             useDeviceLocation: 'true'
                           }}
                           onChange={(suggestion) =>this.onChangeCity(suggestion)}
-                          onClear={()=>this.setState({place:''})}
-                      />
+                          onClear={()=>this.setState({city:'', gps:null})}
+                      /> }
                     </Grid>
                   </Grid>
 
@@ -311,10 +365,6 @@ class Homeheader extends React.Component {
                         dateFormat="dd/MM/yyyy"
                         placeholderText={moment(this.state.date).format('DD/MM/YYYY')}
                         minDate={new Date()}
-
-
-
-
                     />
                       </Grid>
                     </Grid>
@@ -343,11 +393,6 @@ class Homeheader extends React.Component {
                             placeholderText={'09:00'}
                             style={{fontWeight: 100}}
                             customInput={<TextField label="Quelle heure ?" style={{backgroundColor: 'white',fontWeight: 100}} variant={"outlined"}/>}
-
-
-
-
-
                         />
                       </Grid>
                     </Grid>
@@ -361,6 +406,7 @@ class Homeheader extends React.Component {
             </Grid>
 
           </div>
+          { /** End search not connected */ }
 
           <div style={{textAlign: 'left'}} className={classes.headerhome2}>
             <br/>

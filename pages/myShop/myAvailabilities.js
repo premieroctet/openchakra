@@ -136,6 +136,8 @@ class myAvailabilities extends React.Component {
 
     componentDidMount() {
 
+      // FIX : get current availabilities
+
       axios.get(url+'myAlfred/api/users/current').then(res => {
         let user = res.data;
         if(user) {

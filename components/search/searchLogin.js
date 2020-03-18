@@ -79,7 +79,7 @@ const styles = theme => ({
     }
 });
 
-class searchLogin extends React.Component {
+class SearchLogin extends React.Component {
 
     constructor(props) {
         super(props);
@@ -92,7 +92,7 @@ class searchLogin extends React.Component {
             serviceUser: [],
             lat: null,
             lng: null,
-            research: '',
+            research: this.props.service,
             prestations: [],
             services: [],
             resultCategory: [],
@@ -114,7 +114,12 @@ class searchLogin extends React.Component {
         }
     }
 
+    static getInitialProps ({ query: { service, city, date, dateISO, day, hour } }) {
+        return { service: service, city:city, date:date, dateISO: dateISO,day:day, hour:hour }
+    }
+
     componentDidMount() {
+        this.setState({research:this.props.service});
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
             .get(url+'myAlfred/api/users/current')
@@ -460,13 +465,12 @@ class searchLogin extends React.Component {
                                          categories.map(e => (
                                             <Grid container>
                                                 {this.state[e.label] !== 0 ? <Grid item xs={12}> <h3 style={{marginLeft:15}}>{e.label}</h3> </Grid> : null}
-
                                                 <Grid container style={{paddingLeft: '25px'}}>
                                                 {serviceUser.map(a => {
                                                     if (a.service.category === e._id) {
                                                         return (
                                                             <Grid item xs={12} sm={6} md={3}>
-                                                               <Fragment>{ false ?<CardPreview service={a.service} shop={a.shop}></CardPreview> : null}
+                                                                <CardPreview services={a} alfred={user} />
                                                                 <Card className={classes.card} style={{height: '420px'}}>
                                                                             <CardMedia className={classes.media} style={{height:150}} image={a.service.picture} title={a.service.label} >
                                                                                 <img style={{position: 'absolute', width: '130px', height: '130px', borderRadius: '50%', objectFit: 'cover', top: '60px', left: 0, right: 0, margin: 'auto'}} src={"../"+a.user.picture}/>
@@ -547,7 +551,7 @@ class searchLogin extends React.Component {
                                                                                     : null}
                                                                                 </Grid> : null}
                                                                             </CardContent>
-                                                                    </Card></Fragment>
+                                                                    </Card>
                                                             </Grid>
                                                         )
                                                     } else {
@@ -574,4 +578,4 @@ class searchLogin extends React.Component {
 }
 
 
-export default withStyles(styles)(searchLogin);
+export default withStyles(styles)(SearchLogin);
