@@ -116,13 +116,13 @@ class section6 extends React.Component {
     }
 
     render() {
-        const {classes} = this.props;
+        const {classes, gps} = this.props;
         const {category} = this.state;
         const {tags} = this.state;
         const resdata = shuffleArray(category);
         const services = resdata.slice(0, 4).map(e => (
             <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
-                <Link href={'/serviceByCategory?category='+e._id}>
+                <Link href={'/serviceByCategory?category='+e._id+'&gps='+JSON.stringify(gps)}>
                 <Card className={classes.card} style={{
                     backgroundColor:'transparent',
                     textAlign:'center',

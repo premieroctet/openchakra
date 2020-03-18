@@ -129,13 +129,13 @@ class section10 extends React.Component {
     }
 
     render() {
-        const {classes} = this.props;
+        const {classes, gps} = this.props;
         const {prestations} = this.state;
         const {tags} = this.state;
         const resdata = shuffleArray(prestations);
         const services = resdata.slice(0, 10).map(e => (
             <Grid item xs={12} sm={6} md={2} lg={2} key={e._id} style={{margin:'0 10px'}}>
-                <Link href={'/serviceByPrestation?service='+e._id}>
+                <Link href={'/serviceByPrestation?service='+e._id+'&gps='+JSON.stringify(gps)}>
                 <Card className={classes.card}>
                     <CardActionArea style={{cursor:'default'}}>
                         <CardMedia

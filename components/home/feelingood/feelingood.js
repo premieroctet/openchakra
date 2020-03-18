@@ -87,14 +87,14 @@ class feelingood extends React.Component{
   }
 
   render() {
-    const {classes} = this.props;
+    const {classes, gps} = this.props;
     const {service} = this.state;
     const {tags} = this.state;
     const resdata = shuffleArray(service);
 
     const cards = resdata.slice(0, 4).map((e,index) => (
         <Grid key={index} item xs={12} sm={6} md={3}>
-          <Link href={'/serviceByService?service='+e._id}>
+          <Link href={'/serviceByService?service='+e._id+'&gps='+JSON.stringify(gps)}>
           <FeelingoodCard img={e.picture} title={e.label} />
           </Link>
         </Grid>

@@ -3,7 +3,6 @@ const isEmpty = require('../server/validation/is-empty');
 
 const isServiceAroundGPS = (serviceUser, coordinates) => {
 
-  //console.log("Service:"+servuceUser.perimeter,JSON.stringify(service));
   const serviceGPS = serviceUser.service_address.gps;
   if (!serviceGPS) {
     console.warn("Incorect GPS in "+serviceUser._id+":"+JSON.stringify(serviceGPS));
@@ -24,8 +23,6 @@ const isServiceAroundGPS = (serviceUser, coordinates) => {
       service.splice(removeIndex, 1);
       }*/
       var distance = geolib.convertDistance( geolib.getDistance( {latitude:coordinates.lat, longitude:coordinates.lng}, {latitude:latAlfred, longitude: lngAlfred}), 'km').toFixed(2);
-      //console.log("Distance:"+distance);
-      //console.log("Perimeter:"+serviceUser.perimeter);
       return distance < serviceUser.perimeter;
     }
   }

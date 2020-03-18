@@ -71,8 +71,8 @@ class Home extends React.Component {
     };
 
     render()  {
-        const gps = this.state.gs;
-        console.log("GPS:"+JSON.stringify(this.state.gps));
+        const gps = this.state.gps;
+        console.log("GPS:"+JSON.stringify(gps));
 
         return (
             <Fragment>

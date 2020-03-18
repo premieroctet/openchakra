@@ -117,7 +117,7 @@ class login extends React.Component {
               .then(data => {
                 let path = localStorage.getItem('path');
                 if(path === '/'){
-                  Router.push('/search')
+                  Router.push('/')
                 } else {
                   Router.back();
                 }
