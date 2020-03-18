@@ -147,6 +147,7 @@ class shop extends React.Component {
                                     <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
                                         <CardPreview
                                           isOwner={isOwner}
+                                          needAvatar={false}
                                           userState={this.state.userState}
                                           alfred={this.state.alfred}
                                           services={this.state.services[result]}

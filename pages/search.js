@@ -89,7 +89,7 @@ class SearchLogin extends React.Component {
             user: null,
             address: {},
             otherAddress: [],
-            selectedAddress: {}, 
+            selectedAddress: {},
             city: '',
             gps: null,
             categories: [],
@@ -119,7 +119,7 @@ class SearchLogin extends React.Component {
 
     componentDidMount() {
         this.setState({
-             research:'service' in this.props ? this.props.service : '', 
+             research:'service' in this.props ? this.props.service : '',
              gps:'gps' in this.props ? JSON.parse(this.props.gps) : null,
              city:this.props.city || '',
         });
@@ -247,7 +247,7 @@ class SearchLogin extends React.Component {
         var research = this.state.research;
         const serviceUsers = this.state.serviceUsersDisplay;
 
-        research = research.trim();  
+        research = research.trim();
         console.log("GPS:"+JSON.stringify(gps));
 
         return (
@@ -442,7 +442,7 @@ class SearchLogin extends React.Component {
                                 </Grid>
                             </Grid>
 
-                            
+
                         </Grid>
                         { /* END FILTER PANEL */ }
                             <>
@@ -485,11 +485,11 @@ class SearchLogin extends React.Component {
                                                     if (a.service.category === e._id) {
                                                         return (
                                                             <Grid item xs={12} sm={6} md={3}>
-                                                                <CardPreview services={a} alfred={user} gps={gps} />
+                                                                <CardPreview services={a} alfred={user} gps={gps} needAvatar={true}/>
                                                                 <Card className={classes.card} style={{height: '420px'}}>
                                                                             <CardMedia className={classes.media} style={{height:150}} image={a.service.picture} title={a.service.label} >
                                                                                 <img style={{position: 'absolute', width: '130px', height: '130px', borderRadius: '50%', objectFit: 'cover', top: '60px', left: 0, right: 0, margin: 'auto'}} src={"../"+a.user.picture}/>
-                                                                                {a.service_address.city != undefined ? 
+                                                                                {a.service_address.city != undefined ?
                                                                                 <Typography style={{position: 'absolute',fontSize: '0.9rem', color: 'white',textShadow:'0px 0px 3px black',fontWeight:600, bottom: '10px', left: 0, right: 0, margin: 'auto', textAlign:'center'}}>
                                                                                   <img src='/static/assets/img/blanc.svg' />
                                                                                      {' ' + a.service_address.city}
@@ -548,19 +548,19 @@ class SearchLogin extends React.Component {
                                                                                         {a.level == 1 ?
                                                                                             <Tooltip title="Entre 0 et 1 an d'expérience">
                                                                                               <img src='/static/assets/img/experience.svg' />
-                                                                                            </Tooltip> 
+                                                                                            </Tooltip>
                                                                                             :null}{a.level == 2 ?
                                                                                                 <Tooltip title="Entre 1 et 5 ans d'expérience">
                                                                                                   <img src='/static/assets/img/experience.svg' />
-                                                                                                </Tooltip> 
+                                                                                                </Tooltip>
                                                                                             : null} {a.level == 3 ?
                                                                                                 <Tooltip title="Entre 5 et 10 ans d'expérience">
                                                                                                   <img src='/static/assets/img/experience.svg' />
-                                                                                                </Tooltip> 
+                                                                                                </Tooltip>
                                                                                             : null} {a.level == 4 ?
                                                                                                 <Tooltip title="Plus de 10 ans d'expérience">
                                                                                                   <img src='/static/assets/img/experience.svg' />
-                                                                                                </Tooltip> 
+                                                                                                </Tooltip>
                                                                                             :null}
                                                                                     </Grid>
                                                                                     : null}

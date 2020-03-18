@@ -28,6 +28,7 @@ import Dialog from '@material-ui/core/Dialog';
 const {computeDistanceKm}=require('../../utils/functions');
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import UserAvatar from '../avatar/UserAvatar';
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -66,7 +67,7 @@ class CardPreview extends React.Component{
   }
 
   render(){
-    const {classes, services, userState, isOwner, alfred, gps} = this.props;
+    const {classes, services, userState, isOwner, gps, needAvatar} = this.props;
     const service = services.service;
     const { shop } = this.state;
 
@@ -105,6 +106,12 @@ class CardPreview extends React.Component{
               </Grid>
               : null
             }
+            { needAvatar ?
+              <Grid className={classes.avatar}>
+                <UserAvatar classes={'avatarLetter'} user={services.user} className={classes.avatarLetter} />
+              </Grid> :
+              null
+            }
           </Grid>
           <CardContent>
             <Grid  className={classes.cardContent}>
@@ -126,7 +133,9 @@ class CardPreview extends React.Component{
               <Grid className={classes.cardContentRight}>
                 <Grid className={classes.flexPosition}>
                   <Typography variant="body2" color="textSecondary" component="p" className={classes.sizeText}>
-                    {services.service_address.city}
+                    {services.service_address ?
+                      services.service_address.city === undefined || services.service_address.city === "" ? "Non renseigné" : services.service_address.city : "Non renseigné"
+                    }
                     { distance ? `(à ${distance} km)` : null }
                   </Typography>
                   <RoomIcon className={classes.checkCircleIcon}/>
@@ -143,7 +152,6 @@ class CardPreview extends React.Component{
                           Réserver
                         </Button>
                       </Link>
-
                   }
                 </Grid>
               </Grid>

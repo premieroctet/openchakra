@@ -114,7 +114,8 @@ export default theme => ({
 
   },
   flexPosition:{
-    display:'flex'
+    display:'flex',
+    alignItems : 'center'
   },
   minWidth:{
     minWidth:30
@@ -140,6 +141,19 @@ export default theme => ({
       margin: 0,
       height:'auto'
     },
-  }
+  },
+  avatar:{
+    position: 'absolute',
+    left: '50%',
+    marginLeft: -50,
+    top: '50%',
+    marginTop: -50
+  },
+  avatarLetter:{
+    height: 100,
+    width: 100,
+    margin: 'auto',
+    fontSize: 'xx-large',
+  },
 });
 
