@@ -65,10 +65,6 @@ export default theme =>({
   },
   largeWidth:{
     width: '100%',
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: '3%',
-      marginRight: '3%',
-    },
   },
   marginTop:{
     marginTop:30

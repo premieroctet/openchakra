@@ -18,6 +18,7 @@ import AlfredConditionsCancel from '../components/AlfredConditionsCancel/AlfredC
 import AlfredWelcomedMessage from '../components/AlfredWelcomedMessage/AlfredWelcomedMessage';
 import Footer from '../hoc/Layout/Footer/Footer';
 import {Helmet} from 'react-helmet';
+import NavbarMobile from '../components/NavbarMobile/NavbarMobile';
 
 
 const { config } = require('../config/config');
@@ -228,7 +229,7 @@ class shop extends React.Component {
                         </Grid>*/}
                   </Grid>
               </Layout>
-              {/* <Footer/>*/}
+              <NavbarMobile/>
 
           </Fragment>
         )

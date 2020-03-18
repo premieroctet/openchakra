@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import {Helmet} from 'react-helmet';
 import AlfredBanner from '../../components/shop/AlfredBanner/AlfredBanner';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
+import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 
 
 moment.locale('fr');
@@ -246,33 +247,7 @@ class myAvailabilities extends React.Component {
                       </Grid>
                   </Grid>
               </Layout>
-              <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
-                  <Grid item xs={2} style={{textAlign:"center"}}>
-                      <Link href={`/shop?id_alfred=${this.state.userId}`}><a style={{textDecoration:'none'}}>
-                          <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}/></p></a>
-                      </Link>
-                  </Grid>
-                  <Grid item xs={2} style={{textAlign:"center"}}>
-                      <Link href={'/reservations/messages'}><a style={{textDecoration:'none'}}>
-                          <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
-                      </a></Link>
-                  </Grid>
-                  <Grid item xs={2} style={{textAlign:"center"}}>
-                      <Link href={'/reservations/allReservations'}><a style={{textDecoration:'none'}}>
-                          <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
-                      </a></Link>
-                  </Grid>
-                  <Grid item xs={2} style={{textAlign:"center",zIndex:999, borderBottom: '3px solid #4fbdd7'}}>
-                      <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
-                          <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
-                      </a></Link>
-                  </Grid>
-                  <Grid item xs={2} style={{textAlign:"center"}}>
-                      <Link href={'/performances/revenus'}><a style={{textDecoration:'none'}}>
-                          <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}/></p>
-                      </a></Link>
-                  </Grid>
-              </Grid>
+             <NavbarMobile/>
             {/* <Footer/>*/}
 
           </Fragment>
