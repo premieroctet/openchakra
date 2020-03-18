@@ -14,7 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import StarRatings from 'react-star-ratings';
-
+import CardPreview from '../components/CardPreview/CardPreview';
 
 import moment from "moment";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -89,8 +89,8 @@ class serviceByService extends React.Component {
         }
     }
 
-    static getInitialProps ({ query: { service } }) {
-        return { service: service }
+    static getInitialProps ({ query: { service, gps } }) {
+        return { service: service, gps:gps }
 
     }
 
@@ -264,6 +264,7 @@ class serviceByService extends React.Component {
     render() {
         const {classes} = this.props;
         const serviceUser = this.state.serviceUser;
+        const gps=this.props.gps?JSON.parse(this.props.gps) : '';
         return (
             <Fragment>
                 <Layout>
@@ -376,6 +377,7 @@ class serviceByService extends React.Component {
 
 
                                             <Grid item md={3} sm={6} xs={12}>
+                                                <CardPreview services={a} gps={gps} needAvatar={true} />
                                                 <Card className={classes.card} style={{height: '420px'}}>
                                                     <CardMedia
                                                         className={classes.media}

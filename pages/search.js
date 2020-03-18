@@ -114,33 +114,32 @@ class SearchLogin extends React.Component {
     }
 
     onChangeCity({suggestion}) {
+      console.log("Change city");
       this.setState({gps:suggestion.latlng, city: suggestion.name});
     };
 
     componentDidMount() {
-        this.setState({
-             research:'service' in this.props ? this.props.service : '',
-             gps:'gps' in this.props ? JSON.parse(this.props.gps) : null,
-             city:this.props.city || '',
-        });
+        var st={
+          research:'service' in this.props ? this.props.service : '', 
+          gps:'gps' in this.props ? JSON.parse(this.props.gps) : null,
+          city:this.props.city || '',
+        };
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
             .get(url+'myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
-                this.setState({
-                  user:user,
-                  address: user.billing_address,
-                  selectedAddress: 'address' in this.props ? JSON.parse(this.props.address) : user.billing_address,
-                  otherAddress: user.service_address,
-                  gps: user.billing_address.gps,
-                });
+                st['user']=user;
+                st['address']=user.billing_address;
+                st['selectedAddress']='address' in this.props && this.props.address ? JSON.parse(this.props.address) : user.billing_address;
+                st['otherAddress']=user.service_address;
+                if (!st['gps']) {
+                  st['gps']=user.billing_address.gps;
+                }
+                this.setState(st, () => this.search());
             })
             .catch(err => { console.log(err); }
             );
-        if ('address' in this.props) {
-          console.log(JSON.stringify(JSON.parse(this.props.address), null, 2));
-        }
     }
 
     onChange = e => {
@@ -159,7 +158,6 @@ class SearchLogin extends React.Component {
 
     // Filter according to pro or particular && dates
     filter() {
-      console.log(JSON.stringify(this.state.serviceUsers[0], null, 2));
       // Filter only if a search was already done
       if (this.state.searched) {
         this.search();
@@ -192,7 +190,6 @@ class SearchLogin extends React.Component {
        axios.post('/myAlfred/api/serviceUser/search', filters)
          .then(res => {
            let serviceUsers = res.data;
-           console.log("Got service:"+JSON.stringify(serviceUsers[0], null, 2));
            serviceUsers = _.orderBy(serviceUsers,['level','number_of_views','graduated','is_certified','user.creation_date'],
               ['desc','desc','desc','desc','desc']);
            this.setState({serviceUsers:serviceUsers, serviceUsersDisplay:serviceUsers});
@@ -321,7 +318,6 @@ class SearchLogin extends React.Component {
                                   }}
                                   onChange={(suggestion) =>this.onChangeCity(suggestion)}
                                   onClear={()=>this.setState({city:'', gps:null})}
-                                  value={this.state.city}
                                 />
                                 }
 
@@ -486,87 +482,6 @@ class SearchLogin extends React.Component {
                                                         return (
                                                             <Grid item xs={12} sm={6} md={3}>
                                                                 <CardPreview services={a} alfred={user} gps={gps} needAvatar={true}/>
-                                                                <Card className={classes.card} style={{height: '420px'}}>
-                                                                            <CardMedia className={classes.media} style={{height:150}} image={a.service.picture} title={a.service.label} >
-                                                                                <img style={{position: 'absolute', width: '130px', height: '130px', borderRadius: '50%', objectFit: 'cover', top: '60px', left: 0, right: 0, margin: 'auto'}} src={"../"+a.user.picture}/>
-                                                                                {a.service_address.city != undefined ?
-                                                                                <Typography style={{position: 'absolute',fontSize: '0.9rem', color: 'white',textShadow:'0px 0px 3px black',fontWeight:600, bottom: '10px', left: 0, right: 0, margin: 'auto', textAlign:'center'}}>
-                                                                                  <img src='/static/assets/img/blanc.svg' />
-                                                                                     {' ' + a.service_address.city}
-                                                                                     ({Math.round((geolib.convertDistance(
-                                                                                            geolib.getDistance({
-                                                                                                    latitude: a.service_address.gps.lat,
-                                                                                                    longitude: a.service_address.gps.lng
-                                                                                                },
-                                                                                                {
-                                                                                                    latitude: this.state.gps.lat,
-                                                                                                    longitude: this.state.gps.lng
-                                                                                                })
-                                                                                            , 'km') + Number.EPSILON) * 100) / 100} kms)
-                                                                                </Typography>: null}
-                                                                                {a.status ==  'Pro' ? <Typography style={{color: 'white', position: 'absolute', top: '10px', left: '10px',background: '#F87280', border: 'white solid 2px', borderRadius: '15px', width: '50px', textAlign: 'center'}}>Pro</Typography> : null}
-                                                                            </CardMedia>
-                                                                            <CardContent style={{height: 'auto'}}>
-                                                                                <Grid container>
-                                                                                    <Grid item xs={7}>
-                                                                                        <Typography style={{fontSize: '0.9rem', color: '#A3A3A3'}}>{e.label}</Typography>
-                                                                                        <Typography style={{fontSize: '1rem'}}>
-                                                                                            {a.service.label} par {a.user.firstname}  <img src="../static/checkboxes/roundBlue2Checked.png" style={{width: '13px', height: '13px'}}/>
-                                                                                        </Typography>
-                                                                                            <StarRatings rating={a.user.score} starRatedColor={"#2FBCD3"} numberOfStars={5} name='rating' starDimension={'20px'} starHoverColor={'#2FBCD3'} starSpacing={'3px'}
-                                                                                            />
-                                                                                            <span style={{marginBottom: '15px', fontSize: '0.6rem'}}>({a.user.number_of_reviews})</span>
-                                                                                    </Grid>
-                                                                                    <Grid item xs={5}>
-                                                                                        <Typography style={{marginBottom: '-20px',marginLeft: '10px', fontSize: '0.8rem'}}>à partir de {a.minimum_basket}€</Typography>
-                                                                                        <Link href={"/userServicePreview?id="+ a._id}>
-                                                                                            <Button onClick={()=>localStorage.setItem('address',JSON.stringify(this.state.selectedAddress))} alt={a.service._id} variant="contained" color="primary"
-                                                                                                    style={{width: '80%', color: 'white', margin: '20px auto auto'}}>
-                                                                                                Réserver
-                                                                                            </Button>
-                                                                                        </Link>
-                                                                                    </Grid>
-                                                                                </Grid>
-                                                                                {a.graduated == true || a.is_certified == true || a.level != 0 ?
-                                                                                <Grid container style={{marginTop: '20px', marginBottom: '-15px'}}>
-                                                                                    {a.graduated == true ?
-                                                                                    <Grid item xs={3} style={{margin: 'auto', textAlign:'center'}}>
-                                                                                        <Tooltip title="Diplomé">
-                                                                                            <img src='/static/assets/img/diplome.svg' />
-                                                                                        </Tooltip>
-                                                                                    </Grid>
-                                                                                    : null}
-                                                                                    {a.is_certified == true ?
-                                                                                    <Grid item xs={3} style={{margin: 'auto', textAlign:'center'}}>
-                                                                                        <Tooltip title="Certifié">
-                                                                                            <img src='/static/assets/img/certificat.svg' />
-                                                                                        </Tooltip>
-                                                                                    </Grid>
-                                                                                    : null}
-                                                                                    {a.level != 0 ?
-                                                                                    <Grid item xs={3} style={{margin: 'auto', textAlign:'center'}}>
-                                                                                        {a.level == 1 ?
-                                                                                            <Tooltip title="Entre 0 et 1 an d'expérience">
-                                                                                              <img src='/static/assets/img/experience.svg' />
-                                                                                            </Tooltip>
-                                                                                            :null}{a.level == 2 ?
-                                                                                                <Tooltip title="Entre 1 et 5 ans d'expérience">
-                                                                                                  <img src='/static/assets/img/experience.svg' />
-                                                                                                </Tooltip>
-                                                                                            : null} {a.level == 3 ?
-                                                                                                <Tooltip title="Entre 5 et 10 ans d'expérience">
-                                                                                                  <img src='/static/assets/img/experience.svg' />
-                                                                                                </Tooltip>
-                                                                                            : null} {a.level == 4 ?
-                                                                                                <Tooltip title="Plus de 10 ans d'expérience">
-                                                                                                  <img src='/static/assets/img/experience.svg' />
-                                                                                                </Tooltip>
-                                                                                            :null}
-                                                                                    </Grid>
-                                                                                    : null}
-                                                                                </Grid> : null}
-                                                                            </CardContent>
-                                                                    </Card>
                                                             </Grid>
                                                         )
                                                     } else {

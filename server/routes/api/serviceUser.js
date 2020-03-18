@@ -48,7 +48,6 @@ const upload = multer({
 // @Access private
 router.post('/add', upload.fields([{ name: 'diploma', maxCount: 1 }, { name: 'certification', maxCount: 1 }]), passport.authenticate('jwt', { session: false }), (req, res) => {
 
-    console.log("API received ServiceUser:" + JSON.stringify(req.body))
 
     ServiceUser.findOne({
             user: req.user.id,
@@ -541,7 +540,6 @@ router.post('/search',(req,res)=> {
     });
 
     var kwUrl = `${url}/myAlfred/api/service/keyword/${req.body.keyword}`;
-    console.log("Keyword url:"+kwUrl);
     var keywordPromise = 'keyword' in req.body ?  instance.get(kwUrl) : emptyPromise({data: null});
 
     var datesPromise = emptyPromise({data: null});
@@ -569,15 +567,13 @@ router.post('/search',(req,res)=> {
       ServiceUser.find()
         .populate('user','-id_card').populate('service')
         .then(services => {
-          console.log("Services[0]:"+JSON.stringify(services[0], null, 2));
           if ('gps' in req.body) {
             services = filterServicesGPS(services, req.body.gps);
           }
           if (allowedServices!=null) {
-            console.log("Svcs:"+JSON.stringify(allowedServices));
             services = services.filter( su => allowedServices.includes(su.service._id.toString()) );
           }
-          console.log("Services count:"+services.length);
+          console.log("Returned services:"+services.length);
           res.json(services);
         })
         .catch(err => { console.error(err); res.status(404).json({ service: 'No service found' })});

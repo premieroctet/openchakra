@@ -8,6 +8,7 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Card from "@material-ui/core/Card";
+import CardPreview from '../../CardPreview/CardPreview';
 import axios from 'axios';
 import Link from 'next/link';
 
@@ -99,16 +100,9 @@ class serenityNeed extends React.Component {
     this.state = {
       prestations: [],
       tags: {},
-      gps:null,
     }
   }
-  
-  static getDerivedStateFromProps(nextProps, prevState) {
-    return {
-      gps: nextProps.gps,
-    };
-  }
-
+ 
   componentDidMount() {
     axios.get(url + 'myAlfred/api/tags/prestations/section1')
         .then(response => {
@@ -117,7 +111,6 @@ class serenityNeed extends React.Component {
               axios.get(url + 'myAlfred/api/prestation/all/tags/' + data._id)
                   .then(res => {
                     let prestations = res.data;
-
                     this.setState({prestations: prestations})
 
                   })
@@ -127,15 +120,15 @@ class serenityNeed extends React.Component {
         .catch();
   }
   render() {
-    const {classes} = this.props;
-    const {prestations, gps} = this.state;
+    const {classes, gps} = this.props;
+    const {prestations} = this.state;
     const {tags} = this.state;
     const resdata = shuffleArray(prestations);
     console.log("In serenity:"+JSON.stringify(gps));
 
     const services = resdata.slice(0, 12).map(e => (
         <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
-          <Link href={'/serviceByPrestation?prestation='+e._id}>
+          <Link href={'/serviceByPrestation?prestation='+e._id+'&gps='+JSON.stringify(gps)}>
           <Card className={classes.card}>
             <CardActionArea style={{cursor:'default'}}>
               <CardMedia

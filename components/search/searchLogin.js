@@ -191,7 +191,6 @@ class SearchLogin extends React.Component {
        axios.post('/myAlfred/api/serviceUser/search', filters)
          .then(res => {
            let serviceUsers = res.data;
-           console.log("Got service:"+JSON.stringify(serviceUsers[0], null, 2));
            serviceUsers = _.orderBy(serviceUsers,['level','number_of_views','graduated','is_certified','user.creation_date'],
               ['desc','desc','desc','desc','desc']);
            this.setState({serviceUser:serviceUsers});
@@ -249,7 +248,6 @@ class SearchLogin extends React.Component {
         const serviceUser = this.state.serviceUser;
 
         research = research.trim();  
-        //console.log("state:"+JSON.stringify(this.state, null, 2));
 
         return (
             <Fragment>

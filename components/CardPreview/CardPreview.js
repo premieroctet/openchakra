@@ -117,7 +117,8 @@ class CardPreview extends React.Component{
             <Grid  className={classes.cardContent}>
               <Grid className={classes.cardContentPosition}>
                 <Typography variant="body2" color="textSecondary" component="p" className={classes.sizeText}>
-                  {service.category.label}
+                  { /** FIX get category */ }
+                  { /** service.category==undefined ? '':`${service.category.label}`*/ }
                 </Typography>
                 <Grid className={classes.cardContentHeader}>
                   <Typography component="p" className={classes.sizeText}>

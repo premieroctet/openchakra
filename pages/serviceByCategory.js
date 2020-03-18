@@ -14,7 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import StarRatings from 'react-star-ratings';
-
+import CardPreview from '../components/CardPreview/CardPreview';
 
 import moment from "moment";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -90,8 +90,8 @@ class serviceByCategory extends React.Component {
         }
     }
 
-    static getInitialProps ({ query: { category } }) {
-        return { category: category }
+    static getInitialProps ({ query: { category, gps } }) {
+        return { category: category, gps: gps }
 
     }
 
@@ -273,6 +273,7 @@ class serviceByCategory extends React.Component {
         const {classes} = this.props;
         const serviceUser = this.state.serviceUser;
         const {allCategories2} = this.state;
+        const gps=this.props.gps?JSON.parse(this.props.gps) : '';
         return (
             <Fragment>
                 <Layout>
@@ -383,7 +384,7 @@ class serviceByCategory extends React.Component {
                                                 <Grid container class="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'inline-block', minHeight: '250px'}}>
                                                     {allCategories2.map((e,index) => (
                                                         <Grid key={index} style={{display: 'inline-block', width: '300px', margin: 'auto 20px'}}>
-                                                            <Link href={'/serviceByCategory?category='+e._id}>
+                                                            <Link href={'/serviceByCategory?category='+e._id+'&gps='+JSON.stringify(gps)}>
                                                                 <Card onClick={()=>this.refresh(e._id)} style={{width: '300px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
                                                                     <CardActionArea>
                                                                         <CardMedia
@@ -413,6 +414,7 @@ class serviceByCategory extends React.Component {
 
 
                                                             <Grid item md={3} sm={6} xs={12}>
+								                                <CardPreview services={a} gps={gps} needAvatar={true}/>
                                                                 <Card className={classes.card} style={{height: '420px'}}>
                                                                     <CardMedia
                                                                         className={classes.media}
