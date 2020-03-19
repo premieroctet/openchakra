@@ -84,15 +84,17 @@ class section18 extends React.Component{
     }
 
     render() {
-        const {classes} = this.props;
+        const {classes, gps} = this.props;
         const {service} = this.state;
         const {tags} = this.state;
         const resdata = shuffleArray(service);
 
+        console.log("S18:"+JSON.stringify(resdata[0], null, 2));
+
         const cards = resdata.slice(0, 4).map((e,index) => (
             <Grid key={index} item xs={12} sm={6} md={3}>
 
-                <FeelingoodCard id={e._id} img={e.picture} title={e.label} />
+                <FeelingoodCard service_id={e._id} img={e.picture} title={e.label} gps={gps} />
 
             </Grid>
         ));
