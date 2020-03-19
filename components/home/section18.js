@@ -92,7 +92,7 @@ class section18 extends React.Component{
         const cards = resdata.slice(0, 4).map((e,index) => (
             <Grid key={index} item xs={12} sm={6} md={3}>
 
-                <FeelingGoodCard service_id={e._id} img={e.picture} title={e.label} gps={gps} />
+                <FeelingGoodCard id={e._id} img={e.picture} title={e.label} gps={gps} />
 
             </Grid>
         ));

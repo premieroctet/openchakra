@@ -110,12 +110,12 @@ class FeelingGoodCard extends React.Component{
 
   render() {
     // eslint-disable-next-line object-curly-newline
-    const { classes, img, desc, title,alfred,avatar,score,shop,service_id, gps } = this.props;
+    const { classes, img, desc, title,alfred,avatar,score,shop,id,gps } = this.props;
 
     return (
    
     
-      <Link href={'serviceByService?service='+service_id+'&gps='+JSON.stringify(gps)}>
+      <Link href={'serviceByService?service='+service+'&gps='+JSON.stringify(gps)}>
       <Card className={classes.card}>
         <CardActionArea style={{cursor:'default'}}>
 
@@ -153,7 +153,6 @@ class FeelingGoodCard extends React.Component{
 FeelingGoodCard.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
   img: PropTypes.string.isRequired,
-  service_id: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(FeelingGoodCard);
