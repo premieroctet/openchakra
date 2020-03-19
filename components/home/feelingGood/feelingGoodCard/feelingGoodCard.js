@@ -115,7 +115,7 @@ class FeelingGoodCard extends React.Component{
     return (
    
     
-      <Link href={'serviceByService?service='+service+'&gps='+JSON.stringify(gps)}>
+      <Link href={'serviceByService?service='+id+'&gps='+JSON.stringify(gps)}>
       <Card className={classes.card}>
         <CardActionArea style={{cursor:'default'}}>
 
