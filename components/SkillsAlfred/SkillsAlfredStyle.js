@@ -12,11 +12,8 @@ export default theme=>({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: 150,
-    marginTop: 20,
-      [theme.breakpoints.down('xs')]: {
-        marginBottom: 30
-      },
+    width: 'auto',
+    margin: 'auto'
   },
   avatarSize:{
     width: 100,

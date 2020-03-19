@@ -1,4 +1,3 @@
-const drawerWidth = '90%';
 export default theme => ({
   mainContainer:{
     marginTop: 100,
@@ -75,8 +74,10 @@ export default theme => ({
   },
   skillsContentContainer:{
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      alignItems : 'center'
+    }
   },
   leftContainer:{
     width: '50%',

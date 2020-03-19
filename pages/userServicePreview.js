@@ -493,12 +493,8 @@ class userServices extends React.Component {
                   </List>
                 </Grid>
                 <Grid style={{marginTop: 30}}>
-                  <Grid>
-                    <Grid>
-                      <Grid className={classes.skillsContentContainer}>
-                        <SkillsAlfred alfred={alfred} widthHr={500}/>
-                      </Grid>
-                    </Grid>
+                  <Grid className={classes.skillsContentContainer}>
+                    <SkillsAlfred alfred={alfred} widthHr={500}/>
                   </Grid>
                 </Grid>
                 {equipments.length !== 0 ?
