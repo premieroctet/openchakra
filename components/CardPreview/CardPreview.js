@@ -28,7 +28,7 @@ import Dialog from '@material-ui/core/Dialog';
 const {computeDistanceKm}=require('../../utils/functions');
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import UserAvatar from '../avatar/UserAvatar';
+import UserAvatar from '../Avatar/UserAvatar';
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;

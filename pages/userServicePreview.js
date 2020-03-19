@@ -14,7 +14,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import UserAvatar from '../components/avatar/UserAvatar';
+import UserAvatar from '../components/Avatar/UserAvatar';
 import SkillsAlfred from '../components/SkillsAlfred/SkillsAlfred';
 import Typography from '@material-ui/core/Typography';
 import Schedule from '../components/Schedule/Schedule';
