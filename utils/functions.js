@@ -13,7 +13,7 @@ const computeDistanceKm = (latlon1, latlon2) => {
         {latitude:latlon2.lat, longitude: latlon2.lng}
       ),
       "km"
-    ).toFixed(2);
+    ).toFixed(0);
   }
   catch (error) {
     console.log("Error:"+error);

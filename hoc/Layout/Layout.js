@@ -2,17 +2,30 @@ import React, { Fragment } from 'react';
 import NavBar from './NavBar/NavBar';
 import Loader from '../../components/Loader';
 
-const Layout = (props) => {
-  const { children } = props;
+class Layout extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      research : ''
+    };
+    this.getDataForSearch = this.getDataForSearch.bind(this)
+  }
 
-  return (
-    <Fragment>
-      <Loader />
-      <NavBar />
-      {children}
-    </Fragment>
-  );
-};
+  getDataForSearch = data =>{
+    this.setState({research: data}, () => this.props.search(this.state.research))
+  }
 
+  render() {
+    const { children } = this.props;
+
+    return(
+      <Fragment>
+        <Loader />
+        <NavBar search={this.getDataForSearch}/>
+        {children}
+      </Fragment>
+    );
+  }
+}
 
 export default Layout;

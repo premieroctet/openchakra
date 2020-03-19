@@ -15,99 +15,15 @@ import Link from 'next/link';
 import setAuthToken from "../../../utils/setAuthToken";
 import Router from "next/router";
 import UserAvatar from '../../../components/Avatar/UserAvatar';
+import SearchInput from '../../../components/SearchInput/SearchInput';
+import styles from './NavBarStyle'
+import PropTypes from 'prop-types';
+import Grid from '@material-ui/core/Grid';
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
 const jwt = require('jsonwebtoken');
 
-const styles = theme => ({
-  root: {
-    width: '100%',
-  },
-  grow: {
-    flexGrow: 1,
-  },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
-    display: 'none',
-  },
-  searchIcon: {
-    width: theme.spacing(9),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-    width: '100%',
-  },
-  inputInput: {
-    paddingTop: theme.spacing,
-    paddingRight: theme.spacing,
-    paddingBottom: theme.spacing,
-    paddingLeft: theme.spacing(10),
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: 200,
-    },
-  },
-  sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
-  },
-  navbarItem: {
-    alignSelf: 'center',
-    color: '#545659',
-    marginRight: '20px',
-    fontSize: '15px'
-  },
-  navbarLink: {
-    textDecoration: 'none',
-    color: '#545659',
-  },
-  navbarLinkMobile: {
-    color: 'black',
-    textDecoration: 'none',
-  },
-  navbarLinkAvatar: {
-    color: 'black',
-    textDecoration: 'none',
-    marginTop: '8%!important',
-  },
-  bigAvatar: {
-    width: 40,
-    height: 40,
-  },
-
-  lemenuavatar: {
-    marginTop: '2.5%!important',
-    marginLeft: '1%!important',
-  },
-});
 
 class NavBar extends Component {
   state = {
@@ -116,6 +32,7 @@ class NavBar extends Component {
     avatarMoreAnchorEl: null,
     logged: false,
     user: null,
+    research: ''
   };
 
   componentDidMount() {
@@ -133,7 +50,7 @@ class NavBar extends Component {
           })
           .catch(err => console.log(err))
     }
-
+    this.getDataForSearch = this.getDataForSearch.bind(this)
 
   }
 
@@ -169,6 +86,10 @@ class NavBar extends Component {
 
   handleMobileMenuClose = () => {
     this.setState({ mobileMoreAnchorEl: null });
+  };
+
+  getDataForSearch = data =>{
+    this.setState({research: data}, () => this.props.search(this.state.research))
   };
 
   render() {
@@ -348,98 +269,102 @@ class NavBar extends Component {
     );
 
     return (
-      <div className={classes.root}>
+      <Grid className={classes.root}>
         <AppBar color="inherit" position="fixed" style={{boxShadow: 'inherit'}}>
           <Toolbar>
-            <Link href={'/'}>
-              <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
-            </Link>
-            <div className={classes.search}>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-              />
-            </div>
-            <div className={classes.grow} />
-            <div className={classes.sectionDesktop}>
-              {user && user.is_alfred ?
-              <Typography className={classes.navbarItem}>
-                <Link href={`/shop?id_alfred=${user._id}`} >
-                  <a className={classes.navbarLink}>
-                    Ma boutique
-                  </a>
+            <Grid style={{display: 'flex', width : '100%'}}>
+              <Grid>
+                <Link href={'/'}>
+                  <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
                 </Link>
-              </Typography>
-              :
-              <Typography className={classes.navbarItem}>
-                <Link href={'/creaShop/creaShop'}>
-                  <a className={classes.navbarLink}>
-                    Créer ma boutique
-                  </a>
-                </Link>
-              </Typography>}
+              </Grid>
+              <Grid style={{display: 'flex', width: '100%', justifyContent : 'end', alignItems : 'center'}}>
+                <Grid className={classes.search}>
+                  <SearchInput search={this.getDataForSearch}/>
+                </Grid>
+                <Grid className={classes.sectionDesktop}>
+                  {user && user.is_alfred ?
+                    <Typography className={classes.navbarItem}>
+                      <Link href={`/shop?id_alfred=${user._id}`} >
+                        <a className={classes.navbarLink}>
+                          Ma boutique
+                        </a>
+                      </Link>
+                    </Typography>
+                    :
+                    <Typography className={classes.navbarItem}>
+                      <Link href={'/creaShop/creaShop'}>
+                        <a className={classes.navbarLink}>
+                          Créer ma boutique
+                        </a>
+                      </Link>
+                    </Typography>}
 
-              {logged ?<React.Fragment><Typography className={classes.navbarItem}>
-                <Link href={'/myShop/messages'}>
-                  <a className={classes.navbarLink}>
-                    Messages
-                  </a>
-                </Link>
-              </Typography></React.Fragment> : null }
-              <Typography className={classes.navbarItem}>
-                <Link href={'/faq'}>
-                  <a className={classes.navbarLink}>
-                    Aide
-                  </a>
-                </Link>
-              </Typography>
-              {logged ? null :
-                <React.Fragment>
-                  <Link href={'/login'}>
-                    <Button variant="outlined" color={'primary'} style={{ marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
-                      Connexion
-                    </Button>
-                  </Link>
-                  <Link href={'/signup'}>
-                <Button
-                style={{ color: 'white'}}
-                variant="contained"
-                color={'primary'}
-                >
-                Inscription
-                </Button>
-                </Link>
-                </React.Fragment>}
-                {logged ?
-                  <React.Fragment>
-
+                  {logged ?<React.Fragment><Typography className={classes.navbarItem}>
+                    <Link href={'/myShop/messages'}>
+                      <a className={classes.navbarLink}>
+                        Messages
+                      </a>
+                    </Link>
+                  </Typography></React.Fragment> : null }
+                  <Typography className={classes.navbarItem}>
+                    <Link href={'/faq'}>
+                      <a className={classes.navbarLink}>
+                        Aide
+                      </a>
+                    </Link>
+                  </Typography>
+                  {logged ? null :
                     <React.Fragment>
-                      <IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}>
-                        <UserAvatar user={user} className={classes.bigAvatar} />
-                      </IconButton>
-                    </React.Fragment>
+                      <Link href={'/login'}>
+                        <Button variant="outlined" color={'primary'} style={{ marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
+                          Connexion
+                        </Button>
+                      </Link>
+                      <Link href={'/signup'}>
+                        <Button
+                          style={{ color: 'white'}}
+                          variant="contained"
+                          color={'primary'}
+                        >
+                          Inscription
+                        </Button>
+                      </Link>
+                    </React.Fragment>}
+                  {logged ?
+                    <React.Fragment>
 
-                </React.Fragment> : null  }
-            </div>
-            <div className={classes.sectionMobile}>
-                {logged ? mobileavatar :
-                  <React.Fragment>
-                    <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theiconbutton}>
-                      <MoreIcon className={classes.bigIcon} />
-                    </IconButton>
-                  </React.Fragment>}
-            </div>
+                      <React.Fragment>
+                        <IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}>
+                          <UserAvatar user={user} className={classes.bigAvatar} />
+                        </IconButton>
+                      </React.Fragment>
+
+                    </React.Fragment> : null  }
+                </Grid>
+                <Grid className={classes.sectionMobile}>
+                  {logged ? mobileavatar :
+                    <React.Fragment>
+                      <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theiconbutton}>
+                        <MoreIcon className={classes.bigIcon} />
+                      </IconButton>
+                    </React.Fragment>}
+                </Grid>
+              </Grid>
+            </Grid>
           </Toolbar>
         </AppBar>
         {renderMenu}
         {renderMobileMenu}
         {logged ? renderAvatarMenu : null}
-      </div>
+      </Grid>
     );
   }
 }
+
+NavBar.propTypes = {
+  classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
+};
 
 export default withStyles(styles)(NavBar);

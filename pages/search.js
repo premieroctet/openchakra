@@ -26,6 +26,7 @@ import 'react-dates/lib/css/_datepicker.css';
 import Tooltip from '@material-ui/core/Tooltip';
 import CardPreview from '../components/CardPreview/CardPreview';
 import AlgoliaPlaces from "algolia-places-react";
+import SearchInput from '../components/SearchInput/SearchInput';
 
 const geolib = require('geolib');
 const _ = require('lodash');
@@ -106,6 +107,7 @@ class SearchLogin extends React.Component {
             statusFilterVisible:false,
             dateFilterVisible:false,
         }
+        this.needReasearch = this.needReasearch.bind(this)
     }
 
     static getInitialProps ({ query: { service, city, date, dateISO, day, hour, gps, address } }) {
@@ -174,7 +176,6 @@ class SearchLogin extends React.Component {
           statusFilterVisible:false,
         });
         */
-
         const address = this.state.selectedAddress;
         var filters={}
         // GPS
@@ -230,13 +231,9 @@ class SearchLogin extends React.Component {
        this.setState({filterDateVisible:false});
      }
 
-     keyPress(e) {
-       if(e.keyCode === 13){
-         this.search();
-       }
-     }
-
-
+    needReasearch = data =>{
+        this.setState({research : data}, () => this.search())
+    }
 
     render() {
         const {classes} = this.props;
@@ -249,49 +246,32 @@ class SearchLogin extends React.Component {
 
         return (
             <Fragment>
-                <Layout>
+                <Layout search={this.needReasearch}>
                     <Grid container className={classes.bigContainer}>
+
+                      {/*----------------------------------------- debut -----------------------------------------------------------------------*/}
                         <Grid container style={{boxShadow: 'rgba(51, 51, 51, 0.31) 0px 5px 7px -5px', paddingBottom: '10px', paddingTop: '10px', position: 'sticky', top: '55px', backgroundColor: 'white', zIndex: 11}}>
-                            <Grid item xs={4} style={{textAlign: 'center',width: '100%', margin: 'auto', color: '#545659' }}>
-                                <TextField
-                                    id="input-with-icon-textfield"
-                                    InputProps={{
-                                        style:{height: 40, color: '#545659'},
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <Search />
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                    placeholder={'Quel service ?'}
-                                    variant={"outlined"}
-                                    value={this.state.research}
-                                    style={{width: '100%', margin: 'auto'}}
-                                    onChange={(event)=>{this.setState({research: event.target.value});}}
-                                    onKeyDown={(e)=>this.keyPress(e)}
-                                />
-                            </Grid>
+                          {/*<SearchInput search={this.needReasearch}/>*/}
                             <Grid item xs={4} style={{fontFamily: 'Helvetica Neue, Helvetica,sans-serif',width: '100%', margin: 'auto'}}>
                             {this.state.user ?
                             <TextField
-                                    InputProps={{ style:{height: 40}, }}
-                                    id="outlined-select-currency"
-                                    select
-                                    style={{width:'100%', marginTop: '6px'}}
-                                    value={this.state.selectedAddress}
-                                    name={'selectedAddress'}
-                                    onChange={(e) => {this.onChange(e);}}
-                                    margin="normal"
-                                    variant="outlined"
+                                InputProps={{ style:{height: 40}, }}
+                                id="outlined-select-currency"
+                                select
+                                style={{width:'100%', marginTop: '6px'}}
+                                value={this.state.selectedAddress}
+                                name={'selectedAddress'}
+                                onChange={(e) => {this.onChange(e);}}
+                                margin="normal"
+                                variant="outlined"
                                 >
-                                    <MenuItem value={address}>
-                                        Adresse principale, <em> {' '+address.address} {address.zip_code},{address.city}</em>
-                                    </MenuItem>
-                                    {otherAddress.map(e => (
-                                        <MenuItem key={e._id} value={e}>
-                                            {e.label+', '} <em> {' '+e.address},{e.zip_code} {e.city}</em>
-
-                                        </MenuItem>
+                                <MenuItem value={address}>
+                                    Adresse principale, <em> {' '+address.address} {address.zip_code},{address.city}</em>
+                                </MenuItem>
+                                {otherAddress.map(e => (
+                                  <MenuItem key={e._id} value={e}>
+                                      {e.label+', '} <em> {' '+e.address},{e.zip_code} {e.city}</em>
+                                  </MenuItem>
                                     ))}
                                     <MenuItem value={'all'}>
                                         Partout, Rechercher des Alfred partout
@@ -325,11 +305,11 @@ class SearchLogin extends React.Component {
                             <Grid item xs={3} className={classes.webvoir} style={{display:"flex",alignItems:"center"}}>
                                     <Button variant={"contained"} onClick={()=>this.search()} color={"primary"} style={{color:'white'}}>Rechercher</Button>
                             </Grid>
-                            <Grid item xs={3} className={classes.mobilevoir} style={{display:"flex",alignItems:"center"}}>
-                                    <Button variant={"contained"} onClick={()=>this.search()} color={"primary"} style={{color:'white'}}><img src="../../static/search-solid1.svg" style={{width: 15, height: 15}}/></Button>
-                            </Grid>
+
                         </Grid>
-                        <Grid container className={classes.respfilter} style={{position: 'sticky', top: '125px', zIndex: 10, background: 'white', height: 60}}>
+                      {/*----------------------------------------- fin -----------------------------------------------------------------------*/}
+
+                      <Grid container className={classes.respfilter} style={{position: 'sticky', top: '125px', zIndex: 10, background: 'white', height: 60}}>
                             <Grid item xs={12} style={{height: 50}}>
                                 <Grid container>
                                     {this.state.statusFilterVisible ?
