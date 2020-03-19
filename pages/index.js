@@ -7,7 +7,7 @@ import Profiteandlearn from '../components/home/profite&learn/profite&learn'
 import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
 import NearbyYou from '../components/home/NearbyYou/NearbyYou';
 import Homeheader from '../components/home/Homeheader/Homeheader';
-import Feelingood from '../components/home/feelingood/feelingood';
+import FeelingGood from '../components/home/feelingGood/feelingGood';
 import Wellbeing from '../components/home/Wellbeing/Wellbeing';
 import Proposeservice from '../components/home/proposeservice/Proposeservice';
 import Assureback from '../components/home/AssureBack/Assureback';
@@ -91,7 +91,7 @@ class Home extends React.Component {
                 <Section6 gps={gps}/>
                 <Wellbeing gps={gps}/>
                 <Section8 gps={gps}/>
-                <Feelingood gps={gps}/>
+                <FeelingGood gps={gps}/>
                 <Section10 gps={gps}/>
                 <Proposeservice />
                 <Section12 gps={gps}/>

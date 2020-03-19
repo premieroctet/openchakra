@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import FeelingoodCard from './feelingoodCard/feelingoodCard';
+import FeelingGoodCard from './feelingGoodCard/feelingGoodCard';
 import axios from 'axios';
 import Link from 'next/link';
 
@@ -59,7 +59,7 @@ function shuffleArray(array) {
   return array;
 }
 
-class feelingood extends React.Component{
+class FeelingGood extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
@@ -95,7 +95,7 @@ class feelingood extends React.Component{
     const cards = resdata.slice(0, 4).map((e,index) => (
         <Grid key={index} item xs={12} sm={6} md={3}>
           <Link href={'/serviceByService?service='+e._id+'&gps='+JSON.stringify(gps)}>
-          <FeelingoodCard img={e.picture} title={e.label} />
+          <FeelingGoodCard service_id={e._id} img={e.picture} title={e.label} gps={gps}/>
           </Link>
         </Grid>
     ));
@@ -129,8 +129,8 @@ class feelingood extends React.Component{
   }
 }
 
-feelingood.propTypes = {
+FeelingGood.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
-export default withStyles(styles)(feelingood);
+export default withStyles(styles)(FeelingGood);

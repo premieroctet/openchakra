@@ -106,13 +106,12 @@ const styles = theme => ({
 
 
 
-class feelingoodCard extends React.Component{
+class FeelingGoodCard extends React.Component{
 
   render() {
     // eslint-disable-next-line object-curly-newline
     const { classes, img, desc, title,alfred,avatar,score,shop,service_id, gps } = this.props;
 
-    console.log("FeelingGood:"+service_id);
     return (
    
     
@@ -131,7 +130,7 @@ class feelingoodCard extends React.Component{
         </CardMedia>
         <CardContent>
           <Typography variant="h6" component="h2" style={{textAlign:'center'}}>
-            <center>{title}</center>
+            <center>FeelingGood {title}</center>
           </Typography>
 
           <Grid container>
@@ -151,12 +150,13 @@ class feelingoodCard extends React.Component{
 
 };
 
-feelingoodCard.propTypes = {
+FeelingGoodCard.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
   img: PropTypes.string.isRequired,
+  service_id: PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(feelingoodCard);
+export default withStyles(styles)(FeelingGoodCard);
 function newFunction() {
   return <Fragment></Fragment>;
 }
