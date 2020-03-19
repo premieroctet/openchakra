@@ -104,16 +104,20 @@ const styles = theme => ({
   },
 });
 
-const feelingoodCard = (props) => {
-  // eslint-disable-next-line object-curly-newline
-  const { classes, img, desc, title,alfred,avatar,score,shop,id } = props;
 
-  return (
+
+class FeelingGoodCard extends React.Component{
+
+  render() {
+    // eslint-disable-next-line object-curly-newline
+    const { classes, img, desc, title,alfred,avatar,score,shop,id,gps } = this.props;
+
+    return (
    
     
-    <Link href={'serviceByService?service='+id}>
-    <Card className={classes.card}>
-      <CardActionArea style={{cursor:'default'}}>
+      <Link href={'serviceByService?service='+id+'&gps='+JSON.stringify(gps)}>
+      <Card className={classes.card}>
+        <CardActionArea style={{cursor:'default'}}>
 
         <CardMedia className={classes.media} image={img}>
           <div className={classes.lightOverlay}>
@@ -126,7 +130,7 @@ const feelingoodCard = (props) => {
         </CardMedia>
         <CardContent>
           <Typography variant="h6" component="h2" style={{textAlign:'center'}}>
-            <center> {title}</center>
+            <center>FeelingGood {title}</center>
           </Typography>
 
           <Grid container>
@@ -141,15 +145,17 @@ const feelingoodCard = (props) => {
 
     </Card>
     </Link>
-  );
+  )
+}
+
 };
 
-feelingoodCard.propTypes = {
+FeelingGoodCard.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
   img: PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(feelingoodCard);
+export default withStyles(styles)(FeelingGoodCard);
 function newFunction() {
   return <Fragment></Fragment>;
 }
