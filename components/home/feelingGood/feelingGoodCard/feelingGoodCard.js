@@ -130,7 +130,7 @@ class FeelingGoodCard extends React.Component{
         </CardMedia>
         <CardContent>
           <Typography variant="h6" component="h2" style={{textAlign:'center'}}>
-            <center>FeelingGood {title}</center>
+            <center>{title}</center>
           </Typography>
 
           <Grid container>
