@@ -94,7 +94,6 @@ export default theme => ({
   },
   sizeSchedulle:{
     '& .rbc-toolbar':{
-      flexDirection: 'column'
     },
     '& .rbc-time-view':{
       zIndex:0

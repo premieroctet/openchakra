@@ -176,7 +176,7 @@ class UserServicesPreview extends React.Component {
     this.state.prestations.forEach( p => {
       if (count[p._id]>0) {
         total += count[p._id]*p.price;
-      } 
+      }
     });
     total+=su.travel_tax ? su.travel_tax : 0;
     total+=su.pick_tax ? su.pick_tax : 0;
@@ -243,7 +243,7 @@ class UserServicesPreview extends React.Component {
           <Grid style={{marginTop: 20}}>
 
             {/* Start filter */ }
-            { Object.entries(filters).map( (entry) => { 
+            { Object.entries(filters).map( (entry) => {
               var fltr=entry[0];
               var prestations=entry[1];
               return (
@@ -260,12 +260,12 @@ class UserServicesPreview extends React.Component {
               <Grid style={{display: 'flex', alignItems: 'center', width : '100%'}}>
                 <Grid>
                   <TextField
-                    id="outlined-number" 
-					label="Quantité" 
-					type="number" 
-					className={classes.textField} 
-					InputLabelProps={{ shrink: true, }} 
-					margin="normal" 
+                    id="outlined-number"
+					label="Quantité"
+					type="number"
+					className={classes.textField}
+					InputLabelProps={{ shrink: true, }}
+					margin="normal"
 					variant="outlined"
                     name={p._id}
  					value={this.state.count[p._id]}
@@ -467,7 +467,7 @@ class UserServicesPreview extends React.Component {
                 <Grid className={classes.responsiveListContainer}>
                   <List dense={this.state.dense} className={classes.flexPosition}>
                     <Grid className={classes.itemListContainer}>
-                      <Grid>
+                      <Grid className={classes.marginRight}>
                         <ListItem className={classes.noPadding}>
                           <ListItemIcon className={classes.minWidth}>
                             <img src={serviceUser.graduated && serviceUser.graduated !== "" && serviceUser.graduated !== null && serviceUser.graduated !== undefined ? '../../static/assets/img/iconCardAlfred/graduated.svg' : '../../static/assets/img/iconCardAlfred/no_graduated.svg'} alt={'Diplome'} title={'Diplome'} className={classes.imageStyle}/>
@@ -478,7 +478,7 @@ class UserServicesPreview extends React.Component {
                           />
                         </ListItem>
                       </Grid>
-                      <Grid>
+                      <Grid className={classes.marginRight}>
                         <ListItem className={classes.noPadding} style={{marginLeft : 5}}>
                           <ListItemIcon  className={classes.minWidth}>
                             <img src={serviceUser.is_certified && serviceUser.is_certified !== "" && serviceUser.is_certified !== null && serviceUser.is_certified !== undefined ? '../../static/assets/img/iconCardAlfred/certificate.svg' : '../../static/assets/img/iconCardAlfred/no_certificate.svg'} alt={'Certifié'} title={'Certifié'} className={classes.imageStyle}/>
@@ -682,7 +682,7 @@ class UserServicesPreview extends React.Component {
                 <Grid className={classes.commentaryContent}>
                   <Grid style={{display: 'flex', alignItems: 'center'}}>
                     <Grid>
-                      <Typography variant="h6">{alfred.number_of_reviews} Commentaires</Typography>
+                      <Typography variant="h6">{alfred.number_of_reviews} Commentaire(s)</Typography>
                     </Grid>
                     <Grid>
                       <Grid>

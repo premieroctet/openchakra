@@ -34,4 +34,7 @@ export default theme => ({
       fontWeight: 'bold',
       border: '2px solid white'
     },
+  margin: {
+    height: 'auto',
+  },
 })

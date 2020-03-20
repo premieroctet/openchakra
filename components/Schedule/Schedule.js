@@ -265,6 +265,7 @@ class Schedule extends React.Component {
           // FIX: use state instead of props
           events={events}
           defaultView={Views.WEEK}
+          views={['week', 'day', 'month']}
           defaultDate={new Date()}
           onSelectSlot={this.toggleAddModal}
           onSelectEvent={this.toggleEditModal}

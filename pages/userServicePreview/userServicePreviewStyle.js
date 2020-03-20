@@ -25,7 +25,6 @@ export default theme => ({
   },
   boxRating:{
     margin: 0,
-    marginLeft: 15
   },
   rating:{
     marginLeft: -15,
@@ -187,7 +186,6 @@ export default theme => ({
   itemListContainer:{
     width: '100%',
     display: 'flex',
-    justifyContent: 'space-between',
     [theme.breakpoints.down('xs')]: {
       width: '100%',
       flexDirection:'column',
@@ -325,5 +323,8 @@ export default theme => ({
       marginLeft : 15,
       marginRight : 15
     }
+  },
+  marginRight:{
+    marginRight: 20
   }
 })

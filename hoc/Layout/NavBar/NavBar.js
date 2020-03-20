@@ -282,7 +282,7 @@ class NavBar extends Component {
               <Grid className={classes.search}>
                 <SearchInput search={this.getDataForSearch}/>
               </Grid>
-              <Grid style={{display: 'flex', width: '100%', justifyContent : 'end', alignItems : 'center'}}>
+              <Grid style={{display: 'flex', width: '100%', justifyContent : 'flex-end', alignItems : 'center'}}>
                 <Grid className={classes.sectionDesktop}>
                   {user && user.is_alfred ?
                     <Typography className={classes.navbarItem}>
