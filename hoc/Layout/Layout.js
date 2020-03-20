@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import NavBar from './NavBar/NavBar';
 import Loader from '../../components/Loader';
+import PropTypes from 'prop-types';
 
 class Layout extends React.Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class Layout extends React.Component {
 
   getDataForSearch = data =>{
     this.setState({research: data}, () => this.props.search(this.state.research))
-  }
+  };
 
   render() {
     const { children } = this.props;

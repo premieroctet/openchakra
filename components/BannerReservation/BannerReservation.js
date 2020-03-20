@@ -37,7 +37,6 @@ class BannerReservation extends React.Component{
                 <Link href={`/shop?id_alfred=${user._id}`} >
                   <Fab
                     variant="extended"
-                    size="medium"
                     color="primary"
                     aria-label="add"
                     className={classes.margin}

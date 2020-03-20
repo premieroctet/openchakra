@@ -1,3 +1,5 @@
+import { fade } from '@material-ui/core/styles/colorManipulator';
+
 export default theme =>({
     root: {
       width: '100%',
@@ -6,7 +8,8 @@ export default theme =>({
       flexGrow: 1,
     },
     search: {
-      marginRight: 20
+      marginLeft: 20,
+      width: '70%'
     },
     searchIcon: {
       width: theme.spacing(9),
@@ -72,4 +75,18 @@ export default theme =>({
       marginTop: '2.5%!important',
       marginLeft: '1%!important',
     },
+    menuButton: {
+      marginLeft: -12,
+      marginRight: 20,
+    },
+    title: {
+      display: 'none',
+      [theme.breakpoints.up('sm')]: {
+        display: 'block',
+      },
+    },
+  theavatarbutton: {
+    width: 45,
+    height: 45,
+  },
 })

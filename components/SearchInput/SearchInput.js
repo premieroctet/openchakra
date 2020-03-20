@@ -8,16 +8,24 @@ import styles from './SearchInputStyle'
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import FormControl from '@material-ui/core/FormControl';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputLabel from '@material-ui/core/InputLabel';
+import Paper from '@material-ui/core/Paper';
+import InputBase from '@material-ui/core/InputBase';
+import Divider from '@material-ui/core/Divider';
+import Router from 'next/router';
+import moment from 'moment';
+import axios from 'axios';
+const { config } = require('../../config/config');
+const url = config.apiUrl;
 
 class SearchInput extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
       research: '',
-    }
+      gps:'',
+      city: ''
+    };
+    this.findService = this.findService.bind(this)
   }
 
   keyPress(e) {
@@ -26,34 +34,34 @@ class SearchInput extends React.Component{
     }
   }
 
+  findService(){
+    if(this.state.research === ""){
+      Router.push(`/search`)
+    }else if(Router.pathname === '/search'){
+      this.props.search(this.state.research)
+    }else{
+      Router.push(`/search?service=${this.state.research}`)
+    }
+  }
+
   render() {
     const {classes} = this.props;
     return (
       <Grid className={classes.mainContainer}>
-        <Grid>
-          <FormControl variant="outlined"  margin='dense'>
-            <InputLabel variant={"outlined"} style={{backgroundColor :'white'}}>Quel service ? </InputLabel>
-            <OutlinedInput
-              Element
-              id="input-with-icon-textfield"
-              type={'text'}
-              variant="outlined"
-              value={this.state.research}
-              className={classes.textField}
+        <Grid style={{width: '100%'}}>
+          <Paper component="form" className={classes.root}>
+            <IconButton className={classes.iconButton} aria-label="menu" onClick={this.findService}>
+              <Search />
+            </IconButton>
+            <Divider className={classes.divider} orientation="vertical" />
+            <InputBase
+              className={classes.input}
+              placeholder="Quel service ?"
+              inputProps={{ 'aria-label': 'search google maps' }}
               onChange={(event)=>{this.setState({research: event.target.value});}}
               onKeyDown={(e)=>this.keyPress(e)}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="search"
-                    onClick={()=>this.props.search(this.state.research)}
-                  >
-                    {<Search />}
-                  </IconButton>
-                </InputAdornment>
-              }
             />
-          </FormControl>
+          </Paper>
         </Grid>
       </Grid>
     )

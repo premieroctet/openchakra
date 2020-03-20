@@ -265,14 +265,15 @@ class Schedule extends React.Component {
           // FIX: use state instead of props
           events={events}
           defaultView={Views.WEEK}
+          views={['week', 'day', 'month']}
           defaultDate={new Date()}
           onSelectSlot={this.toggleAddModal}
           onSelectEvent={this.toggleEditModal}
           dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
           messages={{
             'today': "Aujourd'hui",
-            "previous":'précédente',
-            "next":"suivante",
+            "previous":'<',
+            "next":">",
             "month": "Mois",
             "week": "Semaine",
             "day": "Aujourd'hui",
