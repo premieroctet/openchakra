@@ -106,17 +106,16 @@ class SearchLogin extends React.Component {
             focusedInput: null,
             statusFilterVisible:false,
             dateFilterVisible:false,
-        }
+        };
         this.needReasearch = this.needReasearch.bind(this)
     }
 
-    static getInitialProps ({ query: { service, city, date, dateISO, day, hour, gps, address } }) {
+    static getInitialProps ({ query: { service, city, date, dateISO, day, hour, gps, address, research } }) {
       // FIX : set city nin AlgoPlaces if provided
-      return { service: service, city:city, date:date, dateISO: dateISO,day:day, hour:hour, gps:gps, address:address }
+      return { service: service, city:city, date:date, dateISO: dateISO,day:day, hour:hour, gps:gps, address:address, research:research }
     }
 
     onChangeCity({suggestion}) {
-      console.log("Change city");
       this.setState({gps:suggestion.latlng, city: suggestion.name});
     };
 
@@ -146,7 +145,6 @@ class SearchLogin extends React.Component {
 
     onChange = e => {
         var {name, value} = e.target;
-        console.log("onChange:"+name, value);
         this.setState({ [e.target.name]: e.target.value });
         if (name === 'selectedAddress') {
           console.log("Selected:"+JSON.stringify(value));
@@ -240,9 +238,8 @@ class SearchLogin extends React.Component {
         const {address, user, otherAddress, categories, gps} = this.state;
         var research = this.state.research;
         const serviceUsers = this.state.serviceUsersDisplay;
-
         research = research.trim();
-        console.log("GPS:"+JSON.stringify(gps));
+
 
         return (
           <Fragment>

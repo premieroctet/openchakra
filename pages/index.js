@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { Fragment } from 'react';
-import Layout from "../hoc/Layout/Layouthome";
+import Layout from "../hoc/Layout/Layout";
 import Footer from "../hoc/Layout/Footer/Footer";
 import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
 import Profiteandlearn from '../components/home/profite&learn/profite&learn'
@@ -33,7 +33,7 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          gps:null, 
+          gps:null,
           logged:false
         }
     }

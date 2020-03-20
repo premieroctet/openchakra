@@ -4,11 +4,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
 import axios from "axios";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles} from '@material-ui/core/styles';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Link from 'next/link';
@@ -26,14 +24,18 @@ const jwt = require('jsonwebtoken');
 
 
 class NavBar extends Component {
-  state = {
-    anchorEl: null,
-    mobileMoreAnchorEl: null,
-    avatarMoreAnchorEl: null,
-    logged: false,
-    user: null,
-    research: ''
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      anchorEl: null,
+      mobileMoreAnchorEl: null,
+      avatarMoreAnchorEl: null,
+      logged: false,
+      user: null,
+      research: ''
+    };
+    this.getDataForSearch = this.getDataForSearch.bind(this);
+  }
 
   componentDidMount() {
     const token = localStorage.getItem('token');
@@ -50,7 +52,6 @@ class NavBar extends Component {
           })
           .catch(err => console.log(err))
     }
-    this.getDataForSearch = this.getDataForSearch.bind(this)
 
   }
 
@@ -272,16 +273,16 @@ class NavBar extends Component {
       <Grid className={classes.root}>
         <AppBar color="inherit" position="fixed" style={{boxShadow: 'inherit'}}>
           <Toolbar>
-            <Grid style={{display: 'flex', width : '100%'}}>
+            <Grid style={{display: 'flex', width : '100%', alignItems: 'center'}}>
               <Grid>
                 <Link href={'/'}>
                   <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
                 </Link>
               </Grid>
+              <Grid className={classes.search}>
+                <SearchInput search={this.getDataForSearch}/>
+              </Grid>
               <Grid style={{display: 'flex', width: '100%', justifyContent : 'end', alignItems : 'center'}}>
-                <Grid className={classes.search}>
-                  <SearchInput search={this.getDataForSearch}/>
-                </Grid>
                 <Grid className={classes.sectionDesktop}>
                   {user && user.is_alfred ?
                     <Typography className={classes.navbarItem}>
