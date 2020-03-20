@@ -189,8 +189,10 @@ class SearchLogin extends React.Component {
        axios.post('/myAlfred/api/serviceUser/search', filters)
          .then(res => {
            let serviceUsers = res.data;
-           serviceUsers = _.orderBy(serviceUsers,['level','number_of_views','graduated','is_certified','user.creation_date'],
+           /**
+              serviceUsers = _.orderBy(serviceUsers,['level','number_of_views','graduated','is_certified','user.creation_date'],
               ['desc','desc','desc','desc','desc']);
+           */
            this.setState({serviceUsers:serviceUsers, serviceUsersDisplay:serviceUsers});
            axios.get(url+'myAlfred/api/category/all/sort')
              .then(res => {

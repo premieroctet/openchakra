@@ -238,7 +238,6 @@ class Schedule extends React.Component {
     const { classes, title, subtitle, selectable, height } = this.props;
 
     let events = availabilities2events(this.props.availabilities);
-    console.log("Events rendered:"+JSON.stringify(events[0]));
 
     return (
       <Grid style={{height: height}}>
