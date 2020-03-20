@@ -272,8 +272,8 @@ class Schedule extends React.Component {
           dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
           messages={{
             'today': "Aujourd'hui",
-            "previous":'précédente',
-            "next":"suivante",
+            "previous":'<',
+            "next":">",
             "month": "Mois",
             "week": "Semaine",
             "day": "Aujourd'hui",
