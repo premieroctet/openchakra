@@ -1,5 +1,6 @@
 import _ from 'lodash';
 const { inspect } = require('util');
+const isEmpty=require('../server/validation/is-empty');
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -46,8 +47,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import CloseIcon from '@material-ui/icons/Close';
 import EditIcon from '@material-ui/icons/Edit';
-
-
+const {COMM_CLIENT}=require('../utils/consts');
+const moment = require('moment');
+moment.locale('fr');
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
@@ -74,8 +76,12 @@ class UserServicesPreview extends React.Component {
       mobileOpen: false,
       setMobileOpen: false,
       bottom: false,
+      commission: 0,
       total: 0,
       location:null,
+      date:null,
+      time:null,
+      errors:{},
     }
     this.onQtyChanged = this.onQtyChanged.bind(this);
   }
@@ -92,10 +98,8 @@ class UserServicesPreview extends React.Component {
     );
     axios.get(url + "myAlfred/api/users/current").then(res => {
       let user = res.data;
-      this.setState({
-        user: user,
-      });
-    })
+      this.setState({ user: user, });
+      })
       .catch(err => {
         console.log(err);
         if (err.response.status === 401 || err.response.status === 403) {
@@ -106,7 +110,6 @@ class UserServicesPreview extends React.Component {
 
     axios.get(url + `myAlfred/api/serviceUser/${id}`).then(res => {
       let serviceUser = res.data;
-      console.log("ServiceUser:"+JSON.stringify(serviceUser.location));
       // Prestas booked : 0 for each
       var count = {}
       serviceUser.prestations.forEach( p => count[p._id]=0);
@@ -121,6 +124,12 @@ class UserServicesPreview extends React.Component {
         count: count,
         location: location,
       });
+      axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
+        .then(res => {
+          let availabilities = res.data;
+          this.setState({ availabilities: availabilities });
+        })
+        .catch(err => console.log(err));
       axios.get(url + "myAlfred/api/shop/alfred/" + this.state.alfred._id).then(res => {
         let shop = res.data;
         this.setState({
@@ -130,10 +139,27 @@ class UserServicesPreview extends React.Component {
           strict: shop.strict_cancel,
         });
       })
-        .catch(err => console.log(err));
+      .catch(err => console.log(err));
     }).catch(err =>{
       console.log(err)
     });
+    this.checkBook();
+  }
+
+  checkBook = () => {
+    var errors={}
+    console.log("checkBook:"+this.state.total,this.state.serviceUser.minimum_basket);
+    if (this.state.total<this.state.serviceUser.minimum_basket) {
+      errors['total']='Commande minimum de '+this.state.serviceUser.minimum_basket+'€ requise';
+    }
+    if (isEmpty(this.state.date)) {
+      errors['date']='Sélectionner une date';
+    }
+    if (isEmpty(this.state.time)) {
+      errors['time']='Sélectionner une heure';
+    }
+    this.setState({errors:errors});
+    console.log("checkBook:"+JSON.stringify(errors));
   }
 
   extractFilters() {
@@ -153,6 +179,12 @@ class UserServicesPreview extends React.Component {
     }
     this.setState({ ...this.state, [side]: open });
   };
+
+  onChange = event => {
+    const {name, value}=event.target;
+    this.setState({[name]:value}, () => this.checkBook());
+    console.log("Changed:"+name, value);
+  }
 
   onLocationChanged = (id, checked) => {
     console.log(id, checked);
@@ -178,14 +210,26 @@ class UserServicesPreview extends React.Component {
         total += count[p._id]*p.price;
       } 
     });
-    total+=su.travel_tax ? su.travel_tax : 0;
-    total+=su.pick_tax ? su.pick_tax : 0;
-    this.setState({total:total})
+    total+=su.travel_tax ? parseInt(su.travel_tax) : 0;
+    total+=su.pick_tax ? parseInt(su.pick_tax) : 0;
+    var commission=total*COMM_CLIENT;
+    console.log(typeof(commission), typeof(total));
+    total+=commission;
+    this.setState({total:total, commission:commission}, () => this.checkBook())
+  }
+
+  getLocationLabel = () => {
+    const titles={'client': 'A mon adresse principale', 'alfred': 'Chez '+this.state.alfred.firstname, 'visio': 'En visio'};
+    if (!this.state.location) {
+      return ''; 
+    } else {
+      return titles[this.state.location];
+    }
   }
 
   render() {
     const {classes} = this.props;
-    const {location, user, serviceUser, shop, service, equipments, userName, alfred, container} = this.state;
+    const {date, time, location, user, serviceUser, shop, service, equipments, userName, alfred, container, errors} = this.state;
 
    const filters = this.extractFilters();
 
@@ -195,13 +239,12 @@ class UserServicesPreview extends React.Component {
       },
     })(Rating);
 
-    console.log("Location:"+location);
     const drawer = side => (
       <Grid className={classes.borderContentRight}>
         <Grid style={{marginBottom: 30}}>
           <Grid style={{display: 'flex', justifyContent: 'space-between' }}>
             <Grid>
-              <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>Date & Heure</Typography>
+              <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>Date & heure</Typography>
             </Grid>
             <Hidden lgUp>
               <Grid>
@@ -218,9 +261,11 @@ class UserServicesPreview extends React.Component {
                 label="Date"
                 type="date"
                 className={classes.textField}
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                InputLabelProps={{ shrink: true, }}
+                name="date"
+                value={this.state.date}
+                onChange={this.onChange}
+                error={errors.date}
               />
             </Grid>
             <Grid style={{marginLeft: 50}}>
@@ -229,16 +274,18 @@ class UserServicesPreview extends React.Component {
                 label="Heure"
                 type="time"
                 className={classes.textField}
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                InputLabelProps={{ shrink: true, }}
+                name="time"
+                value={this.state.time}
+                onChange={this.onChange}
+                error={errors.time}
               />
             </Grid>
           </Grid>
         </Grid>
         <Grid style={{marginBottom: 30}}>
-          <Grid>
-            <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>Mes prestations</Typography>
+          <Grid error={errors.prestations}>
+            <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}} error={errors.prestations}>Mes prestations</Typography>
           </Grid>
           <Grid style={{marginTop: 20}}>
 
@@ -317,6 +364,7 @@ class UserServicesPreview extends React.Component {
           }
         </Grid>
       </Grid>
+        { serviceUser.pick_tax || serviceUser.travel_tax ?
         <Grid style={{marginBottom: 30}}>
         <Grid>
           <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Option de la prestation</Typography>
@@ -335,7 +383,8 @@ class UserServicesPreview extends React.Component {
           </Grid>
           :null
         }
-      </Grid>
+      </Grid>:null
+      }
         <Grid style={{marginBottom: 30}}>
         <Grid>
           <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Détails de la prestation</Typography>
@@ -346,7 +395,7 @@ class UserServicesPreview extends React.Component {
               <RoomIcon color={'primary'}/>
             </Grid>
             <Grid style={{marginLeft: 10}}>
-              <label>A mon adresse principale</label>
+              <label>{ this.getLocationLabel()}</label>
             </Grid>
           </Grid>
           <Grid style={{display: 'flex', alignItems : 'center'}}>
@@ -354,7 +403,7 @@ class UserServicesPreview extends React.Component {
               <CalendarTodayIcon color={'primary'}/>
             </Grid>
             <Grid style={{marginLeft: 10}}>
-              <label>Le 23/03/2020 à 12h30</label>
+              <label>Le {date?moment(date).format('DD/MM/YYYY'):''} à {time}</label>
             </Grid>
           </Grid>
         </Grid>
@@ -373,13 +422,24 @@ class UserServicesPreview extends React.Component {
           </Grid>
           )})
           }
+          { /* Start commission */ }
+          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+            <Grid>
+              <p>Commission (EUR)</p>
+            </Grid>
+            <Grid>
+              <p>{this.state.commission.toFixed(2)}</p>
+            </Grid>
+          </Grid>
+          { /* End commission */ }
           { /* Start total */ }
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
               <p>Total (EUR)</p>
             </Grid>
             <Grid>
-              <p>{this.state.total}</p>
+              <p>{this.state.total.toFixed(2)}</p>
+              <em  style={{color:'red'}}>{errors['total']}</em>
             </Grid>
           </Grid>
           { /* End total */ }
@@ -406,6 +466,7 @@ class UserServicesPreview extends React.Component {
               color="secondary"
               aria-label="add"
               className={classes.margin}
+              disabled={!isEmpty(errors)}
             >
               Réserver
             </Button>
@@ -545,7 +606,7 @@ class UserServicesPreview extends React.Component {
                     </Grid>
                   </Grid>
                   <Grid>
-                    <Schedule  availabilities={[]} services={[]} selectable={false} height={400}/>
+                    <Schedule  availabilities={this.state.availabilities} services={[]} selectable={false} height={400}/>
                   </Grid>
                 </Grid>
                 <Grid className={classes.basketMinimumContainer}>
@@ -586,7 +647,7 @@ class UserServicesPreview extends React.Component {
                       <CalendarTodayIcon fontSize="large"  color={'primary'}/>
                     </Grid>
                     <Grid style={{fontSize: 'large',  marginLeft: 15}}>
-                      {serviceUser.deadline_before_booking} de délai de prévenance
+                      {serviceUser.deadline_before_booking}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -600,6 +661,9 @@ class UserServicesPreview extends React.Component {
                   <Grid>
                     <Grid className={classes.textContentPerimeter}>
                       <p>Le périmètre d’intervention de votre Alfred est la zone dans laquelle votre Alfred accepte de se déplacer pour réaliser ses services. Par mesure de sécurité et conformément à notre politique de confidentialité, l’adresse de votre Alfred n’est pas communiquée. </p>
+                    </Grid>
+                    <Grid style={{fontSize: 'large',  marginLeft: 15}}>
+                      {serviceUser.perimeter} km
                     </Grid>
                   </Grid>
                   <Grid>
