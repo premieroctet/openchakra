@@ -106,13 +106,10 @@ class ButtonSwitch extends React.Component {
   }
 
   onToggle(value){
-    console.log("Toggled:"+value.target.name+value.target.value);
     this.setState({checked: !this.state.checked}, () => this.fireChange());
   };
 
   onChangeBilling(event, index) {
-    console.log("Received index:"+inspect(index)+", billings are"+JSON.stringify(this.props.billings));
-    console.log("Received value:"+inspect(event.target.value)+", billings are"+JSON.stringify(this.props.billings));
     this.setState({billing: event.target.value}, () => this.fireChange());
   }
 
@@ -127,7 +124,6 @@ class ButtonSwitch extends React.Component {
   render() {
     const {classes, isEditable, isOption, isPrice, billings} = this.props;
     const {label, checked} = this.state;
-    console.log(label, 'label')
 
     return(
       <Grid className={classes.contentFiltre}>
@@ -179,7 +175,6 @@ class ButtonSwitch extends React.Component {
                     value={this.state.billing}
                   >
                     {billings.map(option => {
-                      console.log( checked ? JSON.stringify(option): '');
                       return (
                         <MenuItem value={option._id}>{option.label}</MenuItem>
                       )

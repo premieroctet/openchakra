@@ -1,3 +1,5 @@
+import _ from 'lodash';
+const { inspect } = require('util');
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -50,7 +52,7 @@ import EditIcon from '@material-ui/icons/Edit';
 const { config } = require('../config/config');
 const url = config.apiUrl;
 
-class userServices extends React.Component {
+class UserServicesPreview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -71,8 +73,11 @@ class userServices extends React.Component {
       availabilities: [],
       mobileOpen: false,
       setMobileOpen: false,
-      bottom: false
+      bottom: false,
+      total: 0,
+      location:null,
     }
+    this.onQtyChanged = this.onQtyChanged.bind(this);
   }
 
   static getInitialProps ({ query: { id } }) {
@@ -101,13 +106,20 @@ class userServices extends React.Component {
 
     axios.get(url + `myAlfred/api/serviceUser/${id}`).then(res => {
       let serviceUser = res.data;
+      console.log("ServiceUser:"+JSON.stringify(serviceUser.location));
+      // Prestas booked : 0 for each
+      var count = {}
+      serviceUser.prestations.forEach( p => count[p._id]=0);
+      var location = serviceUser.location.client ? "client" : serviceUser.location.alfred ? "alfred" : "visio";
       this.setState({
         serviceUser: serviceUser,
         service: serviceUser.service,
         equipments: serviceUser.equipments,
         prestations: serviceUser.prestations,
         allEquipments : serviceUser.service.equipments,
-        alfred: serviceUser.user
+        alfred: serviceUser.user,
+        count: count,
+        location: location,
       });
       axios.get(url + "myAlfred/api/shop/alfred/" + this.state.alfred._id).then(res => {
         let shop = res.data;
@@ -124,6 +136,17 @@ class userServices extends React.Component {
     });
   }
 
+  extractFilters() {
+    var result={};
+    if (this.state.prestations.length==0) {
+      return result;
+    }
+    _.uniq(this.state.prestations.map( p => p.prestation.filter_presentation.label)).forEach( f => {
+      result[f]=this.state.prestations.filter( p => p.prestation.filter_presentation.label==f);
+    })
+    return result;
+  }
+
   toggleDrawer = (side, open) => event => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -131,9 +154,40 @@ class userServices extends React.Component {
     this.setState({ ...this.state, [side]: open });
   };
 
+  onLocationChanged = (id, checked) => {
+    console.log(id, checked);
+    this.setState({location:id});
+  }
+
+  onQtyChanged = event => {
+    var {name, value} = event.target;
+    value = parseInt(value);
+    if (!isNaN(value)) {
+      var count = this.state.count;
+      count[name]=value;
+      this.setState({count:count}, () => this.computeTotal());
+    }
+  }
+
+  computeTotal = () => {
+    var total=0;
+    var count=this.state.count;
+    var su=this.state.serviceUser;
+    this.state.prestations.forEach( p => {
+      if (count[p._id]>0) {
+        total += count[p._id]*p.price;
+      } 
+    });
+    total+=su.travel_tax ? su.travel_tax : 0;
+    total+=su.pick_tax ? su.pick_tax : 0;
+    this.setState({total:total})
+  }
+
   render() {
     const {classes} = this.props;
-    const {user, serviceUser, shop, service, equipments, userName, alfred, container} = this.state;
+    const {location, user, serviceUser, shop, service, equipments, userName, alfred, container} = this.state;
+
+   const filters = this.extractFilters();
 
     const StyledRating = withStyles({
       iconFilled: {
@@ -141,6 +195,7 @@ class userServices extends React.Component {
       },
     })(Rating);
 
+    console.log("Location:"+location);
     const drawer = side => (
       <Grid className={classes.borderContentRight}>
         <Grid style={{marginBottom: 30}}>
@@ -186,108 +241,53 @@ class userServices extends React.Component {
             <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>Mes prestations</Typography>
           </Grid>
           <Grid style={{marginTop: 20}}>
+
+            {/* Start filter */ }
+            { Object.entries(filters).map( (entry) => { 
+              var fltr=entry[0];
+              var prestations=entry[1];
+              return (
             <ExpansionPanel>
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography className={classes.heading}>Homme</Typography>
+              <Typography className={classes.heading}>{fltr}</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
+              { prestations.map( (p) => { return (
               <Grid style={{display: 'flex', alignItems: 'center', width : '100%'}}>
                 <Grid>
                   <TextField
-                    id="outlined-number"
-                    label="Quantité"
-                    type="number"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin="normal"
-                    variant="outlined"
+                    id="outlined-number" 
+					label="Quantité" 
+					type="number" 
+					className={classes.textField} 
+					InputLabelProps={{ shrink: true, }} 
+					margin="normal" 
+					variant="outlined"
+                    name={p._id}
+ 					value={this.state.count[p._id]}
+                    onChange={this.onQtyChanged}
                   />
                 </Grid>
                 <Grid style={{display:'flex', justifyContent: 'space-evenly', width: '100%'}}>
                   <Grid>
-                    <label>Label presta</label>
+                    <label>{p.prestation.label}</label>
                   </Grid>
                   <Grid>
-                    <label>Prix de la presta</label>
+                    <label>{p.price}</label>
                   </Grid>
                 </Grid>
               </Grid>
+            )})}
             </ExpansionPanelDetails>
           </ExpansionPanel>
-            <ExpansionPanel>
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel2a-content"
-              id="panel2a-header"
-            >
-              <Typography className={classes.heading}>Femme</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <Grid style={{display: 'flex', alignItems: 'center', width : '100%'}}>
-                <Grid>
-                  <TextField
-                    id="outlined-number"
-                    label="Quantité"
-                    type="number"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin="normal"
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid style={{display:'flex', justifyContent: 'space-evenly', width: '100%'}}>
-                  <Grid>
-                    <label>Label presta</label>
-                  </Grid>
-                  <Grid>
-                    <label>Prix de la presta</label>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-            <ExpansionPanel>
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel3a-content"
-              id="panel3a-header"
-            >
-              <Typography className={classes.heading}>Enfant</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <Grid style={{display: 'flex', alignItems: 'center', width : '100%'}}>
-                <Grid>
-                  <TextField
-                    id="outlined-number"
-                    label="Quantité"
-                    type="number"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    margin="normal"
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid style={{display:'flex', justifyContent: 'space-evenly', width: '100%'}}>
-                  <Grid>
-                    <label>Label presta</label>
-                  </Grid>
-                  <Grid>
-                    <label>Prix de la presta</label>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
+          )})
+          }
+          {/* End filter */ }
+
           </Grid>
         </Grid>
         <Grid style={{marginBottom: 30}}>
@@ -295,25 +295,46 @@ class userServices extends React.Component {
           <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Lieu de la prestation</Typography>
         </Grid>
         <Grid>
+          { serviceUser.location && serviceUser.location.client ?
           <Grid>
-            <ButtonSwitch label={'A mon adresse principale'} isEditable={false} isPrice={false} isOption={false}/>
+            <ButtonSwitch id='client' label={'A mon adresse principale'} isEditable={false} isPrice={false} isOption={false} checked={location=='client'} onChange={this.onLocationChanged}/>
           </Grid>
-          <Grid>
-            {
-              alfred.firstname !== undefined ?
-                <ButtonSwitch label={'Chez ' + alfred.firstname} isEditable={false} isPrice={false} isOption={false}/>
-                : null
-            }
-          </Grid>
+            :null
+          }
+          {
+            serviceUser.location && serviceUser.location.alfred && alfred.firstname !== undefined ?
+              <Grid>
+                <ButtonSwitch id='alfred' label={'Chez ' + alfred.firstname} isEditable={false} isPrice={false} isOption={false} checked={location=='alfred'} onChange={this.onLocationChanged}/>
+              </Grid>
+              : null
+          }
+          {
+            serviceUser.location && serviceUser.location.visio ?
+              <Grid>
+                <ButtonSwitch id='visio' label={'En visio'} isEditable={false} isPrice={false} isOption={false} checked={location=='visio'} onChange={this.onLocationChanged}/>
+              </Grid>
+              : null
+          }
         </Grid>
       </Grid>
         <Grid style={{marginBottom: 30}}>
         <Grid>
           <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Option de la prestation</Typography>
         </Grid>
-        <Grid>
-          <ButtonSwitch label={'Retrait & livraison (5€)'} isEditable={false} isPrice={false} isOption={false}/>
-        </Grid>
+        { serviceUser.pick_tax ?
+          <Grid>
+            Retrait & livraison
+            { serviceUser.pick_tax }
+          </Grid>
+          :null
+        }
+        { serviceUser.travel_tax ?
+          <Grid>
+            Frais de déplacement
+            { serviceUser.travel_tax }
+          </Grid>
+          :null
+        }
       </Grid>
         <Grid style={{marginBottom: 30}}>
         <Grid>
@@ -340,38 +361,28 @@ class userServices extends React.Component {
       </Grid>
         <Grid style={{display: 'flex', flexDirection:'column', marginLeft:15, marginRight:15, marginBottom:30}}>
         <Grid>
+          { this.state.prestations.map( (p) => {
+             return this.state.count[p._id]==0 ? null: (
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
-              <p>Presta A</p>
+              <p>{p.prestation.label}</p>
             </Grid>
             <Grid>
-              <p>Prix</p>
+              <p>{this.state.count[p._id]*p.price}</p>
             </Grid>
           </Grid>
-          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-            <Grid>
-              <p>Presta B</p>
-            </Grid>
-            <Grid>
-              <p>Prix</p>
-            </Grid>
-          </Grid>
-          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-            <Grid>
-              <p>Presta C</p>
-            </Grid>
-            <Grid>
-              <p>Prix</p>
-            </Grid>
-          </Grid>
+          )})
+          }
+          { /* Start total */ }
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
               <p>Total (EUR)</p>
             </Grid>
             <Grid>
-              <p>Prix</p>
+              <p>{this.state.total}</p>
             </Grid>
           </Grid>
+          { /* End total */ }
         </Grid>
       </Grid>
         <Grid>
@@ -759,10 +770,10 @@ class userServices extends React.Component {
   }
 }
 
-userServices.propTypes = {
+UserServicesPreview.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
   container: PropTypes.instanceOf(typeof Element === 'undefined' ? Object : Element),
 };
 
-export default  withStyles(styles, { withTheme: true })(userServices);
+export default  withStyles(styles, { withTheme: true })(UserServicesPreview);
