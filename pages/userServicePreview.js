@@ -76,6 +76,7 @@ class UserServicesPreview extends React.Component {
       mobileOpen: false,
       setMobileOpen: false,
       bottom: false,
+      totalPrestations: 0,
       commission: 0,
       total: 0,
       location:null,
@@ -110,6 +111,7 @@ class UserServicesPreview extends React.Component {
 
     axios.get(url + `myAlfred/api/serviceUser/${id}`).then(res => {
       let serviceUser = res.data;
+      console.log("Got SU:"+JSON.stringify(serviceUser, null, 2));
       // Prestas booked : 0 for each
       var count = {}
       serviceUser.prestations.forEach( p => count[p._id]=0);
@@ -149,8 +151,11 @@ class UserServicesPreview extends React.Component {
   checkBook = () => {
     var errors={}
     console.log("checkBook:"+this.state.total,this.state.serviceUser.minimum_basket);
-    if (this.state.total<this.state.serviceUser.minimum_basket) {
-      errors['total']='Commande minimum de '+this.state.serviceUser.minimum_basket+'€ requise';
+    if (!this.state.total) {
+      errors['prestations']='Sélectionnez au moins une prestation';
+    }
+    if (this.state.totalPrestations<this.state.serviceUser.minimum_basket) {
+      errors['total']='Commande minimum des prestation de '+this.state.serviceUser.minimum_basket+'€ requise';
     }
     if (isEmpty(this.state.date)) {
       errors['date']='Sélectionner une date';
@@ -202,20 +207,21 @@ class UserServicesPreview extends React.Component {
   }
 
   computeTotal = () => {
-    var total=0;
+    var totalPrestations=0;
     var count=this.state.count;
     var su=this.state.serviceUser;
     this.state.prestations.forEach( p => {
       if (count[p._id]>0) {
-        total += count[p._id]*p.price;
+        totalPrestations += count[p._id]*p.price;
       }
     });
+    var total=totalPrestations;
     total+=su.travel_tax ? parseInt(su.travel_tax) : 0;
     total+=su.pick_tax ? parseInt(su.pick_tax) : 0;
     var commission=total*COMM_CLIENT;
     console.log(typeof(commission), typeof(total));
     total+=commission;
-    this.setState({total:total, commission:commission}, () => this.checkBook())
+    this.setState({totalPrestations:totalPrestations, commission:commission, total:total}, () => this.checkBook())
   }
 
   getLocationLabel = () => {
@@ -286,6 +292,7 @@ class UserServicesPreview extends React.Component {
         <Grid style={{marginBottom: 30}}>
           <Grid error={errors.prestations}>
             <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}} error={errors.prestations}>Mes prestations</Typography>
+              <em style={{color:'red'}}>{errors['prestations']}</em>
           </Grid>
           <Grid style={{marginTop: 20}}>
 
@@ -324,7 +331,10 @@ class UserServicesPreview extends React.Component {
                     <label>{p.prestation.label}</label>
                   </Grid>
                   <Grid>
-                    <label>{p.price}</label>
+                    <label>{p.price}€</label>
+                  </Grid>
+                  <Grid>
+                    <label>{p.billing.label}</label>
                   </Grid>
                 </Grid>
               </Grid>
@@ -417,7 +427,7 @@ class UserServicesPreview extends React.Component {
               <p>{p.prestation.label}</p>
             </Grid>
             <Grid>
-              <p>{this.state.count[p._id]*p.price}</p>
+              <p>{this.state.count[p._id]*p.price}€</p>
             </Grid>
           </Grid>
           )})
@@ -425,22 +435,24 @@ class UserServicesPreview extends React.Component {
           { /* Start commission */ }
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
-              <p>Commission (EUR)</p>
+              <p>Commission</p>
             </Grid>
             <Grid>
-              <p>{this.state.commission.toFixed(2)}</p>
+              <p>{this.state.commission.toFixed(2)}€</p>
             </Grid>
           </Grid>
           { /* End commission */ }
           { /* Start total */ }
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
-              <p>Total (EUR)</p>
+              <p>Total</p>
             </Grid>
             <Grid>
-              <p>{this.state.total.toFixed(2)}</p>
-              <em  style={{color:'red'}}>{errors['total']}</em>
+              <p>{this.state.total.toFixed(2)}€</p>
             </Grid>
+          </Grid>
+          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+              <em style={{color:'red'}}>{errors['total']}</em>
           </Grid>
           { /* End total */ }
         </Grid>
