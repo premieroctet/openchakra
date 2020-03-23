@@ -47,6 +47,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import CloseIcon from '@material-ui/icons/Close';
 import EditIcon from '@material-ui/icons/Edit';
+import MapComponent from '../components/map';
 const {COMM_CLIENT}=require('../utils/consts');
 const moment = require('moment');
 moment.locale('fr');
@@ -76,6 +77,8 @@ class UserServicesPreview extends React.Component {
       mobileOpen: false,
       setMobileOpen: false,
       bottom: false,
+      count:{},
+      totalPrestations: 0,
       commission: 0,
       total: 0,
       location:null,
@@ -148,9 +151,11 @@ class UserServicesPreview extends React.Component {
 
   checkBook = () => {
     var errors={}
-    console.log("checkBook:"+this.state.total,this.state.serviceUser.minimum_basket);
-    if (this.state.total<this.state.serviceUser.minimum_basket) {
-      errors['total']='Commande minimum de '+this.state.serviceUser.minimum_basket+'€ requise';
+    if (!this.state.total) {
+      errors['prestations']='Sélectionnez au moins une prestation';
+    }
+    if (this.state.totalPrestations<this.state.serviceUser.minimum_basket) {
+      errors['total']='Commande minimum des prestation de '+this.state.serviceUser.minimum_basket+'€ requise';
     }
     if (isEmpty(this.state.date)) {
       errors['date']='Sélectionner une date';
@@ -159,7 +164,6 @@ class UserServicesPreview extends React.Component {
       errors['time']='Sélectionner une heure';
     }
     this.setState({errors:errors});
-    console.log("checkBook:"+JSON.stringify(errors));
   }
 
   extractFilters() {
@@ -167,8 +171,13 @@ class UserServicesPreview extends React.Component {
     if (this.state.prestations.length==0) {
       return result;
     }
-    _.uniq(this.state.prestations.map( p => p.prestation.filter_presentation.label)).forEach( f => {
-      result[f]=this.state.prestations.filter( p => p.prestation.filter_presentation.label==f);
+    _.uniq(this.state.prestations.map( p => p.prestation.filter_presentation)).forEach( f => {
+      // FIX : handle null or "Aucun" filter
+      if (!f || f.label=='Aucun') {
+        result[null]=this.state.prestations.filter( p => p.prestation.filter_presentation==f);
+      } else {
+        result[f]=this.state.prestations.filter( p => p.prestation.filter_presentation==f);
+      }
     })
     return result;
   }
@@ -183,11 +192,9 @@ class UserServicesPreview extends React.Component {
   onChange = event => {
     const {name, value}=event.target;
     this.setState({[name]:value}, () => this.checkBook());
-    console.log("Changed:"+name, value);
   }
 
   onLocationChanged = (id, checked) => {
-    console.log(id, checked);
     this.setState({location:id});
   }
 
@@ -202,20 +209,20 @@ class UserServicesPreview extends React.Component {
   }
 
   computeTotal = () => {
-    var total=0;
+    var totalPrestations=0;
     var count=this.state.count;
     var su=this.state.serviceUser;
     this.state.prestations.forEach( p => {
       if (count[p._id]>0) {
-        total += count[p._id]*p.price;
+        totalPrestations += count[p._id]*p.price;
       }
     });
+    var total=totalPrestations;
     total+=su.travel_tax ? parseInt(su.travel_tax) : 0;
     total+=su.pick_tax ? parseInt(su.pick_tax) : 0;
     var commission=total*COMM_CLIENT;
-    console.log(typeof(commission), typeof(total));
     total+=commission;
-    this.setState({total:total, commission:commission}, () => this.checkBook())
+    this.setState({totalPrestations:totalPrestations, commission:commission, total:total}, () => this.checkBook())
   }
 
   getLocationLabel = () => {
@@ -225,6 +232,48 @@ class UserServicesPreview extends React.Component {
     } else {
       return titles[this.state.location];
     }
+  }
+
+  book = () => {
+    console.log(JSON.stringify(this.state.date));
+    console.log(JSON.stringify(this.state.time));
+  
+    const count=this.state.count; 
+    var prestations=[];
+    this.state.prestations.forEach(p => {
+      if (this.state.count[p._id]) {
+        prestations.push({ price:p.price, value:count[p._id], name:p.prestation.label});
+      }
+    });
+
+    let bookingObj = {
+      address: this.state.serviceUser.service_address,
+      equipments: this.state.serviceUser.equipments,
+      amount: this.state.total,
+      date_prestation: this.state.date,
+      time_prestation: this.state.time,
+      alfred: this.state.serviceUser.user._id,
+      user: this.state.user._id,
+      prestations: prestations,
+      fees: this.state.commission,
+      status: "En attente de confirmation",
+      serviceUserId: this.state.serviceUser._id,
+    };
+
+    if (this.state.selectedOption !== null) {
+      bookingObj.option = this.state.selectedOption;
+    }
+
+    localStorage.setItem("bookingObj", JSON.stringify(bookingObj));
+    localStorage.setItem("emitter", this.state.user._id);
+    localStorage.setItem("recipient", this.state.serviceUser.user._id);
+    localStorage.removeItem('address');
+
+    Router.push({
+      pathname: "/confirmPayement",
+      query: { id: this.props.service_id }
+    })
+
   }
 
   render() {
@@ -286,6 +335,7 @@ class UserServicesPreview extends React.Component {
         <Grid style={{marginBottom: 30}}>
           <Grid error={errors.prestations}>
             <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}} error={errors.prestations}>Mes prestations</Typography>
+              <em style={{color:'red'}}>{errors['prestations']}</em>
           </Grid>
           <Grid style={{marginTop: 20}}>
 
@@ -300,7 +350,7 @@ class UserServicesPreview extends React.Component {
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography className={classes.heading}>{fltr}</Typography>
+              <Typography className={classes.heading}>{fltr?fltr.label:''}</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               { prestations.map( (p) => { return (
@@ -324,7 +374,10 @@ class UserServicesPreview extends React.Component {
                     <label>{p.prestation.label}</label>
                   </Grid>
                   <Grid>
-                    <label>{p.price}</label>
+                    <label>{p.price}€</label>
+                  </Grid>
+                  <Grid>
+                    <label>{p.billing.label}</label>
                   </Grid>
                 </Grid>
               </Grid>
@@ -417,7 +470,7 @@ class UserServicesPreview extends React.Component {
               <p>{p.prestation.label}</p>
             </Grid>
             <Grid>
-              <p>{this.state.count[p._id]*p.price}</p>
+              <p>{this.state.count[p._id]*p.price}€</p>
             </Grid>
           </Grid>
           )})
@@ -425,22 +478,24 @@ class UserServicesPreview extends React.Component {
           { /* Start commission */ }
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
-              <p>Commission (EUR)</p>
+              <p>Commission</p>
             </Grid>
             <Grid>
-              <p>{this.state.commission.toFixed(2)}</p>
+              <p>{this.state.commission.toFixed(2)}€</p>
             </Grid>
           </Grid>
           { /* End commission */ }
           { /* Start total */ }
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
-              <p>Total (EUR)</p>
+              <p>Total</p>
             </Grid>
             <Grid>
-              <p>{this.state.total.toFixed(2)}</p>
-              <em  style={{color:'red'}}>{errors['total']}</em>
+              <p>{this.state.total.toFixed(2)}€</p>
             </Grid>
+          </Grid>
+          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+              <em style={{color:'red'}}>{errors['total']}</em>
           </Grid>
           { /* End total */ }
         </Grid>
@@ -467,6 +522,7 @@ class UserServicesPreview extends React.Component {
               aria-label="add"
               className={classes.margin}
               disabled={!isEmpty(errors)}
+              onClick={this.book}
             >
               Réserver
             </Button>
@@ -663,7 +719,11 @@ class UserServicesPreview extends React.Component {
                       <p>Le périmètre d’intervention de votre Alfred est la zone dans laquelle votre Alfred accepte de se déplacer pour réaliser ses services. Par mesure de sécurité et conformément à notre politique de confidentialité, l’adresse de votre Alfred n’est pas communiquée. </p>
                     </Grid>
                     <Grid style={{width : '100%', height:300, backgroundColor: 'green'}}>
-                      <p>Mettre la carte ici</p>
+                      { serviceUser && serviceUser.service_address?
+                      <MapComponent position={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]} perimeter={serviceUser.perimeter*1000} alfred={alfred.firstname}/>
+                      :
+                      <p>Emplacement de l'Alfred</p>
+                      }
                     </Grid>
                   </Grid>
                 </Grid>
