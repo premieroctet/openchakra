@@ -308,14 +308,14 @@ class UserServicesPreview extends React.Component {
                 <Grid>
                   <TextField
                     id="outlined-number"
-					label="Quantité"
-					type="number"
-					className={classes.textField}
-					InputLabelProps={{ shrink: true, }}
-					margin="normal"
-					variant="outlined"
+                    label="Quantité"
+                    type="number"
+                    className={classes.textField}
+                    InputLabelProps={{ shrink: true, }}
+                    margin="normal"
+                    variant="outlined"
                     name={p._id}
- 					value={this.state.count[p._id]}
+                    value={this.state.count[p._id]}
                     onChange={this.onQtyChanged}
                   />
                 </Grid>

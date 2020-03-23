@@ -97,8 +97,6 @@ class SearchLogin extends React.Component {
             serviceUsers: [],
             serviceUsersDisplay: [],
             research: '',
-            prestations: [],
-            resultCategory: [],
             proSelected: false, // Filtre professionnel
             individualSelected: false, // Filtre particulier
             startDate: null,
@@ -237,7 +235,7 @@ class SearchLogin extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const {address, user, otherAddress, categories, gps} = this.state;
+        const {user, categories, gps} = this.state;
         var research = this.state.research;
         const serviceUsers = this.state.serviceUsersDisplay;
         research = research.trim();
@@ -338,55 +336,6 @@ class SearchLogin extends React.Component {
                               <Typography style={{textAlign: 'center', fontSize: '0.8rem',paddingTop:13,height:43 }}>Quelle(s) date(s) ?</Typography>
                           </Grid>
                         }
-                          <Grid item xs={5} md={3} style={{fontFamily: 'Helvetica Neue, Helvetica,sans-serif',width: '100%', margin: 'auto'}}>
-                            {this.state.user ?
-                              <TextField
-                                InputProps={{ style:{height: 40}, }}
-                                id="outlined-select-currency"
-                                select
-                                style={{width:'100%', marginTop: '6px'}}
-                                value={this.state.selectedAddress}
-                                name={'selectedAddress'}
-                                onChange={(e) => {this.onChange(e);}}
-                                margin="normal"
-                                variant="outlined"
-                              >
-                                <MenuItem value={address}>
-                                  Adresse principale, <em> {' '+address.address} {address.zip_code},{address.city}</em>
-                                </MenuItem>
-                                {otherAddress.map(e => (
-                                  <MenuItem key={e._id} value={e}>
-                                    {e.label+', '} <em> {' '+e.address},{e.zip_code} {e.city}</em>
-                                  </MenuItem>
-                                ))}
-                                <MenuItem value={'all'}>
-                                  Partout, Rechercher des Alfred partout
-                                </MenuItem>
-                                <MenuItem>
-                                  <Link href={'/profile/myAddresses'}><a style={{textDecoration:"none"}}>
-                                    <p style={{ color: '#2FBCD3',cursor:'pointer' }}>
-                                      Ajouter une adresse
-                                    </p>
-                                  </a></Link>
-                                </MenuItem>
-                              </TextField>
-                              :
-                              <AlgoliaPlaces
-                                placeholder='Dans quelle ville ?'
-                                style={{color: '#505050', height: '55px'}}
-                                options={{
-                                  appId: 'plKATRG826CP',
-                                  apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                                  language: 'fr',
-                                  countries: ['fr'],
-                                  type: 'city',
-                                  useDeviceLocation: 'true'
-                                }}
-                                onChange={(suggestion) =>this.onChangeCity(suggestion)}
-                                onClear={()=>this.setState({city:'', gps:null})}
-                              />
-                            }
-                          </Grid>
                         </Grid>
                        </Grid>
                   </Grid>

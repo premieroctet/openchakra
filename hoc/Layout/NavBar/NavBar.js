@@ -40,19 +40,12 @@ class NavBar extends Component {
   componentDidMount() {
     const token = localStorage.getItem('token');
     if (token !== null) {
-      this.setState({logged:true});
-      const token2 = localStorage.getItem('token').split(' ')[1];
+      this.setState({ logged: true });
+      const token2 = localStorage.getItem('token')
+        .split(' ')[1];
 
       axios.defaults.headers.common['Authorization'] = token;
-      axios
-          .get(url+'myAlfred/api/users/current')
-          .then(res => {
-            let user = res.data;
-            this.setState({user:user});
-          })
-          .catch(err => console.log(err))
     }
-
   }
 
   logout2() {
@@ -95,12 +88,11 @@ class NavBar extends Component {
 
   render() {
     const { anchorEl, mobileMoreAnchorEl, avatarMoreAnchorEl } = this.state;
-    const { classes } = this.props;
+    const { classes, gps, user, addressSelected } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isAvatarMenuOpen = Boolean(avatarMoreAnchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const logged = this.state.logged;
-    const user = this.state.user;
     const maboutique = <MenuItem onClick={this.handleMenuClose}><Typography><Link href={'/myShop/services'}><a className={classes.navbarLinkMobile}>Ma boutique</a></Link></Typography></MenuItem>;
     const becomealfred = <MenuItem onClick={this.handleMobileMenuClose}><Typography><Link href={'/creaShop/creaShop'}><a className={classes.navbarLinkMobile}>Devenir Alfred</a></Link></Typography></MenuItem>;
     const mobileavatar =
@@ -280,7 +272,7 @@ class NavBar extends Component {
                 </Link>
               </Grid>
               <Grid className={classes.search}>
-                <SearchInput search={this.getDataForSearch}/>
+                <SearchInput search={this.getDataForSearch} gps={gps} user={user} addressSelected={addressSelected}/>
               </Grid>
               <Grid style={{display: 'flex', width: '100%', justifyContent : 'flex-end', alignItems : 'center'}}>
                 <Grid className={classes.sectionDesktop}>
