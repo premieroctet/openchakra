@@ -85,9 +85,6 @@ class UserServicesPreview extends React.Component {
       date:null,
       time:null,
       errors:{},
-      // DEBUG
-      date: "2020-03-22",
-      time:"10:22",
     }
     this.onQtyChanged = this.onQtyChanged.bind(this);
   }
@@ -722,7 +719,11 @@ class UserServicesPreview extends React.Component {
                       <p>Le périmètre d’intervention de votre Alfred est la zone dans laquelle votre Alfred accepte de se déplacer pour réaliser ses services. Par mesure de sécurité et conformément à notre politique de confidentialité, l’adresse de votre Alfred n’est pas communiquée. </p>
                     </Grid>
                     <Grid style={{width : '100%', height:300, backgroundColor: 'green'}}>
-                      <p>Mettre la carte ici</p>
+                      { serviceUser && serviceUser.service_address?
+                      <MapComponent position={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]} perimeter={serviceUser.perimeter*1000} alfred={alfred.firstname}/>
+                      :
+                      <p>Emplacement de l'Alfred</p>
+                      }
                     </Grid>
                   </Grid>
                 </Grid>
