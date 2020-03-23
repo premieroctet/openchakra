@@ -131,8 +131,8 @@ class ConfirmPayement extends React.Component {
       grandTotal: null,
       checkedOption: false,
       optionPrice: null,
-      date: Date.now(),
-      hour: Date.now()
+      date: null,
+      hour: null,
     };
   }
 
@@ -144,9 +144,7 @@ class ConfirmPayement extends React.Component {
     const prestations = JSON.parse(localStorage.getItem("prestations"));
     const bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
 
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-      "token"
-    );
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem( "token"); 
 
     axios.get(url + "myAlfred/api/users/current").then(res => {
       this.setState({ currentUser: res.data });
@@ -167,9 +165,7 @@ class ConfirmPayement extends React.Component {
     });
     const id = this.props.shop_id;
     localStorage.setItem("path", Router.pathname);
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-      "token"
-    );
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem( "token");
 
     axios.get(url + "myAlfred/api/serviceUser/" + id).then(res => {
       this.setState({ user: res.data.user });
@@ -655,10 +651,7 @@ class ConfirmPayement extends React.Component {
                                   marginLeft: "-5%"
                                 }}
                               >
-                                Membre depuis le{" "}
-                                {moment(user.creation_date).format(
-                                  "DD/MM/YYYY"
-                                )}
+                                Membre depuis le {moment(user.creation_date).format( "DD/MM/YYYY")}
                               </Typography>
                             </Grid>
 
@@ -765,7 +758,7 @@ class ConfirmPayement extends React.Component {
                           <Grid item xs={9} style={{ width: "70%" }}>
                             <p>Date et heure de la prestation:</p>{" "}
                             <p>
-                              {this.state.date} - {moment(this.state.hour).format('HH:mm')}
+                              {moment(this.state.date).format('DD/MM/YYYY')} {this.state.hour}
                             </p>
                           </Grid>
                         </Grid>
@@ -787,8 +780,7 @@ class ConfirmPayement extends React.Component {
                           <Grid item xs={9} style={{ width: "70%" }}>
                             <p>Adresse de la prestation:</p>{" "}
                             <p>
-                              {this.state.address}, {this.state.city}{" "}
-                              {this.state.zip_code}.
+                              {this.state.address}, {this.state.zip_code} {this.state.city}{" "}
                             </p>
                           </Grid>
                         </Grid>

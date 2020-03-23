@@ -76,6 +76,7 @@ class UserServicesPreview extends React.Component {
       mobileOpen: false,
       setMobileOpen: false,
       bottom: false,
+      count:{},
       totalPrestations: 0,
       commission: 0,
       total: 0,
@@ -83,6 +84,9 @@ class UserServicesPreview extends React.Component {
       date:null,
       time:null,
       errors:{},
+      // DEBUG
+      date: "2020-03-22",
+      time:"10:22",
     }
     this.onQtyChanged = this.onQtyChanged.bind(this);
   }
@@ -111,7 +115,6 @@ class UserServicesPreview extends React.Component {
 
     axios.get(url + `myAlfred/api/serviceUser/${id}`).then(res => {
       let serviceUser = res.data;
-      console.log("Got SU:"+JSON.stringify(serviceUser, null, 2));
       // Prestas booked : 0 for each
       var count = {}
       serviceUser.prestations.forEach( p => count[p._id]=0);
@@ -150,7 +153,6 @@ class UserServicesPreview extends React.Component {
 
   checkBook = () => {
     var errors={}
-    console.log("checkBook:"+this.state.total,this.state.serviceUser.minimum_basket);
     if (!this.state.total) {
       errors['prestations']='Sélectionnez au moins une prestation';
     }
@@ -164,7 +166,6 @@ class UserServicesPreview extends React.Component {
       errors['time']='Sélectionner une heure';
     }
     this.setState({errors:errors});
-    console.log("checkBook:"+JSON.stringify(errors));
   }
 
   extractFilters() {
@@ -172,8 +173,13 @@ class UserServicesPreview extends React.Component {
     if (this.state.prestations.length==0) {
       return result;
     }
-    _.uniq(this.state.prestations.map( p => p.prestation.filter_presentation.label)).forEach( f => {
-      result[f]=this.state.prestations.filter( p => p.prestation.filter_presentation.label==f);
+    _.uniq(this.state.prestations.map( p => p.prestation.filter_presentation)).forEach( f => {
+      // FIX : handle null or "Aucun" filter
+      if (!f || f.label=='Aucun') {
+        result[null]=this.state.prestations.filter( p => p.prestation.filter_presentation==f);
+      } else {
+        result[f]=this.state.prestations.filter( p => p.prestation.filter_presentation==f);
+      }
     })
     return result;
   }
@@ -188,11 +194,9 @@ class UserServicesPreview extends React.Component {
   onChange = event => {
     const {name, value}=event.target;
     this.setState({[name]:value}, () => this.checkBook());
-    console.log("Changed:"+name, value);
   }
 
   onLocationChanged = (id, checked) => {
-    console.log(id, checked);
     this.setState({location:id});
   }
 
@@ -219,7 +223,6 @@ class UserServicesPreview extends React.Component {
     total+=su.travel_tax ? parseInt(su.travel_tax) : 0;
     total+=su.pick_tax ? parseInt(su.pick_tax) : 0;
     var commission=total*COMM_CLIENT;
-    console.log(typeof(commission), typeof(total));
     total+=commission;
     this.setState({totalPrestations:totalPrestations, commission:commission, total:total}, () => this.checkBook())
   }
@@ -231,6 +234,48 @@ class UserServicesPreview extends React.Component {
     } else {
       return titles[this.state.location];
     }
+  }
+
+  book = () => {
+    console.log(JSON.stringify(this.state.date));
+    console.log(JSON.stringify(this.state.time));
+  
+    const count=this.state.count; 
+    var prestations=[];
+    this.state.prestations.forEach(p => {
+      if (this.state.count[p._id]) {
+        prestations.push({ price:p.price, value:count[p._id], name:p.prestation.label});
+      }
+    });
+
+    let bookingObj = {
+      address: this.state.serviceUser.service_address,
+      equipments: this.state.serviceUser.equipments,
+      amount: this.state.total,
+      date_prestation: this.state.date,
+      time_prestation: this.state.time,
+      alfred: this.state.serviceUser.user._id,
+      user: this.state.user._id,
+      prestations: prestations,
+      fees: this.state.commission,
+      status: "En attente de confirmation",
+      serviceUserId: this.state.serviceUser._id,
+    };
+
+    if (this.state.selectedOption !== null) {
+      bookingObj.option = this.state.selectedOption;
+    }
+
+    localStorage.setItem("bookingObj", JSON.stringify(bookingObj));
+    localStorage.setItem("emitter", this.state.user._id);
+    localStorage.setItem("recipient", this.state.serviceUser.user._id);
+    localStorage.removeItem('address');
+
+    Router.push({
+      pathname: "/confirmPayement",
+      query: { id: this.props.service_id }
+    })
+
   }
 
   render() {
@@ -307,7 +352,7 @@ class UserServicesPreview extends React.Component {
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography className={classes.heading}>{fltr}</Typography>
+              <Typography className={classes.heading}>{fltr?fltr.label:''}</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               { prestations.map( (p) => { return (
@@ -479,6 +524,7 @@ class UserServicesPreview extends React.Component {
               aria-label="add"
               className={classes.margin}
               disabled={!isEmpty(errors)}
+              onClick={this.book}
             >
               Réserver
             </Button>
