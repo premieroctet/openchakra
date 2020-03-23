@@ -35,9 +35,6 @@ class MapComponent extends React.Component {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
             />
-            <Marker position={position}>
-              <Popup>{alfred}</Popup>
-            </Marker>
             <Circle 
                   center={{lat:position[0], lng:position[1]}}
                   fillColor="blue" 
