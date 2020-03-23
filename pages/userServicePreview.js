@@ -230,7 +230,7 @@ class UserServicesPreview extends React.Component {
   getLocationLabel = () => {
     const titles={'client': 'A mon adresse principale', 'alfred': 'Chez '+this.state.alfred.firstname, 'visio': 'En visio'};
     if (!this.state.location) {
-      return ''; 
+      return '';
     } else {
       return titles[this.state.location];
     }
@@ -720,12 +720,9 @@ class UserServicesPreview extends React.Component {
                     <Grid className={classes.textContentPerimeter}>
                       <p>Le périmètre d’intervention de votre Alfred est la zone dans laquelle votre Alfred accepte de se déplacer pour réaliser ses services. Par mesure de sécurité et conformément à notre politique de confidentialité, l’adresse de votre Alfred n’est pas communiquée. </p>
                     </Grid>
-                    <Grid style={{fontSize: 'large',  marginLeft: 15}}>
-                      {serviceUser.perimeter} km
+                    <Grid style={{width : '100%', height:300, backgroundColor: 'green'}}>
+                      <p>Mettre la carte ici</p>
                     </Grid>
-                  </Grid>
-                  <Grid>
-                    {/* -------------------------------------   ICI LEAFLET ------------------------------------------------------ */}
                   </Grid>
                 </Grid>
                 <Grid className={classes.bookingConditionContent} >
