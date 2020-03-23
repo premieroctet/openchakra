@@ -9,32 +9,29 @@ const styles = {
 
     }
 };
-class map extends React.Component {
+
+class MapComponent extends React.Component {
+
     constructor(props) {
         super(props);
-
-
-
     }
 
     render() {
-        const {classes,position} = this.props;
-        return (
-            <div id={'map-container'} style={{height: 200,width:'100%'}}>
-            <Map center={position} zoom={13} style={{height: 200,width:'100%'}}>
-                <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                />
-                <Marker position={position}>
-                    <Popup>A pretty CSS3 popup.<br />Easily customizable.</Popup>
-                </Marker>
-            </Map>
-            </div>
-        )
-
+      const {classes,position} = this.props;
+      return (
+        <div id={'map-container'} style={{height: 200,width:'100%'}}>
+          <Map center={position} zoom={13} style={{height: 200,width:'100%'}}>
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+            />
+            <Marker position={position}>
+              <Popup>A pretty CSS3 popup.<br />Easily customizable.</Popup>
+            </Marker>
+          </Map>
+        </div>
+      )
     }
 }
 
-
-export default withStyles(styles)(map);
+export default withStyles(styles)(MapComponent);

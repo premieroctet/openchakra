@@ -47,6 +47,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import CloseIcon from '@material-ui/icons/Close';
 import EditIcon from '@material-ui/icons/Edit';
+import MapComponent from '../components/map';
 const {COMM_CLIENT}=require('../utils/consts');
 const moment = require('moment');
 moment.locale('fr');
