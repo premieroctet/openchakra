@@ -81,7 +81,7 @@ const styles = theme => ({
     }
 });
 
-class SearchLogin extends React.Component {
+class SearchPage extends React.Component {
 
     constructor(props) {
         super(props);
@@ -96,7 +96,7 @@ class SearchLogin extends React.Component {
             categories: [],
             serviceUsers: [],
             serviceUsersDisplay: [],
-            research: '',
+            keyword: '',
             proSelected: false, // Filtre professionnel
             individualSelected: false, // Filtre particulier
             startDate: null,
@@ -108,9 +108,11 @@ class SearchLogin extends React.Component {
         this.needReasearch = this.needReasearch.bind(this)
     }
 
-    static getInitialProps ({ query: { keyword, city, date, dateISO, day, hour, gps, address, research } }) {
+    static getInitialProps ({ query: { keyword, city, date, dateISO, day, hour, gps, address, category, service, prestation} }) {
       // FIX : set city nin AlgoPlaces if provided
-      return { keyword: keyword, city:city, date:date, dateISO: dateISO,day:day, hour:hour, gps:gps, address:address, research:research }
+      var init= { keyword: keyword, city:city, date:date, dateISO: dateISO,day:day, hour:hour, gps:gps, address:address, category:category, service:service, prestation:prestation}
+      console.log("InitialProps:"+JSON.stringify(init));
+      return init;
     }
 
     onChangeCity({suggestion}) {
@@ -119,10 +121,13 @@ class SearchLogin extends React.Component {
 
     componentDidMount() {
         var st={
-          research:'keyword' in this.props ? this.props.keyword : '',
+          keyword:'keyword' in this.props ? this.props.keyword : '',
           gps:'gps' in this.props ? JSON.parse(this.props.gps) : null,
           city:this.props.city || '',
         };
+        if ('category' in this.props) {
+          st['category']=this.props.category;
+        }
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
             .get(url+'myAlfred/api/users/current')
@@ -163,15 +168,6 @@ class SearchLogin extends React.Component {
     }
 
      search() {
-        /**
-        this.setState({
-          proSelected: false, // Filtre professionnel
-          individualSelected: false, // Filtre particulier
-          startDate: null,
-          endDate: null,
-          statusFilterVisible:false,
-        });
-        */
         const address = this.state.selectedAddress;
         var filters={}
         // GPS
@@ -180,13 +176,29 @@ class SearchLogin extends React.Component {
         }
 
        // Keyword
-       if (this.state.research) {
-         filters['keyword']=this.state.research;
+       if (this.state.keyword) {
+         filters['keyword']=this.state.keyword;
+       }
+
+       // Category
+       if (this.state.category) {
+         filters['category']=this.state.category;
+       }
+
+       // Service
+       if (this.state.service) {
+         filters['service']=this.state.service;
+       }
+
+       // Prestation
+       if (this.state.prestation) {
+         filters['prestation']=this.state.prestation;
        }
 
        axios.post('/myAlfred/api/serviceUser/search', filters)
          .then(res => {
            let serviceUsers = res.data;
+           console.log("Got SU:"+serviceUsers.length);
            /**
               serviceUsers = _.orderBy(serviceUsers,['level','number_of_views','graduated','is_certified','user.creation_date'],
               ['desc','desc','desc','desc','desc']);
@@ -230,15 +242,16 @@ class SearchLogin extends React.Component {
      }
 
     needReasearch = data =>{
-        this.setState({research : data}, () => this.search())
+        this.setState({keyword : data}, () => this.search())
     }
 
     render() {
+        console.log("Render:keyword:"+this.state.keyword);
         const {classes} = this.props;
         const {user, categories, gps} = this.state;
-        var research = this.state.research;
+        var keyword = this.state.keyword;
         const serviceUsers = this.state.serviceUsersDisplay;
-        research = research.trim();
+        keyword = keyword ? keyword.trim() : '';
 
 
         return (
@@ -346,7 +359,7 @@ class SearchLogin extends React.Component {
                     <Grid container className="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'inline-block', minHeight: '250px'}}>
                       {categories.map((e,index) => (
                         <Grid key={index} style={{display: 'inline-block', width: '300px', margin: 'auto 20px'}}>
-                          <Link href={'/serviceByCategory?category='+e._id}>
+                          <Link href={'/search?category='+e._id}>
                             <Card  style={{width: '300px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
                               <CardActionArea>
                                 <CardMedia
@@ -409,4 +422,4 @@ class SearchLogin extends React.Component {
 }
 
 
-export default withStyles(styles)(SearchLogin);
+export default withStyles(styles)(SearchPage);

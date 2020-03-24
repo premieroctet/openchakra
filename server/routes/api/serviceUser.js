@@ -565,13 +565,23 @@ router.post('/search',(req,res)=> {
         }
       }
       ServiceUser.find()
-        .populate('user','-id_card').populate('service')
+        .populate('user','-id_card')
+        .populate({
+            path: 'service',
+            populate: {
+                path: 'category'
+            }
+        })
         .then(services => {
           if ('gps' in req.body) {
             services = filterServicesGPS(services, req.body.gps);
           }
           if (allowedServices!=null) {
             services = services.filter( su => allowedServices.includes(su.service._id.toString()) );
+          }
+          if ('category' in req.body) {
+            console.log(services[0].service.category);
+            services = services.filter( su => su.service.category._id==req.body.category );
           }
           console.log("Returned services:"+services.length);
           res.json(services);

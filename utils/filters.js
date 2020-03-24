@@ -24,7 +24,6 @@ const isServiceAroundGPS = (serviceUser, coordinates) => {
       }*/
       var distance = geolib.convertDistance( geolib.getDistance( {latitude:coordinates.lat, longitude:coordinates.lng}, {latitude:latAlfred, longitude: lngAlfred}), 'km').toFixed(2);
       var in_perimeter = distance < serviceUser.perimeter;
-      console.log("Comparing dist%perm on:"+distance+","+serviceUser.perimeter+","+serviceUser._id+":"+in_perimeter);
       return in_perimeter;
     }
   }
@@ -50,13 +49,8 @@ const sortfn = gps => {
 
 const filterServicesGPS = (serviceUsers, coordinates) => {
   //serviceUser = serviceUsers.filter( su => isServiceAtAlfredOrVisio(su) || isServiceAroundGPS(su, coordinates) );
-  console.log("Before"+serviceUsers.length);
   var filteredServiceUsers = serviceUsers.filter( su => isServiceAroundGPS(su, coordinates) );
-  console.log("After"+filteredServiceUsers.length);
   filteredServiceUsers.sort(sortfn(coordinates)); 
-  for (i = 0; i < 4; i++) {
-    console.log("SU:"+filteredServiceUsers[i].user.avatar_letters+"=>"+filteredServiceUsers[i].service.label);
-  }
   return filteredServiceUsers;
 }
 
