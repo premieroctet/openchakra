@@ -16,7 +16,6 @@ import axios from 'axios';
 import AlfredConditionsBooking from '../components/AlfredConditionsBooking/AlfredConditionsBooking';
 import AlfredConditionsCancel from '../components/AlfredConditionsCancel/AlfredConditionsCancel';
 import AlfredWelcomedMessage from '../components/AlfredWelcomedMessage/AlfredWelcomedMessage';
-import Footer from '../hoc/Layout/Footer/Footer';
 import {Helmet} from 'react-helmet';
 import NavbarMobile from '../components/NavbarMobile/NavbarMobile';
 

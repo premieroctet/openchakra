@@ -36,6 +36,7 @@ export default theme =>({
     alignItems: 'center',
     flexDirection: 'column',
     marginTop: '3%',
+    width: '100%',
     [theme.breakpoints.down('md')]: {
       width: '90%',
       marginTop: 0,
@@ -45,9 +46,7 @@ export default theme =>({
     display:'flex',
     alignItems: 'center',
     flexDirection: 'column',
-    [theme.breakpoints.down('md')]: {
-     width: '100%'
-    },
+    width: '100%',
     [theme.breakpoints.down('xs')]: {
       marginTop: 20
     },
