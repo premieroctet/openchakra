@@ -95,10 +95,6 @@ class SearchInput extends React.Component{
         <Grid style={{width: '100%'}}>
           <Paper component="form" className={classes.root}>
             <Grid style={{display: 'flex', width: '50%'}}>
-              <IconButton className={classes.iconButton} aria-label="menu" onClick={this.findService}>
-                <Search />
-              </IconButton>
-              <Divider className={classes.divider} orientation="vertical" />
               <InputBase
                 className={classes.input}
                 placeholder="Quel service ?"
@@ -158,6 +154,10 @@ class SearchInput extends React.Component{
                   </Grid>
                 </Grid>
               }
+            <Divider className={classes.divider} orientation="vertical" />
+            <IconButton className={classes.iconButton} aria-label="menu" onClick={this.findService}>
+              <Search />
+            </IconButton>
           </Paper>
         </Grid>
       </Grid>

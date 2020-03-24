@@ -32,7 +32,8 @@ class NavBar extends Component {
       avatarMoreAnchorEl: null,
       logged: false,
       user: null,
-      research: ''
+      research: '',
+      hiddingPanel : true
     };
     this.getDataForSearch = this.getDataForSearch.bind(this);
   }
@@ -45,6 +46,9 @@ class NavBar extends Component {
         .split(' ')[1];
 
       axios.defaults.headers.common['Authorization'] = token;
+    }
+    if(Router.pathname === '/'){
+      this.setState({hiddingPanel: false})
     }
   }
 
@@ -87,7 +91,7 @@ class NavBar extends Component {
   };
 
   render() {
-    const { anchorEl, mobileMoreAnchorEl, avatarMoreAnchorEl } = this.state;
+    const { anchorEl, mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel } = this.state;
     const { classes, gps, user, addressSelected } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isAvatarMenuOpen = Boolean(avatarMoreAnchorEl);
@@ -271,9 +275,11 @@ class NavBar extends Component {
                   <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
                 </Link>
               </Grid>
-              <Grid className={classes.search}>
-                <SearchInput search={this.getDataForSearch} gps={gps} user={user} addressSelected={addressSelected}/>
-              </Grid>
+              {hiddingPanel ?
+                <Grid className={classes.search}>
+                  <SearchInput search={this.getDataForSearch} gps={gps} user={user} addressSelected={addressSelected}/>
+                </Grid>: null
+              }
               <Grid style={{display: 'flex', width: '100%', justifyContent : 'flex-end', alignItems : 'center'}}>
                 <Grid className={classes.sectionDesktop}>
                   {user && user.is_alfred ?
