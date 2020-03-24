@@ -250,7 +250,7 @@ class Homeheader extends React.Component {
 
     Router.push({
       pathname: '/search',
-      query: { service: service,city:city,date:date,dateISO:dateISO,day:day,hour:hour,gps: gps, address: JSON.stringify(this.state.addressSelected) }
+      query: { keyword: service,city:city,date:date,dateISO:dateISO,day:day,hour:hour,gps: gps, address: JSON.stringify(this.state.addressSelected) }
     })
 
 

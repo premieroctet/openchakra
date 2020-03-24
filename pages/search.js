@@ -108,9 +108,9 @@ class SearchLogin extends React.Component {
         this.needReasearch = this.needReasearch.bind(this)
     }
 
-    static getInitialProps ({ query: { service, city, date, dateISO, day, hour, gps, address, research } }) {
+    static getInitialProps ({ query: { keyword, city, date, dateISO, day, hour, gps, address, research } }) {
       // FIX : set city nin AlgoPlaces if provided
-      return { service: service, city:city, date:date, dateISO: dateISO,day:day, hour:hour, gps:gps, address:address, research:research }
+      return { keyword: keyword, city:city, date:date, dateISO: dateISO,day:day, hour:hour, gps:gps, address:address, research:research }
     }
 
     onChangeCity({suggestion}) {
@@ -119,7 +119,7 @@ class SearchLogin extends React.Component {
 
     componentDidMount() {
         var st={
-          research:'service' in this.props ? this.props.service : '',
+          research:'keyword' in this.props ? this.props.keyword : '',
           gps:'gps' in this.props ? JSON.parse(this.props.gps) : null,
           city:this.props.city || '',
         };
