@@ -13,7 +13,7 @@ import Router from 'next/router';
 import MenuItem from '@material-ui/core/MenuItem';
 import AlgoliaPlaces from 'algolia-places-react';
 import moment from 'moment';
-
+import Hidden from '@material-ui/core/Hidden';
 
 class SearchInput extends React.Component{
   constructor(props) {
@@ -94,48 +94,65 @@ class SearchInput extends React.Component{
       <Grid className={classes.mainContainer}>
         <Grid style={{width: '100%'}}>
           <Paper component="form" className={classes.root}>
-            <Grid style={{display: 'flex', width: '50%'}}>
-              <InputBase
+            <Grid className={classes.contentInputService}>
+              <TextField
                 className={classes.input}
                 placeholder="Quel service ?"
-                inputProps={{ 'aria-label': 'search google maps' }}
+                InputProps={{disableUnderline: true}}
                 onChange={(event)=>{this.setState({research: event.target.value});}}
                 onKeyDown={(e)=>this.keyPress(e)}
               />
+              <Hidden mdUp>
+                <Divider className={classes.divider} orientation="vertical" />
+                <IconButton className={classes.iconButton} aria-label="menu" onClick={this.findService}>
+                  <Search />
+                </IconButton>
+              </Hidden>
             </Grid>
-            <Divider className={classes.divider} orientation="vertical" />
+            <Hidden xsDown>
+              <Divider className={classes.divider} orientation="vertical" />
+            </Hidden>
               {user ?
-                <Grid style={{display: 'flex', width: '50%'}}>
-                  <TextField
-                    id="outlined-select-currency"
-                    select
-                    style={{marginTop: '6px', width: '100%'}}
-                    value={this.state.selectedAddress}
-                    name={'selectedAddress'}
-                    onChange={(e) => {this.onChange(e);}}
-                    margin="dense"
-                    variant="outlined"
-                  >
-                    <MenuItem value={this.state.selectedAddress}>
-                      Adresse principale, <em> {' '+addressSelected.address} {addressSelected.zip_code},{addressSelected.city}</em>
-                    </MenuItem>
-                    {user.service_address.map(e => (
-                      <MenuItem key={e._id} value={e}>
-                        {e.label+', '} <em> {' '+e.address},{e.zip_code} {e.city}</em>
+                <Grid className={classes.contentInput}>
+                  <Hidden mdUp>
+                    <Grid style={{width : '10%', display: 'flex'}}>
+                      <img style={{width : 20, height : 20}} src={'../../static/assets/img/navBar/icone.svg'}/>
+                    </Grid>
+                    <Divider className={classes.divider} orientation="vertical" />
+                  </Hidden>
+                  <Grid style={{width: '70%', marginLeft: 20}}>
+                    <TextField
+                      id="outlined-select-currency"
+                      select
+                      style={{marginTop: '6px', width: '100%'}}
+                      InputProps={{disableUnderline: true}}
+                      value={this.state.selectedAddress}
+                      name={'selectedAddress'}
+                      onChange={(e) => {this.onChange(e);}}
+                      margin="dense"
+                    >
+                      <MenuItem value={this.state.selectedAddress}>
+                        Adresse principale, <em> {' '+addressSelected.address} {addressSelected.zip_code},{addressSelected.city}</em>
                       </MenuItem>
-                    ))}
-                    <MenuItem value={'all'}>
-                      Partout, Rechercher des Alfred partout
-                    </MenuItem>
-                    <MenuItem value={'myAddresses'}>
-                      <p style={{ color: '#2FBCD3',cursor:'pointer' }}>
-                        Ajouter une adresse
-                      </p>
-                    </MenuItem>
-                  </TextField>
+                      {user.service_address.map(e => (
+                        <MenuItem key={e._id} value={e}>
+                          {e.label+', '} <em> {' '+e.address},{e.zip_code} {e.city}</em>
+                        </MenuItem>
+                      ))}
+                      <MenuItem value={'all'}>
+                        Partout, Rechercher des Alfred partout
+                      </MenuItem>
+                      <MenuItem value={'myAddresses'}>
+                        <p style={{ color: '#2FBCD3',cursor:'pointer' }}>
+                          Ajouter une adresse
+                        </p>
+                      </MenuItem>
+                    </TextField>
+                  </Grid>
+
                 </Grid>
                 :
-                <Grid style={{display : 'flex', width:'50%'}}>
+                <Grid className={classes.contentInput}>
                   <Grid style={{width: '100%'}}>
                     <AlgoliaPlaces
                       placeholder='Dans quelle ville ?'
@@ -154,10 +171,14 @@ class SearchInput extends React.Component{
                   </Grid>
                 </Grid>
               }
-            <Divider className={classes.divider} orientation="vertical" />
-            <IconButton className={classes.iconButton} aria-label="menu" onClick={this.findService}>
-              <Search />
-            </IconButton>
+            <Hidden xsDown>
+              <Divider className={classes.divider} orientation="vertical" />
+            </Hidden>
+            <Hidden xsDown>
+              <IconButton className={classes.iconButton} aria-label="menu" onClick={this.findService}>
+                <Search />
+              </IconButton>
+            </Hidden>
           </Paper>
         </Grid>
       </Grid>

@@ -17,6 +17,7 @@ import SearchInput from '../../../components/SearchInput/SearchInput';
 import styles from './NavBarStyle'
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
@@ -267,20 +268,54 @@ class NavBar extends Component {
 
     return (
       <Grid className={classes.root}>
-        <AppBar color="inherit" position="fixed" style={{boxShadow: 'inherit'}}>
+        <AppBar color="inherit" position="fixed" className={classes.appBar}>
           <Toolbar>
-            <Grid style={{display: 'flex', width : '100%', alignItems: 'center'}}>
-              <Grid>
-                <Link href={'/'}>
-                  <img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110, cursor: "pointer"}} alt={'Logo Bleu'}/>
-                </Link>
+            <Grid className={classes.mainWrapper}>
+              <Grid style={{display: 'flex', width: '100%', justifyContent: 'space-between', marginTop: 10}}>
+                <Grid>
+                  <Link href={'/'}>
+                    <img src={'../../../static/logo_final_My-Alfred.svg'} className={classes.logoNavbar} alt={'Logo Bleu'}/>
+                  </Link>
+                </Grid>
+                <Hidden mdDown>
+                  <Grid className={classes.sectionMobile}>
+                    {logged ?
+                      <Grid style={{border: '1px solid #e8ebeb', borderRadius : 5}}>
+                        <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
+                          <MoreIcon/>
+                          <Grid>
+                            <p style={{margin: 0, fontSize: 'initial'}}>Menu</p>
+                          </Grid>
+                        </IconButton>
+                      </Grid>
+                      :
+                      null
+                    }
+                  </Grid>
+                </Hidden>
               </Grid>
-              {hiddingPanel ?
-                <Grid className={classes.search}>
-                  <SearchInput search={this.getDataForSearch} gps={gps} user={user} addressSelected={addressSelected}/>
-                </Grid>: null
-              }
-              <Grid style={{display: 'flex', width: '100%', justifyContent : 'flex-end', alignItems : 'center'}}>
+                {hiddingPanel ?
+                  <Grid className={classes.search}>
+                    <SearchInput search={this.getDataForSearch} gps={gps} user={user} addressSelected={addressSelected}/>
+                  </Grid>: null
+                }
+              <Hidden mdUp>
+                <Grid className={classes.sectionMobile}>
+                  {logged ?
+                    <Grid style={{border: '1px solid #e8ebeb', borderRadius : 5}}>
+                      <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
+                        <MoreIcon/>
+                        <Grid>
+                          <p style={{margin: 0, fontSize: 'initial'}}>Menu</p>
+                        </Grid>
+                      </IconButton>
+                    </Grid>
+                    :
+                    null
+                  }
+                </Grid>
+              </Hidden>
+              <Grid className={classes.rightContentNavBar}>
                 <Grid className={classes.sectionDesktop}>
                   {user && user.is_alfred ?
                     <Typography className={classes.navbarItem}>
@@ -299,13 +334,18 @@ class NavBar extends Component {
                       </Link>
                     </Typography>}
 
-                  {logged ?<React.Fragment><Typography className={classes.navbarItem}>
-                    <Link href={'/myShop/messages'}>
-                      <a className={classes.navbarLink}>
-                        Messages
-                      </a>
-                    </Link>
-                  </Typography></React.Fragment> : null }
+                  {logged ?
+                    <React.Fragment>
+                      <Typography className={classes.navbarItem}>
+                        <Link href={'/myShop/messages'}>
+                          <a className={classes.navbarLink}>
+                            Messages
+                          </a>
+                        </Link>
+                      </Typography>
+                    </React.Fragment>
+                    : null
+                  }
                   <Typography className={classes.navbarItem}>
                     <Link href={'/faq'}>
                       <a className={classes.navbarLink}>
@@ -316,7 +356,7 @@ class NavBar extends Component {
                   {logged ? null :
                     <React.Fragment>
                       <Link href={'/login'}>
-                        <Button variant="outlined" color={'primary'} style={{ marginRight: '20px', border: '1px solid rgba(255, 255, 255, 1)' }}>
+                        <Button variant="outlined" color={'primary'} className={classes.buttonLogin}>
                           Connexion
                         </Button>
                       </Link>
@@ -332,22 +372,14 @@ class NavBar extends Component {
                     </React.Fragment>}
                   {logged ?
                     <React.Fragment>
-
                       <React.Fragment>
                         <IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}>
                           <UserAvatar user={user} className={classes.bigAvatar} />
                         </IconButton>
                       </React.Fragment>
-
-                    </React.Fragment> : null  }
-                </Grid>
-                <Grid className={classes.sectionMobile}>
-                  {logged ? mobileavatar :
-                    <React.Fragment>
-                      <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theiconbutton}>
-                        <MoreIcon className={classes.bigIcon} />
-                      </IconButton>
-                    </React.Fragment>}
+                    </React.Fragment>
+                    : null
+                  }
                 </Grid>
               </Grid>
             </Grid>
