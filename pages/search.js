@@ -205,24 +205,25 @@ class SearchPage extends React.Component {
             filters['gps']=this.state.gps;
         }
 
-       // Keyword
+       // Keyword search disables cat/ser/presta filter
        if (this.state.keyword) {
          filters['keyword']=this.state.keyword;
        }
+       else {
+         // Category
+         if (this.state.category) {
+           filters['category']=this.state.category;
+         }
 
-       // Category
-       if (this.state.category) {
-         filters['category']=this.state.category;
-       }
+         // Service
+         if (this.state.service) {
+           filters['service']=this.state.service;
+         }
 
-       // Service
-       if (this.state.service) {
-         filters['service']=this.state.service;
-       }
-
-       // Prestation
-       if (this.state.prestation) {
-         filters['prestation']=this.state.prestation;
+         // Prestation
+         if (this.state.prestation) {
+           filters['prestation']=this.state.prestation;
+         }
        }
 
        axios.post('/myAlfred/api/serviceUser/search', filters)
