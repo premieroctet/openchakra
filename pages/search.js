@@ -27,6 +27,30 @@ import Tooltip from '@material-ui/core/Tooltip';
 import CardPreview from '../components/CardPreview/CardPreview';
 import AlgoliaPlaces from "algolia-places-react";
 import SearchInput from '../components/SearchInput/SearchInput';
+import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
+import Profiteandlearn from '../components/home/profite&learn/profite&learn'
+import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
+import NearbyYou from '../components/home/NearbyYou/NearbyYou';
+import Homeheader from '../components/home/Homeheader/Homeheader';
+import FeelingGood from '../components/home/feelingGood/feelingGood';
+import Wellbeing from '../components/home/Wellbeing/Wellbeing';
+import Proposeservice from '../components/home/proposeservice/Proposeservice';
+import Assureback from '../components/home/AssureBack/Assureback';
+import Section3 from '../components/home/section3';
+import Section6 from '../components/home/section6';
+import Section8 from '../components/home/section8';
+import Passions from '../components/home/Passions/passions';
+import Facons from '../components/home/Facons/facons';
+import Otter from '../components/home/Otter/otter';
+import Section10 from '../components/home/section10';
+import Section12 from '../components/home/section12';
+import Section15 from '../components/home/section15';
+import Section16 from '../components/home/section16';
+import Section18 from '../components/home/section18';
+import Section19 from '../components/home/section19';
+import Section21 from '../components/home/section21';
+import Section22 from '../components/home/section22';
+
 
 const geolib = require('geolib');
 const _ = require('lodash');
@@ -81,7 +105,7 @@ const styles = theme => ({
     }
 });
 
-class SearchLogin extends React.Component {
+class SearchPage extends React.Component {
 
     constructor(props) {
         super(props);
@@ -96,7 +120,7 @@ class SearchLogin extends React.Component {
             categories: [],
             serviceUsers: [],
             serviceUsersDisplay: [],
-            research: '',
+            keyword: '',
             proSelected: false, // Filtre professionnel
             individualSelected: false, // Filtre particulier
             startDate: null,
@@ -108,9 +132,11 @@ class SearchLogin extends React.Component {
         this.needReasearch = this.needReasearch.bind(this)
     }
 
-    static getInitialProps ({ query: { service, city, date, dateISO, day, hour, gps, address, research } }) {
+    static getInitialProps ({ query: { keyword, city, date, dateISO, day, hour, gps, address, category, service, prestation} }) {
       // FIX : set city nin AlgoPlaces if provided
-      return { service: service, city:city, date:date, dateISO: dateISO,day:day, hour:hour, gps:gps, address:address, research:research }
+      var init= { keyword: keyword, city:city, date:date, dateISO: dateISO,day:day, hour:hour, gps:gps, address:address, category:category, service:service, prestation:prestation}
+      console.log("InitialProps:"+JSON.stringify(init));
+      return init;
     }
 
     onChangeCity({suggestion}) {
@@ -119,10 +145,19 @@ class SearchLogin extends React.Component {
 
     componentDidMount() {
         var st={
-          research:'service' in this.props ? this.props.service : '',
+          keyword:'keyword' in this.props ? this.props.keyword : '',
           gps:'gps' in this.props ? JSON.parse(this.props.gps) : null,
           city:this.props.city || '',
         };
+        if ('category' in this.props) {
+          st['category']=this.props.category;
+        }
+        if ('service' in this.props) {
+          st['service']=this.props.service;
+        }
+        if ('prestation' in this.props) {
+          st['prestation']=this.props.prestation;
+        }
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
             .get(url+'myAlfred/api/users/current')
@@ -163,15 +198,6 @@ class SearchLogin extends React.Component {
     }
 
      search() {
-        /**
-        this.setState({
-          proSelected: false, // Filtre professionnel
-          individualSelected: false, // Filtre particulier
-          startDate: null,
-          endDate: null,
-          statusFilterVisible:false,
-        });
-        */
         const address = this.state.selectedAddress;
         var filters={}
         // GPS
@@ -180,13 +206,29 @@ class SearchLogin extends React.Component {
         }
 
        // Keyword
-       if (this.state.research) {
-         filters['keyword']=this.state.research;
+       if (this.state.keyword) {
+         filters['keyword']=this.state.keyword;
+       }
+
+       // Category
+       if (this.state.category) {
+         filters['category']=this.state.category;
+       }
+
+       // Service
+       if (this.state.service) {
+         filters['service']=this.state.service;
+       }
+
+       // Prestation
+       if (this.state.prestation) {
+         filters['prestation']=this.state.prestation;
        }
 
        axios.post('/myAlfred/api/serviceUser/search', filters)
          .then(res => {
            let serviceUsers = res.data;
+           console.log("Got SU:"+serviceUsers.length);
            /**
               serviceUsers = _.orderBy(serviceUsers,['level','number_of_views','graduated','is_certified','user.creation_date'],
               ['desc','desc','desc','desc','desc']);
@@ -195,6 +237,7 @@ class SearchLogin extends React.Component {
            axios.get(url+'myAlfred/api/category/all/sort')
              .then(res => {
                let categories = res.data;
+               console.log("Categories:"+JSON.stringify(categories, null, 2));
                var catCount={}
                categories.forEach(e => {
                  catCount[e.label]=0;
@@ -230,15 +273,16 @@ class SearchLogin extends React.Component {
      }
 
     needReasearch = data =>{
-        this.setState({research : data}, () => this.search())
+        this.setState({keyword : data}, () => this.search())
     }
 
     render() {
+        console.log("Render:keyword:"+this.state.keyword);
         const {classes} = this.props;
         const {user, categories, gps} = this.state;
-        var research = this.state.research;
+        var keyword = this.state.keyword;
         const serviceUsers = this.state.serviceUsersDisplay;
-        research = research.trim();
+        keyword = keyword ? keyword.trim() : '';
 
 
         return (
@@ -344,19 +388,19 @@ class SearchLogin extends React.Component {
                     <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Que recherchez-vous {user?user.firstname:''} ?</h3>
                   </Grid>
                     <Grid container className="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'inline-block', minHeight: '250px'}}>
-                      {categories.map((e,index) => (
+                      {categories.map((cat, index) => (
                         <Grid key={index} style={{display: 'inline-block', width: '300px', margin: 'auto 20px'}}>
-                          <Link href={'/serviceByCategory?category='+e._id}>
+                          <Link href={'/search?category='+cat._id}>
                             <Card  style={{width: '300px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
                               <CardActionArea>
                                 <CardMedia
                                     style={{height:200}}
-                                    image={e.picture}
-                                    title={e.label}
+                                    image={cat.picture}
+                                    title={cat.label}
                                 />
                                 <CardContent style={{padding: '5px'}}>
                                   <Typography gutterBottom style={{fontSize: '1.1rem', textAlign: 'center'}}>
-                                      {e.label}
+                                      {cat.label}
                                   </Typography>
                                 </CardContent>
                               </CardActionArea>
@@ -368,19 +412,19 @@ class SearchLogin extends React.Component {
                       <Grid container>
                         <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Nos meilleurs Alfred ...</h3>
                           {/* Adresse spécifique  */
-                          categories.map(e => (
+                          categories.map(cat => (
                             <Grid container>
-                              {this.state[e.label] !== 0 ?
+                              {this.state[cat.label] !== 0 ?
                                 <Grid item xs={12}>
-                                  <h3 style={{marginLeft:15}}>{e.label}</h3>
+                                  <h3 style={{marginLeft:15}}>{cat.label}</h3>
                                 </Grid> : null
                               }
                                 <Grid container spacing={2} style={{marginLeft: 15, marginRight : 15}}>
-                                {serviceUsers.map(a => {
-                                  if (a.service.category === e._id) {
+                                {serviceUsers.map(su => {
+                                  if (su.service.category._id === cat._id) {
                                     return (
                                       <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
-                                        <CardPreview services={a} alfred={user} gps={gps} needAvatar={true}/>
+                                        <CardPreview services={su} alfred={user} gps={gps} needAvatar={true}/>
                                       </Grid>
                                     )
                                   } else {
@@ -388,7 +432,7 @@ class SearchLogin extends React.Component {
                                   }
                                 })}
                                 </Grid>
-                                {this.state[e.label] !== 0 ?
+                                {this.state[cat.label] !== 0 ?
                                     <hr style={{width: '10%', margin: 'auto', border:'none', height: '10px', marginBottom: '80px', marginTop: '55px', backgroundColor: '#2FBCD3'}} />
                                     : null}
 
@@ -401,6 +445,30 @@ class SearchLogin extends React.Component {
                             null
                           }
                  </Grid>
+                <SerenityNeed gps={gps}/>
+                <BecomeAlfred />
+                <Section3 gps={gps}/>
+                <NearbyYou gps={gps}/>
+                <Profiteandlearn gps={gps}/>
+                <Section6 gps={gps}/>
+                <Wellbeing gps={gps}/>
+                <Section8 gps={gps}/>
+                <FeelingGood gps={gps}/>
+                <Section10 gps={gps}/>
+                <Proposeservice />
+                <Section12 gps={gps}/>
+                <NearbyYou gps={gps}/>
+                <Passions/>
+                <Section15 gps={gps}/>
+                <Section16 gps={gps}/>
+                <Facons/>
+                <Section18 gps={gps}/>
+                <Section19 gps={gps}/>
+                <Otter/>
+                <Section21 gps={gps}/>
+                <Section22 gps={gps}/>
+                <Assureback/>
+
                 <Footer/>
               </Layout>
             </Fragment>
@@ -409,4 +477,4 @@ class SearchLogin extends React.Component {
 }
 
 
-export default withStyles(styles)(SearchLogin);
+export default withStyles(styles)(SearchPage);

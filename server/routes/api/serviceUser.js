@@ -565,13 +565,34 @@ router.post('/search',(req,res)=> {
         }
       }
       ServiceUser.find()
-        .populate('user','-id_card').populate('service')
+        .populate('user','-id_card')
+        .populate({path: 'service', populate: {path:'category'}})
         .then(services => {
+          console.log("SU.prestations:"+JSON.stringify(services[0].prestations, null, 2));
           if ('gps' in req.body) {
             services = filterServicesGPS(services, req.body.gps);
           }
           if (allowedServices!=null) {
             services = services.filter( su => allowedServices.includes(su.service._id.toString()) );
+          }
+          if ('category' in req.body) {
+            services = services.filter( su => su.service.category._id==req.body.category );
+          }
+          if ('service' in req.body) {
+            services = services.filter( su => su.service._id==req.body.service );
+          }
+          if ('prestation' in req.body) {
+            var filtered=[];
+            services.forEach( s => {
+              // FIX : certains ServiceUser avec prestations à None, maybe des privées...
+              try {
+                if (s.prestations.filter(p => p.prestation._id==req.body.prestation).length>0) {
+                  filtered.push(s);
+                }
+              }
+              catch (error) { console.error(error)}
+            });
+            services = filtered;
           }
           console.log("Returned services:"+services.length);
           res.json(services);
