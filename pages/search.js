@@ -143,7 +143,13 @@ class SearchPage extends React.Component {
       this.setState({gps:suggestion.latlng, city: suggestion.name});
     };
 
+    componentDidUpdate(prevProps) {
+      if (this.props!== prevProps) {
+        this.search();
+      }
+    }
     componentDidMount() {
+       console.log("Did mount");
         var st={
           keyword:'keyword' in this.props ? this.props.keyword : '',
           gps:'gps' in this.props ? JSON.parse(this.props.gps) : null,
@@ -198,6 +204,7 @@ class SearchPage extends React.Component {
     }
 
      search() {
+        console.log("Searching");
         const address = this.state.selectedAddress;
         var filters={}
         // GPS
@@ -205,24 +212,24 @@ class SearchPage extends React.Component {
             filters['gps']=this.state.gps;
         }
 
-       // Keyword
+       // Keyword search disables cat/ser/presta filter
        if (this.state.keyword) {
          filters['keyword']=this.state.keyword;
        }
+       else {
+         // Category
+         if (this.props.category) {
+           filters['category']=this.props.category;
+         }
 
-       // Category
-       if (this.state.category) {
-         filters['category']=this.state.category;
-       }
-
-       // Service
-       if (this.state.service) {
-         filters['service']=this.state.service;
-       }
-
-       // Prestation
-       if (this.state.prestation) {
-         filters['prestation']=this.state.prestation;
+         // Service
+         if (this.props.service) {
+           filters['service']=this.props.service;
+         }
+         // Prestation
+         if (this.props.prestation) {
+           filters['prestation']=this.props.prestation;
+         }
        }
 
        axios.post('/myAlfred/api/serviceUser/search', filters)
@@ -237,7 +244,6 @@ class SearchPage extends React.Component {
            axios.get(url+'myAlfred/api/category/all/sort')
              .then(res => {
                let categories = res.data;
-               console.log("Categories:"+JSON.stringify(categories, null, 2));
                var catCount={}
                categories.forEach(e => {
                  catCount[e.label]=0;
@@ -277,7 +283,7 @@ class SearchPage extends React.Component {
     }
 
     render() {
-        console.log("Render:keyword:"+this.state.keyword);
+        console.log("Rendering");
         const {classes} = this.props;
         const {user, categories, gps} = this.state;
         var keyword = this.state.keyword;
@@ -390,7 +396,7 @@ class SearchPage extends React.Component {
                     <Grid container className="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'inline-block', minHeight: '250px'}}>
                       {categories.map((cat, index) => (
                         <Grid key={index} style={{display: 'inline-block', width: '300px', margin: 'auto 20px'}}>
-                          <Link href={'/search?category='+cat._id}>
+                          <Link href={'/search?category='+cat._id} activeClassName="active">
                             <Card  style={{width: '300px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
                               <CardActionArea>
                                 <CardMedia
