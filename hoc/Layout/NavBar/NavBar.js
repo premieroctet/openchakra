@@ -86,6 +86,7 @@ class NavBar extends Component {
     this.setState({ mobileMoreAnchorEl: null });
   };
 
+
   render() {
     const { anchorEl, mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel } = this.state;
     const { classes, gps, user, addressSelected } = this.props;
@@ -291,7 +292,7 @@ class NavBar extends Component {
               </Grid>
                 {hiddingPanel ?
                   <Grid className={classes.search}>
-                    <SearchInput gps={gps} user={user} addressSelected={addressSelected} />
+                    <SearchInput gps={gps} user={user} addressSelected={addressSelected}/>
                   </Grid>: null
                 }
               <Hidden xsDown>

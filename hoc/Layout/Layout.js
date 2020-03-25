@@ -29,6 +29,7 @@ class Layout extends React.Component {
       );
   }
 
+
   render() {
     const {gps, user, addressSelected} = this.state;
     const { children } = this.props;
@@ -36,7 +37,7 @@ class Layout extends React.Component {
     return(
       <Fragment>
         <Loader />
-        <NavBar gps={gps} user={user} addressSelected={addressSelected}/>
+        <NavBar gps={gps} user={user} addressSelected={addressSelected} />
         {children}
       </Fragment>
     );

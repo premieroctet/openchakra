@@ -35,12 +35,6 @@ class SearchInput extends React.Component{
     }
   }
 
-  keyPress(e) {
-    if(e.keyCode === 13){
-      this.props.search(this.state.research);
-    }
-  }
-
   findService(){
     let date;
     let dateISO;
@@ -65,7 +59,7 @@ class SearchInput extends React.Component{
     }
     Router.push({
       pathname: '/search',
-      query: { service: service,city:city,date:date,dateISO:dateISO,day:day,hour:hour,gps: gps, address: JSON.stringify(this.state.selectedAddress) }
+      query: { keyword: service,city:city,date:date,dateISO:dateISO,day:day,hour:hour,gps: gps, address: JSON.stringify(this.state.selectedAddress) }
     });
   }
 
@@ -95,8 +89,9 @@ class SearchInput extends React.Component{
                 className={classes.input}
                 placeholder="Quel service ?"
                 InputProps={{disableUnderline: true}}
-                onChange={(event)=>{this.setState({research: event.target.value});}}
-                onKeyDown={(e)=>this.keyPress(e)}
+                onChange={this.onChange}
+                value={this.state.research}
+                name={'research'}
               />
               <Hidden smUp>
                 <Divider className={classes.divider} orientation="vertical" />

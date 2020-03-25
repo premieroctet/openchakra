@@ -144,7 +144,7 @@ class SearchPage extends React.Component {
 
     componentDidUpdate(prevProps) {
       if (this.props!== prevProps) {
-        this.search();
+        window.location.reload()
       }
     }
     componentDidMount() {
@@ -236,7 +236,6 @@ class SearchPage extends React.Component {
        axios.post('/myAlfred/api/serviceUser/search', filters)
          .then(res => {
            let serviceUsers = res.data;
-           console.log(serviceUsers, 'serviceUsers');
            console.log("Got SU:"+serviceUsers.length);
            /**
               serviceUsers = _.orderBy(serviceUsers,['level','number_of_views','graduated','is_certified','user.creation_date'],

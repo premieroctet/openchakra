@@ -67,7 +67,7 @@ const styles = theme => ({
     boxShadow: '0px 0px 3px #4c4a4a9e',
     padding:'2%',
     minHeight:'470px',
-    bottom:50, 
+    bottom:50,
     marginTop:-10,
     [theme.breakpoints.down('xs')]: { // extra-large: 1920px or larger
       width: '88%',
@@ -252,8 +252,6 @@ class Homeheader extends React.Component {
       pathname: '/search',
       query: { keyword: service,city:city,date:date,dateISO:dateISO,day:day,hour:hour,gps: gps, address: JSON.stringify(this.state.addressSelected) }
     })
-
-
   }
 
   render() {
