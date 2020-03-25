@@ -300,7 +300,7 @@ class SearchPage extends React.Component {
                           <Typography onClick={()=> this.statusFilterToggled()} style={{textAlign: 'center', color:'white', fontSize: '0.8rem', paddingTop: 13, height:43}}>Statut</Typography>
                             <Grid id="status" item xs={12}  style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', marginTop: 8,padding:10,zIndex: 1}}>
                               <Grid container>
-                                <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
+                                <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}} spacing={3}>
                                   {this.state.individualSelected ? <Grid item xs={3}></Grid> :
                                     <Grid item xs={6} sm={4} md={3} style={{textAlign:'center', margin: 'auto'}}>
                                       <FormControlLabel
@@ -422,7 +422,7 @@ class SearchPage extends React.Component {
                                   <h3 style={{marginLeft:15}}>{cat.label}</h3>
                                 </Grid> : null
                               }
-                                <Grid container spacing={2} style={{marginLeft: 15, marginRight : 15}}>
+                                <Grid container spacing={2} style={{marginLeft: 15, marginRight : 15, marginTop: 5}}>
                                 {serviceUsers.map(su => {
                                   if (su.service.category._id === cat._id) {
                                     return (
