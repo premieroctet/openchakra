@@ -43,6 +43,7 @@ class Home extends React.Component {
         const token = localStorage.getItem('token');
         if (token) {
             this.setState({logged:true})
+            Router.push('/search');
         }
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios

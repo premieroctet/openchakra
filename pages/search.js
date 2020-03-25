@@ -27,6 +27,30 @@ import Tooltip from '@material-ui/core/Tooltip';
 import CardPreview from '../components/CardPreview/CardPreview';
 import AlgoliaPlaces from "algolia-places-react";
 import SearchInput from '../components/SearchInput/SearchInput';
+import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
+import Profiteandlearn from '../components/home/profite&learn/profite&learn'
+import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
+import NearbyYou from '../components/home/NearbyYou/NearbyYou';
+import Homeheader from '../components/home/Homeheader/Homeheader';
+import FeelingGood from '../components/home/feelingGood/feelingGood';
+import Wellbeing from '../components/home/Wellbeing/Wellbeing';
+import Proposeservice from '../components/home/proposeservice/Proposeservice';
+import Assureback from '../components/home/AssureBack/Assureback';
+import Section3 from '../components/home/section3';
+import Section6 from '../components/home/section6';
+import Section8 from '../components/home/section8';
+import Passions from '../components/home/Passions/passions';
+import Facons from '../components/home/Facons/facons';
+import Otter from '../components/home/Otter/otter';
+import Section10 from '../components/home/section10';
+import Section12 from '../components/home/section12';
+import Section15 from '../components/home/section15';
+import Section16 from '../components/home/section16';
+import Section18 from '../components/home/section18';
+import Section19 from '../components/home/section19';
+import Section21 from '../components/home/section21';
+import Section22 from '../components/home/section22';
+
 
 const geolib = require('geolib');
 const _ = require('lodash');
@@ -128,6 +152,12 @@ class SearchPage extends React.Component {
         if ('category' in this.props) {
           st['category']=this.props.category;
         }
+        if ('service' in this.props) {
+          st['service']=this.props.service;
+        }
+        if ('prestation' in this.props) {
+          st['prestation']=this.props.prestation;
+        }
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
             .get(url+'myAlfred/api/users/current')
@@ -207,6 +237,7 @@ class SearchPage extends React.Component {
            axios.get(url+'myAlfred/api/category/all/sort')
              .then(res => {
                let categories = res.data;
+               console.log("Categories:"+JSON.stringify(categories, null, 2));
                var catCount={}
                categories.forEach(e => {
                  catCount[e.label]=0;
@@ -357,19 +388,19 @@ class SearchPage extends React.Component {
                     <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Que recherchez-vous {user?user.firstname:''} ?</h3>
                   </Grid>
                     <Grid container className="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'inline-block', minHeight: '250px'}}>
-                      {categories.map((e,index) => (
+                      {categories.map((cat, index) => (
                         <Grid key={index} style={{display: 'inline-block', width: '300px', margin: 'auto 20px'}}>
-                          <Link href={'/search?category='+e._id}>
+                          <Link href={'/search?category='+cat._id}>
                             <Card  style={{width: '300px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
                               <CardActionArea>
                                 <CardMedia
                                     style={{height:200}}
-                                    image={e.picture}
-                                    title={e.label}
+                                    image={cat.picture}
+                                    title={cat.label}
                                 />
                                 <CardContent style={{padding: '5px'}}>
                                   <Typography gutterBottom style={{fontSize: '1.1rem', textAlign: 'center'}}>
-                                      {e.label}
+                                      {cat.label}
                                   </Typography>
                                 </CardContent>
                               </CardActionArea>
@@ -381,19 +412,19 @@ class SearchPage extends React.Component {
                       <Grid container>
                         <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Nos meilleurs Alfred ...</h3>
                           {/* Adresse spécifique  */
-                          categories.map(e => (
+                          categories.map(cat => (
                             <Grid container>
-                              {this.state[e.label] !== 0 ?
+                              {this.state[cat.label] !== 0 ?
                                 <Grid item xs={12}>
-                                  <h3 style={{marginLeft:15}}>{e.label}</h3>
+                                  <h3 style={{marginLeft:15}}>{cat.label}</h3>
                                 </Grid> : null
                               }
                                 <Grid container spacing={2} style={{marginLeft: 15, marginRight : 15}}>
-                                {serviceUsers.map(a => {
-                                  if (a.service.category === e._id) {
+                                {serviceUsers.map(su => {
+                                  if (su.service.category._id === cat._id) {
                                     return (
                                       <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
-                                        <CardPreview services={a} alfred={user} gps={gps} needAvatar={true}/>
+                                        <CardPreview services={su} alfred={user} gps={gps} needAvatar={true}/>
                                       </Grid>
                                     )
                                   } else {
@@ -401,7 +432,7 @@ class SearchPage extends React.Component {
                                   }
                                 })}
                                 </Grid>
-                                {this.state[e.label] !== 0 ?
+                                {this.state[cat.label] !== 0 ?
                                     <hr style={{width: '10%', margin: 'auto', border:'none', height: '10px', marginBottom: '80px', marginTop: '55px', backgroundColor: '#2FBCD3'}} />
                                     : null}
 
@@ -414,6 +445,30 @@ class SearchPage extends React.Component {
                             null
                           }
                  </Grid>
+                <SerenityNeed gps={gps}/>
+                <BecomeAlfred />
+                <Section3 gps={gps}/>
+                <NearbyYou gps={gps}/>
+                <Profiteandlearn gps={gps}/>
+                <Section6 gps={gps}/>
+                <Wellbeing gps={gps}/>
+                <Section8 gps={gps}/>
+                <FeelingGood gps={gps}/>
+                <Section10 gps={gps}/>
+                <Proposeservice />
+                <Section12 gps={gps}/>
+                <NearbyYou gps={gps}/>
+                <Passions/>
+                <Section15 gps={gps}/>
+                <Section16 gps={gps}/>
+                <Facons/>
+                <Section18 gps={gps}/>
+                <Section19 gps={gps}/>
+                <Otter/>
+                <Section21 gps={gps}/>
+                <Section22 gps={gps}/>
+                <Assureback/>
+
                 <Footer/>
               </Layout>
             </Fragment>
