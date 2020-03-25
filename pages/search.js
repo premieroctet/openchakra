@@ -129,7 +129,6 @@ class SearchPage extends React.Component {
             statusFilterVisible:false,
             dateFilterVisible:false,
         };
-        this.needRefresh = this.needRefresh.bind(this)
     }
 
     static getInitialProps ({ query: { keyword, city, date, dateISO, day, hour, gps, address, category, service, prestation} }) {
@@ -205,7 +204,7 @@ class SearchPage extends React.Component {
 
      search() {
         console.log("Searching");
-        const address = this.state.selectedAddress;
+       const address = this.state.selectedAddress;
         var filters={}
         // GPS
         if (this.state.gps) {
@@ -232,9 +231,12 @@ class SearchPage extends React.Component {
          }
        }
 
+       console.log(filters, 'filters');
+
        axios.post('/myAlfred/api/serviceUser/search', filters)
          .then(res => {
            let serviceUsers = res.data;
+           console.log(serviceUsers, 'serviceUsers');
            console.log("Got SU:"+serviceUsers.length);
            /**
               serviceUsers = _.orderBy(serviceUsers,['level','number_of_views','graduated','is_certified','user.creation_date'],
@@ -278,10 +280,6 @@ class SearchPage extends React.Component {
        this.setState({filterDateVisible:false});
      }
 
-    needRefresh(){
-        this.componentDidMount();
-    }
-
     render() {
         console.log("Rendering");
         const {classes} = this.props;
@@ -293,7 +291,7 @@ class SearchPage extends React.Component {
 
         return (
           <Fragment>
-            <Layout needRefresh={this.needRefresh}>
+            <Layout>
               <Grid container className={classes.bigContainer}>
                 <Grid container className={classes.respfilter} style={{position: 'sticky', top: 60, zIndex: 10, background: 'white', height: 60}}>
                   <Grid item xs={12} style={{height: 50}}>

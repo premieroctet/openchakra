@@ -10,7 +10,6 @@ class Layout extends React.Component {
     super(props);
     this.state = {
     };
-    this.needRefresh = this.needRefresh.bind(this)
   }
 
   componentDidMount() {
@@ -30,10 +29,6 @@ class Layout extends React.Component {
       );
   }
 
-  needRefresh(){
-    this.props.needRefresh()
-  }
-
   render() {
     const {gps, user, addressSelected} = this.state;
     const { children } = this.props;
@@ -41,7 +36,7 @@ class Layout extends React.Component {
     return(
       <Fragment>
         <Loader />
-        <NavBar needRefresh={this.needRefresh} gps={gps} user={user} addressSelected={addressSelected}/>
+        <NavBar gps={gps} user={user} addressSelected={addressSelected}/>
         {children}
       </Fragment>
     );

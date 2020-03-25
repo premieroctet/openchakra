@@ -48,7 +48,7 @@ class SearchInput extends React.Component{
     let hour;
     const service = this.state.research;
     const city = this.state.city;
-    const gps = JSON.stringify(this.state.gps);
+    const gps = JSON.stringify(this.props.gps);
     if(this.state.dateSelected !== ''){
       date = moment(this.state.dateSelected).format('DD/MM/YYYY');
       dateISO = moment(this.state.dateSelected).format();
@@ -67,9 +67,6 @@ class SearchInput extends React.Component{
       pathname: '/search',
       query: { service: service,city:city,date:date,dateISO:dateISO,day:day,hour:hour,gps: gps, address: JSON.stringify(this.state.selectedAddress) }
     });
-    if(Router.pathname === '/search'){
-      this.props.needRefresh()
-    }
   }
 
   onChange = e => {

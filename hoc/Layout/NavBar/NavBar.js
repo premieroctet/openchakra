@@ -36,7 +36,6 @@ class NavBar extends Component {
       research: '',
       hiddingPanel : true
     };
-    this.needRefresh = this.needRefresh.bind(this);
   }
 
   componentDidMount() {
@@ -86,10 +85,6 @@ class NavBar extends Component {
   handleMobileMenuClose = () => {
     this.setState({ mobileMoreAnchorEl: null });
   };
-
-  needRefresh(){
-    this.props.needRefresh()
-  }
 
   render() {
     const { anchorEl, mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel } = this.state;
@@ -296,7 +291,7 @@ class NavBar extends Component {
               </Grid>
                 {hiddingPanel ?
                   <Grid className={classes.search}>
-                    <SearchInput gps={gps} user={user} addressSelected={addressSelected} needRefresh={this.needRefresh}/>
+                    <SearchInput gps={gps} user={user} addressSelected={addressSelected} />
                   </Grid>: null
                 }
               <Hidden xsDown>
