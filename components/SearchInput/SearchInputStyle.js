@@ -50,4 +50,19 @@ export default theme => ({
       backgroundColor: 'rgb(232, 235, 235)'
     },
   },
+  contentInputAddress:{
+    width:'95%',
+    marginLeft: 20,
+    [theme.breakpoints.down('xs')]: {
+      width: '70%',
+    }
+  },
+  contentImg:{
+    width : '10%',
+    display: 'flex'
+  },
+  imgStyle:{
+    width : 20,
+    height : 20
+  }
 })

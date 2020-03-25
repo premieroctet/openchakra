@@ -115,14 +115,14 @@ class SearchInput extends React.Component{
               {user ?
                 <Grid className={classes.contentInput}>
                   <Hidden mdUp smUp>
-                    <Grid style={{width : '10%', display: 'flex'}}>
-                      <img style={{width : 20, height : 20}} src={'../../static/assets/img/navBar/icone.svg'}/>
+                    <Grid className={classes.contentImg}>
+                      <img className={classes.imgStyle} src={'../../static/assets/img/navBar/icone.svg'}/>
                     </Grid>
                     <Hidden smUp>
                       <Divider className={classes.divider} orientation="vertical" />
                     </Hidden>
                   </Hidden>
-                  <Grid style={{width: '70%', marginLeft: 20}}>
+                  <Grid className={classes.contentInputAddress}>
                     <TextField
                       id="outlined-select-currency"
                       select
