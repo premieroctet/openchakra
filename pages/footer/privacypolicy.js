@@ -5,10 +5,13 @@ import { withStyles } from '@material-ui/core/styles';
 import Footer from '../../hoc/Layout/Footer/Footer';
 
 const styles = theme => ({
-    bigContainer: {
-        flexGrow: 1,
-    },
+    bigContainer:{
+        marginTop:80,
+        [theme.breakpoints.down('xs')]: {
+            marginTop:250,
 
+        }
+    },
     trigger1: {
         [theme.breakpoints.down('sm')]: {
             position: 'absolute',
@@ -173,7 +176,7 @@ class Privacypolicy extends React.Component {
                    <Grid container style={{marginTop: '4%'}}>
                        <Grid item xs={3} className={classes.leborder}>
                             <Grid container className={classes.toggle} style={{ padding:'2%'}}>
-                                <div className={classes.trigger1}></div>
+                                <div className={classes.trigger1}/>
                                 {click ?
                                 <Grid onClick={this.handleClick} item xs={12} style={{padding: '20px 50px',cursor: 'pointer',zIndex: '1002', backgroundColor: 'white'}}>
                                     <a style={{ textDecoration: 'none',fontWeight:'bold', color: '#4FBDD7', fontSize: '1.1rem'}}>Préambule</a>
@@ -275,7 +278,7 @@ class Privacypolicy extends React.Component {
                                 }
                             </Grid>
                        </Grid>
-                       <Grid item xs={9}>
+                       <Grid item xs={9} className={classes.bigContainer}>
                             <Grid container>
                                 <Grid item xs={12} className={classes.responsiveContainer}>
                                     <p style={{fontWeight: 'bold', color: '#585858', fontSize: '1.35rem', paddingLeft: '7%'}}>Politique de confidentialité & gestion des cookies</p>

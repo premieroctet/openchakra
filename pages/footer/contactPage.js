@@ -3,12 +3,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Layout from '../../hoc/Layout/Layout';
 import Grid from "@material-ui/core/Grid";
 import HubspotForm from 'react-hubspot-form'
-import Footer from '../../hoc/Layout/Footer/Footer';
 import Card from '@material-ui/core/Card';
 import { Typography } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Link from 'next/link';
+
 
 const styles = theme => ({
   fullContainer: {
@@ -18,7 +15,11 @@ const styles = theme => ({
     marginBottom:'2%',
     [theme.breakpoints.down('sm')]: {
       height:'65vh',
+    },
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 250
     }
+
   },
   loginContainer: {
     display:'flex',
@@ -28,9 +29,12 @@ const styles = theme => ({
     width: '50%',
   },
   card: {
+    marginTop: '15%',
     padding: '1.5rem 3rem',
     width: 400,
-    marginTop: '15%',
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 0
+    }
   },
   cardContant: {
     flexDirection: 'column',
@@ -65,7 +69,7 @@ const styles = theme => ({
   hrStyle:{
     borderWidth: 0.5,
     color:'lightgray'
-  }
+  },
 });
 
 class contactPage extends React.Component {

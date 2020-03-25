@@ -5,7 +5,7 @@ export default theme => ({
     backgroundSize:"cover",
     backgroundRepeat:"no-repeat",
     [theme.breakpoints.down('xs')]: {
-      marginTop: 195,
+      marginTop: 250,
     },
   },
   darkOverlay: {
@@ -85,7 +85,7 @@ export default theme => ({
     top:'20%',
     zIndex:502,
     [theme.breakpoints.down('xs')]: {
-      top: '30%',
+      top: '50%',
     },
   }
 })

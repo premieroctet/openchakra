@@ -20,6 +20,13 @@ const styles = theme => ({
         [theme.breakpoints.down('sm')]: {
             display: 'none',
         }
+    },
+    bigContainer:{
+        marginTop:80,
+        [theme.breakpoints.down('xs')]: {
+            marginTop:250,
+
+        }
     }
 });
 
@@ -37,7 +44,7 @@ class faq extends React.Component {
 
         return (
             <Layout>
-                <Grid container style={{marginTop:80}}>
+                <Grid container className={classes.bigContainer}>
                     <Grid item md={7} sm={12} style={{paddingLeft:'3%'}}>
                         <Grid container>
                         <h3>Devenir Alfred</h3>
