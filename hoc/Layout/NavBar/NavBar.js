@@ -36,7 +36,7 @@ class NavBar extends Component {
       research: '',
       hiddingPanel : true
     };
-    this.getDataForSearch = this.getDataForSearch.bind(this);
+    this.needRefresh = this.needRefresh.bind(this);
   }
 
   componentDidMount() {
@@ -87,9 +87,9 @@ class NavBar extends Component {
     this.setState({ mobileMoreAnchorEl: null });
   };
 
-  getDataForSearch = data =>{
-    this.setState({research: data}, () => this.props.search(this.state.research))
-  };
+  needRefresh(){
+    this.props.needRefresh()
+  }
 
   render() {
     const { anchorEl, mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel } = this.state;
@@ -296,7 +296,7 @@ class NavBar extends Component {
               </Grid>
                 {hiddingPanel ?
                   <Grid className={classes.search}>
-                    <SearchInput search={this.getDataForSearch} gps={gps} user={user} addressSelected={addressSelected}/>
+                    <SearchInput gps={gps} user={user} addressSelected={addressSelected} needRefresh={this.needRefresh}/>
                   </Grid>: null
                 }
               <Hidden xsDown>

@@ -129,7 +129,7 @@ class SearchPage extends React.Component {
             statusFilterVisible:false,
             dateFilterVisible:false,
         };
-        this.needReasearch = this.needReasearch.bind(this)
+        this.needRefresh = this.needRefresh.bind(this)
     }
 
     static getInitialProps ({ query: { keyword, city, date, dateISO, day, hour, gps, address, category, service, prestation} }) {
@@ -272,8 +272,8 @@ class SearchPage extends React.Component {
        this.setState({filterDateVisible:false});
      }
 
-    needReasearch = data =>{
-        this.setState({keyword : data}, () => this.search())
+    needRefresh(){
+        this.componentDidMount();
     }
 
     render() {
@@ -287,7 +287,7 @@ class SearchPage extends React.Component {
 
         return (
           <Fragment>
-            <Layout search={this.needReasearch}>
+            <Layout needRefresh={this.needRefresh}>
               <Grid container className={classes.bigContainer}>
                 <Grid container className={classes.respfilter} style={{position: 'sticky', top: 60, zIndex: 10, background: 'white', height: 60}}>
                   <Grid item xs={12} style={{height: 50}}>

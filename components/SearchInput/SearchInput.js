@@ -63,13 +63,12 @@ class SearchInput extends React.Component{
     } else {
       hour = '';
     }
+    Router.push({
+      pathname: '/search',
+      query: { service: service,city:city,date:date,dateISO:dateISO,day:day,hour:hour,gps: gps, address: JSON.stringify(this.state.selectedAddress) }
+    });
     if(Router.pathname === '/search'){
-      this.props.search(this.state.research);
-    }else{
-      Router.push({
-        pathname: '/search',
-        query: { service: service,city:city,date:date,dateISO:dateISO,day:day,hour:hour,gps: gps, address: JSON.stringify(this.state.selectedAddress) }
-      })
+      this.props.needRefresh()
     }
   }
 
