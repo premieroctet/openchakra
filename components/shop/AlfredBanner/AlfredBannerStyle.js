@@ -38,7 +38,7 @@ export default theme => ({
     margin: 'auto',
     fontSize: "xxx-large",
     [theme.breakpoints.down('xs')]: {
-      top: '0%',
+      top: 'inherit',
     },
   },
   itemAvatar: {

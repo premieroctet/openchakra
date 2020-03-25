@@ -19,6 +19,9 @@ const styles = theme => ({
     bigContainer: {
         marginTop: 70,
         flexGrow: 1,
+        [theme.breakpoints.down('xs')]: {
+            marginTop: 250,
+        }
     },
     exportSVG: {
         fontFamily: 'sans-serif!important',
@@ -103,7 +106,7 @@ const styles = theme => ({
         },
         trait1:{
             width: '100%',
-    
+
             height: 4,
             backgroundColor: 'lightgray',
             borderColor: 'transparent'
@@ -112,11 +115,11 @@ const styles = theme => ({
             width: '100%',
             height: 4,
             backgroundColor: 'lightgray',
-            borderColor: 'transparent',  
+            borderColor: 'transparent',
         },
         trait3:{
             width: '100%',
-    
+
             height: 4,
             backgroundColor: 'rgb(47, 188, 211)',
             borderColor: 'transparent'
@@ -219,7 +222,7 @@ class transactions extends React.Component {
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
@@ -245,7 +248,7 @@ class transactions extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-                                
+
                                 <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -419,9 +422,9 @@ class transactions extends React.Component {
 
 
                             </Grid>
-                            
+
                             <Grid container style={{marginBottom:20, marginTop: '50px'}}>
-                                {tabs ? 
+                                {tabs ?
                                 <React.Fragment>
 
                                         <Grid className={classes.historesp} container>

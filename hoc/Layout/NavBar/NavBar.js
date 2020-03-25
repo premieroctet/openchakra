@@ -98,7 +98,7 @@ class NavBar extends Component {
     const isAvatarMenuOpen = Boolean(avatarMoreAnchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const logged = this.state.logged;
-    const maboutique = <MenuItem onClick={this.handleMenuClose}><Typography><Link href={'/myShop/services'}><a className={classes.navbarLinkMobile}>Ma boutique</a></Link></Typography></MenuItem>;
+    const maboutique = <MenuItem onClick={this.handleMenuClose}><Typography><Link href={'/shop'}><a className={classes.navbarLinkMobile}>Ma boutique</a></Link></Typography></MenuItem>;
     const becomealfred = <MenuItem onClick={this.handleMobileMenuClose}><Typography><Link href={'/creaShop/creaShop'}><a className={classes.navbarLinkMobile}>Devenir Alfred</a></Link></Typography></MenuItem>;
     const mobileavatar =
       <React.Fragment>
@@ -271,13 +271,13 @@ class NavBar extends Component {
         <AppBar color="inherit" position="fixed" className={classes.appBar}>
           <Toolbar>
             <Grid className={classes.mainWrapper}>
-              <Grid style={{display: 'flex', width: '100%', justifyContent: 'space-between', marginTop: 10}}>
+              <Grid className={classes.leftContainer}>
                 <Grid>
                   <Link href={'/'}>
                     <img src={'../../../static/logo_final_My-Alfred.svg'} className={classes.logoNavbar} alt={'Logo Bleu'}/>
                   </Link>
                 </Grid>
-                <Hidden mdDown>
+                <Hidden smUp>
                   <Grid className={classes.sectionMobile}>
                     {logged ?
                       <Grid style={{border: '1px solid #e8ebeb', borderRadius : 5}}>
@@ -299,7 +299,7 @@ class NavBar extends Component {
                     <SearchInput search={this.getDataForSearch} gps={gps} user={user} addressSelected={addressSelected}/>
                   </Grid>: null
                 }
-              <Hidden mdUp>
+              <Hidden xsDown>
                 <Grid className={classes.sectionMobile}>
                   {logged ?
                     <Grid style={{border: '1px solid #e8ebeb', borderRadius : 5}}>

@@ -23,7 +23,10 @@ export default theme =>({
     display: 'flex',
     width: '100%',
     justifyContent: 'flex-end',
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.only('sm')]: {
+      width: 'auto'
+    },
   },
   search: {
     marginLeft: 20,
@@ -49,6 +52,9 @@ export default theme =>({
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: 20
+    },
   },
   navbarItem: {
     alignSelf: 'center',
@@ -71,5 +77,15 @@ export default theme =>({
   buttonLogin:{
     marginRight: '20px',
     border: '1px solid rgba(255, 255, 255, 1)'
+  },
+  leftContainer:{
+    width: '100%',
+    display: 'flex',
+    justifyContent:'space-between',
+    marginTop: 10,
+    marginBottom:10,
+    [theme.breakpoints.between('sm', 'xl')]: {
+      width: 'auto'
+    },
   }
 })

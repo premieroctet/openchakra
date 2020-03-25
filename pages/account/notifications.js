@@ -21,6 +21,9 @@ const styles = theme => ({
     bigContainer: {
         marginTop: 70,
         flexGrow: 1,
+        [theme.breakpoints.down('xs')]: {
+            marginTop: 250,
+        }
     },
     hidesm: {
         minWidth: '271px',
@@ -208,7 +211,7 @@ class notifications extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-                                
+
                                 <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>

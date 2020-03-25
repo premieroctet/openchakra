@@ -34,20 +34,23 @@ const styles = theme => ({
      bigContainer: {
         marginTop: 70,
         flexGrow: 1,
+       [theme.breakpoints.down('xs')]: {
+         marginTop: 250,
+       }
     },
     buttondelt:{
-        color: 'white', 
-        position : 'absolute', 
-        borderRadius: '50%', 
-        height: '20px', 
-        width: '20px', 
+        color: 'white',
+        position : 'absolute',
+        borderRadius: '50%',
+        height: '20px',
+        width: '20px',
         border: 'none',
         backgroundColor: '#F8727F' ,
         '&:hover':{
             backgroundColor: 'rgb(173, 79, 88)'
-        }, 
-        top: '-5px', 
-        right: '-5px', 
+        },
+        top: '-5px',
+        right: '-5px',
         cursor: 'pointer'
     },
     hidesm: {
@@ -61,16 +64,16 @@ const styles = theme => ({
         [theme.breakpoints.up('md')]: {
             display:'none',
         }
-        
+
     },
-    trigger:{ 
+    trigger:{
     [theme.breakpoints.down('sm')]: {
     marginTop: -10,
-    width: '100%', 
+    width: '100%',
     marginLeft:'0px',
-    height:'30px', 
+    height:'30px',
     backgroundColor:'#2FBCD3',
-    
+
     display:'block',
     transition: 'display 0.7s',
     borderRadius:'5px',
@@ -86,14 +89,14 @@ const styles = theme => ({
     ,toggle: {
         [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
         transition: 'margin-left 0.7s',
-       
+
         '&:hover': {
             marginLeft:'0px',
             transition: 'margin-left 0.7s',
             boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
 
              }
-      }  
+      }
     }
 
 });
@@ -165,7 +168,7 @@ class paymentMethod extends React.Component {
           this.setState({ issuer });
         }
       };
-    
+
       handleInputFocus = ({ target }) => {
         this.setState({
           focused: target.name,
@@ -192,7 +195,7 @@ class paymentMethod extends React.Component {
             }
           }, 400)
       }
-    
+
       handleInputChange = ({ target }) => {
         if (target.name === 'card_number') {
           target.value = formatCreditCardNumber(target.value);
@@ -201,7 +204,7 @@ class paymentMethod extends React.Component {
         } else if (target.name === 'csv') {
           target.value = formatCVC(target.value);
         }
-    
+
         this.setState({ [target.name]: target.value });
       };
 
@@ -258,7 +261,7 @@ class paymentMethod extends React.Component {
                     <Grid container className={classes.bigContainer}>
 
                     <Grid className={classes.toggle}  item xs={3} style={{}}>
-                         
+
                          <div className={classes.trigger}></div>
                             <Grid container style={{justifyContent: 'center',}}>
                                 <Grid item style={{marginTop: 30,width: 275.25}} className={classes.hidesm}>
@@ -276,7 +279,7 @@ class paymentMethod extends React.Component {
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
@@ -297,12 +300,12 @@ class paymentMethod extends React.Component {
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/credit-card-2.svg'} alt={'credit-card'} height={70} width={27} style={{marginleft: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-                                
+
                                 <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -338,7 +341,7 @@ class paymentMethod extends React.Component {
                                         <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                                
+
                                             </a>
                                         </div>
                                     </Link>
@@ -359,7 +362,7 @@ class paymentMethod extends React.Component {
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                            
+
                                             </a>
                                         </div>
                                     </Link>
@@ -382,7 +385,7 @@ class paymentMethod extends React.Component {
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                            
+
                                             </a>
                                         </div>
                                     </Link>
@@ -402,7 +405,7 @@ class paymentMethod extends React.Component {
 
                                     cards.map((e,index) => (
                                         <React.Fragment key={index}>
-                                            {e.Active.toString() == "true" ? 
+                                            {e.Active.toString() == "true" ?
                                             <Grid item  style={{position: 'relative', margin: '20px'}}>
                                                 <Cards
                                                     expiry={e.ExpirationDate}
@@ -449,7 +452,7 @@ class paymentMethod extends React.Component {
                                     <NumberFormat onClick={this.handleBadSide} customInput={TextField} variant={"outlined"} label="Date d'expiration" name={'expiration_date'} onChange={this.onChange} value={this.state.expiration_date}  style={{margin: 'auto', width:'90%'}} format="##/##" placeholder="MM/YY" />
                                 </Grid>
                                 <Grid item xs={3} style={{ margin: '15px'}}>
-                                    <TextField 
+                                    <TextField
                                             label="CVV"
                                             style={{ width:'85%'}}
                                             variant="outlined"

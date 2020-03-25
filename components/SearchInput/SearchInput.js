@@ -102,7 +102,7 @@ class SearchInput extends React.Component{
                 onChange={(event)=>{this.setState({research: event.target.value});}}
                 onKeyDown={(e)=>this.keyPress(e)}
               />
-              <Hidden mdUp>
+              <Hidden smUp>
                 <Divider className={classes.divider} orientation="vertical" />
                 <IconButton className={classes.iconButton} aria-label="menu" onClick={this.findService}>
                   <Search />
@@ -114,11 +114,13 @@ class SearchInput extends React.Component{
             </Hidden>
               {user ?
                 <Grid className={classes.contentInput}>
-                  <Hidden mdUp>
+                  <Hidden mdUp smUp>
                     <Grid style={{width : '10%', display: 'flex'}}>
                       <img style={{width : 20, height : 20}} src={'../../static/assets/img/navBar/icone.svg'}/>
                     </Grid>
-                    <Divider className={classes.divider} orientation="vertical" />
+                    <Hidden smUp>
+                      <Divider className={classes.divider} orientation="vertical" />
+                    </Hidden>
                   </Hidden>
                   <Grid style={{width: '70%', marginLeft: 20}}>
                     <TextField
