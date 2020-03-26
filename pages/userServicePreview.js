@@ -172,23 +172,18 @@ class UserServicesPreview extends React.Component {
       console.log("NUL");
       return result;
     }
-    _.uniq(this.state.prestations.map( p => p.prestation.filter_presentation)).forEach( f => {
-      // FIX : handle null or "Aucun" filter
-      console.log("Filter:"+JSON.stringify(f, null, 2));
-      if (!f || f.label=='Aucun') {
-        if ('' in result) {
-          result[''].push(...this.state.prestations.filter( p => !p.prestation.filter_presentation || p.prestation.filter_presentation.label=='Aucun'));
-        } else {
-        }
-      } else {
-        if (f.label in result) {
-          result[f.label].push(...this.state.prestations.filter( p => p.prestation.filter_presentation==f));
-        } else {
-          result[f.label]=this.state.prestations.filter( p => p.prestation.filter_presentation==f);
-        }
+    this.state.prestations.forEach( p => {
+      var filter=p.prestation.filter_presentation;
+      var key = !filter || filter.label=='Aucun' ? '' : filter.label;
+      console.log("Key:"+key);
+      if (key in result) {
+        result[key].push(p); 
       }
-    })
-    console.log("Filters:"+JSON.stringify(result, null,2));
+      else {
+        result[key]=[p];
+      }
+    });
+    //console.log("Filters:"+JSON.stringify(result, null,2));
     return result;
   }
 
@@ -245,8 +240,6 @@ class UserServicesPreview extends React.Component {
   }
 
   book = () => {
-    console.log(JSON.stringify(this.state.date));
-    console.log(JSON.stringify(this.state.time));
   
     const count=this.state.count; 
     var prestations=[];
@@ -280,8 +273,6 @@ class UserServicesPreview extends React.Component {
       bookingObj.option = this.state.selectedOption;
     }
 
-
-    console.log(JSON.stringify(bookingObj, null, 2));
 
     localStorage.setItem("bookingObj", JSON.stringify(bookingObj));
     localStorage.setItem("emitter", this.state.user._id);
@@ -362,8 +353,6 @@ class UserServicesPreview extends React.Component {
             { Object.entries(filters).map( (entry) => {
               var fltr=entry[0];
               var prestations=entry[1];
-              console.log(JSON.stringify(fltr));
-              console.log(JSON.stringify(prestations));
               return (
             <ExpansionPanel>
             <ExpansionPanelSummary
