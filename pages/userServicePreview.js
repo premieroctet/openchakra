@@ -168,17 +168,17 @@ class UserServicesPreview extends React.Component {
 
   extractFilters() {
     var result={};
-    if (this.state.prestations.length==0) {
+    if (this.state.prestations.length === 0) {
       return result;
     }
     _.uniq(this.state.prestations.map( p => p.prestation.filter_presentation)).forEach( f => {
       // FIX : handle null or "Aucun" filter
-      if (!f || f.label=='Aucun') {
-        result[null]=this.state.prestations.filter( p => p.prestation.filter_presentation==f);
+      if (!f || f.label==='Aucun') {
+        result[null]=this.state.prestations.filter( p => p.prestation.filter_presentation === f);
       } else {
-        result[f]=this.state.prestations.filter( p => p.prestation.filter_presentation==f);
+        result[f]=this.state.prestations.filter( p => p.prestation.filter_presentation === f);
       }
-    })
+    });
     return result;
   }
 
@@ -237,8 +237,8 @@ class UserServicesPreview extends React.Component {
   book = () => {
     console.log(JSON.stringify(this.state.date));
     console.log(JSON.stringify(this.state.time));
-  
-    const count=this.state.count; 
+
+    const count=this.state.count;
     var prestations=[];
     this.state.prestations.forEach(p => {
       if (this.state.count[p._id]) {
@@ -274,7 +274,73 @@ class UserServicesPreview extends React.Component {
       query: { id: this.props.service_id }
     })
 
-  }
+  };
+
+  needPanell(prestations, fltr, classes){
+    console.log(fltr, 'fltr');
+    return(
+      <Grid style={{width: '100%'}}>
+        <ExpansionPanel>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography className={classes.heading}>{fltr?fltr.label:''}</Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            {this.contentPanel(prestations, classes)}
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+      </Grid>
+    )
+  };
+
+  contentPanel(prestations, classes) {
+    return (
+      <Grid style={{width : '100%'}}>
+        {prestations.map((p) => {
+          return (
+            <Grid style={{
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%'
+            }}>
+              <Grid>
+                <TextField
+                  id="outlined-number"
+                  label="Quantité"
+                  type="number"
+                  className={classes.textField}
+                  InputLabelProps={{ shrink: true, }}
+                  margin="dense"
+                  variant="outlined"
+                  name={p._id}
+                  value={this.state.count[p._id]}
+                  onChange={this.onQtyChanged}
+                />
+              </Grid>
+              <Grid style={{
+                display: 'flex',
+                justifyContent: 'space-evenly',
+                width: '100%'
+              }}>
+                <Grid>
+                  <label>{p.prestation.label}</label>
+                </Grid>
+                <Grid>
+                  <label>{p.price}€</label>
+                </Grid>
+                <Grid>
+                  <label>{p.billing.label}</label>
+                </Grid>
+              </Grid>
+            </Grid>
+          )
+        })}
+      </Grid>
+    )
+  };
 
   render() {
     const {classes} = this.props;
@@ -344,47 +410,14 @@ class UserServicesPreview extends React.Component {
               var fltr=entry[0];
               var prestations=entry[1];
               return (
-            <ExpansionPanel>
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography className={classes.heading}>{fltr?fltr.label:''}</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              { prestations.map( (p) => { return (
-              <Grid style={{display: 'flex', alignItems: 'center', width : '100%'}}>
                 <Grid>
-                  <TextField
-                    id="outlined-number"
-                    label="Quantité"
-                    type="number"
-                    className={classes.textField}
-                    InputLabelProps={{ shrink: true, }}
-                    margin="normal"
-                    variant="outlined"
-                    name={p._id}
-                    value={this.state.count[p._id]}
-                    onChange={this.onQtyChanged}
-                  />
+                  { fltr === 'null' && prestations.length === 1 ?
+                    this.contentPanel(prestations, classes) :
+                    this.needPanell(prestations, fltr, classes)
+                  }
                 </Grid>
-                <Grid style={{display:'flex', justifyContent: 'space-evenly', width: '100%'}}>
-                  <Grid>
-                    <label>{p.prestation.label}</label>
-                  </Grid>
-                  <Grid>
-                    <label>{p.price}€</label>
-                  </Grid>
-                  <Grid>
-                    <label>{p.billing.label}</label>
-                  </Grid>
-                </Grid>
-              </Grid>
-            )})}
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-          )})
+               )
+            })
           }
           {/* End filter */ }
 

@@ -326,5 +326,8 @@ export default theme => ({
   },
   marginRight:{
     marginRight: 20
+  },
+  textField:{
+    width: 70
   }
 })
