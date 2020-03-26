@@ -386,7 +386,6 @@ class UserServicesPreview extends React.Component {
                 id="date"
                 label="Date"
                 type="date"
-                className={classes.textField}
                 InputLabelProps={{ shrink: true, }}
                 name="date"
                 value={this.state.date}
@@ -488,7 +487,7 @@ class UserServicesPreview extends React.Component {
         <Grid style={{marginTop: 20, marginLeft: 10}}>
           <Grid style={{display: 'flex', alignItems : 'center', marginBottom: 20}}>
             <Grid>
-              <RoomIcon color={'primary'}/>
+              <img style={{width: 40, height : 40}} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
             </Grid>
             <Grid style={{marginLeft: 10}}>
               <label>{ this.getLocationLabel()}</label>
@@ -496,7 +495,7 @@ class UserServicesPreview extends React.Component {
           </Grid>
           <Grid style={{display: 'flex', alignItems : 'center'}}>
             <Grid>
-              <CalendarTodayIcon color={'primary'}/>
+              <img style={{width: 40, height : 40}} src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
             </Grid>
             <Grid style={{marginLeft: 10}}>
               <label>Le {date?moment(date).format('DD/MM/YYYY'):''} à {time}</label>
@@ -722,7 +721,7 @@ class UserServicesPreview extends React.Component {
                   </Grid>
                   <Grid className={classes.priceBasketContent}>
                     <Grid>
-                      <ShoppingCartIcon fontSize="large"  color={'primary'}/>
+                      <img style={{width: 40, height : 40}} src={'../../static/assets/img/userServicePreview/shop.svg'}/>
                     </Grid>
                     <Grid style={{fontSize: 'x-large', marginLeft: 15}}>
                       {serviceUser.minimum_basket} €
@@ -743,9 +742,9 @@ class UserServicesPreview extends React.Component {
                   </Grid>
                   <Grid className={classes.delayPrevenanceContent}>
                     <Grid>
-                      <CalendarTodayIcon fontSize="large"  color={'primary'}/>
+                      <img style={{width: 40, height : 40}} src={'../../static/assets/img/userServicePreview/prevenance.svg'}/>
                     </Grid>
-                    <Grid style={{fontSize: 'large',  marginLeft: 15}}>
+                    <Grid style={{fontSize: 'x-large',  marginLeft: 15}}>
                       {serviceUser.deadline_before_booking}
                     </Grid>
                   </Grid>
@@ -761,7 +760,7 @@ class UserServicesPreview extends React.Component {
                     <Grid className={classes.textContentPerimeter}>
                       <p>Le périmètre d’intervention de votre Alfred est la zone dans laquelle votre Alfred accepte de se déplacer pour réaliser ses services. Par mesure de sécurité et conformément à notre politique de confidentialité, l’adresse de votre Alfred n’est pas communiquée. </p>
                     </Grid>
-                    <Grid style={{width : '100%', height:300, backgroundColor: 'green'}}>
+                    <Grid style={{width : '100%', height:300}}>
                       { serviceUser && serviceUser.service_address?
                       <MapComponent position={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]} perimeter={serviceUser.perimeter*1000} alfred={alfred.firstname}/>
                       :

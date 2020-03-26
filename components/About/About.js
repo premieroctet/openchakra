@@ -18,6 +18,7 @@ import Typography from '@material-ui/core/Typography';
 import CancelIcon from '@material-ui/icons/Cancel';
 import moment from 'moment';
 
+
 moment.locale('fr');
 
 class About extends React.Component{
@@ -59,14 +60,18 @@ class About extends React.Component{
             </ListItem>
             <ListItem>
               <ListItemAvatar>
-                <StarIcon className={classes.iconStar}/>
+                <Grid>
+                  <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/commentaires.svg'}/>
+                </Grid>
               </ListItemAvatar>
               <LinkMaterial href="#" onClick={preventDefault} color="primary " className={classes.link}>{this.state.nbCommentary} Commentaires</LinkMaterial>
             </ListItem>
             {shop.identity_card ?
               <ListItem>
                 <ListItemAvatar>
-                  <CheckCircle />
+                  <Grid>
+                    <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/id.svg'}/>
+                  </Grid>
                 </ListItemAvatar>
                 <ListItemText
                   primary={"Pièce d’identité vérifiée"}
@@ -84,7 +89,9 @@ class About extends React.Component{
             }
             <ListItem>
               <ListItemAvatar>
-                <CalendarToday />
+                <Grid>
+                  <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
+                </Grid>
               </ListItemAvatar>
               <ListItemText
                 primary={"Membre depuis " + moment(alfred.creation_date).format('MMMM YYYY')}
@@ -92,7 +99,9 @@ class About extends React.Component{
             </ListItem>
             <ListItem>
               <ListItemAvatar>
-                <img src={'../../static/assets/img/iconCardAlfred/iconCastor.svg'} alt={'iconCastor'} title={'iconCastor'}/>
+                <Grid>
+                  <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/alfred.svg'}/>
+                </Grid>
               </ListItemAvatar>
               <ListItemText
                 //TODO A MODIFIER QUAND DATE CREATION BOUTIQUE SERA STOCKE
@@ -101,7 +110,9 @@ class About extends React.Component{
             </ListItem>
             <ListItem>
               <ListItemAvatar>
-                <Chat />
+                <Grid>
+                  <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/langues.svg'}/>
+                </Grid>
               </ListItemAvatar>
                 <ListItemText
                   primary={languages.length > 1 ? "Langue : " + languages.join(' - ') : "Langue : non renseigné"}

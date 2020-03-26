@@ -329,5 +329,5 @@ export default theme => ({
   },
   textField:{
     width: 70
-  }
+  },
 })
