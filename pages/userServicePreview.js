@@ -37,7 +37,9 @@ import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import MapComponent from '../components/map';
+const {computeBookingReference}=require('../utils/functions');
 const {COMM_CLIENT}=require('../utils/consts');
+const emptyPromise = require('../utils/promise');
 const moment = require('moment');
 moment.locale('fr');
 
@@ -139,6 +141,9 @@ class UserServicesPreview extends React.Component {
   }
 
   checkBook = () => {
+    // FIX: vérifier délai prévenance
+    // FIX: vérifier dispos
+    // FIX: vérifier date/heure après maintenant
     var errors={}
     if (!this.state.total) {
       errors['prestations']='Sélectionnez au moins une prestation';
@@ -228,9 +233,9 @@ class UserServicesPreview extends React.Component {
     }
   }
 
-  book = () => {
-
-    const count=this.state.count;
+  book = (actual) => { //actual : true=> book, false=>infos request
+     
+    const count=this.state.count; 
     var prestations=[];
     this.state.prestations.forEach(p => {
       if (this.state.count[p._id]) {
@@ -238,12 +243,13 @@ class UserServicesPreview extends React.Component {
       }
     });
 
-    var time_p=moment(Date.now()).toDate();
+    var time_p=moment().toDate();
     var tp=this.state.time.split(":");
     time_p.setHours(parseInt(tp[0]));
     time_p.setMinutes(parseInt(tp[1]));
     time_p=moment(time_p);
 
+    var chatPromise = actual ? emptyPromise({ res: null }) : axios.post(url + "myAlfred/api/chatRooms/addAndConnect", { emitter: this.state.user._id, recipient: this.state.serviceUser.user._id });
     let bookingObj = {
       address: this.state.serviceUser.service_address,
       equipments: this.state.serviceUser.equipments,
@@ -258,22 +264,59 @@ class UserServicesPreview extends React.Component {
       serviceUserId: this.state.serviceUser._id,
     };
 
-    if (this.state.selectedOption !== null) {
-      bookingObj.option = this.state.selectedOption;
-    }
+    chatPromise.then( res => {
+      let bookingObj = {
+        reference: computeBookingReference(this.state.user, this.state.serviceUser.user),
+        service: this.state.serviceUser.service,
+        address: this.state.serviceUser.service_address,
+        equipments: this.state.serviceUser.equipments,
+        amount: this.state.total,
+        date_prestation: moment(this.state.date).format("DD/MM/YYYY"), 
+        time_prestation: time_p,
+        alfred: this.state.serviceUser.user._id,
+        user: this.state.user._id,
+        prestations: prestations,
+        fees: this.state.commission,
+        status: actual ? "En attente de confirmation" : "Demande d'infos",
+        serviceUserId: this.state.serviceUser._id,
+      };
+      
+      if (!actual) {
+        bookingObj['chatroom']=res.data._id;
+      }
 
+      if (this.state.selectedOption !== null) {
+        bookingObj.option = this.state.selectedOption;
+      }
 
-    localStorage.setItem("bookingObj", JSON.stringify(bookingObj));
-    localStorage.setItem("emitter", this.state.user._id);
-    localStorage.setItem("recipient", this.state.serviceUser.user._id);
-    localStorage.removeItem('address');
+      if (actual) {
+        localStorage.setItem("bookingObj", JSON.stringify(bookingObj));
+        localStorage.setItem("emitter", this.state.user._id);
+        localStorage.setItem("recipient", this.state.serviceUser.user._id);
+        localStorage.removeItem('address');
 
-    Router.push({
-      pathname: "/confirmPayement",
-      query: { id: this.props.service_id }
+        Router.push({
+          pathname: "/confirmPayement",
+          query: { id: this.props.service_id }
+        })
+      }
+      else {
+        axios.post(url + "myAlfred/api/booking/add", bookingObj)
+          .then(response => {
+            axios.put(url + 'myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, { booking: response.data._id })
+              .then(() => {
+                localStorage.removeItem('address');
+                Router.push({
+                  pathname: "/reservations/messagesDetails",
+                  query: { id: bookingObj.chatroom, booking:response.data._id }
+                });
+              })
+          })
+          .catch(err => console.log(err));
+
+      }
     })
-
-  };
+  }
 
   needPanel(prestations, fltr, classes, index){
 
@@ -539,6 +582,8 @@ class UserServicesPreview extends React.Component {
               color="primary"
               aria-label="add"
               className={classes.margin}
+              disabled={!isEmpty(errors)}
+              onClick={() => this.book(false)}
             >
               Demande d’informations
             </Button>
@@ -552,7 +597,7 @@ class UserServicesPreview extends React.Component {
               aria-label="add"
               className={classes.margin}
               disabled={!isEmpty(errors)}
-              onClick={this.book}
+              onClick={() => this.book(true)}
             >
               Réserver
             </Button>
