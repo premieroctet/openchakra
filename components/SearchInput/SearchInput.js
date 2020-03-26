@@ -42,7 +42,7 @@ class SearchInput extends React.Component{
     let hour;
     const service = this.state.research;
     const city = this.state.city;
-    const gps = JSON.stringify(this.props.gps);
+    const gps = JSON.stringify(this.state.gps);
     if(this.state.dateSelected !== ''){
       date = moment(this.state.dateSelected).format('DD/MM/YYYY');
       dateISO = moment(this.state.dateSelected).format();
@@ -67,7 +67,7 @@ class SearchInput extends React.Component{
     let {name, value} = e.target;
     this.setState({ [e.target.name]: e.target.value });
     if (name === 'selectedAddress') {
-      this.setState({gps: value === 'all'?null: 'gps' in value ? value.gps : {'lat':value['lat'], 'lng':value['lng']}})
+      this.setState({gps: value === 'all'? null : 'gps' in value ? value.gps : {'lat':value['lat'], 'lng':value['lng']}})
     }else if(name === 'myAddresses'){
       Router.push('/profile/myAddresses')
     }
