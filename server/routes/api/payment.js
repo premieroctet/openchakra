@@ -13,9 +13,8 @@ const request = require('request');
 moment.locale('fr');
 
 const api = new mangopay({
-    clientId: 'test-myalfred-haus',
-    clientApiKey: 'Zcx9oZKnBBL31AEugBNrn13n6URvrSqtXCykH3ejBdDSmOYPU1',
-
+    clientId: 'testmyalfredv2',
+    clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
 });
 
 const {config} = require('../../../config/config');
