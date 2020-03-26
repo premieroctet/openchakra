@@ -758,7 +758,7 @@ class ConfirmPayement extends React.Component {
                           <Grid item xs={9} style={{ width: "70%" }}>
                             <p>Date et heure de la prestation:</p>{" "}
                             <p>
-                              {moment(this.state.date).format('DD/MM/YYYY')} {this.state.hour}
+                              {this.state.date} - {moment(this.state.hour).format('HH:mm')}
                             </p>
                           </Grid>
                         </Grid>

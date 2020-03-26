@@ -12,10 +12,11 @@ const mangopay = require('mangopay2-nodejs-sdk');
 const request = require('request');
 moment.locale('fr');
 
-const api = new mangopay({
-    clientId: 'test-myalfred-haus',
-    clientApiKey: 'Zcx9oZKnBBL31AEugBNrn13n6URvrSqtXCykH3ejBdDSmOYPU1',
+const MANGOTEST=true;
 
+const api = new mangopay({
+    clientId: 'testmyalfredv2',
+    clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
 });
 
 const {config} = require('../../../config/config');
@@ -219,6 +220,10 @@ router.post('/payInDirect',passport.authenticate('jwt',{session:false}),(req,res
 // POST /myAlfred/api/payment/payInDirectCreate
 // @access private
 router.post('/payInDirectCreate',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    if (MANGOTEST) {
+      res.json({});
+      return;
+    }
     const amount = req.body.amount*100;
     const fees = req.body.fees*100;
     const id_card = req.body.id_card;
@@ -341,6 +346,10 @@ router.get('/cards',passport.authenticate('jwt',{session:false}),(req,res)=> {
 // View all active credit cards for a user
 // @access private
 router.get('/cardsActive',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    if (MANGOTEST) {
+      res.json([{Id:'4706750000000009', Alias:'1234567890', ExpirationDate:'1022'}]);
+      return;
+    }
     const allCards = [];
     User.findById(req.user.id)
         .then(user => {

@@ -59,6 +59,7 @@ class UserServicesPreview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      index: 0,
       user: {},
       shop: {},
       serviceUser: {},
@@ -168,17 +169,27 @@ class UserServicesPreview extends React.Component {
 
   extractFilters() {
     var result={};
-    if (this.state.prestations.length === 0) {
+    if (this.state.prestations.length==0) {
+      console.log("NUL");
       return result;
     }
     _.uniq(this.state.prestations.map( p => p.prestation.filter_presentation)).forEach( f => {
       // FIX : handle null or "Aucun" filter
-      if (!f || f.label==='Aucun') {
-        result[null]=this.state.prestations.filter( p => p.prestation.filter_presentation === f);
+      console.log("Filter:"+JSON.stringify(f, null, 2));
+      if (!f || f.label=='Aucun') {
+        if ('' in result) {
+          result[''].push(...this.state.prestations.filter( p => !p.prestation.filter_presentation || p.prestation.filter_presentation.label=='Aucun'));
+        } else {
+        }
       } else {
-        result[f]=this.state.prestations.filter( p => p.prestation.filter_presentation === f);
+        if (f.label in result) {
+          result[f.label].push(...this.state.prestations.filter( p => p.prestation.filter_presentation==f));
+        } else {
+          result[f.label]=this.state.prestations.filter( p => p.prestation.filter_presentation==f);
+        }
       }
-    });
+    })
+    console.log("Filters:"+JSON.stringify(result, null,2));
     return result;
   }
 
@@ -246,12 +257,18 @@ class UserServicesPreview extends React.Component {
       }
     });
 
+    var time_p=moment(Date.now()).toDate();
+    var tp=this.state.time.split(":");
+    time_p.setHours(parseInt(tp[0]));
+    time_p.setMinutes(parseInt(tp[1]));
+    time_p=moment(time_p);
+
     let bookingObj = {
       address: this.state.serviceUser.service_address,
       equipments: this.state.serviceUser.equipments,
       amount: this.state.total,
-      date_prestation: this.state.date,
-      time_prestation: this.state.time,
+      date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
+      time_prestation: time_p,
       alfred: this.state.serviceUser.user._id,
       user: this.state.user._id,
       prestations: prestations,
@@ -264,6 +281,9 @@ class UserServicesPreview extends React.Component {
       bookingObj.option = this.state.selectedOption;
     }
 
+
+    console.log(JSON.stringify(bookingObj, null, 2));
+
     localStorage.setItem("bookingObj", JSON.stringify(bookingObj));
     localStorage.setItem("emitter", this.state.user._id);
     localStorage.setItem("recipient", this.state.serviceUser.user._id);
@@ -273,20 +293,23 @@ class UserServicesPreview extends React.Component {
       pathname: "/confirmPayement",
       query: { id: this.props.service_id }
     })
-
-  };
+  }
 
   needPanell(prestations, fltr, classes){
-    console.log(fltr, 'fltr');
+    if(fltr){
+      this.setState({index: this.state.index + 1})
+    }
+    let state = !!fltr;
+
     return(
       <Grid style={{width: '100%'}}>
-        <ExpansionPanel>
+        <ExpansionPanel expanded={this.state.index === 1 ? true : false}>
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
-            <Typography className={classes.heading}>{fltr?fltr.label:''}</Typography>
+            <Typography className={classes.heading}>{fltr?fltr:''}</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             {this.contentPanel(prestations, classes)}
@@ -294,6 +317,7 @@ class UserServicesPreview extends React.Component {
         </ExpansionPanel>
       </Grid>
     )
+
   };
 
   contentPanel(prestations, classes) {
@@ -416,9 +440,9 @@ class UserServicesPreview extends React.Component {
                     this.needPanell(prestations, fltr, classes)
                   }
                 </Grid>
-               )
+              )
             })
-          }
+            }
           {/* End filter */ }
 
           </Grid>
