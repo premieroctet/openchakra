@@ -169,16 +169,26 @@ class UserServicesPreview extends React.Component {
   extractFilters() {
     var result={};
     if (this.state.prestations.length==0) {
+      console.log("NUL");
       return result;
     }
     _.uniq(this.state.prestations.map( p => p.prestation.filter_presentation)).forEach( f => {
       // FIX : handle null or "Aucun" filter
+      console.log("Filter:"+JSON.stringify(f, null, 2));
       if (!f || f.label=='Aucun') {
-        result[null]=this.state.prestations.filter( p => p.prestation.filter_presentation==f);
+        if ('' in result) {
+          result[''].push(...this.state.prestations.filter( p => !p.prestation.filter_presentation || p.prestation.filter_presentation.label=='Aucun'));
+        } else {
+        }
       } else {
-        result[f]=this.state.prestations.filter( p => p.prestation.filter_presentation==f);
+        if (f.label in result) {
+          result[f.label].push(...this.state.prestations.filter( p => p.prestation.filter_presentation==f));
+        } else {
+          result[f.label]=this.state.prestations.filter( p => p.prestation.filter_presentation==f);
+        }
       }
     })
+    console.log("Filters:"+JSON.stringify(result, null,2));
     return result;
   }
 
@@ -246,12 +256,18 @@ class UserServicesPreview extends React.Component {
       }
     });
 
+    var time_p=moment(Date.now()).toDate();
+    var tp=this.state.time.split(":");
+    time_p.setHours(parseInt(tp[0]));
+    time_p.setMinutes(parseInt(tp[1]));
+    time_p=moment(time_p);
+
     let bookingObj = {
       address: this.state.serviceUser.service_address,
       equipments: this.state.serviceUser.equipments,
       amount: this.state.total,
-      date_prestation: this.state.date,
-      time_prestation: this.state.time,
+      date_prestation: moment(this.state.date).format("DD/MM/YYYY"), 
+      time_prestation: time_p,
       alfred: this.state.serviceUser.user._id,
       user: this.state.user._id,
       prestations: prestations,
@@ -263,6 +279,9 @@ class UserServicesPreview extends React.Component {
     if (this.state.selectedOption !== null) {
       bookingObj.option = this.state.selectedOption;
     }
+
+
+    console.log(JSON.stringify(bookingObj, null, 2));
 
     localStorage.setItem("bookingObj", JSON.stringify(bookingObj));
     localStorage.setItem("emitter", this.state.user._id);
@@ -343,6 +362,8 @@ class UserServicesPreview extends React.Component {
             { Object.entries(filters).map( (entry) => {
               var fltr=entry[0];
               var prestations=entry[1];
+              console.log(JSON.stringify(fltr));
+              console.log(JSON.stringify(prestations));
               return (
             <ExpansionPanel>
             <ExpansionPanelSummary
@@ -350,7 +371,7 @@ class UserServicesPreview extends React.Component {
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography className={classes.heading}>{fltr?fltr.label:''}</Typography>
+              <Typography className={classes.heading}>{fltr?fltr:''}</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               { prestations.map( (p) => { return (
