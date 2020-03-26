@@ -287,10 +287,11 @@ class UserServicesPreview extends React.Component {
 
   };
 
-  needPanell(prestations, fltr, classes){
+  needPanel(prestations, fltr, classes, index){
+
     return(
       <Grid style={{width: '100%'}}>
-        <ExpansionPanel>
+        <ExpansionPanel expanded={index === 0}>
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
@@ -314,7 +315,7 @@ class UserServicesPreview extends React.Component {
             <Grid style={{
               display: 'flex',
               alignItems: 'center',
-              width: '100%'
+              width: '100%',
             }}>
               <Grid>
                 <TextField
@@ -413,19 +414,16 @@ class UserServicesPreview extends React.Component {
             <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}} error={errors.prestations}>Mes prestations</Typography>
               <em style={{color:'red'}}>{errors['prestations']}</em>
           </Grid>
-          <Grid style={{marginTop: 20}}>
-
+          <Grid style={{marginTop: 30}}>
             {/* Start filter */ }
-            { Object.entries(filters).map( (entry) => {
+            { Object.entries(filters).map( (entry, index) => {
               var fltr=entry[0];
-              console.log(fltr, 'fltr');
               var prestations=entry[1];
-              console.log(prestations, 'prestations');
               return (
                 <Grid>
-                  { fltr === 'null' && prestations.length === 1 ?
+                  { fltr === '' ?
                     this.contentPanel(prestations, classes) :
-                    this.needPanell(prestations, fltr, classes)
+                    this.needPanel(prestations, fltr, classes, index)
                   }
                 </Grid>
               )
