@@ -87,6 +87,7 @@ class UserServicesPreview extends React.Component {
       date:null,
       time:null,
       errors:{},
+      index: 0
     }
     this.onQtyChanged = this.onQtyChanged.bind(this);
   }
@@ -182,7 +183,7 @@ class UserServicesPreview extends React.Component {
       var key = !filter || filter.label=='Aucun' ? '' : filter.label;
       console.log("Key:"+key);
       if (key in result) {
-        result[key].push(p); 
+        result[key].push(p);
       }
       else {
         result[key]=[p];
@@ -261,6 +262,19 @@ class UserServicesPreview extends React.Component {
     time_p=moment(time_p);
 
     var chatPromise = actual ? emptyPromise({ res: null }) : axios.post(url + "myAlfred/api/chatRooms/addAndConnect", { emitter: this.state.user._id, recipient: this.state.serviceUser.user._id });
+    let bookingObj = {
+      address: this.state.serviceUser.service_address,
+      equipments: this.state.serviceUser.equipments,
+      amount: this.state.total,
+      date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
+      time_prestation: time_p,
+      alfred: this.state.serviceUser.user._id,
+      user: this.state.user._id,
+      prestations: prestations,
+      fees: this.state.commission,
+      status: "En attente de confirmation",
+      serviceUserId: this.state.serviceUser._id,
+    };
 
     chatPromise.then( res => {
       let bookingObj = {
@@ -315,6 +329,72 @@ class UserServicesPreview extends React.Component {
       }
     })
   }
+
+  needPanel(prestations, fltr, classes, index){
+
+    return(
+      <Grid style={{width: '100%'}}>
+        <ExpansionPanel expanded={index === 0}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography className={classes.heading}>{fltr?fltr:''}</Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            {this.contentPanel(prestations, classes)}
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+      </Grid>
+    )
+  };
+
+  contentPanel(prestations, classes) {
+    return (
+      <Grid style={{width : '100%'}}>
+        {prestations.map((p) => {
+          return (
+            <Grid style={{
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%',
+            }}>
+              <Grid>
+                <TextField
+                  id="outlined-number"
+                  label="Quantité"
+                  type="number"
+                  className={classes.textField}
+                  InputLabelProps={{ shrink: true, }}
+                  margin="dense"
+                  variant="outlined"
+                  name={p._id}
+                  value={this.state.count[p._id]}
+                  onChange={this.onQtyChanged}
+                />
+              </Grid>
+              <Grid style={{
+                display: 'flex',
+                justifyContent: 'space-evenly',
+                width: '100%'
+              }}>
+                <Grid>
+                  <label>{p.prestation.label}</label>
+                </Grid>
+                <Grid>
+                  <label>{p.price}€</label>
+                </Grid>
+                <Grid>
+                  <label>{p.billing.label}</label>
+                </Grid>
+              </Grid>
+            </Grid>
+          )
+        })}
+      </Grid>
+    )
+  };
 
   render() {
     const {classes} = this.props;
@@ -377,55 +457,21 @@ class UserServicesPreview extends React.Component {
             <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}} error={errors.prestations}>Mes prestations</Typography>
               <em style={{color:'red'}}>{errors['prestations']}</em>
           </Grid>
-          <Grid style={{marginTop: 20}}>
-
+          <Grid style={{marginTop: 30}}>
             {/* Start filter */ }
-            { Object.entries(filters).map( (entry) => {
+            { Object.entries(filters).map( (entry, index) => {
               var fltr=entry[0];
               var prestations=entry[1];
               return (
-            <ExpansionPanel>
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography className={classes.heading}>{fltr?fltr:''}</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              { prestations.map( (p) => { return (
-              <Grid style={{display: 'flex', alignItems: 'center', width : '100%'}}>
                 <Grid>
-                  <TextField
-                    id="outlined-number"
-                    label="Quantité"
-                    type="number"
-                    className={classes.textField}
-                    InputLabelProps={{ shrink: true, }}
-                    margin="normal"
-                    variant="outlined"
-                    name={p._id}
-                    value={this.state.count[p._id]}
-                    onChange={this.onQtyChanged}
-                  />
+                  { fltr === '' ?
+                    this.contentPanel(prestations, classes) :
+                    this.needPanel(prestations, fltr, classes, index)
+                  }
                 </Grid>
-                <Grid style={{display:'flex', justifyContent: 'space-evenly', width: '100%'}}>
-                  <Grid>
-                    <label>{p.prestation.label}</label>
-                  </Grid>
-                  <Grid>
-                    <label>{p.price}€</label>
-                  </Grid>
-                  <Grid>
-                    <label>{p.billing.label}</label>
-                  </Grid>
-                </Grid>
-              </Grid>
-            )})}
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-          )})
-          }
+              )
+            })
+            }
           {/* End filter */ }
 
           </Grid>
