@@ -129,7 +129,6 @@ class SearchPage extends React.Component {
             statusFilterVisible:false,
             dateFilterVisible:false,
         };
-        this.needReasearch = this.needReasearch.bind(this)
     }
 
     static getInitialProps ({ query: { keyword, city, date, dateISO, day, hour, gps, address, category, service, prestation} }) {
@@ -145,7 +144,7 @@ class SearchPage extends React.Component {
 
     componentDidUpdate(prevProps) {
       if (this.props!== prevProps) {
-        this.search();
+        window.location.reload()
       }
     }
     componentDidMount() {
@@ -205,7 +204,7 @@ class SearchPage extends React.Component {
 
      search() {
         console.log("Searching");
-        const address = this.state.selectedAddress;
+       const address = this.state.selectedAddress;
         var filters={}
         // GPS
         if (this.state.gps) {
@@ -231,6 +230,8 @@ class SearchPage extends React.Component {
            filters['prestation']=this.props.prestation;
          }
        }
+
+       console.log(filters, 'filters');
 
        axios.post('/myAlfred/api/serviceUser/search', filters)
          .then(res => {
@@ -278,10 +279,6 @@ class SearchPage extends React.Component {
        this.setState({filterDateVisible:false});
      }
 
-    needReasearch = data =>{
-        this.setState({keyword : data}, () => this.search())
-    }
-
     render() {
         console.log("Rendering");
         const {classes} = this.props;
@@ -293,7 +290,7 @@ class SearchPage extends React.Component {
 
         return (
           <Fragment>
-            <Layout search={this.needReasearch}>
+            <Layout>
               <Grid container className={classes.bigContainer}>
                 <Grid container className={classes.respfilter} style={{position: 'sticky', top: 60, zIndex: 10, background: 'white', height: 60}}>
                   <Grid item xs={12} style={{height: 50}}>
@@ -303,7 +300,7 @@ class SearchPage extends React.Component {
                           <Typography onClick={()=> this.statusFilterToggled()} style={{textAlign: 'center', color:'white', fontSize: '0.8rem', paddingTop: 13, height:43}}>Statut</Typography>
                             <Grid id="status" item xs={12}  style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', marginTop: 8,padding:10,zIndex: 1}}>
                               <Grid container>
-                                <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}}>
+                                <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}} spacing={3}>
                                   {this.state.individualSelected ? <Grid item xs={3}></Grid> :
                                     <Grid item xs={6} sm={4} md={3} style={{textAlign:'center', margin: 'auto'}}>
                                       <FormControlLabel
@@ -425,7 +422,7 @@ class SearchPage extends React.Component {
                                   <h3 style={{marginLeft:15}}>{cat.label}</h3>
                                 </Grid> : null
                               }
-                                <Grid container spacing={2} style={{marginLeft: 15, marginRight : 15}}>
+                                <Grid container spacing={2} style={{marginLeft: 15, marginRight : 15, marginTop: 5}}>
                                 {serviceUsers.map(su => {
                                   if (su.service.category._id === cat._id) {
                                     return (

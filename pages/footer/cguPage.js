@@ -8,8 +8,14 @@ import Footer from '../../hoc/Layout/Footer/Footer';
 const styles = theme => ({
     hideed:{
         padding: '0 300px',
+        marginTop:80,
+        textAlign: 'justify',
         [theme.breakpoints.down('sm')]: {
             padding: '0 20px',
+        },
+        [theme.breakpoints.down('xs')]: {
+            marginTop:250,
+
         }
     },
     a:{
@@ -30,7 +36,7 @@ class cguPage extends React.Component {
 
         return (
             <Layout>
-                <Grid container className={classes.hideed} style={{marginTop:80,  textAlign: 'justify'}}>
+                <Grid container className={classes.hideed}>
                     <Grid item xs={12} style={{textAlign:'center', marginBottom: 50}}>
                         <h2>Conditions générales d'utilisation et de service de My-Alfred</h2>
                     </Grid>

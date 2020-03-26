@@ -57,7 +57,7 @@ class alfredBanner extends React.Component{
         <Fragment>
           <Grid container className={classes.bannerContainer} style={{backgroundImage: `url('../../${shop.picture}')`}}>
             {isOwner ?
-              <Grid item style={{position:"absolute",left:'3%',top:'20%',zIndex:502}}>
+              <Grid item className={classes.bannerPics}>
                 <LocalSeeIcon onClick={()=>this.handleChange()} style={{cursor:'pointer',color:"white",width:40}}/>
               </Grid> : null
             }

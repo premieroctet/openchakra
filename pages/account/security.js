@@ -23,7 +23,10 @@ const styles = theme => ({
         marginTop: 70,
         flexGrow: 1,
         width: "100%",
-        minHeight: 520
+        minHeight: 520,
+        [theme.breakpoints.down('xs')]: {
+            marginTop: 250,
+        }
     },
     hidesm: {
         minWidth: '271px',
@@ -153,7 +156,7 @@ class security extends React.Component {
             this.setState({checkbuttonvalidate : false});
         }
     };
- 
+
 
     onSubmit = e => {
         e.preventDefault();
@@ -198,7 +201,7 @@ class security extends React.Component {
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a  style={{fontSize: '1.1rem'}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
@@ -224,7 +227,7 @@ class security extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-                                
+
                                 <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>

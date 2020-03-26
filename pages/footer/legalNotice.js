@@ -7,14 +7,20 @@ import Footer from '../../hoc/Layout/Footer/Footer';
 const styles = theme => ({
   hideed:{
     padding: '0 300px',
+    marginTop:80,
+    textAlign: 'justify',
     [theme.breakpoints.down('sm')]: {
       padding: '0 20px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      marginTop:250,
     }
   },
   a:{
     textDecoration: 'none',
     color: '#2FBCD3',
-  }
+  },
+
 });
 
 class Privacypolicy extends React.Component {
@@ -27,7 +33,7 @@ class Privacypolicy extends React.Component {
 
     return (
       <Layout>
-        <Grid container className={classes.hideed} style={{marginTop:80,  textAlign: 'justify'}}>
+        <Grid container className={classes.hideed}>
           <Grid item xs={12} style={{textAlign:'center', marginBottom: 50}}>
             <h2>Mentions légales</h2>
           </Grid>

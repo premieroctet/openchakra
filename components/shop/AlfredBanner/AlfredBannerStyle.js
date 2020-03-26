@@ -4,7 +4,9 @@ export default theme => ({
     backgroundPosition: "center",
     backgroundSize:"cover",
     backgroundRepeat:"no-repeat",
-    marginTop: 56,
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 250,
+    },
   },
   darkOverlay: {
     height: '100%',
@@ -35,6 +37,9 @@ export default theme => ({
     width: 150,
     margin: 'auto',
     fontSize: "xxx-large",
+    [theme.breakpoints.down('xs')]: {
+      top: 'inherit',
+    },
   },
   itemAvatar: {
     flexDirection: 'column',
@@ -74,4 +79,13 @@ export default theme => ({
     left: `50%`,
     transform: `translate(-50%, -50%)`,
   },
+  bannerPics:{
+    position:"absolute",
+    left:'3%',
+    top:'20%',
+    zIndex:502,
+    [theme.breakpoints.down('xs')]: {
+      top: '50%',
+    },
+  }
 })

@@ -52,6 +52,9 @@ const styles = theme => ({
         flexGrow: 1,
         [theme.breakpoints.down('sm')]: {
             overflowX: 'hidden',
+        },
+        [theme.breakpoints.down('xs')]: {
+            marginTop: 250,
         }
     },
     hidesm: {

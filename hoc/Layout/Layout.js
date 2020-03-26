@@ -9,9 +9,7 @@ class Layout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      research : ''
     };
-    this.getDataForSearch = this.getDataForSearch.bind(this)
   }
 
   componentDidMount() {
@@ -31,11 +29,6 @@ class Layout extends React.Component {
       );
   }
 
-  getDataForSearch = data =>{
-    if(Router.pathname === '/search'){
-      this.setState({research: data}, () => this.props.search(this.state.research))
-    }
-  };
 
   render() {
     const {gps, user, addressSelected} = this.state;
@@ -44,7 +37,7 @@ class Layout extends React.Component {
     return(
       <Fragment>
         <Loader />
-        <NavBar search={this.getDataForSearch} gps={gps} user={user} addressSelected={addressSelected}/>
+        <NavBar gps={gps} user={user} addressSelected={addressSelected} />
         {children}
       </Fragment>
     );
