@@ -70,10 +70,6 @@ export default theme =>({
     width: 40,
     height: 40,
   },
-  theavatarbutton: {
-    width: 45,
-    height: 45,
-  },
   buttonLogin:{
     marginRight: '20px',
     border: '1px solid rgba(255, 255, 255, 1)'

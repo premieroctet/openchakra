@@ -80,7 +80,9 @@ class About extends React.Component{
               :
               <ListItem>
                 <ListItemAvatar>
-                  <CancelIcon />
+                  <Grid>
+                    <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/nonId.svg'}/>
+                  </Grid>
                 </ListItemAvatar>
                 <ListItemText
                   primary={"Pièce d’identité non vérifiée"}

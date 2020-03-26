@@ -21,8 +21,6 @@ import UserAvatar from '../components/Avatar/UserAvatar';
 import SkillsAlfred from '../components/SkillsAlfred/SkillsAlfred';
 import Typography from '@material-ui/core/Typography';
 import Schedule from '../components/Schedule/Schedule';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import Checkbox from '@material-ui/core/Checkbox';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
@@ -33,20 +31,11 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ButtonSwitch from '../components/ButtonSwitch/ButtonSwitch';
-import RoomIcon from '@material-ui/icons/Room';
 import Button from '@material-ui/core/Button';
-import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-import MenuIcon from '@material-ui/icons/Menu';
-import Toolbar from '@material-ui/core/Toolbar';
 import CloseIcon from '@material-ui/icons/Close';
-import EditIcon from '@material-ui/icons/Edit';
 import MapComponent from '../components/map';
 const {COMM_CLIENT}=require('../utils/consts');
 const moment = require('moment');
@@ -85,7 +74,6 @@ class UserServicesPreview extends React.Component {
       date:null,
       time:null,
       errors:{},
-      index: 0
     }
     this.onQtyChanged = this.onQtyChanged.bind(this);
   }

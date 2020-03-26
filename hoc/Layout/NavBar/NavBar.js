@@ -94,22 +94,15 @@ class NavBar extends Component {
     const isAvatarMenuOpen = Boolean(avatarMoreAnchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const logged = this.state.logged;
-    const maboutique = <MenuItem onClick={this.handleMenuClose}><Typography><Link href={`/shop?id_alfred=${user ? user._id : ''}`}><a className={classes.navbarLinkMobile}>Ma boutique</a></Link></Typography></MenuItem>;
-    const becomealfred = <MenuItem onClick={this.handleMobileMenuClose}><Typography><Link href={'/creaShop/creaShop'}><a className={classes.navbarLinkMobile}>Devenir Alfred</a></Link></Typography></MenuItem>;
-    const mobileavatar =
-      <React.Fragment>
-        <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}>
-          <UserAvatar user={user} className={classes.bigAvatar} />
-        </IconButton>
-      </React.Fragment>
+    const maboutique = <MenuItem onClick={this.handleMenuClose}><Typography><Link href={`/shop?id_alfred=${user ? user._id : ''}`}><a >Ma boutique</a></Link></Typography></MenuItem>;
+    const becomealfred = <MenuItem onClick={this.handleMobileMenuClose}><Typography><Link href={'/creaShop/creaShop'}><a>Devenir Alfred</a></Link></Typography></MenuItem>;
 
     const logoutMobile =
       <React.Fragment>
         <Link href={'/profile/editProfile'}>
           <MenuItem onClick={this.handleMenuClose}>
             <Typography>
-
-                <a className={classes.navbarLinkMobile}>
+                <a>
                   Profil
                 </a>
             </Typography>
@@ -118,7 +111,7 @@ class NavBar extends Component {
         <Link href={'/account/notifications'}>
         <MenuItem onClick={this.handleMenuClose}>
           <Typography>
-              <a className={classes.navbarLinkMobile}>
+              <a>
                 Mon compte
               </a>
           </Typography>
@@ -138,7 +131,7 @@ class NavBar extends Component {
     <Link href={'/profile/editProfile'}>
       <MenuItem key={1} onClick={this.handleMenuClose}>
         <Typography>
-          <a className={classes.navbarLinkMobile}>
+          <a>
             Profil
           </a>
         </Typography>
@@ -147,7 +140,7 @@ class NavBar extends Component {
     <Link href={'/account/notifications'}>
       <MenuItem key={2} onClick={this.handleMenuClose}>
         <Typography>
-            <a className={classes.navbarLinkMobile}>
+            <a>
               Mon compte
             </a>
         </Typography>
@@ -156,7 +149,7 @@ class NavBar extends Component {
       ,
     <MenuItem key={3} onClick={()=>this.logout2()}>
       <Typography>
-        <a style={{color: "red",}} className={classes.navbarLinkMobile}>
+        <a style={{color: "red",}}>
             Déconnexion
         </a>
       </Typography>
@@ -178,7 +171,6 @@ class NavBar extends Component {
 
     const renderAvatarMenu = (
       <Menu
-        className={classes.lemenuavatar}
         anchorEl={avatarMoreAnchorEl}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -190,7 +182,7 @@ class NavBar extends Component {
             <Link href={'/login'}>
             <MenuItem onClick={this.handleAvatarMenuOpen}>
               <Typography>
-                <a className={classes.navbarLinkAvatar}>
+                <a>
                   Connexion
                 </a>
               </Typography>
@@ -199,7 +191,7 @@ class NavBar extends Component {
             <Link href={'/signup'}>
               <MenuItem onClick={this.handleAvatarMenuOpen}>
                 <Typography>
-                  <a className={classes.navbarLinkAvatar}>
+                  <a>
                     Inscription
                   </a>
                 </Typography>
@@ -223,7 +215,7 @@ class NavBar extends Component {
           <Link href={'/myShop/messages'}>
           <MenuItem onClick={this.handleMobileMenuOpen}>
             <Typography>
-              <a className={classes.navbarLinkMobile}>
+              <a>
                 Messages
               </a>
             </Typography>
@@ -233,7 +225,7 @@ class NavBar extends Component {
         <Link href={'/faq'}>
           <MenuItem onClick={this.handleMobileMenuOpen}>
             <Typography>
-              <a className={classes.navbarLinkMobile}>
+              <a>
                 Aide
               </a>
             </Typography>
@@ -243,7 +235,7 @@ class NavBar extends Component {
           <Link href={'/login'}>
             <MenuItem onClick={this.handleMobileMenuOpen}>
               <Typography>
-                <a className={classes.navbarLinkMobile}>
+                <a>
                   Connexion
                 </a>
               </Typography>
@@ -252,7 +244,7 @@ class NavBar extends Component {
           <Link href={'/signup'}>
             <MenuItem onClick={this.handleMobileMenuOpen}>
               <Typography>
-                <a className={classes.navbarLinkMobile}>
+                <a>
                   Inscription
                 </a>
               </Typography>
