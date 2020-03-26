@@ -146,6 +146,10 @@ router.post('/payIn',passport.authenticate('jwt',{session:false}),(req,res)=> {
 // POST /myAlfred/api/payment/payInCreate
 // @access private
 router.post('/payInCreate',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    if (MANGOTEST) {
+      res.json({RedirectURL:url+'paymentSuccessCreate'});
+      return;
+    }
     const amount = req.body.amount*100;
     const fees = req.body.fees*100;
     User.findById(req.user.id)
@@ -392,6 +396,10 @@ router.get('/activeAccount',passport.authenticate('jwt',{session:false}),(req,re
 // View transaction for a user
 // @access private
 router.get('/transactions',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    if (MANGOTEST) {
+      res.json({});
+      return;
+    }
     const allTransactions = [];
     User.findById(req.user.id)
         .then(user => {

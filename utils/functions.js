@@ -1,6 +1,7 @@
 import getDistance from "geolib/es/getDistance";
 import convertDistance from "geolib/es/convertDistance";
 const isEmpty = require('../server/validation/is-empty');
+const moment=require('moment');
 
 const computeDistanceKm = (latlon1, latlon2) => {
   if (isEmpty(latlon1) || isEmpty(latlon2)) { return null; }
@@ -21,4 +22,9 @@ const computeDistanceKm = (latlon1, latlon2) => {
   }
 }
 
-module.exports={computeDistanceKm};
+const computeBookingReference = (user, alfred) => {
+  var reference = user.avatar_letters+alfred.avatar_letters+ "_"+moment().format('DDMMYYYY');
+  return reference;
+}
+
+module.exports={computeDistanceKm, computeBookingReference};
