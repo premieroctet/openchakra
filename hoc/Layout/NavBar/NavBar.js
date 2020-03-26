@@ -212,7 +212,7 @@ class NavBar extends Component {
       >
         { user && user.is_alfred ? maboutique : becomealfred }
         {logged ?<React.Fragment>
-          <Link href={'/myShop/messages'}>
+          <Link href={'/reservations/messages'}>
           <MenuItem onClick={this.handleMobileMenuOpen}>
             <Typography>
               <a>
@@ -325,7 +325,7 @@ class NavBar extends Component {
                   {logged ?
                     <React.Fragment>
                       <Typography className={classes.navbarItem}>
-                        <Link href={'/myShop/messages'}>
+                        <Link href={'/reservations/messages'}>
                           <a className={classes.navbarLink}>
                             Messages
                           </a>

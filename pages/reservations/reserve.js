@@ -23,7 +23,11 @@ const url = config.apiUrl;
 
 const styles = theme => ({
   bigContainer: {
-    flexGrow: 1
+    marginTop: 100,
+    flexGrow: 1,
+    [theme.breakpoints.down("xs")]: {
+      marginTop: 250,
+    }
   },
   grosHR: {
     height: "7px",

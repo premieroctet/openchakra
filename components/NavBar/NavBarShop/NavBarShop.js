@@ -20,7 +20,7 @@ class NavBarShop extends React.Component{
           </Link>
         </Grid>
         <Grid item xs={2} style={{textAlign:"center"}}>
-          <Link href={'/myShop/messages'}><a style={{textDecoration:'none'}}>
+          <Link href={'/reservations/messages'}><a style={{textDecoration:'none'}}>
             <p style={{color: "white",cursor: 'pointer'}}>Messages</p></a>
           </Link>
         </Grid>

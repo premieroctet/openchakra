@@ -14,8 +14,11 @@ const url = config.apiUrl;
 
 const styles = theme => ({
   bigContainer: {
-    marginTop: 68,
-    flexGrow: 1
+    marginTop: 100,
+    flexGrow: 1,
+    [theme.breakpoints.down("xs")]: {
+      marginTop: 250,
+    }
   },
   mobilevoir: {
     [theme.breakpoints.up("md")]: {
@@ -77,7 +80,7 @@ const styles = theme => ({
   topbar: {
     visibility: "visible",
     position: "sticky",
-    top: 64,
+    top: 75,
     zIndex: 999,
     [theme.breakpoints.down("sm")]: {
       display: "none",

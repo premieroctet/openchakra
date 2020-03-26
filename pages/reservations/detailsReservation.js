@@ -41,8 +41,11 @@ const styles = theme => ({
     display: 'none'
   },
   bigContainer: {
-    marginTop: 68,
-    flexGrow: 1
+    marginTop: 100,
+    flexGrow: 1,
+    [theme.breakpoints.down("xs")]: {
+      marginTop: 250,
+    }
   },
   marginbot: {
     marginBottom: "3.5%"
@@ -2545,7 +2548,7 @@ class DetailsReservation extends React.Component {
               </Grid>
             </Grid> : null}
 
-            
+
 
             <Footer />
           </>
