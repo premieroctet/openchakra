@@ -120,6 +120,7 @@ class SearchPage extends React.Component {
             categories: [],
             serviceUsers: [],
             serviceUsersDisplay: [],
+            proAlfred: [], // Professional Alfred ids
             keyword: '',
             proSelected: false, // Filtre professionnel
             individualSelected: false, // Filtre particulier
@@ -128,6 +129,7 @@ class SearchPage extends React.Component {
             focusedInput: null,
             statusFilterVisible:false,
             dateFilterVisible:false,
+            catCount:{},
         };
     }
 
@@ -148,7 +150,6 @@ class SearchPage extends React.Component {
       }
     }
     componentDidMount() {
-       console.log("Did mount");
         var st={
           keyword:'keyword' in this.props ? this.props.keyword : '',
           gps:'gps' in this.props ? JSON.parse(this.props.gps) : null,
@@ -190,16 +191,27 @@ class SearchPage extends React.Component {
         }
     };
 
-    handleChange = event => {
-        this.setState({[event.target.name]: event.target.checked} );
+    statusFilterChanged = event => {
+        const {name, checked} = event.target;
+        console.log("Changed:"+name+","+checked);
+        this.setState({[event.target.name]: event.target.checked, statusFilterVisible: false}, () => this.filter() );
     };
 
     // Filter according to pro or particular && dates
     filter() {
-      // Filter only if a search was already done
-      if (this.state.searched) {
-        this.search();
+      const serviceUsers=this.state.serviceUsers;
+      var serviceUsersDisplay=[];
+      if (this.state.proSelected || this.state.individualSelected) {
+        serviceUsers.forEach( su => {
+          var alfId = su.user._id;
+          const isPro = this.state.proAlfred.includes(alfId);
+          if (isPro && this.state.proSelected || !isPro && this.state.individualSelected) serviceUsersDisplay.push(su);
+        });
+      } else {
+        serviceUsersDisplay=serviceUsers; 
       }
+
+      this.setState({serviceUsersDisplay: serviceUsersDisplay});
     }
 
      search() {
@@ -236,11 +248,6 @@ class SearchPage extends React.Component {
        axios.post('/myAlfred/api/serviceUser/search', filters)
          .then(res => {
            let serviceUsers = res.data;
-           console.log("Got SU:"+serviceUsers.length);
-           /**
-              serviceUsers = _.orderBy(serviceUsers,['level','number_of_views','graduated','is_certified','user.creation_date'],
-              ['desc','desc','desc','desc','desc']);
-           */
            this.setState({serviceUsers:serviceUsers, serviceUsersDisplay:serviceUsers});
            axios.get(url+'myAlfred/api/category/all/sort')
              .then(res => {
@@ -254,9 +261,14 @@ class SearchPage extends React.Component {
                    }
                  })
                })
-               this.setState({...catCount, categories:categories});
-             }
-             )
+               axios.get(url+'myAlfred/api/shop/all')
+                 .then( res => {
+                   var shops=res.data;
+                   console.log(JSON.stringify(shops));
+                   var proAlfred=shops.filter( s => s.is_professional).map( s => s.alfred._id);
+                   this.setState({catCount:catCount, categories:categories, proAlfred:proAlfred});
+                 })
+             })
              .catch(err => console.log(err));
              this.setState({searched:true});
            })
@@ -280,7 +292,6 @@ class SearchPage extends React.Component {
      }
 
     render() {
-        console.log("Rendering");
         const {classes} = this.props;
         const {user, categories, gps} = this.state;
         var keyword = this.state.keyword;
@@ -307,7 +318,7 @@ class SearchPage extends React.Component {
                                         control={
                                           <Switch
                                               checked={this.state.proSelected}
-                                              onChange={e=>{this.handleChange(e);this.filter()}}
+                                              onChange={e=>{this.statusFilterChanged(e);this.filter()}}
                                               value={this.state.proSelected}
                                               color="primary"
                                               name={'proSelected'}
@@ -325,7 +336,7 @@ class SearchPage extends React.Component {
                                           control={
                                             <Switch
                                                 checked={this.state.individualSelected}
-                                                onChange={e=>{this.handleChange(e);this.filter()}}
+                                                onChange={e=>{this.statusFilterChanged(e);this.filter()}}
                                                 value={this.state.individualSelected}
                                                 color="primary"
                                                 name={'individualSelected'}
@@ -417,7 +428,7 @@ class SearchPage extends React.Component {
                           {/* Adresse spécifique  */
                           categories.map(cat => (
                             <Grid container>
-                              {this.state[cat.label] !== 0 ?
+                              {this.state.catCount[cat.label]>0 ?
                                 <Grid item xs={12}>
                                   <h3 style={{marginLeft:15}}>{cat.label}</h3>
                                 </Grid> : null
