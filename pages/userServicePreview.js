@@ -343,11 +343,7 @@ class UserServicesPreview extends React.Component {
       <Grid style={{width : '100%'}}>
         {prestations.map((p) => {
           return (
-            <Grid style={{
-              display: 'flex',
-              alignItems: 'center',
-              width: '100%',
-            }}>
+            <Grid style={{display: 'flex', alignItems: 'center', width: '100%'}}>
               <Grid>
                 <TextField
                   id="outlined-number"
@@ -362,18 +358,14 @@ class UserServicesPreview extends React.Component {
                   onChange={this.onQtyChanged}
                 />
               </Grid>
-              <Grid style={{
-                display: 'flex',
-                justifyContent: 'space-evenly',
-                width: '100%'
-              }}>
-                <Grid>
+              <Grid style={{display: 'flex', width: '100%'}}>
+                <Grid style={{width: '100%', marginLeft: 10}}>
                   <label>{p.prestation.label}</label>
                 </Grid>
-                <Grid>
+                <Grid style={{width: '30%'}}>
                   <label>{p.price}€</label>
                 </Grid>
-                <Grid>
+                <Grid style={{width: '30%'}}>
                   <label>{p.billing.label}</label>
                 </Grid>
               </Grid>
@@ -518,7 +510,7 @@ class UserServicesPreview extends React.Component {
         <Grid style={{marginTop: 20, marginLeft: 10}}>
           <Grid style={{display: 'flex', alignItems : 'center', marginBottom: 20}}>
             <Grid>
-              <img style={{width: 40, height : 40}} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
+              <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
             </Grid>
             <Grid style={{marginLeft: 10}}>
               <label>{ this.getLocationLabel()}</label>
@@ -526,7 +518,7 @@ class UserServicesPreview extends React.Component {
           </Grid>
           <Grid style={{display: 'flex', alignItems : 'center'}}>
             <Grid>
-              <img style={{width: 40, height : 40}} src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
+              <img style={{width: 40, height : 40}} alt={"calendrier"} title={"calendrier"} src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
             </Grid>
             <Grid style={{marginLeft: 10}}>
               <label>Le {date?moment(date).format('DD/MM/YYYY'):''} à {time}</label>

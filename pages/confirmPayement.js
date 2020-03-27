@@ -364,19 +364,10 @@ class ConfirmPayement extends React.Component {
                           A propos de votre réservation
                         </h3>
                         <Grid item xs={12} style={{}}>
-                          <Grid
-                            item
-                            xs={3}
-                            style={{
-                              width: "30%",
-                              float: "left",
-                              paddingTop: 15
-                            }}
-                          >
-                            <img
-                              src="../../static/calendarreservation.svg"
-                              width={"35%"}
-                            />
+                          <Grid item xs={3} style={{width: "30%", float: "left", paddingTop: 15}}>
+                            <Grid>
+                              <img style={{width: 40, height : 40}} alt={"calendrier"} title={"calendrier"} src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
+                            </Grid>
                           </Grid>
                           <Grid item xs={9} style={{ width: "70%" }}>
                             <p>Date et heure de la prestation:</p>{" "}
@@ -386,19 +377,10 @@ class ConfirmPayement extends React.Component {
                           </Grid>
                         </Grid>
                         <Grid item xs={12} style={{}}>
-                          <Grid
-                            item
-                            xs={3}
-                            style={{
-                              width: "30%",
-                              float: "left",
-                              paddingTop: 15
-                            }}
-                          >
-                            <img
-                              src="../../static/mapmarker.svg"
-                              width={"35%"}
-                            />
+                          <Grid item xs={3} style={{width: "30%", float: "left", paddingTop: 15}}>
+                            <Grid>
+                              <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
+                            </Grid>
                           </Grid>
                           <Grid item xs={9} style={{ width: "70%" }}>
                             <p>Adresse de la prestation:</p>{" "}
@@ -447,9 +429,6 @@ class ConfirmPayement extends React.Component {
                                   );
                                 })
                               : null}
-
-                            {/*<Grid item xs={9} style={{width:'90%', float:'left'}}><p>Supplément Cheveux long</p></Grid>
-                                    <Grid item xs={3} style={{width:'10%', float:'right'}}> <p>5€</p></Grid>*/}
 
                             <br></br>
 
