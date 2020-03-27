@@ -9,6 +9,7 @@ import axios from "axios";
 import _ from 'lodash';
 import moment from 'moment';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
+import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 
 
 const { config } = require("../../config/config");
@@ -20,6 +21,7 @@ const styles = theme => ({
     flexGrow: 1,
     [theme.breakpoints.down("xs")]: {
       marginTop: 250,
+      marginBottom: 100,
     }
   },
   mobilevoir: {
@@ -280,12 +282,11 @@ class Messages extends React.Component {
 
               {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
 
-              <Grid container style={{ marginBottom: "10%" }}>
+              <Grid container>
                 <Grid
                     className={classes.toggle}
                     item
                     xs={3}
-                    style={{ height: "100vh" }}
                 >
                   <div className={classes.trigger}></div>
                   <Grid
@@ -862,97 +863,8 @@ class Messages extends React.Component {
             </Grid>
           </Layout>
           {this.state.currentUser.is_alfred === true?
-              <Grid
-                  container
-                  className={classes.bottombar}
-                  justify="center"
-                  style={{
-                    backgroundColor: "white",
-                    bottom: 0,
-                    position: "fixed",
-                    zIndex: "999"
-                  }}
-              >
-                <Grid item xs={2} style={{ textAlign: "center" }}>
-                  <Link href={"/myShop/services"}>
-                    <a style={{ textDecoration: "none" }}>
-                      <p style={{ color: "white", cursor: "pointer" }}>
-                        <img
-                            src={"../static/shopping-bag.png"}
-                            alt={"sign"}
-                            width={25}
-                            style={{ opacity: "0.5" }}
-                        ></img>
-                      </p>
-                    </a>
-                  </Link>
-                </Grid>
-
-                <Grid item xs={2} style={{ textAlign: "center",borderBottom: "3px solid #4fbdd7" }}>
-                  <Link href={"/reservations/messages"}>
-                    <a style={{ textDecoration: "none" }}>
-                      <p style={{ color: "white", cursor: "pointer" }}>
-                        <img
-                            src={"../static/speech-bubble.png"}
-                            alt={"sign"}
-                            width={25}
-                            style={{ opacity: "0.7" }}
-                        ></img>
-                      </p>
-                    </a>
-                  </Link>
-                </Grid>
-
-                <Grid
-                    item
-                    xs={2}
-                    style={{ textAlign: "center" }}
-                >
-                  <Link href={"/reservations/allReservations"}>
-                    <a style={{ textDecoration: "none" }}>
-                      <p style={{ color: "white", cursor: "pointer" }}>
-                        <img
-                            src={"../static/event.png"}
-                            alt={"sign"}
-                            width={25}
-                            style={{ opacity: "0.7" }}
-                        ></img>
-                      </p>
-                    </a>
-                  </Link>
-                </Grid>
-
-                <Grid item xs={2} style={{ textAlign: "center", zIndex: 999 }}>
-                  <Link href={"/myShop/myAvailabilities"}>
-                    <a style={{ textDecoration: "none" }}>
-                      <p style={{ color: "white", cursor: "pointer" }}>
-                        <img
-                            src={"../static/calendar.png"}
-                            alt={"sign"}
-                            width={25}
-                            style={{ opacity: "0.7" }}
-                        ></img>
-                      </p>
-                    </a>
-                  </Link>
-                </Grid>
-
-                <Grid item xs={2} style={{ textAlign: "center" }}>
-                  <Link href={"/performances/revenus"}>
-                    <a style={{ textDecoration: "none" }}>
-                      <p style={{ color: "white", cursor: "pointer" }}>
-                        <img
-                            src={"../static/speedometer.png"}
-                            alt={"sign"}
-                            width={25}
-                            style={{ opacity: "0.7" }}
-                        ></img>
-                      </p>
-                    </a>
-                  </Link>
-                </Grid>
-              </Grid> : null}
-          <Footer />
+            <NavbarMobile userId={this.state.idEmitter}/>
+            : null}
         </Fragment>
     );
   }

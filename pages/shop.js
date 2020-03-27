@@ -228,7 +228,7 @@ class shop extends React.Component {
                         </Grid>*/}
                   </Grid>
               </Layout>
-              <NavbarMobile/>
+              <NavbarMobile userId={this.state.userId}/>
 
           </Fragment>
         )
