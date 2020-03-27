@@ -537,6 +537,9 @@ class UserServicesPreview extends React.Component {
             <Grid>
               <p>{this.state.count[p._id]*p.price}€</p>
             </Grid>
+            <Grid>
+              <p>{p.billing.label}</p>
+            </Grid>
           </Grid>
           )})
           }

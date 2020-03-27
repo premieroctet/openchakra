@@ -80,7 +80,7 @@ class ButtonSwitch extends React.Component {
     super(props);
     this.state = {
       checked: this.props.checked,
-      billing: props.billing ? props.billing : props.isOption ? this.props.billings[0]._id : null,
+      billing: props.billing ? props.billing._id : props.isOption ? this.props.billings[0]._id : null,
       price:this.props.price,
       label: this.props.label,
     };
@@ -104,6 +104,7 @@ class ButtonSwitch extends React.Component {
   };
 
   onChangeBilling(event, index) {
+    console.log("Bill:"+event.target.value);
     this.setState({billing: event.target.value}, () => this.fireChange());
   }
 
@@ -120,7 +121,7 @@ class ButtonSwitch extends React.Component {
     var {label, checked} = this.state;
     // FIX : forcer le checked, il doit être refourni par le parent
     var checked = this.props.checked;
-
+    console.log("Billing:"+JSON.stringify(this.state.billing));
     return(
       <Grid className={classes.contentFiltre}>
         <Grid className={classes.responsiveIOSswitch} style={{width : this.props.width}}>
@@ -170,9 +171,9 @@ class ButtonSwitch extends React.Component {
                     onChange={this.onChangeBilling}
                     value={this.state.billing}
                   >
-                    {billings.map(option => {
+                    {billings.map(bill => {
                       return (
-                        <MenuItem value={option._id}>{option.label}</MenuItem>
+                        <MenuItem value={bill._id.toString()}>{bill.label}</MenuItem>
                       )
                     }
                     )
