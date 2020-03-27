@@ -17,7 +17,8 @@ const ServiceUserSchema = new Schema({
             ref: 'prestation'
         },
         billing: {
-            type: String,
+            type: Schema.Types.ObjectId,
+            ref: 'billing',
             required: true, 
         },
         price: {
