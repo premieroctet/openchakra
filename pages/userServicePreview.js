@@ -234,8 +234,8 @@ class UserServicesPreview extends React.Component {
   }
 
   book = (actual) => { //actual : true=> book, false=>infos request
-     
-    const count=this.state.count; 
+
+    const count=this.state.count;
     var prestations=[];
     this.state.prestations.forEach(p => {
       if (this.state.count[p._id]) {
@@ -271,7 +271,7 @@ class UserServicesPreview extends React.Component {
         address: this.state.serviceUser.service_address,
         equipments: this.state.serviceUser.equipments,
         amount: this.state.total,
-        date_prestation: moment(this.state.date).format("DD/MM/YYYY"), 
+        date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
         time_prestation: time_p,
         alfred: this.state.serviceUser.user._id,
         user: this.state.user._id,
@@ -280,7 +280,7 @@ class UserServicesPreview extends React.Component {
         status: actual ? "En attente de confirmation" : "Demande d'infos",
         serviceUserId: this.state.serviceUser._id,
       };
-      
+
       if (!actual) {
         bookingObj['chatroom']=res.data._id;
       }
@@ -604,6 +604,11 @@ class UserServicesPreview extends React.Component {
           </Grid>
         </Grid>
       </Grid>
+        {/*<Grid>
+        <Grid>
+          <img alt={'castor_happy'} title={'castor_happy'} style={{height: 100}} src={'../../static/assets/img/userServicePreview/castor.svg'}/>
+        </Grid>
+      </Grid>*/}
     </Grid>
    );
 

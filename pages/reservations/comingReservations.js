@@ -7,6 +7,8 @@ import axios from "axios";
 import Footer from "../../hoc/Layout/Footer/Footer";
 import Typography from "@material-ui/core/Typography";
 import moment from "moment";
+import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
+
 
 const { config } = require("../../config/config");
 const url = config.apiUrl;
@@ -80,7 +82,7 @@ const styles = theme => ({
   topbar: {
     visibility: "visible",
     position: "sticky",
-    top: 64,
+    top: 75,
     zIndex: 999,
     [theme.breakpoints.down("sm")]: {
       display: "none",
@@ -224,7 +226,8 @@ class ComingReservations extends React.Component {
         "token"
     );
     axios.get(url + "myAlfred/api/users/current").then(res => {
-      this.setState({ user: res.data });
+      let result = res.data
+      this.setState({ user: result._id });
       if (res.data.is_alfred === true) {
         this.setState({ isAlfred: true });
       }
@@ -282,92 +285,9 @@ class ComingReservations extends React.Component {
           <Layout>
             <Grid container className={classes.bigContainer}>
               {this.state.isAlfred ? (
-                  <Grid
-                      container
-                      className={classes.topbar}
-                      justify="center"
-                      style={{
-                        backgroundColor: "#4fbdd7",
-                        marginTop: -3,
-                        height: "52px"
-                      }}
-                  >
-                    <Grid item xs={1} className={classes.shopbar}></Grid>
-                    <Grid
-                        item
-                        xs={2}
-                        className={classes.shopbar}
-                        style={{ textAlign: "center" }}
-                    >
-                      <Link href={"/myShop/services"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Ma boutique
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                    <Grid
-                        item
-                        xs={2}
-                        className={classes.shopbar}
-                        style={{ textAlign: "center" }}
-                    >
-                      <Link href={"/reservations/messages"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Messages
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                    <Grid
-                        item
-                        xs={2}
-                        className={classes.shopbar}
-                        style={{
-                          textAlign: "center",
-                          borderBottom: "2px solid white",
-                          zIndex: 999
-                        }}
-                    >
-                      <Link href={"/reservations/allReservations"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Mes réservations
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                    <Grid
-                        item
-                        xs={2}
-                        className={classes.shopbar}
-                        style={{ textAlign: "center" }}
-                    >
-                      <Link href={"/myShop/myAvailabilities"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Mon calendrier
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                    <Grid
-                        item
-                        xs={2}
-                        className={classes.shopbar}
-                        style={{ textAlign: "center" }}
-                    >
-                      <Link href={"/performances/revenus"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Performances
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                  </Grid>
+                <Grid style={{width: '100%'}}>
+                  <NavBarShop userId={this.state.user}/>
+                </Grid>
               ) : null}
 
               {/*/////////////////////////////////////////////////////////////////////////////////////////*/}

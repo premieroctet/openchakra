@@ -25,7 +25,7 @@ class NavBarShop extends React.Component{
           </Link>
         </Grid>
         <Grid item xs={2} style={{textAlign:"center"}}>
-          <Link href={'/myShop/mesreservations'}><a style={{textDecoration:'none'}}>
+          <Link href={'/reservations/allReservations'}><a style={{textDecoration:'none'}}>
             <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p></a>
           </Link>
         </Grid>
@@ -35,7 +35,7 @@ class NavBarShop extends React.Component{
           </Link>
         </Grid>
         <Grid item xs={2} style={{textAlign:"center"}}>
-          <Link href={'/myShop/performances'}><a style={{textDecoration:'none'}}>
+          <Link href={'performances/revenus'}><a style={{textDecoration:'none'}}>
             <p style={{color: "white",cursor: 'pointer'}}>Performance</p></a>
           </Link>
         </Grid>

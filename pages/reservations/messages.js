@@ -8,6 +8,8 @@ import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import _ from 'lodash';
 import moment from 'moment';
+import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
+
 
 const { config } = require("../../config/config");
 const url = config.apiUrl;
@@ -269,92 +271,9 @@ class Messages extends React.Component {
           <Layout>
             <Grid container className={classes.bigContainer}>
               {this.state.currentUser.is_alfred === true?
-                  <Grid
-                      container
-                      className={classes.topbar}
-                      justify="center"
-                      style={{
-                        backgroundColor: "#4fbdd7",
-                        marginTop: -3,
-                        height: "52px"
-                      }}
-                  >
-                    <Grid item xs={1} className={classes.shopbar}></Grid>
-                    <Grid
-                        item
-                        xs={2}
-                        className={classes.shopbar}
-                        style={{ textAlign: "center" }}
-                    >
-                      <Link href={"/myShop/services"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Ma boutique
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                    <Grid
-                        item
-                        xs={2}
-                        className={classes.shopbar}
-                        style={{
-                          textAlign: "center",
-                          borderBottom: "2px solid white",
-                          zIndex: 999
-                        }}
-                    >
-                      <Link href={"/reservations/messages"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Messages
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                    <Grid
-                        item
-                        xs={2}
-                        className={classes.shopbar}
-                        style={{ textAlign: "center" }}
-                    >
-                      <Link href={"/reservations/allReservations"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Mes réservations
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                    <Grid
-                        item
-                        xs={2}
-                        className={classes.shopbar}
-                        style={{ textAlign: "center" }}
-                    >
-                      <Link href={"/myShop/myAvailabilities"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Mon calendrier
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                    <Grid
-                        item
-                        xs={2}
-                        className={classes.shopbar}
-                        style={{ textAlign: "center" }}
-                    >
-                      <Link href={"/performances/revenus"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Performances
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                  </Grid>
+                <Grid style={{width: '100%'}}>
+                  <NavBarShop userId={this.state.idEmitter}/>
+                </Grid>
 
                   : null}
 

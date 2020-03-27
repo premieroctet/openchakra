@@ -43,7 +43,7 @@ class SkillsAlfred extends React.Component{
     return (
       <Grid>
         <Grid item>
-          <Typography variant="h6">
+          <Typography variant="h3" className={classes.titleSkills}>
             Les compliments reçus par {alfred.firstname}
           </Typography>
           <Grid className={ widthHr === 500 ? classes.bigWidth : classes.middleWidth}>

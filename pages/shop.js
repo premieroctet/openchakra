@@ -137,7 +137,7 @@ class shop extends React.Component {
                       </Grid>
                       <Grid className={classes.servicesContainer}>
                           <Grid className={classes.largeWidth}>
-                              <Typography variant="h6">
+                              <Typography variant="h3" className={classes.titleShop}>
                                   Les services de {this.state.alfred.firstname}
                               </Typography>
                           </Grid>
