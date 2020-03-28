@@ -192,26 +192,12 @@ class Reserve extends React.Component {
             <Grid container className={classes.bigContainer}>
               <Grid container>
                 <br></br>
-                <Grid
-                  item
-                  md={5}
-                  xs={12}
-                  style={{
-                    textAlign: "left",
-                    margin: "0 auto",
-                    float: "right",
-                    paddingLeft: "3%"
-                  }}
-                >
+                <Grid item md={5} xs={12} style={{ textAlign: "left", margin: "0 auto", float: "right", paddingLeft: "3%" }} >
                   <div
                     style={{ margin: "20px 11%", marginTop: "5%", width: "90%" }}
                   ></div>
                   <Grid container>
-                    <Grid
-                      item
-                      xs={12}
-                      style={{ marginTop: 50, marginBottom: 30 }}
-                    >
+                    <Grid item xs={12} style={{ marginTop: 50, marginBottom: 30 }} >
                       <h2
                         style={{
                           fontSize: "2rem",
@@ -1049,21 +1035,13 @@ class Reserve extends React.Component {
                           Détail de la réservation
                         </h3>
                         <Grid xs={12} style={{}}>
-                          <Grid
-                            item
-                            xs={9}
-                            style={{ width: "90%", float: "left" }}
-                          >
+                          <Grid item xs={9} style={{ width: "90%", float: "left" }} >
                             <h4>{bookingObj.service}</h4>
                           </Grid>
                           {bookingObj.prestations.map(prestation => {
                             return (
                               <>
-                                <Grid
-                                  item
-                                  xs={9}
-                                  style={{ width: "90%", float: "left" }}
-                                >
+                                <Grid item xs={9} style={{ width: "90%", float: "left" }} >
                                   <p>{prestation.value}X {prestation.name}</p>
                                 </Grid>
                                 <Grid
@@ -1080,18 +1058,10 @@ class Reserve extends React.Component {
                             null
                             :
                             <>
-                              <Grid
-                                item
-                                xs={9}
-                                style={{ width: "90%", float: "left" }}
-                              >
+                              <Grid item xs={9} style={{ width: "90%", float: "left" }} >
                                 <p>{bookingObj.option.label}</p>
                               </Grid>
-                              <Grid
-                                item
-                                xs={3}
-                                style={{ width: "10%", float: "right" }}
-                              >
+                              <Grid item xs={3} style={{ width: "10%", float: "right" }} >
                                 {" "}
                                 <p>{bookingObj.option.price}€</p>
                               </Grid>
@@ -1100,18 +1070,10 @@ class Reserve extends React.Component {
 
                           <br></br>
 
-                          <Grid
-                            item
-                            xs={9}
-                            style={{ width: "90%", float: "left" }}
-                          >
+                          <Grid item xs={9} style={{ width: "90%", float: "left" }} >
                             <p>Frais de service</p>
                           </Grid>
-                          <Grid
-                            item
-                            xs={3}
-                            style={{ width: "10%", float: "right" }}
-                          >
+                          <Grid item xs={3} style={{ width: "10%", float: "right" }} >
                             {" "}
                           <p>{bookingObj.fees}€</p>
                           </Grid>
@@ -1121,15 +1083,7 @@ class Reserve extends React.Component {
                         <Grid item xs={12} style={{}}>
                           <hr></hr>
                           <br></br>
-                          <Grid
-                            item
-                            xs={3}
-                            style={{
-                              width: "25%",
-                              float: "left",
-                              paddingTop: 15
-                            }}
-                          >
+                          <Grid item xs={3} style={{ width: "25%", float: "left", paddingTop: 15 }} >
                             <img
                               src="../../static/calendarreservation.svg"
                               width={"35%"}
@@ -1141,15 +1095,7 @@ class Reserve extends React.Component {
                           </Grid>
                         </Grid>
                         <Grid item xs={12} style={{}}>
-                          <Grid
-                            item
-                            xs={3}
-                            style={{
-                              width: "25%",
-                              float: "left",
-                              paddingTop: 15
-                            }}
-                          >
+                          <Grid item xs={3} style={{ width: "25%", float: "left", paddingTop: 15 }} >
                             <img src="../../static/mapmarker.svg" width={"35%"} />
                           </Grid>
                           <Grid item xs={5} style={{ width: "50%", display: 'inline-block' }}>
@@ -1189,12 +1135,7 @@ class Reserve extends React.Component {
                 </Grid>
 
                 {/*Contenu à droite*/}
-                <Grid
-                  item
-                  xs={12}
-                  md={7}
-                  style={{ marginTop: "2%", marginBottom: "5%" }}
-                >
+                <Grid item xs={12} md={7} style={{ marginTop: "2%", marginBottom: "5%" }} >
                   <Grid
                     container
                     style={{

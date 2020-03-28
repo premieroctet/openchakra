@@ -10,7 +10,7 @@ import moment from "moment";
 import { withStyles } from "@material-ui/core/styles";
 import getDistance from "geolib/es/getDistance";
 import convertDistance from "geolib/es/convertDistance";
-
+import UserAvatar from '../../components/Avatar/UserAvatar';
 const { config } = require("../../config/config");
 const url = config.apiUrl;
 
@@ -333,24 +333,7 @@ class MessagesDetails extends React.Component {
                 }}
               >
                 <Grid item xs={3} md={1} style={{ marginRight: "5%" }}>
-
-
-                  <img
-                    src={`../../${
-                      bookingObj === null
-                        ? null
-                        : this.state.userData._id === bookingObj.alfred._id
-                        ? bookingObj.user.picture
-                        : bookingObj.alfred.picture
-                    }`}
-                    alt={"picture"}
-                    style={{
-                      width: "80px",
-                      height: "80px",
-                      borderRadius: "50%",
-                      objectFit: "cover"
-                    }}
-                  ></img>
+                  <UserAvatar user={bookingObj === null ? null : this.state.userData._id === bookingObj.alfred._id ? bookingObj.user:bookingObj.alfred} />
                 </Grid>
                 <Grid item xs={5} md={7}>
                   <Typography style={{ marginTop: "25px", fontSize: "1.3rem" }}>
@@ -365,7 +348,7 @@ class MessagesDetails extends React.Component {
                           : bookingObj.alfred.name}
                   </Typography>
                   <Typography style={{ marginTop: "3px", color: "#9B9B9B" }}>
-                    Réservation coiffure le{" "}
+                    {bookingObj?bookingObj.service:''} le 
                     {bookingObj === null ? null : bookingObj.date_prestation}{" "}
                   </Typography>
                 </Grid>

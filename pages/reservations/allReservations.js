@@ -6,6 +6,7 @@ import { withStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import Footer from "../../hoc/Layout/Footer/Footer";
 import Typography from "@material-ui/core/Typography";
+import UserAvatar from '../../components/Avatar/UserAvatar';
 import moment from "moment";
 
 const { config } = require("../../config/config");
@@ -254,16 +255,7 @@ class AllReservations extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         {this.state.isAlfred ? (
-                            <Grid
-                                container
-                                className={classes.topbar}
-                                justify="center"
-                                style={{
-                                    backgroundColor: "#4fbdd7",
-                                    marginTop: -3,
-                                    height: "52px"
-                                }}
-                            >
+                            <Grid container className={classes.topbar} justify="center" style={{ backgroundColor: "#4fbdd7", marginTop: -3, height: "52px" }} >
                                 <Grid item xs={1} className={classes.shopbar}></Grid>
                                 <Grid
                                     item
@@ -279,12 +271,7 @@ class AllReservations extends React.Component {
                                         </a>
                                     </Link>
                                 </Grid>
-                                <Grid
-                                    item
-                                    xs={2}
-                                    className={classes.shopbar}
-                                    style={{ textAlign: "center" }}
-                                >
+                                <Grid item xs={2} className={classes.shopbar} style={{ textAlign: "center" }} >
                                     <Link href={"/reservations/messages"}>
                                         <a style={{ textDecoration: "none" }}>
                                             <p style={{ color: "white", cursor: "pointer" }}>
@@ -293,16 +280,7 @@ class AllReservations extends React.Component {
                                         </a>
                                     </Link>
                                 </Grid>
-                                <Grid
-                                    item
-                                    xs={2}
-                                    className={classes.shopbar}
-                                    style={{
-                                        textAlign: "center",
-                                        borderBottom: "2px solid white",
-                                        zIndex: 999
-                                    }}
-                                >
+                                <Grid item xs={2} className={classes.shopbar} style={{ textAlign: "center", borderBottom: "2px solid white", zIndex: 999 }} >
                                     <Link href={"/reservations/allReservations"}>
                                         <a style={{ textDecoration: "none" }}>
                                             <p style={{ color: "white", cursor: "pointer" }}>
@@ -311,12 +289,7 @@ class AllReservations extends React.Component {
                                         </a>
                                     </Link>
                                 </Grid>
-                                <Grid
-                                    item
-                                    xs={2}
-                                    className={classes.shopbar}
-                                    style={{ textAlign: "center" }}
-                                >
+                                <Grid item xs={2} className={classes.shopbar} style={{ textAlign: "center" }} >
                                     <Link href={"/myShop/myAvailabilities"}>
                                         <a style={{ textDecoration: "none" }}>
                                             <p style={{ color: "white", cursor: "pointer" }}>
@@ -325,12 +298,7 @@ class AllReservations extends React.Component {
                                         </a>
                                     </Link>
                                 </Grid>
-                                <Grid
-                                    item
-                                    xs={2}
-                                    className={classes.shopbar}
-                                    style={{ textAlign: "center" }}
-                                >
+                                <Grid item xs={2} className={classes.shopbar} style={{ textAlign: "center" }} >
                                     <Link href={"/performances/revenus"}>
                                         <a style={{ textDecoration: "none" }}>
                                             <p style={{ color: "white", cursor: "pointer" }}>
@@ -345,19 +313,10 @@ class AllReservations extends React.Component {
                         {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
 
                         <Grid container style={{ marginBottom: "11%" }}>
-                            <Grid
-                                className={classes.toggle}
-                                item
-                                xs={3}
-                                style={{ height: "100vh" }}
-                            >
+                            <Grid className={classes.toggle} item xs={3} style={{ height: "100vh" }} >
                                 <div className={classes.trigger}></div>
                                 <Grid container style={{ justifyContent: "center" }}>
-                                    <Grid
-                                        item
-                                        style={{ marginTop: 30, width: 281, height: 70 }}
-                                        className={classes.hidesm}
-                                    >
+                                    <Grid item style={{ marginTop: 30, width: 281, height: 70 }} className={classes.hidesm} >
                                         <Link href={"allReservations"}>
                                             <div
                                                 style={{
@@ -375,11 +334,7 @@ class AllReservations extends React.Component {
                                             </div>
                                         </Link>
                                     </Grid>
-                                    <Grid
-                                        item
-                                        style={{ marginTop: 30, width: 281 }}
-                                        className={classes.hidelg}
-                                    >
+                                    <Grid item style={{ marginTop: 30, width: 281 }} className={classes.hidelg} >
                                         <Link href={"allReservations"}>
                                             <div
                                                 style={{
@@ -403,11 +358,7 @@ class AllReservations extends React.Component {
                                         </Link>
                                     </Grid>
 
-                                    <Grid
-                                        item
-                                        style={{ marginTop: 10, width: 281, height: 70 }}
-                                        className={classes.hidesm}
-                                    >
+                                    <Grid item style={{ marginTop: 10, width: 281, height: 70 }} className={classes.hidesm} >
                                         <Link href={"comingReservations"}>
                                             <div
                                                 style={{
@@ -425,11 +376,7 @@ class AllReservations extends React.Component {
                                             </div>
                                         </Link>
                                     </Grid>
-                                    <Grid
-                                        item
-                                        style={{ marginTop: 30, width: 281 }}
-                                        className={classes.hidelg}
-                                    >
+                                    <Grid item style={{ marginTop: 30, width: 281 }} className={classes.hidelg} >
                                         <Link href={"comingReservations"}>
                                             <div
                                                 style={{
@@ -453,11 +400,7 @@ class AllReservations extends React.Component {
                                         </Link>
                                     </Grid>
 
-                                    <Grid
-                                        item
-                                        style={{ marginTop: 10, width: 281, height: 70 }}
-                                        className={classes.hidesm}
-                                    >
+                                    <Grid item style={{ marginTop: 10, width: 281, height: 70 }} className={classes.hidesm} >
                                         <Link href={"finishedReservations"}>
                                             <div
                                                 style={{
@@ -475,11 +418,7 @@ class AllReservations extends React.Component {
                                             </div>
                                         </Link>
                                     </Grid>
-                                    <Grid
-                                        item
-                                        style={{ marginTop: 30, width: 281 }}
-                                        className={classes.hidelg}
-                                    >
+                                    <Grid item style={{ marginTop: 30, width: 281 }} className={classes.hidelg} >
                                         <Link href={"finishedReservations"}>
                                             <div
                                                 style={{
@@ -653,17 +592,7 @@ class AllReservations extends React.Component {
                                                             style={{ borderBottom: "1px #8281813b solid" }}
                                                         >
                                                             <Grid item md={1} style={{ marginRight: "5%" }}>
-                                                                <img
-                                                                    src={`../../${booking.alfred.picture}`}
-                                                                    alt={"picture"}
-                                                                    style={{
-                                                                        width: "80px",
-                                                                        height: "80px",
-                                                                        borderRadius: "50%",
-                                                                        objectFit: "cover",
-                                                                        margin: "auto"
-                                                                    }}
-                                                                ></img>
+                                                                <UserAvatar user={booking.alfred} />
                                                             </Grid>
                                                             <Grid
                                                                 item
@@ -729,13 +658,7 @@ class AllReservations extends React.Component {
                                                                 </Typography>
                                                             </Grid>
                                                             <Grid item xs={2} style={{}}>
-                                                                <Link
-                                                                    href={{
-                                                                        pathname:
-                                                                            "/reservations/detailsReservation",
-                                                                        query: { id: booking._id, user: true }
-                                                                    }}
-                                                                >
+                                                                <Link href={{ pathname: "/reservations/detailsReservation", query: { id: booking._id, user: true } }} >
                                                                 <Typography
                                                                     className={classes.webvoir}
                                                                     style={{
@@ -763,43 +686,11 @@ class AllReservations extends React.Component {
                                                         </Grid>
 
                                                         {/* Mobile */}
-                                                        <Grid
-                                                            container
-                                                            className={classes.mobilerow1}
-                                                            style={{
-                                                                boxShadow: "0px 0px 6px lightgray",
-                                                                borderRadius: "5px",
-                                                                width: "90%",
-                                                                margin: "15px auto"
-                                                            }}
-                                                        >
-                                                            <Grid
-                                                                item
-                                                                xs={12}
-                                                                style={{
-                                                                    textAlign: "center",
-                                                                    marginTop: "15px"
-                                                                }}
-                                                            >
-                                                                <img
-                                                                    src={`../../${booking.alfred.picture}`}
-                                                                    alt={"picture"}
-                                                                    style={{
-                                                                        width: "80px",
-                                                                        height: "80px",
-                                                                        borderRadius: "50%",
-                                                                        objectFit: "cover"
-                                                                    }}
-                                                                ></img>
+                                                        <Grid container className={classes.mobilerow1} style={{ boxShadow: "0px 0px 6px lightgray", borderRadius: "5px", width: "90%", margin: "15px auto" }} >
+                                                            <Grid item xs={12} style={{ textAlign: "center", marginTop: "15px" }} >
+                                                              <UserAvatar user={booking.alfred} />
                                                             </Grid>
-                                                            <Grid
-                                                                item
-                                                                xs={12}
-                                                                style={{
-                                                                    textAlign: "center",
-                                                                    fontSize: "0.8rem"
-                                                                }}
-                                                            >
+                                                            <Grid item xs={12} style={{ textAlign: "center", fontSize: "0.8rem" }} >
                                                                 <Typography
                                                                     style={{
                                                                         marginTop: "2%",

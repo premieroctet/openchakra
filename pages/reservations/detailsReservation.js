@@ -14,6 +14,7 @@ import moment from "moment";
 import getDistance from "geolib/es/getDistance";
 import convertDistance from "geolib/es/convertDistance";
 import StarRatings from 'react-star-ratings';
+import UserAvatar from '../../components/Avatar/UserAvatar';
 import io from "socket.io-client";
 
 
@@ -528,29 +529,9 @@ class DetailsReservation extends React.Component {
                             {bookingObj === null ||
                             currentUser === null ? null : currentUser._id ===
                             bookingObj.alfred._id ? (
-                                <img
-                                    src={`../../${bookingObj.user.picture}`}
-                                    alt={"picture"}
-                                    style={{
-                                      width: "80px",
-                                      height: "80px",
-                                      borderRadius: "50%",
-                                      objectFit: "cover",
-                                      marginBottom: "20px"
-                                    }}
-                                ></img>
+                                <UserAvatar user={bookingObj.user} />
                             ) : (
-                                <img
-                                    src={`../../${bookingObj.alfred.picture}`}
-                                    alt={"picture"}
-                                    style={{
-                                      width: "80px",
-                                      height: "80px",
-                                      borderRadius: "50%",
-                                      objectFit: "cover",
-                                      marginBottom: "20px"
-                                    }}
-                                ></img>
+                                <UserAvatar user={bookingObj.alfred} />
                             )}
                           </Grid>
                           <Grid item xs={5} md={7}>
