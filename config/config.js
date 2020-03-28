@@ -40,9 +40,14 @@ const mailConfig = {
   accessToken: 'ya29.Il-7B9vPQ9meRKDhLu1cARHVXyGEiGiIidmgeLCB7LLszjByPxRVWJ8mw_u2AQh5ZXeUiXgPyAX9H-KjgXX7pwArP6Bp_TC1OrMR-fOFAMITK0OuOPWKjk11Z0AUhP4dxw'
 }
 
+const computeUrl= (req) => {
+  return 'https://'+req.headers.host;
+};
+
 // Public API
 module.exports = {
     config: { ...completeConfig.default, ...completeConfig[process.env.NODE_ENV] },
     completeConfig,
     mailConfig,
+    computeUrl,
 }

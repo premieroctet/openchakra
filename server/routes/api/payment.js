@@ -12,16 +12,12 @@ const mangopay = require('mangopay2-nodejs-sdk');
 const request = require('request');
 moment.locale('fr');
 
-const MANGOTEST=true;
-
 const api = new mangopay({
     clientId: 'testmyalfredv2',
     clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
 });
 
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
-
+const {computeUrl} = require('../../../config/config');
 
 router.get('/test',(req, res) => res.json({msg: 'Payment Works!'}) );
 
@@ -129,7 +125,7 @@ router.post('/payIn',passport.authenticate('jwt',{session:false}),(req,res)=> {
                             Currency: "EUR",
                             Amount: fees
                         },
-                        ReturnURL: url+'paymentSuccess',
+                        ReturnURL: computeUrl(req)+'/paymentSuccess',
                         CardType: "CB_VISA_MASTERCARD",
                         PaymentType: "CARD",
                         ExecutionType: "WEB",
@@ -146,10 +142,6 @@ router.post('/payIn',passport.authenticate('jwt',{session:false}),(req,res)=> {
 // POST /myAlfred/api/payment/payInCreate
 // @access private
 router.post('/payInCreate',passport.authenticate('jwt',{session:false}),(req,res)=> {
-    if (MANGOTEST) {
-      res.json({RedirectURL:url+'paymentSuccessCreate'});
-      return;
-    }
     const amount = req.body.amount*100;
     const fees = req.body.fees*100;
     User.findById(req.user.id)
@@ -168,17 +160,17 @@ router.post('/payInCreate',passport.authenticate('jwt',{session:false}),(req,res
                             Currency: "EUR",
                             Amount: fees
                         },
-                        ReturnURL: url+'paymentSuccessCreate',
+                        ReturnURL: computeUrl(req)+'/paymentSuccessCreate',
                         CardType: "CB_VISA_MASTERCARD",
                         PaymentType: "CARD",
                         ExecutionType: "WEB",
                         Culture: "FR",
                         CreditedWalletId: wallet_id
                     })
-                        .then(data => {
-                            console.log(data);
-                            res.json(data)
-                        })
+                    .then(data => {
+                      console.log(data);
+                      res.json(data)
+                    })
                 })
         });
 });
@@ -205,13 +197,13 @@ router.post('/payInDirect',passport.authenticate('jwt',{session:false}),(req,res
                             Currency: "EUR",
                             Amount: fees
                         },
-                        ReturnURL: url+'paymentDirectSuccess',
+                        ReturnURL: computeUrl(req)+'/paymentDirectSuccess',
                         CardType: "CB_VISA_MASTERCARD",
                         PaymentType: "CARD",
                         ExecutionType: "DIRECT",
                         CreditedWalletId: wallet_id,
                         CardId: id_card,
-                        SecureModeReturnURL: url+'paymentDirectSuccess'
+                        SecureModeReturnURL: computeUrl(req)+'/paymentDirectSuccess'
                     })
                         .then(data => {
                             res.json(data)
@@ -224,10 +216,6 @@ router.post('/payInDirect',passport.authenticate('jwt',{session:false}),(req,res
 // POST /myAlfred/api/payment/payInDirectCreate
 // @access private
 router.post('/payInDirectCreate',passport.authenticate('jwt',{session:false}),(req,res)=> {
-    if (MANGOTEST) {
-      res.json({});
-      return;
-    }
     const amount = req.body.amount*100;
     const fees = req.body.fees*100;
     const id_card = req.body.id_card;
@@ -247,19 +235,22 @@ router.post('/payInDirectCreate',passport.authenticate('jwt',{session:false}),(r
                             Currency: "EUR",
                             Amount: fees
                         },
-                        ReturnURL: url+'paymentSuccessCreate',
+                        ReturnURL: computeUrl(req)+'/paymentSuccessCreate',
                         CardType: "CB_VISA_MASTERCARD",
                         PaymentType: "CARD",
                         ExecutionType: "DIRECT",
                         CreditedWalletId: wallet_id,
                         CardId: id_card,
-                        SecureModeReturnURL: url+'paymentSuccessCreate'
+                        SecureModeReturnURL: computeUrl(req)+'/paymentSuccessCreate'
                     })
-                        .then(data => {
-                            res.json(data)
-                        })
+                    .then(data => {
+                      res.json(data)
+                    })
+                    .catch(err => res.status(404).json({error:err}))
                 })
+                .catch(err => res.status(404).json({error:err}))
         })
+        .catch(err => res.status(404).json({error:err}))
 
 });
 
@@ -350,10 +341,6 @@ router.get('/cards',passport.authenticate('jwt',{session:false}),(req,res)=> {
 // View all active credit cards for a user
 // @access private
 router.get('/cardsActive',passport.authenticate('jwt',{session:false}),(req,res)=> {
-    if (MANGOTEST) {
-      res.json([{Id:'4706750000000009', Alias:'1234567890', ExpirationDate:'1022'}]);
-      return;
-    }
     const allCards = [];
     User.findById(req.user.id)
         .then(user => {
@@ -396,10 +383,6 @@ router.get('/activeAccount',passport.authenticate('jwt',{session:false}),(req,re
 // View transaction for a user
 // @access private
 router.get('/transactions',passport.authenticate('jwt',{session:false}),(req,res)=> {
-    if (MANGOTEST) {
-      res.json({});
-      return;
-    }
     const allTransactions = [];
     User.findById(req.user.id)
         .then(user => {
