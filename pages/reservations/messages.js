@@ -5,10 +5,12 @@ import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import Footer from "../../hoc/Layout/Footer/Footer";
 import Typography from "@material-ui/core/Typography";
-import UserAvatar from '../../components/Avatar/UserAvatar';
 import axios from "axios";
 import _ from 'lodash';
 import moment from 'moment';
+import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
+import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
+
 
 const { config } = require("../../config/config");
 const url = config.apiUrl;
@@ -19,6 +21,7 @@ const styles = theme => ({
     flexGrow: 1,
     [theme.breakpoints.down("xs")]: {
       marginTop: 250,
+      marginBottom: 100,
     }
   },
   mobilevoir: {
@@ -270,70 +273,33 @@ class Messages extends React.Component {
           <Layout>
             <Grid container className={classes.bigContainer}>
               {this.state.currentUser.is_alfred === true?
-                  <Grid container className={classes.topbar} justify="center" style={{ backgroundColor: "#4fbdd7", marginTop: -3, height: "52px" }} >
-                    <Grid item xs={1} className={classes.shopbar}></Grid>
-                    <Grid item xs={2} className={classes.shopbar} style={{ textAlign: "center" }} >
-                      <Link href={"/myShop/services"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Ma boutique
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                    <Grid item xs={2} className={classes.shopbar} style={{ textAlign: "center", borderBottom: "2px solid white", zIndex: 999 }} >
-                      <Link href={"/reservations/messages"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Messages
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                    <Grid item xs={2} className={classes.shopbar} style={{ textAlign: "center" }} >
-                      <Link href={"/reservations/allReservations"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Mes réservations
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                    <Grid item xs={2} className={classes.shopbar} style={{ textAlign: "center" }} >
-                      <Link href={"/myShop/myAvailabilities"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Mon calendrier
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                    <Grid
-                        item
-                        xs={2}
-                        className={classes.shopbar}
-                        style={{ textAlign: "center" }}
-                    >
-                      <Link href={"/performances/revenus"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Performances
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                  </Grid>
+                <Grid style={{width: '100%'}}>
+                  <NavBarShop userId={this.state.idEmitter}/>
+                </Grid>
 
                   : null}
 
 
               {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
 
-              <Grid container style={{ marginBottom: "10%" }}>
-                <Grid className={classes.toggle} item xs={3} style={{ height: "100vh" }} >
+              <Grid container>
+                <Grid
+                    className={classes.toggle}
+                    item
+                    xs={3}
+                >
                   <div className={classes.trigger}></div>
-                  <Grid container style={{ justifyContent: "center" }} >
-                    <Grid item style={{ marginTop: 30, width: 281, height: 70 }} className={classes.hidesm} >
+                  <Grid
+                      container
+                      style={{
+                        justifyContent: "center"
+                      }}
+                  >
+                    <Grid
+                        item
+                        style={{ marginTop: 30, width: 281, height: 70 }}
+                        className={classes.hidesm}
+                    >
                       <Link href={"/reservations/messages"}>
                         <div
                             style={{
@@ -362,7 +328,11 @@ class Messages extends React.Component {
                       </Link>
                     </Grid>
 
-                    <Grid item style={{ marginTop: 10, width: 281, height: 70 }} className={classes.hidesm} >
+                    <Grid
+                        item
+                        style={{ marginTop: 10, width: 281, height: 70 }}
+                        className={classes.hidesm}
+                    >
                       <Link href={"/reservations/newMessages"}>
                         <div
                             style={{
@@ -526,9 +496,28 @@ class Messages extends React.Component {
                             return (
                                 <React.Fragment>
                                   {/* Web */}
-                                  <Grid alt={booking.chatroom.name} container className={classes.webrow} style={{ borderBottom: "1px #8281813b solid" }} >
-                                    <Grid item xs={3} md={1} style={{ marginRight: "5%" }} >
-                                      <UserAvatar user={booking.alfred} />
+                                  <Grid
+                                      alt={booking.chatroom.name}
+                                      container
+                                      className={classes.webrow}
+                                      style={{ borderBottom: "1px #8281813b solid" }}
+                                  >
+                                    <Grid
+                                        item
+                                        xs={3}
+                                        md={1}
+                                        style={{ marginRight: "5%" }}
+                                    >
+                                      <img
+                                          src={`../../${booking.alfred.picture}`}
+                                          alt={"picture"}
+                                          style={{
+                                            width: "80px",
+                                            height: "80px",
+                                            borderRadius: "50%",
+                                            objectFit: "cover"
+                                          }}
+                                      ></img>
                                     </Grid>
                                     <Grid item xs={5} md={7}>
                                       <Typography
@@ -589,11 +578,37 @@ class Messages extends React.Component {
                                   </Grid>
 
                                   {/* Mobile */}
-                                  <Grid alt={booking.chatroom.name} container className={classes.mobilerow1} style={{ boxShadow: "0px 0px 6px lightgray", borderRadius: "5px", width: "90%", margin: "15px auto" }}>
-                                    <Grid item xs={12} style={{ textAlign: "center", marginTop: "15px" }} >
-                                      <UserAvatar user={booking.alfred} />
+                                  <Grid
+                                      alt={booking.chatroom.name}
+                                      container
+                                      className={classes.mobilerow1}
+                                      style={{
+                                        boxShadow: "0px 0px 6px lightgray",
+                                        borderRadius: "5px",
+                                        width: "90%",
+                                        margin: "15px auto"
+                                      }}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        style={{ textAlign: "center",
+                                          marginTop: "15px" }}
+                                    >
+                                      <img
+                                          src={`../../${booking.alfred.picture}`}
+                                          alt={"picture"}
+                                          style={{
+                                            width: "80px",
+                                            height: "80px",
+                                            borderRadius: "50%",
+                                            objectFit: "cover"
+                                          }}
+                                      ></img>
                                     </Grid>
-                                    <Grid item xs={12} style={{ textAlign: "center", fontSize: "0.8rem" }}>
+                                    <Grid item xs={12} style={{
+                                      textAlign: "center",
+                                      fontSize: "0.8rem"
+                                    }}>
                                       <Typography
                                           style={{ marginTop: "2%", fontSize: "0.8rem", color: booking.status === 'Confirmée' ? "#419F41" : booking.status === 'En attente de confirmation' || booking.status === "Demande d'infos" ? "#F87280" : booking.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D"}}
                                       >
@@ -661,9 +676,27 @@ class Messages extends React.Component {
                               return (
                                   <React.Fragment>
                                     {/* Web */}
-                                    <Grid container className={classes.webrow} style={{ borderBottom: "1px #8281813b solid" }} >
-                                      <Grid item xs={3} md={1} style={{ marginRight: "5%" }} >
-                                        <UserAvatar user={booking.user} />
+                                    <Grid
+                                        container
+                                        className={classes.webrow}
+                                        style={{ borderBottom: "1px #8281813b solid" }}
+                                    >
+                                      <Grid
+                                          item
+                                          xs={3}
+                                          md={1}
+                                          style={{ marginRight: "5%" }}
+                                      >
+                                        <img
+                                            src={`../../${booking.user.picture}`}
+                                            alt={"picture"}
+                                            style={{
+                                              width: "80px",
+                                              height: "80px",
+                                              borderRadius: "50%",
+                                              objectFit: "cover"
+                                            }}
+                                        ></img>
                                       </Grid>
                                       <Grid item xs={5} md={7}>
                                         <Typography
@@ -728,11 +761,35 @@ class Messages extends React.Component {
                                     </Grid>
 
                                     {/* Mobile */}
-                                    <Grid container className={classes.mobilerow1} style={{ boxShadow: "0px 0px 6px lightgray", borderRadius: "5px", width: "90%", margin: "15px auto" }} >
-                                      <Grid item xs={12} style={{ textAlign: "center", marginTop: '15px'}} >
-                                        <UserAvatar user={booking.user} />
+                                    <Grid
+                                        container
+                                        className={classes.mobilerow1}
+                                        style={{
+                                          boxShadow: "0px 0px 6px lightgray",
+                                          borderRadius: "5px",
+                                          width: "90%",
+                                          margin: "15px auto" }}
+                                    >
+                                      <Grid
+                                          item
+                                          xs={12}
+                                          style={{ textAlign: "center", marginTop: '15px'}}
+                                      >
+                                        <img
+                                            src={`../../${booking.user.picture}`}
+                                            alt={"picture"}
+                                            style={{
+                                              width: "80px",
+                                              height: "80px",
+                                              borderRadius: "50%",
+                                              objectFit: "cover"
+                                            }}
+                                        ></img>
                                       </Grid>
-                                      <Grid item xs={12} style={{ textAlign: "center", fontSize: "0.8rem" }}>
+                                      <Grid item xs={12} style={{
+                                        textAlign: "center",
+                                        fontSize: "0.8rem"
+                                      }}>
                                         <Typography
                                             style={{ marginTop: "2%",fontSize: "0.8rem", color: booking.status === 'Confirmée' ? "#419F41" : booking.status === 'En attente de confirmation' || booking.status === "Demande d'infos" ? "#F87280" : booking.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D" }}
                                         >
@@ -806,97 +863,8 @@ class Messages extends React.Component {
             </Grid>
           </Layout>
           {this.state.currentUser.is_alfred === true?
-              <Grid
-                  container
-                  className={classes.bottombar}
-                  justify="center"
-                  style={{
-                    backgroundColor: "white",
-                    bottom: 0,
-                    position: "fixed",
-                    zIndex: "999"
-                  }}
-              >
-                <Grid item xs={2} style={{ textAlign: "center" }}>
-                  <Link href={"/myShop/services"}>
-                    <a style={{ textDecoration: "none" }}>
-                      <p style={{ color: "white", cursor: "pointer" }}>
-                        <img
-                            src={"../static/shopping-bag.png"}
-                            alt={"sign"}
-                            width={25}
-                            style={{ opacity: "0.5" }}
-                        ></img>
-                      </p>
-                    </a>
-                  </Link>
-                </Grid>
-
-                <Grid item xs={2} style={{ textAlign: "center",borderBottom: "3px solid #4fbdd7" }}>
-                  <Link href={"/reservations/messages"}>
-                    <a style={{ textDecoration: "none" }}>
-                      <p style={{ color: "white", cursor: "pointer" }}>
-                        <img
-                            src={"../static/speech-bubble.png"}
-                            alt={"sign"}
-                            width={25}
-                            style={{ opacity: "0.7" }}
-                        ></img>
-                      </p>
-                    </a>
-                  </Link>
-                </Grid>
-
-                <Grid
-                    item
-                    xs={2}
-                    style={{ textAlign: "center" }}
-                >
-                  <Link href={"/reservations/allReservations"}>
-                    <a style={{ textDecoration: "none" }}>
-                      <p style={{ color: "white", cursor: "pointer" }}>
-                        <img
-                            src={"../static/event.png"}
-                            alt={"sign"}
-                            width={25}
-                            style={{ opacity: "0.7" }}
-                        ></img>
-                      </p>
-                    </a>
-                  </Link>
-                </Grid>
-
-                <Grid item xs={2} style={{ textAlign: "center", zIndex: 999 }}>
-                  <Link href={"/myShop/myAvailabilities"}>
-                    <a style={{ textDecoration: "none" }}>
-                      <p style={{ color: "white", cursor: "pointer" }}>
-                        <img
-                            src={"../static/calendar.png"}
-                            alt={"sign"}
-                            width={25}
-                            style={{ opacity: "0.7" }}
-                        ></img>
-                      </p>
-                    </a>
-                  </Link>
-                </Grid>
-
-                <Grid item xs={2} style={{ textAlign: "center" }}>
-                  <Link href={"/performances/revenus"}>
-                    <a style={{ textDecoration: "none" }}>
-                      <p style={{ color: "white", cursor: "pointer" }}>
-                        <img
-                            src={"../static/speedometer.png"}
-                            alt={"sign"}
-                            width={25}
-                            style={{ opacity: "0.7" }}
-                        ></img>
-                      </p>
-                    </a>
-                  </Link>
-                </Grid>
-              </Grid> : null}
-          <Footer />
+            <NavbarMobile userId={this.state.idEmitter}/>
+            : null}
         </Fragment>
     );
   }
