@@ -6,10 +6,8 @@ import axios from "axios";
 import moment from "moment";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import Router from "next/router";
 import { withStyles } from "@material-ui/core/styles";
-import Footer from "../../hoc/Layout/Footer/Footer";
-import DatePicker, {registerLocale} from "react-datepicker";
+import {registerLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
 import io from "socket.io-client";
 
@@ -27,6 +25,7 @@ const styles = theme => ({
     flexGrow: 1,
     [theme.breakpoints.down("xs")]: {
       marginTop: 250,
+      marginBottom: 100,
     }
   },
   grosHR: {
@@ -1154,7 +1153,6 @@ class Reserve extends React.Component {
               </Grid>{" "}
             </Grid>
           </Layout>
-          <Footer />
         </>
         }
       </Fragment>

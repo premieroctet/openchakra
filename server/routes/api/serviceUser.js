@@ -841,6 +841,7 @@ router.get('/:id', passport.authenticate('jwt', {
     session: false
 }), (req, res) => {
 
+    console.log("Getting serviceUser # "+req.params.id);
     ServiceUser.findById(req.params.id)
         .populate('user','-id_card')
         .populate('service')
@@ -849,6 +850,9 @@ router.get('/:id', passport.authenticate('jwt', {
             populate: {
                 path: 'filter_presentation'
             }
+        })
+        .populate({
+            path: 'prestations.billing',
         })
         .populate('equipments')
         .populate('service.equipments')
@@ -864,7 +868,7 @@ router.get('/:id', passport.authenticate('jwt', {
 
         })
         .catch(err => res.status(404).json({
-            service: 'No service found'
+            service: 'No service found'+err
         }));
 });
 

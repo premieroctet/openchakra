@@ -26,6 +26,7 @@ const styles = theme => ({
     flexGrow: 1,
     [theme.breakpoints.down("xs")]: {
       marginTop: 250,
+      marginBottom: 100,
     }
   },
   grosHR: {
@@ -554,7 +555,6 @@ class Preapprouve extends React.Component {
                     </Grid>{" "}
                   </Grid>
                 </Layout>
-                <Footer />
               </>
           }
         </Fragment>

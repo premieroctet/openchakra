@@ -41,7 +41,7 @@ class AlfredWelcomedMessage extends React.Component{
 
     return (
       <Grid className={classes.contentPosition}>
-        <Grid>
+        <Grid className={classes.containerTitle}>
           <h3>Message de bienvenue</h3>
         </Grid>
         <Grid className={classes.containerPositionWelcome}>

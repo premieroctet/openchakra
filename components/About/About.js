@@ -17,6 +17,7 @@ import Rating from '@material-ui/lab/Rating';
 import Typography from '@material-ui/core/Typography';
 import CancelIcon from '@material-ui/icons/Cancel';
 import moment from 'moment';
+import Link from 'next/link';
 
 
 moment.locale('fr');
@@ -48,7 +49,7 @@ class About extends React.Component{
       <Grid container className={classes.mainContainer}>
         <Grid item style={{width: '100%'}}>
           <Grid>
-            <Typography variant="h6">
+            <Typography variant="h3" className={classes.titleAbout}>
               A propos de {alfred.firstname}
             </Typography>
           </Grid>
@@ -121,7 +122,21 @@ class About extends React.Component{
                 />
             </ListItem>
             <ListItem>
-              <LinkMaterial href="#" onClick={preventDefault} color="primary " className={classes.link}>Voir le profil</LinkMaterial>
+              <Link
+                href={{
+                  pathname: "../viewProfile",
+                  query: { id: alfred._id }
+                }}
+              >
+                <Typography
+                  style={{
+                    color: "rgb(47, 188, 211)",
+                    cursor: "pointer"
+                  }}
+                >
+                  Voir le profil
+                </Typography>
+              </Link>
             </ListItem>
           </List>
         </Grid>

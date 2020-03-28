@@ -82,7 +82,6 @@ class services extends React.Component {
               let user = res.data;
               this.setState({user_id: user._id});
               if (this.isNewService()) {
-                console.log("New service, setting service_address to "+JSON.stringify(user.billing_address));
                 var shop = this.state.shop;
                 shop.service_address = user.billing_address;
                 this.setState({shop: shop});
@@ -100,7 +99,6 @@ class services extends React.Component {
             .then( response  =>  {
               let serviceUsers = response.data;
               var services = serviceUsers.map(su => su.service._id);
-              console.log("Exclude services:"+JSON.stringify(services));
               this.setState({exclude_services: services});
             });
         }
@@ -110,7 +108,6 @@ class services extends React.Component {
           axios.get(url+`myAlfred/api/serviceUser/${this.props.service_user_id}`)
             .then(res => {
               let resultat = res.data;
-              console.log("Got resultat:"+JSON.stringify(resultat, null, 2));
               let shop=this.state.shop;
               shop.service = resultat.service._id;
               shop.prestations={}
@@ -146,7 +143,6 @@ class services extends React.Component {
 
     isNewService() {
       var isNew = this.props.service_user_id==null;
-      console.log("isNewService:"+JSON.stringify(isNew));
       return isNew;
     }
 
@@ -183,13 +179,11 @@ class services extends React.Component {
             cloned_shop.prestations = JSON.stringify(cloned_shop.prestations);
             cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
 
-            console.log("Sending prestations:"+JSON.stringify(cloned_shop.prestations));
             let full_url = this.isNewService() ? '/myAlfred/api/serviceUser/myShop/add' : `/myAlfred/api/serviceUser/edit/${this.props.service_user_id}`;
             axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
             axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
             (this.isNewService() ? axios.post : axios.put)(full_url, cloned_shop)
               .then(res => {
-                console.log("After post:"+JSON.stringify(res.data, null, 2));
 
                 if(this.state.shop.diplomaPicture !== null) {
                   var dpChanged = typeof(this.state.shop.diplomaPicture)=='object';
@@ -244,7 +238,6 @@ class services extends React.Component {
     }
 
     onSettingsChanged(location, travel_tax, pick_tax, selectedStuff) {
-        console.log("Services:onSettingsChanged:"+JSON.stringify(location), travel_tax, pick_tax, selectedStuff);
         let shop=this.state.shop;
         shop.location=location;
         shop.travel_tax=travel_tax;
@@ -305,7 +298,6 @@ class services extends React.Component {
 
         const {classes} = this.props;
         let hideRightPanel = this.isRightPanelHidden();
-        console.log("State:"+JSON.stringify(this.state.shop, null, 2));
         return(
           <Grid>
               <Grid className={classes.mainHeader}>

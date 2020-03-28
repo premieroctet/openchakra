@@ -234,8 +234,8 @@ class UserServicesPreview extends React.Component {
   }
 
   book = (actual) => { //actual : true=> book, false=>infos request
-     
-    const count=this.state.count; 
+
+    const count=this.state.count;
     var prestations=[];
     this.state.prestations.forEach(p => {
       if (this.state.count[p._id]) {
@@ -258,7 +258,7 @@ class UserServicesPreview extends React.Component {
         address: this.state.serviceUser.service_address,
         equipments: this.state.serviceUser.equipments,
         amount: this.state.total,
-        date_prestation: moment(this.state.date).format("DD/MM/YYYY"), 
+        date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
         time_prestation: time_p,
         alfred: this.state.serviceUser.user._id,
         user: this.state.user._id,
@@ -267,7 +267,7 @@ class UserServicesPreview extends React.Component {
         status: actual ? "En attente de confirmation" : "Demande d'infos",
         serviceUserId: this.state.serviceUser._id,
       };
-      
+
       if (!actual) {
         bookingObj['chatroom']=res.data._id;
       }
@@ -330,11 +330,7 @@ class UserServicesPreview extends React.Component {
       <Grid style={{width : '100%'}}>
         {prestations.map((p) => {
           return (
-            <Grid style={{
-              display: 'flex',
-              alignItems: 'center',
-              width: '100%',
-            }}>
+            <Grid style={{display: 'flex', alignItems: 'center', width: '100%'}}>
               <Grid>
                 <TextField
                   id="outlined-number"
@@ -349,18 +345,14 @@ class UserServicesPreview extends React.Component {
                   onChange={this.onQtyChanged}
                 />
               </Grid>
-              <Grid style={{
-                display: 'flex',
-                justifyContent: 'space-evenly',
-                width: '100%'
-              }}>
-                <Grid>
+              <Grid style={{display: 'flex', width: '100%'}}>
+                <Grid style={{width: '100%', marginLeft: 10}}>
                   <label>{p.prestation.label}</label>
                 </Grid>
-                <Grid>
+                <Grid style={{width: '30%'}}>
                   <label>{p.price}€</label>
                 </Grid>
-                <Grid>
+                <Grid style={{width: '30%'}}>
                   <label>{p.billing.label}</label>
                 </Grid>
               </Grid>
@@ -505,7 +497,7 @@ class UserServicesPreview extends React.Component {
         <Grid style={{marginTop: 20, marginLeft: 10}}>
           <Grid style={{display: 'flex', alignItems : 'center', marginBottom: 20}}>
             <Grid>
-              <img style={{width: 40, height : 40}} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
+              <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
             </Grid>
             <Grid style={{marginLeft: 10}}>
               <label>{ this.getLocationLabel()}</label>
@@ -513,7 +505,7 @@ class UserServicesPreview extends React.Component {
           </Grid>
           <Grid style={{display: 'flex', alignItems : 'center'}}>
             <Grid>
-              <img style={{width: 40, height : 40}} src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
+              <img style={{width: 40, height : 40}} alt={"calendrier"} title={"calendrier"} src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
             </Grid>
             <Grid style={{marginLeft: 10}}>
               <label>Le {date?moment(date).format('DD/MM/YYYY'):''} à {time}</label>
@@ -531,6 +523,9 @@ class UserServicesPreview extends React.Component {
             </Grid>
             <Grid>
               <p>{this.state.count[p._id]*p.price}€</p>
+            </Grid>
+            <Grid>
+              <p>{p.billing.label}</p>
             </Grid>
           </Grid>
           )})
@@ -591,6 +586,11 @@ class UserServicesPreview extends React.Component {
           </Grid>
         </Grid>
       </Grid>
+        {/*<Grid>
+        <Grid>
+          <img alt={'castor_happy'} title={'castor_happy'} style={{height: 100}} src={'../../static/assets/img/userServicePreview/castor.svg'}/>
+        </Grid>
+      </Grid>*/}
     </Grid>
    );
 

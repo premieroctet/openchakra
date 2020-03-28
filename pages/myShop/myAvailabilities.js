@@ -13,7 +13,13 @@ import {Helmet} from 'react-helmet';
 import AlfredBanner from '../../components/shop/AlfredBanner/AlfredBanner';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
-
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import ForumIcon from '@material-ui/icons/Forum';
+import AssessmentIcon from '@material-ui/icons/Assessment';
+import ScheduleIcon from '@material-ui/icons/Schedule';
 
 moment.locale('fr');
 
@@ -40,12 +46,17 @@ const styles = theme => ({
         },
     },
     containercalendar:{
-      display: 'flex',
-      alignContent: 'center',
-      justifyContent: 'center',
-      [theme.breakpoints.down('sm')]: {
-        width:'100%!important',
-        }},
+        display: 'flex',
+        alignContent: 'center',
+        justifyContent: 'center',
+        [theme.breakpoints.down('sm')]: {
+          width:'100%!important',
+          },
+        [theme.breakpoints.down('xs')]: {
+          marginBottom: 100,
+        }
+      },
+
     containerheader:{[theme.breakpoints.down('sm')]: {
             width:'100%!important',
             marginTop:'-70px',
@@ -247,9 +258,7 @@ class myAvailabilities extends React.Component {
                       </Grid>
                   </Grid>
               </Layout>
-             <NavbarMobile/>
-            {/* <Footer/>*/}
-
+            <NavbarMobile userId={this.state.userId}/>
           </Fragment>
         );
     };
