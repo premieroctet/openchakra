@@ -7,6 +7,7 @@ import axios from "axios";
 import Footer from "../../hoc/Layout/Footer/Footer";
 import Typography from "@material-ui/core/Typography";
 import moment from "moment";
+import UserAvatar from '../../components/Avatar/UserAvatar';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 
@@ -573,17 +574,7 @@ class AllReservations extends React.Component {
                                                             style={{ borderBottom: "1px #8281813b solid" }}
                                                         >
                                                             <Grid item md={1} style={{ marginRight: "5%" }}>
-                                                                <img
-                                                                    src={`../../${booking.alfred.picture}`}
-                                                                    alt={"picture"}
-                                                                    style={{
-                                                                        width: "80px",
-                                                                        height: "80px",
-                                                                        borderRadius: "50%",
-                                                                        objectFit: "cover",
-                                                                        margin: "auto"
-                                                                    }}
-                                                                ></img>
+                                                                <UserAvatar user={booking.alfred} />
                                                             </Grid>
                                                             <Grid
                                                                 item
@@ -701,16 +692,7 @@ class AllReservations extends React.Component {
                                                                     marginTop: "15px"
                                                                 }}
                                                             >
-                                                                <img
-                                                                    src={`../../${booking.alfred.picture}`}
-                                                                    alt={"picture"}
-                                                                    style={{
-                                                                        width: "80px",
-                                                                        height: "80px",
-                                                                        borderRadius: "50%",
-                                                                        objectFit: "cover"
-                                                                    }}
-                                                                ></img>
+                                                                <UserAvatar user={booking.alfred} />
                                                             </Grid>
                                                             <Grid
                                                                 item
@@ -834,16 +816,7 @@ class AllReservations extends React.Component {
                                                         md={1}
                                                         style={{ marginRight: "5%" }}
                                                     >
-                                                        <img
-                                                            src={`../../${booking.user.picture}`}
-                                                            alt={"picture"}
-                                                            style={{
-                                                                width: "80px",
-                                                                height: "80px",
-                                                                borderRadius: "50%",
-                                                                objectFit: "cover"
-                                                            }}
-                                                        ></img>
+                                                        <UserAvatar user={booking.user} />
                                                     </Grid>
                                                     <Grid
                                                         item
@@ -945,17 +918,7 @@ class AllReservations extends React.Component {
                                                         xs={12}
                                                         style={{ textAlign: "center", marginTop: "15px" }}
                                                     >
-                                                        <img
-                                                            src={`../../${booking.user.picture}`}
-                                                            alt={"picture"}
-                                                            style={{
-                                                                width: "80px",
-                                                                height: "80px",
-                                                                borderRadius: "50%",
-                                                                objectFit: "cover",
-                                                                margin: "auto"
-                                                            }}
-                                                        ></img>
+                                                        <UserAvatar user={booking.user} />
                                                     </Grid>
                                                     <Grid
                                                         item
