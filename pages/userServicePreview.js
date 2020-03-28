@@ -250,24 +250,11 @@ class UserServicesPreview extends React.Component {
     time_p=moment(time_p);
 
     var chatPromise = actual ? emptyPromise({ res: null }) : axios.post(url + "myAlfred/api/chatRooms/addAndConnect", { emitter: this.state.user._id, recipient: this.state.serviceUser.user._id });
-    let bookingObj = {
-      address: this.state.serviceUser.service_address,
-      equipments: this.state.serviceUser.equipments,
-      amount: this.state.total,
-      date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
-      time_prestation: time_p,
-      alfred: this.state.serviceUser.user._id,
-      user: this.state.user._id,
-      prestations: prestations,
-      fees: this.state.commission,
-      status: "En attente de confirmation",
-      serviceUserId: this.state.serviceUser._id,
-    };
 
     chatPromise.then( res => {
       let bookingObj = {
         reference: computeBookingReference(this.state.user, this.state.serviceUser.user),
-        service: this.state.serviceUser.service,
+        service: this.state.serviceUser.service.label,
         address: this.state.serviceUser.service_address,
         equipments: this.state.serviceUser.equipments,
         amount: this.state.total,
