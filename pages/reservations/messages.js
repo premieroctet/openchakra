@@ -7,6 +7,7 @@ import Footer from "../../hoc/Layout/Footer/Footer";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import _ from 'lodash';
+import UserAvatar from '../../components/Avatar/UserAvatar';
 import moment from 'moment';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
@@ -508,16 +509,7 @@ class Messages extends React.Component {
                                         md={1}
                                         style={{ marginRight: "5%" }}
                                     >
-                                      <img
-                                          src={`../../${booking.alfred.picture}`}
-                                          alt={"picture"}
-                                          style={{
-                                            width: "80px",
-                                            height: "80px",
-                                            borderRadius: "50%",
-                                            objectFit: "cover"
-                                          }}
-                                      ></img>
+                                      <UserAvatar user={booking.alfred} />
                                     </Grid>
                                     <Grid item xs={5} md={7}>
                                       <Typography
@@ -594,16 +586,7 @@ class Messages extends React.Component {
                                         style={{ textAlign: "center",
                                           marginTop: "15px" }}
                                     >
-                                      <img
-                                          src={`../../${booking.alfred.picture}`}
-                                          alt={"picture"}
-                                          style={{
-                                            width: "80px",
-                                            height: "80px",
-                                            borderRadius: "50%",
-                                            objectFit: "cover"
-                                          }}
-                                      ></img>
+                                      <UserAvatar user={booking.alfred} />
                                     </Grid>
                                     <Grid item xs={12} style={{
                                       textAlign: "center",
@@ -687,16 +670,7 @@ class Messages extends React.Component {
                                           md={1}
                                           style={{ marginRight: "5%" }}
                                       >
-                                        <img
-                                            src={`../../${booking.user.picture}`}
-                                            alt={"picture"}
-                                            style={{
-                                              width: "80px",
-                                              height: "80px",
-                                              borderRadius: "50%",
-                                              objectFit: "cover"
-                                            }}
-                                        ></img>
+                                        <UserAvatar user={booking.user} />
                                       </Grid>
                                       <Grid item xs={5} md={7}>
                                         <Typography
@@ -775,16 +749,7 @@ class Messages extends React.Component {
                                           xs={12}
                                           style={{ textAlign: "center", marginTop: '15px'}}
                                       >
-                                        <img
-                                            src={`../../${booking.user.picture}`}
-                                            alt={"picture"}
-                                            style={{
-                                              width: "80px",
-                                              height: "80px",
-                                              borderRadius: "50%",
-                                              objectFit: "cover"
-                                            }}
-                                        ></img>
+                                        <UserAvatar user={booking.user} />
                                       </Grid>
                                       <Grid item xs={12} style={{
                                         textAlign: "center",
