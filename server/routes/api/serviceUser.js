@@ -17,7 +17,7 @@ const moment = require('moment');
 const isEmpty = require('../../validation/is-empty');
 const {data2ServiceUser} = require('../../../utils/mapping');
 const emptyPromise = require('../../../utils/promise');
-const { config } = require('../../../config/config');
+const { computeUrl } = require('../../../config/config');
 const { filterServicesGPS} = require('../../../utils/filters');
 
 
@@ -533,13 +533,13 @@ router.get('/near/:service',passport.authenticate('jwt',{session:false}),(req,re
 // TODO : include services if visio or @alfred
 router.post('/search',(req,res)=> {
 
-    url = "https://"+req.headers.host;
+    baseUrl = computeUrl(req);
     console.log("ServiceUSer search with filter:"+JSON.stringify(req.body));
     const instance = axios.create({
       httpsAgent: new https.Agent({rejectUnauthorized: false})
     });
 
-    var kwUrl = `${url}/myAlfred/api/service/keyword/${req.body.keyword}`;
+    var kwUrl = `${baseUrl}/myAlfred/api/service/keyword/${req.body.keyword}`;
     var keywordPromise = 'keyword' in req.body ?  instance.get(kwUrl) : emptyPromise({data: null});
 
     var datesPromise = emptyPromise({data: null});
@@ -551,7 +551,7 @@ router.post('/search',(req,res)=> {
 
       const obj = {begin,end,beginDay,endDay};
 
-      datesPromise=axios.post(url+'/myAlfred/api/availability/filterDate',obj) 
+      datesPromise=axios.post(baseUrl+'/myAlfred/api/availability/filterDate',obj) 
     }
 
     keywordPromise.then( result => {

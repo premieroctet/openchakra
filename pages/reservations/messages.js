@@ -7,7 +7,11 @@ import Footer from "../../hoc/Layout/Footer/Footer";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import _ from 'lodash';
+import UserAvatar from '../../components/Avatar/UserAvatar';
 import moment from 'moment';
+import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
+import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
+
 
 const { config } = require("../../config/config");
 const url = config.apiUrl;
@@ -18,6 +22,7 @@ const styles = theme => ({
     flexGrow: 1,
     [theme.breakpoints.down("xs")]: {
       marginTop: 250,
+      marginBottom: 100,
     }
   },
   mobilevoir: {
@@ -269,104 +274,20 @@ class Messages extends React.Component {
           <Layout>
             <Grid container className={classes.bigContainer}>
               {this.state.currentUser.is_alfred === true?
-                  <Grid
-                      container
-                      className={classes.topbar}
-                      justify="center"
-                      style={{
-                        backgroundColor: "#4fbdd7",
-                        marginTop: -3,
-                        height: "52px"
-                      }}
-                  >
-                    <Grid item xs={1} className={classes.shopbar}></Grid>
-                    <Grid
-                        item
-                        xs={2}
-                        className={classes.shopbar}
-                        style={{ textAlign: "center" }}
-                    >
-                      <Link href={"/myShop/services"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Ma boutique
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                    <Grid
-                        item
-                        xs={2}
-                        className={classes.shopbar}
-                        style={{
-                          textAlign: "center",
-                          borderBottom: "2px solid white",
-                          zIndex: 999
-                        }}
-                    >
-                      <Link href={"/reservations/messages"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Messages
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                    <Grid
-                        item
-                        xs={2}
-                        className={classes.shopbar}
-                        style={{ textAlign: "center" }}
-                    >
-                      <Link href={"/reservations/allReservations"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Mes réservations
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                    <Grid
-                        item
-                        xs={2}
-                        className={classes.shopbar}
-                        style={{ textAlign: "center" }}
-                    >
-                      <Link href={"/myShop/myAvailabilities"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Mon calendrier
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                    <Grid
-                        item
-                        xs={2}
-                        className={classes.shopbar}
-                        style={{ textAlign: "center" }}
-                    >
-                      <Link href={"/performances/revenus"}>
-                        <a style={{ textDecoration: "none" }}>
-                          <p style={{ color: "white", cursor: "pointer" }}>
-                            Performances
-                          </p>
-                        </a>
-                      </Link>
-                    </Grid>
-                  </Grid>
+                <Grid style={{width: '100%'}}>
+                  <NavBarShop userId={this.state.idEmitter}/>
+                </Grid>
 
                   : null}
 
 
               {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
 
-              <Grid container style={{ marginBottom: "10%" }}>
+              <Grid container>
                 <Grid
                     className={classes.toggle}
                     item
                     xs={3}
-                    style={{ height: "100vh" }}
                 >
                   <div className={classes.trigger}></div>
                   <Grid
@@ -588,16 +509,7 @@ class Messages extends React.Component {
                                         md={1}
                                         style={{ marginRight: "5%" }}
                                     >
-                                      <img
-                                          src={`../../${booking.alfred.picture}`}
-                                          alt={"picture"}
-                                          style={{
-                                            width: "80px",
-                                            height: "80px",
-                                            borderRadius: "50%",
-                                            objectFit: "cover"
-                                          }}
-                                      ></img>
+                                      <UserAvatar user={booking.alfred} />
                                     </Grid>
                                     <Grid item xs={5} md={7}>
                                       <Typography
@@ -674,16 +586,7 @@ class Messages extends React.Component {
                                         style={{ textAlign: "center",
                                           marginTop: "15px" }}
                                     >
-                                      <img
-                                          src={`../../${booking.alfred.picture}`}
-                                          alt={"picture"}
-                                          style={{
-                                            width: "80px",
-                                            height: "80px",
-                                            borderRadius: "50%",
-                                            objectFit: "cover"
-                                          }}
-                                      ></img>
+                                      <UserAvatar user={booking.alfred} />
                                     </Grid>
                                     <Grid item xs={12} style={{
                                       textAlign: "center",
@@ -767,16 +670,7 @@ class Messages extends React.Component {
                                           md={1}
                                           style={{ marginRight: "5%" }}
                                       >
-                                        <img
-                                            src={`../../${booking.user.picture}`}
-                                            alt={"picture"}
-                                            style={{
-                                              width: "80px",
-                                              height: "80px",
-                                              borderRadius: "50%",
-                                              objectFit: "cover"
-                                            }}
-                                        ></img>
+                                        <UserAvatar user={booking.user} />
                                       </Grid>
                                       <Grid item xs={5} md={7}>
                                         <Typography
@@ -855,16 +749,7 @@ class Messages extends React.Component {
                                           xs={12}
                                           style={{ textAlign: "center", marginTop: '15px'}}
                                       >
-                                        <img
-                                            src={`../../${booking.user.picture}`}
-                                            alt={"picture"}
-                                            style={{
-                                              width: "80px",
-                                              height: "80px",
-                                              borderRadius: "50%",
-                                              objectFit: "cover"
-                                            }}
-                                        ></img>
+                                        <UserAvatar user={booking.user} />
                                       </Grid>
                                       <Grid item xs={12} style={{
                                         textAlign: "center",
@@ -943,97 +828,8 @@ class Messages extends React.Component {
             </Grid>
           </Layout>
           {this.state.currentUser.is_alfred === true?
-              <Grid
-                  container
-                  className={classes.bottombar}
-                  justify="center"
-                  style={{
-                    backgroundColor: "white",
-                    bottom: 0,
-                    position: "fixed",
-                    zIndex: "999"
-                  }}
-              >
-                <Grid item xs={2} style={{ textAlign: "center" }}>
-                  <Link href={"/myShop/services"}>
-                    <a style={{ textDecoration: "none" }}>
-                      <p style={{ color: "white", cursor: "pointer" }}>
-                        <img
-                            src={"../static/shopping-bag.png"}
-                            alt={"sign"}
-                            width={25}
-                            style={{ opacity: "0.5" }}
-                        ></img>
-                      </p>
-                    </a>
-                  </Link>
-                </Grid>
-
-                <Grid item xs={2} style={{ textAlign: "center",borderBottom: "3px solid #4fbdd7" }}>
-                  <Link href={"/reservations/messages"}>
-                    <a style={{ textDecoration: "none" }}>
-                      <p style={{ color: "white", cursor: "pointer" }}>
-                        <img
-                            src={"../static/speech-bubble.png"}
-                            alt={"sign"}
-                            width={25}
-                            style={{ opacity: "0.7" }}
-                        ></img>
-                      </p>
-                    </a>
-                  </Link>
-                </Grid>
-
-                <Grid
-                    item
-                    xs={2}
-                    style={{ textAlign: "center" }}
-                >
-                  <Link href={"/reservations/allReservations"}>
-                    <a style={{ textDecoration: "none" }}>
-                      <p style={{ color: "white", cursor: "pointer" }}>
-                        <img
-                            src={"../static/event.png"}
-                            alt={"sign"}
-                            width={25}
-                            style={{ opacity: "0.7" }}
-                        ></img>
-                      </p>
-                    </a>
-                  </Link>
-                </Grid>
-
-                <Grid item xs={2} style={{ textAlign: "center", zIndex: 999 }}>
-                  <Link href={"/myShop/myAvailabilities"}>
-                    <a style={{ textDecoration: "none" }}>
-                      <p style={{ color: "white", cursor: "pointer" }}>
-                        <img
-                            src={"../static/calendar.png"}
-                            alt={"sign"}
-                            width={25}
-                            style={{ opacity: "0.7" }}
-                        ></img>
-                      </p>
-                    </a>
-                  </Link>
-                </Grid>
-
-                <Grid item xs={2} style={{ textAlign: "center" }}>
-                  <Link href={"/performances/revenus"}>
-                    <a style={{ textDecoration: "none" }}>
-                      <p style={{ color: "white", cursor: "pointer" }}>
-                        <img
-                            src={"../static/speedometer.png"}
-                            alt={"sign"}
-                            width={25}
-                            style={{ opacity: "0.7" }}
-                        ></img>
-                      </p>
-                    </a>
-                  </Link>
-                </Grid>
-              </Grid> : null}
-          <Footer />
+            <NavbarMobile userId={this.state.idEmitter}/>
+            : null}
         </Fragment>
     );
   }

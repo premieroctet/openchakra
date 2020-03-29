@@ -7,6 +7,7 @@ export default theme =>({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        marginBottom: 100
       },
   },
   aboutAndSkillsMainContainer:{
@@ -77,5 +78,10 @@ export default theme =>({
     alignItems: 'center',
     padding: 10
   },
-
+  titleShop:{
+    fontSize: "1.6rem",
+    color: "rgba(84,89,95,0.95)",
+    letterSpacing: -1,
+    fontWeight: "bold"
+  }
 })

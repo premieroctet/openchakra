@@ -94,8 +94,8 @@ class NavBar extends Component {
     const isAvatarMenuOpen = Boolean(avatarMoreAnchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const logged = this.state.logged;
-    const maboutique = <MenuItem onClick={this.handleMenuClose}><Typography><Link href={`/shop?id_alfred=${user ? user._id : ''}`}><a >Ma boutique</a></Link></Typography></MenuItem>;
-    const becomealfred = <MenuItem onClick={this.handleMobileMenuClose}><Typography><Link href={'/creaShop/creaShop'}><a>Devenir Alfred</a></Link></Typography></MenuItem>;
+    const maboutique = <Link href={`/shop?id_alfred=${user ? user._id : ''}`}><MenuItem onClick={this.handleMenuClose}><Typography><a >Ma boutique</a></Typography></MenuItem></Link>;
+    const becomealfred = <Link href={'/creaShop/creaShop'}><MenuItem onClick={this.handleMobileMenuClose}><Typography><a>Devenir Alfred</a></Typography></MenuItem></Link>;
 
     const logoutMobile =
       <React.Fragment>
@@ -210,6 +210,19 @@ class NavBar extends Component {
         open={isMobileMenuOpen}
         onClose={this.handleMenuClose}
       >
+        {logged ?
+          <Link href={'/reservations/allReservations'}>
+            <MenuItem>
+              <Typography>
+                  <a>
+                    Mes réservations
+                  </a>
+              </Typography>
+            </MenuItem>
+          </Link>
+          : null
+        }
+
         { user && user.is_alfred ? maboutique : becomealfred }
         {logged ?<React.Fragment>
           <Link href={'/reservations/messages'}>
@@ -305,6 +318,18 @@ class NavBar extends Component {
               </Hidden>
               <Grid className={classes.rightContentNavBar}>
                 <Grid className={classes.sectionDesktop}>
+                  {logged ?
+                    <React.Fragment>
+                      <Typography className={classes.navbarItem}>
+                        <Link href={'/reservations/allReservations'}>
+                          <a className={classes.navbarLink}>
+                            Mes réservations
+                          </a>
+                        </Link>
+                      </Typography>
+                    </React.Fragment>
+                    : null
+                  }
                   {user && user.is_alfred ?
                     <Typography className={classes.navbarItem}>
                       <Link href={`/shop?id_alfred=${user._id}`} >

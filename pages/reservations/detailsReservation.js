@@ -14,7 +14,11 @@ import moment from "moment";
 import getDistance from "geolib/es/getDistance";
 import convertDistance from "geolib/es/convertDistance";
 import StarRatings from 'react-star-ratings';
+import UserAvatar from '../../components/Avatar/UserAvatar';
 import io from "socket.io-client";
+import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
+import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
+
 
 
 moment.locale("fr");
@@ -45,6 +49,7 @@ const styles = theme => ({
     flexGrow: 1,
     [theme.breakpoints.down("xs")]: {
       marginTop: 250,
+      marginBottom: 100,
     }
   },
   marginbot: {
@@ -87,7 +92,7 @@ const styles = theme => ({
   topbar: {
     visibility: "visible",
     position: "sticky",
-    top: 65,
+    top: 75,
     zIndex: 999,
     [theme.breakpoints.down("sm")]: {
       display: "none",
@@ -219,7 +224,8 @@ class DetailsReservation extends React.Component {
     );
 
     axios.get(url + "myAlfred/api/users/current").then(res => {
-      this.setState({ currentUser: res.data });
+      let result = res.data
+      this.setState({ user: result._id });
     });
 
     axios.get(url + "myAlfred/api/booking/" + booking_id).then(res => {
@@ -298,92 +304,10 @@ class DetailsReservation extends React.Component {
                 <Layout>
                   <Grid container className={classes.bigContainer}>
                     {currentUser.is_alfred === true ?
-                    <Grid
-                        container
-                        className={classes.topbar}
-                        justify="center"
-                        style={{
-                          backgroundColor: "#4fbdd7",
-                          marginTop: -3,
-                          height: "52px"
-                        }}
-                    >
-                      <Grid item xs={1} className={classes.shopbar}></Grid>
-                      <Grid
-                          item
-                          xs={2}
-                          className={classes.shopbar}
-                          style={{ textAlign: "center" }}
-                      >
-                        <Link href={"/myShop/services"}>
-                          <a style={{ textDecoration: "none" }}>
-                            <p style={{ color: "white", cursor: "pointer" }}>
-                              Ma boutique
-                            </p>
-                          </a>
-                        </Link>
+                      <Grid style={{width: '100%'}}>
+                        <NavBarShop userId={this.state.user}/>
                       </Grid>
-                      <Grid
-                          item
-                          xs={2}
-                          className={classes.shopbar}
-                          style={{ textAlign: "center" }}
-                      >
-                        <Link href={"/reservations/messages"}>
-                          <a style={{ textDecoration: "none" }}>
-                            <p style={{ color: "white", cursor: "pointer" }}>
-                              Messages
-                            </p>
-                          </a>
-                        </Link>
-                      </Grid>
-                      <Grid
-                          item
-                          xs={2}
-                          className={classes.shopbar}
-                          style={{
-                            textAlign: "center",
-                            borderBottom: "2px solid white",
-                            zIndex: 999
-                          }}
-                      >
-                        <Link href={"/reservations/allReservations"}>
-                          <a style={{ textDecoration: "none" }}>
-                            <p style={{ color: "white", cursor: "pointer" }}>
-                              Mes réservations
-                            </p>
-                          </a>
-                        </Link>
-                      </Grid>
-                      <Grid
-                          item
-                          xs={2}
-                          className={classes.shopbar}
-                          style={{ textAlign: "center" }}
-                      >
-                        <Link href={"/myShop/myAvailabilities"}>
-                          <a style={{ textDecoration: "none" }}>
-                            <p style={{ color: "white", cursor: "pointer" }}>
-                              Mon calendrier
-                            </p>
-                          </a>
-                        </Link>
-                      </Grid>
-                      <Grid
-                          item
-                          xs={2}
-                          className={classes.shopbar}
-                          style={{ textAlign: "center" }}
-                      >
-                        <Link href={"/performances/revenus"}>
-                          <a style={{ textDecoration: "none" }}>
-                            <p style={{ color: "white", cursor: "pointer" }}>
-                              Performance
-                            </p>
-                          </a>
-                        </Link>
-                      </Grid>
-                    </Grid> : null}
+                     : null}
 
                     {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
 
@@ -528,29 +452,9 @@ class DetailsReservation extends React.Component {
                             {bookingObj === null ||
                             currentUser === null ? null : currentUser._id ===
                             bookingObj.alfred._id ? (
-                                <img
-                                    src={`../../${bookingObj.user.picture}`}
-                                    alt={"picture"}
-                                    style={{
-                                      width: "80px",
-                                      height: "80px",
-                                      borderRadius: "50%",
-                                      objectFit: "cover",
-                                      marginBottom: "20px"
-                                    }}
-                                ></img>
+                                <UserAvatar user={bookingObj.user} />
                             ) : (
-                                <img
-                                    src={`../../${bookingObj.alfred.picture}`}
-                                    alt={"picture"}
-                                    style={{
-                                      width: "80px",
-                                      height: "80px",
-                                      borderRadius: "50%",
-                                      objectFit: "cover",
-                                      marginBottom: "20px"
-                                    }}
-                                ></img>
+                                <UserAvatar user={bookingObj.alfred} />
                             )}
                           </Grid>
                           <Grid item xs={5} md={7}>
@@ -2454,103 +2358,8 @@ class DetailsReservation extends React.Component {
                   </Grid>
                 </Layout>
                 {currentUser.is_alfred === true ?
-                <Grid
-                    container
-                    className={classes.bottombar}
-                    justify="center"
-                    style={{
-                      backgroundColor: "white",
-                      bottom: 0,
-                      position: "fixed",
-                      zIndex: "999"
-                    }}
-                >
-                  <Grid item xs={2} style={{ textAlign: "center" }}>
-                    <Link href={"/myShop/services"}>
-                      <a style={{ textDecoration: "none" }}>
-                        <p style={{ color: "white", cursor: "pointer" }}>
-                          <img
-                              src={"../static/shopping-bag.png"}
-                              alt={"sign"}
-                              width={25}
-                              style={{ opacity: "0.5" }}
-                          ></img>
-                        </p>
-                      </a>
-                    </Link>
-                  </Grid>
-
-                  <Grid item xs={2} style={{ textAlign: "center" }}>
-                    <Link href={"/reservations/messages"}>
-                      <a style={{ textDecoration: "none" }}>
-                        <p style={{ color: "white", cursor: "pointer" }}>
-                          <img
-                              src={"../static/speech-bubble.png"}
-                              alt={"sign"}
-                              width={25}
-                              style={{ opacity: "0.7" }}
-                          ></img>
-                        </p>
-                      </a>
-                    </Link>
-                  </Grid>
-
-              <Grid
-                item
-                xs={2}
-                style={{
-                  textAlign: "center",
-                  borderBottom: "3px solid #4fbdd7"
-                }}
-              >
-                <Link href={"/reservations/allReservations"}>
-                  <a style={{ textDecoration: "none" }}>
-                    <p style={{ color: "white", cursor: "pointer" }}>
-                      <img
-                        src={"../static/event.png"}
-                        alt={"sign"}
-                        width={25}
-                        style={{ opacity: "0.7" }}
-                      ></img>
-                    </p>
-                  </a>
-                </Link>
-              </Grid>
-
-              <Grid item xs={2} style={{ textAlign: "center", zIndex: 999 }}>
-                <Link href={"/myShop/myAvailabilities"}>
-                  <a style={{ textDecoration: "none" }}>
-                    <p style={{ color: "white", cursor: "pointer" }}>
-                      <img
-                        src={"../static/calendar.png"}
-                        alt={"sign"}
-                        width={25}
-                        style={{ opacity: "0.7" }}
-                      ></img>
-                    </p>
-                  </a>
-                </Link>
-              </Grid>
-
-              <Grid item xs={2} style={{ textAlign: "center" }}>
-                <Link href={"/performances/revenus"}>
-                  <a style={{ textDecoration: "none" }}>
-                    <p style={{ color: "white", cursor: "pointer" }}>
-                      <img
-                        src={"../static/speedometer.png"}
-                        alt={"sign"}
-                        width={25}
-                        style={{ opacity: "0.7" }}
-                      ></img>
-                    </p>
-                  </a>
-                </Link>
-              </Grid>
-            </Grid> : null}
-
-
-
-            <Footer />
+                  <NavbarMobile userId={this.state.userId}/>
+                : null}
           </>
         )}
       </Fragment>

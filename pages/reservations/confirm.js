@@ -1329,7 +1329,6 @@ class Confirm extends React.Component {
                     </Grid>{" "}
                   </Grid>
                 </Layout>
-                <Footer />
               </>
           }
         </Fragment>

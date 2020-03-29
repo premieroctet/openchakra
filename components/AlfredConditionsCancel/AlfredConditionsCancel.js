@@ -102,7 +102,7 @@ class AlfredConditionsCancel extends React.Component{
           <Grid className={classes.containerPosition}>
             <Grid className={classes.contentPosition}>
               <Grid className={classes.containerBooking}>
-                <Grid>
+                <Grid className={classes.containerTitle}>
                   <h3>Conditions d’annulation de {alfred.firstname}</h3>
                 </Grid>
                 {userState && isOwner ?

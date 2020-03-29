@@ -79,6 +79,10 @@ export default theme => ({
     },
   },
   containerTitle:{
+    fontSize: "1.6rem",
+    color: "rgba(84,89,95,0.95)",
+    letterSpacing: -1,
+    fontWeight: "bold",
     [theme.breakpoints.down('xs')]: {
       width: '60%',
     },

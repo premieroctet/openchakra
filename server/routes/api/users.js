@@ -19,8 +19,7 @@ const crypto = require('crypto');
 const multer = require("multer");
 
 const {sendMail} = require('../../../utils/mailer');
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
+const {computeUrl } = require('../../../config/config');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -63,7 +62,7 @@ const upload2 = multer({ storage: storage2,fileFilter: function (req, file, call
 
 const sendAccountValidation = (request, user) => {
 
-  let link=new URL('/validateAccount?user='+user._id, "https://"+request.headers.host);
+  let link=new URL('/validateAccount?user='+user._id, computeUrl(request));
 
   sendMail(
     'no-reply@my-alfred.io',
@@ -634,7 +633,7 @@ router.post('/forgotPassword',(req,res) => {
                     `${user.email}`, // list of receivers
                     "Reset password", // Subject line
                     `http://localhost:3000/resetPassword?token=${token}`, // plain text body
-                    '<a href='+url+'resetPassword?token='+token+'>Cliquez içi</a>' // html body
+                    '<a href='+computeUrl(req)+'resetPassword?token='+token+'>Cliquez içi</a>' // html body
                 );
             }
         })
