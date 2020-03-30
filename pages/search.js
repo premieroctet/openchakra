@@ -297,7 +297,7 @@ class SearchPage extends React.Component {
         var keyword = this.state.keyword;
         const serviceUsers = this.state.serviceUsersDisplay;
         keyword = keyword ? keyword.trim() : '';
-  
+ 
         return (
           <Fragment>
             <Layout>
@@ -403,7 +403,7 @@ class SearchPage extends React.Component {
                     <Grid container className="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'inline-block', minHeight: '250px'}}>
                       {categories.map((cat, index) => (
                         <Grid key={index} style={{display: 'inline-block', width: '300px', margin: 'auto 20px'}}>
-                          <Link href={'/search?category='+cat._id} activeClassName="active">
+                          <Link href={'/search?category='+cat._id}>
                             <Card  style={{width: '300px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
                               <CardActionArea>
                                 <CardMedia
