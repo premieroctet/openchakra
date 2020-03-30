@@ -225,7 +225,7 @@ class DetailsReservation extends React.Component {
 
     axios.get(url + "myAlfred/api/users/current").then(res => {
       let result = res.data
-      this.setState({ user: result._id });
+      this.setState({ currentUser: result });
     });
 
     axios.get(url + "myAlfred/api/booking/" + booking_id).then(res => {
@@ -301,7 +301,6 @@ class DetailsReservation extends React.Component {
               <p>Vous n'avez pas l'autorisation d'accéder à cette page</p>
           ) : (
               <>
-                <Layout>
                   <Grid container className={classes.bigContainer}>
                     {currentUser.is_alfred === true ?
                       <Grid style={{width: '100%'}}>
@@ -2356,7 +2355,6 @@ class DetailsReservation extends React.Component {
 
                     {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
                   </Grid>
-                </Layout>
                 {currentUser.is_alfred === true ?
                   <NavbarMobile userId={this.state.userId}/>
                 : null}
