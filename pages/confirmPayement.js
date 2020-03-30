@@ -11,7 +11,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Footer from "../hoc/Layout/Footer/Footer";
 import dynamic from "next/dynamic";
 import About from '../components/About/About';
-import UserAvatar from '../components/avatar/UserAvatar';
+import UserAvatar from '../components/Avatar/UserAvatar';
 
 moment.locale("fr");
 const _ = require("lodash");
