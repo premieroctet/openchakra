@@ -297,7 +297,7 @@ class NavBar extends Component {
               </Grid>
                 {hiddingPanel ?
                   <Grid className={classes.search}>
-                    <SearchInput gps={gps} user={user} addressSelected={addressSelected}/>
+                    <SearchInput />
                   </Grid>: null
                 }
               <Hidden xsDown>

@@ -25,8 +25,6 @@ import StarRatings from 'react-star-ratings';
 import 'react-dates/lib/css/_datepicker.css';
 import Tooltip from '@material-ui/core/Tooltip';
 import CardPreview from '../components/CardPreview/CardPreview';
-import AlgoliaPlaces from "algolia-places-react";
-import SearchInput from '../components/SearchInput/SearchInput';
 import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
 import Profiteandlearn from '../components/home/profite&learn/profite&learn'
 import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
@@ -113,7 +111,6 @@ class SearchPage extends React.Component {
             searched:false,
             user: null,
             address: {},
-            otherAddress: [],
             selectedAddress: {},
             city: '',
             gps: null,
@@ -133,9 +130,9 @@ class SearchPage extends React.Component {
         };
     }
 
-    static getInitialProps ({ query: { keyword, city, date, dateISO, day, hour, gps, address, category, service, prestation} }) {
+    static getInitialProps ({ query: { keyword, city, gps, selectedAddress, category, service, prestation} }) {
       // FIX : set city nin AlgoPlaces if provided
-      var init= { keyword: keyword, city:city, date:date, dateISO: dateISO,day:day, hour:hour, gps:gps, address:address, category:category, service:service, prestation:prestation}
+      var init= { keyword: keyword, city:city, gps:gps, selectedAddress:selectedAddress, category:category, service:service, prestation:prestation}
       return init;
     }
 
@@ -169,16 +166,16 @@ class SearchPage extends React.Component {
             .then(res => {
                 let user = res.data;
                 st['user']=user;
-                st['address']=user.billing_address;
-                st['selectedAddress']='address' in this.props && this.props.address ? JSON.parse(this.props.address) : user.billing_address;
-                st['otherAddress']=user.service_address;
-                if (!st['gps']) {
-                  st['gps']=user.billing_address.gps;
+                var allAddresses={'main': user.billing_address.gps}
+                user.service_address.forEach( ad => allAddresses[ad._id]={lat:ad.lat, lng:ad.lng});
+                st['allAddresses']= allAddresses;
+                if ('selectedAddress' in this.props && this.props['selectedAddress']!='all') {
+                  st['gps']=allAddresses[this.props.selectedAddress];
                 }
-                this.setState(st, () => this.search());
             })
             .catch(err => { console.log(err); }
             );
+         this.setState(st, () => this.search());
     }
 
     onChange = e => {
@@ -208,7 +205,16 @@ class SearchPage extends React.Component {
         serviceUsersDisplay=serviceUsers; 
       }
 
-      this.setState({serviceUsersDisplay: serviceUsersDisplay});
+      var visibleCategories=[];
+      this.state.categories.forEach(e => {
+        serviceUsersDisplay.forEach(a => {
+          if(a.service.category._id === e._id){
+            visibleCategories.push(e.label);
+          }
+        })
+      })
+
+      this.setState({serviceUsersDisplay: serviceUsersDisplay, visibleCategories:visibleCategories});
     }
 
      search() {
@@ -289,7 +295,7 @@ class SearchPage extends React.Component {
         var keyword = this.state.keyword;
         const serviceUsers = this.state.serviceUsersDisplay;
         keyword = keyword ? keyword.trim() : '';
-
+  
         return (
           <Fragment>
             <Layout>
@@ -425,8 +431,9 @@ class SearchPage extends React.Component {
                                 </Grid> : null
                               }
                                 <Grid container spacing={2} style={{marginLeft: 15, marginRight : 15, marginTop: 5}}>
-                                {serviceUsers.map(su => {
-                                  if (su.service.category._id === cat._id) {
+                                {
+                                   serviceUsers.map(su => {
+                                   if (su.service.category._id === cat._id) {
                                     return (
                                       <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
                                         <CardPreview services={su} alfred={user} gps={gps} needAvatar={true}/>
@@ -437,8 +444,8 @@ class SearchPage extends React.Component {
                                   }
                                 })}
                                 </Grid>
-                                {this.state[cat.label] !== 0 ?
-                                    <hr style={{width: '10%', margin: 'auto', border:'none', height: '10px', marginBottom: '80px', marginTop: '55px', backgroundColor: '#2FBCD3'}} />
+                                {this.state.visibleCategories.includes(cat.label) ?
+                                    <hr style={{width: '10%', margin: 'auto', border:'none', height: '10px', marginBottom: '20px', marginTop: '55px', backgroundColor: '#2FBCD3'}} />
                                     : null}
 
                               </Grid>
@@ -450,29 +457,33 @@ class SearchPage extends React.Component {
                             null
                           }
                  </Grid>
-                <SerenityNeed gps={gps}/>
-                <BecomeAlfred />
-                <Section3 gps={gps}/>
-                <NearbyYou gps={gps}/>
-                <Profiteandlearn gps={gps}/>
-                <Section6 gps={gps}/>
-                <Wellbeing gps={gps}/>
-                <Section8 gps={gps}/>
-                <FeelingGood gps={gps}/>
-                <Section10 gps={gps}/>
-                <Proposeservice />
-                <Section12 gps={gps}/>
-                <NearbyYou gps={gps}/>
-                <Passions/>
-                <Section15 gps={gps}/>
-                <Section16 gps={gps}/>
-                <Facons/>
-                <Section18 gps={gps}/>
-                <Section19 gps={gps}/>
-                <Otter/>
-                <Section21 gps={gps}/>
-                <Section22 gps={gps}/>
-                <Assureback/>
+                { serviceUsers.length>0 ? null: 
+                  <>
+                  <SerenityNeed gps={gps}/>
+                  <BecomeAlfred />
+                  <Section3 gps={gps}/>
+                  <NearbyYou gps={gps}/>
+                  <Profiteandlearn gps={gps}/>
+                  <Section6 gps={gps}/>
+                  <Wellbeing gps={gps}/>
+                  <Section8 gps={gps}/>
+                  <FeelingGood gps={gps}/>
+                  <Section10 gps={gps}/>
+                  <Proposeservice />
+                  <Section12 gps={gps}/>
+                  <NearbyYou gps={gps}/>
+                  <Passions/>
+                  <Section15 gps={gps}/>
+                  <Section16 gps={gps}/>
+                  <Facons/>
+                  <Section18 gps={gps}/>
+                  <Section19 gps={gps}/>
+                  <Otter/>
+                  <Section21 gps={gps}/>
+                  <Section22 gps={gps}/>
+                  <Assureback/>
+                  </>
+                }
 
                 <Footer/>
               </Layout>

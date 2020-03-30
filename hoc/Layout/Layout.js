@@ -37,7 +37,7 @@ class Layout extends React.Component {
     return(
       <Fragment>
         <Loader />
-        <NavBar gps={gps} user={user} addressSelected={addressSelected} />
+        <NavBar />
         {children}
       </Fragment>
     );

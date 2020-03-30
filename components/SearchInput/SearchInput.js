@@ -1,3 +1,4 @@
+import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Search from '@material-ui/icons/Search';
@@ -14,62 +15,55 @@ import MenuItem from '@material-ui/core/MenuItem';
 import AlgoliaPlaces from 'algolia-places-react';
 import moment from 'moment';
 import Hidden from '@material-ui/core/Hidden';
+var parse = require('url-parse');
 
 class SearchInput extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      research: '',
+      keyword: '',
       gps:'',
       city: '',
       user: '',
-      selectedAddress: '',
-      hourSelected: ''
+      selectedAddress: null,
     };
     this.findService = this.findService.bind(this)
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if(prevProps.addressSelected !== this.props.addressSelected){
-      this.setState({selectedAddress : this.props.addressSelected})
-    }
+  componentDidMount() {
+    var query=parse(window.location.href, true).query;
+    query['gps']='gps' in query ? JSON.parse(query.gps) : null;
+    this.setState(query);
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.get('/myAlfred/api/users/current')
+     .then(res => {
+       let user = res.data;
+       var allAddresses={'main': user.billing_address}
+       user.service_address.forEach( ad => allAddresses[ad._id]=ad);
+       if (!('selectedAddress' in query)) { this.setState({selectedAddress: 'main'}) }
+       this.setState({user:user, allAddresses:allAddresses});
+     })
   }
 
   findService(){
-    let date;
-    let dateISO;
-    let day;
-    let hour;
-    const service = this.state.research;
-    const city = this.state.city;
-    const gps = JSON.stringify(this.state.gps);
-    if(this.state.dateSelected !== ''){
-      date = moment(this.state.dateSelected).format('DD/MM/YYYY');
-      dateISO = moment(this.state.dateSelected).format();
-      day = moment(this.state.dateSelected).format('dddd');
-    } else {
-      date = '';
-      dateISO = '';
-      day = '';
-    }
-    if(this.state.hourSelected !== ''){
-      hour = moment(this.state.hourSelected).format('HH:mm');
-    } else {
-      hour = '';
-    }
-    Router.push({
-      pathname: '/search',
-      query: { keyword: service,city:city,date:date,dateISO:dateISO,day:day,hour:hour,gps: gps, address: JSON.stringify(this.state.selectedAddress) }
-    });
+    var queryParams={}
+    if (this.state.keyword) { queryParams['keyword']=this.state.keyword};
+    if (this.state.city) { queryParams['city']=this.state.city};
+    if (this.state.gps) { queryParams['gps']=JSON.stringify(this.state.gps)};
+    if (this.state.selectedAddress) { queryParams['selectedAddress']=this.state.selectedAddress}
+    Router.push({ pathname: '/search', query: queryParams })
   }
 
   onChange = e => {
     let {name, value} = e.target;
     this.setState({ [e.target.name]: e.target.value });
     if (name === 'selectedAddress') {
-      this.setState({gps: value === 'all'? null : 'gps' in value ? value.gps : {'lat':value['lat'], 'lng':value['lng']}})
-    }else if(name === 'myAddresses'){
-      Router.push('/profile/myAddresses')
+      if (value=='addAddress') {
+        Router.push('/profile/myAddresses')
+      }
+      else {
+        this.setState({gps: value === 'all'? null : value=='main' ? this.state.allAddresses['main'].gps:{lat:this.state.allAddresses[value].lat, lng:this.state.allAddresses[value].lng}});
+      }
     }
   };
 
@@ -78,7 +72,8 @@ class SearchInput extends React.Component{
   };
 
   render() {
-    const {classes , gps, user, addressSelected} = this.props;
+    const {classes} = this.props;
+    const {gps, user, city} = this.state;
 
     return (
       <Grid className={classes.mainContainer}>
@@ -90,8 +85,8 @@ class SearchInput extends React.Component{
                 placeholder="Quel service ?"
                 InputProps={{disableUnderline: true}}
                 onChange={this.onChange}
-                value={this.state.research}
-                name={'research'}
+                value={this.state.keyword}
+                name={'keyword'}
               />
               <Hidden smUp>
                 <Divider className={classes.divider} orientation="vertical" />
@@ -124,18 +119,18 @@ class SearchInput extends React.Component{
                       onChange={(e) => {this.onChange(e);}}
                       margin="dense"
                     >
-                      <MenuItem value={this.state.selectedAddress}>
-                        Adresse principale, <em> {' '+addressSelected.address} {addressSelected.zip_code},{addressSelected.city}</em>
+                      <MenuItem value={'main'}>
+                        Adresse principale, <em> {' '+user.billing_address.address} {user.billing_address.zip_code},{user.billing_address.city}</em>
                       </MenuItem>
                       {user.service_address.map(e => (
-                        <MenuItem key={e._id} value={e}>
+                        <MenuItem value={e._id}>
                           {e.label+', '} <em> {' '+e.address},{e.zip_code} {e.city}</em>
                         </MenuItem>
                       ))}
                       <MenuItem value={'all'}>
                         Partout, Rechercher des Alfred partout
                       </MenuItem>
-                      <MenuItem value={'myAddresses'}>
+                      <MenuItem value={'addAddress'}>
                         <p style={{ color: '#2FBCD3',cursor:'pointer' }}>
                           Ajouter une adresse
                         </p>
@@ -160,6 +155,7 @@ class SearchInput extends React.Component{
                       }}
                       onChange={(suggestion) =>this.onChangeCity(suggestion)}
                       onClear={()=>this.setState({city:'', gps:null})}
+                      value={city}
                     />
                   </Grid>
                 </Grid>
