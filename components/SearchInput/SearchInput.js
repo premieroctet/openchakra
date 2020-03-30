@@ -48,7 +48,7 @@ class SearchInput extends React.Component{
   }
 
   findService(){
-    var queryParams={}
+    var queryParams={search:1}
     if (this.state.keyword) { queryParams['keyword']=this.state.keyword};
     if (this.state.city) { queryParams['city']=this.state.city};
     if (this.state.gps) { queryParams['gps']=JSON.stringify(this.state.gps)};

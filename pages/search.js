@@ -108,7 +108,6 @@ class SearchPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            searched:false,
             user: null,
             address: {},
             selectedAddress: {},
@@ -117,6 +116,7 @@ class SearchPage extends React.Component {
             categories: [],
             serviceUsers: [],
             serviceUsersDisplay: [],
+            shops: [],
             proAlfred: [], // Professional Alfred ids
             keyword: '',
             proSelected: false, // Filtre professionnel
@@ -130,9 +130,9 @@ class SearchPage extends React.Component {
         };
     }
 
-    static getInitialProps ({ query: { keyword, city, gps, selectedAddress, category, service, prestation} }) {
+    static getInitialProps ({ query: { keyword, city, gps, selectedAddress, category, service, prestation, search} }) {
       // FIX : set city nin AlgoPlaces if provided
-      var init= { keyword: keyword, city:city, gps:gps, selectedAddress:selectedAddress, category:category, service:service, prestation:prestation}
+      var init= { keyword: keyword, city:city, gps:gps, selectedAddress:selectedAddress, category:category, service:service, prestation:prestation, search:search}
       return init;
     }
 
@@ -161,21 +161,32 @@ class SearchPage extends React.Component {
           st['prestation']=this.props.prestation;
         }
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios
-            .get(url+'myAlfred/api/users/current')
-            .then(res => {
-                let user = res.data;
-                st['user']=user;
-                var allAddresses={'main': user.billing_address.gps}
-                user.service_address.forEach( ad => allAddresses[ad._id]={lat:ad.lat, lng:ad.lng});
-                st['allAddresses']= allAddresses;
-                if ('selectedAddress' in this.props && this.props['selectedAddress']!='all') {
-                  st['gps']=allAddresses[this.props.selectedAddress];
-                }
-            })
-            .catch(err => { console.log(err); }
-            );
-         this.setState(st, () => this.search());
+        
+        axios.get('/myAlfred/api/category/all/sort')
+          .then(res => {
+            console.log("Got categories");
+            st['categories']=res.data;
+             axios.get(url+'myAlfred/api/shop/all')
+               .then( res => {
+                  st['shops']=res.data;
+                  axios.get('/myAlfred/api/users/current')
+                    .then(res => {
+                      let user = res.data;
+                      st['user']=user;
+                      var allAddresses={'main': user.billing_address.gps}
+                      user.service_address.forEach( ad => allAddresses[ad._id]={lat:ad.lat, lng:ad.lng});
+                      st['allAddresses']= allAddresses;
+                      if ('selectedAddress' in this.props && this.props['selectedAddress']!='all') {
+                         st['gps']=allAddresses[this.props.selectedAddress];
+                      }
+                      this.setState(st, () => { if ('search' in this.props) {this.search()}});
+                    })
+                    .catch(err => { 
+                      this.setState(st, () => { if ('search' in this.props) {this.search()}});
+                      console.log(err);});
+               })
+           })
+           .catch(err => { console.log(err)});
     }
 
     onChange = e => {
@@ -249,28 +260,19 @@ class SearchPage extends React.Component {
          .then(res => {
            let serviceUsers = res.data;
            this.setState({serviceUsers:serviceUsers, serviceUsersDisplay:serviceUsers});
-           axios.get(url+'myAlfred/api/category/all/sort')
-             .then(res => {
-               let categories = res.data;
-               var visibleCategories=[];
-               categories.forEach(e => {
-                 serviceUsers.forEach(a => {
-                   if(a.service.category._id === e._id){
-                     visibleCategories.push(e.label);
-                   }
-                 })
-               })
-               axios.get(url+'myAlfred/api/shop/all')
-                 .then( res => {
-                   var shops=res.data;
-                   var proAlfred=shops.filter( s => s.is_professional).map( s => s.alfred._id);
-                   this.setState({visibleCategories:visibleCategories, categories:categories, proAlfred:proAlfred});
-                 })
+           const categories = this.state.categories
+           var visibleCategories=[];
+           categories.forEach(e => {
+             serviceUsers.forEach(a => {
+               if(a.service.category._id === e._id){
+                 visibleCategories.push(e.label);
+               }
              })
-             .catch(err => console.log(err));
-             this.setState({searched:true});
            })
-           .catch(err => console.log(err));
+           var shops=res.data;
+           var proAlfred=shops.filter( s => s.is_professional).map( s => s.alfred._id);
+           this.setState({visibleCategories:visibleCategories, categories:categories, proAlfred:proAlfred});
+         })
     }
 
     statusFilterToggled(){
