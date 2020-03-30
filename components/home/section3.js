@@ -113,7 +113,7 @@ class section3 extends React.Component {
         const resdata = shuffleArray(service);
         const services = resdata.slice(0, 6).map(e => (
             <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
-                <Link href={'/search?service='+e._id+'&gps='+JSON.stringify(gps)}>
+                <Link href={'/search?search=1&service='+e._id+'&gps='+JSON.stringify(gps)}>
                 <Card className={classes.card} style={{
                     backgroundColor:'transparent',
                     textAlign:'center',

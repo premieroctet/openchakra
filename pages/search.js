@@ -403,7 +403,7 @@ class SearchPage extends React.Component {
                     <Grid container className="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'inline-block', minHeight: '250px'}}>
                       {categories.map((cat, index) => (
                         <Grid key={index} style={{display: 'inline-block', width: '300px', margin: 'auto 20px'}}>
-                          <Link href={'/search?category='+cat._id}>
+                          <Link href={'/search?search=1&category='+cat._id}>
                             <Card  style={{width: '300px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
                               <CardActionArea>
                                 <CardMedia
