@@ -154,6 +154,10 @@ class UserServicesPreview extends React.Component {
     if (isEmpty(this.state.date)) {
       errors['date']='Sélectionner une date';
     }
+    else {
+      var m=moment(this.state.date);
+      if (m<moment()) { errors['date']='Date de réservation passée' }
+    }
     if (isEmpty(this.state.time)) {
       errors['time']='Sélectionner une heure';
     }
@@ -381,6 +385,7 @@ class UserServicesPreview extends React.Component {
           <Grid style={{display: 'flex', justifyContent: 'space-between' }}>
             <Grid>
               <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>Date & heure</Typography>
+              <em style={{color:'red'}}>{errors['date']}</em>
             </Grid>
             <Hidden lgUp>
               <Grid>
