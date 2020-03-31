@@ -40,11 +40,9 @@ import MapComponent from '../components/map';
 const {computeBookingReference}=require('../utils/functions');
 const {COMM_CLIENT}=require('../utils/consts');
 const emptyPromise = require('../utils/promise');
+const {isMomentAvailable} = require('../utils/dateutils');
 const moment = require('moment');
 moment.locale('fr');
-
-const { config } = require('../config/config');
-const url = config.apiUrl;
 
 class UserServicesPreview extends React.Component {
   constructor(props) {
@@ -78,6 +76,7 @@ class UserServicesPreview extends React.Component {
       errors:{},
     }
     this.onQtyChanged = this.onQtyChanged.bind(this);
+    this.checkBook = this.checkBook.bind(this);
   }
 
   static getInitialProps ({ query: { id } }) {
@@ -90,7 +89,7 @@ class UserServicesPreview extends React.Component {
     axios.defaults.headers.common["Authorization"] = localStorage.getItem(
       "token"
     );
-    axios.get(url + "myAlfred/api/users/current").then(res => {
+    axios.get("/myAlfred/api/users/current").then(res => {
       let user = res.data;
       this.setState({ user: user, });
       })
@@ -102,7 +101,7 @@ class UserServicesPreview extends React.Component {
         }
       });
 
-    axios.get(url + `myAlfred/api/serviceUser/${id}`).then(res => {
+    axios.get(`/myAlfred/api/serviceUser/${id}`).then(res => {
       let serviceUser = res.data;
       // Prestas booked : 0 for each
       var count = {}
@@ -121,10 +120,11 @@ class UserServicesPreview extends React.Component {
       axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
         .then(res => {
           let availabilities = res.data;
+          console.log("Avail:"+availabilities.length);
           this.setState({ availabilities: availabilities });
         })
         .catch(err => console.log(err));
-      axios.get(url + "myAlfred/api/shop/alfred/" + this.state.alfred._id).then(res => {
+      axios.get("/myAlfred/api/shop/alfred/" + this.state.alfred._id).then(res => {
         let shop = res.data;
         this.setState({
           shop: shop,
@@ -137,13 +137,14 @@ class UserServicesPreview extends React.Component {
     }).catch(err =>{
       console.log(err)
     });
-    this.checkBook();
+
+    setTimeout(this.checkBook, 3000);
   }
 
   checkBook = () => {
     // FIX: vérifier délai prévenance
     // FIX: vérifier dispos
-    // FIX: vérifier date/heure après maintenant
+    console.log(this.state.date);
     var errors={}
     if (!this.state.total) {
       errors['prestations']='Sélectionnez au moins une prestation';
@@ -161,19 +162,21 @@ class UserServicesPreview extends React.Component {
     if (isEmpty(this.state.time)) {
       errors['time']='Sélectionner une heure';
     }
+    const m2=moment(this.state.date+' '+this.state.time);
+    if (m2.isValid() && !isMomentAvailable(m2, this.state.service._id, this.state.availabilities)) {
+      errors['date']=this.state.alfred.firstname+" n'est pas disponible à cette date/heure"; 
+    }
     this.setState({errors:errors});
   }
 
   extractFilters() {
     var result={};
     if (this.state.prestations.length==0) {
-      console.log("NUL");
       return result;
     }
     this.state.prestations.forEach( p => {
       var filter=p.prestation.filter_presentation;
       var key = !filter || filter.label=='Aucun' ? '' : filter.label;
-      console.log("Key:"+key);
       if (key in result) {
         result[key].push(p);
       }
@@ -253,7 +256,7 @@ class UserServicesPreview extends React.Component {
     time_p.setMinutes(parseInt(tp[1]));
     time_p=moment(time_p);
 
-    var chatPromise = actual ? emptyPromise({ res: null }) : axios.post(url + "myAlfred/api/chatRooms/addAndConnect", { emitter: this.state.user._id, recipient: this.state.serviceUser.user._id });
+    var chatPromise = actual ? emptyPromise({ res: null }) : axios.post("/myAlfred/api/chatRooms/addAndConnect", { emitter: this.state.user._id, recipient: this.state.serviceUser.user._id });
 
     chatPromise.then( res => {
       let bookingObj = {
@@ -292,9 +295,9 @@ class UserServicesPreview extends React.Component {
         })
       }
       else {
-        axios.post(url + "myAlfred/api/booking/add", bookingObj)
+        axios.post("/myAlfred/api/booking/add", bookingObj)
           .then(response => {
-            axios.put(url + 'myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, { booking: response.data._id })
+            axios.put('/myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, { booking: response.data._id })
               .then(() => {
                 localStorage.removeItem('address');
                 Router.push({

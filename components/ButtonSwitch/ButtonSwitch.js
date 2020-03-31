@@ -121,7 +121,6 @@ class ButtonSwitch extends React.Component {
     var {label, checked} = this.state;
     // FIX : forcer le checked, il doit être refourni par le parent
     var checked = this.props.checked;
-    console.log("Billing:"+JSON.stringify(this.state.billing));
     return(
       <Grid className={classes.contentFiltre}>
         <Grid className={classes.responsiveIOSswitch} style={{width : this.props.width}}>
