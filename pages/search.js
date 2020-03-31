@@ -48,7 +48,7 @@ import Section18 from '../components/home/section18';
 import Section19 from '../components/home/section19';
 import Section21 from '../components/home/section21';
 import Section22 from '../components/home/section22';
-
+const {isIntervalAvailable} = require('../utils/dateutils');
 
 const geolib = require('geolib');
 const _ = require('lodash');
@@ -127,7 +127,8 @@ class SearchPage extends React.Component {
             statusFilterVisible:false,
             dateFilterVisible:false,
             visibleCategories:[],
-            catCount:{} // cat id => # of items to display
+            catCount:{}, // cat id => # of items to display
+            availabilities:[],
         };
     }
 
@@ -140,6 +141,14 @@ class SearchPage extends React.Component {
     onChangeCity({suggestion}) {
       this.setState({gps:suggestion.latlng, city: suggestion.name});
     };
+
+    onChangeInterval(startDate, endDate) {
+      if (startDate) { startDate.hour(0).minute(0).second(0).millisecond(0)};
+      if (endDate) { endDate.hour(23).minute(59).second(59).millisecond(999)};
+      console.log(typeof(startDate), startDate);
+      console.log(typeof(endDate), endDate);
+      this.setState({startDate:startDate, endDate:endDate});  
+    }
 
     componentDidUpdate(prevProps) {
       if (this.props!== prevProps) {
@@ -225,6 +234,22 @@ class SearchPage extends React.Component {
         serviceUsersDisplay=serviceUsers; 
       }
 
+      const start=this.state.startDate;
+      const end=this.state.endDate;
+      console.log(start, end);
+
+      if (start && end) {
+        console.log("Before:"+serviceUsersDisplay.length);
+        const filtered = [];
+        serviceUsersDisplay.forEach( su => {
+          if (isIntervalAvailable(start, end, su.service._id, this.state.availabilities.filter( a => a.user==su.user._id))) {
+            filtered.push(su);
+          }
+        });
+        serviceUsersDisplay=filtered;
+        console.log("After:"+serviceUsersDisplay.length);
+      }
+
       var visibleCategories=[];
       this.state.categories.forEach(e => {
         serviceUsersDisplay.forEach(a => {
@@ -240,29 +265,18 @@ class SearchPage extends React.Component {
      search() {
        const address = this.state.selectedAddress;
         var filters={}
-        // GPS
-        if (this.state.gps) {
-            filters['gps']=this.state.gps;
-        }
 
+        // GPS
+        if (this.state.gps) { filters['gps']=this.state.gps; }
        // Keyword search disables cat/ser/presta filter
-       if (this.state.keyword) {
-         filters['keyword']=this.state.keyword;
-       }
+       if (this.state.keyword) { filters['keyword']=this.state.keyword; }
        else {
          // Category
-         if (this.props.category) {
-           filters['category']=this.props.category;
-         }
-
+         if (this.props.category) { filters['category']=this.props.category; }
          // Service
-         if (this.props.service) {
-           filters['service']=this.props.service;
-         }
+         if (this.props.service) { filters['service']=this.props.service; }
          // Prestation
-         if (this.props.prestation) {
-           filters['prestation']=this.props.prestation;
-         }
+         if (this.props.prestation) { filters['prestation']=this.props.prestation; }
        }
 
        axios.post('/myAlfred/api/serviceUser/search', filters)
@@ -278,8 +292,11 @@ class SearchPage extends React.Component {
                }
              })
            })
-           var shops=res.data;
-           var proAlfred=shops.filter( s => s.is_professional).map( s => s.alfred._id);
+           var proAlfred=this.state.shops.filter( s => s.is_professional).map( s => s.alfred._id);
+           axios.get('/myAlfred/api/availability/all')
+             .then( res => {
+               this.setState({ availabilities: res.data });
+             });
            this.setState({visibleCategories:visibleCategories, categories:categories, proAlfred:proAlfred});
          })
     }
@@ -293,11 +310,11 @@ class SearchPage extends React.Component {
     }
 
      cancelDateFilter(){
-       this.setState({startDate:null,endDate:null,filterDateVisible:false});
+       this.setState({startDate:null,endDate:null,dateFilterVisible:false}, () => this.filter());
      }
 
      validateDateFilter(){
-       this.setState({filterDateVisible:false});
+       this.setState({dateFilterVisible:false}, () => this.filter());
      }
 
     restrictServices(serviceUsers, category) {
@@ -395,7 +412,7 @@ class SearchPage extends React.Component {
                                         startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
                                         endDate={this.state.endDate} // momentPropTypes.momentObj or null,
                                         endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                                        onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })} // PropTypes.func.isRequired,
+                                        onDatesChange={({ startDate, endDate }) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
                                         focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
                                         onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
                                         minimumNights={0}

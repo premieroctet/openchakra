@@ -157,6 +157,18 @@ router.post('/home/date',(req,res)=>{
         .catch(err => console.log(err));
 });
 
+// @Route GET /myAlfred/api/availability/all
+// Get all availability for one user
+router.get('/all',(req,res)=> {
+  Availability.find({})
+    .then(availability => {
+      res.json(availability);
+    })
+    .catch(err => {
+      console.log(err);
+    })
+});
+
 // @Route GET /myAlfred/api/availability/:id
 // Get one availability
 router.get('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
