@@ -127,6 +127,7 @@ class SearchPage extends React.Component {
             statusFilterVisible:false,
             dateFilterVisible:false,
             visibleCategories:[],
+            catCount:{} // cat id => # of items to display
         };
     }
 
@@ -166,6 +167,9 @@ class SearchPage extends React.Component {
           .then(res => {
             console.log("Got categories");
             st['categories']=res.data;
+            var catCount={}
+            res.data.forEach( c => catCount[c._id]=8);
+            st['catCount']=catCount;
              axios.get(url+'myAlfred/api/shop/all')
                .then( res => {
                   st['shops']=res.data;
@@ -179,11 +183,16 @@ class SearchPage extends React.Component {
                       if ('selectedAddress' in this.props && this.props['selectedAddress']!='all') {
                          st['gps']=allAddresses[this.props.selectedAddress];
                       }
+                      if (!this.props['selectedAddress'] && !this.props['gps']) {
+                         st['gps']=allAddresses['main'];
+                         st['selectedAddress']='main';
+                      }
+
                       this.setState(st, () => { if ('search' in this.props) {this.search()}});
                     })
                     .catch(err => { 
                       this.setState(st, () => { if ('search' in this.props) {this.search()}});
-                      console.log(err);});
+                      console.log("Non connecté");});
                })
            })
            .catch(err => { console.log(err)});
@@ -290,6 +299,24 @@ class SearchPage extends React.Component {
      validateDateFilter(){
        this.setState({filterDateVisible:false});
      }
+
+    restrictServices(serviceUsers, category) {
+      const nbToDisplay=this.state.catCount[category._id];
+      const su = serviceUsers.filter( s => s.service.category._id == category._id).slice(0, nbToDisplay);
+      return su;
+    }
+
+    hasMoreToDisplay(serviceUsers, category) {
+      const nbToDisplay=this.state.catCount[category._id];
+      const nbTotal = serviceUsers.filter( s => s.service.category._id == category._id).length;
+      return nbTotal>nbToDisplay;
+    }
+
+    increaseCount(category) {
+      var counts=this.state.catCount;
+      counts[category._id]=counts[category._id]+8;
+      this.setState({catCount:counts});
+    }
 
     render() {
         const {classes} = this.props;
@@ -403,7 +430,7 @@ class SearchPage extends React.Component {
                     <Grid container className="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'inline-block', minHeight: '250px'}}>
                       {categories.map((cat, index) => (
                         <Grid key={index} style={{display: 'inline-block', width: '300px', margin: 'auto 20px'}}>
-                          <Link href={'/search?search=1&category='+cat._id}>
+                          <Link href={'/search?search=1&category='+cat._id+'&gps='+JSON.stringify(gps)}>
                             <Card  style={{width: '300px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
                               <CardActionArea>
                                 <CardMedia
@@ -434,22 +461,24 @@ class SearchPage extends React.Component {
                               }
                                 <Grid container spacing={2} style={{marginLeft: 15, marginRight : 15, marginTop: 5}}>
                                 {
-                                   serviceUsers.map(su => {
-                                   if (su.service.category._id === cat._id) {
+                                   this.restrictServices(serviceUsers, cat).map(su => {
                                     return (
                                       <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
                                         <CardPreview services={su} alfred={user} gps={gps} needAvatar={true}/>
                                       </Grid>
                                     )
-                                  } else {
-                                    return null
-                                  }
-                                })}
+                                  })
+                                }
                                 </Grid>
                                 {this.state.visibleCategories.includes(cat.label) ?
+                                  <>
                                     <hr style={{width: '10%', margin: 'auto', border:'none', height: '10px', marginBottom: '20px', marginTop: '55px', backgroundColor: '#2FBCD3'}} />
+                                    { this.hasMoreToDisplay(serviceUsers, cat) ?
+                                      <Button onClick={()=>this.increaseCount(cat)}>Voir plus</Button>
+                                     : null
+                                    }
+                                  </>
                                     : null}
-
                               </Grid>
                             ))}
                           </Grid>
