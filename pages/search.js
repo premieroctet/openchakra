@@ -214,6 +214,7 @@ class SearchPage extends React.Component {
 
     onChange = e => {
         var {name, value} = e.target;
+        console.log("onChange:"+name+","+value);
         this.setState({ [e.target.name]: e.target.value });
         if (name === 'selectedAddress') {
           this.setState({gps: value === 'all'?null: 'gps' in value ? value.gps : {'lat':value['lat'], 'lng':value['lng']}})
@@ -470,7 +471,7 @@ class SearchPage extends React.Component {
                       ))}
                     </Grid>
                       <Grid container>
-                        { this.props.search && this.state.serviceUsers.length>0 ?
+                        { this.props.search && serviceUsers.length>0 ?
                           <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Nos meilleurs Alfred ...</h3>
                           :
                           null }
@@ -505,13 +506,13 @@ class SearchPage extends React.Component {
                               </Grid>
                             ))}
                           </Grid>
-                          {this.props.search && this.state.serviceUsers.length === 0 ?
+                          {this.props.search && serviceUsers.length === 0 ?
                             <p>Aucun résultat</p>
                             :
                             null
                           }
                  </Grid>
-                { 'search' in this.props>0 ? null: 
+                { serviceUsers.length>0 ? null: 
                   <>
                   <SerenityNeed gps={gps}/>
                   <BecomeAlfred />

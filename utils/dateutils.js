@@ -20,7 +20,7 @@ const numberToDay = (number) => {
 
 const isMomentInEvent = (m, serviceId, event, checkTimeOnly) => {
   if (!event.all_services && !event.services.map(s => s.value).includes(serviceId)) {
-    console.error(`ServiceId ${serviceId} not found in ${JSON.stringify(event.services)}`);
+    console.log(`ServiceId ${serviceId} not found in ${JSON.stringify(event.services)}`);
     return false;
   }
   
@@ -61,6 +61,7 @@ const isMomentInAvail = (m, serviceId, avail) => {
 
 const isMomentAvailable = (mom, serviceId, avails) => {
   if (isEmpty(avails)) { 
+    console.log('isEmpty');
     return true;
   }
   const res= avails.some(a => isMomentInAvail(mom, serviceId, a));
@@ -68,6 +69,10 @@ const isMomentAvailable = (mom, serviceId, avails) => {
 }
 
 const isIntervalAvailable = (start, end, serviceId, avails) => {
+  if (isEmpty(avails)) {
+    return true;
+  }
+  console.log("Avails:"+avails.length);
   var m=moment(start);
   while (m.isBefore(end)) {
     if (isMomentAvailable(m, serviceId, avails)) { return true};

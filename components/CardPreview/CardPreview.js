@@ -48,6 +48,12 @@ class CardPreview extends React.Component{
     }
   }
 
+  componentDidMount() {
+    axios.get('/myAlfred/api/shop/alfred/'+this.props.services.user._id || this.props.services.user)
+      .then( res => this.setState({shop: res.data}))
+      .catch( err => console.log(err)) 
+  }
+
   handleClickOpen(id) {
     this.setState({id_service: id, open:true});
   }
