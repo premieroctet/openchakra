@@ -506,7 +506,7 @@ class SearchPage extends React.Component {
                             null
                           }
                  </Grid>
-                { serviceUsers.length>0 ? null: 
+                { 'search' in this.props >0 ? null: 
                   <>
                   <SerenityNeed gps={gps}/>
                   <BecomeAlfred />
