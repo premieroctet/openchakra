@@ -30,9 +30,6 @@ const isServiceAroundGPS = (serviceUser, coordinates) => {
 }
 
 isServiceAtAlfredOrVisio = su => {
-  // FIX : test only
-  return false;
-  // FIX : end
   return su.location.alfred || su.location.visio;
 }
 
@@ -48,8 +45,7 @@ const sortfn = gps => {
  
 
 const filterServicesGPS = (serviceUsers, coordinates) => {
-  //serviceUser = serviceUsers.filter( su => isServiceAtAlfredOrVisio(su) || isServiceAroundGPS(su, coordinates) );
-  var filteredServiceUsers = serviceUsers.filter( su => isServiceAroundGPS(su, coordinates) );
+  var filteredServiceUsers=serviceUsers.filter( su => isServiceAtAlfredOrVisio(su) || isServiceAroundGPS(su, coordinates) );
   filteredServiceUsers.sort(sortfn(coordinates)); 
   return filteredServiceUsers;
 }
