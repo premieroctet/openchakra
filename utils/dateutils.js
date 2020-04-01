@@ -61,7 +61,6 @@ const isMomentInAvail = (m, serviceId, avail) => {
 
 const isMomentAvailable = (mom, serviceId, avails) => {
   if (isEmpty(avails)) { 
-    console.log('isEmpty');
     return true;
   }
   const res= avails.some(a => isMomentInAvail(mom, serviceId, a));
@@ -72,7 +71,6 @@ const isIntervalAvailable = (start, end, serviceId, avails) => {
   if (isEmpty(avails)) {
     return true;
   }
-  console.log("Avails:"+avails.length);
   var m=moment(start);
   while (m.isBefore(end)) {
     if (isMomentAvailable(m, serviceId, avails)) { return true};
@@ -81,4 +79,29 @@ const isIntervalAvailable = (start, end, serviceId, avails) => {
   return false; 
 }
 
-module.exports={isMomentAvailable, isIntervalAvailable};
+const getDeadLine=(deadline) => {
+  var m=moment();
+  if (!deadline) {
+    return m;
+  }
+  const dl=deadline.split(" ");
+  var value=parseInt(dl[0]);
+  const unit=dl[1];
+
+  switch (unit) {
+    case 'heures':
+      m.add(value, 'hours');
+      break;
+    case 'jours':
+      m.add(value, 'days');
+      break;
+    case 'semaines':
+      m.add(value*7, 'days');
+      break;
+    default:
+      console.error('getDeadLine unité inconnue:'+unit);
+  }
+  return m;
+}
+
+module.exports={isMomentAvailable, isIntervalAvailable, getDeadLine};

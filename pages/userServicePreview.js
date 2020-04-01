@@ -40,7 +40,7 @@ import MapComponent from '../components/map';
 const {computeBookingReference}=require('../utils/functions');
 const {COMM_CLIENT}=require('../utils/consts');
 const emptyPromise = require('../utils/promise');
-const {isMomentAvailable} = require('../utils/dateutils');
+const {isMomentAvailable, getDeadLine} = require('../utils/dateutils');
 const moment = require('moment');
 moment.locale('fr');
 
@@ -120,7 +120,6 @@ class UserServicesPreview extends React.Component {
       axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
         .then(res => {
           let availabilities = res.data;
-          console.log("Avail:"+availabilities.length);
           this.setState({ availabilities: availabilities });
         })
         .catch(err => console.log(err));
@@ -142,9 +141,6 @@ class UserServicesPreview extends React.Component {
   }
 
   checkBook = () => {
-    // FIX: vérifier délai prévenance
-    // FIX: vérifier dispos
-    console.log(this.state.date);
     var errors={}
     if (!this.state.total) {
       errors['prestations']='Sélectionnez au moins une prestation';
@@ -153,18 +149,22 @@ class UserServicesPreview extends React.Component {
       errors['total']='Commande minimum des prestation de '+this.state.serviceUser.minimum_basket+'€ requise';
     }
     if (isEmpty(this.state.date)) {
-      errors['date']='Sélectionner une date';
+      errors['date']='Sélectionnez une date';
     }
     else {
       var m=moment(this.state.date);
       if (m<moment()) { errors['date']='Date de réservation passée' }
     }
     if (isEmpty(this.state.time)) {
-      errors['time']='Sélectionner une heure';
+      errors['time']='Sélectionnez une heure';
     }
     const m2=moment(this.state.date+' '+this.state.time);
     if (m2.isValid() && !isMomentAvailable(m2, this.state.service._id, this.state.availabilities)) {
       errors['date']=this.state.alfred.firstname+" n'est pas disponible à cette date/heure"; 
+    }
+    const minBookingDate=getDeadLine(this.state.serviceUser.deadline_before_booking);
+    if (m2.isBefore(minBookingDate)) {
+      errors['date']="Le délai de prévenance n'est pas respecté";
     }
     this.setState({errors:errors});
   }
@@ -184,7 +184,6 @@ class UserServicesPreview extends React.Component {
         result[key]=[p];
       }
     });
-    //console.log("Filters:"+JSON.stringify(result, null,2));
     return result;
   }
 
@@ -532,12 +531,31 @@ class UserServicesPreview extends React.Component {
             <Grid>
               <p>{this.state.count[p._id]*p.price}€</p>
             </Grid>
-            <Grid>
-              <p>{p.billing.label}</p>
-            </Grid>
           </Grid>
           )})
           }
+          { /* Start travel tax */ }
+          { serviceUser.travel_tax ? 
+          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+            <Grid>
+              <p>Frais de déplacement</p>
+            </Grid>
+            <Grid>
+              <p>{this.state.serviceUser.travel_tax}€</p>
+            </Grid>
+          </Grid>:null}
+          { /* End pick tax */ }
+          { /* Start pick tax */ }
+          { serviceUser.pick_tax ? 
+          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+            <Grid>
+              <p>Frais de livraison/enlèvement</p>
+            </Grid>
+            <Grid>
+              <p>{this.state.serviceUser.pick_tax}€</p>
+            </Grid>
+          </Grid>:null}
+          { /* End pick tax */ }
           { /* Start commission */ }
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
