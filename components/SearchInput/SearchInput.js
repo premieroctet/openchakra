@@ -158,7 +158,6 @@ class SearchInput extends React.Component{
                       }}
                       onChange={(suggestion) =>this.onChangeCity(suggestion)}
                       onClear={()=>this.setState({city:'', gps:null})}
-                      value={city}
                     />
                   </Grid>
                 </Grid>
