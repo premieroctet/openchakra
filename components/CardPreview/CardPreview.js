@@ -49,7 +49,7 @@ class CardPreview extends React.Component{
   }
 
   componentDidMount() {
-    axios.get('/myAlfred/api/shop/alfred/'+this.props.services.user)
+    axios.get('/myAlfred/api/shop/alfred/'+this.props.services.user._id || this.props.services.user)
       .then( res => this.setState({shop: res.data}))
       .catch( err => console.log(err)) 
   }
@@ -77,6 +77,7 @@ class CardPreview extends React.Component{
     const service = services.service;
     const { shop } = this.state;
 
+    console.log(shop.is_professional);
     const distance = gps ? computeDistanceKm(gps, services.service_address.gps) : '';
 
     const StyledRating = withStyles({
