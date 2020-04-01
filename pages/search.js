@@ -130,11 +130,12 @@ class SearchPage extends React.Component {
             catCount:{}, // cat id => # of items to display
             availabilities:[],
         };
+        this.filter=this.filter.bind(this);
     }
 
-    static getInitialProps ({ query: { keyword, city, gps, selectedAddress, category, service, prestation, search} }) {
+    static getInitialProps ({ query: { keyword, city, gps, selectedAddress, category, service, prestation, search, date} }) {
       // FIX : set city nin AlgoPlaces if provided
-      var init= { keyword: keyword, city:city, gps:gps, selectedAddress:selectedAddress, category:category, service:service, prestation:prestation, search:search}
+      var init= { keyword: keyword, city:city, gps:gps, selectedAddress:selectedAddress, category:category, service:service, prestation:prestation, search:search, date:date}
       return init;
     }
 
@@ -145,8 +146,6 @@ class SearchPage extends React.Component {
     onChangeInterval(startDate, endDate) {
       if (startDate) { startDate.hour(0).minute(0).second(0).millisecond(0)};
       if (endDate) { endDate.hour(23).minute(59).second(59).millisecond(999)};
-      console.log(typeof(startDate), startDate);
-      console.log(typeof(endDate), endDate);
       this.setState({startDate:startDate, endDate:endDate});  
     }
 
@@ -156,11 +155,19 @@ class SearchPage extends React.Component {
       }
     }
     componentDidMount() {
+        // Mount components gets criterion from URL
+        // If date in URL then force filter after search
         var st={
           keyword:'keyword' in this.props ? this.props.keyword : '',
           gps:'gps' in this.props ? JSON.parse(this.props.gps) : null,
           city:this.props.city || '',
         };
+        if ('date' in this.props) {
+          var startDate=moment(parseInt(this.props.date)).hour(0).minute(0).second(0);
+          var endDate=moment(parseInt(this.props.date)).hour(23).minute(59).second(59);
+          st['startDate']=startDate;
+          st['endDate']=endDate;
+        }
         if ('category' in this.props) {
           st['category']=this.props.category;
         }
@@ -174,7 +181,6 @@ class SearchPage extends React.Component {
         
         axios.get('/myAlfred/api/category/all/sort')
           .then(res => {
-            console.log("Got categories");
             st['categories']=res.data;
             var catCount={}
             res.data.forEach( c => catCount[c._id]=8);
@@ -196,12 +202,11 @@ class SearchPage extends React.Component {
                          st['gps']=allAddresses['main'];
                          st['selectedAddress']='main';
                       }
-
-                      this.setState(st, () => { if ('search' in this.props) {this.search()}});
+                      this.setState(st, () => { if ('search' in this.props) {this.search('date' in this.props)}});
                     })
                     .catch(err => { 
-                      this.setState(st, () => { if ('search' in this.props) {this.search()}});
-                      console.log("Non connecté");});
+                      this.setState(st, () => { if ('search' in this.props) {this.search('date' in this.props)}});
+                    });
                })
            })
            .catch(err => { console.log(err)});
@@ -236,7 +241,6 @@ class SearchPage extends React.Component {
 
       const start=this.state.startDate;
       const end=this.state.endDate;
-      console.log(start, end);
 
       if (start && end) {
         console.log("Before:"+serviceUsersDisplay.length);
@@ -262,7 +266,7 @@ class SearchPage extends React.Component {
       this.setState({serviceUsersDisplay: serviceUsersDisplay, visibleCategories:visibleCategories});
     }
 
-     search() {
+     search(forceFilter) {
        const address = this.state.selectedAddress;
         var filters={}
 
@@ -295,9 +299,8 @@ class SearchPage extends React.Component {
            var proAlfred=this.state.shops.filter( s => s.is_professional).map( s => s.alfred._id);
            axios.get('/myAlfred/api/availability/all')
              .then( res => {
-               this.setState({ availabilities: res.data });
+               this.setState({availabilities: res.data, visibleCategories:visibleCategories, categories:categories, proAlfred:proAlfred}, () => { if (forceFilter) { this.filter()}});
              });
-           this.setState({visibleCategories:visibleCategories, categories:categories, proAlfred:proAlfred});
          })
     }
 
@@ -467,7 +470,10 @@ class SearchPage extends React.Component {
                       ))}
                     </Grid>
                       <Grid container>
-                        <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Nos meilleurs Alfred ...</h3>
+                        { this.props.search && this.state.serviceUsers.length>0 ?
+                          <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Nos meilleurs Alfred ...</h3>
+                          :
+                          null }
                           {/* Adresse spécifique  */
                           categories.map(cat => (
                             <Grid container>
@@ -499,13 +505,13 @@ class SearchPage extends React.Component {
                               </Grid>
                             ))}
                           </Grid>
-                          {this.state.serviceUsers.length === 0 ?
+                          {this.props.search && this.state.serviceUsers.length === 0 ?
                             <p>Aucun résultat</p>
                             :
                             null
                           }
                  </Grid>
-                { serviceUsers.length>0 ? null: 
+                { 'search' in this.props>0 ? null: 
                   <>
                   <SerenityNeed gps={gps}/>
                   <BecomeAlfred />
