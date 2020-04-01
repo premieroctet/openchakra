@@ -87,6 +87,7 @@ const styles = theme => ({
     fontFamily: 'Helvetica',
     color: 'rgba(84,89,95,0.95)',
     fontSize: 16,
+    textAlign: 'justify'
   },
   separatorBlue:{
     width: '50px'
@@ -146,10 +147,16 @@ class profiteandlearn extends React.Component {
           </Grid>
           <Grid item xs={2}/>
           {/*Partie 1*/}
+          <Grid style={{display: 'flex', alignItems: 'center'}}>
+          <Grid className={classes.hideSM} item md={6} xs={12}>
+            <video width="75%" height="75%" style={{float: "left"}} autoPlay muted playsInline loop>
+              <source src="../static/assets/img/Phone1.mp4" type="video/mp4"/>
+            </video>
+          </Grid>
           <Grid item md={6} xs={12} className={classes.textdesc}>
             <Grid container>
               <Grid item xs={12}>
-                <img src="../../../static/one.svg" title="1" alt="1" scale="0" style={{height:"40px", width:"40px",}}/>
+                <img src={"../../../static/etape1.svg"} title="1" alt="1" style={{height:"80px", width:"80px",}}/>
               </Grid>
               <Grid item xs={12}>
                 <Typography className={classes.textBox2}>
@@ -158,64 +165,45 @@ class profiteandlearn extends React.Component {
               </Grid>
               <Grid item xs={12} className={classes.contentTextBox}>
                 <Typography className={classes.textBox3}>
-                  Vous n'avez aucun frais à payer pour proposer vos services. Indiquez simplement les prestations que vous souhaitez réaliser en vous appuyant sur une liste de plus de 2000 services
-                   proposées sur My-Alfred. Un service n'apparait pas ? Proposez-le à nos équipes !
+                  Vous n'avez aucun frais à payer pour proposer vos services. Indiquez simplement vos prestations en vous appuyant sur une liste de plus de 2000 services
+                   proposées sur My-Alfred. Un service n'apparaît pas ? Soumettez-le à nos équipes !
                 </Typography>
-
+              </Grid>
+            </Grid>
+            <Grid item md={6} xs={12} lg={12} className={classes.textdesc}>
+              <Grid container>
+                <Grid item xs={12}>
+                  <img src={"../../../static/etape2.svg"} title="2" alt="2" style={{height:"80px", width:"80px",}}/>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography className={classes.textBox2}>
+                    Fixez vos conditions
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} className={classes.contentTextBox}>
+                  <Typography className={classes.textBox3}>
+                    Indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et tous les critères pour définir votre prestation. Si vous avez besoin d'aide, nous sommes là pour vous accompagner dans la création de votre boutique de compétences !                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item md={6} xs={12} lg={12} className={classes.textdesc}>
+              <Grid container>
+                <Grid item xs={12}>
+                  <img src={"../../../static/etape3.svg"} title="3" alt="3" style={{height:"80px", width:"80px",}}/>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography className={classes.textBox2}>
+                    Réalisez vos premiers services
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} className={classes.contentTextBox}>
+                  <Typography className={classes.textBox3}>
+                    Une fois votre boutique ouverte, les personnes intéressées par vos prestations pourront réserver vos services en ligne. Si vous avez des questions avant la prestation, vous pourrez les contacter !                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-          <Grid className={classes.hideSM} item md={6} xs={12}>
-            <video width="75%" height="75%" style={{float: "right"}} autoPlay muted playsInline loop>
-              <source src="../static/assets/img/Phone1.mp4" type="video/mp4"/>
-            </video>
           </Grid>
-          {/*Partie 2*/}
-          <Grid className={classes.hideSM} item md={6} xs={12}>
-            <video width="75%" height="75%" style={{float: "left"}} autoPlay muted playsInline loop>
-              <source src="../static/assets/img/Phone2.mp4" type="video/mp4"/>
-            </video>
-          </Grid>
-          <Grid item md={6} xs={12} className={classes.textdesc}>
-            <Grid container>
-              <Grid item xs={12}>
-                <img src="../../../static/two.svg" title="2" alt="2" scale="0" style={{height:"40px", width:"40px",}}/>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography className={classes.textBox2}>
-                  Fixez vos conditions
-                </Typography>
-              </Grid>
-              <Grid item xs={12} className={classes.contentTextBox}>
-                <Typography className={classes.textBox3}>
-                  Indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et tous les critères pour définir votre prestation. Et si vous avez besoin d'aide, nous sommes là pour vous accompagner dans la création de votre boutique de compétences !                  </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          {/*Partie 3*/}
-          <Grid item md={6} xs={12} className={classes.textdesc}>
-            <Grid container>
-              <Grid item xs={12}>
-                <img src="../../../static/three.svg" title="3" alt="3" scale="0" style={{height:"40px", width:"40px",}}/>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography className={classes.textBox2}>
-                  Réalisez vos premiers services
-                </Typography>
-              </Grid>
-              <Grid item xs={12} className={classes.contentTextBox}>
-                <Typography className={classes.textBox3}>
-                  Une fois votre boutique en ligne, les personnes intéressées par vos prestations pourront réserver en ligne vos services. Si vous avez des questions avant la prestation, vous pourrez les contacter !                  </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-
-          <Grid className={classes.hideSM} item md={6} xs={12}>
-            <video width="75%" height="75%" style={{float: "right"}} autoPlay muted playsInline loop>
-              <source src="../static/assets/img/Phone3.mp4" type="video/mp4"/>
-            </video>
-          </Grid>
-
         </Grid>
       </Fragment>
     );

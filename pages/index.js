@@ -1,12 +1,13 @@
+import axios from 'axios';
 import React, { Fragment } from 'react';
-import Layout from "../hoc/Layout/Layouthome";
+import Layout from "../hoc/Layout/Layout";
 import Footer from "../hoc/Layout/Footer/Footer";
 import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
 import Profiteandlearn from '../components/home/profite&learn/profite&learn'
 import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
 import NearbyYou from '../components/home/NearbyYou/NearbyYou';
 import Homeheader from '../components/home/Homeheader/Homeheader';
-import Feelingood from '../components/home/feelingood/feelingood';
+import FeelingGood from '../components/home/feelingGood/feelingGood';
 import Wellbeing from '../components/home/Wellbeing/Wellbeing';
 import Proposeservice from '../components/home/proposeservice/Proposeservice';
 import Assureback from '../components/home/AssureBack/Assureback';
@@ -26,12 +27,14 @@ import Section21 from '../components/home/section21';
 import Section22 from '../components/home/section22';
 import setAuthToken from '../utils/setAuthToken';
 import Router from "next/router";
+import {Helmet} from 'react-helmet';
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            'logged':false
+          gps:null,
+          logged:false
         }
     }
 
@@ -39,8 +42,25 @@ class Home extends React.Component {
         localStorage.setItem('path',Router.pathname);
         const token = localStorage.getItem('token');
         if (token) {
-            this.setState({'logged':true})
+            this.setState({logged:true})
+            Router.push('/search');
         }
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios
+            .get('/myAlfred/api/users/current')
+            .then(res => {
+                let user = res.data;
+                this.setState({
+                  user:user,
+                  address: user.billing_address,
+                  addressSelected: user.billing_address,
+                  otherAddress: user.service_address,
+                  gps: user.billing_address.gps,
+                });
+            })
+            .catch(err => { console.log(err); }
+            );
+
         console.clear();
     }
 
@@ -52,34 +72,40 @@ class Home extends React.Component {
     };
 
     render()  {
+        const {gps} = this.state;
+
         return (
             <Fragment>
-                <Layout />
+              <Helmet>
+                  <title>Services rémunérés entre particuliers - My Alfred </title>
+                  <meta property="description" content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple" />
+                </Helmet>
+                <Layout/>
                 <Homeheader />
-                <SerenityNeed />
+                <SerenityNeed gps={gps}/>
                 <BecomeAlfred />
-                <Section3/>
-                <NearbyYou />
-                <Profiteandlearn />
-                <Section6/>
-                <Wellbeing />
-                <Section8/>
-                <Feelingood />
-                <Section10/>
+                <Section3 gps={gps}/>
+                <NearbyYou gps={gps}/>
+                <Profiteandlearn gps={gps}/>
+                <Section6 gps={gps}/>
+                <Wellbeing gps={gps}/>
+                <Section8 gps={gps}/>
+                <FeelingGood gps={gps}/>
+                <Section10 gps={gps}/>
                 <Proposeservice />
-                <Section12/>
-                <NearbyYou />
+                <Section12 gps={gps}/>
+                <NearbyYou gps={gps}/>
                 <Passions/>
-                <Section15/>
-                <Section16 />
+                <Section15 gps={gps}/>
+                <Section16 gps={gps}/>
                 <Facons/>
-                <Section18 />
-                <Section19 />
+                <Section18 gps={gps}/>
+                <Section19 gps={gps}/>
                 <Otter/>
-                <Section21 />
-                <Section22/>
+                <Section21 gps={gps}/>
+                <Section22 gps={gps}/>
                 <Assureback/>
-                <Footer />
+                <Footer  />
             </Fragment>
         )
     }

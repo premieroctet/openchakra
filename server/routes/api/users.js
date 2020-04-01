@@ -17,10 +17,9 @@ const User = require('../../models/User');
 const ResetToken = require('../../models/ResetToken');
 const crypto = require('crypto');
 const multer = require("multer");
-const nodemailer = require("nodemailer");
 
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
+const {sendMail} = require('../../../utils/mailer');
+const {computeUrl } = require('../../../config/config');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -61,6 +60,21 @@ const upload2 = multer({ storage: storage2,fileFilter: function (req, file, call
         callback(null, true)
     } });
 
+const sendAccountValidation = (request, user) => {
+
+  let link=new URL('/validateAccount?user='+user._id, computeUrl(request));
+
+  sendMail(
+    'no-reply@my-alfred.io',
+    user.email,
+    'validation',
+    {
+      name: user.name,
+      firstname: user.firstname,
+      validation_url: link,
+    }
+  )
+}
 
 router.get('/test',(req, res) => res.json({msg: 'Users Works!'}) );
 
@@ -109,22 +123,7 @@ router.post('/register',(req,res) =>{
                         newUser.save()
                             .then(user => {
                                 res.json(user);
-                                let transporter = nodemailer.createTransport({
-                                    host: 'smtp.ethereal.email',
-                                    port: 587,
-                                    auth: {
-                                        user: 'kirstin85@ethereal.email',
-                                        pass: '1D7q6PCENKSX5cj622'
-                                    }
-                                });
-
-                                let info = transporter.sendMail({
-                                    from: 'kirstin85@ethereal.email', // sender address
-                                    to: `${user.email}`, // list of receivers
-                                    subject: "Valider votre compte", // Subject line
-                                    text: `${url}/validateAccount?user=${user._id}`, // plain text body
-                                    html: '<a href='+url+'validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
-                                });
+                                sendAccountValidation(req, user);
                             })
                             .catch(err => console.log(err));
                     })
@@ -139,22 +138,7 @@ router.post('/register',(req,res) =>{
 router.get('/sendMailVerification',passport.authenticate('jwt',{session:false}),(req,res) => {
     User.findById(req.user.id)
         .then(user => {
-            let transporter = nodemailer.createTransport({
-                host: 'smtp.ethereal.email',
-                port: 587,
-                auth: {
-                    user: 'kirstin85@ethereal.email',
-                    pass: '1D7q6PCENKSX5cj622'
-                }
-            });
-
-            let info = transporter.sendMail({
-                from: 'kirstin85@ethereal.email', // sender address
-                to: `${user.email}`, // list of receivers
-                subject: "Valider votre compte", // Subject line
-                text: `${url}validateAccount?user=${user._id}`, // plain text body
-                html: '<a href='+url+'validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
-            });
+          sendAccountValidation(req, user);
         })
         .catch(err => {
             console.log(err)
@@ -186,39 +170,16 @@ router.put('/profile/billingAddress',passport.authenticate('jwt',{session: false
             user.billing_address.address = req.body.address;
             user.billing_address.zip_code = req.body.zip_code;
             user.billing_address.city = req.body.city;
+            user.billing_address.country = req.body.country;
 
-            if (req.body.country === 'France') {
-                user.billing_address.country = 'France';
-            } else {
-                user.billing_address.country = 'Maroc';
-            }
 
             user.billing_address.gps = {};
+            user.billing_address.gps.lat = req.body.lat;
+            user.billing_address.gps.lng = req.body.lng;
 
-            let address = req.body.address;
-            let city = req.body.city;
-            let zip = req.body.zip_code;
 
-            let newAddress = address.replace(/ /g, '+');
+            user.save().then(user => res.json(user)).catch(err => console.log(err));
 
-            const url = newAddress + '%2C+' + city + ',+'+zip+'&format=geojson&limit=1';
-
-            axios.get(`https://nominatim.openstreetmap.org/search?q=${url}`)
-                .then(response => {
-
-                    let result = response.data.features;
-
-                    result.forEach(function (element) {
-                        user.billing_address.gps.lat = element.geometry.coordinates[1];
-                        user.billing_address.gps.lng = element.geometry.coordinates[0];
-                    });
-
-                    user.save().then(user => res.json(user)).catch(err => console.log(err));
-
-                })
-                .catch(error => {
-                    console.log(error)
-                });
         })
 });
 
@@ -340,7 +301,7 @@ router.put('/profile/job',passport.authenticate('jwt',{session:false}),(req,res)
 // @Access private
 router.post('/profile/picture',upload.single('myImage'),passport.authenticate('jwt',{session:false}),(req,res) => {
     User.findByIdAndUpdate(req.user.id, {
-        picture: req.file.path
+        picture: req.file ? req.file.path : ""
     },{new:true})
         .then(user => {
             res.json(user)
@@ -492,7 +453,7 @@ router.post('/login',(req, res)=> {
                         const payload = {id: user.id, name: user.name, firstname: user.firstname, is_admin: user.is_admin, is_alfred: user.is_alfred}; // Create JWT payload
 
                         // Sign token
-                        jwt.sign(payload, keys.secretOrKey, {expiresIn: '1d'}, (err, token) => {
+                        jwt.sign(payload, keys.secretOrKey, (err, token) => {
                             res.json({success: true, token: 'Bearer ' + token});
                         });
                     } else {
@@ -636,29 +597,16 @@ router.get('/current',passport.authenticate('jwt',{session:false}),(req,res) => 
 
 // @Route POST /myAlfred/api/users/email/check
 //  email
-router.post('/email/check',(req,res) => {
+router.get('/email/check',(req,res) => {
 
-    User.findOne({email: req.body.email})
+    User.findOne({email: req.query.email})
         .then(user => {
-            let transporter = nodemailer.createTransport({
-                host: 'smtp.ethereal.email',
-                port: 587,
-                auth: {
-                    user: 'kirstin85@ethereal.email',
-                    pass: '1D7q6PCENKSX5cj622'
-                }
-            });
-
-            let info = transporter.sendMail({
-                from: 'kirstin85@ethereal.email', // sender address
-                to: `${user.email}`, // list of receivers
-                subject: "Valider votre compte", // Subject line
-                text: `${url}validateAccount?user=${user._id}`, // plain text body
-                html: '<a href='+url+'validateAccount?user='+user._id+'>Cliquez içi</a>' // html body
-            });
+          sendAccountValidation(req, user);
+          res.json(user);
         })
         .catch(err => {
             console.log(err);
+          res.json(null);
         })
 
 });
@@ -666,6 +614,7 @@ router.post('/email/check',(req,res) => {
 // @Route POST /myAlfred/api/users/forgotPassword
 // Send email with link for reset password
 router.post('/forgotPassword',(req,res) => {
+
     const email = req.body.email;
 
     User.findOne({email: email})
@@ -679,22 +628,13 @@ router.post('/forgotPassword',(req,res) => {
                     user.update({resetToken: token._id}).catch(err => console.log(err));
                 });
 
-                let transporter = nodemailer.createTransport({
-                    host: 'smtp.ethereal.email',
-                    port: 587,
-                    auth: {
-                        user: 'kirstin85@ethereal.email',
-                        pass: '1D7q6PCENKSX5cj622'
-                    }
-                });
-
-                let info = transporter.sendMail({
-                    from: 'kirstin85@ethereal.email', // sender address
-                    to: `${user.email}`, // list of receivers
-                    subject: "Reset password", // Subject line
-                    text: `http://localhost:3000/resetPassword?token=${token}`, // plain text body
-                    html: '<a href='+url+'resetPassword?token='+token+'>Cliquez içi</a>' // html body
-                });
+                sendMail(
+                    'no-reply@my-alfred.io', // sender address
+                    `${user.email}`, // list of receivers
+                    "Reset password", // Subject line
+                    `http://localhost:3000/resetPassword?token=${token}`, // plain text body
+                    '<a href='+computeUrl(req)+'resetPassword?token='+token+'>Cliquez içi</a>' // html body
+                );
             }
         })
 });
@@ -876,7 +816,7 @@ router.put('/account/indexGoogle',passport.authenticate('jwt',{session: false}),
 // @Access private
 router.delete('/profile/picture/delete',passport.authenticate('jwt',{session:false}),(req,res)=> {
     User.findByIdAndUpdate(req.user.id,{
-        picture: 'static/basicavatar.png'
+        picture: null
     },{new:true})
         .then(user => {
             res.json(user)

@@ -1,5 +1,5 @@
 import { RRule, RRuleSet, rrulestr } from 'rrule'
-import {ALL_SERVICES} from './consts.js';
+import {ALL_SERVICES, generate_id} from './consts.js';
 
 const EV_AVAIL_DAY_MAPPING='monday tuesday wednesday thursday friday saturday sunday'.split(' ');
 
@@ -32,7 +32,6 @@ const computeRecurrency = (period, event, dayOfWeek) => {
     until: rec_end,
   })
   let all_events=[]
-  console.log("Recurrence rules:"+JSON.stringify(rule));
   rule.all().forEach( dt => {
     let start = new Date(dt)
     start.setHours(event.start.getHours(), event.start.getMinutes(),0);
@@ -51,7 +50,7 @@ const avail2event = availab => {
     evts.forEach(e => {
       let title = e.all_services ? "Tous services" : e.services.map( s => s.label).join('\n');
       let res= {
-        id: availab._id+"-"+new Date().getTime(),
+        ui_id: availab.ui_id || availab._id,
         title: title,
         start: new Date(e.begin),
         end: new Date(e.end),
@@ -70,9 +69,8 @@ const availabilities2events= avails => {
 };
 
 
-const eventUI2availabilities= event => {
-  console.log("Event 2 availability:"+JSON.stringify(event, null, 2));
-  let avail = {}
+const eventUI2availability = event => {
+  let avail = {ui_id: generate_id() }
 
   let startDate=new Date(event.selectedDateStart);
   let endDate=new Date(event.selectedDateEnd);
@@ -99,4 +97,4 @@ const eventUI2availabilities= event => {
   return avail;
 };
 
-export {availabilities2events, eventUI2availabilities};
+export {availabilities2events, eventUI2availability};

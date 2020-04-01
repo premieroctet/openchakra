@@ -9,6 +9,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { Typography } from '@material-ui/core';
 import StarRatings from 'react-star-ratings';
+import NavBarStyle from '../../hoc/Layout/NavBar/NavBarStyle';
+import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
+import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 
 
 moment.locale('fr');
@@ -18,8 +21,11 @@ const url = config.apiUrl;
 
 const styles = theme => ({
     bigContainer: {
-        marginTop: 70,
+        marginTop: 100,
         flexGrow: 1,
+        [theme.breakpoints.down('xs')]: {
+            marginBottom: 100,
+        }
     },
     exportSVG: {
         fontFamily: 'sans-serif!important',
@@ -89,7 +95,7 @@ const styles = theme => ({
             visibility:'visible',
             boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)'
         }},
-    topbar:{visibility:'visible', position: 'sticky', top: 65, zIndex:999,[theme.breakpoints.down('sm')]: {
+    topbar:{visibility:'visible', position: 'sticky', top: 75, zIndex:999,[theme.breakpoints.down('sm')]: {
             visibility:'hidden',
         }},
 
@@ -102,6 +108,7 @@ class Evaluations extends React.Component {
         super(props);
         this.state = {
             reviews: [],
+            userId: ""
         }
     }
 
@@ -109,6 +116,17 @@ class Evaluations extends React.Component {
 
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+
+        axios.get(url+'myAlfred/api/users/current').then(res => {
+            let user = res.data;
+            if(user) {
+                this.setState({
+                    userId: user._id,
+                })
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
 
         axios.get(url+'myAlfred/api/performances/evaluations/allReviews')
             .then(res => {
@@ -127,49 +145,10 @@ class Evaluations extends React.Component {
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer} >
-                        <Grid container className={classes.topbar} justify="center" style={{backgroundColor: '#4fbdd7',marginTop: -3, height: '52px'}}>
-                            <Grid item xs={1} className={classes.shopbar}></Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/services'}>
-                                    <a style={{textDecoration:'none'}}>
-                                        <p style={{color: "white",cursor: 'pointer'}}>Ma boutique</p>
-                                    </a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/reservations/messages'}>
-                                    <a style={{textDecoration:'none'}}>
-                                        <p style={{color: "white",cursor: 'pointer'}}>Messages</p>
-                                    </a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/reservations/allReservations'}>
-                                    <a style={{textDecoration:'none'}}>
-                                        <p style={{color: "white",cursor: 'pointer'}}>Mes réservations</p>
-                                    </a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center"}}>
-                                <Link href={'/myShop/myAvailabilities'}>
-                                    <a style={{textDecoration:'none'}}>
-                                        <p style={{color: "white",cursor: 'pointer'}}>Mon calendrier</p>
-                                    </a>
-                                </Link>
-                            </Grid>
-                            <Grid item xs={2} className={classes.shopbar} style={{textAlign:"center",borderBottom: '2px solid white',zIndex:999}}>
-                                <Link href={'/performances/revenus'}>
-                                    <a style={{textDecoration:'none'}}>
-                                        <p style={{color: "white",cursor: 'pointer'}}>Performances</p>
-                                    </a>
-                                </Link>
-                            </Grid>
+                        <NavBarShop userId={this.state.userId}/>
+                        <Grid className={classes.toggle}  item xs={3}>
 
-                        </Grid>
-
-                        <Grid className={classes.toggle}  item xs={3} style={{}}>
-
-                            <div className={classes.trigger}></div>
+                            <div className={classes.trigger}/>
                             <Grid container style={{justifyContent: 'center',}}>
                                 <Grid item style={{marginTop: 30,width: 281}} className={classes.hidesm}>
                                     <Link href={'/performances/revenus'}>
@@ -355,43 +334,7 @@ class Evaluations extends React.Component {
 
                     </Grid>
                 </Layout>
-                <Grid container className={classes.bottombar} justify="center" style={{backgroundColor: 'white',bottom:0, position:'fixed', zIndex:'999'}}>
-
-                    <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/myShop/services'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/shopping-bag.png'} alt={'sign'} width={25} style={{opacity:'0.5'}}></img></p></a>
-                        </Link>
-                    </Grid>
-
-                    <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/reservations/messages'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speech-bubble.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
-                        </a></Link>
-                    </Grid>
-
-                    <Grid item xs={2} style={{textAlign:"center"}}>
-                        <Link href={'/reservations/allReservations'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/event.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
-                        </a></Link>
-                    </Grid>
-
-                    <Grid item xs={2} style={{textAlign:"center",zIndex:999}}>
-                        <Link href={'/myShop/myAvailabilities'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/calendar.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
-                        </a></Link>
-                    </Grid>
-
-                    <Grid item xs={2} style={{textAlign:"center", borderBottom: '3px solid #4fbdd7'}}>
-                        <Link href={'/performances/revenus'}><a style={{textDecoration:'none'}}>
-                            <p style={{color: "white",cursor: 'pointer'}}><img src={'../static/speedometer.png'} alt={'sign'} width={25} style={{opacity:'0.7'}}></img></p>
-                        </a></Link>
-                    </Grid>
-
-                </Grid>
-                <Footer/>
-
-
-
+              <NavbarMobile userId={this.state.userId}/>
             </Fragment>
         );
     };

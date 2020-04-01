@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
@@ -11,6 +11,8 @@ import Footer from '../hoc/Layout/Footer/Footer';
 import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
+import {Helmet} from 'react-helmet';
+
 const { config } = require('../config/config');
 const url = config.apiUrl;
 
@@ -115,7 +117,7 @@ class login extends React.Component {
               .then(data => {
                 let path = localStorage.getItem('path');
                 if(path === '/'){
-                  Router.push('/search')
+                  Router.push('/')
                 } else {
                   Router.back();
                 }
@@ -129,7 +131,9 @@ class login extends React.Component {
         })
         .catch(err => {
           console.log(err);
-          this.setState({errors: err.response.data});
+          if (err.response) {
+            this.setState({errors: err.response.data});
+          }
         })
 
 
@@ -141,6 +145,10 @@ class login extends React.Component {
 
     return (
       <Layout>
+	<Helmet>
+        <title> Connexion - My Alfred </title>
+        <meta property="description" content="Connectez-vous à My Alfred, application de services entre particuliers. Trouvez des services de bricolage, plomberie, garde d’animaux près de chez vous ! Trouvez, réservez votre Alfred et notez votre service en quelques clics. Plus de 2000 services référencés, trouvez le vôtre dès aujourd’hui " />
+      </Helmet>
         <Grid className={classes.fullContainer}>
           <Grid container className={classes.loginContainer}>
             <Card className={classes.card}>
@@ -197,7 +205,8 @@ class login extends React.Component {
             <img src={'../static/background/Illustration Inscription-connexion_Plan de travail 1 copie-01.svg'} style={{height:'100vh', width:'90%'}} alt={'test'}/>
           </Grid>
         </Grid>
-        <Footer/>
+        {/* <Footer/>*/}
+
       </Layout>
     );
   };

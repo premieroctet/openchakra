@@ -3,9 +3,20 @@
 }
 
 @media screen and (max-width: 960px) {
-  .imgDiv {
+  .imgDiv{
     display: none;
   }
+  .responsiveForm{
+    width: 100% !important;
+  }
+}
+
+.imgDiv{
+  width: 50%;
+}
+
+.responsiveForm{
+  width: 50%;
 }
 
 .steps {

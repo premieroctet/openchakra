@@ -104,8 +104,6 @@ const BookingSchema = new Schema({
     date_payment: {
         type: Date
     }
-
-
 });
 
 module.exports = Booking = mongoose.model('booking',BookingSchema);

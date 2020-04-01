@@ -2,6 +2,7 @@ import React from 'react';
 
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
+import Checkbox from '@material-ui/core/Checkbox';
 import { Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -123,7 +124,7 @@ class all extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get(url+"myAlfred/api/admin/users/users")
+        axios.get(url+"myAlfred/api/admin/users/all")
             .then((response) => {
                 let user = response.data;
                 this.setState({user: user})
@@ -171,6 +172,8 @@ class all extends React.Component {
                                                 <TableCell>Nom</TableCell>
                                                 <TableCell>Prénom</TableCell>
                                                 <TableCell>Email</TableCell>
+                                                <TableCell>Alfred</TableCell>
+                                                <TableCell>Admin</TableCell>
                                                 <TableCell>Action</TableCell>
                                                 <TableCell>Carte d'identité</TableCell>
                                             </TableRow>
@@ -187,6 +190,12 @@ class all extends React.Component {
                                                         </TableCell>
                                                         <TableCell>
                                                             {e.email}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <Checkbox checked={e.is_alfred} disabled={true} />
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <Checkbox checked={e.is_admin} disabled={true} />
                                                         </TableCell>
                                                         <TableCell>
                                                             <Link href={`/dashboard/users/view?id=${e._id}`}><a>Modifier</a></Link>

@@ -8,6 +8,7 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Card from "@material-ui/core/Card";
+import CardPreview from '../../CardPreview/CardPreview';
 import axios from 'axios';
 import Link from 'next/link';
 
@@ -101,7 +102,7 @@ class serenityNeed extends React.Component {
       tags: {},
     }
   }
-
+ 
   componentDidMount() {
     axios.get(url + 'myAlfred/api/tags/prestations/section1')
         .then(response => {
@@ -110,7 +111,6 @@ class serenityNeed extends React.Component {
               axios.get(url + 'myAlfred/api/prestation/all/tags/' + data._id)
                   .then(res => {
                     let prestations = res.data;
-
                     this.setState({prestations: prestations})
 
                   })
@@ -120,13 +120,14 @@ class serenityNeed extends React.Component {
         .catch();
   }
   render() {
-    const {classes} = this.props;
+    const {classes, gps} = this.props;
     const {prestations} = this.state;
     const {tags} = this.state;
     const resdata = shuffleArray(prestations);
+
     const services = resdata.slice(0, 12).map(e => (
         <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
-          <Link href={'/serviceByPrestation?prestation='+e._id}>
+          <Link href={'/search?search=1&prestation='+e._id+'&gps='+JSON.stringify(gps)}>
           <Card className={classes.card}>
             <CardActionArea style={{cursor:'default'}}>
               <CardMedia
@@ -152,7 +153,7 @@ class serenityNeed extends React.Component {
     ));
     return (
         <Fragment>
-          <div className={classes.container1}>
+          <div className={classes.container1} id={'register_done'}>
           <Grid container className={classes.container}>
             <Grid item xs={2}/>
             <Grid item xs={8}>

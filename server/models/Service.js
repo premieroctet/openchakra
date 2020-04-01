@@ -11,10 +11,8 @@ const ServiceSchema = new Schema({
         ref: 'category'
     },
     equipments: [{
-
             type: Schema.Types.ObjectId,
             ref: 'equipment'
-
     }],
     tags: [{
         type: Schema.Types.ObjectId,
@@ -29,11 +27,27 @@ const ServiceSchema = new Schema({
     majoration: {
         type: String
     },
-
+    travel_expense: {
+        type: String
+    },
+    picking_expense: {
+        type: String
+    },
     location: {
-      home   : Boolean,
+      // Adresse du client
+      client   : Boolean,
+      // Adresse de l'Alfred
       alfred : Boolean,
-      visio  : Boolean,
+      // Visioconférence
+      visio  : Boolean
+    },
+    // Frais livraison
+    pick_tax: {
+      type: Boolean
+    },
+    // Frais déplacement
+    travel_tax: {
+      type: Boolean
     }
 });
 

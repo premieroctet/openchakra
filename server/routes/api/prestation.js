@@ -105,9 +105,6 @@ router.get('/:service/:filter',passport.authenticate('jwt',{session:false}), (re
 
 
   let result = User.findById(req.user.id);
-  
-
-
   Prestation.find({
     service: req.params.service,
     filter_presentation: req.params.filter,

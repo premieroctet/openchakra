@@ -13,7 +13,7 @@ const OptionsSchema = new Schema({
     billing: {
         type: String,
         required: true
-    },
+    }
 });
 
 module.exports = Options = mongoose.model('options',OptionsSchema);

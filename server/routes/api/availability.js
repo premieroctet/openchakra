@@ -14,7 +14,9 @@ router.get('/test',(req, res) => res.json({msg: 'Availability Works!'}) );
 router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=> {
 
     const newAvailability = new Availability({user:req.user.id, ...req.body});
+    
     newAvailability.save().then(availability => res.json(availability)).catch(err => console.log(err));
+    console.log("After adding availability:"+JSON.stringify(req.body));
 });
 
 // @Route POST /myAlfred/api/availability/update
@@ -75,6 +77,7 @@ router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,re
 // Return availability between 2 dates
 router.post('/filterDate',(req,res)=>{
     const allAvailability = [];
+    console.log("Filter date received "+JSON.stringify(req.body));
     const dateBegin = req.body.begin;
     const dateEnd = req.body.end;
     const beginDay = req.body.beginDay;
@@ -152,6 +155,18 @@ router.post('/home/date',(req,res)=>{
             res.json(allAvailability)
         })
         .catch(err => console.log(err));
+});
+
+// @Route GET /myAlfred/api/availability/all
+// Get all availability for one user
+router.get('/all',(req,res)=> {
+  Availability.find({})
+    .then(availability => {
+      res.json(availability);
+    })
+    .catch(err => {
+      console.log(err);
+    })
 });
 
 // @Route GET /myAlfred/api/availability/:id

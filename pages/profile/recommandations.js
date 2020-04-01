@@ -16,6 +16,7 @@ import Footer from '../../hoc/Layout/Footer/Footer';
 
 
 
+
 moment.locale('fr');
 
 const { config } = require('../../config/config');
@@ -25,6 +26,9 @@ const styles = theme => ({
     bigContainer: {
         marginTop: 70,
         flexGrow: 1,
+        [theme.breakpoints.down('xs')]: {
+            marginTop: 250,
+        }
     },
     hidesm: {
         minWidth: '271px',
@@ -262,7 +266,8 @@ class recommandations extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-                <Footer/>
+                {/* <Footer/>*/}
+
 
             </Fragment>
         );

@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 const ServiceUserSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
-        ref: 'users'
+        ref: 'users',
+        required: true,
     },
     service: {
         type: Schema.Types.ObjectId,
@@ -16,9 +17,14 @@ const ServiceUserSchema = new Schema({
             ref: 'prestation'
         },
         billing: {
-            type: String
+            type: Schema.Types.ObjectId,
+            ref: 'billing',
+            required: true, 
         },
-        price: Number
+        price: {
+            type: Number,
+            required: true,
+        }
     }],
     equipments: [{
 
@@ -27,6 +33,7 @@ const ServiceUserSchema = new Schema({
 
     }],
     service_address: {
+        type: {
         address: {
             type: String
         },
@@ -43,6 +50,8 @@ const ServiceUserSchema = new Schema({
             lat: Number,
             lng: Number
         }
+        },
+       required: true
     },
     perimeter: {
         type: Number
@@ -112,9 +121,17 @@ const ServiceUserSchema = new Schema({
         enum: ['Pro','Particulier']
     },
    location: {
-      home   : Boolean,
+      client   : Boolean,
       alfred : Boolean,
-      visio  : Boolean,
+      visio  : Boolean
+    },
+    // Frais livraison
+    pick_tax: {
+      type: Number,
+    },
+    // Frais déplacement
+    travel_tax: {
+      type: Number,
     }
 
 });

@@ -10,6 +10,8 @@ import Router from "next/router";
 import { withStyles } from "@material-ui/core/styles";
 import Footer from "../hoc/Layout/Footer/Footer";
 import dynamic from "next/dynamic";
+import About from '../components/About/About';
+import UserAvatar from '../components/Avatar/UserAvatar';
 
 moment.locale("fr");
 const _ = require("lodash");
@@ -96,7 +98,19 @@ const styles = theme => ({
     borderRadius: "0px",
     backgroundColor: "#F8727F",
     marginBottom: "20px"
-  }
+  },
+  avatarLetter:{
+    height: 100,
+    width: 100,
+    margin: 'auto',
+    fontSize: 'xx-large',
+  },
+  textAvatar: {
+    textAlign: 'center',
+    color: 'black',
+    margin: 'auto',
+    fontSize: 20,
+  },
 });
 
 const Input2 = ({ value, onClick }) => (
@@ -125,14 +139,17 @@ class ConfirmPayement extends React.Component {
       address: null,
       zip_code: null,
       prestations: [],
-      totalPrice: 0,
       total: null,
       fees: null,
       grandTotal: null,
       checkedOption: false,
       optionPrice: null,
-      date: Date.now(),
-      hour: Date.now()
+      date: null,
+      hour: null,
+      alfred: null,
+      languages: [],
+      shop: {},
+      userAlfred:[]
     };
   }
 
@@ -143,10 +160,9 @@ class ConfirmPayement extends React.Component {
   componentDidMount() {
     const prestations = JSON.parse(localStorage.getItem("prestations"));
     const bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
+    console.log(bookingObj, 'booking')
 
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-      "token"
-    );
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem( "token");
 
     axios.get(url + "myAlfred/api/users/current").then(res => {
       this.setState({ currentUser: res.data });
@@ -163,13 +179,25 @@ class ConfirmPayement extends React.Component {
       date: bookingObj.date_prestation,
       hour: bookingObj.time_prestation,
       fees: bookingObj.fees,
-      grandTotal: bookingObj.amount
+      grandTotal: bookingObj.amount,
+      alfred: bookingObj.user
+    }, () => {
+      axios.get(`${url}myAlfred/api/shop/alfred/${this.state.alfred}`)
+        .then( response  =>  {
+          let shop = response.data;
+          this.setState({
+            userAlfred: shop.alfred,
+            languages: shop.alfred.languages,
+            shop:shop,
+          });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     });
     const id = this.props.shop_id;
     localStorage.setItem("path", Router.pathname);
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-      "token"
-    );
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem( "token");
 
     axios.get(url + "myAlfred/api/serviceUser/" + id).then(res => {
       this.setState({ user: res.data.user });
@@ -261,7 +289,7 @@ class ConfirmPayement extends React.Component {
   render() {
     const { classes } = this.props;
     const { user } = this.state;
-    const { bookingObj, currentUser } = this.state;
+    const { bookingObj, currentUser, userAlfred, languages, shop } = this.state;
 
     return (
       <Fragment>
@@ -309,428 +337,16 @@ class ConfirmPayement extends React.Component {
                     </Grid>
                     <br></br>
                     <Grid container>
-                      <Grid item xs={5} style={{}}>
-                        <img
-                          src={`../../${user.picture}`}
-                          style={{
-                            borderRadius: "50%",
-                            marginLeft: "auto",
-                            marginRight: "auto",
-                            zIndex: 501,
-                            minWidth: "137px",
-                            maxWidth: "137px",
-                            maxHeight: "137px",
-                            minHeight: "137px"
-                          }}
-                          alt={"picture"}
-                        />
-                      </Grid>
-
-                      <Grid item xs={5} style={{}}>
-                        <h3
-                          style={{
-                            fontSize: "1.6rem",
-                            color: "rgba(84,89,95,0.95)",
-                            letterSpacing: -1,
-                            fontWeight: "bold"
-                          }}
-                        >
-                          A propos de {user.firstname}
-                        </h3>
-
+                      <Grid item xs={5}>
                         <div style={{ marginLeft: "3%" }}>
-                          {Math.round(user.score) === 0 ? (
-                            <>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-regular.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-regular.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-regular.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-regular.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-regular.png"
-                              ></img>
-                            </>
-                          ) : Math.round(user.score) === 1 ? (
-                            <>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-solid.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-regular.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-regular.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-regular.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-regular.png"
-                              ></img>
-                            </>
-                          ) : Math.round(user.score) === 2 ? (
-                            <>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-solid.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-solid.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-regular.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-regular.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-regular.png"
-                              ></img>
-                            </>
-                          ) : Math.round(user.score) === 3 ? (
-                            <>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-solid.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-solid.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-solid.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-regular.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-regular.png"
-                              ></img>
-                            </>
-                          ) : Math.round(user.score) === 4 ? (
-                            <>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-solid.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-solid.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-solid.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-solid.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-regular.png"
-                              ></img>
-                            </>
-                          ) : Math.round(user.score) === 5 ? (
-                            <>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-solid.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-solid.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-solid.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-solid.png"
-                              ></img>
-                              <img
-                                style={{
-                                  width: "20px",
-                                  marginRight: "3px",
-                                  marginBottom: "5px"
-                                }}
-                                src="../../static/stars/star-solid.png"
-                              ></img>
-                            </>
-                          ) : (
-                            <p>Erreur lors du chargement du score</p>
-                          )}
-
-                          <Grid style={{ marginLeft: "4%" }} container>
-                            <Grid item xs={2}>
-                              <img
-                                style={{ width: "15px" }}
-                                src="../../static/stars/star-solid.png"
-                              ></img>
-                            </Grid>
-                            <Grid item xs={10}>
-                              <Typography
-                                style={{
-                                  color: "rgb(47, 188, 211)",
-                                  fontSize: "0.8rem",
-                                  marginLeft: "-5%",
-                                  cursor: "pointer"
-                                }}
-                              >
-                                {user.number_of_reviews} Commentaires
-                              </Typography>
-                            </Grid>
-
-                            {user.id_confirmed === true ? (
-                              <>
-                                <Grid item xs={2}>
-                                  <img
-                                    style={{ width: "15px" }}
-                                    src="../../static/statut/oui.png"
-                                  ></img>
-                                </Grid>
-                                <Grid item xs={10}>
-                                  <Typography
-                                    style={{
-                                      fontSize: "0.8rem",
-                                      marginLeft: "-5%"
-                                    }}
-                                  >
-                                    Pièce d’identité vérifiée
-                                  </Typography>
-                                </Grid>
-                              </>
-                            ) : null}
-
-                            <Grid item xs={2}>
-                              <img
-                                style={{ width: "15px" }}
-                                src="../../static/statut/calendar.png"
-                              ></img>
-                            </Grid>
-                            <Grid item xs={10}>
-                              <Typography
-                                style={{
-                                  fontSize: "0.8rem",
-                                  marginLeft: "-5%"
-                                }}
-                              >
-                                Membre depuis le{" "}
-                                {moment(user.creation_date).format(
-                                  "DD/MM/YYYY"
-                                )}
-                              </Typography>
-                            </Grid>
-
-                            {user.is_alfred === true &&
-                            currentUser.is_alfred === true ? (
-                              <>
-                                <Grid item xs={2}>
-                                  <img
-                                    style={{ width: "15px" }}
-                                    src="../../static/statut/beaver.png"
-                                  ></img>
-                                </Grid>
-                                <Grid item xs={10}>
-                                  <Typography
-                                    style={{
-                                      fontSize: "0.8rem",
-                                      marginLeft: "-5%"
-                                    }}
-                                  >
-                                    Il est également Alfred{" "}
-                                  </Typography>
-                                </Grid>
-                              </>
-                            ) : null}
-
-                            <Grid item xs={2}>
-                              <img
-                                style={{ width: "15px" }}
-                                src="../../static/statut/chat.png"
-                              ></img>
-                            </Grid>
-                            <Grid item xs={10}>
-                              <Typography
-                                style={{
-                                  fontSize: "0.8rem",
-                                  marginLeft: "-5%"
-                                }}
-                              >
-                                Langue:{" "}
-                                {user.languages.length ? (
-                                  user.languages.map(
-                                    language => language + ", "
-                                  )
-                                ) : (
-                                  <span>Français</span>
-                                )}{" "}
-                              </Typography>
-                            </Grid>
-
-                            {
-                              <Link
-                                href={{
-                                  pathname: "../viewProfile",
-                                  query: { id: user._id }
-                                }}
-                              >
-                                <Typography
-                                  style={{
-                                    color: "rgb(47, 188, 211)",
-                                    fontSize: "0.8rem",
-                                    cursor: "pointer"
-                                  }}
-                                >
-                                  Voir le profil
-                                </Typography>
-                              </Link>
-                            }
-                          </Grid>
+                          <About alfred={userAlfred} languages={languages} shop={shop}/>
                         </div>
-
-                        <Grid item xs={2} style={{}}></Grid>
-                        <Grid item xs={10} style={{}}></Grid>
+                      </Grid>
+                      <Grid item xs={5}>
+                        <Grid item className={classes.itemAvatar}>
+                          <UserAvatar classes={'avatarLetter'} user={userAlfred} className={classes.avatarLetter} />
+                          <Typography style={{marginTop:20}} className={classes.textAvatar}>{userAlfred.firstname}</Typography>
+                        </Grid>
                       </Grid>
                     </Grid>
 
@@ -748,19 +364,10 @@ class ConfirmPayement extends React.Component {
                           A propos de votre réservation
                         </h3>
                         <Grid item xs={12} style={{}}>
-                          <Grid
-                            item
-                            xs={3}
-                            style={{
-                              width: "30%",
-                              float: "left",
-                              paddingTop: 15
-                            }}
-                          >
-                            <img
-                              src="../../static/calendarreservation.svg"
-                              width={"35%"}
-                            />
+                          <Grid item xs={3} style={{width: "30%", float: "left", paddingTop: 15}}>
+                            <Grid>
+                              <img style={{width: 40, height : 40}} alt={"calendrier"} title={"calendrier"} src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
+                            </Grid>
                           </Grid>
                           <Grid item xs={9} style={{ width: "70%" }}>
                             <p>Date et heure de la prestation:</p>{" "}
@@ -770,25 +377,15 @@ class ConfirmPayement extends React.Component {
                           </Grid>
                         </Grid>
                         <Grid item xs={12} style={{}}>
-                          <Grid
-                            item
-                            xs={3}
-                            style={{
-                              width: "30%",
-                              float: "left",
-                              paddingTop: 15
-                            }}
-                          >
-                            <img
-                              src="../../static/mapmarker.svg"
-                              width={"35%"}
-                            />
+                          <Grid item xs={3} style={{width: "30%", float: "left", paddingTop: 15}}>
+                            <Grid>
+                              <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
+                            </Grid>
                           </Grid>
                           <Grid item xs={9} style={{ width: "70%" }}>
                             <p>Adresse de la prestation:</p>{" "}
                             <p>
-                              {this.state.address}, {this.state.city}{" "}
-                              {this.state.zip_code}.
+                              {this.state.address}, {this.state.zip_code} {this.state.city}{" "}
                             </p>
                           </Grid>
                         </Grid>
@@ -832,9 +429,6 @@ class ConfirmPayement extends React.Component {
                                   );
                                 })
                               : null}
-
-                            {/*<Grid item xs={9} style={{width:'90%', float:'left'}}><p>Supplément Cheveux long</p></Grid>
-                                    <Grid item xs={3} style={{width:'10%', float:'right'}}> <p>5€</p></Grid>*/}
 
                             <br></br>
 

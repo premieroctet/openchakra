@@ -74,6 +74,7 @@ router.get('/billing/all',passport.authenticate('jwt',{session:false}),(req,res)
     const admin = decode.is_admin;
     if(admin) {
         Billing.find()
+            .sort({label: 1})
             .then(billings => {
                 if (!billings) {
                     return res.status(400).json({msg: 'No billing found'});
@@ -164,7 +165,8 @@ router.get('/users/all',passport.authenticate('jwt',{session:false}),(req,res) =
     const admin = decode.is_admin;
 
     if(admin) {
-        User.find({is_admin: false})
+        User.find({})
+            .sort({name: 1})
             .then(user => {
                 if (!user) {
                     res.status(400).json({msg: 'No users found'});
@@ -311,6 +313,7 @@ router.get('/users/alfred',passport.authenticate('jwt',{session:false}),(req,res
 
     if(admin) {
         User.find({is_alfred: true})
+            .sort({name: 1})
             .then(user => {
                 if (!user) {
                     res.status(400).json({msg: 'No alfred found'});
@@ -434,6 +437,7 @@ router.get('/users/admin',passport.authenticate('jwt',{session: false}),(req, re
     const admin = decode.is_admin;
     if(admin){
         User.find({is_admin: true})
+            .sort({ name: 1})
             .then(user => {
                 if(!user) {
                     res.status(400).json({msg: 'No admin found'});
@@ -736,6 +740,7 @@ router.get('/filterPresentation/all', passport.authenticate('jwt',{session: fals
     const admin = decode.is_admin;
     if(admin) {
         FilterPresentation.find()
+            .sort({label: 1})
             .then(filterPresentation => {
                 if(!filterPresentation){
                     return res.status(400).json({msg: 'No filterPresentation found'});
@@ -859,6 +864,7 @@ router.get('/job/all', passport.authenticate('jwt',{session: false}),(req,res)=>
     const admin = decode.is_admin;
     if(admin) {
         Job.find()
+            .sort({label: 1})
             .then(job => {
                 if(!job){
                     return res.status(400).json({msg: 'No job found'});
@@ -1105,6 +1111,7 @@ router.get('/tags/all', passport.authenticate('jwt',{session: false}),(req,res)=
     const admin = decode.is_admin;
     if(admin) {
         Tags.find()
+            .sort({label: 1})
             .then(tags => {
                 if(!tags){
                     return res.status(400).json({msg: 'No tags found'});
@@ -1427,6 +1434,7 @@ router.get('/equipment/all', passport.authenticate('jwt',{session: false}),(req,
     const admin = decode.is_admin;
     if(admin) {
         Equipment.find()
+            .sort({ label: 1})
             .then(equipment => {
                 if(!equipment){
                     return res.status(400).json({msg: 'No equipment found'});
@@ -1524,6 +1532,7 @@ const uploadService = multer({ storage: storageService });
 // Add service for prestation
 // @Access private
 router.post('/service/all', uploadService.single('picture'),passport.authenticate('jwt',{session: false}),(req, res) => {
+    console.log("Req.body is "+JSON.stringify(req.body));
     const {errors, isValid} = validateServiceInput(req.body);
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
@@ -1545,13 +1554,16 @@ router.post('/service/all', uploadService.single('picture'),passport.authenticat
                         category: mongoose.Types.ObjectId(req.body.category),
                         equipments: JSON.parse(req.body.equipments),
                         tags: JSON.parse(req.body.tags),
-                        picture: req.file.path,
+                        picture: req.body.picture.path,
                         description: req.body.description,
                         majoration: req.body.majoration,
-                        'location.home':req.body.home,
-                        'location.alfred':req.body.alfred,
-                        'location.visio':req.body.visio
-
+                        location : {
+                          alfred: req.body['location.alfred']=="true", 
+                          client: req.body['location.client']=="true", 
+                          visio:  req.body['location.visio']=="true"
+                        },
+                        pick_tax: req.body.pick_tax,
+                        travel_tax: req.body.travel_tax
                     });
 
                     newService.save().then(service => res.json(service)).catch(err => console.log(err));
@@ -1679,6 +1691,7 @@ router.delete('/service/all/:id',passport.authenticate('jwt',{session: false}),(
 // Update a service
 // @Access private
 router.put('/service/all/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
+    console.log("Received:"+JSON.stringify(req.body));
     const token = req.headers.authorization.split(' ')[1];
     const decode = jwt.decode(token);
     const admin = decode.is_admin;
@@ -1688,8 +1701,9 @@ router.put('/service/all/:id',passport.authenticate('jwt',{session: false}),(req
             {
                 $set: { label: req.body.label, equipments: req.body.equipments,category: mongoose.Types.ObjectId(req.body.category),
                     tags: req.body.tags,
-                     description: req.body.description, majoration: req.body.majoration,'location.home':req.body.home,'location.alfred':req.body.alfred,
-                        'location.visio':req.body.visio},
+                     description: req.body.description, majoration: req.body.majoration, location:req.body.location, 
+                     travel_tax: req.body.travel_tax, pick_tax: req.body.pick_tax
+                     },
 
             } , {new: true})
             .then(service => {
@@ -1748,10 +1762,12 @@ router.post('/prestation/all',uploadPrestation.single('picture'),passport.authen
                         calculating: mongoose.Types.ObjectId(req.body.calculating),
                         job: mongoose.Types.ObjectId(req.body.job),
                         description: req.body.description,
-                        picture: req.file.path,
+                        picture: req.body.picture.path,
                         tags: JSON.parse(req.body.tags)
                     });
-                    newPrestation.save().then(prestation => res.json(prestation)).catch(err => console.log(err))
+                    newPrestation.save()
+                     .then(prestation => res.json(prestation))
+                     .catch(err => res.status(400).json(err))
 
 
                 }
@@ -1975,6 +1991,7 @@ router.get('/shopBanner/all',passport.authenticate('jwt',{session: false}),(req,
 
     if(admin) {
     ShopBanner.find()
+        .sort({label: 1})
         .then(banner => {
             if(!banner){
                 return res.status(400).json({msg: 'No banner found'});

@@ -73,7 +73,7 @@ class addPicture extends React.Component {
     handleChange(event) {
         this.setState({
             file:
-                URL.createObjectURL(event.target.files[0])    })
+                event.target.files[0] ? URL.createObjectURL(event.target.files[0]):null })
     }
 
     handleLater(e) {
@@ -148,7 +148,7 @@ class addPicture extends React.Component {
                                 <Grid container>
                                     <Grid item xs={4}></Grid>
                                     <Grid item xs={4} style={{justifyContent: 'center', marginTop: 30, justifyItems: 'center' }}>
-                                        <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color: 'white' }}>
+                                        <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color: 'white' }} disabled={this.state.file===null}>
                                             Suivant
                                         </Button>
                                     <Grid item xs={4}></Grid>

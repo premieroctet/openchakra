@@ -1,20 +1,20 @@
 /* width */
-.contentsticky::-webkit-scrollbar {
+::-webkit-scrollbar {
     width: 4px;
   }
   
   /* Track */
-  .contentsticky::-webkit-scrollbar-track {
+  ::-webkit-scrollbar-track {
     /*background: #f1f1f1;*/
     display: none; 
   }
   
   /* Handle */
-  .contentsticky::-webkit-scrollbar-thumb {
-    background: rgb(90, 90, 90); 
+  ::-webkit-scrollbar-thumb {
+    background: #6099AB; 
   }
   
   /* Handle on hover */
-  .contentsticky::-webkit-scrollbar-thumb:hover {
-    background: rgb(99, 98, 98); 
+  ::-webkit-scrollbar-thumb:hover {
+    background: #71B5CB; 
   }

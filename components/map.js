@@ -1,6 +1,6 @@
 import React from 'react'
-import { Map, TileLayer } from 'react-leaflet'
 import { withStyles } from '@material-ui/core/styles';
+let Map, TileLayer,Marker, Popup, Circle
 
 //const position = [51.505, -0.09];
 const styles = {
@@ -9,30 +9,43 @@ const styles = {
 
     }
 };
-class map extends React.Component {
+
+class MapComponent extends React.Component {
+
     constructor(props) {
         super(props);
+    }
 
-
-
+    componentDidMount() {
+      // FIX : avoid Map loading if component not mounted (i.e. on server side)
+      Map=require('react-leaflet').Map;
+      TileLayer=require('react-leaflet').TileLayer;
+      Marker=require('react-leaflet').Marker;
+      Popup=require('react-leaflet').Popup;
+      Circle=require('react-leaflet').Circle;
     }
 
     render() {
-        const {classes,position} = this.props;
-        return (
-            <div id={'map-container'} style={{height: 200,width:'100%'}}>
-            <Map center={position} zoom={13} style={{height: 200,width:'100%'}}>
-                <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                />
-
-            </Map>
-            </div>
-        )
-
+      const {classes,position, perimeter, alfred} = this.props;
+      if (Map) {
+      return (
+        <div id={'map-container'} style={{height: '100%',width:'100%'}}>
+          <Map center={position} zoom={12} style={{height: '100%',width:'100%'}}>
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+            />
+            <Circle 
+                  center={{lat:position[0], lng:position[1]}}
+                  fillColor="blue" 
+                  radius={perimeter}/>
+          </Map>
+        </div>
+      )
+      } else {
+        return null;
+      }
     }
 }
 
-
-export default withStyles(styles)(map);
+export default withStyles(styles)(MapComponent);

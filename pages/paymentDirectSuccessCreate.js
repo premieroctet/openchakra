@@ -79,6 +79,7 @@ class PaymentDirectSuccessCreate extends React.Component {
                 })
                 .then(res => {
                     let booking = this.state.bookingObj;
+                    console.log(JSON.stringify(booking));
                     booking.chatroom = res.data._id;
 
                     axios

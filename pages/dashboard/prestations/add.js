@@ -67,6 +67,7 @@ class add extends React.Component {
             label: '',
             price: '',
             category: '',
+            category_label: '',
             service: '',
             billing: '',
             filter_presentation: '',
@@ -127,7 +128,11 @@ class add extends React.Component {
         axios.get(url+"myAlfred/api/admin/calculating/all")
             .then((response) => {
                 let calculating = response.data;
-                this.setState({all_calculating: calculating})
+                let calc_number=calculating.find( c => c.label=='Nombre')._id;
+                this.setState({
+                  calculating: calc_number,
+                  all_calculating: calculating
+                })
             }).catch((error) => {
             console.log(error)
         });
@@ -151,7 +156,11 @@ class add extends React.Component {
         axios.get(url+"myAlfred/api/admin/filterPresentation/all")
             .then((response) => {
                 let filter_presentation = response.data;
-                this.setState({all_filter_presentation: filter_presentation})
+                let filter_aucun=filter_presentation.find( f => f.label=='Aucun')._id;
+                this.setState({
+                   all_filter_presentation: filter_presentation,
+                   filter_presentation: filter_aucun,
+                })
             }).catch((error) => {
             console.log(error)
         });
@@ -167,6 +176,18 @@ class add extends React.Component {
 
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
+        let {name, value} = e.target;
+        console.log("onChange:"+name,value);
+        if (name=='service' && value!='') {
+          let service = this.state.all_service.find(s => s._id==value);
+          console.log(service);
+          if (service && service.category) {
+            this.setState({
+              category: service.category._id,
+              category_label: service.category.label
+            });
+          }
+        }
     };
 
     handleChange = e => {
@@ -220,6 +241,7 @@ class add extends React.Component {
             });
         }
 
+        console.log("SelectedBilling:"+JSON.stringify(this.state.selectedBilling));
         if(this.state.selectedBilling != null){
             this.state.selectedBilling.forEach(t => {
 
@@ -274,10 +296,10 @@ class add extends React.Component {
         const {all_tags} = this.state;
         const {errors} = this.state;
 
+        console.log("State.billing:"+JSON.stringify(this.state.billing));
+
         const categories = all_category.map(e => (
-
             <MenuItem value={e._id}>{e.label}</MenuItem>
-
         ));
 
         const options = all_search_filter.map(filter => ({
@@ -310,7 +332,7 @@ class add extends React.Component {
                                 <Grid item>
                                     <TextField
                                         id="standard-with-placeholder"
-                                        label="Label"
+                                        label="Label*"
                                         placeholder="Label"
                                         margin="normal"
                                         style={{ width: '100%' }}
@@ -320,7 +342,6 @@ class add extends React.Component {
                                         onChange={this.onChange}
                                         error={errors.label}
                                     />
-                                    <em>{errors.label}</em>
                                 </Grid>
                                 <Grid item style={{marginTop: 20}}>
                                     <TextField
@@ -333,34 +354,13 @@ class add extends React.Component {
                                         name="price"
                                         value={this.state.price}
                                         onChange={this.onChange}
+                                        error={errors.price}
                                     />
                                 </Grid>
                                 <Grid item style={{width: '100%',marginTop: 20}}>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
-                                            Catégorie
-                                        </InputLabel>
-                                        <Select
-                                            input={<Input name="category" id="genre-label-placeholder" />}
-                                            displayEmpty
-                                            name="category"
-                                            value={this.state.category}
-                                            onChange={this.onChange}
-                                            className={classes.selectEmpty}
-                                        >
-                                            <MenuItem value="">
-                                                <em>...</em>
-                                            </MenuItem>
-                                            {categories}
-                                        </Select>
-                                        <FormHelperText>Sélectionner une catégorie</FormHelperText>
-                                    </FormControl>
-                                    <em>{errors.category}</em>
-                                </Grid>
-                                <Grid item style={{width: '100%',marginTop: 20}}>
-                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
-                                        <InputLabel shrink htmlFor="genre-label-placeholder">
-                                            Service
+                                            Service*
                                         </InputLabel>
                                         <Select
                                             input={<Input name="service" id="genre-label-placeholder" />}
@@ -369,6 +369,7 @@ class add extends React.Component {
                                             value={this.state.service}
                                             onChange={this.onChange}
                                             className={classes.selectEmpty}
+                                            error={errors.service}
                                         >
                                             <MenuItem value="">
                                                 <em>...</em>
@@ -384,7 +385,14 @@ class add extends React.Component {
                                     <em>{errors.service}</em>
                                 </Grid>
                                 <Grid item style={{width: '100%',marginTop: 20}}>
-                                    <Typography style={{ fontSize: 17 }}>Méthodes de facturation</Typography>
+                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
+                                      <Typography style={{ fontSize: 17 }}>Catégorie</Typography>
+                                        <div>{this.state.category_label||'Aucune'}</div>
+                                    </FormControl>
+                                    <em>{errors.category}</em>
+                                </Grid>
+                                <Grid item style={{width: '100%',marginTop: 20}}>
+                                    <Typography style={{ fontSize: 17 }}>Méthodes de facturation*</Typography>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
 
                                         <Select2
@@ -394,15 +402,15 @@ class add extends React.Component {
                                             isMulti
                                             isSearchable
                                             closeMenuOnSelect={false}
-
+                                            error={errors.billing}
                                         />
                                     </FormControl>
-                                    <em>{errors.billing}</em>
+                                    <em style={{color: 'red'}}>{errors.billing}</em>
                                 </Grid>
                                 <Grid item style={{width: '100%',marginTop: 20}}>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
-                                            Méthode de calcul
+                                            Méthode de calcul*
                                         </InputLabel>
                                         <Select
                                             input={<Input name="calculating" id="genre-label-placeholder" />}
@@ -411,6 +419,7 @@ class add extends React.Component {
                                             value={this.state.calculating}
                                             onChange={this.onChange}
                                             className={classes.selectEmpty}
+                                            error={errors.calculating}
                                         >
                                             <MenuItem value="">
                                                 <em>...</em>
@@ -428,7 +437,7 @@ class add extends React.Component {
                                 <Grid item style={{width: '100%',marginTop: 20}}>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
-                                            Filtre de présentation
+                                            Filtre de présentation*
                                         </InputLabel>
                                         <Select
                                             input={<Input name="filter_presentation" id="genre-label-placeholder" />}
@@ -437,6 +446,7 @@ class add extends React.Component {
                                             value={this.state.filter_presentation}
                                             onChange={this.onChange}
                                             className={classes.selectEmpty}
+                                            error={errors.filter_presentation}
                                         >
                                             <MenuItem value="">
                                                 <em>...</em>
@@ -470,7 +480,7 @@ class add extends React.Component {
                                 <Grid item style={{width: '100%',marginTop:20}}>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
-                                            Métier
+                                            Métier*
                                         </InputLabel>
                                         <Select
                                             input={<Input name="job" id="genre-label-placeholder" />}
@@ -479,6 +489,7 @@ class add extends React.Component {
                                             value={this.state.job}
                                             onChange={this.onChange}
                                             className={classes.selectEmpty}
+                                            error={errors.job}
                                         >
                                             <MenuItem value="">
                                                 <em>...</em>

@@ -12,6 +12,7 @@ module.exports = function validateSimpleRegisterInput(data) {
     data.firstname = !isEmpty(data.firstname) ? data.firstname : '';
     data.email = !isEmpty(data.email) ? data.email : '';
     data.password = !isEmpty(data.password) ? data.password : '';
+    data.password2 = !isEmpty(data.password2) ? data.password2 : '';
     data.address = !isEmpty(data.address) ? data.address : '';
     data.zip_code = !isEmpty(data.zip_code) ? data.zip_code : '';
     data.city = !isEmpty(data.city) ? data.city : '';
@@ -41,6 +42,14 @@ module.exports = function validateSimpleRegisterInput(data) {
 
     if(!Validator.isLength(data.password, {min: 8, max: 30})){
         errors.password = 'Le mot de passe doit contenir 8 caractères minimum';
+    }
+
+    if(Validator.isEmpty(data.password2)) {
+        errors.password2 = 'Confirm password field is required';
+    }
+
+    if(!Validator.equals(data.password, data.password2)) {
+        errors.password2 = 'Password must match';
     }
 
     if(Validator.isEmpty(data.address)) {

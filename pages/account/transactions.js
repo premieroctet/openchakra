@@ -8,7 +8,7 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { Typography } from '@material-ui/core';
-
+import {Helmet} from 'react-helmet';
 
 moment.locale('fr');
 
@@ -19,6 +19,9 @@ const styles = theme => ({
     bigContainer: {
         marginTop: 70,
         flexGrow: 1,
+        [theme.breakpoints.down('xs')]: {
+            marginTop: 250,
+        }
     },
     exportSVG: {
         fontFamily: 'sans-serif!important',
@@ -103,7 +106,7 @@ const styles = theme => ({
         },
         trait1:{
             width: '100%',
-    
+
             height: 4,
             backgroundColor: 'lightgray',
             borderColor: 'transparent'
@@ -112,11 +115,11 @@ const styles = theme => ({
             width: '100%',
             height: 4,
             backgroundColor: 'lightgray',
-            borderColor: 'transparent',  
+            borderColor: 'transparent',
         },
         trait3:{
             width: '100%',
-    
+
             height: 4,
             backgroundColor: 'rgb(47, 188, 211)',
             borderColor: 'transparent'
@@ -192,11 +195,16 @@ class transactions extends React.Component {
 
         return (
             <Fragment>
+		<Helmet>
+        <title>compte - Historique des transactions - My Alfred </title>
+        <meta property="description" content="Retrouvez l'ensemble des services rémunérés que vous avez consommé sur My Alfred depuis votre historique des transactions. My Alfred des services entre particuliers assurés, un paiement sécurisé ! " />
+      </Helmet>
+
                 <Layout>
                     <Grid container className={classes.bigContainer}>
 
                     <Grid className={classes.toggle}  item xs={3} style={{}}>
-                         
+
                          <div className={classes.trigger}></div>
                             <Grid container style={{justifyContent: 'center',}}>
                                 <Grid item style={{marginTop: 30,width: 275.25}} className={classes.hidesm}>
@@ -214,7 +222,7 @@ class transactions extends React.Component {
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
@@ -235,12 +243,12 @@ class transactions extends React.Component {
                                         <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/credit-card.svg'} alt={'credit-card'} height={70} width={27} style={{marginleft: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
-                                
+
                                 <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -277,7 +285,7 @@ class transactions extends React.Component {
                                         <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/ascendant-bars-graphic-2.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                                
+
                                             </a>
                                         </div>
                                     </Link>
@@ -298,13 +306,34 @@ class transactions extends React.Component {
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                            
+
                                             </a>
                                         </div>
                                     </Link>
                                 </Grid>
 
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
+                                    <Link href={'/account/applications'}>
+                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
+                                            <img src={'../static/network.svg'} alt={'network'} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
+                                                Applications connectées
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
+                                    <Link href={'/account/applications'}>
+                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
+                                            <img src={'../static/network.svg'} alt={'network'} width={27} style={{marginRight: 4}}/>
+                                            <a style={{fontSize: '1.1rem'}}>
+
+                                            </a>
+                                        </div>
+                                    </Link>
+                                </Grid>
+
+                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
                                     <Link href={'/account/parameters'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
                                             <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
@@ -319,7 +348,7 @@ class transactions extends React.Component {
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                            
+
                                             </a>
                                         </div>
                                     </Link>
@@ -393,9 +422,9 @@ class transactions extends React.Component {
 
 
                             </Grid>
-                            
+
                             <Grid container style={{marginBottom:20, marginTop: '50px'}}>
-                                {tabs ? 
+                                {tabs ?
                                 <React.Fragment>
 
                                         <Grid className={classes.historesp} container>
@@ -435,7 +464,8 @@ class transactions extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-                <Footer/>
+                {/* <Footer/>*/}
+
 
             </Fragment>
         );

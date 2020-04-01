@@ -12,7 +12,9 @@ const passport = require('passport');
 const glob = require('glob');
 const cors = require('cors');
 const { config } = require('../config/config');
-
+const http = require('http')
+const https = require('https')
+const fs = require('fs')
 const users = require('./routes/api/users');
 const category = require('./routes/api/category');
 const billing = require('./routes/api/billing');
@@ -114,9 +116,30 @@ nextApp.prepare().then(() => {
     glob.sync(rootPath + '/server/api/*.js').forEach(controllerPath => {
         if (!controllerPath.includes('.test.js')) require(controllerPath)(app)
     })
+    app.use(express.static('static'))
+    app.use(function(req, res, next) {
+    if (!req.secure ) {
+            console.log("Redirecting to"+JSON.stringify(req.originalUrl));
+            res.redirect (301, 'https://' + req.hostname + req.originalUrl);
+    }
+    next();
+    });
     app.get('*', routerHandler);
+
+    // HTTP only handling redirect to HTTPS
+    http.createServer(app).listen(80);
+    // HTTPS server using certificates
+    https.createServer({
+      cert: fs.readFileSync(process.env.HOME+'/.ssh/Main-Certificate-x509.txt'),
+      key: fs.readFileSync(process.env.HOME+'/.ssh/www_my-alfred_io.key'),
+      ca: fs.readFileSync(process.env.HOME+'/.ssh/Intermediate-Certificate.txt'),
+      },
+      app).listen(443, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`))
+
     app.use(config.serverPort, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`));
-    server.listen(3122);
+    // DEV
+    // server.listen(3122);
+    // END DEV
 
     let roomName = '';
     let bookingName = '';

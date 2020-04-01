@@ -122,11 +122,11 @@ class facon extends React.Component{
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography className={classes.contentBox}>
-                                    A travers la création de votre boutique vous proposez vos services en
+                                    A travers la création de votre boutique, vous proposez vos services en
                                     décrivant l'ensemble de vos prestations. Vous pouvez à tout moment
                                     revenir sur votre boutique, ajouter ou supprimer des services. Les
                                     différentes étapes de création de votre boutique sont extrêmement
-                                    simple. À vous de jouer !
+                                    simples. À vous de jouer !
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -160,10 +160,9 @@ class facon extends React.Component{
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography className={classes.contentBox}>
-                                    C'est à vous de fixer les prix de vos services et nos outils de tarifications
-                                    sont la  pour vous aider à proposer le meilleur prix pour être sélectionné.
-                                    Vous pouvez facilement ajouter des éléments personnalisés, notamment : - des tarifs de week end - des tarifs de nuit -
-                                    des packages de services...
+                                    C'est à vous de fixer les prix de vos services : nos outils de tarifications
+                                    sont là  pour vous aider à proposer le meilleur prix.
+                                    Vous pouvez facilement ajouter des éléments personnalisés, notamment des tarifs de week-end, de nuit, des packages de services...
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -179,8 +178,8 @@ class facon extends React.Component{
                                 <Typography className={classes.contentBox}>
                                     Pour que les utilisateurs  de My-Alfred puissent facilement comprendre
                                     vos services, vous définissez vos règles avant qu'ils puissent réserver.
-                                    Si ils enfreignent les règles après avoir réserver, vous pourrez annuler
-                                    leur réservation sans aucune pénalités.
+                                    S'ils enfreignent les règles après avoir réservé, vous pourrez annuler
+                                    leur réservation sans aucune pénalité.
                                 </Typography>
                             </Grid>
                         </Grid>

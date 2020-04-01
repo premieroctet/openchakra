@@ -10,6 +10,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Switch from "@material-ui/core/Switch";
 import Footer from '../../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
+import {Helmet} from 'react-helmet';
 
 moment.locale('fr');
 
@@ -20,6 +21,9 @@ const styles = theme => ({
     bigContainer: {
         marginTop: 70,
         flexGrow: 1,
+        [theme.breakpoints.down('xs')]: {
+            marginTop: 250,
+        }
     },
     hidesm: {
         minWidth: '271px',
@@ -156,6 +160,11 @@ class notifications extends React.Component {
 
         return (
             <Fragment>
+		<Helmet>
+        <title>compte - Notifications - My Alfred </title>
+        <meta property="description" content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. " />
+      </Helmet>
+
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                     <Grid className={classes.toggle}  item xs={3} style={{}}>
@@ -176,7 +185,7 @@ class notifications extends React.Component {
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/smartphone-call-2.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a  style={{fontSize: '1.1rem'}}>
-                                               
+
                                             </a>
                                         </div>
                                     </Link>
@@ -202,7 +211,7 @@ class notifications extends React.Component {
                                         </div>
                                     </Link>
                                 </Grid>
-                                
+
                                 <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
                                     <Link href={'/account/paymentPreference'}>
                                         <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
@@ -259,7 +268,7 @@ class notifications extends React.Component {
                                         <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                            
+
                                             </a>
                                         </div>
                                     </Link>
@@ -280,7 +289,7 @@ class notifications extends React.Component {
                                         <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
                                             <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 4}}/>
                                             <a style={{fontSize: '1.1rem'}}>
-                                            
+
                                             </a>
                                         </div>
                                     </Link>
@@ -625,7 +634,8 @@ class notifications extends React.Component {
                         <Grid item xs={4}/>
                     </Grid>
                 </Layout>
-                <Footer/>
+                {/* <Footer/>*/}
+
             </Fragment>
         );
     };

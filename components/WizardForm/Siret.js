@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -6,7 +7,6 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import Router from "next/router";
-import {ErrorMessage, Field} from "formik";
 import Button from "@material-ui/core/Button";
 
 const moment = require('moment');
@@ -47,25 +47,37 @@ class siret extends React.Component {
             siret: '',
             nafape: '',
             creationDate: '',
-            denomination: '',
-            nature_juridique: '',
-
-
+            name: '',
+            status: '',
         };
-
         this.onChange = this.onChange.bind(this);
-
-
+        this.setCompanyData = this.setCompanyData.bind(this);
     }
 
     onChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
-        this.props.formikCtx.setFieldValue(`createShop.siret`, siret)
+      let {name, value} = e.target;
+      if (name=='siret') {
+        value = value.replace(/ /g, '');
+      }
+      this.setState({ [name]: value });
 
     };
 
 
-
+  setCompanyData(data) {
+    const date = data.date_creation;
+    const year = date.substring(0,4);
+    const month = date.substring(4,6);
+    const day = date.substring(6,8);
+    const result = day+'/'+month+'/'+year;
+    this.setState({
+      name: data.l1_normalisee,
+      nafape: data.activite_principale,
+      status: data.libelle_nature_juridique_entreprise,
+      creationDate: result
+    }, () => this.props.onChange(this.state)
+    );
+  }
 
     onSubmit = e => {
 
@@ -74,46 +86,36 @@ class siret extends React.Component {
 
         axios.get(`https://entreprise.data.gouv.fr/api/sirene/v1/siret/${code}`)
             .then(res => {
-                const data = res.data;
-                this.setState({denomination: data.etablissement.l1_normalisee, nafape: data.etablissement.activite_principale, nature_juridique: data.etablissement.libelle_nature_juridique_entreprise});
-                const date = data.etablissement.date_creation;
-                const year = date.substring(0,4);
-                const month = date.substring(4,6);
-                const day = date.substring(6,8);
-                const result = day+'/'+month+'/'+year;
-                //const finalDate = moment(result).format('YYYY-MM-DD');
-                this.setState({creationDate: result});
-
-                this.props.formikCtx.setFieldValue(`createShop.siret`, code);
-                this.props.formikCtx.setFieldValue(`createShop.denomination`, this.state.denomination);
-                this.props.formikCtx.setFieldValue(`createShop.creationDate`, this.state.creationDate);
-                this.props.formikCtx.setFieldValue(`createShop.nafape`, this.state.nafape);
-                this.props.formikCtx.setFieldValue(`createShop.nature_juridique`, this.state.nature_juridique);
-
-                console.log(this.props.formikCtx);
+              this.setCompanyData(res.data.etablissement);
             })
             .catch(err => {
-                console.log(err);
-            })
-
-
+               axios.get(`https://entreprise.data.gouv.fr/api/sirene/v1/siren/${code}`)
+                 .then(res => {
+                   this.setCompanyData(res.data.siege_social);
+                 })
+                 .catch(err => {
+                    toast.error("Siret/Siren inconnu");
+                    this.setState({
+                      name:'',
+                      status: '',
+                      creationDate:'',
+                      nafape: '',
+                    }, () => this.props.onChange(this.state));
+                    console.log(err);
+                 })
+              })
     };
 
     render()  {
         const { classes } = this.props;
 
-
-
         return (
             <Grid container>
                 <Grid item xs={12} md={6}>
-                    <Field name="createShop.siret" render={({field}) => {
-                        return (
                             <TextField
-                                {...field}
                                 id="filled-with-placeholder"
-                                label="Siret"
-                                placeholder="Siret"
+                                label="Siret/Siren"
+                                placeholder="Siret/Siren"
                                 margin="normal"
                                 variant="outlined"
                                 type="text"
@@ -121,9 +123,6 @@ class siret extends React.Component {
                                 value={this.state.siret}
                                 onChange={this.onChange}
                             />
-                        )
-                    }} />
-                    <ErrorMessage name={`createShop.siret`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
                     <Button type="button" variant='contained' color="secondary" style={{marginTop: 25, marginLeft: 15,color: 'white'}} onClick={() => this.onSubmit()}>
                         Valider
                     </Button>
@@ -132,44 +131,19 @@ class siret extends React.Component {
 
                 <Grid container>
                     <Grid item xs={12} sm={12} md={6}>
-                        <Field name="createShop.siret" render={({form,field}) => {
-                            return (
-                                <Typography>Siret : {form.values.createShop.siret}</Typography>
-                            )
-                        }} />
-                        <ErrorMessage name={`createShop.creationDate`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                                <Typography>Siret/Siren : {this.state.siret}</Typography>
                     </Grid>
                 <Grid item xs={12} sm={12} md={6}>
-                    <Field name="createShop.creationDate" render={({form,field}) => {
-                        return (
-                            <Typography>Date de création : {form.values.createShop.creationDate}</Typography>
-                        )
-                    }} />
-                    <ErrorMessage name={`createShop.creationDate`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                            <Typography>Date de création : {this.state.creationDate}</Typography>
                 </Grid>
                 <Grid item xs={12} sm={12} md={6}>
-                    <Field name="createShop.denomination" render={({form, field}) => {
-                        return (
-                            <Typography>Dénomination : {form.values.createShop.denomination}</Typography>
-                        )
-                    }} />
-                    <ErrorMessage name={`createShop.denomination`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                            <Typography>Dénomination : {this.state.name}</Typography>
                 </Grid>
                 <Grid item xs={12} sm={12} md={6}>
-                    <Field name="createShop.nafape" render={({form,field}) => {
-                        return (
-                            <Typography>Code NAF/APE : {form.values.createShop.nafape}</Typography>
-                        )
-                    }} />
-                    <ErrorMessage name={`createShop.nafape`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                            <Typography>Code NAF/APE : {this.state.nafape}</Typography>
                 </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                    <Field name="createShop.nature_juridique" render={({form,field}) => {
-                        return (
-                            <Typography>Statut juridique : {form.values.createShop.nature_juridique}</Typography>
-                        )
-                    }} />
-                    <ErrorMessage name={`createShop.nature_juridique`} render={msg => <div style={{color: 'red'}}>{msg}</div>} />
+                <Grid item xs={24} sm={24} md={12}>
+                            <Typography>Statut juridique : {this.state.status}</Typography>
                 </Grid>
                 </Grid>
             </Grid>

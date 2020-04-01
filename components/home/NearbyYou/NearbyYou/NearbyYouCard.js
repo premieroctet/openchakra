@@ -10,6 +10,7 @@ import Avatar from '@material-ui/core/Avatar';
 import CardMedia from '@material-ui/core/CardMedia';
 import { withStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
+import UserAvatar from '../../../Avatar/UserAvatar';
 
 const styles = theme => ({
   card: {
@@ -93,14 +94,13 @@ const styles = theme => ({
 
 const nearbyYouCard = (props) => {
   // eslint-disable-next-line object-curly-newline
-  const { classes, img, title,alfred,avatar,shop } = props;
-
+  const { classes, img, title,alfred,user} = props;
   return (
 
 
 
     <Card className={classes.card}>
-      <Link href={`/shop?id_alfred=${shop}`}>
+      <Link href={`/shop?id_alfred=${user._id}`}>
       <CardActionArea style={{cursor:'default'}}>
 
         <CardMedia className={classes.media} image={img} title={alfred}>
@@ -110,7 +110,7 @@ const nearbyYouCard = (props) => {
 
               </Grid>
               <Grid container className={classes.locationAvatarGrid}>
-                <Avatar src={avatar} className={classes.avatar} />
+                <UserAvatar user={user} className={classes.avatar} />
               </Grid>
             </Grid>
           </div>
@@ -134,7 +134,6 @@ const nearbyYouCard = (props) => {
 
       </CardActionArea>
       </Link>
-
     </Card>
   );
 };

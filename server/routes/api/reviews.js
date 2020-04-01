@@ -47,7 +47,11 @@ router.post('/add/alfred',passport.authenticate('jwt',{session: false}),(req,res
                         User.findById(req.body.alfred)
                             .then(user => {
                                 const score = (quality + relational + prestation)/3;
-                                user.score = ((user.score + score)/2).toFixed(2);
+                                if(user.number_of_reviews === 1){
+                                    user.score = score.toFixed(2);
+                                } else {
+                                    user.score = ((user.score + score)/2).toFixed(2);
+                                }
                                 user.save().then(users => console.log('reviews update')).catch(err => console.log(err));
                             })
                             .catch(error => {
@@ -94,7 +98,11 @@ router.post('/add/client',passport.authenticate('jwt',{session: false}),(req,res
                 User.findById(req.body.client)
                     .then(user => {
                         const score = (reception + relational + accuracy)/3;
-                        user.score_client = ((user.score_client + score)/2).toFixed(2);
+                        if(user.number_of_reviews_client === 1) {
+                            user.score_client = score.toFixed(2);
+                        } else {
+                            user.score_client = ((user.score_client + score)/2).toFixed(2);
+                        }
                         user.save().then(users => console.log('reviews update')).catch(err => console.log(err));
                     })
                     .catch(error => {

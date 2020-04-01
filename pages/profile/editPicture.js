@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react';
+import Avatar from '@material-ui/core/Avatar';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
@@ -14,7 +15,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Footer2 from '../../hoc/Layout/Footer/Footer2';
+import Footer from '../../hoc/Layout/Footer/Footer';
+import {Helmet} from 'react-helmet';
+import {generate_avatar} from '../../utils/generateAvatar';
+
 
 moment.locale('fr');
 
@@ -25,6 +29,9 @@ const styles = theme => ({
     bigContainer: {
         marginTop: 70,
         flexGrow: 1,
+        [theme.breakpoints.down('xs')]: {
+            marginTop: 250,
+        }
     },
     hidesm: {
         minWidth: '271px',
@@ -193,6 +200,10 @@ class editPicture extends React.Component {
         const user = this.state.user;
         return (
             <Fragment>
+		<Helmet>
+        <title>Profil - Photos - My Alfred </title>
+        <meta property="description" content="Votre photo de profil sur My Alfred, plateforme web et mobile de services entre particuliers et auto entrepreneurs. Trouvez des services près de chez vous ! Paiement sécurisé - Inscription 100% gratuite." />
+      </Helmet>
                 <Layout>
                     <Grid container className={classes.bigContainer} style={{minHeight:530}}>
                     <Grid className={classes.toggle}  item xs={3} style={{}}>
@@ -310,7 +321,14 @@ class editPicture extends React.Component {
                             <Grid container style={{marginTop: 20}}>
                                 <Grid item>
                                     <DeleteIcon onClick={()=>this.handleClickOpen()} className={classes.deleteicon} style={{marginLeft: '90%',padding: '2%', marginBottom: '-10%', color: '#616060',  cursor: 'pointer' }}/>
-                                    <Thumb file={this.state.haveapicture} />{this.state.haveapicture ? null : <img width={150} height={150} style={{borderRadius: '50%',objectFit:'cover'}} src={`../${user.picture}`} alt={'picture'}/>}
+                                    <Thumb file={this.state.haveapicture} />
+                                    {
+                                       this.state.haveapicture ?
+                                         null :
+                                           user.picture ?
+                                             <img width={150} height={150} style={{borderRadius: '50%',objectFit:'cover'}} src={`../${user.picture}`} alt={'picture'}/>:
+                                             <Avatar alt="photo de profil" className={classes.avatarLetter}>{generate_avatar(user)}</Avatar>
+                                    }
                                 </Grid>
                                 <Grid item xs={12} md={6} style={{marginLeft: '5%'}}>
                                     <form onSubmit={this.onSubmit}>
@@ -341,7 +359,8 @@ class editPicture extends React.Component {
                         </Grid>
                     </Grid>
                 </Layout>
-                <Footer2/>
+                {/* <Footer/>*/}
+
                 <Dialog
                     open={this.state.open}
                     onClose={()=>this.handleClose()}

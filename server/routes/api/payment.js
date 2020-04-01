@@ -13,14 +13,11 @@ const request = require('request');
 moment.locale('fr');
 
 const api = new mangopay({
-    clientId: 'test-myalfred-haus',
-    clientApiKey: 'Zcx9oZKnBBL31AEugBNrn13n6URvrSqtXCykH3ejBdDSmOYPU1',
-
+    clientId: 'testmyalfredv2',
+    clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
 });
 
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
-
+const {computeUrl} = require('../../../config/config');
 
 router.get('/test',(req, res) => res.json({msg: 'Payment Works!'}) );
 
@@ -128,7 +125,7 @@ router.post('/payIn',passport.authenticate('jwt',{session:false}),(req,res)=> {
                             Currency: "EUR",
                             Amount: fees
                         },
-                        ReturnURL: url+'paymentSuccess',
+                        ReturnURL: computeUrl(req)+'/paymentSuccess',
                         CardType: "CB_VISA_MASTERCARD",
                         PaymentType: "CARD",
                         ExecutionType: "WEB",
@@ -163,17 +160,17 @@ router.post('/payInCreate',passport.authenticate('jwt',{session:false}),(req,res
                             Currency: "EUR",
                             Amount: fees
                         },
-                        ReturnURL: url+'paymentSuccessCreate',
+                        ReturnURL: computeUrl(req)+'/paymentSuccessCreate',
                         CardType: "CB_VISA_MASTERCARD",
                         PaymentType: "CARD",
                         ExecutionType: "WEB",
                         Culture: "FR",
                         CreditedWalletId: wallet_id
                     })
-                        .then(data => {
-                            console.log(data);
-                            res.json(data)
-                        })
+                    .then(data => {
+                      console.log(data);
+                      res.json(data)
+                    })
                 })
         });
 });
@@ -200,13 +197,13 @@ router.post('/payInDirect',passport.authenticate('jwt',{session:false}),(req,res
                             Currency: "EUR",
                             Amount: fees
                         },
-                        ReturnURL: url+'paymentDirectSuccess',
+                        ReturnURL: computeUrl(req)+'/paymentDirectSuccess',
                         CardType: "CB_VISA_MASTERCARD",
                         PaymentType: "CARD",
                         ExecutionType: "DIRECT",
                         CreditedWalletId: wallet_id,
                         CardId: id_card,
-                        SecureModeReturnURL: url+'paymentDirectSuccess'
+                        SecureModeReturnURL: computeUrl(req)+'/paymentDirectSuccess'
                     })
                         .then(data => {
                             res.json(data)
@@ -238,19 +235,22 @@ router.post('/payInDirectCreate',passport.authenticate('jwt',{session:false}),(r
                             Currency: "EUR",
                             Amount: fees
                         },
-                        ReturnURL: url+'paymentSuccessCreate',
+                        ReturnURL: computeUrl(req)+'/paymentSuccessCreate',
                         CardType: "CB_VISA_MASTERCARD",
                         PaymentType: "CARD",
                         ExecutionType: "DIRECT",
                         CreditedWalletId: wallet_id,
                         CardId: id_card,
-                        SecureModeReturnURL: url+'paymentSuccessCreate'
+                        SecureModeReturnURL: computeUrl(req)+'/paymentSuccessCreate'
                     })
-                        .then(data => {
-                            res.json(data)
-                        })
+                    .then(data => {
+                      res.json(data)
+                    })
+                    .catch(err => res.status(404).json({error:err}))
                 })
+                .catch(err => res.status(404).json({error:err}))
         })
+        .catch(err => res.status(404).json({error:err}))
 
 });
 

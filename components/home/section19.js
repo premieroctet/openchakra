@@ -134,13 +134,13 @@ class section19 extends React.Component {
     }
 
     render() {
-        const {classes} = this.props;
+        const {classes, gps} = this.props;
         const {prestations} = this.state;
         const {tags} = this.state;
         const resdata = shuffleArray(prestations);
         const services = resdata.slice(0, 12).map(e => (
             <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
-                <Link href={'/serviceByPrestation?prestation='+e._id}>
+                <Link href={'/search?search=1&prestation='+e._id+'&gps='+JSON.stringify(gps)}>
                 <Card className={classes.card}>
                     <CardActionArea style={{cursor:'default'}}>
 

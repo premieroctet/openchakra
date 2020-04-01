@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import FeelingoodCard from './feelingood/feelingoodCard/feelingoodCard';
+import FeelingGoodCard from './feelingGood/feelingGoodCard/feelingGoodCard';
 import axios from 'axios';
 import Link from 'next/link';
 
@@ -84,7 +84,7 @@ class section18 extends React.Component{
     }
 
     render() {
-        const {classes} = this.props;
+        const {classes, gps} = this.props;
         const {service} = this.state;
         const {tags} = this.state;
         const resdata = shuffleArray(service);
@@ -92,7 +92,7 @@ class section18 extends React.Component{
         const cards = resdata.slice(0, 4).map((e,index) => (
             <Grid key={index} item xs={12} sm={6} md={3}>
 
-                <FeelingoodCard id={e._id} img={e.picture} title={e.label} />
+                <FeelingGoodCard id={e._id} img={e.picture} title={e.label} gps={gps} />
 
             </Grid>
         ));

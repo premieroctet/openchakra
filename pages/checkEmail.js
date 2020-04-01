@@ -79,7 +79,7 @@ class checkEmail extends React.Component {
                             <h2 className={classes.title}>Inscription terminée</h2>
                         </div>
                         <div className={classes.newContainer}>
-                            <Grid container style={{display: 'flex', justifyContent: 'center', marginTop: 20}}>
+                            <Grid container style={{display: 'flex', justifyContent: 'center', marginTop: 20, height: 100 /*safari*/}}>
                                 <img src='../static/happy_castor.svg' style={{width: 100}} alt={'success'}/>
                             </Grid>
                             <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 10, textAlign: 'justify'}}>
@@ -87,14 +87,14 @@ class checkEmail extends React.Component {
                             </Grid>
                             <Grid item className={classes.responsiveButton}>
                                 <Grid item style={{marginRight:'1%' }}>
-                                    <Link href={'/'}>
+                                    <Link href={'/#register_done'}>
                                         <a style={{textDecoration:'none'}}>
                                             <Button variant={"contained"} color={"primary"} style={{color:"white"}}>Commencez à explorer</Button>
                                         </a>
                                     </Link>
                                 </Grid>
                                 <Grid item className={classes.responsiveSecondaryButton}>
-                                    <Link href={'/becomeAlfredForm'}>
+                                    <Link href={'/creaShop/creaShop'}>
                                         <a style={{textDecoration:'none'}}>
                                             <Button variant={"contained"} color={"secondary"} style={{color:"white"}}>Créer ma boutique</Button>
                                         </a>

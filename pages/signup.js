@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -17,6 +17,8 @@ import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
 import Footer from '../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
+import {Helmet} from 'react-helmet';
+
 registerLocale('fr', fr);
 
 
@@ -116,12 +118,14 @@ class signup extends React.Component {
           birthday: '',
           email: '',
           password: '',
+          password2: '',
           address: '',
           city: '',
           zip_code: '',
           country: '',
           checked: false,
-          check2: true,
+          check2: false,
+          check3: false,
           errors: {},
           lat: '',
           lng: '',
@@ -147,12 +151,24 @@ class signup extends React.Component {
 
   onChangePassword = e => {
     this.setState({ [e.target.name]: e.target.value });
+    this.setState({ check3: false});
+    this.setState({password: e.target.value});
     if(e.target.value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})")){
-      this.setState({password: e.target.value});
       this.setState({check2: true});
-
     } else {
       this.setState({check2: false});
+    }
+    this.setState({check3: this.state.password2==e.target.value})
+  };
+
+  onChangePassword2 = e => {
+    this.setState({ [e.target.name]: e.target.value });
+    console.log("Target:"+e.target.name+":Pass1,2:"+this.state.password+","+this.state.password2);
+    this.setState({password2: e.target.value});
+    if(this.state.password==e.target.value) {
+      this.setState({check3: true});
+    } else {
+      this.setState({check3: false});
     }
   };
 
@@ -179,6 +195,7 @@ class signup extends React.Component {
           birthday: this.state.birthday,
           email: this.state.email,
           password: this.state.password,
+          password2: this.state.password2,
           address: this.state.address,
           zip_code: this.state.zip_code,
           city: this.state.city,
@@ -190,7 +207,7 @@ class signup extends React.Component {
         const username = this.state.email;
         const password = this.state.password;
 
-
+        console.log("Submitting");
         axios
             .post(url+'myAlfred/api/users/register', newUser)
             .then(res => {
@@ -219,11 +236,7 @@ class signup extends React.Component {
                   this.setState({errors: err.response.data})
 
             }
-
             );
-
-
-
       };
 
       render() {
@@ -232,6 +245,10 @@ class signup extends React.Component {
 
         return (
             <Layout>
+		<Helmet>
+        <title>Inscription - My Alfred </title>
+        <meta property="description" content="Inscrivez-vous à My Alfred, plateforme de services entre particuliers et autoentrepreneurs. Proposez vos services et trouvez vos clients ! Recherchez vos services et trouvez votre Alfred ! Inscription gratuite et rapide " />
+      </Helmet>
               <Grid className={classes.fullContainer}></Grid>
               <Grid container className={classes.signupContainer}>
                 <div className="fonts">
@@ -388,6 +405,21 @@ class signup extends React.Component {
                           />
                         </Grid>
                         {!this.state.check2 ? <em style={{color:'red'}}>Mot de passe invalide</em> : null}
+                        <Grid item style={{width: '100%'}}>
+                          <TextField
+                              label="Saisir à nouveau le mot de passe"
+                              placeholder="Saisir à nouveau le mot de passe"
+                              margin="normal"
+                              style={{ width: '100%' }}
+                              variant="outlined"
+                              type="password"
+                              name="password2"
+                              value={this.state.password2}
+                              onChange={this.onChangePassword2}
+                              error={errors.password2}
+                          />
+                        </Grid>
+                        {!this.state.check3 ? <em style={{color:'red'}}>Les mots de passe saisis sont différents</em> : null}
                       </Grid>
                       <Typography style={{fontSize: '1.2rem', width:'100%', marginTop: 15}}>Date de naissance</Typography>
                       <p>Pour vous inscrire, vous devez être âgé d’au moins 16 ans. Les autres<br/>
@@ -463,7 +495,8 @@ class signup extends React.Component {
                 </Card>
                 </div>
               </Grid>
-              <Footer/>
+              {/* <Footer/>*/}
+
             </Layout>
         );
       };

@@ -85,7 +85,7 @@ class nearbyYou extends React.Component{
     const cards = resdata.slice(0, 6).map(e => (
         <Grid item xs={12} sm={6} md={4} key={e._id}>
           <NearbyYouCard img={e.service.picture} title={e.service.label} alfred={e.user.firstname}
-                         avatar={`../../../${e.user.picture}`} score={e.user.score} shop={e.user._id}/>
+                         user={e.user} score={e.user.score} />
         </Grid>
     ));
 

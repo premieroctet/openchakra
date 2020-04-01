@@ -116,10 +116,10 @@ class section8 extends React.Component{
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography className={classes.contentTextbox}>
-                                    My-Alfred vous permet de manière simple et sécurisée, de mettre vos services à disposition de tout à chacun.
+                                    My-Alfred vous permet, de manière simple et sécurisée, de mettre vos services à disposition de tout un chacun.
                                     Un talent pour la décoration ? Une passion pour la cuisine ? Ou tout simplement du temps :
                                     proposez vos services et complétez vos revenus.
-                                    Vous avez un contrôle total sur vos disponibilités, vos prix et sur le détail de vos prestations.
+                                    Vous avez un contrôle total sur vos disponibilités, vos prix et le détail de vos prestations.
                                 </Typography>
                             </Grid>
                         </Grid>
