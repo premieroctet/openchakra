@@ -89,6 +89,7 @@ class SearchInput extends React.Component{
                 onChange={this.onChange}
                 value={this.state.keyword}
                 name={'keyword'}
+                onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault(); }}
               />
               <Hidden smUp>
                 <Divider className={classes.divider} orientation="vertical" />
