@@ -467,7 +467,8 @@ class SearchPage extends React.Component {
                       ))}
                     </Grid>
                       <Grid container>
-                        <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Nos meilleurs Alfred ...</h3>
+                        { 'search' in this.props ?
+                        <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Nos meilleurs Alfred ...</h3>:null}
                           {/* Adresse spécifique  */
                           categories.map(cat => (
                             <Grid container>
@@ -499,7 +500,7 @@ class SearchPage extends React.Component {
                               </Grid>
                             ))}
                           </Grid>
-                          {this.state.serviceUsers.length === 0 ?
+                          {this.state.serviceUsers.length === 0 && 'search' in this.props?
                             <p>Aucun résultat</p>
                             :
                             null
