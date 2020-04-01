@@ -33,8 +33,6 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          gps:null,
-          logged:false
         }
     }
 
@@ -42,26 +40,8 @@ class Home extends React.Component {
         localStorage.setItem('path',Router.pathname);
         const token = localStorage.getItem('token');
         if (token) {
-            this.setState({logged:true})
             Router.push('/search');
         }
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios
-            .get('/myAlfred/api/users/current')
-            .then(res => {
-                let user = res.data;
-                this.setState({
-                  user:user,
-                  address: user.billing_address,
-                  addressSelected: user.billing_address,
-                  otherAddress: user.service_address,
-                  gps: user.billing_address.gps,
-                });
-            })
-            .catch(err => { console.log(err); }
-            );
-
-        console.clear();
     }
 
     logout() {
@@ -72,8 +52,6 @@ class Home extends React.Component {
     };
 
     render()  {
-        const {gps} = this.state;
-
         return (
             <Fragment>
               <Helmet>
@@ -81,29 +59,29 @@ class Home extends React.Component {
                   <meta property="description" content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple" />
                 </Helmet>
                 <Layout/>
-                <Homeheader />
-                <SerenityNeed gps={gps}/>
+                <Homeheader/>
+                <SerenityNeed/>
                 <BecomeAlfred />
-                <Section3 gps={gps}/>
-                <NearbyYou gps={gps}/>
-                <Profiteandlearn gps={gps}/>
-                <Section6 gps={gps}/>
-                <Wellbeing gps={gps}/>
-                <Section8 gps={gps}/>
-                <FeelingGood gps={gps}/>
-                <Section10 gps={gps}/>
-                <Proposeservice />
-                <Section12 gps={gps}/>
-                <NearbyYou gps={gps}/>
+                <Section3/>
+                <NearbyYou/>
+                <Profiteandlearn/>
+                <Section6/>
+                <Wellbeing/>
+                <Section8/>
+                <FeelingGood/>
+                <Section10/>
+                <Proposeservice/>
+                <Section12/>
+                <NearbyYou/>
                 <Passions/>
-                <Section15 gps={gps}/>
-                <Section16 gps={gps}/>
+                <Section15/>
+                <Section16/>
                 <Facons/>
-                <Section18 gps={gps}/>
-                <Section19 gps={gps}/>
+                <Section18/>
+                <Section19/>
                 <Otter/>
-                <Section21 gps={gps}/>
-                <Section22 gps={gps}/>
+                <Section21/>
+                <Section22/>
                 <Assureback/>
                 <Footer  />
             </Fragment>

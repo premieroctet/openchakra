@@ -172,53 +172,16 @@ class Homeheader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      allService: [],
-      serviceUser: [],
-      service: '',
-      city: '',
+      keyword: null,
+      city: null,
       gps: null,
-      date: Date.now(),
-      dateSelected: '',
-      hour: '',
-      hourSelected: '',
-      user:null,
-      address:null,
-      adressSelected:null,
+      dateSelected: null,
     };
-
   }
-
-  componentDidMount() {
-    axios.get(url+'myAlfred/api/service/all')
-        .then(res => {
-          this.setState({allService: res.data})
-        })
-        .catch()
-
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios
-            .get(url+'myAlfred/api/users/current')
-            .then(res => {
-                let user = res.data;
-                this.setState({
-                  user:user,
-                  address: user.billing_address,
-                  addressSelected: user.billing_address,
-                  otherAddress: user.service_address,
-                  gps: user.billing_address.gps,
-                });
-            })
-            .catch(err => { console.log(err); }
-            );
-  }
-
 
   onChange = e => {
     var {name, value} = e.target;
     this.setState({ [name]: value });
-    if (name=='addressSelected') {
-      this.setState({gps: value=='all'?null: 'gps' in value ? value.gps : {'lat':value['lat'], 'lng':value['lng']}})
-    };
   };
 
   onChangeCity({suggestion}) {
@@ -226,31 +189,16 @@ class Homeheader extends React.Component {
   };
 
   search() {
-    let date;
-    let dateISO;
-    let day;
-    let hour;
-    const service = this.state.service;
-    const city = this.state.city;
-    const gps = JSON.stringify(this.state.gps);
-    if(this.state.dateSelected !== ''){
-       date = moment(this.state.dateSelected).format('DD/MM/YYYY');
-      dateISO = moment(this.state.dateSelected).format();
-      day = moment(this.state.dateSelected).format('dddd');
-    } else {
-      date = '';
-      dateISO = '';
-      day = '';
-    }
-     if(this.state.hourSelected !== ''){
-       hour = moment(this.state.hourSelected).format('HH:mm');
-     } else {
-       hour = '';
-     }
+    console.log(moment(this.state.dateSelected));
+    var query={search:1}
+    if (this.state.keyword) { query['keyword']=this.state.keyword};
+    if (this.state.city) { query['city']=this.state.city};
+    if (this.state.gps) { query['gps']=this.state.gps};
+    if (this.state.dateSelected) { query['date']=moment(this.state.dateSelected).valueOf()};
 
     Router.push({
       pathname: '/search',
-      query: { keyword: service,city:city,date:date,dateISO:dateISO,day:day,hour:hour,gps: gps, address: JSON.stringify(this.state.addressSelected) }
+      query: query
     })
   }
 
@@ -286,9 +234,9 @@ class Homeheader extends React.Component {
                         label="Service"
                         variant="outlined"
                         placeholder={'Coiffure, Plomberie...'}
-                        value={this.state.service}
+                        value={this.state.keyword}
                         onChange={this.onChange}
-                        name={'service'}
+                        name={'keyword'}
                         style={{width: '100%', backgroundColor: 'white'}}
                     />
                   </Grid>
@@ -297,32 +245,6 @@ class Homeheader extends React.Component {
 
                   <Grid container alignItems="center">
                     <Grid item className={classes.pickerhomelocation} style={{textAlign: 'left', fontFamily: 'Helvetica Neue, Helvetica,sans-serif', fontSize: '0.9rem', fontWeight: '400', color: '#505050'}}>
-                      { this.state.user?
-                            <TextField
-                                    InputProps={{ style:{height: 40}, }}
-                                    id="outlined-select-currency"
-                                    select
-                                    style={{width:'100%', marginTop: '6px'}}
-                                    value={this.state.addressSelected}
-                                    name={'addressSelected'}
-                                    onChange={(e) => {this.onChange(e);}}
-                                    margin="normal"
-                                    variant="outlined"
-                                >
-                                    <MenuItem value={address}>
-                                        Adresse principale, <em> {' '+address.address} {address.zip_code},{address.city}</em>
-                                    </MenuItem>
-                                    {otherAddress.map(e => (
-                                        <MenuItem key={e._id} value={e}>
-                                            {e.label+', '} <em> {' '+e.address},{e.zip_code} {e.city}</em>
-
-                                        </MenuItem>
-                                    ))}
-                                    <MenuItem value={'all'}>
-                                        Partout, Rechercher des Alfred partout
-                                    </MenuItem>
-                                </TextField>
-                       :
                       <AlgoliaPlaces
                           placeholder='Dans quelle ville ?'
                           style={{color: '#505050', height: '55px'}}
@@ -336,15 +258,13 @@ class Homeheader extends React.Component {
                           }}
                           onChange={(suggestion) =>this.onChangeCity(suggestion)}
                           onClear={()=>this.setState({city:'', gps:null})}
-                      /> }
+                      />
                     </Grid>
                   </Grid>
 
 
                 <Grid container style={{marginTop:20}}>
-                  <Grid item xs={5}>
-                    <Grid container style={{alignItems:"center"}}>
-                      <Grid item xs={12}>
+                  <Grid item className={classes.pickerhomelocation} style={{textAlign: 'left', fontFamily: 'Helvetica Neue, Helvetica,sans-serif', fontSize: '0.9rem', fontWeight: '400', marginBottom: '15px',color: '#505050'}}>
                     <DatePicker
                         selected={this.state.dateSelected}
                         onChange={(date)=>{
@@ -364,39 +284,9 @@ class Homeheader extends React.Component {
                         placeholderText={moment(this.state.date).format('DD/MM/YYYY')}
                         minDate={new Date()}
                     />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-
-                  <Grid item xs={2}>
-                    <p style={{color:"gray",fontWeight: 100}}>À</p>
-                  </Grid>
-                  <Grid item xs={5} >
-                    <Grid container style={{alignItems:"center"}}>
-                      <Grid item xs={12}>
-                        <DatePicker
-                            selected={this.state.hourSelected}
-                            onChange={(date)=>{
-                                this.setState({hourSelected:date});
-                                if(date===null){
-                                  this.setState({hourSelected:''})
-                                }}
-                            }
-                            showTimeSelect
-                            showTimeSelectOnly
-                            timeIntervals={30}
-                            timeCaption="Heure"
-                            dateFormat="HH:mm"
-                            locale='fr'
-                            placeholderText={'09:00'}
-                            style={{fontWeight: 100}}
-                            customInput={<TextField label="Quelle heure ?" style={{backgroundColor: 'white',fontWeight: 100}} variant={"outlined"}/>}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
+                   </Grid>
                 </Grid>
-                <Button disabled={(this.state.service ==='' && this.state.place ==='' && this.state.dateSelected !== '') || (this.state.service ==='' && this.state.place ==='' && this.state.hourSelected !== '') } onClick={()=>this.search()}  variant="contained" color={'primary'} style={{marginTop:30}} className={classes.button}>
+                <Button disabled={(this.state.keyword ==='' && this.state.place ==='' && this.state.dateSelected !== '') || (this.state.keyword ==='' && this.state.place ==='' && this.state.hourSelected !== '') } onClick={()=>this.search()}  variant="contained" color={'primary'} style={{marginTop:30}} className={classes.button}>
                   Rechercher
                 </Button>
 
