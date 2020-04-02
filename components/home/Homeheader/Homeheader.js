@@ -11,6 +11,7 @@ import AlgoliaPlaces from "algolia-places-react";
 import fr from 'date-fns/locale/fr';
 import MenuItem from "@material-ui/core/MenuItem";
 import moment from 'moment';
+import isEmpty from '../../../server/validation/is-empty';
 registerLocale('fr', fr);
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
@@ -176,24 +177,38 @@ class Homeheader extends React.Component {
       city: null,
       gps: null,
       dateSelected: null,
+      errors:{},
     };
+    this.onSuggestions=this.onSuggestions.bind(this);
   }
 
   onChange = e => {
+    console.log("onChange");
     var {name, value} = e.target;
     this.setState({ [name]: value });
   };
 
+  onSuggestions = ({rawAnswer, query, suggestions}) => {
+    this.setState({city:query}, () => this.checkGPS());
+  }
+
+  checkGPS() {
+    var errors={}
+    if (this.state.city && !this.state.gps) {
+      errors['city']='Sélectionnez une ville dans la liste';
+    }
+    this.setState({errors:errors});
+  }
+
   onChangeCity({suggestion}) {
-    this.setState({gps:suggestion.latlng, city: suggestion.name});
+    this.setState({gps:suggestion.latlng, city: suggestion.name}, () => this.checkGPS());
   };
 
   search() {
-    console.log(moment(this.state.dateSelected));
     var query={search:1}
     if (this.state.keyword) { query['keyword']=this.state.keyword};
     if (this.state.city) { query['city']=this.state.city};
-    if (this.state.gps) { query['gps']=this.state.gps};
+    if (this.state.gps) { query['gps']=JSON.stringify(this.state.gps)};
     if (this.state.dateSelected) { query['date']=moment(this.state.dateSelected).valueOf()};
 
     Router.push({
@@ -204,10 +219,9 @@ class Homeheader extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {otherAddress, address,popopen, logged} = this.state;
+    const {errors, otherAddress, address,popopen, logged} = this.state;
 
-    console.log(this.state.gps);
-
+    console.log(JSON.stringify(this.state));
     return (
         <Fragment>
           <div className={classes.headerimg}></div>
@@ -257,8 +271,10 @@ class Homeheader extends React.Component {
                             useDeviceLocation: 'true'
                           }}
                           onChange={(suggestion) =>this.onChangeCity(suggestion)}
-                          onClear={()=>this.setState({city:'', gps:null})}
+                          onClear={()=>this.setState({city:'', gps:null}, () => this.checkGPS())}
+                          onSuggestions={this.onSuggestions}
                       />
+                      <em style={{color:'red'}}>{errors['city']}</em>
                     </Grid>
                   </Grid>
 
@@ -286,7 +302,7 @@ class Homeheader extends React.Component {
                     />
                    </Grid>
                 </Grid>
-                <Button disabled={(this.state.keyword ==='' && this.state.place ==='' && this.state.dateSelected !== '') || (this.state.keyword ==='' && this.state.place ==='' && this.state.hourSelected !== '') } onClick={()=>this.search()}  variant="contained" color={'primary'} style={{marginTop:30}} className={classes.button}>
+                <Button disabled={!isEmpty(this.state.errors)} onClick={()=>this.search()}  variant="contained" color={'primary'} style={{marginTop:30}} className={classes.button}>
                   Rechercher
                 </Button>
 

@@ -105,6 +105,7 @@ const styles = theme => ({
 
 class SearchPage extends React.Component {
 
+    // FIX : page blanche quand redirigée depuis home page non connectée
     constructor(props) {
         super(props);
         this.state = {
@@ -163,8 +164,10 @@ class SearchPage extends React.Component {
           city:this.props.city || '',
         };
         if ('date' in this.props) {
-          var startDate=moment(parseInt(this.props.date)).hour(0).minute(0).second(0);
-          var endDate=moment(parseInt(this.props.date)).hour(23).minute(59).second(59);
+          var startDate=moment(parseInt(this.props.date));
+          startDate.hour(0).minute(0).second(0);
+          var endDate=moment(parseInt(this.props.date));
+          endDate.hour(23).minute(59).second(59);
           st['startDate']=startDate;
           st['endDate']=endDate;
         }
