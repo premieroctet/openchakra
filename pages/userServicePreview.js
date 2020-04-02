@@ -222,10 +222,10 @@ class UserServicesPreview extends React.Component {
         totalPrestations += count[p._id]*p.price;
       }
     });
+    totalPrestations+=su.travel_tax ? parseInt(su.travel_tax) : 0;
+    totalPrestations+=su.pick_tax ? parseInt(su.pick_tax) : 0;
+    var commission=totalPrestations*COMM_CLIENT;
     var total=totalPrestations;
-    total+=su.travel_tax ? parseInt(su.travel_tax) : 0;
-    total+=su.pick_tax ? parseInt(su.pick_tax) : 0;
-    var commission=total*COMM_CLIENT;
     total+=commission;
     this.setState({totalPrestations:totalPrestations, commission:commission, total:total}, () => this.checkBook())
   }
@@ -269,6 +269,8 @@ class UserServicesPreview extends React.Component {
         alfred: this.state.serviceUser.user._id,
         user: this.state.user._id,
         prestations: prestations,
+        travel_tax: this.state.serviceUser.travel_tax,
+        pick_tax: this.state.serviceUser.pick_tax,
         fees: this.state.commission,
         status: actual ? "En attente de confirmation" : "Demande d'infos",
         serviceUserId: this.state.serviceUser._id,
@@ -559,7 +561,7 @@ class UserServicesPreview extends React.Component {
           { /* Start commission */ }
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
-              <p>Commission</p>
+              <p>Frais de service</p>
             </Grid>
             <Grid>
               <p>{this.state.commission.toFixed(2)}€</p>

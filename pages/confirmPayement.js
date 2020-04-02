@@ -139,8 +139,12 @@ class ConfirmPayement extends React.Component {
       address: null,
       zip_code: null,
       prestations: [],
+      pick_tax: null,
+      travel_tax: null,
       total: null,
       fees: null,
+      pick_tax: null,
+      travel_tax: null,
       grandTotal: null,
       checkedOption: false,
       optionPrice: null,
@@ -178,6 +182,8 @@ class ConfirmPayement extends React.Component {
       zip_code: bookingObj.address.zip_code,
       date: bookingObj.date_prestation,
       hour: bookingObj.time_prestation,
+      travel_tax: bookingObj.travel_tax,
+      pick_tax: bookingObj.pick_tax,
       fees: bookingObj.fees,
       grandTotal: bookingObj.amount,
       alfred: bookingObj.user
@@ -202,54 +208,6 @@ class ConfirmPayement extends React.Component {
     axios.get(url + "myAlfred/api/serviceUser/" + id).then(res => {
       this.setState({ user: res.data.user });
     });
-  }
-
-  onChange(event, price) {
-    let sumArr = [];
-    let dummyState = [...this.state.selectedPrestations];
-    let fees = null;
-    let total = null;
-    let grandTotal = null;
-    const reducer = (accumulator, currentValue) => accumulator + currentValue;
-
-    const index = _.findIndex(dummyState, function(p) {
-      return p.name === event.target.name;
-    });
-    if (index === -1)
-      dummyState.push({
-        name: event.target.name,
-        value: event.target.value,
-        price: price
-      });
-    if (index !== -1) {
-      dummyState[index].value = event.target.value;
-    }
-
-    dummyState = _.filter(dummyState, function(f) {
-      return f.value !== "";
-    });
-    this.setState({ selectedPrestations: dummyState });
-
-    dummyState.map(prestation => {
-      sumArr.push(prestation.price * prestation.value);
-    });
-
-    if (!_.isEmpty(sumArr)) {
-      fees = 0.09 * (sumArr.reduce(reducer) + this.state.optionPrice);
-      fees = parseFloat(fees.toFixed(2));
-
-
-      this.setState({ total: sumArr.reduce(reducer) + this.state.optionPrice });
-      this.setState({ fees: fees });
-
-      grandTotal = sumArr.reduce(reducer) + fees;
-
-      this.setState({ grandTotal: grandTotal + this.state.optionPrice });
-    } else {
-      this.setState({ total: null + this.state.optionPrice });
-      this.setState({ fees: null });
-      this.setState({ grandTotal: null + this.state.optionPrice });
-    }
   }
 
   async handleCheckedOption(price) {
@@ -430,23 +388,42 @@ class ConfirmPayement extends React.Component {
                                 })
                               : null}
 
+                            { this.state.travel_tax ?
+                            <>
                             <br></br>
+                            <Grid item xs={9} style={{ width: "90%", float: "left" }} >
+                              <p>Frais de déplacement</p>
+                            </Grid>
+                            <Grid item xs={3} style={{ width: "10%", float: "right" }} >
+                              {" "} <p>{this.state.travel_tax.toFixed(2)}€</p>
+                            </Grid>
+                            </>
+                            :
+                            null
+                            }
 
-                            <Grid
-                              item
-                              xs={9}
-                              style={{ width: "90%", float: "left" }}
-                            >
+                            { this.state.pick_tax ?
+                            <>
+                            <br></br>
+                            <Grid item xs={9} style={{ width: "90%", float: "left" }} >
+                              <p>Frais de livraison/enlèvement</p>
+                            </Grid>
+                            <Grid item xs={3} style={{ width: "10%", float: "right" }} >
+                              {" "} <p>{this.state.pick_tax.toFixed(2)}€</p>
+                            </Grid>
+                            </>
+                            :
+                            null
+                            }
+
+                            <br></br>
+                            <Grid item xs={9} style={{ width: "90%", float: "left" }} >
                               <p>Frais de service</p>
                             </Grid>
-                            <Grid
-                              item
-                              xs={3}
-                              style={{ width: "10%", float: "right" }}
-                            >
-                              {" "}
-                              <p>{this.state.fees}€</p>
+                            <Grid item xs={3} style={{ width: "10%", float: "right" }} >
+                              {" "} <p>{this.state.fees.toFixed(2)}€</p>
                             </Grid>
+
                             <Grid
                               item
                               xs={9}
