@@ -913,7 +913,7 @@ class Reserve extends React.Component {
                                       marginLeft: "-5%"
                                     }}
                                   >
-                                    Il est également Alfred{" "}
+                                    Est également Alfred{" "}
                                   </Typography>
                                 </Grid>
                               </>
