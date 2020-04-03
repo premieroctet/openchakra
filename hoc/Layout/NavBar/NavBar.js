@@ -34,7 +34,8 @@ class NavBar extends Component {
       logged: false,
       user: null,
       research: '',
-      hiddingPanel : true
+      hiddingPanel : true,
+      isTop: true,
     };
   }
 
@@ -50,7 +51,18 @@ class NavBar extends Component {
     if(Router.pathname === '/'){
       this.setState({hiddingPanel: false})
     }
+    document.addEventListener('scroll', () => {
+      const isTop = window.scrollY < 820;
+      if (isTop !== this.state.isTop) {
+        this.onScroll(isTop);
+      }
+    })
   }
+
+  onScroll(isTop) {
+    this.setState({ isTop });
+  }
+
 
   logout2() {
     localStorage.removeItem('token');
@@ -96,6 +108,7 @@ class NavBar extends Component {
     const logged = this.state.logged;
     const maboutique = <Link href={`/shop?id_alfred=${user ? user._id : ''}`}><MenuItem onClick={this.handleMenuClose}><Typography><a >Ma boutique</a></Typography></MenuItem></Link>;
     const becomealfred = <Link href={'/creaShop/creaShop'}><MenuItem onClick={this.handleMobileMenuClose}><Typography><a>Devenir Alfred</a></Typography></MenuItem></Link>;
+
 
     const logoutMobile =
       <React.Fragment>
@@ -269,7 +282,7 @@ class NavBar extends Component {
 
     return (
       <Grid className={classes.root}>
-        <AppBar color="inherit" position="fixed" className={classes.appBar}>
+        <AppBar color="inherit" className={classes.appBar} style={{height: '8vh', backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(255, 255, 255)'}} position="fixed">
           <Toolbar>
             <Grid className={classes.mainWrapper}>
               <Grid className={classes.leftContainer}>

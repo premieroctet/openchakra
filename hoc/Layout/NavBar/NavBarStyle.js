@@ -4,7 +4,8 @@ export default theme =>({
     width: '100%',
   },
   appBar:{
-    boxShadow: 'inherit'
+    boxShadow: 'inherit',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
   mainWrapper:{
     display: 'flex',
