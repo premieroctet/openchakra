@@ -51,7 +51,7 @@ class CardPreview extends React.Component{
   componentDidMount() {
     axios.get('/myAlfred/api/shop/alfred/'+this.props.services.user._id || this.props.services.user)
       .then( res => this.setState({shop: res.data}))
-      .catch( err => console.log(err)) 
+      .catch( err => console.log(err))
   }
 
   handleClickOpen(id) {
@@ -118,14 +118,29 @@ class CardPreview extends React.Component{
                   <UserAvatar classes={'avatarLetter'} user={services.user} className={classes.avatarLetter} />
                 </Grid>
                 <Grid style={{marginTop: 20}}>
-                  <Grid className={classes.contentDistanceUnderAvatar}>
-                    <Typography component="p" className={classes.sizeTextUnderAvatar}>
-                      {services.service_address ?
-                        services.service_address.city === undefined || services.service_address.city === "" ? "Non renseigné" : services.service_address.city : "Non renseigné"
-                      }
-                      { distance ? `(à ${distance} km)` : null }
-                    </Typography>
-                    <RoomIcon className={classes.checkCircleIcon}/>
+                  <Grid style={{display:'flex', flexDirection: 'column'}} className={classes.contentDistanceUnderAvatar}>
+                    <Grid>
+                      <Typography component="p" className={classes.sizeTextUnderAvatar}>
+                        {services.service_address ?
+                          services.service_address.city === undefined || services.service_address.city === "" ? "Non renseigné" : services.service_address.city : "Non renseigné"
+                        }
+
+                      </Typography>
+                    </Grid>
+                    { distance ?
+                      <Grid style={{display: 'flex'}}>
+                        <Grid>
+                          <RoomIcon className={classes.checkCircleIcon}/>
+                        </Grid>
+                        <Grid>
+                          <Typography component="p" className={classes.sizeTextUnderAvatar}>
+                            à {distance} km
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                      : null
+                    }
+
                   </Grid>
                 </Grid>
               </Grid>
