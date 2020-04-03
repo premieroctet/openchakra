@@ -42,8 +42,11 @@ const {COMM_CLIENT}=require('../utils/consts');
 const emptyPromise = require('../utils/promise');
 const {isMomentAvailable, getDeadLine} = require('../utils/dateutils');
 const {computeDistanceKm}=require('../utils/functions');
+import DatePicker, {registerLocale} from "react-datepicker";
+import fr from 'date-fns/locale/fr';
 const moment = require('moment');
 moment.locale('fr');
+registerLocale('fr', fr);
 
 class UserServicesPreview extends React.Component {
   constructor(props) {
@@ -153,24 +156,26 @@ class UserServicesPreview extends React.Component {
     if (this.state.totalPrestations<this.state.serviceUser.minimum_basket) {
       errors['total']='Commande minimum des prestation de '+this.state.serviceUser.minimum_basket+'€ requise';
     }
-    if (isEmpty(this.state.date)) {
-      errors['date']='Sélectionnez une date';
+
+    if (!errors.datetime && this.state.date==null) {
+      errors['datetime']='Sélectionnez une date';
     }
-    else {
-      var m=moment(this.state.date);
-      if (m<moment()) { errors['date']='Date de réservation passée' }
-    }
-    if (isEmpty(this.state.time)) {
-      errors['time']='Sélectionnez une heure';
+
+    if (!errors.datetime && this.state.time==null) {
+      errors['datetime']='Sélectionnez une heure';
     }
     const m2=moment(this.state.date+' '+this.state.time);
-    if (m2.isValid() && !isMomentAvailable(m2, this.state.service._id, this.state.availabilities)) {
-      errors['date']=this.state.alfred.firstname+" n'est pas disponible à cette date/heure"; 
+    if (!errors.datetime && m2.isValid() && !isMomentAvailable(m2, this.state.service._id, this.state.availabilities)) {
+      errors['datetime']=this.state.alfred.firstname+" n'est pas disponible à cette date/heure"; 
     }
+
     const minBookingDate=getDeadLine(this.state.serviceUser.deadline_before_booking);
-    if (m2.isBefore(minBookingDate)) {
-      errors['date']="Le délai de prévenance n'est pas respecté";
+    if (!errors.datetime && m2.isBefore(minBookingDate)) {
+      errors['datetime']="Le délai de prévenance n'est pas respecté";
     }
+
+    if (!errors.datetime && this.state.time && this.state.time<moment()) { errors['datetime']='Réservation impossible avant maintenant'}
+
     if (!this.state.location) { errors['location']='Sélectionnez un lieu de prestation'}
     this.setState({errors:errors});
   }
@@ -200,13 +205,22 @@ class UserServicesPreview extends React.Component {
     this.setState({ ...this.state, [side]: open });
   };
 
+  onChangeTime = tm => {
+    this.onChange({target: {name:'time', value:tm}});
+  }
+
+  onChangeDate = dt => {
+    this.onChange({target: {name:'date', value:dt}});
+  }
+
   onChange = event => {
     const {name, value}=event.target;
+    console.log("onChange:"+name+","+value);
     this.setState({[name]:value}, () => this.checkBook());
   }
 
   onLocationChanged = (id, checked) => {
-    this.setState({location:id});
+    this.setState({location:id}, () => this.checkBook());
   }
 
   onQtyChanged = event => {
@@ -264,12 +278,6 @@ class UserServicesPreview extends React.Component {
       }
     });
 
-    var time_p=moment().toDate();
-    var tp=this.state.time.split(":");
-    time_p.setHours(parseInt(tp[0]));
-    time_p.setMinutes(parseInt(tp[1]));
-    time_p=moment(time_p);
-
     var chatPromise = actual ? emptyPromise({ res: null }) : axios.post("/myAlfred/api/chatRooms/addAndConnect", { emitter: this.state.user._id, recipient: this.state.serviceUser.user._id });
 
     chatPromise.then( res => {
@@ -280,7 +288,7 @@ class UserServicesPreview extends React.Component {
         equipments: this.state.serviceUser.equipments,
         amount: this.state.total,
         date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
-        time_prestation: time_p,
+        time_prestation: this.state.time,
         alfred: this.state.serviceUser.user._id,
         user: this.state.user._id,
         prestations: prestations,
@@ -398,7 +406,7 @@ class UserServicesPreview extends React.Component {
       },
     })(Rating);
 
-    console.log(this.state.location);
+    console.log(this.state.date);
 
     const drawer = side => (
       <Grid className={classes.borderContentRight}>
@@ -406,7 +414,7 @@ class UserServicesPreview extends React.Component {
           <Grid style={{display: 'flex', justifyContent: 'space-between' }}>
             <Grid>
               <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>Date & heure</Typography>
-              <em style={{color:'red'}}>{errors['date']}</em>
+              <em style={{color:'red'}}>{errors['datetime']}</em>
             </Grid>
             <Hidden lgUp>
               <Grid>
@@ -418,29 +426,29 @@ class UserServicesPreview extends React.Component {
           </Grid>
           <Grid style={{display: 'flex', marginLeft: 10, marginTop: 20}}>
             <Grid>
-              <TextField
-                id="date"
-                label="Date"
-                type="date"
-                InputLabelProps={{ shrink: true, }}
-                name="date"
-                value={this.state.date}
-                onChange={this.onChange}
-                error={errors.date}
+              <DatePicker 
+                 selected={this.state.date} 
+                 dateFormat="dd/MM/yyyy"
+                 onChange={this.onChangeDate} 
+                 placeholderText="Date"
+                 locale='fr'
+minDate={new Date()}
               />
             </Grid>
             <Grid style={{marginLeft: 50}}>
-              <TextField
-                id="time"
-                label="Heure"
-                type="time"
-                className={classes.textField}
-                InputLabelProps={{ shrink: true, }}
-                name="time"
-                value={this.state.time}
-                onChange={this.onChange}
-                error={errors.time}
-              />
+               <DatePicker
+                 selected={this.state.time}
+                 onChange={this.onChangeTime}
+                 showTimeSelect
+                 showTimeSelectOnly
+                 timeIntervals={30}
+                 timeCaption="Heure"
+                 placeholderText="Heure"
+                 dateFormat="HH:mm"
+                 locale='fr'
+minDate={new Date()}
+               />
+
             </Grid>
           </Grid>
         </Grid>
@@ -535,7 +543,7 @@ class UserServicesPreview extends React.Component {
               <img style={{width: 40, height : 40}} alt={"calendrier"} title={"calendrier"} src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
             </Grid>
             <Grid style={{marginLeft: 10}}>
-              <label>Le {date?moment(date).format('DD/MM/YYYY'):''} à {time}</label>
+              <label>Le {date?moment(date).format('DD/MM/YYYY'):''} à {time?moment(time).format('HH:mm'):''}</label>
             </Grid>
           </Grid>
         </Grid>

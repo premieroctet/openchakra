@@ -45,12 +45,12 @@ const admin = require('./routes/api/admin/dashboard');
 const path = require('path');
 const app = express();
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
-
+const SocketIo = require("socket.io");
 
 
 nextApp.prepare().then(() => {
 
+const SERVER_PROD=true;
 
 // Body parser middleware
     app.use(bodyParser.urlencoded({extended: false}));
@@ -126,20 +126,24 @@ nextApp.prepare().then(() => {
     });
     app.get('*', routerHandler);
 
-    // HTTP only handling redirect to HTTPS
-    http.createServer(app).listen(80);
+    if (SERVER_PROD) {
+      // HTTP only handling redirect to HTTPS
+      http.createServer(app).listen(80);
+    }
     // HTTPS server using certificates
-    https.createServer({
+    var httpsServer=https.createServer({
       cert: fs.readFileSync(process.env.HOME+'/.ssh/Main-Certificate-x509.txt'),
       key: fs.readFileSync(process.env.HOME+'/.ssh/www_my-alfred_io.key'),
       ca: fs.readFileSync(process.env.HOME+'/.ssh/Intermediate-Certificate.txt'),
       },
-      app).listen(443, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`))
+      app)
+    const io=SocketIo(httpsServer);
 
-    app.use(config.serverPort, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`));
-    // DEV
-    // server.listen(3122);
-    // END DEV
+    if (SERVER_PROD) {
+      httpsServer.listen(443, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`))
+    } else {
+      httpsServer.listen(3122, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`))
+    }
 
     let roomName = '';
     let bookingName = '';

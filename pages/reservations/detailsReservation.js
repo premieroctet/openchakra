@@ -703,7 +703,7 @@ class DetailsReservation extends React.Component {
                                               marginLeft: "-5%"
                                             }}
                                         >
-                                          Il est également Alfred{" "}
+                                          Est également Alfred{" "}
                                         </Typography>
                                       </Grid>
                                     </>
@@ -1954,7 +1954,7 @@ class DetailsReservation extends React.Component {
                         >
                           <Grid item xs={12}>
                             <Typography style={{ fontSize: "1.4rem" }}>
-                              Matériels fournis
+                              Matériel fourni
                             </Typography>
                           </Grid>
                           {bookingObj === null ? null : bookingObj.equipments
