@@ -174,7 +174,7 @@ class UserServicesPreview extends React.Component {
       errors['datetime']="Le délai de prévenance n'est pas respecté";
     }
 
-    if (!errors.datetime && this.state.time && this.state.time<moment()) { errors['datetime']='Date de réservation passée' }
+    if (!errors.datetime && this.state.time && this.state.time<moment()) { errors['datetime']='Réservation impossible avant maintenant'}
 
     if (!this.state.location) { errors['location']='Sélectionnez un lieu de prestation'}
     this.setState({errors:errors});
