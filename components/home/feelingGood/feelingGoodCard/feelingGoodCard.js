@@ -113,11 +113,11 @@ class FeelingGoodCard extends React.Component{
     const { classes, img, desc, title,alfred,avatar,score,shop,id,gps } = this.props;
 
     return (
-   
-    
+
+
       <Link href={'search?search=1&service='+id+'&gps='+JSON.stringify(gps)}>
       <Card className={classes.card}>
-        <CardActionArea style={{cursor:'default'}}>
+        <CardActionArea>
 
         <CardMedia className={classes.media} image={img}>
           <div className={classes.lightOverlay}>

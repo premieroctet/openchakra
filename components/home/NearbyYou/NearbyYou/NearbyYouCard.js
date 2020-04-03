@@ -101,7 +101,7 @@ const nearbyYouCard = (props) => {
 
     <Card className={classes.card}>
       <Link href={`/shop?id_alfred=${user._id}`}>
-      <CardActionArea style={{cursor:'default'}}>
+      <CardActionArea>
 
         <CardMedia className={classes.media} image={img} title={alfred}>
           <div className={classes.darkOverlay}>

@@ -137,7 +137,7 @@ class section10 extends React.Component {
             <Grid item xs={12} sm={6} md={2} lg={2} key={e._id} style={{margin:'0 10px'}}>
                 <Link href={'/search?search=1&service='+e._id+'&gps='+JSON.stringify(gps)}>
                 <Card className={classes.card}>
-                    <CardActionArea style={{cursor:'default'}}>
+                    <CardActionArea>
                         <CardMedia
                             className={classes.media2}
                             image={e.picture}
