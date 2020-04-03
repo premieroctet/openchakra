@@ -74,7 +74,7 @@ const styles = theme => ({
   },
   [theme.breakpoints.only('xs')]:{
     loginContainer:{
-      marginTop:'2%'
+      marginTop:75
     }
   },
 

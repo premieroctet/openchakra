@@ -18,6 +18,7 @@ import styles from './NavBarStyle'
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
+import Avatar from '@material-ui/core/Avatar';
 
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
@@ -32,13 +33,19 @@ class NavBar extends Component {
       mobileMoreAnchorEl: null,
       avatarMoreAnchorEl: null,
       logged: false,
-      user: null,
       research: '',
       hiddingPanel : true,
       isTop: true,
       isIndex: false,
-      isSearch: false
+      isSearch: false,
+      user:{},
     };
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+   if(prevProps !== ""){
+     this.state.user = this.props.user
+   }
   }
 
   componentDidMount() {
@@ -110,74 +117,73 @@ class NavBar extends Component {
 
 
   render() {
-    const { anchorEl, mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel } = this.state;
-    const { classes, gps, user, addressSelected } = this.props;
+    const { anchorEl, mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged, picture, user } = this.state;
+    const { classes } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isAvatarMenuOpen = Boolean(avatarMoreAnchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-    const logged = this.state.logged;
-    const maboutique = <Link href={`/shop?id_alfred=${user ? user._id : ''}`}><MenuItem onClick={this.handleMenuClose}><Typography><a >Ma boutique</a></Typography></MenuItem></Link>;
-    const becomealfred = <Link href={'/creaShop/creaShop'}><MenuItem onClick={this.handleMobileMenuClose}><Typography><a>Devenir Alfred</a></Typography></MenuItem></Link>;
+    const mobileavatar = picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>;
 
-
-    const logoutMobile =
-      <React.Fragment>
-        <Link href={'/profile/editProfile'}>
-          <MenuItem onClick={this.handleMenuClose}>
-            <Typography>
-                <a>
-                  Profil
-                </a>
-            </Typography>
-          </MenuItem>
-        </Link>
-        <Link href={'/account/notifications'}>
-        <MenuItem onClick={this.handleMenuClose}>
-          <Typography>
-              <a>
-                Mon compte
-              </a>
-          </Typography>
-        </MenuItem>
-        </Link>
-        <MenuItem onClick={()=>this.logout2()}>
-          <Typography>
-              <a style={{color: "red",}} className={classes.navbarLinkMobile}>
-                  Déconnexion
-              </a>
-          </Typography>
-        </MenuItem>
-    </React.Fragment>;
-
-    const logoutAvatar =
-    [
-    <Link href={'/profile/editProfile'}>
+    const logoutMobile = [
       <MenuItem key={1} onClick={this.handleMenuClose}>
         <Typography>
-          <a>
-            Profil
-          </a>
+          <Link href={'/profile/editProfile'}>
+            <a className={classes.navbarLinkMobile}>
+              Profil
+            </a>
+          </Link>
         </Typography>
-      </MenuItem>
-    </Link>,
-    <Link href={'/account/notifications'}>
+      </MenuItem>,
       <MenuItem key={2} onClick={this.handleMenuClose}>
         <Typography>
-            <a>
+          <Link href={'/account/notifications'}>
+            <a className={classes.navbarLinkMobile}>
               Mon compte
             </a>
+          </Link>
         </Typography>
-       </MenuItem>
-    </Link>
-      ,
-    <MenuItem key={3} onClick={()=>this.logout2()}>
-      <Typography>
-        <a style={{color: "red",}}>
+      </MenuItem>,
+
+      <MenuItem key={3} onClick={()=>this.logout2()}>
+        <Typography>
+
+          <a style={{color: "red",}} className={classes.navbarLinkMobile}>
             Déconnexion
-        </a>
-      </Typography>
-    </MenuItem>
-  ];
+          </a>
+
+        </Typography>
+      </MenuItem>];
+
+    const logoutAvatar =
+      [
+        <MenuItem key={1} onClick={this.handleMenuClose}>
+          <Typography>
+            <Link href={'/profile/editProfile'}>
+              <a className={classes.navbarLinkMobile}>
+                Profil
+              </a>
+            </Link>
+          </Typography>
+        </MenuItem>,
+        <MenuItem key={2} onClick={this.handleMenuClose}>
+          <Typography>
+            <Link href={'/account/notifications'}>
+              <a className={classes.navbarLinkMobile}>
+                Mon compte
+              </a>
+            </Link>
+          </Typography>
+        </MenuItem>,
+        <MenuItem key={3} onClick={()=>this.logout2()}>
+          <Typography>
+
+            <a style={{color: "red",}} className={classes.navbarLinkMobile}>
+              Déconnexion
+            </a>
+
+          </Typography>
+        </MenuItem>
+      ];
 
     const renderMenu = (
       <Menu
@@ -192,8 +198,30 @@ class NavBar extends Component {
       </Menu>
     );
 
+    const doublemenuitem1 = [
+      <MenuItem key={1} onClick={this.handleAvatarMenuOpen}>
+        <Typography>
+          <Link href={'/login'}>
+            <a className={classes.navbarLinkAvatar}>
+              Connexion
+            </a>
+          </Link>
+        </Typography>
+      </MenuItem>,
+      <MenuItem key={2} onClick={this.handleAvatarMenuOpen}>
+        <Typography>
+          <Link href={'/signup'}>
+            <a className={classes.navbarLinkAvatar}>
+              Inscription
+            </a>
+          </Link>
+        </Typography>
+      </MenuItem>
+    ]
+
     const renderAvatarMenu = (
       <Menu
+        className={classes.lemenuavatar}
         anchorEl={avatarMoreAnchorEl}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -201,29 +229,30 @@ class NavBar extends Component {
         onClose={this.handleMenuClose}
       >
         {logged ? logoutAvatar :
-          <React.Fragment>
-            <Link href={'/login'}>
-            <MenuItem onClick={this.handleAvatarMenuOpen}>
-              <Typography>
-                <a>
-                  Connexion
-                </a>
-              </Typography>
-            </MenuItem>
-            </Link>
-            <Link href={'/signup'}>
-              <MenuItem onClick={this.handleAvatarMenuOpen}>
-                <Typography>
-                  <a>
-                    Inscription
-                  </a>
-                </Typography>
-              </MenuItem>
-            </Link>
-          </React.Fragment>
-        }
+          doublemenuitem1}
       </Menu>
     );
+
+    const doublemenuitem = [
+      <MenuItem key={1} onClick={this.handleMobileMenuOpen}>
+        <Typography>
+          <Link href={'/login'}>
+            <a className={classes.navbarLinkMobile}>
+              Connexion
+            </a>
+          </Link>
+        </Typography>
+      </MenuItem>,
+      <MenuItem key={2} onClick={this.handleMobileMenuOpen}>
+        <Typography>
+          <Link href={'/signup'}>
+            <a className={classes.navbarLinkMobile}>
+              Inscription
+            </a>
+          </Link>
+        </Typography>
+      </MenuItem>
+    ];
 
     const renderMobileMenu = (
       <Menu
@@ -233,62 +262,61 @@ class NavBar extends Component {
         open={isMobileMenuOpen}
         onClose={this.handleMenuClose}
       >
-        {logged ?
-          <Link href={'/reservations/allReservations'}>
-            <MenuItem>
-              <Typography>
-                  <a>
-                    Mes réservations
-                  </a>
-              </Typography>
-            </MenuItem>
-          </Link>
-          : null
-        }
-
-        { user && user.is_alfred ? maboutique : becomealfred }
-        {logged ?<React.Fragment>
-          <Link href={'/reservations/messages'}>
-          <MenuItem onClick={this.handleMobileMenuOpen}>
+        <MenuItem onClick={this.handleMobileMenuOpen}>
+          {logged ?
             <Typography>
-              <a>
-                Messages
-              </a>
+              <Link href={`/shop?id_alfred=${user._id}`}>
+                <a
+                  className={classes.navbarLinkMobile}>
+                  Ma boutique
+                </a>
+              </Link>
             </Typography>
-          </MenuItem>
-          </Link>
-        </React.Fragment> : null }
-        <Link href={'/faq'}>
+            :
+            <Typography>
+              <Link href={'/creaShop/creaShop'}>
+                <a
+                  className={classes.navbarLinkMobile}>
+                  Créer ma boutique
+                </a>
+              </Link>
+            </Typography>
+          }
+        </MenuItem>
+        {logged ?
           <MenuItem onClick={this.handleMobileMenuOpen}>
             <Typography>
-              <a>
+              <Link href={'/reservations/allReservations'}>
+                <a className={classes.navbarLinkMobile}>
+                  Mes réservations
+                </a>
+              </Link>
+            </Typography>
+          </MenuItem>: null}
+        {logged ?
+          <MenuItem onClick={this.handleMobileMenuOpen}>
+            <Typography>
+              <Link href={'/reservations/messages'}>
+                <a className={classes.navbarLinkMobile}>
+                  Messages
+                </a>
+              </Link>
+            </Typography>
+          </MenuItem> : null }
+        <MenuItem onClick={this.handleMobileMenuOpen}>
+          <Typography>
+            <Link href={'/faq'}>
+              <a className={classes.navbarLinkMobile}>
                 Aide
               </a>
-            </Typography>
-          </MenuItem>
-        </Link>
-        {logged ? logoutMobile : <React.Fragment>
-          <Link href={'/login'}>
-            <MenuItem onClick={this.handleMobileMenuOpen}>
-              <Typography>
-                <a>
-                  Connexion
-                </a>
-              </Typography>
-            </MenuItem>
-          </Link>
-          <Link href={'/signup'}>
-            <MenuItem onClick={this.handleMobileMenuOpen}>
-              <Typography>
-                <a>
-                  Inscription
-                </a>
-              </Typography>
-          </MenuItem>
-          </Link>
-        </React.Fragment>}
+            </Link>
+          </Typography>
+        </MenuItem>
+        {logged ? logoutMobile :
+          doublemenuitem}
       </Menu>
     );
+
 
     return (
       <Grid className={classes.root}>
@@ -303,18 +331,14 @@ class NavBar extends Component {
                 </Grid>
                 <Hidden smUp>
                   <Grid className={classes.sectionMobile}>
-                    {logged ?
-                      <Grid style={{border: '1px solid #e8ebeb', borderRadius : 5}}>
-                        <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
-                          <MoreIcon/>
-                          <Grid>
-                            <p className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.textBlack}>Menu</p>
-                          </Grid>
-                        </IconButton>
-                      </Grid>
-                      :
-                      null
-                    }
+                    <Grid style={{border: '1px solid #e8ebeb', borderRadius : 5}}>
+                      <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
+                        <MoreIcon className={this.state.isTop && this.state.isIndex ? classes.iconWhite : classes.iconBlack} />
+                        <Grid>
+                          <p className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.textBlack}>Menu</p>
+                        </Grid>
+                      </IconButton>
+                    </Grid>
                   </Grid>
                 </Hidden>
               </Grid>
@@ -369,7 +393,6 @@ class NavBar extends Component {
                         </a>
                       </Link>
                     </Typography>}
-
                   {logged ?
                     <React.Fragment>
                       <Typography className={classes.navbarItem}>

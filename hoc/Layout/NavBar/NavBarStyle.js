@@ -69,7 +69,7 @@ export default theme =>({
   },
   navbarItem: {
     alignSelf: 'center',
-    color: '#545659',
+    color: 'black',
     marginRight: '20px',
     fontSize: '15px'
   },
@@ -98,13 +98,43 @@ export default theme =>({
   textBlack:{
     color: 'black',
     margin: 0,
-    fontSize: 'initial'
+    fontSize: 'initial',
+    [theme.breakpoints.down('xs')]: {
+      color: 'black',
+      textDecoration: 'none',
+    },
   },
   textWhite:{
     color: 'white',
     margin: 0,
     fontSize: 'initial',
     textDecoration: 'none',
-
+    [theme.breakpoints.down('xs')]: {
+      color: 'white',
+      textDecoration: 'none',
+    },
+  },
+  navbarLinkMobile: {
+    color: 'black',
+    textDecoration: 'none',
+  },
+  theavatarbutton: {
+    width: 45,
+    height: 45,
+  },
+  navbarLinkAvatar: {
+    color: 'black',
+    textDecoration: 'none',
+    marginTop: '8%!important',
+  },
+  lemenuavatar: {
+    marginTop: '2.5%!important',
+    marginLeft: '1%!important',
+  },
+  iconWhite:{
+    color: 'white'
+  },
+  iconBlack:{
+    color: 'black'
   }
 })
