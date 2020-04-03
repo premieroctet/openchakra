@@ -249,7 +249,7 @@ class Homeheader extends React.Component {
                   <Grid item className={classes.pickerhomelocation} style={{textAlign: 'left', fontFamily: 'Helvetica Neue, Helvetica,sans-serif', fontSize: '0.9rem', fontWeight: '400', marginBottom: '15px',color: '#505050'}}>
                     <TextField
                         id="outlined-basic"
-                        label="Service"
+                        label="Quel service ?"
                         variant="outlined"
                         placeholder={'Coiffure, Plomberie...'}
                         value={this.state.keyword}
