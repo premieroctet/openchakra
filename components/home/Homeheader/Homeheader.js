@@ -5,16 +5,15 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Router from 'next/router';
-import axios from 'axios';
 import DatePicker, {registerLocale} from "react-datepicker";
 import AlgoliaPlaces from "algolia-places-react";
 import fr from 'date-fns/locale/fr';
-import MenuItem from "@material-ui/core/MenuItem";
 import moment from 'moment';
 import isEmpty from '../../../server/validation/is-empty';
 registerLocale('fr', fr);
 const { config } = require('../../../config/config');
 const url = config.apiUrl;
+import './Homeheader.css'
 
 const styles = theme => ({
   headerimg: {
@@ -151,8 +150,6 @@ const styles = theme => ({
     padding:15,
     borderRadius:10,
     border:'0px solid transparent',
-
-
   },
   paper: {
     zIndex:'99999',
@@ -166,6 +163,14 @@ const styles = theme => ({
     right: '0%',
     margin:'auto',
   },
+  test: {
+    '& .react-datepicker-wrapper, .react-datepicker__input-container': {
+      display: 'block'
+    }
+  },
+  '& .react-datepicker-wrapper, .react-datepicker__input-container':{
+    display: 'block'
+  }
 });
 
 class Homeheader extends React.Component {
@@ -183,12 +188,11 @@ class Homeheader extends React.Component {
   }
 
   onChange = e => {
-    console.log("onChange");
     var {name, value} = e.target;
     this.setState({ [name]: value });
   };
 
-  onSuggestions = ({rawAnswer, query, suggestions}) => {
+  onSuggestions = ({query}) => {
     this.setState({city:query}, () => this.checkGPS());
   }
 
@@ -219,12 +223,12 @@ class Homeheader extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {errors, otherAddress, address,popopen, logged} = this.state;
+    const {errors, popopen} = this.state;
 
     console.log(JSON.stringify(this.state));
     return (
         <Fragment>
-          <div className={classes.headerimg}></div>
+          <div className={classes.headerimg}/>
           <div className={classes.headerhomevid}>
             <video id="background-video" loop autoPlay muted playsInline style={{width: '100%'}}>
               <source src="../../../static/newVideoLight.mp4" type="video/mp4"/>
@@ -232,7 +236,7 @@ class Homeheader extends React.Component {
               Your browser does not support the video tag.
             </video>
           </div>
-          <div className={classes.headeroverlay}></div>
+          <div className={classes.headeroverlay}/>
           { /** Start search not connected */ }
             <div className={classes.headerhome}>
             <Grid container>
@@ -279,26 +283,24 @@ class Homeheader extends React.Component {
                   </Grid>
 
 
-                <Grid container style={{marginTop:20}}>
+                <Grid container style={{marginTop:20, width:'100%'}}>
                   <Grid item className={classes.pickerhomelocation} style={{textAlign: 'left', fontFamily: 'Helvetica Neue, Helvetica,sans-serif', fontSize: '0.9rem', fontWeight: '400', marginBottom: '15px',color: '#505050'}}>
                     <DatePicker
-                        selected={this.state.dateSelected}
-                        onChange={(date)=>{
-                          this.setState({dateSelected:date});
-                          if(date===null){
-                            this.setState({dateSelected:''})
-                          }}
-
-                        }
-                        style={{fontWeight: 100}}
-                        customInput={<TextField label="Quel jour ?" style={{backgroundColor: 'white',fontWeight: 100}} variant={"outlined"}/>}
-
-                        /*customInput={<Input2 />}*/
-                        locale='fr'
-                        showMonthDropdown
-                        dateFormat="dd/MM/yyyy"
-                        placeholderText={moment(this.state.date).format('DD/MM/YYYY')}
-                        minDate={new Date()}
+                      selected={this.state.dateSelected}
+                      onChange={(date)=>{
+                        this.setState({dateSelected:date});
+                        if(date===null){
+                          this.setState({dateSelected:''})
+                        }}
+                      }
+                      style={{fontWeight: 100, width:'100%'}}
+                      customInput={<TextField label="Quel jour ?" style={{backgroundColor: 'white',fontWeight: 100, width: '100%'}} variant={"outlined"}/>}
+                      locale='fr'
+                      showMonthDropdown
+                      dateFormat="dd/MM/yyyy"
+                      placeholderText={moment(this.state.date).format('DD/MM/YYYY')}
+                      minDate={new Date()}
+                      className={classes.test}
                     />
                    </Grid>
                 </Grid>
@@ -344,22 +346,22 @@ class Homeheader extends React.Component {
           {popopen ? <React.Fragment>
                 <div className={classes.paper}>
                   <Grid container>
-                    <Grid item xs={4} style={{height: '1px'}}></Grid>
+                    <Grid item xs={4} style={{height: '1px'}}/>
                     <Grid item xs={4} style={{height: '35px'}}><img src={'../../../static/logo_final_My-Alfred.svg'} style={{width: 110,}} alt={'Logo Bleu'}/></Grid>
-                    <Grid item xs={3} style={{height: '1px'}}></Grid>
+                    <Grid item xs={3} style={{height: '1px'}}/>
                     <Grid item xs={1} style={{height: '4px', zIndex: '10'}}>
                       <p onClick={this.handleClose} style={{color: '#F8727F', cursor: 'pointer'}}>x</p>
                     </Grid>
                     <Grid item xs={12}>
                       <h2 style={{textAlign: 'center',color: 'rgba(84,89,95,0.95)',letterSpacing: -2, fontWeight: 'bold',}}>Les réservations ne seront disponible qu'à partir de Novembre</h2>
                     </Grid>
-                    <Grid item xs={5}></Grid>
+                    <Grid item xs={5}/>
                     <Grid item xs={2} style={{marginTop: '-10px'}}><hr className={classes.grosHR}/></Grid>
-                    <Grid item xs={5}></Grid>
+                    <Grid item xs={5}/>
                   </Grid>
                 </div>
 
-                <div onClick={this.handleClose} style={{position: 'absolute' , top: 0,backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '100%', height: '9999px', zIndex: '99998'}}></div>
+                <div onClick={this.handleClose} style={{position: 'absolute' , top: 0,backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '100%', height: '9999px', zIndex: '99998'}}/>
               </React.Fragment>
               : null}
         </Fragment>
