@@ -3,13 +3,10 @@ import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import moment from 'moment';
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import Footer from '../../hoc/Layout/Footer/Footer';
+
 
 
 
@@ -26,9 +23,6 @@ const styles = theme => ({
     bigContainer: {
         marginTop: 70,
         flexGrow: 1,
-        [theme.breakpoints.down('xs')]: {
-            marginTop: 250,
-        }
     },
     hidesm: {
         minWidth: '271px',

@@ -8,7 +8,6 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
-import Footer from '../../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
 import {Helmet} from 'react-helmet';
 
@@ -24,9 +23,7 @@ const styles = theme => ({
         flexGrow: 1,
         width: "100%",
         minHeight: 520,
-        [theme.breakpoints.down('xs')]: {
-            marginTop: 250,
-        }
+
     },
     hidesm: {
         minWidth: '271px',

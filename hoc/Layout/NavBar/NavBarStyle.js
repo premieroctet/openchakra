@@ -44,6 +44,13 @@ export default theme =>({
       marginLeft: 0
     },
   },
+  searchHidden:{
+    marginLeft: 20,
+    width: '70%',
+    [theme.breakpoints.down('xs')]: {
+      display: 'none'
+    },
+  },
   sectionDesktop: {
     display: 'none',
     [theme.breakpoints.up('md')]: {

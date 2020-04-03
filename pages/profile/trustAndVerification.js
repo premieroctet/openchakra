@@ -12,7 +12,6 @@ import InputLabel from "@material-ui/core/InputLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Document,Page } from 'react-pdf'
-import Footer from '../../hoc/Layout/Footer/Footer';
 import { pdfjs } from 'react-pdf';
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -53,9 +52,6 @@ const styles = theme => ({
         [theme.breakpoints.down('sm')]: {
             overflowX: 'hidden',
         },
-        [theme.breakpoints.down('xs')]: {
-            marginTop: 250,
-        }
     },
     hidesm: {
         minWidth: '271px',

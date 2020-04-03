@@ -6,7 +6,6 @@ import moment from 'moment';
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import Footer from '../../hoc/Layout/Footer/Footer';
 import Typography from "@material-ui/core/Typography";
 import StarRatings from 'react-star-ratings';
 import {Helmet} from 'react-helmet';
@@ -19,9 +18,6 @@ const styles = theme => ({
     bigContainer: {
         marginTop: 70,
         flexGrow: 1,
-        [theme.breakpoints.down('xs')]: {
-            marginTop: 250,
-        }
     },
     hidesm: {
         minWidth: '271px',

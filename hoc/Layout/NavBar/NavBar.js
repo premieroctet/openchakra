@@ -36,7 +36,8 @@ class NavBar extends Component {
       research: '',
       hiddingPanel : true,
       isTop: true,
-      isIndex: false
+      isIndex: false,
+      isSearch: false
     };
   }
 
@@ -53,6 +54,11 @@ class NavBar extends Component {
       this.setState({
         hiddingPanel: false,
         isIndex: true
+      })
+    }
+    if(Router.pathname === '/search'){
+      this.setState({
+        isSearch: true
       })
     }
     document.addEventListener('scroll', () => {
@@ -313,7 +319,7 @@ class NavBar extends Component {
                 </Hidden>
               </Grid>
                 {hiddingPanel ?
-                  <Grid className={classes.search}>
+                  <Grid className={this.state.isSearch ? classes.search : classes.searchHidden}>
                     <SearchInput />
                   </Grid>: null
                 }

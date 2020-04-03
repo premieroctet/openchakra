@@ -19,7 +19,7 @@ const url = config.apiUrl;
 
 const styles = theme => ({
     bigContainer: {
-        marginTop: 100,
+        marginTop: 75,
         flexGrow: 1,
         [theme.breakpoints.down('xs')]: {
             marginBottom: 100,

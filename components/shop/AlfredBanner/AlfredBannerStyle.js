@@ -4,9 +4,7 @@ export default theme => ({
     backgroundPosition: "center",
     backgroundSize:"cover",
     backgroundRepeat:"no-repeat",
-    [theme.breakpoints.down('xs')]: {
-      marginTop: 250,
-    },
+    marginTop: 75
   },
   darkOverlay: {
     height: '100%',
@@ -37,9 +35,7 @@ export default theme => ({
     width: 150,
     margin: 'auto',
     fontSize: "xxx-large",
-    [theme.breakpoints.down('xs')]: {
-      top: 'inherit',
-    },
+
   },
   itemAvatar: {
     flexDirection: 'column',
@@ -53,7 +49,6 @@ export default theme => ({
     textAlign: 'center',
     color: 'white',
     position: 'absolute',
-    top: '35%',
     left: '0%',
     right: '0%',
     margin: 'auto',
@@ -84,8 +79,6 @@ export default theme => ({
     left:'3%',
     top:'20%',
     zIndex:502,
-    [theme.breakpoints.down('xs')]: {
-      top: '50%',
-    },
+
   }
 })

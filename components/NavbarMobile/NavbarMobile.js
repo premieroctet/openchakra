@@ -19,13 +19,14 @@ class NavbarMobile extends React.Component {
   }
 
   switchUrl(stepIndex) {
+    console.log(stepIndex)
     switch (stepIndex) {
       case "Shop":
         return Router.push({
           pathname: '/shop',
           query:{id_alfred : this.props.userId}
         });
-      case "Réservation":
+      case "Reservation":
          return Router.push({
           pathname: '/reservations/allReservations'
         });
@@ -56,7 +57,7 @@ class NavbarMobile extends React.Component {
         }}>
           <BottomNavigation showLabels className={classes.bottombar} onChange={(event, value) => {this.switchUrl(value)}}>
             <BottomNavigationAction className={classes.root} label="Boutique" value={"Shop"} icon={<ShoppingCartIcon color={'primary'}/>}/>
-            <BottomNavigationAction className={classes.root} label="Réservation " value={"Réservation"} icon={<AssignmentIcon color={'primary'}/>}/>
+            <BottomNavigationAction className={classes.root} label="Réservation " value={"Reservation"} icon={<AssignmentIcon color={'primary'}/>}/>
             <BottomNavigationAction className={classes.root} label="Messages" value={"Messages"} icon={<ForumIcon color={'primary'}/>}/>
             <BottomNavigationAction className={classes.root} label="Calendrier" value={"Calendrier"} icon={<ScheduleIcon color={'primary'}/>}/>
             <BottomNavigationAction className={classes.root} label="Performances" value={"Performances"} icon={<AssessmentIcon color={'primary'}/>}/>

@@ -12,7 +12,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select2 from 'react-select';
 import DatePicker, {registerLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
-import Footer from '../../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
 import {Helmet} from 'react-helmet';
 registerLocale('fr', fr);
@@ -25,9 +24,6 @@ const styles = theme => ({
     bigContainer: {
         marginTop: 70,
         flexGrow: 1,
-        [theme.breakpoints.down('xs')]: {
-            marginTop: 250,
-        }
     },
     birthday2:{
         height:'55px',

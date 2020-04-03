@@ -8,8 +8,6 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
-import MenuItem from "@material-ui/core/MenuItem";
-import Footer from '../../hoc/Layout/Footer/Footer';
 import AlgoliaPlaces from 'algolia-places-react';
 import { toast } from 'react-toastify';
 import Dialog from '@material-ui/core/Dialog';
@@ -28,9 +26,6 @@ const styles = theme => ({
     bigContainer: {
         marginTop: 70,
         flexGrow: 1,
-      [theme.breakpoints.down('xs')]: {
-        marginTop: 250,
-      }
     },
     hidesm: {
         minWidth: '271px',

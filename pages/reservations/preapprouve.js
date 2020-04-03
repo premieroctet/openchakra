@@ -25,7 +25,6 @@ const styles = theme => ({
     marginTop: 100,
     flexGrow: 1,
     [theme.breakpoints.down("xs")]: {
-      marginTop: 250,
       marginBottom: 100,
     }
   },

@@ -7,10 +7,6 @@ import Footer from '../../hoc/Layout/Footer/Footer';
 const styles = theme => ({
     bigContainer:{
         marginTop:80,
-        [theme.breakpoints.down('xs')]: {
-            marginTop:250,
-
-        }
     },
     trigger1: {
         [theme.breakpoints.down('sm')]: {

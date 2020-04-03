@@ -16,10 +16,6 @@ const styles = theme => ({
     [theme.breakpoints.down('sm')]: {
       height:'65vh',
     },
-    [theme.breakpoints.down('xs')]: {
-      marginTop: 250
-    }
-
   },
   loginContainer: {
     display:'flex',

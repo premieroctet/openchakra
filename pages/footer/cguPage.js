@@ -13,10 +13,6 @@ const styles = theme => ({
         [theme.breakpoints.down('sm')]: {
             padding: '0 20px',
         },
-        [theme.breakpoints.down('xs')]: {
-            marginTop:250,
-
-        }
     },
     a:{
         textDecoration: 'none',
