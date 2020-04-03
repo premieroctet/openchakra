@@ -100,6 +100,9 @@ const styles = theme => ({
             border: '2px solid #2FBCD3!important',
             transition: 'border 0.5s',
         }
+    },
+    separatorBlue:{
+     width: '150px'
     }
 });
 
@@ -147,7 +150,7 @@ class SearchPage extends React.Component {
     onChangeInterval(startDate, endDate) {
       if (startDate) { startDate.hour(0).minute(0).second(0).millisecond(0)};
       if (endDate) { endDate.hour(23).minute(59).second(59).millisecond(999)};
-      this.setState({startDate:startDate, endDate:endDate});  
+      this.setState({startDate:startDate, endDate:endDate});
     }
 
     componentDidUpdate(prevProps) {
@@ -181,7 +184,7 @@ class SearchPage extends React.Component {
           st['prestation']=this.props.prestation;
         }
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        
+
         axios.get('/myAlfred/api/category/all/sort')
           .then(res => {
             st['categories']=res.data;
@@ -207,7 +210,7 @@ class SearchPage extends React.Component {
                       }
                       this.setState(st, () => { if ('search' in this.props) {this.search('date' in this.props)}});
                     })
-                    .catch(err => { 
+                    .catch(err => {
                       this.setState(st, () => { if ('search' in this.props) {this.search('date' in this.props)}});
                     });
                })
@@ -240,7 +243,7 @@ class SearchPage extends React.Component {
           if (isPro && this.state.proSelected || !isPro && this.state.individualSelected) serviceUsersDisplay.push(su);
         });
       } else {
-        serviceUsersDisplay=serviceUsers; 
+        serviceUsersDisplay=serviceUsers;
       }
 
       const start=this.state.startDate;
@@ -348,7 +351,7 @@ class SearchPage extends React.Component {
         var keyword = this.state.keyword;
         const serviceUsers = this.state.serviceUsersDisplay;
         keyword = keyword ? keyword.trim() : '';
- 
+
         return (
           <Fragment>
             <Layout>
@@ -498,13 +501,17 @@ class SearchPage extends React.Component {
                                 }
                                 </Grid>
                                 {this.state.visibleCategories.includes(cat.label) ?
-                                  <>
-                                    <hr style={{width: '10%', margin: 'auto', border:'none', height: '10px', marginBottom: '20px', marginTop: '55px', backgroundColor: '#2FBCD3'}} />
+                                  <Grid style={{display: 'flex', flexDirection: 'column', width: '100%', marginTop: 30, marginBottom: 30}}>
+                                    <Grid style={{textAlign: 'center'}}>
+                                      <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
+                                    </Grid>
                                     { this.hasMoreToDisplay(serviceUsers, cat) ?
-                                      <Button onClick={()=>this.increaseCount(cat)}>Voir plus</Button>
+                                      <Grid style={{marginLeft: 15}}>
+                                        <Button color={'primary'} onClick={()=>this.increaseCount(cat)}>Voir plus d'Alfred</Button>
+                                      </Grid>
                                      : null
                                     }
-                                  </>
+                                  </Grid>
                                     : null}
                               </Grid>
                             ))}
@@ -515,7 +522,7 @@ class SearchPage extends React.Component {
                             null
                           }
                  </Grid>
-                { this.props.search || serviceUsers.length>0 ? null: 
+                { this.props.search || serviceUsers.length>0 ? null:
                   <>
                   <SerenityNeed gps={gps}/>
                   <BecomeAlfred />
