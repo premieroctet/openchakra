@@ -5,7 +5,10 @@ export default theme =>({
   },
   appBar:{
     boxShadow: 'inherit',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+  },
+  appBarTransparent:{
+    backgroundColor: 'rgba(0,0,0,.5)',
+
   },
   mainWrapper:{
     display: 'flex',
@@ -84,5 +87,17 @@ export default theme =>({
     [theme.breakpoints.between('sm', 'xl')]: {
       width: 'auto'
     },
+  },
+  textBlack:{
+    color: 'black',
+    margin: 0,
+    fontSize: 'initial'
+  },
+  textWhite:{
+    color: 'white',
+    margin: 0,
+    fontSize: 'initial',
+    textDecoration: 'none',
+
   }
 })

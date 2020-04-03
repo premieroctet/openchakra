@@ -40,11 +40,12 @@ class SearchInput extends React.Component{
        let user = res.data;
        var allAddresses={'main': user.billing_address}
        user.service_address.forEach( ad => allAddresses[ad._id]=ad);
-       if (!('selectedAddress' in query)) { 
-         this.setState({selectedAddress: 'main', gps:user.billing_address.gps}) 
+       if (!('selectedAddress' in query)) {
+         this.setState({selectedAddress: 'main', gps:user.billing_address.gps})
        }
        this.setState({user:user, allAddresses:allAddresses});
-     })
+     }).catch(err => { console.log(err); }
+    );
   }
 
   findService(){

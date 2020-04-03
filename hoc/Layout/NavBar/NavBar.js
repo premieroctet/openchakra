@@ -36,6 +36,7 @@ class NavBar extends Component {
       research: '',
       hiddingPanel : true,
       isTop: true,
+      isIndex: false
     };
   }
 
@@ -49,7 +50,10 @@ class NavBar extends Component {
       axios.defaults.headers.common['Authorization'] = token;
     }
     if(Router.pathname === '/'){
-      this.setState({hiddingPanel: false})
+      this.setState({
+        hiddingPanel: false,
+        isIndex: true
+      })
     }
     document.addEventListener('scroll', () => {
       const isTop = window.scrollY < 820;
@@ -282,13 +286,13 @@ class NavBar extends Component {
 
     return (
       <Grid className={classes.root}>
-        <AppBar color="inherit" className={classes.appBar} style={{height: '8vh', backgroundColor: this.state.isTop ? 'rgba(0,0,0,.5)' : 'rgb(255, 255, 255)'}} position="fixed">
+        <AppBar color="inherit" className={this.state.isTop && this.state.isIndex ? classes.appBarTransparent : classes.appBar} position="fixed">
           <Toolbar>
             <Grid className={classes.mainWrapper}>
               <Grid className={classes.leftContainer}>
                 <Grid>
                   <Link href={'/'}>
-                    <img src={'../../../static/logo_final_My-Alfred.svg'} className={classes.logoNavbar} alt={'Logo Bleu'}/>
+                    <img src={this.state.isTop && this.state.isIndex ? '../../../static/assets/img/logo.png' : '../../../static/blueLogo.png'} className={classes.logoNavbar} alt={'Logo Bleu'}/>
                   </Link>
                 </Grid>
                 <Hidden smUp>
@@ -298,7 +302,7 @@ class NavBar extends Component {
                         <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
                           <MoreIcon/>
                           <Grid>
-                            <p style={{margin: 0, fontSize: 'initial'}}>Menu</p>
+                            <p className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.textBlack}>Menu</p>
                           </Grid>
                         </IconButton>
                       </Grid>
@@ -320,7 +324,7 @@ class NavBar extends Component {
                       <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
                         <MoreIcon/>
                         <Grid>
-                          <p style={{margin: 0, fontSize: 'initial'}}>Menu</p>
+                          <p className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.textBlack}>Menu</p>
                         </Grid>
                       </IconButton>
                     </Grid>
@@ -335,7 +339,7 @@ class NavBar extends Component {
                     <React.Fragment>
                       <Typography className={classes.navbarItem}>
                         <Link href={'/reservations/allReservations'}>
-                          <a className={classes.navbarLink}>
+                          <a className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.navbarLink}>
                             Mes réservations
                           </a>
                         </Link>
@@ -346,7 +350,7 @@ class NavBar extends Component {
                   {user && user.is_alfred ?
                     <Typography className={classes.navbarItem}>
                       <Link href={`/shop?id_alfred=${user._id}`} >
-                        <a className={classes.navbarLink}>
+                        <a className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.navbarLink}>
                           Ma boutique
                         </a>
                       </Link>
@@ -354,7 +358,7 @@ class NavBar extends Component {
                     :
                     <Typography className={classes.navbarItem}>
                       <Link href={'/creaShop/creaShop'}>
-                        <a className={classes.navbarLink}>
+                        <a className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.navbarLink}>
                           Créer ma boutique
                         </a>
                       </Link>
@@ -364,7 +368,7 @@ class NavBar extends Component {
                     <React.Fragment>
                       <Typography className={classes.navbarItem}>
                         <Link href={'/reservations/messages'}>
-                          <a className={classes.navbarLink}>
+                          <a className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.navbarLink}>
                             Messages
                           </a>
                         </Link>
@@ -374,7 +378,7 @@ class NavBar extends Component {
                   }
                   <Typography className={classes.navbarItem}>
                     <Link href={'/faq'}>
-                      <a className={classes.navbarLink}>
+                      <a className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.navbarLink}>
                         Aide
                       </a>
                     </Link>
