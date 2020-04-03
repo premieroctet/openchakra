@@ -156,24 +156,25 @@ class UserServicesPreview extends React.Component {
     if (this.state.totalPrestations<this.state.serviceUser.minimum_basket) {
       errors['total']='Commande minimum des prestation de '+this.state.serviceUser.minimum_basket+'€ requise';
     }
-    if (this.state.date==null) {
+
+    if (!errors.datetime && this.state.date==null) {
       errors['datetime']='Sélectionnez une date';
     }
 
-    if (this.state.time==null) {
+    if (!errors.datetime && this.state.time==null) {
       errors['datetime']='Sélectionnez une heure';
     }
     const m2=moment(this.state.date+' '+this.state.time);
-    if (m2.isValid() && !isMomentAvailable(m2, this.state.service._id, this.state.availabilities)) {
+    if (!errors.datetime && m2.isValid() && !isMomentAvailable(m2, this.state.service._id, this.state.availabilities)) {
       errors['datetime']=this.state.alfred.firstname+" n'est pas disponible à cette date/heure"; 
     }
+
     const minBookingDate=getDeadLine(this.state.serviceUser.deadline_before_booking);
-    if (m2.isBefore(minBookingDate)) {
+    if (!errors.datetime && m2.isBefore(minBookingDate)) {
       errors['datetime']="Le délai de prévenance n'est pas respecté";
     }
 
-    var m=moment(this.state.date+' '+this.state.time);
-    if (m.isValid() && m<moment()) { errors['datetime']='Date de réservation passée' }
+    if (!errors.datetime && this.state.time && this.state.time<moment()) { errors['datetime']='Date de réservation passée' }
 
     if (!this.state.location) { errors['location']='Sélectionnez un lieu de prestation'}
     this.setState({errors:errors});
@@ -431,6 +432,7 @@ class UserServicesPreview extends React.Component {
                  onChange={this.onChangeDate} 
                  placeholderText="Date"
                  locale='fr'
+minDate={new Date()}
               />
             </Grid>
             <Grid style={{marginLeft: 50}}>
@@ -441,8 +443,10 @@ class UserServicesPreview extends React.Component {
                  showTimeSelectOnly
                  timeIntervals={30}
                  timeCaption="Heure"
+                 placeholderText="Heure"
                  dateFormat="HH:mm"
                  locale='fr'
+minDate={new Date()}
                />
 
             </Grid>
