@@ -41,6 +41,7 @@ const {computeBookingReference}=require('../utils/functions');
 const {COMM_CLIENT}=require('../utils/consts');
 const emptyPromise = require('../utils/promise');
 const {isMomentAvailable, getDeadLine} = require('../utils/dateutils');
+const {computeDistanceKm}=require('../utils/functions');
 const moment = require('moment');
 moment.locale('fr');
 
@@ -89,9 +90,10 @@ class UserServicesPreview extends React.Component {
     axios.defaults.headers.common["Authorization"] = localStorage.getItem(
       "token"
     );
-    axios.get("/myAlfred/api/users/current").then(res => {
-      let user = res.data;
-      this.setState({ user: user, });
+    axios.get("/myAlfred/api/users/current")
+      .then(res => {
+        let user = res.data;
+        this.setState({ user: user, });
       })
       .catch(err => {
         console.log(err);
@@ -106,7 +108,10 @@ class UserServicesPreview extends React.Component {
       // Prestas booked : 0 for each
       var count = {}
       serviceUser.prestations.forEach( p => count[p._id]=0);
-      var location = serviceUser.location.client ? "client" : serviceUser.location.alfred ? "alfred" : "visio";
+      // FIX : select default location ; can not be "client" if not in perimeter
+      //var location = serviceUser.location.client ? "client" : serviceUser.location.alfred ? "alfred" : "visio";
+      var location=null;
+    
       this.setState({
         serviceUser: serviceUser,
         service: serviceUser.service,
@@ -166,6 +171,7 @@ class UserServicesPreview extends React.Component {
     if (m2.isBefore(minBookingDate)) {
       errors['date']="Le délai de prévenance n'est pas respecté";
     }
+    if (!this.state.location) { errors['location']='Sélectionnez un lieu de prestation'}
     this.setState({errors:errors});
   }
 
@@ -205,8 +211,9 @@ class UserServicesPreview extends React.Component {
 
   onQtyChanged = event => {
     var {name, value} = event.target;
+    if (!value) { value=0}
     value = parseInt(value);
-    if (!isNaN(value)) {
+    if (!isNaN(value) && value>=0) {
       var count = this.state.count;
       count[name]=value;
       this.setState({count:count}, () => this.computeTotal());
@@ -228,6 +235,14 @@ class UserServicesPreview extends React.Component {
     var total=totalPrestations;
     total+=commission;
     this.setState({totalPrestations:totalPrestations, commission:commission, total:total}, () => this.checkBook())
+  }
+
+  isInPerimeter = () => {
+    if (isEmpty(this.state.serviceUser)||isEmpty(this.state.user)) { return true}
+    const coordSU = this.state.serviceUser.service_address.gps;
+    const coordUser = this.state.user.billing_address.gps;
+    const dist=computeDistanceKm(coordSU, coordUser);
+    return dist<this.state.serviceUser.perimeter;
   }
 
   getLocationLabel = () => {
@@ -383,6 +398,8 @@ class UserServicesPreview extends React.Component {
       },
     })(Rating);
 
+    console.log(this.state.location);
+
     const drawer = side => (
       <Grid className={classes.borderContentRight}>
         <Grid style={{marginBottom: 30}}>
@@ -428,7 +445,7 @@ class UserServicesPreview extends React.Component {
           </Grid>
         </Grid>
         <Grid style={{marginBottom: 30}}>
-          <Grid error={errors.prestations}>
+          <Grid>
             <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}} error={errors.prestations}>Mes prestations</Typography>
               <em style={{color:'red'}}>{errors['prestations']}</em>
           </Grid>
@@ -454,9 +471,10 @@ class UserServicesPreview extends React.Component {
         <Grid style={{marginBottom: 30}}>
         <Grid>
           <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Lieu de la prestation</Typography>
+              <em style={{color:'red'}}>{errors['location']}</em>
         </Grid>
         <Grid>
-          { serviceUser.location && serviceUser.location.client ?
+          { serviceUser.location && serviceUser.location.client && this.isInPerimeter() ?
           <Grid>
             <ButtonSwitch id='client' label={'A mon adresse principale'} isEditable={false} isPrice={false} isOption={false} checked={location=='client'} onChange={this.onLocationChanged}/>
           </Grid>
