@@ -156,10 +156,7 @@ class UserServicesPreview extends React.Component {
     if (isEmpty(this.state.date)) {
       errors['date']='Sélectionnez une date';
     }
-    else {
-      var m=moment(this.state.date);
-      if (m<moment()) { errors['date']='Date de réservation passée' }
-    }
+
     if (isEmpty(this.state.time)) {
       errors['time']='Sélectionnez une heure';
     }
@@ -171,6 +168,10 @@ class UserServicesPreview extends React.Component {
     if (m2.isBefore(minBookingDate)) {
       errors['date']="Le délai de prévenance n'est pas respecté";
     }
+
+    var m=moment(this.state.date+' '+this.state.time);
+    if (m.isValid() && m<moment()) { errors['date']='Date de réservation passée' }
+
     if (!this.state.location) { errors['location']='Sélectionnez un lieu de prestation'}
     this.setState({errors:errors});
   }
@@ -206,7 +207,7 @@ class UserServicesPreview extends React.Component {
   }
 
   onLocationChanged = (id, checked) => {
-    this.setState({location:id});
+    this.setState({location:id}, () => this.checkBook());
   }
 
   onQtyChanged = event => {
