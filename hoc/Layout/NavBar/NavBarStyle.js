@@ -118,19 +118,6 @@ export default theme =>({
     color: 'black',
     textDecoration: 'none',
   },
-  theavatarbutton: {
-    width: 45,
-    height: 45,
-  },
-  navbarLinkAvatar: {
-    color: 'black',
-    textDecoration: 'none',
-    marginTop: '8%!important',
-  },
-  lemenuavatar: {
-    marginTop: '2.5%!important',
-    marginLeft: '1%!important',
-  },
   iconWhite:{
     color: 'white'
   },
