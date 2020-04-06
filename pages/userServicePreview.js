@@ -149,6 +149,16 @@ class UserServicesPreview extends React.Component {
     setTimeout(this.checkBook, 3000);
   }
 
+  computeReservationDate = () => {
+    var dt=moment(this.state.date);
+    var tm=moment(this.state.date);
+    if (!dt.isValid() || !tm.isValid()) {
+      return null;
+    }
+    dt.hour(tm.hour()).minute(tm.minute());
+    return dt; 
+  }
+
   checkBook = () => {
     var errors={}
     if (!this.state.total) {
@@ -175,7 +185,8 @@ class UserServicesPreview extends React.Component {
       errors['datetime']="Le délai de prévenance n'est pas respecté";
     }
 
-    if (!errors.datetime && this.state.time && this.state.time<moment()) { errors['datetime']='Réservation impossible avant maintenant'}
+    const reservationDate=this.computeReservationDate();
+    if (reservationDate && reservationDate.isBefore(moment())) { errors['datetime']='Réservation impossible avant maintenant'}
 
     if (!this.state.location) { errors['location']='Sélectionnez un lieu de prestation'}
     this.setState({errors:errors});

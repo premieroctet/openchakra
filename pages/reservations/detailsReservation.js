@@ -481,9 +481,7 @@ class DetailsReservation extends React.Component {
                               {bookingObj === null || currentUser === null
                                   ? null
                                   : currentUser._id === bookingObj.alfred._id
-                                      ? (bookingObj.amount - bookingObj.fees * 2).toFixed(
-                                          2
-                                      )
+                                      ? (bookingObj.amount - bookingObj.fees * 2).toFixed(2)
                                       : bookingObj.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}
                               €
                             </Typography>
@@ -838,7 +836,25 @@ class DetailsReservation extends React.Component {
                                 </a>
                             </div>
                               </Link>
+                              <Link href={`reserve?id=${bookingObj._id}`}>
 
+                              <div
+                                  style={{
+                                    textAlign: "center",
+                                    height: "40px",
+                                    minWidth: "250px",
+                                    backgroundColor: "#F8727F",
+                                    lineHeight: 2.5,
+                                    borderRadius: "50px",
+                                    marginTop: "20%",
+                                    cursor:'pointer'
+                                  }}
+                              >
+                                <a style={{ textDecoration: "none", color: "white" }} >
+                                    Réserver
+                                  </a>
+                              </div>
+                                </Link>
                             {bookingObj === null ? null : bookingObj.status ===
                             "Confirmée" ? (
                                 <>
@@ -2088,7 +2104,7 @@ class DetailsReservation extends React.Component {
                               color: "rgb(47, 188, 211)"
                             }}
                           >
-                            voir détail
+                            Masquer les détails
                           </Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
@@ -2166,9 +2182,9 @@ class DetailsReservation extends React.Component {
                                 currentUser ===
                                   null ? null : currentUser._id ===
                                   bookingObj.alfred._id ? (
-                                  <span>- {bookingObj.fees}</span>
+                                  <span>- {bookingObj.fees.toFixed(2)}</span>
                                 ) : (
-                                  <span>+ {bookingObj.fees}</span>
+                                  <span>+ {bookingObj.fees.toFixed(2)}</span>
                                 )}
                                 €
                               </Typography>
