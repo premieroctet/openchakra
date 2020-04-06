@@ -1,9 +1,14 @@
-import React, { memo } from "react";
-import ColorsControl from "../../controls/ColorsControl";
+import React, { memo } from 'react'
+import ColorsControl from '../../controls/ColorsControl'
 
 const AvatarPanel = () => (
   <>
-    <ColorsControl withFullColor label="Color" name="bg" enableHues />
+    <ColorsControl
+      withFullColor
+      label="Color"
+      name="backgroundColor"
+      enableHues
+    />
 
     <ColorsControl
       withFullColor
@@ -12,6 +17,6 @@ const AvatarPanel = () => (
       enableHues
     />
   </>
-);
+)
 
-export default memo(AvatarPanel);
+export default memo(AvatarPanel)
