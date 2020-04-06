@@ -183,12 +183,12 @@ class UserServicesPreview extends React.Component {
 
   extractFilters() {
     var result={};
-    if (this.state.prestations.length==0) {
+    if (this.state.prestations.length===0) {
       return result;
     }
     this.state.prestations.forEach( p => {
       var filter=p.prestation.filter_presentation;
-      var key = !filter || filter.label=='Aucun' ? '' : filter.label;
+      var key = !filter || filter.label==='Aucun' ? '' : filter.label;
       if (key in result) {
         result[key].push(p);
       }
@@ -381,10 +381,10 @@ class UserServicesPreview extends React.Component {
                 <Grid style={{width: '100%', marginLeft: 10}}>
                   <label>{p.prestation.label}</label>
                 </Grid>
-                <Grid style={{width: '30%'}}>
-                  <label>{p.price}€</label>
+                <Grid style={{width: '50%'}}>
+                  <label>{p.price.toFixed(2)}€</label>
                 </Grid>
-                <Grid style={{width: '30%'}}>
+                <Grid style={{width: '50%'}}>
                   <label>{p.billing.label}</label>
                 </Grid>
               </Grid>
@@ -397,8 +397,7 @@ class UserServicesPreview extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {date, time, location, user, serviceUser, shop, service, equipments, userName, alfred, container, errors} = this.state;
-    console.log(serviceUser, 'service')
+    const {date, time, location, serviceUser, shop, service, equipments, alfred, errors} = this.state;
 
    const filters = this.extractFilters();
 
@@ -552,13 +551,13 @@ class UserServicesPreview extends React.Component {
         <Grid style={{display: 'flex', flexDirection:'column', marginLeft:15, marginRight:15, marginBottom:30}}>
         <Grid>
           { this.state.prestations.map( (p) => {
-             return this.state.count[p._id]==0 ? null: (
+             return this.state.count[p._id]===0 ? null: (
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
               <p>{p.prestation.label}</p>
             </Grid>
             <Grid>
-              <p>{this.state.count[p._id]*p.price}€</p>
+              <p>{(this.state.count[p._id]*(p.price)).toFixed(2)}€</p>
             </Grid>
           </Grid>
           )})

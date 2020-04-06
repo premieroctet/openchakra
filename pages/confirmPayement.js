@@ -236,18 +236,7 @@ class ConfirmPayement extends React.Component {
             <Layout>
               <Grid container className={classes.bigContainer}>
                 <Grid container>
-                  <br></br>
-                  <Grid
-                    item
-                    md={5}
-                    xs={12}
-                    style={{
-                      textAlign: "left",
-                      margin: "0 auto",
-                      float: "right",
-                      paddingLeft: "3%"
-                    }}
-                  >
+                  <Grid item md={5} xs={12} style={{textAlign: "left", margin: "0 auto", float: "right", paddingLeft: "3%"}}>
                     <div
                       style={{
                         margin: "20px 11%",
@@ -275,7 +264,7 @@ class ConfirmPayement extends React.Component {
                     </Grid>
                     <Grid container>
                       <Grid item>
-                        <div style={{ marginLeft: "3%" }}>
+                        <div style={{ marginLeft: "3%", width:'100%' }}>
                           <About alfred={userAlfred} languages={languages} shop={shop} profil={false}/>
                         </div>
                       </Grid>
@@ -300,26 +289,26 @@ class ConfirmPayement extends React.Component {
                         >
                           A propos de votre réservation
                         </h3>
-                        <Grid item xs={12} style={{}}>
-                          <Grid item xs={3} style={{width: "30%", float: "left", paddingTop: 15}}>
+                        <Grid item xs={12} style={{display : 'flex', alignItems:'center'}}>
+                          <Grid item xs={3} style={{paddingTop: 15}}>
                             <Grid>
                               <img style={{width: 40, height : 40}} alt={"calendrier"} title={"calendrier"} src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
                             </Grid>
                           </Grid>
-                          <Grid item xs={9} style={{ width: "70%" }}>
+                          <Grid item xs={9}>
                             <p>Date et heure de la prestation:</p>{" "}
                             <p>
                               {this.state.date} - {moment(this.state.hour).format('HH:mm')}
                             </p>
                           </Grid>
                         </Grid>
-                        <Grid item xs={12} style={{}}>
-                          <Grid item xs={3} style={{width: "30%", float: "left", paddingTop: 15}}>
+                        <Grid item xs={12} style={{display : 'flex', alignItems:'center'}}>
+                          <Grid item xs={3}>
                             <Grid>
                               <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
                             </Grid>
                           </Grid>
-                          <Grid item xs={9} style={{ width: "70%" }}>
+                          <Grid item xs={9}>
                             <p>Adresse de la prestation:</p>{" "}
                             <p>
                               {this.state.address}, {this.state.zip_code} {this.state.city}{" "}
@@ -328,7 +317,7 @@ class ConfirmPayement extends React.Component {
                         </Grid>
                       </Grid>
                       <Grid container>
-                        <Grid item xs={12} style={{}}>
+                        <Grid item xs={12}>
                           <h3
                             style={{
                               fontSize: "1.6rem",
@@ -359,7 +348,7 @@ class ConfirmPayement extends React.Component {
                                         style={{ width: "10%", float: "right" }}
                                       >
                                         <p>
-                                          {prestation.price * prestation.value}€
+                                          {(prestation.price * prestation.value).toFixed(2)}€
                                         </p>
                                       </Grid>
                                     </>
@@ -428,7 +417,7 @@ class ConfirmPayement extends React.Component {
                               }}
                             >
                               {" "}
-                              <p>{this.state.grandTotal}€</p>
+                              <p>{this.state.grandTotal.toFixed(2)}€</p>
                               <Grid style={{ float: "right" }} item xs={12}>
                                 {" "}
                                 <Button
