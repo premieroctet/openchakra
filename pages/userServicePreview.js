@@ -397,6 +397,7 @@ class UserServicesPreview extends React.Component {
   render() {
     const {classes} = this.props;
     const {date, time, location, user, serviceUser, shop, service, equipments, userName, alfred, container, errors} = this.state;
+    console.log(serviceUser, 'service')
 
    const filters = this.extractFilters();
 
@@ -405,8 +406,6 @@ class UserServicesPreview extends React.Component {
         color: '#4fbdd7',
       },
     })(Rating);
-
-    console.log(this.state.date);
 
     const drawer = side => (
       <Grid className={classes.borderContentRight}>
@@ -819,7 +818,9 @@ class UserServicesPreview extends React.Component {
                       <img style={{width: 40, height : 40}} src={'../../static/assets/img/userServicePreview/prevenance.svg'}/>
                     </Grid>
                     <Grid style={{fontSize: 'x-large',  marginLeft: 15}}>
-                      {serviceUser.deadline_before_booking}
+                      {
+                        serviceUser.deadline_before_booking
+                      }
                     </Grid>
                   </Grid>
                 </Grid>
@@ -833,6 +834,14 @@ class UserServicesPreview extends React.Component {
                   <Grid>
                     <Grid className={classes.textContentPerimeter}>
                       <p>Le périmètre d’intervention de votre Alfred est la zone dans laquelle votre Alfred accepte de se déplacer pour réaliser ses services. Par mesure de sécurité et conformément à notre politique de confidentialité, l’adresse de votre Alfred n’est pas communiquée. </p>
+                    </Grid>
+                    <Grid style={{display: 'flex', alignItems:'center', marginBottom: 20}}>
+                      <Grid>
+                        <img style={{width: 40, height : 40}} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
+                      </Grid>
+                      <Grid style={{fontSize: 'x-large', marginLeft: 15}}>
+                        {serviceUser.perimeter} km
+                      </Grid>
                     </Grid>
                     <Grid style={{width : '100%', height:300}}>
                       { serviceUser && serviceUser.service_address?
