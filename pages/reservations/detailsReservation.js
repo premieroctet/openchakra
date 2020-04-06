@@ -836,7 +836,25 @@ class DetailsReservation extends React.Component {
                                 </a>
                             </div>
                               </Link>
+                              <Link href={`reserve?id=${bookingObj._id}`}>
 
+                              <div
+                                  style={{
+                                    textAlign: "center",
+                                    height: "40px",
+                                    minWidth: "250px",
+                                    backgroundColor: "#F8727F",
+                                    lineHeight: 2.5,
+                                    borderRadius: "50px",
+                                    marginTop: "20%",
+                                    cursor:'pointer'
+                                  }}
+                              >
+                                <a style={{ textDecoration: "none", color: "white" }} >
+                                    Réserver
+                                  </a>
+                              </div>
+                                </Link>
                             {bookingObj === null ? null : bookingObj.status ===
                             "Confirmée" ? (
                                 <>
