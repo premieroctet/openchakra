@@ -163,3 +163,5 @@ static/*
 !static/assets
 # Vi swap files
 **/*.swp
+
+!static/style1.css
