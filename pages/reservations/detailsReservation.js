@@ -2088,7 +2088,7 @@ class DetailsReservation extends React.Component {
                               color: "rgb(47, 188, 211)"
                             }}
                           >
-                            voir détail
+                            Masquer les détails
                           </Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
@@ -2166,7 +2166,7 @@ class DetailsReservation extends React.Component {
                                 currentUser ===
                                   null ? null : currentUser._id ===
                                   bookingObj.alfred._id ? (
-                                  <span>- {bookingObj.fees}</span>
+                                  <span>- {bookingObj.fees.toFixed(2)}</span>
                                 ) : (
                                   <span>+ {bookingObj.fees}</span>
                                 )}
