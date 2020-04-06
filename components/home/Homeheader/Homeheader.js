@@ -304,7 +304,7 @@ class Homeheader extends React.Component {
                     />
                    </Grid>
                 </Grid>
-                <Button disabled={!isEmpty(this.state.errors)} onClick={()=>this.search()}  variant="contained" color={'primary'} style={{marginTop:30}} className={classes.button}>
+                <Button disabled={!isEmpty(this.state.errors)} onClick={()=>this.search()}  variant="contained" color={'primary'} className={classes.button}>
                   Rechercher
                 </Button>
 
