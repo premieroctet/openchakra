@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import './userServicePreview/userServicePreviewStyle.css'
 const { inspect } = require('util');
 const isEmpty=require('../server/validation/is-empty');
 import React from 'react';
@@ -432,6 +433,7 @@ class UserServicesPreview extends React.Component {
                  placeholderText="Date"
                  locale='fr'
                  minDate={new Date()}
+                 className={classes.test}
               />
             </Grid>
             <Grid style={{marginLeft: 50}}>
