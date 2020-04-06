@@ -48,13 +48,13 @@ class creaShop extends React.Component {
         minimum_basket: 0,
         diplomaName: null,
         diplomaYear: null,
-	diplomaPicture: null,
+	      diplomaPicture: null,
         certificationName: null,
         certificationYear: null,
         certificationPicture: null,
         deadline_value: 1, // Valeur de prévenance
         deadline_unit: "jours", // Unité de prévenance (h:heures, j:jours, s:semaines)
-	level: '',
+	      level: '',
         service_address: null,
         perimeter: 1,
         availabilities: [],
@@ -142,8 +142,8 @@ class creaShop extends React.Component {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
       axios.post(url+'myAlfred/api/shop/add', cloned_shop)
         .then(res => {
-          
-          var su_id = res.data.services[0]._id; 
+
+          var su_id = res.data.services[0]._id;
           if(cloned_shop.diplomaPicture !== null) {
             var dpChanged = typeof(cloned_shop.diplomaPicture)=='object';
             const formData = new FormData();
@@ -227,8 +227,8 @@ class creaShop extends React.Component {
         description: state.description,
         level: state.level,
         diplomaName: state.diplomaName,
-	diplomaYear: state.diplomaYear,
-	diplomaPicture: state.diplomaPicture,
+	      diplomaYear: state.diplomaYear,
+	      diplomaPicture: state.diplomaPicture,
         certificationName: state.certificationName,
         certificationYear: state.certificationYear,
         certificationPicture: state.certificationPicture

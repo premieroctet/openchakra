@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import './userServicePreview/userServicePreviewStyle.css'
 const { inspect } = require('util');
 const isEmpty=require('../server/validation/is-empty');
 import React from 'react';
@@ -114,7 +115,7 @@ class UserServicesPreview extends React.Component {
       // FIX : select default location ; can not be "client" if not in perimeter
       //var location = serviceUser.location.client ? "client" : serviceUser.location.alfred ? "alfred" : "visio";
       var location=null;
-    
+
       this.setState({
         serviceUser: serviceUser,
         service: serviceUser.service,
@@ -176,7 +177,7 @@ class UserServicesPreview extends React.Component {
     }
     const m2=moment(this.state.date+' '+this.state.time);
     if (!errors.datetime && m2.isValid() && !isMomentAvailable(m2, this.state.service._id, this.state.availabilities)) {
-      errors['datetime']=this.state.alfred.firstname+" n'est pas disponible à cette date/heure"; 
+      errors['datetime']=this.state.alfred.firstname+" n'est pas disponible à cette date/heure";
     }
 
     const minBookingDate=getDeadLine(this.state.serviceUser.deadline_before_booking);
@@ -193,12 +194,12 @@ class UserServicesPreview extends React.Component {
 
   extractFilters() {
     var result={};
-    if (this.state.prestations.length==0) {
+    if (this.state.prestations.length===0) {
       return result;
     }
     this.state.prestations.forEach( p => {
       var filter=p.prestation.filter_presentation;
-      var key = !filter || filter.label=='Aucun' ? '' : filter.label;
+      var key = !filter || filter.label==='Aucun' ? '' : filter.label;
       if (key in result) {
         result[key].push(p);
       }
@@ -391,10 +392,10 @@ class UserServicesPreview extends React.Component {
                 <Grid style={{width: '100%', marginLeft: 10}}>
                   <label>{p.prestation.label}</label>
                 </Grid>
-                <Grid style={{width: '30%'}}>
-                  <label>{p.price}€</label>
+                <Grid style={{width: '50%'}}>
+                  <label>{p.price.toFixed(2)}€</label>
                 </Grid>
-                <Grid style={{width: '30%'}}>
+                <Grid style={{width: '50%'}}>
                   <label>{p.billing.label}</label>
                 </Grid>
               </Grid>
@@ -407,7 +408,7 @@ class UserServicesPreview extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {date, time, location, user, serviceUser, shop, service, equipments, userName, alfred, container, errors} = this.state;
+    const {date, time, location, serviceUser, shop, service, equipments, alfred, errors} = this.state;
 
    const filters = this.extractFilters();
 
@@ -417,15 +418,13 @@ class UserServicesPreview extends React.Component {
       },
     })(Rating);
 
-    console.log(this.state.date);
-
     const drawer = side => (
       <Grid className={classes.borderContentRight}>
         <Grid style={{marginBottom: 30}}>
           <Grid style={{display: 'flex', justifyContent: 'space-between' }}>
             <Grid>
               <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>Date & heure</Typography>
-              <em style={{color:'red'}}>{errors['datetime']}</em>
+              <em style={{color:'#f87280'}}>{errors['datetime']}</em>
             </Grid>
             <Hidden lgUp>
               <Grid>
@@ -437,13 +436,14 @@ class UserServicesPreview extends React.Component {
           </Grid>
           <Grid style={{display: 'flex', marginLeft: 10, marginTop: 20}}>
             <Grid>
-              <DatePicker 
-                 selected={this.state.date} 
+              <DatePicker
+                 selected={this.state.date}
                  dateFormat="dd/MM/yyyy"
-                 onChange={this.onChangeDate} 
+                 onChange={this.onChangeDate}
                  placeholderText="Date"
                  locale='fr'
-minDate={new Date()}
+                 minDate={new Date()}
+                 className={classes.test}
               />
             </Grid>
             <Grid style={{marginLeft: 50}}>
@@ -457,7 +457,7 @@ minDate={new Date()}
                  placeholderText="Heure"
                  dateFormat="HH:mm"
                  locale='fr'
-minDate={new Date()}
+                 minDate={new Date()}
                />
 
             </Grid>
@@ -466,7 +466,7 @@ minDate={new Date()}
         <Grid style={{marginBottom: 30}}>
           <Grid>
             <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}} error={errors.prestations}>Mes prestations</Typography>
-              <em style={{color:'red'}}>{errors['prestations']}</em>
+              <em style={{color:'#f87280'}}>{errors['prestations']}</em>
           </Grid>
           <Grid style={{marginTop: 30}}>
             {/* Start filter */ }
@@ -490,26 +490,26 @@ minDate={new Date()}
         <Grid style={{marginBottom: 30}}>
         <Grid>
           <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Lieu de la prestation</Typography>
-              <em style={{color:'red'}}>{errors['location']}</em>
+              <em style={{color:'#f87280'}}>{errors['location']}</em>
         </Grid>
         <Grid>
           { serviceUser.location && serviceUser.location.client && this.isInPerimeter() ?
           <Grid>
-            <ButtonSwitch id='client' label={'A mon adresse principale'} isEditable={false} isPrice={false} isOption={false} checked={location=='client'} onChange={this.onLocationChanged}/>
+            <ButtonSwitch id='client' label={'A mon adresse principale'} isEditable={false} isPrice={false} isOption={false} checked={location==='client'} onChange={this.onLocationChanged}/>
           </Grid>
             :null
           }
           {
             serviceUser.location && serviceUser.location.alfred && alfred.firstname !== undefined ?
               <Grid>
-                <ButtonSwitch id='alfred' label={'Chez ' + alfred.firstname} isEditable={false} isPrice={false} isOption={false} checked={location=='alfred'} onChange={this.onLocationChanged}/>
+                <ButtonSwitch id='alfred' label={'Chez ' + alfred.firstname} isEditable={false} isPrice={false} isOption={false} checked={location==='alfred'} onChange={this.onLocationChanged}/>
               </Grid>
               : null
           }
           {
             serviceUser.location && serviceUser.location.visio ?
               <Grid>
-                <ButtonSwitch id='visio' label={'En visio'} isEditable={false} isPrice={false} isOption={false} checked={location=='visio'} onChange={this.onLocationChanged}/>
+                <ButtonSwitch id='visio' label={'En visio'} isEditable={false} isPrice={false} isOption={false} checked={location==='visio'} onChange={this.onLocationChanged}/>
               </Grid>
               : null
           }
@@ -562,19 +562,19 @@ minDate={new Date()}
         <Grid style={{display: 'flex', flexDirection:'column', marginLeft:15, marginRight:15, marginBottom:30}}>
         <Grid>
           { this.state.prestations.map( (p) => {
-             return this.state.count[p._id]==0 ? null: (
+             return this.state.count[p._id]===0 ? null: (
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
               <p>{p.prestation.label}</p>
             </Grid>
             <Grid>
-              <p>{this.state.count[p._id]*p.price}€</p>
+              <p>{(this.state.count[p._id]*(p.price)).toFixed(2)}€</p>
             </Grid>
           </Grid>
           )})
           }
           { /* Start travel tax */ }
-          { serviceUser.travel_tax ? 
+          { serviceUser.travel_tax ?
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
               <p>Frais de déplacement</p>
@@ -585,7 +585,7 @@ minDate={new Date()}
           </Grid>:null}
           { /* End pick tax */ }
           { /* Start pick tax */ }
-          { serviceUser.pick_tax ? 
+          { serviceUser.pick_tax ?
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
               <p>Frais de livraison/enlèvement</p>
@@ -615,7 +615,7 @@ minDate={new Date()}
             </Grid>
           </Grid>
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-              <em style={{color:'red'}}>{errors['total']}</em>
+              <em style={{color:'#f87280'}}>{errors['total']}</em>
           </Grid>
           { /* End total */ }
         </Grid>
@@ -766,10 +766,10 @@ minDate={new Date()}
                       </Grid>
                     </Grid>
                     <Grid>
-                      <Grid container spacing={1}>
+                      <Grid container spacing={1} style={{marginRight: 10, marginLeft: 10}}>
                         {equipments.map((result) => {
                           return (
-                            <Grid key={result.id} item xl={2} lg={4} md={4} sm={4} xs={4}>
+                            <Grid key={result.id} item xl={2} lg={3} md={4} sm={4} xs={4}>
                               <img src={`../../static/equipments/${result.logo.slice(0, -4)}_Selected.svg`} height={100} width={100} alt={`${result.name_logo.slice(0, -4)}_Selected.svg`} />
                             </Grid>
                           )
@@ -830,7 +830,9 @@ minDate={new Date()}
                       <img style={{width: 40, height : 40}} src={'../../static/assets/img/userServicePreview/prevenance.svg'}/>
                     </Grid>
                     <Grid style={{fontSize: 'x-large',  marginLeft: 15}}>
-                      {serviceUser.deadline_before_booking}
+                      {
+                        serviceUser.deadline_before_booking
+                      }
                     </Grid>
                   </Grid>
                 </Grid>
@@ -844,6 +846,14 @@ minDate={new Date()}
                   <Grid>
                     <Grid className={classes.textContentPerimeter}>
                       <p>Le périmètre d’intervention de votre Alfred est la zone dans laquelle votre Alfred accepte de se déplacer pour réaliser ses services. Par mesure de sécurité et conformément à notre politique de confidentialité, l’adresse de votre Alfred n’est pas communiquée. </p>
+                    </Grid>
+                    <Grid style={{display: 'flex', alignItems:'center', marginBottom: 20}}>
+                      <Grid>
+                        <img style={{width: 40, height : 40}} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
+                      </Grid>
+                      <Grid style={{fontSize: 'x-large', marginLeft: 15}}>
+                        {serviceUser.perimeter} km
+                      </Grid>
                     </Grid>
                     <Grid style={{width : '100%', height:300}}>
                       { serviceUser && serviceUser.service_address?

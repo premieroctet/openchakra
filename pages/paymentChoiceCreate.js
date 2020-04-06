@@ -154,11 +154,6 @@ class PaymentChoiceCreate extends React.Component {
             })
     }
 
-
-
-
-
-
     render() {
         const {classes} = this.props;
         const {user} = this.state;
@@ -206,24 +201,15 @@ class PaymentChoiceCreate extends React.Component {
                                                             />
                                                         </Grid>
                                                     }
-
-
-
                                                 </React.Fragment>
-
                                             ))}
-                                            {this.state.id_card === this.state.valueother ?
-                                                <Grid value={this.state.valueother} onClick={()=>{this.setState({id_card:"other"});this.setState({cardSelected: false})}} style={{width:'296px', boxShadow: '0px 0px 6px lightgray', height: '40px',border: 'rgb(85, 155, 215) solid 2px', cursor: 'pointer', borderRadius: '5px', margin: '20px', position: 'relative',backgroundColor: '#2FBCD3',color: 'white'}}>
-                                                    <p style={{textAlign: "center", lineHeight: 2, position: "absolute", top: 0, left: 0, right: 0, margin: 'auto'}}>Autre</p>
-                                                </Grid>
-                                                :
-                                                <Grid value={this.state.valueother} onClick={()=>{this.setState({id_card:"other"});this.setState({cardSelected: false})}} style={{width:'296px', boxShadow: '0px 0px 6px lightgray', height: '40px', cursor: 'pointer', borderRadius: '5px', margin: '20px', position: 'relative',backgroundColor: '#2FBCD3',color: 'white'}}>
-                                                    <p style={{textAlign: "center", lineHeight: 2, position: "absolute", top: 0, left: 0, right: 0, margin: 'auto'}}>Autre</p>
-                                                </Grid>
-                                            }
+                                            <Grid>
+                                                <Button color={'primary'} variant={"contained"} style={{color: 'white'}} value={this.state.valueother} onClick={()=>{this.setState({id_card:"other"});this.setState({cardSelected: false})}}>
+                                                    Autre
+                                                </Button>
+                                            </Grid>
                                         </React.Fragment>
                                         :
-
                                         <p>Aucun mode de paiement enregistré</p>
 
                                     }

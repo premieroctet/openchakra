@@ -122,7 +122,7 @@ class NavBar extends Component {
     const isMenuOpen = Boolean(anchorEl);
     const isAvatarMenuOpen = Boolean(avatarMoreAnchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-    const mobileavatar = picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit" className={classes.theavatarbutton}><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>;
+    const mobileavatar = picture ? <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit"><Avatar alt="Basic Avatar" src={`../../${user.picture}`} className={classes.bigAvatar} /></IconButton></React.Fragment> :  <React.Fragment><IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit"><Avatar alt="Basic Avatar" src="../../static/basicavatar.png" className={classes.bigAvatar} /></IconButton></React.Fragment>;
 
     const logoutMobile = [
       <MenuItem key={1} onClick={this.handleMenuClose}>
@@ -202,7 +202,7 @@ class NavBar extends Component {
       <MenuItem key={1} onClick={this.handleAvatarMenuOpen}>
         <Typography>
           <Link href={'/login'}>
-            <a className={classes.navbarLinkAvatar}>
+            <a>
               Connexion
             </a>
           </Link>
@@ -211,7 +211,7 @@ class NavBar extends Component {
       <MenuItem key={2} onClick={this.handleAvatarMenuOpen}>
         <Typography>
           <Link href={'/signup'}>
-            <a className={classes.navbarLinkAvatar}>
+            <a>
               Inscription
             </a>
           </Link>
@@ -221,7 +221,6 @@ class NavBar extends Component {
 
     const renderAvatarMenu = (
       <Menu
-        className={classes.lemenuavatar}
         anchorEl={avatarMoreAnchorEl}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -432,7 +431,7 @@ class NavBar extends Component {
                   {logged ?
                     <React.Fragment>
                       <React.Fragment>
-                        <IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit" className={classes.theavatarbutton}>
+                        <IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit">
                           <UserAvatar user={user} className={classes.bigAvatar} />
                         </IconButton>
                       </React.Fragment>

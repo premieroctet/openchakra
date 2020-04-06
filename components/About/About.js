@@ -31,12 +31,12 @@ class About extends React.Component{
       dense: false,
       valueRating: 0,
       nbCommentary: 0,
-      shop:[]
+      shop:[],
     }
   }
 
   render(){
-    const {classes, alfred, languages, shop} = this.props;
+    const {classes, alfred, languages, shop, profil} = this.props;
     const preventDefault = event => event.preventDefault();
 
     const StyledRating = withStyles({
@@ -121,23 +121,25 @@ class About extends React.Component{
                   primary={languages.length > 1 ? "Langue : " + languages.join(' - ') : "Langue : non renseigné"}
                 />
             </ListItem>
-            <ListItem>
-              <Link
-                href={{
-                  pathname: "../viewProfile",
-                  query: { id: alfred._id }
-                }}
-              >
-                <Typography
-                  style={{
-                    color: "rgb(47, 188, 211)",
-                    cursor: "pointer"
+            { profil ?
+              <ListItem>
+                <Link
+                  href={{
+                    pathname: "../viewProfile",
+                    query: { id: alfred._id }
                   }}
                 >
-                  Voir le profil
-                </Typography>
-              </Link>
-            </ListItem>
+                  <Typography
+                    style={{
+                      color: "rgb(47, 188, 211)",
+                      cursor: "pointer"
+                    }}
+                  >
+                    Voir le profil
+                  </Typography>
+                </Link>
+              </ListItem> : null
+            }
           </List>
         </Grid>
       </Grid>

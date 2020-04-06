@@ -10,8 +10,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import "react-tabs/style/react-tabs.css";
 import "react-input-range/lib/css/index.css";
 import '../static/stylesfonts.css';
-import "../static/style1.css";
-import '../static/stylefixresponsive.css';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import '../static/form.css';
 import '../static/forminputs.css';
@@ -21,6 +19,7 @@ import "../static/cssdashboard.css";
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import 'react-credit-cards/es/styles-compiled.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import "../static/style1.css";
 
 toast.configure({
   position: 'top-center',
@@ -54,7 +53,7 @@ class MyApp extends App {
       <Container>
         <Head>
           <title>My Alfred</title>
-	    <meta property="og:image" content="https://my-alfred.io/static/presentation.jpg" />
+	          <meta property="og:image" content="https://my-alfred.io/static/presentation.jpg" />
             <meta property="og:description" content="Réservez et proposez tous types de services immédiatement et très simplement autour de chez vous" />
             <meta property="description" content="Réservez et proposez tous types de services immédiatement et très simplement autour de chez vous" />
             <meta property="og:type" content="website" />
@@ -67,7 +66,7 @@ class MyApp extends App {
                 crossOrigin=""/>
             <link rel="shortcut icon" type="image/png" href="/static/favicon.png" />
             <link rel="icon" type="image/png" href="/static/favicon.png" />
-            
+
             <script src="https://www.googletagmanager.com/gtag/js?id=G-5ZTWZ756HY"></script>
             <script src="/static/assets/ga.js" />
         </Head>
