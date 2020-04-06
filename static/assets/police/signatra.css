@@ -1,0 +1,9 @@
+@font-face {
+    font-family: "test";
+    src: url("/static/assets/police/Signatra.ttf") format("ttf"),
+    url("/static/assets/police/Signatra.otf") format("otf");
+}
+
+.police{
+    font-family: "test";
+}

@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import Fab from '@material-ui/core/Fab';
 import Chip from '@material-ui/core/Chip';
 import Link from 'next/link';
+import '../../static/assets/police/signatra.css'
 
 class BannerReservation extends React.Component{
 
@@ -31,7 +32,7 @@ class BannerReservation extends React.Component{
           <Grid container className={classes.darkOverlay}>
             <Grid container className={classes.container}>
               <Grid>
-                <Typography className={classes.textAvatar}>{serviceUser.label}</Typography>
+                <Typography className={classes.textAvatar} classes={"police"}>{serviceUser.label}</Typography>
               </Grid>
               <Grid>
                 <Link href={`/shop?id_alfred=${user._id}`} >
