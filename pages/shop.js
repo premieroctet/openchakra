@@ -38,8 +38,13 @@ class shop extends React.Component {
             serviceUser:[],
             stateEditButtonFromAlfredCondtion: false,
             newWelcomedMessage: "",
-            banner:[]
-
+            banner:[],
+            skills: {
+              careful:0,
+              punctual:0,
+              flexible:0,
+              reactive:0,
+            }
         };
         this.needRefresh = this.needRefresh.bind(this);
         this.getStatusEditButton = this.getStatusEditButton.bind(this);
@@ -88,6 +93,15 @@ class shop extends React.Component {
               console.log(error);
           });
 
+        axios.get('/myAlfred/api/reviews/'+this.props.aboutId)
+          .then(response => {
+              const skills=response.data;
+              this.setState({skills:skills});
+          })
+          .catch(function(error){
+              console.log(error);
+          });
+
     }
 
     checkIfOwner() {
@@ -114,6 +128,7 @@ class shop extends React.Component {
         const {classes} = this.props;
         let isOwner= this.state.idAlfred === this.state.userId;
 
+        console.log("Skills:"+JSON.stringify(this.state.skills));
         return (
           <Fragment>
               <Layout>
@@ -132,7 +147,7 @@ class shop extends React.Component {
                               <About alfred={this.state.alfred} languages={this.state.languages} shop={this.state.shop}/>
                           </Grid>
                           <Grid className={classes.skillsContentContainer}>
-                              <SkillsAlfred alfred={this.state.alfred} widthHr={'100%'}/>
+                              <SkillsAlfred alfred={this.state.alfred} widthHr={'100%'} skills={this.state.skills}/>
                           </Grid>
                       </Grid>
                       <Grid className={classes.servicesContainer}>

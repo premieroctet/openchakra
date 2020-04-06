@@ -9,8 +9,7 @@ import Footer from '../hoc/Layout/Footer/Footer';
 import StarRatings from 'react-star-ratings';
 import {toast} from 'react-toastify';
 import TextField from "@material-ui/core/TextField";
-
-
+import SkillsAlfred from '../components/SkillsAlfred/SkillsAlfred';
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
@@ -122,13 +121,17 @@ class Evaluate extends React.Component {
             prestation: 0,
             price: 0,
             relational: 0,
-            content: ''
-
+            content: '',
+            careful: false,
+            punctual: false,
+            flexible: false,
+            reactive: false,
+            alfred:{},
         };
         this.changeRating = this.changeRating.bind(this);
         this.changeRating2 = this.changeRating2.bind(this);
         this.changeRating3 = this.changeRating3.bind(this);
-
+        this.onComplimentChanged = this.onComplimentChanged.bind(this);
 
 
 
@@ -165,6 +168,12 @@ class Evaluate extends React.Component {
                 this.setState({service: service});
             })
             .catch()
+    }
+
+    onComplimentChanged = (name) => {
+      const org=this.state[name];
+      console.log(name+" was "+org);
+      this.setState({[name]: !org});
     }
 
     changeRating( newRating, name ) {
@@ -206,7 +215,11 @@ class Evaluate extends React.Component {
             prestation_quality: prestation_quality,
             quality_price: quality_price,
             relational: relational,
-            content: content
+            content: content,
+            careful: this.state.careful,
+            punctual: this.state.punctual,
+            flexible: this.state.flexible,
+            reactive: this.state.reactive,
         };
 
         axios.post(url+'myAlfred/api/reviews/add/alfred',obj)
@@ -319,6 +332,9 @@ class Evaluate extends React.Component {
                                     </Grid>
 
                                 </div>
+                                    <Grid className={classes.skillsContentContainer}>
+                                      <SkillsAlfred alfred={this.state.alfred} skills={this.state} widthHr={'100%'} hideCount={true} onClick={this.onComplimentChanged} />
+                                    </Grid>
                                 <div>
                                     <br></br>
                                     <p style={{fontSize:'25px'}}>Votre commentaire</p>
