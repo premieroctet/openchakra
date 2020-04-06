@@ -755,10 +755,10 @@ class UserServicesPreview extends React.Component {
                       </Grid>
                     </Grid>
                     <Grid>
-                      <Grid container spacing={1}>
+                      <Grid container spacing={1} style={{marginRight: 10, marginLeft: 10}}>
                         {equipments.map((result) => {
                           return (
-                            <Grid key={result.id} item xl={2} lg={4} md={4} sm={4} xs={4}>
+                            <Grid key={result.id} item xl={2} lg={3} md={4} sm={4} xs={4}>
                               <img src={`../../static/equipments/${result.logo.slice(0, -4)}_Selected.svg`} height={100} width={100} alt={`${result.name_logo.slice(0, -4)}_Selected.svg`} />
                             </Grid>
                           )
