@@ -437,7 +437,6 @@ class ConfirmPayement extends React.Component {
                                   style={{
                                     color: "white",
                                     fontSize: "16px",
-                                    width: "100%",
                                     paddingLeft: "20px",
                                     paddingRight: "20px",
                                     marginBottom: 50,
