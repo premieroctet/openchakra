@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import Link from "next/link";
 import Layout from "../hoc/Layout/Layout";
 import axios from "axios";
 import moment from "moment";
@@ -9,7 +8,6 @@ import Typography from "@material-ui/core/Typography";
 import Router from "next/router";
 import { withStyles } from "@material-ui/core/styles";
 import Footer from "../hoc/Layout/Footer/Footer";
-import dynamic from "next/dynamic";
 import About from '../components/About/About';
 import UserAvatar from '../components/Avatar/UserAvatar';
 
@@ -17,9 +15,7 @@ moment.locale("fr");
 const _ = require("lodash");
 const { config } = require("../config/config");
 const url = config.apiUrl;
-const MapComponent = dynamic(() => import("../components/map"), {
-  ssr: false
-});
+
 const styles = theme => ({
   bigContainer: {
     flexGrow: 1
@@ -113,19 +109,6 @@ const styles = theme => ({
   },
 });
 
-const Input2 = ({ value, onClick }) => (
-  <Button
-    value={value}
-    color={"inherit"}
-    variant={"outlined"}
-    style={{ color: "gray" }}
-    className="example-custom-input"
-    onClick={onClick}
-  >
-    {value}
-  </Button>
-);
-
 class ConfirmPayement extends React.Component {
   constructor(props) {
     super(props);
@@ -143,8 +126,6 @@ class ConfirmPayement extends React.Component {
       travel_tax: null,
       total: null,
       fees: null,
-      pick_tax: null,
-      travel_tax: null,
       grandTotal: null,
       checkedOption: false,
       optionPrice: null,
@@ -162,7 +143,6 @@ class ConfirmPayement extends React.Component {
   }
 
   componentDidMount() {
-    const prestations = JSON.parse(localStorage.getItem("prestations"));
     const bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
     console.log(bookingObj, 'booking')
 
@@ -247,7 +227,7 @@ class ConfirmPayement extends React.Component {
   render() {
     const { classes } = this.props;
     const { user } = this.state;
-    const { bookingObj, currentUser, userAlfred, languages, shop } = this.state;
+    const { currentUser, userAlfred, languages, shop } = this.state;
 
     return (
       <Fragment>
@@ -293,11 +273,10 @@ class ConfirmPayement extends React.Component {
                         </h2>
                       </Grid>
                     </Grid>
-                    <br></br>
                     <Grid container>
-                      <Grid item xs={5}>
+                      <Grid item>
                         <div style={{ marginLeft: "3%" }}>
-                          <About alfred={userAlfred} languages={languages} shop={shop}/>
+                          <About alfred={userAlfred} languages={languages} shop={shop} profil={false}/>
                         </div>
                       </Grid>
                       <Grid item xs={5}>
@@ -308,7 +287,7 @@ class ConfirmPayement extends React.Component {
                       </Grid>
                     </Grid>
 
-                    <div style={{ marginTop: "8%" }}>
+                    <div style={{ marginTop: "8%", paddingLeft: '3%' }}>
                       <hr></hr>
                       <Grid container>
                         <h3
