@@ -114,7 +114,7 @@ class UserServicesPreview extends React.Component {
       // FIX : select default location ; can not be "client" if not in perimeter
       //var location = serviceUser.location.client ? "client" : serviceUser.location.alfred ? "alfred" : "visio";
       var location=null;
-    
+
       this.setState({
         serviceUser: serviceUser,
         service: serviceUser.service,
@@ -166,7 +166,7 @@ class UserServicesPreview extends React.Component {
     }
     const m2=moment(this.state.date+' '+this.state.time);
     if (!errors.datetime && m2.isValid() && !isMomentAvailable(m2, this.state.service._id, this.state.availabilities)) {
-      errors['datetime']=this.state.alfred.firstname+" n'est pas disponible à cette date/heure"; 
+      errors['datetime']=this.state.alfred.firstname+" n'est pas disponible à cette date/heure";
     }
 
     const minBookingDate=getDeadLine(this.state.serviceUser.deadline_before_booking);
@@ -414,7 +414,7 @@ class UserServicesPreview extends React.Component {
           <Grid style={{display: 'flex', justifyContent: 'space-between' }}>
             <Grid>
               <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>Date & heure</Typography>
-              <em style={{color:'red'}}>{errors['datetime']}</em>
+              <em style={{color:'#f87280'}}>{errors['datetime']}</em>
             </Grid>
             <Hidden lgUp>
               <Grid>
@@ -426,13 +426,13 @@ class UserServicesPreview extends React.Component {
           </Grid>
           <Grid style={{display: 'flex', marginLeft: 10, marginTop: 20}}>
             <Grid>
-              <DatePicker 
-                 selected={this.state.date} 
+              <DatePicker
+                 selected={this.state.date}
                  dateFormat="dd/MM/yyyy"
-                 onChange={this.onChangeDate} 
+                 onChange={this.onChangeDate}
                  placeholderText="Date"
                  locale='fr'
-minDate={new Date()}
+                 minDate={new Date()}
               />
             </Grid>
             <Grid style={{marginLeft: 50}}>
@@ -446,7 +446,7 @@ minDate={new Date()}
                  placeholderText="Heure"
                  dateFormat="HH:mm"
                  locale='fr'
-minDate={new Date()}
+                 minDate={new Date()}
                />
 
             </Grid>
@@ -455,7 +455,7 @@ minDate={new Date()}
         <Grid style={{marginBottom: 30}}>
           <Grid>
             <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}} error={errors.prestations}>Mes prestations</Typography>
-              <em style={{color:'red'}}>{errors['prestations']}</em>
+              <em style={{color:'#f87280'}}>{errors['prestations']}</em>
           </Grid>
           <Grid style={{marginTop: 30}}>
             {/* Start filter */ }
@@ -479,26 +479,26 @@ minDate={new Date()}
         <Grid style={{marginBottom: 30}}>
         <Grid>
           <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Lieu de la prestation</Typography>
-              <em style={{color:'red'}}>{errors['location']}</em>
+              <em style={{color:'#f87280'}}>{errors['location']}</em>
         </Grid>
         <Grid>
           { serviceUser.location && serviceUser.location.client && this.isInPerimeter() ?
           <Grid>
-            <ButtonSwitch id='client' label={'A mon adresse principale'} isEditable={false} isPrice={false} isOption={false} checked={location=='client'} onChange={this.onLocationChanged}/>
+            <ButtonSwitch id='client' label={'A mon adresse principale'} isEditable={false} isPrice={false} isOption={false} checked={location==='client'} onChange={this.onLocationChanged}/>
           </Grid>
             :null
           }
           {
             serviceUser.location && serviceUser.location.alfred && alfred.firstname !== undefined ?
               <Grid>
-                <ButtonSwitch id='alfred' label={'Chez ' + alfred.firstname} isEditable={false} isPrice={false} isOption={false} checked={location=='alfred'} onChange={this.onLocationChanged}/>
+                <ButtonSwitch id='alfred' label={'Chez ' + alfred.firstname} isEditable={false} isPrice={false} isOption={false} checked={location==='alfred'} onChange={this.onLocationChanged}/>
               </Grid>
               : null
           }
           {
             serviceUser.location && serviceUser.location.visio ?
               <Grid>
-                <ButtonSwitch id='visio' label={'En visio'} isEditable={false} isPrice={false} isOption={false} checked={location=='visio'} onChange={this.onLocationChanged}/>
+                <ButtonSwitch id='visio' label={'En visio'} isEditable={false} isPrice={false} isOption={false} checked={location==='visio'} onChange={this.onLocationChanged}/>
               </Grid>
               : null
           }
@@ -563,7 +563,7 @@ minDate={new Date()}
           )})
           }
           { /* Start travel tax */ }
-          { serviceUser.travel_tax ? 
+          { serviceUser.travel_tax ?
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
               <p>Frais de déplacement</p>
@@ -574,7 +574,7 @@ minDate={new Date()}
           </Grid>:null}
           { /* End pick tax */ }
           { /* Start pick tax */ }
-          { serviceUser.pick_tax ? 
+          { serviceUser.pick_tax ?
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
               <p>Frais de livraison/enlèvement</p>
@@ -604,7 +604,7 @@ minDate={new Date()}
             </Grid>
           </Grid>
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-              <em style={{color:'red'}}>{errors['total']}</em>
+              <em style={{color:'#f87280'}}>{errors['total']}</em>
           </Grid>
           { /* End total */ }
         </Grid>
