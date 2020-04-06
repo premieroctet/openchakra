@@ -371,7 +371,7 @@ class Preapprouve extends React.Component {
                                     style={{ width: "10%", float: "right" }}
                                 >
                                   {" "}
-                                  <p>{bookingObj.fees}€</p>
+                                  <p>{bookingObj.fees.toFixed(2)}€</p>
                                 </Grid>
                               </Grid>
                             </Grid>

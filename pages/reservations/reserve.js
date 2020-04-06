@@ -1073,7 +1073,7 @@ class Reserve extends React.Component {
                           </Grid>
                           <Grid item xs={3} style={{ width: "10%", float: "right" }} >
                             {" "}
-                          <p>{bookingObj.fees}€</p>
+                          <p>{bookingObj.fees.toFixed(2)}€</p>
                           </Grid>
                         </Grid>
                       </Grid>

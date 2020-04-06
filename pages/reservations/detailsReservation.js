@@ -481,9 +481,7 @@ class DetailsReservation extends React.Component {
                               {bookingObj === null || currentUser === null
                                   ? null
                                   : currentUser._id === bookingObj.alfred._id
-                                      ? (bookingObj.amount - bookingObj.fees * 2).toFixed(
-                                          2
-                                      )
+                                      ? (bookingObj.amount - bookingObj.fees * 2).toFixed(2)
                                       : bookingObj.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}
                               €
                             </Typography>
@@ -2168,7 +2166,7 @@ class DetailsReservation extends React.Component {
                                   bookingObj.alfred._id ? (
                                   <span>- {bookingObj.fees.toFixed(2)}</span>
                                 ) : (
-                                  <span>+ {bookingObj.fees}</span>
+                                  <span>+ {bookingObj.fees.toFixed(2)}</span>
                                 )}
                                 €
                               </Typography>
