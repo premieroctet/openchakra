@@ -290,12 +290,12 @@ class ConfirmPayement extends React.Component {
                           A propos de votre réservation
                         </h3>
                         <Grid item xs={12} style={{display : 'flex', alignItems:'center'}}>
-                          <Grid item xs={3} style={{paddingTop: 15}}>
+                          <Grid item>
                             <Grid>
                               <img style={{width: 40, height : 40}} alt={"calendrier"} title={"calendrier"} src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
                             </Grid>
                           </Grid>
-                          <Grid item xs={9}>
+                          <Grid item xs={9} style={{marginLeft: 25}}>
                             <p>Date et heure de la prestation:</p>{" "}
                             <p>
                               {this.state.date} - {moment(this.state.hour).format('HH:mm')}
@@ -303,12 +303,12 @@ class ConfirmPayement extends React.Component {
                           </Grid>
                         </Grid>
                         <Grid item xs={12} style={{display : 'flex', alignItems:'center'}}>
-                          <Grid item xs={3}>
+                          <Grid item>
                             <Grid>
                               <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
                             </Grid>
                           </Grid>
-                          <Grid item xs={9}>
+                          <Grid item xs={9} style={{marginLeft: 25}}>
                             <p>Adresse de la prestation:</p>{" "}
                             <p>
                               {this.state.address}, {this.state.zip_code} {this.state.city}{" "}
