@@ -78,6 +78,12 @@ class UserServicesPreview extends React.Component {
       location:null,
       date:null,
       time:null,
+      skills: {
+        careful:0,
+        punctual:0,
+        flexible:0,
+        reactive:0,
+      },
       errors:{},
     }
     this.onQtyChanged = this.onQtyChanged.bind(this);
@@ -146,6 +152,15 @@ class UserServicesPreview extends React.Component {
       console.log(err)
     });
 
+    axios.get('/myAlfred/api/reviews/'+this.props.aboutId)
+      .then(response => {
+        const skills=response.data;
+        this.setState({skills:skills});
+      })  
+      .catch(function(error){
+        console.log(error);
+      }); 
+ 
     setTimeout(this.checkBook, 3000);
   }
 
@@ -749,7 +764,7 @@ class UserServicesPreview extends React.Component {
                 </Grid>
                 <Grid style={{marginTop: 30}}>
                   <Grid className={classes.skillsContentContainer}>
-                    <SkillsAlfred alfred={alfred} widthHr={500}/>
+                    <SkillsAlfred alfred={alfred} widthHr={500} skills={this.state.skills}/>
                   </Grid>
                 </Grid>
                 {equipments.length !== 0 ?
