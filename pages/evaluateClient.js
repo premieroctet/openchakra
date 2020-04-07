@@ -10,8 +10,6 @@ import StarRatings from 'react-star-ratings';
 import {toast} from 'react-toastify';
 import TextField from "@material-ui/core/TextField";
 
-
-
 const { config } = require('../config/config');
 const url = config.apiUrl;
 
@@ -122,11 +120,7 @@ class EvaluateClient extends React.Component {
             accueil: 0,
             accuracy: 0,
             relational: 0,
-            content: ''
-            careful: false,
-            punctual: false,
-            flexible: false,
-            reactive: false,
+            content: '',
         };
         this.changeRating = this.changeRating.bind(this);
         this.changeRating2 = this.changeRating2.bind(this);
@@ -170,6 +164,12 @@ class EvaluateClient extends React.Component {
             .catch()
     }
 
+    onComplimentChanged = (name) => {
+      const org=this.state[name];
+      console.log(name+" was "+org);
+      this.setState({[name]: !org});
+    }
+
     changeRating( newRating, name ) {
         this.setState({
             accueil: newRating
@@ -208,17 +208,14 @@ class EvaluateClient extends React.Component {
             accueil: accueil,
             accuracy: accuracy,
             relational: relational,
-            content: content
-            careful: this.state.careful,
-            punctual: this.state.punctual,
-            flexible: this.state.flexible,
-            reactive: this.state.reactive,
+            content: content,
         };
 
         axios.post(url+'myAlfred/api/reviews/add/client',obj)
             .then(() => {
                 toast.info('Commentaire enregistré');
-                Router.push('/merciClient')
+                //Router.push('/merci')
+                Router.push(`/reservations/detailsReservation?id=${booking}&user=true`);
             })
             .catch(err => {
                 toast.error('Une erreur est survenue')

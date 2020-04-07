@@ -78,6 +78,12 @@ class UserServicesPreview extends React.Component {
       location:null,
       date:null,
       time:null,
+      skills: {
+        careful:0,
+        punctual:0,
+        flexible:0,
+        reactive:0,
+      },
       errors:{},
     }
     this.onQtyChanged = this.onQtyChanged.bind(this);
@@ -126,6 +132,13 @@ class UserServicesPreview extends React.Component {
         count: count,
         location: location,
       });
+
+      axios.get('/myAlfred/api/reviews/'+serviceUser.user._id)
+        .then(response => {
+          const skills=response.data;
+          this.setState({skills:skills});
+        })  
+        .catch(function(error){ console.log(error); }); 
       axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
         .then(res => {
           let availabilities = res.data;
@@ -146,17 +159,18 @@ class UserServicesPreview extends React.Component {
       console.log(err)
     });
 
+ 
     setTimeout(this.checkBook, 3000);
   }
 
   computeReservationDate = () => {
     var dt=moment(this.state.date);
-    var tm=moment(this.state.date);
+    var tm=moment(this.state.time);
     if (!dt.isValid() || !tm.isValid()) {
       return null;
     }
     dt.hour(tm.hour()).minute(tm.minute());
-    return dt;
+    return dt; 
   }
 
   checkBook = () => {
@@ -175,17 +189,20 @@ class UserServicesPreview extends React.Component {
     if (!errors.datetime && this.state.time==null) {
       errors['datetime']='Sélectionnez une heure';
     }
-    const m2=moment(this.state.date+' '+this.state.time);
-    if (!errors.datetime && m2.isValid() && !isMomentAvailable(m2, this.state.service._id, this.state.availabilities)) {
+
+    const reservationDate=this.computeReservationDate();
+    if (!errors.datetime && reservationDate.isValid() && !isMomentAvailable(reservationDate, this.state.service._id, this.state.availabilities)) {
       errors['datetime']=this.state.alfred.firstname+" n'est pas disponible à cette date/heure";
     }
 
     const minBookingDate=getDeadLine(this.state.serviceUser.deadline_before_booking);
-    if (!errors.datetime && m2.isBefore(minBookingDate)) {
+    console.log("Prévenance:"+minBookingDate.format('LLL'));
+    if (!errors.datetime && reservationDate.isBefore(minBookingDate)) {
       errors['datetime']="Le délai de prévenance n'est pas respecté";
     }
 
-    const reservationDate=this.computeReservationDate();
+    console.log("Réservation:"+(reservationDate ? reservationDate.format('LLL'):'undef'));
+    console.log("Maintenant:"+moment().format('LLL'));
     if (reservationDate && reservationDate.isBefore(moment())) { errors['datetime']='Réservation impossible avant maintenant'}
 
     if (!this.state.location) { errors['location']='Sélectionnez un lieu de prestation'}
@@ -207,6 +224,7 @@ class UserServicesPreview extends React.Component {
         result[key]=[p];
       }
     });
+    // Set "no filter" to first position
     return result;
   }
 
@@ -352,7 +370,8 @@ class UserServicesPreview extends React.Component {
 
     return(
       <Grid style={{width: '100%'}}>
-        <ExpansionPanel expanded={index === 0}>
+        <ExpansionPanel defaultExpanded={index==0}>
+         
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
@@ -470,9 +489,9 @@ class UserServicesPreview extends React.Component {
           </Grid>
           <Grid style={{marginTop: 30}}>
             {/* Start filter */ }
-            { Object.entries(filters).map( (entry, index) => {
-              var fltr=entry[0];
-              var prestations=entry[1];
+            { Object.keys(filters).sort().map( (key, index)  => {
+              var fltr=key;
+              var prestations=filters[key];
               return (
                 <Grid>
                   { fltr === '' ?
@@ -580,7 +599,7 @@ class UserServicesPreview extends React.Component {
               <p>Frais de déplacement</p>
             </Grid>
             <Grid>
-              <p>{this.state.serviceUser.travel_tax.toFixed(2)}€</p>
+              <p>{this.state.serviceUser.travel_tax}€</p>
             </Grid>
           </Grid>:null}
           { /* End pick tax */ }
@@ -749,7 +768,7 @@ class UserServicesPreview extends React.Component {
                 </Grid>
                 <Grid style={{marginTop: 30}}>
                   <Grid className={classes.skillsContentContainer}>
-                    <SkillsAlfred alfred={alfred} widthHr={500} skills={3}/>
+                    <SkillsAlfred alfred={alfred} widthHr={500} skills={this.state.skills}/>
                   </Grid>
                 </Grid>
                 {equipments.length !== 0 ?

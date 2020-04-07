@@ -225,7 +225,8 @@ class Evaluate extends React.Component {
         axios.post(url+'myAlfred/api/reviews/add/alfred',obj)
             .then(() => {
                 toast.info('Commentaire enregistré');
-                Router.push('/merci')
+                //Router.push('/merci')
+                Router.push(`/reservations/detailsReservation?id=${booking}&user=true`);
             })
             .catch(err => {
                 toast.error('Une erreur est survenue')
