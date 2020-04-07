@@ -46,7 +46,6 @@ class SkillsAlfred extends React.Component{
       if (onClick) { onClick(name)}
     }
  
-    console.log("Skills:"+skills);
     return (
       <Grid>
         <Grid item>
@@ -66,17 +65,18 @@ class SkillsAlfred extends React.Component{
                 const name=result[0];
                 const value=result[1];
                 const skillCount=this.props.skills[name];
+                const picLabel = skillCount || !hideCount ? value.picsLabel : value.picsLabel+'_disabled';
                 return(
                   <Grid className={classes.cardSkills}>
                     <div onClick={(e) => skillClicked(e, name)} >
-                    <Avatar alt="careful_work" src={'/static/assets/img/skillsAlfred/' + value.picsLabel + '.svg'} className={classes.avatarSize} />
+                    <Avatar alt="careful_work" src={'/static/assets/img/skillsAlfred/' + picLabel + '.svg'} className={classes.avatarSize} />
                     </div>
                     { hideCount ?
                       null
                       :
                       <Chip label={skillCount} className={classes.chipStyle} />
                     }
-                    <Typography >{this.props.hideCount && skills && skills[name]?'XXXX ':''}{value.label}</Typography>
+                    <Typography >{value.label}</Typography>
                   </Grid>
                 )
               })

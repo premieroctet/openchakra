@@ -127,7 +127,7 @@ router.post('/add/client',passport.authenticate('jwt',{session: false}),(req,res
 });
 
 // @Route GET /myAlfred/api/reviews/:user_id
-// get skills for user
+// get skills for user, returns 4 skills cumulated
 // @Access private
 router.get('/:user_id',passport.authenticate('jwt',{session:false}),(req,res)=> {
   const userId=mongoose.Types.ObjectId(req.params.user_id);
@@ -141,8 +141,6 @@ router.get('/:user_id',passport.authenticate('jwt',{session:false}),(req,res)=> 
           Object.entries(note).forEach( e => {
             const skillName=e[0];
             const skillSet=e[1];
-            console.log("SkillName:"+skillName);
-            console.log("skillSet:"+skillSet);
             if (skillSet) {
               result[skillName]=result[skillName]+1;
             }
