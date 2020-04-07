@@ -132,6 +132,13 @@ class UserServicesPreview extends React.Component {
         count: count,
         location: location,
       });
+
+      axios.get('/myAlfred/api/reviews/'+serviceUser.user._id)
+        .then(response => {
+          const skills=response.data;
+          this.setState({skills:skills});
+        })  
+        .catch(function(error){ console.log(error); }); 
       axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
         .then(res => {
           let availabilities = res.data;
@@ -152,14 +159,6 @@ class UserServicesPreview extends React.Component {
       console.log(err)
     });
 
-    axios.get('/myAlfred/api/reviews/'+this.props.aboutId)
-      .then(response => {
-        const skills=response.data;
-        this.setState({skills:skills});
-      })  
-      .catch(function(error){
-        console.log(error);
-      }); 
  
     setTimeout(this.checkBook, 3000);
   }
