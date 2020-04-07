@@ -118,7 +118,7 @@ class About extends React.Component{
                 </Grid>
               </ListItemAvatar>
                 <ListItemText
-                  primary={languages.length > 1 ? "Langue : " + languages.join(' - ') : "Langue : non renseigné"}
+                  primary={languages.length >= 1 ? "Langue : " + languages.join(' - ') : "Langue : non renseigné"}
                 />
             </ListItem>
             { profil ?

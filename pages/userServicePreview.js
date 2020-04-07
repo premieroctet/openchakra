@@ -156,7 +156,7 @@ class UserServicesPreview extends React.Component {
       return null;
     }
     dt.hour(tm.hour()).minute(tm.minute());
-    return dt; 
+    return dt;
   }
 
   checkBook = () => {
@@ -580,7 +580,7 @@ class UserServicesPreview extends React.Component {
               <p>Frais de déplacement</p>
             </Grid>
             <Grid>
-              <p>{this.state.serviceUser.travel_tax}€</p>
+              <p>{this.state.serviceUser.travel_tax.toFixed(2)}€</p>
             </Grid>
           </Grid>:null}
           { /* End pick tax */ }
@@ -749,7 +749,7 @@ class UserServicesPreview extends React.Component {
                 </Grid>
                 <Grid style={{marginTop: 30}}>
                   <Grid className={classes.skillsContentContainer}>
-                    <SkillsAlfred alfred={alfred} widthHr={500}/>
+                    <SkillsAlfred alfred={alfred} widthHr={500} skills={3}/>
                   </Grid>
                 </Grid>
                 {equipments.length !== 0 ?
