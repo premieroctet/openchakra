@@ -215,13 +215,19 @@ class UserServicesPreview extends React.Component {
       return result;
     }
     this.state.prestations.forEach( p => {
-      var filter=p.prestation.filter_presentation;
-      var key = !filter || filter.label==='Aucun' ? '' : filter.label;
-      if (key in result) {
-        result[key].push(p);
+      if (p.prestation==null) {
+        // FIX : réaffecter les prestations persos
+        console.error(`Error:${p.id} has a null prestation`);
       }
       else {
-        result[key]=[p];
+        var filter=p.prestation.filter_presentation;
+        var key = !filter || filter.label==='Aucun' ? '' : filter.label;
+        if (key in result) {
+          result[key].push(p);
+        }
+        else {
+          result[key]=[p];
+        }
       }
     });
     // Set "no filter" to first position
