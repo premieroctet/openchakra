@@ -18,175 +18,14 @@ import UserAvatar from '../../components/Avatar/UserAvatar';
 import io from "socket.io-client";
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
-
+import styles from './detailsReservation/detailsReservationStyle'
+import About from '../../components/About/About';
 
 
 moment.locale("fr");
 
-/*var Rating = require('react-rating');*/
 const { config } = require("../../config/config");
 const url = config.apiUrl;
-
-const styles = theme => ({
-  exp1: {
-    "&::before": {
-      height: "0px!important"
-    },
-    [theme.breakpoints.down("sm")]: {
-      width: '100%!important'
-    }
-  },
-  bordernone:{
-    [theme.breakpoints.down("sm")]: {
-      border: 'none!important',
-    },
-  },
-  displayn:{
-    display: 'none'
-  },
-  bigContainer: {
-    marginTop: 100,
-    flexGrow: 1,
-    [theme.breakpoints.down("xs")]: {
-      marginBottom: 100,
-    }
-  },
-  marginbot: {
-    marginBottom: "3.5%"
-  },
-  hiddenone: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none!important"
-    }
-  },
-  revealedone: {
-    [theme.breakpoints.up("md")]: {
-      display: "none!important"
-    }
-  },
-  triangle: {
-    width: 0,
-    height: 0,
-    borderLeft: "15px solid transparent",
-    borderRight: "15px solid transparent",
-    borderTop: "15px solid gray",
-    margin: "0 auto",
-    marginTop: -28
-  },
-  shopbar: {
-    [theme.breakpoints.down("md")]: {
-      display: "none"
-    }
-  },
-  bottombar: {
-    visibility: "hidden",
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    },
-    [theme.breakpoints.down("sm")]: {
-      visibility: "visible",
-      boxShadow: "2px -5px 14px -15px rgba(0,0,0,0.75)"
-    }
-  },
-  topbar: {
-    visibility: "visible",
-    position: "sticky",
-    top: 75,
-    zIndex: 999,
-    [theme.breakpoints.down("sm")]: {
-      display: "none",
-      visibility: "hidden"
-    }
-  },
-  hidesm: {
-    minWidth: "271px",
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
-  },
-
-  hidelg: {
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    }
-  },
-
-  trait: {
-    width: "100%",
-    height: 4,
-    backgroundColor: "rgb(47, 188, 211)",
-    borderColor: "transparent",
-    [theme.breakpoints.down("sm")]: {}
-  },
-  trait1: {
-    width: "100%",
-
-    height: 4,
-    backgroundColor: "lightgray",
-    borderColor: "transparent"
-  },
-  trait2: {
-    width: "100%",
-    height: 4,
-    backgroundColor: "lightgray",
-    borderColor: "transparent",
-    [theme.breakpoints.down("sm")]: {}
-  },
-  trait3: {
-    width: "100%",
-    height: 4,
-    backgroundColor: "rgb(47, 188, 211)",
-    borderColor: "transparent"
-  },
-  tabweb: {
-    visibility: "visible",
-    width: "100%",
-    position: "sticky",
-    top: "115px",
-    fontSize: 15,
-    backgroundColor: "white",
-    zIndex: "20",
-    [theme.breakpoints.down("sm")]: {
-      display: "none",
-      visibility: "hidden"
-    }
-  },
-
-  tabmobile: {
-    visibility: "hidden",
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    },
-    [theme.breakpoints.down("sm")]: {
-      visibility: "visible",
-      fontSize: "10px",
-      fontWeight: "300",
-      marginTop: "-100px",
-      height: 90,
-      backgroundColor: "white",
-      position: "sticky",
-      top: 55,
-      zIndex: 20
-    }
-  },
-
-  mobilerow: {
-    marginTop: "1%",
-    [theme.breakpoints.down("sm")]: {
-      marginTop: "15%"
-    }
-  },
-  Rightcontent: {
-    marginLeft: "4%"
-  },
-  toggle: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
-  }
-});
-
-
 
 class DetailsReservation extends React.Component {
   constructor(props) {
@@ -282,14 +121,8 @@ class DetailsReservation extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const value = this.state.value;
-    const { modal1 } = this.state;
-    const { modal2 } = this.state;
-    const { modal3 } = this.state;
-    const { modal4 } = this.state;
     const { bookingObj } = this.state;
     const { currentUser } = this.state;
-    const { is_user } = this.props;
     const {splitAddress} = this.state;
 
     return (
@@ -438,71 +271,56 @@ class DetailsReservation extends React.Component {
                                   : bookingObj.status}
                         </Typography>
 
-                        <Grid
-                            container
-                            className={classes.mobilerow}
-                            style={{
-                              borderBottom: "1.5px #8281813b solid",
-                              marginTop: "5%"
-                            }}
-                        >
-                          <Grid item xs={3} md={1} style={{ marginRight: "5%" }}>
+                        <Grid container className={classes.mobilerow} style={{marginTop: "5%", justifyContent: 'space-between', alignItems: 'center'}}>
+                          <Grid item xs={3} md={1}>
                             {bookingObj === null ||
                             currentUser === null ? null : currentUser._id ===
                             bookingObj.alfred._id ? (
-                                <UserAvatar user={bookingObj.user} />
+                                <UserAvatar user={bookingObj.user} className={classes.avatarLetter}/>
                             ) : (
-                                <UserAvatar user={bookingObj.alfred} />
+                                <UserAvatar user={bookingObj.alfred} className={classes.avatarLetter}/>
                             )}
                           </Grid>
                           <Grid item xs={5} md={7}>
-                            <Typography
-                                style={{ marginTop: "-3%", fontSize: "1.7rem" }}
-                            >
-                              {bookingObj === null || currentUser === null ? null : currentUser._id === bookingObj.alfred._id ? (
+                            <Grid>
+                              <Typography
+                                style={{fontSize: "1.7rem" }}
+                              >
+                                {bookingObj === null || currentUser === null ? null : currentUser._id === bookingObj.alfred._id ? (
                                   <span>{`${bookingObj.user.firstname} ${bookingObj.user.name}`}</span>
-                              ) : <span>{`${bookingObj.alfred.firstname} ${bookingObj.alfred.name}`}</span> }
-                            </Typography>
-                            <Typography
-                                style={{ marginTop: "2%", fontSize: "0.8rem" }}
-                            >
-                              Réservation {bookingObj.service} le{" "}
-                              {bookingObj === null
+                                ) : <span>{`${bookingObj.alfred.firstname} ${bookingObj.alfred.name}`}</span> }
+                              </Typography>
+                            </Grid>
+                            <Grid style={{ marginTop: "2%"}}>
+                              <Typography style={{fontSize: "0.8rem" }}>
+                                Réservation {bookingObj.service} le{" "}
+                                {bookingObj === null
                                   ? null
                                   : bookingObj.date_prestation}
-                            </Typography>
-                            <Typography
+                              </Typography>
+                            </Grid>
+                            <Grid style={{ marginTop: "2%"}}>
+                              <Typography
                                 style={{
                                   color: "#4FBDD7",
                                   fontWeight: "600",
                                   fontSize: "1.1rem"
                                 }}
-                            >
-                              {bookingObj === null || currentUser === null
+                              >
+                                {bookingObj === null || currentUser === null
                                   ? null
                                   : currentUser._id === bookingObj.alfred._id
-                                      ? (bookingObj.amount - bookingObj.fees * 2).toFixed(2)
-                                      : bookingObj.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}
-                              €
-                            </Typography>
+                                    ? (bookingObj.amount - bookingObj.fees * 2).toFixed(2)
+                                    : bookingObj.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}
+                                €
+                              </Typography>
+                            </Grid>
                           </Grid>
                           <Grid item xs={2} style={{ textAlign: "center" }}>
                             <div style={{ marginTop: "5%" }}>
-                              <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="20.432"
-                                  height="31.478"
-                                  viewBox="0 0 55.432 66.478"
-                              >
-                                <path
-                                    id="Tracé_12517"
-                                    data-name="Tracé 12517"
-                                    d="M300.251,5274l-1.352.1-1.352.2-1.463.206-1.241.311-1.352.3-2.59.814-2.362,1.125-2.365,1.223-2.03,1.428-2.03,1.633-1.8,1.832-1.577,1.836-1.352,2.141-1.238,2.144-.9,2.34-.339,1.227-.339,1.121-.225,1.329-.228,1.222L274,5297.76v1.323l.111,1.835.228,1.833.336,1.942.567,1.831.564,1.839.788,1.832.788,1.836.9,1.838,1.016,1.731,1.124,1.832,2.368,3.365,2.476,3.267,2.593,3.061,2.59,2.851,2.479,2.552,2.365,2.344,2.14,1.936,3.04,2.653,1.241,1.018,1.241-1.018,3.04-2.653,2.141-1.936,2.365-2.344,2.479-2.552,2.59-2.851,2.593-3.061,2.476-3.267,2.368-3.365,1.124-1.832,1.016-1.731.9-1.838.788-1.836.788-1.832.564-1.839.567-1.831.336-1.942.228-1.833.111-1.835v-1.323l-.111-1.225-.228-1.222-.225-1.329-.339-1.121-.339-1.227-.9-2.34-1.238-2.144-1.352-2.141-1.577-1.836-1.8-1.832-2.03-1.633-2.03-1.428-2.365-1.223-2.362-1.125-2.59-.814-1.352-.3-1.241-.311-1.463-.206-1.352-.2-1.355-.1Zm2.707,14.378,1.124.2,1.127.206,1.124.4,1.016.41,1.013.61.9.611.788.714.792.715.678.813.671.919.453.919.453,1.018.225,1.021.222,1.023v2.24l-.222,1.02-.225,1.018-.453,1.023-.453.912-.671.919-.678.819-.792.713-.788.715-.9.609-1.013.613-1.016.4-1.124.41-1.127.206-1.124.2h-2.483l-1.124-.2-1.127-.206-1.124-.41-1.016-.4-1.013-.613-.9-.609-.788-.715-.792-.713-.678-.819-.671-.919-.453-.912-.453-1.023-.225-1.018-.222-1.02v-2.24l.222-1.023.225-1.021.453-1.018.453-.919.671-.919.678-.812.792-.715.788-.714.9-.611,1.013-.61,1.016-.41,1.124-.4,1.127-.206,1.124-.2Z"
-                                    transform="translate(-274.001 -5274)"
-                                    fill="#848484"
-                                    fill-rule="evenodd"
-                                />
-                              </svg>
+                              <Grid>
+                                <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
+                              </Grid>
                             </div>
                             <Typography
                                 style={{ fontSize: "0.8rem", color: "#9B9B9B" }}
@@ -520,287 +338,11 @@ class DetailsReservation extends React.Component {
                             </Typography>
                           </Grid>
                         </Grid>
+                        <hr className={classes.hrSeparator}/>
 
-                        <Grid
-                            container
-                            style={{
-                              borderBottom: "1.5px #8281813b solid",
-                              marginTop: "5%",
-                              paddingBottom: "7%"
-                            }}
-                        >
+                        <Grid container style={{borderBottom: "1.5px #8281813b solid", marginTop: "5%", paddingBottom: "7%"}}>
                           <Grid item xs={12} md={7}>
-                            <Typography
-                                style={{ marginTop: "-3%", fontSize: "1.7rem", marginBottom: '15px'}}
-                            >
-                              A propos de{" "}
-                              {bookingObj === null ||
-                              currentUser === null ? null : currentUser._id ===
-                              bookingObj.alfred._id ? (
-                                  <span>{`${bookingObj.user.firstname} ${bookingObj.user.name}`}</span>
-                              ) : (
-                                  <span>{`${bookingObj.alfred.firstname} ${bookingObj.alfred.name}`}</span>
-                              )}
-                            </Typography>
-                            <div style={{ marginLeft: "3%", marginBottom: '15px' }}>
-                              {bookingObj === null ||
-                              currentUser === null ? null : currentUser._id ===
-                              bookingObj.alfred._id ?
-                                      <StarRatings
-                                          rating={bookingObj.user.score_client}
-                                          starRatedColor={"#2FBCD3"}
-                                          numberOfStars={5}
-                                          name='rating'
-                                          starDimension={'20px'}
-                                          starHoverColor={'#2FBCD3'}
-                                          starSpacing={'3px'}
-                                      />
-                               :
-                                  <StarRatings
-                                      rating={bookingObj.alfred.score}
-                                      starRatedColor={"#2FBCD3"}
-                                      numberOfStars={5}
-                                      name='rating'
-                                      starDimension={'20px'}
-                                      starHoverColor={'#2FBCD3'}
-                                      starSpacing={'3px'}
-                                  />
-                              }
-
-                              <Grid style={{ marginLeft: "4%" }} container>
-                                <Grid item xs={2} md={1}>
-                                  <img
-                                      style={{ width: "15px" }}
-                                      src="../../static/stars/star-solid.png"
-                                  ></img>
-                                </Grid>
-                                <Grid item xs={10} md={11}>
-                                  <Typography
-                                      style={{
-                                        color: "rgb(47, 188, 211)",
-                                        fontSize: "0.8rem",
-                                        marginLeft: "-5%",
-                                        cursor: "pointer"
-                                      }}
-                                  >
-                                    {bookingObj === null || currentUser === null
-                                        ? null
-                                        : currentUser._id === bookingObj.alfred._id
-                                            ? bookingObj.user.number_of_reviews
-                                            : bookingObj.alfred.number_of_reviews}{" "}
-                                    Commentaires
-                                  </Typography>
-                                </Grid>
-
-                                {bookingObj === null ||
-                                currentUser === null ? null : currentUser._id ===
-                                bookingObj.alfred._id ? (
-                                    bookingObj.user.id_confirmed === true ? (
-                                        <>
-                                          <Grid item xs={2} md={1}>
-                                            <img
-                                                style={{ width: "15px" }}
-                                                src="../../static/statut/oui.png"
-                                            ></img>
-                                          </Grid>
-                                          <Grid item xs={10} md={11}>
-                                            <Typography
-                                                style={{
-                                                  fontSize: "0.8rem",
-                                                  marginLeft: "-5%"
-                                                }}
-                                            >
-                                              Pièce d’identité vérifiée
-                                            </Typography>
-                                          </Grid>
-                                        </>
-                                    ) : null
-                                ) : bookingObj.alfred.id_confirmed === true ? (
-                                    <>
-                                      <Grid item xs={2} md={1}>
-                                        <img
-                                            style={{ width: "15px" }}
-                                            src="../../static/statut/oui.png"
-                                        ></img>
-                                      </Grid>
-                                      <Grid item xs={10} md={11}>
-                                        <Typography
-                                            style={{
-                                              fontSize: "0.8rem",
-                                              marginLeft: "-5%"
-                                            }}
-                                        >
-                                          Pièce d’identité vérifiée
-                                        </Typography>
-                                      </Grid>
-                                    </>
-                                ) : null}
-
-                                {bookingObj === null ||
-                                currentUser === null ? null : currentUser._id ===
-                                bookingObj.alfred._id ? (
-                                    <>
-                                      <Grid item xs={2} md={1}>
-                                        <img
-                                            style={{ width: "15px", margin: 'auto'}}
-                                            src="../../static/statut/calendar.png"
-                                        ></img>
-                                      </Grid>
-                                      <Grid item xs={10} md={11}>
-                                        <Typography
-                                            style={{
-                                              fontSize: "0.8rem",
-                                              marginLeft: "-5%"
-                                            }}
-                                        >
-                                          Membre depuis le{" "}
-                                          {moment(
-                                              bookingObj.user.creation_date
-                                          ).format("DD/MM/YYYY")}
-                                        </Typography>
-                                      </Grid>
-                                    </>
-                                ) : (
-                                    <>
-                                      <Grid item xs={2} md={1}>
-                                        <img
-                                            style={{ width: "15px", margin: 'auto' }}
-                                            src="../../static/statut/calendar.png"
-                                        ></img>
-                                      </Grid>
-                                      <Grid item xs={10} md={11}>
-                                        <Typography
-                                            style={{
-                                              fontSize: "0.8rem",
-                                              marginLeft: "-5%"
-                                            }}
-                                        >
-                                          Membre depuis le{" "}
-                                          {moment(
-                                              bookingObj.alfred.creation_date
-                                          ).format("DD/MM/YYYY")}
-                                        </Typography>
-                                      </Grid>
-                                    </>
-                                )}
-
-                                {bookingObj === null ? null : bookingObj.alfred
-                                    .is_alfred === true &&
-                                bookingObj.user.is_alfred === true ? (
-                                    <>
-                                      <Grid item xs={2} md={1}>
-                                        <img
-                                            style={{ width: "15px" }}
-                                            src="../../static/statut/beaver.png"
-                                        ></img>
-                                      </Grid>
-                                      <Grid item xs={10} md={11}>
-                                        <Typography
-                                            style={{
-                                              fontSize: "0.8rem",
-                                              marginLeft: "-5%"
-                                            }}
-                                        >
-                                          Est également Alfred{" "}
-                                        </Typography>
-                                      </Grid>
-                                    </>
-                                ) : null}
-
-                                {bookingObj === null ||
-                                currentUser === null ? null : currentUser._id ===
-                                bookingObj.alfred._id ? (
-                                    <>
-                                      <Grid item xs={2} md={1}>
-                                        <img
-                                            style={{ width: "15px" }}
-                                            src="../../static/statut/chat.png"
-                                        ></img>
-                                      </Grid>
-                                      <Grid item xs={10} md={11}>
-                                        <Typography
-                                            style={{
-                                              fontSize: "0.8rem",
-                                              marginLeft: "-5%"
-                                            }}
-                                        >
-                                          Langue:{" "}
-                                          {bookingObj.user.languages.length ? (
-                                              bookingObj.user.languages.map(
-                                                  language => language + ", "
-                                              )
-                                          ) : (
-                                              <span>Français</span>
-                                          )}{" "}
-                                        </Typography>
-                                      </Grid>
-                                    </>
-                                ) : (
-                                    <>
-                                      <Grid item xs={2} md={1}>
-                                        <img
-                                            style={{ width: "15px" }}
-                                            src="../../static/statut/chat.png"
-                                        ></img>
-                                      </Grid>
-                                      <Grid item xs={10} md={11}>
-                                        <Typography
-                                            style={{
-                                              fontSize: "0.8rem",
-                                              marginLeft: "-5%"
-                                            }}
-                                        >
-                                          Langue:{" "}
-                                          {bookingObj.alfred.languages.length ? (
-                                              bookingObj.alfred.languages.map(
-                                                  language => language + ", "
-                                              )
-                                          ) : (
-                                              <span>Français</span>
-                                          )}{" "}
-                                        </Typography>
-                                      </Grid>
-                                    </>
-                                )}
-                                {bookingObj === null ||
-                                currentUser == null ? null : currentUser._id ===
-                                bookingObj.alfred._id ? (
-                                    <Link
-                                        href={{
-                                          pathname: "../viewProfile",
-                                          query: { id: bookingObj.user._id }
-                                        }}
-                                    >
-                                      <Typography
-                                          style={{
-                                            color: "rgb(47, 188, 211)",
-                                            fontSize: "0.8rem",
-                                            cursor: "pointer"
-                                          }}
-                                      >
-                                        Voir le profil
-                                      </Typography>
-                                    </Link>
-                                ) : (
-                                    <Link
-                                        href={{
-                                          pathname: "../viewProfile",
-                                          query: { id: bookingObj.alfred._id }
-                                        }}
-                                    >
-                                      <Typography
-                                          style={{
-                                            color: "rgb(47, 188, 211)",
-                                            fontSize: "0.8rem",
-                                            cursor: "pointer"
-                                          }}
-                                      >
-                                        Voir le profil
-                                      </Typography>
-                                    </Link>
-                                )}
-                              </Grid>
-                            </div>
+                            <About alfred={bookingObj.alfred._id}/>
                           </Grid>
                           <Grid item xs={2} style={{ textAlign: "center" }}>
                             <Link
