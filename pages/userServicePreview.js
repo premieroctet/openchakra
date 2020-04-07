@@ -165,7 +165,7 @@ class UserServicesPreview extends React.Component {
 
   computeReservationDate = () => {
     var dt=moment(this.state.date);
-    var tm=moment(this.state.date);
+    var tm=moment(this.state.time);
     if (!dt.isValid() || !tm.isValid()) {
       return null;
     }
@@ -189,17 +189,20 @@ class UserServicesPreview extends React.Component {
     if (!errors.datetime && this.state.time==null) {
       errors['datetime']='Sélectionnez une heure';
     }
-    const m2=moment(this.state.date+' '+this.state.time);
-    if (!errors.datetime && m2.isValid() && !isMomentAvailable(m2, this.state.service._id, this.state.availabilities)) {
+
+    const reservationDate=this.computeReservationDate();
+    if (!errors.datetime && reservationDate.isValid() && !isMomentAvailable(reservationDate, this.state.service._id, this.state.availabilities)) {
       errors['datetime']=this.state.alfred.firstname+" n'est pas disponible à cette date/heure";
     }
 
     const minBookingDate=getDeadLine(this.state.serviceUser.deadline_before_booking);
-    if (!errors.datetime && m2.isBefore(minBookingDate)) {
+    console.log("Prévenance:"+minBookingDate.format('LLL'));
+    if (!errors.datetime && reservationDate.isBefore(minBookingDate)) {
       errors['datetime']="Le délai de prévenance n'est pas respecté";
     }
 
-    const reservationDate=this.computeReservationDate();
+    console.log("Réservation:"+(reservationDate ? reservationDate.format('LLL'):'undef'));
+    console.log("Maintenant:"+moment().format('LLL'));
     if (reservationDate && reservationDate.isBefore(moment())) { errors['datetime']='Réservation impossible avant maintenant'}
 
     if (!this.state.location) { errors['location']='Sélectionnez un lieu de prestation'}
