@@ -221,6 +221,7 @@ class UserServicesPreview extends React.Component {
         result[key]=[p];
       }
     });
+    // Set "no filter" to first position
     return result;
   }
 
@@ -366,7 +367,8 @@ class UserServicesPreview extends React.Component {
 
     return(
       <Grid style={{width: '100%'}}>
-        <ExpansionPanel expanded={index === 0}>
+        <ExpansionPanel defaultExpanded={index==0}>
+         
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
@@ -484,9 +486,9 @@ class UserServicesPreview extends React.Component {
           </Grid>
           <Grid style={{marginTop: 30}}>
             {/* Start filter */ }
-            { Object.entries(filters).map( (entry, index) => {
-              var fltr=entry[0];
-              var prestations=entry[1];
+            { Object.keys(filters).sort().map( (key, index)  => {
+              var fltr=key;
+              var prestations=filters[key];
               return (
                 <Grid>
                   { fltr === '' ?
