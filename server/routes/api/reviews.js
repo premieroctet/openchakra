@@ -86,12 +86,6 @@ router.post('/add/client',passport.authenticate('jwt',{session: false}),(req,res
     reviewFields.note_client.accuracy= req.body.accuracy;
     reviewFields.note_client.relational = req.body.relational;
 
-    // Compliments
-    reviewFields.note_client.careful = req.body.careful;
-    reviewFields.note_client.punctual = req.body.punctual;
-    reviewFields.note_client.flexible = req.body.flexible;
-    reviewFields.note_client.reactive = req.body.reactive;
-
     let reception = parseInt(req.body.accueil,10);
     let accuracy = parseInt(req.body.accuracy,10);
     let relational = parseInt(req.body.relational,10);
@@ -132,12 +126,12 @@ router.post('/add/client',passport.authenticate('jwt',{session: false}),(req,res
 router.get('/:user_id',passport.authenticate('jwt',{session:false}),(req,res)=> {
   const userId=mongoose.Types.ObjectId(req.params.user_id);
   var result={careful:0, punctual:0, flexible:0, reactive:0};
-  Reviews.find({$or :[ {alfred:userId}, {user:userId}] })
+  Reviews.find({alfred:userId})
     .then(reviews => {
       console.log(JSON.stringify(reviews));
       if(typeof reviews !== 'undefined' && reviews.length > 0){
         reviews.forEach( r => {
-          const note=r.alfred.equals(userId)?r.note_alfred:r.note_client; 
+          const note=r.note_alfred;
           Object.entries(note).forEach( e => {
             const skillName=e[0];
             const skillSet=e[1];
