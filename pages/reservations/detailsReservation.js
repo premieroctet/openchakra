@@ -340,7 +340,7 @@ class DetailsReservation extends React.Component {
                         </Grid>
                         <hr className={classes.hrSeparator}/>
 
-                        <Grid container style={{borderBottom: "1.5px #8281813b solid", marginTop: "5%", paddingBottom: "7%"}}>
+                        <Grid container style={{borderBottom: "1.5px #8281813b solid", marginTop: "5%", paddingBottom: "7%", alignItems: 'center'}}>
                           <Grid item xs={12} md={7}>
                             <About alfred={bookingObj.alfred._id}/>
                           </Grid>
@@ -364,7 +364,6 @@ class DetailsReservation extends React.Component {
                                 style={{
                                   textAlign: "center",
                                   height: "40px",
-                                  width: "200px",
                                   backgroundColor: "#4FBDD7",
                                   lineHeight: 2.5,
                                   borderRadius: "50px",
@@ -384,7 +383,6 @@ class DetailsReservation extends React.Component {
                                   style={{
                                     textAlign: "center",
                                     height: "40px",
-                                    minWidth: "250px",
                                     backgroundColor: "#F8727F",
                                     lineHeight: 2.5,
                                     borderRadius: "50px",

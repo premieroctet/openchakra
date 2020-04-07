@@ -132,6 +132,7 @@ class ConfirmPayement extends React.Component {
       date: null,
       hour: null,
       languages: [],
+      alfredId: ''
     };
   }
 
@@ -163,6 +164,7 @@ class ConfirmPayement extends React.Component {
       pick_tax: bookingObj.pick_tax,
       fees: bookingObj.fees,
       grandTotal: bookingObj.amount,
+      alfredId: bookingObj.alfred._id
     })
 
     const id = this.props.shop_id;
@@ -213,7 +215,7 @@ class ConfirmPayement extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { currentUser, languages, user } = this.state;
+    const { currentUser, languages, user, alfredId } = this.state;
 
     return (
       <Fragment>
@@ -251,7 +253,7 @@ class ConfirmPayement extends React.Component {
                     <Grid container>
                       <Grid item>
                         <div style={{ marginLeft: "3%", width:'100%' }}>
-                          <About alfred={user} languages={languages} shop={user} profil={false}/>
+                          <About alfred={alfredId} profil={false}/>
                         </div>
                       </Grid>
                       <Grid item xs={5}>

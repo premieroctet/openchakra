@@ -57,7 +57,7 @@ export default theme => ({
   },
   hrSeparator:{
     width: '100%',
-    marginTop: 20,
+    marginTop: 30,
     color : 'rgb(80, 80, 80, 0.2)'
 
   }

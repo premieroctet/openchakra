@@ -18,7 +18,10 @@ import Typography from '@material-ui/core/Typography';
 import CancelIcon from '@material-ui/icons/Cancel';
 import moment from 'moment';
 import Link from 'next/link';
+import axios from 'axios';
 
+const { config } = require('../../config/config');
+const url = config.apiUrl;
 
 moment.locale('fr');
 
@@ -32,11 +35,32 @@ class About extends React.Component{
       valueRating: 0,
       nbCommentary: 0,
       shop:[],
+      user: ''
     }
   }
 
+  componentDidMount() {
+    axios.get(`${url}myAlfred/api/shop/alfred/${this.props.alfred}`)
+      .then( response  =>  {
+        let shop = response.data;
+        console.log(shop, 'shop')
+        this.setState({
+          user: shop.alfred,
+          idAlfred: shop.alfred._id,
+          languages: shop.alfred.languages,
+          services: shop.services,
+          shop:shop,
+        });
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   render(){
-    const {classes, alfred, languages, shop, profil} = this.props;
+    const {shop, languages, user} = this.state;
+    const {classes, alfred, profil} = this.props;
     const preventDefault = event => event.preventDefault();
 
     const StyledRating = withStyles({
@@ -50,7 +74,7 @@ class About extends React.Component{
         <Grid item style={{width: '100%'}}>
           <Grid>
             <Typography variant="h3" className={classes.titleAbout}>
-              A propos de {alfred.firstname}
+              A propos de {user.firstname}
             </Typography>
           </Grid>
           <List dense={this.state.dense} className={classes.listStyle}>
