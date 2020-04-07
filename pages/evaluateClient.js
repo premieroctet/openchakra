@@ -123,19 +123,22 @@ class EvaluateClient extends React.Component {
             accuracy: 0,
             relational: 0,
             content: ''
-
+            careful: false,
+            punctual: false,
+            flexible: false,
+            reactive: false,
         };
         this.changeRating = this.changeRating.bind(this);
         this.changeRating2 = this.changeRating2.bind(this);
         this.changeRating3 = this.changeRating3.bind(this);
-
+        this.onComplimentChanged = this.onComplimentChanged.bind(this);
 
 
 
     }
 
-    static getInitialProps ({ query: { booking,id,client } }) {
-        return { booking:booking,service_id: id,client_id:client }
+    static getInitialProps ({ query: { booking,id } }) {
+        return { booking:booking,service_id: id }
 
     }
 
@@ -206,6 +209,10 @@ class EvaluateClient extends React.Component {
             accuracy: accuracy,
             relational: relational,
             content: content
+            careful: this.state.careful,
+            punctual: this.state.punctual,
+            flexible: this.state.flexible,
+            reactive: this.state.reactive,
         };
 
         axios.post(url+'myAlfred/api/reviews/add/client',obj)

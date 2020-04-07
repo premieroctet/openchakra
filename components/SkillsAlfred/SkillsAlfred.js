@@ -17,46 +17,66 @@ class SkillsAlfred extends React.Component{
       valueRating: 3,
       isChecked: false,
       skills: {
-        skillOne: {
+        careful: {
           label: 'Travail soigneux',
-          picsLabel: 'careful_work'
+          picsLabel: 'careful_work',
         },
-        skillTwo: {
+        punctual: {
           label: 'Ponctualité',
-          picsLabel: 'punctuality'
+          picsLabel: 'punctuality',
         },
-        skillThree: {
+        flexible: {
           label: 'Flexibilité',
-          picsLabel: 'flexibility'
+          picsLabel: 'flexibility',
         },
-        skillFive: {
+        reactive: {
           label: 'Réactivité',
-          picsLabel: 'reactivity'
+          picsLabel: 'reactivity',
         },
       }
 
     }
   }
-  render(){
-    const {classes, alfred, widthHr} = this.props;
 
+  render(){
+    const {classes, skills, alfred, widthHr, hideCount, onClick} = this.props;
+
+    const skillClicked = (e, name) => {
+      e.stopPropagation();
+      if (onClick) { onClick(name)}
+    }
+ 
+    console.log("Skills:"+skills);
     return (
       <Grid>
         <Grid item>
-          <Typography variant="h3" className={classes.titleSkills}>
-            Les compliments reçus par {alfred.firstname}
-          </Typography>
+          { hideCount ? 
+              null 
+              :
+              <Typography variant="h3" className={classes.titleSkills}>
+                Les compliments reçus par {alfred.firstname}
+              </Typography>
+          }
           <Grid className={ widthHr === 500 ? classes.bigWidth : classes.middleWidth}>
             <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
           </Grid>
           <Grid container className={classes.mainContainer}>
             {
-              Object.keys(this.state.skills).map(result =>{
+              Object.entries(this.state.skills).map(result =>{
+                const name=result[0];
+                const value=result[1];
+                const skillCount=this.props.skills[name];
                 return(
                   <Grid className={classes.cardSkills}>
-                    <Avatar alt="careful_work" src={'/static/assets/img/skillsAlfred/' + this.state.skills[result].picsLabel + '.svg'} className={classes.avatarSize}/>
-                    <Chip label="0" className={classes.chipStyle} />
-                    <Typography>{this.state.skills[result].label}</Typography>
+                    <div onClick={(e) => skillClicked(e, name)} >
+                    <Avatar alt="careful_work" src={'/static/assets/img/skillsAlfred/' + value.picsLabel + '.svg'} className={classes.avatarSize} />
+                    </div>
+                    { hideCount ?
+                      null
+                      :
+                      <Chip label={skillCount} className={classes.chipStyle} />
+                    }
+                    <Typography >{this.props.hideCount && skills && skills[name]?'XXXX ':''}{value.label}</Typography>
                   </Grid>
                 )
               })

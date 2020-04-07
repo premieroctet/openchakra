@@ -28,6 +28,12 @@ router.post('/add/alfred',passport.authenticate('jwt',{session: false}),(req,res
                 reviewFields.note_alfred.quality_price= req.body.quality_price;
                 reviewFields.note_alfred.relational = req.body.relational;
 
+                // Compliments
+                reviewFields.note_alfred.careful = req.body.careful;
+                reviewFields.note_alfred.punctual = req.body.punctual;
+                reviewFields.note_alfred.flexible = req.body.flexible;
+                reviewFields.note_alfred.reactive = req.body.reactive;
+                
                 let quality = parseInt(req.body.quality_price,10);
                 let prestation = parseInt(req.body.prestation_quality,10);
                 let relational = parseInt(req.body.relational,10);
@@ -50,6 +56,7 @@ router.post('/add/alfred',passport.authenticate('jwt',{session: false}),(req,res
                                 if(user.number_of_reviews === 1){
                                     user.score = score.toFixed(2);
                                 } else {
+                                    // FIX : mauvais calcul de moyenne
                                     user.score = ((user.score + score)/2).toFixed(2);
                                 }
                                 user.save().then(users => console.log('reviews update')).catch(err => console.log(err));
@@ -78,6 +85,12 @@ router.post('/add/client',passport.authenticate('jwt',{session: false}),(req,res
     reviewFields.note_client.reception = req.body.accueil;
     reviewFields.note_client.accuracy= req.body.accuracy;
     reviewFields.note_client.relational = req.body.relational;
+
+    // Compliments
+    reviewFields.note_client.careful = req.body.careful;
+    reviewFields.note_client.punctual = req.body.punctual;
+    reviewFields.note_client.flexible = req.body.flexible;
+    reviewFields.note_client.reactive = req.body.reactive;
 
     let reception = parseInt(req.body.accueil,10);
     let accuracy = parseInt(req.body.accuracy,10);
@@ -111,6 +124,36 @@ router.post('/add/client',passport.authenticate('jwt',{session: false}),(req,res
             }
         )
         .catch(err => console.log(err));
+});
+
+// @Route GET /myAlfred/api/reviews/:user_id
+// get skills for user
+// @Access private
+router.get('/:user_id',passport.authenticate('jwt',{session:false}),(req,res)=> {
+  const userId=mongoose.Types.ObjectId(req.params.user_id);
+  var result={careful:0, punctual:0, flexible:0, reactive:0};
+  Reviews.find({$or :[ {alfred:userId}, {user:userId}] })
+    .then(reviews => {
+      console.log(JSON.stringify(reviews));
+      if(typeof reviews !== 'undefined' && reviews.length > 0){
+        reviews.forEach( r => {
+          const note=r.alfred.equals(userId)?r.note_alfred:r.note_client; 
+          Object.entries(note).forEach( e => {
+            const skillName=e[0];
+            const skillSet=e[1];
+            console.log("SkillName:"+skillName);
+            console.log("skillSet:"+skillSet);
+            if (skillSet) {
+              result[skillName]=result[skillName]+1;
+            }
+          });
+        });
+        res.json(result);
+      } else {
+        return res.status(400).json(result);
+      }
+    })
+    .catch(err => console.log(err) && res.status(404).json(result));
 });
 
 // @Route GET /myAlfred/api/reviews/all
@@ -208,7 +251,6 @@ router.get('/alfred/:id',(req,res) => {
 // View one review
 // @Access private
 router.get('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
-
     Reviews.findById(req.params.id)
         .populate('alfred')
         .populate('user')
