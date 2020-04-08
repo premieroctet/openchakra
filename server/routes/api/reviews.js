@@ -128,7 +128,6 @@ router.get('/:user_id',passport.authenticate('jwt',{session:false}),(req,res)=> 
   var result={careful:0, punctual:0, flexible:0, reactive:0};
   Reviews.find({alfred:userId})
     .then(reviews => {
-      console.log(JSON.stringify(reviews));
       if(typeof reviews !== 'undefined' && reviews.length > 0){
         reviews.forEach( r => {
           const note=r.note_alfred;
@@ -177,7 +176,7 @@ router.get('/all',passport.authenticate('jwt',{session:false}),(req,res)=> {
 
 router.get('/customerReviewsCurrent', passport.authenticate('jwt', { session: false }), ( req, res ) => {
     const userId = mongoose.Types.ObjectId(req.user.id);
-    Reviews.find({ alfred: userId,note_client:undefined })
+    Reviews.find({ alfred: userIdd })
         .populate('user','-id_card')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
@@ -189,7 +188,7 @@ router.get('/customerReviewsCurrent', passport.authenticate('jwt', { session: fa
 
 router.get('/alfredReviewsCurrent', passport.authenticate('jwt', { session: false }), ( req, res ) => {
     const userId = mongoose.Types.ObjectId(req.user.id);
-    Reviews.find({ user: userId, note_alfred:undefined })
+    Reviews.find({ user: userId })
         .populate('alfred','-id_card')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
@@ -201,7 +200,7 @@ router.get('/alfredReviewsCurrent', passport.authenticate('jwt', { session: fals
 
 router.get('/profile/customerReviewsCurrent/:id', passport.authenticate('jwt', { session: false }), ( req, res ) => {
     const userId = mongoose.Types.ObjectId(req.params.id);
-    Reviews.find({ alfred: userId, note_client: undefined })
+    Reviews.find({ alfred: userId})
         .populate('user','-id_card')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
@@ -213,7 +212,7 @@ router.get('/profile/customerReviewsCurrent/:id', passport.authenticate('jwt', {
 
 router.get('/profile/alfredReviewsCurrent/:id', passport.authenticate('jwt', { session: false }), ( req, res ) => {
     const userId = mongoose.Types.ObjectId(req.params.id);
-    Reviews.find({ user: userId, note_alfred: undefined })
+    Reviews.find({ user: userId})
         .populate('alfred','-id_card')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
