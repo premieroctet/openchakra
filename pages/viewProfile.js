@@ -7,6 +7,7 @@ import Footer from "../hoc/Layout/Footer/Footer";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import moment from "moment";
+import Commentary from '../components/Commentary/Commentary';
 
 moment.locale("fr");
 
@@ -158,7 +159,7 @@ class viewProfile extends React.Component {
     super(props);
     this.state = {
       depliage: false,
-      tabs: false,
+      customerComments: false, // False : display Alfred comments, tru display customer comments
       user_id: null,
       user_infos: null,
       alfredReviews: null,
@@ -203,16 +204,16 @@ class viewProfile extends React.Component {
   }
 
   handleClicktabs2 = () => {
-    this.setState({ tabs: true });
+    this.setState({ customerComments: true });
   };
 
   handleClicktabs = () => {
-    this.setState({ tabs: false });
+    this.setState({ customerComments: false });
   };
 
   render() {
     const { classes } = this.props;
-    const { tabs } = this.state;
+    const { customerComments } = this.state;
     const { depliage } = this.state;
     const { user_infos, customerReviews, alfredReviews } = this.state;
 
@@ -259,7 +260,7 @@ class viewProfile extends React.Component {
                             >
                               <img
                                 style={{ width: "20px" }}
-                                src="../../static/stars/star-solid.png"
+                                src="/static/stars/star-solid.png"
                               ></img>
                             </Grid>
                             <Grid
@@ -292,7 +293,7 @@ class viewProfile extends React.Component {
                                 >
                                   <img
                                     style={{ width: "20px" }}
-                                    src="../../static/statut/oui.png"
+                                    src="/static/statut/oui.png"
                                   ></img>
                                 </Grid>
                                 <Grid
@@ -314,7 +315,7 @@ class viewProfile extends React.Component {
                                 </Grid>
                               </>
                             ) : null}
-                            
+
                             <Grid
                               item
                               xs={2}
@@ -325,7 +326,7 @@ class viewProfile extends React.Component {
                             >
                               <img
                                 style={{ width: "20px" }}
-                                src="../../static/statut/calendar.png"
+                                src="/static/statut/calendar.png"
                               ></img>
                             </Grid>
                             <Grid
@@ -357,7 +358,7 @@ class viewProfile extends React.Component {
                                 >
                                   <img
                                     style={{ width: "20px" }}
-                                    src="../../static/statut/beaver.png"
+                                    src="/static/statut/beaver.png"
                                   ></img>
                                 </Grid>
                                 <Grid
@@ -390,7 +391,7 @@ class viewProfile extends React.Component {
                             >
                               <img
                                 style={{ width: "20px" }}
-                                src="../../static/statut/chat.png"
+                                src="/static/statut/chat.png"
                               ></img>
                             </Grid>
                             <Grid
@@ -451,10 +452,10 @@ class viewProfile extends React.Component {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography style={{ fontSize: "1rem" }}>
-                          {typeof user_infos.description !== 'undefined' ? user_infos.description.slice(0, 200): null}{" "}
+                          {user_infos.description ? user_infos.description.slice(0, 200): null}{" "}
                           {depliage ? (
                             <React.Fragment>
-                              {typeof user_infos.description !== 'undefined' ?user_infos.description.slice(201) :null}
+                              {user_infos.description ? user_infos.description.slice(201) :null}
                             </React.Fragment>
                           ) : (
                             <React.Fragment>
@@ -479,9 +480,7 @@ class viewProfile extends React.Component {
                           Vérifications
                         </Typography>
                       </Grid>
-                      {user_infos.id_confirmed === false &&
-                      user_infos.is_confirmed === false &&
-                      user_infos.phone_confirmed === false ? (
+                      { !(user_infos.id_confirmed || user_infos.is_confirmed || user_infos.phone_confirmed)? (
                         <p>Cet utilisateur n'a aucune vérification</p>
                       ) : null}
                       {user_infos.id_confirmed === true ? (
@@ -490,7 +489,7 @@ class viewProfile extends React.Component {
                             <Grid item xs={1} style={{ textAlign: "center" }}>
                               <img
                                 style={{ width: "30%" }}
-                                src="../static/checkboxes/checkedbluealfred.png"
+                                src="/static/checkboxes/checkedbluealfred.png"
                               />
                             </Grid>
                             <Grid item xs={11}>
@@ -507,7 +506,7 @@ class viewProfile extends React.Component {
                             <Grid item xs={1} style={{ textAlign: "center" }}>
                               <img
                                 style={{ width: "30%" }}
-                                src="../static/checkboxes/checkedbluealfred.png"
+                                src="/static/checkboxes/checkedbluealfred.png"
                               />
                             </Grid>
                             <Grid item xs={11}>
@@ -524,7 +523,7 @@ class viewProfile extends React.Component {
                             <Grid item xs={1} style={{ textAlign: "center" }}>
                               <img
                                 style={{ width: "30%" }}
-                                src="../static/checkboxes/checkedbluealfred.png"
+                                src="/static/checkboxes/checkedbluealfred.png"
                               />
                             </Grid>
                             <Grid item xs={11}>
@@ -541,41 +540,35 @@ class viewProfile extends React.Component {
                         style={{ marginTop: "20px" }}
                         className={classes.tabweb}
                       >
+                      <Commentary user_id={this.props.user_id} alfred_mode={!customerComments}/>
+                      </Grid>
+                      <Grid
+                        container
+                        style={{ marginTop: "20px" }}
+                        className={classes.tabweb}
+                      >
                         <Grid item xs={6} style={{ textAlign: "center" }}>
                           <div>
                             <h2
                               onClick={this.handleClicktabs}
-                              style={{
-                                fontSize: "1.1rem",
-                                color: "#828181",
-                                fontWeight: "100",
-                                cursor: "pointer",
-                                marginLeft: "0%"
-                              }}
+                              style={{ fontSize: "1.1rem", color: "#828181", fontWeight: "100", cursor: "pointer", marginLeft: "0%" }}
                             >
-                              Commentaires de ses Alfred
+                              De la part des Alfred
                             </h2>
                           </div>
                         </Grid>
                         <Grid item xs={6}>
                           <h2
                             onClick={this.handleClicktabs2}
-                            style={{
-                              fontSize: "1.1rem",
-                              color: "#828181",
-                              fontWeight: "100",
-                              textAlign: "center",
-                              cursor: "pointer"
-                            }}
+                            style={{ fontSize: "1.1rem", color: "#828181", fontWeight: "100", textAlign: "center", cursor: "pointer" }}
                           >
-                            {" "}
-                            Commentaires de ses clients
+                            De la part des clients
                           </h2>
                           <br />
                         </Grid>
 
                         <Grid item xs={6}>
-                          {tabs ? (
+                          {customerComments ? (
                             <React.Fragment>
                               <hr
                                 onClick={this.handleClicktabs}
@@ -600,7 +593,7 @@ class viewProfile extends React.Component {
                           )}
                         </Grid>
                         <Grid item xs={6}>
-                          {tabs ? (
+                          {customerComments ? (
                             <React.Fragment>
                               <hr
                                 onClick={this.handleClicktabs2}
@@ -625,7 +618,7 @@ class viewProfile extends React.Component {
                           )}
                         </Grid>
                         <Grid container>
-                          {tabs
+                          {customerComments
                             ? this.state.customerReviews === null
                               ? null
                               : this.state.customerReviews.map(review => {
@@ -688,23 +681,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                               </Grid>
                                             ) : review.note_alfred
@@ -712,23 +705,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                               </Grid>
                                             ) : review.note_alfred
@@ -736,23 +729,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                               </Grid>
                                             ) : review.note_alfred
@@ -760,23 +753,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                               </Grid>
                                             ) : review.note_alfred
@@ -784,23 +777,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                               </Grid>
                                             ) : review.note_alfred
@@ -808,23 +801,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                               </Grid>
                                             ) : null}
@@ -841,23 +834,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                               </Grid>
                                             ) : review.note_alfred
@@ -865,23 +858,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                               </Grid>
                                             ) : review.note_alfred
@@ -889,23 +882,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                               </Grid>
                                             ) : review.note_alfred
@@ -913,23 +906,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                               </Grid>
                                             ) : review.note_alfred
@@ -937,23 +930,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                               </Grid>
                                             ) : review.note_alfred
@@ -961,23 +954,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                               </Grid>
                                             ) : null}
@@ -994,23 +987,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                               </Grid>
                                             ) : review.note_alfred
@@ -1018,23 +1011,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                               </Grid>
                                             ) : review.note_alfred
@@ -1042,23 +1035,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                               </Grid>
                                             ) : review.note_alfred
@@ -1066,23 +1059,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                               </Grid>
                                             ) : review.note_alfred
@@ -1090,23 +1083,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-regular2.png"
+                                                  src="/static/stars/star-regular2.png"
                                                 />
                                               </Grid>
                                             ) : review.note_alfred
@@ -1114,23 +1107,23 @@ class viewProfile extends React.Component {
                                               <Grid item xs={6}>
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                                 <img
                                                   style={{ width: "15px" }}
-                                                  src="../../static/stars/star-solid2.png"
+                                                  src="/static/stars/star-solid2.png"
                                                 />
                                               </Grid>
                                             ) : null}
@@ -1216,138 +1209,138 @@ class viewProfile extends React.Component {
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                             </Grid>
                                           ) : review.note_client.reception === 1 ? (
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                             </Grid>
                                           ) : review.note_client.reception === 2 ? (
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                             </Grid>
                                           ) : review.note_client.reception === 3 ? (
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                             </Grid>
                                           ) : review.note_client.reception === 4 ? (
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                             </Grid>
                                           ) : review.note_client.reception === 5 ? (
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                             </Grid>
                                           ) : null}
@@ -1363,138 +1356,138 @@ class viewProfile extends React.Component {
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                             </Grid>
                                           ) : review.note_client.relational === 1 ? (
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                             </Grid>
                                           ) : review.note_client.relational === 2 ? (
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                             </Grid>
                                           ) : review.note_client.relational === 3 ? (
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                             </Grid>
                                           ) : review.note_client.relational === 4 ? (
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                             </Grid>
                                           ) : review.note_client.relational === 5 ? (
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                             </Grid>
                                           ) : null}
@@ -1509,138 +1502,138 @@ class viewProfile extends React.Component {
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                             </Grid>
                                           ) : review.note_client.accuracy === 1 ? (
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                             </Grid>
                                           ) : review.note_client.accuracy === 2 ? (
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                             </Grid>
                                           ) : review.note_client.accuracy === 3 ? (
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                             </Grid>
                                           ) : review.note_client.accuracy === 4 ? (
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-regular2.png"
+                                                src="/static/stars/star-regular2.png"
                                               />
                                             </Grid>
                                           ) : review.note_client.accuracy === 5 ? (
                                             <Grid item xs={6}>
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                               <img
                                                 style={{ width: "15px" }}
-                                                src="../../static/stars/star-solid2.png"
+                                                src="/static/stars/star-solid2.png"
                                               />
                                             </Grid>
                                           ) : null}
