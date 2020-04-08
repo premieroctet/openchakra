@@ -45,20 +45,22 @@ class Skills extends React.Component{
       e.stopPropagation();
       if (onClick) { onClick(name)}
     }
- 
+
     return (
       <Grid>
         <Grid item>
-          { hideCount ? 
-              null 
+          { hideCount ?
+              null
               :
+              <>
               <Typography variant="h3" className={classes.titleSkills}>
                 Les compliments reçus par {alfred.firstname}
               </Typography>
+              <Grid className={ widthHr === 500 ? classes.bigWidth : classes.middleWidth}>
+                <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
+              </Grid>
+              </>
           }
-          <Grid className={ widthHr === 500 ? classes.bigWidth : classes.middleWidth}>
-            <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
-          </Grid>
           <Grid container className={classes.mainContainer}>
             {
               Object.entries(this.state.skills).map(result =>{

@@ -45,6 +45,8 @@ class Commentary extends React.Component{
       },
     })(Rating);
 
+   console.log("Mode alfred:"+alfred_mode);
+
     return reviews.map( r => (
      <Grid>
        <Grid style={{width: '100%', display:'flex', alignItems: 'center'}}>
@@ -53,7 +55,7 @@ class Commentary extends React.Component{
          </Grid>
          <Grid>
            <p style={{color:'#4fbdd7'}}>
-             {r.serviceUser.service.label} {alfred_mode ? `pour ${r.user.firstname}` : `par ${r.alfred.firstname}`}
+             {r.serviceUser.service.label} {alfred_mode ? `par ${r.alfred.firstname}` : `pour ${r.user.firstname}`}
            </p>
            <p style={{color:'#505050'}}>
              {moment(r.date).format('DD/MM/YYYY - HH:mm')}
