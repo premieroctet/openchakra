@@ -43,7 +43,6 @@ class About extends React.Component{
     axios.get(`${url}myAlfred/api/shop/alfred/${this.props.alfred}`)
       .then( response  =>  {
         let shop = response.data;
-        console.log(shop, 'shop')
         this.setState({
           user: shop.alfred,
           idAlfred: shop.alfred._id,
@@ -51,7 +50,6 @@ class About extends React.Component{
           services: shop.services,
           shop:shop,
         });
-
       })
       .catch(function (error) {
         console.log(error);

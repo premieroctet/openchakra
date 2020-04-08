@@ -59,6 +59,9 @@ export default theme => ({
     width: '100%',
     marginTop: 30,
     color : 'rgb(80, 80, 80, 0.2)'
-
+  },
+  buttonConfirm:{
+   backgroundColor: '#f87280',
+    color: 'white'
   }
 })
