@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AlfredBanner from '../components/shop/AlfredBanner/AlfredBanner';
 import NavBarShop from '../components/NavBar/NavBarShop/NavBarShop';
 import About from '../components/About/About';
-import SkillsAlfred from '../components/SkillsAlfred/SkillsAlfred';
+import Skills from '../components/Skills/Skills';
 import Typography from '@material-ui/core/Typography';
 import CardPreview from '../components/CardPreview/CardPreview';
 import CardAddService from '../components/CardAddService/CardAddService';
@@ -147,7 +147,7 @@ class shop extends React.Component {
                               <About alfred={this.state.alfred} languages={this.state.languages} shop={this.state.shop} profil={true}/>
                           </Grid>
                           <Grid className={classes.skillsContentContainer}>
-                              <SkillsAlfred alfred={this.state.alfred} widthHr={'100%'} skills={this.state.skills}/>
+                              <Skills alfred={this.state.alfred} widthHr={'100%'} skills={this.state.skills}/>
                           </Grid>
                       </Grid>
                       <Grid className={classes.servicesContainer}>
