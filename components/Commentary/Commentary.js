@@ -7,25 +7,46 @@ import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Rating from '@material-ui/lab/Rating';
+import axios from 'axios';
+import moment from 'moment';
+import Skills from '../Skills/Skills';
 
 class Commentary extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      value: 4
+      value: 4,
+      owner:{},
+      reviews:[],
     }
   }
 
-  render(){
-    const {classes} = this.props;
+  componentDidMount() {
+    const alfred_mode = this.props.alfred_mode;
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.get('/myAlfred/api/users/users/'+this.props.user_id)
+      .then (res => {
+        this.setState({owner:res.data})
+      })
+    const req = alfred_mode ? 'alfredReviewsCurrent' : 'customerReviewsCurrent'
+    axios.get(`/myAlfred/api/reviews/profile/${req}/${this.props.user_id}`)
+      .then (res => {
+        this.setState({reviews:res.data})
+      })
+  }
 
+  render(){
+    const {owner, reviews} = this.state;
+    const {classes, user_id} = this.props;
+
+    console.log("Reviews:"+JSON.stringify(reviews));
     const StyledRating = withStyles({
       iconFilled: {
         color: '#4fbdd7',
       },
     })(Rating);
 
-    return (
+    return reviews.map( r => (
      <Grid>
        <Grid style={{width: '100%', display:'flex', alignItems: 'center'}}>
          <Grid style={{marginRight:15}}>
@@ -36,7 +57,7 @@ class Commentary extends React.Component{
              Coiffure pour Maëlis
            </p>
            <p style={{color:'#505050'}}>
-             Date - Heure
+             {moment(r.date).format('DD/MM/YYYY - HH:mm')}
            </p>
          </Grid>
        </Grid>
@@ -84,15 +105,15 @@ class Commentary extends React.Component{
            label="Commentaire"
            multiline
            rows="4"
-           defaultValue="Commentaire"
+           value={r.content}
            className={classes.textField}
            margin="normal"
            variant="outlined"
          />
        </Grid>
      </Grid>
-    )
-  }
+   ))
+}
 }
 
 Commentary.propTypes = {
