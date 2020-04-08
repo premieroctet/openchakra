@@ -19,7 +19,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import UserAvatar from '../components/Avatar/UserAvatar';
-import SkillsAlfred from '../components/SkillsAlfred/SkillsAlfred';
+import Skills from '../components/Skills/Skills';
 import Typography from '@material-ui/core/Typography';
 import Schedule from '../components/Schedule/Schedule';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -765,7 +765,7 @@ class UserServicesPreview extends React.Component {
                 </Grid>
                 <Grid style={{marginTop: 30}}>
                   <Grid className={classes.skillsContentContainer}>
-                    <SkillsAlfred alfred={alfred} widthHr={500} skills={this.state.skills}/>
+                    <Skills alfred={alfred} widthHr={500} skills={this.state.skills}/>
                   </Grid>
                 </Grid>
                 {equipments.length !== 0 ?
