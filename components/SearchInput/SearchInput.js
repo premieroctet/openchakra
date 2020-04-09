@@ -76,7 +76,7 @@ class SearchInput extends React.Component{
 
   render() {
     const {classes} = this.props;
-    const {gps, user, city} = this.state;
+    const {user} = this.state;
 
     return (
       <Grid className={classes.mainContainer}>

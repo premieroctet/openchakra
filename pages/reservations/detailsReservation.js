@@ -149,12 +149,13 @@ class DetailsReservation extends React.Component {
 
     return (
         <Fragment>
+          {/*<Layout>*/}
           {bookingObj === null ||
           currentUser === null || splitAddress === null ? null : currentUser._id !==
           bookingObj.alfred._id && currentUser._id !== bookingObj.user._id ? (
               <p>Vous n'avez pas l'autorisation d'accéder à cette page</p>
           ) : (
-              <>
+              <Grid>
                   <Grid container className={classes.bigContainer}>
                     {currentUser.is_alfred === true ?
                       <Grid style={{width: '100%'}}>
@@ -1222,8 +1223,9 @@ class DetailsReservation extends React.Component {
                 {currentUser.is_alfred === true ?
                   <NavbarMobile userId={this.state.userId}/>
                 : null}
-          </>
+          </Grid>
         )}
+          {/*</Layout>*/}
       </Fragment>
     );
   }

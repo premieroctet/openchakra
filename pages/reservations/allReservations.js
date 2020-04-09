@@ -430,7 +430,7 @@ class AllReservations extends React.Component {
                                                                 </Typography>
                                                               </Grid>
                                                             </Grid>
-                                                            <Grid item className={classes.buttonContainer}>
+                                                            <Grid item>
                                                               <Grid>
                                                                 <Link href={{pathname:"/reservations/detailsReservation", query: { id: booking._id, user: true }}}>
                                                                   <Button color={"primary"} variant={"outlined"}>Voir la reservation</Button>
@@ -620,7 +620,7 @@ class AllReservations extends React.Component {
                                                         </Typography>
                                                       </Grid>
                                                     </Grid>
-                                                    <Grid item className={classes.buttonContainer}>
+                                                    <Grid item>
                                                       <Grid>
                                                         <Link href={{pathname: "/reservations/detailsReservation", query: { id: booking._id, user: true }}}>
                                                           <Button color={"primary"} variant={"outlined"}>Voir la reservation</Button>
