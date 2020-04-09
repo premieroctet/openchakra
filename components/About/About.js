@@ -25,6 +25,7 @@ const url = config.apiUrl;
 
 moment.locale('fr');
 
+// FIX : Commentaires : faire un lien vers le profil
 class About extends React.Component{
   constructor(props){
     super(props);
@@ -35,7 +36,7 @@ class About extends React.Component{
       valueRating: 0,
       nbCommentary: 0,
       shop:[],
-      user: ''
+      user: {}
     }
   }
 
@@ -67,6 +68,7 @@ class About extends React.Component{
       },
     })(Rating);
 
+    console.log(JSON.stringify(alfred));
     return (
       <Grid container className={classes.mainContainer}>
         <Grid item style={{width: '100%'}}>
@@ -147,8 +149,8 @@ class About extends React.Component{
               <ListItem>
                 <Link
                   href={{
-                    pathname: "../viewProfile",
-                    query: { id: user._id }
+                    pathname: "/viewProfile",
+                    query: { id: alfred }
                   }}
                 >
                   <Typography

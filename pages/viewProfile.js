@@ -616,7 +616,7 @@ class viewProfile extends React.Component {
                           style={{ marginTop: "20px" }}
                           className={classes.tabweb}
                         >
-                        <Commentary user_id={this.props.user_id} alfred_mode={!customerComments} key={moment()}/>
+                        <Commentary user_id={this.props.user_id} alfred_mode={customerComments} key={moment()}/>
                         </Grid>
 
                         </Grid>

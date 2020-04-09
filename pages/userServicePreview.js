@@ -974,6 +974,9 @@ class UserServicesPreview extends React.Component {
                 <Grid>
                   <Notes alfred_mode={true} notes={computeAverageNotes(this.state.reviews.map( r => r.note_alfred))} key={moment()}/>
                   </Grid>
+                  <Grid>
+                    <Commentary alfred_mode={true} user_id={alfred._id} key={moment()}/>
+                    </Grid>
                 </Grid>
                 <Hidden mdUp implementation="css">
                   <Grid className={classes.showReservation}>

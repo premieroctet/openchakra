@@ -39,7 +39,6 @@ class Commentary extends React.Component{
     axios.get(url)
       .then (res => {
         this.setState({reviews:res.data})
-        console.log("Got reviews:"+JSON.stringify(res.data, null, 2));
       })
       .catch (err => console.log(err));
   }
@@ -61,6 +60,7 @@ class Commentary extends React.Component{
     }
     else return reviews.map( r => (
      <Grid>
+     {console.log(r)}
        <Grid style={{width: '100%', display:'flex', alignItems: 'center'}}>
          <Grid style={{marginRight:15}}>
            <Avatar className={classes.picsSize}/>
@@ -76,7 +76,8 @@ class Commentary extends React.Component{
        </Grid>
        <Grid style={{display:'flex', alignItems :'center'}}>
          <Grid style={{display:'flex', flexDirection: 'column', width: '50%'}}>
-           <Notes alfred_mode={alfred_mode} note={alfred_mode ? r.note_alfred : r.note_client} key={moment()} />
+         { console.log('sending notes:'+JSON.stringify(alfred_mode ? r.note_alfred : r.note_client))}
+           <Notes alfred_mode={alfred_mode} notes={alfred_mode ? r.note_alfred : r.note_client} key={moment()} />
            </Grid>
        </Grid>
        <Grid>
