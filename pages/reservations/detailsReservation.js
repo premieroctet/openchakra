@@ -961,14 +961,7 @@ class DetailsReservation extends React.Component {
                             </Grid>
                           </Grid>
                         </Grid>
-                        <Grid
-                            container
-                            style={{
-                              borderBottom: "1.5px #8281813b solid",
-                              marginTop: "5%",
-                              paddingBottom: "7%"
-                            }}
-                        >
+                        <Grid container style={{borderBottom: "1.5px #8281813b solid", marginTop: "5%", paddingBottom: "7%"}}>
                           <Grid item xs={12}>
                             <Typography style={{ fontSize: "1.4rem" }}>
                               Matériel fourni
@@ -980,11 +973,10 @@ class DetailsReservation extends React.Component {
                                 return (
                                     <Grid item xs={1} style={{ textAlign: "center" }}>
                                       <img
+                                        alt={equipment.logo}
+                                        title={equipment.logo}
                                           style={{ width: "98%" }}
-                                          src={`../../static/equipments/${equipment.logo.slice(
-                                              0,
-                                              -4
-                                          )}_Selected.svg`}
+                                          src={`../../static/equipments/${equipment.logo.slice(0,-4)}_Selected.svg`}
                                       />
                                     </Grid>
                                 );
@@ -993,14 +985,7 @@ class DetailsReservation extends React.Component {
                               <p>Aucun équipement fourni</p>
                           )}
                         </Grid>
-                    <Grid
-                      container
-                      style={{
-                        borderBottom: "1.5px #8281813b solid",
-                        marginTop: "5%",
-                        paddingBottom: "7%"
-                      }}
-                    >
+                    <Grid container style={{borderBottom: "1.5px #8281813b solid", marginTop: "5%", paddingBottom: "7%"}}>
                       <Grid item xs={12}>
                         <Typography style={{ fontSize: "1.4rem" }}>
                           {bookingObj === null || currentUser === null ?
@@ -1035,176 +1020,72 @@ class DetailsReservation extends React.Component {
 
                         </Typography>
                       </Grid>
-                      <Grid item xs={12}>
-                        <Typography style={{ fontSize: "1.4rem" }}>
-                          Total (EUR)
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography style={{ fontSize: "1.4rem" }}>
-                          {bookingObj === null || currentUser === null
-                            ? null
-                            : currentUser._id === bookingObj.alfred._id
-                            ? (bookingObj.amount - bookingObj.fees * 2).toFixed(
-                                2
-                              )
-                            : bookingObj.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}
-                          €
-                        </Typography>
-                      </Grid>
-                      <ExpansionPanel
-                        defaultExpanded
-                        className={classes.exp1}
-                        style={{
-                          border: "none",
-                          boxShadow: "none",
-                          width: "60%"
-                        }}
-                      >
-                        <ExpansionPanelSummary
-                          expandIcon={
-                            <ExpandMoreIcon style={{ fontSize: 25 }} />
-                          }
-                        >
-                          <Typography
-                            style={{
-                              fontSize: "0.8rem",
-                              color: "rgb(47, 188, 211)"
-                            }}
-                          >
-                            Masquer les détails
-                          </Typography>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails>
-                          <Grid container>
-                            <Grid item xs={4}>
-                              {bookingObj === null
-                                ? null
-                                : bookingObj.prestations.map(prestation => {
-                                    return (
-                                      <Typography
-                                        style={{ fontSize: "1.1rem" }}
-                                      >
-                                        {prestation.name}
-                                      </Typography>
-                                    );
-                                  })}
-                              </Grid>
-                              <Grid item xs={6}>
-                              <Grid
-                                style={{
-                                  height: "25px",
-                                  borderBottom: "1.5px #8281813b solid",
-                                  width: "100%",
-                                  marginTop: "10px"
-                                }}
-                              ></Grid>
-                            </Grid>
-                            <Grid item xs={2}>
-                              {bookingObj === null
-                                ? null
-                                : bookingObj.prestations.map(prestation => {
-                                    return (
-                                      <Typography
-                                        style={{
-                                          fontSize: "1.1rem",
-                                          textAlign: "center"
-                                        }}
-                                      >
-                                        {prestation.value}x{prestation.price}€
-                                      </Typography>
-                                    );
-                                  })}
-                              </Grid>
-
-
-                              <Grid item xs={4}>
-                              <Typography
-                                style={{
-                                  fontSize: "1.1rem",
-                                  marginTop: "10px"
-                                }}
-                              >
-                                Frais du service
-                              </Typography>
-                              </Grid>
-                              <Grid item xs={6}>
-                              <Grid
-                                style={{
-                                  height: "25px",
-                                  borderBottom: "1.5px #8281813b solid",
-                                  width: "100%",
-                                  marginTop: "10px"
-                                }}
-                              ></Grid>
-                            </Grid>
-                            <Grid item xs={2}>
-                              <Typography
-                                style={{
-                                  fontSize: "1.1rem",
-                                  textAlign: "center",
-                                  marginTop: "10px"
-                                }}
-                              >
-                                {bookingObj === null ||
-                                currentUser ===
-                                  null ? null : currentUser._id ===
-                                  bookingObj.alfred._id ? (
-                                  <span>- {bookingObj.fees.toFixed(2)}</span>
-                                ) : (
-                                  <span>+ {bookingObj.fees.toFixed(2)}</span>
-                                )}
-                                €
-                              </Typography>
-                              </Grid>
-
-
-                            <Grid item xs={4}>
-                              <Typography
-                                style={{
-                                  fontSize: "1.5rem",
-                                  fontWeight: "bold",
-                                  color: "rgb(47, 188, 211)",
-                                  marginTop: "10px"
-                                }}
-                              >
-                                Revenu total
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Grid
-                                style={{
-                                  height: "25px",
-                                  borderBottom: "1.5px #8281813b solid",
-                                  width: "100%",
-                                  marginTop: "10px"
-                                }}
-                              ></Grid>
-                            </Grid>
-                              <Grid item xs={2}>
-                              <Typography
-                                style={{
-                                  fontSize: "1.5rem",
-                                  fontWeight: "bold",
-                                  color: "rgb(47, 188, 211)",
-                                  textAlign: "center",
-                                  marginTop: "10px"
-                                }}
-                              >
-                                {bookingObj === null || currentUser === null
-                                  ? null
-                                  : currentUser._id === bookingObj.alfred._id
-                                  ? (
-                                      bookingObj.amount -
-                                      bookingObj.fees * 2
-                                    ).toFixed(2)
-                                  : bookingObj.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}
-                                €
-                              </Typography>
-                            </Grid>
+                      <Grid container style={{display: 'flex', flexDirection: 'column',}}>
+                        <Grid  style={{display: 'flex', marginTop:'5%', width: '70%', justifyContent: 'space-between'}}>
+                          <Grid item>
+                            {bookingObj === null
+                              ? null
+                              : bookingObj.prestations.map(prestation => {
+                                return (
+                                  <Typography style={{ fontSize: "1.1rem" }}>
+                                    {prestation.name}
+                                  </Typography>
+                                );
+                              })}
                           </Grid>
-                        </ExpansionPanelDetails>
-                      </ExpansionPanel>
+                          <Grid item>
+                            {bookingObj === null
+                              ? null
+                              : bookingObj.prestations.map(prestation => {
+                                return (
+                                  <Typography style={{fontSize: "1.1rem", textAlign: "center"}}>
+                                    {prestation.value}x{prestation.price.toFixed(2)}€
+                                  </Typography>
+                                );
+                              })}
+                          </Grid>
+                        </Grid>
+                        <Grid  style={{display: 'flex', width: '70%', justifyContent: 'space-between'}}>
+                          <Grid item>
+                            <Typography style={{fontSize: "1.1rem", marginTop: "10px"}}>
+                              Frais du service
+                            </Typography>
+                          </Grid>
+                          <Grid item >
+                            <Typography style={{fontSize: "1.1rem", textAlign: "center", marginTop: "10px"}}>
+                              {bookingObj === null ||
+                              currentUser ===
+                              null ? null : currentUser._id ===
+                              bookingObj.alfred._id ? (
+                                <span>- {bookingObj.fees.toFixed(2)}</span>
+                              ) : (
+                                <span>+ {bookingObj.fees.toFixed(2)}</span>
+                              )}
+                              €
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid style={{display: 'flex', width: '70%', justifyContent: 'space-between', marginTop: '5%'}}>
+                          <Grid item>
+                            <Typography style={{fontSize: "1.5rem", fontWeight: "bold", color: "rgb(47, 188, 211)", marginTop: "10px"}}>
+                              Revenu total
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography style={{fontSize: "1.5rem", fontWeight: "bold", color: "rgb(47, 188, 211)", textAlign: "center", marginTop: "10px"}}>
+                              {bookingObj === null || currentUser === null
+                                ? null
+                                : currentUser._id === bookingObj.alfred._id
+                                  ? (
+                                    bookingObj.amount -
+                                    bookingObj.fees * 2
+                                  ).toFixed(2)
+                                  : bookingObj.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}
+                              €
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
                     </Grid>
                     <Grid
                       container
