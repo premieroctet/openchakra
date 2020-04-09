@@ -457,7 +457,7 @@ class ComingReservations extends React.Component {
                                         <Grid item>
                                           <Grid>
                                             <Link href={{pathname:"/reservations/detailsReservation", query: { id: booking._id, user: true }}}>
-                                              <Button color={"primary"} variant={"outlined"}>Voir la reservation</Button>
+                                              <Button color={"primary"} variant={"outlined"}>Détail</Button>
                                             </Link>
                                           </Grid>
                                         </Grid>
@@ -586,7 +586,7 @@ class ComingReservations extends React.Component {
                                                     color: "white"
                                                   }}
                                               >
-                                                Voir
+                                                Détail
                                               </a>
                                           </Typography>
                                             </Link>
@@ -667,7 +667,7 @@ class ComingReservations extends React.Component {
                                   <Grid item>
                                     <Grid>
                                       <Link href={{pathname: "/reservations/detailsReservation", query: { id: booking._id, user: true }}}>
-                                        <Button color={"primary"} variant={"outlined"}>Voir la reservation</Button>
+                                        <Button color={"primary"} variant={"outlined"}>Détail</Button>
                                       </Link>
                                     </Grid>
                                   </Grid>
@@ -773,7 +773,7 @@ class ComingReservations extends React.Component {
                                               color: "white"
                                             }}
                                         >
-                                          Voir
+                                          Détail
                                         </a>
                                     </Typography>
                                       </Link>

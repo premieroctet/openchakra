@@ -99,7 +99,7 @@ class Messages extends React.Component {
                     item
                     xs={3}
                 >
-                  <div className={classes.trigger}></div>
+                  <div className={classes.trigger}/>
                   <Grid
                       container
                       style={{
@@ -345,7 +345,7 @@ class Messages extends React.Component {
                                       <Grid item>
                                         <Grid>
                                           <Link href={{pathname:"/reservations/messagesDetails", query: { id: booking.chatroom._id, booking: booking._id}}}>
-                                            <Button color={"primary"} variant={"outlined"}>Détail</Button>
+                                            <Button color={"primary"} variant={"outlined"}>Voir</Button>
                                           </Link>
                                         </Grid>
                                       </Grid>
@@ -425,7 +425,7 @@ class Messages extends React.Component {
                                                 color: "white"
                                               }}
                                           >
-                                            Détail
+                                            Voir
                                           </a>
                                       </Typography>
                                         </Link>
@@ -486,7 +486,7 @@ class Messages extends React.Component {
                                       <Grid item>
                                         <Grid>
                                           <Link href={{pathname:"/reservations/messagesDetails", query: { id: booking.chatroom._id, booking: booking._id}}}>
-                                            <Button color={"primary"} variant={"outlined"}>Détail</Button>
+                                            <Button color={"primary"} variant={"outlined"}>Voir</Button>
                                           </Link>
                                         </Grid>
                                       </Grid>
@@ -570,7 +570,7 @@ class Messages extends React.Component {
                                                   color: "white"
                                                 }}
                                             >
-                                              Détail
+                                              Voir
                                             </a>
                                         </Typography>
                                           </Link>

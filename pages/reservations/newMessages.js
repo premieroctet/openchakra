@@ -415,7 +415,7 @@ class NewMessages extends React.Component {
                                     <Grid item>
                                       <Grid>
                                         <Link href={{pathname:"/reservations/messagesDetails", query: {id: chatroom._id, booking: chatroom.booking._id}}}>
-                                          <Button color={"primary"} variant={"outlined"}>Détail</Button>
+                                          <Button color={"primary"} variant={"outlined"}>Voir</Button>
                                         </Link>
                                       </Grid>
                                     </Grid>
@@ -503,7 +503,7 @@ class NewMessages extends React.Component {
                                                 color: "white"
                                               }}
                                           >
-                                            Détail
+                                            Voir
                                           </a>
                                       </Typography>
                                         </Link>
@@ -565,7 +565,7 @@ class NewMessages extends React.Component {
                                       <Grid item>
                                         <Grid>
                                           <Link href={{pathname:"/reservations/messagesDetails", query: {id: chatroom._id, booking: chatroom.booking._id}}}>
-                                            <Button color={"primary"} variant={"outlined"}>Détail</Button>
+                                            <Button color={"primary"} variant={"outlined"}>Voir</Button>
                                           </Link>
                                         </Grid>
                                       </Grid>
@@ -653,7 +653,7 @@ class NewMessages extends React.Component {
                                                   color: "white"
                                                 }}
                                             >
-                                              Détail
+                                              Voir
                                             </a>
                                         </Typography>
                                           </Link>
