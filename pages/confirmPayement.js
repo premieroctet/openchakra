@@ -131,10 +131,8 @@ class ConfirmPayement extends React.Component {
       optionPrice: null,
       date: null,
       hour: null,
-      alfred: null,
       languages: [],
-      shop: {},
-      userAlfred:[]
+      alfredId: ''
     };
   }
 
@@ -144,7 +142,7 @@ class ConfirmPayement extends React.Component {
 
   componentDidMount() {
     const bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
-    console.log(bookingObj, 'booking')
+    console.log(bookingObj);
 
     axios.defaults.headers.common["Authorization"] = localStorage.getItem( "token");
 
@@ -166,27 +164,18 @@ class ConfirmPayement extends React.Component {
       pick_tax: bookingObj.pick_tax,
       fees: bookingObj.fees,
       grandTotal: bookingObj.amount,
-      alfred: bookingObj.user
-    }, () => {
-      axios.get(`${url}myAlfred/api/shop/alfred/${this.state.alfred}`)
-        .then( response  =>  {
-          let shop = response.data;
-          this.setState({
-            userAlfred: shop.alfred,
-            languages: shop.alfred.languages,
-            shop:shop,
-          });
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
+      alfredId: bookingObj.alfred._id
+    })
+
     const id = this.props.shop_id;
     localStorage.setItem("path", Router.pathname);
     axios.defaults.headers.common["Authorization"] = localStorage.getItem( "token");
 
     axios.get(url + "myAlfred/api/serviceUser/" + id).then(res => {
-      this.setState({ user: res.data.user });
+      this.setState({
+        user: res.data.user,
+        languages: res.data.user.languages
+      });
     });
   }
 
@@ -226,8 +215,7 @@ class ConfirmPayement extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { user } = this.state;
-    const { currentUser, userAlfred, languages, shop } = this.state;
+    const { currentUser, languages, user, alfredId } = this.state;
 
     return (
       <Fragment>
@@ -265,13 +253,13 @@ class ConfirmPayement extends React.Component {
                     <Grid container>
                       <Grid item>
                         <div style={{ marginLeft: "3%", width:'100%' }}>
-                          <About alfred={userAlfred} languages={languages} shop={shop} profil={false}/>
+                          <About alfred={alfredId} profil={false}/>
                         </div>
                       </Grid>
                       <Grid item xs={5}>
                         <Grid item className={classes.itemAvatar}>
-                          <UserAvatar classes={'avatarLetter'} user={userAlfred} className={classes.avatarLetter} />
-                          <Typography style={{marginTop:20}} className={classes.textAvatar}>{userAlfred.firstname}</Typography>
+                          <UserAvatar classes={'avatarLetter'} user={user} className={classes.avatarLetter} />
+                          <Typography style={{marginTop:20}} className={classes.textAvatar}>{user.firstname}</Typography>
                         </Grid>
                       </Grid>
                     </Grid>

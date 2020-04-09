@@ -16,75 +16,11 @@ import {
     formatFormData,
   } from '../components/utils';
 import '../static/creditcards.css';
-
-
-
-
-
-
-
+import styles from './paymentChoice/paymentChoiceStyle'
 moment.locale('fr');
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
-
-const styles = theme => ({
-    bigContainer: {
-        marginTop: 70,
-        flexGrow: 1,
-    },
-    hidesm: {
-        minWidth: '271px',
-        [theme.breakpoints.down('sm')]: {
-            display:'none'
-        }
-    }
-
-    ,hidelg: {
-        [theme.breakpoints.up('md')]: {
-            display:'none',
-        }
-
-    },
-    trigger:{
-        [theme.breakpoints.down('sm')]: {
-            marginTop: -10,
-            width: '100%',
-            marginLeft:'0px',
-            height:'30px',
-            backgroundColor:'#2FBCD3',
-
-            display:'block',
-            transition: 'display 0.7s',
-            borderRadius:'5px',
-            '&:focus': {
-                display:'none',
-                transition: 'display 0.7s',
-
-            }
-        }
-
-    },
-    respright:{
-        [theme.breakpoints.down('sm')]: {
-            display: 'none'
-        }
-    }
-
-    ,toggle: {
-        [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
-            transition: 'margin-left 0.7s',
-
-            '&:hover': {
-                marginLeft:'0px',
-                transition: 'margin-left 0.7s',
-                boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-
-            }
-        }
-    }
-
-});
 
 class paymentChoice extends React.Component {
     constructor(props) {
@@ -96,15 +32,12 @@ class paymentChoice extends React.Component {
             cardSelected: false,
             valueother: 'other'
         }
-
-
     }
 
     static getInitialProps ({ query: { id, total, fees } }) {
         return { id: id, total: total, fees:fees }
     }
-
-
+    
     componentDidMount() {
         const id = this.props.id;
         this.setState({booking_id:id})
@@ -164,11 +97,6 @@ class paymentChoice extends React.Component {
                 Router.push(payIn.RedirectURL)
             })
     }
-
-
-
-
-
 
     render() {
         const {classes} = this.props;
@@ -244,20 +172,20 @@ class paymentChoice extends React.Component {
                                                                 />
                                                             </Grid>
                                                             }
-                                                            
-                                                        
-                                                            
+
+
+
                                                         </React.Fragment>
-                                                        
+
                                                     ))}
                                                         {this.state.id_card === this.state.valueother ?
                                                             <Grid value={this.state.valueother} onClick={()=>{this.setState({id_card:"other"});this.setState({cardSelected: false})}} style={{width:'296px', boxShadow: '0px 0px 6px lightgray', height: '40px',border: 'rgb(85, 155, 215) solid 2px', cursor: 'pointer', borderRadius: '5px', margin: '20px', position: 'relative',backgroundColor: '#2FBCD3',color: 'white'}}>
                                                                <p style={{textAlign: "center", lineHeight: 2, position: "absolute", top: 0, left: 0, right: 0, margin: 'auto'}}>Autre</p>
-                                                            </Grid>  
+                                                            </Grid>
                                                             :
                                                             <Grid value={this.state.valueother} onClick={()=>{this.setState({id_card:"other"});this.setState({cardSelected: false})}} style={{width:'296px', boxShadow: '0px 0px 6px lightgray', height: '40px', cursor: 'pointer', borderRadius: '5px', margin: '20px', position: 'relative',backgroundColor: '#2FBCD3',color: 'white'}}>
                                                                 <p style={{textAlign: "center", lineHeight: 2, position: "absolute", top: 0, left: 0, right: 0, margin: 'auto'}}>Autre</p>
-                                                            </Grid>  
+                                                            </Grid>
                                                         }
                                                     </React.Fragment>
                                              :
@@ -265,7 +193,7 @@ class paymentChoice extends React.Component {
                                             <p>Aucun mode de paiement enregistré</p>
 
                                         }
-                                        
+
                                         <Grid style={{width:'296px', height: '40px', margin: '20px', position: 'relative'}}>
                                             {this.state.cardSelected ?
                                                 <Button onClick={()=>this.payDirect()} type="submit" variant="contained" style={{color: 'white',position: 'absolute', left: 0, right: 0, margin: 'auto', marginBottom: '30px'}} color="primary">
@@ -281,9 +209,9 @@ class paymentChoice extends React.Component {
                                 <Grid item xs={6} className={classes.respright}>
                                     <img style={{position: 'sticky', top: 5}} src="../static/resa.svg" alt="beaver"/>
                                 </Grid>
-                                
+
                             </Grid>
-                                
+
 
                         </Grid>
                     </Grid>
