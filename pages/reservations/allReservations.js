@@ -16,7 +16,7 @@ const { config } = require("../../config/config");
 const url = config.apiUrl;
 moment.locale("fr");
 
-
+//TODO RASSEMBLER ALLRESERVATIONS + COMINGRESERVATIONS + FINISHEDRESERVATIONS
 
 class AllReservations extends React.Component {
     constructor(props) {
