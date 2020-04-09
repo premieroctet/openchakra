@@ -366,7 +366,7 @@ class DetailsReservation extends React.Component {
                           <Grid item xs={12} md={7}>
                             <About alfred={bookingObj.alfred._id}/>
                           </Grid>
-                          <Grid item xs={2} style={{ textAlign: "center" }}>
+                          <Grid item style={{ textAlign: "center"}}>
                             <Link
                                 href={{
                                   pathname: "/reservations/messagesDetails",
@@ -382,22 +382,7 @@ class DetailsReservation extends React.Component {
                                   }
                                 }}
                             >
-                            <div
-                                style={{
-                                  textAlign: "center",
-                                  height: "40px",
-                                  backgroundColor: "#4FBDD7",
-                                  lineHeight: 2.5,
-                                  borderRadius: "50px",
-                                  marginTop: "20%",
-                                  cursor: "pointer"
-                                }}
-                            >
-
-                                <a style={{ textDecoration: "none", color: "white" }}>
-                                  Envoyer un message
-                                </a>
-                            </div>
+                            <Button variant={"outlined"} color={"primary"}>Envoyer un message</Button>
                               </Link>
                             {bookingObj === null ? null : bookingObj.status ===
                             "Confirmée" ? (
