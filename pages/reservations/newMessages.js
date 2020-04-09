@@ -3,205 +3,17 @@ import Link from "next/link";
 import Layout from "../../hoc/Layout/Layout";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
-import Footer from "../../hoc/Layout/Footer/Footer";
+import styles from './newMessages/newMessagesStyle'
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import _ from 'lodash';
 import moment from 'moment';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
+import UserAvatar from '../../components/avatar/UserAvatar';
+import Button from '@material-ui/core/Button';
 
 const { config } = require("../../config/config");
 const url = config.apiUrl;
-
-const styles = theme => ({
-  bigContainer: {
-    marginTop: 100,
-    flexGrow: 1,
-    [theme.breakpoints.down("xs")]: {
-      marginBottom: 100,
-    }
-  },
-  mobilevoir: {
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    }
-  },
-  webvoir: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
-  },
-  mobilerow1: {
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    }
-  },
-  webrow: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
-  },
-  marginbot: {
-    marginBottom: "3.5%"
-  },
-  hiddenone: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none!important"
-    }
-  },
-  revealedone: {
-    [theme.breakpoints.up("md")]: {
-      display: "none!important"
-    }
-  },
-  triangle: {
-    width: 0,
-    height: 0,
-    borderLeft: "15px solid transparent",
-    borderRight: "15px solid transparent",
-    borderTop: "15px solid gray",
-    margin: "0 auto",
-    marginTop: -28
-  },
-  shopbar: {
-    [theme.breakpoints.down("md")]: {
-      display: "none"
-    }
-  },
-  bottombar: {
-    visibility: "hidden",
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    },
-    [theme.breakpoints.down("sm")]: {
-      visibility: "visible",
-      boxShadow: "2px -5px 14px -15px rgba(0,0,0,0.75)"
-    }
-  },
-  topbar: {
-    visibility: "visible",
-    position: "sticky",
-    top: 75,
-    zIndex: 999,
-    [theme.breakpoints.down("sm")]: {
-      display: "none",
-      visibility: "hidden"
-    }
-  },
-  hidesm: {
-    minWidth: "271px",
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
-  },
-
-  hidelg: {
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    }
-  },
-
-  toggle: {
-    [theme.breakpoints.down("sm")]: {
-      marginLeft: "-75px",
-      transition: "margin-left 0.7s",
-
-      "&:hover": {
-        marginLeft: "0px",
-        transition: "margin-left 0.7s",
-        boxShadow: "11px 6px 23px -24px rgba(0,0,0,0.75)"
-      }
-    }
-  },
-  trait: {
-    width: "100%",
-    height: 4,
-    backgroundColor: "rgb(47, 188, 211)",
-    borderColor: "transparent",
-    [theme.breakpoints.down("sm")]: {}
-  },
-  trait1: {
-    width: "100%",
-
-    height: 4,
-    backgroundColor: "lightgray",
-    borderColor: "transparent"
-  },
-  trait2: {
-    width: "100%",
-    height: 4,
-    backgroundColor: "lightgray",
-    borderColor: "transparent",
-    [theme.breakpoints.down("sm")]: {}
-  },
-  trait3: {
-    width: "100%",
-
-    height: 4,
-    backgroundColor: "rgb(47, 188, 211)",
-    borderColor: "transparent"
-  },
-  tabweb: {
-    visibility: "visible",
-    width: "100%",
-    position: "sticky",
-    top: "115px",
-    fontSize: 15,
-    backgroundColor: "white",
-    zIndex: "20",
-    [theme.breakpoints.down("sm")]: {
-      display: "none",
-      visibility: "hidden"
-    }
-  },
-
-  tabmobile: {
-    visibility: "hidden",
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    },
-    [theme.breakpoints.down("sm")]: {
-      visibility: "visible",
-      fontSize: "10px",
-      fontWeight: "300",
-      backgroundColor: "white",
-      position: "sticky",
-      top: 55,
-      zIndex: 20
-    }
-  },
-
-  mobilerow: {
-    marginTop: "1%",
-    [theme.breakpoints.down("sm")]: {
-      marginTop: "15%"
-    }
-  },
-  Rightcontent: {
-    marginLeft: "4%"
-  },
-  trigger:{
-    [theme.breakpoints.down('sm')]: {
-      marginTop: -10,
-      width: '100%',
-      marginLeft:'0px',
-      height:'30px',
-      backgroundColor:'#2FBCD3',
-
-      display:'block',
-      transition: 'display 0.7s',
-      borderRadius:'5px',
-      '&:focus': {
-        display:'none',
-        transition: 'display 0.7s',
-
-      }
-    },
-
-
-
-  },
-});
 
 class NewMessages extends React.Component {
   constructor(props) {
@@ -209,7 +21,6 @@ class NewMessages extends React.Component {
 
     this.state = {
       idEmitter: "",
-      idRecipient: "",
       chatrooms: [],
       tabs: false,
       alfredReservations: [],
@@ -271,7 +82,7 @@ class NewMessages extends React.Component {
                         height: "52px"
                       }}
                   >
-                    <Grid item xs={1} className={classes.shopbar}></Grid>
+                    <Grid item xs={1} className={classes.shopbar}/>
                     <Grid
                         item
                         xs={2}
@@ -358,7 +169,7 @@ class NewMessages extends React.Component {
                     item
                     xs={3}
                 >
-                  <div className={classes.trigger}></div>
+                  <div className={classes.trigger}/>
                   <Grid
                       container
                       style={{
@@ -572,77 +383,43 @@ class NewMessages extends React.Component {
                                       alt={chatroom.name}
                                       container
                                       className={classes.webrow}
-                                      style={{ borderBottom: "1px #8281813b solid" }}
                                   >
-                                    <Grid
-                                        item
-                                        xs={3}
-                                        md={1}
-                                        style={{ marginRight: "5%" }}
-                                    >
-                                      <img
-                                          src={`../../${chatroom.booking.alfred.picture}`}
-                                          alt={"picture"}
-                                          style={{
-                                            width: "80px",
-                                            height: "80px",
-                                            borderRadius: "50%",
-                                            objectFit: "cover"
-                                          }}
-                                      ></img>
+                                    <Grid item xs={2} md={1} className={classes.avatarContainer}>
+                                      <UserAvatar user={chatroom.booking.alfred} />
                                     </Grid>
-                                    <Grid item xs={5} md={7}>
-                                      <Typography
+                                    <Grid item xs={5} md={6}  className={classes.descriptionContainer}>
+                                      <Grid>
+                                        <Typography
                                           style={{ marginTop: "2%", color: "#419F41" }}
-                                      >
-                                        {chatroom.booking.status} -{" "}
-                                        {chatroom.recipient.firstname}
-                                      </Typography>
-                                      <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
-                                        {typeof _.last(chatroom.messages) !== 'undefined' ? _.last(chatroom.messages).content : null}
-                                      </Typography>
-                                      <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
-                                        {typeof _.last(chatroom.messages) !== 'undefined' ? moment(_.last(chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(chatroom.messages) !== 'undefined' ? moment(_.last(chatroom.messages).date).format('HH:mm') : null}
-                                      </Typography>
+                                        >
+                                          {chatroom.booking.status} -{" "}
+                                          {chatroom.recipient.firstname}
+                                        </Typography>
+                                      </Grid>
+                                      <Grid>
+                                        <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
+                                          {typeof _.last(chatroom.messages) !== 'undefined' ? _.last(chatroom.messages).content : null}
+                                        </Typography>
+                                      </Grid>
+                                     <Grid>
+                                       <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
+                                         {typeof _.last(chatroom.messages) !== 'undefined' ? moment(_.last(chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(chatroom.messages) !== 'undefined' ? moment(_.last(chatroom.messages).date).format('HH:mm') : null}
+                                       </Typography>
+                                     </Grid>
                                     </Grid>
-                                    <Grid item xs={1} style={{}}>
+                                    <Grid item xs={2} className={classes.priceContainer}>
                                       <Typography
-                                          style={{ fontWeight: "600", paddingTop: "25%",fontSize: "0.8rem" }}
+                                          style={{ fontWeight: "600", fontSize: "0.8rem" }}
                                       ></Typography>
                                     </Grid>
-                                    <Grid item xs={2} style={{}}>
-                                      <Link
-                                          href={{
-                                            pathname: '/reservations/messagesDetails',
-                                            query: {
-                                              id: chatroom._id,
-                                              booking: chatroom.booking._id
-                                            }
-                                          }}
-                                      >
-                                      <Typography
-                                          style={{
-                                            height: "45px",
-                                            backgroundColor: "#2FBCD3",
-                                            color: "white",
-                                            textAlign: "center",
-                                            cursor: "pointer",
-                                            lineHeight: "3",
-                                            marginTop: "15%"
-                                          }}
-                                      >
-
-                                          <a
-                                              style={{
-                                                textDecoration: "none",
-                                                color: "white"
-                                              }}
-                                          >
-                                            Détail
-                                          </a>
-                                      </Typography>
+                                    <Grid item>
+                                      <Grid>
+                                        <Link href={{pathname:"/reservations/messagesDetails", query: {id: chatroom._id, booking: chatroom.booking._id}}}>
+                                          <Button color={"primary"} variant={"outlined"}>Détail</Button>
                                         </Link>
+                                      </Grid>
                                     </Grid>
+                                    <hr className={classes.hrSeparator}/>
                                   </Grid>
 
                                   {/* Mobile */}
@@ -748,80 +525,51 @@ class NewMessages extends React.Component {
                                         alt={chatroom.name}
                                         container
                                         className={classes.webrow}
-                                        style={{ borderBottom: "1px #8281813b solid" }}
                                     >
                                       <Grid
-                                          item
-                                          xs={3}
-                                          md={1}
-                                          style={{ marginRight: "5%" }}
+                                        item
+                                        xs={2}
+                                        md={1}
+                                        className={classes.avatarContainer}
                                       >
-                                        <img
-                                            src={`../../${chatroom.booking.user.picture}`}
-                                            alt={"picture"}
-                                            style={{
-                                              width: "80px",
-                                              height: "80px",
-                                              borderRadius: "50%",
-                                              objectFit: "cover"
-                                            }}
-                                        ></img>
+                                        <UserAvatar user={chatroom.booking.alfred} />
                                       </Grid>
-                                      <Grid item xs={5} md={7}>
-                                        <Typography
+                                      <Grid item xs={5} md={6} className={classes.descriptionContainer}>
+                                        <Grid>
+                                          <Typography
                                             style={{ marginTop: "2%", color: "#419F41",fontSize: "0.8rem" }}
-                                        >
-                                          {chatroom.booking.status} -{" "}
-                                          {chatroom.recipient.firstname}
-                                        </Typography>
-                                        <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
-                                          {_.last(chatroom.messages).content}
-                                        </Typography>
-                                        <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
-                                          {moment(_.last(chatroom.messages).date).format('DD/MM/YYYY')} - {moment(_.last(chatroom.messages).date).format('HH:mm')}
-                                        </Typography>
+                                          >
+                                            {chatroom.booking.status} -{" "}
+                                            {chatroom.recipient.firstname}
+                                          </Typography>
+                                        </Grid>
+                                        <Grid>
+                                          <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
+                                            {_.last(chatroom.messages).content}
+                                          </Typography>
+                                        </Grid>
+                                        <Grid>
+                                          <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
+                                            {moment(_.last(chatroom.messages).date).format('DD/MM/YYYY')} - {moment(_.last(chatroom.messages).date).format('HH:mm')}
+                                          </Typography>
+                                        </Grid>
                                       </Grid>
-                                      <Grid item xs={1} style={{}}>
+                                      <Grid item xs={2} className={classes.priceContainer}>
                                         <Typography
                                             style={{
                                               fontWeight: "600",
-                                              paddingTop: "25%",fontSize: "0.8rem"
+                                              fontSize: "0.8rem"
                                             }}
                                         ></Typography>
                                       </Grid>
-                                      <Grid item xs={2} style={{}}>
-                                        <Link
-                                            href={{
-                                              pathname: '/reservations/messagesDetails',
-                                              query: {
-                                                id: chatroom._id,
-                                                booking: chatroom.booking._id
-                                              }
-                                            }}
-                                        >
-                                        <Typography
-                                            style={{
-                                              height: "45px",
-                                              backgroundColor: "#2FBCD3",
-                                              color: "white",
-                                              textAlign: "center",
-                                              cursor: "pointer",
-                                              lineHeight: "3",
-                                              marginTop: "15%"
-                                            }}
-                                        >
-
-                                            <a
-                                                style={{
-                                                  textDecoration: "none",
-                                                  color: "white"
-                                                }}
-                                            >
-                                              Détail
-                                            </a>
-                                        </Typography>
+                                      <Grid item>
+                                        <Grid>
+                                          <Link href={{pathname:"/reservations/messagesDetails", query: {id: chatroom._id, booking: chatroom.booking._id}}}>
+                                            <Button color={"primary"} variant={"outlined"}>Détail</Button>
                                           </Link>
+                                        </Grid>
                                       </Grid>
+                                      <hr className={classes.hrSeparator}/>
                                     </Grid>
 
 

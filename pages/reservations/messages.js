@@ -315,7 +315,7 @@ class Messages extends React.Component {
                                     </Grid>
                                     <Grid item xs={5} md={6} className={classes.descriptionContainer}>
                                       <Grid>
-                                        <Typography style={{ marginTop: "2%", color: booking.status === 'Confirmée' ? "#419F41" : booking.status === 'En attente de confirmation' || booking.status === "Demande d'infos" ? "#F87280" : booking.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D"}}>
+                                        <Typography style={{ marginTop: "2%",fontSize: "0.8rem", color: booking.status === 'Confirmée' ? "#419F41" : booking.status === 'En attente de confirmation' || booking.status === "Demande d'infos" ? "#F87280" : booking.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D"}}>
                                           {booking.status} -{" "}
                                           {booking.alfred.firstname}
                                         </Typography>
@@ -436,6 +436,7 @@ class Messages extends React.Component {
                           })
                       ) : <p>Vous n'avez aucun message en tant qu'utilisateur</p>
                   ) : (
+
                       <React.Fragment>
                         {this.state.alfredReservations.length
                             ? this.state.alfredReservations.map(booking => {
@@ -445,76 +446,51 @@ class Messages extends React.Component {
                                     <Grid
                                         container
                                         className={classes.webrow}
-                                        style={{ borderBottom: "1px #8281813b solid" }}
                                     >
                                       <Grid
                                           item
-                                          xs={3}
+                                          xs={2}
                                           md={1}
-                                          style={{ marginRight: "5%" }}
+                                          className={classes.avatarContainer}
                                       >
                                         <UserAvatar user={booking.user} />
                                       </Grid>
-                                      <Grid item xs={5} md={7}>
-                                        <Typography
+                                      <Grid item xs={5} md={6} className={classes.descriptionContainer}>
+                                        <Grid>
+                                          <Typography
                                             style={{ marginTop: "2%",fontSize: "0.8rem", color: booking.status === 'Confirmée' ? "#419F41" : booking.status === 'En attente de confirmation' || booking.status === "Demande d'infos" ? "#F87280" : booking.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D" }}
-                                        >
-                                          {booking.status} -{" "}
-                                          {booking.user.firstname}
-                                        </Typography>
+                                          >
+                                            {booking.status} -{" "}
+                                            {booking.user.firstname}
+                                          </Typography>
+                                        </Grid>
                                         {typeof _.last(booking.chatroom.messages) !== 'undefined' ?
-                                            <>
-                                              <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
-                                                {typeof _.last(booking.chatroom.messages) !== 'undefined' ? _.last(booking.chatroom.messages).content : null}
-                                              </Typography>
-                                              <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
-                                                {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('HH:mm') : null}
-                                              </Typography>
-                                            </>
+                                            <Grid>
+                                              <Grid>
+                                                <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
+                                                  {typeof _.last(booking.chatroom.messages) !== 'undefined' ? _.last(booking.chatroom.messages).content : null}
+                                                </Typography>
+                                              </Grid>
+                                              <Grid>
+                                                <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
+                                                  {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('HH:mm') : null}
+                                                </Typography>
+                                              </Grid>
+                                            </Grid>
                                             : <Typography>Aucun message</Typography>}
 
                                       </Grid>
-                                      <Grid item xs={1} style={{}}>
-                                        <Typography
-                                            style={{
-                                              fontWeight: "600",
-                                              paddingTop: "25%",fontSize: "0.8rem"
-                                            }}
-                                        ></Typography>
+                                      <Grid item xs={2} className={classes.priceContainer}>
+                                        <Typography style={{fontWeight: "600",fontSize: "0.8rem"}}/>
                                       </Grid>
-                                      <Grid item xs={2} style={{}}>
-                                        <Link
-                                            href={{
-                                              pathname: '/reservations/messagesDetails',
-                                              query: {
-                                                id: booking.chatroom._id,
-                                                booking: booking._id
-                                              }
-                                            }}
-                                        >
-                                        <Typography
-                                            style={{
-                                              height: "45px",
-                                              backgroundColor: "#2FBCD3",
-                                              color: "white",
-                                              textAlign: "center",
-                                              cursor: "pointer",
-                                              lineHeight: "3",
-                                              marginTop: "15%"
-                                            }}
-                                        >
-
-                                            <a
-                                                style={{
-                                                  textDecoration: "none",
-                                                  color: "white"
-                                                }}
-                                            >
-                                              Détail
-                                            </a>
-                                        </Typography>
+                                      <Grid item>
+                                        <Grid>
+                                          <Link href={{pathname:"/reservations/messagesDetails", query: { id: booking.chatroom._id, booking: booking._id}}}>
+                                            <Button color={"primary"} variant={"outlined"}>Détail</Button>
                                           </Link>
+                                        </Grid>
                                       </Grid>
+                                      <hr className={classes.hrSeparator}/>
                                     </Grid>
                                     {/************************************************************ fin en tant que user web **************************************************/}
 
