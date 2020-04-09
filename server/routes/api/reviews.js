@@ -177,6 +177,7 @@ router.get('/all',passport.authenticate('jwt',{session:false}),(req,res)=> {
 router.get('/customerReviewsCurrent', passport.authenticate('jwt', { session: false }), ( req, res ) => {
     const userId = mongoose.Types.ObjectId(req.user.id);
     Reviews.find({ alfred: userIdd })
+        .populate('alfred','-id_card')
         .populate('user','-id_card')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
@@ -190,6 +191,7 @@ router.get('/alfredReviewsCurrent', passport.authenticate('jwt', { session: fals
     const userId = mongoose.Types.ObjectId(req.user.id);
     Reviews.find({ user: userId })
         .populate('alfred','-id_card')
+        .populate('user','-id_card')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
         .then(review => {
@@ -201,6 +203,7 @@ router.get('/alfredReviewsCurrent', passport.authenticate('jwt', { session: fals
 router.get('/profile/customerReviewsCurrent/:id', passport.authenticate('jwt', { session: false }), ( req, res ) => {
     const userId = mongoose.Types.ObjectId(req.params.id);
     Reviews.find({ alfred: userId})
+        .populate('alfred','-id_card')
         .populate('user','-id_card')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
@@ -214,6 +217,7 @@ router.get('/profile/alfredReviewsCurrent/:id', passport.authenticate('jwt', { s
     const userId = mongoose.Types.ObjectId(req.params.id);
     Reviews.find({ user: userId})
         .populate('alfred','-id_card')
+        .populate('user','-id_card')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
         .then(review => {

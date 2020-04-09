@@ -7,17 +7,37 @@ import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Rating from '@material-ui/lab/Rating';
+import axios from 'axios';
+import moment from 'moment';
+import Skills from '../Skills/Skills';
 
 class Commentary extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      value: 4
+      value: 4,
+      owner:{},
+      reviews:[],
     }
   }
 
+  componentDidMount() {
+    const alfred_mode = this.props.alfred_mode;
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.get('/myAlfred/api/users/users/'+this.props.user_id)
+      .then (res => {
+        this.setState({owner:res.data})
+      })
+    const req = alfred_mode ? 'alfredReviewsCurrent' : 'customerReviewsCurrent'
+    axios.get(`/myAlfred/api/reviews/profile/${req}/${this.props.user_id}`)
+      .then (res => {
+        this.setState({reviews:res.data})
+      })
+  }
+
   render(){
-    const {classes} = this.props;
+    const {owner, reviews} = this.state;
+    const {classes, user_id, alfred_mode} = this.props;
 
     const StyledRating = withStyles({
       iconFilled: {
@@ -25,7 +45,9 @@ class Commentary extends React.Component{
       },
     })(Rating);
 
-    return (
+   console.log("Mode alfred:"+alfred_mode);
+
+    return reviews.map( r => (
      <Grid>
        <Grid style={{width: '100%', display:'flex', alignItems: 'center'}}>
          <Grid style={{marginRight:15}}>
@@ -33,49 +55,60 @@ class Commentary extends React.Component{
          </Grid>
          <Grid>
            <p style={{color:'#4fbdd7'}}>
-             Coiffure pour Maëlis
+             {r.serviceUser.service.label} {alfred_mode ? `par ${r.alfred.firstname}` : `pour ${r.user.firstname}`}
            </p>
            <p style={{color:'#505050'}}>
-             Date - Heure
+             {moment(r.date).format('DD/MM/YYYY - HH:mm')}
            </p>
          </Grid>
        </Grid>
        <Grid style={{display:'flex', alignItems :'center'}}>
          <Grid style={{display:'flex', flexDirection: 'column', width: '50%'}}>
+         { alfred_mode ?
+           <>
            <Grid style={{height: 50}}>
              <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-             <p>Accueil</p>
-               <StyledRating name="read-only" value={this.state.value} readOnly className={classes.ratingStyle}/>
+             <p>Qualité</p><StyledRating name="read-only" value={r.note_alfred.prestation_quality} readOnly className={classes.ratingStyle}/>
              </Box>
            </Grid>
            <Grid style={{height: 50}}>
              <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-               <p>Qualité-prix</p>
-               <StyledRating name="read-only" value={this.state.value} readOnly className={classes.ratingStyle} />
+               <p>Prix</p><StyledRating name="read-only" value={r.note_alfred.quality_price} readOnly className={classes.ratingStyle} />
              </Box>
            </Grid>
            <Grid style={{height: 50}}>
              <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-               <p>Communication</p>
-               <StyledRating name="read-only" value={this.state.value} readOnly className={classes.ratingStyle}/>
+               <p>Relationnel</p><StyledRating name="read-only" value={r.note_alfred.relational} readOnly className={classes.ratingStyle}/>
              </Box>
            </Grid>
+           </>
+           :
+           <>
+           <Grid style={{height: 50}}>
+             <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
+             <p>Accueil</p><StyledRating name="read-only" value={r.note_client.reception} readOnly className={classes.ratingStyle}/>
+             </Box>
+           </Grid>
+           <Grid style={{height: 50}}>
+             <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
+               <p>Précision</p><StyledRating name="read-only" value={r.note_client.accuracy} readOnly className={classes.ratingStyle} />
+             </Box>
+           </Grid>
+           <Grid style={{height: 50}}>
+             <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
+               <p>Relationnel</p><StyledRating name="read-only" value={r.note_client.relational} readOnly className={classes.ratingStyle}/>
+             </Box>
+           </Grid>
+           </>
+         }
          </Grid>
+         { alfred_mode?
          <Grid style={{width: '50%'}}>
-           <Grid>
-             <h4>Compliments</h4>
-           </Grid>
-           <Grid style={{display:'flex'}}>
-             <Grid className={classes.cardSkills}>
-               <Avatar alt="careful_work" src="../../static/assets/img/skillsAlfred/careful_work.svg" className={classes.avatarSize}/>
-               <p>Travail soigneux</p>
-             </Grid>
-             <Grid className={classes.cardSkills}>
-               <Avatar alt="punctuality" src="../../static/assets/img/skillsAlfred/punctuality.svg" className={classes.avatarSize}/>
-               <p>Ponctualité</p>
-             </Grid>
-           </Grid>
+           <Grid style={{display:'flex'}}><Skills alfred={owner} skills={r.note_alfred} hideCount={true} /></Grid>
          </Grid>
+         :
+         null
+       }
        </Grid>
        <Grid>
          <TextField
@@ -84,15 +117,15 @@ class Commentary extends React.Component{
            label="Commentaire"
            multiline
            rows="4"
-           defaultValue="Commentaire"
+           value={r.content}
            className={classes.textField}
            margin="normal"
            variant="outlined"
          />
        </Grid>
      </Grid>
-    )
-  }
+   ))
+}
 }
 
 Commentary.propTypes = {

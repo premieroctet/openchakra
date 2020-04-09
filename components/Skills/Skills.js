@@ -2,12 +2,12 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import styles from './SkillsAlfredStyle'
+import styles from './SkillsStyle'
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 
-class SkillsAlfred extends React.Component{
+class Skills extends React.Component{
   constructor(props){
     super(props);
     this.state = {
@@ -45,20 +45,22 @@ class SkillsAlfred extends React.Component{
       e.stopPropagation();
       if (onClick) { onClick(name)}
     }
- 
+
     return (
       <Grid>
         <Grid item>
-          { hideCount ? 
-              null 
+          { hideCount ?
+              null
               :
+              <>
               <Typography variant="h3" className={classes.titleSkills}>
                 Les compliments reçus par {alfred.firstname}
               </Typography>
+              <Grid className={ widthHr === 500 ? classes.bigWidth : classes.middleWidth}>
+                <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
+              </Grid>
+              </>
           }
-          <Grid className={ widthHr === 500 ? classes.bigWidth : classes.middleWidth}>
-            <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
-          </Grid>
           <Grid container className={classes.mainContainer}>
             {
               Object.entries(this.state.skills).map(result =>{
@@ -88,9 +90,9 @@ class SkillsAlfred extends React.Component{
   }
 }
 
-SkillsAlfred.propTypes = {
+Skills.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
 };
 
-export default  withStyles(styles, { withTheme: true })(SkillsAlfred);
+export default  withStyles(styles, { withTheme: true })(Skills);
