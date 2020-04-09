@@ -44,6 +44,9 @@ const emptyPromise = require('../utils/promise');
 const {isMomentAvailable, getDeadLine} = require('../utils/dateutils');
 const {computeDistanceKm}=require('../utils/functions');
 import DatePicker, {registerLocale} from "react-datepicker";
+import Commentary from '../components/Commentary/Commentary';
+import Notes from '../components/Notes/Notes';
+import {computeAverageNotes} from '../utils/functions';
 import fr from 'date-fns/locale/fr';
 const moment = require('moment');
 moment.locale('fr');
@@ -84,6 +87,7 @@ class UserServicesPreview extends React.Component {
         flexible:0,
         reactive:0,
       },
+      reviews:[],
       errors:{},
     }
     this.onQtyChanged = this.onQtyChanged.bind(this);
@@ -133,12 +137,17 @@ class UserServicesPreview extends React.Component {
         location: location,
       });
 
+      axios.get(`/myAlfred/api/reviews/profile/alfredReviewsCurrent/${serviceUser.user._id}`)
+        .then (res => {
+          this.setState({reviews:res.data})
+        })
+
       axios.get('/myAlfred/api/reviews/'+serviceUser.user._id)
         .then(response => {
           const skills=response.data;
           this.setState({skills:skills});
-        })  
-        .catch(function(error){ console.log(error); }); 
+        })
+        .catch(function(error){ console.log(error); });
       axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
         .then(res => {
           let availabilities = res.data;
@@ -159,7 +168,7 @@ class UserServicesPreview extends React.Component {
       console.log(err)
     });
 
- 
+
     setTimeout(this.checkBook, 3000);
   }
 
@@ -170,7 +179,7 @@ class UserServicesPreview extends React.Component {
       return null;
     }
     dt.hour(tm.hour()).minute(tm.minute());
-    return dt; 
+    return dt;
   }
 
   checkBook = () => {
@@ -242,7 +251,6 @@ class UserServicesPreview extends React.Component {
 
   onChange = event => {
     const {name, value}=event.target;
-    console.log("onChange:"+name+","+value);
     this.setState({[name]:value}, () => this.checkBook());
   }
 
@@ -368,7 +376,7 @@ class UserServicesPreview extends React.Component {
     return(
       <Grid style={{width: '100%'}}>
         <ExpansionPanel defaultExpanded={index==0}>
-         
+
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
@@ -424,7 +432,7 @@ class UserServicesPreview extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {date, time, location, serviceUser, shop, service, equipments, alfred, errors} = this.state;
+    const {date, time, location, serviceUser, shop, service, equipments, alfred, errors, reviews} = this.state;
 
    const filters = this.extractFilters();
 
@@ -954,59 +962,15 @@ class UserServicesPreview extends React.Component {
                   </Grid>
                 </Grid>
                 <Grid className={classes.commentaryContent}>
-                  <Grid style={{display: 'flex', alignItems: 'center'}}>
-                    <Grid>
-                      <Typography variant="h6">{alfred.number_of_reviews} Commentaire(s)</Typography>
-                    </Grid>
-                    <Grid>
-                      <Grid>
-                        <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                          <Badge badgeContent={0} color={'primary'} className={classes.badgeStyle}>
-                            <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
-                          </Badge>
-                        </Box>
-                      </Grid>
-                    </Grid>
+                <Grid className={classes.bookingConditionContentTitle}>
+                  <Typography variant="h6">Les évaluations de votre Alfred</Typography>
+                </Grid>
+                <Grid className={classes.hrStyle}>
+                  <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
+                </Grid>
+                <Grid>
+                  <Notes alfred_mode={true} notes={computeAverageNotes(this.state.reviews.map( r => r.note_alfred))} key={moment()}/>
                   </Grid>
-                  <Grid className={classes.hrStyle} style={{marginBottom : alfred.number_of_reviews_client === 0 ? 50 : 30}}>
-                    <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
-                  </Grid>
-                  {
-                    alfred.number_of_reviews_client < 0 ?
-                      <Grid>
-                        <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
-                          <label>Accueil</label>
-                          <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                            <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
-                          </Box>
-                        </Grid>
-                        <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
-                          <label>Qualité-prix</label>
-                          <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating} >
-                            <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
-                          </Box>
-                        </Grid>
-                        <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
-                          <label>Communication</label>
-                          <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                            <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
-                          </Box>
-                        </Grid>
-                      </Grid> :
-                      <Grid>
-                        <Grid>
-                          <p>{alfred.firstname} n'a reçu aucun commentaire. </p>
-                        </Grid>
-                      </Grid>
-                  }
-                  {
-                    alfred.number_of_reviews_client < 0 ?
-                      <Grid>
-                        <Grid>
-                          <CardCommentary/>
-                        </Grid>
-                      </Grid> : null
-                  }
                 </Grid>
                 <Hidden mdUp implementation="css">
                   <Grid className={classes.showReservation}>
