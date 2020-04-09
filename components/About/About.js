@@ -119,7 +119,7 @@ class About extends React.Component{
                 </Grid>
               </ListItemAvatar>
               <ListItemText
-                primary={"Membre depuis " + moment(alfred.creation_date).format('MMMM YYYY')}
+                primary={"Membre depuis " + moment(user.creation_date).format('MMMM YYYY')}
               />
             </ListItem>
             <ListItem>
@@ -130,7 +130,7 @@ class About extends React.Component{
               </ListItemAvatar>
               <ListItemText
                 //TODO A MODIFIER QUAND DATE CREATION BOUTIQUE SERA STOCKE
-                primary={alfred.creation_shop ? "Alfred depuis " + moment(alfred.creation_shop).format('MMMM YYYY') : "Alfred depuis " + moment(alfred.creation_date).format('MMMM YYYY')}
+                primary={user.creation_shop ? "Alfred depuis " + moment(user.creation_shop).format('MMMM YYYY') : "Alfred depuis " + moment(user.creation_date).format('MMMM YYYY')}
               />
             </ListItem>
             <ListItem>
@@ -148,7 +148,7 @@ class About extends React.Component{
                 <Link
                   href={{
                     pathname: "../viewProfile",
-                    query: { id: alfred._id }
+                    query: { id: user._id }
                   }}
                 >
                   <Typography
