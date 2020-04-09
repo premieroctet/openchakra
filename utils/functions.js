@@ -27,4 +27,18 @@ const computeBookingReference = (user, alfred) => {
   return reference;
 }
 
-module.exports={computeDistanceKm, computeBookingReference};
+const computeAverageNotes = notes => {
+  console.log("Compute note:"+JSON.stringify(notes));
+  var res={}
+  if (isEmpty(notes)) {
+    return res;
+  }
+  Object.keys(notes[0]).forEach( k => {
+    const value=notes.reduce ((prev, next) => prev+next[k], 0)/notes.length;
+    res[k]=value;
+  })
+  console.log("Returning:"+JSON.stringify(res));
+  return res;
+}
+
+module.exports={computeDistanceKm, computeBookingReference, computeAverageNotes};
