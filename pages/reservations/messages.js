@@ -3,7 +3,7 @@ import Link from "next/link";
 import Layout from "../../hoc/Layout/Layout";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
-import Footer from "../../hoc/Layout/Footer/Footer";
+import styles from "./messages/messagesStyle";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import _ from 'lodash';
@@ -11,200 +11,11 @@ import UserAvatar from '../../components/Avatar/UserAvatar';
 import moment from 'moment';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
+import Button from '@material-ui/core/Button';
 
 
 const { config } = require("../../config/config");
 const url = config.apiUrl;
-
-const styles = theme => ({
-  bigContainer: {
-    marginTop: 100,
-    flexGrow: 1,
-    [theme.breakpoints.down("xs")]: {
-      marginBottom: 100,
-    }
-  },
-  mobilevoir: {
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    }
-  },
-  webvoir: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
-  },
-  mobilerow1: {
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    }
-  },
-  webrow: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
-  },
-  marginbot: {
-    marginBottom: "3.5%"
-  },
-  hiddenone: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none!important"
-    }
-  },
-  revealedone: {
-    [theme.breakpoints.up("md")]: {
-      display: "none!important"
-    }
-  },
-  triangle: {
-    width: 0,
-    height: 0,
-    borderLeft: "15px solid transparent",
-    borderRight: "15px solid transparent",
-    borderTop: "15px solid gray",
-    margin: "0 auto",
-    marginTop: -28
-  },
-  shopbar: {
-    [theme.breakpoints.down("md")]: {
-      display: "none"
-    }
-  },
-  bottombar: {
-    visibility: "hidden",
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    },
-    [theme.breakpoints.down("sm")]: {
-      visibility: "visible",
-      boxShadow: "2px -5px 14px -15px rgba(0,0,0,0.75)"
-    }
-  },
-  topbar: {
-    visibility: "visible",
-    position: "sticky",
-    top: 75,
-    zIndex: 999,
-    [theme.breakpoints.down("sm")]: {
-      display: "none",
-      visibility: "hidden"
-    }
-  },
-  hidesm: {
-    minWidth: "271px",
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
-  },
-
-  hidelg: {
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    }
-  },
-
-  trait: {
-    width: "100%",
-    height: 4,
-    backgroundColor: "rgb(47, 188, 211)",
-    borderColor: "transparent",
-    [theme.breakpoints.down("sm")]: {}
-  },
-  trait1: {
-    width: "100%",
-
-    height: 4,
-    backgroundColor: "lightgray",
-    borderColor: "transparent"
-  },
-  trait2: {
-    width: "100%",
-    height: 4,
-    backgroundColor: "lightgray",
-    borderColor: "transparent",
-    [theme.breakpoints.down("sm")]: {}
-  },
-  trait3: {
-    width: "100%",
-
-    height: 4,
-    backgroundColor: "rgb(47, 188, 211)",
-    borderColor: "transparent"
-  },
-  tabweb: {
-    visibility: "visible",
-    width: "100%",
-    position: "sticky",
-    top: "115px",
-    fontSize: 15,
-    backgroundColor: "white",
-    zIndex: "20",
-    [theme.breakpoints.down("sm")]: {
-      display: "none",
-      visibility: "hidden"
-    }
-  },
-
-  tabmobile: {
-    visibility: "hidden",
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    },
-    [theme.breakpoints.down("sm")]: {
-      visibility: "visible",
-      fontSize: "10px",
-      fontWeight: "300",
-      backgroundColor: "white",
-      position: "sticky",
-      top: 55,
-      zIndex: 20
-    }
-  },
-
-  mobilerow: {
-    marginTop: "1%",
-    [theme.breakpoints.down("sm")]: {
-      marginTop: "15%"
-    }
-  },
-  Rightcontent: {
-    marginLeft: "4%"
-  },
-  toggle: {
-    [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
-      transition: 'margin-left 0.7s',
-
-      '&:hover': {
-        marginLeft:'0px',
-        transition: 'margin-left 0.7s',
-        boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-
-      }
-    }
-  },
-  trigger:{
-    [theme.breakpoints.down('sm')]: {
-      marginTop: -10,
-      width: '100%',
-      marginLeft:'0px',
-      height:'30px',
-      backgroundColor:'#2FBCD3',
-
-      display:'block',
-      transition: 'display 0.7s',
-      borderRadius:'5px',
-      '&:focus': {
-        display:'none',
-        transition: 'display 0.7s',
-
-      }
-    },
-
-
-
-  },
-});
 
 class Messages extends React.Component {
   constructor(props) {
@@ -288,7 +99,7 @@ class Messages extends React.Component {
                     item
                     xs={3}
                 >
-                  <div className={classes.trigger}></div>
+                  <div className={classes.trigger}/>
                   <Grid
                       container
                       style={{
@@ -490,82 +301,55 @@ class Messages extends React.Component {
                       )}
                     </Grid>
                   </Grid>
+                  {/************************************************************ début en tant que user web **************************************************/}
+
                   {tabs ? (
                       this.state.userReservations.length ? (
                           this.state.userReservations.map(booking => {
                             return (
                                 <React.Fragment>
                                   {/* Web */}
-                                  <Grid
-                                      alt={booking.chatroom.name}
-                                      container
-                                      className={classes.webrow}
-                                      style={{ borderBottom: "1px #8281813b solid" }}
-                                  >
-                                    <Grid
-                                        item
-                                        xs={3}
-                                        md={1}
-                                        style={{ marginRight: "5%" }}
-                                    >
+                                  <Grid alt={booking.chatroom.name} container className={classes.webrow}>
+                                    <Grid item xs={2} md={1} className={classes.avatarContainer}>
                                       <UserAvatar user={booking.alfred} />
                                     </Grid>
-                                    <Grid item xs={5} md={7}>
-                                      <Typography
-                                          style={{ marginTop: "2%", color: booking.status === 'Confirmée' ? "#419F41" : booking.status === 'En attente de confirmation' || booking.status === "Demande d'infos" ? "#F87280" : booking.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D"}}
-                                      >
-                                        {booking.status} -{" "}
-                                        {booking.alfred.firstname}
-                                      </Typography>
+                                    <Grid item xs={5} md={6} className={classes.descriptionContainer}>
+                                      <Grid>
+                                        <Typography style={{ marginTop: "2%",fontSize: "0.8rem", color: booking.status === 'Confirmée' ? "#419F41" : booking.status === 'En attente de confirmation' || booking.status === "Demande d'infos" ? "#F87280" : booking.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D"}}>
+                                          {booking.status} -{" "}
+                                          {booking.alfred.firstname}
+                                        </Typography>
+                                      </Grid>
                                       {typeof _.last(booking.chatroom.messages) !== 'undefined' ?
-                                          <>
-                                            <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
-                                              {typeof _.last(booking.chatroom.messages) !== 'undefined' ? _.last(booking.chatroom.messages).content : null}
-                                            </Typography>
-                                            <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
-                                              {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('HH:mm') : null}
-                                            </Typography>
-                                          </>
-                                          : <Typography>Aucun message</Typography>}
+                                          <Grid>
+                                            <Grid>
+                                              <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
+                                                {typeof _.last(booking.chatroom.messages) !== 'undefined' ? _.last(booking.chatroom.messages).content : null}
+                                              </Typography>
+                                            </Grid>
+                                            <Grid item>
+                                              <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
+                                                {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('HH:mm') : null}
+                                              </Typography>
+                                            </Grid>
+                                          </Grid>
+                                          :
+                                        <Grid item>
+                                          <Typography>Aucun message</Typography>
+                                        </Grid>
+                                      }
                                     </Grid>
-                                    <Grid item xs={1} style={{}}>
-                                      <Typography
-                                          style={{ fontWeight: "600", paddingTop: "45%" }}
-                                      ></Typography>
+                                    <Grid item xs={2} className={classes.priceContainer}>
+                                      <Typography style={{ fontWeight: "600"}}/>
                                     </Grid>
-                                    <Grid item xs={2} style={{}}>
-                                      <Link
-                                          href={{
-                                            pathname: '/reservations/messagesDetails',
-                                            query: {
-                                              id: booking.chatroom._id,
-                                              booking: booking._id
-                                            }
-                                          }}
-                                      >
-                                      <Typography
-                                          style={{
-                                            height: "45px",
-                                            backgroundColor: "#2FBCD3",
-                                            color: "white",
-                                            textAlign: "center",
-                                            cursor: "pointer",
-                                            lineHeight: "3",
-                                            marginTop: "15%"
-                                          }}
-                                      >
-
-                                          <a
-                                              style={{
-                                                textDecoration: "none",
-                                                color: "white"
-                                              }}
-                                          >
-                                            Détail
-                                          </a>
-                                      </Typography>
-                                        </Link>
-                                    </Grid>
+                                      <Grid item>
+                                        <Grid>
+                                          <Link href={{pathname:"/reservations/messagesDetails", query: { id: booking.chatroom._id, booking: booking._id}}}>
+                                            <Button color={"primary"} variant={"outlined"}>Voir</Button>
+                                          </Link>
+                                        </Grid>
+                                      </Grid>
+                                      <hr className={classes.hrSeparator}/>
                                   </Grid>
 
                                   {/* Mobile */}
@@ -641,7 +425,7 @@ class Messages extends React.Component {
                                                 color: "white"
                                               }}
                                           >
-                                            Détail
+                                            Voir
                                           </a>
                                       </Typography>
                                         </Link>
@@ -652,6 +436,7 @@ class Messages extends React.Component {
                           })
                       ) : <p>Vous n'avez aucun message en tant qu'utilisateur</p>
                   ) : (
+
                       <React.Fragment>
                         {this.state.alfredReservations.length
                             ? this.state.alfredReservations.map(booking => {
@@ -661,78 +446,55 @@ class Messages extends React.Component {
                                     <Grid
                                         container
                                         className={classes.webrow}
-                                        style={{ borderBottom: "1px #8281813b solid" }}
                                     >
                                       <Grid
                                           item
-                                          xs={3}
+                                          xs={2}
                                           md={1}
-                                          style={{ marginRight: "5%" }}
+                                          className={classes.avatarContainer}
                                       >
                                         <UserAvatar user={booking.user} />
                                       </Grid>
-                                      <Grid item xs={5} md={7}>
-                                        <Typography
+                                      <Grid item xs={5} md={6} className={classes.descriptionContainer}>
+                                        <Grid>
+                                          <Typography
                                             style={{ marginTop: "2%",fontSize: "0.8rem", color: booking.status === 'Confirmée' ? "#419F41" : booking.status === 'En attente de confirmation' || booking.status === "Demande d'infos" ? "#F87280" : booking.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D" }}
-                                        >
-                                          {booking.status} -{" "}
-                                          {booking.user.firstname}
-                                        </Typography>
+                                          >
+                                            {booking.status} -{" "}
+                                            {booking.user.firstname}
+                                          </Typography>
+                                        </Grid>
                                         {typeof _.last(booking.chatroom.messages) !== 'undefined' ?
-                                            <>
-                                              <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
-                                                {typeof _.last(booking.chatroom.messages) !== 'undefined' ? _.last(booking.chatroom.messages).content : null}
-                                              </Typography>
-                                              <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
-                                                {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('HH:mm') : null}
-                                              </Typography>
-                                            </>
+                                            <Grid>
+                                              <Grid>
+                                                <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
+                                                  {typeof _.last(booking.chatroom.messages) !== 'undefined' ? _.last(booking.chatroom.messages).content : null}
+                                                </Typography>
+                                              </Grid>
+                                              <Grid>
+                                                <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
+                                                  {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('HH:mm') : null}
+                                                </Typography>
+                                              </Grid>
+                                            </Grid>
                                             : <Typography>Aucun message</Typography>}
 
                                       </Grid>
-                                      <Grid item xs={1} style={{}}>
-                                        <Typography
-                                            style={{
-                                              fontWeight: "600",
-                                              paddingTop: "25%",fontSize: "0.8rem"
-                                            }}
-                                        ></Typography>
+                                      <Grid item xs={2} className={classes.priceContainer}>
+                                        <Typography style={{fontWeight: "600",fontSize: "0.8rem"}}/>
                                       </Grid>
-                                      <Grid item xs={2} style={{}}>
-                                        <Link
-                                            href={{
-                                              pathname: '/reservations/messagesDetails',
-                                              query: {
-                                                id: booking.chatroom._id,
-                                                booking: booking._id
-                                              }
-                                            }}
-                                        >
-                                        <Typography
-                                            style={{
-                                              height: "45px",
-                                              backgroundColor: "#2FBCD3",
-                                              color: "white",
-                                              textAlign: "center",
-                                              cursor: "pointer",
-                                              lineHeight: "3",
-                                              marginTop: "15%"
-                                            }}
-                                        >
-
-                                            <a
-                                                style={{
-                                                  textDecoration: "none",
-                                                  color: "white"
-                                                }}
-                                            >
-                                              Détail
-                                            </a>
-                                        </Typography>
+                                      <Grid item>
+                                        <Grid>
+                                          <Link href={{pathname:"/reservations/messagesDetails", query: { id: booking.chatroom._id, booking: booking._id}}}>
+                                            <Button color={"primary"} variant={"outlined"}>Voir</Button>
                                           </Link>
+                                        </Grid>
                                       </Grid>
+                                      <hr className={classes.hrSeparator}/>
                                     </Grid>
+                                    {/************************************************************ fin en tant que user web **************************************************/}
 
+                                    {/************************************************************ début en tant que user mobile **************************************************/}
                                     {/* Mobile */}
                                     <Grid
                                         container
@@ -808,7 +570,7 @@ class Messages extends React.Component {
                                                   color: "white"
                                                 }}
                                             >
-                                              Détail
+                                              Voir
                                             </a>
                                         </Typography>
                                           </Link>
