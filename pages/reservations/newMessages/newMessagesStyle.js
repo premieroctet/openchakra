@@ -62,7 +62,7 @@ export default theme => ({
     visibility: "visible",
     width: "100%",
     position: "sticky",
-    top: "115px",
+    top: 75,
     fontSize: 15,
     backgroundColor: "white",
     zIndex: "20",

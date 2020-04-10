@@ -11,6 +11,7 @@ import { withStyles } from "@material-ui/core/styles";
 import getDistance from "geolib/es/getDistance";
 import convertDistance from "geolib/es/convertDistance";
 import UserAvatar from '../../components/Avatar/UserAvatar';
+import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 const { config } = require("../../config/config");
 const url = config.apiUrl;
 
