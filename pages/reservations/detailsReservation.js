@@ -3,17 +3,11 @@ import Link from "next/link";
 import Layout from "../../hoc/Layout/Layout";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
-import Footer from "../../hoc/Layout/Footer/Footer";
 import Typography from "@material-ui/core/Typography";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import axios from "axios";
 import moment from "moment";
 import getDistance from "geolib/es/getDistance";
 import convertDistance from "geolib/es/convertDistance";
-import StarRatings from 'react-star-ratings';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import io from "socket.io-client";
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
@@ -21,7 +15,6 @@ import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import styles from './detailsReservation/detailsReservationStyle'
 import About from '../../components/About/About';
 import Button from '@material-ui/core/Button';
-import Commentary from '../../components/Commentary/Commentary';
 
 
 moment.locale("fr");
@@ -73,7 +66,8 @@ class DetailsReservation extends React.Component {
     axios.get(url + "myAlfred/api/booking/" + booking_id).then(res => {
       this.setState(
         {
-          bookingObj: res.data
+          bookingObj: res.data,
+          alfredId: res.data.user._id
         },
       );
 
@@ -146,6 +140,8 @@ class DetailsReservation extends React.Component {
   render() {
     const { classes } = this.props;
     const { bookingObj, splitAddress, currentUser, categoryLabel } = this.state;
+    console.log(currentUser, 'moi');
+    console.log(bookingObj, 'bookingObj')
 
     return (
         <Fragment>
@@ -1007,32 +1003,33 @@ class DetailsReservation extends React.Component {
                               : bookingObj.prestations.map(prestation => {
                                 return (
                                   <Typography style={{fontSize: "1.1rem", textAlign: "center"}}>
-                                    {prestation.value}x{prestation.price.toFixed(2)}€
+                                    {(prestation.value * prestation.price).toFixed(2)}€
                                   </Typography>
                                 );
                               })}
                           </Grid>
                         </Grid>
+                        {bookingObj.fees !== 0 ?
                         <Grid  style={{display: 'flex', width: '70%', justifyContent: 'space-between'}}>
                           <Grid item>
                             <Typography style={{fontSize: "1.1rem", marginTop: "10px"}}>
-                              Frais du service
+                              Frais de service
                             </Typography>
                           </Grid>
                           <Grid item >
-                            <Typography style={{fontSize: "1.1rem", textAlign: "center", marginTop: "10px"}}>
-                              {bookingObj === null ||
-                              currentUser ===
-                              null ? null : currentUser._id ===
-                              bookingObj.alfred._id ? (
-                                <span>- {bookingObj.fees.toFixed(2)}</span>
-                              ) : (
-                                <span>+ {bookingObj.fees.toFixed(2)}</span>
-                              )}
-                              €
-                            </Typography>
+
+                              <Typography style={{fontSize: "1.1rem", textAlign: "center", marginTop: "10px"}}>
+                                {bookingObj === null || currentUser === null ? null : currentUser._id === bookingObj.alfred._id ? (
+                                  <span>- {bookingObj.fees.toFixed(2)}</span>
+                                ) : (
+                                  <span>+ {bookingObj.fees.toFixed(2)}</span>
+                                )}
+                                €
+                              </Typography>
                           </Grid>
                         </Grid>
+                          : null
+                        }
                         <Grid style={{display: 'flex', width: '70%', justifyContent: 'space-between', marginTop: '5%'}}>
                           <Grid item>
                             <Typography style={{fontSize: "1.5rem", fontWeight: "bold", color: "rgb(47, 188, 211)", marginTop: "10px"}}>
