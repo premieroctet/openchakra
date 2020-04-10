@@ -87,7 +87,6 @@ class UserServicesPreview extends React.Component {
         flexible:0,
         reactive:0,
       },
-      reviews:[],
       errors:{},
     }
     this.onQtyChanged = this.onQtyChanged.bind(this);
@@ -136,11 +135,6 @@ class UserServicesPreview extends React.Component {
         count: count,
         location: location,
       });
-
-      axios.get(`/myAlfred/api/reviews/profile/alfredReviewsCurrent/${serviceUser.user._id}`)
-        .then (res => {
-          this.setState({reviews:res.data})
-        })
 
       axios.get('/myAlfred/api/reviews/'+serviceUser.user._id)
         .then(response => {
@@ -205,13 +199,10 @@ class UserServicesPreview extends React.Component {
     }
 
     const minBookingDate=getDeadLine(this.state.serviceUser.deadline_before_booking);
-    console.log("Prévenance:"+minBookingDate.format('LLL'));
     if (!errors.datetime && reservationDate.isBefore(minBookingDate)) {
       errors['datetime']="Le délai de prévenance n'est pas respecté";
     }
 
-    console.log("Réservation:"+(reservationDate ? reservationDate.format('LLL'):'undef'));
-    console.log("Maintenant:"+moment().format('LLL'));
     if (reservationDate && reservationDate.isBefore(moment())) { errors['datetime']='Réservation impossible avant maintenant'}
 
     if (!this.state.location) { errors['location']='Sélectionnez un lieu de prestation'}
@@ -435,7 +426,7 @@ class UserServicesPreview extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {date, time, location, serviceUser, shop, service, equipments, alfred, errors, reviews} = this.state;
+    const {date, time, location, serviceUser, shop, service, equipments, alfred, errors} = this.state;
 
    const filters = this.extractFilters();
 
@@ -971,11 +962,8 @@ class UserServicesPreview extends React.Component {
                 <Grid className={classes.hrStyle}>
                   <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                 </Grid>
-                <Grid>
-                  <Notes alfred_mode={true} notes={computeAverageNotes(this.state.reviews.map( r => r.note_alfred))} key={moment()}/>
-                  </Grid>
                   <Grid>
-                    <Commentary alfred_mode={true} user_id={alfred._id} key={moment()}/>
+                    <Commentary alfred_mode={true} user_id={alfred._id} service_id={this.props.service_id} key={moment()}/>
                     </Grid>
                 </Grid>
                 <Hidden mdUp implementation="css">

@@ -141,7 +141,7 @@ router.get('/:user_id',passport.authenticate('jwt',{session:false}),(req,res)=> 
         });
         res.json(result);
       } else {
-        return res.status(400).json(result);
+        res.json(result);
       }
     })
     .catch(err => console.log(err) && res.status(404).json(result));
