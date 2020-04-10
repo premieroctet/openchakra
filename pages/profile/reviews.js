@@ -130,6 +130,20 @@ class reviews extends React.Component {
             .then(res => {
                 let user = res.data;
                 this.setState({user:user});
+                axios.get('/myAlfred/api/reviews/profile/alfredReviewsCurrent/'+user._id)
+                    .then(res => {
+                        let reviews = res.data;
+                        this.setState({alfredReviews:reviews})
+                    })
+                    .catch();
+
+                axios.get('/myAlfred/api/reviews/profile/customerReviewsCurrent/'+user._id)
+                    .then(res => {
+                        let reviews = res.data;
+                        this.setState({clientReviews:reviews})
+                    })
+                    .catch()
+
             })
             .catch(err => {
                     if(err.response.status === 401 || err.response.status === 403) {
@@ -139,19 +153,6 @@ class reviews extends React.Component {
                 }
             );
 
-        axios.get('/myAlfred/api/reviews/alfredReviewsCurrent')
-            .then(res => {
-                let reviews = res.data;
-                this.setState({alfredReviews:reviews})
-            })
-            .catch();
-
-        axios.get('/myAlfred/api/reviews/customerReviewsCurrent')
-            .then(res => {
-                let reviews = res.data;
-                this.setState({clientReviews:reviews})
-            })
-            .catch()
     }
 
     handleClicktabs2 =() => {
