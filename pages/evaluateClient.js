@@ -131,8 +131,8 @@ class EvaluateClient extends React.Component {
 
     }
 
-    static getInitialProps ({ query: { booking,id } }) {
-        return { booking:booking,service_id: id }
+    static getInitialProps ({ query: { booking,id,client } }) {
+        return { booking:booking,service_id: id,client:client }
 
     }
 
@@ -166,7 +166,6 @@ class EvaluateClient extends React.Component {
 
     onComplimentChanged = (name) => {
       const org=this.state[name];
-      console.log(name+" was "+org);
       this.setState({[name]: !org});
     }
 
@@ -195,7 +194,7 @@ class EvaluateClient extends React.Component {
     evaluate() {
         const id = this.props.service_id;
         const booking = this.props.booking;
-        const client = this.props.client_id;
+        const client = this.props.client;
         const content = this.state.content;
         const accueil = this.state.accueil;
         const accuracy = this.state.accuracy;
