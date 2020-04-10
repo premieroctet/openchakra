@@ -186,7 +186,7 @@ class viewProfile extends React.Component {
               "myAlfred/api/reviews/profile/customerReviewsCurrent/" +
               this.props.user_id
           )
-          .then(res => this.setState({ customerReviews: res.data }));
+          .then(res => this.setState({ customerReviews: res.data })).catch(error => {console.log(error)});
 
         axios
           .get(
@@ -196,7 +196,7 @@ class viewProfile extends React.Component {
           )
           .then(res => this.setState({ alfredReviews: res.data }));
       })
-      .catch(err => console.log(err));
+      .catch(err => {console.log(err)});
   }
 
   handleClick() {
@@ -215,7 +215,7 @@ class viewProfile extends React.Component {
     const { classes } = this.props;
     const { customerComments } = this.state;
     const { depliage } = this.state;
-    const { user_infos, customerReviews, alfredReviews } = this.state;
+    const { user_infos } = this.state;
 
     return (
       <Fragment>

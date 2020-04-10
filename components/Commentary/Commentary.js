@@ -27,17 +27,21 @@ class Commentary extends React.Component{
     axios.get('/myAlfred/api/users/users/'+this.props.user_id)
       .then (res => {
         this.setState({owner:res.data})
-      })
+      }).catch(error =>{
+        console.log(error)
+    });
     const req = alfred_mode ? 'alfredReviewsCurrent' : 'customerReviewsCurrent'
     axios.get(`/myAlfred/api/reviews/profile/${req}/${this.props.user_id}`)
       .then (res => {
         this.setState({reviews:res.data})
-      })
+      }).catch(error => {
+        console.log(error)
+    })
   }
 
   render(){
     const {owner, reviews} = this.state;
-    const {classes, user_id, alfred_mode} = this.props;
+    const {classes, alfred_mode} = this.props;
 
     const StyledRating = withStyles({
       iconFilled: {
