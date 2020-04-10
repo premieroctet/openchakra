@@ -141,7 +141,7 @@ class shop extends React.Component {
                   <Grid className={classes.marginMainContainer}>
                       <Grid className={classes.aboutAndSkillsMainContainer}>
                           <Grid className={classes.aboutContentContainer}>
-                              <About alfred={this.state.idAlfred} profil={true}/>
+                              <About alfred={this.props.aboutId} profil={true}/>
                           </Grid>
                           <Grid className={classes.skillsContentContainer}>
                               <Skills alfred={this.state.alfred} widthHr={'100%'} skills={this.state.skills}/>

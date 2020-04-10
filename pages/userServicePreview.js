@@ -535,23 +535,34 @@ class UserServicesPreview extends React.Component {
       </Grid>
         { serviceUser.pick_tax || serviceUser.travel_tax ?
         <Grid style={{marginBottom: 30}}>
-        <Grid>
-          <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Option de la prestation</Typography>
-        </Grid>
-        { serviceUser.pick_tax ?
           <Grid>
-            Retrait & livraison
-            { serviceUser.pick_tax }
+            <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Option de la prestation</Typography>
           </Grid>
-          :null
-        }
-        { serviceUser.travel_tax ?
-          <Grid>
-            Frais de déplacement
-            { serviceUser.travel_tax }
+          <Grid style={{marginTop: 20, marginLeft:15, marginRight:15}}>
+            { serviceUser.pick_tax ?
+              <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+                <Grid>
+                  Retrait & livraison
+                </Grid>
+                <Grid>
+                  { serviceUser.pick_tax }€
+                </Grid>
+              </Grid>
+
+              :null
+            }
+            { serviceUser.travel_tax ?
+              <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+                <Grid>
+                  Frais de déplacement
+                </Grid>
+                <Grid>
+                { serviceUser.travel_tax.toFixed(2) }€
+                </Grid>
+              </Grid>
+              :null
+            }
           </Grid>
-          :null
-        }
       </Grid>:null
       }
         <Grid style={{marginBottom: 30}}>
@@ -598,7 +609,7 @@ class UserServicesPreview extends React.Component {
               <p>Frais de déplacement</p>
             </Grid>
             <Grid>
-              <p>{this.state.serviceUser.travel_tax}€</p>
+              <p>{this.state.serviceUser.travel_tax.toFixed(2)}€</p>
             </Grid>
           </Grid>:null}
           { /* End pick tax */ }
