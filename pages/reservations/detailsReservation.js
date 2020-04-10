@@ -140,8 +140,6 @@ class DetailsReservation extends React.Component {
   render() {
     const { classes } = this.props;
     const { bookingObj, splitAddress, currentUser, categoryLabel } = this.state;
-    console.log(currentUser, 'moi');
-    console.log(bookingObj, 'bookingObj')
 
     return (
         <Fragment>
@@ -360,7 +358,7 @@ class DetailsReservation extends React.Component {
                         <hr className={classes.hrSeparator}/>
                         <Grid container style={{borderBottom: "1.5px #8281813b solid", marginTop: "5%", paddingBottom: "7%", alignItems: 'center'}}>
                           <Grid item xs={12} md={7}>
-                            <About alfred={bookingObj.alfred._id}/>
+                            <About alfred={bookingObj.user._id}/>
                           </Grid>
                           <Grid item style={{ textAlign: "center"}}>
                             <Link
