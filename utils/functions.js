@@ -27,4 +27,28 @@ const computeBookingReference = (user, alfred) => {
   return reference;
 }
 
-module.exports={computeDistanceKm, computeBookingReference};
+const computeAverageNotes = notes => {
+  var res={}
+  if (isEmpty(notes)) {
+    return res;
+  }
+  Object.keys(notes[0]).forEach( k => {
+    const value=notes.reduce ((prev, next) => prev+next[k], 0)/notes.length;
+    res[k]=value;
+  })
+  return res;
+}
+
+const computeSumSkills = skills => {
+  var res={}
+  if (isEmpty(skills)) {
+    return res;
+  }
+  Object.keys(skills[0]).forEach( k => {
+    const value=skills.reduce ((prev, next) => prev+next[k], 0);
+    res[k]=value;
+  })
+  return res;
+}
+
+module.exports={computeDistanceKm, computeBookingReference, computeAverageNotes, computeSumSkills};
