@@ -75,6 +75,7 @@ router.post('/add/alfred',passport.authenticate('jwt',{session: false}),(req,res
 router.post('/add/client',passport.authenticate('jwt',{session: false}),(req,res) => {
 
 
+    console.log("Got body:"+JSON.stringify(req.body, null, 2));
     const reviewFields = {};
     reviewFields.alfred = req.user.id;
     reviewFields.user = mongoose.Types.ObjectId(req.body.client);
