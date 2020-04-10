@@ -102,9 +102,9 @@ const navbar = (props) => {
   );
 };
 
-// eslint-disable-next-line react/no-typos
 navbar.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  theme: PropTypes.objectOf(PropTypes.string).isRequired
 };
 
 export default withStyles(styles)(navbar);
