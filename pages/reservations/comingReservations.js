@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import moment from "moment";
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
-import UserAvatar from '../../components/avatar/UserAvatar';
+import UserAvatar from '../../components/Avatar/UserAvatar';
 import Button from '@material-ui/core/Button';
 
 
