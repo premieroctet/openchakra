@@ -19,6 +19,8 @@ const selectPrestation = (shop) =>{
 const settingService = (shop) =>{
   if (shop.location==null)  return true;
   if (Object.values(shop.location).every( v => !v)) return true;
+  if (isNaN(shop.travel_tax)) return false;
+  if (isNaN(shop.pick_tax)) return false;
 };
 
 const assetsService = (shop) => {

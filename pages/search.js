@@ -3,7 +3,12 @@ import Layout from '../hoc/Layout/Layout';
 import Footer from '../hoc/Layout/Footer/Footer';
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from '@material-ui/core/styles';
+import TextField from "@material-ui/core/TextField";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import Search from "@material-ui/icons/Search";
 import axios from "axios";
+import Router from "next/dist/client/router";
+import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import Link from 'next/link';
 import Card from "@material-ui/core/Card";
@@ -14,14 +19,17 @@ import Typography from "@material-ui/core/Typography";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import 'react-dates/initialize';
-import { DateRangePicker } from 'react-dates';
+import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates';
 import moment from "moment";
+import StarRatings from 'react-star-ratings';
 import 'react-dates/lib/css/_datepicker.css';
+import Tooltip from '@material-ui/core/Tooltip';
 import CardPreview from '../components/CardPreview/CardPreview';
 import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
 import Profiteandlearn from '../components/home/profite&learn/profite&learn'
 import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
 import NearbyYou from '../components/home/NearbyYou/NearbyYou';
+import Homeheader from '../components/home/Homeheader/Homeheader';
 import FeelingGood from '../components/home/feelingGood/feelingGood';
 import Wellbeing from '../components/home/Wellbeing/Wellbeing';
 import Proposeservice from '../components/home/proposeservice/Proposeservice';
@@ -56,9 +64,41 @@ const styles = theme => ({
     card: {
         margin: 20,
     },
+    media: {
+      height: "250px!important",
+      position: 'relative',
+      objectFit: 'cover',
+    },
     respfilter:{
         [theme.breakpoints.down('sm')]: {
             top: 200,
+        }
+    },
+    mobilevoir: {
+        [theme.breakpoints.up("md")]: {
+            display: "none!important"
+        }
+    },
+    webvoir: {
+        [theme.breakpoints.down("sm")]: {
+            display: "none!important"
+        }
+    },
+    DateInput_input__focused:{
+        borderBottom: '1px solid #fb1515!important',
+    },
+    algol: {
+        fontFamily: 'Helvetica Neue, Helvetica,sans-serif',
+        '::placeholder':{
+            color: '#cfcfcf',
+        },
+        '&:hover':{
+            border: '1px solid black!important',
+            transition: 'border 0.5s',
+        },
+        '&:focus':{
+            border: '2px solid #2FBCD3!important',
+            transition: 'border 0.5s',
         }
     },
     separatorBlue:{
@@ -195,6 +235,15 @@ class SearchPage extends React.Component {
         this.setState({[event.target.name]: event.target.checked, statusFilterVisible: false}, () => this.filter() );
     };
 
+    resetFilter() {
+      this.setState({
+        proSelected: false,
+        individualSelected: false,
+        startDate: null,
+        endDate: null,
+      }, () => this.filter())
+    }
+
     // Filter according to pro or particular && dates
     filter() {
       const serviceUsers=this.state.serviceUsers;
@@ -308,6 +357,18 @@ class SearchPage extends React.Component {
       this.setState({catCount:counts});
     }
 
+    isStatusFilterSet() {
+      return this.state.proSelected || this.state.individualSelected;
+    }
+
+    isDateFilterSet() {
+      return this.state.startDate!=null || this.state.endDate!=null;
+    }
+
+    isSubFilterSet() {
+      return this.isStatusFilterSet() || this.isDateFilterSet();
+    }
+
     render() {
         const {classes} = this.props;
         const {user, categories, gps} = this.state;
@@ -315,12 +376,8 @@ class SearchPage extends React.Component {
         const serviceUsers = this.state.serviceUsersDisplay;
         keyword = keyword ? keyword.trim() : '';
 
-        // FIX : apply bgColor to filter titles
-        const stateFilterSet = this.state.proSelected || this.state.individualSelected;
-        const dateFilterSet  = this.state.startDate!=null || this.state.endDate!=null;
-
-        const statusFilterBg=stateFilterSet ? '#2FBCD3':'white';
-        const dateFilterBg=dateFilterSet ? '#2FBCD3':'white';
+        const statusFilterBg=this.isStatusFilterSet() ? '#2FBCD3':'white';
+        const dateFilterBg=this.isDateFilterSet() ? '#2FBCD3':'white';
 
         return (
           <Fragment>
@@ -374,7 +431,7 @@ class SearchPage extends React.Component {
                             </Grid>
                           </Grid>
                           :
-                          <Grid key={moment()} item xs={5} md={3} onClick={()=> this.statusFilterToggled()} style={{borderRadius: '15px', backgroundColor: {statusFilterBg}, boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
+                          <Grid key={moment()} item xs={5} md={3} onClick={()=> this.statusFilterToggled()} style={{borderRadius: '15px', backgroundColor: `${statusFilterBg}`, boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
                               <Typography style={{textAlign: 'center', fontSize: '0.8rem', height:43,paddingTop: 13}}>Statut</Typography>
                           </Grid>
                       }
@@ -413,7 +470,7 @@ class SearchPage extends React.Component {
                               </Grid>
                           </Grid>
                             :
-                          <Grid item xs={5} md={3} onClick={()=> this.dateFilterToggled()} style={{borderRadius: '15px', backgroundColor: {dateFilterBg}, boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
+                          <Grid item xs={5} md={3} onClick={()=> this.dateFilterToggled()} style={{borderRadius: '15px', backgroundColor: `${dateFilterBg}`, boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
                               <Typography style={{textAlign: 'center', fontSize: '0.8rem',paddingTop:13,height:43 }}>Quelle(s) date(s) ?</Typography>
                           </Grid>
                         }
@@ -486,10 +543,13 @@ class SearchPage extends React.Component {
                               </Grid>
                             ))}
                           </Grid>
-                          {this.props.search && serviceUsers.length === 0 ?
-                            <p>Nous n'avons pas trouvé de résultat pour votre recherche</p>
+                          {this.props.search && serviceUsers.length === 0 && !this.isSubFilterSet() ?
+                            <p>Aucun résultat</p>
                             :
                             null
+                          }
+                          {this.props.search && serviceUsers.length === 0 && this.isSubFilterSet() ?
+                            <p><Button onClick={() => this.resetFilter()}>Aucun résultat, supprimer les filtres</Button></p> :  null
                           }
                  </Grid>
                 { this.props.search || serviceUsers.length>0 ? null:
