@@ -19,7 +19,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import UserAvatar from '../components/Avatar/UserAvatar';
-import SkillsAlfred from '../components/SkillsAlfred/SkillsAlfred';
+import Skills from '../components/Skills/Skills';
 import Typography from '@material-ui/core/Typography';
 import Schedule from '../components/Schedule/Schedule';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -44,6 +44,9 @@ const emptyPromise = require('../utils/promise');
 const {isMomentAvailable, getDeadLine} = require('../utils/dateutils');
 const {computeDistanceKm}=require('../utils/functions');
 import DatePicker, {registerLocale} from "react-datepicker";
+import Commentary from '../components/Commentary/Commentary';
+import Notes from '../components/Notes/Notes';
+import {computeAverageNotes} from '../utils/functions';
 import fr from 'date-fns/locale/fr';
 const moment = require('moment');
 moment.locale('fr');
@@ -137,8 +140,8 @@ class UserServicesPreview extends React.Component {
         .then(response => {
           const skills=response.data;
           this.setState({skills:skills});
-        })  
-        .catch(function(error){ console.log(error); }); 
+        })
+        .catch(function(error){ console.log(error); });
       axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
         .then(res => {
           let availabilities = res.data;
@@ -159,7 +162,7 @@ class UserServicesPreview extends React.Component {
       console.log(err)
     });
 
- 
+
     setTimeout(this.checkBook, 3000);
   }
 
@@ -170,7 +173,7 @@ class UserServicesPreview extends React.Component {
       return null;
     }
     dt.hour(tm.hour()).minute(tm.minute());
-    return dt; 
+    return dt;
   }
 
   checkBook = () => {
@@ -196,13 +199,10 @@ class UserServicesPreview extends React.Component {
     }
 
     const minBookingDate=getDeadLine(this.state.serviceUser.deadline_before_booking);
-    console.log("Prévenance:"+minBookingDate.format('LLL'));
     if (!errors.datetime && reservationDate.isBefore(minBookingDate)) {
       errors['datetime']="Le délai de prévenance n'est pas respecté";
     }
 
-    console.log("Réservation:"+(reservationDate ? reservationDate.format('LLL'):'undef'));
-    console.log("Maintenant:"+moment().format('LLL'));
     if (reservationDate && reservationDate.isBefore(moment())) { errors['datetime']='Réservation impossible avant maintenant'}
 
     if (!this.state.location) { errors['location']='Sélectionnez un lieu de prestation'}
@@ -251,7 +251,6 @@ class UserServicesPreview extends React.Component {
 
   onChange = event => {
     const {name, value}=event.target;
-    console.log("onChange:"+name+","+value);
     this.setState({[name]:value}, () => this.checkBook());
   }
 
@@ -377,7 +376,7 @@ class UserServicesPreview extends React.Component {
     return(
       <Grid style={{width: '100%'}}>
         <ExpansionPanel defaultExpanded={index==0}>
-         
+
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
@@ -542,23 +541,34 @@ class UserServicesPreview extends React.Component {
       </Grid>
         { serviceUser.pick_tax || serviceUser.travel_tax ?
         <Grid style={{marginBottom: 30}}>
-        <Grid>
-          <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Option de la prestation</Typography>
-        </Grid>
-        { serviceUser.pick_tax ?
           <Grid>
-            Retrait & livraison
-            { serviceUser.pick_tax }
+            <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Option de la prestation</Typography>
           </Grid>
-          :null
-        }
-        { serviceUser.travel_tax ?
-          <Grid>
-            Frais de déplacement
-            { serviceUser.travel_tax }
+          <Grid style={{marginTop: 20, marginLeft:15, marginRight:15}}>
+            { serviceUser.pick_tax ?
+              <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+                <Grid>
+                  Retrait & livraison
+                </Grid>
+                <Grid>
+                  { serviceUser.pick_tax }€
+                </Grid>
+              </Grid>
+
+              :null
+            }
+            { serviceUser.travel_tax ?
+              <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+                <Grid>
+                  Frais de déplacement
+                </Grid>
+                <Grid>
+                { serviceUser.travel_tax.toFixed(2) }€
+                </Grid>
+              </Grid>
+              :null
+            }
           </Grid>
-          :null
-        }
       </Grid>:null
       }
         <Grid style={{marginBottom: 30}}>
@@ -605,7 +615,7 @@ class UserServicesPreview extends React.Component {
               <p>Frais de déplacement</p>
             </Grid>
             <Grid>
-              <p>{this.state.serviceUser.travel_tax}€</p>
+              <p>{this.state.serviceUser.travel_tax.toFixed(2)}€</p>
             </Grid>
           </Grid>:null}
           { /* End pick tax */ }
@@ -774,7 +784,7 @@ class UserServicesPreview extends React.Component {
                 </Grid>
                 <Grid style={{marginTop: 30}}>
                   <Grid className={classes.skillsContentContainer}>
-                    <SkillsAlfred alfred={alfred} widthHr={500} skills={this.state.skills}/>
+                    <Skills alfred={alfred} widthHr={500} skills={this.state.skills}/>
                   </Grid>
                 </Grid>
                 {equipments.length !== 0 ?
@@ -963,59 +973,15 @@ class UserServicesPreview extends React.Component {
                   </Grid>
                 </Grid>
                 <Grid className={classes.commentaryContent}>
-                  <Grid style={{display: 'flex', alignItems: 'center'}}>
-                    <Grid>
-                      <Typography variant="h6">{alfred.number_of_reviews} Commentaire(s)</Typography>
+                <Grid className={classes.bookingConditionContentTitle}>
+                  <Typography variant="h6">Les évaluations de votre Alfred</Typography>
+                </Grid>
+                <Grid className={classes.hrStyle}>
+                  <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
+                </Grid>
+                  <Grid>
+                    <Commentary alfred_mode={true} user_id={alfred._id} service_id={this.props.service_id} key={moment()}/>
                     </Grid>
-                    <Grid>
-                      <Grid>
-                        <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                          <Badge badgeContent={0} color={'primary'} className={classes.badgeStyle}>
-                            <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
-                          </Badge>
-                        </Box>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid className={classes.hrStyle} style={{marginBottom : alfred.number_of_reviews_client === 0 ? 50 : 30}}>
-                    <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
-                  </Grid>
-                  {
-                    alfred.number_of_reviews_client < 0 ?
-                      <Grid>
-                        <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
-                          <label>Accueil</label>
-                          <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                            <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
-                          </Box>
-                        </Grid>
-                        <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
-                          <label>Qualité-prix</label>
-                          <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating} >
-                            <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
-                          </Box>
-                        </Grid>
-                        <Grid style={{display: 'flex', alignItems:'center', marginLeft: 15}}>
-                          <label>Communication</label>
-                          <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                            <StyledRating name="read-only" value={0} readOnly className={classes.rating} />
-                          </Box>
-                        </Grid>
-                      </Grid> :
-                      <Grid>
-                        <Grid>
-                          <p>{alfred.firstname} n'a reçu aucun commentaire. </p>
-                        </Grid>
-                      </Grid>
-                  }
-                  {
-                    alfred.number_of_reviews_client < 0 ?
-                      <Grid>
-                        <Grid>
-                          <CardCommentary/>
-                        </Grid>
-                      </Grid> : null
-                  }
                 </Grid>
                 <Hidden mdUp implementation="css">
                   <Grid className={classes.showReservation}>

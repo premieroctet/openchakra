@@ -56,7 +56,7 @@ class creaShop extends React.Component {
         deadline_unit: "jours", // Unité de prévenance (h:heures, j:jours, s:semaines)
 	      level: '',
         service_address: null,
-        perimeter: 1,
+        perimeter: 10,
         availabilities: [],
       },
       title: "Précisez vos disponibilités si vous le souhaitez ! ",

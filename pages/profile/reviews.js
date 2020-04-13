@@ -11,9 +11,6 @@ import StarRatings from 'react-star-ratings';
 import {Helmet} from 'react-helmet';
 moment.locale('fr');
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         marginTop: 70,
@@ -129,10 +126,24 @@ class reviews extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url+'myAlfred/api/users/current')
+            .get('/myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
                 this.setState({user:user});
+                axios.get('/myAlfred/api/reviews/profile/alfredReviewsCurrent/'+user._id)
+                    .then(res => {
+                        let reviews = res.data;
+                        this.setState({alfredReviews:reviews})
+                    })
+                    .catch();
+
+                axios.get('/myAlfred/api/reviews/profile/customerReviewsCurrent/'+user._id)
+                    .then(res => {
+                        let reviews = res.data;
+                        this.setState({clientReviews:reviews})
+                    })
+                    .catch()
+
             })
             .catch(err => {
                     if(err.response.status === 401 || err.response.status === 403) {
@@ -142,19 +153,6 @@ class reviews extends React.Component {
                 }
             );
 
-        axios.get(url+'myAlfred/api/reviews/alfredReviewsCurrent')
-            .then(res => {
-                let reviews = res.data;
-                this.setState({alfredReviews:reviews})
-            })
-            .catch();
-
-        axios.get(url+'myAlfred/api/reviews/customerReviewsCurrent')
-            .then(res => {
-                let reviews = res.data;
-                this.setState({clientReviews:reviews})
-            })
-            .catch()
     }
 
     handleClicktabs2 =() => {

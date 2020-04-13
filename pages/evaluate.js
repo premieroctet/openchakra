@@ -9,7 +9,7 @@ import Footer from '../hoc/Layout/Footer/Footer';
 import StarRatings from 'react-star-ratings';
 import {toast} from 'react-toastify';
 import TextField from "@material-ui/core/TextField";
-import SkillsAlfred from '../components/SkillsAlfred/SkillsAlfred';
+import Skills from '../components/Skills/Skills';
 
 const { config } = require('../config/config');
 const url = config.apiUrl;
@@ -334,7 +334,7 @@ class Evaluate extends React.Component {
 
                                 </div>
                                     <Grid className={classes.skillsContentContainer}>
-                                      <SkillsAlfred alfred={this.state.alfred} skills={this.state} widthHr={'100%'} hideCount={true} onClick={this.onComplimentChanged} />
+                                      <Skills alfred={this.state.alfred} skills={this.state} widthHr={'100%'} hideCount={true} onClick={this.onComplimentChanged} />
                                     </Grid>
                                 <div>
                                     <br></br>

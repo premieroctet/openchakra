@@ -11,6 +11,7 @@ import { withStyles } from "@material-ui/core/styles";
 import getDistance from "geolib/es/getDistance";
 import convertDistance from "geolib/es/convertDistance";
 import UserAvatar from '../../components/Avatar/UserAvatar';
+import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 const { config } = require("../../config/config");
 const url = config.apiUrl;
 
@@ -336,7 +337,7 @@ class MessagesDetails extends React.Component {
                   <UserAvatar user={bookingObj === null ? null : this.state.userData._id === bookingObj.alfred._id ? bookingObj.user:bookingObj.alfred} />
                 </Grid>
                 <Grid item xs={5} md={7}>
-                  <Typography style={{ marginTop: "25px", fontSize: "1.3rem" }}>
+                  <Typography style={{fontSize: "1.3rem" }}>
                     {bookingObj === null
                         ? null
                         : this.state.userData._id === bookingObj.alfred._id
@@ -348,30 +349,17 @@ class MessagesDetails extends React.Component {
                           : bookingObj.alfred.name}
                   </Typography>
                   <Typography style={{ marginTop: "3px", color: "#9B9B9B" }}>
-                    {bookingObj?bookingObj.service:''} le 
-                    {bookingObj === null ? null : bookingObj.date_prestation}{" "}
+                    {bookingObj?bookingObj.service:''} le
+                    {" "}{bookingObj === null ? null : bookingObj.date_prestation}
                   </Typography>
                 </Grid>
                 <Grid item xs={1} style={{}}>
 
                 </Grid>
                 <Grid item xs={2} style={{}}>
-                  <svg
-                    style={{ marginTop: "25px" }}
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="25.432"
-                    height="36.478"
-                    viewBox="0 0 55.432 66.478"
-                  >
-                    <path
-                      id="Tracé_12517"
-                      data-name="Tracé 12517"
-                      d="M300.251,5274l-1.352.1-1.352.2-1.463.206-1.241.311-1.352.3-2.59.814-2.362,1.125-2.365,1.223-2.03,1.428-2.03,1.633-1.8,1.832-1.577,1.836-1.352,2.141-1.238,2.144-.9,2.34-.339,1.227-.339,1.121-.225,1.329-.228,1.222L274,5297.76v1.323l.111,1.835.228,1.833.336,1.942.567,1.831.564,1.839.788,1.832.788,1.836.9,1.838,1.016,1.731,1.124,1.832,2.368,3.365,2.476,3.267,2.593,3.061,2.59,2.851,2.479,2.552,2.365,2.344,2.14,1.936,3.04,2.653,1.241,1.018,1.241-1.018,3.04-2.653,2.141-1.936,2.365-2.344,2.479-2.552,2.59-2.851,2.593-3.061,2.476-3.267,2.368-3.365,1.124-1.832,1.016-1.731.9-1.838.788-1.836.788-1.832.564-1.839.567-1.831.336-1.942.228-1.833.111-1.835v-1.323l-.111-1.225-.228-1.222-.225-1.329-.339-1.121-.339-1.227-.9-2.34-1.238-2.144-1.352-2.141-1.577-1.836-1.8-1.832-2.03-1.633-2.03-1.428-2.365-1.223-2.362-1.125-2.59-.814-1.352-.3-1.241-.311-1.463-.206-1.352-.2-1.355-.1Zm2.707,14.378,1.124.2,1.127.206,1.124.4,1.016.41,1.013.61.9.611.788.714.792.715.678.813.671.919.453.919.453,1.018.225,1.021.222,1.023v2.24l-.222,1.02-.225,1.018-.453,1.023-.453.912-.671.919-.678.819-.792.713-.788.715-.9.609-1.013.613-1.016.4-1.124.41-1.127.206-1.124.2h-2.483l-1.124-.2-1.127-.206-1.124-.41-1.016-.4-1.013-.613-.9-.609-.788-.715-.792-.713-.678-.819-.671-.919-.453-.912-.453-1.023-.225-1.018-.222-1.02v-2.24l.222-1.023.225-1.021.453-1.018.453-.919.671-.919.678-.812.792-.715.788-.714.9-.611,1.013-.61,1.016-.41,1.124-.4,1.127-.206,1.124-.2Z"
-                      transform="translate(-274.001 -5274)"
-                      fill="#848484"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
+                  <Grid>
+                    <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
+                  </Grid>
                   <Typography style={{ marginTop: "3px", color: "#9B9B9B" }}>
                     {bookingObj === null || typeof this.state.userData.billing_address === 'undefined'
                       ? null
@@ -679,6 +667,8 @@ class MessagesDetails extends React.Component {
                     padding: "20px"
                   }}
                   type="text"
+                  placeholder={"Saisissez un message"}
+                  autoFocus={true}
                   value={this.state.message}
                   onChange={this.handleChange}
                 />

@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AlfredBanner from '../components/shop/AlfredBanner/AlfredBanner';
 import NavBarShop from '../components/NavBar/NavBarShop/NavBarShop';
 import About from '../components/About/About';
-import SkillsAlfred from '../components/SkillsAlfred/SkillsAlfred';
+import Skills from '../components/Skills/Skills';
 import Typography from '@material-ui/core/Typography';
 import CardPreview from '../components/CardPreview/CardPreview';
 import CardAddService from '../components/CardAddService/CardAddService';
@@ -18,10 +18,7 @@ import AlfredConditionsCancel from '../components/AlfredConditionsCancel/AlfredC
 import AlfredWelcomedMessage from '../components/AlfredWelcomedMessage/AlfredWelcomedMessage';
 import {Helmet} from 'react-helmet';
 import NavbarMobile from '../components/NavbarMobile/NavbarMobile';
-
-
-const { config } = require('../config/config');
-const url = config.apiUrl;
+import Commentary from '../components/Commentary/Commentary';
 
 class shop extends React.Component {
     constructor(props) {
@@ -56,7 +53,7 @@ class shop extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(url+'myAlfred/api/users/current').then(res => {
+        axios.get('/myAlfred/api/users/current').then(res => {
             let user = res.data;
             if(user) {
                 this.setState({
@@ -68,7 +65,7 @@ class shop extends React.Component {
             console.log(error);
         });
 
-        axios.get(`${url}myAlfred/api/shop/alfred/${this.state.id}`)
+        axios.get(`/myAlfred/api/shop/alfred/${this.state.id}`)
           .then( response  =>  {
               let shop = response.data;
               this.setState({
@@ -84,7 +81,7 @@ class shop extends React.Component {
               console.log(error);
           });
 
-        axios.get(url+'myAlfred/api/shopBanner/all')
+        axios.get('/myAlfred/api/shopBanner/all')
           .then(response => {
               let banner = response.data;
               this.setState({banner: banner})
@@ -144,10 +141,10 @@ class shop extends React.Component {
                   <Grid className={classes.marginMainContainer}>
                       <Grid className={classes.aboutAndSkillsMainContainer}>
                           <Grid className={classes.aboutContentContainer}>
-                              <About alfred={this.state.alfred} languages={this.state.languages} shop={this.state.shop} profil={true}/>
+                              <About alfred={this.props.aboutId} profil={true}/>
                           </Grid>
                           <Grid className={classes.skillsContentContainer}>
-                              <SkillsAlfred alfred={this.state.alfred} widthHr={'100%'} skills={this.state.skills}/>
+                              <Skills alfred={this.state.alfred} widthHr={'100%'} skills={this.state.skills}/>
                           </Grid>
                       </Grid>
                       <Grid className={classes.servicesContainer}>
@@ -215,32 +212,16 @@ class shop extends React.Component {
 
                           />
                       </Grid>
-                      {/*
                         <Grid style={{marginLeft: '5%', marginRight: '5%', marginTop: '3%'}}>
                             <Grid>
                                 <h3>Commentaires</h3>
                             </Grid>
                             <Grid>
                                 <Grid style={{width : '100%'}}>
-                                    <Commentary/>
-                                </Grid>
-                                <hr style={{marginTop: 30, marginBottom: 30}}/>
-                                <Grid style={{width : '100%'}}>
-                                    <Commentary/>
-                                </Grid>
-                                    <hr style={{marginTop: 30, marginBottom: 30}}/>
-                                <Grid style={{width : '100%'}}>
-                                    <Commentary/>
+                                  <Commentary alfred_mode={true} user_id={this.props.aboutId} />
                                 </Grid>
                             </Grid>
-                            <Grid style={{marginTop:50, marginBottom: 50}}>
-                                <Typography>
-                                    <Link href="#" onClick={preventDefault}>
-                                        Voir plus de commentaires
-                                    </Link>
-                                </Typography>
-                            </Grid>
-                        </Grid>*/}
+                        </Grid>
                   </Grid>
               </Layout>
               <NavbarMobile userId={this.state.userId}/>

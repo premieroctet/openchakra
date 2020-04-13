@@ -139,7 +139,10 @@ class SearchPage extends React.Component {
 
     static getInitialProps ({ query: { keyword, city, gps, selectedAddress, category, service, prestation, search, date} }) {
       // FIX : set city nin AlgoPlaces if provided
-      var init= { keyword: keyword, city:city, gps:gps, selectedAddress:selectedAddress, category:category, service:service, prestation:prestation, search:search, date:date}
+      var init= { keyword: keyword, city:city, selectedAddress:selectedAddress, category:category, service:service, prestation:prestation, search:search, date:date}
+      if (gps) {
+        init['gps']=gps;
+      }
       return init;
     }
 
@@ -352,6 +355,13 @@ class SearchPage extends React.Component {
         const serviceUsers = this.state.serviceUsersDisplay;
         keyword = keyword ? keyword.trim() : '';
 
+        // FIX : apply bgColor to filter titles
+        const stateFilterSet = this.state.proSelected || this.state.individualSelected;
+        const dateFilterSet  = this.state.startDate!=null || this.state.endDate!=null;
+
+        const statusFilterBg=stateFilterSet ? '#2FBCD3':'white';
+        const dateFilterBg=dateFilterSet ? '#2FBCD3':'white';
+
         return (
           <Fragment>
             <Layout>
@@ -404,7 +414,7 @@ class SearchPage extends React.Component {
                             </Grid>
                           </Grid>
                           :
-                          <Grid item xs={5} md={3} onClick={()=> this.statusFilterToggled()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
+                          <Grid key={moment()} item xs={5} md={3} onClick={()=> this.statusFilterToggled()} style={{borderRadius: '15px', backgroundColor: {statusFilterBg}, boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
                               <Typography style={{textAlign: 'center', fontSize: '0.8rem', height:43,paddingTop: 13}}>Statut</Typography>
                           </Grid>
                       }
@@ -443,7 +453,7 @@ class SearchPage extends React.Component {
                               </Grid>
                           </Grid>
                             :
-                          <Grid item xs={5} md={3} onClick={()=> this.dateFilterToggled()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
+                          <Grid item xs={5} md={3} onClick={()=> this.dateFilterToggled()} style={{borderRadius: '15px', backgroundColor: {dateFilterBg}, boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
                               <Typography style={{textAlign: 'center', fontSize: '0.8rem',paddingTop:13,height:43 }}>Quelle(s) date(s) ?</Typography>
                           </Grid>
                         }
@@ -457,7 +467,7 @@ class SearchPage extends React.Component {
                     <Grid container className="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'inline-block', minHeight: '250px'}}>
                       {categories.map((cat, index) => (
                         <Grid key={index} style={{display: 'inline-block', width: '300px', margin: 'auto 20px'}}>
-                          <Link href={'/search?search=1&category='+cat._id+'&gps='+JSON.stringify(gps)}>
+                          <Link href={'/search?search=1&category='+cat._id+(gps?'&gps='+JSON.stringify(gps):'')}>
                             <Card  style={{width: '300px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
                               <CardActionArea>
                                 <CardMedia
@@ -494,7 +504,7 @@ class SearchPage extends React.Component {
                                    this.restrictServices(serviceUsers, cat).map(su => {
                                     return (
                                       <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
-                                        <CardPreview services={su} alfred={user} gps={gps} needAvatar={true}/>
+                                        <CardPreview services={su} alfred={user} gps={gps} needAvatar={true} key={moment()} />
                                       </Grid>
                                     )
                                   })

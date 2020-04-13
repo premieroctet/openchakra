@@ -33,7 +33,7 @@ router.post('/add/alfred',passport.authenticate('jwt',{session: false}),(req,res
                 reviewFields.note_alfred.punctual = req.body.punctual;
                 reviewFields.note_alfred.flexible = req.body.flexible;
                 reviewFields.note_alfred.reactive = req.body.reactive;
-                
+
                 let quality = parseInt(req.body.quality_price,10);
                 let prestation = parseInt(req.body.prestation_quality,10);
                 let relational = parseInt(req.body.relational,10);
@@ -75,6 +75,7 @@ router.post('/add/alfred',passport.authenticate('jwt',{session: false}),(req,res
 router.post('/add/client',passport.authenticate('jwt',{session: false}),(req,res) => {
 
 
+    console.log("Got body:"+JSON.stringify(req.body, null, 2));
     const reviewFields = {};
     reviewFields.alfred = req.user.id;
     reviewFields.user = mongoose.Types.ObjectId(req.body.client);
@@ -85,12 +86,6 @@ router.post('/add/client',passport.authenticate('jwt',{session: false}),(req,res
     reviewFields.note_client.reception = req.body.accueil;
     reviewFields.note_client.accuracy= req.body.accuracy;
     reviewFields.note_client.relational = req.body.relational;
-
-    // Compliments
-    reviewFields.note_client.careful = req.body.careful;
-    reviewFields.note_client.punctual = req.body.punctual;
-    reviewFields.note_client.flexible = req.body.flexible;
-    reviewFields.note_client.reactive = req.body.reactive;
 
     let reception = parseInt(req.body.accueil,10);
     let accuracy = parseInt(req.body.accuracy,10);
@@ -132,12 +127,11 @@ router.post('/add/client',passport.authenticate('jwt',{session: false}),(req,res
 router.get('/:user_id',passport.authenticate('jwt',{session:false}),(req,res)=> {
   const userId=mongoose.Types.ObjectId(req.params.user_id);
   var result={careful:0, punctual:0, flexible:0, reactive:0};
-  Reviews.find({$or :[ {alfred:userId}, {user:userId}] })
+  Reviews.find({alfred:userId})
     .then(reviews => {
-      console.log(JSON.stringify(reviews));
       if(typeof reviews !== 'undefined' && reviews.length > 0){
         reviews.forEach( r => {
-          const note=r.alfred.equals(userId)?r.note_alfred:r.note_client; 
+          const note=r.note_alfred;
           Object.entries(note).forEach( e => {
             const skillName=e[0];
             const skillSet=e[1];
@@ -148,7 +142,7 @@ router.get('/:user_id',passport.authenticate('jwt',{session:false}),(req,res)=> 
         });
         res.json(result);
       } else {
-        return res.status(400).json(result);
+        res.json(result);
       }
     })
     .catch(err => console.log(err) && res.status(404).json(result));
@@ -184,6 +178,7 @@ router.get('/all',passport.authenticate('jwt',{session:false}),(req,res)=> {
 router.get('/customerReviewsCurrent', passport.authenticate('jwt', { session: false }), ( req, res ) => {
     const userId = mongoose.Types.ObjectId(req.user.id);
     Reviews.find({ alfred: userId,note_client:undefined })
+        .populate('alfred','-id_card')
         .populate('user','-id_card')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
@@ -197,6 +192,7 @@ router.get('/alfredReviewsCurrent', passport.authenticate('jwt', { session: fals
     const userId = mongoose.Types.ObjectId(req.user.id);
     Reviews.find({ user: userId, note_alfred:undefined })
         .populate('alfred','-id_card')
+        .populate('user','-id_card')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
         .then(review => {
@@ -208,6 +204,7 @@ router.get('/alfredReviewsCurrent', passport.authenticate('jwt', { session: fals
 router.get('/profile/customerReviewsCurrent/:id', passport.authenticate('jwt', { session: false }), ( req, res ) => {
     const userId = mongoose.Types.ObjectId(req.params.id);
     Reviews.find({ alfred: userId, note_client: undefined })
+        .populate('alfred','-id_card')
         .populate('user','-id_card')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
@@ -221,6 +218,7 @@ router.get('/profile/alfredReviewsCurrent/:id', passport.authenticate('jwt', { s
     const userId = mongoose.Types.ObjectId(req.params.id);
     Reviews.find({ user: userId, note_alfred: undefined })
         .populate('alfred','-id_card')
+        .populate('user','-id_card')
         .populate('serviceUser')
         .populate({path: 'serviceUser', populate: { path: 'service' }})
         .then(review => {

@@ -364,18 +364,6 @@ class NavBar extends Component {
               </Hidden>
               <Grid className={classes.rightContentNavBar}>
                 <Grid className={classes.sectionDesktop}>
-                  {logged ?
-                    <React.Fragment>
-                      <Typography className={classes.navbarItem}>
-                        <Link href={'/reservations/allReservations'}>
-                          <a className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.navbarLink}>
-                            Mes réservations
-                          </a>
-                        </Link>
-                      </Typography>
-                    </React.Fragment>
-                    : null
-                  }
                   {user && user.is_alfred ?
                     <Typography className={classes.navbarItem}>
                       <Link href={`/shop?id_alfred=${user._id}`} >
@@ -395,9 +383,21 @@ class NavBar extends Component {
                   {logged ?
                     <React.Fragment>
                       <Typography className={classes.navbarItem}>
+                        <Link href={'/reservations/allReservations'}>
+                          <a className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.navbarLink}>
+                            Mes réservations
+                          </a>
+                        </Link>
+                      </Typography>
+                    </React.Fragment>
+                    : null
+                  }
+                  {logged ?
+                    <React.Fragment>
+                      <Typography className={classes.navbarItem}>
                         <Link href={'/reservations/messages'}>
                           <a className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.navbarLink}>
-                            Messages
+                            Mes messages
                           </a>
                         </Link>
                       </Typography>

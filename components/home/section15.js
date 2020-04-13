@@ -118,7 +118,7 @@ class section15 extends React.Component {
         const resdata = shuffleArray(category);
         const services = resdata.slice(0, 4).map(e => (
             <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
-                <Link href={'/search?search=1&category='+e._id+'&gps='+JSON.stringify(gps)}>
+                <Link href={'/search?search=1&category='+e._id+(gps?'&gps='+JSON.stringify(gps):'')}>
                 <Card className={classes.card} style={{
                     backgroundColor:'transparent',
                     textAlign:'center',

@@ -10,41 +10,33 @@ const ReviewsSchema = new Schema({
             type: Number,
             max: 5,
             min: 0,
-            default:0,
         },
         quality_price: {
             type: Number,
             max: 5,
             min: 0,
-            default:0,
         },
         relational: {
             type: Number,
             max: 5,
             min: 0,
-            default:0,
         },
         global: {
 	    type: Number,
 	    max: 5,
             min: 0,
-            default:0,
         },
         careful: { // Travail soigné
           type: Boolean,
-          default: false
         },
         punctual: { // Ponctuel
           type: Boolean,
-          default: false
         },
         flexible: { 
           type: Boolean,
-          default: false
         },
         reactive: { // Réactif
           type: Boolean,
-          default: false
         }
     },
     note_client: {
@@ -52,42 +44,22 @@ const ReviewsSchema = new Schema({
             type: Number,
             max: 5,
             min: 0,
-            default:0,
         },
         accuracy: {
             type: Number,
             max: 5,
             min: 0,
-            default:0,
         },
         relational: {
             type: Number,
             max: 5,
             min: 0,
-            default:0,
         },
         global: {
             type: Number,
             max: 5,
             min: 0,
-            default:0,
         },
-        careful: { // Travail soigné
-          type: Boolean,
-          default: false
-        },
-        punctual: { // Ponctuel
-          type: Boolean,
-          default: false
-        },
-        flexible: { 
-          type: Boolean,
-          default: false
-        },
-        reactive: { // Réactif
-          type: Boolean,
-          default: false
-        }
     },
     date: {
         type: Date,

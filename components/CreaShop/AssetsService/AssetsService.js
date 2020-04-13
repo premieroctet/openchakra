@@ -86,6 +86,8 @@ class AssetsService extends React.Component {
                       variant="outlined"
                       value={this.state.description}
                       onChange={ e => this.handleChange('description', e.target.value) }
+                      multiline
+                      rows="4"
                     />
                   </Grid>
                 </Grid>
