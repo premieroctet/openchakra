@@ -777,7 +777,7 @@ class UserServicesPreview extends React.Component {
                       <Grid>
                         <ListItem className={classes.noPadding} style={{marginLeft : 5}}>
                           <ListItemIcon className={classes.minWidth}>
-                            <img src={serviceUser.level && serviceUser.level !== "" && serviceUser.level !== null && serviceUser.level !== undefined ? '../../static/assets/img/iconCardAlfred/experience.svg' : '../../static/assets/img/iconCardAlfred/no_experience.svg'} alt={'Expérimenté'} title={'Expérimenté'} className={classes.imageStyle}/>
+                            <img src={serviceUser.level>0 ? '/static/assets/img/iconCardAlfred/experience.svg' : '/static/assets/img/iconCardAlfred/no_experience.svg'} alt={'Expérimenté'} title={'Expérimenté'} className={classes.imageStyle}/>
                           </ListItemIcon>
                           <ListItemText
                             classes={{primary:classes.sizeText}}
