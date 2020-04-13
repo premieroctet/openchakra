@@ -352,6 +352,13 @@ class SearchPage extends React.Component {
         const serviceUsers = this.state.serviceUsersDisplay;
         keyword = keyword ? keyword.trim() : '';
 
+        // FIX : apply bgColor to filter titles
+        const stateFilterSet = this.state.proSelected || this.state.individualSelected;
+        const dateFilterSet  = this.state.startDate!=null || this.state.endDate!=null;
+
+        const statusFilterBg=stateFilterSet ? '#2FBCD3':'white';
+        const dateFilterBg=dateFilterSet ? '#2FBCD3':'white';
+
         return (
           <Fragment>
             <Layout>
@@ -404,7 +411,7 @@ class SearchPage extends React.Component {
                             </Grid>
                           </Grid>
                           :
-                          <Grid item xs={5} md={3} onClick={()=> this.statusFilterToggled()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
+                          <Grid key={moment()} item xs={5} md={3} onClick={()=> this.statusFilterToggled()} style={{borderRadius: '15px', backgroundColor: {statusFilterBg}, boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
                               <Typography style={{textAlign: 'center', fontSize: '0.8rem', height:43,paddingTop: 13}}>Statut</Typography>
                           </Grid>
                       }
@@ -443,7 +450,7 @@ class SearchPage extends React.Component {
                               </Grid>
                           </Grid>
                             :
-                          <Grid item xs={5} md={3} onClick={()=> this.dateFilterToggled()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
+                          <Grid item xs={5} md={3} onClick={()=> this.dateFilterToggled()} style={{borderRadius: '15px', backgroundColor: {dateFilterBg}, boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
                               <Typography style={{textAlign: 'center', fontSize: '0.8rem',paddingTop:13,height:43 }}>Quelle(s) date(s) ?</Typography>
                           </Grid>
                         }
