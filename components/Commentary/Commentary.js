@@ -12,7 +12,8 @@ import moment from 'moment';
 import Skills from '../Skills/Skills';
 import Notes from '../Notes/Notes';
 import {computeAverageNotes, computeSumSkills} from '../../utils/functions';
-
+import Typography from '@material-ui/core/Typography';
+import Badge from '@material-ui/core/Badge';
 
 class Commentary extends React.Component{
   constructor(props){
@@ -75,45 +76,78 @@ class Commentary extends React.Component{
       const skills = computeSumSkills(reviews.map( r => alfred_mode ? r.note_alfred : r.note_client));
       console.log("Got notes:"+JSON.stringify(notes));
       return (
-        <>
-        <Notes alfred_mode={alfred_mode} notes={notes} key={moment()} />
-        { alfred_mode ? <Skills alfred={owner} skills={skills}/> : null }
-        {reviews.map( r => (
-         <Grid>
-           <Grid style={{width: '100%', display:'flex', alignItems: 'center'}}>
-             <Grid style={{marginRight:15}}> <Avatar className={classes.picsSize}/> </Grid>
+        <Grid>
+          <Grid style={{display: 'flex', width: '100%', marginLeft: 15}}>
+            <Grid style={{width: '50%'}}>
+              <Grid style={{display:'flex', flexDirection: 'column'}}>
+                <Grid>
+                  <Grid>
+                    <Box component="fieldset" mb={3} borderColor="transparent" className={classes.flexContainer}>
+                      <Grid>
+                        <Typography className={classes.titleSkills} variant={"h3"}>Note générale</Typography>
+                      </Grid>
+                      <Grid className={classes.marginLeft}>
+                        <Badge classes={{badge: classes.badge}} badgeContent={10} color="primary">
+                          <StyledRating name="read-only" value={parseInt(notes.prestation_quality)} readOnly className={classes.ratingStyle}/>
+                        </Badge>
+                      </Grid>
+                    </Box>
+                  </Grid>
+                  <Grid style={{width: 290}}>
+                    <hr style={{color : 'rgb(80, 80, 80, 0.2)', margin: 0}}/>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid style={{marginTop:'3%'}}>
+                <Notes alfred_mode={alfred_mode} notes={notes} key={moment()} />
+              </Grid>
+            </Grid>
+            { alfred_mode ?
+              <Grid style={{width: '50%', justifyContent :'center', display: 'flex'}}>
+                <Skills alfred={owner} skills={skills}/>
+              </Grid>
+              :
+              null
+            }
+          </Grid>
+          <hr className={classes.hrSeparator}/>
+          {reviews.map( r => (
+           <Grid>
+             <Grid style={{width: '100%', display:'flex', alignItems: 'center'}}>
+               <Grid style={{marginRight:15}}>
+                 <Avatar className={classes.picsSize}/> </Grid>
+               <Grid>
+                 <p style={{color:'#4fbdd7'}}>
+                   {r.serviceUser.service.label} {alfred_mode ? `pour ${r.user.firstname}` : `par ${r.alfred.firstname}`}
+                 </p>
+                 <p style={{color:'#505050'}}>
+                   {moment(r.date).format('DD/MM/YYYY - HH:mm')}
+                 </p>
+               </Grid>
+             </Grid>
+             <Grid style={{display:'flex', alignItems :'center'}}>
+               <Grid style={{display:'flex', flexDirection: 'column', width: '50%'}}>
+               { console.log('sending notes:'+JSON.stringify(alfred_mode ? r.note_alfred : r.note_client))}
+                 <Notes alfred_mode={alfred_mode} notes={alfred_mode ? r.note_alfred : r.note_client} key={moment()} />
+                 </Grid>
+             </Grid>
              <Grid>
-               <p style={{color:'#4fbdd7'}}>
-                 {r.serviceUser.service.label} {alfred_mode ? `pour ${r.user.firstname}` : `par ${r.alfred.firstname}`}
-               </p>
-               <p style={{color:'#505050'}}>
-                 {moment(r.date).format('DD/MM/YYYY - HH:mm')}
-               </p>
+               <TextField
+                 disabled
+                 id="outlined-multiline-static"
+                 label="Commentaire"
+                 multiline
+                 rows="4"
+                 value={r.content}
+                 className={classes.textField}
+                 margin="normal"
+                 variant="outlined"
+               />
              </Grid>
            </Grid>
-           <Grid style={{display:'flex', alignItems :'center'}}>
-             <Grid style={{display:'flex', flexDirection: 'column', width: '50%'}}>
-             { console.log('sending notes:'+JSON.stringify(alfred_mode ? r.note_alfred : r.note_client))}
-               <Notes alfred_mode={alfred_mode} notes={alfred_mode ? r.note_alfred : r.note_client} key={moment()} />
-               </Grid>
-           </Grid>
-           <Grid>
-             <TextField
-               disabled
-               id="outlined-multiline-static"
-               label="Commentaire"
-               multiline
-               rows="4"
-               value={r.content}
-               className={classes.textField}
-               margin="normal"
-               variant="outlined"
-             />
-           </Grid>
-         </Grid>
-         ))
-        }
-        </>
+           ))
+          }
+        </Grid>
       )
     }
 }}

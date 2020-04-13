@@ -212,16 +212,17 @@ class shop extends React.Component {
 
                           />
                       </Grid>
-                        <Grid style={{marginLeft: '5%', marginRight: '5%', marginTop: '3%'}}>
-                            <Grid>
-                                <h3>Commentaires</h3>
-                            </Grid>
-                            <Grid>
-                                <Grid style={{width : '100%'}}>
-                                  <Commentary alfred_mode={true} user_id={this.props.aboutId} />
-                                </Grid>
+                      <hr className={classes.hrShop}/>
+                      <Grid style={{marginLeft: '5%', marginRight: '5%', marginTop: '3%'}}>
+                        <Grid>
+                            <Typography variant={"h3"} className={classes.titleSkills}>Commentaires</Typography>
+                        </Grid>
+                        <Grid style={{marginTop: '3%'}}>
+                            <Grid style={{width : '100%'}}>
+                              <Commentary alfred_mode={true} user_id={this.props.aboutId} />
                             </Grid>
                         </Grid>
+                    </Grid>
                   </Grid>
               </Layout>
               <NavbarMobile userId={this.state.userId}/>
