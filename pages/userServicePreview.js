@@ -134,6 +134,7 @@ class UserServicesPreview extends React.Component {
         alfred: serviceUser.user,
         count: count,
         location: location,
+        pick_tax: null,
       });
 
       axios.get('/myAlfred/api/reviews/'+serviceUser.user._id)
@@ -251,11 +252,11 @@ class UserServicesPreview extends React.Component {
 
   onChange = event => {
     const {name, value}=event.target;
-    this.setState({[name]:value}, () => this.checkBook());
+    this.setState({[name]:value}, () => this.computeTotal());
   }
 
   onLocationChanged = (id, checked) => {
-    this.setState({location:id}, () => this.checkBook());
+    this.onChange({target: {name:'location', value:checked?id:null}});
   }
 
   onQtyChanged = event => {
@@ -269,6 +270,10 @@ class UserServicesPreview extends React.Component {
     }
   }
 
+  computeTravelTax = () => {
+    return this.state.serviceUser.travel_tax && this.state.location=='client' ? this.state.serviceUser.travel_tax : 0;
+  }
+
   computeTotal = () => {
     var totalPrestations=0;
     var count=this.state.count;
@@ -278,8 +283,9 @@ class UserServicesPreview extends React.Component {
         totalPrestations += count[p._id]*p.price;
       }
     });
-    totalPrestations+=su.travel_tax ? parseInt(su.travel_tax) : 0;
-    totalPrestations+=su.pick_tax ? parseInt(su.pick_tax) : 0;
+    const travelTax = this.computeTravelTax();
+    totalPrestations+=travelTax ? parseInt(travelTax) : 0;
+    totalPrestations+=this.state.pick_tax ? parseInt(this.state.pick_tax) : 0;
     var commission=totalPrestations*COMM_CLIENT;
     var total=totalPrestations;
     total+=commission;
@@ -301,6 +307,10 @@ class UserServicesPreview extends React.Component {
     } else {
       return titles[this.state.location];
     }
+  }
+
+  onPickTaxChanged = (id, checked) => {
+    this.onChange({target: {name:'pick_tax', value:checked? this.state.serviceUser.pick_tax:null}});
   }
 
   book = (actual) => { //actual : true=> book, false=>infos request
@@ -448,6 +458,8 @@ class UserServicesPreview extends React.Component {
       },
     })(Rating);
 
+    console.log("Location:"+location);
+
     const drawer = side => (
       <Grid className={classes.borderContentRight}>
         <Grid style={{marginBottom: 30}}>
@@ -545,25 +557,13 @@ class UserServicesPreview extends React.Component {
           }
         </Grid>
       </Grid>
-        { serviceUser.pick_tax || serviceUser.travel_tax ?
+        { serviceUser.pick_tax || this.computeTravelTax() ?
         <Grid style={{marginBottom: 30}}>
           <Grid>
-            <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Option de la prestation</Typography>
+            <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Option(s) de la prestation</Typography>
           </Grid>
           <Grid style={{marginTop: 20, marginLeft:15, marginRight:15}}>
-            { serviceUser.pick_tax ?
-              <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-                <Grid>
-                  Retrait & livraison
-                </Grid>
-                <Grid>
-                  { serviceUser.pick_tax }€
-                </Grid>
-              </Grid>
-
-              :null
-            }
-            { serviceUser.travel_tax ?
+            { serviceUser.travel_tax && location=='client' ?
               <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
                 <Grid>
                   Frais de déplacement
@@ -572,6 +572,15 @@ class UserServicesPreview extends React.Component {
                 { serviceUser.travel_tax.toFixed(2) }€
                 </Grid>
               </Grid>
+              :null
+            }
+            { serviceUser.pick_tax ?
+              <Grid style={{display: 'flex'}}>
+                <Grid>
+                  <ButtonSwitch label="Retrait & livraison" price={serviceUser.pick_tax} isPrice={true} priceDisabled={true} onChange={this.onPickTaxChanged}/>
+                </Grid>
+              </Grid>
+
               :null
             }
           </Grid>
@@ -615,7 +624,7 @@ class UserServicesPreview extends React.Component {
           )})
           }
           { /* Start travel tax */ }
-          { serviceUser.travel_tax ?
+          { serviceUser.travel_tax && location=='client' ?
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
               <p>Frais de déplacement</p>
@@ -626,13 +635,13 @@ class UserServicesPreview extends React.Component {
           </Grid>:null}
           { /* End pick tax */ }
           { /* Start pick tax */ }
-          { serviceUser.pick_tax ?
+          { this.state.pick_tax ?
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
               <p>Frais de livraison/enlèvement</p>
             </Grid>
             <Grid>
-              <p>{this.state.serviceUser.pick_tax}€</p>
+              <p>{this.state.pick_tax.toFixed(2)}€</p>
             </Grid>
           </Grid>:null}
           { /* End pick tax */ }
