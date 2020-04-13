@@ -215,13 +215,19 @@ class UserServicesPreview extends React.Component {
       return result;
     }
     this.state.prestations.forEach( p => {
-      var filter=p.prestation.filter_presentation;
-      var key = !filter || filter.label==='Aucun' ? '' : filter.label;
-      if (key in result) {
-        result[key].push(p);
+      if (p.prestation==null) {
+        // FIX : réaffecter les prestations persos
+        console.error(`Error:${p.id} has a null prestation`);
       }
       else {
-        result[key]=[p];
+        var filter=p.prestation.filter_presentation;
+        var key = !filter || filter.label==='Aucun' ? '' : filter.label;
+        if (key in result) {
+          result[key].push(p);
+        }
+        else {
+          result[key]=[p];
+        }
       }
     });
     // Set "no filter" to first position
@@ -423,6 +429,12 @@ class UserServicesPreview extends React.Component {
       </Grid>
     )
   };
+
+  formatDeadline = dl => {
+    if (!dl) { return dl};
+    dl=dl.replace("jours", "jour(s)").replace("semaines", "semaine(s)").replace("heures", "heure(s)");
+    return dl;
+  }
 
   render() {
     const {classes} = this.props;
@@ -860,7 +872,7 @@ class UserServicesPreview extends React.Component {
                     </Grid>
                     <Grid style={{fontSize: 'x-large',  marginLeft: 15}}>
                       {
-                        serviceUser.deadline_before_booking
+                        this.formatDeadline(serviceUser.deadline_before_booking)
                       }
                     </Grid>
                   </Grid>
