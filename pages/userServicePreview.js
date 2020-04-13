@@ -430,6 +430,12 @@ class UserServicesPreview extends React.Component {
     )
   };
 
+  formatDeadline = dl => {
+    if (!dl) { return dl};
+    dl=dl.replace("jours", "jour(s)").replace("semaines", "semaine(s)").replace("heures", "heure(s)");
+    return dl;
+  }
+
   render() {
     const {classes} = this.props;
     const {date, time, location, serviceUser, shop, service, equipments, alfred, errors} = this.state;
@@ -866,7 +872,7 @@ class UserServicesPreview extends React.Component {
                     </Grid>
                     <Grid style={{fontSize: 'x-large',  marginLeft: 15}}>
                       {
-                        serviceUser.deadline_before_booking
+                        this.formatDeadline(serviceUser.deadline_before_booking)
                       }
                     </Grid>
                   </Grid>
