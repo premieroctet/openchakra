@@ -139,7 +139,10 @@ class SearchPage extends React.Component {
 
     static getInitialProps ({ query: { keyword, city, gps, selectedAddress, category, service, prestation, search, date} }) {
       // FIX : set city nin AlgoPlaces if provided
-      var init= { keyword: keyword, city:city, gps:gps, selectedAddress:selectedAddress, category:category, service:service, prestation:prestation, search:search, date:date}
+      var init= { keyword: keyword, city:city, selectedAddress:selectedAddress, category:category, service:service, prestation:prestation, search:search, date:date}
+      if (gps) {
+        init['gps']=gps;
+      }
       return init;
     }
 
@@ -464,7 +467,7 @@ class SearchPage extends React.Component {
                     <Grid container className="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'inline-block', minHeight: '250px'}}>
                       {categories.map((cat, index) => (
                         <Grid key={index} style={{display: 'inline-block', width: '300px', margin: 'auto 20px'}}>
-                          <Link href={'/search?search=1&category='+cat._id+'&gps='+JSON.stringify(gps)}>
+                          <Link href={'/search?search=1&category='+cat._id+(gps?'&gps='+JSON.stringify(gps):'')}>
                             <Card  style={{width: '300px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
                               <CardActionArea>
                                 <CardMedia
