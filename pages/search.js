@@ -235,6 +235,15 @@ class SearchPage extends React.Component {
         this.setState({[event.target.name]: event.target.checked, statusFilterVisible: false}, () => this.filter() );
     };
 
+    resetFilter() {
+      this.setState({
+        proSelected: false,
+        individualSelected: false,
+        startDate: null,
+        endDate: null,
+      }, () => this.filter())
+    }
+
     // Filter according to pro or particular && dates
     filter() {
       const serviceUsers=this.state.serviceUsers;
@@ -348,6 +357,18 @@ class SearchPage extends React.Component {
       this.setState({catCount:counts});
     }
 
+    isStatusFilterSet() {
+      return this.state.proSelected || this.state.individualSelected;
+    }
+
+    isDateFilterSet() {
+      return this.state.startDate!=null || this.state.endDate!=null;
+    }
+
+    isSubFilterSet() {
+      return this.isStatusFilterSet() || this.isDateFilterSet();
+    }
+
     render() {
         const {classes} = this.props;
         const {user, categories, gps} = this.state;
@@ -355,12 +376,8 @@ class SearchPage extends React.Component {
         const serviceUsers = this.state.serviceUsersDisplay;
         keyword = keyword ? keyword.trim() : '';
 
-        // FIX : apply bgColor to filter titles
-        const stateFilterSet = this.state.proSelected || this.state.individualSelected;
-        const dateFilterSet  = this.state.startDate!=null || this.state.endDate!=null;
-
-        const statusFilterBg=stateFilterSet ? '#2FBCD3':'white';
-        const dateFilterBg=dateFilterSet ? '#2FBCD3':'white';
+        const statusFilterBg=this.isStatusFilterSet() ? '#2FBCD3':'white';
+        const dateFilterBg=this.isDateFilterSet() ? '#2FBCD3':'white';
 
         return (
           <Fragment>
@@ -526,10 +543,13 @@ class SearchPage extends React.Component {
                               </Grid>
                             ))}
                           </Grid>
-                          {this.props.search && serviceUsers.length === 0 ?
+                          {this.props.search && serviceUsers.length === 0 && !this.isSubFilterSet() ?
                             <p>Aucun résultat</p>
                             :
                             null
+                          }
+                          {this.props.search && serviceUsers.length === 0 && this.isSubFilterSet() ?
+                            <p><Button onClick={() => this.resetFilter()}>Aucun résultat, supprimer les filtres</Button></p> :  null
                           }
                  </Grid>
                 { this.props.search || serviceUsers.length>0 ? null:
