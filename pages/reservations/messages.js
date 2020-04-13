@@ -335,7 +335,7 @@ class Messages extends React.Component {
                                           </Grid>
                                           :
                                         <Grid item>
-                                          <Typography>Aucun message</Typography>
+                                          <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>Aucun message</Typography>
                                         </Grid>
                                       }
                                     </Grid>
@@ -390,7 +390,7 @@ class Messages extends React.Component {
                                               {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('HH:mm') : null}
                                             </Typography>
                                           </>
-                                          : <Typography>Aucun message</Typography>}
+                                          : <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>Aucun message</Typography>}
                                     </Grid>
                                     <Grid item xs={12} style={{textAlign: 'center', fontSize: "0.8rem"}}>
                                       <Typography
@@ -477,7 +477,7 @@ class Messages extends React.Component {
                                                 </Typography>
                                               </Grid>
                                             </Grid>
-                                            : <Typography>Aucun message</Typography>}
+                                            : <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>Aucun message</Typography>}
 
                                       </Grid>
                                       <Grid item xs={2} className={classes.priceContainer}>

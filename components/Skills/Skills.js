@@ -50,16 +50,16 @@ class Skills extends React.Component{
       <Grid>
         <Grid item>
           { hideCount ?
-              null
-              :
-              <>
+            null
+            :
+            <Grid>
               <Typography variant="h3" className={classes.titleSkills}>
                 Les compliments reçus par {alfred.firstname}
               </Typography>
               <Grid className={ widthHr === 500 ? classes.bigWidth : classes.middleWidth}>
                 <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
               </Grid>
-              </>
+            </Grid>
           }
           <Grid container className={classes.mainContainer}>
             {

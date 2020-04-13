@@ -34,10 +34,17 @@ export default theme=>({
       width: 'auto'
     },
   },
-  titleSkills:{
-    fontSize: "1.6rem",
-    color: "rgba(84,89,95,0.95)",
-    letterSpacing: -1,
-    fontWeight: "bold"
-  }
+
+  labelRating:{
+    display: 'flex',
+    alignItems: 'center',
+    margin: 0,
+    padding : 0
+  },
+  marginLeft:{
+    marginLeft: 10
+  },
+  widthP:{
+    width: 156
+  },
 })
