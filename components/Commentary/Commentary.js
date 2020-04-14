@@ -29,8 +29,7 @@ class Commentary extends React.Component{
     const user_id = this.props.user_id;
     const service_id = this.props.service_id;
     const alfred_mode = this.props.alfred_mode;
-    console.log("Mount, user is:"+user_id);
-    console.log("Mount, service is:"+service_id);
+
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     if (user_id) {
       axios.get('/myAlfred/api/users/users/'+user_id)
@@ -42,16 +41,14 @@ class Commentary extends React.Component{
 
     const req = alfred_mode ? 'customerReviewsCurrent':'alfredReviewsCurrent';
     const url = `/myAlfred/api/reviews/profile/${req}/${this.props.user_id}`;
-    console.log("Request:"+url);
+
     axios.get(url)
       .then (res => {
         var reviews = res.data;
-        console.log("Got reviews:"+JSON.stringify(reviews.map( r => r._id)));
         if (service_id) {
-          reviews = reviews.filter( r => r.serviceUser._id=service_id);
+          reviews = reviews.filter( r => r.serviceUser._id==service_id);
         }
-        console.log("Reviews count:"+reviews.length);
-        this.setState({reviews:res.data})
+        this.setState({reviews:reviews})
       })
       .catch (err => console.log(err));
   }
@@ -60,6 +57,7 @@ class Commentary extends React.Component{
     const {owner, reviews} = this.state;
     const {classes, alfred_mode} = this.props;
     console.log(reviews, "reviews")
+
 
   const StyledRating = withStyles({
       iconFilled: {
@@ -75,7 +73,6 @@ class Commentary extends React.Component{
     else {
       const notes = computeAverageNotes(reviews.map( r => alfred_mode ? r.note_alfred : r.note_client));
       const skills = computeSumSkills(reviews.map( r => alfred_mode ? r.note_alfred : r.note_client));
-      console.log("Got notes:"+JSON.stringify(notes));
       return (
         <Grid style={{width: '100%'}}>
           <Grid style={{display: 'flex', width: '100%'}}>
@@ -131,7 +128,6 @@ class Commentary extends React.Component{
                  </Grid>
                  <Grid style={{display:'flex', alignItems :'center'}}>
                    <Grid style={{display:'flex', flexDirection: 'column', width: '50%', marginLeft: 15}}>
-                     { console.log('sending notes:'+JSON.stringify(alfred_mode ? r.note_alfred : r.note_client))}
                      <Notes alfred_mode={alfred_mode} notes={alfred_mode ? r.note_alfred : r.note_client} key={moment()} />
                    </Grid>
                  </Grid>
