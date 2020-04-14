@@ -107,6 +107,51 @@ class UserServicesPreview extends React.Component {
       .then(res => {
         let user = res.data;
         this.setState({ user: user, });
+        axios.get(`/myAlfred/api/serviceUser/${id}`).then(res => {
+          let serviceUser = res.data;
+          // Prestas booked : 0 for each
+          var count = {}
+          serviceUser.prestations.forEach( p => count[p._id]=0);
+
+          var location=null;
+
+          this.setState({
+            serviceUser: serviceUser,
+            service: serviceUser.service,
+            equipments: serviceUser.equipments,
+            prestations: serviceUser.prestations,
+            allEquipments : serviceUser.service.equipments,
+            alfred: serviceUser.user,
+            count: count,
+            location: location,
+            pick_tax: null,
+          }, () => this.setDefaultLocation());
+
+          axios.get('/myAlfred/api/reviews/'+serviceUser.user._id)
+            .then(response => {
+              const skills=response.data;
+              this.setState({skills:skills});
+            })
+            .catch(function(error){ console.log(error); });
+          axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
+            .then(res => {
+              let availabilities = res.data;
+              this.setState({ availabilities: availabilities });
+            })
+            .catch(err => console.log(err));
+          axios.get("/myAlfred/api/shop/alfred/" + this.state.alfred._id).then(res => {
+            let shop = res.data;
+            this.setState({
+              shop: shop,
+              flexible: shop.flexible_cancel,
+              moderate: shop.moderate_cancel,
+              strict: shop.strict_cancel,
+            });
+          })
+          .catch(err => console.log(err));
+        }).catch(err =>{
+          console.log(err)
+        });
       })
       .catch(err => {
         console.log(err);
@@ -116,54 +161,15 @@ class UserServicesPreview extends React.Component {
         }
       });
 
-    axios.get(`/myAlfred/api/serviceUser/${id}`).then(res => {
-      let serviceUser = res.data;
-      // Prestas booked : 0 for each
-      var count = {}
-      serviceUser.prestations.forEach( p => count[p._id]=0);
-      // FIX : select default location ; can not be "client" if not in perimeter
-      //var location = serviceUser.location.client ? "client" : serviceUser.location.alfred ? "alfred" : "visio";
-      var location=null;
-
-      this.setState({
-        serviceUser: serviceUser,
-        service: serviceUser.service,
-        equipments: serviceUser.equipments,
-        prestations: serviceUser.prestations,
-        allEquipments : serviceUser.service.equipments,
-        alfred: serviceUser.user,
-        count: count,
-        location: location,
-      });
-
-      axios.get('/myAlfred/api/reviews/'+serviceUser.user._id)
-        .then(response => {
-          const skills=response.data;
-          this.setState({skills:skills});
-        })
-        .catch(function(error){ console.log(error); });
-      axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
-        .then(res => {
-          let availabilities = res.data;
-          this.setState({ availabilities: availabilities });
-        })
-        .catch(err => console.log(err));
-      axios.get("/myAlfred/api/shop/alfred/" + this.state.alfred._id).then(res => {
-        let shop = res.data;
-        this.setState({
-          shop: shop,
-          flexible: shop.flexible_cancel,
-          moderate: shop.moderate_cancel,
-          strict: shop.strict_cancel,
-        });
-      })
-      .catch(err => console.log(err));
-    }).catch(err =>{
-      console.log(err)
-    });
-
-
     setTimeout(this.checkBook, 3000);
+  }
+
+  setDefaultLocation = () => {
+    console.log("Setting default location");
+    const serviceUser = this.state.serviceUser;
+    const user = this.state.user;
+    var location = serviceUser.location.client && this.isInPerimeter() ? "client" : serviceUser.location.alfred ? "alfred" : "visio";
+    this.setState({location: location});
   }
 
   computeReservationDate = () => {
@@ -251,11 +257,11 @@ class UserServicesPreview extends React.Component {
 
   onChange = event => {
     const {name, value}=event.target;
-    this.setState({[name]:value}, () => this.checkBook());
+    this.setState({[name]:value}, () => this.computeTotal());
   }
 
   onLocationChanged = (id, checked) => {
-    this.setState({location:id}, () => this.checkBook());
+    this.onChange({target: {name:'location', value:checked?id:null}});
   }
 
   onQtyChanged = event => {
@@ -269,6 +275,10 @@ class UserServicesPreview extends React.Component {
     }
   }
 
+  computeTravelTax = () => {
+    return this.state.serviceUser.travel_tax && this.state.location=='client' ? this.state.serviceUser.travel_tax : 0;
+  }
+
   computeTotal = () => {
     var totalPrestations=0;
     var count=this.state.count;
@@ -278,8 +288,9 @@ class UserServicesPreview extends React.Component {
         totalPrestations += count[p._id]*p.price;
       }
     });
-    totalPrestations+=su.travel_tax ? parseInt(su.travel_tax) : 0;
-    totalPrestations+=su.pick_tax ? parseInt(su.pick_tax) : 0;
+    const travelTax = this.computeTravelTax();
+    totalPrestations+=travelTax ? parseInt(travelTax) : 0;
+    totalPrestations+=this.state.pick_tax ? parseInt(this.state.pick_tax) : 0;
     var commission=totalPrestations*COMM_CLIENT;
     var total=totalPrestations;
     total+=commission;
@@ -301,6 +312,10 @@ class UserServicesPreview extends React.Component {
     } else {
       return titles[this.state.location];
     }
+  }
+
+  onPickTaxChanged = (id, checked) => {
+    this.onChange({target: {name:'pick_tax', value:checked? this.state.serviceUser.pick_tax:null}});
   }
 
   book = (actual) => { //actual : true=> book, false=>infos request
@@ -525,45 +540,33 @@ class UserServicesPreview extends React.Component {
         <Grid>
           { serviceUser.location && serviceUser.location.client && this.isInPerimeter() ?
           <Grid>
-            <ButtonSwitch id='client' label={'A mon adresse principale'} isEditable={false} isPrice={false} isOption={false} checked={location==='client'} onChange={this.onLocationChanged}/>
+            <ButtonSwitch key={moment()} id='client' label={'A mon adresse principale'} isEditable={false} isPrice={false} isOption={false} checked={location==='client'} onChange={this.onLocationChanged}/>
           </Grid>
             :null
           }
           {
             serviceUser.location && serviceUser.location.alfred && alfred.firstname !== undefined ?
               <Grid>
-                <ButtonSwitch id='alfred' label={'Chez ' + alfred.firstname} isEditable={false} isPrice={false} isOption={false} checked={location==='alfred'} onChange={this.onLocationChanged}/>
+                <ButtonSwitch key={moment()} id='alfred' label={'Chez ' + alfred.firstname} isEditable={false} isPrice={false} isOption={false} checked={location==='alfred'} onChange={this.onLocationChanged}/>
               </Grid>
               : null
           }
           {
             serviceUser.location && serviceUser.location.visio ?
               <Grid>
-                <ButtonSwitch id='visio' label={'En visio'} isEditable={false} isPrice={false} isOption={false} checked={location==='visio'} onChange={this.onLocationChanged}/>
+                <ButtonSwitch key={moment()} id='visio' label={'En visio'} isEditable={false} isPrice={false} isOption={false} checked={location==='visio'} onChange={this.onLocationChanged}/>
               </Grid>
               : null
           }
         </Grid>
       </Grid>
-        { serviceUser.pick_tax || serviceUser.travel_tax ?
+        { serviceUser.pick_tax || this.computeTravelTax() ?
         <Grid style={{marginBottom: 30}}>
           <Grid>
-            <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Option de la prestation</Typography>
+            <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Option(s) de la prestation</Typography>
           </Grid>
           <Grid style={{marginTop: 20, marginLeft:15, marginRight:15}}>
-            { serviceUser.pick_tax ?
-              <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-                <Grid>
-                  Retrait & livraison
-                </Grid>
-                <Grid>
-                  { serviceUser.pick_tax }€
-                </Grid>
-              </Grid>
-
-              :null
-            }
-            { serviceUser.travel_tax ?
+            { serviceUser.travel_tax && location=='client' ?
               <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
                 <Grid>
                   Frais de déplacement
@@ -572,6 +575,15 @@ class UserServicesPreview extends React.Component {
                 { serviceUser.travel_tax.toFixed(2) }€
                 </Grid>
               </Grid>
+              :null
+            }
+            { serviceUser.pick_tax ?
+              <Grid style={{display: 'flex'}}>
+                <Grid>
+                  <ButtonSwitch label="Retrait & livraison" price={serviceUser.pick_tax} isPrice={true} priceDisabled={true} onChange={this.onPickTaxChanged}/>
+                </Grid>
+              </Grid>
+
               :null
             }
           </Grid>
@@ -615,7 +627,7 @@ class UserServicesPreview extends React.Component {
           )})
           }
           { /* Start travel tax */ }
-          { serviceUser.travel_tax ?
+          { serviceUser.travel_tax && location=='client' ?
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
               <p>Frais de déplacement</p>
@@ -626,13 +638,13 @@ class UserServicesPreview extends React.Component {
           </Grid>:null}
           { /* End pick tax */ }
           { /* Start pick tax */ }
-          { serviceUser.pick_tax ?
+          { this.state.pick_tax ?
           <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
             <Grid>
               <p>Frais de livraison/enlèvement</p>
             </Grid>
             <Grid>
-              <p>{this.state.serviceUser.pick_tax}€</p>
+              <p>{this.state.pick_tax.toFixed(2)}€</p>
             </Grid>
           </Grid>:null}
           { /* End pick tax */ }

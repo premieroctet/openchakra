@@ -37,8 +37,8 @@ class CardPreview extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      value:0,
       dense: true,
+      score: 0,
       service: [],
       alfred:[],
       shop:[],
@@ -50,7 +50,9 @@ class CardPreview extends React.Component{
 
   componentDidMount() {
     axios.get('/myAlfred/api/shop/alfred/'+this.props.services.user._id || this.props.services.user)
-      .then( res => this.setState({shop: res.data}))
+      .then( res => {
+        this.setState({shop: res.data, alfred:res.data.alfred, score:res.data.alfred.score})
+      })
       .catch( err => console.log(err))
   }
 
@@ -162,7 +164,7 @@ class CardPreview extends React.Component{
                 </Grid>
                 <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
                   <Badge badgeContent={0} color={'primary'} className={classes.badgeStyle}>
-                    <StyledRating name="read-only" value={this.state.value} readOnly className={classes.rating} />
+                    <StyledRating name="read-only" value={this.state.score} readOnly className={classes.rating} />
                   </Badge>
                 </Box>
               </Grid>
