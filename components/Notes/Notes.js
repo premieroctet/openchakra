@@ -13,7 +13,6 @@ class Notes extends React.Component{
   render(){
     var {classes, alfred_mode, notes} = this.props;
 
-    console.log("Notes:"+JSON.stringify(notes));
     notes = notes || {};
 
     const StyledRating = withStyles({

@@ -107,6 +107,51 @@ class UserServicesPreview extends React.Component {
       .then(res => {
         let user = res.data;
         this.setState({ user: user, });
+        axios.get(`/myAlfred/api/serviceUser/${id}`).then(res => {
+          let serviceUser = res.data;
+          // Prestas booked : 0 for each
+          var count = {}
+          serviceUser.prestations.forEach( p => count[p._id]=0);
+
+          var location=null;
+
+          this.setState({
+            serviceUser: serviceUser,
+            service: serviceUser.service,
+            equipments: serviceUser.equipments,
+            prestations: serviceUser.prestations,
+            allEquipments : serviceUser.service.equipments,
+            alfred: serviceUser.user,
+            count: count,
+            location: location,
+            pick_tax: null,
+          }, () => this.setDefaultLocation());
+
+          axios.get('/myAlfred/api/reviews/'+serviceUser.user._id)
+            .then(response => {
+              const skills=response.data;
+              this.setState({skills:skills});
+            })
+            .catch(function(error){ console.log(error); });
+          axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
+            .then(res => {
+              let availabilities = res.data;
+              this.setState({ availabilities: availabilities });
+            })
+            .catch(err => console.log(err));
+          axios.get("/myAlfred/api/shop/alfred/" + this.state.alfred._id).then(res => {
+            let shop = res.data;
+            this.setState({
+              shop: shop,
+              flexible: shop.flexible_cancel,
+              moderate: shop.moderate_cancel,
+              strict: shop.strict_cancel,
+            });
+          })
+          .catch(err => console.log(err));
+        }).catch(err =>{
+          console.log(err)
+        });
       })
       .catch(err => {
         console.log(err);
@@ -116,55 +161,15 @@ class UserServicesPreview extends React.Component {
         }
       });
 
-    axios.get(`/myAlfred/api/serviceUser/${id}`).then(res => {
-      let serviceUser = res.data;
-      // Prestas booked : 0 for each
-      var count = {}
-      serviceUser.prestations.forEach( p => count[p._id]=0);
-      // FIX : select default location ; can not be "client" if not in perimeter
-      //var location = serviceUser.location.client ? "client" : serviceUser.location.alfred ? "alfred" : "visio";
-      var location=null;
-
-      this.setState({
-        serviceUser: serviceUser,
-        service: serviceUser.service,
-        equipments: serviceUser.equipments,
-        prestations: serviceUser.prestations,
-        allEquipments : serviceUser.service.equipments,
-        alfred: serviceUser.user,
-        count: count,
-        location: location,
-        pick_tax: null,
-      });
-
-      axios.get('/myAlfred/api/reviews/'+serviceUser.user._id)
-        .then(response => {
-          const skills=response.data;
-          this.setState({skills:skills});
-        })
-        .catch(function(error){ console.log(error); });
-      axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
-        .then(res => {
-          let availabilities = res.data;
-          this.setState({ availabilities: availabilities });
-        })
-        .catch(err => console.log(err));
-      axios.get("/myAlfred/api/shop/alfred/" + this.state.alfred._id).then(res => {
-        let shop = res.data;
-        this.setState({
-          shop: shop,
-          flexible: shop.flexible_cancel,
-          moderate: shop.moderate_cancel,
-          strict: shop.strict_cancel,
-        });
-      })
-      .catch(err => console.log(err));
-    }).catch(err =>{
-      console.log(err)
-    });
-
-
     setTimeout(this.checkBook, 3000);
+  }
+
+  setDefaultLocation = () => {
+    console.log("Setting default location");
+    const serviceUser = this.state.serviceUser;
+    const user = this.state.user;
+    var location = serviceUser.location.client && this.isInPerimeter() ? "client" : serviceUser.location.alfred ? "alfred" : "visio";
+    this.setState({location: location});
   }
 
   computeReservationDate = () => {
@@ -458,8 +463,6 @@ class UserServicesPreview extends React.Component {
       },
     })(Rating);
 
-    console.log("Location:"+location);
-
     const drawer = side => (
       <Grid className={classes.borderContentRight}>
         <Grid style={{marginBottom: 30}}>
@@ -537,21 +540,21 @@ class UserServicesPreview extends React.Component {
         <Grid>
           { serviceUser.location && serviceUser.location.client && this.isInPerimeter() ?
           <Grid>
-            <ButtonSwitch id='client' label={'A mon adresse principale'} isEditable={false} isPrice={false} isOption={false} checked={location==='client'} onChange={this.onLocationChanged}/>
+            <ButtonSwitch key={moment()} id='client' label={'A mon adresse principale'} isEditable={false} isPrice={false} isOption={false} checked={location==='client'} onChange={this.onLocationChanged}/>
           </Grid>
             :null
           }
           {
             serviceUser.location && serviceUser.location.alfred && alfred.firstname !== undefined ?
               <Grid>
-                <ButtonSwitch id='alfred' label={'Chez ' + alfred.firstname} isEditable={false} isPrice={false} isOption={false} checked={location==='alfred'} onChange={this.onLocationChanged}/>
+                <ButtonSwitch key={moment()} id='alfred' label={'Chez ' + alfred.firstname} isEditable={false} isPrice={false} isOption={false} checked={location==='alfred'} onChange={this.onLocationChanged}/>
               </Grid>
               : null
           }
           {
             serviceUser.location && serviceUser.location.visio ?
               <Grid>
-                <ButtonSwitch id='visio' label={'En visio'} isEditable={false} isPrice={false} isOption={false} checked={location==='visio'} onChange={this.onLocationChanged}/>
+                <ButtonSwitch key={moment()} id='visio' label={'En visio'} isEditable={false} isPrice={false} isOption={false} checked={location==='visio'} onChange={this.onLocationChanged}/>
               </Grid>
               : null
           }
