@@ -78,6 +78,7 @@
     "request": "^2.88.0",
     "rrule": "^2.6.3",
     "sendinblue-api": "^1.0.8",
+    "sib-api-v3-sdk": "^7.2.2",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
     "styled-components": "^4.2.0",
