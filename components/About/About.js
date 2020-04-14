@@ -102,7 +102,7 @@ class About extends React.Component{
                   <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/commentaires.svg'}/>
                 </Grid>
               </ListItemAvatar>
-              <LinkMaterial href="#" onClick={preventDefault} color="primary " className={classes.link}>{user.number_of_reviews} Commentaires</LinkMaterial>
+              <LinkMaterial href="#comments" color="primary " className={classes.link}>{user.number_of_reviews} commentaires</LinkMaterial>
             </ListItem>
             {user.id_confirmed ?
               <ListItem>

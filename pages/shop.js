@@ -125,7 +125,6 @@ class shop extends React.Component {
         const {classes} = this.props;
         let isOwner= this.state.idAlfred === this.state.userId;
 
-        console.log("Skills:"+JSON.stringify(this.state.skills));
         return (
           <Fragment>
               <Layout>
@@ -213,7 +212,7 @@ class shop extends React.Component {
                           />
                       </Grid>
                       <hr className={classes.hrShop}/>
-                      <Grid style={{marginLeft: '5%', marginRight: '5%', marginTop: '3%'}}>
+                      <Grid id="comments" style={{marginLeft: '5%', marginRight: '5%', marginTop: '3%'}}>
                         <Grid>
                             <Typography variant={"h3"} className={classes.titleSkills}>Commentaires</Typography>
                         </Grid>
