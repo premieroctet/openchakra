@@ -59,6 +59,7 @@ class Commentary extends React.Component{
   render(){
     const {owner, reviews} = this.state;
     const {classes, user_id, alfred_mode} = this.props;
+    console.log(reviews, "reviews")
 
   const StyledRating = withStyles({
       iconFilled: {
@@ -98,7 +99,7 @@ class Commentary extends React.Component{
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid style={{marginTop:'3%'}}>
+              <Grid style={{marginTop: 30}}>
                 <Notes alfred_mode={alfred_mode} notes={notes} key={moment()} />
               </Grid>
             </Grid>
@@ -110,28 +111,39 @@ class Commentary extends React.Component{
               null
             }
           </Grid>
-          <hr className={classes.hrSeparator}/>
-          {reviews.map( r => (
-           <Grid>
-             <Grid style={{width: '100%', display:'flex', alignItems: 'center'}}>
-               <Grid style={{marginRight:15}}>
-                 <Avatar className={classes.picsSize}/> </Grid>
-               <Grid>
-                 <p style={{color:'#4fbdd7'}}>
-                   {r.serviceUser.service.label} {alfred_mode ? `pour ${r.user.firstname}` : `par ${r.alfred.firstname}`}
-                 </p>
-                 <p style={{color:'#505050'}}>
-                   {moment(r.date).format('DD/MM/YYYY - HH:mm')}
-                 </p>
+          {reviews.map( (r) => (
+           <Grid style={{display: 'flex', width: '100%', marginLeft: 15, flexDirection: 'column'}}>
+             <hr className={classes.hrSeparator}/>
+             <Grid style={{display : 'flex', marginTop: 30}}>
+               <Grid style={{width: '50%'}}>
+                 <Grid style={{width: '100%', display:'flex', alignItems: 'center'}}>
+                   <Grid style={{marginRight:15}}>
+                     <Avatar className={classes.picsSize}/>
+                   </Grid>
+                   <Grid>
+                     <p style={{color:'#4fbdd7'}}>
+                       {r.serviceUser.service.label} {alfred_mode ? `pour ${r.user.firstname}` : `par ${r.alfred.firstname}`}
+                     </p>
+                     <p style={{color:'#505050'}}>
+                       {moment(r.date).format('DD/MM/YYYY - HH:mm')}
+                     </p>
+                   </Grid>
+                 </Grid>
+                 <Grid style={{display:'flex', alignItems :'center'}}>
+                   <Grid style={{display:'flex', flexDirection: 'column', width: '50%', marginLeft: 15}}>
+                     { console.log('sending notes:'+JSON.stringify(alfred_mode ? r.note_alfred : r.note_client))}
+                     <Notes alfred_mode={alfred_mode} notes={alfred_mode ? r.note_alfred : r.note_client} key={moment()} />
+                   </Grid>
+                 </Grid>
+               </Grid>
+               <Grid item style={{width: '50%',justifyContent :'center', display: 'flex'}}>
+                 <Grid style={{justifyContent :'center', display: 'flex'}}>
+                   <Skills alfred={r.user} skills={r.note_alfred} hideCount={true}/>
+                 </Grid>
                </Grid>
              </Grid>
-             <Grid style={{display:'flex', alignItems :'center'}}>
-               <Grid style={{display:'flex', flexDirection: 'column', width: '50%'}}>
-               { console.log('sending notes:'+JSON.stringify(alfred_mode ? r.note_alfred : r.note_client))}
-                 <Notes alfred_mode={alfred_mode} notes={alfred_mode ? r.note_alfred : r.note_client} key={moment()} />
-                 </Grid>
-             </Grid>
-             <Grid>
+
+             <Grid style={{marginTop: 30}}>
                <TextField
                  disabled
                  id="outlined-multiline-static"

@@ -12,7 +12,7 @@ export default theme => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: '100%'
+    width: '90%'
   },
   picsSize:{
     height: 70,
