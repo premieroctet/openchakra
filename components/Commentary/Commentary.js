@@ -46,7 +46,7 @@ class Commentary extends React.Component{
       .then (res => {
         var reviews = res.data;
         if (service_id) {
-          reviews = reviews.filter( r => r.serviceUser._id==service_id);
+          reviews = reviews.filter( r => r.serviceUser._id===service_id);
         }
         this.setState({reviews:reviews})
       })
@@ -56,8 +56,6 @@ class Commentary extends React.Component{
   render(){
     const {owner, reviews} = this.state;
     const {classes, alfred_mode} = this.props;
-    console.log(reviews, "reviews")
-
 
   const StyledRating = withStyles({
       iconFilled: {
@@ -73,6 +71,7 @@ class Commentary extends React.Component{
     else {
       const notes = computeAverageNotes(reviews.map( r => alfred_mode ? r.note_alfred : r.note_client));
       const skills = computeSumSkills(reviews.map( r => alfred_mode ? r.note_alfred : r.note_client));
+
       return (
         <Grid style={{width: '100%'}}>
           <Grid style={{display: 'flex', width: '100%'}}>
@@ -132,11 +131,20 @@ class Commentary extends React.Component{
                    </Grid>
                  </Grid>
                </Grid>
-               <Grid item style={{width: '50%',justifyContent :'center', display: 'flex'}}>
-                 <Grid style={{justifyContent :'center', display: 'flex'}}>
-                   <Skills alfred={r.user} skills={r.note_alfred} hideCount={true}/>
-                 </Grid>
-               </Grid>
+               {alfred_mode ?
+                 <Grid item style={{
+                   width: '50%',
+                   justifyContent: 'center',
+                   display: 'flex'
+                 }}>
+                   <Grid style={{
+                     justifyContent: 'center',
+                     display: 'flex'
+                   }}>
+                     <Skills alfred={r.user} skills={r.note_alfred} hideCount={true}/>
+                   </Grid>
+                 </Grid> : null
+               }
              </Grid>
 
              <Grid style={{marginTop: 30}}>
