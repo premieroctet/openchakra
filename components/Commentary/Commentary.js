@@ -77,8 +77,8 @@ class Commentary extends React.Component{
       const skills = computeSumSkills(reviews.map( r => alfred_mode ? r.note_alfred : r.note_client));
       console.log("Got notes:"+JSON.stringify(notes));
       return (
-        <Grid>
-          <Grid style={{display: 'flex', width: '100%', marginLeft: 15}}>
+        <Grid style={{width: '100%'}}>
+          <Grid style={{display: 'flex', width: '100%'}}>
             <Grid style={{width: '50%'}}>
               <Grid style={{display:'flex', flexDirection: 'column'}}>
                 <Grid>
@@ -112,7 +112,7 @@ class Commentary extends React.Component{
             }
           </Grid>
           {reviews.map( (r) => (
-           <Grid style={{display: 'flex', width: '100%', marginLeft: 15, flexDirection: 'column'}}>
+           <Grid style={{display: 'flex', width: '100%', flexDirection: 'column'}}>
              <hr className={classes.hrSeparator}/>
              <Grid style={{display : 'flex', marginTop: 30}}>
                <Grid style={{width: '50%'}}>

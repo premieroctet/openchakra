@@ -544,7 +544,7 @@ class SearchPage extends React.Component {
                             ))}
                           </Grid>
                           {this.props.search && serviceUsers.length === 0 && !this.isSubFilterSet() ?
-                            <p>Aucun résultat</p>
+                            <p>Nous n'avons pas trouvé de résultat pour votre recherche</p>
                             :
                             null
                           }

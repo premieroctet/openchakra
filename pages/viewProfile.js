@@ -220,7 +220,7 @@ class viewProfile extends React.Component {
     return (
       <Fragment>
         {user_infos === null ? null : (
-          <>
+          <Grid>
             <Layout>
               <Grid container className={classes.bigContainer}>
                 {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
@@ -630,7 +630,7 @@ class viewProfile extends React.Component {
             </Layout>
 
             <Footer />
-          </>
+          </Grid>
         )}
       </Fragment>
     );
