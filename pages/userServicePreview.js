@@ -998,7 +998,7 @@ class UserServicesPreview extends React.Component {
                   <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                 </Grid>
                   <Grid>
-                    <Commentary alfred_mode={true} user_id={alfred._id} service_id={this.props.service_id} key={moment()}/>
+                    <Commentary alfred_mode={false} user_id={alfred._id} service_id={this.props.service_id} key={moment()}/>
                     </Grid>
                 </Grid>
                 <Hidden mdUp implementation="css">

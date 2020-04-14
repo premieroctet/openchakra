@@ -395,13 +395,13 @@ class reviews extends React.Component {
                             </Grid>
                             {tabs ?
 
-                                    <Grid container style={{marginTop: '3%'}}>
-                                        <Commentary alfred_mode={true} user_id={user._id}/>
+                                    <Grid container style={{marginTop: '3%', width: '90%'}}>
+                                        <Commentary alfred_mode={true} user_id={user._id} key={moment()}/>
                                     </Grid>
 
                                 :
 
-                                    <Grid container style={{marginTop: '3%'}}>
+                                    <Grid container style={{marginTop: '3%', width:'90%'}}>
                                         <Commentary alfred_mode={true} user_id={user._id} key={moment()}/>
                                     </Grid>
 

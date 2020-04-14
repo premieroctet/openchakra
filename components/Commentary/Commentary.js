@@ -58,7 +58,7 @@ class Commentary extends React.Component{
 
   render(){
     const {owner, reviews} = this.state;
-    const {classes, user_id, alfred_mode} = this.props;
+    const {classes, alfred_mode} = this.props;
     console.log(reviews, "reviews")
 
   const StyledRating = withStyles({
