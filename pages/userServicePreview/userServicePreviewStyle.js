@@ -20,8 +20,8 @@ export default theme => ({
       marginRight: 0
     },
   },
-  badgeStyle:{
-    color: "blue",
+  badge: {
+    color: 'white'
   },
   boxRating:{
     margin: 0,

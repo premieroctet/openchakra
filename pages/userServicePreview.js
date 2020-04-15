@@ -729,7 +729,7 @@ class UserServicesPreview extends React.Component {
                     <Grid style={{display: 'flex', alignItems: 'center'}}>
                       <Grid>
                         <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                          <Badge badgeContent={alfred.score} color={'primary'} className={classes.badgeStyle}>
+                          <Badge badgeContent={alfred.score} color={'primary'} classes={{badge: classes.badge}}>
                             <StyledRating name="read-only" value={alfred.score} readOnly className={classes.rating} />
                           </Badge>
                         </Box>
