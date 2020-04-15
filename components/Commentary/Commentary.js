@@ -151,7 +151,6 @@ class Commentary extends React.Component{
 
              <Grid style={{marginTop: 30}}>
                <TextField
-                 disabled
                  id="outlined-multiline-static"
                  label="Commentaire"
                  multiline
@@ -160,6 +159,7 @@ class Commentary extends React.Component{
                  className={classes.textField}
                  margin="normal"
                  variant="outlined"
+                 inputProps={{readOnly: true}}
                />
              </Grid>
            </Grid>
