@@ -197,6 +197,10 @@ export default theme => ({
       width: '100%'
     },
   },
+  describExperience:{
+    zIndex:0,
+    width:'100%'
+  },
   texfieldContentWelcomedMessage:{
     width: '100%',
     marginLeft: 10,
