@@ -565,7 +565,7 @@ class UserServicesPreview extends React.Component {
           <Grid>
             <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Option(s) de la prestation</Typography>
           </Grid>
-          <Grid style={{marginTop: 20, marginLeft:15, marginRight:15}}>
+          <Grid style={{marginTop: 20, marginLeft:5, marginRight:15}}>
             { serviceUser.travel_tax && location=='client' ?
               <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
                 <Grid>
@@ -578,7 +578,7 @@ class UserServicesPreview extends React.Component {
               :null
             }
             { serviceUser.pick_tax ?
-              <Grid style={{display: 'flex'}}>
+              <Grid>
                 <Grid>
                   <ButtonSwitch label="Retrait & livraison" price={serviceUser.pick_tax} isPrice={true} priceDisabled={true} onChange={this.onPickTaxChanged}/>
                 </Grid>
