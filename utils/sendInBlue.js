@@ -13,6 +13,30 @@ class SIB_V2 {
   sendMail(index, data) {
     console.log(`Sending ${index} with ${JSON.stringify(data)}`);
   }
+  
+  launchCampaign() {
+    console.log(Object.keys(sendinblue));
+    var request = require("request");
+
+    var options = { method: 'POST',
+      body:{
+        email: 'sebastien.auvray@my-alfred.io',
+        event: 'always',
+      },
+      json:true,
+      url: 'https://in-automate.sendinblue.com/api/v2/trackEvent' ,
+      headers: {
+        'ma-key': SIB_API_KEY_V2,
+      },
+    };
+
+
+    request(options, function (error, response, body) {
+      if (error) throw new Error(error);
+
+      console.log(response, body);
+    });
+  }
 
 }
 
@@ -28,7 +52,6 @@ class SIB_V3 {
 
   sendMail(index, data) {
     SibApiV3Sdk.SendTestEmail({emailTo: "sebastien.auvray@free.fr"});
-    console.log(`Sending ${index} with ${JSON.stringify(data)}`);
     var templateId = index; // Number | Id of the template
 
     var sendEmail = new SibApiV3Sdk.SendEmail(); // SendEmail |
@@ -48,6 +71,10 @@ class SIB_V3 {
       .catch ( err => {
         console.error(err);
       });
+    }
+  
+    launchCampaign() {
+      console.log(Object.keys(this.apiInstance));
     }
 }
 

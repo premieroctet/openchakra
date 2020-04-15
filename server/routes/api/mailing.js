@@ -16,10 +16,11 @@ router.post('/sendMail/:id',(req,res) =>{
   const templateId = req.params.id;
   const contents = req.body;
 
-  console.log(`Sending mail:${templateId} with data ${JSON.stringify(contents)}`);
+  console.log(`Sending mail:${templateId}`);
 
   const s=new SIB();
-  s.sendMail(templateId, contents);
+  //s.sendMail(templateId, contents);
+  s.launchCampaign(templateId, contents);
 });
 
 
