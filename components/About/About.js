@@ -45,7 +45,6 @@ class About extends React.Component{
     axios.get(`/myAlfred/api/users/users/${this.props.alfred}`)
       .then( response  =>  {
         let user = response.data;
-        console.log(user, 'user')
         this.setState({
           user: user,
           userId: user._id,

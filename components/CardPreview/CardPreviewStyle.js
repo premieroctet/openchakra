@@ -87,10 +87,8 @@ export default theme => ({
     fontWeight: 'bold',
     border: '2px solid white'
   },
-  badgeStyle:{
+  badge:{
     color: "white",
-    '& span:nth-child(+n+6)':{
-    }
   },
   cardContent:{
     display:'flex',
