@@ -80,13 +80,15 @@ class Commentary extends React.Component{
                 <Grid>
                   <Grid>
                     <Box component="fieldset" mb={3} borderColor="transparent" className={classes.flexContainer}>
-                      <Grid>
-                        <Typography className={classes.titleSkills} variant={"h3"}>Note générale</Typography>
-                      </Grid>
-                      <Grid className={classes.marginLeft}>
-                        <Badge classes={{badge: classes.badge}} badgeContent={10} color="primary">
-                          <StyledRating name="read-only" value={parseInt(notes.prestation_quality)} readOnly className={classes.ratingStyle}/>
-                        </Badge>
+                      <Grid container style={{alignItems: 'center'}}>
+                        <Grid>
+                          <Typography className={classes.titleSkills} variant={"h3"}>Note générale</Typography>
+                        </Grid>
+                        <Grid className={classes.marginLeft}>
+                          <Badge classes={{badge: classes.badge}} badgeContent={10} color="primary">
+                            <StyledRating name="read-only" value={parseInt(notes.prestation_quality)} readOnly className={classes.ratingStyle}/>
+                          </Badge>
+                        </Grid>
                       </Grid>
                     </Box>
                   </Grid>

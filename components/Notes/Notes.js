@@ -26,22 +26,26 @@ class Notes extends React.Component{
         <Grid>
           <Grid>
             <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-              <Grid className={classes.widthP}>
-                <p>Qualité</p>
-              </Grid>
-              <Grid className={classes.marginLeft}>
-                <StyledRating name="read-only" value={parseInt(notes.prestation_quality)} readOnly className={classes.ratingStyle}/>
+              <Grid container style={{alignItems:'center'}}>
+                <Grid className={classes.widthP}>
+                  <p>Qualité</p>
+                </Grid>
+                <Grid className={classes.marginLeft}>
+                  <StyledRating name="read-only" value={parseInt(notes.prestation_quality)} readOnly className={classes.ratingStyle}/>
+                </Grid>
               </Grid>
             </Box>
           </Grid>
           <Grid>
             <Grid>
               <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-                <Grid className={classes.widthP}>
-                  <p>Prix</p>
-                </Grid>
-                <Grid className={classes.marginLeft}>
-                  <StyledRating name="read-only" value={parseInt(notes.quality_price)} readOnly className={classes.ratingStyle} />
+                <Grid container style={{alignItems:'center'}}>
+                  <Grid className={classes.widthP}>
+                    <p>Prix</p>
+                  </Grid>
+                  <Grid className={classes.marginLeft}>
+                    <StyledRating name="read-only" value={parseInt(notes.quality_price)} readOnly className={classes.ratingStyle} />
+                  </Grid>
                 </Grid>
               </Box>
             </Grid>
@@ -49,11 +53,13 @@ class Notes extends React.Component{
           <Grid>
             <Grid>
               <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-                <Grid className={classes.widthP}>
-                  <p>Relationnel</p>
-                </Grid>
-                <Grid className={classes.marginLeft}>
-                  <StyledRating name="read-only" value={parseInt(notes.relational)} readOnly className={classes.ratingStyle}/>
+                <Grid container style={{alignItems:'center'}}>
+                  <Grid className={classes.widthP}>
+                    <p>Relationnel</p>
+                  </Grid>
+                  <Grid className={classes.marginLeft}>
+                    <StyledRating name="read-only" value={parseInt(notes.relational)} readOnly className={classes.ratingStyle}/>
+                  </Grid>
                 </Grid>
               </Box>
             </Grid>
