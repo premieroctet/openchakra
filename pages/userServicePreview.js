@@ -48,9 +48,71 @@ import Commentary from '../components/Commentary/Commentary';
 import Notes from '../components/Notes/Notes';
 import {computeAverageNotes} from '../utils/functions';
 import fr from 'date-fns/locale/fr';
+import Switch from '@material-ui/core/Switch';
 const moment = require('moment');
 moment.locale('fr');
 registerLocale('fr', fr);
+
+
+const IOSSwitch = withStyles(theme => ({
+  root: {
+    width: 42,
+    height: 26,
+    padding: 0,
+    margin: theme.spacing(1),
+  },
+  switchBase: {
+    padding: 1,
+    '&$checked': {
+      transform: 'translateX(16px)',
+      color: '#47bdd7',
+      '& + $track': {
+        backgroundColor: 'white',
+
+      },
+    },
+    '&$focusVisible $thumb': {
+      color: 'white',
+      border: '6px solid #fff',
+    },
+  },
+  thumb: {
+    width: 24,
+    height: 24,
+  },
+  track: {
+    borderRadius: 26 / 2,
+    border: `1px solid ${theme.palette.grey[400]}`,
+    backgroundColor: theme.palette.grey[50],
+    opacity: 1,
+    transition: theme.transitions.create(['background-color', 'border']),
+  },
+  checked: {},
+  focusVisible: {},
+}))(({ classes, ...props }) => {
+  return (
+    <Switch
+      focusVisibleClassName={classes.focusVisible}
+      disableRipple
+      classes={{
+        root: classes.root,
+        switchBase: classes.switchBase,
+        thumb: classes.thumb,
+        track: classes.track,
+        checked: classes.checked,
+      }}
+      {...props}
+    />
+  );
+});
+
+const CssTextField = withStyles({
+  root: {
+    '& label': {
+      fontSize: '0.8rem',
+    },
+  },
+})(TextField);
 
 class UserServicesPreview extends React.Component {
   constructor(props) {
@@ -88,7 +150,8 @@ class UserServicesPreview extends React.Component {
         reactive:0,
       },
       errors:{},
-    }
+      isChecked: false
+    },
     this.onQtyChanged = this.onQtyChanged.bind(this);
     this.checkBook = this.checkBook.bind(this);
   }
@@ -315,6 +378,7 @@ class UserServicesPreview extends React.Component {
   }
 
   onPickTaxChanged = (id, checked) => {
+    this.setState({isChecked: !this.state.isChecked});
     this.onChange({target: {name:'pick_tax', value:checked? this.state.serviceUser.pick_tax:null}});
   }
 
@@ -453,7 +517,7 @@ class UserServicesPreview extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {date, time, location, serviceUser, shop, service, equipments, alfred, errors} = this.state;
+    const {date, time, location, serviceUser, shop, service, equipments, alfred, errors, isChecked} = this.state;
 
    const filters = this.extractFilters();
 
@@ -579,8 +643,28 @@ class UserServicesPreview extends React.Component {
             }
             { serviceUser.pick_tax ?
               <Grid>
-                <Grid>
-                  <ButtonSwitch label="Retrait & livraison" price={serviceUser.pick_tax} isPrice={true} priceDisabled={true} onChange={this.onPickTaxChanged}/>
+                <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                  <Grid style={{display: 'flex', alignItems: 'center'}}>
+                    <Grid>
+                      <IOSSwitch
+                        color="primary"
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={this.onPickTaxChanged}
+                      />
+                    </Grid>
+                    <Grid>
+                      <label>Retrait & livraison</label>
+                    </Grid>
+                  </Grid>
+
+                  {
+                    isChecked ?
+                      <Grid>
+                        {serviceUser.pick_tax.toFixed(2)}€
+                      </Grid> : null
+                  }
+
                 </Grid>
               </Grid>
 
