@@ -88,6 +88,6 @@ export default theme =>({
     fontSize: "1.6rem",
     color: "rgba(84,89,95,0.95)",
     letterSpacing: -1,
-    fontWeight: "bold"
+    fontWeight: "bold",
   }
 })

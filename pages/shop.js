@@ -213,8 +213,8 @@ class shop extends React.Component {
                       </Grid>
                       <hr className={classes.hrShop}/>
                       <Grid id="comments" style={{marginLeft: '5%', marginRight: '5%', marginTop: '3%'}}>
-                        <Grid>
-                            <Typography variant={"h3"} className={classes.titleSkills}>Commentaires</Typography>
+                        <Grid className={classes.titleSkills}>
+                            <h3>Commentaires</h3>
                         </Grid>
                         <Grid style={{marginTop: '3%'}}>
                             <Grid style={{width : '100%'}}>
