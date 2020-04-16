@@ -37,8 +37,8 @@ class CardPreview extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      value:0,
       dense: true,
+      score: 0,
       service: [],
       alfred:[],
       shop:[],
@@ -49,9 +49,19 @@ class CardPreview extends React.Component{
   }
 
   componentDidMount() {
-    axios.get('/myAlfred/api/shop/alfred/'+this.props.services.user._id || this.props.services.user)
-      .then( res => this.setState({shop: res.data}))
-      .catch( err => console.log(err))
+    if(typeof this.props.services.user === 'string'){
+      axios.get('/myAlfred/api/shop/alfred/'+this.props.services.user)
+        .then( res => {
+          this.setState({shop: res.data, alfred:res.data.alfred, score:res.data.alfred.score})
+        })
+        .catch( err => console.log(err))
+    }else{
+      axios.get('/myAlfred/api/shop/alfred/'+this.props.services.user._id)
+        .then( res => {
+          this.setState({shop: res.data, alfred:res.data.alfred, score:res.data.alfred.score})
+        })
+        .catch( err => console.log(err))
+    }
   }
 
   handleClickOpen(id) {
@@ -161,8 +171,8 @@ class CardPreview extends React.Component{
                   </Typography>
                 </Grid>
                 <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                  <Badge badgeContent={0} color={'primary'} className={classes.badgeStyle}>
-                    <StyledRating name="read-only" value={this.state.value} readOnly className={classes.rating} />
+                  <Badge badgeContent={this.state.score} color={'primary'} classes={{badge: classes.badge}}>
+                    <StyledRating name="read-only" value={this.state.score} readOnly className={classes.rating} precision={0.5}/>
                   </Badge>
                 </Box>
               </Grid>

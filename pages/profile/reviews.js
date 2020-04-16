@@ -9,6 +9,11 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from "@material-ui/core/Typography";
 import StarRatings from 'react-star-ratings';
 import {Helmet} from 'react-helmet';
+import Commentary from '../../components/Commentary/Commentary';
+import Avatar from '@material-ui/core/Avatar';
+import Notes from '../../components/Notes/Notes';
+import Skills from '../../components/Skills/Skills';
+import TextField from '@material-ui/core/TextField';
 moment.locale('fr');
 
 const styles = theme => ({
@@ -47,9 +52,8 @@ const styles = theme => ({
             }
         }
 
-    }
-
-    ,toggle: {
+    },
+    toggle: {
         [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
             transition: 'margin-left 0.7s',
 
@@ -61,7 +65,13 @@ const styles = theme => ({
             }
         }
     },
-    tabweb:{width:'100%', position:'sticky', top:'64px', fontSize:15, backgroundColor:'white', zIndex:'20',
+    tabweb:{
+        width:'100%',
+        position:'sticky',
+        top:'64px',
+        fontSize:15,
+        backgroundColor:'white',
+        zIndex:'20',
         [theme.breakpoints.down('sm')]: {
             display:'none'}},
     trait:{
@@ -88,7 +98,6 @@ const styles = theme => ({
 
     trait1:{
         width: '100%',
-
         height: 4,
         backgroundColor: 'lightgray',
         borderColor: 'transparent'
@@ -97,7 +106,8 @@ const styles = theme => ({
         width: '100%',
         height: 4,
         backgroundColor: 'lightgray',
-        borderColor: 'transparent',  [theme.breakpoints.down('sm')]: {
+        borderColor: 'transparent',
+        [theme.breakpoints.down('sm')]: {
         },
     },
     trait3:{
@@ -166,21 +176,18 @@ class reviews extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const {user} = this.state;
-        const {alfredReviews} = this.state;
-        const {clientReviews} = this.state;
+        const {user, alfredReviews, clientReviews} = this.state;
         const tabs = this.state.tabs;
 
 
         return (
             <Fragment>
-		<Helmet>
-        <title>Commentaires - My Alfred </title>
-        <meta property="description" content="Parcourez vos commentaires et notations pour les services rémunérés proposés ou trouvés sur My-Alfred. Chaque service donne lieu à une notation, des commentaires et des compliments. L'inscription est 100% gratuite et vous permet de proposer et trouver des services rémunérés entre particuliers ou freelance. " />
-      </Helmet>
-                <Layout>
+                <Helmet>
+                    <title>Commentaires - My Alfred </title>
+                    <meta property="description" content="Parcourez vos commentaires et notations pour les services rémunérés proposés ou trouvés sur My-Alfred. Chaque service donne lieu à une notation, des commentaires et des compliments. L'inscription est 100% gratuite et vous permet de proposer et trouver des services rémunérés entre particuliers ou freelance. " />
+                </Helmet>
+                 <Layout>
                     <Grid container className={classes.bigContainer}>
-
                         <Grid className={classes.toggle}  item xs={3} style={{}}>
 
                             <div className={classes.trigger}></div>
@@ -296,7 +303,7 @@ class reviews extends React.Component {
                         </Grid>
 
 
-                        <Grid item xs={9} style={{paddingLeft: 55, minHeight: '530px'}}>
+                        <Grid item xs={9} style={{minHeight: '530px'}}>
                             <Grid container>
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Commentaires</h1>
                             </Grid>
@@ -387,182 +394,22 @@ class reviews extends React.Component {
                                 </Grid>
                             </Grid>
                             {tabs ?
-                                    clientReviews.map(e => (
 
-
-                                    <Grid container>
-                                        <Grid container style={{marginTop: '40px'}}>
-                                            <Grid item xs={6} md={2}>
-                                                <img style={{width: '75px', height : '75px', borderRadius: '50%', objectFit: 'cover'}} src={'../../'+e.user.picture}/>
-                                            </Grid>
-                                            <Grid item xs={6} md={10} style={{marginTop: '10px'}}>
-                                                <Typography style={{color: 'rgb(47, 188, 211)',fontSize: '1.2rem'}}>
-                                                    {e.serviceUser.service.label} pour {e.user.firstname}
-                                                </Typography>
-                                                <Typography style={{color: '#9B9B9B',fontSize: '1rem'}}>
-                                                    {moment(e.date).format('DD/MM/YYYY')} - {moment(e.date).format('HH:mm')}
-                                                </Typography>
-                                            </Grid>
-                                            <Grid container style={{marginTop: '40px'}}>
-                                                <Grid item md={2} xs={6}>
-                                                    <Typography style={{fontSize: '1rem'}}>
-                                                        Qualité de la prestation
-                                                    </Typography>
-                                                </Grid>
-                                                <Grid item md={10} xs={6}>
-                                                    <StarRatings
-                                                    rating={e.note_alfred.prestation_quality}
-                                                    starRatedColor={"#2FBCD3"}
-                                                    numberOfStars={5}
-                                                    name='rating'
-                                                    starDimension={'20px'}
-                                                    starHoverColor={'#2FBCD3'}
-                                                    starSpacing={'3px'}
-                                                />
-                                                </Grid>
-
-                                                <Grid item md={2} xs={6}>
-                                                    <Typography style={{fontSize: '1rem'}}>
-                                                        Qualité - Prix
-                                                    </Typography>
-                                                </Grid>
-                                                <Grid item md={10} xs={6}>
-                                                    <StarRatings
-                                                        rating={e.note_alfred.quality_price}
-                                                        starRatedColor={"#2FBCD3"}
-                                                        numberOfStars={5}
-                                                        name='rating'
-                                                        starDimension={'20px'}
-                                                        starHoverColor={'#2FBCD3'}
-                                                        starSpacing={'3px'}
-                                                    />
-                                                </Grid>
-
-                                                <Grid item md={2} xs={6}>
-                                                    <Typography style={{fontSize: '1rem'}}>
-                                                        Relationnel
-                                                    </Typography>
-                                                </Grid>
-                                                <Grid item md={10} xs={6}>
-                                                    <StarRatings
-                                                        rating={e.note_alfred.relational}
-                                                        starRatedColor={"#2FBCD3"}
-                                                        numberOfStars={5}
-                                                        name='rating'
-                                                        starDimension={'20px'}
-                                                        starHoverColor={'#2FBCD3'}
-                                                        starSpacing={'3px'}
-                                                    />
-                                                </Grid>
-                                            </Grid>
-                                            <Grid item xs={12} style={{marginTop: '40px', marginBottom: '15px'}}>
-                                                <Typography style={{boxShadow: '0px 0px 6px rgba(130, 129, 129, 0.28)', height: '100px', padding: '15px', width: '75%',  borderRadius: '10px'}}>
-                                                    {e.content}
-                                                </Typography>
-                                            </Grid>
-                                        </Grid>
-
-                                        <Grid container style={{marginTop: '40px', marginBottom: '40px'}}>
-                                            <Grid item xs={12}>
-                                                <hr style={{border: 'none', height: '2px', backgroundColor: '#7E7E7E', width: '80%', margin: 'auto'}}/>
-                                            </Grid>
-                                        </Grid>
-
+                                    <Grid container style={{marginTop: '3%', width: '90%'}}>
+                                        <Commentary alfred_mode={true} user_id={user._id} key={moment()}/>
                                     </Grid>
-                                    ))
-
 
                                 :
-                                alfredReviews.map(e => (
 
-
-                                <Grid container>
-                                    <Grid container style={{marginTop: '40px'}}>
-                                        <Grid item xs={6} md={2}>
-                                            <img style={{width: '75px', height : '75px', borderRadius: '50%', objectFit: 'cover'}} src={'../../'+e.alfred.picture}/>
-                                        </Grid>
-                                        <Grid item xs={6} md={10} style={{marginTop: '10px'}}>
-                                            <Typography style={{color: 'rgb(47, 188, 211)',fontSize: '1.2rem'}}>
-                                                {e.serviceUser.service.label} par {e.alfred.firstname}
-                                            </Typography>
-                                            <Typography style={{color: '#9B9B9B',fontSize: '1rem'}}>
-                                                {moment(e.date).format('DD/MM/YYYY')} - {moment(e.date).format('HH:mm')}
-                                            </Typography>
-                                        </Grid>
-                                        <Grid container style={{marginTop: '40px'}}>
-                                            <Grid item md={2} xs={6}>
-                                                <Typography style={{fontSize: '1rem'}}>
-                                                    Accueil
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item md={10} xs={6}>
-                                                <StarRatings
-                                                    rating={e.note_client.reception}
-                                                    starRatedColor={"#2FBCD3"}
-                                                    numberOfStars={5}
-                                                    name='rating'
-                                                    starDimension={'20px'}
-                                                    starHoverColor={'#2FBCD3'}
-                                                    starSpacing={'3px'}
-                                                />
-                                            </Grid>
-
-                                            <Grid item md={2} xs={6}>
-                                                <Typography style={{fontSize: '1rem'}}>
-                                                    Précision de la demande
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item md={10} xs={6}>
-                                                <StarRatings
-                                                    rating={e.note_client.accuracy}
-                                                    starRatedColor={"#2FBCD3"}
-                                                    numberOfStars={5}
-                                                    name='rating'
-                                                    starDimension={'20px'}
-                                                    starHoverColor={'#2FBCD3'}
-                                                    starSpacing={'3px'}
-                                                />
-                                            </Grid>
-
-                                            <Grid item md={2} xs={6}>
-                                                <Typography style={{fontSize: '1rem'}}>
-                                                    Relationnel
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item md={10} xs={6}>
-                                                <StarRatings
-                                                    rating={e.note_client.relational}
-                                                    starRatedColor={"#2FBCD3"}
-                                                    numberOfStars={5}
-                                                    name='rating'
-                                                    starDimension={'20px'}
-                                                    starHoverColor={'#2FBCD3'}
-                                                    starSpacing={'3px'}
-                                                />
-                                            </Grid>
-                                        </Grid>
-                                        <Grid item xs={12} style={{marginTop: '40px', marginBottom: '15px'}}>
-                                            <Typography style={{boxShadow: '0px 0px 6px rgba(130, 129, 129, 0.28)', height: '100px', padding: '15px', width: '75%',  borderRadius: '10px'}}>
-                                                {e.content}
-                                            </Typography>
-                                        </Grid>
+                                    <Grid container style={{marginTop: '3%', width:'90%'}}>
+                                        <Commentary alfred_mode={false} user_id={user._id} key={moment()}/>
                                     </Grid>
 
-                                    <Grid container style={{marginTop: '40px', marginBottom: '40px'}}>
-                                        <Grid item xs={12}>
-                                            <hr style={{border: 'none', height: '2px', backgroundColor: '#7E7E7E', width: '80%', margin: 'auto'}}/>
-                                        </Grid>
-                                    </Grid>
-
-                                </Grid>
-                                ))
 
                             }
                         </Grid>
                     </Grid>
                 </Layout>
-                {/* <Footer/>*/}
-
             </Fragment>
         );
     };

@@ -63,11 +63,11 @@ class SearchInput extends React.Component{
     let {name, value} = e.target;
     this.setState({ [e.target.name]: e.target.value });
     if (name === 'selectedAddress') {
-      if (value=='addAddress') {
+      if (value==='addAddress') {
         Router.push('/profile/myAddresses')
       }
       else {
-        this.setState({gps: value === 'all'? null : value=='main' ? this.state.allAddresses['main'].gps:{lat:this.state.allAddresses[value].lat, lng:this.state.allAddresses[value].lng}});
+        this.setState({gps: value === 'all'? null : value==='main' ? this.state.allAddresses['main'].gps:{lat:this.state.allAddresses[value].lat, lng:this.state.allAddresses[value].lng}});
       }
     }
   };

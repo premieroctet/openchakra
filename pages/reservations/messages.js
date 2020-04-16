@@ -42,6 +42,11 @@ class Messages extends React.Component {
       if(res.data.is_alfred === true){
         this.setState({isAlfred: true})
       }
+      if(this.state.isAlfred === false){
+        this.setState({
+          tabs : true
+        })
+      }
     });
     axios
         .get(url + "myAlfred/api/booking/alfredBooking")
@@ -65,6 +70,13 @@ class Messages extends React.Component {
 
         });
   }
+
+  isAlfred(){
+    if(this.state.isAlfred === false){
+      this.setState({tabs: true})
+    }
+  }
+
   handleClicktabs2 = () => {
     this.setState({ tabs: true });
   };
@@ -76,6 +88,7 @@ class Messages extends React.Component {
 
 
   render() {
+    const { isAlfred } = this.state;
     const { classes } = this.props;
     const tabs = this.state.tabs;
 
@@ -181,126 +194,136 @@ class Messages extends React.Component {
                   <Typography style={{ fontSize: "0.8rem", marginBottom: "4%" }}>
                     Vous avez {this.state.chatrooms.length} conversations
                   </Typography>
-                  <Grid container className={classes.tabweb}>
-                    <Grid item xs={6} style={{ textAlign: "center" }}>
-                      <div>
-                        <h2
+
+                  {
+                    isAlfred ?
+                      <Grid container className={classes.tabweb}>
+                        <Grid item xs={6} style={{ textAlign: "center" }}>
+                          <div>
+                            <h2
+                              onClick={this.handleClicktabs}
+                              style={{
+                                color: "#828181",
+                                fontWeight: "100",
+                                cursor: "pointer",
+                                marginLeft: "0%",
+                                position: "sticky"
+                              }}
+                            >
+                              En tant qu'Alfred
+                            </h2>
+                          </div>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <h2
+                            onClick={this.handleClicktabs2}
+                            style={{
+                              color: "#828181",
+                              fontWeight: "100",
+                              textAlign: "center",
+                              cursor: "pointer"
+                            }}
+                          >
+                            {" "}
+                            En tant qu'utilisateur
+                          </h2>
+                          <br />
+                        </Grid>
+
+                        <Grid item xs={6}>
+                          {tabs ? (
+                            <React.Fragment>
+                              <hr
+                                className={classes.trait1}
+                                style={{ marginTop: "-25px" }}
+                              />
+                            </React.Fragment>
+                          ) : (
+                            <React.Fragment>
+                              <hr
+                                className={classes.trait3}
+                                style={{ marginTop: "-25px" }}
+                              />
+                            </React.Fragment>
+                          )}
+                        </Grid>
+                        <Grid item xs={6}>
+                          {tabs ? (
+                            <React.Fragment>
+                              <hr
+                                className={classes.trait}
+                                style={{ marginTop: "-25px" }}
+                              />
+                            </React.Fragment>
+                          ) : (
+                            <React.Fragment>
+                              <hr
+                                className={classes.trait2}
+                                style={{ marginTop: "-25px" }}
+                              />
+                            </React.Fragment>
+                          )}
+                        </Grid>
+                      </Grid>
+                      : null
+                  }
+                  {
+                    isAlfred ?
+                      <Grid container className={classes.tabmobile}>
+                        <Grid item xs={6} style={{ textAlign: "center" }}>
+                          <h2
                             onClick={this.handleClicktabs}
                             style={{
                               color: "#828181",
                               fontWeight: "100",
                               cursor: "pointer",
-                              marginLeft: "0%",
-                              position: "sticky"
+                              marginLeft: "25%"
                             }}
-                        >
-                          En tant qu'Alfred
-                        </h2>
-                      </div>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <h2
-                          onClick={this.handleClicktabs2}
-                          style={{
-                            color: "#828181",
-                            fontWeight: "100",
-                            textAlign: "center",
-                            cursor: "pointer"
-                          }}
-                      >
-                        {" "}
-                        En tant qu'utilisateur
-                      </h2>
-                      <br />
-                    </Grid>
+                          >
+                            En tant qu'Alfred
+                          </h2>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <h2
+                            onClick={this.handleClicktabs2}
+                            style={{
+                              color: "#828181",
+                              fontWeight: "100",
+                              textAlign: "center",
+                              cursor: "pointer"
+                            }}
+                          >
+                            En tant qu'utilisateur
+                          </h2>
+                          <br />
+                        </Grid>
 
-                    <Grid item xs={6}>
-                      {tabs ? (
-                          <React.Fragment>
-                            <hr
-                                className={classes.trait1}
-                                style={{ marginTop: "-25px" }}
-                            />
-                          </React.Fragment>
-                      ) : (
-                          <React.Fragment>
-                            <hr
-                                className={classes.trait3}
-                                style={{ marginTop: "-25px" }}
-                            />
-                          </React.Fragment>
-                      )}
-                    </Grid>
-                    <Grid item xs={6}>
-                      {tabs ? (
-                          <React.Fragment>
-                            <hr
-                                className={classes.trait}
-                                style={{ marginTop: "-25px" }}
-                            />
-                          </React.Fragment>
-                      ) : (
-                          <React.Fragment>
-                            <hr
-                                className={classes.trait2}
-                                style={{ marginTop: "-25px" }}
-                            />
-                          </React.Fragment>
-                      )}
-                    </Grid>
-                  </Grid>
-                  <Grid container className={classes.tabmobile}>
-                    <Grid item xs={6} style={{ textAlign: "center" }}>
-                      <h2
-                          onClick={this.handleClicktabs}
-                          style={{
-                            color: "#828181",
-                            fontWeight: "100",
-                            cursor: "pointer",
-                            marginLeft: "25%"
-                          }}
-                      >
-                        En tant qu'Alfred
-                      </h2>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <h2
-                          onClick={this.handleClicktabs2}
-                          style={{
-                            color: "#828181",
-                            fontWeight: "100",
-                            textAlign: "center",
-                            cursor: "pointer"
-                          }}
-                      >
-                        En tant qu'utilisateur
-                      </h2>
-                      <br />
-                    </Grid>
+                        <Grid item xs={6} style={{ textAlign: "center" }}>
+                          {tabs ? (
+                            <React.Fragment>
+                              <hr className={classes.trait1} />
+                            </React.Fragment>
+                          ) : (
+                            <React.Fragment>
+                              <hr className={classes.trait3} />
+                            </React.Fragment>
+                          )}
+                        </Grid>
+                        <Grid item xs={6}>
+                          {tabs ? (
+                            <React.Fragment>
+                              <hr className={classes.trait} />
+                            </React.Fragment>
+                          ) : (
+                            <React.Fragment>
+                              <hr className={classes.trait2} />
+                            </React.Fragment>
+                          )}
+                        </Grid>
+                      </Grid>
+                      : null
+                  }
 
-                    <Grid item xs={6} style={{ textAlign: "center" }}>
-                      {tabs ? (
-                          <React.Fragment>
-                            <hr className={classes.trait1} />
-                          </React.Fragment>
-                      ) : (
-                          <React.Fragment>
-                            <hr className={classes.trait3} />
-                          </React.Fragment>
-                      )}
-                    </Grid>
-                    <Grid item xs={6}>
-                      {tabs ? (
-                          <React.Fragment>
-                            <hr className={classes.trait} />
-                          </React.Fragment>
-                      ) : (
-                          <React.Fragment>
-                            <hr className={classes.trait2} />
-                          </React.Fragment>
-                      )}
-                    </Grid>
-                  </Grid>
                   {/************************************************************ début en tant que user web **************************************************/}
 
                   {tabs ? (
@@ -335,7 +358,7 @@ class Messages extends React.Component {
                                           </Grid>
                                           :
                                         <Grid item>
-                                          <Typography>Aucun message</Typography>
+                                          <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>Aucun message</Typography>
                                         </Grid>
                                       }
                                     </Grid>
@@ -390,7 +413,7 @@ class Messages extends React.Component {
                                               {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('DD/MM/YYYY') : null} - {typeof _.last(booking.chatroom.messages) !== 'undefined' ? moment(_.last(booking.chatroom.messages).date).format('HH:mm') : null}
                                             </Typography>
                                           </>
-                                          : <Typography>Aucun message</Typography>}
+                                          : <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>Aucun message</Typography>}
                                     </Grid>
                                     <Grid item xs={12} style={{textAlign: 'center', fontSize: "0.8rem"}}>
                                       <Typography
@@ -477,7 +500,7 @@ class Messages extends React.Component {
                                                 </Typography>
                                               </Grid>
                                             </Grid>
-                                            : <Typography>Aucun message</Typography>}
+                                            : <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>Aucun message</Typography>}
 
                                       </Grid>
                                       <Grid item xs={2} className={classes.priceContainer}>

@@ -27,7 +27,6 @@ class DetailsReservation extends React.Component {
     super(props);
     this.state = {
       value: 4,
-      rating: 3,
       modal1: false,
       modal2: false,
       modal3: false,
@@ -74,6 +73,7 @@ class DetailsReservation extends React.Component {
       if(this.state.bookingObj.serviceUserId){
         axios.get(`/myAlfred/api/serviceUser/${this.state.bookingObj.serviceUserId}`).then(res =>{
           let resultat = res.data;
+          console.log(resultat, 'serviceUser')
           this.setState({category : resultat.service.category}, () =>
             axios.get(`/myAlfred/api/category/${this.state.category}`).then(res =>{
               this.setState({categoryLabel: res.data.label})
@@ -140,10 +140,10 @@ class DetailsReservation extends React.Component {
   render() {
     const { classes } = this.props;
     const { bookingObj, splitAddress, currentUser, categoryLabel } = this.state;
+    console.log(bookingObj, 'bookingObj')
 
     return (
         <Fragment>
-          {/*<Layout>*/}
           {bookingObj === null ||
           currentUser === null || splitAddress === null ? null : currentUser._id !==
           bookingObj.alfred._id && currentUser._id !== bookingObj.user._id ? (
@@ -153,7 +153,7 @@ class DetailsReservation extends React.Component {
                   <Grid container className={classes.bigContainer}>
                     {currentUser.is_alfred === true ?
                       <Grid style={{width: '100%'}}>
-                        <NavBarShop userId={this.state.user}/>
+                        <NavBarShop userId={currentUser._id}/>
                       </Grid>
                      : null}
 
@@ -358,7 +358,7 @@ class DetailsReservation extends React.Component {
                         <hr className={classes.hrSeparator}/>
                         <Grid container style={{borderBottom: "1.5px #8281813b solid", marginTop: "5%", paddingBottom: "7%", alignItems: 'center'}}>
                           <Grid item xs={12} md={7}>
-                            <About alfred={bookingObj.user._id}/>
+                            <About alfred={currentUser._id === bookingObj.alfred._id ? bookingObj.user._id : bookingObj.alfred._id }/>
                           </Grid>
                           <Grid item style={{ textAlign: "center"}}>
                             <Link
@@ -1186,8 +1186,7 @@ class DetailsReservation extends React.Component {
                   <NavbarMobile userId={this.state.userId}/>
                 : null}
           </Grid>
-        )}
-          {/*</Layout>*/}
+          )}
       </Fragment>
     );
   }

@@ -80,7 +80,7 @@ class AssetsService extends React.Component {
                   <Grid>
                     <TextField
                       id="outlined-basic"
-                      className={classes.textField}
+                      className={classes.describExperience}
                       label="Votre expertise"
                       margin="normal"
                       variant="outlined"

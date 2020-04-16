@@ -125,7 +125,6 @@ class shop extends React.Component {
         const {classes} = this.props;
         let isOwner= this.state.idAlfred === this.state.userId;
 
-        console.log("Skills:"+JSON.stringify(this.state.skills));
         return (
           <Fragment>
               <Layout>
@@ -212,16 +211,17 @@ class shop extends React.Component {
 
                           />
                       </Grid>
-                        <Grid style={{marginLeft: '5%', marginRight: '5%', marginTop: '3%'}}>
-                            <Grid>
-                                <h3>Commentaires</h3>
-                            </Grid>
-                            <Grid>
-                                <Grid style={{width : '100%'}}>
-                                  <Commentary alfred_mode={true} user_id={this.props.aboutId} />
-                                </Grid>
+                      <hr className={classes.hrShop}/>
+                      <Grid id="comments" style={{marginLeft: '5%', marginRight: '5%', marginTop: '3%'}}>
+                        <Grid className={classes.titleSkills}>
+                            <h3>Commentaires</h3>
+                        </Grid>
+                        <Grid style={{marginTop: '3%'}}>
+                            <Grid style={{width : '100%'}}>
+                              <Commentary alfred_mode={true} user_id={this.props.aboutId} />
                             </Grid>
                         </Grid>
+                    </Grid>
                   </Grid>
               </Layout>
               <NavbarMobile userId={this.state.userId}/>

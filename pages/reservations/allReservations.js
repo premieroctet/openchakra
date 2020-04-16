@@ -26,7 +26,8 @@ class AllReservations extends React.Component {
             user: null,
             alfredReservations: [],
             userReservations: [],
-            isAlfred: false
+            isAlfred: false,
+            userInfo: {}
         };
     }
 
@@ -36,10 +37,21 @@ class AllReservations extends React.Component {
         );
         axios.get(url + "myAlfred/api/users/current").then(res => {
             let result = res.data
-            this.setState({ user: result._id });
+            this.setState({
+              userInfo: result,
+              user: result._id
+            });
             if (res.data.is_alfred === true) {
-                this.setState({ isAlfred: true });
+                this.setState({
+                  isAlfred: true
+                });
             }
+            if(this.state.isAlfred === false){
+              this.setState({
+                tabs : true
+              })
+            }
+
 
             axios.get(url + "myAlfred/api/booking/alfredBooking").then(res => {
                 this.setState({ alfredReservations: res.data });
@@ -60,6 +72,7 @@ class AllReservations extends React.Component {
     };
 
     render() {
+        const {userInfo} = this.state;
         const { classes } = this.props;
         const tabs = this.state.tabs;
 
@@ -251,125 +264,135 @@ class AllReservations extends React.Component {
                                         réservations
                                     </Typography>
                                 </Grid>
-                                <Grid container className={classes.tabweb}>
+                              {
+                                userInfo.is_alfred ?
+                                  <Grid container className={classes.tabweb}>
                                     <Grid item xs={6} style={{ textAlign: "center" }}>
-                                        <div>
-                                            <h2
-                                                onClick={this.handleClicktabs}
-                                                style={{
-                                                    color: "#828181",
-                                                    fontWeight: "100",
-                                                    cursor: "pointer",
-                                                    marginLeft: "0%",
-                                                    position: "sticky"
-                                                }}
-                                            >
-                                                En tant qu'Alfred
-                                            </h2>
-                                        </div>
+                                      <div>
+                                        <h2
+                                          onClick={this.handleClicktabs}
+                                          style={{
+                                            color: "#828181",
+                                            fontWeight: "100",
+                                            cursor: "pointer",
+                                            marginLeft: "0%",
+                                            position: "sticky"
+                                          }}
+                                        >
+                                          En tant qu'Alfred
+                                        </h2>
+                                      </div>
                                     </Grid>
                                     <Grid item xs={6}>
-                                        <h2
-                                            onClick={this.handleClicktabs2}
-                                            style={{
-                                                color: "#828181",
-                                                fontWeight: "100",
-                                                textAlign: "center",
-                                                cursor: "pointer"
-                                            }}
-                                        >
-                                            {" "}
-                                            En tant qu'utilisateur
-                                        </h2>
-                                        <br />
+                                      <h2
+                                        onClick={this.handleClicktabs2}
+                                        style={{
+                                          color: "#828181",
+                                          fontWeight: "100",
+                                          textAlign: "center",
+                                          cursor: "pointer"
+                                        }}
+                                      >
+                                        {" "}
+                                        En tant qu'utilisateur
+                                      </h2>
+                                      <br />
                                     </Grid>
 
                                     <Grid item xs={6}>
-                                        {tabs ? (
-                                            <React.Fragment>
-                                                <hr
-                                                    className={classes.trait1}
-                                                    style={{ marginTop: "-25px" }}
-                                                />
-                                            </React.Fragment>
-                                        ) : (
-                                            <React.Fragment>
-                                                <hr
-                                                    className={classes.trait3}
-                                                    style={{ marginTop: "-25px" }}
-                                                />
-                                            </React.Fragment>
-                                        )}
+                                      {tabs ? (
+                                        <React.Fragment>
+                                          <hr
+                                            className={classes.trait1}
+                                            style={{ marginTop: "-25px" }}
+                                          />
+                                        </React.Fragment>
+                                      ) : (
+                                        <React.Fragment>
+                                          <hr
+                                            className={classes.trait3}
+                                            style={{ marginTop: "-25px" }}
+                                          />
+                                        </React.Fragment>
+                                      )}
                                     </Grid>
                                     <Grid item xs={6}>
-                                        {tabs ? (
-                                            <React.Fragment>
-                                                <hr
-                                                    className={classes.trait}
-                                                    style={{ marginTop: "-25px" }}
-                                                />
-                                            </React.Fragment>
-                                        ) : (
-                                            <React.Fragment>
-                                                <hr
-                                                    className={classes.trait2}
-                                                    style={{ marginTop: "-25px" }}
-                                                />
-                                            </React.Fragment>
-                                        )}
+                                      {tabs ? (
+                                        <React.Fragment>
+                                          <hr
+                                            className={classes.trait}
+                                            style={{ marginTop: "-25px" }}
+                                          />
+                                        </React.Fragment>
+                                      ) : (
+                                        <React.Fragment>
+                                          <hr
+                                            className={classes.trait2}
+                                            style={{ marginTop: "-25px" }}
+                                          />
+                                        </React.Fragment>
+                                      )}
                                     </Grid>
-                                </Grid>
-                                <Grid container className={classes.tabmobile}>
+                                  </Grid>
+                                  : null
+                              }
+                              {
+                                userInfo.is_alfred ?
+                                  <Grid container className={classes.tabmobile}>
                                     <Grid item xs={6} style={{ textAlign: "center" }}>
-                                        <h2
-                                            onClick={this.handleClicktabs}
-                                            style={{
-                                                color: "#828181",
-                                                fontWeight: "100",
-                                                cursor: "pointer"
-                                            }}
-                                        >
-                                            En tant qu'Alfred
-                                        </h2>
+                                      <h2
+                                        onClick={this.handleClicktabs}
+                                        style={{
+                                          color: "#828181",
+                                          fontWeight: "100",
+                                          cursor: "pointer"
+                                        }}
+                                      >
+                                        En tant qu'Alfred
+                                      </h2>
                                     </Grid>
                                     <Grid item xs={6}>
-                                        <h2
-                                            onClick={this.handleClicktabs2}
-                                            style={{
-                                                color: "#828181",
-                                                fontWeight: "100",
-                                                textAlign: "center",
-                                                cursor: "pointer"
-                                            }}
-                                        >
-                                            En tant qu'utilisateur
-                                        </h2>
-                                        <br />
+                                      <h2
+                                        onClick={this.handleClicktabs2}
+                                        style={{
+                                          color: "#828181",
+                                          fontWeight: "100",
+                                          textAlign: "center",
+                                          cursor: "pointer"
+                                        }}
+                                      >
+                                        En tant qu'utilisateur
+                                      </h2>
+                                      <br />
                                     </Grid>
 
                                     <Grid item xs={6} style={{ textAlign: "center" }}>
-                                        {tabs ? (
-                                            <React.Fragment>
-                                                <hr className={classes.trait1} />
-                                            </React.Fragment>
-                                        ) : (
-                                            <React.Fragment>
-                                                <hr className={classes.trait3} />
-                                            </React.Fragment>
-                                        )}
+                                      {tabs ? (
+                                        <React.Fragment>
+                                          <hr className={classes.trait1} />
+                                        </React.Fragment>
+                                      ) : (
+                                        <React.Fragment>
+                                          <hr className={classes.trait3} />
+                                        </React.Fragment>
+                                      )}
                                     </Grid>
                                     <Grid item xs={6}>
-                                        {tabs ? (
-                                            <React.Fragment>
-                                                <hr className={classes.trait} />
-                                            </React.Fragment>
-                                        ) : (
-                                            <React.Fragment>
-                                                <hr className={classes.trait2} />
-                                            </React.Fragment>
-                                        )}
+                                      {tabs ? (
+                                        <React.Fragment>
+                                          <hr className={classes.trait} />
+                                        </React.Fragment>
+                                      ) : (
+                                        <React.Fragment>
+                                          <hr className={classes.trait2} />
+                                        </React.Fragment>
+                                      )}
                                     </Grid>
-                                </Grid>
+                                  </Grid>
+                                  : null
+                              }
+
+
                               {/************************************************************ début en tant que user web **************************************************/}
                                 {tabs ? (
                                     <React.Fragment>

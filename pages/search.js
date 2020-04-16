@@ -169,7 +169,7 @@ class SearchPage extends React.Component {
           gps:'gps' in this.props ? JSON.parse(this.props.gps) : null,
           city:this.props.city || '',
         };
-        if ('date' in this.props) {
+        if ('date' in this.props && this.props.date) {
           var startDate=moment(parseInt(this.props.date));
           startDate.hour(0).minute(0).second(0);
           var endDate=moment(parseInt(this.props.date));
@@ -544,7 +544,7 @@ class SearchPage extends React.Component {
                             ))}
                           </Grid>
                           {this.props.search && serviceUsers.length === 0 && !this.isSubFilterSet() ?
-                            <p>Aucun résultat</p>
+                            <p>Nous n'avons pas trouvé de résultat pour votre recherche</p>
                             :
                             null
                           }

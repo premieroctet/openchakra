@@ -117,7 +117,7 @@ class ButtonSwitch extends React.Component {
   }
 
   render() {
-    const {classes, isEditable, isOption, isPrice, billings} = this.props;
+    const {classes, isEditable, isOption, isPrice, billings, priceDisabled} = this.props;
     var {label, checked} = this.state;
 
     return(
@@ -149,7 +149,7 @@ class ButtonSwitch extends React.Component {
                   label={`Prix`}
                   type="number"
                   className={classes.textField}
-                  disabled={!checked}
+                  disabled={!checked || priceDisabled}
                   onChange={this.onChangePrice}
                   InputProps={{
                     inputProps: {
