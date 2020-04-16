@@ -86,8 +86,8 @@ class Commentary extends React.Component{
                           <Typography className={classes.titleSkills} variant={"h3"}>Note générale</Typography>
                         </Grid>
                         <Grid className={classes.marginLeft}>
-                          <Badge classes={{badge: classes.badge}} badgeContent={owner.score} color="primary">
-                            <StyledRating name="read-only" value={parseInt(notes.prestation_quality)} readOnly className={classes.ratingStyle}/>
+                          <Badge classes={{badge: classes.badge}} badgeContent={alfred_mode ? owner.score : owner.score_client } color="primary">
+                            <StyledRating name="read-only" value={notes.global} readOnly className={classes.ratingStyle} precision={0.5}/>
                           </Badge>
                         </Grid>
                       </Grid>

@@ -540,7 +540,7 @@ class DetailsReservation extends React.Component {
                                           pourrez consulter la sienne !
                                         </Typography>
                                       </Grid>
-                                      <Grid item xs={2}></Grid>
+                                      <Grid item xs={2}/>
                                       <Grid item md={4} xs={12}>
                                         <Link
                                             href={`/evaluate?booking=${bookingObj._id}&id=${bookingObj.serviceUserId}`}

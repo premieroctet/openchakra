@@ -552,7 +552,7 @@ class UserServicesPreview extends React.Component {
                  placeholderText="Date"
                  locale='fr'
                  minDate={new Date()}
-                 className={classes.test}
+                 className={classes.datePickerStyle}
               />
             </Grid>
             <Grid style={{marginLeft: 50}}>
@@ -567,6 +567,7 @@ class UserServicesPreview extends React.Component {
                  dateFormat="HH:mm"
                  locale='fr'
                  minDate={new Date()}
+                 className={classes.datePickerStyle}
                />
 
             </Grid>

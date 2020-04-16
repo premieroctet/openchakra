@@ -330,4 +330,10 @@ export default theme => ({
   textField:{
     width: 70
   },
+  datePickerStyle:{
+    borderRadius: 5,
+    border: '2px solid #d2d2d2',
+    height: 30,
+    boxShadow: '1px 1px 1px 1px gainsboro'
+  }
 })

@@ -86,6 +86,8 @@ class CardPreview extends React.Component{
     const {classes, services, userState, isOwner, gps, needAvatar} = this.props;
     const service = services.service;
     const { shop } = this.state;
+    console.log(services, 'services')
+    console.log(shop,'shop')
 
     const distance = gps ? computeDistanceKm(gps, services.service_address.gps) : '';
 
