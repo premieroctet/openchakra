@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const emptyPromise = require('../../../utils/promise.js');
 const {data2ServiceUser} = require('../../../utils/mapping');
+const {sendShopDeleted} = require ('../../../utils/mailing');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -302,16 +303,14 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
 // @Route DELETE /myAlfred/api/shop/current/delete
 // Delete one shop
 // @Access private
-router.delete('/current/delete', passport.authenticate('jwt', {
-    session: false
-}), (req, res) => {
-    Shop.findOne({
-            alfred: req.user.id
-        })
+router.delete('/current/delete', passport.authenticate('jwt', { session: false}), (req, res) => {
+    Shop.findOne({alfred: req.user.id})
+      .populate('alfred')
         .then(shop => {
-            shop.remove().then(() => res.json({
-                success: true
-            }));
+            shop.remove().then(() => {
+              sendShopDeleted(shop.alfred);
+              res.json({success: true});
+            });
         })
         .catch(err => res.status(404).json({
             shopnotfound: 'No shop found'

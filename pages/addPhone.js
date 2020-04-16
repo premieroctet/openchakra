@@ -11,8 +11,6 @@ import axios from "axios";
 import Link from "next/link";
 import { toast } from 'react-toastify';
 
-const { config } = require('../config/config');
-const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -66,16 +64,10 @@ class addPhone extends React.Component {
         };
     }
 
-    async onChange(e) {
-
-        this.setState({ [e.target.name]: e.target.value });
-        if( await this.state.phone.length > 8){
-            this.setState({phoneOk:true})
-        } else {
-            this.setState({phoneOk:false})
-        }
-
-
+    onChange(e) {
+        const {name, value} = e.target;
+        this.setState({ [name]: value });
+        if( name=='phone') this.setState({phoneOk:value.length>=8})
     };
 
     onSubmit = e => {
@@ -87,10 +79,10 @@ class addPhone extends React.Component {
         };
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .put(url+'myAlfred/api/users/profile/phone', newPhone)
+            .put('/myAlfred/api/users/profile/phone', newPhone)
             .then(res => {
                 toast.info('Téléphone ajouté');
-                Router.push({pathname: '/checkEmail'})
+                Router.push('/checkEmail');
             })
             .catch(err =>
                 console.log(err)
@@ -130,7 +122,7 @@ class addPhone extends React.Component {
                                                 type={'number'}
                                                 name="phone"
                                                 variant="outlined"
-                                                value={this.state.address}
+                                                value={this.state.phone}
                                                 onChange={(e)=>this.onChange(e)}
                                             />
                                         </Grid>

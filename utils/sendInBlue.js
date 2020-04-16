@@ -1,44 +1,13 @@
 const SibApiV3Sdk = require('sib-api-v3-sdk');
-const sendinblue = require('sendinblue-api');
 
-const {SIB_VERSION, SIB_API_KEY_V2, SIB_API_KEY_V3}=require('./consts');
+const SIB_API_KEY_V2='SvfYtHq36XGknjwC';
+const SIB_API_KEY_V3='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';
 
-class SIB_V2 {
+const SIB_VERSION=3;
 
-  constructor() {
-    var parameters = { "apiKey": SIB_API_KEY_V2 };
-    this.sendinObj = new sendinblue(parameters);
-  }
-
-  sendMail(index, data) {
-    console.log(`Sending ${index} with ${JSON.stringify(data)}`);
-  }
-  
-  launchCampaign() {
-    console.log(Object.keys(sendinblue));
-    var request = require("request");
-
-    var options = { method: 'POST',
-      body:{
-        email: 'sebastien.auvray@my-alfred.io',
-        event: 'always',
-      },
-      json:true,
-      url: 'https://in-automate.sendinblue.com/api/v2/trackEvent' ,
-      headers: {
-        'ma-key': SIB_API_KEY_V2,
-      },
-    };
-
-
-    request(options, function (error, response, body) {
-      if (error) throw new Error(error);
-
-      console.log(response, body);
-    });
-  }
-
-}
+// Templates
+const CONFIRM_EMAIL=5;
+const SHOP_DELETED=15;
 
 class SIB_V3 {
 
@@ -50,34 +19,31 @@ class SIB_V3 {
     this.apiInstance = new SibApiV3Sdk.SMTPApi();
   }
 
-  sendMail(index, data) {
-    SibApiV3Sdk.SendTestEmail({emailTo: "sebastien.auvray@free.fr"});
+  sendMail(index, email, data) {
+    console.log(index, email, JSON.stringify(data));
     var templateId = index; // Number | Id of the template
 
-    var sendEmail = new SibApiV3Sdk.SendEmail(); // SendEmail |
-    sendEmail.emailTo=['sebastien.auvray@my-alfred.io'];
-    sendEmail.TEST = 'TAGADA';
+    var sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
-    this.apiInstance.getSmtpTemplate(templateId).then(function(data) {
-      console.log('API called successfully. Returned data: ' + JSON.stringify(data, null, 2));
-    }, function(error) {
-      console.error(error);
-    });
+    sendSmtpEmail.to=[{email:email}];
+    sendSmtpEmail.templateId = parseInt(index);
+    sendSmtpEmail.params = {};
+    console.log("Setting params:"+JSON.stringify(data));
+    Object.assign(sendSmtpEmail.params, data);
 
-    this.apiInstance.sendTemplate(templateId, sendEmail)
+    console.log("Sending body:"+JSON.stringify(sendSmtpEmail));
+
+    this.apiInstance.sendTransacEmail(sendSmtpEmail)
       .then(data => {
-        console.log('API called successfully. Returned data: ' + JSON.stringify(data));
+        console.log('API called successfully. Returned data: ' + JSON.stringify(data, null, 2));
       })
       .catch ( err => {
         console.error(err);
       });
     }
-  
-    launchCampaign() {
-      console.log(Object.keys(this.apiInstance));
-    }
+
 }
 
-const SIB=SIB_VERSION==2 ? SIB_V2 : SIB_V3;
+const SIB=new SIB_V3();
 
-module.exports={SIB};
+module.exports={SIB, CONFIRM_EMAIL, SHOP_DELETED};

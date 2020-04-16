@@ -18,8 +18,10 @@ const ResetToken = require('../../models/ResetToken');
 const crypto = require('crypto');
 const multer = require("multer");
 
-const {sendMail} = require('../../../utils/mailer');
+const {sendVerificationMail} = require('../../../utils/mailing');
 const {computeUrl } = require('../../../config/config');
+
+const {CONFIRM_EMAIL}=require('../../../utils/consts');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -122,8 +124,9 @@ router.post('/register',(req,res) =>{
                         newUser.password = hash;
                         newUser.save()
                             .then(user => {
-                                res.json(user);
-                                sendAccountValidation(req, user);
+                              const s = new SIB();
+                              sendVerificationMail(user, req)
+                              res.json(user);
                             })
                             .catch(err => console.log(err));
                     })
@@ -138,7 +141,7 @@ router.post('/register',(req,res) =>{
 router.get('/sendMailVerification',passport.authenticate('jwt',{session:false}),(req,res) => {
     User.findById(req.user.id)
         .then(user => {
-          sendAccountValidation(req, user);
+          sendVerificationMail(user, req);
         })
         .catch(err => {
             console.log(err)
