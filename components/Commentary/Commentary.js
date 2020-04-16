@@ -71,7 +71,6 @@ class Commentary extends React.Component{
     else {
       const notes = computeAverageNotes(reviews.map( r => alfred_mode ? r.note_alfred : r.note_client));
       const skills = computeSumSkills(reviews.map( r => alfred_mode ? r.note_alfred : r.note_client));
-      console.log(notes, 'notes')
 
       return (
         <Grid style={{width: '100%'}}>

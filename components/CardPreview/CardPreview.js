@@ -29,6 +29,7 @@ const {computeDistanceKm}=require('../../utils/functions');
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import UserAvatar from '../Avatar/UserAvatar';
+import { computeAverageNotes, computeSumSkills } from '../../utils/functions';
 
 const { config } = require('../../config/config');
 const url = config.apiUrl;
@@ -45,6 +46,7 @@ class CardPreview extends React.Component{
       open: false,
       id_service: '',
       page: false,
+      reviews:[],
     }
   }
 
@@ -62,6 +64,13 @@ class CardPreview extends React.Component{
         })
         .catch( err => console.log(err))
     }
+
+    axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${this.props.services.user}`)
+      .then (res => {
+        var reviews = res.data;
+        this.setState({reviews:reviews})
+      })
+      .catch (err => console.log(err));
   }
 
   handleClickOpen(id) {
@@ -85,9 +94,8 @@ class CardPreview extends React.Component{
   render(){
     const {classes, services, userState, isOwner, gps, needAvatar} = this.props;
     const service = services.service;
-    const { shop } = this.state;
-    console.log(services, 'services')
-    console.log(shop,'shop')
+    const { shop, reviews } = this.state;
+    console.log(reviews, 'reviews')
 
     const distance = gps ? computeDistanceKm(gps, services.service_address.gps) : '';
 
@@ -96,6 +104,9 @@ class CardPreview extends React.Component{
         color: '#4fbdd7',
       },
     })(Rating);
+
+      const notes = computeAverageNotes(reviews.map(r => r.note_client));
+
 
     return (
       <Grid>
@@ -174,7 +185,7 @@ class CardPreview extends React.Component{
                 </Grid>
                 <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
                   <Badge badgeContent={this.state.score} color={'primary'} classes={{badge: classes.badge}}>
-                    <StyledRating name="read-only" value={this.state.score} readOnly className={classes.rating} precision={0.5}/>
+                    <StyledRating name="read-only" value={reviews.length === 0 ? 0 : notes.global} readOnly className={classes.rating} precision={0.5}/>
                   </Badge>
                 </Box>
               </Grid>
