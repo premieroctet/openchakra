@@ -54,26 +54,38 @@ class CardPreview extends React.Component{
     if(typeof this.props.services.user === 'string'){
       axios.get('/myAlfred/api/shop/alfred/'+this.props.services.user)
         .then( res => {
-          this.setState({shop: res.data, alfred:res.data.alfred, score:res.data.alfred.score})
+          this.setState({shop: res.data, alfred:res.data.alfred, score:res.data.alfred.score}, () =>
+            axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${this.props.services.user}`)
+              .then (res => {
+                var reviews = res.data;
+                if (this.props.services._id) {
+                  reviews = reviews.filter( r => r.serviceUser._id===this.props.services._id);
+                }
+                this.setState({reviews:reviews})
+              })
+              .catch (err => console.log(err))
+          )
         })
         .catch( err => console.log(err))
     }else{
       axios.get('/myAlfred/api/shop/alfred/'+this.props.services.user._id)
         .then( res => {
-          this.setState({shop: res.data, alfred:res.data.alfred, score:res.data.alfred.score})
+          this.setState({shop: res.data, alfred:res.data.alfred, score:res.data.alfred.score}, () =>
+            axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${this.props.services.user._id}`)
+              .then (res => {
+                var reviews = res.data;
+                if (this.props.services._id) {
+                  reviews = reviews.filter( r => r.serviceUser._id===this.props.services._id);
+                }
+                this.setState({reviews:reviews})
+              })
+              .catch (err => console.log(err))
+          )
         })
         .catch( err => console.log(err))
     }
 
-    axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${this.props.services.user}`)
-      .then (res => {
-        var reviews = res.data;
-        if (this.props.services._id) {
-          reviews = reviews.filter( r => r.serviceUser._id===this.props.services._id);
-        }
-        this.setState({reviews:reviews})
-      })
-      .catch (err => console.log(err));
+
   }
 
   handleClickOpen(id) {
@@ -186,7 +198,7 @@ class CardPreview extends React.Component{
                   </Typography>
                 </Grid>
                 <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                  <Badge badgeContent={notes.global} color={'primary'} classes={{badge: classes.badge}}>
+                  <Badge badgeContent={notes.global ? notes.global.toFixed(2) : 0} color={'primary'} classes={{badge: classes.badge}}>
                     <StyledRating name="read-only" value={notes.global} readOnly className={classes.rating} precision={0.5}/>
                   </Badge>
                 </Box>

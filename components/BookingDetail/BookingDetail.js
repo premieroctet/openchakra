@@ -10,7 +10,6 @@ class BookingDetail extends React.Component{
 
   render() {
     const {classes, prestations, count, travel_tax, pick_tax, total, alfred_fee, client_fee} = this.props;
-    console.log(client_fee, alfred_fee, count)
 
     return (
       <Grid>
