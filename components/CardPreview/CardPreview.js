@@ -68,6 +68,9 @@ class CardPreview extends React.Component{
     axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${this.props.services.user}`)
       .then (res => {
         var reviews = res.data;
+        if (this.props.services._id) {
+          reviews = reviews.filter( r => r.serviceUser._id===this.props.services._id);
+        }
         this.setState({reviews:reviews})
       })
       .catch (err => console.log(err));
@@ -95,7 +98,6 @@ class CardPreview extends React.Component{
     const {classes, services, userState, isOwner, gps, needAvatar} = this.props;
     const service = services.service;
     const { shop, reviews } = this.state;
-    console.log(reviews, 'reviews')
 
     const distance = gps ? computeDistanceKm(gps, services.service_address.gps) : '';
 
@@ -105,7 +107,7 @@ class CardPreview extends React.Component{
       },
     })(Rating);
 
-      const notes = computeAverageNotes(reviews.map(r => r.note_client));
+      const notes = computeAverageNotes(reviews.map(r => r.note_alfred));
 
 
     return (
@@ -184,8 +186,8 @@ class CardPreview extends React.Component{
                   </Typography>
                 </Grid>
                 <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                  <Badge badgeContent={this.state.score} color={'primary'} classes={{badge: classes.badge}}>
-                    <StyledRating name="read-only" value={reviews.length === 0 ? 0 : notes.global} readOnly className={classes.rating} precision={0.5}/>
+                  <Badge badgeContent={notes.global} color={'primary'} classes={{badge: classes.badge}}>
+                    <StyledRating name="read-only" value={notes.global} readOnly className={classes.rating} precision={0.5}/>
                   </Badge>
                 </Box>
               </Grid>
