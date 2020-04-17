@@ -15,6 +15,7 @@ import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import styles from './detailsReservation/detailsReservationStyle'
 import About from '../../components/About/About';
 import Button from '@material-ui/core/Button';
+import BookingDetail from '../../components/BookingDetail/BookingDetail';
 
 
 moment.locale("fr");
@@ -985,67 +986,7 @@ class DetailsReservation extends React.Component {
                       <Grid container style={{display: 'flex', flexDirection: 'column',}}>
                         <Grid  style={{display: 'flex', marginTop:'5%', width: '70%', justifyContent: 'space-between'}}>
                           <Grid item>
-                            {bookingObj === null
-                              ? null
-                              : bookingObj.prestations.map(prestation => {
-                                return (
-                                  <Typography style={{ fontSize: "1.1rem" }}>
-                                    {prestation.name}
-                                  </Typography>
-                                );
-                              })}
-                          </Grid>
-                          <Grid item>
-                            {bookingObj === null
-                              ? null
-                              : bookingObj.prestations.map(prestation => {
-                                return (
-                                  <Typography style={{fontSize: "1.1rem", textAlign: "center"}}>
-                                    {(prestation.value * prestation.price).toFixed(2)}€
-                                  </Typography>
-                                );
-                              })}
-                          </Grid>
-                        </Grid>
-                        {bookingObj.fees !== 0 ?
-                        <Grid  style={{display: 'flex', width: '70%', justifyContent: 'space-between'}}>
-                          <Grid item>
-                            <Typography style={{fontSize: "1.1rem", marginTop: "10px"}}>
-                              Frais de service
-                            </Typography>
-                          </Grid>
-                          <Grid item >
-
-                              <Typography style={{fontSize: "1.1rem", textAlign: "center", marginTop: "10px"}}>
-                                {bookingObj === null || currentUser === null ? null : currentUser._id === bookingObj.alfred._id ? (
-                                  <span>- {bookingObj.fees.toFixed(2)}</span>
-                                ) : (
-                                  <span>+ {bookingObj.fees.toFixed(2)}</span>
-                                )}
-                                €
-                              </Typography>
-                          </Grid>
-                        </Grid>
-                          : null
-                        }
-                        <Grid style={{display: 'flex', width: '70%', justifyContent: 'space-between', marginTop: '5%'}}>
-                          <Grid item>
-                            <Typography style={{fontSize: "1.5rem", fontWeight: "bold", color: "rgb(47, 188, 211)", marginTop: "10px"}}>
-                              Revenu total
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography style={{fontSize: "1.5rem", fontWeight: "bold", color: "rgb(47, 188, 211)", textAlign: "center", marginTop: "10px"}}>
-                              {bookingObj === null || currentUser === null
-                                ? null
-                                : currentUser._id === bookingObj.alfred._id
-                                  ? (
-                                    bookingObj.amount -
-                                    bookingObj.fees * 2
-                                  ).toFixed(2)
-                                  : bookingObj.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}
-                              €
-                            </Typography>
+                            {/*<BookingDetail/>*/}
                           </Grid>
                         </Grid>
                       </Grid>

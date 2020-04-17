@@ -14,6 +14,7 @@ import fr from 'date-fns/locale/fr';
 import io from "socket.io-client";
 import About from '../../components/About/About';
 import UserAvatar from '../../components/avatar/UserAvatar';
+import BookingDetail from '../../components/BookingDetail/BookingDetail';
 
 registerLocale('fr', fr);
 
@@ -207,68 +208,7 @@ class Confirm extends React.Component {
                                 Détail de la réservation
                               </h3>
                               <Grid xs={12}>
-                                <Grid item xs={9} style={{ width: "90%", float: "left" }}>
-                                  <h4>{bookingObj.service}</h4>
-                                </Grid>
-                                {bookingObj.prestations.map(prestation => {
-                                  return (
-                                      <>
-                                        <Grid
-                                            item
-                                            xs={9}
-                                            style={{ width: "90%", float: "left" }}
-                                        >
-                                          <p>{prestation.value}X {prestation.name}</p>
-                                        </Grid>
-                                        <Grid
-                                            item
-                                            xs={3}
-                                            style={{ width: "10%", float: "right" }}
-                                        >
-                                          <p>{prestation.price.toFixed(2)}€</p>
-                                        </Grid>
-                                      </>
-                                  )
-                                })}
-                                {typeof bookingObj.option === 'undefined' ?
-                                    null
-                                    :
-                                    <>
-                                      <Grid
-                                          item
-                                          xs={9}
-                                          style={{ width: "90%", float: "left" }}
-                                      >
-                                        <p>{bookingObj.option.label}</p>
-                                      </Grid>
-                                      <Grid
-                                          item
-                                          xs={3}
-                                          style={{ width: "10%", float: "right" }}
-                                      >
-                                        {" "}
-                                        <p>{bookingObj.option.price.toFixed(2)}€</p>
-                                      </Grid>
-                                    </>
-                                }
-
-                                <br></br>
-
-                                <Grid
-                                    item
-                                    xs={9}
-                                    style={{ width: "90%", float: "left" }}
-                                >
-                                  <p>Frais de service</p>
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={3}
-                                    style={{ width: "10%", float: "right" }}
-                                >
-                                  {" "}
-                                  <p>{bookingObj.fees.toFixed(2)}€</p>
-                                </Grid>
+                                {/*<BookingDetail/>*/}
                               </Grid>
                             </Grid>
                             <Grid container>

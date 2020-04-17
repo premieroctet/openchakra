@@ -10,6 +10,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Footer from "../hoc/Layout/Footer/Footer";
 import About from '../components/About/About';
 import UserAvatar from '../components/Avatar/UserAvatar';
+import BookingDetail from '../components/BookingDetail/BookingDetail';
 
 moment.locale("fr");
 const _ = require("lodash");
@@ -235,95 +236,9 @@ class ConfirmPayement extends React.Component {
                             Paiement
                           </h3>
                           <Grid xs={12}>
-                            {this.state.prestations.length
-                              ? this.state.prestations.map(prestation => {
-                                  return (
-                                    <>
-                                      <Grid
-                                        item
-                                        xs={9}
-                                        style={{ width: "90%", float: "left" }}
-                                      >
-                                        <p>
-                                          {prestation.value}X {prestation.name}
-                                        </p>
-                                      </Grid>
-                                      <Grid
-                                        item
-                                        xs={3}
-                                        style={{ width: "10%", float: "right" }}
-                                      >
-                                        <p>
-                                          {(prestation.price * prestation.value).toFixed(2)}€
-                                        </p>
-                                      </Grid>
-                                    </>
-                                  );
-                                })
-                              : null}
-
-                            { this.state.travel_tax ?
-                            <>
-                            <br></br>
-                            <Grid item xs={9} style={{ width: "90%", float: "left" }} >
-                              <p>Frais de déplacement</p>
-                            </Grid>
-                            <Grid item xs={3} style={{ width: "10%", float: "right" }} >
-                              {" "} <p>{this.state.travel_tax.toFixed(2)}€</p>
-                            </Grid>
-                            </>
-                            :
-                            null
-                            }
-
-                            { this.state.pick_tax ?
-                            <>
-                            <br></br>
-                            <Grid item xs={9} style={{ width: "90%", float: "left" }} >
-                              <p>Frais de livraison/enlèvement</p>
-                            </Grid>
-                            <Grid item xs={3} style={{ width: "10%", float: "right" }} >
-                              {" "} <p>{this.state.pick_tax.toFixed(2)}€</p>
-                            </Grid>
-                            </>
-                            :
-                            null
-                            }
-
-                            <br></br>
-                            <Grid item xs={9} style={{ width: "90%", float: "left" }} >
-                              <p>Frais de service</p>
-                            </Grid>
-                            <Grid item xs={3} style={{ width: "10%", float: "right" }} >
-                              {" "} <p>{this.state.fees.toFixed(2)}€</p>
-                            </Grid>
-
-                            <Grid
-                              item
-                              xs={9}
-                              style={{
-                                width: "90%",
-                                float: "left",
-                                fontSize: 25,
-                                fontWeight: 600,
-                                color: "#2FBCD3"
-                              }}
-                            >
-                              <p>Total</p>
-                            </Grid>
-                            <Grid
-                              item
-                              xs={3}
-                              style={{
-                                width: "10%",
-                                float: "right",
-                                fontWeight: 600,
-                                fontSize: 25,
-                                color: "#2FBCD3"
-                              }}
-                            >
+                            {/*<BookingDetail/>*/}
+                            <Grid item xs={3} style={{width: "10%", float: "right", fontWeight: 600, fontSize: 25, color: "#2FBCD3"}}>
                               {" "}
-                              <p>{this.state.grandTotal.toFixed(2)}€</p>
                               <Grid style={{ float: "right" }} item xs={12}>
                                 {" "}
                                 <Button
