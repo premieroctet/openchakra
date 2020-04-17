@@ -84,7 +84,7 @@ class About extends React.Component{
     return (
       <Grid container className={classes.mainContainer}>
         <Grid item style={{width: '100%'}}>
-          <Grid>
+          <Grid className={classes.titleContainer}>
             <Typography variant="h3" className={classes.titleAbout}>
               A propos de {user.firstname}
             </Typography>

@@ -24,5 +24,12 @@ export default theme => ({
     color: "rgba(84,89,95,0.95)",
     letterSpacing: -1,
     fontWeight: "bold"
+  },
+  titleContainer:{
+    [theme.breakpoints.down("xs")]: {
+      display: 'flex',
+      justifyContent: 'center',
+      marginBottom: 30
+    }
   }
 });
