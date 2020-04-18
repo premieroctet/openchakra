@@ -80,7 +80,6 @@ class SearchInput extends React.Component{
     const {classes} = this.props;
     const {user} = this.state;
 
-    console.log("User:"+JSON.stringify(user, null, 2));
     return (
       <Grid className={classes.mainContainer}>
         <Grid style={{width: '100%'}}>

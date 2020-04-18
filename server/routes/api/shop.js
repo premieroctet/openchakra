@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const emptyPromise = require('../../../utils/promise.js');
 const {data2ServiceUser} = require('../../../utils/mapping');
-const {sendShopDeleted} = require ('../../../utils/mailing');
+const {sendShopDeleted,sendShopOnline} = require ('../../../utils/mailing');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -99,6 +99,10 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
             console.log("Saving shop:" + JSON.stringify(shop));
             shop.save()
                 .then(shop => {
+                    User.findById(shop.alfred)
+                      .then( alfred => {
+                        sendShopOnline(alfred, req);
+                      }).catch (err => console.err(err));
                     var su = data2ServiceUser(req.body, new ServiceUser());
                     su.user = req.user.id;
 
@@ -146,7 +150,9 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
                                         a.save();
                                     });
                                     User.findOneAndUpdate({ _id: req.user.id }, { is_alfred: true }, { new: true })
-                                        .then(user => console.log("Updated alfred"))
+                                        .then(user => {
+                                          console.log("Updated alfred")
+                                        })
                                         .catch(err => console.log("Error:" + JSON.stringify(err)))
                                 })
                                 .catch(err => console.log("Error:" + err))

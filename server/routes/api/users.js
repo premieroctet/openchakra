@@ -452,9 +452,7 @@ router.post('/login',(req, res)=> {
                 .then(isMatch => {
                     if(isMatch && user.active === true) {
                         // User matched
-
                         const payload = {id: user.id, name: user.name, firstname: user.firstname, is_admin: user.is_admin, is_alfred: user.is_alfred}; // Create JWT payload
-
                         // Sign token
                         jwt.sign(payload, keys.secretOrKey, (err, token) => {
                             res.json({success: true, token: 'Bearer ' + token});

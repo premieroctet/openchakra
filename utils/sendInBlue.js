@@ -5,9 +5,6 @@ const SIB_API_KEY_V3='xkeysib-fb7206d22463c0dcadeee870c9d7cc98f6dc92856e4078c4b5
 
 const SIB_VERSION=3;
 
-// Templates
-const CONFIRM_EMAIL=5;
-const SHOP_DELETED=15;
 
 class SIB_V3 {
 
@@ -20,7 +17,7 @@ class SIB_V3 {
   }
 
   sendMail(index, email, data) {
-    console.log(index, email, JSON.stringify(data));
+    console.log(`Sending ${index} template to ${email} with data ${JSON.stringify(data)}`);
     var templateId = index; // Number | Id of the template
 
     var sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
@@ -46,4 +43,4 @@ class SIB_V3 {
 
 const SIB=new SIB_V3();
 
-module.exports={SIB, CONFIRM_EMAIL, SHOP_DELETED};
+module.exports={SIB};
