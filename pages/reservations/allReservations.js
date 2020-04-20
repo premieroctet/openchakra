@@ -455,7 +455,7 @@ class AllReservations extends React.Component {
                                                             </Grid>
                                                             <Grid item>
                                                               <Grid>
-                                                                <Link href={{pathname:"/reservations/detailsReservation", query: { id: booking._id, user: true }}}>
+                                                                <Link href={{pathname:"/reservations/detailsReservation", query: { id: booking._id}}}>
                                                                   <Button color={"primary"} variant={"outlined"}>Détail</Button>
                                                                 </Link>
                                                               </Grid>
@@ -556,7 +556,7 @@ class AllReservations extends React.Component {
                                                                     href={{
                                                                         pathname:
                                                                             "/reservations/detailsReservation",
-                                                                        query: { id: booking._id, user: true }
+                                                                        query: { id: booking._id}
                                                                     }}
                                                                 >
                                                                 <Typography
@@ -645,7 +645,7 @@ class AllReservations extends React.Component {
                                                     </Grid>
                                                     <Grid item>
                                                       <Grid>
-                                                        <Link href={{pathname: "/reservations/detailsReservation", query: { id: booking._id, user: true }}}>
+                                                        <Link href={{pathname: "/reservations/detailsReservation", query: { id: booking._id}}}>
                                                           <Button color={"primary"} variant={"outlined"}>Détail</Button>
                                                         </Link>
                                                       </Grid>
@@ -722,7 +722,7 @@ class AllReservations extends React.Component {
                                                         <Link
                                                             href={{
                                                                 pathname: "/reservations/detailsReservation",
-                                                                query: { id: booking._id, user: true }
+                                                                query: { id: booking._id}
                                                             }}
                                                         >
                                                         <Typography

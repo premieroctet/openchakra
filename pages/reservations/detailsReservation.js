@@ -34,64 +34,62 @@ class DetailsReservation extends React.Component {
       currentUser: null,
       splitAddress: null,
       categoryLabel: '',
-      is_user : true,
+      is_alfred : null,
+      alfredId: null,
+      currentUser: null,
     };
   }
 
   static getInitialProps({ query: { id, user } }) {
     return {
       booking_id: id,
-      is_user: user==='true'
     };
   }
 
   componentDidMount() {
     const booking_id = this.props.booking_id;
 
-    this.setState({ booking_id: this.props.booking_id });
+    this.setState({ booking_id: booking_id });
 
     axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
 
     axios.get("/myAlfred/api/users/current").then(res => {
       let result = res.data
       this.setState({ currentUser: result });
+      axios.get("/myAlfred/api/booking/" + booking_id).then(res => {
+        this.setState(
+          {
+            bookingObj: res.data,
+            alfredId: res.data.alfred._id,
+            is_alfred: res.data.alfred._id == result._id
+          },
+        );
+
+        if(res.data.serviceUserId){
+          axios.get(`/myAlfred/api/serviceUser/${this.state.bookingObj.serviceUserId}`).then(res =>{
+            let resultat = res.data;
+            this.setState({category : resultat.service.category}, () =>
+              axios.get(`/myAlfred/api/category/${this.state.category}`).then(res =>{
+                this.setState({categoryLabel: res.data.label})
+              })
+            )
+          }).catch(error =>{console.log(error)})
+        }
+
+        this.setState({ splitAddress: this.state.bookingObj.address.address.split(' ')})
+
+        this.socket = io();
+        this.socket.on("connect", socket => {
+          this.socket.emit("booking", this.state.bookingObj._id)
+        });
+        this.socket.on("displayStatus", data => {
+          this.setState({bookingObj: data})
+      })
+    }).catch(error => { console.log(error) })
     }).catch(error => {
       console.log(error)
     });
 
-    axios.get("/myAlfred/api/booking/" + booking_id).then(res => {
-      this.setState(
-        {
-          bookingObj: res.data,
-          alfredId: res.data.user._id
-        },
-      );
-
-      if(this.state.bookingObj.serviceUserId){
-        axios.get(`/myAlfred/api/serviceUser/${this.state.bookingObj.serviceUserId}`).then(res =>{
-          let resultat = res.data;
-          this.setState({category : resultat.service.category}, () =>
-            axios.get(`/myAlfred/api/category/${this.state.category}`).then(res =>{
-              this.setState({categoryLabel: res.data.label})
-            })
-          )
-        }).catch(error =>{
-          console.log(error)
-        })
-      }
-
-      this.setState({ splitAddress: this.state.bookingObj.address.address.split(' ')})
-
-      this.socket = io();
-      this.socket.on("connect", socket => {
-        this.socket.emit("booking", this.state.bookingObj._id)
-      });
-      this.socket.on("displayStatus", data => {
-        this.setState({bookingObj: data})
-    })
-  }).catch(error => {
-    console.log(error)
-    })
   }
 
   changeStatus(status) {
@@ -160,11 +158,12 @@ class DetailsReservation extends React.Component {
     const pricedPrestations=this.computePricedPrestations();
     const countPrestations=this.computeCountPrestations();
 
-    const amount= this.state.bookingObj ? this.state.is_user ? parseFloat(this.state.bookingObj.amount) : parseFloat(this.state.bookingObj.amount)-this.state.bookingObj.fees : 0;
+    const amount= this.state.bookingObj ? this.state.is_alfred ? parseFloat(this.state.bookingObj.amount)-this.state.bookingObj.fees : parseFloat(this.state.bookingObj.amount) : 0;
     const alfred_fee = 0;
-    const client_fee = this.state.bookingObj && this.state.is_user ? this.state.bookingObj.fees : 0;
+    const client_fee = this.state.bookingObj && !this.state.is_alfred ? this.state.bookingObj.fees : 0;
 
-    console.log("amount:"+amount);
+    console.log("Alfred:"+this.state.alfredId);
+    console.log("User:"+(this.state.currentUser==null ? '' : this.state.currentUser._id));
     return (
         <Fragment>
           {bookingObj === null ||

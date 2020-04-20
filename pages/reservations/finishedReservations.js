@@ -461,7 +461,7 @@ class FinishedReservations extends React.Component {
                                 </Grid>
                                 <Grid item>
                                   <Grid>
-                                    <Link href={{pathname:"/reservations/detailsReservation", query: { id: booking._id, user: true }}}>
+                                    <Link href={{pathname:"/reservations/detailsReservation", query: { id: booking._id}}}>
                                       <Button color={"primary"} variant={"outlined"}>Détail</Button>
                                     </Link>
                                   </Grid>
@@ -559,13 +559,7 @@ class FinishedReservations extends React.Component {
                                   </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                  <Link
-                                      href={{
-                                        pathname:
-                                            "/reservations/detailsReservation",
-                                        query: { id: booking._id, user: true }
-                                      }}
-                                  >
+                                  <Link href={{ pathname: "/reservations/detailsReservation", query: { id: booking._id} }} >
                                   <Typography
                                     style={{
                                       height: "45px",
@@ -661,7 +655,7 @@ class FinishedReservations extends React.Component {
                             </Grid>
                             <Grid item>
                               <Grid>
-                                <Link href={{pathname: "/reservations/detailsReservation", query: { id: booking._id, user: true }}}>
+                                <Link href={{pathname: "/reservations/detailsReservation", query: { id: booking._id}}}>
                                   <Button color={"primary"} variant={"outlined"}>Détail</Button>
                                 </Link>
                               </Grid>
@@ -746,13 +740,7 @@ class FinishedReservations extends React.Component {
                               </Typography>
                             </Grid>
                             <Grid item xs={12}>
-                              <Link
-                                  href={{
-                                    pathname:
-                                        "/reservations/detailsReservation",
-                                    query: { id: booking._id, user: true }
-                                  }}
-                              >
+                              <Link href={{ pathname: "/reservations/detailsReservation", query: { id: booking._id} }} >
                               <Typography
                                 style={{
                                   height: "45px",

@@ -214,7 +214,7 @@ class EvaluateClient extends React.Component {
             .then(() => {
                 toast.info('Commentaire enregistré');
                 //Router.push('/merci')
-                Router.push(`/reservations/detailsReservation?id=${booking}&user=true`);
+                Router.push(`/reservations/detailsReservation?id=${booking}`);
             })
             .catch(err => {
                 toast.error('Une erreur est survenue')

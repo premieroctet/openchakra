@@ -141,14 +141,37 @@ class Confirm extends React.Component {
           })
           .catch(err => console.log(err))
     }
+  }
 
+  computePricedPrestations(){
+    var result={};
+    if (this.state.bookingObj) {
+      this.state.bookingObj.prestations.forEach( p => {
+        result[p.name]=p.price*p.value;
+      })
+    }
+    return result;
+  }
 
+  computeCountPrestations(){
+    var result={};
+    if (this.state.bookingObj) {
+      this.state.bookingObj.prestations.forEach( p => {
+        result[p.name]=p.value;
+      })
+    }
+    return result;
   }
 
   render() {
     const { classes } = this.props;
     const { bookingObj, currentUser } = this.state;
     console.log(bookingObj, 'booking')
+
+    const pricedPrestations=this.computePricedPrestations();
+    const countPrestations=this.computeCountPrestations();
+
+    const amount= this.state.bookingObj ? parseFloat(this.state.bookingObj.amount)-this.state.bookingObj.fees : 0;
 
     return (
         <Fragment>
@@ -208,7 +231,13 @@ class Confirm extends React.Component {
                                 Détail de la réservation
                               </h3>
                               <Grid xs={12}>
-                                {/*<BookingDetail/>*/}
+                                <BookingDetail
+                                  prestations={pricedPrestations}
+                                  count={countPrestations}
+                                  travel_tax={this.state.bookingObj?this.state.bookingObj.travel_tax : 0}
+                                  pick_tax={this.state.bookingObj?this.state.bookingObj.pick_tax : 0}
+                                  total={amount}
+                                />
                               </Grid>
                             </Grid>
                             <Grid container>
