@@ -49,6 +49,7 @@ import Notes from '../components/Notes/Notes';
 import {computeAverageNotes} from '../utils/functions';
 import fr from 'date-fns/locale/fr';
 import Switch from '@material-ui/core/Switch';
+import BookingDetail from '../components/BookingDetail/BookingDetail';
 const moment = require('moment');
 moment.locale('fr');
 registerLocale('fr', fr);
@@ -552,7 +553,7 @@ class UserServicesPreview extends React.Component {
                  placeholderText="Date"
                  locale='fr'
                  minDate={new Date()}
-                 className={classes.test}
+                 className={classes.datePickerStyle}
               />
             </Grid>
             <Grid style={{marginLeft: 50}}>
@@ -567,6 +568,7 @@ class UserServicesPreview extends React.Component {
                  dateFormat="HH:mm"
                  locale='fr'
                  minDate={new Date()}
+                 className={classes.datePickerStyle}
                />
 
             </Grid>
@@ -697,95 +699,37 @@ class UserServicesPreview extends React.Component {
         </Grid>
       </Grid>
         <Grid style={{display: 'flex', flexDirection:'column', marginLeft:15, marginRight:15, marginBottom:30}}>
-        <Grid>
-          { this.state.prestations.map( (p) => {
-             return this.state.count[p._id]===0 ? null: (
-          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-            <Grid>
-              <p>{p.prestation.label}</p>
-            </Grid>
-            <Grid>
-              <p>{(this.state.count[p._id]*(p.price)).toFixed(2)}€</p>
-            </Grid>
-          </Grid>
-          )})
-          }
-          { /* Start travel tax */ }
-          { serviceUser.travel_tax && location=='client' ?
-          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-            <Grid>
-              <p>Frais de déplacement</p>
-            </Grid>
-            <Grid>
-              <p>{this.state.serviceUser.travel_tax.toFixed(2)}€</p>
-            </Grid>
-          </Grid>:null}
-          { /* End pick tax */ }
-          { /* Start pick tax */ }
-          { this.state.pick_tax ?
-          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-            <Grid>
-              <p>Frais de livraison/enlèvement</p>
-            </Grid>
-            <Grid>
-              <p>{this.state.pick_tax.toFixed(2)}€</p>
-            </Grid>
-          </Grid>:null}
-          { /* End pick tax */ }
-          { /* Start commission */ }
-          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-            <Grid>
-              <p>Frais de service</p>
-            </Grid>
-            <Grid>
-              <p>{this.state.commission.toFixed(2)}€</p>
-            </Grid>
-          </Grid>
-          { /* End commission */ }
-          { /* Start total */ }
-          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-            <Grid>
-              <p>Total</p>
-            </Grid>
-            <Grid>
-              <p>{this.state.total.toFixed(2)}€</p>
-            </Grid>
-          </Grid>
-          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-              <em style={{color:'#f87280'}}>{errors['total']}</em>
-          </Grid>
-          { /* End total */ }
+          <BookingDetail prestations={this.state.prestations} count={this.state.count} travel_tax={this.state.serviceUser.travel_tax} pick_tax={this.state.pick_tax} total={this.state.total} client_fee={this.state.commission}/>
         </Grid>
-      </Grid>
         <Grid>
-        <Grid style={{display: 'flex', justifyContent: 'space-around' }}>
-          <Grid>
-            <Button
-              variant="outlined"
-              size="medium"
-              color="primary"
-              aria-label="add"
-              className={classes.margin}
-              disabled={!isEmpty(errors)}
-              onClick={() => this.book(false)}
-            >
-              Demande d’informations
-            </Button>
-          </Grid>
-          <Grid>
-            <Button
-              style={{color:'white'}}
-              variant="contained"
-              size="medium"
-              color="secondary"
-              aria-label="add"
-              className={classes.margin}
-              disabled={!isEmpty(errors)}
-              onClick={() => this.book(true)}
-            >
-              Réserver
-            </Button>
-          </Grid>
+          <Grid style={{display: 'flex', justifyContent: 'space-around' }}>
+            <Grid>
+              <Button
+                variant="outlined"
+                size="medium"
+                color="primary"
+                aria-label="add"
+                className={classes.margin}
+                disabled={!isEmpty(errors)}
+                onClick={() => this.book(false)}
+              >
+                Demande d’informations
+              </Button>
+            </Grid>
+            <Grid>
+              <Button
+                style={{color:'white'}}
+                variant="contained"
+                size="medium"
+                color="secondary"
+                aria-label="add"
+                className={classes.margin}
+                disabled={!isEmpty(errors)}
+                onClick={() => this.book(true)}
+              >
+                Réserver
+              </Button>
+            </Grid>
         </Grid>
       </Grid>
         {/*<Grid>
