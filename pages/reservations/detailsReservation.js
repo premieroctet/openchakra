@@ -20,9 +20,6 @@ import BookingDetail from '../../components/BookingDetail/BookingDetail';
 
 moment.locale("fr");
 
-const { config } = require("../../config/config");
-const url = config.apiUrl;
-
 class DetailsReservation extends React.Component {
   constructor(props) {
     super(props);
@@ -36,14 +33,15 @@ class DetailsReservation extends React.Component {
       bookingObj: null,
       currentUser: null,
       splitAddress: null,
-      categoryLabel: ''
+      categoryLabel: '',
+      is_user : true,
     };
   }
 
   static getInitialProps({ query: { id, user } }) {
     return {
       booking_id: id,
-      is_user: user
+      is_user: user==='true'
     };
   }
 
@@ -52,18 +50,16 @@ class DetailsReservation extends React.Component {
 
     this.setState({ booking_id: this.props.booking_id });
 
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-      "token"
-    );
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
 
-    axios.get(url + "myAlfred/api/users/current").then(res => {
+    axios.get("/myAlfred/api/users/current").then(res => {
       let result = res.data
       this.setState({ currentUser: result });
     }).catch(error => {
       console.log(error)
     });
 
-    axios.get(url + "myAlfred/api/booking/" + booking_id).then(res => {
+    axios.get("/myAlfred/api/booking/" + booking_id).then(res => {
       this.setState(
         {
           bookingObj: res.data,
@@ -74,7 +70,6 @@ class DetailsReservation extends React.Component {
       if(this.state.bookingObj.serviceUserId){
         axios.get(`/myAlfred/api/serviceUser/${this.state.bookingObj.serviceUserId}`).then(res =>{
           let resultat = res.data;
-          console.log(resultat, 'serviceUser')
           this.setState({category : resultat.service.category}, () =>
             axios.get(`/myAlfred/api/category/${this.state.category}`).then(res =>{
               this.setState({categoryLabel: res.data.label})
@@ -102,7 +97,7 @@ class DetailsReservation extends React.Component {
   changeStatus(status) {
     axios
       .put(
-        url + "myAlfred/api/booking/modifyBooking/" + this.state.booking_id,
+        "/myAlfred/api/booking/modifyBooking/" + this.state.booking_id,
         { status: status }
       )
       .then(res => {
@@ -138,11 +133,38 @@ class DetailsReservation extends React.Component {
     });
   }
 
+  computePricedPrestations(){
+    var result={};
+    if (this.state.bookingObj) {
+      this.state.bookingObj.prestations.forEach( p => {
+        result[p.name]=p.price*p.value;
+      })
+    }
+    return result;
+  }
+
+  computeCountPrestations(){
+    var result={};
+    if (this.state.bookingObj) {
+      this.state.bookingObj.prestations.forEach( p => {
+        result[p.name]=p.value;
+      })
+    }
+    return result;
+  }
+
   render() {
     const { classes } = this.props;
     const { bookingObj, splitAddress, currentUser, categoryLabel } = this.state;
-    console.log(bookingObj, 'bookingObj')
 
+    const pricedPrestations=this.computePricedPrestations();
+    const countPrestations=this.computeCountPrestations();
+
+    const amount= this.state.bookingObj ? this.state.is_user ? parseFloat(this.state.bookingObj.amount) : parseFloat(this.state.bookingObj.amount)-this.state.bookingObj.fees : 0;
+    const alfred_fee = 0;
+    const client_fee = this.state.bookingObj && this.state.is_user ? this.state.bookingObj.fees : 0;
+
+    console.log("amount:"+amount);
     return (
         <Fragment>
           {bookingObj === null ||
@@ -832,7 +854,15 @@ class DetailsReservation extends React.Component {
                       <Grid container style={{display: 'flex', flexDirection: 'column',}}>
                         <Grid  style={{display: 'flex', marginTop:'5%', width: '70%', justifyContent: 'space-between'}}>
                           <Grid item>
-                            {/*<BookingDetail/>*/}
+                            <BookingDetail
+                              prestations={pricedPrestations}
+                              count={countPrestations}
+                              alfred_fee={alfred_fee}
+                              client_fee={client_fee}
+                              travel_tax={this.state.bookingObj?this.state.bookingObj.travel_tax : 0}
+                              pick_tax={this.state.bookingObj?this.state.bookingObj.pick_tax : 0}
+                              total={amount}
+                            />
                           </Grid>
                         </Grid>
                       </Grid>

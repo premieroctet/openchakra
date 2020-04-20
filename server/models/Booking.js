@@ -32,6 +32,7 @@ const BookingSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'equipment'
     }],
+    // Fix : string > float
     amount: {
         type: String,
         required: true
