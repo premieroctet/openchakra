@@ -165,6 +165,7 @@ class DetailsReservation extends React.Component {
     console.log("Alfred:"+this.state.alfredId);
     console.log("User:"+(this.state.currentUser==null ? '' : this.state.currentUser._id));
     return (
+        <Layout>
         <Fragment>
           {bookingObj === null ||
           currentUser === null || splitAddress === null ? null : currentUser._id !==
@@ -1004,6 +1005,7 @@ class DetailsReservation extends React.Component {
           </Grid>
           )}
       </Fragment>
+      </Layout>
     );
   }
 }
