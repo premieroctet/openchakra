@@ -14,14 +14,14 @@ class BookingDetail extends React.Component{
     return (
       <Grid>
         <Grid>
-          { prestations.map( (p) => {
-            return count[p._id] ===0 ? null: (
+          { Object.keys(prestations).map( k => {
+            return count[k] ===0 ? null: (
               <Grid className={classes.flexContent}>
                 <Grid>
-                  <p>{p.prestation.label}</p>
+                  <p>{k}</p>
                 </Grid>
                 <Grid>
-                  <p>{(count[p._id]*(p.price)).toFixed(2)}€</p>
+                  <p>{prestations[k].toFixed(2)}€</p>
                 </Grid>
               </Grid>
             )})

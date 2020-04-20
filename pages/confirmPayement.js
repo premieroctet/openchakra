@@ -50,7 +50,7 @@ class ConfirmPayement extends React.Component {
       prestations: [],
       pick_tax: null,
       travel_tax: null,
-      total: null,
+      total: 0,
       fees: null,
       grandTotal: null,
       checkedOption: false,
@@ -68,7 +68,6 @@ class ConfirmPayement extends React.Component {
 
   componentDidMount() {
     const bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
-    console.log(bookingObj);
 
     axios.defaults.headers.common["Authorization"] = localStorage.getItem( "token");
 
@@ -139,9 +138,29 @@ class ConfirmPayement extends React.Component {
     })
   }
 
+  computePricedPrestations(){
+    var result={};
+    const count=this.state.count;
+    this.state.prestations.forEach( p => {
+      result[p.name]=p.price*p.value;
+    })
+    return result;
+  }
+
+  computeCountPrestations(){
+    var result={};
+    this.state.prestations.forEach( p => {
+      result[p.name]=p.value;
+    })
+    return result;
+  }
+
   render() {
     const { classes } = this.props;
     const { currentUser, languages, user, alfredId } = this.state;
+
+    const pricedPrestations=this.computePricedPrestations();
+    const countPrestations=this.computeCountPrestations();
 
     return (
       <Fragment>
@@ -236,7 +255,7 @@ class ConfirmPayement extends React.Component {
                             Paiement
                           </h3>
                           <Grid xs={12}>
-                            {/*<BookingDetail/>*/}
+                            <BookingDetail prestations={pricedPrestations} count={countPrestations} total={this.state.grandTotal} client_fee={this.state.fees}/>
                             <Grid item xs={3} style={{width: "10%", float: "right", fontWeight: 600, fontSize: 25, color: "#2FBCD3"}}>
                               {" "}
                               <Grid style={{ float: "right" }} item xs={12}>

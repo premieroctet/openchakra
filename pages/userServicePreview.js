@@ -516,13 +516,26 @@ class UserServicesPreview extends React.Component {
     return dl;
   }
 
+  computePricedPrestations = () => {
+    const count = this.state.count;
+    var result={}
+    this.state.prestations.forEach( p => {
+      if (count[p._id]) {
+        result[p.prestation.label]=count[p._id]*p.price;
+      }
+    })
+    return result;
+  }
+
   render() {
     const {classes} = this.props;
     const {date, time, location, serviceUser, shop, service, equipments, alfred, errors, isChecked} = this.state;
 
    const filters = this.extractFilters();
 
-    const StyledRating = withStyles({
+   const pricedPrestations=this.computePricedPrestations();
+
+   const StyledRating = withStyles({
       iconFilled: {
         color: '#4fbdd7',
       },
@@ -699,7 +712,7 @@ class UserServicesPreview extends React.Component {
         </Grid>
       </Grid>
         <Grid style={{display: 'flex', flexDirection:'column', marginLeft:15, marginRight:15, marginBottom:30}}>
-          <BookingDetail prestations={this.state.prestations} count={this.state.count} travel_tax={this.state.serviceUser.travel_tax} pick_tax={this.state.pick_tax} total={this.state.total} client_fee={this.state.commission}/>
+          <BookingDetail prestations={pricedPrestations} count={this.state.count} travel_tax={this.state.serviceUser.travel_tax} pick_tax={this.state.pick_tax} total={this.state.total} client_fee={this.state.commission}/>
         </Grid>
         <Grid>
           <Grid style={{display: 'flex', justifyContent: 'space-around' }}>
