@@ -53,6 +53,7 @@
     "react-big-calendar": "^0.23.0",
     "react-confirm-alert": "^2.4.1",
     "react-credit-cards": "^0.8.0",
+    "react-csv": "^2.0.3",
     "react-datepicker": "^2.9.4",
     "react-dates": "^21.3.2",
     "react-dom": "^16.8.6",
