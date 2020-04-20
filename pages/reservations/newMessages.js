@@ -9,7 +9,7 @@ import axios from "axios";
 import _ from 'lodash';
 import moment from 'moment';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
-import UserAvatar from '../../components/avatar/UserAvatar';
+import UserAvatar from '../../components/Avatar/UserAvatar';
 import Button from '@material-ui/core/Button';
 
 const { config } = require("../../config/config");
