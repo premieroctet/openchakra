@@ -36,7 +36,6 @@ class DetailsReservation extends React.Component {
       categoryLabel: '',
       is_alfred : null,
       alfredId: null,
-      currentUser: null,
     };
   }
 

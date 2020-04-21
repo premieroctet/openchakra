@@ -73,6 +73,7 @@ class About extends React.Component{
   render(){
     const {languages, user, creationShop} = this.state;
     const {classes, alfred, profil} = this.props;
+    console.log(alfred,'alfred')
     const preventDefault = event => event.preventDefault();
 
     const StyledRating = withStyles({

@@ -11,29 +11,13 @@ import Footer from "../hoc/Layout/Footer/Footer";
 import About from '../components/About/About';
 import UserAvatar from '../components/Avatar/UserAvatar';
 import BookingDetail from '../components/BookingDetail/BookingDetail';
+import styles from './confirmPayement/confirmPayement'
 
 moment.locale("fr");
 const _ = require("lodash");
 const { config } = require("../config/config");
 const url = config.apiUrl;
 
-const styles = theme => ({
-  bigContainer: {
-    flexGrow: 1
-  },
-  avatarLetter:{
-    height: 100,
-    width: 100,
-    margin: 'auto',
-    fontSize: 'xx-large',
-  },
-  textAvatar: {
-    textAlign: 'center',
-    color: 'black',
-    margin: 'auto',
-    fontSize: 20,
-  },
-});
 
 class ConfirmPayement extends React.Component {
   constructor(props) {
@@ -50,9 +34,6 @@ class ConfirmPayement extends React.Component {
       prestations: [],
       pick_tax: null,
       travel_tax: null,
-      travel_tax: null,
-      pick_tax: null,
-      grandTotal: null,
       total: 0,
       fees: null,
       grandTotal: null,
@@ -160,7 +141,7 @@ class ConfirmPayement extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { currentUser, languages, user, alfredId } = this.state;
+    const { currentUser, user, alfredId } = this.state;
 
     const pricedPrestations=this.computePricedPrestations();
     const countPrestations=this.computeCountPrestations();
@@ -172,32 +153,21 @@ class ConfirmPayement extends React.Component {
             <Layout>
               <Grid container className={classes.bigContainer}>
                 <Grid container>
-                  <Grid item md={5} xs={12} style={{textAlign: "left", margin: "0 auto", float: "right", paddingLeft: "3%"}}>
+                  <Grid item md={5} xs={12} className={classes.leftContainer}>
                     <Grid container>
-                      <Grid
-                        item
-                        xs={12}
-                        style={{ marginTop: 50, marginBottom: 30 }}
-                      >
-                        <h2
-                          style={{
-                            fontSize: "2rem",
-                            color: "rgba(84,89,95,0.95)",
-                            letterSpacing: -1,
-                            fontWeight: "100"
-                          }}
-                        >
+                      <Grid item xs={12} className={classes.marginItemContainer}>
+                        <h2 className={classes.h2Style}>
                           Détail de votre réservation
                         </h2>
                       </Grid>
                     </Grid>
-                    <Grid container>
-                      <Grid item>
-                        <div style={{ marginLeft: "3%", width:'100%' }}>
-                          <About alfred={alfredId} profil={false}/>
+                    <Grid container className={classes.containerAboutAndAvatar}>
+                      <Grid item className={classes.marginContainerAvatar}>
+                        <div style={{ width:'100%' }}>
+                          <About alfred={user._id} profil={false}/>
                         </div>
                       </Grid>
-                      <Grid item xs={5}>
+                      <Grid item className={classes.containerAvatar}>
                         <Grid item>
                           <UserAvatar classes={'avatarLetter'} user={user} className={classes.avatarLetter} />
                           <Typography style={{marginTop:20}} className={classes.textAvatar}>{user.firstname}</Typography>
@@ -205,17 +175,10 @@ class ConfirmPayement extends React.Component {
                       </Grid>
                     </Grid>
 
-                    <div style={{ marginTop: "8%", paddingLeft: '3%' }}>
+                    <div style={{ paddingLeft: '3%' }}>
                       <hr></hr>
                       <Grid container>
-                        <h3
-                          style={{
-                            fontSize: "1.6rem",
-                            color: "rgba(84,89,95,0.95)",
-                            letterSpacing: -1,
-                            fontWeight: "bold"
-                          }}
-                        >
+                        <h3 className={classes.h3Style}>
                           A propos de votre réservation
                         </h3>
                         <Grid item xs={12} style={{display : 'flex', alignItems:'center'}}>
@@ -245,35 +208,19 @@ class ConfirmPayement extends React.Component {
                           </Grid>
                         </Grid>
                       </Grid>
-                      <Grid container>
-                        <Grid item xs={12}>
-                          <h3
-                            style={{
-                              fontSize: "1.6rem",
-                              color: "rgba(84,89,95,0.95)",
-                              letterSpacing: -1,
-                              fontWeight: "bold"
-                            }}
-                          >
+                      <Grid container className={classes.widthLarge}>
+                        <Grid item className={classes.widthLarge}>
+                          <h3 className={classes.h3Style}>
                             Paiement
                           </h3>
-                          <Grid xs={12}>
+                          <Grid className={classes.widthLarge}>
                             <BookingDetail prestations={pricedPrestations} count={countPrestations} total={this.state.grandTotal} client_fee={this.state.fees}/>
-                            <Grid item xs={3} style={{width: "10%", float: "right", fontWeight: 600, fontSize: 25, color: "#2FBCD3"}}>
-                              {" "}
-                              <Grid style={{ float: "right" }} item xs={12}>
-                                {" "}
+                            <Grid item className={classes.buttonContainerPiad}>
+                              <Grid item>
                                 <Button
                                   color={"secondary"}
                                   variant={"contained"}
-                                  style={{
-                                    color: "white",
-                                    fontSize: "16px",
-                                    paddingLeft: "20px",
-                                    paddingRight: "20px",
-                                    marginBottom: 50,
-                                    marginRight: 20
-                                  }}
+                                  className={classes.buttonPaid}
                                   onClick={() => {
                                     this.handlePay();
                                   }}
@@ -291,28 +238,10 @@ class ConfirmPayement extends React.Component {
                   </Grid>
 
                   {/*Contenu à droite*/}
-                  <Grid
-                    item
-                    xs={12}
-                    md={7}
-                    style={{ marginTop: "2%", marginBottom: "5%" }}
-                  >
-                    <Grid
-                      container
-                      style={{
-                        backgroundImage: `url('../../static/resa.svg')`,
-                        backgroundPosition: "cover",
-                        backgroundRepeat: "no-repeat",
-                        border: "thin solid transparent",
-                        maxWidth: "100%",
-                        height: "90vh",
-                        padding: "2%",
-                        position: "sticky",
-                        top: 100
-                      }}
-                    ></Grid>{" "}
+                  <Grid item xs={12} md={7} className={classes.rightContainer}>
+                    <Grid className={classes.backgroundRightContainer} container/>
                   </Grid>
-                </Grid>{" "}
+                </Grid>
               </Grid>
             </Layout>
             <Footer />
