@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const emptyPromise = require('../../../utils/promise.js');
 const {data2ServiceUser} = require('../../../utils/mapping');
+const {sendShopDeleted,sendShopOnline} = require ('../../../utils/mailing');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -98,6 +99,10 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
             console.log("Saving shop:" + JSON.stringify(shop));
             shop.save()
                 .then(shop => {
+                    User.findById(shop.alfred)
+                      .then( alfred => {
+                        sendShopOnline(alfred, req);
+                      }).catch (err => console.err(err));
                     var su = data2ServiceUser(req.body, new ServiceUser());
                     su.user = req.user.id;
 
@@ -145,7 +150,9 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
                                         a.save();
                                     });
                                     User.findOneAndUpdate({ _id: req.user.id }, { is_alfred: true }, { new: true })
-                                        .then(user => console.log("Updated alfred"))
+                                        .then(user => {
+                                          console.log("Updated alfred")
+                                        })
                                         .catch(err => console.log("Error:" + JSON.stringify(err)))
                                 })
                                 .catch(err => console.log("Error:" + err))
@@ -302,16 +309,14 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
 // @Route DELETE /myAlfred/api/shop/current/delete
 // Delete one shop
 // @Access private
-router.delete('/current/delete', passport.authenticate('jwt', {
-    session: false
-}), (req, res) => {
-    Shop.findOne({
-            alfred: req.user.id
-        })
+router.delete('/current/delete', passport.authenticate('jwt', { session: false}), (req, res) => {
+    Shop.findOne({alfred: req.user.id})
+      .populate('alfred')
         .then(shop => {
-            shop.remove().then(() => res.json({
-                success: true
-            }));
+            shop.remove().then(() => {
+              sendShopDeleted(shop.alfred);
+              res.json({success: true});
+            });
         })
         .catch(err => res.status(404).json({
             shopnotfound: 'No shop found'

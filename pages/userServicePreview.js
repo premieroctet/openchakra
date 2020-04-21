@@ -50,6 +50,7 @@ import {computeAverageNotes} from '../utils/functions';
 import fr from 'date-fns/locale/fr';
 import Switch from '@material-ui/core/Switch';
 import BookingDetail from '../components/BookingDetail/BookingDetail';
+import {toast} from 'react-toastify';
 const moment = require('moment');
 moment.locale('fr');
 registerLocale('fr', fr);
@@ -232,7 +233,8 @@ class UserServicesPreview extends React.Component {
     console.log("Setting default location");
     const serviceUser = this.state.serviceUser;
     const user = this.state.user;
-    var location = serviceUser.location.client && this.isInPerimeter() ? "client" : serviceUser.location.alfred ? "alfred" : "visio";
+    var location = serviceUser.location.client && this.isInPerimeter() ? "client" : serviceUser.location.alfred ? "alfred" : serviceUser.location.visio ? "visio" : null;
+    if (location==null) { toast.error('Ce service est hors de votre périmètre')}
     this.setState({location: location});
   }
 
@@ -322,6 +324,9 @@ class UserServicesPreview extends React.Component {
   onChange = event => {
     const {name, value}=event.target;
     this.setState({[name]:value}, () => this.computeTotal());
+    if (name=='location' && value!='alfred') {
+      this.setState({pick_tax: null, isChecked: false})
+    }
   }
 
   onLocationChanged = (id, checked) => {
@@ -343,6 +348,10 @@ class UserServicesPreview extends React.Component {
     return this.state.serviceUser.travel_tax && this.state.location=='client' ? this.state.serviceUser.travel_tax : 0;
   }
 
+  computePickTax = () => {
+    return this.state.isChecked && this.state.location=='alfred' ? this.state.serviceUser.pick_tax : 0;
+  }
+
   computeTotal = () => {
     var totalPrestations=0;
     var count=this.state.count;
@@ -353,8 +362,9 @@ class UserServicesPreview extends React.Component {
       }
     });
     const travelTax = this.computeTravelTax();
-    totalPrestations+=travelTax ? parseInt(travelTax) : 0;
-    totalPrestations+=this.state.pick_tax ? parseInt(this.state.pick_tax) : 0;
+    totalPrestations+=travelTax ? parseFloat(travelTax) : 0;
+    const pickTax = this.computePickTax();
+    totalPrestations+=pickTax ? parseFloat(pickTax) : 0;
     var commission=totalPrestations*COMM_CLIENT;
     var total=totalPrestations;
     total+=commission;
@@ -407,12 +417,14 @@ class UserServicesPreview extends React.Component {
         alfred: this.state.serviceUser.user._id,
         user: this.state.user._id,
         prestations: prestations,
-        travel_tax: this.state.serviceUser.travel_tax,
-        pick_tax: this.state.serviceUser.pick_tax,
+        travel_tax: this.computeTravelTax() ,
+        pick_tax: this.computePickTax() ,
         fees: this.state.commission,
         status: actual ? "En attente de confirmation" : "Demande d'infos",
         serviceUserId: this.state.serviceUser._id,
       };
+
+      console.log("BookingObj:"+JSON.stringify(bookingObj, null, 2));
 
       if (!actual) {
         bookingObj['chatroom']=res.data._id;
@@ -656,7 +668,7 @@ class UserServicesPreview extends React.Component {
               </Grid>
               :null
             }
-            { serviceUser.pick_tax ?
+            { serviceUser.pick_tax && location=='alfred' ?
               <Grid>
                 <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                   <Grid style={{display: 'flex', alignItems: 'center'}}>
@@ -712,7 +724,7 @@ class UserServicesPreview extends React.Component {
         </Grid>
       </Grid>
         <Grid style={{display: 'flex', flexDirection:'column', marginLeft:15, marginRight:15, marginBottom:30}}>
-          <BookingDetail prestations={pricedPrestations} count={this.state.count} travel_tax={this.state.serviceUser.travel_tax} pick_tax={this.state.pick_tax} total={this.state.total} client_fee={this.state.commission}/>
+          <BookingDetail prestations={pricedPrestations} count={this.state.count} travel_tax={this.computeTravelTax()} pick_tax={this.state.pick_tax} total={this.state.total} client_fee={this.state.commission}/>
         </Grid>
         <Grid>
           <Grid style={{display: 'flex', justifyContent: 'space-around' }}>
