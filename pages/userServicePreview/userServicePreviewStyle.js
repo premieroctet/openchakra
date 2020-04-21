@@ -116,7 +116,10 @@ export default theme => ({
       marginRight: 50,
       marginLeft: 50,
       marginBottom: 20
-    }
+    },
+    [theme.breakpoints.down('xs')]: {
+      margin:0
+    },
   },
   hrStyle:{
     width: 500,

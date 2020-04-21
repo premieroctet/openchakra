@@ -492,7 +492,7 @@ class UserServicesPreview extends React.Component {
                   onChange={this.onQtyChanged}
                 />
               </Grid>
-              <Grid style={{display: 'flex', width: '100%'}}>
+              <Grid style={{display: 'flex', width: '100%', alignItems: 'center'}}>
                 <Grid style={{width: '100%', marginLeft: 10}}>
                   <label>{p.prestation.label}</label>
                 </Grid>
