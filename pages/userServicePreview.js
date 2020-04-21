@@ -50,6 +50,7 @@ import {computeAverageNotes} from '../utils/functions';
 import fr from 'date-fns/locale/fr';
 import Switch from '@material-ui/core/Switch';
 import BookingDetail from '../components/BookingDetail/BookingDetail';
+import {toast} from 'react-toastify';
 const moment = require('moment');
 moment.locale('fr');
 registerLocale('fr', fr);
@@ -232,7 +233,8 @@ class UserServicesPreview extends React.Component {
     console.log("Setting default location");
     const serviceUser = this.state.serviceUser;
     const user = this.state.user;
-    var location = serviceUser.location.client && this.isInPerimeter() ? "client" : serviceUser.location.alfred ? "alfred" : "visio";
+    var location = serviceUser.location.client && this.isInPerimeter() ? "client" : serviceUser.location.alfred ? "alfred" : serviceUser.location.visio ? "visio" : null;
+    if (location==null) { toast.error('Ce service est hors de votre périmètre')}
     this.setState({location: location});
   }
 
