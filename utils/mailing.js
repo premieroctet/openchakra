@@ -4,19 +4,32 @@ const {SIB}=require('./sendInBlue');
 const {computeUrl } = require('../config/config');
 
 // Templates
+
+/**
+4   VERS ALFRED == Nouvelle demande de réservation // En mode non auto
+10  VERS ALFRED == Un virement vous a été envoyé
+11  VERS ALFRED == Laissez un commentaire
+12  VERS USER == Laissez un commentaire à votre Alfred
+16  VERS utilisateur == demande d'information pré-approuvé sur My Alfred
+17  VERS ALFRED == pré Réservation refusée
+21  VERS ALFRED == N'oubliez pas de mettre à jour vos disponibilités 🗓
+*/
 const CONFIRM_EMAIL=5;
+const ASKING_INFO=6;
+const NEW_MESSAGE_ALFRED=7;
 const BOOKING_CANCELLED_BY_CLIENT=8;
+const NEW_MESSAGE_CLIENT=13;
 const BOOKING_CANCELLED_BY_ALFRED=14;
 const SHOP_DELETED=15;
-const BOOKING_CONFIRMED=19;
-const RESET_PASSWORD=22;
-const BOOKING_EXPIRED_2_ALFRED=31;
-const BOOKING_EXPIRED_2_CLIENT=30;
-const BOOKING_DETAILS=26;
-const BOOKING_INFOS=24;
-const NEW_BOOKING=23;
-const SHOP_ONLINE=20; // OK
 const BOOKING_REFUSED=18; // OK
+const BOOKING_CONFIRMED=19;
+const SHOP_ONLINE=20; // OK
+const RESET_PASSWORD=22;
+const NEW_BOOKING=23;
+const BOOKING_INFOS=24;
+const BOOKING_DETAILS=26;
+const BOOKING_EXPIRED_2_CLIENT=30;
+const BOOKING_EXPIRED_2_ALFRED=31;
 
 
 
@@ -186,8 +199,50 @@ const sendBookingRefused = (booking, req) => {
    )
 }
 
+const sendAskingInfo = (booking, req) => {
+   SIB.sendMail(
+     ASKING_INFO,
+     booking.alfred.email,
+     {
+       client_firstname: booking.user.firstname,
+       alfred_firstname: booking.alfred.firstname,
+       service_label: booking.service,
+       service_datetime: moment(booking.time_prestation).format('DD/MM/YYYY à HH:mm'),
+       total_revenue: parseFloat(booking.amount-booking.fees).toFixed(2),
+     }
+   )
+}
+
+const sendNewMessageToAlfred = (booking, chatroom_id, req) => {
+  const url=new URL(`/reservations/messagesDetails?id=${chatroom_id}&booking=${booking._id}`, computeUrl(req));
+   SIB.sendMail(
+     NEW_MESSAGE_ALFRED,
+     booking.alfred.email,
+     {
+       client_firstname: booking.user.firstname,
+       alfred_firstname: booking.alfred.firstname,
+       service_label: booking.service,
+       link_showclientmessage: url,
+     }
+   )
+}
+
+const sendNewMessageToClient = (booking, chatroom_id, req) => {
+  const url=new URL(`/reservations/messagesDetails?id=${chatroom_id}&booking=${booking._id}`, computeUrl(req));
+   SIB.sendMail(
+     NEW_MESSAGE_CLIENT,
+     booking.user.email,
+     {
+       client_firstname: booking.user.firstname,
+       alfred_firstname: booking.alfred.firstname,
+       service_label: booking.service,
+       link_showalfredmessage: url,
+     }
+   )
+}
+
 module.exports={
   sendVerificationMail, sendShopDeleted, sendBookingConfirmed, sendBookingCancelledByAlfred, sendBookingCancelledByClient,
   sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingDetails, sendBookingInfos, sendNewBooking,
-  sendShopOnline,sendBookingRefused
+  sendShopOnline,sendBookingRefused, sendAskingInfo, sendNewMessageToAlfred, sendNewMessageToClient
 }
