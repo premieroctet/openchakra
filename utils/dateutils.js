@@ -23,7 +23,7 @@ const isMomentInEvent = (m, serviceId, event, checkTimeOnly) => {
     console.log(`ServiceId ${serviceId} not found in ${JSON.stringify(event.services)}`);
     return false;
   }
-  
+
   const start=moment(event.begin);
   const end=moment(event.end);
   if (checkTimeOnly) {
@@ -54,13 +54,13 @@ const isMomentInAvail = (m, serviceId, avail) => {
   const events=avail[dayName]?avail[dayName].event:null;
   if (isEmpty(events)) {
     return false;
-  } 
+  }
   // Test event. If in period, check only time
   return events.some( e => isMomentInEvent(m, serviceId, e, period));
 }
 
 const isMomentAvailable = (mom, serviceId, avails) => {
-  if (isEmpty(avails)) { 
+  if (isEmpty(avails)) {
     return true;
   }
   const res= avails.some(a => isMomentInAvail(mom, serviceId, a));
@@ -76,7 +76,7 @@ const isIntervalAvailable = (start, end, serviceId, avails) => {
     if (isMomentAvailable(m, serviceId, avails)) { return true};
     m.add(15, 'minutes');
   }
-  return false; 
+  return false;
 }
 
 const getDeadLine=(deadline) => {
@@ -104,4 +104,9 @@ const getDeadLine=(deadline) => {
   return m;
 }
 
-module.exports={isMomentAvailable, isIntervalAvailable, getDeadLine};
+const booking_datetime_str = booking => {
+  return `Le ${booking.date_prestation} à ${moment(booking.time_prestation).format('HH:mm')}`
+}
+
+
+module.exports={isMomentAvailable, isIntervalAvailable, getDeadLine, booking_datetime_str};

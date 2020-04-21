@@ -11,6 +11,7 @@ import Footer from "../hoc/Layout/Footer/Footer";
 import About from '../components/About/About';
 import UserAvatar from '../components/Avatar/UserAvatar';
 import BookingDetail from '../components/BookingDetail/BookingDetail';
+const {booking_datetime_str} = require('../utils/dateutils')
 
 moment.locale("fr");
 const _ = require("lodash");
@@ -227,7 +228,7 @@ class ConfirmPayement extends React.Component {
                           <Grid item xs={9} style={{marginLeft: 25}}>
                             <p>Date et heure de la prestation:</p>{" "}
                             <p>
-                              {this.state.date} - {moment(this.state.hour).format('HH:mm')}
+                              {booking_datetime_str(this.state.bookingObj)}
                             </p>
                           </Grid>
                         </Grid>
@@ -258,7 +259,7 @@ class ConfirmPayement extends React.Component {
                             Paiement
                           </h3>
                           <Grid xs={12}>
-                            <BookingDetail prestations={pricedPrestations} count={countPrestations} total={this.state.grandTotal} client_fee={this.state.fees}/>
+                            <BookingDetail prestations={pricedPrestations} count={countPrestations} total={this.state.grandTotal} client_fee={this.state.fees} travel_tax={this.state.travel_tax} pick_tax={this.state.pick_tax}/>
                             <Grid item xs={3} style={{width: "10%", float: "right", fontWeight: 600, fontSize: 25, color: "#2FBCD3"}}>
                               {" "}
                               <Grid style={{ float: "right" }} item xs={12}>
