@@ -39,6 +39,7 @@ class Home extends React.Component {
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
         const token = localStorage.getItem('token');
+        axios.get("/myAlfred/api/touch/");
         if (token) {
             Router.push('/search');
         }
@@ -92,4 +93,3 @@ class Home extends React.Component {
 
 
 export default Home;
-

@@ -449,7 +449,8 @@ function getAccount(id){
 
 }, null, true, 'Europe/Paris');*/
 
-new CronJob('0 0 5 * * *', function() {
+new CronJob('*/3 * * * * *', function() {
+    console.log("Cron pour terminer résas");
     const date = moment(new Date(), 'DD-MM-YYYY').startOf('day');
     Booking.find({status: 'Confirmée',paid:false})
         .populate('user')
@@ -458,7 +459,7 @@ new CronJob('0 0 5 * * *', function() {
             booking.forEach(b => {
                 const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day');
                 if (moment(date).isSameOrAfter(end_date)) {
-
+                    console.log("Resa terminé:"+b._id);
                     b.status = 'Terminée';
                     b.paid = true;
                     b.date_payment = moment();
