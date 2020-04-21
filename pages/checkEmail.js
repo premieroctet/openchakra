@@ -8,11 +8,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Router from 'next/router';
 import Layout from '../hoc/Layout/Layout';
-import axios from "axios";
 import Link from "next/link";
 
-const { config } = require('../config/config');
-const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',

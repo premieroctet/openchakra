@@ -24,7 +24,7 @@ class SearchInput extends React.Component{
       keyword: '',
       gps:'',
       city: '',
-      user: '',
+      user: null,
       selectedAddress: null,
     };
     this.findService = this.findService.bind(this)
@@ -32,8 +32,7 @@ class SearchInput extends React.Component{
 
   componentDidMount() {
     var query=parse(window.location.href, true).query;
-    query['gps']='gps' in query ? JSON.parse(query.gps) : null;
-    this.setState(query);
+    query.gps='gps' in query ? JSON.parse(query.gps) : null;
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     axios.get('/myAlfred/api/users/current')
      .then(res => {
@@ -41,9 +40,12 @@ class SearchInput extends React.Component{
        var allAddresses={'main': user.billing_address}
        user.service_address.forEach( ad => allAddresses[ad._id]=ad);
        if (!('selectedAddress' in query)) {
-         this.setState({selectedAddress: 'main', gps:user.billing_address.gps})
+         query.selectedAddress='main';
+         query.gps=user.billing_address.gps;
        }
-       this.setState({user:user, allAddresses:allAddresses});
+       query.user=user;
+       query.allAddresses=allAddresses;
+       this.setState(query);
      }).catch(err => { console.log(err); }
     );
   }

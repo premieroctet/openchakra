@@ -64,7 +64,7 @@ class validateAccount extends React.Component {
             )
             .then(res => {
                 alert('Compte validé');
-                //Router.push({pathname:'/'})
+                Router.push('/')
             })
             .catch(err =>
                 console.log(err)

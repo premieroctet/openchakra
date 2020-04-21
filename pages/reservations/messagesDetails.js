@@ -152,7 +152,9 @@ class MessagesDetails extends React.Component {
           axios
             .put(
               url+`myAlfred/api/chatRooms/saveMessages/${id}`,
-              { messages: oldMessages }
+              { messages: oldMessages,
+                booking_id: this.props.bookingId
+ }
             )
             .then();
           this.setState({
