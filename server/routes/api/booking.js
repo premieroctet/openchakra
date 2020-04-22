@@ -169,7 +169,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
             .then( book => {
               if (booking.status == 'Demande d\'infos') {
                 sendBookingInfos(book);
-                sendAskingInfo(book);
+                sendAskingInfo(book, req);
               }
               if (booking.status == 'En attente de confirmation') {
                 sendBookingDetails(book);

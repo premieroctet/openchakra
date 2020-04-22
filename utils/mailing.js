@@ -238,6 +238,7 @@ const sendAskingInfo = (booking, req) => {
        service_label: booking.service,
        service_datetime: booking_datetime_str(booking),
        total_revenue: parseFloat(booking.amount-booking.fees).toFixed(2),
+       link_requestinformation: new URL('/reservations/detailsReservation?id='+booking._id, computeUrl(req)),
      }
    )
 }
