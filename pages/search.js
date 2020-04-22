@@ -68,9 +68,18 @@ const styles = theme => ({
       objectFit: 'cover',
     },
     respfilter:{
-        [theme.breakpoints.down('sm')]: {
-            top: 200,
-        }
+      position: 'sticky',
+      top: 60,
+      zIndex: 10,
+      background: 'white',
+      height: 60,
+      [theme.breakpoints.down('sm')]: {
+          top: 200,
+      },
+      [theme.breakpoints.down('xs')]: {
+        height: 150,
+        top: 0
+      }
     },
     mobilevoir: {
         [theme.breakpoints.up("md")]: {
@@ -382,7 +391,7 @@ class SearchPage extends React.Component {
           <Fragment>
             <Layout>
               <Grid container className={classes.bigContainer}>
-                <Grid container className={classes.respfilter} style={{position: 'sticky', top: 60, zIndex: 10, background: 'white', height: 60}}>
+                <Grid container className={classes.respfilter}>
                   <Grid item xs={12} style={{height: 50}}>
                     <Grid container>
                       {this.state.statusFilterVisible ?
