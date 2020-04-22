@@ -13,9 +13,6 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
 import Link from 'next/link';
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
-
 
 const styles = theme => ({
   container: {
@@ -47,7 +44,7 @@ const styles = theme => ({
     textAlign:'center',
     margin:10,
     boxShadow: `1px 3px 1px transparent`,
-    
+
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('xs')]: { // xs: 600px or larger
       maxWidth: 450,
@@ -55,7 +52,7 @@ const styles = theme => ({
     [theme.breakpoints.up('sm')]: {
       maxWidth: 400,
     },
-    [theme.breakpoints.up('md')]: { 
+    [theme.breakpoints.up('md')]: {
       maxWidth: 350,
     },
     [theme.breakpoints.up('lg')]: {
@@ -66,10 +63,10 @@ const styles = theme => ({
   media2: {
     height: 200,
 
-    [theme.breakpoints.down('md')]: { 
+    [theme.breakpoints.down('md')]: {
       width: '200px!important',
     },
-    [theme.breakpoints.down('xs')]: { 
+    [theme.breakpoints.down('xs')]: {
       width: '200px!important',
     },
     [theme.breakpoints.down('sm')]: {
@@ -124,12 +121,12 @@ class Verypractical extends React.Component {
 
   componentDidMount() {
 
-    axios.get(url + 'myAlfred/api/tags/all')
+    axios.get('/myAlfred/api/tags/all')
         .then(response => {
               let data = response.data;
               let random = data[Math.floor(Math.random() * data.length)];
               this.setState({tags:random});
-              axios.get(url + 'myAlfred/api/service/all/tags/' + random._id)
+              axios.get('/myAlfred/api/service/all/tags/' + random._id)
                   .then(res => {
                     let service = res.data;
 
@@ -151,16 +148,16 @@ class Verypractical extends React.Component {
         <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
           <Card className={classes.card}>
             <CardActionArea>
-              
+
               <CardMedia
                   className={classes.media2}
                   image={e.picture}
                   title="Paysage"
               />
               <CardContent>
-                
+
                 <Typography gutterBottom variant="h5" component="h2">
-                 
+
                 </Typography>
                 <Typography gutterBottom variant="p" component="p" style={{fontSize:16}}>
                 {e.label}
@@ -171,7 +168,7 @@ class Verypractical extends React.Component {
               </CardContent>
             </CardActionArea>
             <CardActions>
-              
+
             </CardActions>
           </Card>
         </Grid>
@@ -198,7 +195,7 @@ class Verypractical extends React.Component {
               </div>
             </Grid>
             <Grid item xs={2}></Grid>
-            
+
             <div className="thewrap">
             <section className="sectioncard">
 
@@ -210,7 +207,7 @@ class Verypractical extends React.Component {
           </div>
             <Grid container className="thewrap2">
 
-            
+
             {services}
             </Grid>
           </Grid>

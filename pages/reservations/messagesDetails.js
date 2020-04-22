@@ -12,8 +12,6 @@ import getDistance from "geolib/es/getDistance";
 import convertDistance from "geolib/es/convertDistance";
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
-const { config } = require("../../config/config");
-const url = config.apiUrl;
 
 moment.locale("fr");
 
@@ -121,19 +119,19 @@ class MessagesDetails extends React.Component {
     axios.defaults.headers.common["Authorization"] = localStorage.getItem(
       "token"
     );
-    axios.put(url + 'myAlfred/api/chatRooms/viewMessages/' + this.props.chatroomId)
+    axios.put('/myAlfred/api/chatRooms/viewMessages/' + this.props.chatroomId)
       .then()
-    axios.get(url+"myAlfred/api/users/current").then(res => {
+    axios.get("/myAlfred/api/users/current").then(res => {
       this.setState({ userData: res.data });
       this.setState({ emitter: res.data._id });
       this.setState({ recipientpic: res.data.picture });
     });
     axios
-      .get(url + "myAlfred/api/booking/" + this.props.bookingId)
+      .get("/myAlfred/api/booking/" + this.props.bookingId)
       .then(res => this.setState({ bookingObj: res.data }))
       .catch(err => console.log(err));
     axios
-      .get(url+`myAlfred/api/chatRooms/userChatRoom/${id}`)
+      .get(`/myAlfred/api/chatRooms/userChatRoom/${id}`)
       .then(res => {
         this.setState({
           roomData: res.data,
@@ -151,7 +149,7 @@ class MessagesDetails extends React.Component {
           messages.push(data);
           axios
             .put(
-              url+`myAlfred/api/chatRooms/saveMessages/${id}`,
+              `/myAlfred/api/chatRooms/saveMessages/${id}`,
               { messages: oldMessages,
                 booking_id: this.props.bookingId
  }

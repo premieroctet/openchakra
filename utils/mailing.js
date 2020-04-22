@@ -1,7 +1,8 @@
-const moment=require('moment');
 const {SIB}=require('./sendInBlue');
 
 const {computeUrl } = require('../config/config');
+const {booking_datetime_str} = require('./dateutils');
+var fs = require('fs');
 
 // Templates
 
@@ -10,8 +11,7 @@ const {computeUrl } = require('../config/config');
 10  VERS ALFRED == Un virement vous a été envoyé
 11  VERS ALFRED == Laissez un commentaire
 12  VERS USER == Laissez un commentaire à votre Alfred
-16  VERS utilisateur == demande d'information pré-approuvé sur My Alfred
-17  VERS ALFRED == pré Réservation refusée
+17  VERS ALFRED == pré Réservation refusée ??? Idem annnulée (18)
 21  VERS ALFRED == N'oubliez pas de mettre à jour vos disponibilités 🗓
 */
 const CONFIRM_EMAIL=5;
@@ -21,7 +21,8 @@ const BOOKING_CANCELLED_BY_CLIENT=8;
 const NEW_MESSAGE_CLIENT=13;
 const BOOKING_CANCELLED_BY_ALFRED=14;
 const SHOP_DELETED=15;
-const BOOKING_REFUSED=18; // OK
+const ASKINFO_PREAPPROVED=16;
+const BOOKING_REFUSED_2_CLIENT=18; // OK
 const BOOKING_CONFIRMED=19;
 const SHOP_ONLINE=20; // OK
 const RESET_PASSWORD=22;
@@ -30,6 +31,17 @@ const BOOKING_INFOS=24;
 const BOOKING_DETAILS=26;
 const BOOKING_EXPIRED_2_CLIENT=30;
 const BOOKING_EXPIRED_2_ALFRED=31;
+
+const getHost = () => {
+  try {
+    var data = fs.readFileSync('host.txt', 'utf8');
+    return data;
+  }
+  catch (err) {
+      console.error(err);
+      return null;
+  }
+}
 
 
 
@@ -63,7 +75,7 @@ const sendBookingConfirmed = booking => {
      client_firstname: booking.user.firstname,
      alfred_firstname: booking.alfred.firstname,
      service_label: booking.service,
-     service_datetime: moment(booking.time_prestation).format('DD/MM/YYYY à HH:mm'),
+     service_datetime: booking_datetime_str(booking),
      total_cost: parseFloat(booking.amount).toFixed(2),
    }
  )
@@ -77,7 +89,7 @@ const sendBookingCancelledByAlfred = booking => {
      client_firstname: booking.user.firstname,
      alfred_firstname: booking.alfred.firstname,
      service_label: booking.service,
-     service_datetime: moment(booking.time_prestation).format('DD/MM/YYYY à HH:mm'),
+     service_datetime: booking_datetime_str(booking),
    }
  )
 }
@@ -90,19 +102,18 @@ const sendBookingCancelledByClient = booking => {
      client_firstname: booking.user.firstname,
      alfred_firstname: booking.alfred.firstname,
      service_label: booking.service,
-     service_datetime: moment(booking.time_prestation).format('DD/MM/YYYY à HH:mm'),
+     service_datetime: booking_datetime_str(booking),
    }
  )
 }
 
-// FIX: to implement
-const sendResetPassword = (user, req) => {
+const sendResetPassword = (user, token, req) => {
   SIB.sendMail(
     RESET_PASSWORD,
     user.email,
     {
       user_firstname: user.firstname,
-      link_initiatenewpassword: new URL('/validateAccount?user='+user._id, computeUrl(req)),
+      link_initiatenewpassword: new URL('/resetPassword?token='+token, computeUrl(req)),
     }
   )
 }
@@ -114,7 +125,7 @@ const sendBookingExpiredToAlfred = booking => {
       client_firstname: booking.user.firstname,
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
-      service_datetime: moment(booking.time_prestation).format('DD/MM/YYYY à HH:mm'),
+      service_datetime: booking_datetime_str(booking),
     }
   )
 }
@@ -127,7 +138,8 @@ const sendBookingExpiredToClient = booking => {
       client_firstname: booking.user.firstname,
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
-      service_datetime: moment(booking.time_prestation).format('DD/MM/YYYY à HH:mm'),
+      service_datetime: booking_datetime_str(booking),
+      link_booknewalfred: new URL('/search', getHost()),
     }
   )
 }
@@ -140,7 +152,7 @@ const sendBookingDetails = booking => {
        client_firstname: booking.user.firstname,
        alfred_firstname: booking.alfred.firstname,
        service_label: booking.service,
-       service_datetime: moment(booking.time_prestation).format('DD/MM/YYYY à HH:mm'),
+       service_datetime: booking_datetime_str(booking),
        total_cost: parseFloat(booking.amount).toFixed(2),
      }
    )
@@ -154,7 +166,7 @@ const sendBookingInfos = booking => {
        client_firstname: booking.user.firstname,
        alfred_firstname: booking.alfred.firstname,
        service_label: booking.service,
-       service_datetime: moment(booking.time_prestation).format('DD/MM/YYYY à HH:mm'),
+       service_datetime: booking_datetime_str(booking),
        total_cost: parseFloat(booking.amount).toFixed(2),
      }
    )
@@ -168,8 +180,9 @@ const sendNewBooking = booking => {
        client_firstname: booking.user.firstname,
        alfred_firstname: booking.alfred.firstname,
        service_label: booking.service,
-       service_datetime: moment(booking.time_prestation).format('DD/MM/YYYY à HH:mm'),
+       service_datetime: booking_datetime_str(booking),
        total_revenue: parseFloat(booking.amount-booking.fees).toFixed(2),
+       // FIX :: ajouter lien lnk_showreservation
      }
    )
 }
@@ -185,15 +198,15 @@ const sendShopOnline = (alfred, req) => {
    )
 }
 
-const sendBookingRefused = (booking, req) => {
+const sendBookingRefusedToClient = (booking, req) => {
    SIB.sendMail(
-     BOOKING_REFUSED,
+     BOOKING_REFUSED_2_CLIENT,
      booking.user.email,
      {
        client_firstname: booking.user.firstname,
        alfred_firstname: booking.alfred.firstname,
        service_label: booking.service,
-       service_datetime: moment(booking.time_prestation).format('DD/MM/YYYY à HH:mm'),
+       service_datetime: booking_datetime_str(booking),
        link_booknewalfred: new URL('/search', computeUrl(req)),
      }
    )
@@ -207,7 +220,7 @@ const sendAskingInfo = (booking, req) => {
        client_firstname: booking.user.firstname,
        alfred_firstname: booking.alfred.firstname,
        service_label: booking.service,
-       service_datetime: moment(booking.time_prestation).format('DD/MM/YYYY à HH:mm'),
+       service_datetime: booking_datetime_str(booking),
        total_revenue: parseFloat(booking.amount-booking.fees).toFixed(2),
      }
    )
@@ -241,8 +254,23 @@ const sendNewMessageToClient = (booking, chatroom_id, req) => {
    )
 }
 
+const sendAskInfoPreapproved = (booking, req) => {
+   SIB.sendMail(
+     ASKINFO_PREAPPROVED,
+     booking.user.email,
+     {
+       client_firstname: booking.user.firstname,
+       alfred_firstname: booking.alfred.firstname,
+       service_label: booking.service,
+       link_confirmbooking: new URL('/reservations/detailsReservation?id='+booking._id, computeUrl(req)),
+     }
+   )
+}
+
+
 module.exports={
   sendVerificationMail, sendShopDeleted, sendBookingConfirmed, sendBookingCancelledByAlfred, sendBookingCancelledByClient,
   sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingDetails, sendBookingInfos, sendNewBooking,
-  sendShopOnline,sendBookingRefused, sendAskingInfo, sendNewMessageToAlfred, sendNewMessageToClient
+  sendShopOnline,sendBookingRefusedToClient, sendAskingInfo, sendNewMessageToAlfred, sendNewMessageToClient,
+  sendAskInfoPreapproved, sendResetPassword
 }

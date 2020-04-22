@@ -8,11 +8,6 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import Footer from '../../hoc/Layout/Footer/Footer';
 
-
-
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         marginTop: 70,
@@ -82,7 +77,7 @@ class sponsors extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url+'myAlfred/api/users/current')
+            .get('/myAlfred/api/users/current')
             .then(res => {
                 this.setState({user: res.data});
 

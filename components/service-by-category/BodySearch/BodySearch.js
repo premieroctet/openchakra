@@ -5,9 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 import BodySearchCard from './BodySeachCard/BodySearchCard';
 import axios from "axios";
 
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
   container: {
     paddingRight: 15,
@@ -51,7 +48,7 @@ class bodySearch extends React.Component {
     let self = this;
 
     const id = self.props.category;
-    axios.get(`${url}myAlfred/api/service/all/${id}`)
+    axios.get(`/myAlfred/api/service/all/${id}`)
         .then(function (response) {
 
           let service = response.data;

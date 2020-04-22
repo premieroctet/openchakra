@@ -7,8 +7,6 @@ import axios from 'axios';
 import {Helmet} from 'react-helmet';
 
 const jwt = require('jsonwebtoken');
-const {config} = require('../config/config');
-const url = config.apiUrl;
 
 const becomeAlfredForm = () => {
     const [alfred, setAlfred] = useState(false);
@@ -20,7 +18,7 @@ const becomeAlfredForm = () => {
         } else {
             axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
             axios
-                .get(url+'myAlfred/api/users/current')
+                .get('/myAlfred/api/users/current')
                 .then(res => {
                     let user = res.data;
                     setAlfred(user.is_alfred);

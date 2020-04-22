@@ -11,9 +11,6 @@ import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import Link from "next/link";
 import Avatar from '@material-ui/core/Avatar';
-const {config} = require('../../config/config');
-const url = config.apiUrl;
-
 
 const jwt = require('jsonwebtoken');
 const styles = theme => ({
@@ -67,7 +64,7 @@ class home extends React.Component {
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get(url+"myAlfred/api/admin/users/all")
+        axios.get("/myAlfred/api/admin/users/all")
             .then((response) => { this.setState({user_count: response.data.length}) })
             .catch((error) => { console.log(error);
             if(error.response.status === 401 || error.response.status === 403) {
@@ -76,7 +73,7 @@ class home extends React.Component {
             }
         });
 
-        axios.get(url+"myAlfred/api/admin/users/alfred")
+        axios.get("/myAlfred/api/admin/users/alfred")
             .then((response) => { this.setState({alfred_count: response.data.length}) })
             .catch((error) => {
              console.log(error);

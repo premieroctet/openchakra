@@ -10,11 +10,6 @@ import { Typography } from '@material-ui/core';
 import Footer from '../hoc/Layout/Footer/Footer';
 import {toast} from 'react-toastify';
 
-
-
-const { config } = require('../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         flexGrow: 1,
@@ -40,7 +35,7 @@ class PaymentFailed extends React.Component {
         let bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
         axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
         axios
-            .get(url + "myAlfred/api/users/current")
+            .get("/myAlfred/api/users/current")
             .then(res => {
                 let user = res.data;
                 this.setState({ user: user });
@@ -86,38 +81,18 @@ class PaymentFailed extends React.Component {
                                     </Grid>
                                 </Grid>
                                 <br></br>
-
-
-
                                 <div>
-
                                     <Grid container>
-
                                         <Grid item xs={12} style={{textAlign:'center'}}>
                                             <p style={{fontSize:'30px'}}>Une erreur est survenue lors du paiement. </p>
-
                                             <Link href={'/search'}>
                                                 <Button variant={"contained"} color={"primary"} style={{color:'white'}}>Retour à l'accueil</Button>
                                             </Link>
-
-
                                             <br></br>
-
                                         </Grid>
-
                                     </Grid>
-
                                 </div>
-
-
-
                                 {/*cadre avec couleur et checkbox*/}
-
-
-
-
-
-
                             </Grid>
 
                             {/*Contenu à droite*/}

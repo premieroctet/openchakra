@@ -10,9 +10,8 @@ import axios from "axios";
 import moment from 'moment';
 import StarRatings from 'react-star-ratings';
 moment.locale('fr');
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
 const _ = require('lodash');
+
 const styles = theme => ({
   container: {
     paddingRight: 15,
@@ -97,12 +96,12 @@ class review extends React.Component {
     let self = this;
 
     const id_alfred = self.props.shop;
-    axios.get(`${url}myAlfred/api/shop/alfred/${id_alfred}`)
+    axios.get(`/myAlfred/api/shop/alfred/${id_alfred}`)
         .then(function (result) {
           let shop = result.data;
           let idAlfred = shop.alfred._id;
 
-          axios.get(`${url}myAlfred/api/reviews/alfred/${idAlfred}`)
+          axios.get(`/myAlfred/api/reviews/alfred/${idAlfred}`)
               .then(function (response) {
 
                 let reviews = response.data;

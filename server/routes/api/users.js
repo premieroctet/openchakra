@@ -13,6 +13,8 @@ const validateRegisterInput = require('../../validation/register');
 const validateSimpleRegisterInput = require('../../validation/simpleRegister');
 const validateLoginInput = require('../../validation/login');
 
+const {sendResetPassword} = require('../../../utils/mailing');
+
 const User = require('../../models/User');
 const ResetToken = require('../../models/ResetToken');
 const crypto = require('crypto');
@@ -20,8 +22,6 @@ const multer = require("multer");
 
 const {sendVerificationMail} = require('../../../utils/mailing');
 const {computeUrl } = require('../../../config/config');
-
-const {CONFIRM_EMAIL}=require('../../../utils/consts');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -629,13 +629,7 @@ router.post('/forgotPassword',(req,res) => {
                     user.update({resetToken: token._id}).catch(err => console.log(err));
                 });
 
-                sendMail(
-                    'no-reply@my-alfred.io', // sender address
-                    `${user.email}`, // list of receivers
-                    "Reset password", // Subject line
-                    `http://localhost:3000/resetPassword?token=${token}`, // plain text body
-                    '<a href='+computeUrl(req)+'resetPassword?token='+token+'>Cliquez içi</a>' // html body
-                );
+                sendResetPassword(user, token, req);
             }
         })
 });

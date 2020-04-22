@@ -7,8 +7,6 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
 const { inspect } = require('util');
 import useAutocomplete from '@material-ui/lab/useAutocomplete';
 
@@ -26,7 +24,7 @@ class SelectService extends React.Component {
 
   setServices(pattern) {
     pattern = pattern || '%20';
-    var kw_url = `${url}myAlfred/api/service/keyword/${pattern}`;
+    var kw_url = `/myAlfred/api/service/keyword/${pattern}`;
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     axios.get(kw_url)
       .then((response) => {
@@ -41,7 +39,7 @@ class SelectService extends React.Component {
               services.push(srv_opt);
               if (this.state.service==null && s.id==this.props.service) {
                 console.log("Found");
-                this.setState({service: srv_opt}); 
+                this.setState({service: srv_opt});
               }}
           });
         });

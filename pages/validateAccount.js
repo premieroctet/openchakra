@@ -9,8 +9,6 @@ import Router from 'next/router';
 import Layout from '../hoc/Layout/Layout';
 import axios from "axios";
 
-const { config } = require('../config/config');
-const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -51,8 +49,6 @@ class validateAccount extends React.Component {
     componentDidMount() {
         const user = this.props.id_user;
         this.setState({userID: user});
-
-
     }
 
     onSubmit = e => {
@@ -60,7 +56,7 @@ class validateAccount extends React.Component {
 
         const user = {id:this.state.userID};
         axios
-            .post(url+'myAlfred/api/users/validateAccount',user
+            .post('/myAlfred/api/users/validateAccount',user
             )
             .then(res => {
                 alert('Compte validé');

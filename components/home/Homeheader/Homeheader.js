@@ -11,8 +11,6 @@ import fr from 'date-fns/locale/fr';
 import moment from 'moment';
 import isEmpty from '../../../server/validation/is-empty';
 registerLocale('fr', fr);
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
 import './Homeheader.css'
 
 const styles = theme => ({

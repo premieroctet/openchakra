@@ -24,10 +24,6 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import HomeIcon from '@material-ui/icons/Home';
 
-
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -128,7 +124,7 @@ class all extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get(url+"myAlfred/api/admin/billing/all")
+        axios.get("/myAlfred/api/admin/billing/all")
             .then((response) => {
                 let billing = response.data;
                 this.setState({billing: billing})

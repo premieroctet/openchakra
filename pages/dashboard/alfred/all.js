@@ -22,11 +22,6 @@ import Link from "next/link";
 import HomeIcon from '@material-ui/icons/Home';
 import Typography from "@material-ui/core/Typography";
 
-
-
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -121,7 +116,7 @@ class all extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get(url+"myAlfred/api/admin/users/alfred")
+        axios.get("/myAlfred/api/admin/users/alfred")
             .then((response) => {
                 let alfred = response.data;
                 this.setState({alfred: alfred})

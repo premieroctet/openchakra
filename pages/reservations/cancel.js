@@ -11,11 +11,9 @@ import dynamic from "next/dynamic";
 import io from "socket.io-client";
 import Router from 'next/router';
 import Typography from "@material-ui/core/Typography";
-
-moment.locale("fr");
 const _ = require("lodash");
-const { config } = require("../../config/config");
-const url = config.apiUrl;
+moment.locale("fr");
+
 const MapComponent = dynamic(() => import("../../components/map"), {
   ssr: false
 });
@@ -117,9 +115,6 @@ class Cancel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: {},
-      shop: {},
-      booking_id: null,
       bookingObj: null,
       currUser: null
     };
@@ -131,12 +126,12 @@ class Cancel extends React.Component {
 
   componentDidMount() {
     const booking_id = this.props.booking_id;
-    this.setState({booking_id: booking_id});
-    axios.get(url + "myAlfred/api/users/current").then(res => {
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
+    axios.get("/myAlfred/api/users/current").then(res => {
       this.setState({ currUser: res.data });
     });
 
-    axios.get(url + 'myAlfred/api/booking/' + booking_id)
+    axios.get('/myAlfred/api/booking/' + booking_id)
         .then(res => this.setState({ bookingObj: res.data }))
         .catch();
 
@@ -147,7 +142,9 @@ class Cancel extends React.Component {
   }
 
   changeStatus(status) {
-    axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, {status: status})
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
+    axios.put('/myAlfred/api/booking/modifyBooking/' + this.props.booking_id, {
+      status: status, user:this.state.currUser._id})
         .then(res => {
           this.setState({bookingObj: res.data});
           setTimeout(()=> this.socket.emit("changeStatus", res.data),100)
@@ -158,7 +155,7 @@ class Cancel extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { user, currUser, bookingObj } = this.state;
+    const { currUser, bookingObj } = this.state;
 
     return (
       <Fragment>
@@ -231,7 +228,7 @@ class Cancel extends React.Component {
                           - Le paiement des frais d'annulation ou le blocage des périodes de la prestation sur votre calendrier
                           <br/>
                           <br/>
-                          Si vous avez accepté la réservation instantannée, vous n'aurez pas ces pénalités si vous avez annulé moins de 3 prestations dans l'année
+                          Si vous avez accepté la réservation instantanée, vous n'aurez pas ces pénalités si vous avez annulé moins de 3 prestations dans l'année
                         </Typography>
                         <Grid container style={{ marginTop: 20, marginBottom: 20}}>
                             <hr style={{background: "lightgray", height: 2, width: "100%", border: "none"}} />
@@ -242,7 +239,7 @@ class Cancel extends React.Component {
 
                   <Grid style={{ float: "left" }} item xs={6}>
                     {" "}
-                    <Link href={{ pathname: 'detailsReservation', query:  { id: this.state.booking_id } }}>
+                    <Link href={{ pathname: 'detailsReservation', query:  { id: this.props.booking_id } }}>
                       <Button
                         color={"primary"}
                         variant={"contained"}
@@ -264,7 +261,7 @@ class Cancel extends React.Component {
                   </Grid>
                   <Grid style={{ float: "right" }} item xs={6}>
                     {" "}
-                    <Link href={{ pathname: 'detailsReservation', query:  { id: this.state.booking_id } }}>
+                    <Link href={{ pathname: 'detailsReservation', query:  { id: this.props.booking_id } }}>
                       <Button
                         color={"secondary"}
                         variant={"contained"}

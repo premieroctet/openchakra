@@ -1,3 +1,4 @@
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import Card from '@material-ui/core/Card';
@@ -22,11 +23,6 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import HomeIcon from '@material-ui/icons/Home';
-
-
-
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
 
 const styles = theme => ({
     signupContainer: {
@@ -122,7 +118,7 @@ class all extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get(url+"myAlfred/api/admin/calculating/all")
+        axios.get("/myAlfred/api/admin/calculating/all")
             .then((response) => {
                 let calculating = response.data;
                 this.setState({calculating: calculating})

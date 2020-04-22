@@ -48,6 +48,8 @@ const app = express();
 const server = require('http').Server(app);
 const SocketIo = require("socket.io");
 
+// Avoid deprecation warning
+mongoose.set('useFindAndModify', false);
 
 nextApp.prepare().then(() => {
 
@@ -69,7 +71,7 @@ const SERVER_PROD=true;
 
 // Connect to MongoDB
     mongoose.connect(config.databaseUrl,{useNewUrlParser: true})
-        .then(() => console.log('MongoDB connected'))
+        .then(() => console.log(`MongoDB connected to ${config.databaseUrl}`))
         .catch(err => console.log(err));
 
 // Passport middleware

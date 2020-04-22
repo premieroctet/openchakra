@@ -10,14 +10,9 @@ import { withStyles } from "@material-ui/core/styles";
 import {registerLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
 import io from "socket.io-client";
-
-registerLocale('fr', fr);
-
-
-moment.locale("fr");
 const _ = require("lodash");
-const { config } = require("../../config/config");
-const url = config.apiUrl;
+registerLocale('fr', fr);
+moment.locale("fr");
 
 const styles = theme => ({
   bigContainer: {
@@ -132,10 +127,10 @@ class Reserve extends React.Component {
     this.setState({booking_id: booking_id});
 
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-    axios.get(url + "myAlfred/api/users/current").then(res => {
+    axios.get("/myAlfred/api/users/current").then(res => {
       this.setState({ currentUser: res.data });
     });
-    axios.get(url + 'myAlfred/api/booking/' + booking_id)
+    axios.get('/myAlfred/api/booking/' + booking_id)
         .then(res => {
           this.setState({ bookingObj: res.data })
 
@@ -168,7 +163,7 @@ class Reserve extends React.Component {
     }*/
 
 
-    axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
+    axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
             .then(res => {
               this.setState({bookingObj: res.data});
               setTimeout(()=>this.socket.emit("changeStatus", res.data),100)

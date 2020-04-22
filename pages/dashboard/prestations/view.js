@@ -19,8 +19,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Chip from "@material-ui/core/Chip";
 import Link from "next/link";
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
+
 const styles = {
     loginContainer: {
         alignItems: 'center',
@@ -111,7 +110,7 @@ class view extends React.Component {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.prestation_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`${url}myAlfred/api/admin/prestation/all/${id}`)
+        axios.get(`/myAlfred/api/admin/prestation/all/${id}`)
             .then(response => {
                 let prestation = response.data;
                 this.setState({prestation: prestation, current_service: prestation.service,
@@ -146,7 +145,7 @@ class view extends React.Component {
                 }
             });
 
-        axios.get(url+"myAlfred/api/admin/category/all")
+        axios.get("/myAlfred/api/admin/category/all")
             .then((response) => {
                 let category = response.data;
                 this.setState({all_category: category})
@@ -154,7 +153,7 @@ class view extends React.Component {
             console.log(error)
         });
 
-        axios.get(url+"myAlfred/api/admin/service/all")
+        axios.get("/myAlfred/api/admin/service/all")
             .then((response) => {
                 let service = response.data;
                 this.setState({all_service: service})
@@ -162,7 +161,7 @@ class view extends React.Component {
             console.log(error)
         });
 
-        axios.get(url+"myAlfred/api/admin/billing/all")
+        axios.get("/myAlfred/api/admin/billing/all")
             .then((response) => {
                 let billing = response.data;
                 this.setState({all_billing: billing})
@@ -170,7 +169,7 @@ class view extends React.Component {
             console.log(error)
         });
 
-        axios.get(url+"myAlfred/api/admin/calculating/all")
+        axios.get("/myAlfred/api/admin/calculating/all")
             .then((response) => {
                 let calculating = response.data;
                 this.setState({all_calculating: calculating})
@@ -178,7 +177,7 @@ class view extends React.Component {
             console.log(error)
         });
 
-        axios.get(url+"myAlfred/api/admin/job/all")
+        axios.get("/myAlfred/api/admin/job/all")
             .then((response) => {
                 let job = response.data;
                 this.setState({all_job: job})
@@ -186,7 +185,7 @@ class view extends React.Component {
             console.log(error)
         });
 
-        axios.get(url+"myAlfred/api/admin/searchFilter/all")
+        axios.get("/myAlfred/api/admin/searchFilter/all")
             .then((response) => {
                 let search_filter = response.data;
                 this.setState({all_search_filter: search_filter})
@@ -194,7 +193,7 @@ class view extends React.Component {
             console.log(error)
         });
 
-        axios.get(url+"myAlfred/api/admin/filterPresentation/all")
+        axios.get("/myAlfred/api/admin/filterPresentation/all")
             .then((response) => {
                 let filter_presentation = response.data;
                 this.setState({all_filter_presentation: filter_presentation})
@@ -202,7 +201,7 @@ class view extends React.Component {
             console.log(error)
         });
 
-        axios.get(url+"myAlfred/api/admin/tags/all")
+        axios.get("/myAlfred/api/admin/tags/all")
             .then((response) => {
                 let tags = response.data;
                 this.setState({all_tags: tags})
@@ -275,7 +274,7 @@ class view extends React.Component {
         const filter_presentation = this.state.filter_presentation;
         const { label,price,description } = this.state.prestation;
         const id = this.props.prestation_id;
-        axios.put(`${url}myAlfred/api/admin/prestation/all/${id}`,{label,price,billing,category,service,search_filter,filter_presentation,
+        axios.put(`/myAlfred/api/admin/prestation/all/${id}`,{label,price,billing,category,service,search_filter,filter_presentation,
                                                                                 calculating,job,description,tags})
             .then(res => {
 
@@ -291,7 +290,7 @@ class view extends React.Component {
 
     handleClick() {
         const id = this.props.prestation_id;
-        axios.delete(`${url}myAlfred/api/admin/prestation/all/${id}`)
+        axios.delete(`/myAlfred/api/admin/prestation/all/${id}`)
             .then(res => {
 
                 alert('Prestation supprimée avec succès');

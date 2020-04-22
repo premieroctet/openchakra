@@ -13,8 +13,6 @@ import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 
-const { config } = require('../config/config');
-const url = config.apiUrl;
 const styles = {
     loginContainer: {
         alignItems: 'center',
@@ -59,10 +57,8 @@ class forgotPassword extends React.Component {
 
         };
 
-        axios.post(url+'myAlfred/api/users/forgotPassword',user)
+        axios.post('/myAlfred/api/users/forgotPassword',user)
             .then(res => {
-                cancel();
-
                 Router.push({pathname:'/'})
             })
             .catch(err => {

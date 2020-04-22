@@ -20,9 +20,6 @@ import moment from 'moment';
 import Link from 'next/link';
 import axios from 'axios';
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 moment.locale('fr');
 
 // FIX : Commentaires : faire un lien vers le profil
@@ -59,7 +56,7 @@ class About extends React.Component{
 
   isAlfred(){
     if(this.state.isAlfred){
-      axios.get(`${url}myAlfred/api/shop/alfred/${this.state.userId}`).then( response =>{
+      axios.get(`/myAlfred/api/shop/alfred/${this.state.userId}`).then( response =>{
         let shop = response.data;
         this.setState({
           creationShop : shop.creation_date

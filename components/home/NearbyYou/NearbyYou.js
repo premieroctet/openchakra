@@ -5,8 +5,6 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import NearbyYouCard from './NearbyYou/NearbyYouCard';
 import axios from 'axios';
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
 
 const styles = theme => ({
   container: {
@@ -70,7 +68,7 @@ class nearbyYou extends React.Component{
   }
 
   componentDidMount() {
-      axios.get(url+'myAlfred/api/serviceUser/home')
+      axios.get('/myAlfred/api/serviceUser/home')
           .then(response => {
             let service = response.data;
             this.setState({service:service})

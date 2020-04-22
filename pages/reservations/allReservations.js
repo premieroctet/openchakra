@@ -12,8 +12,6 @@ import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import styles from './allReservations/allReservationsStyle'
 import Button from '@material-ui/core/Button';
 
-const { config } = require("../../config/config");
-const url = config.apiUrl;
 moment.locale("fr");
 
 //TODO RASSEMBLER ALLRESERVATIONS + COMINGRESERVATIONS + FINISHEDRESERVATIONS
@@ -35,7 +33,7 @@ class AllReservations extends React.Component {
         axios.defaults.headers.common["Authorization"] = localStorage.getItem(
             "token"
         );
-        axios.get(url + "myAlfred/api/users/current").then(res => {
+        axios.get("/myAlfred/api/users/current").then(res => {
             let result = res.data
             this.setState({
               userInfo: result,
@@ -53,11 +51,11 @@ class AllReservations extends React.Component {
             }
 
 
-            axios.get(url + "myAlfred/api/booking/alfredBooking").then(res => {
+            axios.get("/myAlfred/api/booking/alfredBooking").then(res => {
                 this.setState({ alfredReservations: res.data });
             });
 
-            axios.get(url + "myAlfred/api/booking/userBooking").then(res => {
+            axios.get("/myAlfred/api/booking/userBooking").then(res => {
                 this.setState({ userReservations: res.data });
             });
         });

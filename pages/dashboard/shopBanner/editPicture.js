@@ -7,15 +7,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
-
-
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
-
-
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
 
 const styles = {
     loginContainer: {
@@ -68,7 +62,7 @@ class editPicture extends React.Component {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.banner_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`${url}myAlfred/api/admin/shopBanner/all/${id}`)
+        axios.get(`/myAlfred/api/admin/shopBanner/all/${id}`)
             .then(response => {
                 let banner = response.data;
                 this.setState({banner: banner});
@@ -96,7 +90,7 @@ class editPicture extends React.Component {
         const formData = new FormData();
         formData.append('picture',this.state.picture);
         const id = this.props.banner_id;
-        axios.post(`${url}myAlfred/api/admin/shopBanner/editPicture/${id}`,formData)
+        axios.post(`/myAlfred/api/admin/shopBanner/editPicture/${id}`,formData)
             .then(res => {
 
                 alert('Photo modifiée avec succès');

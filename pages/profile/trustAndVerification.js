@@ -32,8 +32,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 moment.locale('fr');
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
 const FilledButton = styled.div`
     display: inline-block;
     height: 25px;
@@ -197,7 +195,7 @@ class trustAndVerification extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url+'myAlfred/api/users/current')
+            .get('/myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
                 this.setState({user:user});
@@ -214,7 +212,7 @@ class trustAndVerification extends React.Component {
                 }
                 if(user.is_alfred) {
                     this.setState({alfred: true});
-                    axios.get(url+'myAlfred/api/shop/currentAlfred')
+                    axios.get('/myAlfred/api/shop/currentAlfred')
                         .then(response => {
                             let result = response.data;
                             this.setState({professional: result.is_professional,particular:result.is_particular,company: result.company});
@@ -311,7 +309,7 @@ class trustAndVerification extends React.Component {
                 'content-type': 'multipart/form-data'
             }
         };
-        axios.post(url+"myAlfred/api/users/profile/idCard",formData,config)
+        axios.post("/myAlfred/api/users/profile/idCard",formData,config)
             .then((response) => {
                 toast.info('Carte d\'identité ajoutée');
                 this.componentDidMount();
@@ -328,7 +326,7 @@ class trustAndVerification extends React.Component {
                 'content-type': 'multipart/form-data'
             }
         };
-        axios.post(url+"myAlfred/api/users/profile/idCard/addVerso",formData,config)
+        axios.post("/myAlfred/api/users/profile/idCard/addVerso",formData,config)
             .then((response) => {
                 toast.info('Carte d\'identité ajoutée');
 
@@ -340,7 +338,7 @@ class trustAndVerification extends React.Component {
     };
 
     sendEmail = () =>{
-        axios.get(url+'myAlfred/api/users/sendMailVerification')
+        axios.get('/myAlfred/api/users/sendMailVerification')
             .then(() => {
                 toast.info('Email envoyé');
             })
@@ -362,7 +360,7 @@ class trustAndVerification extends React.Component {
             naf_ape: this.state.naf_ape,
         };
         axios
-            .put(url+'myAlfred/api/shop/editStatus', newStatus)
+            .put('/myAlfred/api/shop/editStatus', newStatus)
             .then(res => {
                 toast.info('Statut modifié');
                 let status;
@@ -372,7 +370,7 @@ class trustAndVerification extends React.Component {
                     status = 'Particulier'
                 }
                 const data = {status:status};
-                axios.put(url+'myAlfred/api/serviceUser/editStatus',data)
+                axios.put('/myAlfred/api/serviceUser/editStatus',data)
                     .then()
                     .catch()
 
@@ -382,7 +380,7 @@ class trustAndVerification extends React.Component {
 
     deleteRecto() {
         this.setState({open:false});
-        axios.delete(url+'myAlfred/api/users/profile/idCard/recto')
+        axios.delete('/myAlfred/api/users/profile/idCard/recto')
             .then(() => {
                 toast.error('Recto supprimé');
                 setTimeout(() => window.location.reload(), 2000);

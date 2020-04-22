@@ -250,7 +250,7 @@ class UserServicesPreview extends React.Component {
 
   checkBook = () => {
     var errors={}
-    if (!this.state.total) {
+    if (Object.values(this.state.count).every( v => v==0)) {
       errors['prestations']='Sélectionnez au moins une prestation';
     }
     if (this.state.totalPrestations<this.state.serviceUser.minimum_basket) {

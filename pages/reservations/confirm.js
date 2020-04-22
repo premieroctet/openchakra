@@ -15,14 +15,9 @@ import io from "socket.io-client";
 import About from '../../components/About/About';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
-
 registerLocale('fr', fr);
-
-
 moment.locale("fr");
 const _ = require("lodash");
-const { config } = require("../../config/config");
-const url = config.apiUrl;
 
 const styles = theme => ({
   bigContainer: {
@@ -71,11 +66,11 @@ class Confirm extends React.Component {
 
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-    axios.get(url + "myAlfred/api/users/current").then(res => {
+    axios.get("/myAlfred/api/users/current").then(res => {
       this.setState({ currentUser: res.data });
     });
 
-    axios.get(url + 'myAlfred/api/booking/' + booking_id)
+    axios.get('/myAlfred/api/booking/' + booking_id)
         .then(res => {
           this.setState({ bookingObj: res.data })
 
@@ -125,7 +120,7 @@ class Confirm extends React.Component {
 
 
     if (typeof this.state.bookingObj.end_date !== 'undefined' && typeof this.state.bookingObj.end_time !== 'undefined') {
-      axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, { status: 'Confirmée' })
+      axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, { status: 'Confirmée' })
 
           .then(res => {
           this.setState({bookingObj: res.data})
@@ -134,7 +129,7 @@ class Confirm extends React.Component {
         .catch(err => console.log(err))
       return null;
     } else {
-      axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
+      axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
           .then(res => {
             this.setState({bookingObj: res.data})
             setTimeout(()=>this.socket.emit("changeStatus", res.data),100)

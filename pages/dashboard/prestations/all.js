@@ -25,10 +25,6 @@ import LastPageIcon from "@material-ui/icons/LastPage";
 import PropTypes from "prop-types";
 import HomeIcon from '@material-ui/icons/Home';
 
-
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -122,7 +118,7 @@ class all extends React.Component {
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(url+"myAlfred/api/admin/prestation/all")
+        axios.get("/myAlfred/api/admin/prestation/all")
             .then((response) => {
                 let prestation = response.data;
                 console.log(JSON.stringify(prestation.filter(p => p.private_alfred!=null), null, 2));

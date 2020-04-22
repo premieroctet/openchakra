@@ -10,11 +10,6 @@ import { Typography } from '@material-ui/core';
 import Footer from '../hoc/Layout/Footer/Footer';
 import {toast} from 'react-toastify';
 
-
-
-const { config } = require('../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         flexGrow: 1,
@@ -40,7 +35,7 @@ class PaymentSuccessCreate extends React.Component {
         let bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
         axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
         axios
-            .get(url + "myAlfred/api/users/current")
+            .get("/myAlfred/api/users/current")
             .then(res => {
                 let user = res.data;
                 this.setState({ user: user });
@@ -51,7 +46,7 @@ class PaymentSuccessCreate extends React.Component {
                     Router.push({ pathname: "/login" });
                 }
             });
-        axios.get(url+'myAlfred/api/payment/transactions')
+        axios.get('/myAlfred/api/payment/transactions')
             .then(result => {
                 let transaction = result.data;
                 if(transaction.Status === 'FAILED'){
@@ -71,7 +66,7 @@ class PaymentSuccessCreate extends React.Component {
                         grandTotal: bookingObj.amount
                     }, () => {
                         axios
-                            .post(url + "myAlfred/api/chatRooms/addAndConnect", {
+                            .post("/myAlfred/api/chatRooms/addAndConnect", {
                                 emitter: localStorage.getItem("emitter"),
                                 recipient: localStorage.getItem("recipient")
                             })
@@ -80,11 +75,11 @@ class PaymentSuccessCreate extends React.Component {
                                 booking.chatroom = res.data._id;
 
                                 axios
-                                    .post(url + "myAlfred/api/booking/add", booking)
+                                    .post("/myAlfred/api/booking/add", booking)
                                     .then(result => {
                                         axios
                                             .put(
-                                                url + "myAlfred/api/chatRooms/addBookingId/" + booking.chatroom,
+                                                "/myAlfred/api/chatRooms/addBookingId/" + booking.chatroom,
                                                 { booking: result.data._id }
                                             )
                                             .then(() => {

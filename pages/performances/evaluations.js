@@ -17,9 +17,6 @@ import Commentary from '../../components/Commentary/Commentary';
 
 moment.locale('fr');
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         marginTop: 75,
@@ -118,7 +115,7 @@ class Evaluations extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get(url+'myAlfred/api/users/current').then(res => {
+        axios.get('/myAlfred/api/users/current').then(res => {
             let user = res.data;
             if(user) {
                 this.setState({
@@ -129,7 +126,7 @@ class Evaluations extends React.Component {
             console.log(error);
         });
 
-        axios.get(url+'myAlfred/api/performances/evaluations/allReviews')
+        axios.get('/myAlfred/api/performances/evaluations/allReviews')
             .then(res => {
                 this.setState({reviews:res.data})
             })

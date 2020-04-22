@@ -9,10 +9,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import Footer from '../hoc/Layout/Footer/Footer';
 
-
-const { config } = require('../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         flexGrow: 1,
@@ -45,7 +41,7 @@ class PaymentDirectSuccessCreate extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url + "myAlfred/api/users/current")
+            .get("/myAlfred/api/users/current")
             .then(res => {
                 let user = res.data;
                 this.setState({ user: user });
@@ -73,7 +69,7 @@ class PaymentDirectSuccessCreate extends React.Component {
             grandTotal: bookingObj.amount
         }, () => {
             axios
-                .post(url + "myAlfred/api/chatRooms/addAndConnect", {
+                .post("/myAlfred/api/chatRooms/addAndConnect", {
                     emitter: localStorage.getItem("emitter"),
                     recipient: localStorage.getItem("recipient")
                 })
@@ -83,11 +79,11 @@ class PaymentDirectSuccessCreate extends React.Component {
                     booking.chatroom = res.data._id;
 
                     axios
-                        .post(url + "myAlfred/api/booking/add", booking)
+                        .post("/myAlfred/api/booking/add", booking)
                         .then(result => {
                             axios
                                 .put(
-                                    url + "myAlfred/api/chatRooms/addBookingId/" + booking.chatroom,
+                                    "/myAlfred/api/chatRooms/addBookingId/" + booking.chatroom,
                                     { booking: result.data._id }
                                 )
                                 .then(() => {
@@ -129,7 +125,7 @@ class PaymentDirectSuccessCreate extends React.Component {
                                 <Grid container>
 
                                     <Grid item xs={12} style={{marginTop:50, marginBottom:30}}>
-                                        <h2 style={{fontSize: '2.5rem',color: 'rgba(84,89,95,0.95)',letterSpacing: -1, fontWeight: '100', textAlign:'center'}}>Résevation enregistrée !</h2>
+                                        <h2 style={{fontSize: '2.5rem',color: 'rgba(84,89,95,0.95)',letterSpacing: -1, fontWeight: '100', textAlign:'center'}}>Réservation enregistrée !</h2>
 
                                     </Grid>
                                 </Grid>

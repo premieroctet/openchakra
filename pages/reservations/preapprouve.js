@@ -11,14 +11,9 @@ import Footer from "../../hoc/Layout/Footer/Footer";
 import DatePicker, {registerLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
 import io from "socket.io-client";
-
 registerLocale('fr', fr);
-
-
 moment.locale("fr");
 const _ = require("lodash");
-const { config } = require("../../config/config");
-const url = config.apiUrl;
 
 const styles = theme => ({
   bigContainer: {
@@ -139,7 +134,7 @@ class Preapprouve extends React.Component {
     this.setState({booking_id: booking_id});
 
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-    axios.get(url + 'myAlfred/api/booking/' + booking_id)
+    axios.get('/myAlfred/api/booking/' + booking_id)
         .then(res => {
           this.setState({ bookingObj: res.data })
 
@@ -188,18 +183,15 @@ class Preapprouve extends React.Component {
 
     const dateObj = { end_date: endDate, end_time: endHour, status: 'Pré-approuvée' };
 
-
-    if (typeof this.state.bookingObj.end_date !== 'undefined' && typeof this.state.bookingObj.end_time !== 'undefined') {
-      return null;
-    } else {
-      axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
+    console.log("dateObj:"+JSON.stringify(dateObj));
+ 
+    axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
 
           .then(res => {
             this.setState({bookingObj: res.data});
             setTimeout(()=>this.socket.emit("changeStatus", res.data),100)
           })
           .catch()
-    }
   }
 
   render() {

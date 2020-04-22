@@ -7,9 +7,6 @@ import FeelingGoodCard from './feelingGoodCard/feelingGoodCard';
 import axios from 'axios';
 import Link from 'next/link';
 
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
   container: {
     margin: 'auto',
@@ -69,11 +66,11 @@ class FeelingGood extends React.Component{
   }
 
   componentDidMount() {
-    axios.get(url + 'myAlfred/api/tags/services/section9')
+    axios.get('/myAlfred/api/tags/services/section9')
         .then(response => {
               let data = response.data;
               this.setState({tags:data});
-              axios.get(url + 'myAlfred/api/service/all/tags/' + data._id)
+              axios.get('/myAlfred/api/service/all/tags/' + data._id)
                   .then(res => {
                     let service = res.data;
 

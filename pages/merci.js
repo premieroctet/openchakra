@@ -9,10 +9,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import Footer from '../hoc/Layout/Footer/Footer';
 
-
-const { config } = require('../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         flexGrow: 1,

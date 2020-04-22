@@ -53,8 +53,6 @@ const {isIntervalAvailable} = require('../utils/dateutils');
 const geolib = require('geolib');
 const _ = require('lodash');
 
-const { config } = require('../config/config');
-const url = config.apiUrl;
 moment.locale('fr');
 const styles = theme => ({
     bigContainer: {
@@ -194,7 +192,7 @@ class SearchPage extends React.Component {
             var catCount={}
             res.data.forEach( c => catCount[c._id]=8);
             st['catCount']=catCount;
-             axios.get(url+'myAlfred/api/shop/all')
+             axios.get('/myAlfred/api/shop/all')
                .then( res => {
                   st['shops']=res.data;
                   axios.get('/myAlfred/api/users/current')

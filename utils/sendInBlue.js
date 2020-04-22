@@ -38,7 +38,6 @@ class SIB_V3 {
         console.error(err);
       });
     }
-
 }
 
 const SIB=new SIB_V3();

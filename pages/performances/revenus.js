@@ -24,9 +24,6 @@ const Chart = loadable(() => import('react-apexcharts'));
 
 moment.locale('fr');
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         marginTop: 75,
@@ -214,7 +211,7 @@ class revenus extends React.Component {
         });
         const newRevenus = [];
         const year = new Date().getFullYear();
-        axios.get(url+'myAlfred/api/performances/incomes/'+year)
+        axios.get('/myAlfred/api/performances/incomes/'+year)
             .then(res => {
                 let bookings = res.data;
                 this.setState({bookings:bookings});
@@ -278,13 +275,13 @@ class revenus extends React.Component {
                     this.state.novemberAmount+this.state.decemberAmount});
             })
             .catch(err => console.log(err))
-        axios.get(url+'myAlfred/api/performances/incomes/totalComing/'+year)
+        axios.get('/myAlfred/api/performances/incomes/totalComing/'+year)
             .then(res => {
                 this.setState({totalComing: parseInt(res.data),totalYear:parseInt(res.data)+this.state.totalPaid});
             })
             .catch(err => console.log(err))
 
-        axios.get(url+'myAlfred/api/users/current').then(res => {
+        axios.get('/myAlfred/api/users/current').then(res => {
             let user = res.data;
             if(user) {
                 this.setState({
@@ -326,7 +323,7 @@ class revenus extends React.Component {
             totalComing: 0,});
         const newRevenus = [];
         await this.setState({year:e.target.value});
-        axios.get(url+'myAlfred/api/performances/incomes/'+this.state.year)
+        axios.get('/myAlfred/api/performances/incomes/'+this.state.year)
             .then(res => {
                 let bookings = res.data;
                 this.setState({bookings:bookings});
@@ -391,7 +388,7 @@ class revenus extends React.Component {
             })
             .catch(err => console.log(err))
 
-        axios.get(url+'myAlfred/api/performances/incomes/totalComing/'+this.state.year)
+        axios.get('/myAlfred/api/performances/incomes/totalComing/'+this.state.year)
             .then(res => {
                 this.setState({totalComing: parseFloat(res.data),totalYear:parseFloat(res.data)+this.state.totalPaid});
             })

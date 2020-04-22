@@ -10,11 +10,6 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Link from 'next/link';
 import Footer from '../hoc/Layout/Footer/Footer';
 
-
-
-
-const { config } = require('../config/config');
-const url = config.apiUrl;
 const styles = theme => ({
     hideed:{
         [theme.breakpoints.down('sm')]: {
