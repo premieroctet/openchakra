@@ -18,7 +18,7 @@ class BookingDetail extends React.Component{
           { Object.keys(prestations).map( k => {
             return count[k] ===0 ? null: (
               <Grid className={classes.flexContent}>
-                <Grid>
+                <Grid className={classes.labelContent}>
                   <p>{k}</p>
                 </Grid>
                 <Grid>
@@ -30,7 +30,7 @@ class BookingDetail extends React.Component{
           { /* Start travel tax */ }
           { travel_tax ?
             <Grid className={classes.flexContent}>
-              <Grid>
+              <Grid className={classes.labelContent}>
                 <p>Frais de déplacement</p>
               </Grid>
               <Grid>
@@ -41,7 +41,7 @@ class BookingDetail extends React.Component{
           { /* Start pick tax */ }
           { pick_tax  ?
             <Grid className={classes.flexContent}>
-              <Grid>
+              <Grid className={classes.labelContent}>
                 <p>Frais de livraison/enlèvement</p>
               </Grid>
               <Grid>
@@ -52,7 +52,7 @@ class BookingDetail extends React.Component{
           { /* Start commission */ }
           {client_fee && client_fee !== 0 ?
             <Grid className={classes.flexContent}>
-              <Grid>
+              <Grid className={classes.labelContent}>
                 <p>Frais de service</p>
               </Grid>
               <Grid>
@@ -62,7 +62,7 @@ class BookingDetail extends React.Component{
           }
           {alfred_fee ?
             <Grid className={classes.flexContent}>
-              <Grid>
+              <Grid className={classes.labelContent}>
                 <p>Frais de service</p>
               </Grid>
               <Grid>

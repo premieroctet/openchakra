@@ -609,14 +609,17 @@ class DetailsReservation extends React.Component {
                                             ? null
                                             : bookingObj.prestations.map(prestation => {
                                               return (
-                                                <Typography
-                                                  style={{
-                                                    fontSize: "1.1rem",
-                                                    textAlign: "center"
-                                                  }}
-                                                >
-                                                  {prestation.value} x
-                                                </Typography>
+                                                <Grid style={{display: 'flex'}}>
+                                                  <Grid>
+                                                    <Typography style={{fontSize: "1.1rem"}}>
+                                                      {prestation.value}
+                                                    </Typography>
+                                                  </Grid>
+                                                  <Grid style={{fontSize: "1.1rem"}}>
+                                                    <Typography> x </Typography>
+                                                  </Grid>
+                                                </Grid>
+
                                               );
                                             })}
                                         </Grid>
@@ -660,7 +663,7 @@ class DetailsReservation extends React.Component {
                                             query: { id: this.state.booking_id }
                                           }}
                                         >
-                                          <Button variant={"contained"} className={classes.buttonConfirm}>Confirmer la réservation</Button>
+                                          <Button variant={"contained"} className={classes.buttonConfirm}>Confirmer</Button>
                                         </Link>
                                       </Grid>
                                       <Grid>

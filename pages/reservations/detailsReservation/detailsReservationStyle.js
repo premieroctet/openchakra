@@ -189,11 +189,12 @@ export default theme => ({
   mainContainerStateResa:{
     display: 'flex',
     alignItems:'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    width:'50%'
 
   },
   marginLeftLabel:{
       marginLeft: 30
-    
+
   }
 })
