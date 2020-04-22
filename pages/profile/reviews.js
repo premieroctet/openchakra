@@ -6,119 +6,10 @@ import moment from 'moment';
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import Typography from "@material-ui/core/Typography";
-import StarRatings from 'react-star-ratings';
 import {Helmet} from 'react-helmet';
 import Commentary from '../../components/Commentary/Commentary';
-import Avatar from '@material-ui/core/Avatar';
-import Notes from '../../components/Notes/Notes';
-import Skills from '../../components/Skills/Skills';
-import TextField from '@material-ui/core/TextField';
 moment.locale('fr');
-
-const styles = theme => ({
-    bigContainer: {
-        marginTop: 70,
-        flexGrow: 1,
-    },
-    hidesm: {
-        minWidth: '271px',
-        [theme.breakpoints.down('sm')]: {
-            display:'none'
-        }
-    }
-
-    ,hidelg: {
-        [theme.breakpoints.up('md')]: {
-            display:'none',
-        }
-
-    },
-    trigger:{
-        [theme.breakpoints.down('sm')]: {
-            marginTop: -10,
-            width: '100%',
-            marginLeft:'0px',
-            height:'30px',
-            backgroundColor:'#2FBCD3',
-
-            display:'block',
-            transition: 'display 0.7s',
-            borderRadius:'5px',
-            '&:focus': {
-                display:'none',
-                transition: 'display 0.7s',
-
-            }
-        }
-
-    },
-    toggle: {
-        [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
-            transition: 'margin-left 0.7s',
-
-            '&:hover': {
-                marginLeft:'0px',
-                transition: 'margin-left 0.7s',
-                boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-
-            }
-        }
-    },
-    tabweb:{
-        width:'100%',
-        position:'sticky',
-        top:'64px',
-        fontSize:15,
-        backgroundColor:'white',
-        zIndex:'20',
-        [theme.breakpoints.down('sm')]: {
-            display:'none'}},
-    trait:{
-        width: '100%',
-        height: 4,
-        backgroundColor: 'rgb(47, 188, 211)',
-        borderColor: 'transparent',
-        [theme.breakpoints.down('sm')]: {
-        },
-    },
-    tabmobile: {
-        fontSize: "10px",
-        fontWeight: "300",
-        height: 90,
-        backgroundColor: "white",
-        position: "sticky",
-        top: 55,
-        zIndex: 20,
-        [theme.breakpoints.up("md")]: {
-            display: "none"
-        },
-
-    },
-
-    trait1:{
-        width: '100%',
-        height: 4,
-        backgroundColor: 'lightgray',
-        borderColor: 'transparent'
-    },
-    trait2:{
-        width: '100%',
-        height: 4,
-        backgroundColor: 'lightgray',
-        borderColor: 'transparent',
-        [theme.breakpoints.down('sm')]: {
-        },
-    },
-    trait3:{
-        width: '100%',
-        height: 4,
-        backgroundColor: 'rgb(47, 188, 211)',
-        borderColor: 'transparent'
-    },
-
-
-});
+import styles from './reviews/reviewsStyle'
 
 class reviews extends React.Component {
     constructor(props) {
@@ -188,9 +79,9 @@ class reviews extends React.Component {
                 </Helmet>
                  <Layout>
                     <Grid container className={classes.bigContainer}>
-                        <Grid className={classes.toggle}  item xs={3} style={{}}>
+                        <Grid className={classes.toggle}  item xs={3}>
 
-                            <div className={classes.trigger}></div>
+                            <div className={classes.trigger}/>
                             <Grid container style={{justifyContent: 'center',}}>
                                 <Grid item style={{marginTop: 30,width: 281}} className={classes.hidesm}>
                                     <Link href={'/profile/editProfile'}>
@@ -303,7 +194,7 @@ class reviews extends React.Component {
                         </Grid>
 
 
-                        <Grid item xs={9} style={{minHeight: '530px'}}>
+                        <Grid item lg={9} className={classes.containerCommentary}>
                             <Grid container>
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Commentaires</h1>
                             </Grid>

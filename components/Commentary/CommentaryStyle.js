@@ -45,4 +45,57 @@ export default theme => ({
   badge: {
     color: 'white'
   },
+  containerAvatarAndAbout:{
+    width: '50%',
+    [theme.breakpoints.down('xs')]:{
+      width: '100%'
+    }
+  },
+  containerGeneralNotes:{
+    width: '50%',
+    [theme.breakpoints.down('xs')]:{
+      width: '100%'
+    }
+  },
+  mainContainer:{
+    display: 'flex',
+    width: '100%',
+    [theme.breakpoints.down('xs')]:{
+     flexDirection: 'column'
+    }
+  },
+  containerSkills:{
+    width: '50%',
+    justifyContent :'center',
+    display: 'flex',
+    [theme.breakpoints.down('xs')]:{
+      width: '100%',
+      marginTop: '15%'
+    }
+  },
+  mainContainerAvatarAndAbout:{
+    display : 'flex',
+    marginTop: 30,
+    [theme.breakpoints.down('xs')]:{
+      flexDirection: 'column'
+    }
+  },
+  containerNotes:{
+    display:'flex',
+    flexDirection: 'column',
+    width: '50%',
+    marginLeft: 15,
+    [theme.breakpoints.down('xs')]:{
+      width: '100%',
+    }
+  },
+  containerAlfredMode:{
+    width: '50%',
+    justifyContent: 'center',
+    display: 'flex',
+    [theme.breakpoints.down('xs')]:{
+      width: '100%',
+      marginTop: '15%'
+    }
+  }
 })

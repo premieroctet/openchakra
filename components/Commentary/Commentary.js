@@ -74,8 +74,8 @@ class Commentary extends React.Component{
 
       return (
         <Grid style={{width: '100%'}}>
-          <Grid style={{display: 'flex', width: '100%'}}>
-            <Grid style={{width: '50%'}}>
+          <Grid className={classes.mainContainer}>
+            <Grid className={classes.containerGeneralNotes}>
               <Grid style={{display:'flex', flexDirection: 'column'}}>
                 <Grid>
                   <Grid>
@@ -102,7 +102,7 @@ class Commentary extends React.Component{
               </Grid>
             </Grid>
             { alfred_mode ?
-              <Grid style={{width: '50%', justifyContent :'center', display: 'flex'}}>
+              <Grid className={classes.containerSkills}>
                 <Skills alfred={owner} skills={skills}/>
               </Grid>
               :
@@ -112,8 +112,8 @@ class Commentary extends React.Component{
           {reviews.map( (r) => (
            <Grid style={{display: 'flex', width: '100%', flexDirection: 'column'}}>
              <hr className={classes.hrSeparator}/>
-             <Grid style={{display : 'flex', marginTop: 30}}>
-               <Grid style={{width: '50%'}}>
+             <Grid className={classes.mainContainerAvatarAndAbout}>
+               <Grid className={classes.containerAvatarAndAbout}>
                  <Grid style={{width: '100%', display:'flex', alignItems: 'center'}}>
                    <Grid style={{marginRight:15}}>
                      <Avatar className={classes.picsSize}/>
@@ -128,17 +128,13 @@ class Commentary extends React.Component{
                    </Grid>
                  </Grid>
                  <Grid style={{display:'flex', alignItems :'center'}}>
-                   <Grid style={{display:'flex', flexDirection: 'column', width: '50%', marginLeft: 15}}>
+                   <Grid className={classes.containerNotes}>
                      <Notes alfred_mode={alfred_mode} notes={alfred_mode ? r.note_alfred : r.note_client} key={moment()} />
                    </Grid>
                  </Grid>
                </Grid>
                {alfred_mode ?
-                 <Grid item style={{
-                   width: '50%',
-                   justifyContent: 'center',
-                   display: 'flex'
-                 }}>
+                 <Grid item className={classes.containerAlfredMode}>
                    <Grid style={{
                      justifyContent: 'center',
                      display: 'flex'

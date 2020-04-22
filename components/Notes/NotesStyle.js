@@ -45,6 +45,9 @@ export default theme=>({
     marginLeft: 10
   },
   widthP:{
-    width: 156
+    width: 156,
+    [theme.breakpoints.down('xs')]: {
+      width: 150
+    },
   },
 })
