@@ -172,7 +172,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
               }
               if (booking.status == 'En attente de confirmation') {
                 sendBookingDetails(book);
-                sendNewBooking(book);
+                sendNewBooking(book, req);
               }
             }).catch(err => console.log(err));
           res.json(booking);

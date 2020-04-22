@@ -43,9 +43,6 @@ const getHost = () => {
   }
 }
 
-
-
-
 const sendVerificationMail = (user, req) => {
   SIB.sendMail(
     CONFIRM_EMAIL,
@@ -172,7 +169,7 @@ const sendBookingInfos = booking => {
    )
 }
 
-const sendNewBooking = booking => {
+const sendNewBooking = (booking, req) => {
    SIB.sendMail(
      NEW_BOOKING,
      booking.alfred.email,
@@ -182,7 +179,8 @@ const sendNewBooking = booking => {
        service_label: booking.service,
        service_datetime: booking_datetime_str(booking),
        total_revenue: parseFloat(booking.amount-booking.fees).toFixed(2),
-       // FIX :: ajouter lien lnk_showreservation
+       link_showreservation: new URL('/reservations/detailsReservation?id='+booking._id, computeUrl(req)),
+
      }
    )
 }
