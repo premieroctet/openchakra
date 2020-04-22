@@ -17,9 +17,6 @@ import Router from "next/router";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
-
 const styles = {
     loginContainer: {
         alignItems: 'center',
@@ -68,7 +65,7 @@ class idCard extends React.Component {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.alfred_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`${url}myAlfred/api/admin/users/alfred/${id}`)
+        axios.get(`/myAlfred/api/admin/users/alfred/${id}`)
             .then(response => {
 
                 let alfred = response.data;
@@ -103,7 +100,7 @@ class idCard extends React.Component {
 
     validateCard() {
         const id = this.props.alfred_id;
-        axios.put(url+'myAlfred/api/admin/users/alfred/idCard/'+id)
+        axios.put('/myAlfred/api/admin/users/alfred/idCard/'+id)
             .then(() => {
                 alert('Carte d\'identité validée');
                 Router.push({pathname: '/dashboard/alfred/all'})
@@ -113,7 +110,7 @@ class idCard extends React.Component {
 
     deleteCard() {
         const id = this.props.alfred_id;
-        axios.put(url+'myAlfred/api/admin/users/alfred/idCard/delete/'+id)
+        axios.put('/myAlfred/api/admin/users/alfred/idCard/delete/'+id)
             .then(() => {
                 alert('Validation supprimée');
                 Router.push({pathname: '/dashboard/alfred/all'})

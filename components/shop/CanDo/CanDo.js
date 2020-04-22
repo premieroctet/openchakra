@@ -11,10 +11,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import { FavoriteBorderOutlined, More } from '@material-ui/icons';
 
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
-
-
 const styles = theme => ({
   container: {
     paddingRight: 15,
@@ -131,7 +127,7 @@ class canDo extends React.Component{
 
     const id_alfred = self.props.shop;
 
-    axios.get(url + 'myAlfred/api/serviceUser/allUserServices/' + id_alfred)
+    axios.get('/myAlfred/api/serviceUser/allUserServices/' + id_alfred)
         .then(res => this.setState({services: res.data}))
         .catch(err => console.log(err));
   }

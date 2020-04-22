@@ -5,17 +5,11 @@ import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-
-
-
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
 
 const styles = {
     loginContainer: {
@@ -63,7 +57,7 @@ class view extends React.Component {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.alfred_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`${url}myAlfred/api/admin/users/alfred/${id}`)
+        axios.get(`/myAlfred/api/admin/users/alfred/${id}`)
             .then(response => {
 
                     let alfred = response.data;
@@ -96,7 +90,7 @@ class view extends React.Component {
 
         const data = {is_alfred:this.state.is_alfred, active: this.state.active, super_alfred:this.state.super_alfred};
         const id = this.props.alfred_id;
-        axios.put(`${url}myAlfred/api/admin/users/alfred/${id}`,data)
+        axios.put(`/myAlfred/api/admin/users/alfred/${id}`,data)
             .then(res => {
                     alert('Utilisateur modifié avec succès');
                     Router.push({pathname: '/dashboard/alfred/all'})
@@ -111,7 +105,7 @@ class view extends React.Component {
 
     handleClick() {
         const id = this.props.alfred_id;
-        axios.delete(`${url}myAlfred/api/admin/users/alfred/${id}`)
+        axios.delete(`/myAlfred/api/admin/users/alfred/${id}`)
             .then(res => {
 
                     alert('Utilisateur supprimé avec succès');

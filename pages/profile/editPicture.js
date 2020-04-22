@@ -22,9 +22,6 @@ import {generate_avatar} from '../../utils/generateAvatar';
 
 moment.locale('fr');
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         marginTop: 70,
@@ -133,7 +130,7 @@ class editPicture extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url+'myAlfred/api/users/current')
+            .get('/myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
                 this.setState({user:user});
@@ -175,7 +172,7 @@ class editPicture extends React.Component {
                 'content-type': 'multipart/form-data'
             }
         };
-        axios.post(url+"myAlfred/api/users/profile/picture",formData,config)
+        axios.post("/myAlfred/api/users/profile/picture",formData,config)
             .then((response) => {
                 toast.info('Photo modifiée');
                 Router.push({pathname:'/profile/editProfile'})
@@ -183,7 +180,7 @@ class editPicture extends React.Component {
     };
 
     deletePicture = () => {
-      axios.delete(url+'myAlfred/api/users/profile/picture/delete')
+      axios.delete('/myAlfred/api/users/profile/picture/delete')
           .then(() => {
               toast.error('Photo supprimée');
               this.setState({open:false});

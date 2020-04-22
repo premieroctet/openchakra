@@ -31,9 +31,6 @@ import { toast } from 'react-toastify';
 import UserAvatar from '../Avatar/UserAvatar';
 import { computeAverageNotes, computeSumSkills } from '../../utils/functions';
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 class CardPreview extends React.Component{
   constructor(props){
     super(props);
@@ -97,7 +94,7 @@ class CardPreview extends React.Component{
   }
 
   deleteService(id) {
-    axios.delete(url + 'myAlfred/api/serviceUser/' + id)
+    axios.delete('/myAlfred/api/serviceUser/' + id)
       .then(() => {
         toast.error('Service supprimé');
         this.setState({open:false,id_service:''});

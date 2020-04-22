@@ -165,3 +165,6 @@ static/*
 **/*.swp
 
 !static/style1.css
+
+# Touched host file
+host.txt

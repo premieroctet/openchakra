@@ -12,9 +12,6 @@ import {toast} from 'react-toastify';
 import io from "socket.io-client";
 
 
-const { config } = require('../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         flexGrow: 1,
@@ -38,7 +35,7 @@ class paymentSuccess extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
         axios
-            .get(url + "myAlfred/api/users/current")
+            .get("/myAlfred/api/users/current")
             .then(res => {
                 let user = res.data;
                 this.setState({ user: user });
@@ -49,7 +46,7 @@ class paymentSuccess extends React.Component {
                     Router.push({ pathname: "/login" });
                 }
             });
-        axios.get(url+'myAlfred/api/payment/transactions')
+        axios.get('/myAlfred/api/payment/transactions')
             .then(result => {
                 let transaction = result.data;
                 if(transaction.Status === 'FAILED'){
@@ -59,7 +56,7 @@ class paymentSuccess extends React.Component {
                     this.socket = io();
                     this.socket.on("connect", socket => {
                         this.socket.emit("booking", booking_id)
-                        axios.put(url + 'myAlfred/api/booking/modifyBooking/' + booking_id, {status: 'Confirmée'})
+                        axios.put('/myAlfred/api/booking/modifyBooking/' + booking_id, {status: 'Confirmée'})
                             .then(res => {
                                 setTimeout(()=>this.socket.emit("changeStatus", res.data),100)
                                 localStorage.removeItem('booking_id');
@@ -99,7 +96,7 @@ class paymentSuccess extends React.Component {
                                 <Grid container>
 
                                     <Grid item xs={12} style={{marginTop:50, marginBottom:30}}>
-                                        <h2 style={{fontSize: '2.5rem',color: 'rgba(84,89,95,0.95)',letterSpacing: -1, fontWeight: '100', textAlign:'center'}}>Résevation enregistrée !</h2>
+                                        <h2 style={{fontSize: '2.5rem',color: 'rgba(84,89,95,0.95)',letterSpacing: -1, fontWeight: '100', textAlign:'center'}}>Réservation enregistrée !</h2>
 
                                     </Grid>
                                 </Grid>

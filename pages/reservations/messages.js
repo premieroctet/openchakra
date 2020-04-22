@@ -14,9 +14,6 @@ import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import Button from '@material-ui/core/Button';
 
 
-const { config } = require("../../config/config");
-const url = config.apiUrl;
-
 class Messages extends React.Component {
   constructor(props) {
     super(props);
@@ -37,7 +34,7 @@ class Messages extends React.Component {
     axios.defaults.headers.common["Authorization"] = localStorage.getItem(
         "token"
     );
-    axios.get(url+"myAlfred/api/users/current").then(res => {
+    axios.get("/myAlfred/api/users/current").then(res => {
       this.setState({ idEmitter: res.data._id,currentUser: res.data });
       if(res.data.is_alfred === true){
         this.setState({isAlfred: true})
@@ -49,14 +46,14 @@ class Messages extends React.Component {
       }
     });
     axios
-        .get(url + "myAlfred/api/booking/alfredBooking")
+        .get("/myAlfred/api/booking/alfredBooking")
         .then(res => {
           this.setState({ alfredReservations: res.data });
         })
         .catch(err => console.log(err));
 
     axios
-        .get(url + "myAlfred/api/booking/userBooking")
+        .get("/myAlfred/api/booking/userBooking")
         .then(res => {
           this.setState({ userReservations: res.data });
         })
@@ -64,7 +61,7 @@ class Messages extends React.Component {
 
 
     axios
-        .get(url+"myAlfred/api/chatRooms/userChatRooms")
+        .get("/myAlfred/api/chatRooms/userChatRooms")
         .then(res => {
           this.setState({ chatrooms: res.data });
 

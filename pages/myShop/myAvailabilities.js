@@ -23,9 +23,6 @@ import ScheduleIcon from '@material-ui/icons/Schedule';
 
 moment.locale('fr');
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         marginTop: 68,
@@ -150,7 +147,7 @@ class myAvailabilities extends React.Component {
 
       // FIX : get current availabilities
 
-      axios.get(url+'myAlfred/api/users/current').then(res => {
+      axios.get('/myAlfred/api/users/current').then(res => {
         let user = res.data;
         if(user) {
           this.setState({
@@ -162,7 +159,7 @@ class myAvailabilities extends React.Component {
         console.log(error);
       });
 
-      axios.get(`${url}myAlfred/api/shop/alfred/${this.state.id}`)
+      axios.get(`/myAlfred/api/shop/alfred/${this.state.id}`)
         .then( response  =>  {
           let shop = response.data;
           this.setState({
@@ -177,7 +174,7 @@ class myAvailabilities extends React.Component {
           console.log(error);
         });
 
-      axios.get(url+'myAlfred/api/shopBanner/all')
+      axios.get('/myAlfred/api/shopBanner/all')
         .then(response => {
           let banner = response.data;
           this.setState({banner: banner})
@@ -191,7 +188,7 @@ class myAvailabilities extends React.Component {
     availabilityCreated(avail) {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-      axios.post(url+'myAlfred/api/availability/add',avail)
+      axios.post('/myAlfred/api/availability/add',avail)
           .then(res => {
               toast.info('Disponibilité ajoutée avec succès !');
               let new_availabilities = [res.data, ...this.state.availabilities];
@@ -206,7 +203,7 @@ class myAvailabilities extends React.Component {
     availabilityDelete(avail) {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-      axios.delete(url+'myAlfred/api/availability/'+avail)
+      axios.delete('/myAlfred/api/availability/'+avail)
           .then(res => {
               toast.info('Disponibilité supprimée avec succès !');
               let new_availabilities=[];
@@ -264,6 +261,3 @@ class myAvailabilities extends React.Component {
     };
 }
 export default withStyles(styles)(myAvailabilities);
-
-
-

@@ -25,8 +25,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Select2 from 'react-select';
 
 
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -103,7 +101,7 @@ class add extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get(url+"myAlfred/api/admin/category/all")
+        axios.get("/myAlfred/api/admin/category/all")
             .then((response) => {
                 let category = response.data;
                 this.setState({all_category: category})
@@ -111,7 +109,7 @@ class add extends React.Component {
             console.log(error)
         });
 
-        axios.get(url+"myAlfred/api/admin/tags/all")
+        axios.get("/myAlfred/api/admin/tags/all")
             .then((response) => {
                 let tags = response.data;
                 this.setState({all_tags: tags})
@@ -119,7 +117,7 @@ class add extends React.Component {
             console.log(error)
         });
 
-        axios.get(url+"myAlfred/api/admin/equipment/all")
+        axios.get("/myAlfred/api/admin/equipment/all")
             .then((response) => {
                 let equipments = response.data;
                 this.setState({all_equipments: equipments})
@@ -131,7 +129,7 @@ class add extends React.Component {
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
     };
-    
+
     onChangeLocation = e => {
       const location = this.state.location;
       location[e.target.name]=e.target.checked
@@ -227,7 +225,7 @@ class add extends React.Component {
 
         console.log("POSTing");
         axios
-            .post(url+'myAlfred/api/admin/service/all', formData)
+            .post('/myAlfred/api/admin/service/all', formData)
             .then(res => {
                 alert('Service ajouté');
                 Router.push({pathname:'/dashboard/services/all'})

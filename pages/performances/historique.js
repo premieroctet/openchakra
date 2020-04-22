@@ -14,9 +14,6 @@ import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 
 moment.locale('fr');
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         marginTop: 75,
@@ -162,21 +159,21 @@ class Historique extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get(url+'myAlfred/api/booking/getPaid')
+        axios.get('/myAlfred/api/booking/getPaid')
             .then(res => {
                 let bookingsPaid = res.data;
                 this.setState({bookingsPaid: bookingsPaid})
             })
             .catch(err => console.log(err));
 
-        axios.get(url+'myAlfred/api/booking/getPaidSoon')
+        axios.get('/myAlfred/api/booking/getPaidSoon')
             .then(res => {
                 let bookingsPaidSoon = res.data;
                 this.setState({bookingsPaidSoon: bookingsPaidSoon})
             })
             .catch(err => console.log(err))
 
-        axios.get(url+'myAlfred/api/users/current').then(res => {
+        axios.get('/myAlfred/api/users/current').then(res => {
             let user = res.data;
             if(user) {
                 this.setState({

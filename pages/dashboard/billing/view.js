@@ -5,15 +5,9 @@ import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-
-
-
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
-
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
 
 const styles = {
     loginContainer: {
@@ -58,7 +52,7 @@ class view extends React.Component {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.billing_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`${url}myAlfred/api/admin/billing/all/${id}`)
+        axios.get(`/myAlfred/api/admin/billing/all/${id}`)
             .then(response => {
                 let billing = response.data;
                 this.setState({billing: billing});
@@ -85,7 +79,7 @@ class view extends React.Component {
 
         const { label } = this.state.billing;
         const id = this.props.billing_id;
-        axios.put(`${url}myAlfred/api/admin/billing/all/${id}`,{label})
+        axios.put(`/myAlfred/api/admin/billing/all/${id}`,{label})
             .then(res => {
 
                 alert('Méthode de facturation modifié avec succès');
@@ -101,7 +95,7 @@ class view extends React.Component {
 
     handleClick() {
         const id = this.props.billing_id;
-        axios.delete(`${url}myAlfred/api/admin/billing/all/${id}`)
+        axios.delete(`/myAlfred/api/admin/billing/all/${id}`)
             .then(res => {
 
                 alert('Méthode de facturation supprimée avec succès');

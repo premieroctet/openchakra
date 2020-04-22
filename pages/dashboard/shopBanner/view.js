@@ -12,8 +12,6 @@ import axios from 'axios';
 import Router from "next/router";
 import Link from "next/link";
 
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
 const styles = {
     loginContainer: {
         alignItems: 'center',
@@ -58,7 +56,7 @@ class view extends React.Component {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.banner_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`${url}myAlfred/api/admin/shopBanner/all/${id}`)
+        axios.get(`/myAlfred/api/admin/shopBanner/all/${id}`)
             .then(response => {
                 let shopBanner = response.data;
                 this.setState({shopBanner: shopBanner});
@@ -86,7 +84,7 @@ class view extends React.Component {
 
         const { label} = this.state.shopBanner;
         const id = this.props.banner_id;
-        axios.put(`${url}myAlfred/api/admin/shopBanner/all/${id}`,{label})
+        axios.put(`/myAlfred/api/admin/shopBanner/all/${id}`,{label})
             .then(res => {
 
                 alert('Image modifiée avec succès');
@@ -101,7 +99,7 @@ class view extends React.Component {
 
     handleClick() {
         const id = this.props.banner_id;
-        axios.delete(`${url}myAlfred/api/admin/shopBanner/all/${id}`)
+        axios.delete(`/myAlfred/api/admin/shopBanner/all/${id}`)
             .then(res => {
 
                 alert('Image supprimée avec succès');

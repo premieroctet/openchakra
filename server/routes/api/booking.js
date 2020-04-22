@@ -11,7 +11,8 @@ const User = require('../../models/User');
 const CronJob = require('cron').CronJob;
 const mangopay = require('mangopay2-nodejs-sdk');
 const {sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfos,
-sendBookingDetails, sendNewBooking, sendBookingRefused}=require('../../../utils/mailing');
+sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingCancelledByClient,
+sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo} = require('../../../utils/mailing');
 moment.locale('fr');
 
 const api = new mangopay({
@@ -171,7 +172,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
               }
               if (booking.status == 'En attente de confirmation') {
                 sendBookingDetails(book);
-                sendNewBooking(book);
+                sendNewBooking(book, req);
               }
             }).catch(err => console.log(err));
           res.json(booking);
@@ -345,6 +346,7 @@ router.delete('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
 
 router.put('/modifyBooking/:id', passport.authenticate('jwt', { session: false }), ( req, res ) => {
     const obj = { status: req.body.status };
+    const canceller_id = req.body.user;
     if (req.body.end_date) obj.end_date = req.body.end_date;
     if (req.body.end_time) obj.end_time = req.body.end_time;
 
@@ -357,7 +359,16 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', { session: false }
             if (!booking) return res.status(404).json({msg: 'no booking found'});
             if (booking) {
               if (booking.status=='Confirmée') sendBookingConfirmed(booking);
-              if (booking.status=='Refusée') sendBookingRefused(booking, req);
+              if (booking.status=='Refusée') sendBookingRefusedToClient(booking, req);
+              if (booking.status=='Pré-approuvée') sendAskInfoPreapproved(booking, req);
+              if (booking.status=='Annulée') {
+                if (canceller_id==booking.user._id) {
+                  sendBookingCancelledByClient(booking);
+                }
+                else {
+                  sendBookingCancelledByAlfred(booking);
+                }
+              }
               return res.json(booking);
             }
         })
@@ -458,7 +469,7 @@ new CronJob('0 0 5 * * *', function() {
             booking.forEach(b => {
                 const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day');
                 if (moment(date).isSameOrAfter(end_date)) {
-
+                    console.log("Resa terminé:"+b._id);
                     b.status = 'Terminée';
                     b.paid = true;
                     b.date_payment = moment();
@@ -466,8 +477,6 @@ new CronJob('0 0 5 * * *', function() {
                 }
             })
         })
-
-
 }, null, true, 'Europe/Paris');
 
 new CronJob('0 0 6 * * *', function() {
@@ -477,12 +486,14 @@ new CronJob('0 0 6 * * *', function() {
         .populate('alfred')
         .then(booking => {
             booking.forEach(b => {
+                console.log("Checking"+b.date)
                 const date = moment(b.date).add(2,'days');
                 const newDate = moment(date, 'DD-MM-YYYY').startOf('day');
                 if(moment(currentDate).isSameOrAfter(newDate)){
+                    console.log("Expired")
                     b.status = 'Expirée';
                     b.save()
-                      .then( bsaved => {
+                      .then( b => {
                         sendBookingExpiredToAlfred(b);
                         sendBookingExpiredToClient(b);
                       })

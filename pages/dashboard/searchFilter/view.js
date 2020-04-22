@@ -5,15 +5,10 @@ import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-
-
-
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
 const styles = {
     loginContainer: {
         alignItems: 'center',
@@ -57,7 +52,7 @@ class view extends React.Component {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.searchFilter_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`${url}myAlfred/api/admin/searchFilter/all/${id}`)
+        axios.get(`/myAlfred/api/admin/searchFilter/all/${id}`)
             .then(response => {
                 let searchFilter = response.data;
                 this.setState({searchFilter: searchFilter});
@@ -84,7 +79,7 @@ class view extends React.Component {
 
         const { label } = this.state.searchFilter;
         const id = this.props.searchFilter_id;
-        axios.put(`${url}myAlfred/api/admin/searchFilter/all/${id}`,{label})
+        axios.put(`/myAlfred/api/admin/searchFilter/all/${id}`,{label})
             .then(res => {
 
                 alert('Filtre modifié avec succès');
@@ -99,7 +94,7 @@ class view extends React.Component {
 
     handleClick() {
         const id = this.props.searchFilter_id;
-        axios.delete(`${url}myAlfred/api/admin/searchFilter/all/${id}`)
+        axios.delete(`/myAlfred/api/admin/searchFilter/all/${id}`)
             .then(res => {
 
                 alert('Filtre supprimé avec succès');

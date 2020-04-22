@@ -17,9 +17,6 @@ import {Helmet} from 'react-helmet';
 registerLocale('fr', fr);
 moment.locale('fr');
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         marginTop: 70,
@@ -111,7 +108,7 @@ class editProfile extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url+'myAlfred/api/users/current')
+            .get('/myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
                 this.setState({user:user,phone:user.phone});
@@ -157,7 +154,7 @@ class editProfile extends React.Component {
         const birthday = this.state.birthday;
         const {email, name, firstname,description,gender,phone,job,diplomes,school,emergency_phone} = this.state.user;
 
-        axios.put(url+'myAlfred/api/users/profile/editProfile',{email,name,firstname,birthday,description,gender,phone,job,diplomes,school,
+        axios.put('/myAlfred/api/users/profile/editProfile',{email,name,firstname,birthday,description,gender,phone,job,diplomes,school,
         emergency_phone,languages})
             .then(res => {
                 toast.info('Profil modifié avec succès');

@@ -11,9 +11,6 @@ import Footer from '../hoc/Layout/Footer/Footer';
 import io from "socket.io-client";
 
 
-const { config } = require('../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         flexGrow: 1,
@@ -45,7 +42,7 @@ class paymentDirectSuccess extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url + "myAlfred/api/users/current")
+            .get("/myAlfred/api/users/current")
             .then(res => {
                 let user = res.data;
                 this.setState({ user: user });
@@ -59,7 +56,7 @@ class paymentDirectSuccess extends React.Component {
         this.socket = io();
         this.socket.on("connect", socket => {
             this.socket.emit("booking", id)
-            axios.put(url + 'myAlfred/api/booking/modifyBooking/' + id, {status: 'Confirmée'})
+            axios.put('/myAlfred/api/booking/modifyBooking/' + id, {status: 'Confirmée'})
                 .then(res => {
                     setTimeout(()=>this.socket.emit("changeStatus", res.data),100)
 

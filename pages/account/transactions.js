@@ -12,9 +12,6 @@ import {Helmet} from 'react-helmet';
 
 moment.locale('fr');
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         marginTop: 70,
@@ -149,7 +146,7 @@ class transactions extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url+'myAlfred/api/users/current')
+            .get('/myAlfred/api/users/current')
             .then(res => {
                 this.setState({user: res.data});
             })
@@ -161,13 +158,13 @@ class transactions extends React.Component {
                 }
             );
 
-        axios.get(url+'myAlfred/api/booking/account/paid')
+        axios.get('/myAlfred/api/booking/account/paid')
             .then(res => {
                 this.setState({paid: res.data})
             })
             .catch();
 
-        axios.get(url+'myAlfred/api/booking/account/paidSoon')
+        axios.get('/myAlfred/api/booking/account/paidSoon')
             .then(res => {
                 this.setState({paidSoon: res.data})
             })

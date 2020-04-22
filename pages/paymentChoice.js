@@ -19,9 +19,6 @@ import '../static/creditcards.css';
 import styles from './paymentChoice/paymentChoiceStyle'
 moment.locale('fr');
 
-const { config } = require('../config/config');
-const url = config.apiUrl;
-
 class paymentChoice extends React.Component {
     constructor(props) {
         super(props);
@@ -37,7 +34,7 @@ class paymentChoice extends React.Component {
     static getInitialProps ({ query: { id, total, fees } }) {
         return { id: id, total: total, fees:fees }
     }
-    
+
     componentDidMount() {
         const id = this.props.id;
         this.setState({booking_id:id})
@@ -46,7 +43,7 @@ class paymentChoice extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url+'myAlfred/api/users/current')
+            .get('/myAlfred/api/users/current')
             .then(res => {
                 this.setState({user: res.data});
             })
@@ -59,7 +56,7 @@ class paymentChoice extends React.Component {
                 }
             );
 
-        axios.get(url+'myAlfred/api/payment/cardsActive')
+        axios.get('/myAlfred/api/payment/cardsActive')
             .then(response => {
                 let cards = response.data;
                 this.setState({cards:cards});
@@ -74,7 +71,7 @@ class paymentChoice extends React.Component {
             amount: total,
             fees: fees
         };
-        axios.post(url+'myAlfred/api/payment/payInDirect',data)
+        axios.post('/myAlfred/api/payment/payInDirect',data)
             .then(() => {
                 Router.push('/paymentDirectSuccess?id=' +  this.state.booking_id)
 
@@ -89,9 +86,8 @@ class paymentChoice extends React.Component {
             amount: total,
             fees: fees
         };
-        axios.post(url+'myAlfred/api/payment/payIn',data)
+        axios.post('/myAlfred/api/payment/payIn',data)
             .then(res => {
-                //axios.put(url +  'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, {status: 'Confirmée'})
                 localStorage.setItem('booking_id',this.state.booking_id);
                 let payIn = res.data;
                 Router.push(payIn.RedirectURL)

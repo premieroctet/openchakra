@@ -7,8 +7,6 @@ import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-const { config } = require('../../config/config');
-const url = config.apiUrl;
 
 class AlfredConditions extends React.Component{
   constructor(props){
@@ -57,7 +55,7 @@ class AlfredConditions extends React.Component{
     const moderate_cancel = this.props.shop.moderate_cancel;
     const strict_cancel = this.props.shop.strict_cancel;
 
-    axios.put(url+'myAlfred/api/shop/editParameters',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card,
+    axios.put('/myAlfred/api/shop/editParameters',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card,
       recommandations,welcome_message,flexible_cancel,moderate_cancel,strict_cancel})
       .then(() => {
         toast.info('Paramètres modifiés');

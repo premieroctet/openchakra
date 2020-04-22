@@ -31,8 +31,6 @@ import '../static/overridedate.css';
 
 const _ = require('lodash');
 
-const { config } = require('../config/config');
-const url = config.apiUrl;
 moment.locale('fr');
 const styles = theme => ({
     bigContainer: {
@@ -114,14 +112,14 @@ class searchHome extends React.Component {
         const hour = this.props.hour;
 
         if(service === '' && city === '' && date === '' && dateISO === '' && day === '' && hour === '') {
-            axios.get(url+'myAlfred/api/serviceUser/all')
+            axios.get('/myAlfred/api/serviceUser/all')
                 .then(res => {
                     const sorted = _.orderBy(res.data,['level','number_of_views','graduated','is_certified','user.creation_date'],
                         ['desc','desc','desc','desc','desc']);
                     this.setState({serviceUser: sorted})
                 });
             setTimeout(() =>
-                axios.get(url+'myAlfred/api/category/all/sort')
+                axios.get('/myAlfred/api/category/all/sort')
                     .then(response => {
                         this.setState({allCategories : response.data, showCategories : true})
                         response.data.forEach(e => {
@@ -170,7 +168,7 @@ class searchHome extends React.Component {
 
     async searchWithWord(){
         const obj = {label:this.props.service.trim()};
-        await axios.post(url+'myAlfred/api/prestation/all/search',obj)
+        await axios.post('/myAlfred/api/prestation/all/search',obj)
             .then(res => {
                 let prestations = res.data;
                 this.setState({prestations:prestations});
@@ -189,7 +187,7 @@ class searchHome extends React.Component {
                 console.log(err)
             });
 
-        await axios.post(url+'myAlfred/api/service/all/search',obj)
+        await axios.post('/myAlfred/api/service/all/search',obj)
             .then(res => {
                 let services = res.data;
                 this.setState({services: services});
@@ -206,7 +204,7 @@ class searchHome extends React.Component {
                 console.log(err);
             });
 
-        await axios.post(url + 'myAlfred/api/category/all/search', obj)
+        await axios.post('/myAlfred/api/category/all/search', obj)
             .then(responseCategory => {
                 let category = responseCategory.data;
                 this.setState({resultCategory:category});
@@ -232,7 +230,7 @@ class searchHome extends React.Component {
             const uniqCategoryFinal = _.uniqBy(categoryFinal,'label');
             this.setState({allCategories: uniqCategoryFinal});
 
-            axios.get(url+'myAlfred/api/serviceUser/all')
+            axios.get('/myAlfred/api/serviceUser/all')
                 .then(result => {
                     const finalServiceUser = [];
                     const serviceUser = result.data;
@@ -305,7 +303,7 @@ class searchHome extends React.Component {
 
     async searchWithWordAndCity() {
         const obj = {label:this.props.service.trim()};
-        await axios.post(url+'myAlfred/api/prestation/all/search',obj)
+        await axios.post('/myAlfred/api/prestation/all/search',obj)
             .then(res => {
 
                 let prestations = res.data;
@@ -326,7 +324,7 @@ class searchHome extends React.Component {
                 console.log(err)
             });
 
-        await axios.post(url+'myAlfred/api/service/all/search',obj)
+        await axios.post('/myAlfred/api/service/all/search',obj)
             .then(res => {
                 let services = res.data;
                 this.setState({services: services});
@@ -343,7 +341,7 @@ class searchHome extends React.Component {
                 console.log(err);
             });
 
-        await axios.post(url + 'myAlfred/api/category/all/search', obj)
+        await axios.post('/myAlfred/api/category/all/search', obj)
             .then(responseCategory => {
                 let category = responseCategory.data;
                 this.setState({resultCategory:category});
@@ -369,7 +367,7 @@ class searchHome extends React.Component {
             const uniqCategoryFinal = _.uniqBy(categoryFinal,'label');
             this.setState({allCategories: uniqCategoryFinal});
             const obj = {city:this.props.city};
-            axios.post(url+'myAlfred/api/serviceUser/nearCity',obj)
+            axios.post('/myAlfred/api/serviceUser/nearCity',obj)
                 .then(result => {
                     const finalServiceUser = [];
                     const serviceUser = result.data;
@@ -443,14 +441,14 @@ class searchHome extends React.Component {
     searchWithCity() {
         const city = this.props.city;
         const obj = {city:city};
-        axios.post(url+'myAlfred/api/serviceUser/nearCity',obj)
+        axios.post('/myAlfred/api/serviceUser/nearCity',obj)
             .then(res => {
                 let serviceUser = res.data;
                 const sorted = _.orderBy(serviceUser,['level','number_of_views','graduated','is_certified','user.creation_date'],
                     ['desc','desc','desc','desc','desc']);
                 this.setState({serviceUser:sorted,serviceUserCopy: sorted});
 
-                axios.get(url+'myAlfred/api/category/all/sort')
+                axios.get('/myAlfred/api/category/all/sort')
                     .then(res => {
                         let categories = res.data;
                         this.setState({allCategories:categories});
@@ -479,14 +477,14 @@ class searchHome extends React.Component {
         const hour = this.props.hour;
 
         if(service === '' && city === '' && date === '' && dateISO === '' && day === '' && hour === '') {
-            axios.get(url+'myAlfred/api/serviceUser/all')
+            axios.get('/myAlfred/api/serviceUser/all')
                 .then(res => {
                     const sorted = _.orderBy(res.data,['level','number_of_views','graduated','is_certified','user.creation_date'],
                         ['desc','desc','desc','desc','desc']);
                     this.setState({serviceUser: sorted})
                 });
             setTimeout(() =>
-                axios.get(url+'myAlfred/api/category/all/sort')
+                axios.get('/myAlfred/api/category/all/sort')
                     .then(response => {
                         this.setState({allCategories : response.data, showCategories : true})
                         response.data.forEach(e => {
@@ -509,7 +507,7 @@ class searchHome extends React.Component {
             const obj = {
                 service: service, city: city, date: date, day: day, hour: hour, dateISO: dateISO
             };
-            axios.post(url + 'myAlfred/api/serviceUser/home/search', obj)
+            axios.post('/myAlfred/api/serviceUser/home/search', obj)
                 .then(res => {
                     let serviceUser = res.data;
                     this.setState({serviceUser: serviceUser, copyService: serviceUser});
@@ -636,7 +634,7 @@ class searchHome extends React.Component {
             const endDay =  moment(end).format('dddd');
             const obj = {begin,end,beginDay,endDay};
 
-            axios.post(url+'myAlfred/api/availability/filterDate',obj)
+            axios.post('/myAlfred/api/availability/filterDate',obj)
                 .then(response => {
                     let availability = response.data;
                     const idAlfred = [];

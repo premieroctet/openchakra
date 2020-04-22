@@ -20,8 +20,6 @@ import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Avatar from '@material-ui/core/Avatar';
 
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
 const jwt = require('jsonwebtoken');
 
 

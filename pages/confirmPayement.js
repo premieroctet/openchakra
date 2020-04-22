@@ -16,8 +16,6 @@ const {booking_datetime_str} = require('../utils/dateutils');
 
 moment.locale("fr");
 const _ = require("lodash");
-const { config } = require("../config/config");
-const url = config.apiUrl;
 
 
 class ConfirmPayement extends React.Component {
@@ -56,7 +54,7 @@ class ConfirmPayement extends React.Component {
 
     axios.defaults.headers.common["Authorization"] = localStorage.getItem( "token");
 
-    axios.get(url + "myAlfred/api/users/current").then(res => {
+    axios.get("/myAlfred/api/users/current").then(res => {
       this.setState({ currentUser: res.data });
     });
 
@@ -81,7 +79,7 @@ class ConfirmPayement extends React.Component {
     localStorage.setItem("path", Router.pathname);
     axios.defaults.headers.common["Authorization"] = localStorage.getItem( "token");
 
-    axios.get(url + "myAlfred/api/serviceUser/" + id).then(res => {
+    axios.get("/myAlfred/api/serviceUser/" + id).then(res => {
       this.setState({
         user: res.data.user,
         languages: res.data.user.languages

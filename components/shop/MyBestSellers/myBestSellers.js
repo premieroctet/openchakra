@@ -16,10 +16,7 @@ import Link from 'next/link';
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-
 moment.locale('fr');
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
 
 const styles = theme => ({
   container: {
@@ -146,14 +143,14 @@ class myBestSellers extends React.Component{
 
     const id_alfred = self.props.shop;
 
-    axios.get(`${url}myAlfred/api/shop/alfred/${id_alfred}`)
+    axios.get(`/myAlfred/api/shop/alfred/${id_alfred}`)
         .then(function (response) {
 
           let shop = response.data;
           let idAlfred = shop.alfred._id;
 
 
-          axios.get(`${url}myAlfred/api/booking/last/${idAlfred}`)
+          axios.get(`/myAlfred/api/booking/last/${idAlfred}`)
               .then(function (result) {
                 let booking = result.data;
 

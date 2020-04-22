@@ -10,9 +10,6 @@ import StarRatings from 'react-star-ratings';
 import {toast} from 'react-toastify';
 import TextField from "@material-ui/core/TextField";
 
-const { config } = require('../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         flexGrow: 1,
@@ -143,7 +140,7 @@ class EvaluateClient extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url+'myAlfred/api/users/current')
+            .get('/myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
                 this.setState({user:user});
@@ -156,7 +153,7 @@ class EvaluateClient extends React.Component {
                 }
             );
 
-        axios.get(url+'myAlfred/api/serviceUser/'+id)
+        axios.get('/myAlfred/api/serviceUser/'+id)
             .then(res => {
                 let service = res.data;
                 this.setState({service: service});
@@ -210,7 +207,7 @@ class EvaluateClient extends React.Component {
             content: content,
         };
 
-        axios.post(url+'myAlfred/api/reviews/add/client',obj)
+        axios.post('/myAlfred/api/reviews/add/client',obj)
             .then(() => {
                 toast.info('Commentaire enregistré');
                 //Router.push('/merci')

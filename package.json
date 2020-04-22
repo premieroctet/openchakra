@@ -36,6 +36,7 @@
     "leaflet": "^1.5.1",
     "loadable-components": "^2.2.3",
     "lodash": "^4.17.11",
+    "log-timestamp": "^0.3.0",
     "mangopay2-nodejs-sdk": "^1.10.0",
     "moment": "^2.24.0",
     "mongoose": "^5.5.5",

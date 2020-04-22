@@ -14,9 +14,6 @@ import {Helmet} from 'react-helmet';
 
 moment.locale('fr');
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         marginTop: 70,
@@ -102,7 +99,7 @@ class security extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url+'myAlfred/api/users/current')
+            .get('/myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
                 this.setState({user:user, last_login: user.last_login});
@@ -159,7 +156,7 @@ class security extends React.Component {
         e.preventDefault();
         const data = {password: this.state.password, newPassword: this.state.newPassword};
         axios
-            .put(url+'myAlfred/api/users/profile/editPassword', data)
+            .put('/myAlfred/api/users/profile/editPassword', data)
             .then(() => {
                 toast.info('Mot de passe modifié');
                 setTimeout(() => window.location.reload(), 2000);

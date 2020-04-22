@@ -8,8 +8,6 @@ import CardContent from "@material-ui/core/CardContent";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
 import Link from 'next/link';
-const {config} = require('../../config/config');
-const url = config.apiUrl;
 
 const styles = theme => ({
     container: {
@@ -89,11 +87,11 @@ class section22 extends React.Component {
 
     componentDidMount() {
 
-        axios.get(url + 'myAlfred/api/tags/category/section22')
+        axios.get('/myAlfred/api/tags/category/section22')
             .then(response => {
                     let data = response.data;
                     this.setState({tags:data});
-                    axios.get(url + 'myAlfred/api/category/all/tags/' + data._id)
+                    axios.get('/myAlfred/api/category/all/tags/' + data._id)
                         .then(res => {
                             let category = res.data;
                             this.setState({category: category})

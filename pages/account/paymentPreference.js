@@ -20,9 +20,6 @@ import {Helmet} from 'react-helmet';
 
 moment.locale('fr');
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         marginTop: 70,
@@ -99,7 +96,7 @@ class paymentPreference extends React.Component {
             localStorage.setItem('path', Router.pathname);
             axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
             axios
-                .get(url + 'myAlfred/api/users/current')
+                .get('/myAlfred/api/users/current')
                 .then(res => {
                     this.setState({user: res.data});
 
@@ -111,7 +108,7 @@ class paymentPreference extends React.Component {
                         }
                     }
                 );
-            axios.get(url+'myAlfred/api/payment/activeAccount')
+            axios.get('/myAlfred/api/payment/activeAccount')
                 .then(response => {
                     let accounts = response.data;
                     if(accounts.length){
@@ -143,12 +140,12 @@ class paymentPreference extends React.Component {
         iban: this.state.iban
       };
 
-      axios.post(url+'myAlfred/api/payment/bankAccount',data)
+      axios.post('/myAlfred/api/payment/bankAccount',data)
           .then(res => {
               toast.info('RIB ajouté');
 
               this.setState({clickAdd: false});
-              axios.get(url+'myAlfred/api/payment/activeAccount')
+              axios.get('/myAlfred/api/payment/activeAccount')
                   .then(response => {
                       let accounts = response.data;
                       if(accounts.length){
@@ -164,7 +161,7 @@ class paymentPreference extends React.Component {
         const data = {
             id_account: id
         };
-        axios.put(url+'myAlfred/api/payment/account',data)
+        axios.put('/myAlfred/api/payment/account',data)
             .then(() => {
                 toast.error('Compte bancaire supprimé');
                 this.refresh();
@@ -177,7 +174,7 @@ class paymentPreference extends React.Component {
 
     refresh() {
         this.setState({clickDelete: false,haveAccount: false});
-        axios.get(url+'myAlfred/api/payment/activeAccount')
+        axios.get('/myAlfred/api/payment/activeAccount')
             .then(response => {
                 let accounts = response.data;
                 if(accounts.length){
