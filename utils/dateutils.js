@@ -1,7 +1,7 @@
 const { RRule, RRuleSet, rrulestr }=require('rrule');
 const {ALL_SERVICES, generate_id}=require('./consts.js');
 const isEmpty = require('../server/validation/is-empty');
-const moment=require('moment');
+const moment=require('moment-timezone');
 
 const DAYS=['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
@@ -105,7 +105,7 @@ const getDeadLine=(deadline) => {
 }
 
 const booking_datetime_str = booking => {
-  return `Le ${booking.date_prestation} à ${moment(booking.time_prestation).format('HH:mm')}`
+  return `Le ${booking.date_prestation} à ${moment(booking.time_prestation).tz('Europe/Paris').format('HH:mm')}`
 }
 
 
