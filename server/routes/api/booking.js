@@ -11,8 +11,8 @@ const User = require('../../models/User');
 const CronJob = require('cron').CronJob;
 const mangopay = require('mangopay2-nodejs-sdk');
 const {sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfos,
-sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingCancelledByClient,
-sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo} = require('../../../utils/mailing');
+sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
+sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual} = require('../../../utils/mailing');
 moment.locale('fr');
 
 const api = new mangopay({
@@ -136,6 +136,7 @@ router.get('/endConfirmedBookings', passport.authenticate('jwt', { session : fal
     })
 })
 
+
 router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {
     const random = crypto.randomBytes(Math.ceil(5/2)).toString('hex').slice(0,5);
 
@@ -172,6 +173,9 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
               }
               if (booking.status == 'En attente de confirmation') {
                 sendBookingDetails(book);
+                sendNewBookingManual(book, req);
+              }
+              if (booking.status == 'Confirmée') {
                 sendNewBooking(book, req);
               }
             }).catch(err => console.log(err));
@@ -359,14 +363,21 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', { session: false }
             if (!booking) return res.status(404).json({msg: 'no booking found'});
             if (booking) {
               if (booking.status=='Confirmée') sendBookingConfirmed(booking);
-              if (booking.status=='Refusée') sendBookingRefusedToClient(booking, req);
+              if (booking.status=='Refusée') {
+                if (canceller_id==booking.user._id) {
+                  sendBookingRefusedToAlfred(booking, req);
+                }
+                else {
+                  sendBookingRefusedToClient(booking, req);
+                }
+              }
               if (booking.status=='Pré-approuvée') sendAskInfoPreapproved(booking, req);
               if (booking.status=='Annulée') {
                 if (canceller_id==booking.user._id) {
                   sendBookingCancelledByClient(booking);
                 }
                 else {
-                  sendBookingCancelledByAlfred(booking);
+                  sendBookingCancelledByAlfred(booking, req);
                 }
               }
               return res.json(booking);

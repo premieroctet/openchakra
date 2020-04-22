@@ -7,13 +7,15 @@ var fs = require('fs');
 // Templates
 
 /**
-4   VERS ALFRED == Nouvelle demande de réservation // En mode non auto
 10  VERS ALFRED == Un virement vous a été envoyé
 11  VERS ALFRED == Laissez un commentaire
 12  VERS USER == Laissez un commentaire à votre Alfred
 17  VERS ALFRED == pré Réservation refusée ??? Idem annnulée (18)
 21  VERS ALFRED == N'oubliez pas de mettre à jour vos disponibilités 🗓
 */
+
+// FIX 4, 17, 18
+const NEW_BOOKING_MANUAL=4;
 const CONFIRM_EMAIL=5;
 const ASKING_INFO=6;
 const NEW_MESSAGE_ALFRED=7;
@@ -22,6 +24,7 @@ const NEW_MESSAGE_CLIENT=13;
 const BOOKING_CANCELLED_BY_ALFRED=14;
 const SHOP_DELETED=15;
 const ASKINFO_PREAPPROVED=16;
+const BOOKING_REFUSED_2_ALFRED=17;
 const BOOKING_REFUSED_2_CLIENT=18; // OK
 const BOOKING_CONFIRMED=19;
 const SHOP_ONLINE=20; // OK
@@ -78,7 +81,7 @@ const sendBookingConfirmed = booking => {
  )
 }
 
-const sendBookingCancelledByAlfred = booking => {
+const sendBookingCancelledByAlfred = (booking, req) => {
  SIB.sendMail(
    BOOKING_CANCELLED_BY_ALFRED,
    booking.user.email,
@@ -87,6 +90,8 @@ const sendBookingCancelledByAlfred = booking => {
      alfred_firstname: booking.alfred.firstname,
      service_label: booking.service,
      service_datetime: booking_datetime_str(booking),
+     link_findnewalfred : new URL('/search', computeUrl(req)),
+
    }
  )
 }
@@ -210,6 +215,19 @@ const sendBookingRefusedToClient = (booking, req) => {
    )
 }
 
+const sendBookingRefusedToAlfred = (booking, req) => {
+   SIB.sendMail(
+     BOOKING_REFUSED_2_ALFRED,
+     booking.alfred.email,
+     {
+       client_firstname: booking.user.firstname,
+       alfred_firstname: booking.alfred.firstname,
+       service_label: booking.service,
+       service_datetime: booking_datetime_str(booking),
+     }
+   )
+}
+
 const sendAskingInfo = (booking, req) => {
    SIB.sendMail(
      ASKING_INFO,
@@ -265,10 +283,25 @@ const sendAskInfoPreapproved = (booking, req) => {
    )
 }
 
+const sendNewBookingManual = (booking, req) => {
+   SIB.sendMail(
+     NEW_BOOKING_MANUAL,
+     booking.alfred.email,
+     {
+       client_firstname: booking.user.firstname,
+       alfred_firstname: booking.alfred.firstname,
+       service_label: booking.service,
+       service_datetime: booking_datetime_str(booking),
+       total_revenue: parseFloat(booking.amount-booking.fees).toFixed(2),
+       link_confirmbooking: new URL('/reservations/detailsReservation?id='+booking._id, computeUrl(req)),
+
+     }
+   )
+}
 
 module.exports={
   sendVerificationMail, sendShopDeleted, sendBookingConfirmed, sendBookingCancelledByAlfred, sendBookingCancelledByClient,
   sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingDetails, sendBookingInfos, sendNewBooking,
   sendShopOnline,sendBookingRefusedToClient, sendAskingInfo, sendNewMessageToAlfred, sendNewMessageToClient,
-  sendAskInfoPreapproved, sendResetPassword
+  sendAskInfoPreapproved, sendResetPassword, sendNewBookingManual
 }
