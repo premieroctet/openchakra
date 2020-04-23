@@ -31,6 +31,7 @@ export default theme => ({
     }
   },
   respright:{
+    width:'50%',
     [theme.breakpoints.down('sm')]: {
       display: 'none'
     }
@@ -50,7 +51,11 @@ export default theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems:'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    width:'50%',
+    [theme.breakpoints.down('xs')]: {
+      width:'100%',
+    }
   },
   paiementMethode:{
     backgroundColor : 'grey',
@@ -65,7 +70,8 @@ export default theme => ({
     display: 'flex',
     width:'100%',
     [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column'
+      flexDirection: 'column',
+      alignItems:'center'
     }
   },
   mainContainerCardPaiment:{
@@ -75,6 +81,21 @@ export default theme => ({
       flexDirection: 'column',
       justifyContent: 'center'
     }
+  },
+  containerTitle:{
+    [theme.breakpoints.down('xs')]: {
+      display:'flex',
+      justifyContent: 'center'
+    }
+  },
+  titleStyle:{
+    color: 'dimgray',
+    fontWeight: '100',
+    marginLeft: '1%',
+    [theme.breakpoints.down('xs')]: {
+      margin: 0
+    }
+
   }
 
 })

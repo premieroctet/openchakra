@@ -107,11 +107,11 @@ class PaymentChoiceCreate extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         <Grid item xs={12} className={classes.mainContainerCardPaiment}>
-                            <Grid container>
-                                <h1 style={{color: 'dimgray',fontWeight: '100'}}>Choix du mode de paiement</h1>
+                            <Grid container className={classes.containerTitle}>
+                                <h1 className={classes.titleStyle}>Choix du mode de paiement</h1>
                             </Grid>
                             <Grid container>
-                                <Grid item xs={12} md={6} className={classes.containerLeft}>
+                                <Grid item className={classes.containerLeft}>
                                     {cards.length ?
                                         <Grid className={classes.flexContainerCard}>
                                             {cards.map((e,index) => (
@@ -185,12 +185,10 @@ class PaymentChoiceCreate extends React.Component {
                                             </Button>
                                         </Grid>
                                     </Grid>
-
                                 </Grid>
-                                <Grid item xs={6} className={classes.respright}>
+                                <Grid item className={classes.respright}>
                                     <img style={{position: 'sticky', top: 5}} src="../static/resa.svg" alt="beaver"/>
                                 </Grid>
-
                             </Grid>
 
 
