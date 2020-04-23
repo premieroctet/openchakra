@@ -161,7 +161,6 @@ class Confirm extends React.Component {
   render() {
     const { classes } = this.props;
     const { bookingObj, currentUser } = this.state;
-    console.log(bookingObj, 'booking')
 
     const pricedPrestations=this.computePricedPrestations();
     const countPrestations=this.computeCountPrestations();
@@ -214,7 +213,7 @@ class Confirm extends React.Component {
                           <hr></hr>
 
                           <Grid container>
-                            <Grid item xs={12} style={{}}>
+                            <Grid item xs={12}>
                               <h3
                                   style={{
                                     fontSize: "1.6rem",

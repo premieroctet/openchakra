@@ -101,7 +101,10 @@ export default theme => ({
     }
   },
   fontSizeTitleSectionAbout:{
-    fontSize: "1.7rem",
+    fontSize: "1.6rem",
+    color: "rgba(84,89,95,0.95)",
+    letterSpacing: -1,
+    fontWeight: "bold",
     marginBottom: "5%",
     [theme.breakpoints.down("xs")]: {
       fontSize: "1.5rem"

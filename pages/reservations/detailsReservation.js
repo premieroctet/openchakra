@@ -374,33 +374,17 @@ class DetailsReservation extends React.Component {
                             {bookingObj === null ? null : bookingObj.status ===
                             "Confirmée" ? (
                                 <Grid>
-                                  <div
-                                      style={{
-                                        textAlign: "center",
-                                        height: "40px",
-                                        width: "200px",
-                                        backgroundColor: "#4FBDD7",
-                                        lineHeight: 2.5,
-                                        borderRadius: "50px",
-                                        marginTop: "5%"
-                                      }}
-                                  >
-                                    <a
-                                        href={`tel:${
-                                            bookingObj === null || currentUser === null
-                                                ? null
-                                                : currentUser._id === bookingObj.alfred._id
-                                                ? bookingObj.user.phone
-                                                : bookingObj.alfred.phone
-                                        }`}
-                                        style={{
-                                          textDecoration: "none",
-                                          color: "white"
-                                        }}
-                                    >
-                                      Appeler
-                                    </a>
-                                  </div>
+                                  <Grid>
+                                    <Link href={`tel:${
+                                      bookingObj === null || currentUser === null
+                                        ? null
+                                        : currentUser._id === bookingObj.alfred._id
+                                        ? bookingObj.user.phone
+                                        : bookingObj.alfred.phone
+                                    }`}>
+                                      <Button variant={"contained"} color={"secondary"} style={{color: 'white'}}>Appeler</Button>
+                                    </Link>
+                                  </Grid>
 
                                   <div
                                       style={{ textAlign: "center", width: "200px" }}
@@ -464,27 +448,8 @@ class DetailsReservation extends React.Component {
                                       <Grid item xs={2}/>
                                       <Grid item md={4} xs={12}>
                                         <Link href={`/evaluateClient?booking=${bookingObj._id}&id=${bookingObj.serviceUserId}&client=${bookingObj.user._id}`}>
-                                        <div
-                                            style={{
-                                              textAlign: "center",
-                                              width: "200px",
-                                              height: "40px",
-                                              backgroundColor: "#F8727F",
-                                              lineHeight: 2.5,
-                                              borderRadius: "50px",
-                                              cursor: 'pointer'
-                                            }}
-                                        >
-
-                                            <a
-                                                style={{
-                                                  textDecoration: "none",
-                                                  color: "white"
-                                                }}
-                                            >
-                                              Evaluer mon client
-                                            </a>
-                                        </div>
+                                          <Button color={"secondary"} variant={"contained"} style={{color: 'white'}}>Evaluer mon client
+                                          </Button>
                                           </Link>
                                       </Grid>
                                     </Grid> }
@@ -571,7 +536,7 @@ class DetailsReservation extends React.Component {
                         ) : null}
                         <Grid container className={classes.mainContainerAboutResa}>
                           <Grid item xs={12} className={classes.containerTitleSectionAbout}>
-                            <Typography className={classes.fontSizeTitleSectionAbout}>
+                            <Typography variant="h3" className={classes.fontSizeTitleSectionAbout}>
                               A propos de votre réservation
                             </Typography>
                           </Grid>
@@ -611,11 +576,11 @@ class DetailsReservation extends React.Component {
                                               return (
                                                 <Grid style={{display: 'flex'}}>
                                                   <Grid>
-                                                    <Typography style={{fontSize: "1.1rem"}}>
+                                                    <Typography>
                                                       {prestation.value}
                                                     </Typography>
                                                   </Grid>
-                                                  <Grid style={{fontSize: "1.1rem"}}>
+                                                  <Grid>
                                                     <Typography> x </Typography>
                                                   </Grid>
                                                 </Grid>
@@ -628,7 +593,7 @@ class DetailsReservation extends React.Component {
                                             ? null
                                             : bookingObj.prestations.map(prestation => {
                                               return (
-                                                <Typography style={{ fontSize: "1.1rem" }}>
+                                                <Typography>
                                                   {prestation.name}
                                                 </Typography>
                                               );
@@ -675,21 +640,17 @@ class DetailsReservation extends React.Component {
                                   )
                                 ) : bookingObj.status === "Demande d'infos" &&
                                 currentUser._id === bookingObj.alfred._id ? (
-                                  <Grid>
+                                  <Grid style={{display: 'flex', flexDirection: "column", alignItems: 'center'}}>
                                     <Link
                                       href={{
                                         pathname: "/reservations/preapprouve",
                                         query: { id: this.state.booking_id }
                                       }}
                                     >
-                                      <Grid className={classes.buttonReservaionRed}>
-                                        <a style={{textDecoration: "none", color: "white"}}>
-                                          Pré-approuver
-                                        </a>
-                                      </Grid>
+                                      <Button color={"secondary"} variant={"contained"} style={{color:'white'}}>Pré-approuver</Button>
                                     </Link>
-                                    <Grid className={classes.buttonReservationNo} onClick={() => this.changeStatus('Refusée')}>
-                                      Refuser
+                                    <Grid style={{marginTop: '5%'}}>
+                                      <Button onClick={() => this.changeStatus('Refusée')} variant={"outlined"} color={'primary'}>Refuser</Button>
                                     </Grid>
                                   </Grid>
                                 ) : bookingObj.status === "Demande d'infos" &&
@@ -784,9 +745,7 @@ class DetailsReservation extends React.Component {
                                     </Grid>
                                   ) : (
                                     <Link href={`reserve?id=${bookingObj._id}`}>
-                                      <Grid className={classes.buttonReservaionRed}>
-                                        <a style={{textDecoration: "none", color: "white"}}>Réserver</a>
-                                      </Grid>
+                                      <Button variant={"contained"} color={"secondary"} style={{color :'white'}}>Réserver</Button>
                                     </Link>
                                   )
                                 ) : null}
@@ -796,7 +755,7 @@ class DetailsReservation extends React.Component {
                         </Grid>
                         <Grid container style={{borderBottom: "1.5px #8281813b solid", marginTop: "5%", paddingBottom: "7%"}}>
                           <Grid item xs={12}>
-                            <Typography style={{ fontSize: "1.4rem" }}>
+                            <Typography variant={"h3"} className={classes.fontSizeTitleSectionAbout}>
                               Matériel fourni
                             </Typography>
                           </Grid>
@@ -820,7 +779,7 @@ class DetailsReservation extends React.Component {
                         </Grid>
                     <Grid container style={{borderBottom: "1.5px #8281813b solid", marginTop: "5%", paddingBottom: "7%"}}>
                       <Grid item xs={12}>
-                        <Typography style={{ fontSize: "1.4rem" }}>
+                        <Typography variant={"h3"} className={classes.fontSizeTitleSectionAbout}>
                           {bookingObj === null || currentUser === null ?
                               <span>Revenus potentiels</span>
                               :
@@ -878,7 +837,7 @@ class DetailsReservation extends React.Component {
                       }}
                     >
                       <Grid item xs={12}>
-                        <Typography style={{ fontSize: "1rem" }}>
+                        <Typography>
                           Début le{" "}
                           {bookingObj === null
                             ? null
@@ -892,7 +851,7 @@ class DetailsReservation extends React.Component {
                       <Grid item xs={12}>
                       {bookingObj === null ? null : bookingObj.status ===
                         "Confirmée" || bookingObj.status === 'Terminée' ?  (
-                        <Typography style={{ fontSize: "1rem" }}>
+                        <Typography>
                           Fin le{" "}
                           {bookingObj === null ? null : moment(bookingObj.end_date).format('DD/MM/YYYY')} à{" "}
                           {bookingObj === null ? null : bookingObj.end_time}
@@ -925,7 +884,6 @@ class DetailsReservation extends React.Component {
                           <a
                             style={{
                               textDecoration: "none",
-                              fontSize: "1.1rem",
                               color: "rgb(47, 188, 211)"
                             }}
                           >
@@ -946,7 +904,6 @@ class DetailsReservation extends React.Component {
                         href="mailto:contact@myalfred.io"
                         style={{
                           textDecoration: "none",
-                          fontSize: "1.1rem",
                           color: "rgb(47, 188, 211)"
                         }}
                       >
@@ -968,7 +925,6 @@ class DetailsReservation extends React.Component {
                           href="mailto:contact@myalfred.io"
                           style={{
                             textDecoration: "none",
-                            fontSize: "1.1rem",
                             color: "rgb(47, 188, 211)"
                           }}
                         >
@@ -988,7 +944,6 @@ class DetailsReservation extends React.Component {
                         <a
                           style={{
                             textDecoration: "none",
-                            fontSize: "1.1rem",
                             color: "rgb(47, 188, 211)"
                           }}
                         >

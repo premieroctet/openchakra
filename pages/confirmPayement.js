@@ -87,31 +87,6 @@ class ConfirmPayement extends React.Component {
     });
   }
 
-  async handleCheckedOption(price) {
-    await this.setState({ checkedOption: !this.state.checkedOption });
-
-    if (this.state.checkedOption === true) {
-      let feesTrue = 0.09 * (this.state.total + price);
-      feesTrue = parseFloat(feesTrue.toFixed(2));
-
-      let grandTotalTrue = this.state.total + price + feesTrue;
-      grandTotalTrue = parseFloat(grandTotalTrue.toFixed(2));
-      this.setState({ fees: feesTrue });
-      this.setState({ optionPrice: price });
-      this.setState({ grandTotal: grandTotalTrue });
-    }
-    if (this.state.checkedOption === false) {
-      let feesFalse = 0.09 * this.state.total;
-      feesFalse = parseFloat(feesFalse.toFixed(2));
-
-      let grandTotalFalse = this.state.total + feesFalse;
-      grandTotalFalse = parseFloat(grandTotalFalse.toFixed(2));
-      this.setState({ fees: feesFalse });
-      this.setState({ optionPrice: null });
-      this.setState({ grandTotal: grandTotalFalse });
-    }
-  }
-
   handlePay() {
     localStorage.setItem("emitter", this.state.emitter);
     localStorage.setItem("recipient", this.state.recipient);
@@ -140,7 +115,7 @@ class ConfirmPayement extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { currentUser, user, alfredId } = this.state;
+    const { currentUser, user } = this.state;
 
     const pricedPrestations=this.computePricedPrestations();
     const countPrestations=this.computeCountPrestations();
@@ -148,7 +123,7 @@ class ConfirmPayement extends React.Component {
     return (
       <Fragment>
         {user === null || currentUser === null ? null : (
-          <>
+          <Grid>
             <Layout>
               <Grid container className={classes.bigContainer}>
                 <Grid container>
@@ -244,7 +219,7 @@ class ConfirmPayement extends React.Component {
               </Grid>
             </Layout>
             <Footer />
-          </>
+          </Grid>
         )}
       </Fragment>
     );
