@@ -90,7 +90,12 @@ const styles = theme => ({
         fontSize:'10px', fontWeight:'300', marginTop:'-100px', height:60, backgroundColor:'white', position:'sticky', top:55, zIndex:20,
         [theme.breakpoints.up('md')]: {
             display: 'none',
-        }},
+        },
+        [theme.breakpoints.down('xs')]: {
+            height: 100,
+            top:65
+        },
+        },
         trait:{
             width: '100%',
             height: 4,
@@ -122,6 +127,9 @@ const styles = theme => ({
         historesp: {
             [theme.breakpoints.down('sm')]: {
                 marginTop: '150px',
+            },
+            [theme.breakpoints.down('xs')]: {
+                marginTop: 50,
             },
         }
 

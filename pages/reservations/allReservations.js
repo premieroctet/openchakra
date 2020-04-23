@@ -480,7 +480,10 @@ class AllReservations extends React.Component {
                                                                 xs={12}
                                                                 style={{
                                                                     textAlign: "center",
-                                                                    marginTop: "15px"
+                                                                    marginTop: "15px",
+                                                                    display:'flex',
+                                                                    justifyContent: 'center'
+
                                                                 }}
                                                             >
                                                                 <UserAvatar user={booking.alfred} />
@@ -665,7 +668,7 @@ class AllReservations extends React.Component {
                                                     <Grid
                                                         item
                                                         xs={12}
-                                                        style={{ textAlign: "center", marginTop: "15px" }}
+                                                        style={{ textAlign: "center", marginTop: "15px", display: 'flex', justifyContent: 'center' }}
                                                     >
                                                         <UserAvatar user={booking.user} />
                                                     </Grid>
