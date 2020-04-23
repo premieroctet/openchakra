@@ -32,7 +32,7 @@ export async function saveAsJSON(components: IComponents) {
     new Blob([serialized], { type: 'application/json' }),
     {
       fileName: name,
-      description: 'Excalidraw file',
+      description: 'OpenChakra file',
     },
     (window as any).handle,
   )
