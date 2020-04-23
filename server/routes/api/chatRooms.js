@@ -9,6 +9,8 @@ const {sendNewMessageToAlfred, sendNewMessageToClient}=require('../../../utils/m
 
 const ChatRooms = require('../../models/ChatRooms');
 
+// FIX : sendNewMessage de client vers Alfred en double
+
 router.get('/test',(req, res) => res.json({msg: 'ChatRooms Works!'}) );
 
 // Get chatrooms for one user

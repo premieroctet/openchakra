@@ -124,7 +124,6 @@ router.post('/register',(req,res) =>{
                         newUser.password = hash;
                         newUser.save()
                             .then(user => {
-                              const s = new SIB();
                               sendVerificationMail(user, req)
                               res.json(user);
                             })
