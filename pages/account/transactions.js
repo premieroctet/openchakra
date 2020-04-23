@@ -6,7 +6,6 @@ import moment from 'moment';
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import Footer from '../../hoc/Layout/Footer/Footer';
 import { Typography } from '@material-ui/core';
 import {Helmet} from 'react-helmet';
 
@@ -17,14 +16,6 @@ const styles = theme => ({
         marginTop: 70,
         flexGrow: 1,
 
-    },
-    exportSVG: {
-        fontFamily: 'sans-serif!important',
-        color: '#2FBCD3',
-    },
-    exportPNG: {
-        fontFamily: 'sans-serif!important',
-        color: '#2FBCD3',
     },
     hidesm: {
         minWidth: '271px',
@@ -58,14 +49,7 @@ const styles = theme => ({
      }
 
 },
-    responsiveContainer: {
-        [theme.breakpoints.down('sm')]: {
-            width:'135%!important',
-
-        }
-    }
-
-    ,toggle: {
+    toggle: {
         [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
         transition: 'margin-left 0.7s',
 
@@ -77,9 +61,6 @@ const styles = theme => ({
              }
       }
     },
-    tabscontainer:{width:'60%',
-        [theme.breakpoints.down('sm')]: {
-            width:'100%',}},
 
     tabweb:{width:'100%', position:'sticky', top:'35px', fontSize:15, backgroundColor:'white', zIndex:'20',
         [theme.breakpoints.down('sm')]: {
@@ -191,7 +172,6 @@ class transactions extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const {user} = this.state;
         const {tabs} = this.state;
         const {paid} = this.state;
         const {paidSoon} = this.state;
@@ -208,7 +188,7 @@ class transactions extends React.Component {
 
                     <Grid className={classes.toggle}  item xs={3} style={{}}>
 
-                         <div className={classes.trigger}></div>
+                         <div className={classes.trigger}/>
                             <Grid container style={{justifyContent: 'center',}}>
                                 <Grid item style={{marginTop: 30,width: 275.25}} className={classes.hidesm}>
                                     <Link href={'/account/notifications'}>

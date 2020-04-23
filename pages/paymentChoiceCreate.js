@@ -106,14 +106,14 @@ class PaymentChoiceCreate extends React.Component {
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-                        <Grid item xs={12} style={{paddingLeft: 55,minHeight: '510px'}}>
+                        <Grid item xs={12} className={classes.mainContainerCardPaiment}>
                             <Grid container>
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Choix du mode de paiement</h1>
                             </Grid>
                             <Grid container>
                                 <Grid item xs={12} md={6} className={classes.containerLeft}>
                                     {cards.length ?
-                                        <Grid style={{display: 'flex'}}>
+                                        <Grid className={classes.flexContainerCard}>
                                             {cards.map((e,index) => (
                                               <Grid>
                                                   {this.state.id_card === e.Id ?
