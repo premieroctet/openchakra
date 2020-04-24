@@ -1,4 +1,3 @@
-const console=require('console');
 
 class RegExpParam extends RegExp {
 
@@ -25,4 +24,11 @@ const fillSms = (pattern, values) => {
   return pattern;
 }
 
-module.exports={fillSms}
+const isPhoneOk = value => {
+  if (!value) return false;
+  if (value.length==10 && value.startsWith('0')) return true;
+  if (value.length==11 && value.startsWith('33')) return true;
+  return false;
+}
+
+module.exports={fillSms, isPhoneOk}

@@ -21,4 +21,6 @@ const generate_id= () => { return new Date().getTime() };
 const COMM_ALFRED=0.0;
 const COMM_CLIENT=0.18;
 
-module.exports={ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR, generate_id, COMM_ALFRED, COMM_CLIENT};
+const SMS_VERIF_DEBUG=true;
+
+module.exports={ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR, generate_id, COMM_ALFRED, COMM_CLIENT, SMS_VERIF_DEBUG};

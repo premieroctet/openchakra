@@ -39,18 +39,18 @@ const BOOKING_EXPIRED_2_ALFRED=31;
 const CONFIRM_PHONE = -1;
 
 const SMS_CONTENTS = {
-  [NEW_BOOKING_MANUAL]:           "{{ params.client_firstname }} a effectué une demande de réservation de votre service {{ params.service_label }}"
-  [CONFIRM_PHONE]:                "(My Alfred) pour valider votre numéro de téléphone portable, merci de saisir le code d'activation suivant : {{ params.sms_code }}"
-  [ASKING_INFO]:                  "{{ params.client_firstname }} a effectué une demande d'information pour votre service {{ params.service_label }}"
-  [BOOKING_CANCELLED_BY_CLIENT]:  "Malheureusement, {{ params.client_firstname }} a annulé la réservation de votre service {{ params.service_label }}"
-  [TRANSFER_TO_ALFRED]:          "(My Alfred), un versement de {{ params.total_revenue }} a été effectué pour votre service {{ params.service_label }}"
-  [BOOKING_CANCELLED_BY_ALFRED]:  "Malheureusement, {{ params.alfred_firstname }} a annulé votre réservation du service {{ params.service_label }}"
-  [ASKINFO_PREAPPROVED]:          "{{ params.alfred_firstname }} a pré approuvé la réservation de votre service {{ params.service_label }}"
-  [BOOKING_REFUSED_2_CLIENT]:     "Malheureusement, {{ params.alfred_firstname }} a refusé votre réservation du service {{ params.service_label }}"
-  [BOOKING_CONFIRMED]:            "{{ params.alfred_firstname }} a confirmé votre réservation de son service {{ params.service_label }}"
-  [NEW_BOOKING]:                  "{{ params.client_firstname }} a réservé votre service {{ params.service_label }}"
-  [BOOKING_EXPIRED_2_CLIENT]:     "Votre réservation du service {{ params.service_label }} par {{ params.alfred_firstname }} est expirée"
-  [BOOKING_EXPIRED_2_ALFRED]:     "La réservation de votre service {{ params.service_label }} par {{ params.client_firstname }} est expirée"
+  [NEW_BOOKING_MANUAL]:           "{{ params.client_firstname }} a effectué une demande de réservation de votre service {{ params.service_label }}",
+  [CONFIRM_PHONE]:                "(My Alfred) pour valider votre numéro de téléphone portable, merci de saisir le code d'activation suivant : {{ params.sms_code }}",
+  [ASKING_INFO]:                  "{{ params.client_firstname }} a effectué une demande d'information pour votre service {{ params.service_label }}",
+  [BOOKING_CANCELLED_BY_CLIENT]:  "Malheureusement, {{ params.client_firstname }} a annulé la réservation de votre service {{ params.service_label }}",
+  [TRANSFER_TO_ALFRED]:          "(My Alfred), un versement de {{ params.total_revenue }} a été effectué pour votre service {{ params.service_label }}",
+  [BOOKING_CANCELLED_BY_ALFRED]:  "Malheureusement, {{ params.alfred_firstname }} a annulé votre réservation du service {{ params.service_label }}",
+  [ASKINFO_PREAPPROVED]:          "{{ params.alfred_firstname }} a pré approuvé la réservation de votre service {{ params.service_label }}",
+  [BOOKING_REFUSED_2_CLIENT]:     "Malheureusement, {{ params.alfred_firstname }} a refusé votre réservation du service {{ params.service_label }}",
+  [BOOKING_CONFIRMED]:            "{{ params.alfred_firstname }} a confirmé votre réservation de son service {{ params.service_label }}",
+  [NEW_BOOKING]:                  "{{ params.client_firstname }} a réservé votre service {{ params.service_label }}",
+  [BOOKING_EXPIRED_2_CLIENT]:     "Votre réservation du service {{ params.service_label }} par {{ params.alfred_firstname }} est expirée",
+  [BOOKING_EXPIRED_2_ALFRED]:     "La réservation de votre service {{ params.service_label }} par {{ params.client_firstname }} est expirée",
 }
 
 const getHost = () => {
@@ -67,13 +67,15 @@ const getHost = () => {
 const sendNotification = (notif_index, destinee, params) => {
 
   // Send mail
-  SIB.sendMail(notif_index, destinee.email, params);
+  if (notif_index != CONFIRM_PHONE) {
+    SIB.sendMail(notif_index, destinee.email, params);
+  }
 
   // Send SMS
   if (destinee.phone && SMS_CONTENTS[notif_index]) {
     const smsContents=fillSms(SMS_CONTENTS[notif_index], params);
     if (!smsContents) {
-      console.error(`Error creating SMS ${notif_index} to ${destinee.phone} with params ${params}`)
+      console.error(`Error creating SMS ${notif_index} to ${destinee.phone} with params ${JSON.stringify(params)}`)
     }
     else {
       SIB.sendSms(destinee.phone, smsContents);
@@ -88,6 +90,16 @@ const sendVerificationMail = (user, req) => {
     {
       link_confirmemail:new URL('/validateAccount?user='+user._id, computeUrl(req)),
       user_firstname: user.firstname,
+    }
+  )
+}
+
+const sendVerificationSMS = user => {
+  sendNotification(
+    CONFIRM_PHONE,
+    user,
+    {
+      sms_code: user.sms_code,
     }
   )
 }
@@ -336,5 +348,5 @@ module.exports={
   sendVerificationMail, sendShopDeleted, sendBookingConfirmed, sendBookingCancelledByAlfred, sendBookingCancelledByClient,
   sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingDetails, sendBookingInfos, sendNewBooking,
   sendShopOnline,sendBookingRefusedToClient, sendAskingInfo, sendNewMessageToAlfred, sendNewMessageToClient,
-  sendAskInfoPreapproved, sendResetPassword, sendNewBookingManual
+  sendAskInfoPreapproved, sendResetPassword, sendNewBookingManual, sendVerificationSMS
 }
