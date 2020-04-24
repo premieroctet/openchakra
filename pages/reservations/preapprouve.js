@@ -16,7 +16,7 @@ moment.locale("fr");
 const _ = require("lodash");
 import styles from './preApprouve/preApprouveStyle'
 import About from '../../components/About/About';
-import UserAvatar from '../../components/avatar/UserAvatar';
+import UserAvatar from '../../components/Avatar/UserAvatar';
 import Typography from '@material-ui/core/Typography';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
 

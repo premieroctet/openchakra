@@ -257,7 +257,6 @@ class DetailsReservation extends React.Component {
                         <Typography
                             style={{
                               fontSize: "1.5rem",
-                              marginTop: "4%",
                               color:
                                   bookingObj === null || currentUser === null
                                       ? null
@@ -871,7 +870,6 @@ class DetailsReservation extends React.Component {
                         container
                         style={{
                           borderBottom: "1.5px #8281813b solid",
-                          marginTop: "2%",
                           paddingBottom: "3%"
                         }}
                       >

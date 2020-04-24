@@ -35,7 +35,7 @@ const styles = theme => ({
     minWidth: '200px!important',
     marginRight: '10px!important',
     marginLeft: '10px!important',
-    boxShadow: '0 5px 4px -2px lightgrey',  
+    boxShadow: '0 5px 4px -2px lightgrey',
   },
   cardAction: {
     height: '100%',
@@ -72,7 +72,7 @@ const popularCategoriesCard = (props) => {
               </Grid>*/}
               <Grid item xs={3} className={classes.center}>
                 {/*<Badge badgeContent={number} color="primary">*/}
-              {/*<Avatar alt="Unknown" src={avatar}/>*/}
+              {/*<Avatar alt="Unknown" src={Avatar}/>*/}
                 {/*<People style={{color: 'lightgrey'}}/>*/}
               {/*</Badge>*/}
               </Grid>
