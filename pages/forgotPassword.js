@@ -8,10 +8,10 @@ import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import setAuthToken from '../utils/setAuthToken';
-
 import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
+import { toast } from 'react-toastify';
 
 const styles = {
     loginContainer: {
@@ -59,7 +59,8 @@ class forgotPassword extends React.Component {
 
         axios.post('/myAlfred/api/users/forgotPassword',user)
             .then(res => {
-                Router.push({pathname:'/'})
+              toast.info(`Un email vous a été envoyé à l'adresse ${this.state.email}`)
+              Router.push({pathname:'/'})
             })
             .catch(err => {
                 console.log(err);

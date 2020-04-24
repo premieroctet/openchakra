@@ -185,7 +185,6 @@ const sendLeaveCommentForAlfred = booking => {
  )
 }
 
-
 const sendResetPassword = (user, token, req) => {
   sendNotification(
     RESET_PASSWORD,
