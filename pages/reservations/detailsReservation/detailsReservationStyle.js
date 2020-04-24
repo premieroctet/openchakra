@@ -107,7 +107,9 @@ export default theme => ({
     fontWeight: "bold",
     marginBottom: "5%",
     [theme.breakpoints.down("xs")]: {
-      fontSize: "1.5rem"
+      fontSize: "1.5rem",
+      display:'flex',
+      justifyContent :'center'
     }
   },
   containerTitleSectionAbout:{
@@ -198,6 +200,11 @@ export default theme => ({
   },
   marginLeftLabel:{
       marginLeft: 30
-
+  },
+  equipmentContainer:{
+    [theme.breakpoints.down("xs")]: {
+      display: 'flex',
+      justifyContent: 'center'
+    }
   }
 })

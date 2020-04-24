@@ -753,7 +753,7 @@ class DetailsReservation extends React.Component {
                           </Grid>
                         </Grid>
                         <Grid container style={{borderBottom: "1.5px #8281813b solid", marginTop: "5%", paddingBottom: "7%"}}>
-                          <Grid item xs={12}>
+                          <Grid item xs={12} className={classes.equipmentContainer}>
                             <Typography variant={"h3"} className={classes.fontSizeTitleSectionAbout}>
                               Matériel fourni
                             </Typography>
@@ -870,7 +870,8 @@ class DetailsReservation extends React.Component {
                         container
                         style={{
                           borderBottom: "1.5px #8281813b solid",
-                          paddingBottom: "3%"
+                          paddingBottom: "3%",
+                          paddingTop: "3%"
                         }}
                       >
                         <Link
