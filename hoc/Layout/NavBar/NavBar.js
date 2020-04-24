@@ -262,7 +262,7 @@ class NavBar extends Component {
         onClose={this.handleMenuClose}
       >
         <MenuItem onClick={this.handleMobileMenuOpen}>
-          {logged ?
+          {user && user.is_alfred ?
             <Typography>
               <Link href={`/shop?id_alfred=${user._id}`}>
                 <a
