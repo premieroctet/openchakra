@@ -679,6 +679,7 @@ router.post('/forgotPassword',(req,res) => {
                 });
 
                 sendResetPassword(user, token, req);
+                res.json();
             }
         })
 });
