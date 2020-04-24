@@ -12,7 +12,8 @@ const CronJob = require('cron').CronJob;
 const mangopay = require('mangopay2-nodejs-sdk');
 const {sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfos,
 sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
-sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual} = require('../../../utils/mailing');
+sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual,
+sendLeaveCommentForClient, sendLeaveCommentForAlfred} = require('../../../utils/mailing');
 moment.locale('fr');
 
 const api = new mangopay({
@@ -101,19 +102,8 @@ router.get('/endConfirmedBookings', passport.authenticate('jwt', { session : fal
     const userId = mongoose.Types.ObjectId(req.user.id);
     Booking.find({
         $and: [
-            {
-                $or: [
-                    {
-                        user: userId
-                    },
-                    {
-                        alfred: userId
-                    }
-                ]
-            },
-            {
-                status: 'Confirmée'
-            }
+            { $or: [ { user: userId }, { alfred: userId } ] },
+            { status: 'Confirmée' }
         ]
     })
     .then(booking => {
@@ -123,9 +113,7 @@ router.get('/endConfirmedBookings', passport.authenticate('jwt', { session : fal
 
             const hourBooking = parseInt(b.end_time.slice(0,2));
             if (moment().isAfter(date)) {
-
                 if (hourNow >= hourBooking) {
-
                     Booking.findByIdAndUpdate(b._id, { status: 'Terminée' }, { new: true })
                         .then(newB => {
                             res.json(newB);
@@ -471,7 +459,8 @@ function getAccount(id){
 
 }, null, true, 'Europe/Paris');*/
 
-new CronJob('0 0 5 * * *', function() {
+//new CronJob('0 0 5 * * *', function() {
+new CronJob('*/30 * * * * *', function() {
     const date = moment(new Date(), 'DD-MM-YYYY').startOf('day');
     Booking.find({status: 'Confirmée',paid:false})
         .populate('user')
@@ -484,7 +473,12 @@ new CronJob('0 0 5 * * *', function() {
                     b.status = 'Terminée';
                     b.paid = true;
                     b.date_payment = moment();
-                    b.save().then().catch();
+                    b.save()
+                      .then( b => {
+                        sendLeaveCommentForAlfred(b);
+                        sendLeaveCommentForClient(b);
+                      })
+                      .catch();
                 }
             })
         })

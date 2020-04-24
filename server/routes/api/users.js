@@ -184,7 +184,9 @@ router.post('/sendSMSVerification',passport.authenticate('jwt',{session:false}),
             if (req.body.phone) {
               user.phone=req.body.phone;
             }
-            sendVerificationSMS(user);
+            if (!sendVerificationSMS(user)) {
+              res.status(400).json({error:"Impossible d'envoyer le SMS"});
+            }
           }
           res.json({sms_code:code})
         })
