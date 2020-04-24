@@ -649,7 +649,7 @@ class ComingReservations extends React.Component {
                                   <Grid item xs={2} className={classes.priceContainer}>
                                     <Grid>
                                       <Typography style={{color: "#4FBDD7", fontWeight: "600"}}>
-                                        {booking.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}€
+                                                          {(booking.amount - booking.fees).toFixed(2)}€
                                       </Typography>
                                     </Grid>
                                   </Grid>
@@ -679,17 +679,7 @@ class ComingReservations extends React.Component {
                                       xs={12}
                                       style={{ textAlign: "center", marginTop: "15px" }}
                                   >
-                                    <img
-                                        src={`../../${booking.user.picture}`}
-                                        alt={"picture"}
-                                        style={{
-                                          width: "80px",
-                                          height: "80px",
-                                          borderRadius: "50%",
-                                          objectFit: "cover",
-                                          margin: "auto"
-                                        }}
-                                    ></img>
+                                                        <UserAvatar user={booking.user} />
                                   </Grid>
                                   <Grid
                                       item
@@ -734,7 +724,7 @@ class ComingReservations extends React.Component {
                                           textAlign: "center"
                                         }}
                                     >
-                                      {booking.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}€
+                                                            {(booking.amount - booking.fees).toFixed(2)}€
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12}>

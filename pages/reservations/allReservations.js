@@ -640,7 +640,7 @@ class AllReservations extends React.Component {
                                                     <Grid item xs={2} className={classes.priceContainer}>
                                                       <Grid>
                                                         <Typography style={{color: "#4FBDD7", fontWeight: "600"}}>
-                                                          {(booking.amount - booking.fees * 2).toFixed(2)}€
+                                                          {(booking.amount - booking.fees).toFixed(2)}€
                                                         </Typography>
                                                       </Grid>
                                                     </Grid>
@@ -716,7 +716,7 @@ class AllReservations extends React.Component {
                                                                 textAlign: "center"
                                                             }}
                                                         >
-                                                            {(booking.amount - booking.fees * 2).toFixed(2)}€
+                                                            {(booking.amount - booking.fees).toFixed(2)}€
                                                         </Typography>
                                                     </Grid>
                                                     <Grid item xs={12} style={{}}>
