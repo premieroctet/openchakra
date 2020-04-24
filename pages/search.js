@@ -53,8 +53,6 @@ const {isIntervalAvailable} = require('../utils/dateutils');
 const geolib = require('geolib');
 const _ = require('lodash');
 
-const { config } = require('../config/config');
-const url = config.apiUrl;
 moment.locale('fr');
 const styles = theme => ({
     bigContainer: {
@@ -70,9 +68,18 @@ const styles = theme => ({
       objectFit: 'cover',
     },
     respfilter:{
-        [theme.breakpoints.down('sm')]: {
-            top: 200,
-        }
+      position: 'sticky',
+      top: 60,
+      zIndex: 10,
+      background: 'white',
+      height: 60,
+      [theme.breakpoints.down('sm')]: {
+          top: 200,
+      },
+      [theme.breakpoints.down('xs')]: {
+        height: 150,
+        top: 0
+      }
     },
     mobilevoir: {
         [theme.breakpoints.up("md")]: {
@@ -139,7 +146,10 @@ class SearchPage extends React.Component {
 
     static getInitialProps ({ query: { keyword, city, gps, selectedAddress, category, service, prestation, search, date} }) {
       // FIX : set city nin AlgoPlaces if provided
-      var init= { keyword: keyword, city:city, gps:gps, selectedAddress:selectedAddress, category:category, service:service, prestation:prestation, search:search, date:date}
+      var init= { keyword: keyword, city:city, selectedAddress:selectedAddress, category:category, service:service, prestation:prestation, search:search, date:date}
+      if (gps) {
+        init['gps']=gps;
+      }
       return init;
     }
 
@@ -166,7 +176,7 @@ class SearchPage extends React.Component {
           gps:'gps' in this.props ? JSON.parse(this.props.gps) : null,
           city:this.props.city || '',
         };
-        if ('date' in this.props) {
+        if ('date' in this.props && this.props.date) {
           var startDate=moment(parseInt(this.props.date));
           startDate.hour(0).minute(0).second(0);
           var endDate=moment(parseInt(this.props.date));
@@ -191,7 +201,7 @@ class SearchPage extends React.Component {
             var catCount={}
             res.data.forEach( c => catCount[c._id]=8);
             st['catCount']=catCount;
-             axios.get(url+'myAlfred/api/shop/all')
+             axios.get('/myAlfred/api/shop/all')
                .then( res => {
                   st['shops']=res.data;
                   axios.get('/myAlfred/api/users/current')
@@ -231,6 +241,15 @@ class SearchPage extends React.Component {
         const {name, checked} = event.target;
         this.setState({[event.target.name]: event.target.checked, statusFilterVisible: false}, () => this.filter() );
     };
+
+    resetFilter() {
+      this.setState({
+        proSelected: false,
+        individualSelected: false,
+        startDate: null,
+        endDate: null,
+      }, () => this.filter())
+    }
 
     // Filter according to pro or particular && dates
     filter() {
@@ -329,13 +348,14 @@ class SearchPage extends React.Component {
 
     restrictServices(serviceUsers, category) {
       const nbToDisplay=this.state.catCount[category._id];
-      const su = serviceUsers.filter( s => s.service.category._id == category._id).slice(0, nbToDisplay);
+      const su = serviceUsers.filter( s => s.service.category._id === category._id).slice(0, nbToDisplay);
+      console.log(su, 'su');
       return su;
     }
 
     hasMoreToDisplay(serviceUsers, category) {
       const nbToDisplay=this.state.catCount[category._id];
-      const nbTotal = serviceUsers.filter( s => s.service.category._id == category._id).length;
+      const nbTotal = serviceUsers.filter( s => s.service.category._id === category._id).length;
       return nbTotal>nbToDisplay;
     }
 
@@ -345,6 +365,18 @@ class SearchPage extends React.Component {
       this.setState({catCount:counts});
     }
 
+    isStatusFilterSet() {
+      return this.state.proSelected || this.state.individualSelected;
+    }
+
+    isDateFilterSet() {
+      return this.state.startDate!=null || this.state.endDate!=null;
+    }
+
+    isSubFilterSet() {
+      return this.isStatusFilterSet() || this.isDateFilterSet();
+    }
+
     render() {
         const {classes} = this.props;
         const {user, categories, gps} = this.state;
@@ -352,11 +384,14 @@ class SearchPage extends React.Component {
         const serviceUsers = this.state.serviceUsersDisplay;
         keyword = keyword ? keyword.trim() : '';
 
+        const statusFilterBg=this.isStatusFilterSet() ? '#2FBCD3':'white';
+        const dateFilterBg=this.isDateFilterSet() ? '#2FBCD3':'white';
+
         return (
           <Fragment>
             <Layout>
               <Grid container className={classes.bigContainer}>
-                <Grid container className={classes.respfilter} style={{position: 'sticky', top: 60, zIndex: 10, background: 'white', height: 60}}>
+                <Grid container className={classes.respfilter}>
                   <Grid item xs={12} style={{height: 50}}>
                     <Grid container>
                       {this.state.statusFilterVisible ?
@@ -404,7 +439,7 @@ class SearchPage extends React.Component {
                             </Grid>
                           </Grid>
                           :
-                          <Grid item xs={5} md={3} onClick={()=> this.statusFilterToggled()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
+                          <Grid key={moment()} item xs={5} md={3} onClick={()=> this.statusFilterToggled()} style={{borderRadius: '15px', backgroundColor: `${statusFilterBg}`, boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
                               <Typography style={{textAlign: 'center', fontSize: '0.8rem', height:43,paddingTop: 13}}>Statut</Typography>
                           </Grid>
                       }
@@ -443,7 +478,7 @@ class SearchPage extends React.Component {
                               </Grid>
                           </Grid>
                             :
-                          <Grid item xs={5} md={3} onClick={()=> this.dateFilterToggled()} style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
+                          <Grid item xs={5} md={3} onClick={()=> this.dateFilterToggled()} style={{borderRadius: '15px', backgroundColor: `${dateFilterBg}`, boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', cursor: 'pointer', height: '45px', margin: 10}}>
                               <Typography style={{textAlign: 'center', fontSize: '0.8rem',paddingTop:13,height:43 }}>Quelle(s) date(s) ?</Typography>
                           </Grid>
                         }
@@ -457,7 +492,7 @@ class SearchPage extends React.Component {
                     <Grid container className="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'inline-block', minHeight: '250px'}}>
                       {categories.map((cat, index) => (
                         <Grid key={index} style={{display: 'inline-block', width: '300px', margin: 'auto 20px'}}>
-                          <Link href={'/search?search=1&category='+cat._id+'&gps='+JSON.stringify(gps)}>
+                          <Link href={'/search?search=1&category='+cat._id+(gps?'&gps='+JSON.stringify(gps):'')}>
                             <Card  style={{width: '300px', margin: '20px auto', borderRadius: '35px', height: '250px'}} className={classes.card}>
                               <CardActionArea>
                                 <CardMedia
@@ -494,7 +529,7 @@ class SearchPage extends React.Component {
                                    this.restrictServices(serviceUsers, cat).map(su => {
                                     return (
                                       <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
-                                        <CardPreview services={su} alfred={user} gps={gps} needAvatar={true}/>
+                                        <CardPreview services={su} alfred={user} gps={gps} needAvatar={true} key={moment()} />
                                       </Grid>
                                     )
                                   })
@@ -516,10 +551,13 @@ class SearchPage extends React.Component {
                               </Grid>
                             ))}
                           </Grid>
-                          {this.props.search && serviceUsers.length === 0 ?
-                            <p>Aucun résultat</p>
+                          {this.props.search && serviceUsers.length === 0 && !this.isSubFilterSet() ?
+                            <p>Nous n'avons pas trouvé de résultat pour votre recherche</p>
                             :
                             null
+                          }
+                          {this.props.search && serviceUsers.length === 0 && this.isSubFilterSet() ?
+                            <p><Button onClick={() => this.resetFilter()}>Aucun résultat, supprimer les filtres</Button></p> :  null
                           }
                  </Grid>
                 { this.props.search || serviceUsers.length>0 ? null:

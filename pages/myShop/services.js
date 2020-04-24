@@ -14,8 +14,6 @@ import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import {ALF_CONDS, CANCEL_MODE} from '../../utils/consts.js';
-const {config} = require('../../config/config');
-const url = config.apiUrl;
 import { toast } from 'react-toastify';
 import Router from "next/router";
 import {selectService, selectPrestation, settingService, assetsService} from '../../utils/validationSteps/validationSteps';
@@ -48,7 +46,7 @@ class services extends React.Component {
                 deadline_unit: "jours", // Unité de prévenance (h:heures, j:jours, s:semaines)
                 level: '',
                 service_address: null,
-                perimeter: 1,
+                perimeter: 10,
                 availabilities: [],
             },
             title: "Précisez vos disponibilités si vous le souhaitez ! ",
@@ -77,7 +75,7 @@ class services extends React.Component {
         }
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(url+'myAlfred/api/users/current')
+        axios.get('/myAlfred/api/users/current')
           .then(res => {
               let user = res.data;
               this.setState({user_id: user._id});
@@ -95,7 +93,7 @@ class services extends React.Component {
         if (this.isNewService()) {
           // Get shop to update exclusion services list
           axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-          axios.get(`${url}myAlfred/api/serviceUser/currentAlfred`)
+          axios.get(`/myAlfred/api/serviceUser/currentAlfred`)
             .then( response  =>  {
               let serviceUsers = response.data;
               var services = serviceUsers.map(su => su.service._id);
@@ -105,7 +103,7 @@ class services extends React.Component {
 
         if (!this.isNewService()) {
           axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-          axios.get(url+`myAlfred/api/serviceUser/${this.props.service_user_id}`)
+          axios.get(`/myAlfred/api/serviceUser/${this.props.service_user_id}`)
             .then(res => {
               let resultat = res.data;
               let shop=this.state.shop;
@@ -192,7 +190,7 @@ class services extends React.Component {
                   formData.append('year',this.state.shop.diplomaYear);
                   formData.append('file_diploma', dpChanged ? this.state.shop.diplomaPicture : null);
 
-                  axios.post(url+'myAlfred/api/serviceUser/addDiploma/'+res.data._id,formData)
+                  axios.post('/myAlfred/api/serviceUser/addDiploma/'+res.data._id,formData)
                     .then(() => { console.log("Diplôme ajouté"); })
                     .catch(err => console.log(err))
                 }
@@ -204,7 +202,7 @@ class services extends React.Component {
                   formData.append('year',this.state.shop.certificationYear);
                   formData.append('file_certification', cpChanged ? this.state.shop.certificationPicture : null);
 
-                  axios.post(url+'myAlfred/api/serviceUser/addCertification/'+res.data._id,formData)
+                  axios.post('/myAlfred/api/serviceUser/addCertification/'+res.data._id,formData)
                     .then(() => { console.log("Certification ajoutée"); })
                     .catch(err => console.log(err))
                 }

@@ -10,9 +10,6 @@ import StarRatings from 'react-star-ratings';
 import {toast} from 'react-toastify';
 import TextField from "@material-ui/core/TextField";
 
-const { config } = require('../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         flexGrow: 1,
@@ -131,8 +128,8 @@ class EvaluateClient extends React.Component {
 
     }
 
-    static getInitialProps ({ query: { booking,id } }) {
-        return { booking:booking,service_id: id }
+    static getInitialProps ({ query: { booking,id,client } }) {
+        return { booking:booking,service_id: id,client:client }
 
     }
 
@@ -143,7 +140,7 @@ class EvaluateClient extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url+'myAlfred/api/users/current')
+            .get('/myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
                 this.setState({user:user});
@@ -156,7 +153,7 @@ class EvaluateClient extends React.Component {
                 }
             );
 
-        axios.get(url+'myAlfred/api/serviceUser/'+id)
+        axios.get('/myAlfred/api/serviceUser/'+id)
             .then(res => {
                 let service = res.data;
                 this.setState({service: service});
@@ -166,7 +163,6 @@ class EvaluateClient extends React.Component {
 
     onComplimentChanged = (name) => {
       const org=this.state[name];
-      console.log(name+" was "+org);
       this.setState({[name]: !org});
     }
 
@@ -195,7 +191,7 @@ class EvaluateClient extends React.Component {
     evaluate() {
         const id = this.props.service_id;
         const booking = this.props.booking;
-        const client = this.props.client_id;
+        const client = this.props.client;
         const content = this.state.content;
         const accueil = this.state.accueil;
         const accuracy = this.state.accuracy;
@@ -211,11 +207,11 @@ class EvaluateClient extends React.Component {
             content: content,
         };
 
-        axios.post(url+'myAlfred/api/reviews/add/client',obj)
+        axios.post('/myAlfred/api/reviews/add/client',obj)
             .then(() => {
                 toast.info('Commentaire enregistré');
                 //Router.push('/merci')
-                Router.push(`/reservations/detailsReservation?id=${booking}&user=true`);
+                Router.push(`/reservations/detailsReservation?id=${booking}`);
             })
             .catch(err => {
                 toast.error('Une erreur est survenue')

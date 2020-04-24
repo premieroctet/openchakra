@@ -5,15 +5,10 @@ import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-
-
-
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
 const styles = {
     loginContainer: {
         alignItems: 'center',
@@ -59,7 +54,7 @@ class view extends React.Component {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.option_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`${url}myAlfred/api/admin/options/all/${id}`)
+        axios.get(`/myAlfred/api/admin/options/all/${id}`)
             .then(response => {
                 let option = response.data;
                 this.setState({option: option});
@@ -86,7 +81,7 @@ class view extends React.Component {
 
         const { label,description,billing } = this.state.option;
         const id = this.props.option_id;
-        axios.put(`${url}myAlfred/api/admin/options/all/${id}`,{label,description,billing})
+        axios.put(`/myAlfred/api/admin/options/all/${id}`,{label,description,billing})
             .then(res => {
 
                 alert('Option modifiée avec succès');
@@ -101,7 +96,7 @@ class view extends React.Component {
 
     handleClick() {
         const id = this.props.option_id;
-        axios.delete(`${url}myAlfred/api/admin/options/all/${id}`)
+        axios.delete(`/myAlfred/api/admin/options/all/${id}`)
             .then(res => {
 
                 alert('Option supprimée avec succès');

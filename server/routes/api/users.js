@@ -7,18 +7,20 @@ const bcrypt = require('bcryptjs');
 const axios = require('axios');
 const mongoose = require('mongoose');
 const path = require('path');
+const {SMS_VERIF_DEBUG} = require("../../../utils/consts");
 
 
 const validateRegisterInput = require('../../validation/register');
 const validateSimpleRegisterInput = require('../../validation/simpleRegister');
 const validateLoginInput = require('../../validation/login');
 
+const {sendResetPassword, sendVerificationMail, sendVerificationSMS} = require('../../../utils/mailing');
+
 const User = require('../../models/User');
 const ResetToken = require('../../models/ResetToken');
 const crypto = require('crypto');
 const multer = require("multer");
 
-const {sendMail} = require('../../../utils/mailer');
 const {computeUrl } = require('../../../config/config');
 
 const storage = multer.diskStorage({
@@ -122,8 +124,8 @@ router.post('/register',(req,res) =>{
                         newUser.password = hash;
                         newUser.save()
                             .then(user => {
-                                res.json(user);
-                                sendAccountValidation(req, user);
+                              sendVerificationMail(user, req)
+                              res.json(user);
                             })
                             .catch(err => console.log(err));
                     })
@@ -138,10 +140,59 @@ router.post('/register',(req,res) =>{
 router.get('/sendMailVerification',passport.authenticate('jwt',{session:false}),(req,res) => {
     User.findById(req.user.id)
         .then(user => {
-          sendAccountValidation(req, user);
+          sendVerificationMail(user, req);
+          res.json({})
         })
         .catch(err => {
             console.log(err)
+        })
+});
+
+// @Route POST /myAlfred/api/users/sendSMSVerification
+// Send email
+// @access private
+router.post('/checkSMSVerification',passport.authenticate('jwt',{session:false}),(req,res) => {
+    const sms_code=req.body.sms_code;
+    User.findById(req.user.id)
+        .then(user => {
+          if (user.sms_code==sms_code) {
+            console.log("Code SSMS OK pour moi");
+            User.findByIdAndUpdate(req.user.id, {sms_code:null, phone_confirmed: true})
+              .then( u => console.log("OK"))
+              .catch( err => console.log(err))
+            res.json({sms_code_ok:true})
+          }
+          else {
+            res.json({sms_code_ok:false})
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          res.status(400).json(err);
+        })
+});
+
+// @Route POST /myAlfred/api/users/sendSMSVerification
+// Send email
+// @access private
+router.post('/sendSMSVerification',passport.authenticate('jwt',{session:false}),(req,res) => {
+    const code= Math.floor(Math.random() * Math.floor(10000)).toString().padStart(4, "0");
+    console.log(`Création code sms ${code} pour ${req.user.id}, debug:${SMS_VERIF_DEBUG}`);
+    User.findByIdAndUpdate(req.user.id, {sms_code: code}, {new:true})
+        .then(user => {
+          if (!SMS_VERIF_DEBUG) {
+            if (req.body.phone) {
+              user.phone=req.body.phone;
+            }
+            if (!sendVerificationSMS(user)) {
+              res.status(400).json({error:"Impossible d'envoyer le SMS"});
+            }
+          }
+          res.json({sms_code:code})
+        })
+        .catch(err => {
+          console.error(err);
+          res.status(400).json(err);
         })
 });
 
@@ -271,7 +322,8 @@ router.delete('/profile/address/:id',passport.authenticate('jwt',{session:false}
 // @Access private
 router.put('/profile/phone',passport.authenticate('jwt',{session:false}),(req,res) => {
     User.findByIdAndUpdate(req.user.id, {
-        phone: req.body.phone
+        phone: req.body.phone,
+        phone_confirmed: req.body.phone_confirmed,
     },{new:true})
         .then(user => {
             res.json(user)
@@ -449,9 +501,7 @@ router.post('/login',(req, res)=> {
                 .then(isMatch => {
                     if(isMatch && user.active === true) {
                         // User matched
-
                         const payload = {id: user.id, name: user.name, firstname: user.firstname, is_admin: user.is_admin, is_alfred: user.is_alfred}; // Create JWT payload
-
                         // Sign token
                         jwt.sign(payload, keys.secretOrKey, (err, token) => {
                             res.json({success: true, token: 'Bearer ' + token});
@@ -628,13 +678,7 @@ router.post('/forgotPassword',(req,res) => {
                     user.update({resetToken: token._id}).catch(err => console.log(err));
                 });
 
-                sendMail(
-                    'no-reply@my-alfred.io', // sender address
-                    `${user.email}`, // list of receivers
-                    "Reset password", // Subject line
-                    `http://localhost:3000/resetPassword?token=${token}`, // plain text body
-                    '<a href='+computeUrl(req)+'resetPassword?token='+token+'>Cliquez içi</a>' // html body
-                );
+                sendResetPassword(user, token, req);
             }
         })
 });

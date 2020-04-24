@@ -21,10 +21,6 @@ import {Helmet} from 'react-helmet';
 
 registerLocale('fr', fr);
 
-
-
-const { config } = require('../config/config');
-const url = config.apiUrl;
 const styles = theme => ({
   fullContainer: {
     backgroundImage: 'url(../static/background/connexion_inscription.png)',
@@ -209,15 +205,15 @@ class signup extends React.Component {
 
         console.log("Submitting");
         axios
-            .post(url+'myAlfred/api/users/register', newUser)
+            .post('/myAlfred/api/users/register', newUser)
             .then(res => {
               toast.info('Inscription réussie');
-              axios.post(url+'myAlfred/api/users/login',{username, password})
+              axios.post('/myAlfred/api/users/login',{username, password})
                   .then(response => {
                     const {token} = response.data;
                     localStorage.setItem('token',token);
                     axios.defaults.headers.common['Authorization'] = token;
-                    axios.post(url+'myAlfred/api/payment/createUser')
+                    axios.post('/myAlfred/api/payment/createUser')
                         .then(()=> {
                           Router.push({pathname:'/addPicture'})
                         })

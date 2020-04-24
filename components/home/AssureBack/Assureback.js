@@ -8,9 +8,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import axios from 'axios';
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
-
 
 const styles = theme => ({
   container: {

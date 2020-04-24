@@ -7,15 +7,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
-
-
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
-
-
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
 
 const styles = {
     loginContainer: {
@@ -70,7 +64,7 @@ class editPicture extends React.Component {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.equipment_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`${url}myAlfred/api/admin/equipment/all/${id}`)
+        axios.get(`/myAlfred/api/admin/equipment/all/${id}`)
             .then(response => {
                 let equipment = response.data;
                 this.setState({equipment: equipment});
@@ -103,9 +97,8 @@ class editPicture extends React.Component {
         formData.append('logo',this.state.logo);
         formData.append('logo2',this.state.logo2);
         const id = this.props.equipment_id;
-        axios.post(`${url}myAlfred/api/admin/equipment/editPicture/${id}`,formData)
+        axios.post(`/myAlfred/api/admin/equipment/editPicture/${id}`,formData)
             .then(res => {
-
                 alert('Logos modifiés avec succès');
                 Router.push({pathname:'/dashboard/equipments/all'})
             })
@@ -114,11 +107,7 @@ class editPicture extends React.Component {
                 localStorage.removeItem('token');
                 Router.push({pathname: '/login'})
             })
-
-
     };
-
-
 
     render()  {
         const { classes } = this.props;

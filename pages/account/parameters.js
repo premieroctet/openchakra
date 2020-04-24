@@ -16,9 +16,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {Helmet} from 'react-helmet';
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         marginTop: 70,
@@ -87,7 +84,7 @@ class parameters extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url+'myAlfred/api/users/current')
+            .get('/myAlfred/api/users/current')
             .then(res => {
                 this.setState({user: res.data, index_google: res.data.index_google,alfred:res.data.is_alfred});
 
@@ -120,7 +117,7 @@ class parameters extends React.Component {
      handleChange = name => event => {
          this.setState({[name]: event.target.checked });
          const data = {index_google:!this.state.index_google};
-         axios.put(url+'myAlfred/api/users/account/indexGoogle', data)
+         axios.put('/myAlfred/api/users/account/indexGoogle', data)
             .then(() => {
                 toast.info('Compte mis à jour');
             })
@@ -130,11 +127,11 @@ class parameters extends React.Component {
     deleteShop = () => {
 
 
-                axios.delete(url+'myAlfred/api/serviceUser/current/allServices')
+                axios.delete('/myAlfred/api/serviceUser/current/allServices')
                     .then(() => {
-                        axios.delete(url+'myAlfred/api/shop/current/delete')
+                        axios.delete('/myAlfred/api/shop/current/delete')
                             .then(() => {
-                                axios.put(url+'myAlfred/api/users/users/deleteAlfred')
+                                axios.put('/myAlfred/api/users/users/deleteAlfred')
                                     .then(() => {
                                         this.setState({open:false});
                                         toast.error('Boutique supprimée');
@@ -150,7 +147,7 @@ class parameters extends React.Component {
 
                     })
                     .catch();
-                axios.delete(url+'myAlfred/api/availability/currentAlfred')
+                axios.delete('/myAlfred/api/availability/currentAlfred')
                     .then()
                     .catch();
 
@@ -160,11 +157,11 @@ class parameters extends React.Component {
 
     deleteAccount = () => {
         if(this.state.alfred === true) {
-            axios.delete(url+'myAlfred/api/serviceUser/current/allServices')
+            axios.delete('/myAlfred/api/serviceUser/current/allServices')
                 .then(() => {
-                    axios.delete(url+'myAlfred/api/shop/current/delete')
+                    axios.delete('/myAlfred/api/shop/current/delete')
                         .then(() => {
-                            axios.put(url+'myAlfred/api/users/current/delete')
+                            axios.put('/myAlfred/api/users/current/delete')
                                 .then(() => {
                                     this.setState({open2:false});
                                     toast.error('Compte désactivé');
@@ -178,11 +175,11 @@ class parameters extends React.Component {
 
                 })
                 .catch();
-            axios.delete(url+'myAlfred/api/availability/currentAlfred')
+            axios.delete('/myAlfred/api/availability/currentAlfred')
                 .then()
                 .catch();
         } else {
-            axios.put(url+'myAlfred/api/users/current/delete')
+            axios.put('/myAlfred/api/users/current/delete')
                 .then(() => {
                     this.setState({open2:false});
                     toast.error('Compte désactivé');

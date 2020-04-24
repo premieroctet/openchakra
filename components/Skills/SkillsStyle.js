@@ -13,7 +13,7 @@ export default theme=>({
     flexDirection: 'column',
     alignItems: 'center',
     width: 'auto',
-    margin: 'auto'
+    margin: 10
   },
   avatarSize:{
     width: 100,

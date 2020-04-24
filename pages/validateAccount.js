@@ -8,9 +8,8 @@ import Button from '@material-ui/core/Button';
 import Router from 'next/router';
 import Layout from '../hoc/Layout/Layout';
 import axios from "axios";
+import { toast } from 'react-toastify';
 
-const { config } = require('../config/config');
-const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -51,8 +50,6 @@ class validateAccount extends React.Component {
     componentDidMount() {
         const user = this.props.id_user;
         this.setState({userID: user});
-
-
     }
 
     onSubmit = e => {
@@ -60,11 +57,11 @@ class validateAccount extends React.Component {
 
         const user = {id:this.state.userID};
         axios
-            .post(url+'myAlfred/api/users/validateAccount',user
+            .post('/myAlfred/api/users/validateAccount',user
             )
             .then(res => {
-                alert('Compte validé');
-                //Router.push({pathname:'/'})
+                toast.info('Compte validé');
+                Router.push('/')
             })
             .catch(err =>
                 console.log(err)

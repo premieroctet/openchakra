@@ -18,9 +18,6 @@ import FormControl from "@material-ui/core/FormControl";
 import Chip from '@material-ui/core/Chip';
 import Select2 from 'react-select';
 
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -100,7 +97,7 @@ class add extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get(url+"myAlfred/api/admin/category/all")
+        axios.get("/myAlfred/api/admin/category/all")
             .then((response) => {
                 let category = response.data;
                 this.setState({all_category: category})
@@ -109,7 +106,7 @@ class add extends React.Component {
 
         });
 
-        axios.get(url+"myAlfred/api/admin/service/all")
+        axios.get("/myAlfred/api/admin/service/all")
             .then((response) => {
                 let service = response.data;
                 this.setState({all_service: service})
@@ -117,7 +114,7 @@ class add extends React.Component {
             console.log(error)
         });
 
-        axios.get(url+"myAlfred/api/admin/billing/all")
+        axios.get("/myAlfred/api/admin/billing/all")
             .then((response) => {
                 let billing = response.data;
                 this.setState({all_billing: billing})
@@ -125,7 +122,7 @@ class add extends React.Component {
             console.log(error)
         });
 
-        axios.get(url+"myAlfred/api/admin/calculating/all")
+        axios.get("/myAlfred/api/admin/calculating/all")
             .then((response) => {
                 let calculating = response.data;
                 let calc_number=calculating.find( c => c.label=='Nombre')._id;
@@ -137,7 +134,7 @@ class add extends React.Component {
             console.log(error)
         });
 
-        axios.get(url+"myAlfred/api/admin/job/all")
+        axios.get("/myAlfred/api/admin/job/all")
             .then((response) => {
                 let job = response.data;
                 this.setState({all_job: job})
@@ -145,7 +142,7 @@ class add extends React.Component {
             console.log(error)
         });
 
-        axios.get(url+"myAlfred/api/admin/searchFilter/all")
+        axios.get("/myAlfred/api/admin/searchFilter/all")
             .then((response) => {
                 let search_filter = response.data;
                 this.setState({all_search_filter: search_filter})
@@ -153,7 +150,7 @@ class add extends React.Component {
             console.log(error)
         });
 
-        axios.get(url+"myAlfred/api/admin/filterPresentation/all")
+        axios.get("/myAlfred/api/admin/filterPresentation/all")
             .then((response) => {
                 let filter_presentation = response.data;
                 let filter_aucun=filter_presentation.find( f => f.label=='Aucun')._id;
@@ -165,7 +162,7 @@ class add extends React.Component {
             console.log(error)
         });
 
-        axios.get(url+"myAlfred/api/admin/tags/all")
+        axios.get("/myAlfred/api/admin/tags/all")
             .then((response) => {
                 let tags = response.data;
                 this.setState({all_tags: tags})
@@ -265,7 +262,7 @@ class add extends React.Component {
         formData.append('tags',JSON.stringify(arrayTags));
 
         axios
-            .post(url+'myAlfred/api/admin/prestation/all', formData)
+            .post('/myAlfred/api/admin/prestation/all', formData)
             .then(res => {
                 alert('Prestation ajoutée');
                 Router.push({pathname:'/dashboard/prestations/all'})

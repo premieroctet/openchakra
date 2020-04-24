@@ -11,10 +11,6 @@ import Commentary from '../components/Commentary/Commentary';
 
 moment.locale("fr");
 
-/*var Rating = require('react-rating');*/
-const { config } = require("../config/config");
-const url = config.apiUrl;
-
 const styles = theme => ({
   exp1: {
     "&::before": {
@@ -176,27 +172,25 @@ class viewProfile extends React.Component {
     this.setState({ user_id: user_id });
 
     axios
-      .get(url + "myAlfred/api/users/users/" + this.props.user_id)
+      .get("/myAlfred/api/users/users/" + this.props.user_id)
       .then(res => {
         this.setState({ user_infos: res.data });
 
         axios
           .get(
-            url +
-              "myAlfred/api/reviews/profile/customerReviewsCurrent/" +
+              "/myAlfred/api/reviews/profile/customerReviewsCurrent/" +
               this.props.user_id
           )
-          .then(res => this.setState({ customerReviews: res.data }));
+          .then(res => this.setState({ customerReviews: res.data })).catch(error => {console.log(error)});
 
         axios
           .get(
-            url +
-              "myAlfred/api/reviews/profile/alfredReviewsCurrent/" +
+              "/myAlfred/api/reviews/profile/alfredReviewsCurrent/" +
               this.props.user_id
           )
           .then(res => this.setState({ alfredReviews: res.data }));
       })
-      .catch(err => console.log(err));
+      .catch(err => {console.log(err)});
   }
 
   handleClick() {
@@ -215,12 +209,12 @@ class viewProfile extends React.Component {
     const { classes } = this.props;
     const { customerComments } = this.state;
     const { depliage } = this.state;
-    const { user_infos, customerReviews, alfredReviews } = this.state;
+    const { user_infos } = this.state;
 
     return (
       <Fragment>
         {user_infos === null ? null : (
-          <>
+          <Grid>
             <Layout>
               <Grid container className={classes.bigContainer}>
                 {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
@@ -630,7 +624,7 @@ class viewProfile extends React.Component {
             </Layout>
 
             <Footer />
-          </>
+          </Grid>
         )}
       </Fragment>
     );

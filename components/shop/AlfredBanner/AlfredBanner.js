@@ -10,9 +10,6 @@ import { toast } from 'react-toastify';
 import { Carousel } from 'react-responsive-carousel';
 import Modal from '@material-ui/core/Modal';
 
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
-
 class alfredBanner extends React.Component{
 
   constructor(props) {
@@ -30,7 +27,7 @@ class alfredBanner extends React.Component{
     onSubmitBanner = e =>{
       e.preventDefault();
       const data = {picture: e.target.label.value};
-      axios.put(url+'myAlfred/api/shop/editBanner',data)
+      axios.put('/myAlfred/api/shop/editBanner',data)
         .then(res => {
           toast.info('Photo modifiée');
           this.setState({open: false}, () =>  this.props.needRefresh() );

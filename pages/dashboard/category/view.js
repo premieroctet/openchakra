@@ -7,15 +7,10 @@ import { withStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
-
-
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 import Select2 from 'react-select';
-
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
 
 const styles = {
     loginContainer: {
@@ -84,7 +79,7 @@ class view extends React.Component {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.category_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`${url}myAlfred/api/admin/category/all/${id}`)
+        axios.get(`/myAlfred/api/admin/category/all/${id}`)
             .then(response => {
                let category = response.data;
                 this.setState({category: category,current_tags: category.tags,});
@@ -102,7 +97,7 @@ class view extends React.Component {
                 }
             });
 
-        axios.get(url+"myAlfred/api/admin/tags/all")
+        axios.get("/myAlfred/api/admin/tags/all")
             .then((response) => {
                 let tags = response.data;
                 this.setState({all_tags: tags})
@@ -138,7 +133,7 @@ class view extends React.Component {
         const tags = arrayTags;
         const { label, description } = this.state.category;
         const id = this.props.category_id;
-        axios.put(`${url}myAlfred/api/admin/category/all/${id}`,{label,tags,description})
+        axios.put(`/myAlfred/api/admin/category/all/${id}`,{label,tags,description})
             .then(res => {
 
                 alert('Categorie modifié avec succès');
@@ -154,7 +149,7 @@ class view extends React.Component {
 
     handleClick() {
         const id = this.props.category_id;
-        axios.delete(`${url}myAlfred/api/admin/category/all/${id}`)
+        axios.delete(`/myAlfred/api/admin/category/all/${id}`)
             .then(res => {
 
                 alert('Categorie supprimée avec succès');

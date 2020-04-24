@@ -5,8 +5,11 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const CronJob = require('cron').CronJob;
 const nodemailer = require("nodemailer");
+const {sendNewMessageToAlfred, sendNewMessageToClient}=require('../../../utils/mailing');
 
 const ChatRooms = require('../../models/ChatRooms');
+
+// FIX : sendNewMessage de client vers Alfred en double
 
 router.get('/test',(req, res) => res.json({msg: 'ChatRooms Works!'}) );
 
@@ -76,10 +79,26 @@ router.post('/addAndConnect', (req, res) => {
 })
 
 router.put('/saveMessages/:id', (req, res) => {
-  ChatRooms.findByIdAndUpdate(req.params.id, { lusender: req.body.messages.lusender, lurecipient: req.body.messages.lurecipient,messages: req.body.messages })
+  ChatRooms.findByIdAndUpdate(req.params.id, { lusender: req.body.messages.lusender, lurecipient: req.body.messages.lurecipient,messages: req.body.messages }, {new:true})
     .then(chatroom => {
       if (!chatroom) return res.status(404).json({msg: 'no chatroom found'})
-      if (chatroom) return res.json();
+      if (chatroom) {
+        Booking.findById(req.body.booking_id)
+          .populate('alfred')
+          .populate('user')
+          .then (b => {
+            const msg=chatroom.messages[chatroom.messages.length-1];
+
+            if (b.alfred._id.equals(msg.idsender)) {
+              sendNewMessageToClient(b, req.params.id, req);
+            }
+            else {
+              sendNewMessageToAlfred(b, req.params.id, req);
+            }
+          })
+          .catch (err => console.log(err))
+        return res.json();
+      }
     })
     .catch(err => console.log(err));
 })
@@ -170,7 +189,7 @@ new CronJob('0 */30 * * * *', function() {
                   pass: '1D7q6PCENKSX5cj622'
                 }
               })
-  
+
               let info = transporter.sendMail({
                 from: 'kirstin85@ethereal.email', // sender address
                 to: `${toEmail}`, // list of receivers

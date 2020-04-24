@@ -18,10 +18,7 @@ import AlfredConditionsCancel from '../components/AlfredConditionsCancel/AlfredC
 import AlfredWelcomedMessage from '../components/AlfredWelcomedMessage/AlfredWelcomedMessage';
 import {Helmet} from 'react-helmet';
 import NavbarMobile from '../components/NavbarMobile/NavbarMobile';
-
-
-const { config } = require('../config/config');
-const url = config.apiUrl;
+import Commentary from '../components/Commentary/Commentary';
 
 class shop extends React.Component {
     constructor(props) {
@@ -56,7 +53,7 @@ class shop extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(url+'myAlfred/api/users/current').then(res => {
+        axios.get('/myAlfred/api/users/current').then(res => {
             let user = res.data;
             if(user) {
                 this.setState({
@@ -68,7 +65,7 @@ class shop extends React.Component {
             console.log(error);
         });
 
-        axios.get(`${url}myAlfred/api/shop/alfred/${this.state.id}`)
+        axios.get(`/myAlfred/api/shop/alfred/${this.state.id}`)
           .then( response  =>  {
               let shop = response.data;
               this.setState({
@@ -84,7 +81,7 @@ class shop extends React.Component {
               console.log(error);
           });
 
-        axios.get(url+'myAlfred/api/shopBanner/all')
+        axios.get('/myAlfred/api/shopBanner/all')
           .then(response => {
               let banner = response.data;
               this.setState({banner: banner})
@@ -128,7 +125,6 @@ class shop extends React.Component {
         const {classes} = this.props;
         let isOwner= this.state.idAlfred === this.state.userId;
 
-        console.log("Skills:"+JSON.stringify(this.state.skills));
         return (
           <Fragment>
               <Layout>
@@ -144,7 +140,7 @@ class shop extends React.Component {
                   <Grid className={classes.marginMainContainer}>
                       <Grid className={classes.aboutAndSkillsMainContainer}>
                           <Grid className={classes.aboutContentContainer}>
-                              <About alfred={this.state.idAlfred} profil={true}/>
+                              <About alfred={this.props.aboutId} profil={true}/>
                           </Grid>
                           <Grid className={classes.skillsContentContainer}>
                               <Skills alfred={this.state.alfred} widthHr={'100%'} skills={this.state.skills}/>
@@ -215,32 +211,17 @@ class shop extends React.Component {
 
                           />
                       </Grid>
-                      {/*
-                        <Grid style={{marginLeft: '5%', marginRight: '5%', marginTop: '3%'}}>
-                            <Grid>
-                                <h3>Commentaires</h3>
+                      <hr className={classes.hrShop}/>
+                      <Grid id="comments" style={{marginLeft: '5%', marginRight: '5%', marginTop: '3%'}}>
+                        <Grid className={classes.titleSkills}>
+                            <h3>Commentaires</h3>
+                        </Grid>
+                        <Grid style={{marginTop: '3%'}}>
+                            <Grid style={{width : '100%'}}>
+                              <Commentary alfred_mode={true} user_id={this.props.aboutId} />
                             </Grid>
-                            <Grid>
-                                <Grid style={{width : '100%'}}>
-                                    <Commentary/>
-                                </Grid>
-                                <hr style={{marginTop: 30, marginBottom: 30}}/>
-                                <Grid style={{width : '100%'}}>
-                                    <Commentary/>
-                                </Grid>
-                                    <hr style={{marginTop: 30, marginBottom: 30}}/>
-                                <Grid style={{width : '100%'}}>
-                                    <Commentary/>
-                                </Grid>
-                            </Grid>
-                            <Grid style={{marginTop:50, marginBottom: 50}}>
-                                <Typography>
-                                    <Link href="#" onClick={preventDefault}>
-                                        Voir plus de commentaires
-                                    </Link>
-                                </Typography>
-                            </Grid>
-                        </Grid>*/}
+                        </Grid>
+                    </Grid>
                   </Grid>
               </Layout>
               <NavbarMobile userId={this.state.userId}/>

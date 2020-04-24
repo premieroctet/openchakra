@@ -12,9 +12,6 @@ import Cards from "react-credit-cards";
 import styles from './paymentChoiceCreate/paymentChoiceCreateStyle'
 moment.locale('fr');
 
-const { config } = require('../config/config');
-const url = config.apiUrl;
-
 class PaymentChoiceCreate extends React.Component {
     constructor(props) {
         super(props);
@@ -41,7 +38,7 @@ class PaymentChoiceCreate extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url+'myAlfred/api/users/current')
+            .get('/myAlfred/api/users/current')
             .then(res => {
                 this.setState({user: res.data});
             })
@@ -54,7 +51,7 @@ class PaymentChoiceCreate extends React.Component {
                 }
             );
 
-        axios.get(url+'myAlfred/api/payment/cardsActive')
+        axios.get('/myAlfred/api/payment/cardsActive')
             .then(response => {
                 let cards = response.data;
                 this.setState({
@@ -77,7 +74,7 @@ class PaymentChoiceCreate extends React.Component {
             amount: total,
             fees: fees
         };
-        axios.post(url+'myAlfred/api/payment/payInDirectCreate',data)
+        axios.post('/myAlfred/api/payment/payInDirectCreate',data)
             .then(() => {
                 Router.push('/paymentDirectSuccessCreate?=' + this.state.booking_id)
 
@@ -92,7 +89,7 @@ class PaymentChoiceCreate extends React.Component {
             amount: total,
             fees: fees
         };
-        axios.post(url+'myAlfred/api/payment/payInCreate',data)
+        axios.post('/myAlfred/api/payment/payInCreate',data)
             .then(res => {
                 let payIn = res.data;
                 Router.push(payIn.RedirectURL)
@@ -109,14 +106,14 @@ class PaymentChoiceCreate extends React.Component {
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-                        <Grid item xs={12} style={{paddingLeft: 55,minHeight: '510px'}}>
-                            <Grid container>
-                                <h1 style={{color: 'dimgray',fontWeight: '100'}}>Choix du mode de paiement</h1>
+                        <Grid item xs={12} className={classes.mainContainerCardPaiment}>
+                            <Grid container className={classes.containerTitle}>
+                                <h1 className={classes.titleStyle}>Choix du mode de paiement</h1>
                             </Grid>
                             <Grid container>
-                                <Grid item xs={12} md={6} className={classes.containerLeft}>
+                                <Grid item className={classes.containerLeft}>
                                     {cards.length ?
-                                        <Grid style={{display: 'flex'}}>
+                                        <Grid className={classes.flexContainerCard}>
                                             {cards.map((e,index) => (
                                               <Grid>
                                                   {this.state.id_card === e.Id ?
@@ -188,12 +185,10 @@ class PaymentChoiceCreate extends React.Component {
                                             </Button>
                                         </Grid>
                                     </Grid>
-
                                 </Grid>
-                                <Grid item xs={6} className={classes.respright}>
+                                <Grid item className={classes.respright}>
                                     <img style={{position: 'sticky', top: 5}} src="../static/resa.svg" alt="beaver"/>
                                 </Grid>
-
                             </Grid>
 
 

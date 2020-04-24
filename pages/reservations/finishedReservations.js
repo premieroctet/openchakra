@@ -9,11 +9,9 @@ import moment from "moment";
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import styles from './finishedReservations/finishedReservationsStyle'
-import UserAvatar from '../../components/avatar/UserAvatar';
+import UserAvatar from '../../components/Avatar/UserAvatar';
 import Button from '@material-ui/core/Button';
 
-const { config } = require("../../config/config");
-const url = config.apiUrl;
 moment.locale("fr");
 
 class FinishedReservations extends React.Component {
@@ -33,17 +31,17 @@ class FinishedReservations extends React.Component {
     axios.defaults.headers.common["Authorization"] = localStorage.getItem(
       "token"
     );
-    axios.get(url + "myAlfred/api/users/current").then(res => {
+    axios.get("/myAlfred/api/users/current").then(res => {
       let result = res.data
       this.setState({ user: result._id });
       if (res.data.is_alfred === true) {
         this.setState({ isAlfred: true });
       }
 
-      axios.get(url + "myAlfred/api/booking/alfredBooking").then(res => {
+      axios.get("/myAlfred/api/booking/alfredBooking").then(res => {
         this.setState({ alfredReservations: res.data });
 
-        axios.get(url + "myAlfred/api/booking/userBooking").then(res => {
+        axios.get("/myAlfred/api/booking/userBooking").then(res => {
           this.setState({ userReservations: res.data });
 
           this.state.alfredReservations.forEach(booking => {
@@ -461,7 +459,7 @@ class FinishedReservations extends React.Component {
                                 </Grid>
                                 <Grid item>
                                   <Grid>
-                                    <Link href={{pathname:"/reservations/detailsReservation", query: { id: booking._id, user: true }}}>
+                                    <Link href={{pathname:"/reservations/detailsReservation", query: { id: booking._id}}}>
                                       <Button color={"primary"} variant={"outlined"}>Détail</Button>
                                     </Link>
                                   </Grid>
@@ -559,13 +557,7 @@ class FinishedReservations extends React.Component {
                                   </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                  <Link
-                                      href={{
-                                        pathname:
-                                            "/reservations/detailsReservation",
-                                        query: { id: booking._id, user: true }
-                                      }}
-                                  >
+                                  <Link href={{ pathname: "/reservations/detailsReservation", query: { id: booking._id} }} >
                                   <Typography
                                     style={{
                                       height: "45px",
@@ -661,7 +653,7 @@ class FinishedReservations extends React.Component {
                             </Grid>
                             <Grid item>
                               <Grid>
-                                <Link href={{pathname: "/reservations/detailsReservation", query: { id: booking._id, user: true }}}>
+                                <Link href={{pathname: "/reservations/detailsReservation", query: { id: booking._id}}}>
                                   <Button color={"primary"} variant={"outlined"}>Détail</Button>
                                 </Link>
                               </Grid>
@@ -746,13 +738,7 @@ class FinishedReservations extends React.Component {
                               </Typography>
                             </Grid>
                             <Grid item xs={12}>
-                              <Link
-                                  href={{
-                                    pathname:
-                                        "/reservations/detailsReservation",
-                                    query: { id: booking._id, user: true }
-                                  }}
-                              >
+                              <Link href={{ pathname: "/reservations/detailsReservation", query: { id: booking._id} }} >
                               <Typography
                                 style={{
                                   height: "45px",

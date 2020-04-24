@@ -7,8 +7,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Card from "@material-ui/core/Card";
 import axios from "axios";
 import Router from "next/router";
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
 
 const styles = theme => ({
   container: {
@@ -94,10 +92,10 @@ class bio extends React.Component {
 
     const id_alfred = self.props.shop;
 
-    
 
 
-    axios.get(`${url}myAlfred/api/shop/alfred/${id_alfred}`)
+
+    axios.get(`/myAlfred/api/shop/alfred/${id_alfred}`)
         .then(function (response) {
 
           let shop = response.data;

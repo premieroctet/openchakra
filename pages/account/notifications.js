@@ -14,9 +14,6 @@ import {Helmet} from 'react-helmet';
 
 moment.locale('fr');
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         marginTop: 70,
@@ -90,7 +87,7 @@ class notifications extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url+'myAlfred/api/users/current')
+            .get('/myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
                 this.setState({user:user});
@@ -143,7 +140,7 @@ class notifications extends React.Component {
           assistance_sms: this.state.assistance_sms,
         };
 
-        axios.put(url+'myAlfred/api/users/account/notifications',data)
+        axios.put('/myAlfred/api/users/account/notifications',data)
             .then(() => {
                 toast.info('Compte mis à jour');
             })

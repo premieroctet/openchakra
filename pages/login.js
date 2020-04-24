@@ -13,9 +13,6 @@ import axios from 'axios';
 import Router from "next/router";
 import {Helmet} from 'react-helmet';
 
-const { config } = require('../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
   fullContainer: {
     display:'flex',
@@ -108,12 +105,12 @@ class login extends React.Component {
     password: this.state.password
   };
 
-    axios.post(url+'myAlfred/api/users/login',user)
+    axios.post('/myAlfred/api/users/login',user)
         .then(res => {
           const {token} = res.data;
           localStorage.setItem('token',token);
           setAuthToken(token);
-          axios.put(url+'myAlfred/api/users/account/lastLogin')
+          axios.put('/myAlfred/api/users/account/lastLogin')
               .then(data => {
                 let path = localStorage.getItem('path');
                 if(path === '/'){

@@ -26,14 +26,13 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {Helmet} from 'react-helmet';
+const {SMS_VERIF_DEBUG} =require('../../utils/consts');
 
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 moment.locale('fr');
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
 const FilledButton = styled.div`
     display: inline-block;
     height: 25px;
@@ -188,16 +187,19 @@ class trustAndVerification extends React.Component {
             creation_date: '',
             status: '',
             open:false,
+            // SMS Code setState
+            smsCodeOpen: false, // Show/hide SMS code modal
+            smsCode: '', // Typed SMS code
+            smsError: null,
         };
         this.editSiret = this.editSiret.bind(this);
     }
 
     componentDidMount() {
-
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url+'myAlfred/api/users/current')
+            .get('/myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
                 this.setState({user:user});
@@ -214,7 +216,7 @@ class trustAndVerification extends React.Component {
                 }
                 if(user.is_alfred) {
                     this.setState({alfred: true});
-                    axios.get(url+'myAlfred/api/shop/currentAlfred')
+                    axios.get('/myAlfred/api/shop/currentAlfred')
                         .then(response => {
                             let result = response.data;
                             this.setState({professional: result.is_professional,particular:result.is_particular,company: result.company});
@@ -311,12 +313,10 @@ class trustAndVerification extends React.Component {
                 'content-type': 'multipart/form-data'
             }
         };
-        axios.post(url+"myAlfred/api/users/profile/idCard",formData,config)
+        axios.post("/myAlfred/api/users/profile/idCard",formData,config)
             .then((response) => {
                 toast.info('Carte d\'identité ajoutée');
                 this.componentDidMount();
-
-
             }).catch();
     };
 
@@ -328,7 +328,7 @@ class trustAndVerification extends React.Component {
                 'content-type': 'multipart/form-data'
             }
         };
-        axios.post(url+"myAlfred/api/users/profile/idCard/addVerso",formData,config)
+        axios.post("/myAlfred/api/users/profile/idCard/addVerso",formData,config)
             .then((response) => {
                 toast.info('Carte d\'identité ajoutée');
 
@@ -340,7 +340,7 @@ class trustAndVerification extends React.Component {
     };
 
     sendEmail = () =>{
-        axios.get(url+'myAlfred/api/users/sendMailVerification')
+        axios.get('/myAlfred/api/users/sendMailVerification')
             .then(() => {
                 toast.info('Email envoyé');
             })
@@ -348,7 +348,18 @@ class trustAndVerification extends React.Component {
     };
 
     sendSms = () => {
-        //function sms
+        axios.post('/myAlfred/api/users/sendSMSVerification')
+          .then (res => {
+            var txt="Le SMS a été envoyé";
+            if (SMS_VERIF_DEBUG) {
+              txt =`PAS DE CREDIT SMS : le code est ${res.data.sms_code} ;-)`;
+            }
+            toast.info(txt);
+            this.setState({smsCodeOpen:true})
+          })
+          .catch(err => {
+              toast.error("Impossible d'envoyer le SMS");
+          })
     };
 
     editSiret() {
@@ -362,7 +373,7 @@ class trustAndVerification extends React.Component {
             naf_ape: this.state.naf_ape,
         };
         axios
-            .put(url+'myAlfred/api/shop/editStatus', newStatus)
+            .put('/myAlfred/api/shop/editStatus', newStatus)
             .then(res => {
                 toast.info('Statut modifié');
                 let status;
@@ -372,7 +383,7 @@ class trustAndVerification extends React.Component {
                     status = 'Particulier'
                 }
                 const data = {status:status};
-                axios.put(url+'myAlfred/api/serviceUser/editStatus',data)
+                axios.put('/myAlfred/api/serviceUser/editStatus',data)
                     .then()
                     .catch()
 
@@ -382,7 +393,7 @@ class trustAndVerification extends React.Component {
 
     deleteRecto() {
         this.setState({open:false});
-        axios.delete(url+'myAlfred/api/users/profile/idCard/recto')
+        axios.delete('/myAlfred/api/users/profile/idCard/recto')
             .then(() => {
                 toast.error('Recto supprimé');
                 setTimeout(() => window.location.reload(), 2000);
@@ -390,6 +401,21 @@ class trustAndVerification extends React.Component {
             })
             .catch();
 
+    }
+
+    checkSmsCode = () => {
+      const sms_code = this.state.smsCode;
+      axios.post("/myAlfred/api/users/checkSMSVerification", {sms_code:sms_code})
+        .then( res => {
+          if (res.data.sms_code_ok) {
+            toast.info("Votre numéro de téléphone est validé")
+            this.setState({smsCodeOpen: false});
+          }
+          else {
+            toast.error("Le code est incorrect")
+          }
+        })
+        .catch(err => toast.error("Erreur à la vérification du code"))
     }
 
     render() {
@@ -400,7 +426,6 @@ class trustAndVerification extends React.Component {
         const {professional} = this.state;
         const {alfred} = this.state;
         const {company} = this.state;
-
 
         return (
             <Fragment>
@@ -854,6 +879,38 @@ class trustAndVerification extends React.Component {
                     </DialogActions>
                 </Dialog>
 
+   <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
+     <DialogTitle id="form-dialog-title">Confirmation du numéro de téléphone</DialogTitle>
+     <DialogContent>
+       <DialogContentText>
+         Saisissez le code reçu par SMS
+       </DialogContentText>
+       <TextField
+         autoFocus
+         margin="dense"
+         id="name"
+         label="Code"
+         type="number"
+         placeholder="0000"
+         maxLength="4"
+         value={this.state.smsCode}
+         onChange={ e => { console.log(e.target.value); this.setState({smsCode: e.target.value})}}
+         fullWidth
+         errors={this.state.smsError}
+       />
+     </DialogContent>
+     <DialogActions>
+       <Button onClick={() => this.setState({smsCodeOpen:false})} color="primary">
+         Annuler
+       </Button>
+       <Button
+         disabled={this.state.smsCode.length!=4}
+         onClick={() => this.checkSmsCode()}
+         color="primary">
+         Confirmer
+       </Button>
+     </DialogActions>
+   </Dialog>
             </Fragment>
         );
     };

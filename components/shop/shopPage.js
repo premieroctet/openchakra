@@ -83,5 +83,11 @@ export default theme =>({
     color: "rgba(84,89,95,0.95)",
     letterSpacing: -1,
     fontWeight: "bold"
+  },
+  titleSkills:{
+    fontSize: "1.6rem",
+    color: "rgba(84,89,95,0.95)",
+    letterSpacing: -1,
+    fontWeight: "bold",
   }
 })

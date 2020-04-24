@@ -27,9 +27,6 @@ import {Helmet} from 'react-helmet';
 
 moment.locale('fr');
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
      bigContainer: {
         marginTop: 70,
@@ -124,7 +121,7 @@ class paymentMethod extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url+'myAlfred/api/users/current')
+            .get('/myAlfred/api/users/current')
             .then(res => {
                 this.setState({user: res.data});
                 this.setState({userName:  this.state.user.name + ' ' + this.state.user.firstname });
@@ -138,7 +135,7 @@ class paymentMethod extends React.Component {
                 }
             );
 
-        axios.get(url+'myAlfred/api/payment/cards')
+        axios.get('/myAlfred/api/payment/cards')
             .then(response => {
                 let cards = response.data;
                 this.setState({cards:cards});
@@ -146,7 +143,7 @@ class paymentMethod extends React.Component {
     }
 
     refreshCards = () =>{
-        axios.get(url+'myAlfred/api/payment/cards')
+        axios.get('/myAlfred/api/payment/cards')
             .then(response => {
                 let cards = response.data;
                 this.setState({cards:cards});
@@ -218,9 +215,9 @@ class paymentMethod extends React.Component {
             csv: csv
         };
 
-        axios.post(url+'myAlfred/api/payment/createCard',obj)
+        axios.post('/myAlfred/api/payment/createCard',obj)
             .then(() => {
-                axios.get(url+'myAlfred/api/payment/cards')
+                axios.get('/myAlfred/api/payment/cards')
                     .then(response => {
                         let cards = response.data;
                         this.setState({cards:cards});
@@ -230,9 +227,9 @@ class paymentMethod extends React.Component {
 
     deleteCard(id) {
         const obj = {id_card:id};
-        axios.put(url+'myAlfred/api/payment/cards',obj)
+        axios.put('/myAlfred/api/payment/cards',obj)
             .then(() => {
-                axios.get(url+'myAlfred/api/payment/cards')
+                axios.get('/myAlfred/api/payment/cards')
                     .then(response => {
                         let cards = response.data;
                         this.setState({cards:cards});

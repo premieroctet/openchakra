@@ -49,18 +49,14 @@ class Skills extends React.Component{
     return (
       <Grid>
         <Grid item>
-          { hideCount ?
-              null
-              :
-              <>
-              <Typography variant="h3" className={classes.titleSkills}>
-                Les compliments reçus par {alfred.firstname}
-              </Typography>
-              <Grid className={ widthHr === 500 ? classes.bigWidth : classes.middleWidth}>
-                <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
-              </Grid>
-              </>
-          }
+          <Grid>
+            <Typography variant="h3" className={classes.titleSkills}>
+              {hideCount ? `Les compliments données par ${alfred.firstname}` : `Les compliments reçus par ${alfred.firstname}`}
+            </Typography>
+            <Grid className={ widthHr === 500 ? classes.bigWidth : classes.middleWidth}>
+              <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
+            </Grid>
+          </Grid>
           <Grid container className={classes.mainContainer}>
             {
               Object.entries(this.state.skills).map(result =>{

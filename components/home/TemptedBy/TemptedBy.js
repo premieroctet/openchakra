@@ -10,9 +10,6 @@ import CardMedia from "@material-ui/core/CardMedia";
 import {RestaurantMenu} from "@material-ui/icons";
 import Card from "@material-ui/core/Card";
 
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
   container: {
     paddingRight: 15,
@@ -115,7 +112,7 @@ class TemptedBy extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(url+'myAlfred/api/prestation/home')
+    axios.get('/myAlfred/api/prestation/home')
         .then(response => {
           let prestation = response.data;
 

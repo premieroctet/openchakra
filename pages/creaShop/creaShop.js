@@ -18,8 +18,6 @@ import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import {ALF_CONDS, CANCEL_MODE} from '../../utils/consts.js';
-const {config} = require('../../config/config');
-const url = config.apiUrl;
 import { toast } from 'react-toastify';
 import Router from "next/router";
 import {creaShopPresentation, selectService, selectPrestation, settingService, assetsService, settingShop, introduceYou} from '../../utils/validationSteps/validationSteps'
@@ -56,7 +54,7 @@ class creaShop extends React.Component {
         deadline_unit: "jours", // Unité de prévenance (h:heures, j:jours, s:semaines)
 	      level: '',
         service_address: null,
-        perimeter: 1,
+        perimeter: 10,
         availabilities: [],
       },
       title: "Précisez vos disponibilités si vous le souhaitez ! ",
@@ -84,7 +82,7 @@ class creaShop extends React.Component {
         }
 
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-    axios.get(url+'myAlfred/api/users/current')
+    axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
         let shop = this.state.shop;
@@ -140,7 +138,7 @@ class creaShop extends React.Component {
       cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
 
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-      axios.post(url+'myAlfred/api/shop/add', cloned_shop)
+      axios.post('/myAlfred/api/shop/add', cloned_shop)
         .then(res => {
 
           var su_id = res.data.services[0]._id;
@@ -151,7 +149,7 @@ class creaShop extends React.Component {
             formData.append('year',cloned_shop.diplomaYear);
             formData.append('file_diploma', dpChanged ? cloned_shop.diplomaPicture : null);
 
-            axios.post(url+'myAlfred/api/serviceUser/addDiploma/'+su_id,formData)
+            axios.post('/myAlfred/api/serviceUser/addDiploma/'+su_id,formData)
               .then(() => { console.log("Diplôme ajouté"); })
               .catch(err => console.log(err))
           }
@@ -163,7 +161,7 @@ class creaShop extends React.Component {
             formData.append('year',cloned_shop.certificationYear);
             formData.append('file_certification', cpChanged ? cloned_shop.certificationPicture : null);
 
-            axios.post(url+'myAlfred/api/serviceUser/addCertification/'+su_id,formData)
+            axios.post('/myAlfred/api/serviceUser/addCertification/'+su_id,formData)
               .then(() => { console.log("Certification ajoutée"); })
               .catch(err => console.log(err))
           }

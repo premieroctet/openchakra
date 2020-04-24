@@ -15,8 +15,6 @@ import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 
 moment.locale('fr');
 const _ = require('lodash');
-const { config } = require('../../config/config');
-const url = config.apiUrl;
 
 const styles = theme => ({
     bigContainer: {
@@ -138,25 +136,25 @@ class Statistiques extends React.Component {
 
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(url+'myAlfred/api/performances/statistics/totalBookings')
+        axios.get('/myAlfred/api/performances/statistics/totalBookings')
             .then(res => {
                 this.setState({totalIncomes: res.data.incomes.toString(),totalPrestations: res.data.prestations})
             })
             .catch(err => console.log(err));
 
-        axios.get(url+'myAlfred/api/performances/statistics/totalViewsServices')
+        axios.get('/myAlfred/api/performances/statistics/totalViewsServices')
             .then(res => {
                 this.setState({totalViewsServices: res.data})
             })
             .catch(err => console.log(err));
 
-        axios.get(url+'myAlfred/api/performances/statistics/totalReviews')
+        axios.get('/myAlfred/api/performances/statistics/totalReviews')
             .then(res => {
                 this.setState({totalReviews: res.data})
             })
             .catch(err => console.log(err));
 
-        axios.get(url+'myAlfred/api/serviceUser/currentAlfred')
+        axios.get('/myAlfred/api/serviceUser/currentAlfred')
             .then(res => {
                 let service = res.data;
                 this.setState({serviceUser: service});
@@ -168,13 +166,13 @@ class Statistiques extends React.Component {
                 this.setState({uniqCategory:uniqCategory});
                 service.forEach(s => {
                     const obj = {label:s.service.label};
-                    axios.post(url+'myAlfred/api/performances/statistics/bookings/service',obj)
+                    axios.post('/myAlfred/api/performances/statistics/bookings/service',obj)
                         .then(response => {
                             this.setState({[s.service.label+'Incomes']:response.data.incomes,[s.service.label+'Prestations']:response.data.prestations})
                         })
                         .catch(error => console.log(error));
 
-                    axios.get(url+'myAlfred/api/performances/statistics/reviews/'+s._id)
+                    axios.get('/myAlfred/api/performances/statistics/reviews/'+s._id)
                         .then(result => {
                             this.setState({[s.service.label+'Reviews']:result.data})
                         })
@@ -183,7 +181,7 @@ class Statistiques extends React.Component {
             })
             .catch(err => console.log(err))
 
-        axios.get(url+'myAlfred/api/users/current').then(res => {
+        axios.get('/myAlfred/api/users/current').then(res => {
             let user = res.data;
             if(user) {
                 this.setState({

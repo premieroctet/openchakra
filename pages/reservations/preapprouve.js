@@ -11,99 +11,14 @@ import Footer from "../../hoc/Layout/Footer/Footer";
 import DatePicker, {registerLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
 import io from "socket.io-client";
-
 registerLocale('fr', fr);
-
-
 moment.locale("fr");
 const _ = require("lodash");
-const { config } = require("../../config/config");
-const url = config.apiUrl;
-
-const styles = theme => ({
-  bigContainer: {
-    marginTop: 100,
-    flexGrow: 1,
-    [theme.breakpoints.down("xs")]: {
-      marginBottom: 100,
-    }
-  },
-  grosHR: {
-    height: "7px",
-    backgroundColor: "#6ec1e4",
-    width: "76%",
-    float: "left"
-  },
-  fournitureHR: {
-    height: "5px",
-    backgroundColor: "#6ec1e4",
-    width: "85%",
-    float: "left"
-  },
-  disponibilityHR: {
-    height: "5px",
-    backgroundColor: "#6ec1e4",
-    width: "103%",
-    float: "left"
-  },
-  conditionsHR: {
-    height: "5px",
-    backgroundColor: "#6ec1e4",
-    width: "189%",
-    float: "left"
-  },
-  perimeterHR: {
-    height: "5px",
-    backgroundColor: "#6ec1e4",
-    width: "223%",
-    float: "left"
-  },
-  dispocard: {
-    minHeight: "100px",
-    width: "200px",
-    textAlign: "center",
-
-    boxShadow: "4px 4px 41px -37px rgba(0,0,0,0.0)",
-    border: "solid 1px #ccc",
-    borderRadius: "10px"
-  },
-  dispocardin: {
-    padding: "1%",
-    fontSize: "17px",
-    fontWeight: "bold",
-    marginBottom: 10
-  },
-
-  prestationlist: {
-    padding: "1%",
-
-    marginBottom: 10,
-    border: "solid 1px #ccc",
-    borderRadius: "5px"
-  },
-  prestationside: {
-    backgroundColor: "transparent",
-    Border: "0px #ccc solid",
-    borderRadius: "10px",
-    marginRight: "10px",
-    marginLeft: "10px",
-    height: "30px"
-  },
-
-  dispoheader: {
-    height: "2%",
-    color: "white",
-    width: "100%",
-    padding: "1%",
-
-    fontSize: "15px",
-    textAlign: "center",
-
-    borderRadius: "0px",
-    backgroundColor: "#F8727F",
-    marginBottom: "20px"
-  }
-});
+import styles from './preApprouve/preApprouveStyle'
+import About from '../../components/About/About';
+import UserAvatar from '../../components/Avatar/UserAvatar';
+import Typography from '@material-ui/core/Typography';
+import BookingDetail from '../../components/BookingDetail/BookingDetail';
 
 const Input2 = ({value,  onClick }) => (
     <Button value={value} color={"inherit"} variant={"outlined"} style={{color:"gray"}} className="example-custom-input" onClick={onClick}>
@@ -139,7 +54,7 @@ class Preapprouve extends React.Component {
     this.setState({booking_id: booking_id});
 
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-    axios.get(url + 'myAlfred/api/booking/' + booking_id)
+    axios.get('/myAlfred/api/booking/' + booking_id)
         .then(res => {
           this.setState({ bookingObj: res.data })
 
@@ -188,23 +103,45 @@ class Preapprouve extends React.Component {
 
     const dateObj = { end_date: endDate, end_time: endHour, status: 'Pré-approuvée' };
 
+    console.log("dateObj:"+JSON.stringify(dateObj));
 
-    if (typeof this.state.bookingObj.end_date !== 'undefined' && typeof this.state.bookingObj.end_time !== 'undefined') {
-      return null;
-    } else {
-      axios.put(url + 'myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
+    axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
 
           .then(res => {
             this.setState({bookingObj: res.data});
             setTimeout(()=>this.socket.emit("changeStatus", res.data),100)
           })
           .catch()
+  }
+
+  computePricedPrestations(){
+    var result={};
+    if (this.state.bookingObj) {
+      this.state.bookingObj.prestations.forEach( p => {
+        result[p.name]=p.price*p.value;
+      })
     }
+    return result;
+  }
+
+  computeCountPrestations(){
+    var result={};
+    if (this.state.bookingObj) {
+      this.state.bookingObj.prestations.forEach( p => {
+        result[p.name]=p.value;
+      })
+    }
+    return result;
   }
 
   render() {
     const { classes } = this.props;
     const { bookingObj } = this.state;
+
+    const pricedPrestations=this.computePricedPrestations();
+    const countPrestations=this.computeCountPrestations();
+
+    const amount= this.state.bookingObj ? parseFloat(this.state.bookingObj.amount)-this.state.bookingObj.fees : 0;
 
     return (
         <Fragment>
@@ -215,21 +152,7 @@ class Preapprouve extends React.Component {
                 <Layout>
                   <Grid container className={classes.bigContainer}>
                     <Grid container>
-                      <br></br>
-                      <Grid
-                          item
-                          md={5}
-                          xs={12}
-                          style={{
-                            textAlign: "left",
-                            margin: "0 auto",
-                            float: "right",
-                            paddingLeft: "3%"
-                          }}
-                      >
-                        <div
-                            style={{ margin: "20px 11%", marginTop: "5%", width: "90%" }}
-                        ></div>
+                      <Grid item md={5} xs={12} style={{textAlign: "left", margin: "0 auto", float: "right", paddingLeft: "3%"}}>
                         <Grid container>
                           <Grid
                               item
@@ -246,48 +169,19 @@ class Preapprouve extends React.Component {
                             >
                               Pré-approuver la réservation de {`${bookingObj.user.firstname} ${bookingObj.user.name}`}{" "}
                             </h2>
-                            <hr
-                                style={{
-                                  width: "100px",
-                                  color: "#F87280",
-                                  border: "solid 3px #F87280 ",
-                                  float: "left",
-                                  marginTop: "-10px"
-                                }}
-                            ></hr>
                           </Grid>
                         </Grid>
-                        <br></br>
-                        <Grid container>
-                          <Grid item xs={5} style={{}}>
-                            <img
-                                src={`../../${bookingObj.user.picture}`}
-                                style={{
-                                  borderRadius: "50%",
-                                  marginLeft: "auto",
-                                  marginRight: "auto",
-                                  zIndex: 501,
-                                  width: "137px",
-                                  height: "137px",
-                                  objectFit:"cover"
-                                }}
-                                alt={"picture"}
-                            />
+                        <Grid container >
+                          <Grid item>
+                            <div style={{ marginLeft: "3%", width:'100%' }}>
+                              <About alfred={bookingObj.user._id} profil={false}/>
+                            </div>
                           </Grid>
-
-                          <Grid item xs={5} style={{}}>
-                            <h3
-                                style={{
-                                  fontSize: "1.6rem",
-                                  color: "rgba(84,89,95,0.95)",
-                                  letterSpacing: -1,
-                                  fontWeight: "bold"
-                                }}
-                            >
-                              A propos de {`${bookingObj.user.firstname} ${bookingObj.user.name}`}
-                            </h3>
-                            <Grid item xs={2} style={{}}></Grid>
-                            <Grid item xs={10} style={{}}></Grid>
+                          <Grid item xs={5} >
+                            <Grid item style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                              <UserAvatar classes={'avatarLetter'} user={bookingObj.user} className={classes.avatarLetter} />
+                              <Typography style={{marginTop:20}} className={classes.textAvatar}>{bookingObj.user.firstname}</Typography>
+                            </Grid>
                           </Grid>
                         </Grid>
 
@@ -295,7 +189,7 @@ class Preapprouve extends React.Component {
                           <hr></hr>
 
                           <Grid container>
-                            <Grid item xs={12} style={{}}>
+                            <Grid item xs={12}>
                               <h3
                                   style={{
                                     fontSize: "1.6rem",
@@ -306,77 +200,18 @@ class Preapprouve extends React.Component {
                               >
                                 Détail de la réservation
                               </h3>
-                              <Grid xs={12} style={{}}>
-                                <Grid
-                                    item
-                                    xs={9}
-                                    style={{ width: "90%", float: "left" }}
-                                >
-                                  <h4>{bookingObj.service}</h4>
-                                </Grid>
-                                {bookingObj.prestations.map(prestation => {
-                                  return (
-                                      <>
-                                        <Grid
-                                            item
-                                            xs={9}
-                                            style={{ width: "90%", float: "left" }}
-                                        >
-                                          <p>{prestation.value}X {prestation.name}</p>
-                                        </Grid>
-                                        <Grid
-                                            item
-                                            xs={3}
-                                            style={{ width: "10%", float: "right" }}
-                                        >
-                                          <p>{prestation.price}€</p>
-                                        </Grid>
-                                      </>
-                                  )
-                                })}
-                                {typeof bookingObj.option === 'undefined' ?
-                                    null
-                                    :
-                                    <>
-                                      <Grid
-                                          item
-                                          xs={9}
-                                          style={{ width: "90%", float: "left" }}
-                                      >
-                                        <p>{bookingObj.option.label}</p>
-                                      </Grid>
-                                      <Grid
-                                          item
-                                          xs={3}
-                                          style={{ width: "10%", float: "right" }}
-                                      >
-                                        {" "}
-                                        <p>{bookingObj.option.price}€</p>
-                                      </Grid>
-                                    </>
-                                }
-
-                                <br></br>
-
-                                <Grid
-                                    item
-                                    xs={9}
-                                    style={{ width: "90%", float: "left" }}
-                                >
-                                  <p>Frais de service</p>
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={3}
-                                    style={{ width: "10%", float: "right" }}
-                                >
-                                  {" "}
-                                  <p>{bookingObj.fees.toFixed(2)}€</p>
-                                </Grid>
+                              <Grid xs={12}>
+                                <BookingDetail
+                                  prestations={pricedPrestations}
+                                  count={countPrestations}
+                                  travel_tax={this.state.bookingObj?this.state.bookingObj.travel_tax : 0}
+                                  pick_tax={this.state.bookingObj?this.state.bookingObj.pick_tax : 0}
+                                  total={amount}
+                                />
                               </Grid>
                             </Grid>
                             <Grid container>
-                              <Grid item xs={12} style={{}}>
+                              <Grid item xs={12}>
                                 <hr></hr>
                                 <h3
                                     style={{
@@ -401,104 +236,116 @@ class Preapprouve extends React.Component {
                                   prestation.
                                 </p>
                                 <br></br>
-                                <Grid
-                                    item
-                                    xs={3}
-                                    style={{
-                                      width: "25%",
-                                      float: "left",
-                                      paddingTop: 15
-                                    }}
-                                >
-                                  <img
-                                      src="../../static/calendarreservation.svg"
-                                      width={"35%"}
-                                  />
-                                </Grid>
-                                <Grid item xs={9} style={{ width: "70%" }}>
-                                  <p>Adresse de la prestation:</p>{" "}
-                                  <p>{bookingObj.address.address}, {bookingObj.address.city} {bookingObj.address.zip_code}</p>
+                                <Grid container style={{alignItems: 'center'}}>
+                                  <Grid item style={{marginRight: 50}}>
+                                    <Grid item>
+                                      <Grid>
+                                        <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
+                                      </Grid>
+                                    </Grid>
+                                  </Grid>
+                                  <Grid item>
+                                    <Grid>
+                                      <p>Adresse de la prestation:</p>{" "}
+                                    </Grid>
+                                    <Grid>
+                                      <p>{bookingObj.address.address}, {bookingObj.address.city} {bookingObj.address.zip_code}</p>
+                                    </Grid>
+                                  </Grid>
                                 </Grid>
                               </Grid>
-                              <Grid item xs={12} style={{}}>
-                                <Grid
-                                    item
-                                    xs={3}
-                                    style={{
-                                      width: "25%",
-                                      float: "left",
-                                      paddingTop: 15
-                                    }}
-                                >
-                                  <img src="../../static/mapmarker.svg" width={"35%"} />
+                              <Grid item style={{display: 'flex', marginTop: 30, marginBottom: 30, alignItems: 'center'}}>
+                                <Grid item style={{marginRight: 50}}>
+                                  <Grid item>
+                                    <Grid>
+                                      <img style={{width: 40, height : 40}} alt={"calendrier"} title={"calendrier"} src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
+                                    </Grid>
+                                  </Grid>
                                 </Grid>
-                                <Grid item xs={5} style={{ width: "50%", display: 'inline-block' }}>
+                                <Grid item style={{display: 'inline-block', width: '100%' }}>
                                   <p>Date de début:</p> <p>{bookingObj.date_prestation} - {moment(bookingObj.time_prestation).format('HH:mm')}</p>
                                 </Grid>
                                 {typeof bookingObj.end_date !== 'undefined' && typeof bookingObj.end_time !== 'undefined' ?
-                                    <Grid item xs={4} style={{ width: "50%", display: 'inline-block' }}>
-                                      <p>Date de fin:</p> <p>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_time}</p>
+                                    <Grid item style={{display: 'flex', width: '100%' }}>
+                                      <Grid>
+                                        <p>Date de fin:</p>
+                                      </Grid>
+                                      <Grid>
+                                        <p>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_time}</p>
+                                      </Grid>
                                     </Grid>
                                     :
                                     null
                                 }
                                 {typeof this.state.bookingObj.end_date === 'undefined' && typeof this.state.bookingObj.end_time === 'undefined' ?
-                                    typeof this.state.end === null ? null :
+                                  typeof this.state.end === null ? null :
 
-                                        <Grid item xs={6} style={{ width: "50%", display: 'inline-block' }}>
-                                      <p>Date de fin:</p> <DatePicker
-                                        selected={moment(this.state.end).isAfter(this.state.currDate) ? this.state.end : this.state.currDate}
-                                        onChange={date => {
-                                          let isToday = moment(date).isSame(moment(new Date()), 'day');
-                                          this.setState({
-                                            end:date,
-                                            isToday: isToday
-                                          }, () => {
-                                            this.setState({
-                                              hourToSend: moment(this.state.begin).isSame(this.state.end, 'day') ? moment(new Date(this.state.time_prestation).setHours(new Date(this.state.time_prestation).getHours() + 1)).utc()._d : moment(this.state.currDate).utc()._d
-                                            })
+                                    <Grid item style={{display: 'flex', width: '100%', alignItems: 'center', flexDirection : 'column', marginLeft: 30 }}>
+                                      <Grid style={{width: '100%'}}>
+                                        <p>Date de fin:</p>
+                                      </Grid>
+                                      <Grid style={{display: 'flex'}}>
+                                        <Grid style={{marginRight: 10}}>
+                                          <DatePicker
+                                            selected={moment(this.state.end).isAfter(this.state.currDate) ? this.state.end : this.state.currDate}
+                                            onChange={date => {
+                                              let isToday = moment(date).isSame(moment(new Date()), 'day');
+                                              this.setState({
+                                                end:date,
+                                                isToday: isToday,
+                                              }, () => {
+                                                this.setState({
+                                                  hourToSend: moment(this.state.begin).isSame(this.state.end, 'day') ? moment(new Date(this.state.time_prestation).setHours(new Date(this.state.time_prestation).getHours() + 1)).utc()._d : moment(this.state.currDate).utc()._d
+                                                })
 
-                                          })
-                                        }}
-                                        customInput={<Input2 />}
-                                        locale='fr'
-                                        showMonthDropdown
-                                        dateFormat="dd/MM/yyyy"
-                                        minDate={this.state.begin}
-                                    /> - <DatePicker
+                                              })
+                                            }}
+                                            customInput={<Input2 />}
+                                            locale='fr'
+                                            showMonthDropdown
+                                            dateFormat="dd/MM/yyyy"
+                                            minDate={this.state.begin}
+                                          />
+                                        </Grid>
+
+                                        - {
+                                        <Grid style={{marginLeft: 10}}>
+                                          <DatePicker
                                             selected={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.time_prestation).setHours(new Date(this.state.time_prestation).getHours() + 1) : this.state.currDate}
-                                        onChange={
-                                          moment(this.state.begin).isSame(this.state.end, 'day') ?
-                                              (date) => this.setState({
-                                                time_prestation: moment(date.setHours(date.getHours() - 1)).utc()._d,
-                                                hour: date,
-                                                hourToSend: moment(date.setHours(date.getHours() + 1)).utc()._d
-                                              })
-                                              :
-                                              (date) => this.setState({
-                                                currDate:date,
-                                                hour: date,
-                                                hourToSend: date
-                                              })
-                                        }
+                                            onChange={
+                                              moment(this.state.begin).isSame(this.state.end, 'day') ?
+                                                (date) => this.setState({
+                                                  time_prestation: moment(date.setHours(date.getHours() - 1)).utc()._d,
+                                                  hour: date,
+                                                  hourToSend: moment(date.setHours(date.getHours() + 1)).utc()._d
+                                                })
+                                                :
+                                                (date) => this.setState({
+                                                  currDate: date,
+                                                  hour: date,
+                                                  hourToSend: date
+                                                })
 
-                                        customInput={<Input2 />}
-                                        showTimeSelect
-                                        showTimeSelectOnly
-                                        minTime={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.min_time_prestation).setHours(new Date(this.state.min_time_prestation).getHours() + 1) : this.state.isToday ? this.state.currDate : null}
-                                        maxTime={moment(this.state.begin).isSame(this.state.end, 'day') || this.state.isToday ? moment().endOf('day').toDate() : null}
+                                            }
 
-                                        timeIntervals={15}
-                                        timeCaption="Heure"
-                                        dateFormat="HH:mm"
-                                        locale='fr'
-                                        minDate={new Date()}
-                                    />
+                                            customInput={<Input2 />}
+                                            showTimeSelect
+                                            showTimeSelectOnly
+                                            timeIntervals={15}
+                                            minTime={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.min_time_prestation).setHours(new Date(this.state.min_time_prestation).getHours() + 1) : this.state.isToday ? this.state.currDate : null}
+                                            maxTime={moment(this.state.begin).isSame(this.state.end, 'day') || this.state.isToday ? moment().endOf('day').toDate() : null}
+                                            timeCaption="Heure"
+                                            dateFormat="HH:mm"
+                                            locale='fr'
+                                            minDate={new Date()}
+                                          />
+                                        </Grid>
+
+                                      }
+                                      </Grid>
                                     </Grid>
-                                    :
-                                    null}
-
-
+                                  :
+                                  null}
                               </Grid>
                             </Grid>
                           </Grid>

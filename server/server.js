@@ -40,6 +40,7 @@ const availability = require('./routes/api/availability');
 const performances = require('./routes/api/performances');
 const payment = require('./routes/api/payment');
 const chatRooms = require('./routes/api/chatRooms');
+const touch = require('./routes/api/touch');
 
 const admin = require('./routes/api/admin/dashboard');
 const path = require('path');
@@ -47,6 +48,8 @@ const app = express();
 const server = require('http').Server(app);
 const SocketIo = require("socket.io");
 
+// Avoid deprecation warning
+mongoose.set('useFindAndModify', false);
 
 nextApp.prepare().then(() => {
 
@@ -68,7 +71,7 @@ const SERVER_PROD=true;
 
 // Connect to MongoDB
     mongoose.connect(config.databaseUrl,{useNewUrlParser: true})
-        .then(() => console.log('MongoDB connected'))
+        .then(() => console.log(`MongoDB connected to ${config.databaseUrl}`))
         .catch(err => console.log(err));
 
 // Passport middleware
@@ -110,6 +113,7 @@ const SERVER_PROD=true;
     app.use('/myAlfred/api/chatRooms', chatRooms);
     app.use('/myAlfred/api/performances',performances);
     app.use('/myAlfred/api/payment',payment);
+    app.use('/myAlfred/api/touch',touch);
 
     //const port = process.env.PORT || 5000;
     const rootPath = require('path').join(__dirname, '/..')
@@ -169,4 +173,3 @@ const SERVER_PROD=true;
         })
     });
 });
-

@@ -10,9 +10,6 @@ import styles from '../shop/componentStyle'
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 class AlfredConditionsCancel extends React.Component{
   constructor(props){
     super(props);
@@ -79,7 +76,7 @@ class AlfredConditionsCancel extends React.Component{
       const welcome_message = this.props.shop.welcome_message;
 
 
-      axios.put(url+'myAlfred/api/shop/editParameters',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card,
+      axios.put('/myAlfred/api/shop/editParameters',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card,
         recommandations,welcome_message,flexible_cancel,moderate_cancel,strict_cancel})
         .then(() => {
           toast.info('Paramètres modifiés');

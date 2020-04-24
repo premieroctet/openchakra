@@ -1,4 +1,4 @@
-/**/ 
+/**/
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
@@ -8,8 +8,6 @@ import PopularCategoriesCard from './PoplarCategoriesCard/PopularCategoriesCard'
 import Head from 'next/head';
 import axios from 'axios';
 import Link from 'next/link';
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
 
 const styles = theme => ({
 
@@ -80,7 +78,7 @@ class popularCategories extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(url+'myAlfred/api/category/all')
+    axios.get('/myAlfred/api/category/all')
         .then(response => {
           let category = response.data;
 
@@ -89,7 +87,7 @@ class popularCategories extends React.Component {
 
           this.setState({
             category: category,
-           
+
 
           })
         })

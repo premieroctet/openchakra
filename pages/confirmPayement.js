@@ -10,104 +10,13 @@ import { withStyles } from "@material-ui/core/styles";
 import Footer from "../hoc/Layout/Footer/Footer";
 import About from '../components/About/About';
 import UserAvatar from '../components/Avatar/UserAvatar';
+import BookingDetail from '../components/BookingDetail/BookingDetail';
+import styles from './confirmPayement/confirmPayement';
+const {booking_datetime_str} = require('../utils/dateutils');
 
 moment.locale("fr");
 const _ = require("lodash");
-const { config } = require("../config/config");
-const url = config.apiUrl;
 
-const styles = theme => ({
-  bigContainer: {
-    flexGrow: 1
-  },
-  grosHR: {
-    height: "7px",
-    backgroundColor: "#6ec1e4",
-    width: "76%",
-    float: "left"
-  },
-  fournitureHR: {
-    height: "5px",
-    backgroundColor: "#6ec1e4",
-    width: "85%",
-    float: "left"
-  },
-  disponibilityHR: {
-    height: "5px",
-    backgroundColor: "#6ec1e4",
-    width: "103%",
-    float: "left"
-  },
-  conditionsHR: {
-    height: "5px",
-    backgroundColor: "#6ec1e4",
-    width: "189%",
-    float: "left"
-  },
-  perimeterHR: {
-    height: "5px",
-    backgroundColor: "#6ec1e4",
-    width: "223%",
-    float: "left"
-  },
-  dispocard: {
-    minHeight: "100px",
-    width: "200px",
-    textAlign: "center",
-
-    boxShadow: "4px 4px 41px -37px rgba(0,0,0,0.0)",
-    border: "solid 1px #ccc",
-    borderRadius: "10px"
-  },
-  dispocardin: {
-    padding: "1%",
-    fontSize: "17px",
-    fontWeight: "bold",
-    marginBottom: 10
-  },
-
-  prestationlist: {
-    padding: "1%",
-
-    marginBottom: 10,
-    border: "solid 1px #ccc",
-    borderRadius: "5px"
-  },
-  prestationside: {
-    backgroundColor: "transparent",
-    Border: "0px #ccc solid",
-    borderRadius: "10px",
-    marginRight: "10px",
-    marginLeft: "10px",
-    height: "30px"
-  },
-
-  dispoheader: {
-    height: "2%",
-    color: "white",
-    width: "100%",
-    padding: "1%",
-
-    fontSize: "15px",
-    textAlign: "center",
-
-    borderRadius: "0px",
-    backgroundColor: "#F8727F",
-    marginBottom: "20px"
-  },
-  avatarLetter:{
-    height: 100,
-    width: 100,
-    margin: 'auto',
-    fontSize: 'xx-large',
-  },
-  textAvatar: {
-    textAlign: 'center',
-    color: 'black',
-    margin: 'auto',
-    fontSize: 20,
-  },
-});
 
 class ConfirmPayement extends React.Component {
   constructor(props) {
@@ -124,7 +33,7 @@ class ConfirmPayement extends React.Component {
       prestations: [],
       pick_tax: null,
       travel_tax: null,
-      total: null,
+      total: 0,
       fees: null,
       grandTotal: null,
       checkedOption: false,
@@ -142,11 +51,10 @@ class ConfirmPayement extends React.Component {
 
   componentDidMount() {
     const bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
-    console.log(bookingObj);
 
     axios.defaults.headers.common["Authorization"] = localStorage.getItem( "token");
 
-    axios.get(url + "myAlfred/api/users/current").then(res => {
+    axios.get("/myAlfred/api/users/current").then(res => {
       this.setState({ currentUser: res.data });
     });
 
@@ -171,37 +79,12 @@ class ConfirmPayement extends React.Component {
     localStorage.setItem("path", Router.pathname);
     axios.defaults.headers.common["Authorization"] = localStorage.getItem( "token");
 
-    axios.get(url + "myAlfred/api/serviceUser/" + id).then(res => {
+    axios.get("/myAlfred/api/serviceUser/" + id).then(res => {
       this.setState({
         user: res.data.user,
         languages: res.data.user.languages
       });
     });
-  }
-
-  async handleCheckedOption(price) {
-    await this.setState({ checkedOption: !this.state.checkedOption });
-
-    if (this.state.checkedOption === true) {
-      let feesTrue = 0.09 * (this.state.total + price);
-      feesTrue = parseFloat(feesTrue.toFixed(2));
-
-      let grandTotalTrue = this.state.total + price + feesTrue;
-      grandTotalTrue = parseFloat(grandTotalTrue.toFixed(2));
-      this.setState({ fees: feesTrue });
-      this.setState({ optionPrice: price });
-      this.setState({ grandTotal: grandTotalTrue });
-    }
-    if (this.state.checkedOption === false) {
-      let feesFalse = 0.09 * this.state.total;
-      feesFalse = parseFloat(feesFalse.toFixed(2));
-
-      let grandTotalFalse = this.state.total + feesFalse;
-      grandTotalFalse = parseFloat(grandTotalFalse.toFixed(2));
-      this.setState({ fees: feesFalse });
-      this.setState({ optionPrice: null });
-      this.setState({ grandTotal: grandTotalFalse });
-    }
   }
 
   handlePay() {
@@ -213,68 +96,63 @@ class ConfirmPayement extends React.Component {
     })
   }
 
+  computePricedPrestations(){
+    var result={};
+    const count=this.state.count;
+    this.state.prestations.forEach( p => {
+      result[p.name]=p.price*p.value;
+    })
+    return result;
+  }
+
+  computeCountPrestations(){
+    var result={};
+    this.state.prestations.forEach( p => {
+      result[p.name]=p.value;
+    })
+    return result;
+  }
+
   render() {
     const { classes } = this.props;
-    const { currentUser, languages, user, alfredId } = this.state;
+    const { currentUser, user } = this.state;
+
+    const pricedPrestations=this.computePricedPrestations();
+    const countPrestations=this.computeCountPrestations();
 
     return (
       <Fragment>
         {user === null || currentUser === null ? null : (
-          <>
+          <Grid>
             <Layout>
               <Grid container className={classes.bigContainer}>
                 <Grid container>
-                  <Grid item md={5} xs={12} style={{textAlign: "left", margin: "0 auto", float: "right", paddingLeft: "3%"}}>
-                    <div
-                      style={{
-                        margin: "20px 11%",
-                        marginTop: "5%",
-                        width: "90%"
-                      }}
-                    ></div>
+                  <Grid item md={5} xs={12} className={classes.leftContainer}>
                     <Grid container>
-                      <Grid
-                        item
-                        xs={12}
-                        style={{ marginTop: 50, marginBottom: 30 }}
-                      >
-                        <h2
-                          style={{
-                            fontSize: "2rem",
-                            color: "rgba(84,89,95,0.95)",
-                            letterSpacing: -1,
-                            fontWeight: "100"
-                          }}
-                        >
+                      <Grid item xs={12} className={classes.marginItemContainer}>
+                        <h2 className={classes.h2Style}>
                           Détail de votre réservation
                         </h2>
                       </Grid>
                     </Grid>
-                    <Grid container>
-                      <Grid item>
-                        <div style={{ marginLeft: "3%", width:'100%' }}>
-                          <About alfred={alfredId} profil={false}/>
+                    <Grid container className={classes.containerAboutAndAvatar}>
+                      <Grid item className={classes.marginContainerAvatar}>
+                        <div style={{ width:'100%' }}>
+                          <About alfred={user._id} profil={false}/>
                         </div>
                       </Grid>
-                      <Grid item xs={5}>
-                        <Grid item className={classes.itemAvatar}>
+                      <Grid item className={classes.containerAvatar}>
+                        <Grid item>
                           <UserAvatar classes={'avatarLetter'} user={user} className={classes.avatarLetter} />
                           <Typography style={{marginTop:20}} className={classes.textAvatar}>{user.firstname}</Typography>
                         </Grid>
                       </Grid>
                     </Grid>
 
-                    <div style={{ marginTop: "8%", paddingLeft: '3%' }}>
+                    <div style={{ paddingLeft: '3%' }}>
                       <hr></hr>
                       <Grid container>
-                        <h3
-                          style={{
-                            fontSize: "1.6rem",
-                            color: "rgba(84,89,95,0.95)",
-                            letterSpacing: -1,
-                            fontWeight: "bold"
-                          }}
-                        >
+                        <h3 className={classes.h3Style}>
                           A propos de votre réservation
                         </h3>
                         <Grid item xs={12} style={{display : 'flex', alignItems:'center'}}>
@@ -286,7 +164,7 @@ class ConfirmPayement extends React.Component {
                           <Grid item xs={9} style={{marginLeft: 25}}>
                             <p>Date et heure de la prestation:</p>{" "}
                             <p>
-                              {this.state.date} - {moment(this.state.hour).format('HH:mm')}
+                              {booking_datetime_str(this.state.bookingObj)}
                             </p>
                           </Grid>
                         </Grid>
@@ -304,121 +182,19 @@ class ConfirmPayement extends React.Component {
                           </Grid>
                         </Grid>
                       </Grid>
-                      <Grid container>
-                        <Grid item xs={12}>
-                          <h3
-                            style={{
-                              fontSize: "1.6rem",
-                              color: "rgba(84,89,95,0.95)",
-                              letterSpacing: -1,
-                              fontWeight: "bold"
-                            }}
-                          >
+                      <Grid container className={classes.widthLarge}>
+                        <Grid item className={classes.widthLarge}>
+                          <h3 className={classes.h3Style}>
                             Paiement
                           </h3>
-                          <Grid xs={12}>
-                            {this.state.prestations.length
-                              ? this.state.prestations.map(prestation => {
-                                  return (
-                                    <>
-                                      <Grid
-                                        item
-                                        xs={9}
-                                        style={{ width: "90%", float: "left" }}
-                                      >
-                                        <p>
-                                          {prestation.value}X {prestation.name}
-                                        </p>
-                                      </Grid>
-                                      <Grid
-                                        item
-                                        xs={3}
-                                        style={{ width: "10%", float: "right" }}
-                                      >
-                                        <p>
-                                          {(prestation.price * prestation.value).toFixed(2)}€
-                                        </p>
-                                      </Grid>
-                                    </>
-                                  );
-                                })
-                              : null}
-
-                            { this.state.travel_tax ?
-                            <>
-                            <br></br>
-                            <Grid item xs={9} style={{ width: "90%", float: "left" }} >
-                              <p>Frais de déplacement</p>
-                            </Grid>
-                            <Grid item xs={3} style={{ width: "10%", float: "right" }} >
-                              {" "} <p>{this.state.travel_tax.toFixed(2)}€</p>
-                            </Grid>
-                            </>
-                            :
-                            null
-                            }
-
-                            { this.state.pick_tax ?
-                            <>
-                            <br></br>
-                            <Grid item xs={9} style={{ width: "90%", float: "left" }} >
-                              <p>Frais de livraison/enlèvement</p>
-                            </Grid>
-                            <Grid item xs={3} style={{ width: "10%", float: "right" }} >
-                              {" "} <p>{this.state.pick_tax.toFixed(2)}€</p>
-                            </Grid>
-                            </>
-                            :
-                            null
-                            }
-
-                            <br></br>
-                            <Grid item xs={9} style={{ width: "90%", float: "left" }} >
-                              <p>Frais de service</p>
-                            </Grid>
-                            <Grid item xs={3} style={{ width: "10%", float: "right" }} >
-                              {" "} <p>{this.state.fees.toFixed(2)}€</p>
-                            </Grid>
-
-                            <Grid
-                              item
-                              xs={9}
-                              style={{
-                                width: "90%",
-                                float: "left",
-                                fontSize: 25,
-                                fontWeight: 600,
-                                color: "#2FBCD3"
-                              }}
-                            >
-                              <p>Total</p>
-                            </Grid>
-                            <Grid
-                              item
-                              xs={3}
-                              style={{
-                                width: "10%",
-                                float: "right",
-                                fontWeight: 600,
-                                fontSize: 25,
-                                color: "#2FBCD3"
-                              }}
-                            >
-                              {" "}
-                              <p>{this.state.grandTotal.toFixed(2)}€</p>
-                              <Grid style={{ float: "right" }} item xs={12}>
-                                {" "}
+                          <Grid className={classes.widthLarge}>
+                            <BookingDetail prestations={pricedPrestations} count={countPrestations} total={this.state.grandTotal} client_fee={this.state.fees} travel_tax={this.state.travel_tax} pick_tax={this.state.pick_tax}/>
+                            <Grid item className={classes.buttonContainerPiad}>
+                              <Grid item>
                                 <Button
                                   color={"secondary"}
                                   variant={"contained"}
-                                  style={{
-                                    color: "white",
-                                    fontSize: "16px",
-                                    paddingLeft: "20px",
-                                    paddingRight: "20px",
-                                    marginBottom: 50,
-                                    marginRight: 20
-                                  }}
+                                  className={classes.buttonPaid}
                                   onClick={() => {
                                     this.handlePay();
                                   }}
@@ -436,32 +212,14 @@ class ConfirmPayement extends React.Component {
                   </Grid>
 
                   {/*Contenu à droite*/}
-                  <Grid
-                    item
-                    xs={12}
-                    md={7}
-                    style={{ marginTop: "2%", marginBottom: "5%" }}
-                  >
-                    <Grid
-                      container
-                      style={{
-                        backgroundImage: `url('../../static/resa.svg')`,
-                        backgroundPosition: "cover",
-                        backgroundRepeat: "no-repeat",
-                        border: "thin solid transparent",
-                        maxWidth: "100%",
-                        height: "90vh",
-                        padding: "2%",
-                        position: "sticky",
-                        top: 100
-                      }}
-                    ></Grid>{" "}
+                  <Grid item xs={12} md={7} className={classes.rightContainer}>
+                    <Grid className={classes.backgroundRightContainer} container/>
                   </Grid>
-                </Grid>{" "}
+                </Grid>
               </Grid>
             </Layout>
             <Footer />
-          </>
+          </Grid>
         )}
       </Fragment>
     );

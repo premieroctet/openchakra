@@ -5,15 +5,10 @@ import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-
-
-
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
 const styles = {
     loginContainer: {
         alignItems: 'center',
@@ -57,7 +52,7 @@ class view extends React.Component {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.job_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`${url}myAlfred/api/admin/job/all/${id}`)
+        axios.get(`/myAlfred/api/admin/job/all/${id}`)
             .then(response => {
                 let job = response.data;
                 this.setState({job: job});
@@ -84,7 +79,7 @@ class view extends React.Component {
 
         const { label } = this.state.job;
         const id = this.props.job_id;
-        axios.put(`${url}myAlfred/api/admin/job/all/${id}`,{label})
+        axios.put(`/myAlfred/api/admin/job/all/${id}`,{label})
             .then(res => {
 
                 alert('Métier modifié avec succès');
@@ -103,7 +98,7 @@ class view extends React.Component {
 
     handleClick() {
         const id = this.props.job_id;
-        axios.delete(`${url}myAlfred/api/admin/job/all/${id}`)
+        axios.delete(`/myAlfred/api/admin/job/all/${id}`)
             .then(res => {
 
                 alert('Métier supprimé avec succès');

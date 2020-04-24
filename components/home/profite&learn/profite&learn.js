@@ -13,9 +13,6 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
 import Link from 'next/link';
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
-
 
 const styles = theme => ({
   container: {

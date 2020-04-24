@@ -12,9 +12,6 @@ import axios from "axios";
 import FormControl from "@material-ui/core/FormControl";
 import Select2 from 'react-select';
 
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -76,7 +73,7 @@ class add extends React.Component {
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(url+"myAlfred/api/admin/tags/all")
+        axios.get("/myAlfred/api/admin/tags/all")
             .then((response) => {
                 let tags = response.data;
                 this.setState({all_tags: tags})
@@ -119,7 +116,7 @@ class add extends React.Component {
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .post(url+'myAlfred/api/admin/category/all', formData)
+            .post('/myAlfred/api/admin/category/all', formData)
             .then(res => {
                 alert('Catégorie ajouté');
                 Router.push({pathname:'/dashboard/category/all'})

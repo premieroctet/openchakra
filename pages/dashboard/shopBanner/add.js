@@ -10,8 +10,6 @@ import Router from 'next/router';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
 
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -68,7 +66,7 @@ class add extends React.Component {
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .post(url+'myAlfred/api/admin/shopBanner/all', formData)
+            .post('/myAlfred/api/admin/shopBanner/all', formData)
             .then(res => {
                 alert('Bannière ajoutée');
                 Router.push({pathname:'/dashboard/shopBanner/all'})

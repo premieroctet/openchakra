@@ -5,16 +5,10 @@ import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-
-
-
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 import Link from "next/link";
-
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
 
 const styles = {
     loginContainer: {
@@ -58,7 +52,7 @@ class view extends React.Component {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.equipment_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`${url}myAlfred/api/admin/equipment/all/${id}`)
+        axios.get(`/myAlfred/api/admin/equipment/all/${id}`)
             .then(response => {
                 let equipment = response.data;
                 this.setState({equipment: equipment});
@@ -85,7 +79,7 @@ class view extends React.Component {
 
         const { label } = this.state.equipment;
         const id = this.props.equipment_id;
-        axios.put(`${url}myAlfred/api/admin/equipment/all/${id}`,{label})
+        axios.put(`/myAlfred/api/admin/equipment/all/${id}`,{label})
             .then(res => {
 
                 alert('Equipement modifié avec succès');
@@ -98,15 +92,12 @@ class view extends React.Component {
                     Router.push({pathname: '/login'})
                 }
             })
-
-
     };
 
     handleClick() {
         const id = this.props.equipment_id;
-        axios.delete(`${url}myAlfred/api/admin/equipment/all/${id}`)
+        axios.delete(`/myAlfred/api/admin/equipment/all/${id}`)
             .then(res => {
-
                 alert('Equipement supprimé avec succès');
                 Router.push({pathname:'/dashboard/equipments/all'})
             })

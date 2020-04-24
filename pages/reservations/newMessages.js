@@ -9,11 +9,8 @@ import axios from "axios";
 import _ from 'lodash';
 import moment from 'moment';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
-import UserAvatar from '../../components/avatar/UserAvatar';
+import UserAvatar from '../../components/Avatar/UserAvatar';
 import Button from '@material-ui/core/Button';
-
-const { config } = require("../../config/config");
-const url = config.apiUrl;
 
 class NewMessages extends React.Component {
   constructor(props) {
@@ -33,13 +30,13 @@ class NewMessages extends React.Component {
     axios.defaults.headers.common["Authorization"] = localStorage.getItem(
         "token"
     );
-    axios.get(url+"myAlfred/api/users/current").then(res => {
+    axios.get("/myAlfred/api/users/current").then(res => {
       this.setState({ idEmitter: res.data._id });
       if(res.data.is_alfred === true){
         this.setState({isAlfred: true})
       }
     });
-    axios.get(url + 'myAlfred/api/chatRooms/nonViewedMessages')
+    axios.get('/myAlfred/api/chatRooms/nonViewedMessages')
         .then(res => {
           this.setState({
             alfredReservations: res.data[0],
@@ -49,7 +46,7 @@ class NewMessages extends React.Component {
 
 
     axios
-        .get(url+"myAlfred/api/chatRooms/userChatRooms")
+        .get("/myAlfred/api/chatRooms/userChatRooms")
         .then(res => {
           this.setState({ chatrooms: res.data });
         });

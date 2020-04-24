@@ -23,8 +23,6 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "next/link";
 
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
 const styles = {
     loginContainer: {
         alignItems: 'center',
@@ -106,7 +104,7 @@ class view extends React.Component {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.service_id;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(`${url}myAlfred/api/admin/service/all/${id}`)
+        axios.get(`/myAlfred/api/admin/service/all/${id}`)
             .then(response => {
                 let service = response.data;
                 console.log("Received from API:"+JSON.stringify(service));
@@ -139,7 +137,7 @@ class view extends React.Component {
                 }
             });
 
-        axios.get(url+"myAlfred/api/admin/category/all")
+        axios.get("/myAlfred/api/admin/category/all")
             .then((response) => {
                 let category = response.data;
                 this.setState({all_category: category})
@@ -147,7 +145,7 @@ class view extends React.Component {
             console.log(error)
         });
 
-        axios.get(url+"myAlfred/api/admin/tags/all")
+        axios.get("/myAlfred/api/admin/tags/all")
             .then((response) => {
                 let tags = response.data;
                 this.setState({all_tags: tags})
@@ -155,7 +153,7 @@ class view extends React.Component {
             console.log(error)
         });
 
-        axios.get(url+"myAlfred/api/admin/equipment/all")
+        axios.get("/myAlfred/api/admin/equipment/all")
             .then((response) => {
                 let equipments = response.data;
                 this.setState({all_equipments: equipments})
@@ -170,7 +168,7 @@ class view extends React.Component {
         state[e.target.name] = e.target.value;
         this.setState({service:state});
     };
- 
+
     onChangeLocation = e => {
       console.log("onChangeLocation");
       const service = this.state.service;
@@ -256,7 +254,7 @@ class view extends React.Component {
         const travel_tax = service.travel_tax;
         const pick_tax = service.pick_tax;
 
-        axios.put(`${url}myAlfred/api/admin/service/all/${id}`,
+        axios.put(`/myAlfred/api/admin/service/all/${id}`,
 	{label,description,tags,category,equipments,majoration,location, travel_tax, pick_tax})
             .then(res => {
 
@@ -276,7 +274,7 @@ class view extends React.Component {
 
     handleClick() {
         const id = this.props.service_id;
-        axios.delete(`${url}myAlfred/api/admin/service/all/${id}`)
+        axios.delete(`/myAlfred/api/admin/service/all/${id}`)
             .then(res => {
 
                 alert('Service supprimé avec succès');
@@ -293,7 +291,7 @@ class view extends React.Component {
 
     };
 
-   
+
 
     render()  {
         const { classes } = this.props;
@@ -305,7 +303,7 @@ class view extends React.Component {
         const {all_tags} = this.state;
         const {all_equipments} = this.state;
         const {isChecked} = this.state;
-   
+
         console.log("Render service:"+JSON.stringify(service));
 
         const categories = all_category.map(e => (
@@ -435,7 +433,7 @@ class view extends React.Component {
                                   label={<React.Fragment> <p style={{fontFamily: 'Helvetica'}}>Frais de retrait&livraison</p> </React.Fragment>}
                                  />
                                 </Grid>
- 
+
                                 <Grid item style={{marginTop: 20}}>
                                     <Typography style={{ fontSize: 20 }}>Description</Typography>
                                     <TextField

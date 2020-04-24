@@ -48,9 +48,73 @@ import Commentary from '../components/Commentary/Commentary';
 import Notes from '../components/Notes/Notes';
 import {computeAverageNotes} from '../utils/functions';
 import fr from 'date-fns/locale/fr';
+import Switch from '@material-ui/core/Switch';
+import BookingDetail from '../components/BookingDetail/BookingDetail';
+import {toast} from 'react-toastify';
 const moment = require('moment');
 moment.locale('fr');
 registerLocale('fr', fr);
+
+
+const IOSSwitch = withStyles(theme => ({
+  root: {
+    width: 42,
+    height: 26,
+    padding: 0,
+    margin: theme.spacing(1),
+  },
+  switchBase: {
+    padding: 1,
+    '&$checked': {
+      transform: 'translateX(16px)',
+      color: '#47bdd7',
+      '& + $track': {
+        backgroundColor: 'white',
+
+      },
+    },
+    '&$focusVisible $thumb': {
+      color: 'white',
+      border: '6px solid #fff',
+    },
+  },
+  thumb: {
+    width: 24,
+    height: 24,
+  },
+  track: {
+    borderRadius: 26 / 2,
+    border: `1px solid ${theme.palette.grey[400]}`,
+    backgroundColor: theme.palette.grey[50],
+    opacity: 1,
+    transition: theme.transitions.create(['background-color', 'border']),
+  },
+  checked: {},
+  focusVisible: {},
+}))(({ classes, ...props }) => {
+  return (
+    <Switch
+      focusVisibleClassName={classes.focusVisible}
+      disableRipple
+      classes={{
+        root: classes.root,
+        switchBase: classes.switchBase,
+        thumb: classes.thumb,
+        track: classes.track,
+        checked: classes.checked,
+      }}
+      {...props}
+    />
+  );
+});
+
+const CssTextField = withStyles({
+  root: {
+    '& label': {
+      fontSize: '0.8rem',
+    },
+  },
+})(TextField);
 
 class UserServicesPreview extends React.Component {
   constructor(props) {
@@ -87,9 +151,9 @@ class UserServicesPreview extends React.Component {
         flexible:0,
         reactive:0,
       },
-      reviews:[],
       errors:{},
-    }
+      isChecked: false
+    },
     this.onQtyChanged = this.onQtyChanged.bind(this);
     this.checkBook = this.checkBook.bind(this);
   }
@@ -108,6 +172,51 @@ class UserServicesPreview extends React.Component {
       .then(res => {
         let user = res.data;
         this.setState({ user: user, });
+        axios.get(`/myAlfred/api/serviceUser/${id}`).then(res => {
+          let serviceUser = res.data;
+          // Prestas booked : 0 for each
+          var count = {}
+          serviceUser.prestations.forEach( p => count[p._id]=0);
+
+          var location=null;
+
+          this.setState({
+            serviceUser: serviceUser,
+            service: serviceUser.service,
+            equipments: serviceUser.equipments,
+            prestations: serviceUser.prestations,
+            allEquipments : serviceUser.service.equipments,
+            alfred: serviceUser.user,
+            count: count,
+            location: location,
+            pick_tax: null,
+          }, () => this.setDefaultLocation());
+
+          axios.get('/myAlfred/api/reviews/'+serviceUser.user._id)
+            .then(response => {
+              const skills=response.data;
+              this.setState({skills:skills});
+            })
+            .catch(function(error){ console.log(error); });
+          axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
+            .then(res => {
+              let availabilities = res.data;
+              this.setState({ availabilities: availabilities });
+            })
+            .catch(err => console.log(err));
+          axios.get("/myAlfred/api/shop/alfred/" + this.state.alfred._id).then(res => {
+            let shop = res.data;
+            this.setState({
+              shop: shop,
+              flexible: shop.flexible_cancel,
+              moderate: shop.moderate_cancel,
+              strict: shop.strict_cancel,
+            });
+          })
+          .catch(err => console.log(err));
+        }).catch(err =>{
+          console.log(err)
+        });
       })
       .catch(err => {
         console.log(err);
@@ -117,59 +226,16 @@ class UserServicesPreview extends React.Component {
         }
       });
 
-    axios.get(`/myAlfred/api/serviceUser/${id}`).then(res => {
-      let serviceUser = res.data;
-      // Prestas booked : 0 for each
-      var count = {}
-      serviceUser.prestations.forEach( p => count[p._id]=0);
-      // FIX : select default location ; can not be "client" if not in perimeter
-      //var location = serviceUser.location.client ? "client" : serviceUser.location.alfred ? "alfred" : "visio";
-      var location=null;
-
-      this.setState({
-        serviceUser: serviceUser,
-        service: serviceUser.service,
-        equipments: serviceUser.equipments,
-        prestations: serviceUser.prestations,
-        allEquipments : serviceUser.service.equipments,
-        alfred: serviceUser.user,
-        count: count,
-        location: location,
-      });
-
-      axios.get(`/myAlfred/api/reviews/profile/alfredReviewsCurrent/${serviceUser.user._id}`)
-        .then (res => {
-          this.setState({reviews:res.data})
-        })
-
-      axios.get('/myAlfred/api/reviews/'+serviceUser.user._id)
-        .then(response => {
-          const skills=response.data;
-          this.setState({skills:skills});
-        })
-        .catch(function(error){ console.log(error); });
-      axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
-        .then(res => {
-          let availabilities = res.data;
-          this.setState({ availabilities: availabilities });
-        })
-        .catch(err => console.log(err));
-      axios.get("/myAlfred/api/shop/alfred/" + this.state.alfred._id).then(res => {
-        let shop = res.data;
-        this.setState({
-          shop: shop,
-          flexible: shop.flexible_cancel,
-          moderate: shop.moderate_cancel,
-          strict: shop.strict_cancel,
-        });
-      })
-      .catch(err => console.log(err));
-    }).catch(err =>{
-      console.log(err)
-    });
-
-
     setTimeout(this.checkBook, 3000);
+  }
+
+  setDefaultLocation = () => {
+    console.log("Setting default location");
+    const serviceUser = this.state.serviceUser;
+    const user = this.state.user;
+    var location = serviceUser.location.client && this.isInPerimeter() ? "client" : serviceUser.location.alfred ? "alfred" : serviceUser.location.visio ? "visio" : null;
+    if (location==null) { toast.error('Ce service est hors de votre périmètre')}
+    this.setState({location: location});
   }
 
   computeReservationDate = () => {
@@ -184,7 +250,7 @@ class UserServicesPreview extends React.Component {
 
   checkBook = () => {
     var errors={}
-    if (!this.state.total) {
+    if (Object.values(this.state.count).every( v => v==0)) {
       errors['prestations']='Sélectionnez au moins une prestation';
     }
     if (this.state.totalPrestations<this.state.serviceUser.minimum_basket) {
@@ -205,13 +271,10 @@ class UserServicesPreview extends React.Component {
     }
 
     const minBookingDate=getDeadLine(this.state.serviceUser.deadline_before_booking);
-    console.log("Prévenance:"+minBookingDate.format('LLL'));
     if (!errors.datetime && reservationDate.isBefore(minBookingDate)) {
       errors['datetime']="Le délai de prévenance n'est pas respecté";
     }
 
-    console.log("Réservation:"+(reservationDate ? reservationDate.format('LLL'):'undef'));
-    console.log("Maintenant:"+moment().format('LLL'));
     if (reservationDate && reservationDate.isBefore(moment())) { errors['datetime']='Réservation impossible avant maintenant'}
 
     if (!this.state.location) { errors['location']='Sélectionnez un lieu de prestation'}
@@ -224,13 +287,19 @@ class UserServicesPreview extends React.Component {
       return result;
     }
     this.state.prestations.forEach( p => {
-      var filter=p.prestation.filter_presentation;
-      var key = !filter || filter.label==='Aucun' ? '' : filter.label;
-      if (key in result) {
-        result[key].push(p);
+      if (p.prestation==null) {
+        // FIX : réaffecter les prestations persos
+        console.error(`Error:${p.id} has a null prestation`);
       }
       else {
-        result[key]=[p];
+        var filter=p.prestation.filter_presentation;
+        var key = !filter || filter.label==='Aucun' ? '' : filter.label;
+        if (key in result) {
+          result[key].push(p);
+        }
+        else {
+          result[key]=[p];
+        }
       }
     });
     // Set "no filter" to first position
@@ -254,11 +323,14 @@ class UserServicesPreview extends React.Component {
 
   onChange = event => {
     const {name, value}=event.target;
-    this.setState({[name]:value}, () => this.checkBook());
+    this.setState({[name]:value}, () => this.computeTotal());
+    if (name=='location' && value!='alfred') {
+      this.setState({pick_tax: null, isChecked: false})
+    }
   }
 
   onLocationChanged = (id, checked) => {
-    this.setState({location:id}, () => this.checkBook());
+    this.onChange({target: {name:'location', value:checked?id:null}});
   }
 
   onQtyChanged = event => {
@@ -272,6 +344,14 @@ class UserServicesPreview extends React.Component {
     }
   }
 
+  computeTravelTax = () => {
+    return this.state.serviceUser.travel_tax && this.state.location=='client' ? this.state.serviceUser.travel_tax : 0;
+  }
+
+  computePickTax = () => {
+    return this.state.isChecked && this.state.location=='alfred' ? this.state.serviceUser.pick_tax : 0;
+  }
+
   computeTotal = () => {
     var totalPrestations=0;
     var count=this.state.count;
@@ -281,8 +361,10 @@ class UserServicesPreview extends React.Component {
         totalPrestations += count[p._id]*p.price;
       }
     });
-    totalPrestations+=su.travel_tax ? parseInt(su.travel_tax) : 0;
-    totalPrestations+=su.pick_tax ? parseInt(su.pick_tax) : 0;
+    const travelTax = this.computeTravelTax();
+    totalPrestations+=travelTax ? parseFloat(travelTax) : 0;
+    const pickTax = this.computePickTax();
+    totalPrestations+=pickTax ? parseFloat(pickTax) : 0;
     var commission=totalPrestations*COMM_CLIENT;
     var total=totalPrestations;
     total+=commission;
@@ -304,6 +386,11 @@ class UserServicesPreview extends React.Component {
     } else {
       return titles[this.state.location];
     }
+  }
+
+  onPickTaxChanged = (id, checked) => {
+    this.setState({isChecked: !this.state.isChecked});
+    this.onChange({target: {name:'pick_tax', value:checked? this.state.serviceUser.pick_tax:null}});
   }
 
   book = (actual) => { //actual : true=> book, false=>infos request
@@ -330,12 +417,14 @@ class UserServicesPreview extends React.Component {
         alfred: this.state.serviceUser.user._id,
         user: this.state.user._id,
         prestations: prestations,
-        travel_tax: this.state.serviceUser.travel_tax,
-        pick_tax: this.state.serviceUser.pick_tax,
+        travel_tax: this.computeTravelTax() ,
+        pick_tax: this.computePickTax() ,
         fees: this.state.commission,
         status: actual ? "En attente de confirmation" : "Demande d'infos",
         serviceUserId: this.state.serviceUser._id,
       };
+
+      console.log("BookingObj:"+JSON.stringify(bookingObj, null, 2));
 
       if (!actual) {
         bookingObj['chatroom']=res.data._id;
@@ -415,7 +504,7 @@ class UserServicesPreview extends React.Component {
                   onChange={this.onQtyChanged}
                 />
               </Grid>
-              <Grid style={{display: 'flex', width: '100%'}}>
+              <Grid style={{display: 'flex', width: '100%', alignItems: 'center'}}>
                 <Grid style={{width: '100%', marginLeft: 10}}>
                   <label>{p.prestation.label}</label>
                 </Grid>
@@ -433,13 +522,32 @@ class UserServicesPreview extends React.Component {
     )
   };
 
+  formatDeadline = dl => {
+    if (!dl) { return dl};
+    dl=dl.replace("jours", "jour(s)").replace("semaines", "semaine(s)").replace("heures", "heure(s)");
+    return dl;
+  }
+
+  computePricedPrestations = () => {
+    const count = this.state.count;
+    var result={}
+    this.state.prestations.forEach( p => {
+      if (count[p._id]) {
+        result[p.prestation.label]=count[p._id]*p.price;
+      }
+    })
+    return result;
+  }
+
   render() {
     const {classes} = this.props;
-    const {date, time, location, serviceUser, shop, service, equipments, alfred, errors, reviews} = this.state;
+    const {date, time, location, serviceUser, shop, service, equipments, alfred, errors, isChecked} = this.state;
 
    const filters = this.extractFilters();
 
-    const StyledRating = withStyles({
+   const pricedPrestations=this.computePricedPrestations();
+
+   const StyledRating = withStyles({
       iconFilled: {
         color: '#4fbdd7',
       },
@@ -470,7 +578,7 @@ class UserServicesPreview extends React.Component {
                  placeholderText="Date"
                  locale='fr'
                  minDate={new Date()}
-                 className={classes.test}
+                 className={classes.datePickerStyle}
               />
             </Grid>
             <Grid style={{marginLeft: 50}}>
@@ -485,6 +593,7 @@ class UserServicesPreview extends React.Component {
                  dateFormat="HH:mm"
                  locale='fr'
                  minDate={new Date()}
+                 className={classes.datePickerStyle}
                />
 
             </Grid>
@@ -522,45 +631,73 @@ class UserServicesPreview extends React.Component {
         <Grid>
           { serviceUser.location && serviceUser.location.client && this.isInPerimeter() ?
           <Grid>
-            <ButtonSwitch id='client' label={'A mon adresse principale'} isEditable={false} isPrice={false} isOption={false} checked={location==='client'} onChange={this.onLocationChanged}/>
+            <ButtonSwitch key={moment()} id='client' label={'A mon adresse principale'} isEditable={false} isPrice={false} isOption={false} checked={location==='client'} onChange={this.onLocationChanged}/>
           </Grid>
             :null
           }
           {
             serviceUser.location && serviceUser.location.alfred && alfred.firstname !== undefined ?
               <Grid>
-                <ButtonSwitch id='alfred' label={'Chez ' + alfred.firstname} isEditable={false} isPrice={false} isOption={false} checked={location==='alfred'} onChange={this.onLocationChanged}/>
+                <ButtonSwitch key={moment()} id='alfred' label={'Chez ' + alfred.firstname} isEditable={false} isPrice={false} isOption={false} checked={location==='alfred'} onChange={this.onLocationChanged}/>
               </Grid>
               : null
           }
           {
             serviceUser.location && serviceUser.location.visio ?
               <Grid>
-                <ButtonSwitch id='visio' label={'En visio'} isEditable={false} isPrice={false} isOption={false} checked={location==='visio'} onChange={this.onLocationChanged}/>
+                <ButtonSwitch key={moment()} id='visio' label={'En visio'} isEditable={false} isPrice={false} isOption={false} checked={location==='visio'} onChange={this.onLocationChanged}/>
               </Grid>
               : null
           }
         </Grid>
       </Grid>
-        { serviceUser.pick_tax || serviceUser.travel_tax ?
+        { serviceUser.pick_tax || this.computeTravelTax() ?
         <Grid style={{marginBottom: 30}}>
-        <Grid>
-          <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Option de la prestation</Typography>
-        </Grid>
-        { serviceUser.pick_tax ?
           <Grid>
-            Retrait & livraison
-            { serviceUser.pick_tax }
+            <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Option(s) de la prestation</Typography>
           </Grid>
-          :null
-        }
-        { serviceUser.travel_tax ?
-          <Grid>
-            Frais de déplacement
-            { serviceUser.travel_tax }
+          <Grid style={{marginTop: 20, marginLeft:5, marginRight:15}}>
+            { serviceUser.travel_tax && location=='client' ?
+              <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+                <Grid>
+                  Frais de déplacement
+                </Grid>
+                <Grid>
+                { serviceUser.travel_tax.toFixed(2) }€
+                </Grid>
+              </Grid>
+              :null
+            }
+            { serviceUser.pick_tax && location=='alfred' ?
+              <Grid>
+                <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                  <Grid style={{display: 'flex', alignItems: 'center'}}>
+                    <Grid>
+                      <IOSSwitch
+                        color="primary"
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={this.onPickTaxChanged}
+                      />
+                    </Grid>
+                    <Grid>
+                      <label>Retrait & livraison</label>
+                    </Grid>
+                  </Grid>
+
+                  {
+                    isChecked ?
+                      <Grid>
+                        {serviceUser.pick_tax.toFixed(2)}€
+                      </Grid> : null
+                  }
+
+                </Grid>
+              </Grid>
+
+              :null
+            }
           </Grid>
-          :null
-        }
       </Grid>:null
       }
         <Grid style={{marginBottom: 30}}>
@@ -587,95 +724,37 @@ class UserServicesPreview extends React.Component {
         </Grid>
       </Grid>
         <Grid style={{display: 'flex', flexDirection:'column', marginLeft:15, marginRight:15, marginBottom:30}}>
-        <Grid>
-          { this.state.prestations.map( (p) => {
-             return this.state.count[p._id]===0 ? null: (
-          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-            <Grid>
-              <p>{p.prestation.label}</p>
-            </Grid>
-            <Grid>
-              <p>{(this.state.count[p._id]*(p.price)).toFixed(2)}€</p>
-            </Grid>
-          </Grid>
-          )})
-          }
-          { /* Start travel tax */ }
-          { serviceUser.travel_tax ?
-          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-            <Grid>
-              <p>Frais de déplacement</p>
-            </Grid>
-            <Grid>
-              <p>{this.state.serviceUser.travel_tax}€</p>
-            </Grid>
-          </Grid>:null}
-          { /* End pick tax */ }
-          { /* Start pick tax */ }
-          { serviceUser.pick_tax ?
-          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-            <Grid>
-              <p>Frais de livraison/enlèvement</p>
-            </Grid>
-            <Grid>
-              <p>{this.state.serviceUser.pick_tax}€</p>
-            </Grid>
-          </Grid>:null}
-          { /* End pick tax */ }
-          { /* Start commission */ }
-          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-            <Grid>
-              <p>Frais de service</p>
-            </Grid>
-            <Grid>
-              <p>{this.state.commission.toFixed(2)}€</p>
-            </Grid>
-          </Grid>
-          { /* End commission */ }
-          { /* Start total */ }
-          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-            <Grid>
-              <p>Total</p>
-            </Grid>
-            <Grid>
-              <p>{this.state.total.toFixed(2)}€</p>
-            </Grid>
-          </Grid>
-          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-              <em style={{color:'#f87280'}}>{errors['total']}</em>
-          </Grid>
-          { /* End total */ }
+          <BookingDetail prestations={pricedPrestations} count={this.state.count} travel_tax={this.computeTravelTax()} pick_tax={this.state.pick_tax} total={this.state.total} client_fee={this.state.commission}/>
         </Grid>
-      </Grid>
         <Grid>
-        <Grid style={{display: 'flex', justifyContent: 'space-around' }}>
-          <Grid>
-            <Button
-              variant="outlined"
-              size="medium"
-              color="primary"
-              aria-label="add"
-              className={classes.margin}
-              disabled={!isEmpty(errors)}
-              onClick={() => this.book(false)}
-            >
-              Demande d’informations
-            </Button>
-          </Grid>
-          <Grid>
-            <Button
-              style={{color:'white'}}
-              variant="contained"
-              size="medium"
-              color="secondary"
-              aria-label="add"
-              className={classes.margin}
-              disabled={!isEmpty(errors)}
-              onClick={() => this.book(true)}
-            >
-              Réserver
-            </Button>
-          </Grid>
+          <Grid style={{display: 'flex', justifyContent: 'space-around' }}>
+            <Grid>
+              <Button
+                variant="outlined"
+                size="medium"
+                color="primary"
+                aria-label="add"
+                className={classes.margin}
+                disabled={!isEmpty(errors)}
+                onClick={() => this.book(false)}
+              >
+                Demande d’informations
+              </Button>
+            </Grid>
+            <Grid>
+              <Button
+                style={{color:'white'}}
+                variant="contained"
+                size="medium"
+                color="secondary"
+                aria-label="add"
+                className={classes.margin}
+                disabled={!isEmpty(errors)}
+                onClick={() => this.book(true)}
+              >
+                Réserver
+              </Button>
+            </Grid>
         </Grid>
       </Grid>
         {/*<Grid>
@@ -703,7 +782,7 @@ class UserServicesPreview extends React.Component {
                     <Grid style={{display: 'flex', alignItems: 'center'}}>
                       <Grid>
                         <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                          <Badge badgeContent={alfred.score} color={'primary'} className={classes.badgeStyle}>
+                          <Badge badgeContent={alfred.score} color={'primary'} classes={{badge: classes.badge}}>
                             <StyledRating name="read-only" value={alfred.score} readOnly className={classes.rating} />
                           </Badge>
                         </Box>
@@ -763,7 +842,7 @@ class UserServicesPreview extends React.Component {
                       <Grid>
                         <ListItem className={classes.noPadding} style={{marginLeft : 5}}>
                           <ListItemIcon className={classes.minWidth}>
-                            <img src={serviceUser.level && serviceUser.level !== "" && serviceUser.level !== null && serviceUser.level !== undefined ? '../../static/assets/img/iconCardAlfred/experience.svg' : '../../static/assets/img/iconCardAlfred/no_experience.svg'} alt={'Expérimenté'} title={'Expérimenté'} className={classes.imageStyle}/>
+                            <img src={serviceUser.level>0 ? '/static/assets/img/iconCardAlfred/experience.svg' : '/static/assets/img/iconCardAlfred/no_experience.svg'} alt={'Expérimenté'} title={'Expérimenté'} className={classes.imageStyle}/>
                           </ListItemIcon>
                           <ListItemText
                             classes={{primary:classes.sizeText}}
@@ -858,7 +937,7 @@ class UserServicesPreview extends React.Component {
                     </Grid>
                     <Grid style={{fontSize: 'x-large',  marginLeft: 15}}>
                       {
-                        serviceUser.deadline_before_booking
+                        this.formatDeadline(serviceUser.deadline_before_booking)
                       }
                     </Grid>
                   </Grid>
@@ -971,11 +1050,8 @@ class UserServicesPreview extends React.Component {
                 <Grid className={classes.hrStyle}>
                   <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
                 </Grid>
-                <Grid>
-                  <Notes alfred_mode={true} notes={computeAverageNotes(this.state.reviews.map( r => r.note_alfred))} key={moment()}/>
-                  </Grid>
                   <Grid>
-                    <Commentary alfred_mode={true} user_id={alfred._id} key={moment()}/>
+                    <Commentary alfred_mode={false} user_id={alfred._id} service_id={this.props.service_id} key={moment()}/>
                     </Grid>
                 </Grid>
                 <Hidden mdUp implementation="css">

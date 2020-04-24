@@ -8,13 +8,11 @@ export default theme => ({
     [theme.breakpoints.down('sm')]: {
       display:'none'
     }
-  }
-
-  ,hidelg: {
+  },
+  hidelg: {
     [theme.breakpoints.up('md')]: {
       display:'none',
     }
-
   },
   trigger:{
     [theme.breakpoints.down('sm')]: {
@@ -23,33 +21,29 @@ export default theme => ({
       marginLeft:'0px',
       height:'30px',
       backgroundColor:'#2FBCD3',
-
       display:'block',
       transition: 'display 0.7s',
       borderRadius:'5px',
       '&:focus': {
         display:'none',
         transition: 'display 0.7s',
-
       }
     }
-
   },
   respright:{
+    width:'50%',
     [theme.breakpoints.down('sm')]: {
       display: 'none'
     }
-  }
-
-  ,toggle: {
-    [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
+  },
+  toggle: {
+    [theme.breakpoints.down('sm')]: {
+      marginLeft:'-75px',
       transition: 'margin-left 0.7s',
-
       '&:hover': {
         marginLeft:'0px',
         transition: 'margin-left 0.7s',
         boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-
       }
     }
   },
@@ -57,7 +51,11 @@ export default theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems:'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    width:'50%',
+    [theme.breakpoints.down('xs')]: {
+      width:'100%',
+    }
   },
   paiementMethode:{
     backgroundColor : 'grey',
@@ -67,6 +65,37 @@ export default theme => ({
     color: 'white',
     marginBottom: '30px',
     backgroundColor: '#4fbdd7'
+  },
+  flexContainerCard:{
+    display: 'flex',
+    width:'100%',
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      alignItems:'center'
+    }
+  },
+  mainContainerCardPaiment:{
+
+    [theme.breakpoints.down('xs')]: {
+      display:'flex',
+      flexDirection: 'column',
+      justifyContent: 'center'
+    }
+  },
+  containerTitle:{
+    [theme.breakpoints.down('xs')]: {
+      display:'flex',
+      justifyContent: 'center'
+    }
+  },
+  titleStyle:{
+    color: 'dimgray',
+    fontWeight: '100',
+    marginLeft: '1%',
+    [theme.breakpoints.down('xs')]: {
+      margin: 0
+    }
+
   }
 
 })

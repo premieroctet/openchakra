@@ -8,8 +8,6 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import styles from './EditPictureStyle'
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
 
 class EditPicture extends React.Component {
 
@@ -30,7 +28,7 @@ class EditPicture extends React.Component {
   componentDidMount() {
     localStorage.setItem('path',Router.pathname);
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-    axios.get(`${url}myAlfred/api/admin/${this.props.type}/all/${this.props.id}`)
+    axios.get(`/myAlfred/api/admin/${this.props.type}/all/${this.props.id}`)
       .then(response => {
         console.log(response, ' response');
         let result = response.data;
@@ -53,7 +51,7 @@ class EditPicture extends React.Component {
     e.preventDefault();
     const formData = new FormData();
     formData.append('picture',this.state.picture);
-    axios.post(`${url}myAlfred/api/admin/${this.props.type}/editPicture/${this.props.id}`,formData)
+    axios.post(`/myAlfred/api/admin/${this.props.type}/editPicture/${this.props.id}`,formData)
       .then(res => {
         alert('Photo modifiée avec succès');
         Router.push({pathname:`/dashboard/${this.props.type}`+`s/all`})

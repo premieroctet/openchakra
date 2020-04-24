@@ -29,29 +29,60 @@ const {computeDistanceKm}=require('../../utils/functions');
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import UserAvatar from '../Avatar/UserAvatar';
-
-const { config } = require('../../config/config');
-const url = config.apiUrl;
+import { computeAverageNotes, computeSumSkills } from '../../utils/functions';
 
 class CardPreview extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      value:0,
       dense: true,
+      score: 0,
       service: [],
       alfred:[],
       shop:[],
       open: false,
       id_service: '',
       page: false,
+      reviews:[],
     }
   }
 
   componentDidMount() {
-    axios.get('/myAlfred/api/shop/alfred/'+this.props.services.user._id || this.props.services.user)
-      .then( res => this.setState({shop: res.data}))
-      .catch( err => console.log(err))
+    if(typeof this.props.services.user === 'string'){
+      axios.get('/myAlfred/api/shop/alfred/'+this.props.services.user)
+        .then( res => {
+          this.setState({shop: res.data, alfred:res.data.alfred, score:res.data.alfred.score}, () =>
+            axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${this.props.services.user}`)
+              .then (res => {
+                var reviews = res.data;
+                if (this.props.services._id) {
+                  reviews = reviews.filter( r => r.serviceUser._id===this.props.services._id);
+                }
+                this.setState({reviews:reviews})
+              })
+              .catch (err => console.log(err))
+          )
+        })
+        .catch( err => console.log(err))
+    }else{
+      axios.get('/myAlfred/api/shop/alfred/'+this.props.services.user._id)
+        .then( res => {
+          this.setState({shop: res.data, alfred:res.data.alfred, score:res.data.alfred.score}, () =>
+            axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${this.props.services.user._id}`)
+              .then (res => {
+                var reviews = res.data;
+                if (this.props.services._id) {
+                  reviews = reviews.filter( r => r.serviceUser._id===this.props.services._id);
+                }
+                this.setState({reviews:reviews})
+              })
+              .catch (err => console.log(err))
+          )
+        })
+        .catch( err => console.log(err))
+    }
+
+
   }
 
   handleClickOpen(id) {
@@ -63,7 +94,7 @@ class CardPreview extends React.Component{
   }
 
   deleteService(id) {
-    axios.delete(url + 'myAlfred/api/serviceUser/' + id)
+    axios.delete('/myAlfred/api/serviceUser/' + id)
       .then(() => {
         toast.error('Service supprimé');
         this.setState({open:false,id_service:''});
@@ -75,7 +106,7 @@ class CardPreview extends React.Component{
   render(){
     const {classes, services, userState, isOwner, gps, needAvatar} = this.props;
     const service = services.service;
-    const { shop } = this.state;
+    const { shop, reviews } = this.state;
 
     const distance = gps ? computeDistanceKm(gps, services.service_address.gps) : '';
 
@@ -84,6 +115,9 @@ class CardPreview extends React.Component{
         color: '#4fbdd7',
       },
     })(Rating);
+
+      const notes = computeAverageNotes(reviews.map(r => r.note_alfred));
+
 
     return (
       <Grid>
@@ -161,8 +195,8 @@ class CardPreview extends React.Component{
                   </Typography>
                 </Grid>
                 <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                  <Badge badgeContent={0} color={'primary'} className={classes.badgeStyle}>
-                    <StyledRating name="read-only" value={this.state.value} readOnly className={classes.rating} />
+                  <Badge badgeContent={notes.global ? notes.global.toFixed(2) : 0} color={'primary'} classes={{badge: classes.badge}}>
+                    <StyledRating name="read-only" value={notes.global} readOnly className={classes.rating} precision={0.5}/>
                   </Badge>
                 </Box>
               </Grid>
@@ -179,18 +213,11 @@ class CardPreview extends React.Component{
                     </Grid> : null
                 }
                 <Grid>
-                  {
-                    userState && isOwner ?
-                      <Grid>
-
-                      </Grid>
-                      :
-                      <Link href={'userServicePreview?id=' + services._id}>
-                        <Button variant="contained" color="primary" className={classes.button}>
-                          Réserver
-                        </Button>
-                      </Link>
-                  }
+                  <Link href={'userServicePreview?id=' + services._id}>
+                    <Button variant="contained" color="primary" className={classes.button}>
+                      {userState && isOwner ? "Visualiser" : "Réserver"}
+                    </Button>
+                  </Link>
                 </Grid>
               </Grid>
             </Grid>

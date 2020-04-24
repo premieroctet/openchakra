@@ -15,8 +15,6 @@ import { toast } from 'react-toastify';
 import axios from "axios";
 
 
-const { config } = require('../config/config');
-const url = config.apiUrl;
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -81,7 +79,7 @@ class addPicture extends React.Component {
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.put(url+"myAlfred/api/users/profile/pictureLater", { picture: 'static/basicavatar.png' })
+        axios.put("/myAlfred/api/users/profile/pictureLater", { picture: 'static/basicavatar.png' })
             .then((response) => {
                 Router.push({pathname: '/addPhone'})
             }).catch((error) => {
@@ -101,7 +99,7 @@ class addPicture extends React.Component {
                 'content-type': 'multipart/form-data'
             }
         };
-        axios.post(url+"myAlfred/api/users/profile/picture",formData,config)
+        axios.post("/myAlfred/api/users/profile/picture",formData,config)
             .then((response) => {
                 toast.info('Photo de profil ajoutée');
                 Router.push({pathname: '/addPhone'})

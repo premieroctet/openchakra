@@ -19,9 +19,6 @@ import {Helmet} from 'react-helmet';
 
 moment.locale('fr');
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
     bigContainer: {
         marginTop: 70,
@@ -129,7 +126,7 @@ class myAddresses extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url+'myAlfred/api/users/current')
+            .get('/myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
                 this.setState({user:user});
@@ -180,7 +177,7 @@ class myAddresses extends React.Component {
 
     handleClick = (id) => {
       this.setState({clickAdd: false, clickEdit: true});
-      axios.get(url+'myAlfred/api/users/profile/address/'+id)
+      axios.get('/myAlfred/api/users/profile/address/'+id)
           .then(res => {
               let result = res.data;
               this.setState({address_selected: result,edit_label: result.label,edit_address:result.address,edit_zip_code:result.zip_code,
@@ -200,7 +197,7 @@ class myAddresses extends React.Component {
           lng: this.state.currentLng
       };
         axios
-            .put(url+'myAlfred/api/users/profile/billingAddress', address)
+            .put('/myAlfred/api/users/profile/billingAddress', address)
             .then(res => {
                 toast.info('Adresse principale modifiée');
                 Router.push({pathname:'/profile/myAddresses'})
@@ -220,7 +217,7 @@ class myAddresses extends React.Component {
             note: this.state.note,
             phone: this.state.phone,
         };
-        axios.put(url+'myAlfred/api/users/profile/serviceAddress',newAddress)
+        axios.put('/myAlfred/api/users/profile/serviceAddress',newAddress)
             .then(() => {
                 toast.info('Adresse ajoutée');
                 this.setState({clickAdd: false});
@@ -243,7 +240,7 @@ class myAddresses extends React.Component {
             phone: this.state.edit_phone,
       };
 
-      axios.put(url+'myAlfred/api/users/profile/address/'+id,editAddress)
+      axios.put('/myAlfred/api/users/profile/address/'+id,editAddress)
           .then(()=> {
               toast.info('Adresse modifiée avec succès');
               this.setState({clickEdit: false});
@@ -254,7 +251,7 @@ class myAddresses extends React.Component {
     };
 
     deleteAddress = (id) => {
-            axios.delete(url+'myAlfred/api/users/profile/address/'+id)
+            axios.delete('/myAlfred/api/users/profile/address/'+id)
                 .then(() => {
                     toast.error('Adresse supprimée');
                     this.setState({clickEdit: false,open:false,id_address:''});

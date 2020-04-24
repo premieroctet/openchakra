@@ -6,28 +6,16 @@ import moment from 'moment';
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import Footer from '../../hoc/Layout/Footer/Footer';
 import { Typography } from '@material-ui/core';
 import {Helmet} from 'react-helmet';
 
 moment.locale('fr');
-
-const { config } = require('../../config/config');
-const url = config.apiUrl;
 
 const styles = theme => ({
     bigContainer: {
         marginTop: 70,
         flexGrow: 1,
 
-    },
-    exportSVG: {
-        fontFamily: 'sans-serif!important',
-        color: '#2FBCD3',
-    },
-    exportPNG: {
-        fontFamily: 'sans-serif!important',
-        color: '#2FBCD3',
     },
     hidesm: {
         minWidth: '271px',
@@ -61,14 +49,7 @@ const styles = theme => ({
      }
 
 },
-    responsiveContainer: {
-        [theme.breakpoints.down('sm')]: {
-            width:'135%!important',
-
-        }
-    }
-
-    ,toggle: {
+    toggle: {
         [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
         transition: 'margin-left 0.7s',
 
@@ -80,9 +61,6 @@ const styles = theme => ({
              }
       }
     },
-    tabscontainer:{width:'60%',
-        [theme.breakpoints.down('sm')]: {
-            width:'100%',}},
 
     tabweb:{width:'100%', position:'sticky', top:'35px', fontSize:15, backgroundColor:'white', zIndex:'20',
         [theme.breakpoints.down('sm')]: {
@@ -93,7 +71,12 @@ const styles = theme => ({
         fontSize:'10px', fontWeight:'300', marginTop:'-100px', height:60, backgroundColor:'white', position:'sticky', top:55, zIndex:20,
         [theme.breakpoints.up('md')]: {
             display: 'none',
-        }},
+        },
+        [theme.breakpoints.down('xs')]: {
+            height: 100,
+            top:65
+        },
+        },
         trait:{
             width: '100%',
             height: 4,
@@ -126,6 +109,9 @@ const styles = theme => ({
             [theme.breakpoints.down('sm')]: {
                 marginTop: '150px',
             },
+            [theme.breakpoints.down('xs')]: {
+                marginTop: 50,
+            },
         }
 
 
@@ -149,7 +135,7 @@ class transactions extends React.Component {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
-            .get(url+'myAlfred/api/users/current')
+            .get('/myAlfred/api/users/current')
             .then(res => {
                 this.setState({user: res.data});
             })
@@ -161,13 +147,13 @@ class transactions extends React.Component {
                 }
             );
 
-        axios.get(url+'myAlfred/api/booking/account/paid')
+        axios.get('/myAlfred/api/booking/account/paid')
             .then(res => {
                 this.setState({paid: res.data})
             })
             .catch();
 
-        axios.get(url+'myAlfred/api/booking/account/paidSoon')
+        axios.get('/myAlfred/api/booking/account/paidSoon')
             .then(res => {
                 this.setState({paidSoon: res.data})
             })
@@ -186,7 +172,6 @@ class transactions extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const {user} = this.state;
         const {tabs} = this.state;
         const {paid} = this.state;
         const {paidSoon} = this.state;
@@ -203,7 +188,7 @@ class transactions extends React.Component {
 
                     <Grid className={classes.toggle}  item xs={3} style={{}}>
 
-                         <div className={classes.trigger}></div>
+                         <div className={classes.trigger}/>
                             <Grid container style={{justifyContent: 'center',}}>
                                 <Grid item style={{marginTop: 30,width: 275.25}} className={classes.hidesm}>
                                     <Link href={'/account/notifications'}>

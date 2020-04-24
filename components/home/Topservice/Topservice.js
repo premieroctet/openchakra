@@ -13,9 +13,6 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import axios from 'axios';
 import Link from 'next/link';
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
-
 
 const styles = theme => ({
   container: {
@@ -61,12 +58,12 @@ const styles = theme => ({
   },
   textdesc: {
     [theme.breakpoints.down('sm')]: {
-      marginTop: '10%!important',    
+      marginTop: '10%!important',
     },
   },
   media2: {
     height: 200
-  },  
+  },
   textBox1: {
     color: 'rgba(84,89,95,0.95)',
     letterSpacing: -2,
@@ -76,9 +73,9 @@ const styles = theme => ({
     paddingLeft: 15,
     marginBottom: 15,
     marginTop: 80,
-  },  
+  },
   textBox2: {
-    color: 'rgba(0, 0, 0, 0.87)', 
+    color: 'rgba(0, 0, 0, 0.87)',
     fontSize: '1.25rem',
     paddingRight: 15,
     paddingLeft: 15,
@@ -116,12 +113,12 @@ class TopService extends React.Component {
 
   componentDidMount() {
 
-    axios.get(url + 'myAlfred/api/tags/all')
+    axios.get('/myAlfred/api/tags/all')
         .then(response => {
               let data = response.data;
               let random = data[Math.floor(Math.random() * data.length)];
               this.setState({tags:random});
-              axios.get(url + 'myAlfred/api/service/all/tags/' + random._id)
+              axios.get('/myAlfred/api/service/all/tags/' + random._id)
                   .then(res => {
                     let service = res.data;
 
@@ -148,7 +145,7 @@ class TopService extends React.Component {
     margin:10,
     boxShadow: '1px 3px 1px transparent'}}>
             <CardActionArea style={{
-    height:'600px', 
+    height:'600px',
      }}>
               <CardMedia
                   className={classes.media2}
@@ -157,17 +154,17 @@ class TopService extends React.Component {
                   style={{height:'530px', width: '100%',}}
               />
               <CardContent>
-                
+
                 <Typography gutterBottom variant="h5" component="p" style={{fontSize:16, fontWeight:100, textAlign:'center'}}>
                   {e.label}
                 </Typography>
                 <Typography component="p">
                   {e.description}
                 </Typography>
-               
+
               </CardContent>
             </CardActionArea>
-           
+
           </Card>
         </Grid>
     ));

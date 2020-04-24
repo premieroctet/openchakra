@@ -95,7 +95,7 @@ class ButtonSwitch extends React.Component {
 
   fireChange(id, checked, price, billing, label) {
     if (this.props.onChange) {
-      this.props.onChange(this.props.id, this.state.checked, this.state.price, this.state.billing, this.state.label);
+      this.props.onChange(this.props.id, this.state.checked, this.state.checked?this.state.price:null, this.state.billing, this.state.label);
     }
   }
 
@@ -117,10 +117,9 @@ class ButtonSwitch extends React.Component {
   }
 
   render() {
-    const {classes, isEditable, isOption, isPrice, billings} = this.props;
+    const {classes, isEditable, isOption, isPrice, billings, priceDisabled} = this.props;
     var {label, checked} = this.state;
-    // FIX : forcer le checked, il doit être refourni par le parent
-    var checked = this.props.checked;
+
     return(
       <Grid className={classes.contentFiltre}>
         <Grid className={classes.responsiveIOSswitch} style={{width : this.props.width}}>
@@ -150,7 +149,7 @@ class ButtonSwitch extends React.Component {
                   label={`Prix`}
                   type="number"
                   className={classes.textField}
-                  disabled={!checked}
+                  disabled={!checked || priceDisabled}
                   onChange={this.onChangePrice}
                   InputProps={{
                     inputProps: {

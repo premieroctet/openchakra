@@ -11,9 +11,6 @@ import Card from "@material-ui/core/Card";
 import axios from 'axios';
 import Link from 'next/link';
 
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
   container: {
     margin: 'auto',
@@ -86,11 +83,11 @@ class Wellbeing extends React.Component {
 
   componentDidMount() {
 
-    axios.get(url + 'myAlfred/api/tags/services/section7')
+    axios.get('/myAlfred/api/tags/services/section7')
         .then(response => {
               let data = response.data;
               this.setState({tags:data});
-              axios.get(url + 'myAlfred/api/service/all/tags/' + data._id)
+              axios.get('/myAlfred/api/service/all/tags/' + data._id)
                   .then(res => {
                     let service = res.data;
 
@@ -110,7 +107,7 @@ class Wellbeing extends React.Component {
     const resdata = shuffleArray(service);
     const services = resdata.slice(0, 6).map(e => (
         <Grid item xs={12} sm={6} md={4} lg={4} key={e._id}>
-          <Link href={'/search?search=1&service='+e._id+'&gps='+JSON.stringify(gps)}>
+          <Link href={'/search?search=1&service='+e._id+(gps?'&gps='+JSON.stringify(gps):'')}>
           <Card className={classes.card}>
             <CardActionArea>
               <CardMedia

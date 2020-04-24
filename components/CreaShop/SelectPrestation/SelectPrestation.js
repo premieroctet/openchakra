@@ -11,9 +11,6 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 const jwt = require('jsonwebtoken');
 
-const { config } = require('../../../config/config');
-const url = config.apiUrl;
-
 class SelectPrestation extends React.Component {
   constructor(props) {
     super(props);
@@ -39,18 +36,18 @@ class SelectPrestation extends React.Component {
     const alfred_id = decode.id;
 
     let billings=null;
-    axios.get(`${url}myAlfred/api/billing/all`)
+    axios.get(`/myAlfred/api/billing/all`)
       .then(res => {
         billings=res.data;
         this.setState({all_billings: billings});
       });
-    axios.get(`${url}myAlfred/api/service/${this.props.service}`)
+    axios.get(`/myAlfred/api/service/${this.props.service}`)
       .then( res => {
          let service=res.data;
          this.setState({service_name: service.label});
       })
       .catch(error => console.log(error.response));
-    axios.get(`${url}myAlfred/api/prestation/${this.props.service}`)
+    axios.get(`/myAlfred/api/prestation/${this.props.service}`)
       .then(res => {
         var prestations = res.data;
         // Remove private belonging to other Alfreds

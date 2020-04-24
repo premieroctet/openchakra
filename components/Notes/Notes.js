@@ -8,14 +8,11 @@ import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
 
-
-
 class Notes extends React.Component{
 
   render(){
     var {classes, alfred_mode, notes} = this.props;
 
-    console.log("Notes:"+JSON.stringify(notes));
     notes = notes || {};
 
     const StyledRating = withStyles({
@@ -26,44 +23,90 @@ class Notes extends React.Component{
 
     if (alfred_mode) {
       return (
-        <>
-        <Grid style={{height: 50}}>
-          <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-          <p>Qualité</p><StyledRating name="read-only" value={parseInt(notes.prestation_quality)} readOnly className={classes.ratingStyle}/>
-          </Box>
+        <Grid>
+          <Grid>
+            <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
+              <Grid container style={{alignItems:'center'}}>
+                <Grid className={classes.widthP}>
+                  <p>Qualité</p>
+                </Grid>
+                <Grid className={classes.marginLeft}>
+                  <StyledRating name="read-only" value={parseInt(notes.prestation_quality)} readOnly className={classes.ratingStyle}/>
+                </Grid>
+              </Grid>
+            </Box>
+          </Grid>
+          <Grid>
+            <Grid>
+              <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
+                <Grid container style={{alignItems:'center'}}>
+                  <Grid className={classes.widthP}>
+                    <p>Prix</p>
+                  </Grid>
+                  <Grid className={classes.marginLeft}>
+                    <StyledRating name="read-only" value={parseInt(notes.quality_price)} readOnly className={classes.ratingStyle} />
+                  </Grid>
+                </Grid>
+              </Box>
+            </Grid>
+          </Grid>
+          <Grid>
+            <Grid>
+              <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
+                <Grid container style={{alignItems:'center'}}>
+                  <Grid className={classes.widthP}>
+                    <p>Relationnel</p>
+                  </Grid>
+                  <Grid className={classes.marginLeft}>
+                    <StyledRating name="read-only" value={parseInt(notes.relational)} readOnly className={classes.ratingStyle}/>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid style={{height: 50}}>
-          <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-            <p>Prix</p><StyledRating name="read-only" value={parseInt(notes.quality_price)} readOnly className={classes.ratingStyle} />
-          </Box>
-        </Grid>
-        <Grid style={{height: 50}}>
-          <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-            <p>Relationnel</p><StyledRating name="read-only" value={parseInt(notes.relational)} readOnly className={classes.ratingStyle}/>
-          </Box>
-        </Grid>
-        </>
       )
     }
     else {
       return (
-        <>
-        <Grid style={{height: 50}}>
-          <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-          <p>Accueil</p><StyledRating name="read-only" value={parseInt(notes.reception)} readOnly className={classes.ratingStyle}/>
-          </Box>
+        <Grid>
+          <Grid>
+            <Grid>
+              <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
+                <Grid className={classes.widthP}>
+                  <p>Accueil</p>
+                </Grid>
+                <Grid className={classes.marginLeft}>
+                  <StyledRating name="read-only" value={parseInt(notes.reception)} readOnly className={classes.ratingStyle}/>
+                </Grid>
+              </Box>
+            </Grid>
+          </Grid>
+          <Grid>
+            <Grid>
+              <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
+                <Grid className={classes.widthP}>
+                  <p>Précision</p>
+                </Grid>
+                <Grid className={classes.marginLeft}>
+                  <StyledRating name="read-only" value={parseInt(notes.accuracy)} readOnly className={classes.ratingStyle} />
+                </Grid>
+              </Box>
+            </Grid>
+          </Grid>
+          <Grid>
+            <Grid>
+              <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
+                <Grid className={classes.widthP}>
+                  <p>Relationnel</p>
+                </Grid>
+                <Grid className={classes.marginLeft}>
+                  <StyledRating name="read-only" value={parseInt(notes.relational)} readOnly className={classes.ratingStyle}/>
+                </Grid>
+              </Box>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid style={{height: 50}}>
-          <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-            <p>Précision</p><StyledRating name="read-only" value={parseInt(notes.accuracy)} readOnly className={classes.ratingStyle} />
-          </Box>
-        </Grid>
-        <Grid style={{height: 50}}>
-          <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-            <p>Relationnel</p><StyledRating name="read-only" value={parseInt(notes.relational)} readOnly className={classes.ratingStyle}/>
-          </Box>
-        </Grid>
-        </>
       )
     }
 

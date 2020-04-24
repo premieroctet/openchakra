@@ -5,90 +5,16 @@ import axios from "axios";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Layout from "../../hoc/Layout/Layout";
-import Footer from '../../hoc/Layout/Footer/Footer';
 import moment from "moment";
 import { withStyles } from "@material-ui/core/styles";
 import getDistance from "geolib/es/getDistance";
 import convertDistance from "geolib/es/convertDistance";
 import UserAvatar from '../../components/Avatar/UserAvatar';
-const { config } = require("../../config/config");
-const url = config.apiUrl;
+import styles from './messagesDetails/messagesDetailsStyle'
+import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 
 moment.locale("fr");
 
-const styles = theme => ({
-  currentmsg: {
-    backgroundColor: "rgb(47, 188, 211)",
-    width: "auto",
-    maxWidth: "400px",
-    height: "auto",
-    lineHeight: "1.5",
-    color: "white",
-    borderRadius: "50px 50px 5px 50px",
-    boxShadow: "0px 0px 6px #4545454f",
-    margin: "10px 10px",
-    overflowWrap: "break-word",
-    padding: "10px 20px",
-    textAlign: "justify"
-  },
-  othermsg: {
-    backgroundColor: "#F87280",
-    width: "auto",
-    maxWidth: "400px",
-    height: "auto",
-    lineHeight: "1.5",
-    color: "white",
-    borderRadius: "50px 50px 50px 5px",
-    boxShadow: "0px 0px 6px #4545454f",
-    margin: "10px 10px",
-    overflowWrap: "break-word",
-    padding: "10px 20px",
-    textAlign: "justify",
-    marginLeft: "38px"
-  },
-  current: {
-    color: "#6a6a6c",
-    fontSize: "0.8rem",
-    float: "right",
-    marginRight: "10px"
-  },
-  send: {
-    right: "7%",
-    [theme.breakpoints.down("sm")]: {
-      right: "10%"
-    }
-  },
-  scrollbar: {
-    "&::-webkit-scrollbar": {
-      width: "5px"
-    },
-    "&::-moz-scrollbar": {
-      width: "5px"
-    },
-    "&::-webkit-scrollbar-track": {
-      "-webkit-box-shadow": "inset 0 0 6px rgba(0,0,0,0.00)"
-    },
-    "&::-moz-scrollbar-track": {
-      "-webkit-box-shadow": "inset 0 0 6px rgba(0,0,0,0.00)"
-    },
-    "&::-webkit-scrollbar-thumb": {
-      backgroundColor: "rgba(0,0,0,.25)",
-      outline: "1px solid slategrey"
-    },
-    "&::-moz-scrollbar-thumb": {
-      backgroundColor: "rgba(0,0,0,.25)",
-      outline: "1px solid slategrey"
-    }
-  },
-  Rightcontent: {
-    marginLeft: "4%"
-  },
-  toggle: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
-  }
-});
 
 class MessagesDetails extends React.Component {
   constructor(props) {
@@ -120,19 +46,19 @@ class MessagesDetails extends React.Component {
     axios.defaults.headers.common["Authorization"] = localStorage.getItem(
       "token"
     );
-    axios.put(url + 'myAlfred/api/chatRooms/viewMessages/' + this.props.chatroomId)
+    axios.put('/myAlfred/api/chatRooms/viewMessages/' + this.props.chatroomId)
       .then()
-    axios.get(url+"myAlfred/api/users/current").then(res => {
+    axios.get("/myAlfred/api/users/current").then(res => {
       this.setState({ userData: res.data });
       this.setState({ emitter: res.data._id });
       this.setState({ recipientpic: res.data.picture });
     });
     axios
-      .get(url + "myAlfred/api/booking/" + this.props.bookingId)
+      .get("/myAlfred/api/booking/" + this.props.bookingId)
       .then(res => this.setState({ bookingObj: res.data }))
       .catch(err => console.log(err));
     axios
-      .get(url+`myAlfred/api/chatRooms/userChatRoom/${id}`)
+      .get(`/myAlfred/api/chatRooms/userChatRoom/${id}`)
       .then(res => {
         this.setState({
           roomData: res.data,
@@ -150,8 +76,10 @@ class MessagesDetails extends React.Component {
           messages.push(data);
           axios
             .put(
-              url+`myAlfred/api/chatRooms/saveMessages/${id}`,
-              { messages: oldMessages }
+              `/myAlfred/api/chatRooms/saveMessages/${id}`,
+              { messages: oldMessages,
+                booking_id: this.props.bookingId
+ }
             )
             .then();
           this.setState({
@@ -325,15 +253,9 @@ class MessagesDetails extends React.Component {
                   {bookingObj === null ? null : bookingObj.status}
                 </Typography>
               </Grid>
-              <Grid
-                container
-                className={classes.mobilerow}
-                style={{
-                  boxShadow: "0 5px 5px -5px rgba(51, 51, 51, 0.29)"
-                }}
-              >
-                <Grid item xs={3} md={1} style={{ marginRight: "5%" }}>
-                  <UserAvatar user={bookingObj === null ? null : this.state.userData._id === bookingObj.alfred._id ? bookingObj.user:bookingObj.alfred} />
+              <Grid container className={classes.mobilerow}>
+                <Grid item style={{ marginRight: "5%" }}>
+                  <UserAvatar user={bookingObj === null ? null : this.state.userData._id === bookingObj.alfred._id ? bookingObj.user:bookingObj.alfred} classes={'avatarLetter'} className={classes.avatarLetter} />
                 </Grid>
                 <Grid item xs={5} md={7}>
                   <Typography style={{fontSize: "1.3rem" }}>
@@ -352,10 +274,7 @@ class MessagesDetails extends React.Component {
                     {" "}{bookingObj === null ? null : bookingObj.date_prestation}
                   </Typography>
                 </Grid>
-                <Grid item xs={1} style={{}}>
-
-                </Grid>
-                <Grid item xs={2} style={{}}>
+                <Grid item xs={2}>
                   <Grid>
                     <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
                   </Grid>

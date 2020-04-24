@@ -12,9 +12,6 @@ import Link from 'next/link';
 import axios from 'axios';
 const jwt = require('jsonwebtoken');
 
-const {config} = require('../../../config/config');
-const url = config.apiUrl;
-
 const styles = theme => ({
   container: {
     margin:'auto',
@@ -126,7 +123,7 @@ class becomeAlfred extends React.Component{
 
       axios.defaults.headers.common['Authorization'] = token;
       axios
-        .get(url+'myAlfred/api/users/current')
+        .get('/myAlfred/api/users/current')
         .then(res => {
           let user = res.data;
           this.setState({user:user, alfred:user.is_alfred, userId: user._id});

@@ -20,8 +20,8 @@ export default theme => ({
       marginRight: 0
     },
   },
-  badgeStyle:{
-    color: "blue",
+  badge: {
+    color: 'white'
   },
   boxRating:{
     margin: 0,
@@ -116,7 +116,10 @@ export default theme => ({
       marginRight: 50,
       marginLeft: 50,
       marginBottom: 20
-    }
+    },
+    [theme.breakpoints.down('xs')]: {
+      margin:0
+    },
   },
   hrStyle:{
     width: 500,
@@ -330,4 +333,10 @@ export default theme => ({
   textField:{
     width: 70
   },
+  datePickerStyle:{
+    borderRadius: 5,
+    border: '2px solid #d2d2d2',
+    height: 30,
+    boxShadow: '1px 1px 1px 1px gainsboro'
+  }
 })

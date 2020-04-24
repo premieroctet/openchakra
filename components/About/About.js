@@ -20,9 +20,6 @@ import moment from 'moment';
 import Link from 'next/link';
 import axios from 'axios';
 
-const { config } = require('../../config/config');
-const url = config.apiUrl;
-
 moment.locale('fr');
 
 // FIX : Commentaires : faire un lien vers le profil
@@ -33,33 +30,47 @@ class About extends React.Component{
       alfred: [],
       languages: [],
       dense: false,
-      valueRating: 0,
-      nbCommentary: 0,
-      shop:[],
-      user: {}
+      user: {},
+      userId: '',
+      isAlfred: false,
+      creationShop: ''
     }
+    this.isAlfred = this.isAlfred.bind(this)
   }
 
   componentDidMount() {
-    axios.get(`${url}myAlfred/api/shop/alfred/${this.props.alfred}`)
+    axios.get(`/myAlfred/api/users/users/${this.props.alfred}`)
       .then( response  =>  {
-        let shop = response.data;
+        let user = response.data;
         this.setState({
-          user: shop.alfred,
-          idAlfred: shop.alfred._id,
-          languages: shop.alfred.languages,
-          services: shop.services,
-          shop:shop,
-        });
+          user: user,
+          userId: user._id,
+          isAlfred: user.is_alfred,
+          languages: user.languages,
+        }, () => this.isAlfred());
       })
       .catch(function (error) {
         console.log(error);
       });
   }
 
+  isAlfred(){
+    if(this.state.isAlfred){
+      axios.get(`/myAlfred/api/shop/alfred/${this.state.userId}`).then( response =>{
+        let shop = response.data;
+        this.setState({
+          creationShop : shop.creation_date
+        })
+      }).catch( error => {
+        console.log(error)
+      })
+    }
+  }
+
   render(){
-    const {shop, languages, user} = this.state;
+    const {languages, user, creationShop} = this.state;
     const {classes, alfred, profil} = this.props;
+    console.log(alfred,'alfred')
     const preventDefault = event => event.preventDefault();
 
     const StyledRating = withStyles({
@@ -68,19 +79,18 @@ class About extends React.Component{
       },
     })(Rating);
 
-    console.log(JSON.stringify(alfred));
     return (
       <Grid container className={classes.mainContainer}>
         <Grid item style={{width: '100%'}}>
-          <Grid>
+          <Grid className={classes.titleContainer}>
             <Typography variant="h3" className={classes.titleAbout}>
               A propos de {user.firstname}
             </Typography>
           </Grid>
           <List dense={this.state.dense} className={classes.listStyle}>
             <ListItem>
-              <Box component="fieldset" mb={3} borderColor="transparent" className={classes.raiting}>
-                <StyledRating name="read-only" value={this.state.valueRating} readOnly/>
+              <Box component="fieldset" mb={user.score} borderColor="transparent" className={classes.raiting}>
+                <StyledRating name="read-only" value={user.score} readOnly/>
               </Box>
             </ListItem>
             <ListItem>
@@ -89,9 +99,9 @@ class About extends React.Component{
                   <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/commentaires.svg'}/>
                 </Grid>
               </ListItemAvatar>
-              <LinkMaterial href="#" onClick={preventDefault} color="primary " className={classes.link}>{this.state.nbCommentary} Commentaires</LinkMaterial>
+              <LinkMaterial href="#comments" color="primary " className={classes.link}>{user.number_of_reviews} commentaires</LinkMaterial>
             </ListItem>
-            {shop.identity_card ?
+            {user.id_confirmed ?
               <ListItem>
                 <ListItemAvatar>
                   <Grid>
@@ -124,17 +134,21 @@ class About extends React.Component{
                 primary={"Membre depuis " + moment(user.creation_date).format('MMMM YYYY')}
               />
             </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Grid>
-                  <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/alfred.svg'}/>
-                </Grid>
-              </ListItemAvatar>
-              <ListItemText
-                //TODO A MODIFIER QUAND DATE CREATION BOUTIQUE SERA STOCKE
-                primary={user.creation_shop ? "Alfred depuis " + moment(user.creation_shop).format('MMMM YYYY') : "Alfred depuis " + moment(user.creation_date).format('MMMM YYYY')}
-              />
-            </ListItem>
+            {
+              user.is_alfred ?
+                <ListItem>
+                  <ListItemAvatar>
+                    <Grid>
+                      <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/alfred.svg'}/>
+                    </Grid>
+                  </ListItemAvatar>
+                  <ListItemText
+                    //TODO A MODIFIER QUAND DATE CREATION BOUTIQUE SERA STOCKE
+                    primary={"Alfred depuis " + moment(creationShop).format('MMMM YYYY')}
+                  />
+                </ListItem> : null
+            }
+
             <ListItem>
               <ListItemAvatar>
                 <Grid>

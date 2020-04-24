@@ -75,6 +75,7 @@ router.post('/add/alfred',passport.authenticate('jwt',{session: false}),(req,res
 router.post('/add/client',passport.authenticate('jwt',{session: false}),(req,res) => {
 
 
+    console.log("Got body:"+JSON.stringify(req.body, null, 2));
     const reviewFields = {};
     reviewFields.alfred = req.user.id;
     reviewFields.user = mongoose.Types.ObjectId(req.body.client);
@@ -141,7 +142,7 @@ router.get('/:user_id',passport.authenticate('jwt',{session:false}),(req,res)=> 
         });
         res.json(result);
       } else {
-        return res.status(400).json(result);
+        res.json(result);
       }
     })
     .catch(err => console.log(err) && res.status(404).json(result));
