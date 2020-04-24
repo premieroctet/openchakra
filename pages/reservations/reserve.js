@@ -176,7 +176,7 @@ class Reserve extends React.Component {
                           <Grid item xs={3} style={{ width: "25%", float: "left", paddingTop: 15 }} >
                             <Grid item>
                               <Grid>
-                                <img style={{width: 40, height : 40}} alt={"calendrier"} title={"calendrier"} src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
+                                <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
                               </Grid>
                             </Grid>
                           </Grid>
@@ -189,7 +189,7 @@ class Reserve extends React.Component {
                           <Grid item xs={3} style={{ width: "25%", float: "left", paddingTop: 15 }} >
                             <Grid item>
                               <Grid>
-                                <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
+                                <img style={{width: 40, height : 40}} alt={"calendrier"} title={"calendrier"} src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
                               </Grid>
                             </Grid>
                           </Grid>
