@@ -74,7 +74,7 @@ class BookingDetail extends React.Component{
           { /* Start total */ }
           <Grid className={classes.flexContent}>
             <Grid>
-              <p>{client_fee !== undefined ? "Total" : "Total à percevoir"}</p>
+              <p>{client_fee !== 0 ? "Total" : "Total à percevoir"}</p>
             </Grid>
             <Grid>
               <p>{total.toFixed(2)}€</p>

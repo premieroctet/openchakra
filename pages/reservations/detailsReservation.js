@@ -319,7 +319,7 @@ class DetailsReservation extends React.Component {
                                 {bookingObj === null || currentUser === null
                                   ? null
                                   : currentUser._id === bookingObj.alfred._id
-                                    ? (bookingObj.amount - bookingObj.fees * 2).toFixed(2)
+                                    ? (parseInt(bookingObj.amount) - bookingObj.fees).toFixed(2)
                                     : bookingObj.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}
                                 €
                               </Typography>
