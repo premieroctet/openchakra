@@ -8,9 +8,6 @@ var fs = require('fs');
 // Templates
 
 /**
-11  VERS ALFRED == Laissez un commentaire
-12  VERS USER == Laissez un commentaire à votre Alfred
-17  VERS ALFRED == pré Réservation refusée ??? Idem annnulée (18)
 21  VERS ALFRED == N'oubliez pas de mettre à jour vos disponibilités 🗓
 */
 
@@ -21,6 +18,8 @@ const ASKING_INFO=6;
 const NEW_MESSAGE_ALFRED=7;
 const BOOKING_CANCELLED_BY_CLIENT=8;
 const TRANSFER_TO_ALFRED=10; // NOK
+const LEAVE_COMMENT_FOR_CLIENT=11;
+const LEAVE_COMMENT_FOR_ALFRED=12;
 const NEW_MESSAGE_CLIENT=13;
 const BOOKING_CANCELLED_BY_ALFRED=14;
 const SHOP_DELETED=15;
@@ -66,9 +65,10 @@ const getHost = () => {
 
 const sendNotification = (notif_index, destinee, params) => {
 
+  result = true;
   // Send mail
   if (notif_index != CONFIRM_PHONE) {
-    SIB.sendMail(notif_index, destinee.email, params);
+    result = result && SIB.sendMail(notif_index, destinee.email, params);
   }
 
   // Send SMS
@@ -76,11 +76,13 @@ const sendNotification = (notif_index, destinee, params) => {
     const smsContents=fillSms(SMS_CONTENTS[notif_index], params);
     if (!smsContents) {
       console.error(`Error creating SMS ${notif_index} to ${destinee.phone} with params ${JSON.stringify(params)}`)
+      result = false;
     }
     else {
-      SIB.sendSms(destinee.phone, smsContents);
+      result = result && SIB.sendSms(destinee.phone, smsContents);
     }
   }
+  return result;
 }
 
 const sendVerificationMail = (user, req) => {
@@ -95,13 +97,14 @@ const sendVerificationMail = (user, req) => {
 }
 
 const sendVerificationSMS = user => {
-  sendNotification(
+  const result=sendNotification(
     CONFIRM_PHONE,
     user,
     {
       sms_code: user.sms_code,
     }
   )
+  return result;
 }
 
 const sendShopDeleted = (user, req) => {
@@ -155,6 +158,33 @@ const sendBookingCancelledByClient = booking => {
    }
  )
 }
+
+const sendLeaveCommentForClient = booking => {
+ sendNotification(
+   LEAVE_COMMENT_FOR_CLIENT, // 11
+   booking.alfred,
+   {
+     client_firstname: booking.user.firstname,
+     alfred_firstname: booking.alfred.firstname,
+     service_label: booking.service,
+     link_reviewsclient : new URL(`/evaluateClient?booking=${booking._id}&id=${booking.serviceUserId}&client=${booking.user._id}`, getHost()),
+   }
+ )
+}
+
+const sendLeaveCommentForAlfred = booking => {
+ sendNotification(
+   LEAVE_COMMENT_FOR_ALFRED, // 12
+   booking.user,
+   {
+     client_firstname: booking.user.firstname,
+     alfred_firstname: booking.alfred.firstname,
+     service_label: booking.service,
+     link_reviewsalfred : new URL(`/evaluate?booking=${booking._id}&id=${booking.serviceUserId}`, getHost()),
+   }
+ )
+}
+
 
 const sendResetPassword = (user, token, req) => {
   sendNotification(
@@ -348,5 +378,6 @@ module.exports={
   sendVerificationMail, sendShopDeleted, sendBookingConfirmed, sendBookingCancelledByAlfred, sendBookingCancelledByClient,
   sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingDetails, sendBookingInfos, sendNewBooking,
   sendShopOnline,sendBookingRefusedToClient, sendAskingInfo, sendNewMessageToAlfred, sendNewMessageToClient,
-  sendAskInfoPreapproved, sendResetPassword, sendNewBookingManual, sendVerificationSMS
+  sendAskInfoPreapproved, sendResetPassword, sendNewBookingManual, sendVerificationSMS, sendLeaveCommentForClient,
+  sendLeaveCommentForAlfred
 }
