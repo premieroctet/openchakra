@@ -66,9 +66,10 @@ const getHost = () => {
 
 const sendNotification = (notif_index, destinee, params) => {
 
+  result = true;
   // Send mail
   if (notif_index != CONFIRM_PHONE) {
-    SIB.sendMail(notif_index, destinee.email, params);
+    result = result && SIB.sendMail(notif_index, destinee.email, params);
   }
 
   // Send SMS
@@ -76,11 +77,13 @@ const sendNotification = (notif_index, destinee, params) => {
     const smsContents=fillSms(SMS_CONTENTS[notif_index], params);
     if (!smsContents) {
       console.error(`Error creating SMS ${notif_index} to ${destinee.phone} with params ${JSON.stringify(params)}`)
+      result = false;
     }
     else {
-      SIB.sendSms(destinee.phone, smsContents);
+      result = result && SIB.sendSms(destinee.phone, smsContents);
     }
   }
+  return result;
 }
 
 const sendVerificationMail = (user, req) => {
@@ -95,13 +98,14 @@ const sendVerificationMail = (user, req) => {
 }
 
 const sendVerificationSMS = user => {
-  sendNotification(
+  const result=sendNotification(
     CONFIRM_PHONE,
     user,
     {
       sms_code: user.sms_code,
     }
   )
+  return result;
 }
 
 const sendShopDeleted = (user, req) => {

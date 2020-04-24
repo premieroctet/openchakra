@@ -32,9 +32,11 @@ class SIB_V3 {
     this.smtpInstance.sendTransacEmail(sendSmtpEmail)
       .then(data => {
         console.log('SMTP called successfully. Returned data: ' + JSON.stringify(data, null, 2));
+        return true;
       })
       .catch ( err => {
         console.error(err);
+        return false;
       });
     }
 
@@ -50,9 +52,11 @@ class SIB_V3 {
       this.smsInstance.sendTransacSms(sendTransacSms)
         .then(data => {
           console.log('SMS called successfully. Returned data: ' + JSON.stringify(data, null, 2));
+          return true;
         })
         .catch ( err => {
           console.error(err);
+          return false;
         });
     }
 }
