@@ -30,6 +30,9 @@ const UserSchema = new Schema({
     phone: {
         type: String
     },
+    sms_code: {
+        type: String
+    },
     billing_address: {
         address: {
             type: String

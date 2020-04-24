@@ -2,12 +2,12 @@ const {SIB}=require('./sendInBlue');
 
 const {computeUrl } = require('../config/config');
 const {booking_datetime_str} = require('./dateutils');
+const {fillSms} = require('./sms')
 var fs = require('fs');
 
 // Templates
 
 /**
-10  VERS ALFRED == Un virement vous a été envoyé
 11  VERS ALFRED == Laissez un commentaire
 12  VERS USER == Laissez un commentaire à votre Alfred
 17  VERS ALFRED == pré Réservation refusée ??? Idem annnulée (18)
@@ -20,6 +20,7 @@ const CONFIRM_EMAIL=5;
 const ASKING_INFO=6;
 const NEW_MESSAGE_ALFRED=7;
 const BOOKING_CANCELLED_BY_CLIENT=8;
+const TRANSFER_TO_ALFRED=10; // NOK
 const NEW_MESSAGE_CLIENT=13;
 const BOOKING_CANCELLED_BY_ALFRED=14;
 const SHOP_DELETED=15;
@@ -35,6 +36,23 @@ const BOOKING_DETAILS=26;
 const BOOKING_EXPIRED_2_CLIENT=30;
 const BOOKING_EXPIRED_2_ALFRED=31;
 
+const CONFIRM_PHONE = -1;
+
+const SMS_CONTENTS = {
+  [NEW_BOOKING_MANUAL]:           "{{ params.client_firstname }} a effectué une demande de réservation de votre service {{ params.service_label }}",
+  [CONFIRM_PHONE]:                "(My Alfred) pour valider votre numéro de téléphone portable, merci de saisir le code d'activation suivant : {{ params.sms_code }}",
+  [ASKING_INFO]:                  "{{ params.client_firstname }} a effectué une demande d'information pour votre service {{ params.service_label }}",
+  [BOOKING_CANCELLED_BY_CLIENT]:  "Malheureusement, {{ params.client_firstname }} a annulé la réservation de votre service {{ params.service_label }}",
+  [TRANSFER_TO_ALFRED]:          "(My Alfred), un versement de {{ params.total_revenue }} a été effectué pour votre service {{ params.service_label }}",
+  [BOOKING_CANCELLED_BY_ALFRED]:  "Malheureusement, {{ params.alfred_firstname }} a annulé votre réservation du service {{ params.service_label }}",
+  [ASKINFO_PREAPPROVED]:          "{{ params.alfred_firstname }} a pré approuvé la réservation de votre service {{ params.service_label }}",
+  [BOOKING_REFUSED_2_CLIENT]:     "Malheureusement, {{ params.alfred_firstname }} a refusé votre réservation du service {{ params.service_label }}",
+  [BOOKING_CONFIRMED]:            "{{ params.alfred_firstname }} a confirmé votre réservation de son service {{ params.service_label }}",
+  [NEW_BOOKING]:                  "{{ params.client_firstname }} a réservé votre service {{ params.service_label }}",
+  [BOOKING_EXPIRED_2_CLIENT]:     "Votre réservation du service {{ params.service_label }} par {{ params.alfred_firstname }} est expirée",
+  [BOOKING_EXPIRED_2_ALFRED]:     "La réservation de votre service {{ params.service_label }} par {{ params.client_firstname }} est expirée",
+}
+
 const getHost = () => {
   try {
     var data = fs.readFileSync('host.txt', 'utf8');
@@ -46,10 +64,29 @@ const getHost = () => {
   }
 }
 
+const sendNotification = (notif_index, destinee, params) => {
+
+  // Send mail
+  if (notif_index != CONFIRM_PHONE) {
+    SIB.sendMail(notif_index, destinee.email, params);
+  }
+
+  // Send SMS
+  if (destinee.phone && SMS_CONTENTS[notif_index]) {
+    const smsContents=fillSms(SMS_CONTENTS[notif_index], params);
+    if (!smsContents) {
+      console.error(`Error creating SMS ${notif_index} to ${destinee.phone} with params ${JSON.stringify(params)}`)
+    }
+    else {
+      SIB.sendSms(destinee.phone, smsContents);
+    }
+  }
+}
+
 const sendVerificationMail = (user, req) => {
-  SIB.sendMail(
+  sendNotification(
     CONFIRM_EMAIL,
-    user.email,
+    user,
     {
       link_confirmemail:new URL('/validateAccount?user='+user._id, computeUrl(req)),
       user_firstname: user.firstname,
@@ -57,10 +94,20 @@ const sendVerificationMail = (user, req) => {
   )
 }
 
+const sendVerificationSMS = user => {
+  sendNotification(
+    CONFIRM_PHONE,
+    user,
+    {
+      sms_code: user.sms_code,
+    }
+  )
+}
+
 const sendShopDeleted = (user, req) => {
-  SIB.sendMail(
+  sendNotification(
     SHOP_DELETED,
-    user.email,
+    user,
     {
       user_firstname: user.firstname,
     }
@@ -68,9 +115,9 @@ const sendShopDeleted = (user, req) => {
 }
 
 const sendBookingConfirmed = booking => {
- SIB.sendMail(
+ sendNotification(
    BOOKING_CONFIRMED,
-   booking.user.email,
+   booking.user,
    {
      client_firstname: booking.user.firstname,
      alfred_firstname: booking.alfred.firstname,
@@ -82,9 +129,9 @@ const sendBookingConfirmed = booking => {
 }
 
 const sendBookingCancelledByAlfred = (booking, req) => {
- SIB.sendMail(
+ sendNotification(
    BOOKING_CANCELLED_BY_ALFRED,
-   booking.user.email,
+   booking.user,
    {
      client_firstname: booking.user.firstname,
      alfred_firstname: booking.alfred.firstname,
@@ -97,9 +144,9 @@ const sendBookingCancelledByAlfred = (booking, req) => {
 }
 
 const sendBookingCancelledByClient = booking => {
- SIB.sendMail(
+ sendNotification(
    BOOKING_CANCELLED_BY_CLIENT,
-   booking.alfred.email,
+   booking.alfred,
    {
      client_firstname: booking.user.firstname,
      alfred_firstname: booking.alfred.firstname,
@@ -110,9 +157,9 @@ const sendBookingCancelledByClient = booking => {
 }
 
 const sendResetPassword = (user, token, req) => {
-  SIB.sendMail(
+  sendNotification(
     RESET_PASSWORD,
-    user.email,
+    user,
     {
       user_firstname: user.firstname,
       link_initiatenewpassword: new URL('/resetPassword?token='+token, computeUrl(req)),
@@ -120,9 +167,9 @@ const sendResetPassword = (user, token, req) => {
   )
 }
 const sendBookingExpiredToAlfred = booking => {
-  SIB.sendMail(
+  sendNotification(
     BOOKING_EXPIRED_2_ALFRED,
-    booking.alfred.email,
+    booking.alfred,
     {
       client_firstname: booking.user.firstname,
       alfred_firstname: booking.alfred.firstname,
@@ -133,9 +180,9 @@ const sendBookingExpiredToAlfred = booking => {
 }
 
 const sendBookingExpiredToClient = booking => {
-  SIB.sendMail(
+  sendNotification(
     BOOKING_EXPIRED_2_CLIENT,
-    booking.user.email,
+    booking.user,
     {
       client_firstname: booking.user.firstname,
       alfred_firstname: booking.alfred.firstname,
@@ -147,9 +194,9 @@ const sendBookingExpiredToClient = booking => {
 }
 
 const sendBookingDetails = booking => {
-   SIB.sendMail(
+   sendNotification(
      BOOKING_DETAILS,
-     booking.user.email,
+     booking.user,
      {
        client_firstname: booking.user.firstname,
        alfred_firstname: booking.alfred.firstname,
@@ -161,9 +208,9 @@ const sendBookingDetails = booking => {
 }
 
 const sendBookingInfos = booking => {
-   SIB.sendMail(
+   sendNotification(
      BOOKING_INFOS,
-     booking.user.email,
+     booking.user,
      {
        client_firstname: booking.user.firstname,
        alfred_firstname: booking.alfred.firstname,
@@ -175,9 +222,9 @@ const sendBookingInfos = booking => {
 }
 
 const sendNewBooking = (booking, req) => {
-   SIB.sendMail(
+   sendNotification(
      NEW_BOOKING,
-     booking.alfred.email,
+     booking.alfred,
      {
        client_firstname: booking.user.firstname,
        alfred_firstname: booking.alfred.firstname,
@@ -191,9 +238,9 @@ const sendNewBooking = (booking, req) => {
 }
 
 const sendShopOnline = (alfred, req) => {
-   SIB.sendMail(
+   sendNotification(
      SHOP_ONLINE,
-     alfred.email,
+     alfred,
      {
        alfred_firstname: alfred.firstname,
        link_manageshop: new URL('/shop?id_alfred='+alfred._id, computeUrl(req)),
@@ -202,9 +249,9 @@ const sendShopOnline = (alfred, req) => {
 }
 
 const sendBookingRefusedToClient = (booking, req) => {
-   SIB.sendMail(
+   sendNotification(
      BOOKING_REFUSED_2_CLIENT,
-     booking.user.email,
+     booking.user,
      {
        client_firstname: booking.user.firstname,
        alfred_firstname: booking.alfred.firstname,
@@ -216,9 +263,9 @@ const sendBookingRefusedToClient = (booking, req) => {
 }
 
 const sendBookingRefusedToAlfred = (booking, req) => {
-   SIB.sendMail(
+   sendNotification(
      BOOKING_REFUSED_2_ALFRED,
-     booking.alfred.email,
+     booking.alfred,
      {
        client_firstname: booking.user.firstname,
        alfred_firstname: booking.alfred.firstname,
@@ -229,9 +276,9 @@ const sendBookingRefusedToAlfred = (booking, req) => {
 }
 
 const sendAskingInfo = (booking, req) => {
-   SIB.sendMail(
+   sendNotification(
      ASKING_INFO,
-     booking.alfred.email,
+     booking.alfred,
      {
        client_firstname: booking.user.firstname,
        alfred_firstname: booking.alfred.firstname,
@@ -244,37 +291,35 @@ const sendAskingInfo = (booking, req) => {
 }
 
 const sendNewMessageToAlfred = (booking, chatroom_id, req) => {
-  const url=new URL(`/reservations/messagesDetails?id=${chatroom_id}&booking=${booking._id}`, computeUrl(req));
-   SIB.sendMail(
+   sendNotification(
      NEW_MESSAGE_ALFRED,
-     booking.alfred.email,
+     booking.alfred,
      {
        client_firstname: booking.user.firstname,
        alfred_firstname: booking.alfred.firstname,
        service_label: booking.service,
-       link_showclientmessage: url,
+       link_showclientmessage: new URL(`/reservations/messagesDetails?id=${chatroom_id}&booking=${booking._id}`, computeUrl(req)),
      }
    )
 }
 
 const sendNewMessageToClient = (booking, chatroom_id, req) => {
-  const url=new URL(`/reservations/messagesDetails?id=${chatroom_id}&booking=${booking._id}`, computeUrl(req));
-   SIB.sendMail(
+   sendNotification(
      NEW_MESSAGE_CLIENT,
-     booking.user.email,
+     booking.user,
      {
        client_firstname: booking.user.firstname,
        alfred_firstname: booking.alfred.firstname,
        service_label: booking.service,
-       link_showalfredmessage: url,
+       link_showalfredmessage: new URL(`/reservations/messagesDetails?id=${chatroom_id}&booking=${booking._id}`, computeUrl(req)),
      }
    )
 }
 
 const sendAskInfoPreapproved = (booking, req) => {
-   SIB.sendMail(
+   sendNotification(
      ASKINFO_PREAPPROVED,
-     booking.user.email,
+     booking.user,
      {
        client_firstname: booking.user.firstname,
        alfred_firstname: booking.alfred.firstname,
@@ -285,24 +330,23 @@ const sendAskInfoPreapproved = (booking, req) => {
 }
 
 const sendNewBookingManual = (booking, req) => {
-   SIB.sendMail(
-     NEW_BOOKING_MANUAL,
-     booking.alfred.email,
-     {
-       client_firstname: booking.user.firstname,
-       alfred_firstname: booking.alfred.firstname,
-       service_label: booking.service,
-       service_datetime: booking_datetime_str(booking),
-       total_revenue: parseFloat(booking.amount-booking.fees).toFixed(2),
-       link_confirmbooking: new URL('/reservations/detailsReservation?id='+booking._id, computeUrl(req)),
-
-     }
-   )
+  sendNotification(
+    NEW_BOOKING_MANUAL,
+    booking.alfred,
+    {
+      client_firstname: booking.user.firstname,
+      alfred_firstname: booking.alfred.firstname,
+      service_label: booking.service,
+      service_datetime: booking_datetime_str(booking),
+      total_revenue: parseFloat(booking.amount-booking.fees).toFixed(2),
+      link_confirmbooking: new URL('/reservations/detailsReservation?id='+booking._id, computeUrl(req)),
+    }
+  )
 }
 
 module.exports={
   sendVerificationMail, sendShopDeleted, sendBookingConfirmed, sendBookingCancelledByAlfred, sendBookingCancelledByClient,
   sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingDetails, sendBookingInfos, sendNewBooking,
   sendShopOnline,sendBookingRefusedToClient, sendAskingInfo, sendNewMessageToAlfred, sendNewMessageToClient,
-  sendAskInfoPreapproved, sendResetPassword, sendNewBookingManual
+  sendAskInfoPreapproved, sendResetPassword, sendNewBookingManual, sendVerificationSMS
 }
