@@ -573,7 +573,7 @@ class trustAndVerification extends React.Component {
                                         Envoyer email de vérification
                                     </Button></Grid></Grid>}
                                 <Grid item xs={12} style={{marginTop: 20}}>
-                                    <InputLabel style={{color: 'black'}}>Téléphone (format 33xxxxxxx)</InputLabel>
+                                    <InputLabel style={{color: 'black'}}>Téléphone</InputLabel>
                                 </Grid>
                                 <Grid container>
                                     <Grid item xs={12} style={{display:"contents",justifyContent:"center"}}>
