@@ -5,6 +5,7 @@ const SIB_API_KEY_V3='xkeysib-fb7206d22463c0dcadeee870c9d7cc98f6dc92856e4078c4b5
 
 const SIB_VERSION=3;
 
+const SmsTemplateId=38;
 
 class SIB_V3 {
 
@@ -13,11 +14,12 @@ class SIB_V3 {
     var apiKey = defaultClient.authentications['api-key'];
     apiKey.apiKey = SIB_API_KEY_V3;
 
-    this.apiInstance = new SibApiV3Sdk.SMTPApi();
+    this.smtpInstance = new SibApiV3Sdk.SMTPApi();
+    this.smsInstance = new SibApiV3Sdk.TransactionalSMSApi();
   }
 
   sendMail(index, email, data) {
-    console.log(`Sending ${index} template to ${email} with data ${JSON.stringify(data)}`);
+    console.log(`Sending mail template #${index} to ${email} with data ${JSON.stringify(data)}`);
     var templateId = index; // Number | Id of the template
 
     var sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
@@ -25,18 +27,33 @@ class SIB_V3 {
     sendSmtpEmail.to=[{email:email}];
     sendSmtpEmail.templateId = parseInt(index);
     sendSmtpEmail.params = {};
-    console.log("Setting params:"+JSON.stringify(data));
     Object.assign(sendSmtpEmail.params, data);
 
-    console.log("Sending body:"+JSON.stringify(sendSmtpEmail));
-
-    this.apiInstance.sendTransacEmail(sendSmtpEmail)
+    this.smtpInstance.sendTransacEmail(sendSmtpEmail)
       .then(data => {
-        console.log('API called successfully. Returned data: ' + JSON.stringify(data, null, 2));
+        console.log('SMTP called successfully. Returned data: ' + JSON.stringify(data, null, 2));
       })
       .catch ( err => {
         console.error(err);
       });
+    }
+
+    sendSms(number, data) {
+      console.log(`Sending SMS to ${number}, with data ${data}`);
+
+      const sendTransacSms = new SibApiV3Sdk.SendTransacSms();
+      sendTransacSms.sender     = 'Seb';
+      sendTransacSms.recipient  = number;
+      sendTransacSms.content    = data;
+      sendTransacSms.type       = 'transactional';
+
+      this.smsInstance.sendTransacSms(sendTransacSms)
+        .then(data => {
+          console.log('SMS called successfully. Returned data: ' + JSON.stringify(data, null, 2));
+        })
+        .catch ( err => {
+          console.error(err);
+        });
     }
 }
 

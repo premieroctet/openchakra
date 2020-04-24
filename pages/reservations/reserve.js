@@ -15,7 +15,7 @@ registerLocale('fr', fr);
 moment.locale("fr");
 import styles from '../reserve/reserveStyle'
 import About from '../../components/About/About';
-import UserAvatar from '../../components/avatar/UserAvatar';
+import UserAvatar from '../../components/Avatar/UserAvatar';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
 
 

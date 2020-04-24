@@ -26,6 +26,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {Helmet} from 'react-helmet';
+const {SMS_VERIF_DEBUG} =require('../../utils/consts');
 
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -186,12 +187,15 @@ class trustAndVerification extends React.Component {
             creation_date: '',
             status: '',
             open:false,
+            // SMS Code setState
+            smsCodeOpen: false, // Show/hide SMS code modal
+            smsCode: '', // Typed SMS code
+            smsError: null,
         };
         this.editSiret = this.editSiret.bind(this);
     }
 
     componentDidMount() {
-
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios
@@ -313,8 +317,6 @@ class trustAndVerification extends React.Component {
             .then((response) => {
                 toast.info('Carte d\'identité ajoutée');
                 this.componentDidMount();
-
-
             }).catch();
     };
 
@@ -346,7 +348,18 @@ class trustAndVerification extends React.Component {
     };
 
     sendSms = () => {
-        //function sms
+        axios.post('/myAlfred/api/users/sendSMSVerification')
+          .then (res => {
+            var txt="Le SMS a été envoyé";
+            if (SMS_VERIF_DEBUG) {
+              txt =`PAS DE CREDIT SMS : le code est ${res.data.sms_code} ;-)`;
+            }
+            toast.info(txt);
+            this.setState({smsCodeOpen:true})
+          })
+          .catch(err => {
+              toast.error("Impossible d'envoyer le SMS");
+          })
     };
 
     editSiret() {
@@ -390,6 +403,21 @@ class trustAndVerification extends React.Component {
 
     }
 
+    checkSmsCode = () => {
+      const sms_code = this.state.smsCode;
+      axios.post("/myAlfred/api/users/checkSMSVerification", {sms_code:sms_code})
+        .then( res => {
+          if (res.data.sms_code_ok) {
+            toast.info("Votre numéro de téléphone est validé")
+            this.setState({smsCodeOpen: false});
+          }
+          else {
+            toast.error("Le code est incorrect")
+          }
+        })
+        .catch(err => toast.error("Erreur à la vérification du code"))
+    }
+
     render() {
         const {classes} = this.props;
         const {user} = this.state;
@@ -398,7 +426,6 @@ class trustAndVerification extends React.Component {
         const {professional} = this.state;
         const {alfred} = this.state;
         const {company} = this.state;
-
 
         return (
             <Fragment>
@@ -852,6 +879,38 @@ class trustAndVerification extends React.Component {
                     </DialogActions>
                 </Dialog>
 
+   <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
+     <DialogTitle id="form-dialog-title">Confirmation du numéro de téléphone</DialogTitle>
+     <DialogContent>
+       <DialogContentText>
+         Saisissez le code reçu par SMS
+       </DialogContentText>
+       <TextField
+         autoFocus
+         margin="dense"
+         id="name"
+         label="Code"
+         type="number"
+         placeholder="0000"
+         maxLength="4"
+         value={this.state.smsCode}
+         onChange={ e => { console.log(e.target.value); this.setState({smsCode: e.target.value})}}
+         fullWidth
+         errors={this.state.smsError}
+       />
+     </DialogContent>
+     <DialogActions>
+       <Button onClick={() => this.setState({smsCodeOpen:false})} color="primary">
+         Annuler
+       </Button>
+       <Button
+         disabled={this.state.smsCode.length!=4}
+         onClick={() => this.checkSmsCode()}
+         color="primary">
+         Confirmer
+       </Button>
+     </DialogActions>
+   </Dialog>
             </Fragment>
         );
     };
