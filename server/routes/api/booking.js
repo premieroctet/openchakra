@@ -142,6 +142,8 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
     bookingFields.time_prestation = moment(req.body.time_prestation);
     bookingFields.prestations = req.body.prestations;
     bookingFields.fees = req.body.fees;
+    bookingFields.travel_tax = req.body.travel_tax;
+    bookingFields.pick_tax = req.body.pick_tax;
     bookingFields.status = req.body.status;
     bookingFields.serviceUserId = req.body.serviceUserId;
 

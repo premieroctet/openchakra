@@ -104,7 +104,17 @@ const BookingSchema = new Schema({
     },
     date_payment: {
         type: Date
-    }
+    },
+    travel_tax: {
+      type: Number,
+      required : true,
+      default: 0,
+    },
+    pick_tax: {
+      type: Number,
+      required : true,
+      default: 0,
+    },
 });
 
 module.exports = Booking = mongoose.model('booking',BookingSchema);
