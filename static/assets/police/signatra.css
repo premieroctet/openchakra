@@ -1,9 +1,11 @@
+
 @font-face {
-    font-family: "test";
-    src: url("/static/assets/police/Signatra.ttf") format("ttf"),
-    url("/static/assets/police/Signatra.otf") format("otf");
+    font-family: Signatra;
+    src: url("/static/assets/police/Signatra.ttf") format("truetype"),
+    url("/static/assets/police/Signatra.otf") format("truetype");
 }
 
-.police{
-    color: white
+.customPolice{
+    font-family: Signatra;
+    font-size: 30px
 }

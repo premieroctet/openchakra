@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from '../componentStyle'
 import { Typography } from '@material-ui/core';
+import '../../../static/assets/police/signatra.css'
 
 class CreaShopPresentation extends React.Component {
   constructor(props) {
@@ -26,7 +27,7 @@ class CreaShopPresentation extends React.Component {
               <Grid className={classes.contentTextSize}>
                 <Grid>
                   <Grid>
-                    <Typography className={classes.policySizeStep}>Etape 1 </Typography>
+                    <p class="customPolice">Etape 1 </p>
                     <hr className={classes.hrStyle}/>
                   </Grid>
                   <Grid>
@@ -40,7 +41,7 @@ class CreaShopPresentation extends React.Component {
                 </Grid>
                 <Grid>
                   <Grid>
-                    <Typography className={classes.policySizeStep}>Etape 2 </Typography>
+                    <p class="customPolice">Etape 2 </p>
                     <hr className={classes.hrStyle}/>
                   </Grid>
                   <Grid>
@@ -54,7 +55,7 @@ class CreaShopPresentation extends React.Component {
                 </Grid>
                 <Grid style={{height: 250}}>
                   <Grid>
-                    <Typography className={classes.policySizeStep}>Etape 3</Typography>
+                    <p class="customPolice">Etape 3</p>
                     <hr className={classes.hrStyle}/>
                   </Grid>
                   <Grid>

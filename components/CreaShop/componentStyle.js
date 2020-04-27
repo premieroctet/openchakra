@@ -1,3 +1,4 @@
+
 export default theme => ({
   mainContainer:{
     width: '100%',
@@ -40,7 +41,7 @@ export default theme => ({
     paddingBottom: 2
   },
   policySizeStep:{
-    fontFamily: 'Signatra',
+    fontFamily: "signatra",
     fontSize: 30
   },
   policySizeSubtitle:{

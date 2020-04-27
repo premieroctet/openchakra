@@ -32,7 +32,7 @@ class BannerReservation extends React.Component{
           <Grid container className={classes.darkOverlay}>
             <Grid container className={classes.container}>
               <Grid>
-                <p className={classes.textAvatar}>{serviceUser.label}</p>
+                <p class="customPolice">{serviceUser.label}</p>
               </Grid>
               <Grid>
                 <Link href={`/shop?id_alfred=${user._id}`} >

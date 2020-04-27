@@ -158,14 +158,10 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-.static/*
-.static/
-static
-static/
+!static
 static/*
-/static
-/.static/
-/static/*
+!static/assets
+
 # Vi swap files
 **/*.swp
 
