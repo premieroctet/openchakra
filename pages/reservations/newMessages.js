@@ -35,6 +35,12 @@ class NewMessages extends React.Component {
       if(res.data.is_alfred === true){
         this.setState({isAlfred: true})
       }
+            if(this.state.isAlfred === false){
+        this.setState({
+          tabs : true
+        })
+      }
+
     });
     axios.get('/myAlfred/api/chatRooms/nonViewedMessages')
         .then(res => {
@@ -61,6 +67,7 @@ class NewMessages extends React.Component {
 
 
   render() {
+    const { isAlfred } = this.state;
     const { classes } = this.props;
     const tabs = this.state.tabs;
 
@@ -250,6 +257,9 @@ class NewMessages extends React.Component {
                   <Typography style={{ fontSize: "0.8rem", marginBottom: "4%" }}>
                     vous avez {this.state.alfredReservations.length + this.state.userReservations.length} nouveaux messages
                   </Typography>
+
+                  {
+                    isAlfred ?
                   <Grid container className={classes.tabweb}>
                     <Grid item xs={6} style={{ textAlign: "center" }}>
                       <div>
@@ -318,6 +328,10 @@ class NewMessages extends React.Component {
                       )}
                     </Grid>
                   </Grid>
+                      : null
+                  }
+                  {
+                    isAlfred ?
                   <Grid container className={classes.tabmobile}>
                     <Grid item xs={6} style={{ textAlign: "center" }}>
                       <h2
@@ -370,6 +384,10 @@ class NewMessages extends React.Component {
                       )}
                     </Grid>
                   </Grid>
+                      : null
+                  }
+
+                  {/************************************************************ début en tant que user web **************************************************/}
                   {tabs ? (
                       this.state.userReservations.length ? (
                           this.state.userReservations.map(chatroom => {
