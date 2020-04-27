@@ -33,6 +33,12 @@ class PaymentSuccessCreate extends React.Component {
 
         localStorage.setItem('path',Router.pathname);
         let bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
+
+        if (!bookingObj) {
+          this.context.router.history.goBack();
+          return;
+        }
+
         axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
         axios
             .get("/myAlfred/api/users/current")
@@ -84,6 +90,12 @@ class PaymentSuccessCreate extends React.Component {
                                             )
                                             .then(() => {
                                                 this.setState({success:true})
+                                                localStorage.removeItem("bookingObj");
+                                                Router.push({
+                                                    pathname: "/reservations/detailsReservation",
+                                                    query: { id: result.data._id }
+                                                });
+
                                             });
                                     })
                                     .catch(err => console.log(err));
