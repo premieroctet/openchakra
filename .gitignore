@@ -163,10 +163,11 @@ $RECYCLE.BIN/
 static
 static/
 static/*
+/static
+/.static/
+/static/*
 # Vi swap files
 **/*.swp
-
-!static/style1.css
 
 # Touched host file
 host.txt
