@@ -165,6 +165,7 @@ export default theme => ({
     borderRadius:"unset"
   },
   contentIntervention:{
+    height: 250,
     [theme.breakpoints.down('md')]: {
       marginBottom : 100
     }

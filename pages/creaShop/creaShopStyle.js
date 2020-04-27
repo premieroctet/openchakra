@@ -66,6 +66,7 @@ export default theme => ({
     display: 'flex',
     flexDirection : 'column',
     justifyContent: 'space-between',
+    marginBottom: 250
   },
   rightContentComponent:{
     width: '40%',
@@ -116,5 +117,4 @@ export default theme => ({
   nextButton:{
     color: 'white'
   },
-
 })

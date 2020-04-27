@@ -52,7 +52,7 @@ class CreaShopPresentation extends React.Component {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid>
+                <Grid style={{height: 250}}>
                   <Grid>
                     <Typography className={classes.policySizeStep}>Etape 3</Typography>
                     <hr className={classes.hrStyle}/>

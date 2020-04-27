@@ -183,7 +183,7 @@ class AssetsService extends React.Component {
                       </ExpansionPanelDetails>
                     </ExpansionPanel>
                   </Grid>
-                  <Grid item xs={12} >
+                  <Grid item xs={12} style={{height: 500}}>
                     <h3 className={classes.policySizeSubtitle}>Votre certification</h3>
                     <ExpansionPanel defaultExpanded={true}>
                       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} >
