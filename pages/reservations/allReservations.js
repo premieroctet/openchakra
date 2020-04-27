@@ -37,18 +37,10 @@ class AllReservations extends React.Component {
             let result = res.data
             this.setState({
               userInfo: result,
-              user: result._id
+              user: result._id,
+	      isAlfred: result.is_alfred,
+	      tabs: !result.is_alfred,
             });
-            if (res.data.is_alfred === true) {
-                this.setState({
-                  isAlfred: true
-                });
-            }
-            if(this.state.isAlfred === false){
-              this.setState({
-                tabs : true
-              })
-            }
 
 
             axios.get("/myAlfred/api/booking/alfredBooking").then(res => {
@@ -442,12 +434,7 @@ class AllReservations extends React.Component {
                                                             <Grid item xs={2} className={classes.priceContainer}>
                                                               <Grid>
                                                                 <Typography style={{color: "#4FBDD7", fontWeight: "600"}}>
-                                                                  {
-                                                                    booking.amount.match(
-                                                                      /^-?\d+(?:\.\d{0,2})?/
-                                                                    )[0]
-                                                                  }
-                                                                  €
+                                                                  {booking.amount.toFixed(2)}€
                                                                 </Typography>
                                                               </Grid>
                                                             </Grid>
@@ -544,12 +531,7 @@ class AllReservations extends React.Component {
                                                                         textAlign: "center"
                                                                     }}
                                                                 >
-                                                                    {
-                                                                        booking.amount.match(
-                                                                            /^-?\d+(?:\.\d{0,2})?/
-                                                                        )[0]
-                                                                    }
-                                                                    €
+                                                                    {booking.amount.toFixed(2)}€
                                                                 </Typography>
                                                             </Grid>
                                                             <Grid item xs={12} style={{}}>

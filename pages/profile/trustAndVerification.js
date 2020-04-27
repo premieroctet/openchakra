@@ -26,8 +26,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {Helmet} from 'react-helmet';
-const {SMS_VERIF_DEBUG} =require('../../utils/consts');
-
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -351,9 +349,6 @@ class trustAndVerification extends React.Component {
         axios.post('/myAlfred/api/users/sendSMSVerification')
           .then (res => {
             var txt="Le SMS a été envoyé";
-            if (SMS_VERIF_DEBUG) {
-              txt =`PAS DE CREDIT SMS : le code est ${res.data.sms_code} ;-)`;
-            }
             toast.info(txt);
             this.setState({smsCodeOpen:true})
           })

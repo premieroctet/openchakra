@@ -23,7 +23,8 @@ class FinishedReservations extends React.Component {
       alfredReservations: [],
       userReservations: [],
       finishedReservations: 0,
-      isAlfred: false
+      isAlfred: false,
+      userInfo: {}
     };
   }
 
@@ -33,10 +34,13 @@ class FinishedReservations extends React.Component {
     );
     axios.get("/myAlfred/api/users/current").then(res => {
       let result = res.data
-      this.setState({ user: result._id });
-      if (res.data.is_alfred === true) {
-        this.setState({ isAlfred: true });
-      }
+            this.setState({
+              userInfo: result,
+              user: result._id,
+	      isAlfred: result.is_alfred,
+	      tabs: !result.is_alfred,
+            });
+
 
       axios.get("/myAlfred/api/booking/alfredBooking").then(res => {
         this.setState({ alfredReservations: res.data });
@@ -83,6 +87,7 @@ class FinishedReservations extends React.Component {
   };
 
   render() {
+        const {userInfo} = this.state;
     const { classes } = this.props;
     const tabs = this.state.tabs;
 
@@ -266,6 +271,8 @@ class FinishedReservations extends React.Component {
                   Vous avez {this.state.finishedReservations} réservations
                   terminées
                 </Typography>
+                              {
+                                userInfo.is_alfred ?
                 <Grid container className={classes.tabweb}>
                   <Grid item xs={6} style={{ textAlign: "center" }}>
                     <div>
@@ -334,6 +341,10 @@ class FinishedReservations extends React.Component {
                     )}
                   </Grid>
                 </Grid>
+                                  : null
+                              }
+                              {
+                                userInfo.is_alfred ?
                 <Grid container className={classes.tabmobile}>
                   <Grid item xs={6} style={{ textAlign: "center" }}>
                     <h2
@@ -386,6 +397,8 @@ class FinishedReservations extends React.Component {
                     )}
                   </Grid>
                 </Grid>
+                                  : null
+                              }
 
 
                 {/************************************************************ début en tant que user web **************************************************/}
@@ -449,12 +462,7 @@ class FinishedReservations extends React.Component {
                                       fontWeight: "600",
                                     }}
                                   >
-                                    {
-                                      booking.amount.match(
-                                        /^-?\d+(?:\.\d{0,2})?/
-                                      )[0]
-                                    }
-                                    €
+                                    { booking.amount.toFixed(2) } €
                                   </Typography>
                                 </Grid>
                                 <Grid item>
@@ -548,12 +556,7 @@ class FinishedReservations extends React.Component {
                                       textAlign: "center"
                                     }}
                                   >
-                                    {
-                                      booking.amount.match(
-                                        /^-?\d+(?:\.\d{0,2})?/
-                                      )[0]
-                                    }
-                                    €
+                                    {booking.amount.toFixed(2)}€
                                   </Typography>
                                 </Grid>
                                 <Grid item xs={12}>

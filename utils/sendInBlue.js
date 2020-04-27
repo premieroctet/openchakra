@@ -1,3 +1,5 @@
+const {SMS_VERIF_DEBUG}=require('./consts');
+
 const SibApiV3Sdk = require('sib-api-v3-sdk');
 
 const SIB_API_KEY_V2='SvfYtHq36XGknjwC';
@@ -41,10 +43,18 @@ class SIB_V3 {
     }
 
     sendSms(number, data) {
+
+      if (SMS_VERIF_DEBUG) {
+        const ALLOWED_NUMBERS=['33644245767', '33687377363', '33675774324' ]
+        if (!ALLOWED_NUMBERS.includes(number)) {
+          console.log(`Disallowed phone number : ${number} amongst ${ALLOWED_NUMBERS}`);
+          return true;
+        }
+      }
       console.log(`Sending SMS to ${number}, with data ${data}`);
 
       const sendTransacSms = new SibApiV3Sdk.SendTransacSms();
-      sendTransacSms.sender     = 'Seb';
+      sendTransacSms.sender     = 'MyAlfred';
       sendTransacSms.recipient  = number;
       sendTransacSms.content    = data;
       sendTransacSms.type       = 'transactional';
