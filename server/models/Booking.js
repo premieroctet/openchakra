@@ -34,7 +34,7 @@ const BookingSchema = new Schema({
     }],
     // Fix : string > float
     amount: {
-        type: String,
+        type: Number,
         required: true
     },
     date: {

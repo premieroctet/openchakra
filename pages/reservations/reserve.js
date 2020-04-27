@@ -39,7 +39,6 @@ class Reserve extends React.Component {
       travel_tax: null,
       total: 0,
       fees: null,
-      grandTotal: null,
       checkedOption: false,
       optionPrice: null,
       languages: [],
@@ -54,7 +53,6 @@ class Reserve extends React.Component {
   componentDidMount() {
     const booking_id = this.props.booking_id;
     this.setState({booking_id: booking_id});
-    const bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
 
     axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
@@ -62,26 +60,27 @@ class Reserve extends React.Component {
       this.setState({ currentUser: res.data });
     });
 
-    this.setState({
-      emitter: localStorage.getItem("emitter"),
-      recipient: localStorage.getItem("recipient"),
-      prestations: bookingObj.prestations,
-      bookingObj: bookingObj,
-      city: bookingObj.address.city,
-      address: bookingObj.address.address,
-      zip_code: bookingObj.address.zip_code,
-      date: bookingObj.date_prestation,
-      hour: bookingObj.time_prestation,
-      travel_tax: bookingObj.travel_tax,
-      pick_tax: bookingObj.pick_tax,
-      fees: bookingObj.fees,
-      grandTotal: bookingObj.amount,
-      alfredId: bookingObj.alfred._id
-    });
-
     axios.get('/myAlfred/api/booking/' + booking_id)
         .then(res => {
-          this.setState({ bookingObj: res.data })
+          const bookingObj=res.data;
+
+          this.setState({
+            emitter: localStorage.getItem("emitter"),
+            recipient: localStorage.getItem("recipient"),
+            prestations: bookingObj.prestations,
+            bookingObj: bookingObj,
+            city: bookingObj.address.city,
+            address: bookingObj.address.address,
+            zip_code: bookingObj.address.zip_code,
+            date: bookingObj.date_prestation,
+            hour: bookingObj.time_prestation,
+            travel_tax: bookingObj.travel_tax,
+            pick_tax: bookingObj.pick_tax,
+            fees: bookingObj.fees,
+            total: bookingObj.amount,
+            alfredId: bookingObj.alfred._id
+          });
+
 
           this.socket = io();
           this.socket.on("connect", socket => {
@@ -130,6 +129,7 @@ class Reserve extends React.Component {
     const pricedPrestations=this.computePricedPrestations();
     const countPrestations=this.computeCountPrestations();
 
+    console.log("")
     return (
       <Fragment>
         {this.state.bookingObj === null || this.state.currentUser === null ?
@@ -168,7 +168,7 @@ class Reserve extends React.Component {
                         <h3 className={classes.h3Style}>
                           Détail de la réservation
                         </h3>
-                        <BookingDetail prestations={pricedPrestations} count={countPrestations} total={this.state.grandTotal} client_fee={this.state.fees} travel_tax={this.state.travel_tax} pick_tax={this.state.pick_tax}/>
+                        <BookingDetail prestations={pricedPrestations} count={countPrestations} total={this.state.total} client_fee={this.state.fees} travel_tax={this.state.travel_tax} pick_tax={this.state.pick_tax}/>
                       </Grid>
                       <Grid container>
                         <Grid item xs={12}>
