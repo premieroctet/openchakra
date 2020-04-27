@@ -16,8 +16,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-const {SMS_VERIF_DEBUG} = require('../utils/consts');
-
 
 const styles = theme => ({
     signupContainer: {
@@ -120,9 +118,6 @@ class addPhone extends React.Component {
       axios.post('/myAlfred/api/users/sendSMSVerification', {phone: this.state.phone})
         .then (res => {
           var txt="Le SMS a été envoyé";
-          if (SMS_VERIF_DEBUG) {
-            txt =`PAS DE CREDIT SMS : le code est ${res.data.sms_code} ;-)`;
-          }
           toast.info(txt);
           this.setState({smsCodeOpen:true})
         })

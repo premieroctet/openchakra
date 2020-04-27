@@ -65,24 +65,27 @@ const getHost = () => {
 
 const sendNotification = (notif_index, destinee, params) => {
 
-  result = true;
+  var resultMail=true, resultSms=true;
   // Send mail
   if (notif_index != CONFIRM_PHONE) {
-    result = result && SIB.sendMail(notif_index, destinee.email, params);
+    resultMail =  SIB.sendMail(notif_index, destinee.email, params);
   }
 
   // Send SMS
-  if (destinee.phone && SMS_CONTENTS[notif_index]) {
-    const smsContents=fillSms(SMS_CONTENTS[notif_index], params);
+  if (destinee.phone && SMS_CONTENTS[notif_index.toString()]) {
+    console.log("Sending SMS");
+    const smsContents=fillSms(SMS_CONTENTS[notif_index.toString()], params);
+    console.log("SMS contents is "+smsContents);
     if (!smsContents) {
       console.error(`Error creating SMS ${notif_index} to ${destinee.phone} with params ${JSON.stringify(params)}`)
       result = false;
     }
     else {
-      result = result && SIB.sendSms(destinee.phone, smsContents);
+      console.log("Calling SIB.sendSms");
+      resultSms = SIB.sendSms(destinee.phone, smsContents);
     }
   }
-  return result;
+  return resultMail && resultSms;
 }
 
 const sendVerificationMail = (user, req) => {
