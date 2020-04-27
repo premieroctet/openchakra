@@ -418,7 +418,7 @@ class transactions extends React.Component {
                                                         <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.alfred.firstname} - {e.date_prestation} - {e.service}</Typography>
                                                     </Grid>
                                                     <Grid item xs={4}>
-                                                        <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{e.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}€</Typography>
+                                                        <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{e.amount.toFixed(2)}€</Typography>
                                                     </Grid>
                                                 </Grid>
                                             ))}
@@ -435,7 +435,7 @@ class transactions extends React.Component {
                                                     <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.alfred.firstname} - {e.date_prestation} - {e.service}</Typography>
                                                 </Grid>
                                                 <Grid item xs={4}>
-                                                    <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{e.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}€</Typography>
+                                                    <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{e.amount.toFixed(2)}€</Typography>
                                                 </Grid>
                                             </Grid>
                                         ))}

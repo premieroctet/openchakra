@@ -122,7 +122,7 @@ class Statistiques extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            totalIncomes: '0',
+            totalIncomes: 0,
             totalPrestations: 0,
             totalViewsServices: 0,
             totalReviews: 0,
@@ -138,7 +138,7 @@ class Statistiques extends React.Component {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.get('/myAlfred/api/performances/statistics/totalBookings')
             .then(res => {
-                this.setState({totalIncomes: res.data.incomes.toString(),totalPrestations: res.data.prestations})
+                this.setState({totalIncomes: res.data.incomes,totalPrestations: res.data.prestations})
             })
             .catch(err => console.log(err));
 
@@ -198,7 +198,6 @@ class Statistiques extends React.Component {
         const {classes} = this.props;
         const {uniqCategory} = this.state;
         const {serviceUser} = this.state;
-
 
         return (
             <Fragment>
@@ -305,7 +304,7 @@ class Statistiques extends React.Component {
                                 <Grid container style={{marginTop: '40px'}}>
                                     <Grid item className={classes.webview} md={2}></Grid>
                                     <Grid item xs={3} sm={3} md={2} style={{textAlign: 'center'}}>
-                                        <Typography style={{color: '#7E7E7E'}}><span style={{color:'#2FBCD3', fontSize: '1.1rem', fontWeight: 'bold'}}>{this.state.totalIncomes.match(/^-?\d+(?:\.\d{0,2})?/)[0]}€</span> <br/>Générés depuis l'inscription</Typography>
+                                        <Typography style={{color: '#7E7E7E'}}><span style={{color:'#2FBCD3', fontSize: '1.1rem', fontWeight: 'bold'}}>{this.state.totalIncomes.toFixed(2)}€</span> <br/>Générés depuis l'inscription</Typography>
                                     </Grid>
                                     <Grid item xs={3} sm={3} md={2} style={{textAlign: 'center'}}>
                                         <Typography style={{color: '#7E7E7E'}}><span style={{color:'#2FBCD3', fontSize: '1.1rem', fontWeight: 'bold'}}>{this.state.totalPrestations}</span> <br/>Prestation(s) réalisée(s)</Typography>
