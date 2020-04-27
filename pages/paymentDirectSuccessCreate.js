@@ -57,7 +57,9 @@ class PaymentDirectSuccessCreate extends React.Component {
 
         if (!bookingObj) {
           this.context.router.history.goBack();
+          return;
         }
+
         this.setState({
             emitter: localStorage.getItem("emitter"),
             recipient: localStorage.getItem("recipient"),
@@ -90,6 +92,7 @@ class PaymentDirectSuccessCreate extends React.Component {
                                     { booking: result.data._id }
                                 )
                                 .then(() => {
+                                    localStorage.removeItem("bookingObj");
                                     Router.push({
                                         pathname: "/reservations/detailsReservation",
                                         query: { id: result.data._id }
