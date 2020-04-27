@@ -51,7 +51,7 @@ class DetailsReservation extends React.Component {
     this.setState({ booking_id: booking_id });
 
     axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
-
++-
     axios.get("/myAlfred/api/users/current").then(res => {
       let result = res.data
       this.setState({ currentUser: result });
@@ -319,8 +319,8 @@ class DetailsReservation extends React.Component {
                                 {bookingObj === null || currentUser === null
                                   ? null
                                   : currentUser._id === bookingObj.alfred._id
-                                    ? (parseFloat(bookingObj.amount) - bookingObj.fees).toFixed(2)
-                                    : bookingObj.amount.match(/^-?\d+(?:\.\d{0,2})?/)[0]}
+                                    ? (bookingObj.amount - bookingObj.fees).toFixed(2)
+                                    : bookingObj.amount.toFixed(2)}
                                 €
                               </Typography>
                             </Grid>

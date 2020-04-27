@@ -449,12 +449,7 @@ class FinishedReservations extends React.Component {
                                       fontWeight: "600",
                                     }}
                                   >
-                                    {
-                                      booking.amount.match(
-                                        /^-?\d+(?:\.\d{0,2})?/
-                                      )[0]
-                                    }
-                                    €
+                                    { booking.amount.toFixed(2) } €
                                   </Typography>
                                 </Grid>
                                 <Grid item>
@@ -548,12 +543,7 @@ class FinishedReservations extends React.Component {
                                       textAlign: "center"
                                     }}
                                   >
-                                    {
-                                      booking.amount.match(
-                                        /^-?\d+(?:\.\d{0,2})?/
-                                      )[0]
-                                    }
-                                    €
+                                    {booking.amount.toFixed(2)}€
                                   </Typography>
                                 </Grid>
                                 <Grid item xs={12}>

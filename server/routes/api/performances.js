@@ -98,7 +98,7 @@ router.get('/statistics/totalBookings',passport.authenticate('jwt',{session:fals
         .then(booking => {
 
             booking.forEach(b => {
-                totalIncomes += parseFloat(b.amount)-(b.fees*2);
+                totalIncomes += b.amount-b.fees;
                 totalPrestations += b.prestations.length
 
             });
