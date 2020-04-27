@@ -9,5 +9,10 @@ export default theme => ({
     [theme.breakpoints.down('md')]: {
       display: 'none',
     },
-  }
+  },
+  stepIcon:{
+    "& .MuiStepIcon-text":{
+      fill: 'white'
+    }
+  },
 })

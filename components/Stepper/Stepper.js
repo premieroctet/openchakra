@@ -67,7 +67,9 @@ class Stepper extends React.Component {
         <StepperMaterial activeStep={activeStep} alternativeLabel>
           {this.state.steps.map(label => (
             <Step key={label}>
-              <StepLabel>{label}</StepLabel>
+              <StepLabel StepIconProps={{
+                classes: { root: classes.stepIcon }
+              }}>{label}</StepLabel>
             </Step>
           ))}
         </StepperMaterial>

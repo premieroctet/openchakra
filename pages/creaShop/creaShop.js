@@ -309,7 +309,7 @@ class creaShop extends React.Component {
           </Grid>
         </Grid>
         <Grid className={classes.marginContainer}>
-          <Grid className={classes.mainContainer} style={{marginBottom: this.state.shop === 6 ? 300 : 0}}>
+          <Grid className={classes.mainContainer}>
             <Grid className={hideRightPanel ? classes.mainContainerNoImg : classes.leftContentComponent }>
               {this.renderSwitch(this.state.activeStep)}
             </Grid>
