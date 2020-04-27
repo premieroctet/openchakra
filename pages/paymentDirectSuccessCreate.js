@@ -55,6 +55,9 @@ class PaymentDirectSuccessCreate extends React.Component {
 
         let bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
 
+        if (!bookingObj) {
+          this.context.router.history.goBack();
+        }
         this.setState({
             emitter: localStorage.getItem("emitter"),
             recipient: localStorage.getItem("recipient"),
