@@ -37,18 +37,10 @@ class AllReservations extends React.Component {
             let result = res.data
             this.setState({
               userInfo: result,
-              user: result._id
+              user: result._id,
+	      isAlfred: result.is_alfred,
+	      tabs: !result.is_alfred,
             });
-            if (res.data.is_alfred === true) {
-                this.setState({
-                  isAlfred: true
-                });
-            }
-            if(this.state.isAlfred === false){
-              this.setState({
-                tabs : true
-              })
-            }
 
 
             axios.get("/myAlfred/api/booking/alfredBooking").then(res => {

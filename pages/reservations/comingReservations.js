@@ -22,7 +22,8 @@ class ComingReservations extends React.Component {
       alfredReservations: [],
       userReservations: [],
       comingReservations: 0,
-      isAlfred: false
+      isAlfred: false,
+      userInfo : {},
     };
   }
 
@@ -31,11 +32,14 @@ class ComingReservations extends React.Component {
         "token"
     );
     axios.get("/myAlfred/api/users/current").then(res => {
-      let result = res.data
-      this.setState({ user: result._id });
-      if (res.data.is_alfred === true) {
-        this.setState({ isAlfred: true });
-      }
+            let result = res.data
+            this.setState({
+              userInfo: result,
+              user: result._id,
+	      isAlfred: result.is_alfred,
+	      tabs: !result.is_alfred,
+            });
+
 
       axios.get("/myAlfred/api/booking/alfredBooking").then(res => {
         this.setState({ alfredReservations: res.data });
@@ -82,6 +86,7 @@ class ComingReservations extends React.Component {
   };
 
   render() {
+        const {userInfo} = this.state;
     const { classes } = this.props;
     const tabs = this.state.tabs;
 
@@ -263,12 +268,18 @@ class ComingReservations extends React.Component {
                 </Grid>
 
                 <Grid className={classes.paddresp} item xs={9} sm={9} md={7}>
+                                <Grid container>
+                                    <Grid item xs={12}>
                   <Typography style={{ fontSize: "2rem", marginTop: "4%" }}>
                     Mes réservations à venir
                   </Typography>
+		  </Grid>
                   <Typography style={{ fontSize: "0.8rem", marginBottom: "4%" }}>
                     Vous avez {this.state.comingReservations} réservations à venir
                   </Typography>
+                                </Grid>
+                              {
+                                userInfo.is_alfred ?
                   <Grid container className={classes.tabweb}>
                     <Grid item xs={6} style={{ textAlign: "center" }}>
                       <div>
@@ -337,6 +348,10 @@ class ComingReservations extends React.Component {
                       )}
                     </Grid>
                   </Grid>
+                                  : null
+                              }
+                              {
+                                userInfo.is_alfred ?
                   <Grid container className={classes.tabmobile}>
                     <Grid item xs={6} style={{ textAlign: "center" }}>
                       <h2
@@ -388,6 +403,8 @@ class ComingReservations extends React.Component {
                       )}
                     </Grid>
                   </Grid>
+                                  : null
+                              }
                   {/************************************************************ début en tant que user web **************************************************/}
 
                   {tabs ? (
