@@ -49,7 +49,7 @@ const server = require('http').Server(app);
 const SocketIo = require("socket.io");
 
 // Avoid deprecation warning
-mongoose.set('useFindAndModify', false);
+mongoose.set('useUnifiedTopology', true);
 
 nextApp.prepare().then(() => {
 
