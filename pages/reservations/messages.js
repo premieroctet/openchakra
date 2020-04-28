@@ -94,7 +94,7 @@ class Messages extends React.Component {
           <Layout>
             <Grid container className={classes.bigContainer}>
               {this.state.currentUser.is_alfred === true?
-                <Grid style={{width: '100%'}}>
+                <Grid className={classes.navbarShopContainer}>
                   <NavBarShop userId={this.state.idEmitter}/>
                 </Grid>
 
@@ -274,7 +274,6 @@ class Messages extends React.Component {
                               color: "#828181",
                               fontWeight: "100",
                               cursor: "pointer",
-                              marginLeft: "25%"
                             }}
                           >
                             En tant qu'Alfred
@@ -372,7 +371,7 @@ class Messages extends React.Component {
                                       <hr className={classes.hrSeparator}/>
                                   </Grid>
 
-                                  {/* Mobile */}
+                                  {/* Mobile en tant que user*/}
                                   <Grid
                                       alt={booking.chatroom.name}
                                       container
@@ -386,8 +385,11 @@ class Messages extends React.Component {
                                     <Grid
                                         item
                                         xs={12}
-                                        style={{ textAlign: "center",
-                                          marginTop: "15px" }}
+                                        style={{
+                                          marginTop: "15px",
+                                          display: 'flex',
+                                          justifyContent: 'center'
+                                        }}
                                     >
                                       <UserAvatar user={booking.alfred} />
                                     </Grid>
@@ -512,10 +514,8 @@ class Messages extends React.Component {
                                       </Grid>
                                       <hr className={classes.hrSeparator}/>
                                     </Grid>
-                                    {/************************************************************ fin en tant que user web **************************************************/}
 
-                                    {/************************************************************ début en tant que user mobile **************************************************/}
-                                    {/* Mobile */}
+                                    {/* Mobile en tant qu'alfred*/}
                                     <Grid
                                         container
                                         className={classes.mobilerow1}
@@ -528,7 +528,7 @@ class Messages extends React.Component {
                                       <Grid
                                           item
                                           xs={12}
-                                          style={{ textAlign: "center", marginTop: '15px'}}
+                                          style={{ display: 'flex',justifyContent: 'center', marginTop: '15px'}}
                                       >
                                         <UserAvatar user={booking.user} />
                                       </Grid>

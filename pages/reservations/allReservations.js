@@ -71,7 +71,7 @@ class AllReservations extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         {this.state.isAlfred ? (
-                            <Grid style={{width: '100%'}}>
+                            <Grid className={classes.navbarShopContainer}>
                                 <NavBarShop userId={this.state.user}/>
                             </Grid>
                         ) : null}

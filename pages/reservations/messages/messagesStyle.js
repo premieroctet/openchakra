@@ -133,5 +133,11 @@ export default theme => ({
     width: '100%',
     marginTop: 20,
     color : 'rgb(80, 80, 80, 0.2)'
+  },
+  navbarShopContainer:{
+    width: '100%',
+    [theme.breakpoints.down('xs')]: {
+      display: 'none'
+    }
   }
 })
