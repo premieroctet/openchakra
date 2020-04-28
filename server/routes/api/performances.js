@@ -152,7 +152,7 @@ router.post('/statistics/bookings/service',passport.authenticate('jwt',{session:
         .then(booking => {
 
             booking.forEach(b => {
-                totalIncomes += parseFloat(b.amount)-(b.fees*2);
+                totalIncomes += b.amount-b.fees;
                 totalPrestations += b.prestations.length
 
             });
