@@ -17,6 +17,10 @@ export default theme => ({
     }
   },
   mobilerow1: {
+    boxShadow: "0px 0px 6px lightgray",
+    borderRadius: "5px",
+
+    margin: "15px auto",
     [theme.breakpoints.up("md")]: {
       display: "none"
     }
@@ -205,5 +209,11 @@ export default theme => ({
     width: '100%',
     marginTop: 20,
     color : 'rgb(80, 80, 80, 0.2)'
+  },
+  navbarShopContainer:{
+    width: '100%',
+    [theme.breakpoints.down('xs')]: {
+      display: 'none'
+    }
   }
 })

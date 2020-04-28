@@ -17,6 +17,9 @@ export default theme => ({
     }
   },
   mobilerow1: {
+    boxShadow: "0px 0px 6px lightgray",
+    borderRadius: "5px",
+    margin: "15px auto",
     [theme.breakpoints.up("md")]: {
       display: "none"
     }
