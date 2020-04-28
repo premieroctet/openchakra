@@ -18,6 +18,7 @@ class reviews extends React.Component {
             user: {},
             alfredReviews: [],
             clientReviews: [],
+            is_alfred: false,
             tabs: false,
         };
     }
@@ -30,7 +31,8 @@ class reviews extends React.Component {
             .get('/myAlfred/api/users/current')
             .then(res => {
                 let user = res.data;
-                this.setState({user:user});
+                this.setState({user:user, is_alfred: user.is_alfred});
+                console.log("**********Alfred:"+user.is_alfred);
                 axios.get('/myAlfred/api/reviews/profile/alfredReviewsCurrent/'+user._id)
                     .then(res => {
                         let reviews = res.data;
@@ -67,7 +69,7 @@ class reviews extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const {user, alfredReviews, clientReviews} = this.state;
+        const {user, is_alfred, alfredReviews, clientReviews} = this.state;
         const tabs = this.state.tabs;
 
 
@@ -195,9 +197,11 @@ class reviews extends React.Component {
 
 
                         <Grid item lg={9} className={classes.containerCommentary}>
-                            <Grid container>
-                                <h1 style={{color: 'dimgray',fontWeight: '100'}}>Commentaires</h1>
-                            </Grid>
+                        <Grid container>
+                            <h1 style={{color: 'dimgray',fontWeight: '100'}}>Commentaires</h1>
+                        </Grid>
+                        { is_alfred ?
+                          <>
                             <Grid container className={classes.tabweb} style={{paddingRight: '30px'}}>
                                 <Grid item xs={6} style={{textAlign:"center"}}>
                                     <div>
@@ -284,6 +288,10 @@ class reviews extends React.Component {
                                     )}
                                 </Grid>
                             </Grid>
+                            </>
+                            :
+                            null
+                          }
                             {tabs ?
 
                                     <Grid container style={{marginTop: '3%', width: '90%'}}>
