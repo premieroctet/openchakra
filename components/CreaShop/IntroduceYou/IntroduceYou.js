@@ -31,7 +31,8 @@ class IntroduceYou extends React.Component {
     console.log("State:"+JSON.stringify(this.state));
     let req = (id==='particular' && checked) || (id==='professional' && !checked);
     console.log("Is particular is "+req);
-    this.setState({is_particular: req},
+    const company=req ? null : this.state.company;
+    this.setState({is_particular: req, company: company},
       () => this.props.onChange(req, this.state.company, this.state.is_certified));
 
   }

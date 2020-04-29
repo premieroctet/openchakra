@@ -87,12 +87,8 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
             shop.level=req.body.level;
 
             // FIX: save company
-            shop.company = {};
-            if (req.body.name) shop.company.name = req.body.name;
-            if (req.body.creation_date) shop.company.creation_date = req.body.creation_date;
-            if (req.body.siret) shop.company.siret = req.body.siret;
-            if (req.body.naf_ape) shop.company.naf_ape = req.body.naf_ape;
-            if (req.body.status) shop.company.status = req.body.status;
+            shop.company = null;
+            if (req.body.company) shop.company=req.body.company;
 
             shop.picture = "static/shopBanner/sky-690293_1920.jpg";
 
@@ -424,11 +420,13 @@ router.put('/editStatus', passport.authenticate('jwt', {
         }, {
             is_particular: req.body.is_particular,
             is_professional: req.body.is_professional,
-            "company.name": req.body.name,
-            "company.creation_date": req.body.creation_date,
-            "company.siret": req.body.siret,
-            "company.naf_ape": req.body.naf_ape,
-            "company.status": req.body.status
+            company : req.bosy.is_particular ? null: {
+              name: req.body.name,
+              creation_date: req.body.creation_date,
+              siret: req.body.siret,
+              naf_ape: req.body.naf_ape,
+              status: req.body.status,
+            }
         }, {
             new: true
         })

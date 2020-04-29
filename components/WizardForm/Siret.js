@@ -44,8 +44,8 @@ class siret extends React.Component {
 
         this.state = {
             siret: '',
-            nafape: '',
-            creationDate: '',
+            naf_ape: '',
+            creation_date: '',
             name: '',
             status: '',
         };
@@ -71,9 +71,9 @@ class siret extends React.Component {
     const result = day+'/'+month+'/'+year;
     this.setState({
       name: data.l1_normalisee,
-      nafape: data.activite_principale,
+      naf_ape: data.activite_principale,
       status: data.libelle_nature_juridique_entreprise,
-      creationDate: result
+      creation_date: result
     }, () => this.props.onChange(this.state)
     );
   }
@@ -97,8 +97,8 @@ class siret extends React.Component {
                     this.setState({
                       name:'',
                       status: '',
-                      creationDate:'',
-                      nafape: '',
+                      creation_date:'',
+                      naf_ape: '',
                     }, () => this.props.onChange(this.state));
                     console.log(err);
                  })
@@ -133,13 +133,13 @@ class siret extends React.Component {
                                 <Typography>Siret/Siren : {this.state.siret}</Typography>
                     </Grid>
                 <Grid item xs={12} sm={12} md={6}>
-                            <Typography>Date de création : {this.state.creationDate}</Typography>
+                            <Typography>Date de création : {this.state.creation_date}</Typography>
                 </Grid>
                 <Grid item xs={12} sm={12} md={6}>
                             <Typography>Dénomination : {this.state.name}</Typography>
                 </Grid>
                 <Grid item xs={12} sm={12} md={6}>
-                            <Typography>Code NAF/APE : {this.state.nafape}</Typography>
+                            <Typography>Code NAF/APE : {this.state.naf_ape}</Typography>
                 </Grid>
                 <Grid item xs={24} sm={24} md={12}>
                             <Typography>Statut juridique : {this.state.status}</Typography>
