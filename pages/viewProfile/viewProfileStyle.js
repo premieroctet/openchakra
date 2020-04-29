@@ -12,7 +12,7 @@ export default theme => ({
     height: "100%",
     marginTop: "15px",
     marginBottom: "15px",
-    width: "30%",
+    width: "29%",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
     }
@@ -62,7 +62,9 @@ export default theme => ({
   },
   itemAvatar: {
     marginTop: 10,
-    width: '90%'
+    width: '90%',
+    display: 'flex',
+    justifyContent: 'center'
   },
   avatarLetter:{
     height: 100,
