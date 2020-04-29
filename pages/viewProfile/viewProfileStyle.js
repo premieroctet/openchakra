@@ -11,6 +11,7 @@ export default theme => ({
   toggle: {
     height: "100%",
     marginTop: "15px",
+    marginBottom: "15px",
     width: "30%",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
@@ -73,11 +74,18 @@ export default theme => ({
     fontSize: "1.6rem",
     color: "rgba(84,89,95,0.95)",
     letterSpacing: -1,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    [theme.breakpoints.down("sm")]: {
+      display:'flex',
+      justifyContent: 'center'
+    }
   },
   servicesContainer:{
     marginTop: '3%',
-    width: '100%'
+    width: '100%',
+    [theme.breakpoints.down("sm")]: {
+      marginTop: '5%',
+    }
   },
   largeWidth:{
     width: '100%',
@@ -88,5 +96,11 @@ export default theme => ({
     alignItems: 'center',
     padding: 10
   },
-
+  tabweb:{
+    marginTop: "20px",
+    [theme.breakpoints.down("sm")]: {
+      marginLeft: 15,
+      marginRight: 15
+    }
+  }
 })

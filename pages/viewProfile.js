@@ -122,8 +122,8 @@ class viewProfile extends React.Component {
                   <Grid className={classes.toggle} item>
                     <Grid container className={classes.mainContainer}>
                       <Grid item>
-                        <Grid style={{ marginLeft: "3%" }}>
-                          <Grid style={{ marginLeft: "4%" }} container>
+                        <Grid>
+                          <Grid container style={{justifyContent: 'center'}}>
                             <Grid item className={classes.itemAvatar}>
                               <UserAvatar classes={'avatarLetter'} user={user_infos} className={classes.avatarLetter} />
                             </Grid>
@@ -140,7 +140,7 @@ class viewProfile extends React.Component {
 
                   <Grid className={classes.rightcontent} item>
                     <Grid container>
-                      <Grid item xs={8} md={10}>
+                      <Grid item className={classes.largeWidth}>
                         <Typography variant={"h3"} className={classes.titleAbout}>
                           Bonjour je m'apppelle {user_infos.firstname}
                         </Typography>
@@ -226,11 +226,7 @@ class viewProfile extends React.Component {
 
 
 
-                      <Grid
-                        container
-                        style={{ marginTop: "20px" }}
-                        className={classes.tabweb}
-                      >
+                      <Grid container className={classes.tabweb}>
                         <Grid item xs={6} style={{ textAlign: "center" }}>
                           <div>
                             <h2
