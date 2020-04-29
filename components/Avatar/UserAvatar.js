@@ -7,63 +7,33 @@ import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import styles from './UserAvatarStyle'
 
-const StyledBadge = withStyles((theme) => ({
-  badge: {
-    backgroundColor: '#f87280',
-    color: '#f87280',
-    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-    '&::after': {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      borderRadius: '50%',
-      animation: '$ripple 1.2s infinite ease-in-out',
-      border: '1px solid currentColor',
-      content: '""',
-    },
-  },
-  '@keyframes ripple': {
-    '0%': {
-      transform: 'scale(.8)',
-      opacity: 1,
-    },
-    '100%': {
-      transform: 'scale(2.4)',
-      opacity: 0,
-    },
-  },
-}))(Badge);
-
 class UserAvatar extends React.Component{
   constructor(props){
     super(props);
     this.state={
-      anchorEl: false,
-      setAnchorEl: false
+      anchorEl: null,
     }
   }
 
-   handlePopoverOpen = (event) => {
-    this.setState({setAnchorEl: true})
+  handlePopoverOpen = (event) => {
+    this.setState({anchorEl: event.currentTarget})
   };
 
   handlePopoverClose = () => {
-    this.setState({setAnchorEl: false})
+    this.setState({anchorEl: null})
   };
 
 
   render(){
     const {user, className, classes} = this.props;
-    const {anchorEl, setAnchorEl} = this.state;
+    const {anchorEl} = this.state;
+    const open = Boolean(anchorEl);
+    const kyc = this.props.user.kyc_errors;
 
-
-    if (user) {
-      const picture = user.picture===undefined || user.picture==='' ? null : user.picture;
-      return picture?
+      return(
         <Grid>
-          <StyledBadge
+          <Badge
+            classes={{badge: kyc !== undefined ? kyc.length !== 0 ? classes.badge : classes.badgeOk : classes.badge}}
             overlap="circle"
             anchorOrigin={{
               vertical: 'bottom',
@@ -72,55 +42,46 @@ class UserAvatar extends React.Component{
             variant="dot"
             onMouseEnter={this.handlePopoverOpen}
             onMouseLeave={this.handlePopoverClose}
+            aria-owns={anchorEl ? 'mouse-over-popover' : undefined}
+            aria-haspopup="true"
           >
-            <Avatar alt="photo de profil" src={"/"+user.picture} className={className} />
-          </StyledBadge>
+            {
+              user.picture===undefined || user.picture==='' ?
+                <Avatar alt="photo de profil" className={className}>{user.avatar_letters}</Avatar>
+                :
+                <Avatar alt="photo de profil" src={"/"+user.picture} className={className} />
+            }
+          </Badge>
           <Popover
             id="mouse-over-popover"
             className={classes.popover}
             classes={{
               paper: classes.paper,
             }}
-            open={setAnchorEl}
+            open={open && kyc.length !== 0}
+            anchorEl={anchorEl}
             onClose={this.handlePopoverClose}
             disableRestoreFocus
-          >
-            <Typography>I use Popover.</Typography>
-          </Popover>
-        </Grid>
-         :
-        <Grid>
-          <StyledBadge
-            overlap="circle"
             anchorOrigin={{
               vertical: 'bottom',
-              horizontal: 'right',
+              horizontal: 'left',
             }}
-            variant="dot"
-            onMouseEnter={this.handlePopoverOpen}
-            onMouseLeave={this.handlePopoverClose}
-          >
-            <Avatar alt="photo de profil" className={className}>{user.avatar_letters}</Avatar>
-          </StyledBadge>
-          <Popover
-            id="mouse-over-popover"
-            className={classes.popover}
-            classes={{
-              paper: classes.paper,
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
             }}
-            open={setAnchorEl}
-            onClose={this.handlePopoverClose}
-            disableRestoreFocus
           >
-            <Typography>I use Popover.</Typography>
+            <Typography>Veuillez compléter votre profil :</Typography>
+            {
+              kyc !== undefined ?
+                kyc.map(res => (
+                  <p>- {res}</p>
+                )) :
+                null
+            }
           </Popover>
         </Grid>
-
-
-    }
-    else {
-      return <Avatar alt="photo de profil" src='/static/basicavatar.png' className={className} />
-    }
+      )
   }
 }
 
