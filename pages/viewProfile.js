@@ -144,6 +144,9 @@ class viewProfile extends React.Component {
                         <Typography variant={"h3"} className={classes.titleAbout}>
                           Bonjour je m'apppelle {user_infos.firstname}
                         </Typography>
+                        <Grid item xs={12} style={{marginTop: '3%'}}>
+                          <Typography style={{ fontSize: "1rem" }}>{user_infos.description ? user_infos.description : "Aucune description"   }</Typography>
+                        </Grid>
                       </Grid>
                       <Grid className={classes.servicesContainer}>
                         <Grid className={classes.largeWidth}>
