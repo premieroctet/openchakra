@@ -8,147 +8,15 @@ import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import moment from "moment";
 import Commentary from '../components/Commentary/Commentary';
+import styles from './viewProfile/viewProfileStyle'
+import UserAvatar from '../components/Avatar/UserAvatar';
+import About from '../components/About/About';
+import CardPreview from '../components/CardPreview/CardPreview';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
+
 
 moment.locale("fr");
-
-const styles = theme => ({
-  exp1: {
-    "&::before": {
-      height: "0px!important"
-    }
-  },
-  bigContainer: {
-    marginTop: 68,
-    flexGrow: 1
-  },
-  marginbot: {
-    marginBottom: "3.5%"
-  },
-  hiddenone: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none!important"
-    }
-  },
-  revealedone: {
-    [theme.breakpoints.up("md")]: {
-      display: "none!important"
-    }
-  },
-  triangle: {
-    width: 0,
-    height: 0,
-    borderLeft: "15px solid transparent",
-    borderRight: "15px solid transparent",
-    borderTop: "15px solid gray",
-    margin: "0 auto",
-    marginTop: -28
-  },
-  shopbar: {
-    [theme.breakpoints.down("md")]: {
-      display: "none"
-    }
-  },
-  bottombar: {
-    visibility: "hidden",
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    },
-    [theme.breakpoints.down("sm")]: {
-      visibility: "visible",
-      boxShadow: "2px -5px 14px -15px rgba(0,0,0,0.75)"
-    }
-  },
-  topbar: {
-    visibility: "visible",
-    position: "sticky",
-    top: 65,
-    zIndex: 999,
-    [theme.breakpoints.down("sm")]: {
-      display: "none",
-      visibility: "hidden"
-    }
-  },
-  hidesm: {
-    minWidth: "271px",
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
-  },
-  hidelg: {
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    }
-  },
-  toggle: {
-    [theme.breakpoints.down("sm")]: {
-      marginLeft: "-75px",
-      transition: "margin-left 0.7s",
-
-      "&:hover": {
-        marginLeft: "0px",
-        transition: "margin-left 0.7s",
-        boxShadow: "11px 6px 23px -24px rgba(0,0,0,0.75)"
-      }
-    }
-  },
-  trait: {
-    width: "100%",
-    height: 4,
-    backgroundColor: "rgb(47, 188, 211)",
-    borderColor: "transparent",
-    [theme.breakpoints.down("sm")]: {}
-  },
-  trait1: {
-    width: "100%",
-
-    height: 4,
-    backgroundColor: "lightgray",
-    borderColor: "transparent"
-  },
-  trait2: {
-    width: "100%",
-    height: 4,
-    backgroundColor: "lightgray",
-    borderColor: "transparent",
-    [theme.breakpoints.down("sm")]: {}
-  },
-  trait3: {
-    width: "100%",
-
-    height: 4,
-    backgroundColor: "rgb(47, 188, 211)",
-    borderColor: "transparent"
-  },
-
-  tabmobile: {
-    visibility: "hidden",
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    },
-    [theme.breakpoints.down("sm")]: {
-      visibility: "visible",
-      fontSize: "10px",
-      fontWeight: "300",
-      marginTop: "-100px",
-      height: 90,
-      backgroundColor: "white",
-      position: "sticky",
-      top: 55,
-      zIndex: 20
-    }
-  },
-
-  mobilerow: {
-    marginTop: "1%",
-    [theme.breakpoints.down("sm")]: {
-      marginTop: "15%"
-    }
-  },
-  Rightcontent: {
-    marginLeft: "4%",
-    marginTop: "15px"
-  }
-});
 
 class viewProfile extends React.Component {
   constructor(props) {
@@ -159,7 +27,10 @@ class viewProfile extends React.Component {
       user_id: null,
       user_infos: null,
       alfredReviews: null,
-      customerReviews: null
+      customerReviews: null,
+      userState: false,
+      userId: '',
+      services: [],
     };
   }
 
@@ -170,6 +41,34 @@ class viewProfile extends React.Component {
   componentDidMount() {
     const user_id = this.props.user_id;
     this.setState({ user_id: user_id });
+
+    axios.get('/myAlfred/api/users/current').then(res => {
+      let user = res.data;
+      if(user) {
+        this.setState({
+          userState: true,
+          userId: user._id,
+        })
+      }
+    }).catch(function (error) {
+      console.log(error);
+    });
+
+    axios.get(`/myAlfred/api/shop/alfred/${this.props.user_id}`)
+      .then( response  =>  {
+        let shop = response.data;
+        this.setState({
+          alfred: shop.alfred,
+          idAlfred: shop.alfred._id,
+          languages: shop.alfred.languages,
+          services: shop.services,
+          shop:shop,
+        });
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
     axios
       .get("/myAlfred/api/users/users/" + this.props.user_id)
@@ -207,9 +106,9 @@ class viewProfile extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { customerComments } = this.state;
-    const { depliage } = this.state;
-    const { user_infos } = this.state;
+    const { customerComments, user_infos } = this.state;
+
+    console.log(user_infos, 'user_infos')
 
     return (
       <Fragment>
@@ -217,317 +116,115 @@ class viewProfile extends React.Component {
           <Grid>
             <Layout>
               <Grid container className={classes.bigContainer}>
-                {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
+                {/*//////////////////////////////Container de gauche///////////////////////////////////////////////////////////*/}
 
-                <Grid container style={{ marginBottom: "10%" }}>
-                  <Grid
-                    className={classes.toggle}
-                    item
-                    xs={3}
-                    style={{
-                      height: "100%",
-                      borderRight: "1px #8281813b solid",
-                      marginTop: "15px"
-                    }}
-                  >
-                    <Grid
-                      container
-                      style={{
-                        border: "0.2px solid lightgrey",
-                        margin: "auto",
-                        justifyContent: "center",
-                        position: "sticky",
-                        top: 100,
-                        width: "90%"
-                      }}
-                    >
-                      <Grid item xs={7} md={9}>
-                        <div style={{ marginLeft: "3%" }}>
+                <Grid container className={classes.leftContent} style={{ marginBottom: "10%" }}>
+                  <Grid className={classes.toggle} item>
+                    <Grid container className={classes.mainContainer}>
+                      <Grid item>
+                        <Grid style={{ marginLeft: "3%" }}>
                           <Grid style={{ marginLeft: "4%" }} container>
-                            <Grid
-                              item
-                              xs={2}
-                              style={{
-                                marginBottom: "10px",
-                                marginTop: "12px"
-                              }}
-                            >
-                              <img
-                                style={{ width: "20px" }}
-                                src="/static/stars/star-solid.png"
-                              ></img>
+                            <Grid item className={classes.itemAvatar}>
+                              <UserAvatar classes={'avatarLetter'} user={user_infos} className={classes.avatarLetter} />
                             </Grid>
-                            <Grid
-                              item
-                              xs={10}
-                              style={{
-                                marginBottom: "10px",
-                                marginTop: "10px"
-                              }}
-                            >
-                              <Typography
-                                style={{
-                                  fontSize: "1rem",
-                                  marginLeft: "-5%",
-                                }}
-                              >
-                                {user_infos.number_of_reviews} Commentaires
-                              </Typography>
-                            </Grid>
-
-                            {user_infos.id_confirmed ? (
-                              <>
-                                <Grid
-                                  item
-                                  xs={2}
-                                  style={{
-                                    marginBottom: "10px",
-                                    marginTop: "12px"
-                                  }}
-                                >
-                                  <img
-                                    style={{ width: "20px" }}
-                                    src="/static/statut/oui.png"
-                                  ></img>
-                                </Grid>
-                                <Grid
-                                  item
-                                  xs={10}
-                                  style={{
-                                    marginBottom: "10px",
-                                    marginTop: "10px"
-                                  }}
-                                >
-                                  <Typography
-                                    style={{
-                                      fontSize: "1.1rem",
-                                      marginLeft: "-5%"
-                                    }}
-                                  >
-                                    Pièce d’identité vérifiée
-                                  </Typography>
-                                </Grid>
-                              </>
-                            ) : null}
-
-                            <Grid
-                              item
-                              xs={2}
-                              style={{
-                                marginBottom: "10px",
-                                marginTop: "12px"
-                              }}
-                            >
-                              <img
-                                style={{ width: "20px" }}
-                                src="/static/statut/calendar.png"
-                              ></img>
-                            </Grid>
-                            <Grid
-                              item
-                              xs={10}
-                              style={{
-                                marginBottom: "10px",
-                                marginTop: "10px"
-                              }}
-                            >
-                              <Typography
-                                style={{
-                                  fontSize: "1.1rem",
-                                  marginLeft: "-5%"
-                                }}
-                              >
-                                Membre depuis le {moment(user_infos.creation_date).format('DD/MM/YYYY')}
-                              </Typography>
-                            </Grid>
-                            {user_infos.is_alfred ? (
-                              <>
-                                <Grid
-                                  item
-                                  xs={2}
-                                  style={{
-                                    marginBottom: "10px",
-                                    marginTop: "12px"
-                                  }}
-                                >
-                                  <img
-                                    style={{ width: "20px" }}
-                                    src="/static/statut/beaver.png"
-                                  ></img>
-                                </Grid>
-                                <Grid
-                                  item
-                                  xs={10}
-                                  style={{
-                                    marginBottom: "10px",
-                                    marginTop: "10px"
-                                  }}
-                                >
-                                  <Typography
-                                    style={{
-                                      fontSize: "1.1rem",
-                                      marginLeft: "-5%"
-                                    }}
-                                  >
-                                    {user_infos.firstname} est Alfred{" "}
-                                  </Typography>
-                                </Grid>
-                              </>
-                            ) : null}
-
-                            <Grid
-                              item
-                              xs={2}
-                              style={{
-                                marginBottom: "10px",
-                                marginTop: "12px"
-                              }}
-                            >
-                              <img
-                                style={{ width: "20px" }}
-                                src="/static/statut/chat.png"
-                              ></img>
-                            </Grid>
-                            <Grid
-                              item
-                              xs={10}
-                              style={{
-                                marginBottom: "10px",
-                                marginTop: "10px"
-                              }}
-                            >
-                              <Typography
-                                style={{
-                                  fontSize: "1.1rem",
-                                  marginLeft: "-5%"
-                                }}
-                              >
-                                Langue(s) : {user_infos.languages.length ? (
-                                user_infos.languages.map(language => {
-                                  return language + ', '
-                                })
-                              ) : 'Français'}
-                              </Typography>
-                            </Grid>
+                           <Grid style={{marginLeft: "auto", marginRight: "auto", marginTop: 50}}>
+                             <About alfred={user_infos._id} profil={false} needTitle={false}/>
+                           </Grid>
                           </Grid>
-                        </div>
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
 
-                  <Grid
-                    className={classes.Rightcontent}
-                    item
-                    xs={9}
-                    sm={9}
-                    md={7}
-                  >
+                  {/********************************************* container de droite***********************************************************/}
+
+                  <Grid className={classes.rightcontent} item>
                     <Grid container>
-                      <Grid item xs={4} md={2}>
-                        <img
-                          style={{
-                            width: "125px",
-                            height: "125px",
-                            borderRadius: "50%",
-                            objectFit: "cover"
-                          }}
-                          src={`../${user_infos.picture}`}
-                        />
-                      </Grid>
                       <Grid item xs={8} md={10}>
-                        <Typography style={{ fontSize: "1.8rem" }}>
-                          {user_infos.firstname}
+                        <Typography variant={"h3"} className={classes.titleAbout}>
+                          Bonjour je m'apppelle {user_infos.firstname}
                         </Typography>
                       </Grid>
-                      <Grid item xs={12}>
-                        <Typography style={{ fontSize: "1.2rem" }}>
-                          A propos de {user_infos.firstname}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography style={{ fontSize: "1rem" }}>
-                          {user_infos.description ? user_infos.description.slice(0, 200): null}{" "}
-                          {depliage ? (
-                            <React.Fragment>
-                              {user_infos.description ? user_infos.description.slice(201) :null}
-                            </React.Fragment>
-                          ) : (
-                            <React.Fragment>
-                              …
-                              <span
-                                onClick={() => this.handleClick()}
-                                style={{
-                                  color: "#2B9BD6",
-                                  textDecoration: "underline",
-                                  cursor: "pointer"
-                                }}
-                              >
-                                lire la suite
-                              </span>
-                            </React.Fragment>
-                          )}
-                        </Typography>
+                      <Grid className={classes.servicesContainer}>
+                        <Grid className={classes.largeWidth}>
+                          <Typography variant="h3" className={classes.titleAbout}>
+                            Les services de {user_infos.firstname}
+                          </Typography>
+                        </Grid>
+                        <Grid container className={classes.cardPreviewContainer} spacing={2}>
+                          { Object.keys(this.state.services).map( result => {
+                            return (
+                              <Grid item xs={12} sm={12} md={12} lg={6} xl={4}>
+                                <CardPreview
+                                  isOwner={false}
+                                  needAvatar={false}
+                                  userState={this.state.userState}
+                                  alfred={user_infos}
+                                  services={this.state.services[result]}
+                                  needRefresh={this.needRefresh}/>
+                              </Grid>
+                            )
+                          })
+                          }
+                        </Grid>
                       </Grid>
 
-                      <Grid item xs={12} style={{ marginTop: "30px" }}>
-                        <Typography style={{ fontSize: "1.2rem" }}>
+                      <Grid item xs={12} style={{ marginTop: "3%" }}>
+                        <Typography variant="h3" className={classes.titleAbout}>
                           Vérifications
                         </Typography>
                       </Grid>
-                      { !(user_infos.id_confirmed || user_infos.is_confirmed || user_infos.phone_confirmed)? (
-                        <p>Cet utilisateur n'a aucune vérification</p>
-                      ) : null}
-                      {user_infos.id_confirmed === true ? (
-                        <Grid item xs={12} style={{ marginTop: "15px" }}>
-                          <Grid container>
-                            <Grid item xs={1} style={{ textAlign: "center" }}>
-                              <img
-                                style={{ width: "30%" }}
-                                src="/static/checkboxes/checkedbluealfred.png"
-                              />
-                            </Grid>
-                            <Grid item xs={11}>
-                              <Typography style={{ fontSize: "1rem" }}>
-                                Pièce d’identité
-                              </Typography>
-                            </Grid>
-                          </Grid>
+                      { !(user_infos.id_confirmed || user_infos.email || user_infos.phone )? (
+                        <Grid style={{ marginTop: "3%" }}>
+                          <p>Cet utilisateur n'a aucune vérification</p>
                         </Grid>
                       ) : null}
-                      {user_infos.phone_confirmed === true ? (
-                        <Grid item xs={12} style={{ marginTop: "15px" }}>
-                          <Grid container>
-                            <Grid item xs={1} style={{ textAlign: "center" }}>
-                              <img
-                                style={{ width: "30%" }}
-                                src="/static/checkboxes/checkedbluealfred.png"
-                              />
-                            </Grid>
-                            <Grid item xs={11}>
-                              <Typography style={{ fontSize: "1rem" }}>
-                                Téléphone
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      ) : null}
-                      {user_infos.is_confirmed === true ? (
-                        <Grid item xs={12} style={{ marginTop: "15px" }}>
-                          <Grid container>
-                            <Grid item xs={1} style={{ textAlign: "center" }}>
-                              <img
-                                style={{ width: "30%" }}
-                                src="/static/checkboxes/checkedbluealfred.png"
-                              />
-                            </Grid>
-                            <Grid item xs={11}>
-                              <Typography style={{ fontSize: "1rem" }}>
-                                Adresse Email
-                              </Typography>
+                      <Grid style={{marginLeft: 15, marginTop: 15}}>
+                        {user_infos.id_confirmed ? (
+                          <Grid item style={{ marginTop: "15px" }}>
+                            <Grid container>
+                              <Grid item style={{ textAlign: "center" }}>
+                                <CheckCircleIcon color={"primary"}/>
+                              </Grid>
+                              <Grid item style={{ marginLeft: "15px" }}>
+                                <Typography style={{ fontSize: "1rem" }}>
+                                  Pièce d’identité
+                                </Typography>
+                              </Grid>
                             </Grid>
                           </Grid>
-                        </Grid>
-                      ) : null}
+                        ) : null}
+                        {user_infos.phone ? (
+                          <Grid item style={{ marginTop: "15px" }}>
+                            <Grid container>
+                              <Grid item style={{ textAlign: "center" }}>
+                                <CheckCircleIcon color={"primary"}/>
+                              </Grid>
+                              <Grid item style={{ marginLeft: "15px" }}>
+                                <Typography style={{ fontSize: "1rem" }}>
+                                  Téléphone
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        ) : null}
+                        {user_infos.email ? (
+                          <Grid item style={{ marginTop: "15px" }}>
+                            <Grid container>
+                              <Grid item style={{ textAlign: "center" }}>
+                                <CheckCircleIcon color={"primary"}/>
+                              </Grid>
+                              <Grid item style={{ marginLeft: "15px" }}>
+                                <Typography style={{ fontSize: "1rem" }}>
+                                  Adresse Email
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        ) : null}
+                      </Grid>
+
+
 
                       <Grid
                         container
