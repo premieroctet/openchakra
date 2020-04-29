@@ -381,5 +381,5 @@ module.exports={
   sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingDetails, sendBookingInfos, sendNewBooking,
   sendShopOnline,sendBookingRefusedToClient, sendAskingInfo, sendNewMessageToAlfred, sendNewMessageToClient,
   sendAskInfoPreapproved, sendResetPassword, sendNewBookingManual, sendVerificationSMS, sendLeaveCommentForClient,
-  sendLeaveCommentForAlfred
+  sendLeaveCommentForAlfred, getHost
 }

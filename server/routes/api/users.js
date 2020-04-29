@@ -4,10 +4,8 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const bcrypt = require('bcryptjs');
-const axios = require('axios');
 const mongoose = require('mongoose');
 const path = require('path');
-
 
 const validateRegisterInput = require('../../validation/register');
 const validateSimpleRegisterInput = require('../../validation/simpleRegister');
@@ -384,14 +382,18 @@ router.post('/profile/idCard',upload2.fields([{name: 'myCardR',maxCount: 1}, {na
                 user.id_card.verso = req.files['myCardV'][0].path;
             }
 
-            user.save().then(user => res.json(user)).catch(err => console.log(err));
+            user.save()
+              .then(user => {
+                res.json(user)
+              })
+              .catch(err => console.log(err));
         })
         .catch(err => {
             console.log(err)
         })
 });
 
-// @Route PUT /myAlfred/api/users/profile/idCard
+// @Route PUT /myAlfred/api/users/profile/idCard/addVerso
 // Add an identity card
 // @Access private
 router.post('/profile/idCard/addVerso',upload2.single('myCardV'),passport.authenticate('jwt',{session:false}),(req,res) => {

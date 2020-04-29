@@ -7,7 +7,9 @@ class UserAvatar extends React.Component{
   }
 
   render(){
+
     const {user, className} = this.props;
+    console.log(user.kyc_errors);
 
     if (user) {
       const picture = user.picture===undefined || user.picture==='' ? null : user.picture;
