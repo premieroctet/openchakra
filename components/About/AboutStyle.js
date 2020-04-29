@@ -28,7 +28,7 @@ export default theme => ({
   titleContainer:{
     [theme.breakpoints.down("xs")]: {
       display: 'flex',
-      justifyContent: 'center',
+      marginLeft: 15,
       marginBottom: 30
     }
   }

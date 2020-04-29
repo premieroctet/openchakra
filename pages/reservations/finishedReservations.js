@@ -96,7 +96,7 @@ class FinishedReservations extends React.Component {
         <Layout>
           <Grid container className={classes.bigContainer}>
             {this.state.isAlfred ? (
-              <Grid style={{width: '100%'}}>
+              <Grid className={classes.navbarShopContainer}>
                 <NavBarShop userId={this.state.user}/>
               </Grid>
             ) : null}
@@ -341,10 +341,10 @@ class FinishedReservations extends React.Component {
                     )}
                   </Grid>
                 </Grid>
-                                  : null
-                              }
-                              {
-                                userInfo.is_alfred ?
+                  : null
+                  }
+                  {
+                    userInfo.is_alfred ?
                 <Grid container className={classes.tabmobile}>
                   <Grid item xs={6} style={{ textAlign: "center" }}>
                     <h2
@@ -353,7 +353,6 @@ class FinishedReservations extends React.Component {
                         color: "#828181",
                         fontWeight: "100",
                         cursor: "pointer",
-                        marginLeft: "25%"
                       }}
                     >
                       En tant qu'Alfred
@@ -484,31 +483,13 @@ class FinishedReservations extends React.Component {
                               <Grid
                                 container
                                 className={classes.mobilerow1}
-                                style={{
-                                  boxShadow: "0px 0px 6px lightgray",
-                                  borderRadius: "5px",
-                                  width: "90%",
-                                  margin: "15px auto"
-                                }}
                               >
                                 <Grid
                                   item
                                   xs={12}
-                                  style={{
-                                    textAlign: "center",
-                                    marginTop: "15px"
-                                  }}
+                                  style={{ display: "flex", justifyContent: 'center', marginTop: "15px" }}
                                 >
-                                  <img
-                                    src={`../../${booking.alfred.picture}`}
-                                    alt={"picture"}
-                                    style={{
-                                      width: "80px",
-                                      height: "80px",
-                                      borderRadius: "50%",
-                                      objectFit: "cover"
-                                    }}
-                                  ></img>
+                                  <UserAvatar user={booking.alfred} />
                                 </Grid>
                                 <Grid
                                   xs={12}
@@ -655,32 +636,17 @@ class FinishedReservations extends React.Component {
                           </Grid>
 
                           {/* Mobile */}
-                          <Grid
-                            container
-                            className={classes.mobilerow1}
-                            style={{
-                              boxShadow: "0px 0px 6px lightgray",
-                              borderRadius: "5px",
-                              width: "90%",
-                              margin: "15px auto"
-                            }}
-                          >
                             <Grid
-                              item
-                              xs={12}
-                              style={{ textAlign: "center", marginTop: "15px" }}
+                              container
+                              className={classes.mobilerow1}
                             >
-                              <img
-                                src={`../../${booking.user.picture}`}
-                                alt={"picture"}
-                                style={{
-                                  width: "80px",
-                                  height: "80px",
-                                  borderRadius: "50%",
-                                  objectFit: "cover"
-                                }}
-                              ></img>
-                            </Grid>
+                              <Grid
+                                item
+                                xs={12}
+                                style={{ display: "flex", justifyContent: 'center', marginTop: "15px" }}
+                              >
+                                <UserAvatar user={booking.user} />
+                              </Grid>
                             <Grid
                               item
                               xs={12}

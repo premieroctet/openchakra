@@ -108,7 +108,7 @@ class SelectPrestation extends React.Component {
                 <p className={classes.policySizeContent}>Quelles prestations souhaitez-vous réaliser ? Indiquez vos tarifs et votre unité de facturation. </p>
               </Grid>
               <Grid className={classes.buttonAddPrestas}>
-                <Grid item  className={classes.maxWidth}>
+                <Grid item  className={classes.maxWidth} style={{marginBottom: 100}}>
                   <Grid style={{marginBottom: 10}}>
                     <Fab variant="extended" color="primary" aria-label="add" onClick={() => this.addCustomPrestation() } className={classes.margin}>
                       <AddIcon  className={classes.extendedIcon}/>
