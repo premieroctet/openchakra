@@ -17,9 +17,8 @@ sendLeaveCommentForClient, sendLeaveCommentForAlfred} = require('../../../utils/
 moment.locale('fr');
 
 const api = new mangopay({
-    clientId: 'test-myalfred-haus',
-    clientApiKey: 'Zcx9oZKnBBL31AEugBNrn13n6URvrSqtXCykH3ejBdDSmOYPU1',
-
+    clientId: 'testmyalfredv2',
+    clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
 });
 
 router.get('/test',(req, res) => res.json({msg: 'Booking Works!'}) );
@@ -376,93 +375,110 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', { session: false }
         .catch(err => console.log(err))
 });
 
-function getAccount(id){
-    const allAccount = [];
-    api.Users.getBankAccounts(id)
-                .then(accounts => {
-                    accounts.forEach(a => {
-                        if(a.Active){
-                            allAccount.push(a)
-                        }
-                    });
-                    return allAccount;
-                })
+const DEBUG=true;
 
+const payAlfred = booking => {
+  console.log(`Starting paying of booking #${booking._id}`)
+  if (!DEBUG) {
+    booking.status = 'Terminée';
+    booking.save().then().catch();
+  }
+  const amount = (booking.amount-booking.fees) * 100;
+  const id_mangopay_user = booking.user.id_mangopay;
+  const id_mangopay_alfred = booking.alfred.id_mangopay;
+
+  api.Users.getWallets(id_mangopay_user)
+    .catch( err => {
+      console.error("Err:"+JSON.stringify(err));
+      return;
+    })
+    .then(wallets => {
+      const wallet_id = wallets[0].Id;
+      api.Users.getWallets(id_mangopay_alfred)
+        .catch(err => {
+          console.error(`GetWallets Alfred ${id_mangopay_alfred}:${JSON.stringify(err)}`)
+          return
+        })
+        .then(wallet_alfred => {
+          const id_wallet_alfred = wallet_alfred[0].Id;
+          api.Transfers.create({
+              AuthorId: id_mangopay_user,
+              DebitedFunds: { Currency: 'EUR', Amount: amount },
+              Fees: { Currency: "EUR", Amount: 0 },
+              DebitedWalletId: wallet_id,
+              CreditedWalletId: id_wallet_alfred,
+            })
+            .then( trsf => {
+                if (trsf.Status == 'FAILED') {
+                  console.error(`Transfer failed:${trsf.ResultMessage}`);
+                  return
+                }
+                api.Users.getBankAccounts(id_mangopay_alfred)
+                  .catch (err => {
+                    console.log(err);
+                    return
+                  })
+                  .then ( accounts => {
+                      accounts = accounts.filter ( a => a.Active);
+                      if (accounts.length==0) {
+                        console.log(`No active bank account for Alfred ${id_mangopay_alfred}`);
+                        return
+                      }
+                      api.PayOuts.create({
+                          AuthorId: id_mangopay_alfred,
+                          DebitedFunds: { Currency: "EUR", Amount: amount },
+                          Fees: { Currency: "EUR", Amount: 0 },
+                          BankAccountId: accounts[0].Id,
+                          DebitedWalletId: id_wallet_alfred,
+                          BankWireRef: "My Alfred",
+                          PaymentType: "BANK_WIRE"
+                        })
+                        .catch ( err => {
+                          console.log(err);
+                          return
+                        })
+                        .then(
+                          po => {
+                            console.log('Create payout OK:' + JSON.stringify(po));
+                            booking.paid = true;
+                            booking.date_payment = moment()
+                            booking.save().then().catch();
+                          },
+                          err => {
+                            console.error('Create Payout error:' + JSON.stringify(err))
+                          }
+                      )
+                })
+              },
+               err => { err => console.error('Create transfer error:' + JSON.stringify(err)) }
+            )
+        })
+    })
 }
 
-/*new CronJob('0 0 5 * * *', function() {
-    const date = moment(new Date(), 'DD-MM-YYYY').startOf('day');
-    Booking.find({status: 'Confirmée',paid:false})
-        .populate('user')
-        .populate('alfred')
-        .then(booking => {
-            booking.forEach(b => {
-                const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day');
-                if(moment(date).isSameOrAfter(end_date)){
-                   b.status = 'Terminée';
-                   b.save().then().catch();
-                   const amount = b.amount;
-                   const id_mangopay_user = b.user.id_mangopay;
-                   const id_mangopay_alfred = b.alfred.id_mangopay;
-
-
-                    api.Users.getWallets(id_mangopay_user)
-                        .then(wallets => {
-                            const wallet_id = wallets[0].Id;
-                            api.Users.getWallets(id_mangopay_alfred)
-                                .then(wallet_alfred => {
-                                    const id_wallet_alfred = wallet_alfred[0].Id;
-                                    api.Transfers.create({
-                                        AuthorId: id_mangopay_user,
-                                        DebitedFunds: {
-                                            Currency: 'EUR',
-                                            Amount: amount
-                                        },
-                                        Fees: {
-                                            Currency: "EUR",
-                                            Amount: 0
-                                        },
-                                        DebitedWalletId: wallet_id,
-                                        CreditedWalletId: id_wallet_alfred,
-
-                                    })
-                                        .then(()=>{
-                                                const accountAlfred = getAccount(id_mangopay_alfred);
-                                                api.PayOuts.create({
-                                                    AuthorId: id_wallet_alfred,
-                                                    DebitedFunds: {
-                                                        Currency: "EUR",
-                                                        Amount: amount
-                                                    },
-                                                    Fees: {
-                                                        Currency: "EUR",
-                                                        Amount: 0
-                                                    },
-                                                    BankAccountId: accountAlfred[0].Id,
-                                                    DebitedWalletId: id_wallet_alfred,
-                                                    BankWireRef: "My Alfred"
-
-                                                })
-                                                    .then(()=> {
-                                                        b.paid = true;
-                                                        b.date_payment = moment()
-                                                        b.save().then().catch();
-                                                    })
-                                        }
-
-                                        )
-                                })
-
-                        })
-
-                }
-            })
-        })
-
-}, null, true, 'Europe/Paris');*/
-
 //new CronJob('0 0 5 * * *', function() {
-new CronJob('*/30 * * * * *', function() {
+new CronJob(DEBUG ? '*/10 * * * * *' : '0 0 5 * * *', function() {
+  console.log("Checking bookings to terminate");
+  const date = moment(new Date(), 'DD-MM-YYYY').startOf('day');
+  Booking.find(DEBUG ? {} : {
+      status: 'Confirmée',
+      paid: false
+    })
+    .populate('user')
+    .populate('alfred')
+    .catch(err => console.error(err))
+    .then(booking => {
+      booking.forEach(b => {
+        const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day');
+        console.log(`End date:${end_date}`)
+        if (moment(date).isSameOrAfter(end_date)) {
+          payAlfred(b);
+        }
+      })
+    })
+}, null, true, 'Europe/Paris');
+/**
+new CronJob('0 0 5 * * *', function() {
     const date = moment(new Date(), 'DD-MM-YYYY').startOf('day');
     Booking.find({status: 'Confirmée',paid:false})
         .populate('user')
@@ -485,6 +501,7 @@ new CronJob('*/30 * * * * *', function() {
             })
         })
 }, null, true, 'Europe/Paris');
+*/
 
 new CronJob('0 0 6 * * *', function() {
     const currentDate = moment(new Date(), 'DD-MM-YYYY').startOf('day');

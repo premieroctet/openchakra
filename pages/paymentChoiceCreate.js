@@ -68,7 +68,7 @@ class PaymentChoiceCreate extends React.Component {
 
     payDirect() {
         const total = parseFloat(this.props.total);
-        const fees = parseFloat(this.props.fees)*2;
+        const fees = parseFloat(this.props.fees);
         const data = {
             id_card: this.state.id_card,
             amount: total,
@@ -84,7 +84,7 @@ class PaymentChoiceCreate extends React.Component {
 
     pay(){
         const total = parseFloat(this.props.total);
-        const fees = parseFloat(this.props.fees)*2;
+        const fees = parseFloat(this.props.fees);
         const data = {
             amount: total,
             fees: fees

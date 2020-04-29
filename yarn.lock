@@ -9819,7 +9819,7 @@ makeerror@1.0.x:
   dependencies:
     tmpl "1.0.x"
 
-mangopay2-nodejs-sdk@^1.10.0:
+mangopay2-nodejs-sdk@^1.12.0:
   version "1.12.0"
   resolved "https://registry.yarnpkg.com/mangopay2-nodejs-sdk/-/mangopay2-nodejs-sdk-1.12.0.tgz#21c8541f0eba2c0cae63b7d59dd7945248f5b24d"
   integrity sha512-F8J6D1WumkoNbAkUl+q2s68SFBli1w7TBzswinOeEFQDF88TttKfOg9LqJv4kMOfritRJ716Z3QgFsYYeV9cdA==
