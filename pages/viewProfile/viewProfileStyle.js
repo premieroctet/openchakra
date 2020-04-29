@@ -102,5 +102,14 @@ export default theme => ({
       marginLeft: 15,
       marginRight: 15
     }
+  },
+  titleAboutSection:{
+    fontSize: "1.6rem",
+    color: "rgba(84,89,95,0.95)",
+    letterSpacing: -1,
+    fontWeight: "bold",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "1rem",
+    }
   }
 })

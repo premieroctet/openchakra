@@ -118,7 +118,7 @@ class viewProfile extends React.Component {
               <Grid container className={classes.bigContainer}>
                 {/*//////////////////////////////Container de gauche///////////////////////////////////////////////////////////*/}
 
-                <Grid container className={classes.leftContent} style={{ marginBottom: "10%" }}>
+                <Grid container style={{ marginBottom: "10%" }}>
                   <Grid className={classes.toggle} item>
                     <Grid container className={classes.mainContainer}>
                       <Grid item>
@@ -154,7 +154,7 @@ class viewProfile extends React.Component {
                         <Grid container className={classes.cardPreviewContainer} spacing={2}>
                           { Object.keys(this.state.services).map( result => {
                             return (
-                              <Grid item xs={12} sm={12} md={12} lg={6} xl={4}>
+                              <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
                                 <CardPreview
                                   isOwner={false}
                                   needAvatar={false}
@@ -176,7 +176,7 @@ class viewProfile extends React.Component {
                       </Grid>
                       { !(user_infos.id_confirmed || user_infos.email || user_infos.phone )? (
                         <Grid style={{ marginTop: "3%" }}>
-                          <p>Cet utilisateur n'a aucune vérification</p>
+                          <Typography variant="h3" className={classes.titleAbout}>Cet utilisateur n'a aucune vérification</Typography>
                         </Grid>
                       ) : null}
                       <Grid style={{marginLeft: 15, marginTop: 15}}>
@@ -227,6 +227,11 @@ class viewProfile extends React.Component {
 
 
                       <Grid container className={classes.tabweb}>
+                        <Grid item xs={12} style={{ marginTop: "3%" }}>
+                          <Typography variant="h3" className={classes.titleAbout}>
+                            Commentaires
+                          </Typography>
+                        </Grid>
                         <Grid item xs={6} style={{ textAlign: "center" }}>
                           <div>
                             <h2
@@ -240,7 +245,7 @@ class viewProfile extends React.Component {
                         <Grid item xs={6}>
                           <h2
                             onClick={this.handleClicktabs2}
-                            style={{ fontSize: "1.1rem", color: "#828181", fontWeight: "100", textAlign: "center", cursor: "pointer" }}
+                            style={{ fontSize: "1.1rem", color: "#828181", fontWeight: "100", cursor: "pointer", marginLeft: "0%" }}
                           >
                             De la part des clients
                           </h2>
@@ -298,12 +303,8 @@ class viewProfile extends React.Component {
                           )}
                         </Grid>
                         <Grid container>
-                        <Grid
-                          container
-                          style={{ marginTop: "20px" }}
-                          className={classes.tabweb}
-                        >
-                        <Commentary user_id={this.props.user_id} alfred_mode={customerComments} key={moment()}/>
+                        <Grid container style={{ marginTop: "20px" }} className={classes.tabweb}>
+                          <Commentary user_id={this.props.user_id} alfred_mode={customerComments} key={moment()}/>
                         </Grid>
 
                         </Grid>

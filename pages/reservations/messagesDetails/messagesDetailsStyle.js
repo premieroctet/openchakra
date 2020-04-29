@@ -73,7 +73,8 @@ export default theme => ({
   mobilerow:{
     boxShadow: "0 5px 5px -5px rgba(51, 51, 51, 0.29)",
     alignItems : 'center',
-    height: 100
+    height: 100,
+    justifyContent: 'space-between'
   },
   avatarLetter:{
     height: 65,
