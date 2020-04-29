@@ -273,6 +273,12 @@ const UserSchema = new Schema({
       default: function() {
         return (this.firstname.charAt(0)+this.name.charAt(0)).toUpperCase();
       }
+    },
+    kyc_errors: {
+      type: [String],
+      default: function() {
+        return ['Pas de pièce d\'identité', 'Pas d\'adresse', 'Pas de SIRET'];
+      }
     }
 });
 
