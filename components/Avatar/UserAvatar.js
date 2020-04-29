@@ -1,6 +1,6 @@
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Badge from '@material-ui/core/Badge';
 import Grid from '@material-ui/core/Grid';
 import Popover from '@material-ui/core/Popover';
@@ -23,6 +23,18 @@ class UserAvatar extends React.Component{
     this.setState({anchorEl: null})
   };
 
+  avatarWithPics(user, className) {
+    return(
+      <Avatar alt="photo de profil" src={"/"+user.picture} className={className} />
+    )
+  }
+
+  avatarWithoutPics(user, className){
+    return (
+      <Avatar alt="photo de profil" className={className}>{user.avatar_letters}</Avatar>
+
+    )
+  }
 
   render(){
     const {user, className, classes} = this.props;
@@ -32,54 +44,68 @@ class UserAvatar extends React.Component{
 
       return(
         <Grid>
-          <Badge
-            classes={{badge: kyc !== undefined ? kyc.length !== 0 ? classes.badge : classes.badgeOk : classes.badge}}
-            overlap="circle"
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            variant="dot"
-            onMouseEnter={this.handlePopoverOpen}
-            onMouseLeave={this.handlePopoverClose}
-            aria-owns={anchorEl ? 'mouse-over-popover' : undefined}
-            aria-haspopup="true"
-          >
-            {
-              user.picture===undefined || user.picture==='' ?
-                <Avatar alt="photo de profil" className={className}>{user.avatar_letters}</Avatar>
-                :
-                <Avatar alt="photo de profil" src={"/"+user.picture} className={className} />
-            }
-          </Badge>
-          <Popover
-            id="mouse-over-popover"
-            className={classes.popover}
-            classes={{
-              paper: classes.paper,
-            }}
-            open={open && kyc.length !== 0}
-            anchorEl={anchorEl}
-            onClose={this.handlePopoverClose}
-            disableRestoreFocus
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'left',
-            }}
-          >
-            <Typography>Veuillez compléter votre profil :</Typography>
-            {
-              kyc !== undefined ?
-                kyc.map(res => (
-                  <p>- {res}</p>
-                )) :
-                null
-            }
-          </Popover>
+          {
+            kyc ?
+              <Grid>
+                <Badge
+                  classes={{badge: classes.badge}}
+                  overlap="circle"
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  variant="dot"
+                  onMouseEnter={this.handlePopoverOpen}
+                  onMouseLeave={this.handlePopoverClose}
+                  aria-owns={anchorEl ? 'mouse-over-popover' : undefined}
+                  aria-haspopup="true"
+                >
+                  {
+                    user.picture===undefined || user.picture==='' ?
+                      this.avatarWithoutPics(user, className)
+                      :
+                      this.avatarWithPics(user, className)
+                  }
+                </Badge>
+                <Popover
+                  id="mouse-over-popover"
+                  className={classes.popover}
+                  classes={{
+                    paper: classes.paper,
+                  }}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={this.handlePopoverClose}
+                  disableRestoreFocus
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                  }}
+                >
+                  <Typography>Veuillez compléter votre profil :</Typography>
+                  {
+                    kyc !== undefined ?
+                      kyc.map(res => (
+                        <p>- {res}</p>
+                      )) :
+                      null
+                  }
+                </Popover>
+              </Grid> :
+              <Grid>
+                {
+                  user.picture===undefined || user.picture==='' ?
+                    this.avatarWithoutPics(user, className)
+                    :
+                    this.avatarWithPics(user, className)
+                }
+              </Grid>
+          }
+
         </Grid>
       )
   }

@@ -36,20 +36,4 @@ export default theme => ({
       opacity: 0,
     },
   },
-  badgeOk: {
-    backgroundColor: '#4fbdd7',
-    color: '#4fbdd7',
-    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-    '&::after': {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      borderRadius: '50%',
-      animation: '$ripple 1.2s infinite ease-in-out',
-      border: '1px solid currentColor',
-      content: '""',
-    },
-  },
 })
