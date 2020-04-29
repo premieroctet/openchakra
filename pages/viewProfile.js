@@ -142,7 +142,7 @@ class viewProfile extends React.Component {
                     <Grid container>
                       <Grid item className={classes.largeWidth}>
                         <Typography variant={"h3"} className={classes.titleAbout}>
-                          Bonjour je m'apppelle {user_infos.firstname}
+                          Bonjour je m'appelle {user_infos.firstname}
                         </Typography>
                       </Grid>
                       <Grid className={classes.servicesContainer}>
