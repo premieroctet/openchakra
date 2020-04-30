@@ -116,8 +116,8 @@ const createMangoProvider = (user, shop) => {
 
 const addIdIfRequired = user => {
   console.log("addIdIfRequired")
-  if (!user.mangopay_provider_id || user.mangopay_provider_status == 'NATURAL') {
-    console.log("Pas besoin d'envoyer l'ID")
+  if (!user.mangopay_provider_id) {
+    console.log(`User ${user._id}:pas besoin d'envoyer l'ID pour un client`)
     return false;
   }
   const objStatus = {
@@ -144,6 +144,10 @@ const addIdIfRequired = user => {
         .then(resultRecto => {
           const id_verso = user.id_card.verso ? '../../../' + user.id_card.verso : null;
 
+          // Natural provider : KYX check is free => send
+          if (user.mangopay_provider_status=='NATURAL') {
+            requireKycValidation(user, documentId);
+          }
           if (id_verso !== null) {
             const base64Verso = fs.readFileSync(path.resolve(id_verso), 'base64');
             const KycPageVerso = new mangoApi.models.KycPage({"File": base64Verso});
