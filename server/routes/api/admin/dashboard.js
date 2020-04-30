@@ -72,58 +72,16 @@ router.get('/shops/extract',passport.authenticate('jwt',{session:false}),(req,re
   var result=[]
   User.find()
   .then( users => {
-    users.forEach(u =>{
-      var current={nom:u.name, prénom:u.firstnamme, email:u.email, "date d'inscription":u.creation_date, 'email vérifié': u.is_confirmed? "O":"N", portable:u.phone}
-      Shop.find({alfred: u})
-        .catch (err => console.log(err))
-        .then( s =>{
-          if (s.length>0) {
-            s=s[0];
-            current=Object.assign(current, {'particulier/pro': s.is_particular? "particulier":'pro', siret: s.company? s.company.siret : '', "création boutique":s.creation_date});
-            current=Object.assign(current, {'conditions de réservation': s.my_alfred_conditions ? "Profil vérifié" : s.profile_picture ? "Photo de profil" : s.identity_card ? "Pièce d'identité" : "recommandations"})
-            current=Object.assign(current, {'conditions d\'annulation': s.flexible_cancel ? "Flexible" : s.moderate_cancel ? "Modéré" : "Strict"})
-            current=Object.assign(current, {'panier minimum': s.minimum_basket, 'comment réserver' : s.booking_request ? "Manuel" : 'Auto'});
-            ServiceUser.find({user: u})
-              .populate('service')
-              //.populate('prestations')
-              .catch(err => console.log(err))
-              .then( services => {
-                if (services && services.length>0) {
-                  services.forEach( su => {
-                    current=Object.assign(current, { "délai de prévenance": su.deadline_before_booking, "périmètre": su.perimeter, 'panier minium': su.minimum_basket})
-                    current=Object.assign(current, { "service": su.service.label, "retrait/livraison": su.pick_tax, "frais de déplacement": su.travel_tax})
-                    var location=su.location.client ? "C":"";
-                    location += su.location.alfred ? "A" : "";
-                    location += su.location.visio ? "V" : "";
-                    current=Object.assign(current, { "lieu de prestation": location });
-                    if (su.prestations.length>0) {
-                      su.prestations.forEach(presta => {
-                          Billing.findById(presta.billing)
-                            .then ( b => current= Object.assign(current, { facturation: b ? b.label : ''}))
-                            .catch(err => console.log(err));
-                          Prestation.findById(presta.prestation)
-                            .populate('category')
-                            .then ( p => current= Object.assign(current, { prestation: p ? p.label : '', 'catégorie': p ? p.category.label : ''}))
-                            .catch(err => console.log(err));
-                          result.push(current);
-                      });
-                    }
-                    else {
-                      result.push(current);
-                    }
-                  })
-                }
-                else {
-                  result.push(current);
-                }
-              })
-          }
-          else {
-            result.push(current);
-          }
+      Shop.find()
+        .then ( shops => {
+            users.forEach ( user => {
+              const shop=shops.filter( s => s.alfred._id.equals(user._id))
+              user=Object.assign(user, shop ? shop[0] : {})
+              result.push(user)
+            })
+            res.json(result)
         })
-    })
-    setTimeout( () => res.json(result), 3000);
+        .catch ()
   })
 });
 
