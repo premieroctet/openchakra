@@ -26,6 +26,7 @@ router.get('/test',(req, res) => res.json({msg: 'Payment Works!'}) );
 router.get('/mangopay_hook', (req,res)=>{
   var query=parse(req.originalUrl, true).query;
   console.log(`Got params:${JSON.stringify(query)}`);
+  res.json();
 });
 
 // POST /myAlfred/api/payment/createCard
