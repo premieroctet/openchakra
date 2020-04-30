@@ -113,5 +113,11 @@ export default theme => ({
     [theme.breakpoints.down("xs")]: {
       fontSize: "1rem",
     }
+  },
+  containerDescription:{
+    marginTop: '3%',
+    [theme.breakpoints.down("xs")]: {
+     textAlign: 'center'
+    }
   }
 })
