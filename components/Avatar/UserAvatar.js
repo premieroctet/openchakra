@@ -6,13 +6,22 @@ import Grid from '@material-ui/core/Grid';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import styles from './UserAvatarStyle'
+const jwt = require('jsonwebtoken');
 
 class UserAvatar extends React.Component{
   constructor(props){
     super(props);
     this.state={
       anchorEl: null,
+      currentUser: ''
     }
+  }
+
+  componentDidMount() {
+    const token2 = localStorage.getItem('token').split(' ')[1];
+    const decode = jwt.decode(token2);
+    const alfred_id = decode.id;
+    this.setState({currentUser: alfred_id})
   }
 
   handlePopoverOpen = (event) => {
@@ -38,14 +47,15 @@ class UserAvatar extends React.Component{
 
   render(){
     const {user, className, classes} = this.props;
-    const {anchorEl} = this.state;
+    const {anchorEl, currentUser} = this.state;
     const open = Boolean(anchorEl);
     const kyc = this.props.user.kyc_errors;
+    const owner = currentUser === this.props.user._id;
 
       return(
         <Grid>
           {
-            kyc ?
+            owner && kyc ?
               <Grid>
                 <Badge
                   classes={{badge: classes.badge}}
@@ -88,11 +98,10 @@ class UserAvatar extends React.Component{
                 >
                   <Typography>Veuillez compléter votre profil :</Typography>
                   {
-                    kyc !== undefined ?
+
                       kyc.map(res => (
                         <p>- {res}</p>
-                      )) :
-                      null
+                      ))
                   }
                 </Popover>
               </Grid> :

@@ -4,10 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
-import Link from 'next/link';
 import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import setAuthToken from '../utils/setAuthToken';
 
 import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
@@ -23,14 +20,6 @@ const styles = {
     card: {
         padding: '1.5rem 3rem',
         width: 400,
-    },
-    cardContant: {
-        flexDirection: 'column',
-    },
-    linkText: {
-        textDecoration: 'none',
-        color: 'black',
-        fontSize: 12,
     },
 };
 
