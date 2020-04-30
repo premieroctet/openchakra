@@ -30,5 +30,8 @@ export default theme => ({
       display: 'flex',
       marginBottom: 30
     }
-  }
+  },
+  badge:{
+    color: "white",
+  },
 });

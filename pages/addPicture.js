@@ -40,7 +40,10 @@ const styles = theme => ({
         height: 80,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        [theme.breakpoints.down("xs")]:{
+            textAlign: 'center'
+        }
 
     },
     newContainer: {

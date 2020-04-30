@@ -87,8 +87,8 @@ export default theme => ({
   },
   marginContainerAvatar:{
     marginRight: '15%',
+    marginLeft:30,
     [theme.breakpoints.down("xs")]:{
-      marginRight: 0
     }
 
   }

@@ -13,16 +13,29 @@ class UserAvatar extends React.Component{
     super(props);
     this.state={
       anchorEl: null,
-      currentUser: ''
+      currentUser: '',
+      kyc: null,
+      owner: false,
+      userId: ''
     }
   }
 
   componentDidMount() {
-    const token2 = localStorage.getItem('token').split(' ')[1];
-    const decode = jwt.decode(token2);
-    const alfred_id = decode.id;
-    this.setState({currentUser: alfred_id})
+    const token = localStorage.getItem('token');
+    if (token !== null) {
+      this.setState({ logged: true });
+      const token2 = localStorage.getItem('token').split(' ')[1];
+      const decode = jwt.decode(token2);
+      const alfred_id = decode.id;
+      this.setState({currentUser: alfred_id})
+    }
   }
+
+  ifOwner(){
+    if(this.state.currentUser === this.state.userId){
+      this.setState({owner : true})
+    }
+  };
 
   handlePopoverOpen = (event) => {
     this.setState({anchorEl: event.currentTarget})
@@ -49,9 +62,13 @@ class UserAvatar extends React.Component{
     const {user, className, classes} = this.props;
     const {anchorEl, currentUser} = this.state;
     const open = Boolean(anchorEl);
-    const kyc = this.props.user.kyc_errors;
-    const owner = currentUser === this.props.user._id;
 
+    if(user){
+      var owner = currentUser === user._id;
+      var kyc = user.kyc_errors;
+    }
+
+    if(user){
       return(
         <Grid>
           {
@@ -99,9 +116,9 @@ class UserAvatar extends React.Component{
                   <Typography>Veuillez compléter votre profil :</Typography>
                   {
 
-                      kyc.map(res => (
-                        <p>- {res}</p>
-                      ))
+                    kyc.map(res => (
+                      <p>- {res}</p>
+                    ))
                   }
                 </Popover>
               </Grid> :
@@ -117,6 +134,13 @@ class UserAvatar extends React.Component{
 
         </Grid>
       )
+
+    }else{
+      return(
+       <Avatar alt="photo de profil" src='/static/basicavatar.png' className={className} />
+      )
+    }
+
   }
 }
 

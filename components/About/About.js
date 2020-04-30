@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import Link from 'next/link';
 import axios from 'axios';
+import Badge from '@material-ui/core/Badge';
 
 moment.locale('fr');
 
@@ -64,8 +65,8 @@ class About extends React.Component{
 
   render(){
     const {languages, user, creationShop} = this.state;
-    const {classes, alfred, profil, needTitle} = this.props;
-    const preventDefault = event => event.preventDefault();
+    const {classes, alfred, needTitle} = this.props;
+   console.log(user, 'user')
 
     const StyledRating = withStyles({
       iconFilled: {
@@ -76,20 +77,19 @@ class About extends React.Component{
     return (
       <Grid container className={classes.mainContainer}>
         <Grid item style={{width: '100%'}}>
-
-            <Grid className={classes.titleContainer}>
-              <Typography variant="h3" className={classes.titleAbout}>
-                A propos de {user.firstname}
-              </Typography>
-            </Grid>
-
-
+          <Grid className={classes.titleContainer}>
+            <Typography variant="h3" className={classes.titleAbout}>
+              A propos de {user.firstname}
+            </Typography>
+          </Grid>
           <List dense={this.state.dense} className={classes.listStyle}>
             {
               needTitle !== false ?
                 <ListItem>
-                  <Box component="fieldset" mb={user.score} borderColor="transparent" className={classes.raiting}>
-                    <StyledRating name="read-only" value={user.score} readOnly/>
+                  <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
+                    <Badge badgeContent={user.score} color={'primary'} classes={{badge: classes.badge}}>
+                      <StyledRating name="read-only" value={user.score} readOnly precision={0.5}/>
+                    </Badge>
                   </Box>
                 </ListItem> : null
             }
@@ -99,7 +99,18 @@ class About extends React.Component{
                   <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/commentaires.svg'}/>
                 </Grid>
               </ListItemAvatar>
-              <LinkMaterial href="#comments" color="primary " className={classes.link}>{user.number_of_reviews} commentaires</LinkMaterial>
+              <Link
+                href={{
+                  pathname: "/profile/reviews",
+                }}
+              >
+                <a
+                  className={classes.link}
+                  target="_blank"
+                >
+                  {user.number_of_reviews} commentaires
+                </a>
+              </Link>
             </ListItem>
             {user.id_confirmed ?
               <ListItem>
@@ -159,25 +170,23 @@ class About extends React.Component{
                   primary={languages.length >= 1 ? "Langue : " + languages.join(' - ') : "Langue : non renseigné"}
                 />
             </ListItem>
-            { profil ?
-              <ListItem>
-                <Link
-                  href={{
-                    pathname: "/viewProfile",
-                    query: { id: alfred }
+            <ListItem>
+              <Link
+                href={{
+                  pathname: "/viewProfile",
+                  query: { id: alfred }
+                }}
+              >
+                <Typography
+                  style={{
+                    color: "rgb(47, 188, 211)",
+                    cursor: "pointer"
                   }}
                 >
-                  <Typography
-                    style={{
-                      color: "rgb(47, 188, 211)",
-                      cursor: "pointer"
-                    }}
-                  >
-                    Voir le profil
-                  </Typography>
-                </Link>
-              </ListItem> : null
-            }
+                  Voir le profil
+                </Typography>
+              </Link>
+            </ListItem>
           </List>
         </Grid>
       </Grid>

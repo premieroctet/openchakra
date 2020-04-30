@@ -16,50 +16,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
-const styles = theme => ({
-    signupContainer: {
-        alignItems: 'center',
-        height: '100vh',
-        flexDirection: 'column',
-
-    },
-    card: {
-        fontFamily: 'Helvetica',
-        width: 800,
-        marginTop: '100px',
-    },
-    cardContant: {
-        flexDirection: 'column',
-    },
-    linkText: {
-        textDecoration: 'none',
-        color: 'black',
-        fontSize: 12,
-        lineHeight: 4.15,
-    },
-    banner: {
-        marginBottom: 25,
-        backgroundColor: '#2FBCD3',
-        height: 80,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-
-    },
-    newContainer: {
-        padding: 20,
-    },
-    title: {
-        fontFamily: 'Helvetica',
-        color: 'white',
-        display: 'flex',
-        justifyContent: 'center',
-        marginTop: 0,
-        paddingTop: 22,
-        letterSpacing: 1,
-    },
-});
+import styles from './addPhone/addPhoneStyle'
 
 class addPhone extends React.Component {
     constructor(props) {
@@ -83,7 +40,7 @@ class addPhone extends React.Component {
     onChange(e) {
         const {name, value} = e.target;
         this.setState({ [name]: value });
-        if( name=='phone') {
+        if( name==='phone') {
           this.setState({phoneOk:isPhoneOk(value)})
         }
     };
@@ -150,7 +107,7 @@ class addPhone extends React.Component {
         return (
             <Layout>
                 <Grid container className={classes.signupContainer}>
-                    <Grid item xs={10}>
+                    <Grid item className={classes.mainContainer}>
                     <Card className={classes.card}>
                         <div className={classes.banner}>
                             <h2 className={classes.title}>Confirmez votre numéro de téléphone</h2>
@@ -216,7 +173,7 @@ class addPhone extends React.Component {
                       Annuler
                     </Button>
                     <Button
-                      disabled={this.state.smsCode.length!=4}
+                      disabled={this.state.smsCode.length!==4}
                       onClick={() => this.checkSmsCode()}
                       color="primary">
                       Confirmer
