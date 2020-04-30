@@ -17,18 +17,9 @@ const {computeUrl} = require('../../../config/config');
 
 router.get('/test',(req, res) => res.json({msg: 'Payment Works!'}) );
 
-/** Hook Mangopay */
-mangoApi.Hooks.create({
-  Tag: "MyAlfred hook",
-  EventType: "KYC_SUCCEEDED",
-  Status: "ENABLED",
-  Validity: "VALID",
-  Url: new URL('/myAlfred/api/payment/mangopay_hook', getHost()),
-});
-
 
 router.get('/mangopay_hook', (req,res)=>{
-  console.log("Got params:"+req.params);
+  console.log(`Got params:${JSON.stringify(req.params)}`);
 });
 
 // POST /myAlfred/api/payment/createCard
@@ -400,60 +391,5 @@ router.put('/cards',passport.authenticate('jwt',{session:false}),(req,res)=> {
     mangoApi.Cards.update({Id:id_card,Active:false}).then().catch()
 });
 
-// POST / myAlfred/api/payment/createKycDocument
-// Create a KYC document
-// @access private
-router.post('/createKycDocument', passport.authenticate('jwt', { session: false }), ( req, res ) => {
-    User.findById(req.user.id)
-        .then(user => {
-            const objStatus = {
-                Type: 'IDENTITY_PROOF',
-            }
-            const id = user.id_mangopay;
-
-            mangoApi.Users.createKycDocument(id, objStatus)
-                .then(result => {
-                    const documentId = result.Id;
-                    let id_recto = path.resolve(user.id_card.recto);
-                    let id_verso = null;
-
-                    const base64Recto = fs.readFileSync(id_recto, 'base64');
-                    const KycPageRecto = new mangoApi.models.KycPage({
-                        "File": base64Recto
-                    });
-
-                    if (typeof user.id_card.verso !== 'undefined') id_verso = '../../../' + user.id_card.verso;
-
-                    mangoApi.Users.createKycPage(id, documentId, KycPageRecto)
-                        .then(resultRecto => {
-                            if (id_verso !== null) {
-                                const base64Verso = fs.readFileSync(path.resolve(id_verso), 'base64');
-                                const KycPageVerso = new mangoApi.models.KycPage({
-                                    "File": base64Verso
-                                });
-
-                                mangoApi.Users.createKycPageFromFile(id, documentId, KycPageVerso)
-                                    .then(resultVerso => {
-                                        res.json([resultRecto, resultVerso]);
-                                    })
-                                    .catch(err => res.json(err))
-                            }
-
-                            const updateObj = {
-                                Id: documentId,
-                                Status: "VALIDATION_ASKED"
-                            };
-
-                            mangoApi.Users.updateKycDocument(id, updateObj)
-                                .then(updKyc => {
-                                    res.json(updKyc);
-                                })
-                        })
-                        .catch(err => res.json(err))
-
-                })
-        })
-        .catch(err => res.json(err))
-})
 
 module.exports = router;

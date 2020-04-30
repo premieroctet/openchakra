@@ -20,6 +20,8 @@ const multer = require("multer");
 
 const {computeUrl } = require('../../../config/config');
 
+const {addIdIfRequired} = require('../../../utils/mangopay')
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'static/profile/')
@@ -370,7 +372,7 @@ router.put('/profile/pictureLater', passport.authenticate('jwt', { session: fals
         .catch(err => console.log(err));
 })
 
-// @Route PUT /myAlfred/api/users/profile/idCard
+// @Route POST /myAlfred/api/users/profile/idCard
 // Add an identity card
 // @Access private
 router.post('/profile/idCard',upload2.fields([{name: 'myCardR',maxCount: 1}, {name:'myCardV',maxCount:1}]),passport.authenticate('jwt',{session:false}),(req,res) => {
@@ -385,6 +387,8 @@ router.post('/profile/idCard',upload2.fields([{name: 'myCardR',maxCount: 1}, {na
 
             user.save()
               .then(user => {
+                console.log("Sending ID to Mangopay if required");
+                addIdIfRequired(user);
                 res.json(user)
               })
               .catch(err => console.log(err));

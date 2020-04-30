@@ -265,9 +265,23 @@ const UserSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'chatRooms'
     },
-    // Mangopay as buyer
+    // Mangopay as client
     id_mangopay: {
-        type: String
+      type: String,
+    },
+    // Mangopay as provider
+    mangopay_provider_id: {
+      type: String,
+    },
+    // Provider status : NATURAL or LEGAL
+    mangopay_provider_status: {
+      type: String
+    },
+    identity_proof_id : {
+      type: String
+    },
+    registration_proof_id : {
+      type: String,
     },
     avatar_letters: {
       type: String,

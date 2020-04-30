@@ -453,7 +453,7 @@ const payAlfred = booking => {
 }
 
 //new CronJob('0 0 5 * * *', function() {
-new CronJob('0 * * * * *', function() {
+new CronJob('0 */5 * * * *', function() {
   console.log("Checking bookings to terminate");
   const date = moment(new Date(), 'DD-MM-YYYY').startOf('day');
   Booking.find({

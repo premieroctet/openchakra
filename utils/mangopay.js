@@ -1,76 +1,179 @@
+const moment = require('moment');
+const path = require('path');
+const fs = require('fs');
+const {getHost}=require('./mailing')
+
+
 const mangopay = require('mangopay2-nodejs-sdk');
 
+
+// PROD !!!!!
+/**
 const mangoApi = new mangopay({
-    clientId: 'testmyalfredv2',
-    clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
+  clientId: 'myalfredprod',
+  clientApiKey: 'j8R8fLZmUderNNp27siCqMAJ3y7Bv7BB82trfGuhqSKcYpEZ91',
 });
+*/
+
+const mangoApi = new mangopay({
+  clientId: 'testmyalfredv2',
+  clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
+});
+
+const HOOK_TYPES="KYC_CREATED KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED".split(' ')
+/** Hook Mangopay */
+
+HOOK_TYPES.forEach(hookType => {
+  mangoApi.Hooks.create({
+    Tag: "MyAlfred hook",
+    EventType: hookType,
+    Status: "ENABLED",
+    Validity: "VALID",
+    Url: new URL('/myAlfred/api/payment/mangopay_hook', getHost()),
+  });
+})
+
 
 
 const createMangoClient = user => {
-  User.findById(user)
-    .then(user => {
+  var userData = {
+    PersonType: "NATURAL",
+    FirstName: user.firstname,
+    LastName: user.name,
+    Birthday: moment(user.birthday).unix(),
+    Nationality: 'FR',
+    CountryOfResidence: 'FR',
+    Email: user.email,
+  }
 
-        var userData={
-            PersonType: user.is_alfred'NATURAL',
-            FirstName: user.firstname,
-            LastName: user.name,
-            Birthday: moment(user.birthday).unix(),
-            Nationality: 'FR',
-            CountryOfResidence: 'FR',
-            Email: user.email,
-        }
-
-        mangoApi.Users.create(userData)
-            .then(newUser=> {
-              console.log(`Created Mango User ${JSON.stringify(newUser)}`)
-                user.id_mangopay = newUser.Id;
-                user.save().then().catch();
-                mangoApi.Wallets.create({
-                    Owners: [newUser.Id],
-                    Description: `Wallet ${user._id} / ${newUser.FirstName} ${newUser.LastName} client`,
-                    Currency: 'EUR'
-                })
-                    .then(wallet => {
-                      console.log(`Created Wallet ${JSON.stringify(wallet)}`)
-                      res.json(wallet)
-                    })
-            })
+  mangoApi.Users.create(userData)
+    .then(newUser => {
+      console.log(`Created Mango User ${JSON.stringify(newUser)}`)
+      user.id_mangopay = newUser.Id;
+      user.save().then().catch();
+      mangoApi.Wallets.create({
+          Owners: [newUser.Id],
+          Description: `Wallet ${user._id} / ${newUser.FirstName} ${newUser.LastName} client`,
+          Currency: 'EUR'
+        })
+        .then(wallet => {
+          console.log(`Created Wallet ${JSON.stringify(wallet)}`)
+        })
     })
-    .catch(err => console.log(err))
 };
 
-const createMangoSeller = (user, shop) => {
-  User.findById(user)
-    .then(user => {
+const createMangoProvider = (user, shop) => {
 
-        var userData={
-            PersonType: user.is_alfred'NATURAL',
-            FirstName: user.firstname,
-            LastName: user.name,
-            Birthday: moment(user.birthday).unix(),
-            Nationality: 'FR',
-            CountryOfResidence: 'FR',
-            Email: user.email,
-        }
-
-        mangoApi.Users.create(userData)
-            .then(newUser=> {
-              console.log(`Created Mango User ${JSON.stringify(newUser)}`)
-                user.id_mangopay = newUser.Id;
-                user.save().then().catch();
-                mangoApi.Wallets.create({
-                    Owners: [newUser.Id],
-                    Description: `Wallet ${user._id} / ${newUser.FirstName} ${newUser.LastName} client`,
-                    Currency: 'EUR'
-                })
-                    .then(wallet => {
-                      console.log(`Created Wallet ${JSON.stringify(wallet)}`)
-                      res.json(wallet)
-                    })
-            })
+  var userData = {
+    PersonType: shop.is_particular ? "NATURAL" : "LEGAL",
+    FirstName: user.firstname,
+    LastName: user.name,
+    Birthday: moment(user.birthday).unix(),
+    Nationality: 'FR',
+    CountryOfResidence: 'FR',
+    Email: user.email,
+  }
+  if (shop.is_professional) {
+    const addr = user.billing_address
+    userData.LegalPersonType = "SOLETRADER"
+    userData.Name = shop.company.name
+    userData.CompanyNumber = shop.company.siret
+    userData.Headq
+    userData.LegalRepresentativeFirstName = user.firstname
+    userData.LegalRepresentativeLastName = user.name
+    userData.LegalRepresentativeBirthday = moment(user.birthday).unix()
+    userData.LegalRepresentativeNationality = 'FR'
+    userData.LegalRepresentativeCountryOfResidence = 'FR'
+    userData.LegalRepresentativeEmail = user.email
+    const mangoAddr = new mangoApi.models.Address({
+      AddressLine1: addr.address,
+      AddressLine2: "",
+      City: addr.city,
+      Region: "",
+      PostalCode: addr.zip_code,
+      Country: "FR"
     })
-    .catch(err => console.log(err))
+    userData.HeadquartersAddress = mangoAddr
+    userData.LegalRepresentativeAddress = mangoAddr
+  }
+
+  mangoApi.Users.create(userData)
+    .then(newUser => {
+      console.log(`Created Mango User ${JSON.stringify(newUser)}`)
+      user.mangopay_provider_id = newUser.Id;
+      user.mangopay_provider_status = newUser.PersonType
+      user.save().then().catch();
+      mangoApi.Wallets.create({
+          Owners: [newUser.Id],
+          Description: `Wallet ${user._id} / ${newUser.FirstName} ${newUser.LastName} provider`,
+          Currency: 'EUR'
+        })
+        .then(wallet => {
+          console.log(`Created Wallet ${JSON.stringify(wallet)}`)
+        })
+    })
 };
 
+const addIdIfRequired = user => {
+  console.log("addIdIfRequired")
+  if (!user.mangopay_provider_id || user.mangopay_provider_status == 'NATURAL') {
+    console.log("Pas besoin d'envoyer l'ID")
+    return false;
+  }
+  const objStatus = {
+    Type: 'IDENTITY_PROOF',
+  }
+  const id = user.mangopay_provider_id;
 
-module.exports={mangoApi};
+  mangoApi.Users.createKycDocument(id, objStatus)
+    .then(result => {
+      const documentId = result.Id;
+      console.log(`Create identiy proof ${documentId} for provider ${id}`)
+      user.identity_proof_id=documentId;
+      user.save()
+        .then ( u => console.log(`User saved id proof ${user.identity_proof_id}`) )
+        .catch ( err => console.error(err) )
+
+      const id_recto = path.resolve(user.id_card.recto);
+
+      // FIX vérifier sous quelle forme envoyer le fichier
+      const base64Recto = fs.readFileSync(id_recto, 'base64');
+      const KycPageRecto = new mangoApi.models.KycPage({"File": base64Recto});
+
+      mangoApi.Users.createKycPage(id, documentId, KycPageRecto)
+        .then(resultRecto => {
+          const id_verso = user.id_card.verso ? '../../../' + user.id_card.verso : null;
+
+          if (id_verso !== null) {
+            const base64Verso = fs.readFileSync(path.resolve(id_verso), 'base64');
+            const KycPageVerso = new mangoApi.models.KycPage({"File": base64Verso});
+
+            mangoApi.Users.createKycPageFromFile(id, documentId, KycPageVerso)
+              .then(resultVerso => console.log(`Created KyCPage verso ${JSON.stringify(resultVerso)}`))
+              .catch(err => console.error(err))
+          }
+        })
+        .catch(err => console.error(res))
+
+  })
+  .catch (err => console.error(err))
+}
+
+const requireKycValidation = (user, document) => {
+  const updateObj = {
+      Id: documentId,
+      Status: "VALIDATION_ASKED"
+  };
+
+  mangoApi.Users.updateKycDocument(user.mangopay_provider_id, updateObj)
+    .then(updKyc => console.log(`Required validation for document ${JSON.stringify(updKyc)}`))
+    .catch(err => console.error(`Error ${err}`))
+}
+
+module.exports = {
+  mangoApi,
+  createMangoClient,
+  createMangoProvider,
+  addIdIfRequired,
+  requireKycValidation
+};

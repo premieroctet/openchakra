@@ -314,7 +314,6 @@ class trustAndVerification extends React.Component {
         axios.post("/myAlfred/api/users/profile/idCard",formData,config)
             .then((response) => {
                 toast.info('Carte d\'identité ajoutée');
-                axios.post("/myAlfred/api/payment/createKycDocument")
                 this.componentDidMount();
             }).catch();
     };

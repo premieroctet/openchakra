@@ -6,6 +6,7 @@ const multer = require('multer');
 const emptyPromise = require('../../../utils/promise.js');
 const {data2ServiceUser} = require('../../../utils/mapping');
 const {sendShopDeleted,sendShopOnline} = require ('../../../utils/mailing');
+const {createMangoProvider} = require('../../../utils/mangopay');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -97,8 +98,10 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
                 .then(shop => {
                     User.findById(shop.alfred)
                       .then( alfred => {
+                        createMangoProvider(alfred, shop)
                         sendShopOnline(alfred, req);
-                      }).catch (err => console.err(err));
+                      })
+                      .catch (err => console.error(err));
                     var su = data2ServiceUser(req.body, new ServiceUser());
                     su.user = req.user.id;
 
