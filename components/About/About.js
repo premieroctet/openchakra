@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import Link from 'next/link';
 import axios from 'axios';
+import Badge from '@material-ui/core/Badge';
 
 moment.locale('fr');
 
@@ -64,8 +65,8 @@ class About extends React.Component{
 
   render(){
     const {languages, user, creationShop} = this.state;
-    const {classes, alfred, profil, needTitle} = this.props;
-    const preventDefault = event => event.preventDefault();
+    const {classes, alfred, needTitle} = this.props;
+   console.log(user, 'user')
 
     const StyledRating = withStyles({
       iconFilled: {
@@ -85,8 +86,10 @@ class About extends React.Component{
             {
               needTitle !== false ?
                 <ListItem>
-                  <Box component="fieldset" mb={user.score} borderColor="transparent" className={classes.raiting}>
-                    <StyledRating name="read-only" value={user.score} readOnly/>
+                  <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
+                    <Badge badgeContent={user.score} color={'primary'} classes={{badge: classes.badge}}>
+                      <StyledRating name="read-only" value={user.score} readOnly precision={0.5}/>
+                    </Badge>
                   </Box>
                 </ListItem> : null
             }
