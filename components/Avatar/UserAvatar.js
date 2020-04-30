@@ -13,7 +13,9 @@ class UserAvatar extends React.Component{
     super(props);
     this.state={
       anchorEl: null,
-      currentUser: ''
+      currentUser: '',
+      kyc: null,
+      owner: false
     }
   }
 
@@ -26,7 +28,6 @@ class UserAvatar extends React.Component{
       const alfred_id = decode.id;
       this.setState({currentUser: alfred_id})
     }
-
   }
 
   handlePopoverOpen = (event) => {
@@ -54,8 +55,8 @@ class UserAvatar extends React.Component{
     const {user, className, classes} = this.props;
     const {anchorEl, currentUser} = this.state;
     const open = Boolean(anchorEl);
-    const kyc = this.props.user.kyc_errors;
-    const owner = currentUser === this.props.user._id;
+    const owner = currentUser === user._id;
+    const kyc = user.kyc_errors;
 
       return(
         <Grid>

@@ -231,7 +231,7 @@ class NewMessages extends React.Component {
                                 </Typography>
                               </Grid>
                               <Grid>
-                                <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
+                                <Typography style={{ color: "black",fontSize: "0.8rem", fontWeight:"bold" }}>
                                   {typeof _.last(chatroom.messages) !== 'undefined' ? _.last(chatroom.messages).content : null}
                                 </Typography>
                               </Grid>
@@ -261,7 +261,7 @@ class NewMessages extends React.Component {
                                 {chatroom.booking.status} -{" "}
                                 {chatroom.recipient.firstname}
                               </Typography>
-                              <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
+                              <Typography style={{ color: "black",fontSize: "0.8rem", fontWeight: 'bold' }}>
                                 {typeof _.last(chatroom.messages) !== 'undefined' ? _.last(chatroom.messages).content : null}
                               </Typography>
                               <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
@@ -310,7 +310,7 @@ class NewMessages extends React.Component {
                                   </Typography>
                                 </Grid>
                                 <Grid>
-                                  <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
+                                  <Typography style={{ color: "black",fontSize: "0.8rem", fontWeight: 'bold' }}>
                                     {_.last(chatroom.messages).content}
                                   </Typography>
                                 </Grid>
@@ -341,7 +341,7 @@ class NewMessages extends React.Component {
                                   {chatroom.booking.status} -{" "}
                                   {chatroom.recipient.firstname}
                                 </Typography>
-                                <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
+                                <Typography style={{ color: "black",fontSize: "0.8rem", fontWeight: 'bold' }}>
                                   {_.last(chatroom.messages).content}
                                 </Typography>
                                 <Typography style={{ color: "#9B9B9B",fontSize: "0.8rem" }}>
