@@ -56,6 +56,12 @@ const styles = theme => ({
         [theme.breakpoints.down('xs')]:{
            marginTop: '2%'
         }
+    },
+    mainContainer:{
+        [theme.breakpoints.down('xs')]:{
+            display: 'flex',
+            justifyContent: 'center'
+        }
     }
 });
 
@@ -70,7 +76,7 @@ class checkEmail extends React.Component {
         return (
             <Layout>
                 <Grid container className={classes.signupContainer}>
-                    <Grid item xs={10}>
+                    <Grid item className={classes.mainContainer}>
                     <Card className={classes.card}>
                         <div className={classes.banner}>
                             <h2 className={classes.title}>Inscription terminée</h2>

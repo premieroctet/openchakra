@@ -76,14 +76,11 @@ class About extends React.Component{
     return (
       <Grid container className={classes.mainContainer}>
         <Grid item style={{width: '100%'}}>
-
-            <Grid className={classes.titleContainer}>
-              <Typography variant="h3" className={classes.titleAbout}>
-                A propos de {user.firstname}
-              </Typography>
-            </Grid>
-
-
+          <Grid className={classes.titleContainer}>
+            <Typography variant="h3" className={classes.titleAbout}>
+              A propos de {user.firstname}
+            </Typography>
+          </Grid>
           <List dense={this.state.dense} className={classes.listStyle}>
             {
               needTitle !== false ?
@@ -99,7 +96,18 @@ class About extends React.Component{
                   <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/commentaires.svg'}/>
                 </Grid>
               </ListItemAvatar>
-              <LinkMaterial href="#comments" color="primary " className={classes.link}>{user.number_of_reviews} commentaires</LinkMaterial>
+              <Link
+                href={{
+                  pathname: "/profile/reviews",
+                }}
+              >
+                <a
+                  className={classes.link}
+                  target="_blank"
+                >
+                  {user.number_of_reviews} commentaires
+                </a>
+              </Link>
             </ListItem>
             {user.id_confirmed ?
               <ListItem>
@@ -159,25 +167,23 @@ class About extends React.Component{
                   primary={languages.length >= 1 ? "Langue : " + languages.join(' - ') : "Langue : non renseigné"}
                 />
             </ListItem>
-            { profil ?
-              <ListItem>
-                <Link
-                  href={{
-                    pathname: "/viewProfile",
-                    query: { id: alfred }
+            <ListItem>
+              <Link
+                href={{
+                  pathname: "/viewProfile",
+                  query: { id: alfred }
+                }}
+              >
+                <Typography
+                  style={{
+                    color: "rgb(47, 188, 211)",
+                    cursor: "pointer"
                   }}
                 >
-                  <Typography
-                    style={{
-                      color: "rgb(47, 188, 211)",
-                      cursor: "pointer"
-                    }}
-                  >
-                    Voir le profil
-                  </Typography>
-                </Link>
-              </ListItem> : null
-            }
+                  Voir le profil
+                </Typography>
+              </Link>
+            </ListItem>
           </List>
         </Grid>
       </Grid>
