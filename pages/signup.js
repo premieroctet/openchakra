@@ -40,7 +40,7 @@ const styles = theme => ({
     height: '180vh',
     flexDirection: 'column',
     position: 'absolute',
-    top: '90%',
+    top: '82%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
     zIndex: '2',
@@ -48,7 +48,7 @@ const styles = theme => ({
   card: {
     //padding: '1.5rem 3rem',
     maxWidth: 600,
-    marginTop: '100px',
+    marginTop: 170,
     boxShadow: '0px 2px 66px -37px rgba(10,10,10,0.65)',
   },
   datenaissance: {
