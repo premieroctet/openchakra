@@ -18,10 +18,15 @@ class UserAvatar extends React.Component{
   }
 
   componentDidMount() {
-    const token2 = localStorage.getItem('token').split(' ')[1];
-    const decode = jwt.decode(token2);
-    const alfred_id = decode.id;
-    this.setState({currentUser: alfred_id})
+    const token = localStorage.getItem('token');
+    if (token !== null) {
+      this.setState({ logged: true });
+      const token2 = localStorage.getItem('token').split(' ')[1];
+      const decode = jwt.decode(token2);
+      const alfred_id = decode.id;
+      this.setState({currentUser: alfred_id})
+    }
+
   }
 
   handlePopoverOpen = (event) => {
