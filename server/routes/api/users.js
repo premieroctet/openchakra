@@ -176,7 +176,7 @@ router.post('/checkSMSVerification',passport.authenticate('jwt',{session:false})
 // @access private
 router.post('/sendSMSVerification',passport.authenticate('jwt',{session:false}),(req,res) => {
     const code= Math.floor(Math.random() * Math.floor(10000)).toString().padStart(4, "0");
-    console.log(`Création code sms ${code} pour ${req.user.id}, debug:${SMS_VERIF_DEBUG}`);
+    console.log(`Création code sms ${code} pour ${req.user.id}`);
     User.findByIdAndUpdate(req.user.id, {sms_code: code}, {new:true})
         .then(user => {
           if (req.body.phone) {
@@ -184,6 +184,7 @@ router.post('/sendSMSVerification',passport.authenticate('jwt',{session:false}),
           }
           if (!sendVerificationSMS(user)) {
             res.status(400).json({error:"Impossible d'envoyer le SMS"});
+	    return;
           }
           res.json({sms_code:code})
         })
