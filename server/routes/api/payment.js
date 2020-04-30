@@ -11,6 +11,8 @@ const moment = require('moment');
 const request = require('request');
 const {mangoApi}=require('../../../utils/mangopay');
 const {getHost}=require('../../../utils/mailing')
+var parse = require('url-parse');
+
 moment.locale('fr');
 
 const {computeUrl} = require('../../../config/config');
@@ -19,7 +21,8 @@ router.get('/test',(req, res) => res.json({msg: 'Payment Works!'}) );
 
 
 router.get('/mangopay_hook', (req,res)=>{
-  console.log(`Got params:${JSON.stringify(req.params)}`);
+  var query=parse(window.location.href, true).query;
+  console.log(`Got params:${JSON.stringify(query)}`);
 });
 
 // POST /myAlfred/api/payment/createCard
