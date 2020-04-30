@@ -268,10 +268,12 @@ const UserSchema = new Schema({
     // Mangopay as client
     id_mangopay: {
       type: String,
+      default: null
     },
     // Mangopay as provider
     mangopay_provider_id: {
       type: String,
+      default: null
     },
     // Provider status : NATURAL or LEGAL
     mangopay_provider_status: {

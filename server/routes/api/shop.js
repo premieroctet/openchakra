@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const mongoose = require('mongoose');
 const multer = require('multer');
+const CronJob = require('cron').CronJob;
 const emptyPromise = require('../../../utils/promise.js');
 const {data2ServiceUser} = require('../../../utils/mapping');
 const {sendShopDeleted,sendShopOnline} = require ('../../../utils/mailing');
@@ -439,5 +440,23 @@ router.put('/editStatus', passport.authenticate('jwt', {
         })
 });
 
+
+// Create mango provider account for all alfred with shops
+new CronJob('0/10 * * * * *', function() {
+  console.log("Alfred who need mango account");
+  User.find({is_alfred: true, mangopay_provider_id: null})
+    .then ( alfreds => {
+      alfreds.forEach( alfred => {
+        Shop.findOne({alfred:alfred})
+          .then( shop => {
+            console.log(`Found alfred ${alfred.name} and shop ${shop._id}`)
+            createMangoProvider(alfred, shop)
+          })
+          .catch( err => console.error(err))
+      });
+      console.log(`Found ${alfreds.length}`)
+
+    })
+}, null, true, 'Europe/Paris');
 
 module.exports = router;
