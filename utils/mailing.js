@@ -107,7 +107,7 @@ const sendVerificationSMS = user => {
       sms_code: user.sms_code,
     }
   )
-  return result;
+  return true;
 }
 
 const sendShopDeleted = (user, req) => {
