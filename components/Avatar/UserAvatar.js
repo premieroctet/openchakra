@@ -15,7 +15,8 @@ class UserAvatar extends React.Component{
       anchorEl: null,
       currentUser: '',
       kyc: null,
-      owner: false
+      owner: false,
+      userId: ''
     }
   }
 
@@ -29,6 +30,12 @@ class UserAvatar extends React.Component{
       this.setState({currentUser: alfred_id})
     }
   }
+
+  ifOwner(){
+    if(this.state.currentUser === this.state.userId){
+      this.setState({owner : true})
+    }
+  };
 
   handlePopoverOpen = (event) => {
     this.setState({anchorEl: event.currentTarget})
@@ -55,9 +62,13 @@ class UserAvatar extends React.Component{
     const {user, className, classes} = this.props;
     const {anchorEl, currentUser} = this.state;
     const open = Boolean(anchorEl);
-    const owner = currentUser === user._id;
-    const kyc = user.kyc_errors;
 
+    if(user){
+      var owner = currentUser === user._id;
+      var kyc = user.kyc_errors;
+    }
+
+    if(user){
       return(
         <Grid>
           {
@@ -105,9 +116,9 @@ class UserAvatar extends React.Component{
                   <Typography>Veuillez compléter votre profil :</Typography>
                   {
 
-                      kyc.map(res => (
-                        <p>- {res}</p>
-                      ))
+                    kyc.map(res => (
+                      <p>- {res}</p>
+                    ))
                   }
                 </Popover>
               </Grid> :
@@ -123,6 +134,13 @@ class UserAvatar extends React.Component{
 
         </Grid>
       )
+
+    }else{
+      return(
+       <Avatar alt="photo de profil" src='/static/basicavatar.png' className={className} />
+      )
+    }
+
   }
 }
 
