@@ -265,6 +265,7 @@ const UserSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'chatRooms'
     },
+    // Mangopay as buyer
     id_mangopay: {
         type: String
     },

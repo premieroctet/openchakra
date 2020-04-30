@@ -121,6 +121,7 @@ router.post('/register',(req,res) =>{
                         newUser.password = hash;
                         newUser.save()
                             .then(user => {
+                              createMangoClient(user)
                               sendVerificationMail(user, req)
                               res.json(user);
                             })

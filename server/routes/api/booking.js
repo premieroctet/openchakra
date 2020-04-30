@@ -375,7 +375,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', { session: false }
         .catch(err => console.log(err))
 });
 
-const DEBUG=true;
+const DEBUG=false;
 
 const payAlfred = booking => {
   console.log(`Starting paying of booking #${booking._id}`)

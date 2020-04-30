@@ -213,14 +213,7 @@ class signup extends React.Component {
                     const {token} = response.data;
                     localStorage.setItem('token',token);
                     axios.defaults.headers.common['Authorization'] = token;
-                    axios.post('/myAlfred/api/payment/createUser')
-                        .then(()=> {
-                          Router.push({pathname:'/addPicture'})
-                        })
-                        .catch(() => {
-                          toast.error('Une erreur est survenue')
-                        })
-
+                    Router.push({pathname:'/addPicture'})
                   })
                   .catch(error => {
                     console.log(error);

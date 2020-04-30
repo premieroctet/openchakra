@@ -31,40 +31,6 @@ router.get('/mangopay_hook', (req,res)=>{
   console.log("Got params:"+req.params);
 });
 
-// POST /myAlfred/api/payment/createUser
-// Create a user and a wallet
-// @access private
-router.post('/createUser',passport.authenticate('jwt',{session:false}),(req,res)=>{
-    User.findById(req.user.id)
-        .then(user => {
-
-            var userData={
-                PersonType: 'NATURAL',
-                FirstName: user.firstname,
-                LastName: user.namename,
-                Birthday: moment(user.birthday).unix(),
-                Nationality: 'FR',
-                CountryOfResidence: 'FR',
-                Email: user.email,
-            }
-
-            mangoApi.Users.create(userData)
-                .then(newUser=> {
-                    user.id_mangopay = newUser.Id;
-                    user.save().then().catch();
-                    mangoApi.Wallets.create({
-                        Owners: [newUser.Id],
-                        Description: 'new wallet',
-                        Currency: 'EUR'
-                    })
-                        .then(response => {
-                            res.json(response)
-                        })
-                })
-        })
-        .catch(err => console.log(err))
-});
-
 // POST /myAlfred/api/payment/createCard
 // Create credit card
 // @access private

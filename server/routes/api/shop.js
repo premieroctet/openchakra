@@ -420,16 +420,14 @@ router.put('/editStatus', passport.authenticate('jwt', {
         }, {
             is_particular: req.body.is_particular,
             is_professional: req.body.is_professional,
-            company : req.bosy.is_particular ? null: {
+            company : req.body.is_particular ? null: {
               name: req.body.name,
               creation_date: req.body.creation_date,
               siret: req.body.siret,
               naf_ape: req.body.naf_ape,
               status: req.body.status,
             }
-        }, {
-            new: true
-        })
+        }, { new: true })
         .then(shop => {
             res.json(shop)
         })
