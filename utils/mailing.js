@@ -97,6 +97,7 @@ const sendVerificationMail = (user, req) => {
       user_firstname: user.firstname,
     }
   )
+  return true;
 }
 
 const sendVerificationSMS = user => {

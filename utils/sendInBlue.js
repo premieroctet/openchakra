@@ -1,3 +1,4 @@
+
 const SibApiV3Sdk = require('sib-api-v3-sdk');
 
 const SIB_API_KEY_V2='SvfYtHq36XGknjwC';
@@ -59,7 +60,6 @@ class SIB_V3 {
           console.error(err);
           return false;
         });
-      return true;
     }
 }
 
