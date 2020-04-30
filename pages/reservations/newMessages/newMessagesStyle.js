@@ -7,12 +7,16 @@ export default theme => ({
     }
   },
   mobilerow1: {
+    boxShadow: "0px 0px 6px lightgray",
+    borderRadius: "5px",
+    margin: "15px auto",
     [theme.breakpoints.up("md")]: {
       display: "none"
     }
   },
   webrow: {
     alignItems:'center',
+    justifyContent: 'space-around',
     [theme.breakpoints.down("sm")]: {
       display: "none"
     }
@@ -133,5 +137,46 @@ export default theme => ({
     width: '100%',
     marginTop: 20,
     color : 'rgb(80, 80, 80, 0.2)'
+  },
+  navbarShopContainer:{
+    width: '100%',
+    [theme.breakpoints.down('xs')]: {
+      display: 'none'
+    }
+  },
+  containerAllmessages:{
+    border: "0.2px solid lightgrey",
+    lineHeight: "4",
+    paddingLeft: 5,
+    paddingRight: 5,
+    display: "flex",
+    height: 70
+  },
+  h2Style:{
+    color: "#828181",
+    fontWeight: "100",
+    cursor: "pointer",
+    marginLeft: "0%",
+    position: "sticky"
+  },
+  h2StyleBis:{
+    color: "#828181",
+    fontWeight: "100",
+    textAlign: "center",
+    cursor: "pointer"
+  },
+  containerUserAvatar:{
+    marginTop: "15px",
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  buttonSee:{
+    height: "45px",
+    backgroundColor: "#2FBCD3",
+    color: "white",
+    textAlign: "center",
+    cursor: "pointer",
+    lineHeight: "3",
+    marginTop: "5%"
   }
 })

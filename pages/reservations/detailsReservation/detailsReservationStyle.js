@@ -48,6 +48,7 @@ export default theme => ({
   },
   Rightcontent: {
     marginLeft: "4%",
+    marginTop: "2%",
     [theme.breakpoints.down("xs")]: {
       marginRight: "4%",
     }
@@ -91,15 +92,6 @@ export default theme => ({
       marginTop: 30,
     }
   },
-  buttonMessageDetail:{
-    textAlign: "center",
-    [theme.breakpoints.down("xs")]: {
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-      marginTop: 30
-    }
-  },
   fontSizeTitleSectionAbout:{
     fontSize: "1.6rem",
     color: "rgba(84,89,95,0.95)",
@@ -115,7 +107,6 @@ export default theme => ({
   containerTitleSectionAbout:{
     [theme.breakpoints.down("xs")]: {
       display: 'flex',
-      justifyContent: 'center'
     }
   },
   mainContainerAboutResa:{
@@ -195,7 +186,7 @@ export default theme => ({
     display: 'flex',
     alignItems:'center',
     justifyContent: 'center',
-    width:'50%'
+    width:'100%'
 
   },
   marginLeftLabel:{
@@ -204,7 +195,25 @@ export default theme => ({
   equipmentContainer:{
     [theme.breakpoints.down("xs")]: {
       display: 'flex',
-      justifyContent: 'center'
+    }
+  },
+  navbarShopContainer:{
+    width: '100%',
+    [theme.breakpoints.down('xs')]: {
+      display: 'none'
+    }
+  },
+  detailsReservationContainer:{
+    display: 'flex',
+    width: '100%',
+    marginTop: '3%'
+  },
+  containerButtonGroup:{
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      display: 'flex',
+      justifyContent : 'center',
+      marginTop: '5%'
     }
   }
 })

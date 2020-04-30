@@ -110,40 +110,42 @@ class siret extends React.Component {
 
         return (
             <Grid container>
-                <Grid item xs={12} md={6}>
-                            <TextField
-                                id="filled-with-placeholder"
-                                label="Siret/Siren"
-                                placeholder="Siret/Siren"
-                                margin="normal"
-                                variant="outlined"
-                                type="text"
-                                name={'siret'}
-                                value={this.state.siret}
-                                onChange={this.onChange}
-                            />
+                <Grid item style={{display: 'flex'}}>
+                  <Grid>
+                    <TextField
+                      id="filled-with-placeholder"
+                      label="Siret/Siren"
+                      placeholder="Siret/Siren"
+                      margin="normal"
+                      variant="outlined"
+                      type="text"
+                      name={'siret'}
+                      value={this.state.siret}
+                      onChange={this.onChange}
+                    />
+                  </Grid>
+                  <Grid>
                     <Button type="button" variant='contained' color="secondary" style={{marginTop: 25, marginLeft: 15,color: 'white'}} onClick={() => this.onSubmit()}>
-                        Valider
+                      Valider
                     </Button>
+                  </Grid>
                 </Grid>
-
-
                 <Grid container>
-                    <Grid item xs={12} sm={12} md={6}>
-                                <Typography>Siret/Siren : {this.state.siret}</Typography>
-                    </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                            <Typography>Date de création : {this.state.creation_date}</Typography>
-                </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                            <Typography>Dénomination : {this.state.name}</Typography>
-                </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                            <Typography>Code NAF/APE : {this.state.naf_ape}</Typography>
-                </Grid>
-                <Grid item xs={24} sm={24} md={12}>
-                            <Typography>Statut juridique : {this.state.status}</Typography>
-                </Grid>
+                  <Grid item xs={12} sm={12} md={6}>
+                    <Typography>Siret/Siren : {this.state.siret}</Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={6}>
+                    <Typography>Date de création : {this.state.creation_date}</Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={6}>
+                    <Typography>Dénomination : {this.state.name}</Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={6}>
+                    <Typography>Code NAF/APE : {this.state.naf_ape}</Typography>
+                  </Grid>
+                  <Grid item xs={24} sm={24} md={12}>
+                    <Typography>Statut juridique : {this.state.status}</Typography>
+                  </Grid>
                 </Grid>
             </Grid>
         );

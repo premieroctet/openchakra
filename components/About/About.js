@@ -8,14 +8,9 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import CheckCircle from '@material-ui/icons/CheckCircle';
-import CalendarToday from '@material-ui/icons/CalendarToday';
-import Chat from '@material-ui/icons/Chat';
-import StarIcon from '@material-ui/icons/Star';
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
 import Typography from '@material-ui/core/Typography';
-import CancelIcon from '@material-ui/icons/Cancel';
 import moment from 'moment';
 import Link from 'next/link';
 import axios from 'axios';
@@ -33,8 +28,8 @@ class About extends React.Component{
       user: {},
       userId: '',
       isAlfred: false,
-      creationShop: ''
-    }
+      creationShop: '',
+    };
     this.isAlfred = this.isAlfred.bind(this)
   }
 
@@ -69,8 +64,7 @@ class About extends React.Component{
 
   render(){
     const {languages, user, creationShop} = this.state;
-    const {classes, alfred, profil} = this.props;
-    console.log(alfred,'alfred')
+    const {classes, alfred, profil, needTitle} = this.props;
     const preventDefault = event => event.preventDefault();
 
     const StyledRating = withStyles({
@@ -82,17 +76,23 @@ class About extends React.Component{
     return (
       <Grid container className={classes.mainContainer}>
         <Grid item style={{width: '100%'}}>
-          <Grid className={classes.titleContainer}>
-            <Typography variant="h3" className={classes.titleAbout}>
-              A propos de {user.firstname}
-            </Typography>
-          </Grid>
+
+            <Grid className={classes.titleContainer}>
+              <Typography variant="h3" className={classes.titleAbout}>
+                A propos de {user.firstname}
+              </Typography>
+            </Grid>
+
+
           <List dense={this.state.dense} className={classes.listStyle}>
-            <ListItem>
-              <Box component="fieldset" mb={user.score} borderColor="transparent" className={classes.raiting}>
-                <StyledRating name="read-only" value={user.score} readOnly/>
-              </Box>
-            </ListItem>
+            {
+              needTitle !== false ?
+                <ListItem>
+                  <Box component="fieldset" mb={user.score} borderColor="transparent" className={classes.raiting}>
+                    <StyledRating name="read-only" value={user.score} readOnly/>
+                  </Box>
+                </ListItem> : null
+            }
             <ListItem>
               <ListItemAvatar>
                 <Grid>

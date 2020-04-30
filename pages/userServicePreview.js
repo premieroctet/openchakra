@@ -1,6 +1,4 @@
-import _ from 'lodash';
 import './userServicePreview/userServicePreviewStyle.css'
-const { inspect } = require('util');
 const isEmpty=require('../server/validation/is-empty');
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -25,7 +23,6 @@ import Schedule from '../components/Schedule/Schedule';
 import Checkbox from '@material-ui/core/Checkbox';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
-import CardCommentary from '../components/CardCommentary/CardCommentary';
 import TextField from '@material-ui/core/TextField';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -45,8 +42,6 @@ const {isMomentAvailable, getDeadLine} = require('../utils/dateutils');
 const {computeDistanceKm}=require('../utils/functions');
 import DatePicker, {registerLocale} from "react-datepicker";
 import Commentary from '../components/Commentary/Commentary';
-import Notes from '../components/Notes/Notes';
-import {computeAverageNotes} from '../utils/functions';
 import fr from 'date-fns/locale/fr';
 import Switch from '@material-ui/core/Switch';
 import BookingDetail from '../components/BookingDetail/BookingDetail';

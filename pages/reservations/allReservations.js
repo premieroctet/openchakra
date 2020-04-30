@@ -71,7 +71,7 @@ class AllReservations extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         {this.state.isAlfred ? (
-                            <Grid style={{width: '100%'}}>
+                            <Grid className={classes.navbarShopContainer}>
                                 <NavBarShop userId={this.state.user}/>
                             </Grid>
                         ) : null}
@@ -455,12 +455,7 @@ class AllReservations extends React.Component {
                                                         <Grid
                                                             container
                                                             className={classes.mobilerow1}
-                                                            style={{
-                                                                boxShadow: "0px 0px 6px lightgray",
-                                                                borderRadius: "5px",
-                                                                width: "90%",
-                                                                margin: "15px auto"
-                                                            }}
+
                                                         >
                                                             <Grid
                                                                 item
@@ -640,12 +635,6 @@ class AllReservations extends React.Component {
                                                 <Grid
                                                     container
                                                     className={classes.mobilerow1}
-                                                    style={{
-                                                        boxShadow: "0px 0px 6px lightgray",
-                                                        borderRadius: "5px",
-                                                        width: "90%",
-                                                        margin: "15px auto"
-                                                    }}
                                                 >
                                                     <Grid
                                                         item

@@ -95,7 +95,7 @@ class ComingReservations extends React.Component {
           <Layout>
             <Grid container className={classes.bigContainer}>
               {this.state.isAlfred ? (
-                <Grid style={{width: '100%'}}>
+                <Grid className={classes.navbarShopContainer}>
                   <NavBarShop userId={this.state.user}/>
                 </Grid>
               ) : null}
@@ -483,31 +483,13 @@ class ComingReservations extends React.Component {
                                       <Grid
                                           container
                                           className={classes.mobilerow1}
-                                          style={{
-                                            boxShadow: "0px 0px 6px lightgray",
-                                            borderRadius: "5px",
-                                            width: "90%",
-                                            margin: "15px auto"
-                                          }}
                                       >
                                         <Grid
-                                            item
-                                            xs={12}
-                                            style={{
-                                              textAlign: "center",
-                                              marginTop: "15px"
-                                            }}
+                                          item
+                                          xs={12}
+                                          style={{ display: "flex", justifyContent: 'center', marginTop: "15px" }}
                                         >
-                                          <img
-                                              src={`../../${booking.alfred.picture}`}
-                                              alt={"picture"}
-                                              style={{
-                                                width: "80px",
-                                                height: "80px",
-                                                borderRadius: "50%",
-                                                objectFit: "cover"
-                                              }}
-                                          ></img>
+                                          <UserAvatar user={booking.alfred} />
                                         </Grid>
                                         <Grid
                                             item
@@ -609,173 +591,167 @@ class ComingReservations extends React.Component {
 
                       </React.Fragment>
 
-                  ) : this.state.alfredReservations.length ? (
-                      this.state.alfredReservations.map((booking, i) => {
-                        if (
-                            booking.status === "Confirmée" ||
-                            booking.status === "En attente de confirmation" ||
-                            booking.status === "Demande d'infos" ||
-                            booking.status === "Pré-approuvée"
-                        ) {
-                          return (
-                              <React.Fragment>
-                                {/* Web */}
-                                <Grid container className={classes.webrow}>
-                                  <Grid item xs={2} md={1} className={classes.avatarContainer}>
-                                    <UserAvatar user={booking.user} />
-                                  </Grid>
-                                  <Grid item xs={5} md={6} className={classes.descriptionContainer}>
-                                    <Typography
-                                        style={{
-                                          marginTop: "2%",
-                                          fontSize: "0.8rem",
-                                          color:
-                                              booking.status === "Confirmée"
-                                                  ? "#419F41"
-                                                  : booking.status ===
-                                                  "En attente de confirmation" ||
-                                                  booking.status === "Demande d'infos"
-                                                  ? "#F87280"
-                                                  : booking.status === "Pré-approuvée"
-                                                      ? "#F89B72"
-                                                      : "#5D5D5D"
-                                        }}
-                                    >
-                                      {booking.status === "Pré-approuvée"
-                                          ? "Invitation à réserver"
-                                          : booking.status}{" "}
-                                      - {booking.user.firstname}
-                                    </Typography>
-                                    <Grid>
-                                      <Typography style={{ color: "#9B9B9B", fontSize: "0.8rem" }}>
-                                        {booking.date_prestation} -{" "}
-                                        {moment(booking.time_prestation).format("HH:mm")}
-                                      </Typography>
-                                    </Grid>
-                                   <Grid>
-                                     <Typography style={{ color: "#9B9B9B", fontSize: "0.8rem" }}>
-                                       {booking.service}
-                                     </Typography>
-                                   </Grid>
-                                  </Grid>
-                                  <Grid item xs={2} className={classes.priceContainer}>
-                                    <Grid>
-                                      <Typography style={{color: "#4FBDD7", fontWeight: "600"}}>
-                                                          {(booking.amount - booking.fees).toFixed(2)}€
-                                      </Typography>
-                                    </Grid>
-                                  </Grid>
-                                  <Grid item>
-                                    <Grid>
-                                      <Link href={{pathname: "/reservations/detailsReservation", query: { id: booking._id}}}>
-                                        <Button color={"primary"} variant={"outlined"}>Détail</Button>
-                                      </Link>
-                                    </Grid>
-                                  </Grid>
-                                  <hr className={classes.hrSeparator}/>
-                                </Grid>
+        ) : this.state.alfredReservations.length ? (
+          this.state.alfredReservations.map((booking, i) => {
+            if (
+                booking.status === "Confirmée" ||
+                booking.status === "En attente de confirmation" ||
+                booking.status === "Demande d'infos" ||
+                booking.status === "Pré-approuvée"
+            ) {
+              return (
+                <React.Fragment>
+                  {/* Web */}
+                  <Grid container className={classes.webrow}>
+                    <Grid item xs={2} md={1} className={classes.avatarContainer}>
+                      <UserAvatar user={booking.user} />
+                    </Grid>
+                    <Grid item xs={5} md={6} className={classes.descriptionContainer}>
+                      <Typography
+                          style={{
+                            marginTop: "2%",
+                            fontSize: "0.8rem",
+                            color:
+                                booking.status === "Confirmée"
+                                    ? "#419F41"
+                                    : booking.status ===
+                                    "En attente de confirmation" ||
+                                    booking.status === "Demande d'infos"
+                                    ? "#F87280"
+                                    : booking.status === "Pré-approuvée"
+                                        ? "#F89B72"
+                                        : "#5D5D5D"
+                          }}
+                      >
+                        {booking.status === "Pré-approuvée"
+                            ? "Invitation à réserver"
+                            : booking.status}{" "}
+                        - {booking.user.firstname}
+                      </Typography>
+                      <Grid>
+                        <Typography style={{ color: "#9B9B9B", fontSize: "0.8rem" }}>
+                          {booking.date_prestation} -{" "}
+                          {moment(booking.time_prestation).format("HH:mm")}
+                        </Typography>
+                      </Grid>
+                     <Grid>
+                       <Typography style={{ color: "#9B9B9B", fontSize: "0.8rem" }}>
+                         {booking.service}
+                       </Typography>
+                     </Grid>
+                    </Grid>
+                    <Grid item xs={2} className={classes.priceContainer}>
+                      <Grid>
+                        <Typography style={{color: "#4FBDD7", fontWeight: "600"}}>
+                                            {(booking.amount - booking.fees).toFixed(2)}€
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <Grid>
+                        <Link href={{pathname: "/reservations/detailsReservation", query: { id: booking._id}}}>
+                          <Button color={"primary"} variant={"outlined"}>Détail</Button>
+                        </Link>
+                      </Grid>
+                    </Grid>
+                    <hr className={classes.hrSeparator}/>
+                  </Grid>
 
-                                {/* Mobile */}
-                                <Grid
-                                    container
-                                    className={classes.mobilerow1}
-                                    style={{
-                                      boxShadow: "0px 0px 6px lightgray",
-                                      borderRadius: "5px",
-                                      width: "90%",
-                                      margin: "15px auto"
-                                    }}
-                                >
-                                  <Grid
-                                      item
-                                      xs={12}
-                                      style={{ textAlign: "center", marginTop: "15px" }}
-                                  >
-                                                        <UserAvatar user={booking.user} />
-                                  </Grid>
-                                  <Grid
-                                      item
-                                      xs={12}
-                                      style={{ textAlign: "center", fontSize: "0.8rem" }}
-                                  >
-                                    <Typography
-                                        style={{
-                                          fontSize: "0.8rem",
-                                          marginTop: "2%",
-                                          color:
-                                              booking.status === "Confirmée"
-                                                  ? "#419F41"
-                                                  : booking.status ===
-                                                  "En attente de confirmation" ||
-                                                  booking.status === "Demande d'infos"
-                                                  ? "#F87280"
-                                                  : booking.status === "Pré-approuvée"
-                                                      ? "#F89B72"
-                                                      : "#5D5D5D"
-                                        }}
-                                    >
-                                      {booking.status === "Pré-approuvée"
-                                          ? "Invitation à réserver"
-                                          : booking.status}{" "}
-                                      - {booking.user.firstname}
-                                    </Typography>
-                                    <Typography style={{ color: "#9B9B9B", fontSize: "0.8rem" }}>
-                                      {booking.date_prestation} -{" "}
-                                      {moment(booking.time_prestation).format("HH:mm")}
-                                    </Typography>
-                                    <Typography style={{ color: "#9B9B9B", fontSize: "0.8rem" }}>
-                                      {booking.service}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={12}>
-                                    <Typography
-                                        style={{
-                                          color: "#4FBDD7",
-                                          fontWeight: "600",
-                                          paddingTop: "5%",
-                                          textAlign: "center"
-                                        }}
-                                    >
-                                                            {(booking.amount - booking.fees).toFixed(2)}€
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={12}>
-                                    <Link href={{ pathname: "/reservations/detailsReservation", query: { id: booking._id} }} >
-                                    <Typography
-                                        style={{
-                                          height: "45px",
-                                          backgroundColor: "#2FBCD3",
-                                          color: "white",
-                                          textAlign: "center",
-                                          cursor: "pointer",
-                                          lineHeight: "3",
-                                          marginTop: "5%"
-                                        }}
-                                    >
+                  {/* Mobile */}
+                  <Grid
+                    container
+                    className={classes.mobilerow1}
+                  >
+                    <Grid
+                      item
+                      xs={12}
+                      style={{ display: "flex", justifyContent: 'center', marginTop: "15px" }}
+                    >
+                      <UserAvatar user={booking.user} />
+                    </Grid>
+                    <Grid
+                        item
+                        xs={12}
+                        style={{ textAlign: "center", fontSize: "0.8rem" }}
+                    >
+                      <Typography
+                          style={{
+                            fontSize: "0.8rem",
+                            marginTop: "2%",
+                            color:
+                                booking.status === "Confirmée"
+                                    ? "#419F41"
+                                    : booking.status ===
+                                    "En attente de confirmation" ||
+                                    booking.status === "Demande d'infos"
+                                    ? "#F87280"
+                                    : booking.status === "Pré-approuvée"
+                                        ? "#F89B72"
+                                        : "#5D5D5D"
+                          }}
+                      >
+                        {booking.status === "Pré-approuvée"
+                            ? "Invitation à réserver"
+                            : booking.status}{" "}
+                        - {booking.user.firstname}
+                      </Typography>
+                      <Typography style={{ color: "#9B9B9B", fontSize: "0.8rem" }}>
+                        {booking.date_prestation} -{" "}
+                        {moment(booking.time_prestation).format("HH:mm")}
+                      </Typography>
+                      <Typography style={{ color: "#9B9B9B", fontSize: "0.8rem" }}>
+                        {booking.service}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography
+                          style={{
+                            color: "#4FBDD7",
+                            fontWeight: "600",
+                            paddingTop: "5%",
+                            textAlign: "center"
+                          }}
+                      >
+                                              {(booking.amount - booking.fees).toFixed(2)}€
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Link href={{ pathname: "/reservations/detailsReservation", query: { id: booking._id} }} >
+                      <Typography
+                          style={{
+                            height: "45px",
+                            backgroundColor: "#2FBCD3",
+                            color: "white",
+                            textAlign: "center",
+                            cursor: "pointer",
+                            lineHeight: "3",
+                            marginTop: "5%"
+                          }}
+                      >
 
-                                        <a
-                                            style={{
-                                              textDecoration: "none",
-                                              color: "white"
-                                            }}
-                                        >
-                                          Détail
-                                        </a>
-                                    </Typography>
-                                      </Link>
-                                  </Grid>
-                                </Grid>
-                              </React.Fragment>
-                          );
-                        } else if (this.state.alfredReservations.length === i + 1) {
-                          return (
-                              <p>Vous n'avez aucune réservation en tant qu'Alfred</p>
-                          );
-                        } else {
-                          return null;
-                        }
-                      })
-                  ) : (
+                          <a
+                              style={{
+                                textDecoration: "none",
+                                color: "white"
+                              }}
+                          >
+                            Détail
+                          </a>
+                      </Typography>
+                        </Link>
+                    </Grid>
+                  </Grid>
+                  </React.Fragment>
+              );
+            } else if (this.state.alfredReservations.length === i + 1) {
+              return (
+                  <p>Vous n'avez aucune réservation en tant qu'Alfred</p>
+              );
+            } else {
+              return null;
+            }
+          })
+        ) : (
                       <p>Vous n'avez aucune réservation en tant qu'Alfred</p>
                   )}
                 </Grid>
