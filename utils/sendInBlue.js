@@ -50,7 +50,6 @@ class SIB_V3 {
       sendTransacSms.content    = data;
       sendTransacSms.type       = 'transactional';
 
-      /**
       this.smsInstance.sendTransacSms(sendTransacSms)
         .then(data => {
           console.log('SMS called successfully. Returned data: ' + JSON.stringify(data, null, 2));
@@ -60,7 +59,6 @@ class SIB_V3 {
           console.error(err);
           return false;
         });
-      */
       return true;
     }
 }
