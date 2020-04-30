@@ -40,67 +40,10 @@ import Section18 from '../components/home/section18';
 import Section19 from '../components/home/section19';
 import Section21 from '../components/home/section21';
 import Section22 from '../components/home/section22';
+import styles from './search/searchStyle'
 const {isIntervalAvailable} = require('../utils/dateutils');
 
 moment.locale('fr');
-const styles = theme => ({
-    bigContainer: {
-        marginTop: 80,
-        minHeight: 530
-    },
-    card: {
-        margin: 20,
-    },
-    media: {
-      height: "250px!important",
-      position: 'relative',
-      objectFit: 'cover',
-    },
-    respfilter:{
-      position: 'sticky',
-      top: 60,
-      zIndex: 10,
-      background: 'white',
-      height: 60,
-      [theme.breakpoints.down('sm')]: {
-          top: 200,
-      },
-      [theme.breakpoints.down('xs')]: {
-        height: 150,
-        top: 0
-      }
-    },
-    mobilevoir: {
-        [theme.breakpoints.up("md")]: {
-            display: "none!important"
-        }
-    },
-    webvoir: {
-        [theme.breakpoints.down("sm")]: {
-            display: "none!important"
-        }
-    },
-    DateInput_input__focused:{
-        borderBottom: '1px solid #fb1515!important',
-    },
-    algol: {
-        fontFamily: 'Helvetica Neue, Helvetica,sans-serif',
-        '::placeholder':{
-            color: '#cfcfcf',
-        },
-        '&:hover':{
-            border: '1px solid black!important',
-            transition: 'border 0.5s',
-        },
-        '&:focus':{
-            border: '2px solid #2FBCD3!important',
-            transition: 'border 0.5s',
-        }
-    },
-    separatorBlue:{
-     width: '150px'
-    }
-});
 
 class SearchPage extends React.Component {
 
@@ -380,7 +323,7 @@ class SearchPage extends React.Component {
                       {this.state.statusFilterVisible ?
                         <Grid item xs={5} md={3}  style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', height: '45px', margin: 10}}>
                           <Typography onClick={()=> this.statusFilterToggled()} style={{textAlign: 'center', color:'white', fontSize: '0.8rem', paddingTop: 13, height:43}}>Statut</Typography>
-                            <Grid id="status" item xs={12}  style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', marginTop: 8,padding:10,zIndex: 1}}>
+                            <Grid id="status" className={classes.filterStatus} item xs={12}>
                               <Grid container>
                                 <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}} spacing={3}>
                                   {this.state.individualSelected ? <Grid item xs={3}/> :
@@ -469,7 +412,7 @@ class SearchPage extends React.Component {
                        </Grid>
                   </Grid>
                   { /* END FILTER PANEL */ }
-                  <Grid container>
+                  <Grid container className={classes.containerTitle}>
                     <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Que recherchez-vous {user?user.firstname:''} ?</h3>
                   </Grid>
                     <Grid container className="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'inline-block', minHeight: '250px'}}>
@@ -520,15 +463,15 @@ class SearchPage extends React.Component {
                                 </Grid>
                                 {this.state.visibleCategories.includes(cat.label) ?
                                   <Grid style={{display: 'flex', flexDirection: 'column', width: '100%', marginTop: 30, marginBottom: 30}}>
-                                    <Grid style={{textAlign: 'center'}}>
-                                      <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
-                                    </Grid>
                                     { this.hasMoreToDisplay(serviceUsers, cat) ?
                                       <Grid style={{marginLeft: 15}}>
                                         <Button color={'primary'} onClick={()=>this.increaseCount(cat)}>Voir plus d'Alfred</Button>
                                       </Grid>
-                                     : null
+                                      : null
                                     }
+                                    <Grid style={{textAlign: 'center'}}>
+                                      <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
+                                    </Grid>
                                   </Grid>
                                     : null}
                               </Grid>
