@@ -77,8 +77,8 @@ export default theme => ({
         width:50,
   },
     [theme.breakpoints.down('xs')]: {
-      height:20,
-      width:20,
+      height:40,
+      width:40,
     }
   },
   chipStyle:{
@@ -145,6 +145,9 @@ export default theme => ({
     left: '50%',
     top: '50%',
     transform: 'translate(-50%, -50%)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems : 'center'
   },
   avatarLetter:{
     height: 100,

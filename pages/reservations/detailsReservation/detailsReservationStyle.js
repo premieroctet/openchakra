@@ -107,7 +107,6 @@ export default theme => ({
   containerTitleSectionAbout:{
     [theme.breakpoints.down("xs")]: {
       display: 'flex',
-      justifyContent: 'center'
     }
   },
   mainContainerAboutResa:{
@@ -196,7 +195,6 @@ export default theme => ({
   equipmentContainer:{
     [theme.breakpoints.down("xs")]: {
       display: 'flex',
-      justifyContent: 'center'
     }
   },
   navbarShopContainer:{

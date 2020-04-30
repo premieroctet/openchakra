@@ -3,12 +3,7 @@ import Layout from '../hoc/Layout/Layout';
 import Footer from '../hoc/Layout/Footer/Footer';
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from '@material-ui/core/styles';
-import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import Search from "@material-ui/icons/Search";
 import axios from "axios";
-import Router from "next/dist/client/router";
-import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import Link from 'next/link';
 import Card from "@material-ui/core/Card";
@@ -19,17 +14,14 @@ import Typography from "@material-ui/core/Typography";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import 'react-dates/initialize';
-import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates';
+import { DateRangePicker } from 'react-dates';
 import moment from "moment";
-import StarRatings from 'react-star-ratings';
 import 'react-dates/lib/css/_datepicker.css';
-import Tooltip from '@material-ui/core/Tooltip';
 import CardPreview from '../components/CardPreview/CardPreview';
 import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
 import Profiteandlearn from '../components/home/profite&learn/profite&learn'
 import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
 import NearbyYou from '../components/home/NearbyYou/NearbyYou';
-import Homeheader from '../components/home/Homeheader/Homeheader';
 import FeelingGood from '../components/home/feelingGood/feelingGood';
 import Wellbeing from '../components/home/Wellbeing/Wellbeing';
 import Proposeservice from '../components/home/proposeservice/Proposeservice';
@@ -48,70 +40,10 @@ import Section18 from '../components/home/section18';
 import Section19 from '../components/home/section19';
 import Section21 from '../components/home/section21';
 import Section22 from '../components/home/section22';
+import styles from './search/searchStyle'
 const {isIntervalAvailable} = require('../utils/dateutils');
 
-const geolib = require('geolib');
-const _ = require('lodash');
-
 moment.locale('fr');
-const styles = theme => ({
-    bigContainer: {
-        marginTop: 80,
-        minHeight: 530
-    },
-    card: {
-        margin: 20,
-    },
-    media: {
-      height: "250px!important",
-      position: 'relative',
-      objectFit: 'cover',
-    },
-    respfilter:{
-      position: 'sticky',
-      top: 60,
-      zIndex: 10,
-      background: 'white',
-      height: 60,
-      [theme.breakpoints.down('sm')]: {
-          top: 200,
-      },
-      [theme.breakpoints.down('xs')]: {
-        height: 150,
-        top: 0
-      }
-    },
-    mobilevoir: {
-        [theme.breakpoints.up("md")]: {
-            display: "none!important"
-        }
-    },
-    webvoir: {
-        [theme.breakpoints.down("sm")]: {
-            display: "none!important"
-        }
-    },
-    DateInput_input__focused:{
-        borderBottom: '1px solid #fb1515!important',
-    },
-    algol: {
-        fontFamily: 'Helvetica Neue, Helvetica,sans-serif',
-        '::placeholder':{
-            color: '#cfcfcf',
-        },
-        '&:hover':{
-            border: '1px solid black!important',
-            transition: 'border 0.5s',
-        },
-        '&:focus':{
-            border: '2px solid #2FBCD3!important',
-            transition: 'border 0.5s',
-        }
-    },
-    separatorBlue:{
-     width: '150px'
-    }
-});
 
 class SearchPage extends React.Component {
 
@@ -211,7 +143,7 @@ class SearchPage extends React.Component {
                       var allAddresses={'main': user.billing_address.gps}
                       user.service_address.forEach( ad => allAddresses[ad._id]={lat:ad.lat, lng:ad.lng});
                       st['allAddresses']= allAddresses;
-                      if ('selectedAddress' in this.props && this.props['selectedAddress']!='all') {
+                      if ('selectedAddress' in this.props && this.props['selectedAddress']!=='all') {
                          st['gps']=allAddresses[this.props.selectedAddress];
                       }
                       if (!this.props['selectedAddress'] && !this.props['gps']) {
@@ -238,7 +170,6 @@ class SearchPage extends React.Component {
     };
 
     statusFilterChanged = event => {
-        const {name, checked} = event.target;
         this.setState({[event.target.name]: event.target.checked, statusFilterVisible: false}, () => this.filter() );
     };
 
@@ -269,10 +200,9 @@ class SearchPage extends React.Component {
       const end=this.state.endDate;
 
       if (start && end) {
-        console.log("Before:"+serviceUsersDisplay.length);
         const filtered = [];
         serviceUsersDisplay.forEach( su => {
-          if (isIntervalAvailable(start, end, su.service._id, this.state.availabilities.filter( a => a.user==su.user._id))) {
+          if (isIntervalAvailable(start, end, su.service._id, this.state.availabilities.filter( a => a.user===su.user._id))) {
             filtered.push(su);
           }
         });
@@ -348,9 +278,7 @@ class SearchPage extends React.Component {
 
     restrictServices(serviceUsers, category) {
       const nbToDisplay=this.state.catCount[category._id];
-      const su = serviceUsers.filter( s => s.service.category._id === category._id).slice(0, nbToDisplay);
-      console.log(su, 'su');
-      return su;
+      return serviceUsers.filter( s => s.service.category._id === category._id).slice(0, nbToDisplay);
     }
 
     hasMoreToDisplay(serviceUsers, category) {
@@ -380,9 +308,7 @@ class SearchPage extends React.Component {
     render() {
         const {classes} = this.props;
         const {user, categories, gps} = this.state;
-        var keyword = this.state.keyword;
         const serviceUsers = this.state.serviceUsersDisplay;
-        keyword = keyword ? keyword.trim() : '';
 
         const statusFilterBg=this.isStatusFilterSet() ? '#2FBCD3':'white';
         const dateFilterBg=this.isDateFilterSet() ? '#2FBCD3':'white';
@@ -397,10 +323,10 @@ class SearchPage extends React.Component {
                       {this.state.statusFilterVisible ?
                         <Grid item xs={5} md={3}  style={{borderRadius: '15px', backgroundColor: '#2FBCD3', boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset', cursor: 'pointer', height: '45px', margin: 10}}>
                           <Typography onClick={()=> this.statusFilterToggled()} style={{textAlign: 'center', color:'white', fontSize: '0.8rem', paddingTop: 13, height:43}}>Statut</Typography>
-                            <Grid id="status" item xs={12}  style={{borderRadius: '15px', backgroundColor: 'white', boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px', height: '100px', marginTop: 8,padding:10,zIndex: 1}}>
+                            <Grid id="status" className={classes.filterStatus} item xs={12}>
                               <Grid container>
                                 <Grid item xs={12} style={{textAlign:'center', margin: 'auto'}} spacing={3}>
-                                  {this.state.individualSelected ? <Grid item xs={3}></Grid> :
+                                  {this.state.individualSelected ? <Grid item xs={3}/> :
                                     <Grid item xs={6} sm={4} md={3} style={{textAlign:'center', margin: 'auto'}}>
                                       <FormControlLabel
                                         control={
@@ -486,7 +412,7 @@ class SearchPage extends React.Component {
                        </Grid>
                   </Grid>
                   { /* END FILTER PANEL */ }
-                  <Grid container>
+                  <Grid container className={classes.containerTitle}>
                     <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Que recherchez-vous {user?user.firstname:''} ?</h3>
                   </Grid>
                     <Grid container className="scrollLittle" style={{overflowX: 'scroll', whiteSpace: 'nowrap', display: 'inline-block', minHeight: '250px'}}>
@@ -537,15 +463,15 @@ class SearchPage extends React.Component {
                                 </Grid>
                                 {this.state.visibleCategories.includes(cat.label) ?
                                   <Grid style={{display: 'flex', flexDirection: 'column', width: '100%', marginTop: 30, marginBottom: 30}}>
-                                    <Grid style={{textAlign: 'center'}}>
-                                      <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
-                                    </Grid>
                                     { this.hasMoreToDisplay(serviceUsers, cat) ?
                                       <Grid style={{marginLeft: 15}}>
                                         <Button color={'primary'} onClick={()=>this.increaseCount(cat)}>Voir plus d'Alfred</Button>
                                       </Grid>
-                                     : null
+                                      : null
                                     }
+                                    <Grid style={{textAlign: 'center'}}>
+                                      <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
+                                    </Grid>
                                   </Grid>
                                     : null}
                               </Grid>

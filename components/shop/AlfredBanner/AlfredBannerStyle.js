@@ -27,7 +27,6 @@ export default theme => ({
     display: 'block',
   },
   avatarLetter:{
-    position: 'absolute',
     top: '15%',
     left: '0%',
     right: '0%',
