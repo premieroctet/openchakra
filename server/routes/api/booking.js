@@ -375,14 +375,10 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', { session: false }
         .catch(err => console.log(err))
 });
 
-const DEBUG=true;
-
 const payAlfred = booking => {
   console.log(`Starting paying of booking #${booking._id}`)
-  if (!DEBUG) {
-    booking.status = 'Terminée';
-    booking.save().then().catch();
-  }
+  booking.status = 'Terminée';
+  booking.save().then().catch();
   const amount = (booking.amount-booking.fees) * 100;
   const id_mangopay_user = booking.user.id_mangopay;
   const id_mangopay_alfred = booking.alfred.id_mangopay;
@@ -460,7 +456,7 @@ const payAlfred = booking => {
 new CronJob('0 * * * * *', function() {
   console.log("Checking bookings to terminate");
   const date = moment(new Date(), 'DD-MM-YYYY').startOf('day');
-  Booking.find(DEBUG ? {} : {
+  Booking.find({
       status: 'Confirmée',
       paid: false
     })
