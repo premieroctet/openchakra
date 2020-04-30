@@ -20,8 +20,11 @@ const {computeUrl} = require('../../../config/config');
 router.get('/test',(req, res) => res.json({msg: 'Payment Works!'}) );
 
 
+// GET /myAlfred/api/payment/mangopay_hook
+// Create credit card
+// @access public
 router.get('/mangopay_hook', (req,res)=>{
-  var query=parse(window.location.href, true).query;
+  var query=parse(req.originalUrl, true).query;
   console.log(`Got params:${JSON.stringify(query)}`);
 });
 
