@@ -75,9 +75,17 @@ router.get('/shops/extract',passport.authenticate('jwt',{session:false}),(req,re
       Shop.find()
         .then ( shops => {
             users.forEach ( user => {
-              const shop=shops.filter( s => s.alfred._id.equals(user._id))
-              user=Object.assign(user, shop ? shop[0] : {})
-              result.push(user)
+              var shop=shops.filter( s => s.alfred._id.equals(user._id))
+              shop=shop.length>0?shop[0]:{_doc:{}}
+              var data={}
+              Object.keys(user._doc).forEach( k => {
+                  data[`user.${k}`]=JSON.stringify(user[k]);
+              })
+              Object.keys(shop._doc).forEach( k => {
+                  data[`shop.${k}`]=JSON.stringify(shop[k]);
+              })
+              console.log(Object.keys(data))
+              result.push(data)
             })
             res.json(result)
         })
