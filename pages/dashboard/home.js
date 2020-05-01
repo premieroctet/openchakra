@@ -95,7 +95,7 @@ class home extends React.Component {
                                   <Link href="/dashboard/users/all"><a>Utilisateurs</a></Link><br/>
                                   <Link href="/dashboard/alfred/all"><a>Alfred</a></Link><br/>
                                   <Link href="/dashboard/admin/all"><a>Administrateurs</a></Link><br/>
-                                  <CSVLink asyncOnClick={true} data={this.state.shopsData} target="_blank">Export boutiques</CSVLink>
+                                  <CSVLink asyncOnClick={true} data={this.state.shopsData} filename="shops.csv" separator={";"} target="_blank">Export boutiques</CSVLink>
                                   <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
                                       <Typography style={{ fontSize: 30 }}>Fonctions DEV</Typography>
                                   </Grid>

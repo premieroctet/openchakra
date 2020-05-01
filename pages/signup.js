@@ -50,6 +50,9 @@ const styles = theme => ({
     maxWidth: 600,
     marginTop: 170,
     boxShadow: '0px 2px 66px -37px rgba(10,10,10,0.65)',
+    [theme.breakpoints.down("xs")]:{
+      marginTop: 250
+    }
   },
   datenaissance: {
     marginTop: 20,
@@ -148,7 +151,7 @@ class signup extends React.Component {
     }
   };
 
-    onChangeAddress({query, rawAnswer, suggestion, suggestionIndex}) {
+    onChangeAddress({suggestion}) {
         this.setState({city: suggestion.city, address: suggestion.name, zip_code: suggestion.postcode,country: suggestion.country,
             lat: suggestion.latlng.lat, lng: suggestion.latlng.lng});
 
@@ -222,10 +225,10 @@ class signup extends React.Component {
             <Grid container className={classes.signupContainer}>
               <div className="fonts">
               <Card className={classes.card}>
-                <div className={classes.banner}>
-                  <h2 className={classes.title}>Inscription</h2>
-                </div>
                 <div className={classes.newContainer}>
+                  <div className={classes.banner}>
+                    <h2 className={classes.title}>Inscription</h2>
+                  </div>
                   <form onSubmit={this.onSubmit}>
                     <Grid container>
                       <Grid item style={{width: '100%'}}>
