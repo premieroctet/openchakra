@@ -84,7 +84,6 @@ router.get('/shops/extract',passport.authenticate('jwt',{session:false}),(req,re
               Object.keys(shop._doc).forEach( k => {
                   data[`shop.${k}`]=JSON.stringify(shop[k]);
               })
-              console.log(Object.keys(data))
               result.push(data)
             })
             res.json(result)
