@@ -442,7 +442,7 @@ router.put('/editStatus', passport.authenticate('jwt', {
 
 
 // Create mango provider account for all alfred with shops
-new CronJob('0/10 * * * * *', function() {
+new CronJob('0 0 * * * *', function() {
   console.log("Alfred who need mango account");
   User.find({is_alfred: true, mangopay_provider_id: null})
     .then ( alfreds => {
