@@ -22,12 +22,14 @@ const HOOK_TYPES="KYC_CREATED KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED".spl
 /** Hook Mangopay */
 
 HOOK_TYPES.forEach(hookType => {
+  const hook_url=new URL('/myAlfred/api/payment/mangopay_hook', getHost());
+  console.log(`Setting hook for ${hookType}`);
   mangoApi.Hooks.create({
     Tag: "MyAlfred hook",
     EventType: hookType,
     Status: "ENABLED",
     Validity: "VALID",
-    Url: new URL('/myAlfred/api/payment/mangopay_hook', getHost()),
+    Url: hook_url,
   });
 })
 
