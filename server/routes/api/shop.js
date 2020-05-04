@@ -3,9 +3,11 @@ const router = express.Router();
 const passport = require('passport');
 const mongoose = require('mongoose');
 const multer = require('multer');
+const CronJob = require('cron').CronJob;
 const emptyPromise = require('../../../utils/promise.js');
 const {data2ServiceUser} = require('../../../utils/mapping');
 const {sendShopDeleted,sendShopOnline} = require ('../../../utils/mailing');
+const {createMangoProvider} = require('../../../utils/mangopay');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -87,12 +89,8 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
             shop.level=req.body.level;
 
             // FIX: save company
-            shop.company = {};
-            if (req.body.name) shop.company.name = req.body.name;
-            if (req.body.creation_date) shop.company.creation_date = req.body.creation_date;
-            if (req.body.siret) shop.company.siret = req.body.siret;
-            if (req.body.naf_ape) shop.company.naf_ape = req.body.naf_ape;
-            if (req.body.status) shop.company.status = req.body.status;
+            shop.company = null;
+            if (req.body.company) shop.company=req.body.company;
 
             shop.picture = "static/shopBanner/sky-690293_1920.jpg";
 
@@ -101,8 +99,10 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
                 .then(shop => {
                     User.findById(shop.alfred)
                       .then( alfred => {
+                        createMangoProvider(alfred, shop)
                         sendShopOnline(alfred, req);
-                      }).catch (err => console.err(err));
+                      })
+                      .catch (err => console.error(err));
                     var su = data2ServiceUser(req.body, new ServiceUser());
                     su.user = req.user.id;
 
@@ -424,14 +424,14 @@ router.put('/editStatus', passport.authenticate('jwt', {
         }, {
             is_particular: req.body.is_particular,
             is_professional: req.body.is_professional,
-            "company.name": req.body.name,
-            "company.creation_date": req.body.creation_date,
-            "company.siret": req.body.siret,
-            "company.naf_ape": req.body.naf_ape,
-            "company.status": req.body.status
-        }, {
-            new: true
-        })
+            company : req.body.is_particular ? null: {
+              name: req.body.name,
+              creation_date: req.body.creation_date,
+              siret: req.body.siret,
+              naf_ape: req.body.naf_ape,
+              status: req.body.status,
+            }
+        }, { new: true })
         .then(shop => {
             res.json(shop)
         })
@@ -440,5 +440,23 @@ router.put('/editStatus', passport.authenticate('jwt', {
         })
 });
 
+
+// Create mango provider account for all alfred with shops
+new CronJob('0 0 * * * *', function() {
+  console.log("Alfred who need mango account");
+  User.find({is_alfred: true, mangopay_provider_id: null})
+    .then ( alfreds => {
+      alfreds.forEach( alfred => {
+        Shop.findOne({alfred:alfred})
+          .then( shop => {
+            console.log(`Found alfred ${alfred.name} and shop ${shop._id}`)
+            createMangoProvider(alfred, shop)
+          })
+          .catch( err => console.error(err))
+      });
+      console.log(`Found ${alfreds.length}`)
+
+    })
+}, null, true, 'Europe/Paris');
 
 module.exports = router;

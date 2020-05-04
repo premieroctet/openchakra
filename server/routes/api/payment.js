@@ -8,53 +8,25 @@ const User = require('../../models/User');
 const axios = require('axios');
 const _ = require('lodash');
 const moment = require('moment');
-const mangopay = require('mangopay2-nodejs-sdk');
 const request = require('request');
-moment.locale('fr');
+const {mangoApi}=require('../../../utils/mangopay');
+const {getHost}=require('../../../utils/mailing')
+var parse = require('url-parse');
 
-const api = new mangopay({
-    clientId: 'testmyalfredv2',
-    clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
-});
+moment.locale('fr');
 
 const {computeUrl} = require('../../../config/config');
 
 router.get('/test',(req, res) => res.json({msg: 'Payment Works!'}) );
 
-// POST /myAlfred/api/payment/createUser
-// Create a user and a wallet
-// @access private
-router.post('/createUser',passport.authenticate('jwt',{session:false}),(req,res)=>{
-    User.findById(req.user.id)
-        .then(user => {
-            let firstname = user.firstname;
-            let lastname = user.name;
-            let birthday = moment(user.birthday).unix();
-            let email = user.email;
 
-            api.Users.create({
-                PersonType: 'NATURAL',
-                FirstName: firstname,
-                LastName: lastname,
-                Birthday: birthday,
-                Nationality: 'FR',
-                CountryOfResidence: 'FR',
-                Email: email
-            })
-                .then(newUser=> {
-                    user.id_mangopay = newUser.Id;
-                    user.save().then().catch();
-                    api.Wallets.create({
-                        Owners: [newUser.Id],
-                        Description: 'new wallet',
-                        Currency: 'EUR'
-                    })
-                        .then(response => {
-                            res.json(response)
-                        })
-                })
-        })
-        .catch(err => console.log(err))
+// GET /myAlfred/api/payment/mangopay_hook
+// Create credit card
+// @access public
+router.get('/mangopay_hook', (req,res)=>{
+  var query=parse(req.originalUrl, true).query;
+  console.log(`Got params:${JSON.stringify(query)}`);
+  res.json();
 });
 
 // POST /myAlfred/api/payment/createCard
@@ -64,7 +36,7 @@ router.post('/createCard',passport.authenticate('jwt',{session:false}),(req,res)
     User.findById(req.user.id)
         .then(user => {
             let id_mangopay = user.id_mangopay;
-            api.CardRegistrations.create({
+            mangoApi.CardRegistrations.create({
                 UserId: id_mangopay,
                 Currency: 'EUR'
             })
@@ -94,7 +66,7 @@ router.post('/createCard',passport.authenticate('jwt',{session:false}),(req,res)
                     };
                     request.post(options,function (err,data,result) {
                         cardRegistrationData.RegistrationData = result;
-                        api.CardRegistrations.update(cardRegistrationData)
+                        mangoApi.CardRegistrations.update(cardRegistrationData)
                             .then(newCard => {
                                 res.json(newCard)
                             });
@@ -112,10 +84,10 @@ router.post('/payIn',passport.authenticate('jwt',{session:false}),(req,res)=> {
     User.findById(req.user.id)
         .then(user => {
             const id_mangopay = user.id_mangopay;
-            api.Users.getWallets(id_mangopay)
+            mangoApi.Users.getWallets(id_mangopay)
                 .then(wallets => {
                     const wallet_id = wallets[0].Id;
-                    api.PayIns.create({
+                    mangoApi.PayIns.create({
                         AuthorId: id_mangopay,
                         DebitedFunds: {
                             Currency: 'EUR',
@@ -147,10 +119,10 @@ router.post('/payInCreate',passport.authenticate('jwt',{session:false}),(req,res
     User.findById(req.user.id)
         .then(user => {
             const id_mangopay = user.id_mangopay;
-            api.Users.getWallets(id_mangopay)
+            mangoApi.Users.getWallets(id_mangopay)
                 .then(wallets => {
                     const wallet_id = wallets[0].Id;
-                    api.PayIns.create({
+                    mangoApi.PayIns.create({
                         AuthorId: id_mangopay,
                         DebitedFunds: {
                             Currency: 'EUR',
@@ -184,10 +156,10 @@ router.post('/payInDirect',passport.authenticate('jwt',{session:false}),(req,res
     User.findById(req.user.id)
         .then(user => {
             const id_mangopay = user.id_mangopay;
-            api.Users.getWallets(id_mangopay)
+            mangoApi.Users.getWallets(id_mangopay)
                 .then(wallets => {
                     const wallet_id = wallets[0].Id;
-                    api.PayIns.create({
+                    mangoApi.PayIns.create({
                         AuthorId: id_mangopay,
                         DebitedFunds: {
                             Currency: 'EUR',
@@ -222,10 +194,10 @@ router.post('/payInDirectCreate',passport.authenticate('jwt',{session:false}),(r
     User.findById(req.user.id)
         .then(user => {
             const id_mangopay = user.id_mangopay;
-            api.Users.getWallets(id_mangopay)
+            mangoApi.Users.getWallets(id_mangopay)
                 .then(wallets => {
                     const wallet_id = wallets[0].Id;
-                    api.PayIns.create({
+                    mangoApi.PayIns.create({
                         AuthorId: id_mangopay,
                         DebitedFunds: {
                             Currency: 'EUR',
@@ -263,10 +235,10 @@ router.post('/transfer',passport.authenticate('jwt',{session:false}),(req,res)=>
     User.findById(req.user.id)
         .then(user => {
             const id_mangopay = user.id_mangopay;
-            api.Users.getWallets(id_mangopay)
+            mangoApi.Users.getWallets(id_mangopay)
                 .then(wallets => {
                     const wallet_id = wallets[0].Id;
-                    api.Transfers.create({
+                    mangoApi.Transfers.create({
                         AuthorId: id_mangopay,
                         DebitedFunds: {
                             Currency: 'EUR',
@@ -315,7 +287,7 @@ router.post('/bankAccount',passport.authenticate('jwt',{session:false}),(req,res
                 Type: "IBAN"
             };
 
-            api.Users.createBankAccount(id_mangopay,account)
+            mangoApi.Users.createBankAccount(id_mangopay,account)
                 .then(newAccount => {
                     res.json({msg: "Compte créé"})
                 })
@@ -331,7 +303,7 @@ router.post('/bankAccount',passport.authenticate('jwt',{session:false}),(req,res
 router.get('/cards',passport.authenticate('jwt',{session:false}),(req,res)=> {
     User.findById(req.user.id)
         .then(user => {
-            api.Users.getCards(user.id_mangopay).then(cards => res.json(cards))
+            mangoApi.Users.getCards(user.id_mangopay).then(cards => res.json(cards))
         })
         .catch(err => console.log(err))
 
@@ -344,7 +316,7 @@ router.get('/cardsActive',passport.authenticate('jwt',{session:false}),(req,res)
     const allCards = [];
     User.findById(req.user.id)
         .then(user => {
-            api.Users.getCards(user.id_mangopay)
+            mangoApi.Users.getCards(user.id_mangopay)
                 .then(cards => {
                     cards.forEach(c => {
                         if(c.Active){
@@ -367,7 +339,7 @@ router.get('/activeAccount',passport.authenticate('jwt',{session:false}),(req,re
     User.findById(req.user.id)
         .then(user => {
             const id_mangopay = user.id_mangopay;
-            api.Users.getBankAccounts(id_mangopay)
+            mangoApi.Users.getBankAccounts(id_mangopay)
                 .then(accounts => {
                     accounts.forEach(a => {
                         if(a.Active){
@@ -393,7 +365,7 @@ router.get('/transactions',passport.authenticate('jwt',{session:false}),(req,res
                     per_page: 100
                 }
             };
-            api.Users.getTransactions(id_mangopay,null,options)
+            mangoApi.Users.getTransactions(id_mangopay,null,options)
                 .then(transactions => {
                     const reverse = _.reverse(transactions);
                     res.json(reverse[0])
@@ -409,7 +381,7 @@ router.put('/account',passport.authenticate('jwt',{session:false}),(req,res)=> {
     User.findById(req.user.id)
         .then(user => {
             const id_mangopay = user.id_mangopay;
-            api.Users.deactivateBankAccount(id_mangopay,id_account).then(
+            mangoApi.Users.deactivateBankAccount(id_mangopay,id_account).then(
                 account=> {
                     res.status(200).json(account)
                 }
@@ -423,63 +395,8 @@ router.put('/account',passport.authenticate('jwt',{session:false}),(req,res)=> {
 // @access private
 router.put('/cards',passport.authenticate('jwt',{session:false}),(req,res)=> {
     const id_card = req.body.id_card;
-    api.Cards.update({Id:id_card,Active:false}).then().catch()
+    mangoApi.Cards.update({Id:id_card,Active:false}).then().catch()
 });
 
-// POST / myAlfred/api/payment/createKycDocument
-// Create a KYC document
-// @access private
-router.post('/createKycDocument', passport.authenticate('jwt', { session: false }), ( req, res ) => {
-    User.findById(req.user.id)
-        .then(user => {
-            const objStatus = { 
-                Type: 'IDENTITY_PROOF',
-            }
-            const id = user.id_mangopay;
-
-            api.Users.createKycDocument(id, objStatus)
-                .then(result => {
-                    const documentId = result.Id;
-                    let id_recto = path.resolve(user.id_card.recto);
-                    let id_verso = null;
-
-                    const base64Recto = fs.readFileSync(id_recto, 'base64');
-                    const KycPageRecto = new api.models.KycPage({
-                        "File": base64Recto
-                    });
-
-                    if (typeof user.id_card.verso !== 'undefined') id_verso = '../../../' + user.id_card.verso;
-
-                    api.Users.createKycPage(id, documentId, KycPageRecto)
-                        .then(resultRecto => {
-                            if (id_verso !== null) {
-                                const base64Verso = fs.readFileSync(path.resolve(id_verso), 'base64');
-                                const KycPageVerso = new api.models.KycPage({
-                                    "File": base64Verso
-                                });
-
-                                api.Users.createKycPageFromFile(id, documentId, KycPageVerso)
-                                    .then(resultVerso => {
-                                        res.json([resultRecto, resultVerso]);
-                                    })
-                                    .catch(err => res.json(err))
-                            }
-
-                            const updateObj = {
-                                Id: documentId,
-                                Status: "VALIDATION_ASKED"
-                            };
-
-                            api.Users.updateKycDocument(id, updateObj)
-                                .then(updKyc => {
-                                    res.json(updKyc);
-                                })
-                        })
-                        .catch(err => res.json(err))
-                    
-                })
-        })
-        .catch(err => res.json(err))
-})
 
 module.exports = router;

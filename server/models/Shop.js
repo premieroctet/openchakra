@@ -82,6 +82,10 @@ const ShopSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    // Mangopay as seller
+    id_mangopay: {
+        type: String
+    },
 });
 
 module.exports = Shop = mongoose.model('shop',ShopSchema);
