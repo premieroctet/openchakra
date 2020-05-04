@@ -6,17 +6,17 @@ const emptyPromise = require('./promise');
 const mangopay = require('mangopay2-nodejs-sdk');
 
 // PROD !!!!!
-/**
 const mangoApi = new mangopay({
   clientId: 'myalfredprod',
   clientApiKey: 'j8R8fLZmUderNNp27siCqMAJ3y7Bv7BB82trfGuhqSKcYpEZ91',
 });
-*/
 
+/**
 const mangoApi = new mangopay({
   clientId: 'testmyalfredv2',
   clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
 });
+*/
 
 const HOOK_TYPES="KYC_CREATED KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED".split(' ')
 /** Hook Mangopay */
@@ -42,7 +42,7 @@ const createMangoClient = user => {
     Nationality: 'FR',
     CountryOfResidence: 'FR',
     Email: user.email,
-    Tag: `Client ${user._id} / ${newUser.FirstName} ${newUser.LastName}`,
+    Tag: `Client ${user._id} / ${user.FirstName} ${user.LastName}`,
   }
 
   mangoApi.Users.create(userData)
@@ -78,7 +78,7 @@ const createMangoProvider = (user, shop) => {
     Nationality: 'FR',
     CountryOfResidence: 'FR',
     Email: user.email,
-    Tag: `Provider ${user._id} / ${newUser.FirstName} ${newUser.LastName}`,
+    Tag: `Provider ${user._id} / ${user.FirstName} ${user.LastName}`,
   }
   if (shop.is_professional) {
     const addr = user.billing_address
