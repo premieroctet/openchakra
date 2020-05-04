@@ -57,6 +57,12 @@ const createMangoClient = user => {
         .then(wallet => {
           console.log(`Created Wallet ${JSON.stringify(wallet)}`)
         })
+        .catch (err => {
+          console.error(`Création wallet user ${user.firstname} ${user.name}:${JSON.stringify(err)}`)
+        })
+    })
+    .catch (err => {
+      console.error(`Création mangopay user ${user.firstname} ${user.name}:${JSON.stringify(err)}`)
     })
 };
 

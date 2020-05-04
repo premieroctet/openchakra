@@ -7,6 +7,8 @@ const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const path = require('path');
 
+const CronJob = require('cron').CronJob;
+
 const validateRegisterInput = require('../../validation/register');
 const validateSimpleRegisterInput = require('../../validation/simpleRegister');
 const validateLoginInput = require('../../validation/login');
@@ -20,7 +22,7 @@ const multer = require("multer");
 
 const {computeUrl } = require('../../../config/config');
 
-const {addIdIfRequired} = require('../../../utils/mangopay')
+const {addIdIfRequired, createMangoClient} = require('../../../utils/mangopay')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -900,6 +902,19 @@ router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false
             console.log(err)
         })
 });
+
+// Create mango client account for all user with no id_mangopay
+new CronJob('0 * * * * *', function() {
+  console.log("Customers who need mango account");
+  User.find({id_mangopay: null})
+    .then ( usrs => {
+      usrs.forEach( user => {
+        console.log(`Found customer ${user.name}`)
+        createMangoClient(user)
+      })
+    })
+    .catch( err => console.error(err))
+}, null, true, 'Europe/Paris');
 
 
 module.exports = router;
