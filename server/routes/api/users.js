@@ -904,7 +904,7 @@ router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false
 });
 
 // Create mango client account for all user with no id_mangopay
-new CronJob('0 * * * * *', function() {
+new CronJob('0 0 * * * *', function() {
   console.log("Customers who need mango account");
   User.find({id_mangopay: null})
     .then ( usrs => {
