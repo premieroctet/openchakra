@@ -38,10 +38,14 @@ class addPhone extends React.Component {
     }
 
     onChange(e) {
-        const {name, value} = e.target;
+        var {name, value} = e.target;
         this.setState({ [name]: value });
         if( name==='phone') {
-          this.setState({phoneOk:isPhoneOk(value)})
+          const phoneOk=isPhoneOk(value);
+          if (phoneOk && value.startsWith('0')) {
+            value='33'+value.substring(1);
+          }
+          this.setState({'phone': value,phoneOk:isPhoneOk(value)})
         }
     };
 
