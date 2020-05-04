@@ -113,7 +113,7 @@ class NavBar extends Component {
     const logoutMobile = [
       <Link href={'/profile/editProfile'}>
 
-      <MenuItem key={1} onClick={this.handleMenuClose}>
+      <MenuItem key={1}>
         <Typography>
           <a className={classes.navbarLinkMobile}>
             Profil
@@ -123,7 +123,7 @@ class NavBar extends Component {
       </Link>
       ,
       <Link href={'/account/notifications'}>
-      <MenuItem key={2} onClick={this.handleMenuClose}>
+      <MenuItem key={2}>
         <Typography>
           <a className={classes.navbarLinkMobile}>
             Mon compte
@@ -143,7 +143,7 @@ class NavBar extends Component {
     const logoutAvatar =
       [
         <Link href={'/profile/editProfile'}>
-        <MenuItem key={1} onClick={this.handleMenuClose}>
+        <MenuItem key={1}>
           <Typography>
             <a className={classes.navbarLinkMobile}>
               Profil
@@ -153,7 +153,7 @@ class NavBar extends Component {
         </Link>
         ,
         <Link href={'/account/notifications'}>
-        <MenuItem key={2} onClick={this.handleMenuClose}>
+        <MenuItem key={2}>
           <Typography>
             <a className={classes.navbarLinkMobile}>
               Mon compte
@@ -171,22 +171,9 @@ class NavBar extends Component {
         </MenuItem>
       ];
 
-    const renderMenu = (
-      <Menu
-        anchorEl={anchorEl}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={Boolean(anchorEl)}
-        onClose={this.handleMenuClose}
-      >
-        <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
-        <MenuItem onClick={this.handleMenuClose}>My account</MenuItem>
-      </Menu>
-    );
-
     const doublemenuitem1 = [
       <Link href={'/login'}>
-        <MenuItem key={1} onClick={this.handleAvatarMenuOpen}>
+        <MenuItem key={1}>
           <Typography>
             <a>Connexion</a>
           </Typography>
@@ -194,7 +181,7 @@ class NavBar extends Component {
       </Link>
       ,
       <Link href={'/signup'}>
-        <MenuItem key={2} onClick={this.handleAvatarMenuOpen}>
+        <MenuItem key={2}>
           <Typography>
             <a>Inscription</a>
           </Typography>
@@ -218,7 +205,7 @@ class NavBar extends Component {
 
     const doublemenuitem = [
       <Link href={'/login'}>
-        <MenuItem key={1} onClick={this.handleMobileMenuOpen}>
+        <MenuItem key={1}>
           <Typography>
             <a className={classes.navbarLinkMobile}>
               Connexion
@@ -228,7 +215,7 @@ class NavBar extends Component {
       </Link>
       ,
       <Link href={'/signup'}>
-      <MenuItem key={2} onClick={this.handleMobileMenuOpen}>
+      <MenuItem key={2}>
         <Typography>
           <a className={classes.navbarLinkMobile}>
             Inscription
@@ -248,7 +235,7 @@ class NavBar extends Component {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Link href={user && user.is_alfred ? `/shop?id_alfred=${user._id}` : '/creaShop/creaShop'}>
-          <MenuItem onClick={this.handleMobileMenuOpen}>
+          <MenuItem>
             <Typography>
               <a className={classes.navbarLinkMobile}>{user && user.is_alfred ? "Ma boutique" : "Créer ma boutique"}</a>
             </Typography>
@@ -265,7 +252,7 @@ class NavBar extends Component {
           : null}
         {logged ?
           <Link href={'/reservations/messages'}>
-            <MenuItem onClick={this.handleMobileMenuOpen}>
+            <MenuItem>
               <Typography>
                 <a className={classes.navbarLinkMobile}>Messages</a>
               </Typography>
@@ -273,7 +260,7 @@ class NavBar extends Component {
           </Link>
           : null }
         <Link href={'/faq'}>
-        <MenuItem onClick={this.handleMobileMenuOpen}>
+        <MenuItem>
           <Typography>
             <a className={classes.navbarLinkMobile}>Aide</a>
           </Typography>
@@ -410,7 +397,6 @@ class NavBar extends Component {
             </Grid>
           </Toolbar>
         </AppBar>
-        {renderMenu}
         {renderMobileMenu}
         {logged ? renderAvatarMenu : null}
       </Grid>
