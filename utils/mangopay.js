@@ -13,19 +13,10 @@ const mangoApi = new mangopay({
 });
 */
 
-/** SANDBOX v2
 const mangoApi = new mangopay({
   clientId: 'testmyalfredv2',
   clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
 });
-*/
-
-// SANDBOX v4
-const mangoApi = new mangopay({
-  clientId: 'testmyalfredv4',
-  clientApiKey: '9mDn7ReSiD2txOFbNbF8A3YiJaEyDPE7wRdWbNApYTS5USm05J',
-});
-
 
 const HOOK_TYPES="KYC_CREATED KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED".split(' ')
 /** Hook Mangopay */
@@ -51,6 +42,7 @@ const createMangoClient = user => {
     Nationality: 'FR',
     CountryOfResidence: 'FR',
     Email: user.email,
+    Tag: `Client ${user._id} / ${newUser.FirstName} ${newUser.LastName}`,
   }
 
   mangoApi.Users.create(userData)
@@ -86,6 +78,7 @@ const createMangoProvider = (user, shop) => {
     Nationality: 'FR',
     CountryOfResidence: 'FR',
     Email: user.email,
+    Tag: `Provider ${user._id} / ${newUser.FirstName} ${newUser.LastName}`,
   }
   if (shop.is_professional) {
     const addr = user.billing_address
