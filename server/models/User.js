@@ -294,7 +294,7 @@ const UserSchema = new Schema({
     kyc_errors: {
       type: [String],
       default: function() {
-        return ['Pas de pièce d\'identité', 'Pas d\'adresse', 'Pas de SIRET'];
+        return null;
       }
     }
 });
