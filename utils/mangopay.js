@@ -13,10 +13,19 @@ const mangoApi = new mangopay({
 });
 */
 
+/** SANDBOX v2
 const mangoApi = new mangopay({
   clientId: 'testmyalfredv2',
   clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
 });
+*/
+
+// SANDBOX v4
+const mangoApi = new mangopay({
+  clientId: 'testmyalfredv4',
+  clientApiKey: '9mDn7ReSiD2txOFbNbF8A3YiJaEyDPE7wRdWbNApYTS5USm05J',
+});
+
 
 const HOOK_TYPES="KYC_CREATED KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED".split(' ')
 /** Hook Mangopay */
