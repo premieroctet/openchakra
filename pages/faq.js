@@ -18,9 +18,13 @@ const styles = theme => ({
     },
     bigContainer:{
         marginTop:80,
+    },
+    expansionPanelStyle:{
+        border: "none",
+        boxShadow: "none",
+        width: "70%",
         [theme.breakpoints.down('xs')]: {
-            marginTop:250,
-
+            width: "90%",
         }
     }
 });
@@ -45,7 +49,7 @@ class faq extends React.Component {
                         <h3>Devenir Alfred</h3>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                  className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -80,7 +84,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -136,7 +140,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -174,7 +178,7 @@ class faq extends React.Component {
                             <h3>Créer votre boutique de service</h3>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -204,7 +208,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -246,7 +250,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -286,7 +290,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -329,7 +333,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -368,7 +372,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -412,7 +416,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -455,7 +459,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -499,7 +503,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -545,7 +549,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -601,7 +605,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -645,7 +649,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -708,7 +712,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -747,7 +751,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -801,7 +805,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -847,7 +851,7 @@ class faq extends React.Component {
                             <h3>Identification et vérification</h3>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -878,7 +882,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                             <ExpansionPanel
-                                style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                className={classes.expansionPanelStyle}
                             >
                                 <ExpansionPanelSummary
                                     expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -922,7 +926,7 @@ class faq extends React.Component {
                         </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -960,7 +964,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -997,7 +1001,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1043,7 +1047,7 @@ class faq extends React.Component {
                             <h3>Mes versements</h3>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1084,7 +1088,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1123,7 +1127,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1172,7 +1176,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1216,7 +1220,7 @@ class faq extends React.Component {
                             <h3>Mes réservations</h3>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1263,7 +1267,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1323,7 +1327,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1359,7 +1363,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1405,7 +1409,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1442,7 +1446,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1479,7 +1483,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1523,7 +1527,7 @@ class faq extends React.Component {
                             <h3>Mon compte</h3>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1567,7 +1571,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1616,7 +1620,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1668,7 +1672,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1706,7 +1710,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                             <ExpansionPanel
-                                style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                className={classes.expansionPanelStyle}
                             >
                                 <ExpansionPanelSummary
                                     expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1746,7 +1750,7 @@ class faq extends React.Component {
                         </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1780,7 +1784,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1821,7 +1825,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1851,7 +1855,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1901,7 +1905,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1951,7 +1955,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -1986,7 +1990,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -2007,7 +2011,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -2038,7 +2042,7 @@ class faq extends React.Component {
                             <h3>Mon profil</h3>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -2078,7 +2082,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -2112,7 +2116,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -2148,7 +2152,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -2183,7 +2187,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
@@ -2234,7 +2238,7 @@ class faq extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <ExpansionPanel
-                                    style={{ border: "none", boxShadow: "none", width: "70%" }}
+                                    className={classes.expansionPanelStyle}
                                 >
                                     <ExpansionPanelSummary
                                         expandIcon={<ExpandMoreIcon style={{ fontSize: 25 }} />}
