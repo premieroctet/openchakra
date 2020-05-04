@@ -132,6 +132,9 @@ const addIdIfRequired = user => {
   const id = user.mangopay_provider_id;
 
   mangoApi.Users.createKycDocument(id, objStatus)
+    .catch(error => {
+      console.error(`createKycDocument(${id}, ${JSON.stringify(objStatus)}) : ${JSON.stringify(error)}`)
+    })
     .then(result => {
       const documentId = result.Id;
       console.log(`Create identiy proof ${documentId} for provider ${id}`)
@@ -147,12 +150,15 @@ const addIdIfRequired = user => {
       const KycPageRecto = new mangoApi.models.KycPage({"File": base64Recto});
 
       mangoApi.Users.createKycPage(id, documentId, KycPageRecto)
+        .catch(error => {
+          console.error(`createKycPage(${id}, ${documentId}, KycPageRecto : ${JSON.stringify(error)}`)
+        })
         .then(resultRecto => {
           const id_verso = user.id_card.verso ? '../../../' + user.id_card.verso : null;
 
           // Natural provider : KYX check is free => send
           if (user.mangopay_provider_status=='NATURAL') {
-            console.log("Natural proivider => sending ID")
+            console.log("Natural provider => require KYC")
             try {
               requireKycValidation(user, documentId);
             }
