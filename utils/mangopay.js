@@ -45,7 +45,7 @@ const createMangoClient = user => {
     Nationality: 'FR',
     CountryOfResidence: 'FR',
     Email: user.email,
-    Tag: `Client ${user._id} / ${user.FirstName} ${user.LastName}`,
+    Tag: `Client ${user._id} / ${user.firstname} ${user.name}`,
   }
 
   mangoApi.Users.create(userData)
@@ -55,7 +55,7 @@ const createMangoClient = user => {
       user.save().then().catch();
       mangoApi.Wallets.create({
           Owners: [newUser.Id],
-          Description: `Wallet ${user._id} / ${newUser.FirstName} ${newUser.LastName} client`,
+          Description: `Wallet ${user._id} / ${user.firstname} ${user.name} client`,
           Currency: 'EUR'
         })
         .then(wallet => {
@@ -81,7 +81,7 @@ const createMangoProvider = (user, shop) => {
     Nationality: 'FR',
     CountryOfResidence: 'FR',
     Email: user.email,
-    Tag: `Provider ${user._id} / ${user.FirstName} ${user.LastName}`,
+    Tag: `Provider ${user._id} / ${user.firstname} ${user.name}`,
   }
   if (shop.is_professional) {
     const addr = user.billing_address
@@ -114,7 +114,7 @@ const createMangoProvider = (user, shop) => {
       user.save().then().catch();
       mangoApi.Wallets.create({
           Owners: [newUser.Id],
-          Description: `Wallet ${user._id} / ${newUser.FirstName} ${newUser.LastName} provider`,
+          Description: `Wallet ${user._id} / ${user.firstname} ${user.name} provider`,
           Currency: 'EUR'
         })
         .then(wallet => {
