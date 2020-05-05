@@ -9,6 +9,7 @@ const mangopay = require('mangopay2-nodejs-sdk');
 const mangoApi = new mangopay({
   clientId: 'myalfredprod',
   clientApiKey: 'j8R8fLZmUderNNp27siCqMAJ3y7Bv7BB82trfGuhqSKcYpEZ91',
+  baseUrl: 'https://api.mangopay.com',
 });
 
 /**
@@ -23,7 +24,7 @@ const HOOK_TYPES="KYC_CREATED KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED".spl
 
 HOOK_TYPES.forEach(hookType => {
   const hook_url=new URL('/myAlfred/api/payment/mangopay_hook', getHost());
-  console.log(`Setting hook for ${hookType}`);
+  console.log(`Setting hook ${hook_url} for ${hookType}`);
   mangoApi.Hooks.create({
     Tag: "MyAlfred hook",
     EventType: hookType,
