@@ -2213,5 +2213,42 @@ router.put('/options/all/:id',passport.authenticate('jwt',{session: false}),(req
 
 });
 
+// @Route GET /myAlfred/api/admin/statistics
+// Get satistics (users, shops, services)
+// @Access private
+//router.get('/statistics',passport.authenticate('jwt',{session:false}),(req,res)=> {
+router.get('/statistics', (req,res)=> {
+    //
+    //const token = req.headers.authorization.split(' ')[1];
+    //const decode = jwt.decode(token);
+    //const admin = decode.is_admin;
+    //
+    const admin=true;
+
+    if(admin) {
+        var stats = {}
+        User.count()
+            .catch(err => res.status(404).json({statistics: 'Error on users'}))
+            .then(nb_users => {
+              stats['users']=nb_users;
+              User.find({is_alfred:true}).count()
+                .catch(err => res.status(404).json({statistics: 'Error on alfred'}))
+                .then(nb_alfred => {
+                   stats['alfred'] = nb_alfred;
+                   ServiceUser.find()
+                     .catch(err => res.status(404).json({statistics: 'Error on alfred'}))
+                     .then(services => {
+                       stats['services'] = services.length;
+                       stats['prestations'] = services.map( s => s.prestations.length).reduce( (acc, value) => acc+value);
+                       res.json(stats);      
+                   })
+                })
+            })
+    } else {
+        res.status(403).json({msg: 'Access denied'});
+    }
+
+
+});
 
 module.exports = router;

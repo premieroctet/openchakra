@@ -11,6 +11,8 @@ import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import Link from "next/link";
 import Avatar from '@material-ui/core/Avatar';
+import HomeIcon from '@material-ui/icons/Home';
+
 
 const jwt = require('jsonwebtoken');
 const styles = theme => ({
@@ -49,14 +51,11 @@ const styles = theme => ({
 
 });
 
-class home extends React.Component {
+class statistics extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            users_count: 0,
-            alfred_count: 0,
         }
-        setInterval(()=> this.getCounts(), 5000);
         this.getCounts=this.getCounts.bind(this);
     }
 
@@ -64,25 +63,14 @@ class home extends React.Component {
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get("/myAlfred/api/admin/users/all")
-            .then((response) => { this.setState({user_count: response.data.length}) })
+        axios.get("/myAlfred/api/admin/statistics")
+            .then((response) => { this.setState(response.data)})
             .catch((error) => { console.log(error);
             if(error.response.status === 401 || error.response.status === 403) {
                 localStorage.removeItem('token');
                 Router.push({pathname: '/login'})
             }
         });
-
-        axios.get("/myAlfred/api/admin/users/alfred")
-            .then((response) => { this.setState({alfred_count: response.data.length}) })
-            .catch((error) => {
-             console.log(error);
-             if(error.response.status === 401 || error.response.status === 403) {
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
-            }
-          });
-
     }
 
     componentDidMount() {
@@ -96,24 +84,37 @@ class home extends React.Component {
             this.setState({is_admin: decode.is_admin});
         }
         this.getCounts();
+        setInterval(()=> this.getCounts(), 30000);
     }
 
 
     render() {
         const { classes } = this.props;
         const list =
-                    <Grid>
-                        <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: '10%' }}>
+                    <Grid rows={[1,2]}>
+                        <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: '0%' }} >
                             <Typography style={{ fontSize: 30 }}>Inscrits</Typography>
                         </Grid>
-                        <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                            <Avatar className={classes.mediumAvatar}>{ this.state.user_count}</Avatar>
+                        <Grid item style={{ display: 'flex', justifyContent: 'center' }} >
+                            <Avatar className={classes.mediumAvatar}>{ this.state.users}</Avatar>
                         </Grid>
-                        <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop:'20%' }}>
+                        <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop:'5%' }} >
                             <Typography style={{ fontSize: 30 }}>Alfred</Typography>
                         </Grid>
+                        <Grid item style={{ display: 'flex', justifyContent: 'center' }} >
+                            <Avatar className={classes.mediumAvatar}>{ this.state.alfred}</Avatar>
+                        </Grid>
+                        <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop:'5%' }}>
+                            <Typography style={{ fontSize: 30 }}>Services</Typography>
+                        </Grid>
                         <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                            <Avatar className={classes.bigAvatar}>{ this.state.alfred_count}</Avatar>
+                            <Avatar className={classes.mediumAvatar}>{ this.state.services}</Avatar>
+                        </Grid>
+                        <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop:'5%' }}>
+                            <Typography style={{ fontSize: 30 }}>Prestations</Typography>
+                        </Grid>
+                        <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
+                            <Avatar className={classes.mediumAvatar}>{ this.state.prestations}</Avatar>
                         </Grid>
                     </Grid>;
         const refused = <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
@@ -122,12 +123,14 @@ class home extends React.Component {
 
         return (
             <Layout>
+                <Grid container style={{marginTop: 70}}>
+                    <Link href={'/dashboard/home'}>
+                        <Typography  className="retour"><HomeIcon className="retour2"/> <span>Retour</span></Typography>
+                    </Link>
+                </Grid>
                 <Grid container className={classes.signupContainer}>
                     <Card className={classes.card}>
-                        <Grid>
                             {this.state.is_admin ? list : refused}
-
-                        </Grid>
                     </Card>
                 </Grid>
             </Layout>
@@ -136,4 +139,4 @@ class home extends React.Component {
     };
 }
 
-export default withStyles(styles)(home);
+export default withStyles(styles)(statistics);

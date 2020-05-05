@@ -76,7 +76,7 @@ class home extends React.Component {
                                   <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
                                       <Typography style={{ fontSize: 30 }}>Moniteur</Typography>
                                   </Grid>
-                                  <Link href="/dashboard/users"><a>Suivi des inscrits</a></Link><br/>
+                        <Link href="/dashboard/statistics"><a>Statistiques</a></Link><br/>
                                   <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
                                       <Typography style={{ fontSize: 30 }}>Base de données</Typography>
                                   </Grid>
