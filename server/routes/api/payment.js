@@ -12,6 +12,7 @@ const request = require('request');
 const {mangoApi}=require('../../../utils/mangopay');
 const {getHost}=require('../../../utils/mailing')
 var parse = require('url-parse');
+const { inspect } = require('util');
 
 moment.locale('fr');
 
@@ -396,6 +397,43 @@ router.put('/account',passport.authenticate('jwt',{session:false}),(req,res)=> {
 router.put('/cards',passport.authenticate('jwt',{session:false}),(req,res)=> {
     const id_card = req.body.id_card;
     mangoApi.Cards.update({Id:id_card,Active:false}).then().catch()
+});
+
+// GET /myAlfred/api/payment/siret/{no_siret_or_siren}
+// Get document for siret orsiren
+// @access public
+router.get('/siret/:siret_siren',(req,res)=> {
+
+    var siren=req.params.siret_siren.substring(0, 9)
+    console.log(`siren:${siren}`)
+    siren=`${siren.substring(0,3)} ${siren.substring(3,6)} ${siren.substring(6,9)}`
+    data={
+       "form.siren": siren,
+       "form.critere": "S",
+       "form.nic": '',
+       "form.departement": '',
+       "form.departement_actif": '',
+     }
+    console.log(JSON.stringify(data))
+
+    const transport = axios.create({withCredentials: true})
+    transport.get("https://avis-situation-sirene.insee.fr/")
+      .catch (err => {
+        console.error(err)
+        res.status(404).json(err)
+        return
+      })
+      .then( resp => {
+          transport.post('https://avis-situation-sirene.insee.fr/IdentificationListeSiret.action', data)
+            .catch (err => {
+              res.status(404).json(err)
+              return
+            })
+            .then(resp => {
+              console.log(inspect(resp))
+              res.write(resp.data)
+            })
+      })
 });
 
 
