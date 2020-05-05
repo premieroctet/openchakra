@@ -36,8 +36,6 @@ class paymentPreference extends React.Component {
             haveAccount: false,
             bic: '',
             iban: '',
-
-
         };
         this.callDrawer = this.callDrawer.bind(this)
 
@@ -152,9 +150,9 @@ class paymentPreference extends React.Component {
             <meta property="description" content="My Alfred, des services entre particuliers et auto-entrepreneurs rémunérés ! Choisissez vos méthodes de versement de vos rémunérations pour chacun des services réalisés. Versement 72h après la prestation." />
           </Helmet>
             <Layout>
-              <Grid container className={classes.bigContainer} style={{minHeight:530}}>
+              <Grid container className={classes.bigContainer}>
                 <Grid style={{zIndex: 0}}>
-                  <ResponsiveDrawer ref={this.child}/>
+                  <ResponsiveDrawer ref={this.child} isActiveIndex={2}/>
                 </Grid>
                   <Grid>
                     <Grid>
@@ -170,32 +168,35 @@ class paymentPreference extends React.Component {
                     </Grid>
                   </Grid>
                   <Grid item xs={9} className={classes.containerLeft}>
+                    <Grid container>
+                      <h1 style={{color: 'dimgray', fontWeight: '100'}}>Préférence de versement</h1>
+                    </Grid>
                       <Grid container>
-                          <h1 style={{color: 'dimgray', fontWeight: '100'}}>Préférence de versement</h1>
-                      </Grid>
-                      <Grid container>
-                          <Grid item xs={12}>
-                              <h2 style={{color: 'dimgray', fontWeight: '100'}}>RIB</h2>
-                          </Grid>
+                        <Grid item xs={12}>
+                          <h2 style={{color: 'dimgray', fontWeight: '100'}}>RIB</h2>
+                        </Grid>
                           <Grid item className={classes.containerBank}>
-                              <p>Compte bancaire (par défaut)</p>
-                              {haveAccount ?  <p>{accounts[0].OwnerName}, {accounts[0].IBAN}</p>:  <p>Aucun rib</p> }
-
+                            <p>Compte bancaire (par défaut)</p>
+                            {haveAccount ?
+                              <p>{accounts[0].OwnerName}, {accounts[0].IBAN}</p>
+                              :
+                              <p>Aucun rib</p>
+                            }
                           </Grid>
                       </Grid>
-                <Grid container>
-                    <Grid item>
-                        {haveAccount ?
+                      <Grid container>
+                        <Grid item>
+                          {haveAccount ?
                             <h2 className={classes.h2Style} onClick={()=>this.handleClick2()}>Supprimer le RIB</h2>
                             :
                             <h2 className={classes.h2Style} onClick={this.handleClick}>Ajouter un RIB</h2>
-                        }
-                    </Grid>
-                    {clickAdd ?
-                        <Grid container>
-                        <Grid item style={{marginBottom: '25%'}}>
-                            <form onSubmit={this.onSubmit}>
-                                <Grid item>
+                          }
+                          </Grid>
+                          {clickAdd ?
+                            <Grid container>
+                              <Grid item style={{marginBottom: '25%'}}>
+                                <form onSubmit={this.onSubmit}>
+                                  <Grid item>
                                     <TextField
                                         id="outlined-name"
                                         style={{width: '100%'}}
@@ -207,57 +208,56 @@ class paymentPreference extends React.Component {
                                         placeholder={'IBAN'}
                                         label={'IBAN'}
                                     />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        style={{width: '100%'}}
-                                        value={this.state.bic}
-                                        name={'bic'}
-                                        onChange={this.onChange}
-                                        margin="normal"
-                                        variant="outlined"
-                                        placeholder={'Code SWIFT / BIC'}
-                                        label={'Code SWIFT / BIC'}
-                                    />
-                                </Grid>
-
-                                <Grid item xs={12} style={{display: "flex", justifyContent: "flex-end"}}>
-                                    <Button size={'large'} type={'submit'} variant="contained" color="primary"
-                                            style={{color: 'white',marginTop: 15}}>
-                                        Ajouter le rib
-                                    </Button>
-                                </Grid>
-                            </form>
-                        </Grid>
-                        </Grid>
-                        : null}
-                    {clickDelete ?
-                        <Dialog
-                            open={this.state.clickDelete}
-                            onClose={()=>this.handleClose()}
-                            aria-labelledby="alert-dialog-title"
-                            aria-describedby="alert-dialog-description"
-                        >
-                            <DialogTitle id="alert-dialog-title">{"Voulez-vous vraiment supprimer votre RIB ?"}</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText id="alert-dialog-description">
-                                    Si vous supprimez votre RIB vous ne pourrez plus l'utiliser par la suite avec ce compte.
-                                </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button onClick={()=>this.handleClose()} color="primary">
-                                    Annuler
-                                </Button>
-                                <Button onClick={()=>this.deleteAccount(accounts[0].Id)} color="secondary" autoFocus>
-                                    Supprimer
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
-                        : null}
-                        </Grid>
-                     </Grid>
-          </Grid>
-        </Layout>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                      <TextField
+                                          style={{width: '100%'}}
+                                          value={this.state.bic}
+                                          name={'bic'}
+                                          onChange={this.onChange}
+                                          margin="normal"
+                                          variant="outlined"
+                                          placeholder={'Code SWIFT / BIC'}
+                                          label={'Code SWIFT / BIC'}
+                                      />
+                                    </Grid>
+                                    <Grid item xs={12} style={{display: "flex", justifyContent: "flex-end"}}>
+                                      <Button size={'large'} type={'submit'} variant="contained" color="primary"
+                                              style={{color: 'white',marginTop: 15}}>
+                                          Ajouter le rib
+                                        </Button>
+                                    </Grid>
+                                </form>
+                              </Grid>
+                              </Grid>
+                              : null}
+                              {clickDelete ?
+                                <Dialog
+                                    open={this.state.clickDelete}
+                                    onClose={()=>this.handleClose()}
+                                    aria-labelledby="alert-dialog-title"
+                                    aria-describedby="alert-dialog-description"
+                                  >
+                                    <DialogTitle id="alert-dialog-title">{"Voulez-vous vraiment supprimer votre RIB ?"}</DialogTitle>
+                                      <DialogContent>
+                                        <DialogContentText id="alert-dialog-description">
+                                            Si vous supprimez votre RIB vous ne pourrez plus l'utiliser par la suite avec ce compte.
+                                        </DialogContentText>
+                                      </DialogContent>
+                                      <DialogActions>
+                                        <Button onClick={()=>this.handleClose()} color="primary">
+                                            Annuler
+                                        </Button>
+                                        <Button onClick={()=>this.deleteAccount(accounts[0].Id)} color="secondary" autoFocus>
+                                            Supprimer
+                                        </Button>
+                                      </DialogActions>
+                                  </Dialog>
+                                  : null}
+                                  </Grid>
+                               </Grid>
+              </Grid>
+            </Layout>
         </Fragment>
     );}
 

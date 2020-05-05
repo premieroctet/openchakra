@@ -1,15 +1,9 @@
 export default theme => ({
-  containerBank:{
-    paddingLeft: 20,
-    border: '1px solid lightgrey',
-    width: '70%',
-    [theme.breakpoints.down('xs')]: {
-      width: '90%',
-    }
-  },
   bigContainer: {
     marginTop: 100,
     flexGrow: 1,
+    width: "100%",
+    minHeight: 520,
   },
   hidesm: {
     minWidth: '271px',
@@ -49,10 +43,20 @@ export default theme => ({
       }
     }
   },
-  h2Style:{
-    color: '#2FBCD3',
-    fontWeight: '100',
-    cursor: 'pointer'
+  picsContainer: {
+    display:"flex",
+    justifyContent:"center",
+    width:'50%',
+    height:'auto',
+    [theme.breakpoints.down('sm')]: {
+      display:'none'
+    },
+    [theme.breakpoints.down('md')]: {
+      display:'none'
+    }
+  },
+  formClasse:{
+    width:'100%',
   },
   menuButton: {
     marginLeft: theme.spacing(1),

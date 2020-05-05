@@ -10,75 +10,13 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
 import { toast } from 'react-toastify';
 import {Helmet} from 'react-helmet';
-
+import styles from './security/securityStyle'
+import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
 moment.locale('fr');
 
-const styles = theme => ({
-    bigContainer: {
-        marginTop: 70,
-        flexGrow: 1,
-        width: "100%",
-        minHeight: 520,
-
-    },
-    hidesm: {
-        minWidth: '271px',
-        [theme.breakpoints.down('sm')]: {
-            display:'none'
-        }
-    },
-   hidelg: {
-        [theme.breakpoints.up('md')]: {
-            display:'none',
-        }
-    },
-    trigger:{
-        [theme.breakpoints.down('sm')]: {
-            marginTop: -10,
-            width: '100%',
-            marginLeft:'0px',
-            height:'30px',
-            backgroundColor:'#2FBCD3',
-            display:'block',
-            transition: 'display 0.7s',
-            borderRadius:'5px',
-            '&:focus': {
-                display:'none',
-                transition: 'display 0.7s',
-            }
-        }
-   },
-    toggle: {
-        [theme.breakpoints.down('sm')]: {
-            marginLeft:'-75px',
-            transition: 'margin-left 0.7s',
-            '&:hover': {
-                marginLeft:'0px',
-                transition: 'margin-left 0.7s',
-                boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-            }
-        }
-    },
-    formContainer: {
-        paddingLeft: 55,
-    },
-    picsContainer: {
-        display:"flex",
-        justifyContent:"center",
-        width:'50%',
-        height:'auto',
-        [theme.breakpoints.down('sm')]: {
-            display:'none'
-        },
-        [theme.breakpoints.down('md')]: {
-            display:'none'
-        }
-    },
-    formClasse:{
-        width:'100%',
-    }
-});
 
 class security extends React.Component {
     constructor(props) {
@@ -171,142 +109,29 @@ class security extends React.Component {
 
         return (
             <Fragment>
-		<Helmet>
-        <title>Compte - Sécurité - My Alfred </title>
-        <meta property="description" content="Modifiez votre mot de passe et gérer la sécurité de votre compte My Alfred. Des milliers de particuliers et auto-entrepreneurs proches de chez vous prêts à vous rendre service ! Paiement sécurisé. Inscription 100% gratuite !" />
-      </Helmet>
+            <Helmet>
+                <title>Compte - Sécurité - My Alfred </title>
+                <meta property="description" content="Modifiez votre mot de passe et gérer la sécurité de votre compte My Alfred. Des milliers de particuliers et auto-entrepreneurs proches de chez vous prêts à vous rendre service ! Paiement sécurisé. Inscription 100% gratuite !" />
+              </Helmet>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-                    <Grid className={classes.toggle}  item xs={3}>
-                         <div className={classes.trigger}/>
-                            <Grid container style={{justifyContent: 'center',}}>
-                                <Grid item style={{marginTop: 30,width: 275.25}} className={classes.hidesm}>
-                                    <Link href={'/account/notifications'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Notifications
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 30,width: 275.25}} className={classes.hidelg}>
-                                    <Link href={'/account/notifications'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a  style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10}} className={classes.hidesm}>
-                                    <Link href={'/account/paymentMethod'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/credit-card.svg'} alt={'credit-card'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Mode de paiement
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10}} className={classes.hidelg}>
-                                    <Link href={'/account/paymentMethod'}>
-                                        <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/credit-card.svg'} alt={'credit-card'} height={70} width={27} style={{marginleft: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
-                                    <Link href={'/account/paymentPreference'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Préférence de versement
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidelg}>
-                                    <Link href={'/account/paymentPreference'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
-                                    <Link href={'/account/transactions'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Historique des transactions
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidelg}>
-                                    <Link href={'/account/transactions'}>
-                                        <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
-                                    <Link href={'/account/security'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/locked-padlock-2.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Sécurité
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidelg}>
-                                    <Link href={'/account/security'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/locked-padlock-2.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
-                                    <Link href={'/account/parameters'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Paramètres
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidelg}>
-                                    <Link href={'/account/parameters'}>
-                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
+                        <Grid style={{zIndex: 0}}>
+                            <ResponsiveDrawer ref={this.child} isActiveIndex={4}/>
+                        </Grid>
+                        <Grid>
+                            <Grid>
+                                <IconButton
+                                  color="inherit"
+                                  aria-label="open drawer"
+                                  edge="start"
+                                  onClick={this.callDrawer}
+                                  className={classes.menuButton}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
                             </Grid>
                         </Grid>
-                        <Grid item xs={9} className={classes.formContainer}>
+                        <Grid item xs={9} className={classes.containerLeft}>
                             <h1 style={{color: 'dimgray',fontWeight: '100'}}>Securité</h1>
                             <Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'left' }}>

@@ -8,114 +8,13 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import {Helmet} from 'react-helmet';
+import styles from './transactions/transactionsStyle'
+import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
 moment.locale('fr');
 
-const styles = theme => ({
-    bigContainer: {
-        marginTop: 70,
-        flexGrow: 1,
-
-    },
-    hidesm: {
-        minWidth: '271px',
-        [theme.breakpoints.down('sm')]: {
-            display:'none'
-        }
-    }
-
-   ,hidelg: {
-        [theme.breakpoints.up('md')]: {
-            display:'none',
-        }
-
-    },
-    trigger:{
-    [theme.breakpoints.down('sm')]: {
-    marginTop: -10,
-    width: '100%',
-    marginLeft:'0px',
-    height:'30px',
-    backgroundColor:'#2FBCD3',
-
-    display:'block',
-    transition: 'display 0.7s',
-    borderRadius:'5px',
-    '&:focus': {
-    display:'none',
-    transition: 'display 0.7s',
-
-       }
-     }
-
-},
-    toggle: {
-        [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
-        transition: 'margin-left 0.7s',
-
-        '&:hover': {
-            marginLeft:'0px',
-            transition: 'margin-left 0.7s',
-            boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-
-             }
-      }
-    },
-
-    tabweb:{width:'100%', position:'sticky', top:'35px', fontSize:15, backgroundColor:'white', zIndex:'20',
-        [theme.breakpoints.down('sm')]: {
-            display: 'none'}},
-
-
-    tabmobile:{
-        fontSize:'10px', fontWeight:'300', marginTop:'-100px', height:60, backgroundColor:'white', position:'sticky', top:55, zIndex:20,
-        [theme.breakpoints.up('md')]: {
-            display: 'none',
-        },
-        [theme.breakpoints.down('xs')]: {
-            height: 100,
-            top:65
-        },
-        },
-        trait:{
-            width: '100%',
-            height: 4,
-            backgroundColor: 'rgb(47, 188, 211)',
-            borderColor: 'transparent',
-            [theme.breakpoints.down('sm')]: {
-            },
-        },
-        trait1:{
-            width: '100%',
-
-            height: 4,
-            backgroundColor: 'lightgray',
-            borderColor: 'transparent'
-        },
-        trait2:{
-            width: '100%',
-            height: 4,
-            backgroundColor: 'lightgray',
-            borderColor: 'transparent',
-        },
-        trait3:{
-            width: '100%',
-
-            height: 4,
-            backgroundColor: 'rgb(47, 188, 211)',
-            borderColor: 'transparent'
-        },
-        historesp: {
-            [theme.breakpoints.down('sm')]: {
-                marginTop: '150px',
-            },
-            [theme.breakpoints.down('xs')]: {
-                marginTop: 50,
-            },
-        }
-
-
-});
 
 class transactions extends React.Component {
     constructor(props) {
@@ -125,9 +24,7 @@ class transactions extends React.Component {
             tabs: false,
             paid: [],
             paidSoon: []
-
         }
-
     }
 
     componentDidMount() {
@@ -172,175 +69,33 @@ class transactions extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const {tabs} = this.state;
-        const {paid} = this.state;
-        const {paidSoon} = this.state;
+        const {tabs, paid, paidSoon} = this.state;
 
         return (
             <Fragment>
-		<Helmet>
-        <title>compte - Historique des transactions - My Alfred </title>
-        <meta property="description" content="Retrouvez l'ensemble des services rémunérés que vous avez consommé sur My Alfred depuis votre historique des transactions. My Alfred des services entre particuliers assurés, un paiement sécurisé ! " />
-      </Helmet>
-
+            <Helmet>
+                <title>compte - Historique des transactions - My Alfred </title>
+                <meta property="description" content="Retrouvez l'ensemble des services rémunérés que vous avez consommé sur My Alfred depuis votre historique des transactions. My Alfred des services entre particuliers assurés, un paiement sécurisé ! " />
+              </Helmet>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-
-                    <Grid className={classes.toggle}  item xs={3} style={{}}>
-
-                         <div className={classes.trigger}/>
-                            <Grid container style={{justifyContent: 'center',}}>
-                                <Grid item style={{marginTop: 30,width: 275.25}} className={classes.hidesm}>
-                                    <Link href={'/account/notifications'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Notifications
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 30,width: 275.25}} className={classes.hidelg}>
-                                    <Link href={'/account/notifications'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/smartphone-call.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10}} className={classes.hidesm}>
-                                    <Link href={'/account/paymentMethod'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/credit-card.svg'} alt={'credit-card'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Mode de paiement
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10}} className={classes.hidelg}>
-                                    <Link href={'/account/paymentMethod'}>
-                                        <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/credit-card.svg'} alt={'credit-card'} height={70} width={27} style={{marginleft: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
-                                    <Link href={'/account/paymentPreference'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Préférence de versement
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidelg}>
-                                    <Link href={'/account/paymentPreference'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
-                                    <Link href={'/account/transactions'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/ascendant-bars-graphic-2.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Historique des transactions
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidelg}>
-                                    <Link href={'/account/transactions'}>
-                                        <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/ascendant-bars-graphic-2.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
-                                    <Link href={'/account/security'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Sécurité
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidelg}>
-                                    <Link href={'/account/security'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
-                                    <Link href={'/account/applications'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/network.svg'} alt={'network'} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Applications connectées
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidelg}>
-                                    <Link href={'/account/applications'}>
-                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/network.svg'} alt={'network'} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 270.25}} className={classes.hidesm}>
-                                    <Link href={'/account/parameters'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Paramètres
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidelg}>
-                                    <Link href={'/account/parameters'}>
-                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
+                        <Grid style={{zIndex: 0}}>
+                            <ResponsiveDrawer ref={this.child} isActiveIndex={3}/>
+                        </Grid>
+                        <Grid>
+                            <Grid>
+                                <IconButton
+                                  color="inherit"
+                                  aria-label="open drawer"
+                                  edge="start"
+                                  onClick={this.callDrawer}
+                                  className={classes.menuButton}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
                             </Grid>
                         </Grid>
-
-
-                        <Grid item xs={9} style={{paddingLeft: 20, marginBottom: '20px',minHeight:530}}>
+                        <Grid item xs={9} className={classes.containerLeft}>
                             <Grid container className={classes.tabweb} style={{paddingRight:20}}>
                                 <Grid item xs={12}>
                                     <h1 style={{color: 'dimgray',fontWeight: '100'}}>Historique des transactions</h1>

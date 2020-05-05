@@ -1,5 +1,4 @@
 import React, {Fragment} from 'react';
-import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import moment from 'moment';
@@ -8,56 +7,14 @@ import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import Switch from "@material-ui/core/Switch";
-import Footer from '../../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
 import {Helmet} from 'react-helmet';
+import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import styles from './notifications/notificationsStyle'
 
 moment.locale('fr');
-
-const styles = theme => ({
-    bigContainer: {
-        marginTop: 70,
-        flexGrow: 1,
-    },
-    hidesm: {
-        minWidth: '271px',
-        [theme.breakpoints.down('sm')]: {
-            display:'none'
-        }
-    },
-    hidelg: {
-        [theme.breakpoints.up('md')]: {
-            display:'none',
-        }
-    },
-    trigger: {
-        [theme.breakpoints.down('sm')]: {
-            marginTop: -10,
-            width: '100%',
-            marginLeft: '0px',
-            height: '30px',
-            backgroundColor: '#2FBCD3',
-            display: 'block',
-            transition: 'display 0.7s',
-            borderRadius: '5px',
-            '&:focus': {
-                display: 'none',
-                transition: 'display 0.7s',
-            }
-        }
-    },
-    toggle: {
-        [theme.breakpoints.down('sm')]:{
-            marginLeft:'-75px',
-            transition: 'margin-left 0.7s',
-            '&:hover': {
-                marginLeft:'0px',
-                transition: 'margin-left 0.7s',
-                boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-             }
-        }
-    }
-});
 
 class notifications extends React.Component {
     constructor(props) {
@@ -81,6 +38,7 @@ class notifications extends React.Component {
             assistance_push: false,
             assistance_sms: false,
         };
+        this.callDrawer = this.callDrawer.bind(this)
     }
 
     componentDidMount() {
@@ -147,460 +105,347 @@ class notifications extends React.Component {
             .catch();
     };
 
+    callDrawer(){
+        this.child.current.handleDrawerToggle();
+    }
+
     render() {
         const {classes} = this.props;
-        const {user} = this.state;
-
 
         return (
             <Fragment>
-		<Helmet>
-        <title>compte - Notifications - My Alfred </title>
-        <meta property="description" content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. " />
-      </Helmet>
-
+                <Helmet>
+                    <title>compte - Notifications - My Alfred </title>
+                    <meta property="description" content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. " />
+                  </Helmet>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-                    <Grid className={classes.toggle}  item xs={3} style={{}}>
-                         <div className={classes.trigger}/>
-                            <Grid container style={{justifyContent: 'center',}}>
-                                <Grid item style={{marginTop: 30,width: 275.25}} className={classes.hidesm}>
-                                    <Link href={'/account/notifications'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/smartphone-call-2.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Notifications
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 30,width: 275.25}} className={classes.hidelg}>
-                                    <Link href={'/account/notifications'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/smartphone-call-2.svg'} alt={'smartphone-call'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a  style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10}} className={classes.hidesm}>
-                                    <Link href={'/account/paymentMethod'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/credit-card.svg'} alt={'credit-card'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Mode de paiement
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10}} className={classes.hidelg}>
-                                    <Link href={'/account/paymentMethod'}>
-                                        <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/credit-card.svg'} alt={'credit-card'} height={70} width={27} style={{marginleft: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
-                                    <Link href={'/account/paymentPreference'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Préférence de versement
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidelg}>
-                                    <Link href={'/account/paymentPreference'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/piggy-bank.svg'} alt={'piggy-bank'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
-                                    <Link href={'/account/transactions'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Historique des transactions
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidelg}>
-                                    <Link href={'/account/transactions'}>
-                                        <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/ascendant-bars-graphic.svg'} alt={'ascendant-bars'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
-                                    <Link href={'/account/security'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Sécurité
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidelg}>
-                                    <Link href={'/account/security'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/locked-padlock.svg'} alt={'locked-padlock'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidesm}>
-                                    <Link href={'/account/parameters'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Paramètres
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 275.25}} className={classes.hidelg}>
-                                    <Link href={'/account/parameters'}>
-                                        <div style={{padding:'30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/two-settings-cogwheels.svg'} alt={'settings'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem'}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
+                        <Grid style={{zIndex: 0}}>
+                            <ResponsiveDrawer ref={this.child} isActiveIndex={0}/>
+                        </Grid>
+                        <Grid>
+                            <Grid>
+                                <IconButton
+                                  color="inherit"
+                                  aria-label="open drawer"
+                                  edge="start"
+                                  onClick={this.callDrawer}
+                                  className={classes.menuButton}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
                             </Grid>
                         </Grid>
-                        <Grid item xs={9} style={{paddingLeft: 55}}>
+                    <Grid item xs={9} className={classes.containerLeft}>
+                        <Grid container>
                             <Grid container>
-                                <Grid container>
-                                    <h1 style={{color: 'dimgray',fontWeight: '100'}}>Notifications</h1>
-                                </Grid>
-                                <Grid item xs={12}>
-                                <h2 style={{fontWeight: '100',marginBotto:0}}>Messages</h2>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                    <p style={{marginTop:0}}>Recevez des messages de la part des Alfred et des utilisateurs y compris les demandes de réservations.
+                                <h1 style={{color: 'dimgray',fontWeight: '100'}}>Notifications</h1>
+                            </Grid>
+                            <Grid item xs={12}>
+                            <h2 style={{fontWeight: '100',marginBotto:0}}>Messages</h2>
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <p style={{marginTop:0}}>Recevez des messages de la part des Alfred et des utilisateurs y compris les demandes de réservations.
 
-                                    </p>
+                                </p>
+                            </Grid>
+                            <Grid container className={classes.item}>
+                            <Grid item xs={6} md={3}>
+                                <p>Email</p>
+                            </Grid>
+                                <Grid item xs={6} md={9}>
+                                    <Switch
+                                        checked={this.state.messages_email}
+                                        onChange={this.handleChange('messages_email')}
+                                        value={'messages_email'}
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
                                 </Grid>
-                                <Grid container className={classes.item}>
+                            </Grid>
+                            <Grid container className={classes.item}>
+                                <Grid item xs={6} md={3}>
+                                    <p>Notification push</p>
+                                </Grid>
+                                <Grid item xs={6} md={9}>
+                                    <Switch
+                                        checked={this.state.messages_push}
+                                        onChange={this.handleChange('messages_push')}
+                                        value={'messages_push'}
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid container className={classes.item}>
+                                <Grid item xs={6} md={3}>
+                                    <p>SMS</p>
+                                </Grid>
+                                <Grid item xs={6} md={9}>
+                                    <Switch
+                                        checked={this.state.messages_sms}
+                                        onChange={this.handleChange('messages_sms')}
+                                        value={'messages_sms'}
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid container>
+                                <Grid item xs={6}>
+                                    <hr/>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <h2 style={{fontWeight: '100',marginBotto:0}}>Rappel</h2>
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <p style={{marginTop:0}}>
+                                    Recevez des rappels de réservation, des demandes d’évaluation, des informations sur les tarifs et d’autres rappels relatifs à vos activités sur My-Alfred.
+                                </p>
+                            </Grid>
+                            <Grid container className={classes.item}>
                                 <Grid item xs={6} md={3}>
                                     <p>Email</p>
                                 </Grid>
-                                    <Grid item xs={6} md={9}>
-                                        <Switch
-                                            checked={this.state.messages_email}
-                                            onChange={this.handleChange('messages_email')}
-                                            value={'messages_email'}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    </Grid>
+                                <Grid item xs={6} md={9}>
+                                    <Switch
+                                        checked={this.state.rappel_email}
+                                        onChange={this.handleChange('rappel_email')}
+                                        value={'rappel_email'}
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
                                 </Grid>
-                                <Grid container className={classes.item}>
-                                    <Grid item xs={6} md={3}>
-                                        <p>Notification push</p>
-                                    </Grid>
-                                    <Grid item xs={6} md={9}>
-                                        <Switch
-                                            checked={this.state.messages_push}
-                                            onChange={this.handleChange('messages_push')}
-                                            value={'messages_push'}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    </Grid>
+                            </Grid>
+                            <Grid container className={classes.item}>
+                                <Grid item xs={6} md={3}>
+                                    <p>Notification push</p>
                                 </Grid>
-                                <Grid container className={classes.item}>
-                                    <Grid item xs={6} md={3}>
-                                        <p>SMS</p>
-                                    </Grid>
-                                    <Grid item xs={6} md={9}>
-                                        <Switch
-                                            checked={this.state.messages_sms}
-                                            onChange={this.handleChange('messages_sms')}
-                                            value={'messages_sms'}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    </Grid>
+                                <Grid item xs={6} md={9}>
+                                    <Switch
+                                        checked={this.state.rappel_push}
+                                        onChange={this.handleChange('rappel_push')}
+                                        value={'rappel_push'}
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
                                 </Grid>
-                                <Grid container>
-                                    <Grid item xs={6}>
-                                        <hr/>
-                                    </Grid>
+                            </Grid>
+                            <Grid container className={classes.item}>
+                                <Grid item xs={6} md={3}>
+                                    <p>SMS</p>
+                                </Grid>
+                                <Grid item xs={6} md={9}>
+                                    <Switch
+                                        checked={this.state.rappel_sms}
+                                        onChange={this.handleChange('rappel_sms')}
+                                        value={'rappel_sms'}
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
                                 </Grid>
                             </Grid>
                             <Grid container>
-                                <Grid item xs={12}>
-                                    <h2 style={{fontWeight: '100',marginBotto:0}}>Rappel</h2>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                    <p style={{marginTop:0}}>
-                                        Recevez des rappels de réservation, des demandes d’évaluation, des informations sur les tarifs et d’autres rappels relatifs à vos activités sur My-Alfred.
-                                    </p>
-                                </Grid>
-                                <Grid container className={classes.item}>
-                                    <Grid item xs={6} md={3}>
-                                        <p>Email</p>
-                                    </Grid>
-                                    <Grid item xs={6} md={9}>
-                                        <Switch
-                                            checked={this.state.rappel_email}
-                                            onChange={this.handleChange('rappel_email')}
-                                            value={'rappel_email'}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    </Grid>
-                                </Grid>
-                                <Grid container className={classes.item}>
-                                    <Grid item xs={6} md={3}>
-                                        <p>Notification push</p>
-                                    </Grid>
-                                    <Grid item xs={6} md={9}>
-                                        <Switch
-                                            checked={this.state.rappel_push}
-                                            onChange={this.handleChange('rappel_push')}
-                                            value={'rappel_push'}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    </Grid>
-                                </Grid>
-                                <Grid container className={classes.item}>
-                                    <Grid item xs={6} md={3}>
-                                        <p>SMS</p>
-                                    </Grid>
-                                    <Grid item xs={6} md={9}>
-                                        <Switch
-                                            checked={this.state.rappel_sms}
-                                            onChange={this.handleChange('rappel_sms')}
-                                            value={'rappel_sms'}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    </Grid>
-                                </Grid>
-                                <Grid container>
-                                    <Grid item xs={6}>
-                                        <hr/>
-                                    </Grid>
+                                <Grid item xs={6}>
+                                    <hr/>
                                 </Grid>
                             </Grid>
+                        </Grid>
 
-                            <Grid container>
-                                <Grid item xs={12}>
-                                    <h2 style={{fontWeight: '100',marginBotto:0}}>Promotions & Astuces</h2>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <h2 style={{fontWeight: '100',marginBotto:0}}>Promotions & Astuces</h2>
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <p style={{marginTop:0}}>
+                                    Recevez des coupons, des informations promotionnelles, des enquêtes, et des informations de la part de My-Alfred
+                                    et de ses partenaires.
+                                </p>
+                            </Grid>
+                            <Grid container className={classes.item}>
+                                <Grid item xs={6} md={3}>
+                                    <p>Email</p>
                                 </Grid>
-                                <Grid item xs={12} md={6}>
-                                    <p style={{marginTop:0}}>
-                                        Recevez des coupons, des informations promotionnelles, des enquêtes, et des informations de la part de My-Alfred
-                                        et de ses partenaires.
-                                    </p>
+                                <Grid item xs={6} md={9}>
+                                    <Switch
+                                        checked={this.state.promotions_email}
+                                        onChange={this.handleChange('promotions_email')}
+                                        value={'promotions_email'}
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
                                 </Grid>
-                                <Grid container className={classes.item}>
-                                    <Grid item xs={6} md={3}>
-                                        <p>Email</p>
-                                    </Grid>
-                                    <Grid item xs={6} md={9}>
-                                        <Switch
-                                            checked={this.state.promotions_email}
-                                            onChange={this.handleChange('promotions_email')}
-                                            value={'promotions_email'}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    </Grid>
+                            </Grid>
+                            <Grid container className={classes.item}>
+                                <Grid item xs={6} md={3}>
+                                    <p>Notification push</p>
                                 </Grid>
-                                <Grid container className={classes.item}>
-                                    <Grid item xs={6} md={3}>
-                                        <p>Notification push</p>
-                                    </Grid>
-                                    <Grid item xs={6} md={9}>
-                                        <Switch
-                                            checked={this.state.promotions_push}
-                                            onChange={this.handleChange('promotions_push')}
-                                            value={'promotions_push'}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    </Grid>
+                                <Grid item xs={6} md={9}>
+                                    <Switch
+                                        checked={this.state.promotions_push}
+                                        onChange={this.handleChange('promotions_push')}
+                                        value={'promotions_push'}
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
                                 </Grid>
-                                <Grid container className={classes.item}>
-                                    <Grid item xs={6} md={3}>
-                                        <p>SMS</p>
-                                    </Grid>
-                                    <Grid item xs={6} md={9}>
-                                        <Switch
-                                            checked={this.state.promotions_sms}
-                                            onChange={this.handleChange('promotions_sms')}
-                                            value={'promotions_sms'}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    </Grid>
+                            </Grid>
+                            <Grid container className={classes.item}>
+                                <Grid item xs={6} md={3}>
+                                    <p>SMS</p>
                                 </Grid>
-                                <Grid container className={classes.item}>
-                                    <Grid item xs={6} md={3}>
-                                        <p>Appel téléphonique</p>
-                                    </Grid>
-                                    <Grid item xs={6} md={9}>
-                                        <Switch
-                                            checked={this.state.promotions_phone}
-                                            onChange={this.handleChange('promotions_phone')}
-                                            value={'promotions_phone'}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    </Grid>
+                                <Grid item xs={6} md={9}>
+                                    <Switch
+                                        checked={this.state.promotions_sms}
+                                        onChange={this.handleChange('promotions_sms')}
+                                        value={'promotions_sms'}
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
                                 </Grid>
-                                <Grid container>
-                                    <Grid item xs={6}>
-                                        <hr/>
-                                    </Grid>
+                            </Grid>
+                            <Grid container className={classes.item}>
+                                <Grid item xs={6} md={3}>
+                                    <p>Appel téléphonique</p>
+                                </Grid>
+                                <Grid item xs={6} md={9}>
+                                    <Switch
+                                        checked={this.state.promotions_phone}
+                                        onChange={this.handleChange('promotions_phone')}
+                                        value={'promotions_phone'}
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
                                 </Grid>
                             </Grid>
                             <Grid container>
-                                <Grid item xs={12}>
-                                    <h2 style={{fontWeight: '100',marginBotto:0}}>Politique & communauté </h2>
+                                <Grid item xs={6}>
+                                    <hr/>
                                 </Grid>
-                                <Grid item xs={12} md={6}>
-                                    <p style={{marginTop:0}}>
-                                        Recevez des nouvelles sur les réglementations liées aux prestations de services
-                                    </p>
+                            </Grid>
+                        </Grid>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <h2 style={{fontWeight: '100',marginBotto:0}}>Politique & communauté </h2>
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <p style={{marginTop:0}}>
+                                    Recevez des nouvelles sur les réglementations liées aux prestations de services
+                                </p>
+                            </Grid>
+                            <Grid container className={classes.item}>
+                                <Grid item xs={6} md={3}>
+                                    <p>Email</p>
                                 </Grid>
-                                <Grid container className={classes.item}>
-                                    <Grid item xs={6} md={3}>
-                                        <p>Email</p>
-                                    </Grid>
-                                    <Grid item xs={6} md={9}>
-                                        <Switch
-                                            checked={this.state.community_email}
-                                            onChange={this.handleChange('community_email')}
-                                            value={'community_email'}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    </Grid>
+                                <Grid item xs={6} md={9}>
+                                    <Switch
+                                        checked={this.state.community_email}
+                                        onChange={this.handleChange('community_email')}
+                                        value={'community_email'}
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
                                 </Grid>
-                                <Grid container className={classes.item}>
-                                    <Grid item xs={6} md={3}>
-                                        <p>Notification push</p>
-                                    </Grid>
-                                    <Grid item xs={6} md={9}>
-                                        <Switch
-                                            checked={this.state.community_push}
-                                            onChange={this.handleChange('community_push')}
-                                            value={'community_push'}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    </Grid>
+                            </Grid>
+                            <Grid container className={classes.item}>
+                                <Grid item xs={6} md={3}>
+                                    <p>Notification push</p>
                                 </Grid>
-                                <Grid container className={classes.item}>
-                                    <Grid item xs={6} md={3}>
-                                        <p>SMS</p>
-                                    </Grid>
-                                    <Grid item xs={6} md={9}>
-                                        <Switch
-                                            checked={this.state.community_sms}
-                                            onChange={this.handleChange('community_sms')}
-                                            value={'community_sms'}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    </Grid>
+                                <Grid item xs={6} md={9}>
+                                    <Switch
+                                        checked={this.state.community_push}
+                                        onChange={this.handleChange('community_push')}
+                                        value={'community_push'}
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
                                 </Grid>
-                                <Grid container>
-                                    <Grid item xs={6}>
-                                        <hr/>
-                                    </Grid>
+                            </Grid>
+                            <Grid container className={classes.item}>
+                                <Grid item xs={6} md={3}>
+                                    <p>SMS</p>
+                                </Grid>
+                                <Grid item xs={6} md={9}>
+                                    <Switch
+                                        checked={this.state.community_sms}
+                                        onChange={this.handleChange('community_sms')}
+                                        value={'community_sms'}
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
                                 </Grid>
                             </Grid>
                             <Grid container>
-                                <Grid item xs={12}>
-                                    <h2 style={{fontWeight: '100',marginBotto:0}}>Assistance du compte </h2>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                    <p style={{marginTop:0}}>
-                                        Nous devrons peut-être vous envoyer des messages concernant votre compte. Vos réservations de services,
-                                        des informations légales,
-                                        des questions de sécurité et de confidentialité, et pour répondre à vos demandes adressées à notre assistance
-                                        utilisateur.
-                                        Pour votre sécurité, vous ne pouvez pas désactiver les notifications par email et nous pourrions vous
-                                        contacter par téléphone ou d’autres moyens si besoin.
-                                    </p>
-                                </Grid>
-                                <Grid container className={classes.item}>
-                                    <Grid item xs={6} md={3}>
-                                        <p>Email</p>
-                                    </Grid>
-                                    <Grid item xs={6} md={9}>
-                                        <Switch
-                                            checked={this.state.assistance_email}
-                                            onChange={this.handleChange('assistance_email')}
-                                            value={'assistance_email'}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    </Grid>
-                                </Grid>
-                                <Grid container className={classes.item}>
-                                    <Grid item xs={6} md={3}>
-                                        <p>Notification push</p>
-                                    </Grid>
-                                    <Grid item xs={6} md={9}>
-                                        <Switch
-                                            checked={this.state.assistance_push}
-                                            onChange={this.handleChange('assistance_push')}
-                                            value={'assistance_push'}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    </Grid>
-                                </Grid>
-                                <Grid container className={classes.item}>
-                                    <Grid item xs={6} md={3}>
-                                        <p>SMS</p>
-                                    </Grid>
-                                    <Grid item xs={6} md={9}>
-                                        <Switch
-                                            checked={this.state.assistance_sms}
-                                            onChange={this.handleChange('assistance_sms')}
-                                            value={'assistance_sms'}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    </Grid>
-                                </Grid>
-                                <Grid container>
-                                    <Grid item xs={6}>
-                                        <hr/>
-                                    </Grid>
+                                <Grid item xs={6}>
+                                    <hr/>
                                 </Grid>
                             </Grid>
+                        </Grid>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <h2 style={{fontWeight: '100',marginBotto:0}}>Assistance du compte </h2>
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <p style={{marginTop:0}}>
+                                    Nous devrons peut-être vous envoyer des messages concernant votre compte. Vos réservations de services,
+                                    des informations légales,
+                                    des questions de sécurité et de confidentialité, et pour répondre à vos demandes adressées à notre assistance
+                                    utilisateur.
+                                    Pour votre sécurité, vous ne pouvez pas désactiver les notifications par email et nous pourrions vous
+                                    contacter par téléphone ou d’autres moyens si besoin.
+                                </p>
+                            </Grid>
+                            <Grid container className={classes.item}>
+                                <Grid item xs={6} md={3}>
+                                    <p>Email</p>
+                                </Grid>
+                                <Grid item xs={6} md={9}>
+                                    <Switch
+                                        checked={this.state.assistance_email}
+                                        onChange={this.handleChange('assistance_email')}
+                                        value={'assistance_email'}
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid container className={classes.item}>
+                                <Grid item xs={6} md={3}>
+                                    <p>Notification push</p>
+                                </Grid>
+                                <Grid item xs={6} md={9}>
+                                    <Switch
+                                        checked={this.state.assistance_push}
+                                        onChange={this.handleChange('assistance_push')}
+                                        value={'assistance_push'}
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid container className={classes.item}>
+                                <Grid item xs={6} md={3}>
+                                    <p>SMS</p>
+                                </Grid>
+                                <Grid item xs={6} md={9}>
+                                    <Switch
+                                        checked={this.state.assistance_sms}
+                                        onChange={this.handleChange('assistance_sms')}
+                                        value={'assistance_sms'}
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid container>
+                                <Grid item xs={6}>
+                                    <hr/>
+                                </Grid>
+                            </Grid>
+                        </Grid>
                         </Grid>
                     </Grid>
                     <Grid container style={{marginBottom:20}}>

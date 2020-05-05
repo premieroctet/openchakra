@@ -1,15 +1,8 @@
 export default theme => ({
-  containerBank:{
-    paddingLeft: 20,
-    border: '1px solid lightgrey',
-    width: '70%',
-    [theme.breakpoints.down('xs')]: {
-      width: '90%',
-    }
-  },
   bigContainer: {
     marginTop: 100,
     flexGrow: 1,
+    minHeight: 520,
   },
   hidesm: {
     minWidth: '271px',
@@ -48,11 +41,6 @@ export default theme => ({
         boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
       }
     }
-  },
-  h2Style:{
-    color: '#2FBCD3',
-    fontWeight: '100',
-    cursor: 'pointer'
   },
   menuButton: {
     marginLeft: theme.spacing(1),

@@ -1,20 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
-import MenuIcon from '@material-ui/icons/Menu';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles';
 import styles from './ResponsiveDrawerStyle'
 import Grid from '@material-ui/core/Grid';
@@ -28,27 +21,33 @@ class ResponsiveDrawer extends React.Component{
       itemsDrawer: [
         {
           text: 'Notifications',
-          url: '/account/notifications'
+          url: '/account/notifications',
+          isActivePics: 'NotificationsActive'
         },
        {
           text: 'Mode de paiement',
-          url: '/account/paymentMethod'
+          url: '/account/paymentMethod',
+          isActivePics: 'Mode de paiement active'
         },
         {
           text: 'Préférence de versement',
-          url: '/account/paymentPreference'
+          url: '/account/paymentPreference',
+          isActivePics: 'Préférence de versement active'
         },
        {
           text: 'Historique des transactions',
-          url: '/account/transactions'
+          url: '/account/transactions',
+          isActivePics: 'Historique des transactions active'
         },
        {
           text: 'Sécurité',
-          url: '/account/security'
+          url: '/account/security',
+          isActivePics: 'Sécurité active'
         },
        {
           text: 'Paramètres',
-          url: '/account/parameters'
+          url: '/account/parameters',
+          isActivePics: 'Paramètres active'
         },
       ]
     }
@@ -63,13 +62,12 @@ class ResponsiveDrawer extends React.Component{
     return (
       <Grid>
         <Grid className={classes.toolbar} />
-        <Divider />
         <List>
-          {this.state.itemsDrawer.map( (res) =>  (
+          {this.state.itemsDrawer.map( (res, index) =>  (
             <Link href={res.url}>
               <ListItem button key={res.text}>
                 <ListItemIcon>
-                  <img src={`../static/${res.text}.svg`} alt={res.text} title={res.text} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
+                  <img src={`../static/${index === this.props.isActiveIndex ? res.isActivePics : res.text}.svg`} alt={res.text} title={res.text} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
                 </ListItemIcon>
               <ListItemText primary={res.text} />
               </ListItem>
