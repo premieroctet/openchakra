@@ -26,6 +26,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {Helmet} from 'react-helmet';
+import styles from './trustAndVerification/trustAndVerificationStyle'
+import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -41,85 +45,6 @@ const FilledButton = styled.div`
     margin-top: 3px;
     margin-left: 3px;
 `;
-const styles = theme => ({
-    bigContainer: {
-        marginTop: 70,
-        marginBottom: 70,
-        flexGrow: 1,
-        [theme.breakpoints.down('sm')]: {
-            overflowX: 'hidden',
-        },
-    },
-    hidesm: {
-        minWidth: '271px',
-        [theme.breakpoints.down('sm')]: {
-            display:'none'
-        }
-    }
-    ,hidelg: {
-        [theme.breakpoints.up('md')]: {
-            display:'none',
-        }
-    },
-    trigger:{
-        [theme.breakpoints.down('sm')]: {
-            marginTop: -10,
-            width: '100%',
-            marginLeft:'0px',
-            height:'30px',
-            backgroundColor:'#2FBCD3',
-            display:'block',
-            transition: 'display 0.7s',
-            borderRadius:'5px',
-            '&:focus': {
-                display:'none',
-                transition: 'display 0.7s',
-            }
-        }
-    },
-    divresp: {
-        [theme.breakpoints.down('sm')]: {
-            width:'171%!important'
-        }
-    },
-    buttresp: {
-        [theme.breakpoints.down('sm')]: {
-            width:'86%!important',
-            fontSize:'0.7rem'
-        }
-    },
-    buttresp2: {
-        [theme.breakpoints.down('sm')]: {
-            width:'168%!important',
-            fontSize:'0.7rem'
-        }
-    },
-    respenr:{
-        [theme.breakpoints.down('sm')]: {
-            justifyContent:'flex-start!important',
-        }
-    }
-    ,respenr2:{
-        [theme.breakpoints.down('sm')]: {
-            fontSize:'0.7rem'
-        }
-    }
-    ,toggle: {
-        [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
-            transition: 'margin-left 0.7s',
-            '&:hover': {
-                marginLeft:'0px',
-                transition: 'margin-left 0.7s',
-                boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-            }
-        }
-    },
-    formresp:{
-        [theme.breakpoints.down('sm')]:{
-            width:'250%'
-        }
-    }
-});
 
 class Thumb extends React.Component {
     state = {
@@ -160,6 +85,7 @@ class Thumb extends React.Component {
 class trustAndVerification extends React.Component {
     constructor(props) {
         super(props);
+      this.child = React.createRef();
         this.state = {
             user: {},
             type: null,
@@ -191,6 +117,7 @@ class trustAndVerification extends React.Component {
             smsError: null,
         };
         this.editSiret = this.editSiret.bind(this);
+        this.callDrawer = this.callDrawer.bind(this)
     }
 
     componentDidMount() {
@@ -413,175 +340,87 @@ class trustAndVerification extends React.Component {
         .catch(err => toast.error("Erreur à la vérification du code"))
     }
 
+    callDrawer(){
+        this.child.current.handleDrawerToggle();
+    }
+
     render() {
         const {classes} = this.props;
-        const {user} = this.state;
-        const {ext} = this.state;
-        const {ext2} = this.state;
-        const {professional} = this.state;
-        const {alfred} = this.state;
-        const {company} = this.state;
+        const {user, ext, ext2, professional, alfred} = this.state;
 
         return (
             <Fragment>
-		<Helmet>
-        <title> Profil - Confiance et vérification - My Alfred </title>
-        <meta property="description" content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. " />
-      </Helmet>
+            <Helmet>
+                <title> Profil - Confiance et vérification - My Alfred </title>
+                <meta property="description" content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. " />
+              </Helmet>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-                        <Grid className={classes.toggle}  item xs={3} style={{}}>
-                            <div className={classes.trigger}/>
-                            <Grid container style={{justifyContent: 'center',}}>
-                                <Grid item style={{marginTop: 30,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/editProfile'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/user.svg'} alt={'user'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Modifier le profil
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/profile/editProfile'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/user.svg'} alt={'user'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/myAddresses'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'2',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/sign.svg'} alt={'sign'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Mes adresses de prestations
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10}} className={classes.hidelg}>
-                                    <Link href={'/profile/myAddresses'}>
-                                        <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/sign.svg'} alt={'sign'} height={70} width={27} style={{marginleft: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/profile/editPicture'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/picture-2.svg'} alt={'picture'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/editPicture'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/picture-2.svg'} alt={'picture'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Photo
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/profile/trustAndVerification'}>
-                                        <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/success-2.svg'} alt={'check'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/trustAndVerification'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/success-2.svg'} alt={'check'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Confiance et vérification
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/profile/reviews'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} height={70} alt={'comment'} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/reviews'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} height={70} alt={'comment'} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Commentaires
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
+                        <Grid style={{zIndex: 0}}>
+                            <ResponsiveDrawer ref={this.child} isActiveIndex={3} itemsDrawers={'profil'}/>
+                        </Grid>
+                        <Grid>
+                            <Grid>
+                                <IconButton
+                                  color="inherit"
+                                  aria-label="open drawer"
+                                  edge="start"
+                                  onClick={this.callDrawer}
+                                  className={classes.menuButton}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
                             </Grid>
                         </Grid>
-                        <Grid item xs={9} style={{paddingLeft: 55, }}>
-                            <Grid container className={classes.divresp}>
+                        <Grid item xs={9} className={classes.containerLeft}>
+                            <Grid container>
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Confiance et vérification</h1>
                             </Grid>
-                            <Grid container className={classes.divresp}>
+                            <Grid container>
                                 <Grid item xs={12} style={{marginTop: 20}}>
-
                                     <InputLabel style={{color: 'black'}}>Email</InputLabel>
                                 </Grid>
                                 <Grid container>
                                     <Grid item xs={12} style={{display:"contents",justifyContent:"center"}}>
                                         <TextField
                                             id="standard-name"
-                                            style={{ marginTop: 15,width:'50%'}}
+                                            className={classes.textField}
                                             value={user.email || ''}
                                             margin="normal"
                                             name={'email'}
                                             variant={'outlined'}
                                             disabled={true}
                                         />
-                                        {user.is_confirmed ? <img src={'../static/success-2.svg'} height={80} alt={'check'} width={28} style={{marginLeft: 5}}/> :
-                                            <img src={'../static/success.svg'} alt={'check'} height={80} width={28} style={{marginLeft: 5}}/>
+                                        {user.is_confirmed ?
+                                          <img src={'../static/Confiance et vérification active.svg'} height={80} alt={'check'} width={28} style={{marginLeft: 5}}/>
+                                          :
+                                          <img src={'../static/Confiance et vérification.svg'} alt={'check'} height={80} width={28} style={{marginLeft: 5}}/>
                                         }
                                     </Grid>
                                 </Grid>
                                 {user.is_confirmed ?
                                     null
-                                    : <Grid container> <Grid item xs={7}> <Button className={classes.buttresp} type="submit" onClick={()=>this.sendEmail()} variant="contained" color="primary" style={{width:'50%',color:'white',marginTop:15 }}>
+                                    :
+                                  <Grid container>
+                                    <Grid item className={classes.buttonSend}>
+                                      <Button className={classes.buttresp} type="submit" onClick={()=>this.sendEmail()} variant="contained" color="primary" style={{color:'white',marginTop:15 }}>
                                         Envoyer email de vérification
                                     </Button></Grid></Grid>}
                                 <Grid item xs={12} style={{marginTop: 20}}>
                                     <InputLabel style={{color: 'black'}}>Téléphone</InputLabel>
                                 </Grid>
                                 <Grid container>
-                                    <Grid item xs={12} style={{display:"contents",justifyContent:"center"}}>
+                                    <Grid item xs={12} style={{display:"flex"}}>
                                         <TextField
-                                            style={{ marginTop: 15,width:'50%'}}
+                                            className={classes.textField}
                                             value={user.phone || ''}
                                             margin="normal"
                                             name={'phone'}
                                             variant={'outlined'}
                                             disabled={true}
                                         />
-                                        {user.phone_confirmed ? <img src={'../static/success-2.svg'} alt={'check'} height={80} width={28} style={{marginLeft: 5}}/> :
-                                            <img src={'../static/success.svg'} alt={'check'} height={80} width={28} style={{marginLeft: 5}}/>
+                                        {user.phone_confirmed ? <img src={'../static/Confiance et vérification active.svg'} alt={'check'} height={80} width={28} style={{marginLeft: 5}}/> :
+                                            <img src={'../static/Confiance et vérification.svg'} alt={'check'} height={80} width={28} style={{marginLeft: 5}}/>
                                         }
                                     </Grid>
                                 </Grid>
@@ -589,18 +428,18 @@ class trustAndVerification extends React.Component {
                                     null
                                     :
                                     <Grid container>
-                                        <Grid item xs={4} style={{maxWidth:'30%'}}>
-                                            <Button className={classes.buttresp2} type="submit" onClick={()=>this.sendSms()} variant="contained" color="primary" style={{width:'100%',color:'white',marginTop:15 }}>
+                                        <Grid item  className={classes.buttonSendSMS}>
+                                            <Button className={classes.buttresp2} type="submit" onClick={()=>this.sendSms()} variant="contained" color="primary" style={{color:'white',marginTop:15 }}>
                                                 Envoyer sms de vérification
                                             </Button>
                                         </Grid>
                                     </Grid>}
-                                <Grid item xs={6}>
+                                <Grid item>
                                     <h2 style={{fontWeight:'100'}}>Pièce d'identité</h2>
-                                    <p className={classes.divresp} style={{color:'#2FBCD3'}}>Vous pouvez ajouter ou modifier une pièce d’identité en sélectionnant le type de pièce et télécharger le document.  Un recto pour le passeport et le recto/verso pour la pièce d’identité</p>
+                                    <p style={{color:'#2FBCD3'}}>Vous pouvez ajouter ou modifier une pièce d’identité en sélectionnant le type de pièce et télécharger le document.  Un recto pour le passeport et le recto/verso pour la pièce d’identité</p>
                                     <TextField
                                         select
-                                        style={{width:'70%'}}
+                                        className={classes.typeFile}
                                         value={this.state.type}
                                         name={'type'}
                                         onChange={(event)=>{this.onChange(event);this.setState({selected:true})}}
@@ -617,11 +456,11 @@ class trustAndVerification extends React.Component {
                                     </TextField>
                                     <form className={classes.formresp} onSubmit={this.onSubmit}>
                                         {this.state.haveCard ?
-                                            <Grid item xs={12}>
-                                                <Grid container style={{alignItems:"center"}}>
-                                                    <Grid item xs={9}>
-                                                        <Grid container className={classes.divresp} style={{border:'1px solid lightgrey',marginTop:20,alignItems:"center"}}>
-                                                            <Grid item xs={8}>
+                                            <Grid item>
+                                                <Grid container style={{alignItems:"center", flexWrap: 'nowrap'}}>
+                                                    <Grid item>
+                                                        <Grid container style={{border:'1px solid lightgrey',marginTop:20,alignItems:"center", justifyContent: 'center'}}>
+                                                            <Grid item>
                                                                 {ext ==='pdf' ?
                                                                     <Document
                                                                         file={`../${this.state.card.recto}`}
@@ -633,9 +472,9 @@ class trustAndVerification extends React.Component {
                                                                     <img src={`../${this.state.card.recto}`} alt={'recto'} width={200}/>
                                                                 }
                                                             </Grid>
-                                                            <Grid item xs={4}>
-                                                                <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
-                                                                    <Edit style={{cursor:"pointer"}}/>
+                                                            <Grid item className={classes.contentIcones}>
+                                                                <label className={classes.forminputs}>
+                                                                    <Edit color={'primary'} style={{cursor:"pointer"}}/>
                                                                     <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
                                                                            onChange={this.onChangeRecto}
                                                                            className="form-control" accept=".jpg,.jpeg,.png,.pdf"
@@ -646,15 +485,15 @@ class trustAndVerification extends React.Component {
                                                         </Grid>
                                                     </Grid>
                                                     <Grid item xs={3}>
-                                                        {user.id_confirmed ? <img src={'../static/success-2.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/> :
-                                                            <img src={'../static/success.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/>
+                                                        {user.id_confirmed ? <img src={'../static/Confiance et vérification active.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/> :
+                                                            <img src={'../static/Confiance et vérification.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/>
                                                         }
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
                                             :(
-                                                this.state.file===null ?<Grid item xs={6} style={{marginTop: 20,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center",
-                                                    }}>
+                                                this.state.file===null ?
+                                                  <Grid item xs={6} className={classes.containerRecto}>
                                                         <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
                                                             <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger recto</p>
                                                             <input disabled={!this.state.selected} id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
@@ -711,15 +550,15 @@ class trustAndVerification extends React.Component {
                                                         </Grid>
                                                     </Grid>
                                                     <Grid item xs={3}>
-                                                        {user.id_confirmed ? <img src={'../static/success-2.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/> :
-                                                            <img src={'../static/success.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/>
+                                                        {user.id_confirmed ? <img src={'../static/Confiance et vérification active.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/> :
+                                                            <img src={'../static/Confiance et vérification.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/>
                                                         }
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
                                             :(
-                                                this.state.file2===null ?<Grid item xs={6} style={{marginTop: 20,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center",
-                                                    }}>
+                                                this.state.file2===null ?
+                                                  <Grid item xs={9} className={classes.containerRecto}>
                                                         <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
                                                             <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger verso (sauf passeport)</p>
                                                             <input disabled={this.state.type === 'passeport' || !this.state.selected} id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
@@ -746,11 +585,11 @@ class trustAndVerification extends React.Component {
                                             )}
                                         {this.state.id_recto === null && this.state.id_verso !==null ?
                                             <Grid item xs={9} className={classes.respenr}  style={{marginTop:20,display:"flex",justifyContent:"flex-end"}}>
-                                                <Button className={classes.respenr2} onClick={()=>this.addVerso()} color={"primary"} variant={"contained"} style={{color:"white"}}>Enregistrer verso</Button>
+                                                <Button onClick={()=>this.addVerso()} color={"primary"} variant={"contained"} style={{color:"white"}}>Enregistrer verso</Button>
                                             </Grid>
                                             :
                                             <Grid item xs={9} className={classes.respenr} style={{marginTop:20,display:"flex",justifyContent:"flex-start"}}>
-                                                <Button className={classes.respenr2} type={"submit"} color={"secondary"} variant={"contained"} style={{color:"white"}}>Enregistrer</Button>
+                                                <Button type={"submit"} color={"secondary"} variant={"contained"} style={{color:"white"}}>Enregistrer</Button>
                                             </Grid>
                                         }
                                     </form>
@@ -797,25 +636,26 @@ class trustAndVerification extends React.Component {
                                     </Grid>
                                     {professional ?
                                         <React.Fragment>
-                                            <Grid container>
+                                            <Grid container className={classes.containerProfessional}>
                                                 <Grid item xs={12} style={{display:"contents",justifyContent:"center"}}>
                                                     <TextField
                                                         id="standard-name"
-                                                        style={{ marginTop: 15,width:'50%'}}
+                                                        className={classes.textField}
                                                         value={this.state.siret}
                                                         onChange={this.onChange}
                                                         margin="normal"
                                                         name={'siret'}
                                                         variant={'outlined'}
+                                                        label={'Siret'}
                                                     />
                                                     <Grid item xs={3} style={{marginTop:8,marginLeft:5}}>
-                                                        <Button onClick={()=>this.handleSiret()} type="submit" variant="contained" color="primary" style={{ width: '80%',color:'white',marginTop:15 }}>
+                                                        <Button onClick={()=>this.handleSiret()} type="submit" variant="contained" color="primary" style={{color:'white',marginTop:15 }}>
                                                             Vérifier
                                                         </Button>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
-                                            <Grid container style={{width:'70%',marginTop:20,backgroundColor:'whitesmoke',paddingLeft:10}}>
+                                            <Grid container style={{width:'85%',marginTop:20,backgroundColor:'whitesmoke',paddingLeft:10}}>
                                                 <Grid item xs={6}>
                                                     <p style={{marginBottom:0}}>Siret : {this.state.siret}</p>
                                                 </Grid>
@@ -823,7 +663,7 @@ class trustAndVerification extends React.Component {
                                                     <p style={{marginBottom:0}}>Date de creation : {this.state.creation_date}</p>
                                                 </Grid>
                                             </Grid>
-                                            <Grid container style={{width:'70%',backgroundColor:'whitesmoke',paddingLeft:10}}>
+                                            <Grid container style={{width:'85%',backgroundColor:'whitesmoke',paddingLeft:10}}>
                                                 <Grid item xs={6}>
                                                     <p style={{marginBottom:0,marginTop: 10}}>Dénomination : {this.state.name}</p>
                                                 </Grid>
@@ -831,7 +671,7 @@ class trustAndVerification extends React.Component {
                                                     <p style={{marginBottom:0,marginTop: 10}}>NAF/APE : {this.state.naf_ape}</p>
                                                 </Grid>
                                             </Grid>
-                                            <Grid container style={{width:'70%',backgroundColor:'whitesmoke',paddingLeft:10}}>
+                                            <Grid container style={{width:'85%',backgroundColor:'whitesmoke',paddingLeft:10}}>
 
                                                 <Grid item xs={12}>
                                                     <p style={{marginTop: 10}}>Status juridique : {this.state.status}</p>

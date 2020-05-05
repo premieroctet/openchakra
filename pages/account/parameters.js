@@ -24,6 +24,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 class parameters extends React.Component {
     constructor(props) {
         super(props);
+      this.child = React.createRef();
         this.state = {
             user: {},
             index_google: false,
@@ -32,6 +33,7 @@ class parameters extends React.Component {
             open2: false,
         };
         this.handleClose = this.handleClose.bind(this);
+      this.callDrawer = this.callDrawer.bind(this)
 
     }
 
@@ -139,6 +141,10 @@ class parameters extends React.Component {
                 .catch();
         }
     };
+
+  callDrawer(){
+    this.child.current.handleDrawerToggle();
+  }
 
     render() {
         const {classes} = this.props;

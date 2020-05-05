@@ -16,73 +16,18 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {Helmet} from 'react-helmet';
+import styles from './myAddresses/myAddressesStyle'
+import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
 moment.locale('fr');
 
-const styles = theme => ({
-    bigContainer: {
-        marginTop: 70,
-        flexGrow: 1,
-    },
-    hidesm: {
-        minWidth: '271px',
-        [theme.breakpoints.down('sm')]: {
-            display:'none'
-        }
-    },
-   hidelg: {
-        [theme.breakpoints.up('md')]: {
-            display:'none',
-        }
-    },
-    trigger:{
-    [theme.breakpoints.down('sm')]: {
-    marginTop: -10,
-    width: '100%',
-    marginLeft:'0px',
-    height:'30px',
-    backgroundColor:'#2FBCD3',
-    display:'block',
-    transition: 'display 0.7s',
-    borderRadius:'5px',
-    '&:focus': {
-    display:'none',
-    transition: 'display 0.7s',
-       }
-     }
-},
-    responsiveContainer: {
-        [theme.breakpoints.down('sm')]: {
-            width:'135%!important',
-        }
-    },
-    toggle: {
-        [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
-        transition: 'margin-left 0.7s',
-        '&:hover': {
-            marginLeft:'0px',
-            transition: 'margin-left 0.7s',
-            boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-             }
-      }
-    },
-  buttonAddaddress: {
-    color: '#4fbdd7',
-    marginTop: 15,
-    borderColor: '#4fbdd7',
-    backgroundColor: 'white',
-    border: '1px solid',
-    boxShadow: 'inherit',
-    '&:hover': {
-      backgroundColor: '#4fbdd7',
-      color:'white'
-    },
-  }
-});
 
 class myAddresses extends React.Component {
     constructor(props) {
         super(props);
+      this.child = React.createRef();
         this.state = {
             user: {},
             address: '',
@@ -120,6 +65,8 @@ class myAddresses extends React.Component {
         };
         this.onChangeAlgolia=this.onChangeAlgolia.bind(this);
         this.onChangeAlgolia2=this.onChangeAlgolia2.bind(this);
+        this.callDrawer = this.callDrawer.bind(this)
+
     }
 
     componentDidMount() {
@@ -260,131 +207,41 @@ class myAddresses extends React.Component {
                 .catch();
     };
 
+  callDrawer(){
+    this.child.current.handleDrawerToggle();
+  }
+
 
 
     render() {
         const {classes} = this.props;
-        const {user} = this.state;
-        const {currentAddress} = this.state;
-        const {clickAdd} = this.state;
-        const {clickEdit} = this.state;
-        const {service_address} = this.state;
-        const {address_selected} = this.state;
+        const {clickAdd, clickEdit, service_address, address_selected} = this.state;
 
         return (
             <Fragment>
-		<Helmet>
-        <title> Profil - Mes adresses de prestation - My Alfred </title>
-        <meta property="description" content="Renseignez vos adresses de prestation et recherchez des Alfred là où vous le souhaitez ! Des services entre particuliers dans toute la France. Réservez dès maintenant votre Alfred mécanicien, plombier, électricien, coiffeur, coach sportif…" />
-      </Helmet>
+            <Helmet>
+                <title> Profil - Mes adresses de prestation - My Alfred </title>
+                <meta property="description" content="Renseignez vos adresses de prestation et recherchez des Alfred là où vous le souhaitez ! Des services entre particuliers dans toute la France. Réservez dès maintenant votre Alfred mécanicien, plombier, électricien, coiffeur, coach sportif…" />
+              </Helmet>
                 <Layout>
-                    <Grid container className={classes.bigContainer} style={{overflowX:"hidden"}}>
-                        <Grid className={classes.toggle}  item xs={3} style={{}}>
-                            <div className={classes.trigger}/>
-                            <Grid container style={{justifyContent: 'center',}}>
-                                <Grid item style={{marginTop: 30,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/editProfile'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/user.svg'} alt={'user'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Modifier le profil
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/profile/editProfile'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/user.svg'} alt={'user'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/myAddresses'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'2',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/sign-2.svg'} alt={'sign'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Mes adresses de <br/>
-                                                prestations
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10}} className={classes.hidelg}>
-                                    <Link href={'/profile/myAddresses'}>
-                                        <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/sign-2.svg'} alt={'sign'} height={70} width={27} style={{marginleft: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/profile/editPicture'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/picture-2.svg'} alt={'picture'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/editPicture'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/picture-2.svg'} alt={'picture'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Photo
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/profile/trustAndVerification'}>
-                                        <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/success.svg'} alt={'check'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/trustAndVerification'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/success.svg'} alt={'check'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Confiance et vérification
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/profile/reviews'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/reviews'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Commentaires
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
+                    <Grid container className={classes.bigContainer}>
+                        <Grid style={{zIndex: 0}}>
+                            <ResponsiveDrawer ref={this.child} isActiveIndex={1} itemsDrawers={'profil'}/>
+                        </Grid>
+                        <Grid>
+                            <Grid>
+                                <IconButton
+                                  color="inherit"
+                                  aria-label="open drawer"
+                                  edge="start"
+                                  onClick={this.callDrawer}
+                                  className={classes.menuButton}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
                             </Grid>
                         </Grid>
-                        <Grid item xs={9} style={{paddingLeft: 20}}>
+                        <Grid item xs={9} className={classes.containerLeft}>
                             <Grid container style={{marginBottom:20}}>
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Mes adresses de prestations</h1>
                                 <Grid container>
@@ -407,7 +264,7 @@ class myAddresses extends React.Component {
                                         </Grid>
                                         <form onSubmit={this.onSubmit}>
                                             <Grid container className={classes.responsiveContainer}>
-                                            <Grid item xs={10}>
+                                            <Grid item xs={7}>
                                                 <TextField
                                                     inputProps={{
                                                         readOnly: true,
@@ -423,44 +280,43 @@ class myAddresses extends React.Component {
                                                     label={'Rue'}
                                                 />
                                             </Grid>
-                                                <Grid container>
-                                            <Grid item xs={10} lg={4}>
+                                            <Grid container>
+                                              <Grid item xs={7} lg={4}>
+                                                  <TextField
+                                                      inputProps={{
+                                                          readOnly: true,
+                                                          style: {cursor:"default"}
+                                                      }}
+                                                      className={classes.textField}
+                                                      style={{width: '100%'}}
+                                                      value={this.state.currentZip_code}
+                                                      name={'currentZip_code'}
+                                                      onChange={this.onChange}
+                                                      margin="normal"
+                                                      variant="outlined"
+                                                      placeholder={'Code postal'}
+                                                      label={'Code postal'}
+                                                  />
+                                            </Grid>
+                                            <Grid item xs={7} lg={4} className={classes.containerRightOfCity}>
                                                 <TextField
                                                     inputProps={{
                                                         readOnly: true,
                                                         style: {cursor:"default"}
                                                     }}
-                                                    className={classes.textField}
+                                                    id="outlined-name"
                                                     style={{width: '100%'}}
-                                                    value={this.state.currentZip_code}
-                                                    name={'currentZip_code'}
+                                                    value={this.state.currentCity}
+                                                    name={'currentCity'}
                                                     onChange={this.onChange}
                                                     margin="normal"
                                                     variant="outlined"
-                                                    placeholder={'Code postal'}
-                                                    label={'Code postal'}
+                                                    placeholder={'Ville'}
+                                                    label={'Ville'}
                                                 />
-                                            </Grid>
-                                                    <Grid item xs={2}/>
-                                                <Grid item xs={10} lg={4}>
-                                                    <TextField
-                                                        inputProps={{
-                                                            readOnly: true,
-                                                            style: {cursor:"default"}
-                                                        }}
-                                                        id="outlined-name"
-                                                        style={{width: '100%'}}
-                                                        value={this.state.currentCity}
-                                                        name={'currentCity'}
-                                                        onChange={this.onChange}
-                                                        margin="normal"
-                                                        variant="outlined"
-                                                        placeholder={'Ville'}
-                                                        label={'Ville'}
-                                                    />
+                                                  </Grid>
                                                 </Grid>
-                                                </Grid>
-                                            <Grid item xs={10} md={7}>
+                                            <Grid item xs={7} md={7}>
                                                 <TextField
                                                     inputProps={{
                                                         readOnly: true,
@@ -492,7 +348,7 @@ class myAddresses extends React.Component {
                                 </Grid>
                                 <Grid container style={{marginTop: 20}}>
                                     {service_address.map((e,index) =>(
-                                       <React.Fragment key={index}> <Grid item xs={10}  style={{marginLeft: -55}}>
+                                       <React.Fragment key={index}> <Grid item xs={6}  style={{marginLeft: -55}}>
                                             <hr style={{borderColor: '#fefefe',width:'125%'}}/>
                                             <h4 style={{paddingLeft: 40}}>{e.label}</h4>
                                             <p style={{paddingLeft: 40,marginBottom: 0}}>{e.address}</p>
@@ -516,7 +372,7 @@ class myAddresses extends React.Component {
                                 {clickAdd ?
                                     <form onSubmit={this.onSubmit2}>
                                         <Grid container>
-                                            <Grid item xs={12} lg={6} sm={12} md={6}>
+                                            <Grid item xs={10} lg={6} sm={12} md={6}>
                                                 <TextField
                                                     id="standard-name"
                                                     style={{ marginTop: 30,width: '100%'}}
@@ -530,7 +386,7 @@ class myAddresses extends React.Component {
                                                 />
                                             </Grid>
                                             <Grid container>
-                                            <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                                            <Grid item xs={10} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                 <AlgoliaPlaces
                                                     placeholder='Recherchez votre adresse'
                                                     options={{
@@ -544,7 +400,7 @@ class myAddresses extends React.Component {
                                                 />
                                             </Grid>
                                             </Grid>
-                                            <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                                            <Grid item xs={10} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                 <TextField
                                                     style={{ marginTop: 15,width: '100%'}}
                                                     value={this.state.new_address}
@@ -560,7 +416,7 @@ class myAddresses extends React.Component {
                                                 />
                                             </Grid>
                                             <Grid container>
-                                                <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                                                <Grid item xs={10} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                     <TextField
                                                         style={{ marginTop: 15,width: '100%'}}
                                                         value={this.state.new_zip_code}
@@ -576,7 +432,7 @@ class myAddresses extends React.Component {
                                                     />
                                                 </Grid>
                                             </Grid>
-                                            <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                                            <Grid item xs={10} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                 <TextField
                                                     style={{ marginTop: 15,width: '100%'}}
                                                     value={this.state.new_city}
@@ -592,7 +448,7 @@ class myAddresses extends React.Component {
                                                 />
                                             </Grid>
                                             <Grid container>
-                                              <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                                              <Grid item xs={10} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                   <TextField
                                                       style={{ marginTop: 15,width: '100%'}}
                                                       value={this.state.note}
@@ -610,10 +466,10 @@ class myAddresses extends React.Component {
 
                                         </Grid>
                                         <p style={{color: '#F8727F',marginTop:25}}>OPTION DE CONTACT</p>
-                                        <Grid item xs={12} lg={6} sm={12} md={6}>
+                                        <Grid item xs={10} lg={6} sm={12} md={6}>
                                             <p style={{marginBottom: 0}}>Vous pouvez indiquer un numéro de téléphone de contact spécifique à cette adresse et permettre à votre Alfred de contacter cette personne de confiance si vous le souhaitez</p>
                                         </Grid>
-                                        <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                                        <Grid item xs={10} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                             <TextField
                                                 style={{ marginTop: 15,width: '100%'}}
                                                 value={this.state.phone}
@@ -635,7 +491,7 @@ class myAddresses extends React.Component {
                                 {clickEdit ?
                                     <form onSubmit={(event)=>this.onSubmit3(event,address_selected._id)}>
                                         <Grid container>
-                                            <Grid item xs={12} lg={6} sm={12} md={6}>
+                                            <Grid item xs={8} lg={6} sm={12} md={6}>
                                                 <TextField
                                                     id="standard-name"
                                                     style={{ marginTop: 30,width: '100%'}}
@@ -649,7 +505,7 @@ class myAddresses extends React.Component {
                                                 />
                                             </Grid>
                                             <Grid container>
-                                              <Grid  item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                                              <Grid  item xs={8} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                   <AlgoliaPlaces
                                                       placeholder='Recherchez votre adresse'
                                                       options={{
@@ -664,7 +520,7 @@ class myAddresses extends React.Component {
                                                   />
                                               </Grid>
                                             </Grid>
-                                            <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                                            <Grid item xs={8} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                 <TextField
                                                     style={{ marginTop: 15,width: '100%'}}
                                                     value={this.state.edit_address}
@@ -677,7 +533,7 @@ class myAddresses extends React.Component {
                                                 />
                                             </Grid>
                                             <Grid container>
-                                            <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                                            <Grid item xs={8} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                 <TextField
                                                     style={{ marginTop: 15,width: '100%'}}
                                                     value={this.state.edit_zip_code}
@@ -690,7 +546,7 @@ class myAddresses extends React.Component {
                                                 />
                                             </Grid>
                                             </Grid>
-                                            <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                                            <Grid item xs={8} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                 <TextField
                                                     style={{ marginTop: 15,width: '100%'}}
                                                     value={this.state.edit_city}
@@ -703,7 +559,7 @@ class myAddresses extends React.Component {
                                                 />
                                             </Grid>
                                             <Grid container>
-                                            <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                                            <Grid item xs={8} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                                 <TextField
                                                     style={{ marginTop: 15,width: '100%'}}
                                                     value={this.state.edit_note}
@@ -724,7 +580,7 @@ class myAddresses extends React.Component {
                                         <Grid item xs={12} lg={6} sm={12} md={6}>
                                             <p style={{marginBottom: 0}}>Vous pouvez indiquer un numéro de téléphone de contact spécifique à cette adresse et permettre à votre Alfred de contacter cette personne de confiance si vous le souhaitez</p>
                                         </Grid>
-                                        <Grid item xs={12} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                                        <Grid item xs={8} lg={6} sm={12} md={6} style={{marginTop: 20}}>
                                             <TextField
                                                 style={{ marginTop: 15,width: '100%'}}
                                                 value={this.state.edit_phone}

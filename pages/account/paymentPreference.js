@@ -138,6 +138,10 @@ class paymentPreference extends React.Component {
             })
     }
 
+  callDrawer(){
+    this.child.current.handleDrawerToggle();
+  }
+
 
     render(){
         const {classes} = this.props;

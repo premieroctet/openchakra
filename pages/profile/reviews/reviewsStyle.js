@@ -101,10 +101,20 @@ export default theme => ({
   },
   containerCommentary:{
     minHeight: '530px',
+    paddingLeft: 55,
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center'
+      alignItems: 'center',
+      paddingLeft: 'inherit',
+      marginLeft: '5%'
     },
-  }
+  },
+  menuButton: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
+  },
 })

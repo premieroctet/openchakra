@@ -19,12 +19,14 @@ moment.locale('fr');
 class transactions extends React.Component {
     constructor(props) {
         super(props);
+        this.child = React.createRef();
         this.state = {
             user: {},
             tabs: false,
             paid: [],
             paidSoon: []
         }
+        this.callDrawer = this.callDrawer.bind(this)
     }
 
     componentDidMount() {
@@ -64,7 +66,9 @@ class transactions extends React.Component {
         this.setState({ tabs: false });
     };
 
-
+    callDrawer(){
+        this.child.current.handleDrawerToggle();
+    }
 
 
     render() {

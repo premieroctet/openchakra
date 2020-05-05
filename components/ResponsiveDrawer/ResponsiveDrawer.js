@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles';
+import { useTheme, withStyles } from '@material-ui/core/styles';
 import styles from './ResponsiveDrawerStyle'
 import Grid from '@material-ui/core/Grid';
 import Link from 'next/link';
@@ -18,7 +17,7 @@ class ResponsiveDrawer extends React.Component{
     super(props);
     this.state = {
       mobileOpen: false,
-      itemsDrawer: [
+      itemsDrawerAccount: [
         {
           text: 'Notifications',
           url: '/account/notifications',
@@ -49,6 +48,33 @@ class ResponsiveDrawer extends React.Component{
           url: '/account/parameters',
           isActivePics: 'Paramètres active'
         },
+      ],
+      itemsDrawerProfil: [
+        {
+          text: 'Modifier le profil',
+          url: '/profile/editProfile',
+          isActivePics: 'Modifier le profil active'
+        },
+        {
+          text: 'Mes adresses de prestations',
+          url: '/profile/myAddresses',
+          isActivePics: 'Mes adresses de prestations active'
+        },
+        {
+          text: 'Photo',
+          url: '/profile/editPicture',
+          isActivePics: 'Photo active'
+        },
+        {
+          text: 'Confiance et vérification',
+          url: '/profile/trustAndVerification',
+          isActivePics: 'Confiance et vérification active'
+        },
+        {
+          text: 'Commentaires',
+          url: '/profile/reviews',
+          isActivePics: 'Commentaires active'
+        }
       ]
     }
   }
@@ -59,11 +85,13 @@ class ResponsiveDrawer extends React.Component{
   theme = () => useTheme();
 
   drawer(classes){
+    let itemsDrawer = this.props.itemsDrawers && this.props. itemsDrawers === 'profil' ? this.state.itemsDrawerProfil : this.state.itemsDrawerAccount;
     return (
       <Grid>
         <Grid className={classes.toolbar} />
         <List>
-          {this.state.itemsDrawer.map( (res, index) =>  (
+          {
+            itemsDrawer.map( (res, index) =>  (
             <Link href={res.url}>
               <ListItem button key={res.text}>
                 <ListItemIcon>

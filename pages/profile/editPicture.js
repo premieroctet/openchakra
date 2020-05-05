@@ -1,6 +1,5 @@
 import React, {Fragment} from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import moment from 'moment';
@@ -15,69 +14,15 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Footer from '../../hoc/Layout/Footer/Footer';
 import {Helmet} from 'react-helmet';
 import {generate_avatar} from '../../utils/generateAvatar';
-
+import styles from './editPicture/editPictureStyle'
+import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
 moment.locale('fr');
 
-const styles = theme => ({
-    bigContainer: {
-        marginTop: 70,
-        flexGrow: 1,
-    },
-    hidesm: {
-        minWidth: '271px',
-        [theme.breakpoints.down('sm')]: {
-            display:'none'
-        }
-    },
-   hidelg: {
-        [theme.breakpoints.up('md')]: {
-            display:'none',
-        }
-    },
-    trigger:{
-        [theme.breakpoints.down('sm')]: {
-            marginTop: -10,
-            width: '100%',
-            marginLeft:'0px',
-            height:'30px',
-            backgroundColor:'#2FBCD3',
-            display:'block',
-            transition: 'display 0.7s',
-            borderRadius:'5px',
-            '&:focus': {
-            display:'none',
-            transition: 'display 0.7s',
-            }
-        }
-    },
-    toggle: {
-        [theme.breakpoints.down('sm')]: {
-            marginLeft:'-75px',
-            transition: 'margin-left 0.7s',
-             '&:hover': {
-                 marginLeft:'0px',
-                  transition: 'margin-left 0.7s',
-                 boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-             }
-        }
-    },
-    buttonAddaddress: {
-        display: 'inline-block',
-        marginTop: 15,
-        color: '#4fbdd7',
-        borderColor: '#4fbdd7',
-        backgroundColor: 'white',
-        border: '1px solid',
-        '&:hover': {
-            backgroundColor: '#4fbdd7',
-            color:'white'
-        },
-    }
-});
 
 class Thumb extends React.Component {
     state = {
@@ -118,12 +63,15 @@ class Thumb extends React.Component {
 class editPicture extends React.Component {
     constructor(props) {
         super(props);
+        this.child = React.createRef();
         this.state = {
             user: {},
             haveapicture: '',
             open: false,
 
         };
+        this.callDrawer = this.callDrawer.bind(this)
+
     }
 
     componentDidMount() {
@@ -189,126 +137,39 @@ class editPicture extends React.Component {
           .catch();
     };
 
+    callDrawer(){
+        this.child.current.handleDrawerToggle();
+    }
+
     render() {
         const {classes} = this.props;
         const user = this.state.user;
         return (
             <Fragment>
-		<Helmet>
-        <title>Profil - Photos - My Alfred </title>
-        <meta property="description" content="Votre photo de profil sur My Alfred, plateforme web et mobile de services entre particuliers et auto entrepreneurs. Trouvez des services près de chez vous ! Paiement sécurisé - Inscription 100% gratuite." />
-      </Helmet>
+                <Helmet>
+                    <title>Profil - Photos - My Alfred </title>
+                    <meta property="description" content="Votre photo de profil sur My Alfred, plateforme web et mobile de services entre particuliers et auto entrepreneurs. Trouvez des services près de chez vous ! Paiement sécurisé - Inscription 100% gratuite." />
+                  </Helmet>
                 <Layout>
-                    <Grid container className={classes.bigContainer} style={{minHeight:530}}>
-                    <Grid className={classes.toggle}  item xs={3} style={{}}>
-                         <div className={classes.trigger}/>
-                            <Grid container style={{justifyContent: 'center',}}>
-                                <Grid item style={{marginTop: 30,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/editProfile'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/user.svg'} alt={'user'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Modifier le profil
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/profile/editProfile'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/user.svg'} alt={'user'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/myAddresses'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'2',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/sign.svg'} alt={'sign'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Mes adresses de prestations
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10}} className={classes.hidelg}>
-                                    <Link href={'/profile/myAddresses'}>
-                                        <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/sign.svg'} alt={'sign'} height={70} width={27} style={{marginleft: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/profile/editPicture'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/picture.svg'} alt={'picture'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/editPicture'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/picture.svg'} alt={'picture'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Photo
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/profile/trustAndVerification'}>
-                                        <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/success.svg'} alt={'check'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/trustAndVerification'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/success.svg'} alt={'check'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Confiance et vérification
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/profile/reviews'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/profile/reviews'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex'}}>
-                                            <img src={'../static/comment-black-oval-bubble-shape.svg'} alt={'comment'} height={70} width={27} style={{marginRight: 10,marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Commentaires
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-
+                    <Grid container className={classes.bigContainer}>
+                        <Grid style={{zIndex: 0}}>
+                            <ResponsiveDrawer ref={this.child} isActiveIndex={2} itemsDrawers={'profil'}/>
+                        </Grid>
+                        <Grid>
+                            <Grid>
+                                <IconButton
+                                  color="inherit"
+                                  aria-label="open drawer"
+                                  edge="start"
+                                  onClick={this.callDrawer}
+                                  className={classes.menuButton}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
                             </Grid>
                         </Grid>
 
-
-                        <Grid item xs={9} style={{paddingLeft: 55,marginBottom:15}}>
+                        <Grid item xs={9} className={classes.containerLeft}>
                             <Grid container>
                                 <h1 style={{color: 'dimgray',fontWeight: '100'}}>Photo</h1>
                             </Grid>

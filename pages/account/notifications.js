@@ -19,6 +19,7 @@ moment.locale('fr');
 class notifications extends React.Component {
     constructor(props) {
         super(props);
+        this.child = React.createRef();
         this.state = {
             user: {},
             messages_email: false,

@@ -33,6 +33,7 @@ moment.locale('fr');
 class paymentMethod extends React.Component {
     constructor(props) {
         super(props);
+      this.child = React.createRef();
         this.state = {
             user: {},
             cards: [],
@@ -46,6 +47,7 @@ class paymentMethod extends React.Component {
             deletedial: false,
             Idtempo: ''
         }
+      this.callDrawer = this.callDrawer.bind(this)
     }
 
     componentDidMount() {
@@ -167,6 +169,10 @@ class paymentMethod extends React.Component {
                     })
             })
     }
+
+  callDrawer(){
+    this.child.current.handleDrawerToggle();
+  }
 
     render() {
       const {classes} = this.props;

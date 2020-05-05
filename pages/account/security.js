@@ -21,6 +21,7 @@ moment.locale('fr');
 class security extends React.Component {
     constructor(props) {
         super(props);
+        this.child = React.createRef();
         this.state = {
             user: {},
             password: '',
@@ -31,6 +32,7 @@ class security extends React.Component {
             testpremier : false,
             last_login: [],
         };
+        this.callDrawer = this.callDrawer.bind(this)
     }
 
     componentDidMount() {
@@ -101,6 +103,10 @@ class security extends React.Component {
             })
             .catch();
     };
+
+    callDrawer(){
+        this.child.current.handleDrawerToggle();
+    }
 
     render() {
         const {classes} = this.props;
