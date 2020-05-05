@@ -17,6 +17,8 @@ import styles from './editProfile/editProfileStyle'
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+const {isPhoneOk}=require('../../utils/sms');
+
 
 registerLocale('fr', fr);
 moment.locale('fr');
@@ -77,7 +79,15 @@ class editProfile extends React.Component {
 
     onChange = e => {
         const state = this.state.user;
-        state[e.target.name] = e.target.value;
+        var {name, value}=e.target;
+        if( name==='phone') {
+          const phoneOk=isPhoneOk(value);
+          if (phoneOk && e.target.value.startsWith('0')) {
+            value='33'+value.substring(1);
+          }
+        }
+
+        state[e.target.name] = value;
         this.setState({user:state});
     };
 

@@ -265,8 +265,25 @@ const UserSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'chatRooms'
     },
+    // Mangopay as client
     id_mangopay: {
-        type: String
+      type: String,
+      default: null
+    },
+    // Mangopay as provider
+    mangopay_provider_id: {
+      type: String,
+      default: null
+    },
+    // Provider status : NATURAL or LEGAL
+    mangopay_provider_status: {
+      type: String
+    },
+    identity_proof_id : {
+      type: String
+    },
+    registration_proof_id : {
+      type: String,
     },
     avatar_letters: {
       type: String,
@@ -277,7 +294,7 @@ const UserSchema = new Schema({
     kyc_errors: {
       type: [String],
       default: function() {
-        return ['Pas de pièce d\'identité', 'Pas d\'adresse', 'Pas de SIRET'];
+        return null;
       }
     }
 });

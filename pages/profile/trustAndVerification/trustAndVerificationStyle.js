@@ -121,6 +121,6 @@ export default theme => ({
   },
   buttonSendSMS:{
     width: '50%',
-   
+
   }
 })

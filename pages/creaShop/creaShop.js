@@ -141,6 +141,7 @@ class creaShop extends React.Component {
       axios.post('/myAlfred/api/shop/add', cloned_shop)
         .then(res => {
 
+          axios.post()
           var su_id = res.data.services[0]._id;
           if(cloned_shop.diplomaPicture !== null) {
             var dpChanged = typeof(cloned_shop.diplomaPicture)=='object';

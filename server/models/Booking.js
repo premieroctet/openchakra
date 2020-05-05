@@ -115,6 +115,12 @@ const BookingSchema = new Schema({
       required : true,
       default: 0,
     },
+    mangopay_transfer_id: {
+      type: String,
+    },
+    mangopay_payout_id: {
+      type: String,
+    },
 });
 
 module.exports = Booking = mongoose.model('booking',BookingSchema);

@@ -4,10 +4,10 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const bcrypt = require('bcryptjs');
-const axios = require('axios');
 const mongoose = require('mongoose');
 const path = require('path');
 
+const CronJob = require('cron').CronJob;
 
 const validateRegisterInput = require('../../validation/register');
 const validateSimpleRegisterInput = require('../../validation/simpleRegister');
@@ -21,6 +21,8 @@ const crypto = require('crypto');
 const multer = require("multer");
 
 const {computeUrl } = require('../../../config/config');
+
+const {addIdIfRequired, createMangoClient} = require('../../../utils/mangopay')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -123,6 +125,7 @@ router.post('/register',(req,res) =>{
                         newUser.password = hash;
                         newUser.save()
                             .then(user => {
+                              createMangoClient(user)
                               sendVerificationMail(user, req)
                               res.json(user);
                             })
@@ -372,7 +375,7 @@ router.put('/profile/pictureLater', passport.authenticate('jwt', { session: fals
         .catch(err => console.log(err));
 })
 
-// @Route PUT /myAlfred/api/users/profile/idCard
+// @Route POST /myAlfred/api/users/profile/idCard
 // Add an identity card
 // @Access private
 router.post('/profile/idCard',upload2.fields([{name: 'myCardR',maxCount: 1}, {name:'myCardV',maxCount:1}]),passport.authenticate('jwt',{session:false}),(req,res) => {
@@ -385,14 +388,20 @@ router.post('/profile/idCard',upload2.fields([{name: 'myCardR',maxCount: 1}, {na
                 user.id_card.verso = req.files['myCardV'][0].path;
             }
 
-            user.save().then(user => res.json(user)).catch(err => console.log(err));
+            user.save()
+              .then(user => {
+                console.log("Sending ID to Mangopay if required");
+                addIdIfRequired(user);
+                res.json(user)
+              })
+              .catch(err => console.log(err));
         })
         .catch(err => {
             console.log(err)
         })
 });
 
-// @Route PUT /myAlfred/api/users/profile/idCard
+// @Route PUT /myAlfred/api/users/profile/idCard/addVerso
 // Add an identity card
 // @Access private
 router.post('/profile/idCard/addVerso',upload2.single('myCardV'),passport.authenticate('jwt',{session:false}),(req,res) => {
@@ -662,18 +671,19 @@ router.get('/email/check',(req,res) => {
 // @Route POST /myAlfred/api/users/forgotPassword
 // Send email with link for reset password
 router.post('/forgotPassword',(req,res) => {
-
     const email = req.body.email;
 
     User.findOne({email: email})
         .then(user => {
             if(user === null) {
-                res.json('email not in the database')
+                console.error(`email ${email} not in database`)
+                res.status(404).json('Email inconnu')
             } else {
                 const token = crypto.randomBytes(20).toString('hex');
                 const newToken = new ResetToken({token:token});
                 newToken.save().then(token =>{
-                    user.update({resetToken: token._id}).catch(err => console.log(err));
+                    user.update({resetToken: token._id})
+                      .catch(err => console.log(err));
                 });
 
                 sendResetPassword(user, token, req);
@@ -893,6 +903,19 @@ router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false
             console.log(err)
         })
 });
+
+// Create mango client account for all user with no id_mangopay
+new CronJob('0 0 * * * *', function() {
+  console.log("Customers who need mango account");
+  User.find({id_mangopay: null, active:true})
+    .then ( usrs => {
+      usrs.forEach( user => {
+        console.log(`Found customer ${user.name}`)
+        createMangoClient(user)
+      })
+    })
+    .catch( err => console.error(err))
+}, null, true, 'Europe/Paris');
 
 
 module.exports = router;
