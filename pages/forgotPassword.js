@@ -62,8 +62,9 @@ class forgotPassword extends React.Component {
               toast.info(`Un email vous a été envoyé à l'adresse ${this.state.email}`)
               Router.push({pathname:'/'})
             })
-            .catch(err => {
-                console.log(err);
+            .catch(res => {
+              toast.error(res.response.data)
+              console.log(JSON.stringify(res, null, 2));
             })
 
 

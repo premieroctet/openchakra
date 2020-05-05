@@ -671,18 +671,19 @@ router.get('/email/check',(req,res) => {
 // @Route POST /myAlfred/api/users/forgotPassword
 // Send email with link for reset password
 router.post('/forgotPassword',(req,res) => {
-
     const email = req.body.email;
 
     User.findOne({email: email})
         .then(user => {
             if(user === null) {
-                res.json('email not in the database')
+                console.error(`email ${email} not in database`)
+                res.status(404).json('Email inconnu')
             } else {
                 const token = crypto.randomBytes(20).toString('hex');
                 const newToken = new ResetToken({token:token});
                 newToken.save().then(token =>{
-                    user.update({resetToken: token._id}).catch(err => console.log(err));
+                    user.update({resetToken: token._id})
+                      .catch(err => console.log(err));
                 });
 
                 sendResetPassword(user, token, req);

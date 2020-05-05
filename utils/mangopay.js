@@ -6,18 +6,18 @@ const emptyPromise = require('./promise');
 const mangopay = require('mangopay2-nodejs-sdk');
 
 // PROD !!!!!
+/**
 const mangoApi = new mangopay({
   clientId: 'myalfredprod',
   clientApiKey: 'j8R8fLZmUderNNp27siCqMAJ3y7Bv7BB82trfGuhqSKcYpEZ91',
   baseUrl: 'https://api.mangopay.com',
 });
+*/
 
-/**
 const mangoApi = new mangopay({
   clientId: 'testmyalfredv2',
   clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
 });
-*/
 
 const HOOK_TYPES="KYC_CREATED KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED".split(' ')
 /** Hook Mangopay */
