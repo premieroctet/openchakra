@@ -26,7 +26,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import ListItemText from '@material-ui/core/ListItemText';
-import {availabilities2events, eventUI2availability} from '../../utils/converters';
+import {availabilities2events, eventUI2availability, DAYS} from '../../utils/converters';
 import {ALL_SERVICES} from '../../utils/consts.js';
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -73,8 +73,6 @@ const MenuProps = {
     },
   },
 };
-
-const DAYS='Lu Ma Me Je Ve Sa Di'.split(' ');
 
 class Schedule extends React.Component {
   constructor(props) {
@@ -158,6 +156,7 @@ class Schedule extends React.Component {
 
     console.log("Deleting:"+JSON.stringify(event));
     if (this.props.onDeleteAvailability) {
+      console.log(`Suppression de ${JSON.stringify(event)}`)
      confirmAlert({
       title: 'Suppression',
       message: 'Supprimer cette disponibilité et toutes ses occurrences pour '+event.title+"?",
@@ -227,6 +226,12 @@ class Schedule extends React.Component {
   onSubmit = e => {
     let avail=eventUI2availability(this.state);
     let res = this.props.onCreateAvailability(avail);
+    this.closeModal();
+  };
+
+  onDelete = e => {
+    let avail=eventUI2availability(this.state);
+    let res = this.props.onDeleteAvailability(avail);
     this.closeModal();
   };
 
@@ -436,6 +441,11 @@ class Schedule extends React.Component {
                   <Grid container justify="flex-end" style={{marginTop: 20}}>
                     <Button type="button" variant="contained" className={classes.textFieldButton} color={'secondary'} onClick={() => this.setState({isAddModalOpen: false})} >Annuler </Button>
                     <Button type="button" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onSubmit()}>Ajouter </Button>
+                    { this.props.onDeleteAvailability ?
+                        <Button type="button" variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onDelete()}>Supprimer </Button>
+                        :
+                        null
+                    }
                   </Grid>
                 </form>
               </Grid>

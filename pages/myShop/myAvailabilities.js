@@ -146,6 +146,15 @@ class myAvailabilities extends React.Component {
     componentDidMount() {
 
       // FIX : get current availabilities
+      localStorage.setItem('path',Router.pathname);
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+
+      axios.get('/myAlfred/api/availability/currentAlfred')
+        .then ( res => {
+          console.log(JSON.stringify(res.data, null, 2));
+          this.setState({availabilities: res.data})
+        })
+        .catch (err => console.error(err))
 
       axios.get('/myAlfred/api/users/current').then(res => {
         let user = res.data;
@@ -186,8 +195,9 @@ class myAvailabilities extends React.Component {
     }
 
     availabilityCreated(avail) {
-      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
+      console.log(`Availability created : ${JSON.stringify(avail)}`)
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
       axios.post('/myAlfred/api/availability/add',avail)
           .then(res => {
               toast.info('Disponibilité ajoutée avec succès !');
