@@ -34,8 +34,6 @@ import { Typography } from '@material-ui/core'; // Import css
 import styles from './ScheduleStyle'
 import PropTypes from 'prop-types';
 
-
-const propTypes = {};
 const localizer = momentLocalizer(moment);
 
 const formats = {
@@ -46,7 +44,7 @@ const formats = {
   }, culture, local) =>
     local.format(start, 'HH:mm', culture) + ' - ' + // Affichage de l'event dans le calendrier h début (week/day)
     local.format(end, 'HH:mm', culture), // Affichage de l'event dans le calendrier h fin (week/day)
-  dayFormat: 'dddd' + ' ' + 'DD/MM', // header de weekly (lun. dd/mm) (week)
+  dayFormat: 'dd' + ' ' + 'DD/MM', // header de weekly (lun. dd/mm) (week)
   agendaTimeRangeFormat: ({
     start,
     end
@@ -131,7 +129,7 @@ class Schedule extends React.Component {
 
 
   onChangeServices = e => {
-    let all_serv = e.target.value.filter(serv => serv[0]==ALL_SERVICES[0]);
+    let all_serv = e.target.value.filter(serv => serv[0]===ALL_SERVICES[0]);
     let contains = all_serv.length>0;
     if (contains) {
       this.setState({servicesSelected: [ALL_SERVICES]});
@@ -156,7 +154,6 @@ class Schedule extends React.Component {
 
   toggleEditModal = event => {
 
-    console.log("Deleting:"+JSON.stringify(event));
     if (this.props.onDeleteAvailability) {
      confirmAlert({
       title: 'Suppression',
@@ -185,7 +182,6 @@ class Schedule extends React.Component {
   };
 
    handleChange = panel => (event, isExpanded) => {
-     console.log("recurrDays:"+JSON.stringify(this.state.recurrDays));
      this.setState({isExpanded: isExpanded ? panel : false});
      if (isExpanded && this.state.recurrDays.size===0 && this.state.selectedDateStart ) {
        let dayOfWeek = new Date(this.state.selectedDateStart).getDay();
@@ -285,6 +281,8 @@ class Schedule extends React.Component {
           }}
           formats={formats}
           className={classes.sizeSchedulle}
+          step={60}
+          timeslots={1}
         />
         <Modal
           closeAfterTransition

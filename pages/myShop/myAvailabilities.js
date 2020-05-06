@@ -1,11 +1,8 @@
 import React, {Fragment} from 'react';
-import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
-import Footer from '../../hoc/Layout/Footer/Footer';
 import axios from "axios";
 import moment from 'moment';
 import Grid from "@material-ui/core/Grid";
-import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import Schedule from '../../components/Schedule/Schedule';
 import { toast } from 'react-toastify';
@@ -13,109 +10,9 @@ import {Helmet} from 'react-helmet';
 import AlfredBanner from '../../components/shop/AlfredBanner/AlfredBanner';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import ForumIcon from '@material-ui/icons/Forum';
-import AssessmentIcon from '@material-ui/icons/Assessment';
-import ScheduleIcon from '@material-ui/icons/Schedule';
+import styles from './myAvailabilities/myAvailabilitiesStyle'
 
 moment.locale('fr');
-
-const styles = theme => ({
-    bigContainer: {
-        marginTop: 68,
-        flexGrow: 1,
-    },
-
-    marginbot: {
-        marginBottom: '3.5%',
-    },
-    hiddenone: {
-        [theme.breakpoints.down('sm')]: {
-            display: 'none!important',
-        },
-    },
-    revealedone: {
-        [theme.breakpoints.up('md')]: {
-            display: 'none!important',
-        },
-    },
-    containercalendar:{
-        display: 'flex',
-        alignContent: 'center',
-        justifyContent: 'center',
-        [theme.breakpoints.down('sm')]: {
-          width:'100%!important',
-          },
-        [theme.breakpoints.down('xs')]: {
-          marginBottom: 100,
-        }
-      },
-
-    containerheader:{[theme.breakpoints.down('sm')]: {
-            width:'100%!important',
-            marginTop:'-70px',
-        }},
-    bottombar:{visibility:'hidden', [theme.breakpoints.down('sm')]: {
-            visibility:'visible',
-            boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)'
-        }},
-    topbar:{visibility:'visible', position: 'sticky', top: 65, zIndex:999,[theme.breakpoints.down('sm')]: {
-            visibility:'hidden',
-        }},
-    hidenimg:{
-        [theme.breakpoints.down('sm')]: {
-            display: 'none'
-        }
-    }
-    ,
-    dispocard:{
-        minHeight:'100px',
-        maxWidth:'250px',
-        textAlign:'center',
-        backgroundColor:'#f2f2f2',
-        boxShadow: '4px 4px 41px -37px rgba(0,0,0,0.0)',
-        border:'solid 1px #ccc',
-        borderRadius:'10px',
-        padding:'5%',
-    },
-    dispocardin:{
-        padding:'5%',
-        fontSize:'15px',
-        marginBottom:10,
-    },
-
-    dispoheader:{
-        height:'10%',
-        color:'gray',
-        width:'100%',
-        backgroundColor:'#f2f2f2',
-        transition: 'background-color 0.5s',
-        fontSize:'15px',
-        textAlign:'left',
-        borderRadius:'0px',
-        marginBottom:'5 px',
-        '&:hover': {
-            backgroundColor:'#2FBCD3',
-            transition: 'background-color 0.5s',
-            color: 'white',
-        }
-    },
-
-    respbg:{
-        [theme.breakpoints.down('sm')]: {
-            marginTop: '-13%',
-        }
-    },
-    resppic:{
-        [theme.breakpoints.down('sm')]: {
-            top: '17%!important',
-        }
-    },
-});
-
 
 class myAvailabilities extends React.Component {
 
@@ -249,9 +146,9 @@ class myAvailabilities extends React.Component {
                   <NavBarShop userId={this.state.userId}/>
                   : null
                 }
-                  <Grid container style={{padding:'2%'}} className={classes.containercalendar}>
+                  <Grid container className={classes.containercalendar}>
                       <Grid style={{width:'90%'}}>
-                          <Schedule height={400} availabilities={this.state.availabilities} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} selectable={true}/>
+                          <Schedule height={700} availabilities={this.state.availabilities} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} selectable={true}/>
                       </Grid>
                   </Grid>
               </Layout>
