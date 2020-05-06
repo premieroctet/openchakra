@@ -36,17 +36,30 @@ isServiceAtAlfredOrVisio = su => {
 
 const sortfn = gps => {
   const sort = (su1, su2) => {
-    var d1 = geolib.getDistance(gps, su1.service_address.gps); 
-    var d2 = geolib.getDistance(gps, su2.service_address.gps); 
-    return d1-d2; 
+    var d1, d2;
+    try {
+      d1 = geolib.getDistance(gps, su1.service_address.gps);
+    }
+    catch (e) {
+      console.warn(`Warning: GPS incorrect pour serviceUser ${su1._id}`)
+      d1 = 100000;
+    }
+    try {
+      d2 = geolib.getDistance(gps, su2.service_address.gps);
+    }
+    catch (e) {
+      console.warn(`Warning: GPS incorrect pour serviceUser ${su2._id}`)
+      d2 = 100000;
+    }
+    return d1-d2;
   }
   return sort;
 }
- 
+
 
 const filterServicesGPS = (serviceUsers, coordinates) => {
   var filteredServiceUsers=serviceUsers.filter( su => isServiceAtAlfredOrVisio(su) || isServiceAroundGPS(su, coordinates) );
-  filteredServiceUsers.sort(sortfn(coordinates)); 
+  filteredServiceUsers.sort(sortfn(coordinates));
   return filteredServiceUsers;
 }
 
