@@ -347,6 +347,7 @@ class Schedule extends React.Component {
                           KeyboardButtonProps={{
                             'aria-label': 'change date',
                           }}
+                          autoOk={true}
                         />
                         <TextField
                           id="time"
@@ -375,6 +376,7 @@ class Schedule extends React.Component {
                           KeyboardButtonProps={{
                             'aria-label': 'change date',
                           }}
+                          autoOk={true}
                         />
                         <TextField
                           id="time"
@@ -437,6 +439,7 @@ class Schedule extends React.Component {
                                 InputLabelProps={{
                                   shrink: true,
                                 }}
+                                autoOk={true}
                               />
                          </MuiPickersUtilsProvider>
                         </Grid>
