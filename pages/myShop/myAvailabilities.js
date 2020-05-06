@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Schedule from '../../components/Schedule/Schedule';
 import { toast } from 'react-toastify';
 import {Helmet} from 'react-helmet';
-import AlfredBanner from '../../components/shop/AlfredBanner/AlfredBanner';
+import { SCHEDULE_SUBTITLE } from '../../utils/messages';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import styles from './myAvailabilities/myAvailabilitiesStyle'
@@ -141,16 +141,15 @@ class myAvailabilities extends React.Component {
               <meta property="description" content="Indiquez vos dispoinibilités pour proposer vos services entre particuliers ! Des services à proximité, rémunérés et assurés ! Vos disponibilités permettront à vos futurs clients de vous réserver directement, au créneau souhaité !" />
             </Helmet>
               <Layout>
-                <AlfredBanner alfred={this.state.alfred} shop={this.state.shop} banner={this.state.banner} isOwner={isOwner}  needRefresh={this.needRefresh}/>
                 {isOwner ?
                   <NavBarShop userId={this.state.userId}/>
                   : null
                 }
-                  <Grid container className={classes.containercalendar}>
-                      <Grid style={{width:'90%'}}>
-                          <Schedule height={700} availabilities={this.state.availabilities} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} selectable={true}/>
-                      </Grid>
+                <Grid container className={classes.containercalendar}>
+                  <Grid style={{width:'90%'}}>
+                    <Schedule height={700} availabilities={this.state.availabilities} subtitle={SCHEDULE_SUBTITLE} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} selectable={true}/>
                   </Grid>
+                </Grid>
               </Layout>
             <NavbarMobile userId={this.state.userId}/>
           </Fragment>

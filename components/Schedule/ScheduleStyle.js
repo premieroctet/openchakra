@@ -95,6 +95,7 @@ export default theme => ({
   sizeSchedulle:{
     '& .rbc-timeslot-group':{
       minHeight: '25px !important',
+      backgroundColor: '#e6e6e6',
       [theme.breakpoints.down('xs')]: {
         minHeight: '50px !important',
       },
@@ -103,6 +104,7 @@ export default theme => ({
       justifyContent: 'space-between',
       [theme.breakpoints.down('xs')]: {
         justifyContent: 'center',
+        flexDirection: 'column'
       },
     },
     '& .rbc-time-view':{
@@ -117,7 +119,7 @@ export default theme => ({
       display: 'none !important'
     },
     '& .rbc-toolbar-label':{
-      display:'none !important'
+
     },
     '& .rbc-header':{
       [theme.breakpoints.down('xs')]: {

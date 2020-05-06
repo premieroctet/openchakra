@@ -3,8 +3,8 @@ export default theme => ({
     display: 'flex',
     alignContent: 'center',
     justifyContent: 'center',
-    marginTop: '2%',
-    marginBottom: '2%',
+    marginTop: 100,
+    marginBottom: 200,
     [theme.breakpoints.down('sm')]: {
       width:'100%!important',
     },

@@ -44,7 +44,7 @@ const formats = {
   }, culture, local) =>
     local.format(start, 'HH:mm', culture) + ' - ' + // Affichage de l'event dans le calendrier h début (week/day)
     local.format(end, 'HH:mm', culture), // Affichage de l'event dans le calendrier h fin (week/day)
-  dayFormat: 'dd' + ' ' + 'DD/MM', // header de weekly (lun. dd/mm) (week)
+  dayFormat: 'ddd' + ' ' + 'DD' , // header de weekly (lun. dd/mm) (week)
   agendaTimeRangeFormat: ({
     start,
     end
@@ -56,8 +56,8 @@ const formats = {
     start,
     end
   }, culture, local) =>
-    local.format(start,  'dddd' + ' ' + 'DD/MM/YYYY', culture) + ' au ' + // Title de week - date début (week)
-    local.format(end,  'dddd' + ' ' + 'DD/MM/YYYY', culture),// Title de week - date fin (week)
+    local.format(start,  'MMM' + ' ' + 'YYYY', culture) + // Title de week - date début (week)
+    local.format(end,  '' + ' ' + '', culture),// Title de week - date fin (week)
   dayHeaderFormat: 'dddd DD MMMM'
 };
 
@@ -86,13 +86,14 @@ class Schedule extends React.Component {
       servicesSelected:[ALL_SERVICES],
       dayLayoutAlgorithm: 'no-overlap',
       selectedDateEndRecu: null,
+      isExpanded: true,
       // Days (1=>7)
       recurrDays: new Set(),
       services: [ALL_SERVICES, ...this.props.services] || [ALL_SERVICES],
     };
     this.closeModal = this.closeModal.bind(this);
     this.toggleEditModal = this.toggleEditModal.bind(this);
-
+    this.handleChange = this.handleChange.bind(this);
   }
 
   /**
@@ -145,12 +146,23 @@ class Schedule extends React.Component {
           selectedDateEnd: end,
           selectedTimeStart: start.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
           selectedTimeEnd: end.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
-          isExpanded: false,
           servicesSelected: [ALL_SERVICES],
           isAddModalOpen: !this.state.isAddModalOpen,
           recurrDays: new Set(),
-      });
+      }, () => this.addDefaultValue());
+
   };
+
+  addDefaultValue(){
+    var dt = new Date(this.state.selectedDateEnd);
+    dt.setMonth( dt.getMonth() + 6 );
+    if (this.state.isExpanded && this.state.recurrDays.size===0 && this.state.selectedDateStart ) {
+      this.setState({
+        selectedDateEndRecu: dt,
+        recurrDays: new Set([0, 1, 2, 3, 4 , 5])
+      });
+    }
+  }
 
   toggleEditModal = event => {
 
@@ -181,12 +193,11 @@ class Schedule extends React.Component {
     }
   };
 
-   handleChange = panel => (event, isExpanded) => {
-     this.setState({isExpanded: isExpanded ? panel : false});
-     if (isExpanded && this.state.recurrDays.size===0 && this.state.selectedDateStart ) {
+   handleChange(){
+     this.setState({isExpanded: !this.state.isExpanded});
+     if (this.state.isExpanded && this.state.recurrDays.size===0 && this.state.selectedDateStart ) {
        let dayOfWeek = new Date(this.state.selectedDateStart).getDay();
        dayOfWeek = (dayOfWeek+6)%7
-       console.log("Faut remplir avec "+dayOfWeek);
        this.setState({recurrDays: new Set([dayOfWeek])});
      }
    };
@@ -222,7 +233,7 @@ class Schedule extends React.Component {
 
   onSubmit = e => {
     let avail=eventUI2availability(this.state);
-    let res = this.props.onCreateAvailability(avail);
+    this.props.onCreateAvailability(avail);
     this.closeModal();
   };
 
@@ -382,7 +393,7 @@ class Schedule extends React.Component {
                       </MuiPickersUtilsProvider>
                     </Grid>
                   <Grid container className={classes.containerRecurrence}>
-                    <ExpansionPanel expanded={this.state.isExpanded === 'panel1'} style={{width:'100%'}}>
+                    <ExpansionPanel expanded={this.state.isExpanded} style={{width:'100%'}}>
                       <ExpansionPanelSummary>
                         <FormControlLabel
                           aria-label="Acknowledge"
@@ -390,7 +401,8 @@ class Schedule extends React.Component {
                           onFocus={event => event.stopPropagation()}
                           control={<Checkbox />}
                           label="Récurrence"
-                          onChange={this.handleChange('panel1')}
+                          onChange={this.handleChange}
+                          checked={this.state.isExpanded}
                         />
                       </ExpansionPanelSummary>
                       <ExpansionPanelDetails className={classes.panelForm}>
