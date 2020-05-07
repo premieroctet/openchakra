@@ -89,7 +89,40 @@ class ResponsiveDrawer extends React.Component{
           text: 'Mes réservations terminées',
           url: 'finishedReservations'
         }
+      ],
+      itemsDrawerMessages:[
+        {
+          text: 'Tous les messages',
+          url : '/reservations/messages'
+        },
+        {
+          text: 'Messages non lus',
+          url: '/reservations/newMessages'
+        }
+      ],
+      itemsDrawerPerformances:[
+        {
+          text: 'Mes revenus',
+          url: '/performances/revenus',
+          isActivePics: 'Mes revenus active'
+        },
+        {
+          text: 'Mes statistiques',
+          url: '/performances/statistiques',
+          isActivePics: 'Mes statistiques active'
+        },
+        {
+          text: 'Mes évaluations',
+          url: '/performances/evaluations',
+          isActivePics: 'Mes évaluations active'
+        },
+        {
+          text: 'Historique des versements',
+          url : '/performances/historique',
+          isActivePics: 'Historique des versements active'
+        }
       ]
+
     }
   }
   handleDrawerToggle = () => {
@@ -104,6 +137,8 @@ class ResponsiveDrawer extends React.Component{
         case 'profil' : itemsDrawer = this.state.itemsDrawerProfil;break;
         case 'reservation' : itemsDrawer = this.state.itemsDrawerReservations;break;
         case 'account': itemsDrawer = this.state.itemsDrawerAccount;break;
+        case 'message': itemsDrawer = this.state.itemsDrawerMessages;break;
+        case 'performance': itemsDrawer = this.state.itemsDrawerPerformances;break;
       }
 
     return (

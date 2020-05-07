@@ -12,11 +12,14 @@ import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import Button from '@material-ui/core/Button';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
+import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
 class NewMessages extends React.Component {
   constructor(props) {
     super(props);
-
+    this.child = React.createRef();
     this.state = {
       idEmitter: "",
       chatrooms: [],
@@ -25,6 +28,7 @@ class NewMessages extends React.Component {
       userReservations: [],
       isAlfred: false,
     };
+    this.callDrawer = this.callDrawer.bind(this)
   }
 
   componentDidMount() {
@@ -62,6 +66,9 @@ class NewMessages extends React.Component {
     this.setState({ tabs: false });
   };
 
+  callDrawer(){
+    this.child.current.handleDrawerToggle();
+  }
 
   render() {
     const { classes } = this.props;
@@ -82,49 +89,25 @@ class NewMessages extends React.Component {
             {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
 
             <Grid container>
-              <Grid className={classes.toggle} item xs={3}>
-                <div className={classes.trigger}/>
-                <Grid container style={{ justifyContent: "center"}}>
-                  <Grid item style={{ marginTop: 30, width: 281, height: 70 }} className={classes.hidesm}>
-                    <Link href={"/reservations/messages"}>
-                      <Grid className={classes.containerAllmessages}>
-                        <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
-                          Tous les messages
-                        </a>
-                      </Grid>
-                    </Link>
-                  </Grid>
-                  <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
-                    <Link href={'/reservations/messages'}>
-                      <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                        <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                          <img src={'../static/speech-bubble.svg'} alt={'user'} width={27} height={70} style={{marginRight: 4}}/>
-                        </a>
-                      </div>
-                    </Link>
-                  </Grid>
-                  <Grid item style={{ marginTop: 10, width: 281, height: 70 }} className={classes.hidesm}>
-                    <Link href={"/reservations/newMessages"}>
-                      <Grid className={classes.containerAllmessages}>
-                        <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
-                          Messages non lus
-                        </a>
-                      </Grid>
-                    </Link>
-                  </Grid>
-                  <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
-                    <Link href={'/reservations/newMessages'}>
-                      <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center'}}>
-                        <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                          <img src={'../static/unread-email-2.svg'} alt={'user'} width={27} height={70} style={{marginRight: 4}}/>
-                        </a>
-                      </div>
-                    </Link>
+              <Grid className={classes.toggle}>
+                <Grid>
+                  <ResponsiveDrawer ref={this.child} isActiveIndex={1} itemsDrawers={'message'} needMargin={true}/>
+                </Grid>
+                <Grid>
+                  <Grid>
+                    <IconButton
+                      color="inherit"
+                      aria-label="open drawer"
+                      edge="start"
+                      onClick={this.callDrawer}
+                      className={classes.menuButton}
+                    >
+                      <MenuIcon />
+                    </IconButton>
                   </Grid>
                 </Grid>
               </Grid>
-
-              <Grid style={{paddingLeft: '10px'}} item xs={9} sm={9} md={7}>
+              <Grid style={{paddingLeft: 55}} item xs={9} sm={9} md={7}>
                 <Typography style={{ fontSize: "2rem", marginTop: "4%" }}>
                   Mes messages non lus
                 </Typography>
