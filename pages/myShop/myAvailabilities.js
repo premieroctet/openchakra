@@ -136,6 +136,7 @@ class myAvailabilities extends React.Component {
         };
         this.availabilityCreated = this.availabilityCreated.bind(this);
         this.availabilityDelete = this.availabilityDelete.bind(this);
+        this.availabilityUpdate = this.availabilityUpdate.bind(this);
         this.needRefresh = this.needRefresh.bind(this);
     }
 
@@ -210,15 +211,22 @@ class myAvailabilities extends React.Component {
 		  })
     }
 
+    availabilityUpdate(avail) {
+        console.log("Avail update:"+JSON.stringify(avail))
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.post('/myAlfred/api/availability/update', avail)
+    }
+
     availabilityDelete(avail) {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-      axios.delete('/myAlfred/api/availability/'+avail)
+      console.log("Deleteing:"+JSON.stringify(avail))
+      axios.delete('/myAlfred/api/availability/'+avail._id)
           .then(res => {
               toast.info('Disponibilité supprimée avec succès !');
               let new_availabilities=[];
               this.state.availabilities.forEach( a => {
-                if (a._id!==avail) {
+                if (a._id!==avail._id) {
                   new_availabilities.push(a);
                 }
               })
@@ -261,7 +269,8 @@ class myAvailabilities extends React.Component {
                 }
                   <Grid container style={{padding:'2%'}} className={classes.containercalendar}>
                       <Grid style={{width:'90%'}}>
-                          <Schedule height={400} availabilities={this.state.availabilities} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} selectable={true}/>
+                          <Schedule height={400} availabilities={this.state.availabilities} services={this.state.services} selectable={true}
+                          onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} onUpdateAvailability={this.availabilityUpdate}/>
                       </Grid>
                   </Grid>
               </Layout>

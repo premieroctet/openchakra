@@ -1,6 +1,6 @@
 const { RRule, RRuleSet, rrulestr }=require('rrule')
 const {ALL_SERVICES, generate_id} = require('./consts.js');
-const moment=require('moment')
+const moment=require('moment-timezone')
 const EV_AVAIL_DAY_MAPPING='monday tuesday wednesday thursday friday saturday sunday'.split(' ');
 
 const DAYS='Lu Ma Me Je Ve Sa Di'.split(' ');
@@ -73,7 +73,10 @@ const availabilities2events= avails => {
 
 const eventUI2availability = event => {
 
-  let avail = {ui_id: generate_id() }
+  let avail = {ui_id: event.ui_id ? event.ui_id : generate_id() }
+  if (event.ui_id) {
+    avail['_id']=event.ui_id;
+  }
 
   let startDate=new Date(event.selectedDateStart);
   let endDate=new Date(event.selectedDateEnd);
@@ -102,8 +105,6 @@ const eventUI2availability = event => {
 
 const availability2eventUI = avail => {
 
-  console.log("Event:"+JSON.stringify(avail))
-
   var eventUI = {
     selectedDateStart: null,
     selectedDateEnd: null,
@@ -111,6 +112,7 @@ const availability2eventUI = avail => {
     isExpanded: avail['period'].active ? 'panel1' : false,
     servicesSelected: [ALL_SERVICES],
     selectedDateEndRecu: null,
+    ui_id: avail._id
   }
   if (avail['period'].active) {
     eventUI.isExpanded = 'panel1';
@@ -126,8 +128,8 @@ const availability2eventUI = avail => {
       if (eventUI.isExpanded) {
         eventUI.recurrDays.add(index);
       }
-      eventUI.selectedDateStart=ev[0].begin
-      eventUI.selectedDateEnd=ev[0].end
+      eventUI.selectedDateStart=moment(ev[0].begin).toDate()
+      eventUI.selectedDateEnd=moment(ev[0].end).toDate()
       eventUI.selectedTimeStart=moment(ev[0].begin).tz('Europe/Paris').format('HH:mm')
       eventUI.selectedTimeEnd=moment(ev[0].end).tz('Europe/Paris').format('HH:mm')
     }

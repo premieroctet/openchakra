@@ -26,7 +26,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import ListItemText from '@material-ui/core/ListItemText';
-import {availabilities2events, eventUI2availability, DAYS} from '../../utils/converters';
+import {availabilities2events, eventUI2availability, availability2eventUI, DAYS} from '../../utils/converters';
 import {ALL_SERVICES} from '../../utils/consts.js';
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -154,7 +154,20 @@ class Schedule extends React.Component {
 
   toggleEditModal = event => {
 
-    console.log("Deleting:"+JSON.stringify(event));
+    console.log("Deleting:"+JSON.stringify(event.ui_id));
+    var avail=this.props.availabilities.filter( a => a._id==event.ui_id);
+    if (avail.length==0) {
+      console.error(`No avail found for ${event.ui_id}`)
+      return
+    }
+    avail = avail[0]
+
+    const eventUI = availability2eventUI(avail);
+
+    console.log("EventUI:"+JSON.stringify(eventUI));
+    this.setState({...eventUI, isAddModalOpen: true});
+
+    /**
     if (this.props.onDeleteAvailability) {
       console.log(`Suppression de ${JSON.stringify(event)}`)
      confirmAlert({
@@ -174,6 +187,7 @@ class Schedule extends React.Component {
       ]
     });
     }
+    */
 
     if (!this.state.isAddModalOpen) {
       this.setState({
@@ -225,13 +239,20 @@ class Schedule extends React.Component {
 
   onSubmit = e => {
     let avail=eventUI2availability(this.state);
-    let res = this.props.onCreateAvailability(avail);
+    if (this.state.ui_id) { // Modif
+      this.props.onUpdateAvailability(avail);
+    }
+    else {
+      this.props.onCreateAvailability(avail);
+    }
+    this.setState({ui_id: null})
     this.closeModal();
   };
 
   onDelete = e => {
     let avail=eventUI2availability(this.state);
     let res = this.props.onDeleteAvailability(avail);
+    this.setState({ui_id: null})
     this.closeModal();
   };
 
@@ -303,7 +324,7 @@ class Schedule extends React.Component {
             <Grid container className={classes.modalContainer}>
               <Grid container>
                   <Grid>
-                    <h2>Nouvelle disponibilité</h2>
+                    <h2>{ this.state.ui_id ? `Modifier disponibilité` : `Nouvelle disponibilité`}</h2>
                   </Grid>
               </Grid>
               <Grid container>
@@ -393,6 +414,7 @@ class Schedule extends React.Component {
                       <ExpansionPanelSummary>
                         <FormControlLabel
                           aria-label="Acknowledge"
+                          checked={this.state.isExpanded === 'panel1'}
                           onClick={event => event.stopPropagation()}
                           onFocus={event => event.stopPropagation()}
                           control={<Checkbox />}
@@ -440,8 +462,10 @@ class Schedule extends React.Component {
                   </Grid>
                   <Grid container justify="flex-end" style={{marginTop: 20}}>
                     <Button type="button" variant="contained" className={classes.textFieldButton} color={'secondary'} onClick={() => this.setState({isAddModalOpen: false})} >Annuler </Button>
-                    <Button type="button" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onSubmit()}>Ajouter </Button>
-                    { this.props.onDeleteAvailability ?
+                    <Button type="button" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onSubmit()}>
+                      { this.state.ui_id ? `Modifier` : `Ajouter` }
+                    </Button>
+                    { this.props.onDeleteAvailability && this.state.ui_id ?
                         <Button type="button" variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onDelete()}>Supprimer </Button>
                         :
                         null
