@@ -406,18 +406,18 @@ class signup extends React.Component {
                       <em style={{color:'red'}}>
                         {this.state.errors.birthday}
                       </em>
-                    <Grid container style={{marginTop: 15}}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                              checked={this.state.checked}
-                              onChange={this.handleChecked}
-                              value="checked"
-                              color="primary"
-                          />
-                        }
-                        label="J’accepte les conditions générales d’utilisation de My-Alfred."
-                      />
+                    <Grid container style={{marginTop: 15, alignItems: 'center'}}>
+                      <Grid>
+                        <Checkbox
+                          checked={this.state.checked}
+                          onChange={this.handleChecked}
+                          value="checked"
+                          color="primary"
+                        />
+                      </Grid>
+                      <Grid>
+                        <a href={"footer/cguPage"} target="_blank">J’accepte les conditions générales d’utilisation de My-Alfred.</a>
+                      </Grid>
                     </Grid>
 
                     <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
