@@ -1,6 +1,6 @@
 const { RRule, RRuleSet, rrulestr }=require('rrule')
 const {ALL_SERVICES, generate_id} = require('./consts.js');
-
+const moment=require('moment')
 const EV_AVAIL_DAY_MAPPING='monday tuesday wednesday thursday friday saturday sunday'.split(' ');
 
 const DAYS='Lu Ma Me Je Ve Sa Di'.split(' ');
@@ -47,7 +47,7 @@ const computeRecurrency = (period, event, dayOfWeek) => {
 
 const avail2event = availab => {
   let result=[];
-  "monday tuesday wednesday thursday friday saturday sunday".split(' ').forEach(day => {
+  EV_AVAIL_DAY_MAPPING.forEach(day => {
     let evts = availab[day]['event'];
     evts.forEach(e => {
       let title = e.all_services ? "Tous services" : e.services.map( s => s.label).join('\n');
@@ -100,44 +100,41 @@ const eventUI2availability = event => {
   return avail;
 };
 
-const availability2eventUI = event => {
+const availability2eventUI = avail => {
 
-  console.log("Event:"+JSON.stringify(event))
+  console.log("Event:"+JSON.stringify(avail))
 
   var eventUI = {
     selectedDateStart: null,
     selectedDateEnd: null,
     recurrDays: new Set(),
-    isExpanded: false,
-    servicesSelected: null,
+    isExpanded: avail['period'].active ? 'panel1' : false,
+    servicesSelected: [ALL_SERVICES],
+    selectedDateEndRecu: null,
   }
-  return eventUI
-
-  let avail = {ui_id: generate_id() }
-
-  let startDate=new Date(event.selectedDateStart);
-  let endDate=new Date(event.selectedDateEnd);
-
-  let recurrent = event.recurrDays.size > 0;
-  let selDay=(startDate.getDay()+6)%7;
-  let all_services = event.servicesSelected.indexOf(ALL_SERVICES)>-1;
-  let services=[]
-  if (!all_services) {
-    services=event.servicesSelected.map(s => ({ label:s[0], value:s[1]}));
-  }
-
-  const inner_event = { 'begin': startDate, 'end': endDate, services:services, all_services : all_services }
-  EV_AVAIL_DAY_MAPPING.forEach( (item, index) => {
-    let include = recurrent ? event.recurrDays.has(index) : index==selDay;
-    avail[item] = include ? {'event':[inner_event]} : {'event': []};
-  })
-  if (event.isExpanded==='panel1') {
-    avail['period']={active:true, month_begin: new Date(event.selectedDateStart), month_end: event.selectedDateEndRecu ? new Date(event.selectedDateEndRecu):null };
+  if (avail['period'].active) {
+    eventUI.isExpanded = 'panel1';
+    eventUI.selectedDateEndRecu = avail.period.month_end;
   }
   else {
-    avail['period']={active:false, month_begin: null, month_end: null};
+    eventUI.isExpanded = false;
   }
-  return avail;
+
+  EV_AVAIL_DAY_MAPPING.forEach((day, index) => {
+    const ev = avail[day].event;
+    if (ev.length >0) {
+      if (eventUI.isExpanded) {
+        eventUI.recurrDays.add(index);
+      }
+      eventUI.selectedDateStart=ev[0].begin
+      eventUI.selectedDateEnd=ev[0].end
+      eventUI.selectedTimeStart=moment(ev[0].begin).tz('Europe/Paris').format('HH:mm')
+      eventUI.selectedTimeEnd=moment(ev[0].end).tz('Europe/Paris').format('HH:mm')
+    }
+  })
+
+  return eventUI
+
 };
 
 module.exports={availabilities2events, eventUI2availability, availability2eventUI, DAYS};

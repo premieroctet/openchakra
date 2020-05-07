@@ -22,6 +22,7 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=> {
 // @Route GET /myAlfred/api/availability/toEventUI
 // Get converted availability to eventUI
 // access public
+/* TEST ONLY
 router.get('/toEventUI/:avail_id',(req,res)=> {
   const availId = req.params.avail_id
 
@@ -38,15 +39,17 @@ router.get('/toEventUI/:avail_id',(req,res)=> {
 
   Availability.findById(availId)
     .then (avail => {
-      console.log(`res is ${JSON.stringify(avail)}`)
       const event = availability2eventUI(avail);
-      res.json({MODEL:MODEL, AVAIL:AVAIL, eventUI:event, availability:avail});
+      const avail2 = eventUI2availability(event);
+      const event2 = availability2eventUI(avail2);
+      res.json({event1:event, event2:event2});
     })
     .catch (err => {
       console.error(err)
       res.json(err)
     })
 });
+*/
 
 // @Route POST /myAlfred/api/availability/update
 // update an availability for one user
