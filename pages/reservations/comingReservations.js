@@ -11,11 +11,16 @@ import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import Button from '@material-ui/core/Button';
+import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 moment.locale("fr");
 
 class ComingReservations extends React.Component {
   constructor(props) {
     super(props);
+    this.child = React.createRef();
+
     this.state = {
       tabs: false,
       user: null,
@@ -25,6 +30,7 @@ class ComingReservations extends React.Component {
       isAlfred: false,
       userInfo : {},
     };
+    this.callDrawer = this.callDrawer.bind(this)
   }
 
   componentDidMount() {
@@ -85,6 +91,10 @@ class ComingReservations extends React.Component {
     this.setState({ tabs: false });
   };
 
+  callDrawer(){
+    this.child.current.handleDrawerToggle();
+  }
+
   render() {
         const {userInfo} = this.state;
     const { classes } = this.props;
@@ -103,250 +113,104 @@ class ComingReservations extends React.Component {
               {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
 
               <Grid container>
-                <Grid
-                    className={classes.toggle}
-                    item
-                    xs={3}
-                >
-                  <div className={classes.trigger}></div>
-                  <Grid
-                      container
-                      style={{
-                        justifyContent: "center"
-                      }}
-                  >
-                    <Grid
-                        item
-                        style={{ marginTop: 30, width: 281, height: 70 }}
-                        className={classes.hidesm}
-                    >
-                      <Link href={"allReservations"}>
-                        <div
-                            style={{
-                              border: "0.2px solid lightgrey",
-                              lineHeight: "4",
-                              paddingLeft: 5,
-                              paddingRight: 5,
-                              display: "flex",
-                              height: 70
-                            }}
-                        >
-                          <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
-                            Toutes mes réservations
-                          </a>
-                        </div>
-                      </Link>
-                    </Grid>
-                    <Grid
-                        item
-                        style={{ marginTop: 30, width: 281 }}
-                        className={classes.hidelg}
-                    >
-                      <Link href={"allReservations"}>
-                        <div
-                            style={{
-                              lineHeight: "4",
-                              paddingLeft: 5,
-                              paddingRight: 5,
-                              display: "flex",
-                              justifyContent: "center"
-                            }}
-                        >
-                          <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
-                            <img
-                                src={"../static/calendar-3.svg"}
-                                alt={"user"}
-                                width={27}
-                                height={70}
-                                style={{ marginRight: 4 }}
-                            />
-                          </a>
-                        </div>
-                      </Link>
-                    </Grid>
-
-                    <Grid
-                        item
-                        style={{ marginTop: 10, width: 281, height: 70 }}
-                        className={classes.hidesm}
-                    >
-                      <Link href={"comingReservations"}>
-                        <div
-                            style={{
-                              border: "0.2px solid lightgrey",
-                              lineHeight: "4",
-                              paddingLeft: 5,
-                              paddingRight: 5,
-                              display: "flex",
-                              height: 70
-                            }}
-                        >
-                          <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
-                            Mes réservations à venir
-                          </a>
-                        </div>
-                      </Link>
-                    </Grid>
-                    <Grid
-                        item
-                        style={{ marginTop: 30, width: 281 }}
-                        className={classes.hidelg}
-                    >
-                      <Link href={"comingReservations"}>
-                        <div
-                            style={{
-                              lineHeight: "4",
-                              paddingLeft: 5,
-                              paddingRight: 5,
-                              display: "flex",
-                              justifyContent: "center"
-                            }}
-                        >
-                          <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
-                            <img
-                                src={"../static/calendar-6.svg"}
-                                alt={"user"}
-                                width={27}
-                                height={70}
-                                style={{ marginRight: 4 }}
-                            />
-                          </a>
-                        </div>
-                      </Link>
-                    </Grid>
-
-                    <Grid
-                        item
-                        style={{ marginTop: 10, width: 281, height: 70 }}
-                        className={classes.hidesm}
-                    >
-                      <Link href={"finishedReservations"}>
-                        <div
-                            style={{
-                              border: "0.2px solid lightgrey",
-                              lineHeight: "4",
-                              paddingLeft: 5,
-                              paddingRight: 5,
-                              display: "flex",
-                              height: 70
-                            }}
-                        >
-                          <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
-                            Mes réservations terminées
-                          </a>
-                        </div>
-                      </Link>
-                    </Grid>
-                    <Grid
-                        item
-                        style={{ marginTop: 30, width: 281 }}
-                        className={classes.hidelg}
-                    >
-                      <Link href={"finishedReservations"}>
-                        <div
-                            style={{
-                              lineHeight: "4",
-                              paddingLeft: 5,
-                              paddingRight: 5,
-                              display: "flex",
-                              justifyContent: "center"
-                            }}
-                        >
-                          <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
-                            <img
-                                src={"../static/calendar.svg"}
-                                alt={"user"}
-                                width={27}
-                                height={70}
-                                style={{ marginRight: 4 }}
-                            />
-                          </a>
-                        </div>
-                      </Link>
+                <Grid className={classes.toggle}>
+                  <Grid>
+                    <ResponsiveDrawer ref={this.child} isActiveIndex={1} itemsDrawers={'reservation'} needMargin={true}/>
+                  </Grid>
+                  <Grid>
+                    <Grid>
+                      <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        edge="start"
+                        onClick={this.callDrawer}
+                        className={classes.menuButton}
+                      >
+                        <MenuIcon />
+                      </IconButton>
                     </Grid>
                   </Grid>
                 </Grid>
-
                 <Grid className={classes.paddresp} item xs={9} sm={9} md={7}>
-                                <Grid container>
-                                    <Grid item xs={12}>
-                  <Typography style={{ fontSize: "2rem", marginTop: "4%" }}>
-                    Mes réservations à venir
-                  </Typography>
-		  </Grid>
-                  <Typography style={{ fontSize: "0.8rem", marginBottom: "4%" }}>
-                    Vous avez {this.state.comingReservations} réservations à venir
-                  </Typography>
-                                </Grid>
-                              {
-                                userInfo.is_alfred ?
-                  <Grid container className={classes.tabweb}>
-                    <Grid item xs={6} style={{ textAlign: "center" }}>
-                      <div>
-                        <h2
-                            onClick={this.handleClicktabs}
-                            style={{
-                              color: "#828181",
-                              fontWeight: "100",
-                              cursor: "pointer",
-                              marginLeft: "0%",
-                              position: "sticky"
-                            }}
-                        >
-                          En tant qu'Alfred
-                        </h2>
-                      </div>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <h2
-                          onClick={this.handleClicktabs2}
-                          style={{
-                            color: "#828181",
-                            fontWeight: "100",
-                            textAlign: "center",
-                            cursor: "pointer"
-                          }}
-                      >
-                        {" "}
-                        En tant qu'utilisateur
-                      </h2>
-                      <br />
-                    </Grid>
+                  <Grid container>
+                    <Grid item xs={12}>
+                      <Typography style={{ fontSize: "2rem", marginTop: "4%" }}>
+                        Mes réservations à venir
+                      </Typography>
+		                </Grid>
+                      <Typography style={{ fontSize: "0.8rem", marginBottom: "4%" }}>
+                        Vous avez {this.state.comingReservations} réservations à venir
+                      </Typography>
+                  </Grid>
+                  {
+                    userInfo.is_alfred ?
+                      <Grid container className={classes.tabweb}>
+                        <Grid item xs={6} style={{ textAlign: "center" }}>
+                          <div>
+                            <h2
+                                onClick={this.handleClicktabs}
+                                style={{
+                                  color: "#828181",
+                                  fontWeight: "100",
+                                  cursor: "pointer",
+                                  marginLeft: "0%",
+                                  position: "sticky"
+                                }}
+                            >
+                              En tant qu'Alfred
+                            </h2>
+                          </div>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <h2
+                              onClick={this.handleClicktabs2}
+                              style={{
+                                color: "#828181",
+                                fontWeight: "100",
+                                textAlign: "center",
+                                cursor: "pointer"
+                              }}
+                          >
+                            {" "}
+                            En tant qu'utilisateur
+                          </h2>
+                          <br />
+                        </Grid>
 
-                    <Grid item xs={6}>
-                      {tabs ? (
-                          <React.Fragment>
-                            <hr
-                                className={classes.trait1}
-                                style={{ marginTop: "-25px" }}
-                            />
-                          </React.Fragment>
-                      ) : (
-                          <React.Fragment>
-                            <hr
-                                className={classes.trait3}
-                                style={{ marginTop: "-25px" }}
-                            />
-                          </React.Fragment>
-                      )}
-                    </Grid>
-                    <Grid item xs={6}>
-                      {tabs ? (
-                          <React.Fragment>
-                            <hr
-                                className={classes.trait}
-                                style={{ marginTop: "-25px" }}
-                            />
-                          </React.Fragment>
-                      ) : (
-                          <React.Fragment>
-                            <hr
-                                className={classes.trait2}
-                                style={{ marginTop: "-25px" }}
-                            />
-                          </React.Fragment>
-                      )}
-                    </Grid>
+                        <Grid item xs={6}>
+                          {tabs ? (
+                              <React.Fragment>
+                                <hr
+                                    className={classes.trait1}
+                                    style={{ marginTop: "-25px" }}
+                                />
+                              </React.Fragment>
+                          ) : (
+                              <React.Fragment>
+                                <hr
+                                    className={classes.trait3}
+                                    style={{ marginTop: "-25px" }}
+                                />
+                              </React.Fragment>
+                          )}
+                        </Grid>
+                        <Grid item xs={6}>
+                          {tabs ? (
+                              <React.Fragment>
+                                <hr
+                                    className={classes.trait}
+                                    style={{ marginTop: "-25px" }}
+                                />
+                              </React.Fragment>
+                          ) : (
+                              <React.Fragment>
+                                <hr
+                                    className={classes.trait2}
+                                    style={{ marginTop: "-25px" }}
+                                />
+                              </React.Fragment>
+                          )}
+                        </Grid>
                   </Grid>
                                   : null
                               }

@@ -122,7 +122,7 @@ class security extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         <Grid style={{zIndex: 0}}>
-                            <ResponsiveDrawer ref={this.child} isActiveIndex={4}/>
+                            <ResponsiveDrawer ref={this.child} isActiveIndex={4} itemsDrawers={'account'}/>
                         </Grid>
                         <Grid>
                             <Grid>
