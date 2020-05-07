@@ -122,7 +122,7 @@ class notifications extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         <Grid style={{zIndex: 0}}>
-                            <ResponsiveDrawer ref={this.child} isActiveIndex={0}/>
+                            <ResponsiveDrawer ref={this.child} isActiveIndex={0} itemsDrawers={'account'}/>
                         </Grid>
                         <Grid>
                             <Grid>

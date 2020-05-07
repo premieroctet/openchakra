@@ -11,12 +11,16 @@ import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import styles from './finishedReservations/finishedReservationsStyle'
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import Button from '@material-ui/core/Button';
+import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
 moment.locale("fr");
 
 class FinishedReservations extends React.Component {
   constructor(props) {
     super(props);
+    this.child = React.createRef();
     this.state = {
       tabs: false,
       user: null,
@@ -26,6 +30,8 @@ class FinishedReservations extends React.Component {
       isAlfred: false,
       userInfo: {}
     };
+    this.callDrawer = this.callDrawer.bind(this)
+
   }
 
   componentDidMount() {
@@ -86,6 +92,10 @@ class FinishedReservations extends React.Component {
     this.setState({ tabs: false });
   };
 
+  callDrawer(){
+    this.child.current.handleDrawerToggle();
+  }
+
   render() {
         const {userInfo} = this.state;
     const { classes } = this.props;
@@ -104,165 +114,24 @@ class FinishedReservations extends React.Component {
             {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
 
             <Grid container>
-              <Grid
-                className={classes.toggle}
-                item
-                xs={3}
-              >
-                <div className={classes.trigger}/>
-                <Grid container style={{ justifyContent: "center" }}>
-                  <Grid
-                    item
-                    style={{ marginTop: 30, width: 281, height: 70 }}
-                    className={classes.hidesm}
-                  >
-                    <Link href={"allReservations"}>
-                      <div
-                        style={{
-                          border: "0.2px solid lightgrey",
-                          lineHeight: "4",
-                          paddingLeft: 5,
-                          paddingRight: 5,
-                          display: "flex",
-                          height: 70
-                        }}
-                      >
-                        <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
-                          Toutes mes réservations
-                        </a>
-                      </div>
-                    </Link>
-                  </Grid>
-                  <Grid
-                    item
-                    style={{ marginTop: 30, width: 281 }}
-                    className={classes.hidelg}
-                  >
-                    <Link href={"allReservations"}>
-                      <div
-                        style={{
-                          lineHeight: "4",
-                          paddingLeft: 5,
-                          paddingRight: 5,
-                          display: "flex",
-                          justifyContent: "center"
-                        }}
-                      >
-                        <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
-                          <img
-                            src={"../static/calendar-3.svg"}
-                            alt={"user"}
-                            width={27}
-                            height={70}
-                            style={{ marginRight: 4 }}
-                          />
-                        </a>
-                      </div>
-                    </Link>
-                  </Grid>
-
-                  <Grid
-                    item
-                    style={{ marginTop: 10, width: 281, height: 70 }}
-                    className={classes.hidesm}
-                  >
-                    <Link href={"comingReservations"}>
-                      <div
-                        style={{
-                          border: "0.2px solid lightgrey",
-                          lineHeight: "4",
-                          paddingLeft: 5,
-                          paddingRight: 5,
-                          display: "flex",
-                          height: 70
-                        }}
-                      >
-                        <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
-                          Mes réservations à venir
-                        </a>
-                      </div>
-                    </Link>
-                  </Grid>
-                  <Grid
-                    item
-                    style={{ marginTop: 30, width: 281 }}
-                    className={classes.hidelg}
-                  >
-                    <Link href={"comingReservations"}>
-                      <div
-                        style={{
-                          lineHeight: "4",
-                          paddingLeft: 5,
-                          paddingRight: 5,
-                          display: "flex",
-                          justifyContent: "center"
-                        }}
-                      >
-                        <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
-                          <img
-                            src={"../static/calendar-5.svg"}
-                            alt={"user"}
-                            width={27}
-                            height={70}
-                            style={{ marginRight: 4 }}
-                          />
-                        </a>
-                      </div>
-                    </Link>
-                  </Grid>
-
-                  <Grid
-                    item
-                    style={{ marginTop: 10, width: 281, height: 70 }}
-                    className={classes.hidesm}
-                  >
-                    <Link href={"finishedReservations"}>
-                      <div
-                        style={{
-                          border: "0.2px solid lightgrey",
-                          lineHeight: "4",
-                          paddingLeft: 5,
-                          paddingRight: 5,
-                          display: "flex",
-                          height: 70
-                        }}
-                      >
-                        <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
-                          Mes réservations terminées
-                        </a>
-                      </div>
-                    </Link>
-                  </Grid>
-                  <Grid
-                    item
-                    style={{ marginTop: 30, width: 281 }}
-                    className={classes.hidelg}
-                  >
-                    <Link href={"finishedReservations"}>
-                      <div
-                        style={{
-                          lineHeight: "4",
-                          paddingLeft: 5,
-                          paddingRight: 5,
-                          display: "flex",
-                          justifyContent: "center"
-                        }}
-                      >
-                        <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
-                          <img
-                            src={"../static/calendar-2.svg"}
-                            alt={"user"}
-                            width={27}
-                            height={70}
-                            style={{ marginRight: 4 }}
-                          />
-                        </a>
-                      </div>
-                    </Link>
+              <Grid className={classes.toggle}>
+                <Grid>
+                  <ResponsiveDrawer ref={this.child} isActiveIndex={2} itemsDrawers={'reservation'} needMargin={true}/>
+                </Grid>
+                <Grid>
+                  <Grid>
+                    <IconButton
+                      color="inherit"
+                      aria-label="open drawer"
+                      edge="start"
+                      onClick={this.callDrawer}
+                      className={classes.menuButton}
+                    >
+                      <MenuIcon />
+                    </IconButton>
                   </Grid>
                 </Grid>
               </Grid>
-
               <Grid className={classes.paddresp} item xs={9} sm={9} md={7}>
                 <Typography style={{ fontSize: "2rem", marginTop: "4%" }}>
                   Mes réservations terminées
