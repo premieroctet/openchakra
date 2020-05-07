@@ -34,8 +34,6 @@ import { Typography } from '@material-ui/core'; // Import css
 import styles from './ScheduleStyle'
 import PropTypes from 'prop-types';
 
-
-const propTypes = {};
 const localizer = momentLocalizer(moment);
 
 const formats = {
@@ -46,7 +44,7 @@ const formats = {
   }, culture, local) =>
     local.format(start, 'HH:mm', culture) + ' - ' + // Affichage de l'event dans le calendrier h début (week/day)
     local.format(end, 'HH:mm', culture), // Affichage de l'event dans le calendrier h fin (week/day)
-  dayFormat: 'dddd' + ' ' + 'DD/MM', // header de weekly (lun. dd/mm) (week)
+  dayFormat: 'ddd' + ' ' + 'DD' , // header de weekly (lun. dd/mm) (week)
   agendaTimeRangeFormat: ({
     start,
     end
@@ -58,8 +56,8 @@ const formats = {
     start,
     end
   }, culture, local) =>
-    local.format(start,  'dddd' + ' ' + 'DD/MM/YYYY', culture) + ' au ' + // Title de week - date début (week)
-    local.format(end,  'dddd' + ' ' + 'DD/MM/YYYY', culture),// Title de week - date fin (week)
+    local.format(start,  'MMM' + ' ' + 'YYYY', culture) + // Title de week - date début (week)
+    local.format(end,  '' + ' ' + '', culture),// Title de week - date fin (week)
   dayHeaderFormat: 'dddd DD MMMM'
 };
 
@@ -86,13 +84,14 @@ class Schedule extends React.Component {
       servicesSelected:[ALL_SERVICES],
       dayLayoutAlgorithm: 'no-overlap',
       selectedDateEndRecu: null,
+      isExpanded: true,
       // Days (1=>7)
       recurrDays: new Set(),
       services: [ALL_SERVICES, ...this.props.services] || [ALL_SERVICES],
     };
     this.closeModal = this.closeModal.bind(this);
     this.toggleEditModal = this.toggleEditModal.bind(this);
-
+    this.handleChange = this.handleChange.bind(this);
   }
 
   /**
@@ -129,7 +128,7 @@ class Schedule extends React.Component {
 
 
   onChangeServices = e => {
-    let all_serv = e.target.value.filter(serv => serv[0]==ALL_SERVICES[0]);
+    let all_serv = e.target.value.filter(serv => serv[0]===ALL_SERVICES[0]);
     let contains = all_serv.length>0;
     if (contains) {
       this.setState({servicesSelected: [ALL_SERVICES]});
@@ -145,16 +144,28 @@ class Schedule extends React.Component {
           selectedDateEnd: end,
           selectedTimeStart: start.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
           selectedTimeEnd: end.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
-          isExpanded: false,
           servicesSelected: [ALL_SERVICES],
           isAddModalOpen: !this.state.isAddModalOpen,
+          isExpanded: 'panel1',
           recurrDays: new Set(),
-      });
+      }, () => this.addDefaultValue());
+
   };
+
+  addDefaultValue(){
+    var dt = new Date(this.state.selectedDateEnd);
+    dt.setMonth( dt.getMonth() + 6 );
+    if (this.state.isExpanded && this.state.recurrDays.size===0 && this.state.selectedDateStart ) {
+      this.setState({
+        selectedDateEndRecu: dt,
+        recurrDays: new Set([0, 1, 2, 3, 4 , 5])
+      });
+    }
+  }
 
   toggleEditModal = event => {
 
-    console.log("Deleting:"+JSON.stringify(event.ui_id));
+    console.log("Updating:"+JSON.stringify(event.ui_id));
     var avail=this.props.availabilities.filter( a => a._id==event.ui_id);
     if (avail.length==0) {
       console.error(`No avail found for ${event.ui_id}`)
@@ -167,28 +178,6 @@ class Schedule extends React.Component {
     console.log("EventUI:"+JSON.stringify(eventUI));
     this.setState({...eventUI, isAddModalOpen: true});
 
-    /**
-    if (this.props.onDeleteAvailability) {
-      console.log(`Suppression de ${JSON.stringify(event)}`)
-     confirmAlert({
-      title: 'Suppression',
-      message: 'Supprimer cette disponibilité et toutes ses occurrences pour '+event.title+"?",
-      buttons: [
-        {
-          label: 'Oui',
-          onClick: () => this.props.onDeleteAvailability(event.ui_id)
-        },
-        {
-          label: 'Non',
-        },
-        {
-          label: 'Annuler',
-        }
-      ]
-    });
-    }
-    */
-
     if (!this.state.isAddModalOpen) {
       this.setState({
         currentEvent: event,
@@ -197,13 +186,11 @@ class Schedule extends React.Component {
     }
   };
 
-   handleChange = panel => (event, isExpanded) => {
-     console.log("recurrDays:"+JSON.stringify(this.state.recurrDays));
-     this.setState({isExpanded: isExpanded ? panel : false});
-     if (isExpanded && this.state.recurrDays.size===0 && this.state.selectedDateStart ) {
+   handleChange(){
+     this.setState({isExpanded: !this.state.isExpanded});
+     if (this.state.isExpanded && this.state.recurrDays.size===0 && this.state.selectedDateStart ) {
        let dayOfWeek = new Date(this.state.selectedDateStart).getDay();
        dayOfWeek = (dayOfWeek+6)%7
-       console.log("Faut remplir avec "+dayOfWeek);
        this.setState({recurrDays: new Set([dayOfWeek])});
      }
    };
@@ -311,6 +298,8 @@ class Schedule extends React.Component {
           }}
           formats={formats}
           className={classes.sizeSchedulle}
+          step={60}
+          timeslots={1}
         />
         <Modal
           closeAfterTransition
@@ -364,6 +353,7 @@ class Schedule extends React.Component {
                           KeyboardButtonProps={{
                             'aria-label': 'change date',
                           }}
+                          autoOk={true}
                         />
                         <TextField
                           id="time"
@@ -392,6 +382,7 @@ class Schedule extends React.Component {
                           KeyboardButtonProps={{
                             'aria-label': 'change date',
                           }}
+                          autoOk={true}
                         />
                         <TextField
                           id="time"
@@ -410,7 +401,7 @@ class Schedule extends React.Component {
                       </MuiPickersUtilsProvider>
                     </Grid>
                   <Grid container className={classes.containerRecurrence}>
-                    <ExpansionPanel expanded={this.state.isExpanded === 'panel1'} style={{width:'100%'}}>
+                    <ExpansionPanel expanded={this.state.isExpanded} style={{width:'100%'}}>
                       <ExpansionPanelSummary>
                         <FormControlLabel
                           aria-label="Acknowledge"
@@ -419,7 +410,8 @@ class Schedule extends React.Component {
                           onFocus={event => event.stopPropagation()}
                           control={<Checkbox />}
                           label="Récurrence"
-                          onChange={this.handleChange('panel1')}
+                          onChange={this.handleChange}
+                          checked={this.state.isExpanded}
                         />
                       </ExpansionPanelSummary>
                       <ExpansionPanelDetails className={classes.panelForm}>
@@ -454,6 +446,7 @@ class Schedule extends React.Component {
                                 InputLabelProps={{
                                   shrink: true,
                                 }}
+                                autoOk={true}
                               />
                          </MuiPickersUtilsProvider>
                         </Grid>

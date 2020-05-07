@@ -20,7 +20,8 @@ import axios from 'axios';
 import {ALF_CONDS, CANCEL_MODE} from '../../utils/consts.js';
 import { toast } from 'react-toastify';
 import Router from "next/router";
-import {creaShopPresentation, selectService, selectPrestation, settingService, assetsService, settingShop, introduceYou} from '../../utils/validationSteps/validationSteps'
+import {creaShopPresentation, selectService, selectPrestation, settingService, assetsService, settingShop, introduceYou} from '../../utils/validationSteps/validationSteps';
+import {SCHEDULE_SUBTITLE} from '../../utils/messages'
 
 class creaShop extends React.Component {
   constructor(props) {
@@ -58,8 +59,6 @@ class creaShop extends React.Component {
         availabilities: [],
       },
       title: "Précisez vos disponibilités si vous le souhaitez ! ",
-      subtitle : "Si aucune disponibilité n’est précisée, vos services pourront être réservés à tout moment. Si vous précisez vos disponibilités, seules les plages horaires indiquées pourront être réservées. Vous pouvez appliquer une récurrence à vos disponibilités afin de gagner du temps ! Par exemple, si vous êtes disponible tous les lundis et mardis, vous pouvez cocher la case Récurrence, et cliquer sur Lu et Ma afin de répéter votre disponibilité sur une durée que vous pouvez définir."
-
     };
     this.onServiceChanged = this.onServiceChanged.bind(this);
     this.onPrestaChanged = this.onPrestaChanged.bind(this);
@@ -278,7 +277,7 @@ class creaShop extends React.Component {
       case 5:
         return <AssetsService data={shop} onChange={this.assetsChanged} type={"creaShop"}/>;
       case 6:
-        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} selectable={true} height={400}/>;
+        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={SCHEDULE_SUBTITLE} selectable={true} height={400}/>;
       case 7:
         return <BookingConditions conditions={shop.my_alfred_conditions} booking_request={shop.booking_request}  onChange={this.conditionsChanged} />;
       case 8:
