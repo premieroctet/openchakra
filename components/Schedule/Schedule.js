@@ -247,7 +247,7 @@ class Schedule extends React.Component {
     let events = availabilities2events(this.props.availabilities);
 
     return (
-      <Grid style={{height: height}}>
+      <Grid className={classes.heightContainer} style={{height: height}}>
         { title || subtitle  ?
           <Grid style={{ marginBottom: 50 }}>
             { title ?

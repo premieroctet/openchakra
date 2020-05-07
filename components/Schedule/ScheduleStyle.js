@@ -9,7 +9,7 @@ export default theme => ({
     left: '50%',
     transform: 'translate(-50%, -50%)',
     [theme.breakpoints.down('xs')]: {
-      width: '100%',
+      width: '90%',
     },
   },
   textField: {
@@ -133,5 +133,9 @@ export default theme => ({
       float: 'left'
     }
   },
-
+  heightContainer:{
+    [theme.breakpoints.down('xs')]:{
+      height: 'inherit !important'
+    }
+  }
 })

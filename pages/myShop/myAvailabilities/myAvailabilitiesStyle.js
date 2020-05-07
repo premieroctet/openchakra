@@ -10,6 +10,7 @@ export default theme => ({
     },
     [theme.breakpoints.down('xs')]: {
       marginBottom: '50%',
+      marginTop: 20
     },
   },
 })
