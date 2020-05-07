@@ -4,6 +4,8 @@ const passport = require('passport');
 const moment = require('moment');
 const {availability2eventUI, eventUI2availability} =require('../../../utils/converters');
 const Availability = require('../../models/Availability');
+const {createDefaultAvailability}=require('../../../utils/dateutils');
+
 moment.locale('fr');
 router.get('/test',(req, res) => res.json({msg: 'Availability Works!'}) );
 
@@ -26,34 +28,10 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=> {
 // @Route GET /myAlfred/api/availability/toEventUI
 // Get converted availability to eventUI
 // access public
-/* TEST ONLY
-router.get('/toEventUI/:avail_id',(req,res)=> {
-  const availId = req.params.avail_id
-
-  const MODEL={
-    "servicesSelected":[["Tous les services",null]],
-    "selectedDateEndRecu":"2020-07-25T15:35:00.000Z",
-    "recurrDays":new Set([0,1,2]),
-    "services":[["Tous les services",null]],
-    "selectedDateStart":"2020-05-06T05:00:00.000Z","selectedDateEnd":"2020-05-06T11:30:00.000Z",
-    "selectedTimeStart":"07:00", "selectedTimeEnd":"13:30","isExpanded":"panel1"}
-
-  const AVAIL = {
-    "monday":{"event":[{"begin":"2020-05-06T05:00:00.000Z","end":"2020-05-06T11:30:00.000Z","services":[],"all_services":true}]},"tuesday":{"event":[{"begin":"2020-05-06T05:00:00.000Z","end":"2020-05-06T11:30:00.000Z","services":[],"all_services":true}]},"wednesday":{"event":[{"begin":"2020-05-06T05:00:00.000Z","end":"2020-05-06T11:30:00.000Z","services":[],"all_services":true}]},"thursday":{"event":[]},"friday":{"event":[]},"saturday":{"event":[]},"sunday":{"event":[]},"period":{"active":true,"month_begin":"2020-05-06T05:00:00.000Z","month_end":"2020-07-25T15:35:00.000Z"}}
-
-  Availability.findById(availId)
-    .then (avail => {
-      const event = availability2eventUI(avail);
-      const avail2 = eventUI2availability(event);
-      const event2 = availability2eventUI(avail2);
-      res.json({event1:event, event2:event2});
-    })
-    .catch (err => {
-      console.error(err)
-      res.json(err)
-    })
+router.get('/toEventUI',(req,res)=> {
+  const eventUI=createDefaultAvailability();
+  res.json({avail:eventUI});
 });
-*/
 
 // @Route POST /myAlfred/api/availability/update
 // update an availability for one user

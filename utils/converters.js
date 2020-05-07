@@ -94,7 +94,7 @@ const eventUI2availability = event => {
     let include = recurrent ? event.recurrDays.has(index) : index==selDay;
     avail[item] = include ? {'event':[inner_event]} : {'event': []};
   })
-  if (event.isExpanded==='panel1') {
+  if (event.isExpanded) {
     avail['period']={active:true, month_begin: new Date(event.selectedDateStart), month_end: event.selectedDateEndRecu ? new Date(event.selectedDateEndRecu):null };
   }
   else {
