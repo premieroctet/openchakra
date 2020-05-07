@@ -33,7 +33,7 @@ class addPhone extends React.Component {
         };
     }
 
-    coponentDidMount() {
+    componentDidMount() {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     }
 

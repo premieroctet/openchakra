@@ -13,9 +13,10 @@ import Link from "next/link";
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
-        height: '100vh',
         flexDirection: 'column',
-
+        [theme.breakpoints.down('xs')]:{
+            marginBottom: 200
+        }
     },
     card: {
         fontFamily: 'Helvetica',
