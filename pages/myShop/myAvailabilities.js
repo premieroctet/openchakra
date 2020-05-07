@@ -33,6 +33,7 @@ class myAvailabilities extends React.Component {
         };
         this.availabilityCreated = this.availabilityCreated.bind(this);
         this.availabilityDelete = this.availabilityDelete.bind(this);
+        this.availabilityUpdate = this.availabilityUpdate.bind(this);
         this.needRefresh = this.needRefresh.bind(this);
     }
 
@@ -43,6 +44,14 @@ class myAvailabilities extends React.Component {
     componentDidMount() {
 
       // FIX : get current availabilities
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+
+      axios.get('/myAlfred/api/availability/currentAlfred')
+        .then ( res => {
+          console.log(JSON.stringify(res.data, null, 2));
+          this.setState({availabilities: res.data})
+        })
+        .catch (err => console.error(err))
 
       axios.get('/myAlfred/api/users/current').then(res => {
         let user = res.data;
@@ -83,8 +92,9 @@ class myAvailabilities extends React.Component {
     }
 
     availabilityCreated(avail) {
-      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
+      console.log(`Availability created : ${JSON.stringify(avail)}`)
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
       axios.post('/myAlfred/api/availability/add',avail)
           .then(res => {
               toast.info('Disponibilité ajoutée avec succès !');
@@ -97,15 +107,32 @@ class myAvailabilities extends React.Component {
 		  })
     }
 
+    availabilityUpdate(avail) {
+        console.log("Avail update:"+JSON.stringify(avail))
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.post('/myAlfred/api/availability/update', avail)
+          .then( res => {
+
+
+        axios.get('/myAlfred/api/availability/currentAlfred')
+          .then ( res => {
+            console.log(JSON.stringify(res.data, null, 2));
+            this.setState({availabilities: res.data})
+          })
+          .catch (err => console.error(err))
+        });
+    }
+
     availabilityDelete(avail) {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-      axios.delete('/myAlfred/api/availability/'+avail)
+      console.log("Deleteing:"+JSON.stringify(avail))
+      axios.delete('/myAlfred/api/availability/'+avail._id)
           .then(res => {
               toast.info('Disponibilité supprimée avec succès !');
               let new_availabilities=[];
               this.state.availabilities.forEach( a => {
-                if (a._id!==avail) {
+                if (a._id!==avail._id) {
                   new_availabilities.push(a);
                 }
               })
@@ -147,7 +174,7 @@ class myAvailabilities extends React.Component {
                 }
                 <Grid container className={classes.containercalendar}>
                   <Grid style={{width:'90%'}}>
-                    <Schedule height={700} availabilities={this.state.availabilities} subtitle={SCHEDULE_SUBTITLE} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} selectable={true}/>
+                    <Schedule height={700} availabilities={this.state.availabilities} subtitle={SCHEDULE_SUBTITLE} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} onUpdateAvailability={this.availabilityUpdate} selectable={true}/>
                   </Grid>
                 </Grid>
               </Layout>
