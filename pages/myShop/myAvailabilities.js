@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Schedule from '../../components/Schedule/Schedule';
 import { toast } from 'react-toastify';
 import {Helmet} from 'react-helmet';
-import { SCHEDULE_SUBTITLE } from '../../utils/messages';
+import { SCHEDULE_SUBTITLE, SCHEDULE_TITLE } from '../../utils/messages';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import styles from './myAvailabilities/myAvailabilitiesStyle'
@@ -174,7 +174,7 @@ class myAvailabilities extends React.Component {
                 }
                 <Grid container className={classes.containercalendar}>
                   <Grid style={{width:'90%'}}>
-                    <Schedule height={700} availabilities={this.state.availabilities} subtitle={SCHEDULE_SUBTITLE} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} onUpdateAvailability={this.availabilityUpdate} selectable={true}/>
+                    <Schedule height={700} availabilities={this.state.availabilities} title={SCHEDULE_TITLE} subtitle={SCHEDULE_SUBTITLE} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} onUpdateAvailability={this.availabilityUpdate} selectable={true}/>
                   </Grid>
                 </Grid>
               </Layout>

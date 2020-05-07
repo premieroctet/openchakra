@@ -21,7 +21,7 @@ import {ALF_CONDS, CANCEL_MODE} from '../../utils/consts.js';
 import { toast } from 'react-toastify';
 import Router from "next/router";
 import {creaShopPresentation, selectService, selectPrestation, settingService, assetsService, settingShop, introduceYou} from '../../utils/validationSteps/validationSteps';
-import {SCHEDULE_SUBTITLE} from '../../utils/messages'
+import {SCHEDULE_SUBTITLE, SCHEDULE_TITLE} from '../../utils/messages'
 
 class creaShop extends React.Component {
   constructor(props) {
@@ -58,7 +58,6 @@ class creaShop extends React.Component {
         perimeter: 10,
         availabilities: [],
       },
-      title: "Précisez vos disponibilités si vous le souhaitez ! ",
     };
     this.onServiceChanged = this.onServiceChanged.bind(this);
     this.onPrestaChanged = this.onPrestaChanged.bind(this);
@@ -277,7 +276,7 @@ class creaShop extends React.Component {
       case 5:
         return <AssetsService data={shop} onChange={this.assetsChanged} type={"creaShop"}/>;
       case 6:
-        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={SCHEDULE_SUBTITLE} selectable={true} height={700}/>;
+        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={SCHEDULE_TITLE} subtitle={SCHEDULE_SUBTITLE} selectable={true} height={700}/>;
       case 7:
         return <BookingConditions conditions={shop.my_alfred_conditions} booking_request={shop.booking_request}  onChange={this.conditionsChanged} />;
       case 8:

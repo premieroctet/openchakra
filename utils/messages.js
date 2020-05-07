@@ -13,4 +13,6 @@ const SCHEDULE_SUBTITLE=['Si aucune disponibilité n’est précisée, vos servi
 '                      Par exemple, si vous êtes disponible tous les lundis et mardis, vous pouvez cocher la case Récurrence, et cliquer sur Lu et Ma afin de répéter votre disponibilité sur une durée que vous\n' +
 '                      pouvez définir.'];
 
-export {MYSHOP_MESSAGE, MYSHOP_TITLE, MYSHOP_SUBTITLE, SCHEDULE_SUBTITLE};
+const SCHEDULE_TITLE=['Précisez vos disponibilités si vous le souhaitez ! '];
+
+export {MYSHOP_MESSAGE, MYSHOP_TITLE, MYSHOP_SUBTITLE, SCHEDULE_SUBTITLE, SCHEDULE_TITLE};
