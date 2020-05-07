@@ -80,24 +80,29 @@ class ResponsiveDrawer extends React.Component{
         {
           text: 'Toutes mes réservations',
           url: 'allReservations',
+          isActivePics: 'Toutes mes réservations active'
         },
         {
           text: 'Mes réservations à venir',
-          url: 'comingReservations'
+          url: 'comingReservations',
+          isActivePics: 'Mes réservations à venir active'
         },
         {
           text: 'Mes réservations terminées',
-          url: 'finishedReservations'
+          url: 'finishedReservations',
+          isActivePics: 'Mes réservations terminées active'
         }
       ],
       itemsDrawerMessages:[
         {
           text: 'Tous les messages',
-          url : '/reservations/messages'
+          url : '/reservations/messages',
+          isActivePics: 'Tous les messages active'
         },
         {
           text: 'Messages non lus',
-          url: '/reservations/newMessages'
+          url: '/reservations/newMessages',
+          isActivePics: 'Messages non lus active'
         }
       ],
       itemsDrawerPerformances:[
