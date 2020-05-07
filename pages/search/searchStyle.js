@@ -12,13 +12,13 @@ export default theme => ({
     objectFit: 'cover',
   },
   respfilter:{
-    position: 'sticky',
-    top: 60,
+    position: 'fixed',
+    top: 65,
     zIndex: 10,
     background: 'white',
     height: 60,
     [theme.breakpoints.down('sm')]: {
-      top: 200,
+      top: 65,
     },
     [theme.breakpoints.down('xs')]: {
       top: 230
