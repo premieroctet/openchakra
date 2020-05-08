@@ -66,6 +66,7 @@ class creaShop extends React.Component {
     this.preferencesChanged = this.preferencesChanged.bind(this);
     this.assetsChanged = this.assetsChanged.bind(this);
     this.availabilityCreated = this.availabilityCreated.bind(this);
+    this.availabilityUpdated = this.availabilityUpdated.bind(this);
     this.availabilityDeleted = this.availabilityDeleted.bind(this);
     this.conditionsChanged = this.conditionsChanged.bind(this);
     this.shopSettingsChanged = this.shopSettingsChanged.bind(this);
@@ -92,7 +93,7 @@ class creaShop extends React.Component {
         });
       })
       .catch(error => {
-        console.log(error);
+        console.error(error);
       })
   }
 
@@ -110,21 +111,27 @@ class creaShop extends React.Component {
   }
 
   availabilityCreated(avail) {
-    console.log("Availability created:"+JSON.stringify(avail, null, 2));
     let shop = this.state.shop;
     shop.availabilities.push(avail);
     this.setState({shop: shop});
   }
 
-  availabilityDeleted(avail_id) {
-    console.log("Availability id deleted:"+JSON.stringify(avail_id, null, 2));
+  availabilityDeleted(avail) {
     let shop = this.state.shop;
-    shop.availabilities=shop.availabilities.filter(avail => avail.ui_id !== avail_id);
+    shop.availabilities=shop.availabilities.filter(av => av.ui_id !== avail.ui_id);
+    this.setState({shop: shop});
+  }
+
+  availabilityUpdated(avail) {
+    let shop = this.state.shop;
+    // Remove
+    shop.availabilities=shop.availabilities.filter(av => av.ui_id !== avail.ui_id);
+    // Add
+    shop.availabilities.push(avail);
     this.setState({shop: shop});
   }
 
   handleNext = () => {
-    console.log("Handle next");
     if (this.state.activeStep<9) {
       this.setState({activeStep: this.state.activeStep + 1});
     }
@@ -151,7 +158,7 @@ class creaShop extends React.Component {
 
             axios.post('/myAlfred/api/serviceUser/addDiploma/'+su_id,formData)
               .then(() => { console.log("Diplôme ajouté"); })
-              .catch(err => console.log(err))
+              .catch(err => console.error(err))
           }
 
           if(cloned_shop.certificationPicture !== null) {
@@ -163,7 +170,7 @@ class creaShop extends React.Component {
 
             axios.post('/myAlfred/api/serviceUser/addCertification/'+su_id,formData)
               .then(() => { console.log("Certification ajoutée"); })
-              .catch(err => console.log(err))
+              .catch(err => console.error(err))
           }
 
           toast.info("Boutique créée avec succès");
@@ -187,7 +194,6 @@ class creaShop extends React.Component {
   onServiceChanged(service_id){
     let shop = this.state.shop;
     shop.service = service_id;
-    console.log("CreaShop setting service "+service_id);
     this.setState({shop: shop});
   }
 
@@ -195,7 +201,6 @@ class creaShop extends React.Component {
     let shop=this.state.shop;
     shop.prestations=prestations;
     this.setState({shop: shop});
-    console.log("CreaShop:onPrestaChanged:"+JSON.stringify(prestations));
   }
 
   settingsChanged(location, travel_tax, pick_tax, selectedStuff) {
@@ -277,7 +282,7 @@ class creaShop extends React.Component {
       case 5:
         return <AssetsService data={shop} onChange={this.assetsChanged} type={"creaShop"}/>;
       case 6:
-        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={SCHEDULE_SUBTITLE} selectable={true} height={700}/>;
+        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onUpdateAvailability={this.availabilityUpdated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={SCHEDULE_SUBTITLE} selectable={true} height={700}/>;
       case 7:
         return <BookingConditions conditions={shop.my_alfred_conditions} booking_request={shop.booking_request}  onChange={this.conditionsChanged} />;
       case 8:
@@ -293,8 +298,6 @@ class creaShop extends React.Component {
 
     const {classes} = this.props;
     let hideRightPanel = this.isRightPanelHidden();
-
-    console.log("service address:"+JSON.stringify(this.state.service_address));
 
     return(
       <Grid>

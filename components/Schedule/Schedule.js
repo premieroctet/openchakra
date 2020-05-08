@@ -165,8 +165,7 @@ class Schedule extends React.Component {
 
   toggleEditModal = event => {
 
-    console.log("Updating:"+JSON.stringify(event.ui_id));
-    var avail=this.props.availabilities.filter( a => a._id==event.ui_id);
+    var avail=this.props.availabilities.filter( a => a.ui_id==event.ui_id || a._id==event._id);
     if (avail.length==0) {
       console.error(`No avail found for ${event.ui_id}`)
       return
@@ -175,7 +174,6 @@ class Schedule extends React.Component {
 
     const eventUI = availability2eventUI(avail);
 
-    console.log("EventUI:"+JSON.stringify(eventUI));
     this.setState({...eventUI, isAddModalOpen: true});
 
     if (!this.state.isAddModalOpen) {
@@ -226,7 +224,7 @@ class Schedule extends React.Component {
 
   onSubmit = e => {
     let avail=eventUI2availability(this.state);
-    if (this.state.ui_id) { // Modif
+    if (this.state.ui_id|| this.state._id) { // Modif
       this.props.onUpdateAvailability(avail);
     }
     else {
@@ -313,7 +311,7 @@ class Schedule extends React.Component {
             <Grid container className={classes.modalContainer}>
               <Grid container>
                   <Grid>
-                    <h2>{ this.state.ui_id ? `Modifier disponibilité` : `Nouvelle disponibilité`}</h2>
+                    <h2>{ this.state.ui_id||this.state._id ? `Modifier disponibilité` : `Nouvelle disponibilité`}</h2>
                   </Grid>
               </Grid>
               <Grid container>
@@ -383,6 +381,8 @@ class Schedule extends React.Component {
                             'aria-label': 'change date',
                           }}
                           autoOk={true}
+                          minDate={this.state.selectedDateStart}
+                          minDateMessage={`Date de fin incorrecte`}
                         />
                         <TextField
                           id="time"
@@ -456,9 +456,9 @@ class Schedule extends React.Component {
                   <Grid container justify="flex-end" style={{marginTop: 20}}>
                     <Button type="button" variant="contained" className={classes.textFieldButton} color={'secondary'} onClick={() => this.setState({isAddModalOpen: false})} >Annuler </Button>
                     <Button type="button" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onSubmit()}>
-                      { this.state.ui_id ? `Modifier` : `Ajouter` }
+                      { this.state.ui_id||this.state._id  ? `Modifier` : `Ajouter` }
                     </Button>
-                    { this.props.onDeleteAvailability && this.state.ui_id ?
+                    { this.props.onDeleteAvailability && (this.state.ui_id||this.state._id) ?
                         <Button type="button" variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onDelete()}>Supprimer </Button>
                         :
                         null

@@ -52,7 +52,8 @@ const avail2event = availab => {
     evts.forEach(e => {
       let title = e.all_services ? "Tous services" : e.services.map( s => s.label).join('\n');
       let res= {
-        ui_id: availab.ui_id || availab._id,
+        ui_id: availab.ui_id,
+        _id : availab._id,
         title: title,
         start: new Date(e.begin),
         end: new Date(e.end),
@@ -73,15 +74,13 @@ const availabilities2events= avails => {
 
 const eventUI2availability = event => {
 
-  let avail = {ui_id: event.ui_id ? event.ui_id : generate_id() }
-  if (event.ui_id) {
-    avail['_id']=event.ui_id;
-  }
+  console.log(`converting to availability:${JSON.stringify(event)}`)
+  let avail = {ui_id: event.ui_id ? event.ui_id : generate_id(), _id : event._id}
 
   let startDate=new Date(event.selectedDateStart);
   let endDate=new Date(event.selectedDateEnd);
 
-  let recurrent = event.recurrDays.size > 0;
+  let recurrent = event.recurrDays.size > 0 && event.isExpanded;
   let selDay=(startDate.getDay()+6)%7;
   let all_services = event.servicesSelected.indexOf(ALL_SERVICES)>-1;
   let services=[]
@@ -94,10 +93,12 @@ const eventUI2availability = event => {
     let include = recurrent ? event.recurrDays.has(index) : index==selDay;
     avail[item] = include ? {'event':[inner_event]} : {'event': []};
   })
-  if (event.isExpanded) {
+  if (recurrent) {
+    console.log('RECURRENCE')
     avail['period']={active:true, month_begin: new Date(event.selectedDateStart), month_end: event.selectedDateEndRecu ? new Date(event.selectedDateEndRecu):null };
   }
   else {
+    console.log('NO RECURRENCE')
     avail['period']={active:false, month_begin: null, month_end: null};
   }
   return avail;
@@ -112,8 +113,10 @@ const availability2eventUI = avail => {
     isExpanded: avail['period'].active ? 'panel1' : false,
     servicesSelected: [ALL_SERVICES],
     selectedDateEndRecu: null,
-    ui_id: avail._id
+    ui_id: avail.ui_id,
+    _id : avail._id,
   }
+
   if (avail['period'].active) {
     eventUI.isExpanded = 'panel1';
     eventUI.selectedDateEndRecu = avail.period.month_end;

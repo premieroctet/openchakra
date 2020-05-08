@@ -1,5 +1,5 @@
 const { RRule, RRuleSet, rrulestr }=require('rrule');
-const {ALL_SERVICES, generate_id}=require('./consts.js');
+const {ALL_SERVICES}=require('./consts.js');
 const isEmpty = require('../server/validation/is-empty');
 const moment=require('moment-timezone');
 const {eventUI2availability}=require('./converters');
