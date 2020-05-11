@@ -430,7 +430,7 @@ export const onboarding: IComponents = {
   'comp-K6GPAPKNQACEE': {
     id: 'comp-K6GPAPKNQACEE',
     props: {
-      children: '⚡️Welcome in OpenChakra',
+      children: '⚡️Welcome to OpenChakra',
       fontSize: '3xl',
       fontWeight: 'bold',
     },
