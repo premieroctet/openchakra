@@ -28,6 +28,7 @@ import useDispatch from '../hooks/useDispatch'
 import { useSelector } from 'react-redux'
 import { getComponents } from '../core/selectors/components'
 import { getShowLayout, getShowCode } from '../core/selectors/app'
+import HeaderMenu from './HeaderMenu'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
@@ -95,6 +96,9 @@ const Header = () => {
 
         <Flex flexGrow={1} justifyContent="space-between" alignItems="center">
           <Stack isInline spacing={4} justify="center" align="center">
+            <Box>
+              <HeaderMenu />
+            </Box>
             <FormControl>
               <Tooltip
                 zIndex={100}
@@ -138,7 +142,6 @@ const Header = () => {
 
           <Stack isInline>
             <CodeSandboxButton />
-
             <Popover>
               {({ onClose }) => (
                 <>

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Box, Flex, Stack, Button } from '@chakra-ui/core'
 import { FaBomb } from 'react-icons/fa'
 import { gridStyles } from '../editor/Editor'
-import { bugsnagClient } from '../../utils/bugsnag'
+// import { bugsnagClient } from '../../utils/bugsnag'
 
 type ErrorBoundaryState = {
   hasError: boolean
@@ -17,7 +17,7 @@ export default class AppErrorBoundary extends Component<
   state = { hasError: false }
 
   static getDerivedStateFromError(error: any) {
-    bugsnagClient.notify(error)
+    // bugsnagClient.notify(error)
     return { hasError: true }
   }
 

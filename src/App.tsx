@@ -9,21 +9,17 @@ import Header from './components/Header'
 import { Global } from '@emotion/core'
 import { HotKeys } from 'react-hotkeys'
 import useShortcuts, { keyMap } from './hooks/useShortcuts'
-import EditorErrorBoundary from './components/errorBoundaries/EditorErrorBoundary'
-import useProducthunt from './hooks/useProducthunt'
+// import EditorErrorBoundary from './components/errorBoundaries/EditorErrorBoundary'
 import { InspectorProvider } from './contexts/inspector-context'
 
 const App = () => {
   const { handlers } = useShortcuts()
 
-  // To remove soon :)
-  useProducthunt()
-
   return (
     <HotKeys allowChanges handlers={handlers} keyMap={keyMap}>
       <Global
         styles={() => ({
-          html: { minWidth: '860px' },
+          html: { minWidth: '860px', backgroundColor: '#1a202c' },
         })}
       />
 
@@ -31,17 +27,15 @@ const App = () => {
       <DndProvider backend={Backend}>
         <Flex h="calc(100vh - 3rem)">
           <Sidebar />
-
-          <EditorErrorBoundary>
-            <Box bg="white" flex={1} zIndex={10} position="relative">
-              <Editor />
-            </Box>
-          </EditorErrorBoundary>
+          {/* <EditorErrorBoundary> */}
+          <Box bg="white" flex={1} zIndex={10} position="relative">
+            <Editor />
+          </Box>
+          {/* </EditorErrorBoundary> */}
 
           <Box
             maxH="calc(100vh - 3rem)"
             flex="0 0 15rem"
-            roundedRight={10}
             bg="#f7fafc"
             overflowY="auto"
             overflowX="visible"

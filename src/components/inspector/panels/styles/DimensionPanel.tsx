@@ -20,8 +20,8 @@ const DimensionPanel = () => {
         <TextControl hasColumn label="Min W" name="minWidth" />
         <TextControl hasColumn label="Min H" name="minHeight" />
 
-        <TextControl hasColumn label="Min W" name="maxWidth" />
-        <TextControl hasColumn label="Min H" name="maxHeight" />
+        <TextControl hasColumn label="Max W" name="maxWidth" />
+        <TextControl hasColumn label="Max H" name="maxHeight" />
       </SimpleGrid>
 
       <FormControl label="Overflow">

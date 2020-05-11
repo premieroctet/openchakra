@@ -1,8 +1,13 @@
-import React, { memo } from "react";
-import ColorsControl from "../../controls/ColorsControl";
+import React, { memo } from 'react'
+import ColorsControl from '../../controls/ColorsControl'
 
 const BoxPanel = () => (
-  <ColorsControl withFullColor label="Color" name="bg" enableHues />
-);
+  <ColorsControl
+    withFullColor
+    label="Color"
+    name="backgroundColor"
+    enableHues
+  />
+)
 
-export default memo(BoxPanel);
+export default memo(BoxPanel)

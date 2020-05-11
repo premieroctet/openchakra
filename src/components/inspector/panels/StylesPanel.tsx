@@ -5,6 +5,7 @@ import PaddingPanel from '../panels/styles/PaddingPanel'
 import DimensionPanel from '../panels/styles/DimensionPanel'
 import BorderPanel from '../panels/styles/BorderPanel'
 import DisplayPanel from '../panels/styles/DisplayPanel'
+import PositionPanel from '../panels/styles/PositionPanel'
 import TextPanel from '../panels/styles/TextPanel'
 import AccordionContainer from '../AccordionContainer'
 import ColorsControl from '../controls/ColorsControl'
@@ -47,6 +48,9 @@ const StylesPanel: React.FC<Props> = ({
       <>
         <AccordionContainer title="Layout">
           <DisplayPanel />
+        </AccordionContainer>
+        <AccordionContainer title="Position">
+          <PositionPanel />
         </AccordionContainer>
         <AccordionContainer title="Spacing">
           <PaddingPanel type="margin" />
