@@ -91,24 +91,13 @@ interface IComponent {
   id: string
   props: any
   rootParentType?: ComponentType
-}
-interface ICustomComponent {
-  children: string[]
-  type: ComponentType
-  parent: string
-  id: string
-  props: any
-  rootParentType?: ComponentType
-  name: string
+  name?: string
 }
 
 interface IComponents {
   [name: string]: IComponent
 }
 
-interface ICustomComponents {
-  [name: string]: ICustomComponent
-}
 
 interface IPreviewProps {
   component: IComponent

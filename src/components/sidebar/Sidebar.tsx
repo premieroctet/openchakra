@@ -228,20 +228,21 @@ const Menu = () => {
         {customComponents &&
           Object.values(customComponents).map(component => {
             const { type, name, rootParentType, id } = component
-
-            return (
-              <DragItem
-                soon={false}
-                key={name}
-                label={name}
-                type={type as any}
-                id={id as any}
-                rootParentType={rootParentType}
-                custom={true}
-              >
-                {name}
-              </DragItem>
-            )
+            if (name !== undefined) {
+              return (
+                <DragItem
+                  soon={false}
+                  key={name}
+                  label={name}
+                  type={type as any}
+                  id={id as any}
+                  rootParentType={rootParentType}
+                  custom={true}
+                >
+                  {name}
+                </DragItem>
+              )
+            }
           })}
       </Box>
     </DarkMode>

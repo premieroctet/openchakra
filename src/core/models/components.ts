@@ -3,14 +3,18 @@ import produce from 'immer'
 import { DEFAULT_PROPS } from '../../utils/defaultProps'
 import templates, { TemplateType } from '../../templates'
 import { generateId } from '../../utils/generateId'
-import { duplicateComponent, deleteComponent } from '../../utils/recursive'
+import {
+  duplicateComponent,
+  deleteComponent,
+  saveComponents,
+} from '../../utils/recursive'
 import omit from 'lodash/omit'
 
 export type ComponentsState = {
   components: IComponents
   selectedId: IComponent['id']
   hoveredId?: IComponent['id']
-  customComponents: ICustomComponents
+  customComponents: IComponents
 }
 export type ComponentsStateWithUndo = {
   past: ComponentsState[]
@@ -192,8 +196,6 @@ const components = createModel({
       },
     ): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
-        console.log(payload)
-        console.log(draftState.components)
         const selectedComponent = draftState.customComponents[payload.id]
 
         if (selectedComponent.id !== DEFAULT_ID) {
@@ -201,7 +203,7 @@ const components = createModel({
 
           const { newId, clonedComponents } = duplicateComponent(
             selectedComponent,
-            draftState.components,
+            draftState.customComponents,
           )
 
           draftState.components = {
@@ -257,14 +259,15 @@ const components = createModel({
     },
     saveComponent(state: ComponentsState, name: string): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
-        const selectedComponent = draftState.components[draftState.selectedId]
-        console.log(selectedComponent)
+        const componentToBeSaved = draftState.components[draftState.selectedId]
+        const savedComponents = saveComponents(
+          componentToBeSaved,
+          draftState.components,
+          name,
+        )
         draftState.customComponents = {
           ...draftState.customComponents,
-          [selectedComponent.id]: {
-            name,
-            ...selectedComponent,
-          },
+          ...savedComponents,
         }
       })
     },

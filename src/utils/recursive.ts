@@ -34,6 +34,30 @@ export const duplicateComponent = (
     clonedComponents,
   }
 }
+export const saveComponents = (
+  component: IComponent,
+  components: IComponents,
+  name: string,
+) => {
+  let savedComponents: IComponents = {}
+
+  const save = (component: IComponent, name?: string) => {
+    savedComponents = {
+      ...savedComponents,
+      [component.id]: {
+        ...component,
+        name,
+      },
+    }
+    component.children &&
+      component.children.forEach(child => {
+        const newComponentToSave = components[child]
+        save(newComponentToSave)
+      })
+  }
+  save(component, name)
+  return savedComponents
+}
 
 export const deleteComponent = (
   component: IComponent,
