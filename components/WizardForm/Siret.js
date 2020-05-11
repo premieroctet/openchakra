@@ -60,7 +60,8 @@ class siret extends React.Component {
       if (name=='creation_date') {
         value=moment(value).format('DD/mm/YYYY')
       }
-      this.setState({ [name]: value });
+      this.setState({ [name]: value },
+        () => this.props.onChange(this.state));
 
     };
 
@@ -75,7 +76,8 @@ class siret extends React.Component {
       name: data.l1_normalisee,
       naf_ape: data.activite_principale,
       status: data.libelle_nature_juridique_entreprise,
-      creation_date: result
+      creation_date: result,
+      errors: null,
     }, () => this.props.onChange(this.state)
     );
   }
