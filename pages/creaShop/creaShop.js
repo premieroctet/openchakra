@@ -22,6 +22,7 @@ import { toast } from 'react-toastify';
 import Router from "next/router";
 import {creaShopPresentation, selectService, selectPrestation, settingService, assetsService, settingShop, introduceYou} from '../../utils/validationSteps/validationSteps';
 import {SCHEDULE_SUBTITLE} from '../../utils/messages'
+const {createDefaultAvailability}=require('../../utils/dateutils');
 
 class creaShop extends React.Component {
   constructor(props) {
@@ -56,7 +57,7 @@ class creaShop extends React.Component {
 	      level: '',
         service_address: null,
         perimeter: 10,
-        availabilities: [],
+        availabilities: [createDefaultAvailability()],
       },
       title: "Précisez vos disponibilités si vous le souhaitez ! ",
     };

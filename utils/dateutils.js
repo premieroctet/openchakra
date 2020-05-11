@@ -112,13 +112,13 @@ const createDefaultAvailability = () => {
 
 
   var start=new Date()
-  start=new Date(start.setHours(9))
+  start=new Date(start.setHours(8))
   start=new Date(start.setMinutes(0))
   start=new Date(start.setSeconds(0))
   start=new Date(start.setMilliseconds(0))
 
   var end=new Date()
-  end=new Date(end.setHours(18))
+  end=new Date(end.setHours(19))
   end=new Date(end.setMinutes(0))
   end=new Date(end.setSeconds(0))
   end=new Date(end.setMilliseconds(0))
