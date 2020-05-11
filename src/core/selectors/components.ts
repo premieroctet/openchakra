@@ -38,3 +38,6 @@ export const getHoveredId = (state: RootState) =>
 
 export const getIsHovered = (id: IComponent['id']) => (state: RootState) =>
   getHoveredId(state) === id
+
+export const getCustomComponents = (state: RootState) =>
+  state.components.present.customComponents

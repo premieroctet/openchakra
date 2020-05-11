@@ -92,6 +92,15 @@ const Inspector = () => {
             justify="flex-end"
           >
             <CodeActionButton />
+
+            <ActionButton
+              label="Save component"
+              onClick={() => {
+                const name = prompt('Enter the name for the Component') || ''
+                dispatch.components.saveComponent(name)
+              }}
+              icon="add"
+            />
             <ActionButton
               label="Duplicate"
               onClick={() => dispatch.components.duplicate()}

@@ -9,6 +9,8 @@ import {
   IconButton,
 } from '@chakra-ui/core'
 import DragItem from './DragItem'
+import { useSelector } from 'react-redux'
+import { getCustomComponents } from '../../core/selectors/components'
 
 type MenuItem = {
   children?: MenuItems
@@ -131,6 +133,7 @@ const menuItems: MenuItems = {
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
+  const customComponents = useSelector(getCustomComponents)
 
   return (
     <DarkMode>
@@ -174,10 +177,11 @@ const Menu = () => {
         </InputGroup>
 
         {(Object.keys(menuItems) as ComponentType[])
-          .filter(c => c.toLowerCase().includes(searchTerm.toLowerCase()))
+          .filter(c => {
+            return c.toLowerCase().includes(searchTerm.toLowerCase())
+          })
           .map(name => {
             const { children, soon } = menuItems[name] as MenuItem
-
             if (children) {
               const elements = Object.keys(children).map(childName => (
                 <DragItem
@@ -216,6 +220,24 @@ const Menu = () => {
                 type={name as any}
                 id={name as any}
                 rootParentType={menuItems[name]?.rootParentType || name}
+              >
+                {name}
+              </DragItem>
+            )
+          })}
+        {customComponents &&
+          Object.values(customComponents).map(component => {
+            const { type, name, rootParentType, id } = component
+
+            return (
+              <DragItem
+                soon={false}
+                key={name}
+                label={name}
+                type={type as any}
+                id={id as any}
+                rootParentType={rootParentType}
+                custom={true}
               >
                 {name}
               </DragItem>

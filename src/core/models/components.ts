@@ -10,6 +10,7 @@ export type ComponentsState = {
   components: IComponents
   selectedId: IComponent['id']
   hoveredId?: IComponent['id']
+  customComponents: ICustomComponents
 }
 export type ComponentsStateWithUndo = {
   past: ComponentsState[]
@@ -183,6 +184,34 @@ const components = createModel({
         }
       })
     },
+    addCustomComponent(
+      state: ComponentsState,
+      payload: {
+        id: string
+        parentId: string
+      },
+    ): ComponentsState {
+      return produce(state, (draftState: ComponentsState) => {
+        console.log(payload)
+        console.log(draftState.components)
+        const selectedComponent = draftState.customComponents[payload.id]
+
+        if (selectedComponent.id !== DEFAULT_ID) {
+          const parentElement = draftState.components[payload.parentId]
+
+          const { newId, clonedComponents } = duplicateComponent(
+            selectedComponent,
+            draftState.components,
+          )
+
+          draftState.components = {
+            ...draftState.components,
+            ...clonedComponents,
+          }
+          draftState.components[parentElement.id].children.push(newId)
+        }
+      })
+    },
     select(
       state: ComponentsState,
       selectedId: IComponent['id'],
@@ -223,6 +252,19 @@ const components = createModel({
             ...clonedComponents,
           }
           draftState.components[parentElement.id].children.push(newId)
+        }
+      })
+    },
+    saveComponent(state: ComponentsState, name: string): ComponentsState {
+      return produce(state, (draftState: ComponentsState) => {
+        const selectedComponent = draftState.components[draftState.selectedId]
+        console.log(selectedComponent)
+        draftState.customComponents = {
+          ...draftState.customComponents,
+          [selectedComponent.id]: {
+            name,
+            ...selectedComponent,
+          },
         }
       })
     },
