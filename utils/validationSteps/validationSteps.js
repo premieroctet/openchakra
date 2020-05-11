@@ -39,7 +39,7 @@ const introduceYou = (shop) =>{
   if (shop.is_particular===true) return false;
   // Pro
   if (shop.company==null) return true;
-  if (shop.company.siret) return false;
+  if (!shop.company.siret) return true;
   if (shop.is_certified===false) return true;
   return false;
 };
