@@ -153,7 +153,7 @@ class SearchPage extends React.Component {
                       this.setState(st, () => { if (this.props.search) {this.search('date' in this.props)}});
                     })
                     .catch(err => {
-                      this.setState(st);
+                      this.setState(st, () => { if (this.props.search) {this.search('date' in this.props)}});
                     });
                })
            })
@@ -223,7 +223,7 @@ class SearchPage extends React.Component {
     }
 
      search(forceFilter) {
-       console.trace()
+       console.log("Searching")
        const address = this.state.selectedAddress;
         var filters={}
 
