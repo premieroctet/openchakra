@@ -1,40 +1,14 @@
-
 import { toast } from 'react-toastify';
 import React from 'react';
-import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
-import Router from "next/router";
 import Button from "@material-ui/core/Button";
+import styles from '.././Siret/SiretStyle'
 const moment = require('moment');
 moment.locale('fr');
-
-const styles = {
-    loginContainer: {
-        alignItems: 'center',
-        height: '100vh',
-        justifyContent: 'center',
-        flexDirection: 'column',
-    },
-    card: {
-        padding: '1.5rem 3rem',
-        width: 400,
-    },
-    cardContant: {
-        flexDirection: 'column',
-    },
-    linkText: {
-        textDecoration: 'none',
-        color: 'black',
-        fontSize: 12,
-    },
-    menu: {
-        width: 200,
-    },
-};
 
 class siret extends React.Component {
 
@@ -54,10 +28,10 @@ class siret extends React.Component {
 
     onChange = e => {
       let {name, value} = e.target;
-      if (name=='siret') {
+      if (name==='siret') {
         value = value.replace(/ /g, '');
       }
-      if (name=='creation_date') {
+      if (name==='creation_date') {
         value=moment(value).format('DD/mm/YYYY')
       }
       this.setState({ [name]: value },
@@ -127,6 +101,7 @@ class siret extends React.Component {
                       name={'siret'}
                       value={this.state.siret}
                       onChange={this.onChange}
+                      className={classes.textFieldSiret}
                     />
                   </Grid>
                   <Grid>
