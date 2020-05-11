@@ -39,8 +39,9 @@ const introduceYou = (shop) =>{
   if (shop.is_particular===true) return false;
   // Pro
   if (shop.company==null) return true;
-  if (Object.values(shop.company).some(v => v==null || v==='')) return true;
+  if (shop.company.siret) return false;
   if (shop.is_certified===false) return true;
+  return false;
 };
 
 export {creaShopPresentation, selectService, selectPrestation, settingService, assetsService, settingShop, introduceYou}
