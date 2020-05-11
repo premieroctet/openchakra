@@ -14,11 +14,11 @@ import usePropsSelector from '../../../../hooks/usePropsSelector'
 const PositionPanel = () => {
   const { setValueFromEvent } = useForm()
   const pos = usePropsSelector('position')
-
   const left = usePropsSelector('left')
   const right = usePropsSelector('right')
   const bottom = usePropsSelector('bottom')
   const top = usePropsSelector('top')
+  const zIndex = usePropsSelector('zIndex')
 
   return (
     <>
@@ -36,6 +36,17 @@ const PositionPanel = () => {
           <option>sticky</option>
         </Select>
       </FormControl>
+      <FormControl label="z-index">
+        <Input
+          placeholder="zIndex"
+          size="sm"
+          type="text"
+          value={zIndex}
+          name="zIndex"
+          onChange={setValueFromEvent}
+          autoComplete="off"
+        />
+      </FormControl>
 
       <SimpleGrid columns={2} spacing={1}>
         <InputGroup size="sm">
@@ -46,7 +57,7 @@ const PositionPanel = () => {
             placeholder="left"
             size="sm"
             type="text"
-            name={'left'}
+            name="left"
             value={left || ''}
             onChange={setValueFromEvent}
             autoComplete="off"
@@ -64,7 +75,7 @@ const PositionPanel = () => {
             size="sm"
             type="text"
             value={right || ''}
-            name={'right'}
+            name="right"
             onChange={setValueFromEvent}
             autoComplete="off"
           />
@@ -79,7 +90,7 @@ const PositionPanel = () => {
             size="sm"
             type="text"
             value={top || ''}
-            name={'top'}
+            name="top"
             onChange={setValueFromEvent}
             autoComplete="off"
           />
@@ -96,13 +107,12 @@ const PositionPanel = () => {
             size="sm"
             type="text"
             value={bottom || ''}
-            name={'bottom'}
+            name="bottom"
             onChange={setValueFromEvent}
             autoComplete="off"
           />
         </InputGroup>
       </SimpleGrid>
-      {/* </FormControl> */}
     </>
   )
 }
