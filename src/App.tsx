@@ -9,7 +9,7 @@ import Header from './components/Header'
 import { Global } from '@emotion/core'
 import { HotKeys } from 'react-hotkeys'
 import useShortcuts, { keyMap } from './hooks/useShortcuts'
-import EditorErrorBoundary from './components/errorBoundaries/EditorErrorBoundary'
+// import EditorErrorBoundary from './components/errorBoundaries/EditorErrorBoundary'
 import { InspectorProvider } from './contexts/inspector-context'
 
 const App = () => {
@@ -27,11 +27,11 @@ const App = () => {
       <DndProvider backend={Backend}>
         <Flex h="calc(100vh - 3rem)">
           <Sidebar />
-          <EditorErrorBoundary>
-            <Box bg="white" flex={1} zIndex={10} position="relative">
-              <Editor />
-            </Box>
-          </EditorErrorBoundary>
+          {/* <EditorErrorBoundary> */}
+          <Box bg="white" flex={1} zIndex={10} position="relative">
+            <Editor />
+          </Box>
+          {/* </EditorErrorBoundary> */}
 
           <Box
             maxH="calc(100vh - 3rem)"

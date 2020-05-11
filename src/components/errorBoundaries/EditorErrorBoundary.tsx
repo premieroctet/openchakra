@@ -4,7 +4,7 @@ import { ActionCreators as UndoActionCreators } from 'redux-undo'
 import { Box, Flex, Stack, Button } from '@chakra-ui/core'
 import { FaBomb } from 'react-icons/fa'
 import { gridStyles } from '../editor/Editor'
-import { bugsnagClient } from '../../utils/bugsnag'
+// import { bugsnagClient } from '../../utils/bugsnag'
 
 type ErrorBoundaryState = {
   hasError: boolean
@@ -21,7 +21,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   static getDerivedStateFromError(error: any) {
-    bugsnagClient.notify(error)
+    // bugsnagClient.notify(error)
     return { hasError: true }
   }
 
