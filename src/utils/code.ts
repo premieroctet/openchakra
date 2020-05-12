@@ -5,7 +5,6 @@ const capitalize = (value: string) => {
 }
 
 const formatCode = async (code: string) => {
-  console.log(code)
   let formattedCode = `// 🚨 Your props contains invalid code`
 
   const prettier = await import('prettier/standalone')
@@ -58,12 +57,10 @@ const buildBlock = (
           propsContent += `${propName}${operand} `
         }
       })
-      console.log(component)
       if (
         childComponent.customComponentId !== undefined &&
         customComponents !== undefined
       ) {
-        console.log('here')
         const customComponent =
           customComponents[childComponent.customComponentId]
         content += `<${customComponent.name &&
