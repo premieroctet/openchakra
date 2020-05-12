@@ -21,7 +21,10 @@ import LastPageIcon from "@material-ui/icons/LastPage";
 import Link from "next/link";
 import HomeIcon from '@material-ui/icons/Home';
 import Typography from "@material-ui/core/Typography";
+import moment from 'moment-timezone';
+moment.locale('fr');
 
+const {config} = require('../../../config/config');
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
@@ -113,21 +116,22 @@ class all extends React.Component {
     }
 
     componentDidMount() {
-        localStorage.setItem('path',Router.pathname);
+        localStorage.setItem('path', Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get("/myAlfred/api/admin/users/alfred")
-            .then((response) => {
-                let alfred = response.data;
-                this.setState({alfred: alfred})
+        axios.get("/myAlfred/api/shop/all")
+          .then((response) => {
+            let alfred = response.data;
+            console.log("Alfred:"+JSON.stringify(alfred[0], null, 2))
+            this.setState({alfred: alfred})
 
-            }).catch((error) => {
+          })
+          .catch((error) => {
             console.log(error);
             if(error.response.status === 401 || error.response.status === 403) {
                 localStorage.removeItem('token');
                 Router.push({pathname: '/login'})
             }
-
         });
     }
 
@@ -161,8 +165,10 @@ class all extends React.Component {
                                             <TableCell>Nom</TableCell>
                                             <TableCell>Prénom</TableCell>
                                             <TableCell>Email</TableCell>
+                                            <TableCell>Boutique créée le</TableCell>
                                             <TableCell>Action</TableCell>
                                             <TableCell>Carte d'identité</TableCell>
+                                            <TableCell>Boutique</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -170,19 +176,25 @@ class all extends React.Component {
                                             .map((e,index) =>
                                                 <TableRow key={index}>
                                                     <TableCell component="th" scope="row">
-                                                        {e.name}
+                                                        {e.alfred.name}
                                                     </TableCell>
                                                     <TableCell component="th" scope="row">
-                                                        {e.firstname}
+                                                        {e.alfred.firstname}
                                                     </TableCell>
                                                     <TableCell component="th" scope="row">
-                                                        {e.email}
+                                                        {e.alfred.email}
+                                                    </TableCell>
+                                                    <TableCell component="th" scope="row">
+                                                        {moment(e.creation_date).format('L LT')}
                                                     </TableCell>
                                                     <TableCell>
                                                         <Link href={`/dashboard/alfred/view?id=${e._id}`}><a>Modifier</a></Link>
                                                     </TableCell>
                                                     <TableCell>
                                                         <Link href={`/dashboard/alfred/idCard?id=${e._id}`}><a>Détails</a></Link>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Link href={`/shop?id_alfred=${e.alfred._id}`}><a>Consulter</a></Link>
                                                     </TableCell>
 
                                                 </TableRow>
