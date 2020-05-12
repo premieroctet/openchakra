@@ -38,6 +38,7 @@ const components = createModel({
   state: {
     components: INITIAL_COMPONENTS,
     selectedId: DEFAULT_ID,
+    customComponents: INITIAL_COMPONENTS,
   } as ComponentsState,
   reducers: {
     reset(state: ComponentsState, components?: IComponents): ComponentsState {
@@ -210,6 +211,8 @@ const components = createModel({
             ...draftState.components,
             ...clonedComponents,
           }
+          console.log(newId)
+          draftState.components[newId].customComponentId = payload.id
           draftState.components[parentElement.id].children.push(newId)
         }
       })
@@ -260,6 +263,8 @@ const components = createModel({
     saveComponent(state: ComponentsState, name: string): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
         const componentToBeSaved = draftState.components[draftState.selectedId]
+        draftState.components[draftState.selectedId].customComponentId =
+          draftState.selectedId
         const savedComponents = saveComponents(
           componentToBeSaved,
           draftState.components,
@@ -269,6 +274,8 @@ const components = createModel({
           ...draftState.customComponents,
           ...savedComponents,
         }
+        // draftState.customComponents[draftState.selectedId].customComponentId =
+        //   draftState.selectedId
       })
     },
     hover(

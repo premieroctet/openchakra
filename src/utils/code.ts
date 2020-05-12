@@ -5,6 +5,7 @@ const capitalize = (value: string) => {
 }
 
 const formatCode = async (code: string) => {
+  console.log(code)
   let formattedCode = `// 🚨 Your props contains invalid code`
 
   const prettier = await import('prettier/standalone')
@@ -22,9 +23,12 @@ const formatCode = async (code: string) => {
   return formattedCode
 }
 
-const buildBlock = (component: IComponent, components: IComponents) => {
+const buildBlock = (
+  component: IComponent,
+  components: IComponents,
+  customComponents?: IComponents,
+) => {
   let content = ''
-
   component.children.forEach((key: string) => {
     let childComponent = components[key]
     if (!childComponent) {
@@ -54,15 +58,24 @@ const buildBlock = (component: IComponent, components: IComponents) => {
           propsContent += `${propName}${operand} `
         }
       })
-
+      console.log(component)
       if (
+        childComponent.customComponentId !== undefined &&
+        customComponents !== undefined
+      ) {
+        console.log('here')
+        const customComponent =
+          customComponents[childComponent.customComponentId]
+        content += `<${customComponent.name &&
+          capitalize(customComponent.name)} />`
+      } else if (
         typeof childComponent.props.children === 'string' &&
         childComponent.children.length === 0
       ) {
         content += `<${componentName} ${propsContent}>${childComponent.props.children}</${componentName}>`
       } else if (childComponent.children.length) {
         content += `<${componentName} ${propsContent}>
-      ${buildBlock(childComponent, components)}
+      ${buildBlock(childComponent, components, customComponents)}
       </${componentName}>`
       } else {
         content += `<${componentName} ${propsContent} />`
@@ -87,8 +100,11 @@ const My${component.type} = () => (
   return await formatCode(code)
 }
 
-export const generateCode = async (components: IComponents) => {
-  let code = buildBlock(components.root, components)
+export const generateCode = async (
+  components: IComponents,
+  customComponents?: IComponents,
+) => {
+  let code = buildBlock(components.root, components, customComponents)
 
   const imports = [
     ...new Set(
@@ -97,6 +113,24 @@ export const generateCode = async (components: IComponents) => {
         .map(name => components[name].type),
     ),
   ]
+  const customComponentCode =
+    customComponents !== undefined &&
+    Object.values(customComponents).map(component => {
+      const selectedId = component.id
+      if (component.name !== undefined) {
+        const parentId = customComponents[selectedId].parent
+        const parent = { ...customComponents[parentId] }
+        parent.children = [selectedId]
+        const componentCode = buildBlock(
+          parent,
+          customComponents,
+        )
+        return `const ${capitalize(component.name)} = () =>(
+        ${componentCode}
+     );
+     `
+      }
+    })
 
   code = `import React from 'react';
 import {
@@ -106,6 +140,8 @@ import {
   ${imports.join(',')}
 } from "@chakra-ui/core";
 
+${customComponentCode && customComponentCode.join('')}
+
 const App = () => (
   <ThemeProvider theme={theme}>
     <CSSReset />
@@ -113,7 +149,16 @@ const App = () => (
   </ThemeProvider>
 );
 
-export default App;`
+export default App;
+`
+  // const App = () => (
+  //   <ThemeProvider theme={theme}>
+  //     <CSSReset />
+  //     ${code}
+  //   </ThemeProvider>
+  // );
+
+  // export default App;
 
   return await formatCode(code)
 }
