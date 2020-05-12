@@ -26,19 +26,24 @@ class MapComponent extends React.Component {
     }
 
     render() {
-      const {classes,position, perimeter, alfred} = this.props;
+      var {classes,position, perimeter, alfred, zoom, circles} = this.props;
+      zoom = zoom || 12;
+      circles = circles || []
       if (Map) {
       return (
         <div id={'map-container'} style={{height: '100%',width:'100%'}}>
-          <Map center={position} zoom={12} style={{height: '100%',width:'100%'}}>
+          <Map center={position} zoom={zoom} style={{height: '100%',width:'100%'}}>
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
             />
-            <Circle 
+            <Circle
                   center={{lat:position[0], lng:position[1]}}
-                  fillColor="blue" 
+                  fillColor="blue"
                   radius={perimeter}/>
+            { circles.map( c =>
+                <Circle center={c.coordinates} radius={c.perimeter} />
+            )}
           </Map>
         </div>
       )
