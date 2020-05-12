@@ -193,7 +193,7 @@ router.get('/users/all',passport.authenticate('jwt',{session:false}),(req,res) =
 
     if(admin) {
         User.find({})
-            .sort({name: 1})
+            .sort({creation_date: -1})
             .then(user => {
                 if (!user) {
                     res.status(400).json({msg: 'No users found'});
@@ -2240,7 +2240,7 @@ router.get('/statistics', (req,res)=> {
                      .then(services => {
                        stats['services'] = services.length;
                        stats['prestations'] = services.map( s => s.prestations.length).reduce( (acc, value) => acc+value);
-                       res.json(stats);      
+                       res.json(stats);
                    })
                 })
             })

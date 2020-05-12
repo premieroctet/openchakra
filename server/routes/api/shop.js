@@ -167,34 +167,30 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
 // @Route GET /myAlfred/api/shop/all
 // View all shop
 router.get('/all', (req, res) => {
-
     Shop.find()
-        .populate('alfred','-id_card')
-        .populate('services')
-        .populate({
-            path: 'services',
-            populate: {
-                path: 'service',
-                select: 'label'
-            }
-        })
-        .then(shop => {
-            if (typeof shop !== 'undefined' && shop.length > 0) {
-                res.json(shop);
-            }
-            else {
-                return res.status(400).json({
-                    msg: 'No shop found'
-                });
-            }
-
-
-        })
-        .catch(err => res.status(404).json({
-            shop: 'No shop found'
-        }));
-
-
+      .sort({creation_date:-1})
+      .populate('alfred','-id_card')
+      .populate('services')
+      .populate({
+          path: 'services',
+          populate: {
+              path: 'service',
+              select: 'label'
+          }
+      })
+      .then(shop => {
+          if (typeof shop !== 'undefined' && shop.length > 0) {
+              res.json(shop);
+          }
+          else {
+              return res.status(400).json({
+                  msg: 'No shop found'
+              });
+          }
+      })
+      .catch(err => res.status(404).json({
+          shop: 'No shop found'
+      }));
 });
 
 // @Route GET /myAlfred/api/shop/:id

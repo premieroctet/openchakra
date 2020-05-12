@@ -25,7 +25,6 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import PropTypes from "prop-types";
 import HomeIcon from '@material-ui/icons/Home';
-import ExtendedTable from '../../../components/extendedTable';
 
 const styles = theme => ({
     signupContainer: {
@@ -161,7 +160,69 @@ class all extends React.Component {
                             <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
                                 <Typography style={{ fontSize: 30 }}>Utilisateurs</Typography>
                             </Grid>
-                            <ExtendedTable data={user} titles={[{label:'Nom', field:'name'}, {label:'Pénom', field:'firstname'}, ]} />
+                            <Paper style={{width: '100%'}}>
+                                <div>
+                                    <Table className={classes.table}>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Nom</TableCell>
+                                                <TableCell>Prénom</TableCell>
+                                                <TableCell>Email</TableCell>
+                                                <TableCell>Alfred</TableCell>
+                                                <TableCell>Admin</TableCell>
+                                                <TableCell>Action</TableCell>
+                                                <TableCell>Carte d'identité</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {user.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+                                                .map((e,index) =>
+                                                    <TableRow key={index}>
+                                                        <TableCell component="th" scope="row">
+                                                            {e.name}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            {e.firstname}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            {e.email}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <Checkbox checked={e.is_alfred} disabled={true} />
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <Checkbox checked={e.is_admin} disabled={true} />
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <Link href={`/dashboard/users/view?id=${e._id}`}><a>Modifier</a></Link>
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <Link href={`/dashboard/users/idCard?id=${e._id}`}><a>Détails</a></Link>
+                                                        </TableCell>
+
+                                                    </TableRow>
+                                                )}
+
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                                <TablePagination
+                                    rowsPerPageOptions={[10, 25]}
+                                    component="div"
+                                    count={user.length}
+                                    rowsPerPage={this.state.rowsPerPage}
+                                    page={this.state.page}
+                                    backIconButtonProps={{
+                                        'aria-label': 'Previous Page',
+                                    }}
+                                    nextIconButtonProps={{
+                                        'aria-label': 'Next Page',
+                                    }}
+                                    onChangePage={this.handleChangePage}
+                                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                    ActionsComponent={TablePaginationActionsWrapped }
+                                />
+                            </Paper>
                         </Grid>
                     </Card>
                 </Grid>
