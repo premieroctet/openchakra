@@ -6,7 +6,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
 import Link from "next/link";
 import Chip from "@material-ui/core/Chip";
@@ -25,7 +24,7 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import PropTypes from "prop-types";
 import HomeIcon from '@material-ui/icons/Home';
-import ExtendedTable from '../../../components/extendedTable';
+
 
 const styles = theme => ({
     signupContainer: {
@@ -104,34 +103,18 @@ TablePaginationActions.propTypes = {
 };
 const TablePaginationActionsWrapped = withStyles(actionsStyles, { withTheme: true })(TablePaginationActions);
 
-class all extends React.Component {
+class ExtendedTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: [],
+            user: this.props.data,
+            titles: this.props.titles, // {label: 'Nom', field:'name'}
             page: 0,
             rowsPerPage: 10,
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
 
-    }
-
-    componentDidMount() {
-        localStorage.setItem('path',Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-
-        axios.get("/myAlfred/api/admin/users/all")
-            .then((response) => {
-                let user = response.data;
-                this.setState({user: user})
-            }).catch((error) => {
-            console.log(error);
-            if(error.response.status === 401 || error.response.status === 403) {
-                localStorage.removeItem('token');
-                Router.push({pathname: '/login'})
-            }
-        });
     }
 
     handleChangePage(event, page) {
@@ -148,24 +131,69 @@ class all extends React.Component {
         const {user} = this.state;
 
         return (
-            <Layout>
-                <Grid container style={{marginTop: 70}}>
-                    <Link href={'/dashboard/home'}>
-                        <Typography  className="retour"><HomeIcon className="retour2"/> <span>Retour</span></Typography>
-                    </Link>
-                </Grid>
-                <Grid container className={classes.signupContainer}>
+          <Paper style={{width: '100%'}}>
+              <div>
+                  <Table className={classes.table}>
+                      <TableHead>
+                          <TableRow>
+                              <TableCell>Nom</TableCell>
+                              <TableCell>Prénom</TableCell>
+                              <TableCell>Email</TableCell>
+                              <TableCell>Alfred</TableCell>
+                              <TableCell>Admin</TableCell>
+                              <TableCell>Action</TableCell>
+                              <TableCell>Carte d'identité</TableCell>
+                          </TableRow>
+                      </TableHead>
+                      <TableBody>
+                          {user.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+                              .map((e,index) =>
+                                  <TableRow key={index}>
+                                      <TableCell component="th" scope="row">
+                                          {e.name}
+                                      </TableCell>
+                                      <TableCell>
+                                          {e.firstname}
+                                      </TableCell>
+                                      <TableCell>
+                                          {e.email}
+                                      </TableCell>
+                                      <TableCell>
+                                          <Checkbox checked={e.is_alfred} disabled={true} />
+                                      </TableCell>
+                                      <TableCell>
+                                          <Checkbox checked={e.is_admin} disabled={true} />
+                                      </TableCell>
+                                      <TableCell>
+                                          <Link href={`/dashboard/users/view?id=${e._id}`}><a>Modifier</a></Link>
+                                      </TableCell>
+                                      <TableCell>
+                                          <Link href={`/dashboard/users/idCard?id=${e._id}`}><a>Détails</a></Link>
+                                      </TableCell>
 
-                    <Card className={classes.card}>
-                        <Grid>
-                            <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Typography style={{ fontSize: 30 }}>Utilisateurs</Typography>
-                            </Grid>
-                            <ExtendedTable data={user} titles={[{label:'Nom', field:'name'}, {label:'Pénom', field:'firstname'}, ]} />
-                        </Grid>
-                    </Card>
-                </Grid>
-            </Layout>
+                                  </TableRow>
+                              )}
+
+                      </TableBody>
+                  </Table>
+              </div>
+              <TablePagination
+                  rowsPerPageOptions={[10, 25]}
+                  component="div"
+                  count={user.length}
+                  rowsPerPage={this.state.rowsPerPage}
+                  page={this.state.page}
+                  backIconButtonProps={{
+                      'aria-label': 'Previous Page',
+                  }}
+                  nextIconButtonProps={{
+                      'aria-label': 'Next Page',
+                  }}
+                  onChangePage={this.handleChangePage}
+                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActionsWrapped }
+              />
+          </Paper>
         );
 
 
@@ -173,4 +201,4 @@ class all extends React.Component {
     };
 }
 
-export default withStyles(styles)(all);
+export default withStyles(styles)(ExtendedTable);

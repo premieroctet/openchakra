@@ -42,7 +42,11 @@ class MapComponent extends React.Component {
                   fillColor="blue"
                   radius={perimeter}/>
             { circles.map( c =>
-                <Circle center={c.coordinates} radius={c.perimeter} />
+                <>
+                <Marker position={c.coordinates}>
+                  <Popup><a href={c.link} target="_blank">{c.label}</a></Popup>
+                </Marker>
+                </>
             )}
           </Map>
         </div>

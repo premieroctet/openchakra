@@ -1,0 +1,224 @@
+[1mdiff --git a/components/map.js b/components/map.js[m
+[1mindex 907814e9..fc44d813 100644[m
+[1m--- a/components/map.js[m
+[1m+++ b/components/map.js[m
+[36m@@ -42,7 +42,11 @@[m [mclass MapComponent extends React.Component {[m
+                   fillColor="blue"[m
+                   radius={perimeter}/>[m
+             { circles.map( c =>[m
+[31m-                <Circle center={c.coordinates} radius={c.perimeter} />[m
+[32m+[m[32m                <>[m
+[32m+[m[32m                <Marker position={c.coordinates}>[m
+[32m+[m[32m                  <Popup><a href={c.link} target="_blank">{c.label}</a></Popup>[m
+[32m+[m[32m                </Marker>[m
+[32m+[m[32m                </>[m
+             )}[m
+           </Map>[m
+         </div>[m
+[1mdiff --git a/pages/dashboard/map.js b/pages/dashboard/map.js[m
+[1mindex 073382d3..5b64c9aa 100644[m
+[1m--- a/pages/dashboard/map.js[m
+[1m+++ b/pages/dashboard/map.js[m
+[36m@@ -2,9 +2,15 @@[m [mimport React from 'react';[m
+ [m
+ import Card from '@material-ui/core/Card';[m
+ import Grid from '@material-ui/core/Grid';[m
+[31m-import { Typography } from '@material-ui/core';[m
+[32m+[m[32mimport {[m
+[32m+[m[32m  Typography[m
+[32m+[m[32m}[m
+[32m+[m[32mfrom '@material-ui/core';[m
+ import TextField from '@material-ui/core/TextField';[m
+[31m-import { withStyles } from '@material-ui/core/styles';[m
+[32m+[m[32mimport {[m
+[32m+[m[32m  withStyles[m
+[32m+[m[32m}[m
+[32m+[m[32mfrom '@material-ui/core/styles';[m
+ import Button from '@material-ui/core/Button';[m
+ import Router from 'next/router';[m
+ import Layout from '../../hoc/Layout/Layout';[m
+[36m@@ -13,30 +19,31 @@[m [mimport Link from "next/link";[m
+ import Avatar from '@material-ui/core/Avatar';[m
+ import HomeIcon from '@material-ui/icons/Home';[m
+ import MapComponent from '../../components/map';[m
+[31m-[m
+[32m+[m[32mimport Select from '@material-ui/core/Select';[m
+[32m+[m[32mimport MenuItem from '@material-ui/core/MenuItem';[m
+ [m
+ const jwt = require('jsonwebtoken');[m
+ const styles = theme => ({[m
+[31m-    signupContainer: {[m
+[31m-        alignItems: 'center',[m
+[31m-        justifyContent: 'top',[m
+[31m-        flexDirection: 'column',[m
+[32m+[m[32m  signupContainer: {[m
+[32m+[m[32m    alignItems: 'center',[m
+[32m+[m[32m    justifyContent: 'top',[m
+[32m+[m[32m    flexDirection: 'column',[m
+ [m
+[31m-    },[m
+[31m-    card: {[m
+[31m-        padding: '1.5rem 3rem',[m
+[31m-        width: 400,[m
+[31m-        marginTop: '100px',[m
+[31m-    },[m
+[31m-    cardContant: {[m
+[31m-        flexDirection: 'column',[m
+[31m-    },[m
+[31m-    linkText: {[m
+[31m-        textDecoration: 'none',[m
+[31m-        color: 'black',[m
+[31m-        fontSize: 12,[m
+[31m-        lineHeight: 4.15,[m
+[31m-    },[m
+[32m+[m[32m  },[m
+[32m+[m[32m  card: {[m
+[32m+[m[32m    padding: '1.5rem 3rem',[m
+[32m+[m[32m    width: 400,[m
+[32m+[m[32m    marginTop: '100px',[m
+[32m+[m[32m  },[m
+[32m+[m[32m  cardContant: {[m
+[32m+[m[32m    flexDirection: 'column',[m
+[32m+[m[32m  },[m
+[32m+[m[32m  linkText: {[m
+[32m+[m[32m    textDecoration: 'none',[m
+[32m+[m[32m    color: 'black',[m
+[32m+[m[32m    fontSize: 12,[m
+[32m+[m[32m    lineHeight: 4.15,[m
+[32m+[m[32m  },[m
+   mediumAvatar: {[m
+     width: 100,[m
+     height: 100,[m
+[36m@@ -53,45 +60,100 @@[m [mconst styles = theme => ({[m
+ });[m
+ [m
+ class ServicesMap extends React.Component {[m
+[31m-    constructor(props) {[m
+[31m-        super(props);[m
+[31m-        this.state = {[m
+[31m-          services:[],[m
+[31m-        }[m
+[32m+[m[32m  constructor(props) {[m
+[32m+[m[32m    super(props);[m
+[32m+[m[32m    this.state = {[m
+[32m+[m[32m      allServices: [],[m
+[32m+[m[32m      selectedService: '',[m
+[32m+[m[32m      services: [],[m
+[32m+[m[32m      circles: [],[m
+     }[m
+[32m+[m[32m    this.onChangeService = this.onChangeService.bind(this);[m
+[32m+[m[32m  }[m
+ [m
+[31m-    componentDidMount() {[m
+[31m-        localStorage.setItem('path',Router.pathname);[m
+[31m-        const auth = localStorage.getItem('token');[m
+[31m-        if(auth === null) {[m
+[31m-            Router.push('/login')[m
+[31m-        } else {[m
+[31m-          axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');[m
+[31m-          axios.get("/myAlfred/api/serviceUser/all")[m
+[31m-            .then( response => {[m
+[31m-              this.setState({services: response.data})[m
+[31m-              console.log("Services:"+response.data.length)[m
+[31m-[m
+[31m-            })[m
+[31m-            .catch (err => console.error(err));[m
+[31m-        }[m
+[32m+[m[32m  componentDidMount() {[m
+[32m+[m[32m    localStorage.setItem('path', Router.pathname);[m
+[32m+[m[32m    const auth = localStorage.getItem('token');[m
+[32m+[m[32m    if (auth === null) {[m
+[32m+[m[32m      Router.push('/login')[m
+[32m+[m[32m    }[m
+[32m+[m[32m    else {[m
+[32m+[m[32m      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');[m
+[32m+[m[32m      axios.get("/myAlfred/api/service/all")[m
+[32m+[m[32m        .then(response => {[m
+[32m+[m[32m          this.setState({[m
+[32m+[m[32m            allServices: response.data,[m
+[32m+[m[32m          })[m
+[32m+[m[32m        })[m
+[32m+[m[32m        .catch(err => console.error(err));[m
+[32m+[m[32m      axios.get("/myAlfred/api/serviceUser/all")[m
+[32m+[m[32m        .then(response => {[m
+[32m+[m[32m          const circles = response.data.map(s => ({[m
+[32m+[m[32m            coordinates: s.service_address.gps,[m
+[32m+[m[32m            label: `${s.user.firstname}-${s.service.label}`,[m
+[32m+[m[32m            link: `/userServicePreview?id=${s._id}`,[m
+[32m+[m[32m          }))[m
+[32m+[m[32m          console.log(JSON.stringify(circles))[m
+[32m+[m[32m          this.setState({[m
+[32m+[m[32m            services: response.data,[m
+[32m+[m[32m            circles: circles[m
+[32m+[m[32m          })[m
+[32m+[m[32m        })[m
+[32m+[m[32m        .catch(err => console.error(err));[m
+     }[m
+[32m+[m[32m  }[m
+ [m
+[32m+[m[32m  onChangeService = ev => {[m
+[32m+[m[32m    const {[m
+[32m+[m[32m      name,[m
+[32m+[m[32m      value[m
+[32m+[m[32m    } = ev.target;[m
+[32m+[m[32m    const filtered = this.state.services.filter(s => s.service._id.toString() == value)[m
+[32m+[m[32m    const circles = filtered.map(s => ({[m
+[32m+[m[32m      coordinates: s.service_address.gps,[m
+[32m+[m[32m      label: `${s.user.firstname}-${s.service.label}`,[m
+[32m+[m[32m      link: `/userServicePreview?id=${s._id}`,[m
+[32m+[m[32m    }))[m
+[32m+[m[32m    this.setState({[m
+[32m+[m[32m      selectedService: value,[m
+[32m+[m[32m      circles: circles[m
+[32m+[m[32m    })[m
+[32m+[m[32m  }[m
+ [m
+[31m-    render() {[m
+[31m-        const { classes } = this.props;[m
+[32m+[m[32m  render() {[m
+[32m+[m[32m    const {[m
+[32m+[m[32m      classes[m
+[32m+[m[32m    } = this.props;[m
+[32m+[m[32m    const {[m
+[32m+[m[32m      circles,[m
+[32m+[m[32m      allServices,[m
+[32m+[m[32m      serviceSelected[m
+[32m+[m[32m    } = this.state;[m
+ [m
+[31m-        const circles=this.state.services.map( s => ({coordinates:s.service_address.gps, perimeter:s.perimeter*10}))[m
+[31m-        return ([m
+[31m-            <Layout>[m
+[31m-              <Grid style={{width : '100%', height:600}}>[m
+[31m-                  { /* <MapComponent position={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]} perimeter={serviceUser.perimeter*1000} alfred={alfred.firstname}/> */ }[m
+[31m-                  <MapComponent position={[46.71, 1.71]} zoom={6} circles={circles}/>[m
+[31m-                </Grid>[m
+[31m-            </Layout>[m
+[32m+[m[32m    return ([m
+[32m+[m[32m      <Layout>[m
+[32m+[m[32m        <Grid style={{width : '100%', height:600}}>[m
+[32m+[m[32m            { /* <MapComponent position={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]} perimeter={serviceUser.perimeter*1000} alfred={alfred.firstname}/> */ }[m
+[32m+[m[32m            <MapComponent position={[46.71, 1.71]} zoom={6} circles={circles}/>[m
+[32m+[m[32m          </Grid>[m
+[32m+[m[32m          <Grid style={{width : '100%'}}>[m
+[32m+[m[32m          <Typography>{circles.length} services</Typography>[m
+[32m+[m[32m          <Select[m
+[32m+[m[32m            labelId="demo-mutiple-checkbox-label"[m
+[32m+[m[32m            id="demo-mutiple-checkbox"[m
+[32m+[m[32m            renderValue={selected => allServices.filter(s => s._id===selected)[0].label}[m
+[32m+[m[32m            value={serviceSelected}[m
+[32m+[m[32m            onChange={this.onChangeService}[m
+[32m+[m[32m          >[m
+[32m+[m[32m            {allServices.map(s => ([m
+[32m+[m[32m              <MenuItem value={s._id}>{s.label}</MenuItem>[m
+[32m+[m[32m            ))}[m
+ [m
+[31m-        );[m
+[31m-    };[m
+[32m+[m[32m            </Select>[m
+[32m+[m[32m          </Grid>[m
+[32m+[m[32m      </Layout>[m
+[32m+[m[32m    );[m
+[32m+[m[32m  };[m
+ }[m
+ [m
+ export default withStyles(styles)(ServicesMap);[m
