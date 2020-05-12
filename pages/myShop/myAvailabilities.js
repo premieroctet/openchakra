@@ -11,7 +11,7 @@ import { SCHEDULE_SUBTITLE } from '../../utils/messages';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import styles from './myAvailabilities/myAvailabilitiesStyle'
-
+import Router from 'next/router';
 moment.locale('fr');
 
 class myAvailabilities extends React.Component {
@@ -43,6 +43,11 @@ class myAvailabilities extends React.Component {
 
     componentDidMount() {
 
+       const auth = localStorage.getItem('token');
+       if(!this.props.aboutId && auth === null) {
+         localStorage.setItem('path',Router.pathname);
+         Router.push('/login')
+       }
       // FIX : get current availabilities
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
