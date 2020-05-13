@@ -1,7 +1,14 @@
 import React from 'react'
 import { useInteractive } from '../../../hooks/useInteractive'
 import { useDropComponent } from '../../../hooks/useDropComponent'
-import { Box, Menu, MenuList, MenuButton } from '@chakra-ui/core'
+import {
+  Box,
+  Menu,
+  MenuList,
+  MenuButton,
+  MenuGroup,
+  MenuItem,
+} from '@chakra-ui/core'
 import ComponentPreview from '../ComponentPreview'
 import { MenuWhitelist } from '../../../utils/editor'
 
@@ -51,6 +58,23 @@ export const MenuButtonPreview = ({ component }: IPreviewProps) => {
   const { props, ref } = useInteractive(component, true)
   const { drop, isOver } = useDropComponent(component.id, MenuWhitelist)
 
+  if (isOver) {
+    props.bg = 'teal.50'
+  }
+
+  return (
+    <MenuButton ref={drop(ref)} {...props}>
+      {component.children.map((key: string) => (
+        <ComponentPreview key={key} componentName={key} />
+      ))}
+    </MenuButton>
+  )
+}
+
+export const MenuItemPreview = ({ component }: IPreviewProps) => {
+  const { props, ref } = useInteractive(component, true)
+  const { drop, isOver } = useDropComponent(component.id, MenuWhitelist)
+
   let boxProps: any = {}
 
   if (isOver) {
@@ -59,11 +83,32 @@ export const MenuButtonPreview = ({ component }: IPreviewProps) => {
 
   return (
     <Box ref={drop(ref)} {...boxProps}>
-      <MenuButton {...props}>
+      <MenuItem {...props}>
         {component.children.map((key: string) => (
           <ComponentPreview key={key} componentName={key} />
         ))}
-      </MenuButton>
+      </MenuItem>
+    </Box>
+  )
+}
+
+export const MenuGroupPreview = ({ component }: IPreviewProps) => {
+  const { props, ref } = useInteractive(component, true)
+  const { drop, isOver } = useDropComponent(component.id, MenuWhitelist)
+
+  let boxProps: any = {}
+
+  if (isOver) {
+    props.bg = 'teal.50'
+  }
+
+  return (
+    <Box ref={drop(ref)} {...boxProps}>
+      <MenuGroup {...props}>
+        {component.children.map((key: string) => (
+          <ComponentPreview key={key} componentName={key} />
+        ))}
+      </MenuGroup>
     </Box>
   )
 }
