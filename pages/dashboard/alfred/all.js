@@ -122,7 +122,6 @@ class all extends React.Component {
         axios.get("/myAlfred/api/shop/all")
           .then((response) => {
             let alfred = response.data;
-            console.log("Alfred:"+JSON.stringify(alfred[0], null, 2))
             this.setState({alfred: alfred})
 
           })
@@ -196,7 +195,6 @@ class all extends React.Component {
                                                     <TableCell>
                                                         <Link href={`/shop?id_alfred=${e.alfred._id}`}><a>Consulter</a></Link>
                                                     </TableCell>
-
                                                 </TableRow>
                                             )}
 
