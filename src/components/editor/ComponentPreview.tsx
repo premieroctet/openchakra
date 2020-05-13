@@ -18,6 +18,12 @@ import PreviewContainer from './PreviewContainer'
 import { InputRightElementPreview } from './previews/InputRightElement'
 import { InputLeftElementPreview } from './previews/InputLeftElement'
 import AspectRatioBoxPreview from './previews/AspectRatioBoxPreview'
+import MenuPreview, {
+  MenuListPreview,
+  MenuButtonPreview,
+  MenuGroupPreview,
+  MenuItemPreview,
+} from './previews/MenuPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -28,7 +34,7 @@ const ComponentPreview: React.FC<{
   }
 
   const type = (component && component.type) || null
-
+  console.log(type)
   switch (type) {
     // Simple components
     case 'Badge':
@@ -75,6 +81,8 @@ const ComponentPreview: React.FC<{
     case 'InputRightAddon':
     case 'InputLeftAddon':
     case 'Tag':
+    case 'MenuDivider':
+    case 'MenuItemOption':
       return (
         <PreviewContainer
           component={component}
@@ -106,6 +114,7 @@ const ComponentPreview: React.FC<{
     case 'Breadcrumb':
     case 'InputGroup':
     case 'BreadcrumbItem':
+    case 'MenuOptionGroup':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -138,6 +147,16 @@ const ComponentPreview: React.FC<{
       return <AccordionPanelPreview component={component} />
     case 'AspectRatioBox':
       return <AspectRatioBoxPreview component={component} />
+    case 'Menu':
+      return <MenuPreview component={component} />
+    case 'MenuList':
+      return <MenuListPreview component={component} />
+    case 'MenuButton':
+      return <MenuButtonPreview component={component} />
+    case 'MenuItem':
+      return <MenuItemPreview component={component} />
+    case 'MenuGroup':
+      return <MenuGroupPreview component={component} />
     default:
       return null
   }

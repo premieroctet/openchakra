@@ -50,7 +50,6 @@ type ComponentType =
   | 'Tabs'
   | 'Code'
   | 'Editable'
-  | 'Menu'
   | 'NumberInput'
   | 'Radio'
   | 'RadioGroup'
@@ -67,6 +66,14 @@ type ComponentType =
   | 'Grid'
   | 'BreadcrumbItem'
   | 'BreadcrumbLink'
+  | 'Menu'
+  | 'MenuList'
+  | 'MenuButton'
+  | 'MenuItem'
+  | 'MenuGroup'
+  | 'MenuDivider'
+  | 'MenuOptionGroup'
+  | 'MenuItemOption'
 
 type MetaComponentType =
   | 'FormControlMeta'
@@ -75,6 +82,7 @@ type MetaComponentType =
   | 'AlertMeta'
   | 'InputGroupMeta'
   | 'BreadcrumbMeta'
+  | 'MenuMeta'
 
 interface IComponent {
   children: string[]

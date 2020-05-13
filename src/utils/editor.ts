@@ -5,6 +5,17 @@ const ALERT_COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'AlertTitle',
 ]
 
+const MENU_COMPONENTS: (ComponentType | MetaComponentType)[] = [
+  'Menu',
+  'MenuList',
+  'MenuButton',
+  'MenuItem',
+  'MenuGroup',
+  'MenuDivider',
+  'MenuOptionGroup',
+  'MenuItemOption',
+]
+
 export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   ...ALERT_COMPONENTS,
   'Avatar',
@@ -53,7 +64,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'Breadcrumb',
   'BreadcrumbItem',
   'BreadcrumbLink',
-  'Menu',
+  ...MENU_COMPONENTS,
   'NumberInput',
   'AccordionItem',
   'AccordionHeader',
@@ -68,9 +79,15 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'ListMeta',
   'InputGroupMeta',
   'BreadcrumbMeta',
+  'MenuMeta',
 ]
 
 export const AccordionWhitelist: (
+  | ComponentType
+  | MetaComponentType
+)[] = COMPONENTS.filter(name => !ALERT_COMPONENTS.includes(name))
+
+export const MenuWhitelist: (
   | ComponentType
   | MetaComponentType
 )[] = COMPONENTS.filter(name => !ALERT_COMPONENTS.includes(name))
@@ -87,5 +104,12 @@ export const rootComponents = COMPONENTS
         'AccordionHeader',
         'AccordionPanel',
         'AccordionIcon',
+        'MenuButton',
+        'MenuItem',
+        'MenuGroup',
+        'MenuDivider',
+        'MenuOptionGroup',
+        'MenuItemOption',
+        'MenuList',
       ].includes(name),
   )

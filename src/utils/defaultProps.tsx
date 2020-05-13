@@ -33,14 +33,15 @@ import {
   InputProps,
   AspectRatioBoxProps,
   BreadcrumbItemProps,
+  BreadcrumbItem,
   EditableProps,
-  MenuProps,
   NumberInputProps,
   RadioProps,
   SelectProps,
   RadioGroupProps,
   InputGroupProps,
   GridProps,
+  BreadcrumbLink,
 } from '@chakra-ui/core'
 import { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
 
@@ -101,13 +102,29 @@ type PreviewDefaultProps = {
   BreadcrumbItem?: BreadcrumbItemProps
   BreadcrumbLink?: any
   Editable?: EditableProps
-  Menu?: MenuProps
+  Menu?: any
+  MenuList?: any
+  MenuButton?: any
+  MenuItem?: any
+  MenuGroup?: any
+  MenuDivider?: any
+  MenuOptionGroup?: any
+  MenuItemOption?: any
+
   NumberInput?: NumberInputProps
   Radio?: RadioProps
   RadioGroup?: RadioGroupProps
   List?: any
   ListIcon?: IconProps
   ListItem?: any
+  // meta components
+  AlertMeta?: any
+  InputGroupMeta?: any
+  FormControlMeta?: any
+  AccordionMeta?: any
+  ListMeta?: any
+  BreadcrumbMeta?: any
+  MenuMeta?: any
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -192,6 +209,16 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Select: {
     icon: 'chevron-down',
   },
+  Menu: {
+    isOpen: true,
+  },
+  MenuList: {},
+  MenuButton: {},
+  MenuItem: {},
+  MenuGroup: {},
+  MenuDivider: {},
+  MenuOptionGroup: {},
+  MenuItemOption: {},
 }
 
 export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
@@ -267,6 +294,10 @@ export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
     addSeparator: true,
   },
   CloseButton: { size: 'md' },
+  BreadcrumbItem: { ...BreadcrumbItem.defaultProps },
+  BreadcrumbLink: {
+    ...BreadcrumbLink.defaultProps,
+  },
 }
 
 export const getDefaultFormProps = (type: ComponentType) => {
