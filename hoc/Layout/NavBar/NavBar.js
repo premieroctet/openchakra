@@ -18,6 +18,7 @@ import styles from './NavBarStyle'
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
+const moment = require('moment');
 
 class NavBar extends Component {
   constructor(props) {
@@ -297,7 +298,7 @@ class NavBar extends Component {
               </Grid>
                 {hiddingPanel ?
                   <Grid className={this.state.isSearch ? classes.search : classes.searchHidden}>
-                    <SearchInput searchCallback={this.props.searchCallback} />
+                    <SearchInput searchCallback={this.props.searchCallback} key={moment()}/>
                   </Grid>: null
                 }
               <Hidden xsDown>

@@ -45,8 +45,7 @@ class SearchInput extends React.Component{
        }
        query.user=user;
        query.allAddresses=allAddresses
-       //this.setState(query)
-       this.setState({keyword: query.keyword})
+       this.setState(query)
      })
      .catch(err => { console.log("Not logged"); }
     );
