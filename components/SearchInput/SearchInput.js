@@ -57,12 +57,17 @@ class SearchInput extends React.Component{
     if (this.state.city) { queryParams['city']=this.state.city};
     if (this.state.gps) { queryParams['gps']=JSON.stringify(this.state.gps)};
     if (this.state.selectedAddress) { queryParams['selectedAddress']=this.state.selectedAddress}
+    /**
+    TODO : ce code ne change pas l'URL donc si on va sur réserver puis retour,
+    il faut relancer la recherche
     if (this.props.searchCallback) {
       this.props.searchCallback(queryParams);
     }
     else {
       Router.push({ pathname: '/search', query: queryParams })
     }
+    */
+    Router.push({ pathname: '/search', query: queryParams })
   }
 
   onChange = e => {
