@@ -23,12 +23,16 @@ const isServiceAroundGPS = (serviceUser, coordinates) => {
       service.splice(removeIndex, 1);
       }*/
       try {
-        var distance = geolib.convertDistance( geolib.getDistance( {latitude:coordinates.lat, longitude:coordinates.lng}, {latitude:latAlfred, longitude: lngAlfred}), 'km').toFixed(2);
+        const dist= geolib.getDistance(
+          {latitude:coordinates.lat.toString(), longitude:coordinates.lng.toString()},
+          {latitude:latAlfred.toString(), longitude: lngAlfred.toString()})
+        var distance = geolib.convertDistance( dist, 'km').toFixed(2);
         var in_perimeter = distance < serviceUser.perimeter;
         return in_perimeter;
       }
       catch (err) {
         console.error(`Error computing distance between ${coordinates} and ${latAlfred}/${lngAlfred}`);
+        console.error(err)
         return false;
       }
     }
