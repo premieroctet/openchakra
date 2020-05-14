@@ -154,7 +154,7 @@ router.post('/myShop/add', upload.fields([{ name: 'file_diploma', maxCount: 1 },
                 });
             }
             const data = req.body;
-            var su = data2ServiceUser(data, new ServiceUser()); 
+            var su = data2ServiceUser(data, new ServiceUser());
             su.user = req.user.id;
 
             // FIX : créer les prestations custom avant
@@ -171,7 +171,7 @@ router.post('/myShop/add', upload.fields([{ name: 'file_diploma', maxCount: 1 },
                  const newp = { prestation: presta._id, billing: presta.billing, price: presta.price };
                  su.prestations.push(newp);
                });
-               
+
                su.save().then((su) => {
                  Shop.findOne({ alfred: req.user.id })
                    .then(shop => {
@@ -231,9 +231,9 @@ router.put('/edit/:id', passport.authenticate('jwt', { session: false }), (req, 
                Object.values(req.body.prestations).forEach(presta => {
                  const newp = { prestation: presta._id, billing: presta.billing, price: presta.price };
                  su.prestations.push(newp);
-               });     
+               });
                su.save().then((su) => {
-                  res.json(su); 
+                  res.json(su);
                 })
              })
 
@@ -551,7 +551,7 @@ router.post('/search',(req,res)=> {
 
       const obj = {begin,end,beginDay,endDay};
 
-      datesPromise=axios.post(baseUrl+'/myAlfred/api/availability/filterDate',obj) 
+      datesPromise=axios.post(baseUrl+'/myAlfred/api/availability/filterDate',obj)
     }
 
     keywordPromise.then( result => {
@@ -568,7 +568,6 @@ router.post('/search',(req,res)=> {
         .populate('user','-id_card')
         .populate({path: 'service', populate: {path:'category'}})
         .then(services => {
-          console.log("SU.prestations:"+JSON.stringify(services[0].prestations, null, 2));
           if ('gps' in req.body) {
             services = filterServicesGPS(services, req.body.gps);
           }

@@ -44,9 +44,11 @@ class SearchInput extends React.Component{
          query.gps=user.billing_address.gps;
        }
        query.user=user;
-       query.allAddresses=allAddresses;
-       this.setState(query);
-     }).catch(err => { console.log(err); }
+       query.allAddresses=allAddresses
+       //this.setState(query)
+       this.setState({keyword: query.keyword})
+     })
+     .catch(err => { console.log("Not logged"); }
     );
   }
 
@@ -56,7 +58,12 @@ class SearchInput extends React.Component{
     if (this.state.city) { queryParams['city']=this.state.city};
     if (this.state.gps) { queryParams['gps']=JSON.stringify(this.state.gps)};
     if (this.state.selectedAddress) { queryParams['selectedAddress']=this.state.selectedAddress}
-    Router.push({ pathname: '/search', query: queryParams })
+    if (this.props.searchCallback) {
+      this.props.searchCallback(queryParams);
+    }
+    else {
+      Router.push({ pathname: '/search', query: queryParams })
+    }
   }
 
   onChange = e => {

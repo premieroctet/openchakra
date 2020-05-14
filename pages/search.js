@@ -74,6 +74,7 @@ class SearchPage extends React.Component {
             availabilities:[],
         };
         this.filter=this.filter.bind(this);
+        this.searchCallback=this.searchCallback.bind(this);
     }
 
     static getInitialProps ({ query: { keyword, city, gps, selectedAddress, category, service, prestation, search, date} }) {
@@ -157,12 +158,17 @@ class SearchPage extends React.Component {
                     });
                })
            })
-           .catch(err => { console.log(err)});
+           .catch(err => {
+             console.log(err)
+           });
+    }
+
+    searchCallback = q => {
+        this.setState(q, () => this.search())
     }
 
     onChange = e => {
         var {name, value} = e.target;
-        console.log("onChange:"+name+","+value);
         this.setState({ [e.target.name]: e.target.value });
         if (name === 'selectedAddress') {
           this.setState({gps: value === 'all'?null: 'gps' in value ? value.gps : {'lat':value['lat'], 'lng':value['lng']}})
@@ -207,7 +213,6 @@ class SearchPage extends React.Component {
           }
         });
         serviceUsersDisplay=filtered;
-        console.log("After:"+serviceUsersDisplay.length);
       }
 
       var visibleCategories=[];
@@ -223,7 +228,6 @@ class SearchPage extends React.Component {
     }
 
      search(forceFilter) {
-       console.log("Searching")
        const address = this.state.selectedAddress;
         var filters={}
 
@@ -316,7 +320,7 @@ class SearchPage extends React.Component {
 
         return (
           <Fragment>
-            <Layout>
+            <Layout searchCallback={this.searchCallback} >
               <Grid container className={classes.bigContainer}>
                 <Grid container className={classes.respfilter}>
                   <Grid item xs={12} style={{height: 50}}>
@@ -456,7 +460,7 @@ class SearchPage extends React.Component {
                                    this.restrictServices(serviceUsers, cat).map(su => {
                                     return (
                                       <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
-                                        <CardPreview services={su} alfred={user} gps={gps} needAvatar={true} key={moment()} />
+                                        <CardPreview services={su} alfred={user} gps={gps} needAvatar={true} key={su._id} />
                                       </Grid>
                                     )
                                   })

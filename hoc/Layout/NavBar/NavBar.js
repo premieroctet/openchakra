@@ -297,7 +297,7 @@ class NavBar extends Component {
               </Grid>
                 {hiddingPanel ?
                   <Grid className={this.state.isSearch ? classes.search : classes.searchHidden}>
-                    <SearchInput />
+                    <SearchInput searchCallback={this.props.searchCallback} />
                   </Grid>: null
                 }
               <Hidden xsDown>
