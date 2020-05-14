@@ -21,7 +21,7 @@ const STATE: ComponentsState = {
     },
   },
   selectedId: 'button-testid',
-  sideBarComponents: {},
+  customComponents: {},
 }
 
 describe('Components model', () => {

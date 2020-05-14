@@ -33,6 +33,27 @@ export const INITIAL_COMPONENTS: IComponents = {
     props: {},
   },
 }
+const addToCustomComponents = (
+  components: IComponents,
+  customComponents: IComponents,
+  id: string,
+  parentId: string,
+  typeOfComponent: string,
+) => {
+  const checkCustomComponentId = components[parentId].customComponentId
+  if (checkCustomComponentId !== undefined) {
+    customComponents[checkCustomComponentId].children.push(id)
+    if (typeOfComponent !== 'custom') {
+      customComponents = {
+        ...customComponents,
+        [id]: {
+          ...components[id],
+        },
+      }
+    }
+  }
+  return customComponents
+}
 
 const components = createModel({
   state: {
@@ -136,6 +157,20 @@ const components = createModel({
         draftState.components[payload.parentId].children.push(
           payload.componentId,
         )
+        if (draftState.components[payload.parentId].customComponentId) {
+          // Remove id from previous parent
+          draftState.customComponents[previousParentId].children = children
+
+          // Insert the selected element in the custom components
+          draftState.customComponents[payload.componentId] = {
+            ...draftState.components[payload.componentId],
+          }
+
+          // Add new child
+          draftState.customComponents[payload.parentId].children.push(
+            payload.componentId,
+          )
+        }
       })
     },
     moveSelectedComponentChildren(
@@ -173,6 +208,13 @@ const components = createModel({
           parent: payload.parentName,
           rootParentType: payload.rootParentType || payload.type,
         }
+        draftState.customComponents = addToCustomComponents(
+          draftState.components,
+          draftState.customComponents,
+          id,
+          draftState.components[id].parent,
+          'default',
+        )
       })
     },
     addMetaComponent(
@@ -187,6 +229,23 @@ const components = createModel({
           ...draftState.components,
           ...payload.components,
         }
+        if (draftState.components[payload.parent].customComponentId) {
+          draftState.customComponents[payload.parent].children.push(
+            payload.root,
+          )
+
+          draftState.customComponents = {
+            ...draftState.customComponents,
+            ...payload.components,
+          }
+        }
+        // addToCustomComponents(
+        //   draftState.components,
+        //   draftState.customComponents,
+        //   payload.root,
+        //   payload.parent,
+        //   'meta',
+        // )
       })
     },
     addCustomComponent(
@@ -211,9 +270,16 @@ const components = createModel({
             ...draftState.components,
             ...clonedComponents,
           }
-          console.log(newId)
           draftState.components[newId].customComponentId = payload.id
           draftState.components[parentElement.id].children.push(newId)
+
+          addToCustomComponents(
+            draftState.components,
+            draftState.customComponents,
+            payload.id,
+            payload.parentId,
+            'custom',
+          )
         }
       })
     },
@@ -263,8 +329,6 @@ const components = createModel({
     saveComponent(state: ComponentsState, name: string): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
         const componentToBeSaved = draftState.components[draftState.selectedId]
-        draftState.components[draftState.selectedId].customComponentId =
-          draftState.selectedId
         const savedComponents = saveComponents(
           componentToBeSaved,
           draftState.components,
@@ -274,8 +338,12 @@ const components = createModel({
           ...draftState.customComponents,
           ...savedComponents,
         }
-        // draftState.customComponents[draftState.selectedId].customComponentId =
-        //   draftState.selectedId
+
+        draftState.components[draftState.selectedId].customComponentId =
+          draftState.selectedId //To look after the selectedId for the customComponents
+
+        draftState.customComponents[draftState.selectedId].customComponentId =
+          draftState.selectedId
       })
     },
     hover(

@@ -72,7 +72,11 @@ const buildBlock = (
         content += `<${componentName} ${propsContent}>${childComponent.props.children}</${componentName}>`
       } else if (childComponent.children.length) {
         content += `<${componentName} ${propsContent}>
-      ${buildBlock(childComponent, components, customComponents)}
+      ${buildBlock(
+        childComponent,
+        components,
+        customComponents !== undefined ? customComponents : components,
+      )}
       </${componentName}>`
       } else {
         content += `<${componentName} ${propsContent} />`
@@ -110,6 +114,7 @@ export const generateCode = async (
         .map(name => components[name].type),
     ),
   ]
+  console.log(customComponents)
   const customComponentCode =
     customComponents !== undefined &&
     Object.values(customComponents).map(component => {
@@ -118,10 +123,7 @@ export const generateCode = async (
         const parentId = customComponents[selectedId].parent
         const parent = { ...customComponents[parentId] }
         parent.children = [selectedId]
-        const componentCode = buildBlock(
-          parent,
-          customComponents,
-        )
+        const componentCode = buildBlock(parent, customComponents)
         return `const ${capitalize(component.name)} = () =>(
         ${componentCode}
      );
