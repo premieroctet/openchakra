@@ -1,8 +1,8 @@
 const { RRule, RRuleSet, rrulestr }=require('rrule');
-const {ALL_SERVICES, generate_id}=require('./consts.js');
+const {ALL_SERVICES}=require('./consts.js');
 const isEmpty = require('../server/validation/is-empty');
 const moment=require('moment-timezone');
-
+const {eventUI2availability}=require('./converters');
 const DAYS=['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
 const dayToNumber = (day) => {
@@ -108,5 +108,38 @@ const booking_datetime_str = booking => {
   return `Le ${booking.date_prestation} à ${moment(booking.time_prestation).tz('Europe/Paris').format('HH:mm')}`
 }
 
+const createDefaultAvailability = () => {
 
-module.exports={isMomentAvailable, isIntervalAvailable, getDeadLine, booking_datetime_str};
+
+  var start=new Date()
+  start=new Date(start.setHours(8))
+  start=new Date(start.setMinutes(0))
+  start=new Date(start.setSeconds(0))
+  start=new Date(start.setMilliseconds(0))
+
+  var end=new Date()
+  end=new Date(end.setHours(19))
+  end=new Date(end.setMinutes(0))
+  end=new Date(end.setSeconds(0))
+  end=new Date(end.setMilliseconds(0))
+
+  var dt = new Date(end);
+  dt.setMonth( dt.getMonth() + 6 );
+
+  const eventUI={
+    isExpanded:'panel1',
+    recurrDays:new Set([0,1,2,3,4,5]),
+    selectedDateStart: start,
+    selectedDateEnd: end,
+    selectedTimeStart: start.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
+    selectedTimeEnd: end.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
+    servicesSelected: [ALL_SERVICES],
+    selectedDateEndRecu: dt,
+  };
+
+  const avail=eventUI2availability(eventUI)
+
+  return avail;
+}
+
+module.exports={isMomentAvailable, isIntervalAvailable, getDeadLine, booking_datetime_str, createDefaultAvailability};

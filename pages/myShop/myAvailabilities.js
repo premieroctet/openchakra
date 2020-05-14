@@ -11,7 +11,7 @@ import { SCHEDULE_SUBTITLE, SCHEDULE_TITLE } from '../../utils/messages';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import styles from './myAvailabilities/myAvailabilitiesStyle'
-
+import Router from 'next/router';
 moment.locale('fr');
 
 class myAvailabilities extends React.Component {
@@ -43,12 +43,16 @@ class myAvailabilities extends React.Component {
 
     componentDidMount() {
 
+       const auth = localStorage.getItem('token');
+       if(!this.props.aboutId && auth === null) {
+         localStorage.setItem('path',Router.pathname);
+         Router.push('/login')
+       }
       // FIX : get current availabilities
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
       axios.get('/myAlfred/api/availability/currentAlfred')
         .then ( res => {
-          console.log(JSON.stringify(res.data, null, 2));
           this.setState({availabilities: res.data})
         })
         .catch (err => console.error(err))
@@ -62,7 +66,7 @@ class myAvailabilities extends React.Component {
           })
         }
       }).catch(function (error) {
-        console.log(error);
+        console.error(error);
       });
 
       axios.get(`/myAlfred/api/shop/alfred/${this.state.id}`)
@@ -77,7 +81,7 @@ class myAvailabilities extends React.Component {
 
         })
         .catch(function (error) {
-          console.log(error);
+          console.error();(error);
         });
 
       axios.get('/myAlfred/api/shopBanner/all')
@@ -86,14 +90,13 @@ class myAvailabilities extends React.Component {
           this.setState({banner: banner})
         })
         .catch(function(error){
-          console.log(error);
+          console.error(error);
         });
 
     }
 
     availabilityCreated(avail) {
 
-      console.log(`Availability created : ${JSON.stringify(avail)}`)
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
       axios.post('/myAlfred/api/availability/add',avail)
           .then(res => {
@@ -102,13 +105,12 @@ class myAvailabilities extends React.Component {
               this.setState({availabilities: new_availabilities});
           })
           .catch(err => {
-            console.log(err);
+            error(err);
             toast.error(err);
 		  })
     }
 
     availabilityUpdate(avail) {
-        console.log("Avail update:"+JSON.stringify(avail))
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.post('/myAlfred/api/availability/update', avail)
           .then( res => {
@@ -116,7 +118,6 @@ class myAvailabilities extends React.Component {
 
         axios.get('/myAlfred/api/availability/currentAlfred')
           .then ( res => {
-            console.log(JSON.stringify(res.data, null, 2));
             this.setState({availabilities: res.data})
           })
           .catch (err => console.error(err))
@@ -126,7 +127,6 @@ class myAvailabilities extends React.Component {
     availabilityDelete(avail) {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-      console.log("Deleteing:"+JSON.stringify(avail))
       axios.delete('/myAlfred/api/availability/'+avail._id)
           .then(res => {
               toast.info('Disponibilité supprimée avec succès !');
@@ -139,7 +139,7 @@ class myAvailabilities extends React.Component {
               this.setState({availabilities: new_availabilities});
           })
           .catch(err => {
-            console.log(err);
+            error(err);
             toast.error(err);
           })
     }

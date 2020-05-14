@@ -150,10 +150,10 @@ class SearchPage extends React.Component {
                          st['gps']=allAddresses['main'];
                          st['selectedAddress']='main';
                       }
-                      this.setState(st, () => { if ('search' in this.props) {this.search('date' in this.props)}});
+                      this.setState(st, () => { if (this.props.search) {this.search('date' in this.props)}});
                     })
                     .catch(err => {
-                      this.setState(st, () => { if ('search' in this.props) {this.search('date' in this.props)}});
+                      this.setState(st, () => { if (this.props.search) {this.search('date' in this.props)}});
                     });
                })
            })
@@ -223,6 +223,7 @@ class SearchPage extends React.Component {
     }
 
      search(forceFilter) {
+       console.log("Searching")
        const address = this.state.selectedAddress;
         var filters={}
 
