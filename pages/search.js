@@ -86,10 +86,6 @@ class SearchPage extends React.Component {
       return init;
     }
 
-    onChangeCity({suggestion}) {
-      this.setState({gps:suggestion.latlng, city: suggestion.name});
-    };
-
     onChangeInterval(startDate, endDate) {
       if (startDate) { startDate.hour(0).minute(0).second(0).millisecond(0)};
       if (endDate) { endDate.hour(23).minute(59).second(59).millisecond(999)};
@@ -164,6 +160,9 @@ class SearchPage extends React.Component {
     }
 
     searchCallback = q => {
+        if (!('gps' in q)) {
+          q['gps']=null
+        }
         this.setState(q, () => this.search())
     }
 
@@ -232,9 +231,12 @@ class SearchPage extends React.Component {
         var filters={}
 
         // GPS
-        if (this.state.gps) { filters['gps']=this.state.gps; }
+        if (this.state.gps) {
+          filters['gps']=this.state.gps; }
        // Keyword search disables cat/ser/presta filter
-       if (this.state.keyword) { filters['keyword']=this.state.keyword; }
+       if (this.state.keyword) {
+         filters['keyword']=this.state.keyword;
+       }
        else {
          // Category
          if (this.props.category) { filters['category']=this.props.category; }

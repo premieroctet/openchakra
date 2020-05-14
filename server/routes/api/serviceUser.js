@@ -569,7 +569,12 @@ router.post('/search',(req,res)=> {
         .populate({path: 'service', populate: {path:'category'}})
         .then(services => {
           if ('gps' in req.body) {
-            services = filterServicesGPS(services, JSON.parse(req.body.gps));
+            try {
+              services = filterServicesGPS(services, JSON.parse(req.body.gps));
+            }
+            catch (err) {
+              services = filterServicesGPS(services, req.body.gps);
+            }
           }
           if (allowedServices!=null) {
             services = services.filter( su => allowedServices.includes(su.service._id.toString()) );
