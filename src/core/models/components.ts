@@ -70,6 +70,18 @@ const moveToCustomComponents = (
   customComponents[parentId].children.push(id)
 }
 
+const deleteComp = (
+  components: IComponents,
+  componentId: string,
+  parentId: string,
+) => {
+  const children = components[parentId].children.filter(
+    (id: string) => id !== componentId,
+  )
+
+  components[parentId].children = children
+}
+
 const components = createModel({
   state: {
     components: INITIAL_COMPONENTS,
@@ -127,13 +139,15 @@ const components = createModel({
       return produce(state, (draftState: ComponentsState) => {
         let component = draftState.components[componentId]
 
-        // Remove self
+        deleteComp(draftState.components, componentId, component.parent)
         if (component && component.parent) {
-          const children = draftState.components[
-            component.parent
-          ].children.filter((id: string) => id !== componentId)
-
-          draftState.components[component.parent].children = children
+          if (draftState.customComponents[componentId].parent !== undefined) {
+            deleteComp(
+              draftState.customComponents,
+              componentId,
+              component.parent,
+            )
+          }
         }
 
         draftState.selectedId = DEFAULT_ID
