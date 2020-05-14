@@ -47,7 +47,9 @@ const CustomPropsPanel = () => {
         onSubmit={(event: FormEvent) => {
           event.preventDefault()
 
-          const [name, value] = quickProps.split(SEPARATOR)
+          const num = quickProps.indexOf('=')
+          const name = quickProps.slice(0, num)
+          const value = quickProps.slice(num + 1)
 
           if (name && value) {
             setValue(name, value)
