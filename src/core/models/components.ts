@@ -54,6 +54,21 @@ const addToCustomComponents = (
   }
   return customComponents
 }
+const moveToCustomComponents = (
+  componentToBeMoved: IComponent,
+  customComponents: IComponents,
+  id: string,
+  parentId: string,
+) => {
+  if (customComponents[id] !== undefined) {
+    customComponents[id].parent = parentId
+  } else {
+    customComponents[id] = {
+      ...componentToBeMoved,
+    }
+  }
+  customComponents[parentId].children.push(id)
+}
 
 const components = createModel({
   state: {
@@ -157,18 +172,22 @@ const components = createModel({
         draftState.components[payload.parentId].children.push(
           payload.componentId,
         )
-        if (draftState.components[payload.parentId].customComponentId) {
-          // Remove id from previous parent
+
+        //check whether the component to be moved is in custom components
+        if (draftState.customComponents[previousParentId] !== undefined) {
+          const children = draftState.customComponents[
+            previousParentId
+          ].children.filter(id => id !== payload.componentId)
           draftState.customComponents[previousParentId].children = children
+        }
 
-          // Insert the selected element in the custom components
-          draftState.customComponents[payload.componentId] = {
-            ...draftState.components[payload.componentId],
-          }
-
-          // Add new child
-          draftState.customComponents[payload.parentId].children.push(
+        //check whether the component is moved into custom components
+        if (draftState.components[payload.parentId].customComponentId) {
+          moveToCustomComponents(
+            draftState.components[payload.componentId],
+            draftState.customComponents,
             payload.componentId,
+            payload.parentId,
           )
         }
       })
@@ -239,13 +258,6 @@ const components = createModel({
             ...payload.components,
           }
         }
-        // addToCustomComponents(
-        //   draftState.components,
-        //   draftState.customComponents,
-        //   payload.root,
-        //   payload.parent,
-        //   'meta',
-        // )
       })
     },
     addCustomComponent(

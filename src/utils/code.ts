@@ -114,7 +114,6 @@ export const generateCode = async (
         .map(name => components[name].type),
     ),
   ]
-  console.log(customComponents)
   const customComponentCode =
     customComponents !== undefined &&
     Object.values(customComponents).map(component => {
