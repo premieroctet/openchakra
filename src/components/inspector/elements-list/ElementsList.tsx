@@ -23,7 +23,7 @@ const ElementsList: React.FC<Props> = ({
         (element, index) =>
           element && (
             <ElementListItem
-              key={element.id}
+              key={index}
               type={element.type}
               index={index}
               moveItem={moveItem}

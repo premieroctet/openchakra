@@ -28,13 +28,13 @@ import MenuPreview, {
 const ComponentPreview: React.FC<{
   componentName: string
 }> = ({ componentName, ...forwardedProps }) => {
-  const component = useSelector(getComponentBy(componentName))
-  if (!component) {
+  const componentToBeDisplayed = useSelector(getComponentBy(componentName))
+
+  if (!componentToBeDisplayed) {
     console.error(`ComponentPreview unavailable for component ${componentName}`)
   }
 
-  const type = (component && component.type) || null
-  console.log(type)
+  const type = (componentToBeDisplayed && componentToBeDisplayed.type) || null
   switch (type) {
     // Simple components
     case 'Badge':
@@ -62,7 +62,7 @@ const ComponentPreview: React.FC<{
     case 'Select':
       return (
         <PreviewContainer
-          component={component}
+          component={componentToBeDisplayed}
           type={Chakra[type]}
           {...forwardedProps}
         />
@@ -85,7 +85,7 @@ const ComponentPreview: React.FC<{
     case 'MenuItemOption':
       return (
         <PreviewContainer
-          component={component}
+          component={componentToBeDisplayed}
           type={Chakra[type]}
           {...forwardedProps}
           isBoxWrapped
@@ -104,7 +104,7 @@ const ComponentPreview: React.FC<{
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
-          component={component}
+          component={componentToBeDisplayed}
           type={Chakra[type]}
           {...forwardedProps}
         />
@@ -118,7 +118,7 @@ const ComponentPreview: React.FC<{
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
-          component={component}
+          component={componentToBeDisplayed}
           type={Chakra[type]}
           {...forwardedProps}
           isBoxWrapped
@@ -126,37 +126,37 @@ const ComponentPreview: React.FC<{
       )
     // More complex components
     case 'InputRightElement':
-      return <InputRightElementPreview component={component} />
+      return <InputRightElementPreview component={componentToBeDisplayed} />
     case 'InputLeftElement':
-      return <InputLeftElementPreview component={component} />
+      return <InputLeftElementPreview component={componentToBeDisplayed} />
     case 'Avatar':
-      return <AvatarPreview component={component} />
+      return <AvatarPreview component={componentToBeDisplayed} />
     case 'AvatarBadge':
-      return <AvatarBadgePreview component={component} />
+      return <AvatarBadgePreview component={componentToBeDisplayed} />
     case 'AvatarGroup':
-      return <AvatarGroupPreview component={component} />
+      return <AvatarGroupPreview component={componentToBeDisplayed} />
     case 'Alert':
-      return <AlertPreview component={component} />
+      return <AlertPreview component={componentToBeDisplayed} />
     case 'Accordion':
-      return <AccordionPreview component={component} />
+      return <AccordionPreview component={componentToBeDisplayed} />
     case 'AccordionHeader':
-      return <AccordionHeaderPreview component={component} />
+      return <AccordionHeaderPreview component={componentToBeDisplayed} />
     case 'AccordionItem':
-      return <AccordionItemPreview component={component} />
+      return <AccordionItemPreview component={componentToBeDisplayed} />
     case 'AccordionPanel':
-      return <AccordionPanelPreview component={component} />
+      return <AccordionPanelPreview component={componentToBeDisplayed} />
     case 'AspectRatioBox':
-      return <AspectRatioBoxPreview component={component} />
+      return <AspectRatioBoxPreview component={componentToBeDisplayed} />
     case 'Menu':
-      return <MenuPreview component={component} />
+      return <MenuPreview component={componentToBeDisplayed} />
     case 'MenuList':
-      return <MenuListPreview component={component} />
+      return <MenuListPreview component={componentToBeDisplayed} />
     case 'MenuButton':
-      return <MenuButtonPreview component={component} />
+      return <MenuButtonPreview component={componentToBeDisplayed} />
     case 'MenuItem':
-      return <MenuItemPreview component={component} />
+      return <MenuItemPreview component={componentToBeDisplayed} />
     case 'MenuGroup':
-      return <MenuGroupPreview component={component} />
+      return <MenuGroupPreview component={componentToBeDisplayed} />
     default:
       return null
   }
