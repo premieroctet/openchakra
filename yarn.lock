@@ -10017,6 +10017,11 @@ messageformat@^2.3.0:
     messageformat-formatters "^2.0.1"
     messageformat-parser "^4.1.2"
 
+metaphone@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/metaphone/-/metaphone-1.0.6.tgz#5c72473312f7fae1965e673fb95d9a6dd57b1dd3"
+  integrity sha512-1xKourcr1sNyZh+6+PApMx6EFHrGd63M/M1m6sG4TqlNfYIzXgnFoOJhdf3TIqOdb2gEil56sRdm3sc/xRbdFQ==
+
 methods@^1.1.1, methods@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
