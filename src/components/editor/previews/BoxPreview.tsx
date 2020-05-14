@@ -13,7 +13,7 @@ const BoxPreview: React.FC<{ component: IComponent }> = ({ component }) => {
   }
 
   return (
-    <Box pos="relative" ref={drop(ref)} {...props}>
+    <Box ref={drop(ref)} {...props}>
       {component.children.map((key: string) => (
         <ComponentPreview key={key} componentName={key} />
       ))}

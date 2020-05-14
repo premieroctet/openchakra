@@ -18,7 +18,7 @@ const WithChildrenPreviewContainer: React.FC<{
 }) => {
   const { drop, isOver } = useDropComponent(component.id)
   const { props, ref } = useInteractive(component, enableVisualHelper)
-  const propsElement = { ...props, ...forwardedProps, pos: 'relative' }
+  const propsElement = { ...props, ...forwardedProps }
 
   if (!isBoxWrapped) {
     propsElement.ref = drop(ref)

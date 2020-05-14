@@ -13,7 +13,7 @@ import usePropsSelector from '../../../../hooks/usePropsSelector'
 
 const PositionPanel = () => {
   const { setValueFromEvent } = useForm()
-  const pos = usePropsSelector('position')
+  const position = usePropsSelector('position')
   const left = usePropsSelector('left')
   const right = usePropsSelector('right')
   const bottom = usePropsSelector('bottom')
@@ -26,16 +26,17 @@ const PositionPanel = () => {
         <Select
           name="position"
           size="sm"
-          value={pos}
+          value={position}
           onChange={setValueFromEvent}
         >
+          <option>static</option>
           <option>relative</option>
           <option>absolute</option>
           <option>fixed</option>
-          <option>static</option>
           <option>sticky</option>
         </Select>
       </FormControl>
+
       <FormControl label="z-index">
         <Input
           placeholder="zIndex"
