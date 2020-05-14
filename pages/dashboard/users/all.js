@@ -26,7 +26,6 @@ import LastPageIcon from "@material-ui/icons/LastPage";
 import PropTypes from "prop-types";
 import HomeIcon from '@material-ui/icons/Home';
 
-
 const styles = theme => ({
     signupContainer: {
         alignItems: 'center',
