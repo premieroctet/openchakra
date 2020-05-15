@@ -183,10 +183,8 @@ router.get('/keyword/:kw',(req,res)=> {
     var result={}
     var keywords = {}
     Category.find({s_label:{$regex:regexp}})
-      .collation({ "locale": "fr", "strength": 2 })
       .then(categories => {
         Service.find({ $or : [{category: {$in: categories.map(c=> c._id)}}, {s_label:{$regex:regexp}}]})
-          .collation({ "locale": "fr", "strength": 2 })
           .populate('category')
           .then(services => {
              services.forEach(s => {
@@ -195,7 +193,6 @@ router.get('/keyword/:kw',(req,res)=> {
                keywords[key] ? keywords[key].push(s.category.label) : keywords[key]=[s.category.label];
              });
              Prestation.find({s_label:{$regex:regexp}})
-               .collation({ "locale": "fr", "strength": 2 })
                .populate({path : 'service', populate: { path:'category'}}).then(prestations => {
                   prestations.forEach(p => {
                     let s = p.service;
