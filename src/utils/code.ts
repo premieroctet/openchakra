@@ -26,6 +26,7 @@ const buildBlock = (
   component: IComponent,
   components: IComponents,
   customComponents?: IComponents,
+  skipLevel?: boolean,
 ) => {
   let content = ''
   component.children.forEach((key: string) => {
@@ -59,7 +60,8 @@ const buildBlock = (
       })
       if (
         childComponent.customComponentId !== undefined &&
-        customComponents !== undefined
+        customComponents !== undefined &&
+        !skipLevel
       ) {
         const customComponent =
           customComponents[childComponent.customComponentId]
@@ -72,11 +74,7 @@ const buildBlock = (
         content += `<${componentName} ${propsContent}>${childComponent.props.children}</${componentName}>`
       } else if (childComponent.children.length) {
         content += `<${componentName} ${propsContent}>
-      ${buildBlock(
-        childComponent,
-        components,
-        customComponents !== undefined ? customComponents : components,
-      )}
+      ${buildBlock(childComponent, components, customComponents)}
       </${componentName}>`
       } else {
         content += `<${componentName} ${propsContent} />`
@@ -118,11 +116,21 @@ export const generateCode = async (
     customComponents !== undefined &&
     Object.values(customComponents).map(component => {
       const selectedId = component.id
-      if (component.name !== undefined) {
-        const parentId = customComponents[selectedId].parent
-        const parent = { ...customComponents[parentId] }
-        parent.children = [selectedId]
-        const componentCode = buildBlock(parent, customComponents)
+      const findComponent = Object.values(components).find(
+        component => component.customComponentId === selectedId,
+      )
+      if (component.name !== undefined && findComponent !== undefined) {
+        const parentId = findComponent.parent
+        const componentCode = buildBlock(
+          {
+            ...components[parentId],
+            children: [components[parentId].children[0]],
+          },
+          components,
+          customComponents,
+          true,
+        )
+
         return `const ${capitalize(component.name)} = () =>(
         ${componentCode}
      );
@@ -149,14 +157,6 @@ const App = () => (
 
 export default App;
 `
-  // const App = () => (
-  //   <ThemeProvider theme={theme}>
-  //     <CSSReset />
-  //     ${code}
-  //   </ThemeProvider>
-  // );
-
-  // export default App;
 
   return await formatCode(code)
 }

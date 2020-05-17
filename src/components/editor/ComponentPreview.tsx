@@ -29,7 +29,6 @@ const ComponentPreview: React.FC<{
   componentName: string
 }> = ({ componentName, ...forwardedProps }) => {
   const componentToBeDisplayed = useSelector(getComponentBy(componentName))
-
   if (!componentToBeDisplayed) {
     console.error(`ComponentPreview unavailable for component ${componentName}`)
   }

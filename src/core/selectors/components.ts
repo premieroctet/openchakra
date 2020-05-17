@@ -6,13 +6,8 @@ export const getComponents = (state: RootState) =>
 export const getComponentBy = (nameOrId: string | IComponent['id']) => (
   state: RootState,
 ) => {
-  const customComponentId =
-    state.components.present.components[nameOrId].customComponentId
-  return customComponentId === undefined
-    ? state.components.present.components[nameOrId]
-    : state.components.present.customComponents[customComponentId]
+  return state.components.present.components[nameOrId]
 }
-
 
 export const getSelectedComponent = (state: RootState) =>
   state.components.present.components[state.components.present.selectedId]
