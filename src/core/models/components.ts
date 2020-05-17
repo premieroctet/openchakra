@@ -127,20 +127,45 @@ const components = createModel({
       payload: { id: string; name: string; value: string },
     ) {
       return produce(state, (draftState: ComponentsState) => {
-        draftState.components[payload.id].props[payload.name] = payload.value
+        const customComponentId =
+          draftState.components[payload.id].customComponentId
+        if (customComponentId !== undefined) {
+          draftState.customComponents[customComponentId].props[payload.name] =
+            payload.value
+          Object.values(draftState.components).forEach(component =>
+            component.customComponentId === customComponentId
+              ? (component.props[payload.name] = payload.value)
+              : component,
+          )
+        } else {
+          draftState.components[payload.id].props[payload.name] = payload.value
+        }
       })
     },
     deleteProps(state: ComponentsState, payload: { id: string; name: string }) {
-      return {
-        ...state,
-        components: {
-          ...state.components,
-          [payload.id]: {
-            ...state.components[payload.id],
-            props: omit(state.components[payload.id].props, payload.name),
-          },
-        },
-      }
+      return produce(state, (draftState: ComponentsState) => {
+        const customComponentId =
+          draftState.components[payload.id].customComponentId
+        if (customComponentId !== undefined) {
+          draftState.customComponents[customComponentId].props = omit(
+            draftState.components[payload.id].props,
+            payload.name,
+          )
+          Object.values(draftState.components).forEach(component =>
+            component.customComponentId === customComponentId
+              ? (component.props = omit(
+                  draftState.components[payload.id].props,
+                  payload.name,
+                ))
+              : component,
+          )
+        } else {
+          draftState.components[payload.id].props = omit(
+            draftState.components[payload.id].props,
+            payload.name,
+          )
+        }
+      })
     },
     deleteComponent(state: ComponentsState, componentId: string) {
       if (componentId === 'root') {
