@@ -124,7 +124,7 @@ export const generateCode = async (
         const componentCode = buildBlock(
           {
             ...components[parentId],
-            children: [components[parentId].children[0]],
+            children: [findComponent.id],
           },
           components,
           customComponents,
