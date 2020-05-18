@@ -72,6 +72,7 @@ class SearchPage extends React.Component {
             visibleCategories:[],
             catCount:{}, // cat id => # of items to display
             availabilities:[],
+            isAdmin: false
         };
         this.filter=this.filter.bind(this);
         this.searchCallback=this.searchCallback.bind(this);
@@ -136,6 +137,7 @@ class SearchPage extends React.Component {
                   axios.get('/myAlfred/api/users/current')
                     .then(res => {
                       let user = res.data;
+                      this.setState({isAdmin: user.is_admin});
                       st['user']=user;
                       var allAddresses={'main': user.billing_address.gps}
                       user.service_address.forEach( ad => allAddresses[ad._id]={lat:ad.lat, lng:ad.lng});
@@ -314,7 +316,7 @@ class SearchPage extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const {user, categories, gps} = this.state;
+        const {user, categories, gps, isAdmin} = this.state;
         const serviceUsers = this.state.serviceUsersDisplay;
 
         const statusFilterBg=this.isStatusFilterSet() ? '#2FBCD3':'white';
@@ -462,7 +464,7 @@ class SearchPage extends React.Component {
                                    this.restrictServices(serviceUsers, cat).map(su => {
                                     return (
                                       <Grid item xs={12} sm={12} md={12} lg={3} xl={3} className={classes.paddingResponsive}>
-                                        <CardPreview services={su} alfred={user} gps={gps} needAvatar={true} key={su._id} />
+                                        <CardPreview services={su} alfred={user} gps={gps} needAvatar={true} key={su._id} isAdmin={isAdmin}/>
                                       </Grid>
                                     )
                                   })

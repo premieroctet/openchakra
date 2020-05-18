@@ -41,7 +41,8 @@ class shop extends React.Component {
               punctual:0,
               flexible:0,
               reactive:0,
-            }
+            },
+            isAdmin: false
         };
         this.needRefresh = this.needRefresh.bind(this);
         this.getStatusEditButton = this.getStatusEditButton.bind(this);
@@ -59,6 +60,7 @@ class shop extends React.Component {
                 this.setState({
                     userState: true,
                     userId: user._id,
+                    isAdmin: user.is_admin
                 })
             }
         }).catch(function (error) {
@@ -123,6 +125,7 @@ class shop extends React.Component {
 
     render() {
         const {classes} = this.props;
+        const {isAdmin} = this.state;
         let isOwner= this.state.idAlfred === this.state.userId;
 
         return (
@@ -162,7 +165,9 @@ class shop extends React.Component {
                                           userState={this.state.userState}
                                           alfred={this.state.alfred}
                                           services={this.state.services[result]}
-                                          needRefresh={this.needRefresh}/>
+                                          needRefresh={this.needRefresh}
+                                          isAdmin={isAdmin}
+                                        />
                                     </Grid>
                                   )
                               })

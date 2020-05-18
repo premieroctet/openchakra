@@ -104,7 +104,7 @@ class CardPreview extends React.Component{
   }
 
   render(){
-    const {classes, services, userState, isOwner, gps, needAvatar} = this.props;
+    const {classes, services, userState, isOwner, gps, needAvatar, isAdmin} = this.props;
     const service = services.service;
     const { shop, reviews } = this.state;
 
@@ -118,7 +118,6 @@ class CardPreview extends React.Component{
 
       const notes = computeAverageNotes(reviews.map(r => r.note_alfred));
 
-
     return (
       <Grid>
         <Card className={classes.card}>
@@ -129,7 +128,7 @@ class CardPreview extends React.Component{
               </Grid>
               :null
             }
-            {userState && isOwner ?
+            {userState && isOwner || isAdmin  ?
               <Grid>
                 <Grid className={classes.actionMediaEdit}>
                   <Link href={'/myShop/services?id=' + services._id}>
