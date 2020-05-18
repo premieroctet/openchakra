@@ -26,8 +26,9 @@ class Layout extends React.Component {
           gps: user.billing_address.gps,
         });
       })
-      .catch(err => { console.log(err); }
-      );
+      .catch(err => {
+        console.log("Not connected");
+      });
   }
 
 
@@ -38,7 +39,7 @@ class Layout extends React.Component {
     return(
       <Fragment>
         <Loader />
-          <NavBar gps={gps} user={user} addressSelected={addressSelected} />
+          <NavBar gps={gps} user={user} addressSelected={addressSelected} searchCallback={this.props.searchCallback} />
         {children}
       </Fragment>
     );
