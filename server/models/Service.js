@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+var metaphone = require('metaphone')
 
 const ServiceSchema = new Schema({
     label: {
@@ -48,9 +49,24 @@ const ServiceSchema = new Schema({
     // Frais déplacement
     travel_tax: {
       type: Boolean
-    }
+    },
+    s_label: {
+      type: String,
+      default: function() {
+        return metaphone(this.label)
+      }
+    },
 });
 
 ServiceSchema.index({label:'text'});
 
-module.exports = Service = mongoose.model('service',ServiceSchema);
+const Service = mongoose.model('service',ServiceSchema);
+
+// To update s_label
+Service.find({})
+  .then (services => {
+    services.forEach( s => s.save());
+  }
+)
+
+module.exports = Service;

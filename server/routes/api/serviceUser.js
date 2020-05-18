@@ -5,8 +5,10 @@ const mongoose = require('mongoose');
 const path = require('path');
 const ServiceUser = require('../../models/ServiceUser');
 const Shop = require('../../models/Shop');
+const Service = require('../../models/Service');
 const User = require('../../models/User');
 const Availability = require('../../models/Availability');
+const Prestation = require('../../models/Prestation');
 const axios = require('axios');
 const https = require('https');
 const multer = require("multer");
@@ -19,7 +21,9 @@ const {data2ServiceUser} = require('../../../utils/mapping');
 const emptyPromise = require('../../../utils/promise');
 const { computeUrl } = require('../../../config/config');
 const { filterServicesGPS} = require('../../../utils/filters');
-
+var metaphone = require('metaphone')
+const intersection = require('array-intersection');
+//mongoose.set('debug', true)
 
 moment.locale('fr');
 const storage = multer.diskStorage({
@@ -598,8 +602,28 @@ router.post('/search',(req,res)=> {
             });
             services = filtered;
           }
-          console.log("Returned services:"+services.length);
-          res.json(services);
+          if ('keyword' in req.body) {
+            var regexp = new RegExp(metaphone(req.body.keyword),'i');
+            Prestation.find({ s_label: regexp})
+              .populate({ path: "job", match: {s_label:{$regex:regexp}}})
+              .then( prestas => {
+                const ids = prestas.map( p => p._id.toString())
+                services = services.filter( s => {
+                  if (s.service.s_label.match(regexp) || s.service.category.s_label.match(regexp)) {
+                    return true;
+                  }
+                  pids = s.prestations.map( pp => pp.prestation ? pp.prestation.toString() : '')
+                  const contains = intersection(ids, pids).length>0
+                  if (contains) {
+                    return true
+                  }
+                })
+                res.json(services)
+              })
+          }
+          else {
+            res.json(services);
+        }
         })
         .catch(err => { console.error(err); res.status(404).json({ service: 'No service found' })});
     });

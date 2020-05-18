@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+var metaphone = require('metaphone')
 
 const PrestationSchema = new Schema({
     label: {
@@ -50,10 +51,25 @@ const PrestationSchema = new Schema({
     private_alfred: {
         type: Schema.Types.ObjectId,
         ref: 'filterPresentation',
-	default: null
-    }
+	       default: null
+    },
+    s_label: {
+      type: String,
+      default: function() {
+        return metaphone(this.label)
+      }
+    },
 });
 
 PrestationSchema.index({label:'text'});
 
-module.exports = Prestation = mongoose.model('prestation',PrestationSchema);
+const Prestation = mongoose.model('prestation',PrestationSchema);
+
+// To update s_label
+Prestation.find({})
+  .then (prestations => {
+    prestations.forEach( p => p.save());
+  }
+)
+
+module.exports = Prestation;
