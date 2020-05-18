@@ -146,7 +146,6 @@ class Schedule extends React.Component {
           selectedTimeEnd: end.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
           servicesSelected: [ALL_SERVICES],
           isAddModalOpen: !this.state.isAddModalOpen,
-          isExpanded: 'panel1',
           recurrDays: new Set(),
       }, () => this.addDefaultValue());
 
@@ -165,12 +164,11 @@ class Schedule extends React.Component {
 
   toggleEditModal = event => {
 
-    var avail=this.props.availabilities.filter( a => a.ui_id==event.ui_id || a._id==event._id);
-    if (avail.length==0) {
-      console.error(`No avail found for ${event.ui_id}`)
+    var avail=this.props.availabilities.filter( a => a.ui_id === event.ui_id || a._id === event._id);
+    if (avail.length === 0) {
       return
     }
-    avail = avail[0]
+    avail = avail[0];
 
     const eventUI = availability2eventUI(avail);
 
@@ -230,14 +228,14 @@ class Schedule extends React.Component {
     else {
       this.props.onCreateAvailability(avail);
     }
-    this.setState({ui_id: null})
+    this.setState({ui_id: null});
     this.closeModal();
   };
 
   onDelete = e => {
     let avail=eventUI2availability(this.state);
     let res = this.props.onDeleteAvailability(avail);
-    this.setState({ui_id: null})
+    this.setState({ui_id: null});
     this.closeModal();
   };
 
@@ -327,97 +325,76 @@ class Schedule extends React.Component {
                   </Grid>
               </Grid>
               <Grid container>
-                <form >
-                  <FormControl style={{width:"100%"}}>
-                    <InputLabel id="demo-simple-select-label">Sélectionnez au moins un service</InputLabel>
-                    <Select
-                      labelId="demo-mutiple-checkbox-label"
-                      id="demo-mutiple-checkbox"
-                      multiple
-                      input={<Input />}
-                      renderValue={selected => selected.map(s=>s[0]).join(',')}
-                      value={this.state.servicesSelected}
-                      onChange={this.onChangeServices}
-                      MenuProps={MenuProps}
-                    >
-                      {[ALL_SERVICES, ...this.props.services].map(name => (
-                        <MenuItem key={name} value={name}>
-                          <Checkbox checked={this.state.servicesSelected.indexOf(name) > -1} />
-                          <ListItemText primary={name[0]} />
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                    <Grid container className={classes.contentTimeSlot}>
-                      <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
-                        <KeyboardDatePicker
-                          disableToolbar
-                          variant="inline"
-                          format="dd/MM/yyyy"
-                          margin="normal"
-                          id="date-picker-inline"
-                          label="Date de début"
-                          className={classes.formSchedule}
-                          value={this.state.selectedDateStart}
-                          onChange={this.handleDateStartChange}
-                          KeyboardButtonProps={{
-                            'aria-label': 'change date',
-                          }}
-                          autoOk={true}
-                        />
-                        <TextField
-                          id="time"
-                          label="Heure de début"
-                          type="time"
-                          defaultValue={this.state.selectedTimeStart}
-                          onChange={this.handleTimeStartChange}
-                          className={classes.textField}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          inputProps={{
-                            step: 300, // 5 min
-                          }}
-                        />
-                        <KeyboardDatePicker
-                          disableToolbar
-                          variant="inline"
-                          format="dd/MM/yyyy"
-                          margin="normal"
-                          id="date-picker-inline"
-                          label="Date de fin"
-                          className={classes.formSchedule}
-                          value={this.state.selectedDateEnd}
-                          onChange={this.handleDateEndChange}
-                          KeyboardButtonProps={{
-                            'aria-label': 'change date',
-                          }}
-                          autoOk={true}
-                          minDate={this.state.selectedDateStart}
-                          minDateMessage={`Date de fin incorrecte`}
-                        />
-                        <TextField
-                          id="time"
-                          label="Heure de fin"
-                          type="time"
-                          className={classes.textField}
-                          defaultValue={this.state.selectedTimeEnd}
-                          onChange={this.handleTimeEndChange}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          inputProps={{
-                            step: 300, // 5 min
-                          }}
-                        />
-                      </MuiPickersUtilsProvider>
+                <form>
+                  <Grid container className={classes.contentTimeSlot}>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
+                      <KeyboardDatePicker
+                        disableToolbar
+                        variant="inline"
+                        format="dd/MM/yyyy"
+                        margin="normal"
+                        id="date-picker-inline"
+                        label="Date de début"
+                        className={classes.formSchedule}
+                        value={this.state.selectedDateStart}
+                        onChange={this.handleDateStartChange}
+                        KeyboardButtonProps={{
+                          'aria-label': 'change date',
+                        }}
+                        autoOk={true}
+                      />
+                      <TextField
+                        id="time"
+                        label="Heure de début"
+                        type="time"
+                        defaultValue={this.state.selectedTimeStart}
+                        onChange={this.handleTimeStartChange}
+                        className={classes.textField}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        inputProps={{
+                          step: 300, // 5 min
+                        }}
+                      />
+                      <KeyboardDatePicker
+                        disableToolbar
+                        variant="inline"
+                        format="dd/MM/yyyy"
+                        margin="normal"
+                        id="date-picker-inline"
+                        label="Date de fin"
+                        className={classes.formSchedule}
+                        value={this.state.selectedDateEnd}
+                        onChange={this.handleDateEndChange}
+                        KeyboardButtonProps={{
+                          'aria-label': 'change date',
+                        }}
+                        autoOk={true}
+                        minDate={this.state.selectedDateStart}
+                        minDateMessage={`Date de fin incorrecte`}
+                      />
+                      <TextField
+                        id="time"
+                        label="Heure de fin"
+                        type="time"
+                        className={classes.textField}
+                        defaultValue={this.state.selectedTimeEnd}
+                        onChange={this.handleTimeEndChange}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        inputProps={{
+                          step: 300, // 5 min
+                        }}
+                      />
+                    </MuiPickersUtilsProvider>
                     </Grid>
                   <Grid container className={classes.containerRecurrence}>
                     <ExpansionPanel expanded={this.state.isExpanded} style={{width:'100%'}}>
                       <ExpansionPanelSummary>
                         <FormControlLabel
                           aria-label="Acknowledge"
-                          checked={this.state.isExpanded === 'panel1'}
                           onClick={event => event.stopPropagation()}
                           onFocus={event => event.stopPropagation()}
                           control={<Checkbox />}

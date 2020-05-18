@@ -50,7 +50,7 @@ const avail2event = availab => {
   EV_AVAIL_DAY_MAPPING.forEach(day => {
     let evts = availab[day]['event'];
     evts.forEach(e => {
-      let title = e.all_services ? "Tous services" : e.services.map( s => s.label).join('\n');
+      let title = e.all_services ? "Disponible" : e.services.map( s => s.label).join('\n');
       let res= {
         ui_id: availab.ui_id,
         _id : availab._id,
