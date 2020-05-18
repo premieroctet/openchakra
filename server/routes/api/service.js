@@ -17,23 +17,43 @@ var metaphone = require('metaphone')
 // @Route GET /myAlfred/api/service/all
 // View all service
 router.get('/all',(req,res)=> {
+  Service.find()
+      .sort({'label':1})
+      .populate('tags')
+      .populate('equipments')
+      .populate('category')
+      .then(service => {
+          if(typeof service !== 'undefined' && service.length > 0){
+              res.json(service);
+          } else {
+              return res.status(400).json({msg: 'No service found'});
+          }
+      })
+      .catch(err => res.status(404).json({ service: 'No service found' }));
+});
 
-        Service.find()
-            .sort({'label':1})
-            .populate('tags')
-            .populate('equipments')
-            .populate('category')
-            .then(service => {
-                if(typeof service !== 'undefined' && service.length > 0){
-                    res.json(service);
-                } else {
-                    return res.status(400).json({msg: 'No service found'});
-                }
-
-            })
-            .catch(err => res.status(404).json({ service: 'No service found' }));
-
-
+// @Route GET /myAlfred/api/service/allCount
+// View all service with count of serviceUser
+router.get('/allCount',(req,res)=> {
+  Service.aggregate().lookup({
+    from: "serviceusers", localField: "_id", foreignField: "service", as:'serviceusers'
+    })
+    .then(services => {
+      if(typeof services !== 'undefined' && services.length > 0){
+        var counts=[]
+        services.forEach( s => {
+          counts.push({ _id: s._id, label: `${s.label} (${s.serviceusers.length})` })
+        });
+        res.json(counts)
+      }
+      else {
+        return res.status(400).json({msg: 'No service found'});
+      }
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({ service: 'No service found' })
+    });
 });
 
 // @Route POST /myAlfred/api/service/all/search
