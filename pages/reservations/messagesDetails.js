@@ -414,9 +414,9 @@ class MessagesDetails extends React.Component {
                   );
                 })}
                 {typeof this.state.roomData.messages !== "undefined" ? (
-                  <div style={{ margin: "auto", marginBottom: "10px" }}>
-                    <Grid container>
-                      <Grid item xs={5}>
+                  <Grid style={{ margin: "auto", marginBottom: "10px" }}>
+                    <Grid container className={classes.containerNewMessage}>
+                      <Grid item className={classes.widthBar}>
                         <hr
                           style={{
                             background: "#80808070",
@@ -425,7 +425,7 @@ class MessagesDetails extends React.Component {
                           }}
                         />
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item>
                         <p
                           style={{
                             width: "100px",
@@ -437,7 +437,7 @@ class MessagesDetails extends React.Component {
                           Nouveaux Messages
                         </p>
                       </Grid>
-                      <Grid item xs={5}>
+                      <Grid item className={classes.widthBar}>
                         <hr
                           style={{
                             background: "#80808070",
@@ -447,7 +447,7 @@ class MessagesDetails extends React.Component {
                         />
                       </Grid>
                     </Grid>
-                  </div>
+                  </Grid>
                 ) : null}
                 {this.state.messages.map((message, index) => {
                   return (
