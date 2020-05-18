@@ -49,6 +49,8 @@ import {toast} from 'react-toastify';
 const moment = require('moment');
 moment.locale('fr');
 registerLocale('fr', fr);
+import Link from 'next/link';
+
 
 
 const IOSSwitch = withStyles(theme => ({
@@ -806,6 +808,23 @@ class UserServicesPreview extends React.Component {
                     <Grid item className={classes.itemAvatar}>
                       <UserAvatar classes={'avatarLetter'} user={alfred} className={classes.avatarLetter} />
                       <Typography style={{marginTop:20}} className={classes.textAvatar}>{alfred.firstname}</Typography>
+                      <Grid style={{textAlign : 'center'}}>
+                        <Link
+                          href={{
+                            pathname: "/viewProfile",
+                            query: { id: this.state.alfred._id }
+                          }}
+                        >
+                          <Typography
+                            style={{
+                              color: "rgb(47, 188, 211)",
+                              cursor: "pointer"
+                            }}
+                          >
+                            Voir le profil
+                          </Typography>
+                        </Link>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>

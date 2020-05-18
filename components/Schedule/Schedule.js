@@ -245,6 +245,17 @@ class Schedule extends React.Component {
     this.setState({isAddModalOpen: false})
   };
 
+  eventStyleGetter = () => {
+    var style = {
+      backgroundColor: '#94D6E4',
+      border: '0px',
+      fontWeight: 'bold'
+    };
+    return {
+      style: style
+    };
+  };
+
   render() {
     const { classes, title, subtitle, selectable, height } = this.props;
 
@@ -298,6 +309,7 @@ class Schedule extends React.Component {
           className={classes.sizeSchedulle}
           step={60}
           timeslots={1}
+          eventPropGetter={(this.eventStyleGetter)}
         />
         <Modal
           closeAfterTransition
