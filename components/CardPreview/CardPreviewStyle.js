@@ -131,7 +131,7 @@ export default theme => ({
     }
   },
   sizeText: {
-    fontSize: 'small',
+    fontSize: '0.85vw',
   },
   responsiveListContainer:{
     marginTop: 10,
