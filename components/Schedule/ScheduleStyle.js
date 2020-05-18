@@ -131,6 +131,9 @@ export default theme => ({
     },
     '& .rbc-btn-group :nth-child(2)':{
       float: 'left'
+    },
+    '& .rbc-event':{
+      width: '110% !important'
     }
   },
   heightContainer:{

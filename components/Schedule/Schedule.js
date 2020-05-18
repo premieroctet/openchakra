@@ -3,10 +3,6 @@ import { Calendar, Views, momentLocalizer   } from 'react-big-calendar';
 import _ from 'lodash'
 import moment from 'moment';
 import Modal from '@material-ui/core/Modal';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import Fade from '@material-ui/core/Fade';
 import Grid from '@material-ui/core/Grid';
 import {
@@ -24,11 +20,8 @@ import Chip from '@material-ui/core/Chip';
 import frLocale from "date-fns/locale/fr";
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Input from '@material-ui/core/Input';
-import ListItemText from '@material-ui/core/ListItemText';
 import {availabilities2events, eventUI2availability, availability2eventUI, DAYS} from '../../utils/converters';
 import {ALL_SERVICES} from '../../utils/consts.js';
-import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Typography } from '@material-ui/core'; // Import css
 import styles from './ScheduleStyle'
@@ -247,7 +240,7 @@ class Schedule extends React.Component {
     var style = {
       backgroundColor: '#94D6E4',
       border: '0px',
-      fontWeight: 'bold'
+      fontWeight: 'bold',
     };
     return {
       style: style
