@@ -132,6 +132,12 @@ export default theme => ({
   },
   sizeText: {
     fontSize: '0.85vw',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '2.5vw',
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '3.5vw',
+    },
   },
   responsiveListContainer:{
     marginTop: 10,
@@ -150,10 +156,30 @@ export default theme => ({
     alignItems : 'center'
   },
   avatarLetter:{
-    height: 100,
-    width: 100,
+    height: 95,
+    width: 95,
     margin: 'auto',
     fontSize: 'xx-large',
+    [theme.breakpoints.down('xl')]: {
+      height: 100,
+      width: 100,
+    },
+    [theme.breakpoints.down('lg')]: {
+      height: 80,
+      width: 80,
+    },
+    [theme.breakpoints.down('md')]: {
+      height: 80,
+      width: 80,
+    },
+    [theme.breakpoints.down('sm')]: {
+      height: 95,
+      width: 95,
+    },
+    [theme.breakpoints.down('xs')]: {
+      height: 100,
+      width: 100,
+    },
   },
   contentDistanceUnderAvatar:{
     display: 'flex',
@@ -163,7 +189,14 @@ export default theme => ({
   sizeTextUnderAvatar:{
     fontWeight: 'bold',
     color: 'white',
-    textShadow: 'black 0px 0px 3px'
+    textShadow: 'black 0px 0px 3px',
+    fontSize: '1vw',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '2.5vw',
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '4.5vw',
+    },
   }
 });
 

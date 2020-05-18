@@ -29,7 +29,7 @@ const {computeDistanceKm}=require('../../utils/functions');
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import UserAvatar from '../Avatar/UserAvatar';
-import { computeAverageNotes, computeSumSkills } from '../../utils/functions';
+import { computeAverageNotes } from '../../utils/functions';
 
 class CardPreview extends React.Component{
   constructor(props){

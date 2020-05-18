@@ -457,11 +457,11 @@ class SearchPage extends React.Component {
                                   <h3 style={{marginLeft:15}}>{cat.label}</h3>
                                 </Grid> : null
                               }
-                                <Grid container spacing={2} style={{marginLeft: 15, marginRight : 15, marginTop: 5}}>
+                                <Grid container spacing={2} className={classes.containerCardPreview}>
                                 {
                                    this.restrictServices(serviceUsers, cat).map(su => {
                                     return (
-                                      <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+                                      <Grid item xs={12} sm={12} md={12} lg={3} xl={3} className={classes.paddingResponsive}>
                                         <CardPreview services={su} alfred={user} gps={gps} needAvatar={true} key={su._id} />
                                       </Grid>
                                     )
