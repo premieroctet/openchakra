@@ -60,7 +60,7 @@ class shop extends React.Component {
                 this.setState({
                     userState: true,
                     userId: user._id,
-                    isAdmin: user.is_admin
+                    isAdmin: user.is_admin // is Admin can edit and remove
                 })
             }
         }).catch(function (error) {
