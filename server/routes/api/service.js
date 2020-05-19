@@ -4,30 +4,56 @@ const passport = require('passport');
 const _ = require('lodash');
 
 const Service = require('../../models/Service');
+const Category = require('../../models/Category');
+const Prestation = require('../../models/Prestation');
+const Job = require('../../models/Job');
 const ServiceUser = require('../../models/ServiceUser');
 router.get('/test',(req, res) => res.json({msg: 'Service Works!'}) );
+
+const mongoose = require('mongoose');
+var metaphone = require('metaphone')
 
 
 // @Route GET /myAlfred/api/service/all
 // View all service
 router.get('/all',(req,res)=> {
+  Service.find()
+      .sort({'label':1})
+      .populate('tags')
+      .populate('equipments')
+      .populate('category')
+      .then(service => {
+          if(typeof service !== 'undefined' && service.length > 0){
+              res.json(service);
+          } else {
+              return res.status(400).json({msg: 'No service found'});
+          }
+      })
+      .catch(err => res.status(404).json({ service: 'No service found' }));
+});
 
-        Service.find()
-            .sort({'label':1})
-            .populate('tags')
-            .populate('equipments')
-            .populate('category')
-            .then(service => {
-                if(typeof service !== 'undefined' && service.length > 0){
-                    res.json(service);
-                } else {
-                    return res.status(400).json({msg: 'No service found'});
-                }
-
-            })
-            .catch(err => res.status(404).json({ service: 'No service found' }));
-
-
+// @Route GET /myAlfred/api/service/allCount
+// View all service with count of serviceUser
+router.get('/allCount',(req,res)=> {
+  Service.aggregate().lookup({
+    from: "serviceusers", localField: "_id", foreignField: "service", as:'serviceusers'
+    })
+    .then(services => {
+      if(typeof services !== 'undefined' && services.length > 0){
+        var counts=[]
+        services.forEach( s => {
+          counts.push({ _id: s._id, label: `${s.label} (${s.serviceusers.length})` })
+        });
+        res.json(counts)
+      }
+      else {
+        return res.status(400).json({msg: 'No service found'});
+      }
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({ service: 'No service found' })
+    });
 });
 
 // @Route POST /myAlfred/api/service/all/search
@@ -170,14 +196,15 @@ router.get('/all/tags/:tags',(req,res)=> {
 // Return { category_name : { services} }
 router.get('/keyword/:kw',(req,res)=> {
 
-    var kw = req.params.kw;
-    console.log("Search service keyword:"+kw);
-    var regexp = new RegExp(kw,'i');
+    const kw = req.params.kw
+    const meta = metaphone(kw)
+    console.log(`Search service keyword:${kw}, metaphone:${meta}`);
+    var regexp = new RegExp(meta,'i');
     var result={}
     var keywords = {}
-    Category.find({label:{$regex:regexp}})
+    Category.find({s_label:{$regex:regexp}})
       .then(categories => {
-        Service.find({ $or : [{category: {$in: categories.map(c=> c._id)}}, {label:{$regex:regexp}}]})
+        Service.find({ $or : [{category: {$in: categories.map(c=> c._id)}}, {s_label:{$regex:regexp}}]})
           .populate('category')
           .then(services => {
              services.forEach(s => {
@@ -185,7 +212,7 @@ router.get('/keyword/:kw',(req,res)=> {
                let key=s.category.label+s.label;
                keywords[key] ? keywords[key].push(s.category.label) : keywords[key]=[s.category.label];
              });
-             Prestation.find({label:{$regex:regexp}})
+             Prestation.find({s_label:{$regex:regexp}})
                .populate({path : 'service', populate: { path:'category'}}).then(prestations => {
                   prestations.forEach(p => {
                     let s = p.service;
@@ -195,7 +222,7 @@ router.get('/keyword/:kw',(req,res)=> {
                   });
                   Prestation.find()
                     .populate({path : 'service', populate: { path:'category'}})
-                    .populate({ path: "job", match: {label:{$regex:regexp}}})
+                    .populate({ path: "job", match: {s_label:{$regex:regexp}}})
                     .then(prestations => {
                        prestations.forEach(p => {
                          if ('job' in p && p['job']!=null) {
@@ -217,7 +244,7 @@ router.get('/keyword/:kw',(req,res)=> {
                     ordered[key] = result[key];
                   });
                   result = ordered;
-                  
+
                   res.json(result);
                   });
 

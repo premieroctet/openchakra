@@ -506,10 +506,10 @@ class UserServicesPreview extends React.Component {
                   <label>{p.prestation.label}</label>
                 </Grid>
                 <Grid style={{width: '50%'}}>
-                  <label>{p.price.toFixed(2)}€</label>
+                  <label>{p.price ? p.price.toFixed(2) : "?"}€</label>
                 </Grid>
                 <Grid style={{width: '50%'}}>
-                  <label>{p.billing.label}</label>
+                  <label>{p.billing ? p.billing.label : '?'}</label>
                 </Grid>
               </Grid>
             </Grid>

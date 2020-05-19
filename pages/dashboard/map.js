@@ -1,16 +1,10 @@
 import React from 'react';
-
+import Checkbox from '@material-ui/core/Checkbox';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
-import {
-  Typography
-}
-from '@material-ui/core';
+import {Typography} from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
-import {
-  withStyles
-}
-from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Router from 'next/router';
 import Layout from '../../hoc/Layout/Layout';
@@ -64,11 +58,13 @@ class ServicesMap extends React.Component {
     super(props);
     this.state = {
       allServices: [],
-      selectedService: '',
+      selectedService: 'all',
       services: [],
-      circles: [],
+      serviceCircles: [],
+      userCircles: [],
+      displayUsers:false,
     }
-    this.onChangeService = this.onChangeService.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
   componentDidMount() {
@@ -79,76 +75,93 @@ class ServicesMap extends React.Component {
     }
     else {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-      axios.get("/myAlfred/api/service/all")
+      axios.get("/myAlfred/api/service/allCount")
         .then(response => {
-          this.setState({
-            allServices: response.data,
-          })
+          this.setState({ allServices: response.data })
         })
         .catch(err => console.error(err));
+      // Services
       axios.get("/myAlfred/api/serviceUser/all")
         .then(response => {
-          const circles = response.data.map(s => ({
+          const serviceCircles = response.data.map(s => ({
             coordinates: s.service_address.gps,
             label: `${s.user.firstname}-${s.service.label}`,
             link: `/userServicePreview?id=${s._id}`,
           }))
           this.setState({
             services: response.data,
-            circles: circles
+            serviceCircles: serviceCircles
+          })
+        })
+        .catch(err => console.error(err));
+
+      // Users
+      axios.get("/myAlfred/api/admin/users/users")
+        .then(response => {
+          const userCircles = response.data.map(user => ({
+            coordinates: user.billing_address.gps,
+            label: `${user.firstname}`,
+            link: `/viewProfile?id=${user._id}`,
+          }))
+          this.setState({
+            userCircles: userCircles
           })
         })
         .catch(err => console.error(err));
     }
   }
 
-  onChangeService = ev => {
-    const {
-      name,
-      value
-    } = ev.target;
-    const filtered = this.state.services.filter(s => s.service._id.toString() == value)
-    const circles = filtered.map(s => ({
-      coordinates: s.service_address.gps,
-      label: `${s.user.firstname}-${s.service.label}`,
-      link: `/userServicePreview?id=${s._id}`,
-    }))
-    this.setState({
-      selectedService: value,
-      circles: circles
-    })
+  onChange = ev => {
+    const { name, value } = ev.target;
+    if (name=='selectedService') {
+      const filtered = value=='all' ? this.state.services : value=='none' ? [] : this.state.services.filter(s => s.service._id.toString() == value)
+      const serviceCircles = filtered.map(s => ({
+        coordinates: s.service_address.gps,
+        label: `${s.user.firstname}-${s.service.label}`,
+        link: `/userServicePreview?id=${s._id}`,
+      }))
+      this.setState({
+        selectedService: value,
+        serviceCircles: serviceCircles
+      })
+    }
+    if (name=='displayUsers') {
+      this.setState({[name]: ev.target.checked})
+    }
   }
 
   render() {
-    const {
-      classes
-    } = this.props;
-    const {
-      circles,
-      allServices,
-      serviceSelected
-    } = this.state;
+    const { classes } = this.props;
+    const { serviceCircles, userCircles, allServices, selectedService, displayUsers, } = this.state;
 
+    const allCircles= displayUsers ? userCircles.concat(serviceCircles) : serviceCircles
     return (
       <Layout>
-        <Grid style={{width : '100%', height:600}}>
+        <Grid style={{width : '100%', height:700}}>
             { /* <MapComponent position={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]} perimeter={serviceUser.perimeter*1000} alfred={alfred.firstname}/> */ }
-            <MapComponent position={[46.71, 1.71]} zoom={6} circles={circles}/>
+            <MapComponent position={[47.5, 1.71]} zoom={6} circles={allCircles}/>
           </Grid>
           <Grid style={{width : '100%'}}>
-          <Typography>{circles.length} services</Typography>
+          <Grid style={{display: 'flex', 'align-items':'center'}}>
           <Select
-            labelId="demo-mutiple-checkbox-label"
-            id="demo-mutiple-checkbox"
-            renderValue={selected => allServices.filter(s => s._id===selected)[0].label}
-            value={serviceSelected}
-            onChange={this.onChangeService}
+            renderValue={selected => selected=='all' ? 'Tous' : selected=='none' ? 'Aucun' : allServices.filter(s => s._id===selected)[0].label}
+            name={`selectedService`}
+            value={selectedService}
+            onChange={this.onChange}
           >
+            <MenuItem value={'all'}>Tous</MenuItem>
+            <MenuItem value={'none'}>Aucun</MenuItem>
             {allServices.map(s => (
               <MenuItem value={s._id}>{s.label}</MenuItem>
             ))}
 
             </Select>
+            <Typography>{serviceCircles.length} services</Typography>
+            </Grid>
+            <Grid style={{display: 'flex', 'align-items':'center'}}>
+            <Checkbox name={`displayUsers`} checked={this.state.displayUsers} onChange={this.onChange}/>
+            <Typography>Afficher les non-Alfred</Typography>
+            </Grid>
           </Grid>
       </Layout>
     );
