@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const ALL_SERVICES=['Tous les services', null];
 
 
@@ -16,7 +17,11 @@ const CANCEL_MODE= {
 
 const CUSTOM_PRESTATIONS_FLTR="Prestations personnalisées";
 
-const generate_id= () => { return new Date().getTime() };
+const generate_id= () => {
+   return crypto.randomBytes(10).toString('hex');
+};
+
+const GID_LEN=20;
 
 const COMM_ALFRED=0.0;
 const COMM_CLIENT=0.18;

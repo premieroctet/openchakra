@@ -66,7 +66,7 @@ class SelectPrestation extends React.Component {
 
   addCustomPrestation() {
     let grouped=this.state.grouped;
-    let custom_presta = {_id: -generate_id(), label:"", service: this.state.service, billing:this.state.all_billings, description:'', price:0};
+    let custom_presta = {_id: generate_id(), label:"", service: this.state.service, billing:this.state.all_billings, description:'', price:0};
     grouped[CUSTOM_PRESTATIONS_FLTR].push(custom_presta);
     this.setState({grouped: grouped});
   }

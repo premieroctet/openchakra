@@ -118,14 +118,14 @@ class creaShop extends React.Component {
 
   availabilityDeleted(avail) {
     let shop = this.state.shop;
-    shop.availabilities=shop.availabilities.filter(av => av.ui_id !== avail.ui_id);
+    shop.availabilities=shop.availabilities.filter(av => av._id !== avail._id);
     this.setState({shop: shop});
   }
 
   availabilityUpdated(avail) {
     let shop = this.state.shop;
     // Remove
-    shop.availabilities=shop.availabilities.filter(av => av.ui_id !== avail.ui_id);
+    shop.availabilities=shop.availabilities.filter(av => av._id !== avail._id);
     // Add
     shop.availabilities.push(avail);
     this.setState({shop: shop});

@@ -5,10 +5,7 @@ import moment from 'moment';
 import Modal from '@material-ui/core/Modal';
 import Fade from '@material-ui/core/Fade';
 import Grid from '@material-ui/core/Grid';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DateFnsUtils from '@date-io/date-fns';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -66,33 +63,50 @@ const MenuProps = {
 };
 
 class Schedule extends React.Component {
+  EMPTY_AVAIL = {
+    // Availability data
+    servicesSelected:[ALL_SERVICES],
+    _id: null,
+    selectedDateStart: null,
+    selectedTimeStart: null,
+    selectedDateEnd: null,
+    selectedTimeEnd: null,
+    selectedDateEndRecu: null,
+    // Days (1=>7)
+    recurrDays: new Set(),
+  }
+
   constructor(props) {
     super(props);
 
     this.state = {
       events: _.cloneDeep(this.props.events),
       title: '',
-      isAddModalOpen: false,
-      isEditModalOpen: false,
-      servicesSelected:[ALL_SERVICES],
+      isModalOpen: false,
       dayLayoutAlgorithm: 'no-overlap',
-      selectedDateEndRecu: null,
       isExpanded: true,
-      // Days (1=>7)
-      recurrDays: new Set(),
       services: [ALL_SERVICES, ...this.props.services] || [ALL_SERVICES],
+      ...this.EMPTY_AVAIL
     };
+    this.resetData()
+
     this.closeModal = this.closeModal.bind(this);
     this.toggleEditModal = this.toggleEditModal.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
+    this.resetData = this.resetData.bind(this);
+
   }
 
+  resetData = () => {
+    this.setState(this.EMPTY_AVAIL)
+  }
   /**
     On peut envoyer si service(s) sélectionné(s), date/heure début et fin saisis
     et, si récurrence, au moins un jour sélectionné
   */
   isButtonSendEnabled() {
-    let enabled=this.state.servicesSelected.length > 0;
+    let enabled=this.state.servicesSelected.length>0;
     enabled = enabled && this.state.selectedDateStart && this.state.selectedTimeStart && this.state.selectedDateEnd && this.state.selectedTimeEnd;
     enabled = enabled && (!this.state.isExpanded || this.state.recurrDays.size>0);
     return enabled;
@@ -132,45 +146,41 @@ class Schedule extends React.Component {
   };
 
   toggleAddModal =  ({ start, end })  => {
+    var dt = new Date(start);
+    dt.setMonth( dt.getMonth() + 6 );
+    console.log("ToggleAddModal")
       this.setState({
-          selectedDateStart: start,
-          selectedDateEnd: end,
-          selectedTimeStart: start.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
-          selectedTimeEnd: end.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
-          servicesSelected: [ALL_SERVICES],
-          isAddModalOpen: !this.state.isAddModalOpen,
-          recurrDays: new Set(),
-      }, () => this.addDefaultValue());
+        _id : null,
+        selectedDateStart: start,
+        selectedDateEnd: end,
+        selectedTimeStart: start.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
+        selectedTimeEnd: end.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
+        selectedDateEndRecu: dt,
+        servicesSelected: [ALL_SERVICES],
+        isModalOpen: !this.state.isModalOpen,
+        recurrDays: new Set([0, 1, 2, 3, 4 , 5])
+      }, () => { console.log(`Id:${this.state._id}`)});
 
   };
 
-  addDefaultValue(){
-    var dt = new Date(this.state.selectedDateEnd);
-    dt.setMonth( dt.getMonth() + 6 );
-    if (this.state.isExpanded && this.state.recurrDays.size===0 && this.state.selectedDateStart ) {
-      this.setState({
-        selectedDateEndRecu: dt,
-        recurrDays: new Set([0, 1, 2, 3, 4 , 5])
-      });
-    }
-  }
-
   toggleEditModal = event => {
-
-    var avail=this.props.availabilities.filter( a => a.ui_id === event.ui_id || a._id === event._id);
+    console.log("ToggleEditModal")
+    console.log(`Event:${JSON.stringify(event)}`)
+    console.log(`Availabilities:${JSON.stringify(this.props.availabilities.map( a => a._id))}`)
+    var avail=this.props.availabilities.filter( a => a._id === event._id);
     if (avail.length === 0) {
       return
     }
     avail = avail[0];
+    console.log(`Found availability:${JSON.stringify(avail._id)}`)
 
     const eventUI = availability2eventUI(avail);
 
-    this.setState({...eventUI, isAddModalOpen: true});
+    this.setState({...eventUI, isModalOpen: true});
 
-    if (!this.state.isAddModalOpen) {
+    if (!this.state.isModalOpen) {
       this.setState({
-        currentEvent: event,
-        isEditModalOpen: !this.state.isEditModalOpen,
+        isModalOpen: !this.state.isModalOpen,
       });
     }
   };
@@ -183,6 +193,11 @@ class Schedule extends React.Component {
        this.setState({recurrDays: new Set([dayOfWeek])});
      }
    };
+
+   handleCancel = () => {
+     this.resetData()
+     this.closeModal()
+   }
 
    handleDateStartChange = date => {
      this.setState({selectedDateStart: date});
@@ -215,25 +230,24 @@ class Schedule extends React.Component {
 
   onSubmit = e => {
     let avail=eventUI2availability(this.state);
-    if (this.state.ui_id|| this.state._id) { // Modif
+    if (this.state._id>0) { // Modif
       this.props.onUpdateAvailability(avail);
     }
     else {
       this.props.onCreateAvailability(avail);
     }
-    this.setState({ui_id: null});
     this.closeModal();
+    this.resetData()
   };
 
   onDelete = e => {
     let avail=eventUI2availability(this.state);
     let res = this.props.onDeleteAvailability(avail);
-    this.setState({ui_id: null});
     this.closeModal();
   };
 
   closeModal = () =>{
-    this.setState({isAddModalOpen: false})
+    this.setState({isModalOpen: false})
   };
 
   eventStyleGetter = () => {
@@ -307,14 +321,14 @@ class Schedule extends React.Component {
           BackdropProps={{
             timeout: 500,
           }}
-          open={this.state.isAddModalOpen}
+          open={this.state.isModalOpen}
           onClose={this.closeModal}
         >
-          <Fade in={this.state.isAddModalOpen}>
+          <Fade in={this.state.isModalOpen}>
             <Grid container className={classes.modalContainer}>
               <Grid container>
                   <Grid>
-                    <h2>{ this.state.ui_id||this.state._id ? `Modifier disponibilité` : `Nouvelle disponibilité`}</h2>
+                    <h2>{ this.state._id==null ? `Nouvelle disponibilité` : `Modifier disponibilité`}</h2>
                   </Grid>
               </Grid>
               <Grid container>
@@ -436,11 +450,11 @@ class Schedule extends React.Component {
                     </ExpansionPanel>
                   </Grid>
                   <Grid container justify="flex-end" style={{marginTop: 20}}>
-                    <Button type="button" variant="contained" className={classes.textFieldButton} color={'secondary'} onClick={() => this.setState({isAddModalOpen: false})} >Annuler </Button>
+                    <Button type="button" variant="contained" className={classes.textFieldButton} color={'secondary'} onClick={() => this.handleCancel()} >Annuler </Button>
                     <Button type="button" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onSubmit()}>
-                      { this.state.ui_id||this.state._id  ? `Modifier` : `Ajouter` }
+                      { this.state._id==null ? `Ajouter` : `Modifier` }
                     </Button>
-                    { this.props.onDeleteAvailability && (this.state.ui_id||this.state._id) ?
+                    { this.props.onDeleteAvailability && this.state._id!=null ?
                         <Button type="button" variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onDelete()}>Supprimer </Button>
                         :
                         null
