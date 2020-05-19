@@ -7,6 +7,7 @@ import {
   getIsHovered,
 } from '../core/selectors/components'
 import { getShowLayout, getFocusedComponent } from '../core/selectors/app'
+import { useDropComponent } from './useDropComponent'
 
 export const useInteractive = (
   component: IComponent,
@@ -23,6 +24,19 @@ export const useInteractive = (
   })
 
   const ref = useRef<HTMLDivElement>(null)
+  let boundingPosition
+  boundingPosition =
+    ref.current !== null ? ref.current.getBoundingClientRect() : undefined
+  const { drop } = useDropComponent(
+    component.id,
+    undefined,
+    undefined,
+    true,
+    boundingPosition && {
+      top: boundingPosition.top,
+      bottom: boundingPosition.bottom,
+    },
+  )
   let props = {
     ...component.props,
     onMouseOver: (event: MouseEvent) => {
@@ -61,5 +75,5 @@ export const useInteractive = (
     }
   }
 
-  return { props, ref: drag(ref), drag }
+  return { props, ref: drag(drop(ref)), drag }
 }

@@ -134,10 +134,11 @@ const components = createModel({
     },
     moveSelectedComponentChildren(
       state: ComponentsState,
-      payload: { fromIndex: number; toIndex: number },
+      payload: { parentId?: string; fromIndex: number; toIndex: number },
     ): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
-        const selectedComponent = draftState.components[draftState.selectedId]
+        const selectedComponent =
+          draftState.components[payload.parentId || draftState.selectedId]
 
         selectedComponent.children.splice(
           payload.toIndex,
