@@ -101,7 +101,8 @@ class About extends React.Component{
               </ListItemAvatar>
               <Link
                 href={{
-                  pathname: "/profile/reviews",
+                  pathname: "/viewProfile",
+                  query: { id: alfred }
                 }}
               >
                 <a
