@@ -52,7 +52,6 @@ const avail2event = availab => {
     evts.forEach(e => {
       let title = e.all_services ? "Disponible" : e.services.map( s => s.label).join('\n');
       let res= {
-        ui_id: availab.ui_id,
         _id : availab._id,
         title: title,
         start: new Date(e.begin),
@@ -74,8 +73,7 @@ const availabilities2events= avails => {
 
 const eventUI2availability = event => {
 
-  console.log(`converting to availability:${JSON.stringify(event)}`)
-  let avail = {ui_id: event.ui_id ? event.ui_id : generate_id(), _id : event._id}
+  let avail = {_id: event._id==null ? generate_id() : event._id }
 
   let startDate=new Date(event.selectedDateStart);
   let endDate=new Date(event.selectedDateEnd);
@@ -101,20 +99,20 @@ const eventUI2availability = event => {
     console.log('NO RECURRENCE')
     avail['period']={active:false, month_begin: null, month_end: null};
   }
+  console.log(`Converted ${JSON.stringify(event, null, 2)} to ${JSON.stringify(avail, null, 2)}`)
   return avail;
 };
 
 const availability2eventUI = avail => {
 
   var eventUI = {
+    _id : avail._id,
     selectedDateStart: null,
     selectedDateEnd: null,
     recurrDays: new Set(),
     isExpanded: avail['period'].active ? 'panel1' : false,
     servicesSelected: [ALL_SERVICES],
     selectedDateEndRecu: null,
-    ui_id: avail.ui_id,
-    _id : avail._id,
   }
 
   if (avail['period'].active) {
@@ -137,6 +135,8 @@ const availability2eventUI = avail => {
       eventUI.selectedTimeEnd=moment(ev[0].end).tz('Europe/Paris').format('HH:mm')
     }
   })
+
+  console.log(`converting ${JSON.stringify(avail, null, 2)} tp ${JSON.stringify(eventUI, null, 2)}`)
 
   return eventUI
 

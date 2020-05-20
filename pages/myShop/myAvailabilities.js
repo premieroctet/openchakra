@@ -10,6 +10,7 @@ import {Helmet} from 'react-helmet';
 import { SCHEDULE_SUBTITLE, SCHEDULE_TITLE } from '../../utils/messages';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
+const {GID_LEN} = require('../../utils/consts')
 import styles from './myAvailabilities/myAvailabilitiesStyle'
 import Router from 'next/router';
 moment.locale('fr');
@@ -97,15 +98,21 @@ class myAvailabilities extends React.Component {
 
     availabilityCreated(avail) {
 
+      if (avail._id.length==GID_LEN) {
+        avail._id = null
+      }
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
       axios.post('/myAlfred/api/availability/add',avail)
           .then(res => {
               toast.info('Disponibilité ajoutée avec succès !');
-              let new_availabilities = [res.data, ...this.state.availabilities];
-              this.setState({availabilities: new_availabilities});
+              axios.get('/myAlfred/api/availability/currentAlfred')
+                .then ( res => {
+                  this.setState({availabilities: res.data});
+                })
+                .catch (err => console.error(err))
           })
           .catch(err => {
-            error(err);
+            console.error(err);
             toast.error(err);
 		  })
     }

@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const ALL_SERVICES=['Tous les services', null];
 
 
@@ -16,9 +17,13 @@ const CANCEL_MODE= {
 
 const CUSTOM_PRESTATIONS_FLTR="Prestations personnalisées";
 
-const generate_id= () => { return new Date().getTime() };
+const generate_id= () => {
+   return crypto.randomBytes(20).toString('hex');
+};
+
+const GID_LEN=40;
 
 const COMM_ALFRED=0.0;
 const COMM_CLIENT=0.18;
 
-module.exports={ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR, generate_id, COMM_ALFRED, COMM_CLIENT};
+module.exports={ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR, generate_id, COMM_ALFRED, COMM_CLIENT, GID_LEN};
