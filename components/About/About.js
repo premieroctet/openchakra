@@ -66,7 +66,6 @@ class About extends React.Component{
   render(){
     const {languages, user, creationShop} = this.state;
     const {classes, alfred, needTitle} = this.props;
-   console.log(user, 'user')
 
     const StyledRating = withStyles({
       iconFilled: {
