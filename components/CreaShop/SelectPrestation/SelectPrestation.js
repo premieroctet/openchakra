@@ -6,7 +6,7 @@ import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
 import { Typography } from '@material-ui/core';
 import axios from 'axios';
 import styles from '../componentStyle'
-import {CUSTOM_PRESTATIONS_FLTR, generate_id} from '../../../utils/consts';
+import {CUSTOM_PRESTATIONS_FLTR, generate_id, GID_LEN} from '../../../utils/consts';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 const jwt = require('jsonwebtoken');
@@ -126,7 +126,7 @@ class SelectPrestation extends React.Component {
                       </Grid>
                       <Grid container spacing={2}>
                       {prestas.map((p, j) => {
-                        let isEditable=parseInt(p._id)<0;
+                        let isEditable=p._id.length==GID_LEN
                         let presta=this.state.prestations[p._id];
                         return(
                           <Grid key={p._id} item xl={6} lg={6} md={6} sm={12} xs={12}>

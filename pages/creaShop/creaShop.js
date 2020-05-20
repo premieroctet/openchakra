@@ -17,7 +17,7 @@ import IntroduceYou from '../../components/CreaShop/IntroduceYou/IntroduceYou';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
-import {ALF_CONDS, CANCEL_MODE} from '../../utils/consts.js';
+import {ALF_CONDS, CANCEL_MODE, GID_LEN} from '../../utils/consts.js';
 import { toast } from 'react-toastify';
 import Router from "next/router";
 import {creaShopPresentation, selectService, selectPrestation, settingService, assetsService, settingShop, introduceYou} from '../../utils/validationSteps/validationSteps';
@@ -142,6 +142,11 @@ class creaShop extends React.Component {
       Object.keys(cloned_shop.prestations).forEach(key => { if (key<0) cloned_shop.prestations[key]._id = null });
       cloned_shop.prestations = JSON.stringify(cloned_shop.prestations);
       cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
+      cloned_shop.availabilities.forEach( a => {
+        if (a._id.length==GID_LEN) {
+          a._id=null
+        }
+      })
 
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
       axios.post('/myAlfred/api/shop/add', cloned_shop)

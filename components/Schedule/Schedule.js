@@ -18,7 +18,7 @@ import frLocale from "date-fns/locale/fr";
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import {availabilities2events, eventUI2availability, availability2eventUI, DAYS} from '../../utils/converters';
-import {ALL_SERVICES} from '../../utils/consts.js';
+import {ALL_SERVICES, GID_LEN} from '../../utils/consts.js';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Typography } from '@material-ui/core'; // Import css
 import styles from './ScheduleStyle'
@@ -230,11 +230,11 @@ class Schedule extends React.Component {
 
   onSubmit = e => {
     let avail=eventUI2availability(this.state);
-    if (this.state._id>0) { // Modif
-      this.props.onUpdateAvailability(avail);
+    if (this.state._id==null) { // Modif
+      this.props.onCreateAvailability(avail);
     }
     else {
-      this.props.onCreateAvailability(avail);
+      this.props.onUpdateAvailability(avail);
     }
     this.closeModal();
     this.resetData()
