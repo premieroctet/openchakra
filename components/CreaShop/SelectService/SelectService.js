@@ -140,8 +140,8 @@ class SelectService extends React.Component {
                     :
                     <Select
                       options={this.state.services}
-                      values={this.state.service ? [{label: this.state.service.label.split('/')[0], value:this.state.service.id}] : []}
-                      //onChange={ this.onChange }
+                      //values={this.state.service ? [{label: this.state.service.label.split('/')[0], value:this.state.service.id}] : []}
+                      onChange={ this.onChange }
                       //onKeyDown={(event) =>{ this.handleKeyDown(event) }}
                       disabled={!this.isCreation()}
                       searchable={true}
