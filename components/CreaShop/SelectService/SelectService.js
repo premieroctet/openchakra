@@ -1,3 +1,5 @@
+const AUTOCOMPLETE=false
+
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
@@ -6,9 +8,11 @@ import styles from '../componentStyle'
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 const { inspect } = require('util');
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import useAutocomplete from '@material-ui/lab/useAutocomplete';
+
+import Select from "react-dropdown-select";
 
 class SelectService extends React.Component {
   constructor(props) {
@@ -35,7 +39,7 @@ class SelectService extends React.Component {
 	    // FIX: passer les keyowrds autrement dans le back
             // Dont show services to exclude (i.e. already in the shop)
             if (!this.props.exclude || !this.props.exclude.includes(s.id)) {
-              let srv_opt={category: k, name: s.label+"/"+s.keywords.join(' '), id: s.id};
+              let srv_opt={category: k, label: s.label+"/"+s.keywords.join(' '), value: s.id};
               services.push(srv_opt);
               if (this.state.service==null && s.id==this.props.service) {
                 console.log("Found");
@@ -53,7 +57,17 @@ class SelectService extends React.Component {
    this.setServices('');
   }
 
-  onChange(event, value){
+  onChange(item){
+    if (item.length>0) {
+      console.log("OnChange value:"+inspect(item[0]));
+      this.setState({service: item ? item[0].value : null});
+      if(item !== undefined && item !== null){
+        this.props.onChange(item[0].value);
+      }
+    }
+  }
+
+  onChangeSelect(value){
     console.log("OnChange value:"+inspect(value));
     this.setState({service: value ? value : null});
     if(value !== undefined && value !== null){
@@ -100,6 +114,7 @@ class SelectService extends React.Component {
                 </Grid>
                 <Grid >
                   <Grid>
+                  { AUTOCOMPLETE ?
                     <Autocomplete
                       id="grouped-demo"
                       className={classes.textFieldSelecteService}
@@ -107,7 +122,7 @@ class SelectService extends React.Component {
                       onKeyDown={(event) =>{ this.handleKeyDown(event) }}
                       options={this.state.services}
                       groupBy={option => option.category}
-                      getOptionLabel={option => option.name}
+                      getOptionLabel={option => option.label}
                       value={this.state.service}
                       disabled={!this.isCreation()}
                       renderInput={params => (
@@ -117,11 +132,29 @@ class SelectService extends React.Component {
                         console.log(`${JSON.stringify(option)}, ${value}`)
                         return (
                            <div>
-                           {option ? option.name.split('/')[0] : ''}
+                           {option ? option.label.split('/')[0] : ''}
                            </div>
                        );
                       }}
                     />
+                    :
+                    <Select
+                      options={this.state.services}
+                      values={this.state.service ? [{label: this.state.service.label.split('/')[0], value:this.state.service.id}] : []}
+                      //onChange={ this.onChange }
+                      //onKeyDown={(event) =>{ this.handleKeyDown(event) }}
+                      disabled={!this.isCreation()}
+                      searchable={true}
+                      searchBy={'label'}
+                      itemRenderer= { ({ item, itemIndex, props, state, methods }) => {
+                        return (
+                           <div onClick={() => methods.addItem(item)}>
+                           {`${item.category}:${item.label.split('/')[0]}`}
+                           </div>
+                       )
+                      }}
+                    />
+                  }
                   </Grid>
                 </Grid>
               </Grid>
