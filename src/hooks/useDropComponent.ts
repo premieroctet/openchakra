@@ -13,6 +13,8 @@ export const useDropComponent = (
   boundingPosition?: {
     top: number
     bottom: number
+    right: number
+    left: number
   },
 ) => {
   const dispatch = useDispatch()
@@ -25,22 +27,40 @@ export const useDropComponent = (
           return
         }
         const selectedComponent = components[item.id]
-        const { top, bottom } = boundingPosition
+        const { top, bottom, left, right } = boundingPosition
+        const hoverMiddleX = (right - left) / 2
         const hoverMiddleY = (bottom - top) / 2
         const clientOffset = monitor.getClientOffset()
+        const fromIndex = components[selectedComponent.parent].children.indexOf(
+          item.id,
+        )
+        const toIndex = components[selectedComponent.parent].children.indexOf(
+          componentId,
+        )
+        const hoverClientX = clientOffset && clientOffset.x - left
         const hoverClientY = clientOffset && clientOffset.y - top
+    
 
-        if (hoverClientY && hoverClientY < hoverMiddleY) return
-        if (hoverClientY && hoverClientY > hoverMiddleY) return
+        // Dragging downwards & rightwards
+        if (
+          fromIndex < toIndex &&
+          ((hoverClientY && hoverClientY < hoverMiddleY) ||
+            (hoverClientX && hoverClientX < hoverMiddleX))
+        )
+          return
+
+        // Dragging upwards & leftwards
+        if (
+          fromIndex > toIndex &&
+          ((hoverClientY && hoverClientY > hoverMiddleY) ||
+            (hoverClientX && hoverClientX > hoverMiddleX))
+        )
+          return
 
         dispatch.components.moveSelectedComponentChildren({
           parentId: selectedComponent.parent,
-          fromIndex: components[selectedComponent.parent].children.indexOf(
-            item.id,
-          ),
-          toIndex: components[selectedComponent.parent].children.indexOf(
-            componentId,
-          ),
+          fromIndex,
+          toIndex,
         })
       }
     },
