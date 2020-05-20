@@ -74,6 +74,8 @@ class SelectService extends React.Component {
   render() {
     const {classes, creationBoutique} = this.props;
 
+    console.log(`Service:${this.state.service}`)
+
     return(
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
@@ -105,12 +107,20 @@ class SelectService extends React.Component {
                       onKeyDown={(event) =>{ this.handleKeyDown(event) }}
                       options={this.state.services}
                       groupBy={option => option.category}
-                      getOptionLabel={option => option.name.split('/')[0]}
+                      getOptionLabel={option => option.name}
                       value={this.state.service}
                       disabled={!this.isCreation()}
                       renderInput={params => (
                         <TextField {...params} label={this.isCreation() ? "Tapez votre service" : ""} variant="outlined" fullWidth />
                       )}
+                      renderOption= {(option, {value}) => {
+                        console.log(`${JSON.stringify(option)}, ${value}`)
+                        return (
+                           <div>
+                           {option ? option.name.split('/')[0] : ''}
+                           </div>
+                       );
+                      }}
                     />
                   </Grid>
                 </Grid>
