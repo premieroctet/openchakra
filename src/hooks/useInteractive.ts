@@ -35,8 +35,6 @@ export const useInteractive = (
     boundingPosition && {
       top: boundingPosition.top,
       bottom: boundingPosition.bottom,
-      right: boundingPosition.right,
-      left: boundingPosition.left,
     },
   )
   let props = {
