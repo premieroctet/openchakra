@@ -604,12 +604,16 @@ router.post('/search',(req,res)=> {
           }
           if ('keyword' in req.body) {
             var regexp = new RegExp(metaphone(req.body.keyword),'i');
-            Prestation.find({ s_label: regexp})
-              .populate({ path: "job", match: {s_label:{$regex:regexp}}})
+            Prestation.find()
+              .populate("job")
               .then( prestas => {
+                prestas = prestas.filter( p => {
+                  const keep = p.s_label.match(regexp)!=null || (p.job && p.job.s_label.match(regexp)!=null)
+                  return keep
+                })
                 const ids = prestas.map( p => p._id.toString())
                 services = services.filter( s => {
-                  if (s.service.s_label.match(regexp) || s.service.category.s_label.match(regexp)) {
+                  if (s.service.s_label.match(regexp)!=null || s.service.category.s_label.match(regexp)!=null) {
                     return true;
                   }
                   pids = s.prestations.map( pp => pp.prestation ? pp.prestation.toString() : '')
@@ -869,7 +873,6 @@ router.get('/:id', passport.authenticate('jwt', {
     session: false
 }), (req, res) => {
 
-    console.log("Getting serviceUser # "+req.params.id);
     ServiceUser.findById(req.params.id)
         .populate('user','-id_card')
         .populate('service')

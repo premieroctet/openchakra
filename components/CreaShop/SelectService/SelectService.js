@@ -1,3 +1,5 @@
+const AUTOCOMPLETE=false
+
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
@@ -6,9 +8,13 @@ import styles from '../componentStyle'
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 const { inspect } = require('util');
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import useAutocomplete from '@material-ui/lab/useAutocomplete';
+
+import Select from "react-dropdown-select";
+
+const metaphone=require('metaphone')
 
 class SelectService extends React.Component {
   constructor(props) {
@@ -35,10 +41,9 @@ class SelectService extends React.Component {
 	    // FIX: passer les keyowrds autrement dans le back
             // Dont show services to exclude (i.e. already in the shop)
             if (!this.props.exclude || !this.props.exclude.includes(s.id)) {
-              let srv_opt={category: k, name: s.label+"/"+s.keywords.join(' '), id: s.id};
+              let srv_opt={label: k+":"+s.label, value: s.id, keywords: s.keywords.map(k => metaphone(k)).join(' ').toLowerCase(), };
               services.push(srv_opt);
               if (this.state.service==null && s.id==this.props.service) {
-                console.log("Found");
                 this.setState({service: srv_opt});
               }}
           });
@@ -53,8 +58,16 @@ class SelectService extends React.Component {
    this.setServices('');
   }
 
-  onChange(event, value){
-    console.log("OnChange value:"+inspect(value));
+  onChange(item){
+    if (item.length>0) {
+      this.setState({service: item ? item[0].value : null});
+      if(item !== undefined && item !== null){
+        this.props.onChange(item[0].value);
+      }
+    }
+  }
+
+  onChangeSelect(value){
     this.setState({service: value ? value : null});
     if(value !== undefined && value !== null){
       this.props.onChange(value.id);
@@ -62,13 +75,19 @@ class SelectService extends React.Component {
   }
 
   handleKeyDown(event){
-    // FIX: manque ernier caractère dans target.value
-    console.log("OnKeyDown:"+JSON.stringify(event.target.value));
     this.setServices(event.target.value);
   }
 
   isCreation() {
     return this.state.creation;
+  }
+
+  searchFn = st => {
+    const search = metaphone(st.state.search.toLowerCase())
+    const regex = new RegExp(search, "i")
+    const options = st.props.options
+    const selected=options.filter( opt => opt.keywords.match(regex)!=null)
+    return selected
   }
 
   render() {
@@ -98,6 +117,7 @@ class SelectService extends React.Component {
                 </Grid>
                 <Grid >
                   <Grid>
+                  { AUTOCOMPLETE ?
                     <Autocomplete
                       id="grouped-demo"
                       className={classes.textFieldSelecteService}
@@ -105,13 +125,32 @@ class SelectService extends React.Component {
                       onKeyDown={(event) =>{ this.handleKeyDown(event) }}
                       options={this.state.services}
                       groupBy={option => option.category}
-                      getOptionLabel={option => option.name.split('/')[0]}
+                      getOptionLabel={option => option.label}
                       value={this.state.service}
                       disabled={!this.isCreation()}
                       renderInput={params => (
                         <TextField {...params} label={this.isCreation() ? "Tapez votre service" : ""} variant="outlined" fullWidth />
                       )}
+                      renderOption= {(option, {value}) => {
+                        return (
+                           <div>
+                           {option ? option.label.split('/')[0] : ''}
+                           </div>
+                       );
+                      }}
                     />
+                    :
+                    <Select
+                      options={this.state.services}
+                      //values={this.state.service ? [{label: this.state.service.label.split('/')[0], value:this.state.service.id}] : []}
+                      onChange={ this.onChange }
+                      //onKeyDown={(event) =>{ this.handleKeyDown(event) }}
+                      disabled={!this.isCreation()}
+                      searchable={true}
+                      searchBy={'label'}
+                      searchFn={this.searchFn}
+                    />
+                  }
                   </Grid>
                 </Grid>
               </Grid>
