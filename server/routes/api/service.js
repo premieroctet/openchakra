@@ -35,6 +35,8 @@ router.get('/all',(req,res)=> {
 // @Route GET /myAlfred/api/service/allCount
 // View all service with count of serviceUser
 router.get('/allCount',(req,res)=> {
+  // FIX : only for Mongo V4
+  /**
   Service.aggregate().lookup({
     from: "serviceusers", localField: "_id", foreignField: "service", as:'serviceusers'
     })
@@ -54,6 +56,28 @@ router.get('/allCount',(req,res)=> {
       console.error(err)
       res.status(404).json({ service: 'No service found' })
     });
+    */
+    Service.find({})
+      .sort({label: 1})
+      .then(services => {
+        ServiceUser.find({})
+          .then( sus => {
+            var counts=[]
+            services.forEach( service => {
+              const suCount = sus.filter( su => su.service._id.equals(service._id)).length;
+              counts.push({ _id: service._id, label: `${service.label} (${suCount})` })
+            })
+            res.json(counts)
+          })
+          .catch(err => {
+            console.error(err)
+            res.status(404).json({ service: 'No service found' })
+          });
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({ service: 'No service found' })
+      });
 });
 
 // @Route POST /myAlfred/api/service/all/search
