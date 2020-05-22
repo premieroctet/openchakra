@@ -280,8 +280,7 @@ class MessagesDetails extends React.Component {
                     <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
                   </Grid>
                   <Typography style={{ marginTop: "3px", color: "#9B9B9B" }}>
-                    {bookingObj == undefined || bookingObj.address == undefined ||  bookingObj.address.gps == undefined ? null
-
+                    {bookingObj == undefined || bookingObj.address == undefined || this.state.userData.billing_address == undefined ||this.state.userData == undefined ? 0
                       : convertDistance(getDistance(this.state.userData.billing_address.gps, bookingObj.address.gps),"km").toFixed(2)
                     }{" "}
                     km
