@@ -130,9 +130,14 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
 
                             Object.values(req.body.prestations).forEach(presta => {
                                 console.log("Ajout presta : " + JSON.stringify(presta));
-                                p = { prestation: presta._id, billing: presta.billing, price: presta.price };
-                                su.prestations.push(p);
-                                console.log("Presta ajoutée : " + JSON.stringify(p));
+                                if (!presta.price) {
+                                  console.error(`Presta ${presta._id} : non ajoutée, prix à 0`)
+                                }
+                                else {
+                                  p = { prestation: presta._id, billing: presta.billing, price: presta.price };
+                                  su.prestations.push(p);
+                                  console.log("Presta ajoutée : " + JSON.stringify(p));
+                                }
                             });
 
                             su.save()
