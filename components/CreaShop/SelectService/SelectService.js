@@ -33,13 +33,14 @@ class SelectService extends React.Component {
     axios.get(kw_url)
       .then((response) => {
         let data = response.data;
+        console.log(`Answer:${JSON.stringify(data, null, 2)}`)
         let services = [];
         Object.keys(data).forEach( (k) => {
           data[k].forEach( (s) => {
 	    // FIX: passer les keyowrds autrement dans le back
             // Dont show services to exclude (i.e. already in the shop)
             if (!this.props.exclude || !this.props.exclude.includes(s.id)) {
-              let srv_opt={category: k, label: s.label+"/"+s.keywords.join(' '), value: s.id};
+              let srv_opt={label: k+":"+s.label, value: s.id, keywords: s.keywords.join(' ').toLowerCase(), };
               services.push(srv_opt);
               if (this.state.service==null && s.id==this.props.service) {
                 console.log("Found");
@@ -47,6 +48,7 @@ class SelectService extends React.Component {
               }}
           });
         });
+        console.log(`Options:${JSON.stringify(services, null, 2)}`)
         this.setState({services: services});
       }).catch(error => {
       console.log(error);
@@ -85,10 +87,16 @@ class SelectService extends React.Component {
     return this.state.creation;
   }
 
+  searchFn = st => {
+    const search = st.state.search.toLowerCase()
+    const options = st.props.options
+    console.log(`Searching ${search} amongst ${options.length} options`);
+    const selected=options.filter( opt => opt.keywords.includes(search))
+    return selected
+  }
+
   render() {
     const {classes, creationBoutique} = this.props;
-
-    console.log(`Service:${this.state.service}`)
 
     return(
       <Grid className={classes.mainContainer}>
@@ -146,13 +154,7 @@ class SelectService extends React.Component {
                       disabled={!this.isCreation()}
                       searchable={true}
                       searchBy={'label'}
-                      itemRenderer= { ({ item, itemIndex, props, state, methods }) => {
-                        return (
-                           <div onClick={() => methods.addItem(item)}>
-                           {`${item.category}:${item.label.split('/')[0]}`}
-                           </div>
-                       )
-                      }}
+                      searchFn={this.searchFn}
                     />
                   }
                   </Grid>
