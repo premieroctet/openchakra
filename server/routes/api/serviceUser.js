@@ -566,7 +566,6 @@ router.post('/search',(req,res)=> {
         if (allowedServices.length>0) {
           allowedServices=allowedServices.reduce( (acc, arr) => acc.concat(arr));
           allowedServices=allowedServices.map( service => service.id.toString());
-          console.log(`AllowedServices:${JSON.stringify(allowedServices)}`)
         }
       }
       ServiceUser.find()
@@ -610,9 +609,6 @@ router.post('/search',(req,res)=> {
               .then( prestas => {
                 prestas = prestas.filter( p => {
                   const keep = p.s_label.match(regexp)!=null || (p.job && p.job.s_label.match(regexp)!=null)
-                  if (p.label.includes('Pose de carr')) {
-                    console.log(`Keep ${keep} for ${JSON.stringify(p)}`)
-                  }
                   return keep
                 })
                 const ids = prestas.map( p => p._id.toString())
@@ -877,7 +873,6 @@ router.get('/:id', passport.authenticate('jwt', {
     session: false
 }), (req, res) => {
 
-    console.log("Getting serviceUser # "+req.params.id);
     ServiceUser.findById(req.params.id)
         .populate('user','-id_card')
         .populate('service')

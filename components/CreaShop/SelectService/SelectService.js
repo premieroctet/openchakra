@@ -14,6 +14,8 @@ import useAutocomplete from '@material-ui/lab/useAutocomplete';
 
 import Select from "react-dropdown-select";
 
+const metaphone=require('metaphone')
+
 class SelectService extends React.Component {
   constructor(props) {
     super(props);
@@ -33,22 +35,19 @@ class SelectService extends React.Component {
     axios.get(kw_url)
       .then((response) => {
         let data = response.data;
-        console.log(`Answer:${JSON.stringify(data, null, 2)}`)
         let services = [];
         Object.keys(data).forEach( (k) => {
           data[k].forEach( (s) => {
 	    // FIX: passer les keyowrds autrement dans le back
             // Dont show services to exclude (i.e. already in the shop)
             if (!this.props.exclude || !this.props.exclude.includes(s.id)) {
-              let srv_opt={label: k+":"+s.label, value: s.id, keywords: s.keywords.join(' ').toLowerCase(), };
+              let srv_opt={label: k+":"+s.label, value: s.id, keywords: s.keywords.map(k => metaphone(k)).join(' ').toLowerCase(), };
               services.push(srv_opt);
               if (this.state.service==null && s.id==this.props.service) {
-                console.log("Found");
                 this.setState({service: srv_opt});
               }}
           });
         });
-        console.log(`Options:${JSON.stringify(services, null, 2)}`)
         this.setState({services: services});
       }).catch(error => {
       console.log(error);
@@ -61,7 +60,6 @@ class SelectService extends React.Component {
 
   onChange(item){
     if (item.length>0) {
-      console.log("OnChange value:"+inspect(item[0]));
       this.setState({service: item ? item[0].value : null});
       if(item !== undefined && item !== null){
         this.props.onChange(item[0].value);
@@ -70,7 +68,6 @@ class SelectService extends React.Component {
   }
 
   onChangeSelect(value){
-    console.log("OnChange value:"+inspect(value));
     this.setState({service: value ? value : null});
     if(value !== undefined && value !== null){
       this.props.onChange(value.id);
@@ -78,8 +75,6 @@ class SelectService extends React.Component {
   }
 
   handleKeyDown(event){
-    // FIX: manque ernier caractère dans target.value
-    console.log("OnKeyDown:"+JSON.stringify(event.target.value));
     this.setServices(event.target.value);
   }
 
@@ -88,10 +83,10 @@ class SelectService extends React.Component {
   }
 
   searchFn = st => {
-    const search = st.state.search.toLowerCase()
+    const search = metaphone(st.state.search.toLowerCase())
+    const regex = new RegExp(search, "i")
     const options = st.props.options
-    console.log(`Searching ${search} amongst ${options.length} options`);
-    const selected=options.filter( opt => opt.keywords.includes(search))
+    const selected=options.filter( opt => opt.keywords.match(regex)!=null)
     return selected
   }
 
@@ -137,7 +132,6 @@ class SelectService extends React.Component {
                         <TextField {...params} label={this.isCreation() ? "Tapez votre service" : ""} variant="outlined" fullWidth />
                       )}
                       renderOption= {(option, {value}) => {
-                        console.log(`${JSON.stringify(option)}, ${value}`)
                         return (
                            <div>
                            {option ? option.label.split('/')[0] : ''}
