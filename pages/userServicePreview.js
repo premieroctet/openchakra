@@ -400,13 +400,24 @@ class UserServicesPreview extends React.Component {
       }
     });
 
+    let place;
+    switch (this.state.location) {
+      case 'client':
+        place = this.state.user.billing_address;
+        break;
+      case 'alfred':
+        place = this.state.serviceUser.service_address;
+        break;
+    }
+
+
     var chatPromise = actual ? emptyPromise({ res: null }) : axios.post("/myAlfred/api/chatRooms/addAndConnect", { emitter: this.state.user._id, recipient: this.state.serviceUser.user._id });
 
     chatPromise.then( res => {
       let bookingObj = {
         reference: computeBookingReference(this.state.user, this.state.serviceUser.user),
         service: this.state.serviceUser.service.label,
-        address: this.state.serviceUser.service_address,
+        address: place,
         equipments: this.state.serviceUser.equipments,
         amount: this.state.total,
         date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
