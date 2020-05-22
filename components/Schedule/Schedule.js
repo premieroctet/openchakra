@@ -146,6 +146,9 @@ class Schedule extends React.Component {
   };
 
   toggleAddModal =  ({ start, end })  => {
+    if (!this.props.onCreateAvailability) {
+      return
+    }
     var dt = new Date(start);
     dt.setMonth( dt.getMonth() + 6 );
     console.log("ToggleAddModal")
@@ -164,6 +167,9 @@ class Schedule extends React.Component {
   };
 
   toggleEditModal = event => {
+    if (!this.props.onUpdateAvailability) {
+      return
+    }
     console.log("ToggleEditModal")
     console.log(`Event:${JSON.stringify(event)}`)
     console.log(`Availabilities:${JSON.stringify(this.props.availabilities.map( a => a._id))}`)
