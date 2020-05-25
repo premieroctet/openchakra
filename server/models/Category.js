@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-var metaphone = require('metaphone')
+const {normalize} = require('../../utils/text')
 
 const CategorySchema = new Schema({
     label: {
@@ -20,7 +20,7 @@ const CategorySchema = new Schema({
   s_label: {
     type: String,
     default: function() {
-      return metaphone(this.label)
+      return normalize(this.label)
     }
   },
 });
