@@ -36,12 +36,13 @@ export const useDropComponent = (
         )
         const hoverClientY = clientOffset && clientOffset.y - top
 
-        // Dragging downwards
+        // hasPassedMid
         if (fromIndex < toIndex && hoverClientY && hoverClientY < hoverMiddleY)
           return
-        // Dragging upwards
+
         if (fromIndex > toIndex && hoverClientY && hoverClientY > hoverMiddleY)
           return
+
         dispatch.components.moveSelectedComponentChildren({
           parentId: selectedComponent.parent,
           fromIndex,
