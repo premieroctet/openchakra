@@ -1,6 +1,7 @@
 import React, { FunctionComponent, ComponentClass } from 'react'
 import { useInteractive } from '../../hooks/useInteractive'
 import { useDropComponent } from '../../hooks/useDropComponent'
+import { useHoverComponent } from '../../hooks//useHoverComponent'
 import ComponentPreview from './ComponentPreview'
 import { Box } from '@chakra-ui/core'
 
@@ -17,8 +18,21 @@ const WithChildrenPreviewContainer: React.FC<{
   ...forwardedProps
 }) => {
   const { drop, isOver } = useDropComponent(component.id)
-  const { props, ref } = useInteractive(component, enableVisualHelper)
-  const propsElement = { ...props, ...forwardedProps }
+  const { props, ref, boundingPosition } = useInteractive(
+    component,
+    enableVisualHelper,
+    drop,
+  )
+  const { hover } = useHoverComponent(
+    component.id,
+    boundingPosition && {
+      top: boundingPosition.top,
+      bottom: boundingPosition.bottom,
+    },
+  )
+
+  const hoverRef = hover(ref)
+  const propsElement = { ...props, ...forwardedProps, pos: 'relative' }
 
   if (!isBoxWrapped) {
     propsElement.ref = drop(ref)
@@ -40,9 +54,8 @@ const WithChildrenPreviewContainer: React.FC<{
     let boxProps: any = {
       display: 'inline',
     }
-
     return (
-      <Box {...boxProps} ref={drop(ref)}>
+      <Box {...boxProps} ref={hoverRef}>
         {children}
       </Box>
     )

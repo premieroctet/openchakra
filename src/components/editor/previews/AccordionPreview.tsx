@@ -1,6 +1,7 @@
 import React from 'react'
 import { useInteractive } from '../../../hooks/useInteractive'
 import { useDropComponent } from '../../../hooks/useDropComponent'
+import { useHoverComponent } from '../../../hooks/useHoverComponent'
 import {
   Box,
   Accordion,
@@ -14,17 +15,25 @@ import { AccordionWhitelist } from '../../../utils/editor'
 const acceptedTypes: ComponentType[] = ['AccordionItem']
 
 const AccordionPreview: React.FC<IPreviewProps> = ({ component }) => {
-  const { props, ref } = useInteractive(component, true)
   const { drop, isOver } = useDropComponent(component.id, acceptedTypes)
+  const { props, ref, boundingPosition } = useInteractive(component, true, drop)
+  const { hover } = useHoverComponent(
+    component.id,
+    boundingPosition && {
+      top: boundingPosition.top,
+      bottom: boundingPosition.bottom,
+    },
+  )
 
   let boxProps: any = {}
+  const hoverRef = hover(ref)
 
   if (isOver) {
     props.bg = 'teal.50'
   }
 
   return (
-    <Box ref={drop(ref)} {...boxProps}>
+    <Box ref={hoverRef} {...boxProps}>
       <Accordion {...props}>
         {component.children.map((key: string) => (
           <ComponentPreview key={key} componentName={key} />
@@ -35,8 +44,8 @@ const AccordionPreview: React.FC<IPreviewProps> = ({ component }) => {
 }
 
 export const AccordionHeaderPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component, true)
   const { drop, isOver } = useDropComponent(component.id, AccordionWhitelist)
+  const { props, ref } = useInteractive(component, true)
 
   if (isOver) {
     props.bg = 'teal.50'
@@ -52,8 +61,8 @@ export const AccordionHeaderPreview = ({ component }: IPreviewProps) => {
 }
 
 export const AccordionItemPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component, true)
   const { drop, isOver } = useDropComponent(component.id, AccordionWhitelist)
+  const { props, ref } = useInteractive(component, true)
 
   let boxProps: any = {}
 
@@ -73,8 +82,8 @@ export const AccordionItemPreview = ({ component }: IPreviewProps) => {
 }
 
 export const AccordionPanelPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component, true)
   const { drop, isOver } = useDropComponent(component.id, AccordionWhitelist)
+  const { props, ref } = useInteractive(component, true)
 
   let boxProps: any = {}
 

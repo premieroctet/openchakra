@@ -1,5 +1,6 @@
 import React, { FunctionComponent, ComponentClass } from 'react'
 import { useInteractive } from '../../hooks/useInteractive'
+import { useHoverComponent } from '../../hooks/useHoverComponent'
 import { Box } from '@chakra-ui/core'
 
 const PreviewContainer: React.FC<{
@@ -14,8 +15,19 @@ const PreviewContainer: React.FC<{
   isBoxWrapped,
   ...forwardedProps
 }) => {
-  const { props, ref } = useInteractive(component, enableVisualHelper)
+  const { props, ref, boundingPosition } = useInteractive(
+    component,
+    enableVisualHelper,
+  )
+  const { hover } = useHoverComponent(
+    component.id,
+    boundingPosition && {
+      top: boundingPosition.top,
+      bottom: boundingPosition.bottom,
+    },
+  )
 
+  const hoverRef = hover(ref)
   const children = React.createElement(type, {
     ...props,
     ...forwardedProps,
@@ -26,7 +38,7 @@ const PreviewContainer: React.FC<{
     let boxProps: any = {}
 
     return (
-      <Box {...boxProps} ref={ref}>
+      <Box {...boxProps} ref={hoverRef}>
         {children}
       </Box>
     )

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useInteractive } from '../../../hooks/useInteractive'
 import { useDropComponent } from '../../../hooks/useDropComponent'
+import { useHoverComponent } from '../../../hooks/useHoverComponent'
 import ComponentPreview from '../ComponentPreview'
 import { Alert, Box } from '@chakra-ui/core'
 
@@ -10,9 +11,19 @@ const AlertPreview: React.FC<IPreviewProps> = ({ component }) => {
     'AlertTitle',
     'AlertDescription',
   ] as ComponentType[]
-  const { props, ref } = useInteractive(component, false)
   const { drop, isOver } = useDropComponent(component.id, acceptedTypes)
-
+  const { props, ref, boundingPosition } = useInteractive(
+    component,
+    false,
+    drop,
+  )
+  const { hover } = useHoverComponent(
+    component.id,
+    boundingPosition && {
+      top: boundingPosition.top,
+      bottom: boundingPosition.bottom,
+    },
+  )
   let boxProps: any = {}
 
   if (isOver) {
@@ -20,7 +31,7 @@ const AlertPreview: React.FC<IPreviewProps> = ({ component }) => {
   }
 
   return (
-    <Box ref={drop(ref)} {...boxProps}>
+    <Box ref={hover(ref)} {...boxProps}>
       <Alert {...props}>
         {component.children.map((key: string) => (
           <ComponentPreview key={key} componentName={key} />
