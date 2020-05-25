@@ -31,7 +31,6 @@ export const useInteractive = (
     component.id,
     undefined,
     undefined,
-    true,
     boundingPosition && {
       top: boundingPosition.top,
       bottom: boundingPosition.bottom,

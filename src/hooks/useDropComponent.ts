@@ -9,7 +9,6 @@ export const useDropComponent = (
   componentId: string,
   accept: (ComponentType | MetaComponentType)[] = rootComponents,
   canDrop: boolean = true,
-  canSwap: boolean = false,
   boundingPosition?: {
     top: number
     bottom: number
@@ -20,7 +19,7 @@ export const useDropComponent = (
   const [{ isOver }, drop] = useDrop({
     accept,
     hover: (item, monitor) => {
-      if (canSwap && item.isMoved && boundingPosition) {
+      if (item.isMoved && boundingPosition) {
         if (componentId === item.id) {
           return
         }
@@ -57,9 +56,7 @@ export const useDropComponent = (
       if (!monitor.isOver()) {
         return
       }
-      if (canSwap) {
-        return
-      } else if (item.isMoved) {
+      if (item.isMoved) {
         dispatch.components.moveComponent({
           parentId: componentId,
           componentId: item.id,
