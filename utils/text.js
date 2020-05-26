@@ -1,6 +1,6 @@
 
 const normalize = str => {
-  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+  return str.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
 }
 
 const createRegexps = str => {
@@ -17,15 +17,12 @@ const createQuery = str => {
     criterions.push({'s_label' : { $regex : r}})
   })
   const query={ $or : criterions }
-  console.log(`Created query : ${JSON.stringify(query)}`)
   return query
 }
 
 const matches = (str, keywords) => {
-  console.log(`**** CHECK ${str} against ${keywords}`)
   const regexps = createRegexps(keywords)
   const ok = regexps.some ( r => str.match(r) )
-  console.log(`Checking ${str} against ${keywords}:${ok}`)
   return ok
 }
 
