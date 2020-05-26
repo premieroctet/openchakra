@@ -1772,7 +1772,7 @@ router.post('/prestation/all',uploadPrestation.single('picture'),passport.authen
             return res.status(400).json(errors);
         }
 
-        Prestation.findOne({label: req.body.label, filter_presentation: req.body.filter_presentation})
+        Prestation.findOne({label: req.body.label, filter_presentation: req.body.filter_presentation, service: req.body.service})
             .then(prestation => {
                 if(prestation) {
                     errors.label = 'Cette prestation existe déjà';
