@@ -41,7 +41,7 @@ class SelectService extends React.Component {
             if (!this.props.exclude || !this.props.exclude.includes(s.id)) {
               let srv_opt={label: `${s.label}`, value: s.id, keywords: s.keywords.map(k => normalize(k)).join(' ').toLowerCase(), };
               services.push(srv_opt);
-              if (this.state.service==null && s.id==this.props.service) {
+	             if (this.state.service==null && s.id==this.props.service) {
                 this.setState({service: srv_opt});
               }}
           });
@@ -92,6 +92,7 @@ class SelectService extends React.Component {
 
   render() {
     const {classes, creationBoutique} = this.props;
+    const {service} = this.state;
 
     return(
       <Grid className={classes.mainContainer}>
@@ -99,12 +100,12 @@ class SelectService extends React.Component {
           <Grid>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>{creationBoutique ? "Créez votre boutique de services" : this.isCreation() ? "Ajouter un service" : "Configurer un service"}</Typography>
+                <Typography className={classes.policySizeTitle}>{creationBoutique ? "Créez votre boutique de services" : this.isCreation() ? "Ajouter un service" : "Modifier un service"}</Typography>
               </Grid>
               <Grid>
                 <Grid>
                   <Grid>
-                    <h3 className={classes.policySizeSubtitle}>{this.isCreation() ? "Quel service souhaitez-vous réaliser ?" : "Ce service va être configuré"} </h3>
+                    <h3 className={classes.policySizeSubtitle}>{this.isCreation() ? "Quel service souhaitez-vous réaliser ?" : `Vous allez modifier votre service "${service ? service.label : ''}"`} </h3>
                   </Grid>
                   { creationBoutique ?
                     <Grid className={classes.bottomSpacer}>
@@ -115,6 +116,7 @@ class SelectService extends React.Component {
                     </Grid> : null
                   }
                 </Grid>
+                { this.isCreation() ?
                 <Grid >
                   <Grid>
                   { AUTOCOMPLETE ?
@@ -142,7 +144,6 @@ class SelectService extends React.Component {
                     :
                     <Select
                       options={this.state.services}
-                      //values={this.state.service ? [{label: this.state.service.label.split('/')[0], value:this.state.service.id}] : []}
                       onChange={ this.onChange }
                       //onKeyDown={(event) =>{ this.handleKeyDown(event) }}
                       disabled={!this.isCreation()}
@@ -153,6 +154,9 @@ class SelectService extends React.Component {
                   }
                   </Grid>
                 </Grid>
+                :
+                null
+                }
               </Grid>
             </Grid>
           </Grid>
