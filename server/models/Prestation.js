@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-var metaphone = require('metaphone')
+const {normalize} = require('../../utils/text')
 
 const PrestationSchema = new Schema({
     label: {
@@ -56,7 +56,7 @@ const PrestationSchema = new Schema({
     s_label: {
       type: String,
       default: function() {
-        return metaphone(this.label)
+        return normalize(this.label)
       }
     },
 });

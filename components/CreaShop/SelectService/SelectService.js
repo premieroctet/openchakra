@@ -11,10 +11,8 @@ import axios from 'axios';
 const { inspect } = require('util');
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import useAutocomplete from '@material-ui/lab/useAutocomplete';
-
+const {matches, normalize} = require('../../../utils/text')
 import Select from "react-dropdown-select";
-
-const metaphone=require('metaphone')
 
 class SelectService extends React.Component {
   constructor(props) {
@@ -41,7 +39,7 @@ class SelectService extends React.Component {
 	    // FIX: passer les keyowrds autrement dans le back
             // Dont show services to exclude (i.e. already in the shop)
             if (!this.props.exclude || !this.props.exclude.includes(s.id)) {
-              let srv_opt={label: k+":"+s.label, value: s.id, keywords: s.keywords.map(k => metaphone(k)).join(' ').toLowerCase(), };
+              let srv_opt={label: `${s.label}`, value: s.id, keywords: s.keywords.map(k => normalize(k)).join(' ').toLowerCase(), };
               services.push(srv_opt);
               if (this.state.service==null && s.id==this.props.service) {
                 this.setState({service: srv_opt});
@@ -50,7 +48,7 @@ class SelectService extends React.Component {
         });
         this.setState({services: services});
       }).catch(error => {
-      console.log(error);
+      console.error(error);
     })
   }
 
@@ -83,10 +81,12 @@ class SelectService extends React.Component {
   }
 
   searchFn = st => {
-    const search = metaphone(st.state.search.toLowerCase())
-    const regex = new RegExp(search, "i")
+    const search = normalize(st.state.search)
     const options = st.props.options
-    const selected=options.filter( opt => opt.keywords.match(regex)!=null)
+    const selected=options.filter( opt => {
+      const ok= matches(opt.keywords,search) || matches(opt.label,search)
+      return ok
+    })
     return selected
   }
 

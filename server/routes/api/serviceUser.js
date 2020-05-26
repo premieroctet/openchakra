@@ -21,7 +21,7 @@ const {data2ServiceUser} = require('../../../utils/mapping');
 const emptyPromise = require('../../../utils/promise');
 const { computeUrl } = require('../../../config/config');
 const { filterServicesGPS} = require('../../../utils/filters');
-var metaphone = require('metaphone')
+const {createQuery, matches} = require('../../../utils/text')
 const intersection = require('array-intersection');
 //mongoose.set('debug', true)
 
@@ -559,6 +559,7 @@ router.post('/search',(req,res)=> {
     }
 
     keywordPromise.then( result => {
+      console.log(`/service/:keyword returned ${result.data}`)
       var allowedServices=result.data;
       // Result is object category => [arr of services] or null
       if (allowedServices!=null) {
@@ -603,17 +604,18 @@ router.post('/search',(req,res)=> {
             services = filtered;
           }
           if ('keyword' in req.body) {
-            var regexp = new RegExp(metaphone(req.body.keyword),'i');
+            const keyword = req.body.keyword;
             Prestation.find()
               .populate("job")
               .then( prestas => {
                 prestas = prestas.filter( p => {
-                  const keep = p.s_label.match(regexp)!=null || (p.job && p.job.s_label.match(regexp)!=null)
+                  console.log(`Presta ${JSON.stringify(p)}`)
+                  const keep = matches(p.s_label, keyword) || (p.job && matches(p.job.s_label, keyword))
                   return keep
                 })
                 const ids = prestas.map( p => p._id.toString())
                 services = services.filter( s => {
-                  if (s.service.s_label.match(regexp)!=null || s.service.category.s_label.match(regexp)!=null) {
+                  if (matches(s.service.s_label, keyword) || matches(s.service.category.s_label, keyword)) {
                     return true;
                   }
                   pids = s.prestations.map( pp => pp.prestation ? pp.prestation.toString() : '')

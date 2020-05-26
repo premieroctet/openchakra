@@ -11,8 +11,7 @@ const ServiceUser = require('../../models/ServiceUser');
 router.get('/test',(req, res) => res.json({msg: 'Service Works!'}) );
 
 const mongoose = require('mongoose');
-var metaphone = require('metaphone')
-
+const {createQuery} = require('../../../utils/text')
 
 // @Route GET /myAlfred/api/service/all
 // View all service
@@ -221,14 +220,14 @@ router.get('/all/tags/:tags',(req,res)=> {
 router.get('/keyword/:kw',(req,res)=> {
 
     const kw = req.params.kw
-    const meta = metaphone(kw)
-    console.log(`Search service keyword:${kw}, metaphone:${meta}`);
-    var regexp = new RegExp(meta,'i');
+
+    console.log(`Search service keyword:${kw}`);
     var result={}
     var keywords = {}
-    Category.find({s_label:{$regex:regexp}})
+    const query=createQuery(kw)
+    Category.find(query)
       .then(categories => {
-        Service.find({ $or : [{category: {$in: categories.map(c=> c._id)}}, {s_label:{$regex:regexp}}]})
+        Service.find({ $or : [{category: {$in: categories.map(c=> c._id)}}, query]})
           .populate('category')
           .then(services => {
              services.forEach(s => {
@@ -236,7 +235,7 @@ router.get('/keyword/:kw',(req,res)=> {
                let key=s.category.label+s.label;
                keywords[key] ? keywords[key].push(s.category.label) : keywords[key]=[s.category.label];
              });
-             Prestation.find({s_label:{$regex:regexp}})
+             Prestation.find(query)
                .populate({path : 'service', populate: { path:'category'}}).then(prestations => {
                   prestations.forEach(p => {
                     let s = p.service;
@@ -246,7 +245,7 @@ router.get('/keyword/:kw',(req,res)=> {
                   });
                   Prestation.find()
                     .populate({path : 'service', populate: { path:'category'}})
-                    .populate({ path: "job", match: {s_label:{$regex:regexp}}})
+                    .populate({ path: "job", match: query})
                     .then(prestations => {
                        prestations.forEach(p => {
                          if ('job' in p && p['job']!=null) {
@@ -276,7 +275,10 @@ router.get('/keyword/:kw',(req,res)=> {
            })
            }
       )
-      .catch((err) => res.json("Error:"+JSON.stringify(err)));
+      .catch((err) => {
+        console.error(err)
+        res.json("Error:"+JSON.stringify(err))
+      });
 });
 
 module.exports = router;
