@@ -39,7 +39,7 @@ class SelectService extends React.Component {
 	    // FIX: passer les keyowrds autrement dans le back
             // Dont show services to exclude (i.e. already in the shop)
             if (!this.props.exclude || !this.props.exclude.includes(s.id)) {
-              let srv_opt={label: `${k} : ${s.label}`, value: s.id, keywords: s.keywords.map(k => normalize(k)).join(' ').toLowerCase(), };
+              let srv_opt={label: `${s.label}`, value: s.id, keywords: s.keywords.map(k => normalize(k)).join(' ').toLowerCase(), };
               services.push(srv_opt);
               if (this.state.service==null && s.id==this.props.service) {
                 this.setState({service: srv_opt});
