@@ -163,7 +163,7 @@ router.post('/myShop/add', upload.fields([{ name: 'file_diploma', maxCount: 1 },
             su.user = req.user.id;
 
             // FIX : créer les prestations custom avant
-            let newPrestations = Object.values(req.body.prestations).filter(p => p._id == null);
+            let newPrestations = Object.values(req.body.prestations).filter(p => p._id && p._id.length == GID_LEN);
             let newPrestaModels = newPrestations.map(p => Prestation({ ...p, service: req.body.service, billing: [p.billing], filter_presentation: null, private_alfred: req.user.id }));
 
             const r = newPrestaModels.length > 0 ? Prestation.collection.insert(newPrestaModels) : emptyPromise({ insertedIds: [] });
