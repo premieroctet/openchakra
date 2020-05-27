@@ -109,7 +109,7 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
 
                     // FIX : créer les prestations custom avant
                     req.body.prestations=JSON.parse(req.body.prestations);
-                    let newPrestations = Object.values(req.body.prestations).filter(p => p._id.length == GID_LEN);
+                    let newPrestations = Object.values(req.body.prestations).filter(p => p._id && p._id.length == GID_LEN);
                     console.log("newPrestations:" + JSON.stringify(newPrestations));
                     let newPrestaModels = newPrestations.map(p => Prestation({ ...p, service: req.body.service, billing: [p.billing], filter_presentation: null, private_alfred: req.user.id }));
                     console.log("newPrestationsModel before save:" + JSON.stringify(newPrestaModels));

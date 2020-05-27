@@ -23,6 +23,7 @@ const { computeUrl } = require('../../../config/config');
 const { filterServicesGPS} = require('../../../utils/filters');
 const {createQuery, matches} = require('../../../utils/text')
 const intersection = require('array-intersection');
+const {GID_LEN} = require ('../../../utils/consts')
 //mongoose.set('debug', true)
 
 moment.locale('fr');
@@ -223,7 +224,7 @@ router.put('/edit/:id', passport.authenticate('jwt', { session: false }), (req, 
             su.prestations = [];
 
             // FIX : créer les prestations custom avant
-            let newPrestations = Object.values(req.body.prestations).filter(p => p._id == null);
+            let newPrestations = Object.values(req.body.prestations).filter(p => p._id && p._id.length == GID_LEN);
             let newPrestaModels = newPrestations.map(p => Prestation({ ...p, service: req.body.service, billing: [p.billing], filter_presentation: null, private_alfred: req.user.id }));
 
             const r = newPrestaModels.length > 0 ? Prestation.collection.insert(newPrestaModels) : emptyPromise({ insertedIds: [] });
