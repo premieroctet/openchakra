@@ -610,7 +610,6 @@ router.post('/search',(req,res)=> {
               .populate("job")
               .then( prestas => {
                 prestas = prestas.filter( p => {
-                  console.log(`Presta ${JSON.stringify(p)}`)
                   const keep = matches(p.s_label, keyword) || (p.job && matches(p.job.s_label, keyword))
                   return keep
                 })

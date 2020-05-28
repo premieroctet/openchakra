@@ -6,7 +6,6 @@ const normalize = str => {
 const createRegexps = str => {
   str = normalize(str).split(' ')
   const regexps = str.map( s => new RegExp(s, "i"))
-  console.log(`Created regexps:${regexps}`)
   return regexps
 }
 
