@@ -28,12 +28,14 @@ class siret extends React.Component {
 
     onChange = e => {
       let {name, value} = e.target;
+      console.log(`*Before:${name}=>${value}`)
       if (name==='siret') {
         value = value.replace(/ /g, '');
       }
       if (name==='creation_date') {
-        value=moment(value).format('DD/mm/YYYY')
+        value=moment(value).format('DD/MM/YYYY')
       }
+      console.log(`After:${name}=>${value}`)
       this.setState({ [name]: value },
         () => this.props.onChange(this.state));
 
@@ -136,7 +138,7 @@ class siret extends React.Component {
                     margin="normal"
                     variant="outlined"
                     type="text"
-                    name={'creation_date'}
+                    name={'name'}
                     value={this.state.name}
                     onChange={this.onChange}
                   />
@@ -149,7 +151,7 @@ class siret extends React.Component {
                   margin="normal"
                   variant="outlined"
                   type="text"
-                  name={'Code NAF/APE'}
+                  name={'naf_ape'}
                   value={this.state.naf_ape}
                   onChange={this.onChange}
                   />
@@ -162,7 +164,7 @@ class siret extends React.Component {
                   margin="normal"
                   variant="outlined"
                   type="text"
-                  name={'Statut juridique'}
+                  name={'status'}
                   value={this.state.status}
                   onChange={this.onChange}
                   />
