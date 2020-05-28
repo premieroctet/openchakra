@@ -45,6 +45,7 @@ import Commentary from '../components/Commentary/Commentary';
 import fr from 'date-fns/locale/fr';
 import Switch from '@material-ui/core/Switch';
 import BookingDetail from '../components/BookingDetail/BookingDetail';
+import {Helmet} from 'react-helmet';
 import {toast} from 'react-toastify';
 const moment = require('moment');
 moment.locale('fr');
@@ -774,6 +775,15 @@ class UserServicesPreview extends React.Component {
    );
 
     return (
+      <>
+          <Helmet>
+            <meta property="og:image" content={`/${service.picture}`} />
+            <meta property="og:image:secure_url" content={`/${service.picture}`} />
+            <meta property="og:description" content={`${service.label} par ${alfred.firstname}`} />
+            <meta property="description" content={`${service.label} par ${alfred.firstname}`} />
+            <meta property="og:type" content="website" />
+            <meta property="og:url"content="https://my-alfred.io" />
+            </Helmet>
       <Grid>
         <Layout>
           <Grid style={{width: '100%'}}>
@@ -1110,7 +1120,7 @@ class UserServicesPreview extends React.Component {
           </Grid>
         </Layout>
       </Grid>
-
+      </>
     )
   }
 }
