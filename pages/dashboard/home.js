@@ -78,6 +78,7 @@ class home extends React.Component {
                                   </Grid>
                                   <Link href="/dashboard/statistics"><a>Statistiques</a></Link><br/>
                                   <Link href="/dashboard/map"><a>Carte des services</a></Link><br/>
+                                  <Link href="/dashboard/bookings"><a>Réservations</a></Link><br/>
                                   <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
                                       <Typography style={{ fontSize: 30 }}>Base de données</Typography>
                                   </Grid>

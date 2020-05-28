@@ -2251,4 +2251,35 @@ router.get('/statistics', (req,res)=> {
 
 });
 
+// @Route GET /myAlfred/api/admin/statistics
+// Get satistics (users, shops, services)
+// @Access private
+//router.get('/statistics',passport.authenticate('jwt',{session:false}),(req,res)=> {
+router.get('/booking/all', (req,res)=> {
+    //
+    //const token = req.headers.authorization.split(' ')[1];
+    //const decode = jwt.decode(token);
+    //const admin = decode.is_admin;
+    //
+    const admin=true;
+
+    if(admin) {
+      Booking.find()
+        .populate('alfred', 'firstname name')
+        .populate('user', 'firstname name')
+        .sort({date : -1})
+          .catch(err => {
+            console.error(err)
+            res.status(404).json({bookings: 'Error'})
+          })
+          .then(bookings => {
+            res.json(bookings);
+          })
+    } else {
+      res.status(403).json({msg: 'Access denied'});
+    }
+
+
+});
+
 module.exports = router;
