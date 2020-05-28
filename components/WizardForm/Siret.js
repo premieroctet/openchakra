@@ -13,6 +13,8 @@ const {ENTITES} = require('../../utils/consts')
 
 moment.locale('fr');
 
+const DATE_COUPURE_INSEE = moment("2020-06-09")
+
 class siret extends React.Component {
 
     constructor(props) {
@@ -98,7 +100,19 @@ class siret extends React.Component {
     render()  {
         const { classes } = this.props;
 
+        const coupureToday=DATE_COUPURE_INSEE.format('DD/MM/YY')==moment().format('DD/MM/YY')
+
         return (
+          <>
+           { coupureToday ?
+            <Typography style={{color:'red'}}>
+              En raison de l'arrêt des serveurs de l'INSEE ce {`${DATE_COUPURE_INSEE.format('DD/MM/YY')}`},
+              nous ne pouvons renseigner automatiquement vos informations à partir de votre numéro Siret
+              <br/>Merci de saisir tous les champs manuellement
+              </Typography>
+              :
+              null
+          }
             <Grid container>
                 <Grid item style={{display: 'flex'}}>
                   <Grid>
@@ -177,6 +191,7 @@ class siret extends React.Component {
                   </Grid>
                 </Grid>
             </Grid>
+            </>
         );
     };
 }
