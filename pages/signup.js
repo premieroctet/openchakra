@@ -16,6 +16,7 @@ import fr from 'date-fns/locale/fr';
 import { toast } from 'react-toastify';
 import {Helmet} from 'react-helmet';
 import styles from './signup/signupStyle'
+import {checkPass1, checkPass2} from '../utils/passwords';
 
 registerLocale('fr', fr);
 
@@ -35,8 +36,8 @@ class signup extends React.Component {
           zip_code: '',
           country: '',
           checked: false,
-          check2: false,
-          check3: false,
+          status1: {error:'', check:false},
+          status2: {error:'', check:false},
           errors: {},
           lat: '',
           lng: '',
@@ -61,26 +62,10 @@ class signup extends React.Component {
       };
 
   onChangePassword = e => {
-    this.setState({ [e.target.name]: e.target.value });
-    this.setState({ check3: false});
-    this.setState({password: e.target.value});
-    if(e.target.value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})")){
-      this.setState({check2: true});
-    } else {
-      this.setState({check2: false});
-    }
-    this.setState({check3: this.state.password2===e.target.value})
-  };
-
-  onChangePassword2 = e => {
-    this.setState({ [e.target.name]: e.target.value });
-    console.log("Target:"+e.target.name+":Pass1,2:"+this.state.password+","+this.state.password2);
-    this.setState({password2: e.target.value});
-    if(this.state.password===e.target.value) {
-      this.setState({check3: true});
-    } else {
-      this.setState({check3: false});
-    }
+    this.setState({
+      status1: checkPass1(this.state.password),
+      status2: checkPass2(this.state.password, this.state.password2),
+    })
   };
 
     onChangeAddress({suggestion}) {
@@ -295,13 +280,12 @@ class signup extends React.Component {
                             type="password"
                             name="password"
                             value={this.state.password}
-                            onChange={this.onChangePassword}
-                            error={errors.password}
-                            helperText="8 caractères minimum dont
-                                  une majuscule, une minuscule et un chiffre"
+                            onChange={this.onChange}
+                            onKeyUp ={this.onChangePassword}
+                            error={this.state.status1.error}
+                            helperText={this.state.status1.error}
                         />
                       </Grid>
-                      {!this.state.check2 ? <em style={{color:'red'}}>Mot de passe invalide</em> : null}
                       <Grid item style={{width: '100%'}}>
                         <TextField
                             label="Saisir à nouveau le mot de passe"
@@ -312,11 +296,12 @@ class signup extends React.Component {
                             type="password"
                             name="password2"
                             value={this.state.password2}
-                            onChange={this.onChangePassword2}
-                            error={errors.password2}
+                            onChange={this.onChange}
+                            onKeyUp ={this.onChangePassword}
+                            error={this.state.status2.error}
+                            helperText={this.state.status2.error}
                         />
                       </Grid>
-                      {!this.state.check3 ? <em style={{color:'red'}}>Les mots de passe saisis sont différents</em> : null}
                     </Grid>
                     <Typography style={{fontSize: '1.2rem', width:'100%', marginTop: 15}}>Date de naissance</Typography>
                     <p>Pour vous inscrire, vous devez être âgé d’au moins 16 ans. Les autres<br/>
@@ -353,11 +338,14 @@ class signup extends React.Component {
                     </Grid>
 
                     <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                      {this.state.checked && this.state.check2 ? <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color:"white" }}>
+                       <Button
+                           disabled = {!(this.state.checked && this.state.status1.check && this.state.status2.check)}
+                           type="submit"
+                           variant="contained"
+                           color="primary"
+                           style={{ width: '100%',color:"white" }}>
                         Inscription
-                      </Button> : <Button disabled type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
-                        Inscription
-                      </Button> }
+                      </Button>
 
                     </Grid>
                   </form>
