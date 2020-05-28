@@ -37,7 +37,10 @@ class siret extends React.Component {
       }
       console.log(`After:${name}=>${value}`)
       this.setState({ [name]: value },
-        () => this.props.onChange(this.state));
+        () => {
+          this.props.onChange(this.state)
+          if (name=='siret') this.onSubmit()
+        });
 
     };
 
@@ -73,13 +76,12 @@ class siret extends React.Component {
                    this.setCompanyData(res.data.siege_social);
                  })
                  .catch(err => {
-                    toast.error("Siret/Siren inconnu");
                     this.setState({
                       name:'',
                       status: '',
                       creation_date:'',
                       naf_ape: '',
-                      errors: 'Merci de saisir les données manuellement'
+                      errors: 'Siret/Siren inconnu, merci de saisir les données manuellement'
                     }, () => this.props.onChange(this.state));
                     console.error(err);
                  })
@@ -107,9 +109,6 @@ class siret extends React.Component {
                     />
                   </Grid>
                   <Grid>
-                    <Button type="button" variant='contained' color="secondary" style={{marginTop: 25, marginLeft: 15,color: 'white'}} onClick={() => this.onSubmit()}>
-                      Valider
-                    </Button>
                   </Grid>
                 </Grid>
                 <Grid container>

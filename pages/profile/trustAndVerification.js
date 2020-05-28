@@ -30,6 +30,7 @@ import styles from './trustAndVerification/trustAndVerificationStyle'
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import Siret from '../../components/WizardForm/Siret';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -118,6 +119,7 @@ class trustAndVerification extends React.Component {
         };
         this.editSiret = this.editSiret.bind(this);
         this.callDrawer = this.callDrawer.bind(this)
+        this.onSiretChanged = this.onSiretChanged.bind(this)
     }
 
     componentDidMount() {
@@ -171,7 +173,11 @@ class trustAndVerification extends React.Component {
     }
 
     onChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
+      const {name, value} = e.target
+      this.setState({ [e.target.name]: e.target.value },
+      () => {
+        if (name=='siret') this.handleSiret()
+      });
     };
 
     onChange2 = event => {
@@ -183,6 +189,11 @@ class trustAndVerification extends React.Component {
             [name]: value
         });
     };
+
+    onSiretChanged = data => {
+      console.log(`Siret changed : ${JSON.stringify(data)}`)
+      this.setState(data)
+    }
 
     onChangeRecto = e => {
         this.setState({id_recto:e.target.files[0],haveCard:false});
@@ -635,49 +646,7 @@ class trustAndVerification extends React.Component {
                                         </Grid>
                                     </Grid>
                                     {professional ?
-                                        <React.Fragment>
-                                            <Grid container className={classes.containerProfessional}>
-                                                <Grid item xs={12} style={{display:"contents",justifyContent:"center"}}>
-                                                    <TextField
-                                                        id="standard-name"
-                                                        className={classes.textField}
-                                                        value={this.state.siret}
-                                                        onChange={this.onChange}
-                                                        margin="normal"
-                                                        name={'siret'}
-                                                        variant={'outlined'}
-                                                        label={'Siret'}
-                                                    />
-                                                    <Grid item xs={3} style={{marginTop:8,marginLeft:5}}>
-                                                        <Button onClick={()=>this.handleSiret()} type="submit" variant="contained" color="primary" style={{color:'white',marginTop:15 }}>
-                                                            Vérifier
-                                                        </Button>
-                                                    </Grid>
-                                                </Grid>
-                                            </Grid>
-                                            <Grid container style={{width:'85%',marginTop:20,backgroundColor:'whitesmoke',paddingLeft:10}}>
-                                                <Grid item xs={6}>
-                                                    <p style={{marginBottom:0}}>Siret : {this.state.siret}</p>
-                                                </Grid>
-                                                <Grid item xs={6}>
-                                                    <p style={{marginBottom:0}}>Date de creation : {this.state.creation_date}</p>
-                                                </Grid>
-                                            </Grid>
-                                            <Grid container style={{width:'85%',backgroundColor:'whitesmoke',paddingLeft:10}}>
-                                                <Grid item xs={6}>
-                                                    <p style={{marginBottom:0,marginTop: 10}}>Dénomination : {this.state.name}</p>
-                                                </Grid>
-                                                <Grid item xs={6}>
-                                                    <p style={{marginBottom:0,marginTop: 10}}>NAF/APE : {this.state.naf_ape}</p>
-                                                </Grid>
-                                            </Grid>
-                                            <Grid container style={{width:'85%',backgroundColor:'whitesmoke',paddingLeft:10}}>
-
-                                                <Grid item xs={12}>
-                                                    <p style={{marginTop: 10}}>Status juridique : {this.state.status}</p>
-                                                </Grid>
-                                            </Grid>
-                                        </React.Fragment>
+                                      <Siret onChange={this.onSiretChanged}/>
                                         : null}
                                     <Grid item xs={5}>
                                         <Button className={classes.respenr2} onClick={this.editSiret} type="submit" variant="contained" color="primary" style={{color:'white',marginTop:15 }}>
