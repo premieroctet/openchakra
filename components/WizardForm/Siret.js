@@ -8,6 +8,9 @@ import axios from 'axios';
 import Button from "@material-ui/core/Button";
 import styles from '.././Siret/SiretStyle'
 const moment = require('moment');
+const {SIRET} = require('../../config/config')
+const {ENTITES} = require('../../utils/consts')
+
 moment.locale('fr');
 
 class siret extends React.Component {
@@ -28,63 +31,69 @@ class siret extends React.Component {
 
     onChange = e => {
       let {name, value} = e.target;
-      console.log(`*Before:${name}=>${value}`)
       if (name==='siret') {
         value = value.replace(/ /g, '');
       }
       if (name==='creation_date') {
         value=moment(value).format('DD/MM/YYYY')
       }
-      console.log(`After:${name}=>${value}`)
       this.setState({ [name]: value },
-        () => this.props.onChange(this.state));
+        () => {
+          this.props.onChange(this.state)
+          if (name=='siret') this.onSubmit()
+        });
 
     };
 
 
-  setCompanyData(data) {
-    const date = data.date_creation;
-    const year = date.substring(0,4);
-    const month = date.substring(4,6);
-    const day = date.substring(6,8);
-    const result = day+'/'+month+'/'+year;
-    this.setState({
-      name: data.l1_normalisee,
-      naf_ape: data.activite_principale,
-      status: data.libelle_nature_juridique_entreprise,
-      creation_date: result,
-      errors: null,
-    }, () => this.props.onChange(this.state)
-    );
-  }
 
     onSubmit = e => {
 
 
         const code = this.state.siret;
 
-        axios.get(`https://entreprise.data.gouv.fr/api/sirene/v1/siret/${code}`)
+        const config = {
+          headers: { Authorization: `Bearer ${SIRET.token}` }
+        };
+
+        axios.get(`${SIRET.siretUrl}/${code}`, config)
             .then(res => {
               this.setCompanyData(res.data.etablissement);
             })
             .catch(err => {
-               axios.get(`https://entreprise.data.gouv.fr/api/sirene/v1/siren/${code}`)
+               axios.get(`${SIRET.sirenUrl}/${code}`, config)
                  .then(res => {
-                   this.setCompanyData(res.data.siege_social);
+                   this.setCompanyData(res.data);
                  })
                  .catch(err => {
-                    toast.error("Siret/Siren inconnu");
                     this.setState({
                       name:'',
                       status: '',
                       creation_date:'',
                       naf_ape: '',
-                      errors: 'Merci de saisir les données manuellement'
+                      errors: 'Siret/Siren inconnu, merci de saisir les données manuellement'
                     }, () => this.props.onChange(this.state));
                     console.error(err);
                  })
               })
     };
+
+    setCompanyData(data) {
+      const uniteLegale = data.uniteLegale.periodesUniteLegale ? data.uniteLegale.periodesUniteLegale[0] : data.uniteLegale
+      const date = data.uniteLegale.dateCreationUniteLegale;
+      const year = date.substring(0,4);
+      const month = date.substring(5,7);
+      const day = date.substring(8,10);
+      const result = day+'/'+month+'/'+year;
+      this.setState({
+        name: uniteLegale.denominationUniteLegale || `${data.uniteLegale.prenomUsuelUniteLegale || uniteLegale.prenomUsuelUniteLegale} ${uniteLegale.nomUniteLegale}`,
+        naf_ape: uniteLegale.activitePrincipaleUniteLegale,
+        status: ENTITES[uniteLegale.categorieJuridiqueUniteLegale],
+        creation_date: result,
+        errors: null,
+      }, () => this.props.onChange(this.state)
+      );
+    }
 
     render()  {
         const { classes } = this.props;
@@ -107,9 +116,6 @@ class siret extends React.Component {
                     />
                   </Grid>
                   <Grid>
-                    <Button type="button" variant='contained' color="secondary" style={{marginTop: 25, marginLeft: 15,color: 'white'}} onClick={() => this.onSubmit()}>
-                      Valider
-                    </Button>
                   </Grid>
                 </Grid>
                 <Grid container>
