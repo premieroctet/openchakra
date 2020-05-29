@@ -119,7 +119,7 @@ class all extends React.Component {
         localStorage.setItem('path', Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get("/myAlfred/api/shop/all")
+        axios.get("/myAlfred/api/admin/shop/all")
           .then((response) => {
             let alfred = response.data;
             this.setState({alfred: alfred})

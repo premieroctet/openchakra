@@ -192,7 +192,7 @@ router.get('/users/all',passport.authenticate('jwt',{session:false}),(req,res) =
     const admin = decode.is_admin;
 
     if(admin) {
-        User.find({})
+        User.find({}, 'firstname name email is_alfred is_admin')
             .sort({creation_date: -1})
             .then(user => {
                 if (!user) {
@@ -330,6 +330,28 @@ router.delete('/users/users/:id',passport.authenticate('jwt',{session: false}),(
             .catch(err => res.status(404).json({user: 'No user found'}));
 
 });
+
+// @Route GET /myAlfred/api/admmin/shop/all
+// View all shop
+router.get('/shop/all', (req, res) => {
+    Shop.find({}, '_id creation_date')
+      .sort({creation_date:-1})
+      .populate('alfred','_id firstname name email')
+      .then(shop => {
+          if (typeof shop !== 'undefined' && shop.length > 0) {
+              res.json(shop);
+          }
+          else {
+              return res.status(400).json({
+                  msg: 'No shop found'
+              });
+          }
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({shop: 'No shop found'})});
+});
+
 
 // @Route GET /myAlfred/api/admin/users/alfred
 // List all alfred
@@ -1835,16 +1857,10 @@ router.get('/prestation/all',passport.authenticate('jwt',{session:false}),(req,r
     const admin = decode.is_admin;
 
     if(admin) {
-        Prestation.find()
-            .sort({label:1, category:1})
-            .populate('category')
-            .populate('job')
-            .populate('service')
-            .populate('billing')
-            .populate('search_filter')
-            .populate('filter_presentation')
-            .populate('calculating')
-            .populate('tags')
+        Prestation.find({}, 'label private_alfred')
+            .sort({s_label:1, category:1})
+            .populate({path : 'service', select : 'label', populate : {path : 'category', select : 'label'}})
+            .populate('filter_presentation', 'label')
             .then(prestation => {
                 if (!prestation) {
                     return res.status(400).json({msg: 'No prestation found'});
