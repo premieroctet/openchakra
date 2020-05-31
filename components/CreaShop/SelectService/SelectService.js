@@ -1,3 +1,5 @@
+const AUTOCOMPLETE=false
+
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
@@ -6,9 +8,11 @@ import styles from '../componentStyle'
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 const { inspect } = require('util');
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import useAutocomplete from '@material-ui/lab/useAutocomplete';
+const {matches, normalize} = require('../../../utils/text')
+import Select from "react-dropdown-select";
 
 class SelectService extends React.Component {
   constructor(props) {
@@ -35,17 +39,16 @@ class SelectService extends React.Component {
 	    // FIX: passer les keyowrds autrement dans le back
             // Dont show services to exclude (i.e. already in the shop)
             if (!this.props.exclude || !this.props.exclude.includes(s.id)) {
-              let srv_opt={category: k, name: s.label+"/"+s.keywords.join(' '), id: s.id};
+              let srv_opt={label: `${s.label}`, value: s.id, keywords: s.keywords.map(k => normalize(k)).join(' ').toLowerCase(), };
               services.push(srv_opt);
-              if (this.state.service==null && s.id==this.props.service) {
-                console.log("Found");
+	             if (this.state.service==null && s.id==this.props.service) {
                 this.setState({service: srv_opt});
               }}
           });
         });
         this.setState({services: services});
       }).catch(error => {
-      console.log(error);
+      console.error(error);
     })
   }
 
@@ -53,8 +56,16 @@ class SelectService extends React.Component {
    this.setServices('');
   }
 
-  onChange(event, value){
-    console.log("OnChange value:"+inspect(value));
+  onChange(item){
+    if (item.length>0) {
+      this.setState({service: item ? item[0].value : null});
+      if(item !== undefined && item !== null){
+        this.props.onChange(item[0].value);
+      }
+    }
+  }
+
+  onChangeSelect(value){
     this.setState({service: value ? value : null});
     if(value !== undefined && value !== null){
       this.props.onChange(value.id);
@@ -62,8 +73,6 @@ class SelectService extends React.Component {
   }
 
   handleKeyDown(event){
-    // FIX: manque ernier caractère dans target.value
-    console.log("OnKeyDown:"+JSON.stringify(event.target.value));
     this.setServices(event.target.value);
   }
 
@@ -71,8 +80,19 @@ class SelectService extends React.Component {
     return this.state.creation;
   }
 
+  searchFn = st => {
+    const search = normalize(st.state.search)
+    const options = st.props.options
+    const selected=options.filter( opt => {
+      const ok= matches(opt.keywords,search) || matches(opt.label,search)
+      return ok
+    })
+    return selected
+  }
+
   render() {
     const {classes, creationBoutique} = this.props;
+    const {service} = this.state;
 
     return(
       <Grid className={classes.mainContainer}>
@@ -80,12 +100,12 @@ class SelectService extends React.Component {
           <Grid>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>{creationBoutique ? "Créez votre boutique de services" : this.isCreation() ? "Ajouter un service" : "Configurer un service"}</Typography>
+                <Typography className={classes.policySizeTitle}>{creationBoutique ? "Créez votre boutique de services" : this.isCreation() ? "Ajouter un service" : "Modifier un service"}</Typography>
               </Grid>
               <Grid>
                 <Grid>
                   <Grid>
-                    <h3 className={classes.policySizeSubtitle}>{this.isCreation() ? "Quel service souhaitez-vous réaliser ?" : "Ce service va être configuré"} </h3>
+                    <h3 className={classes.policySizeSubtitle}>{this.isCreation() ? "Quel service souhaitez-vous réaliser ?" : `Vous allez modifier votre service "${service ? service.label : ''}"`} </h3>
                   </Grid>
                   { creationBoutique ?
                     <Grid className={classes.bottomSpacer}>
@@ -96,8 +116,10 @@ class SelectService extends React.Component {
                     </Grid> : null
                   }
                 </Grid>
+                { this.isCreation() ?
                 <Grid >
                   <Grid>
+                  { AUTOCOMPLETE ?
                     <Autocomplete
                       id="grouped-demo"
                       className={classes.textFieldSelecteService}
@@ -105,15 +127,36 @@ class SelectService extends React.Component {
                       onKeyDown={(event) =>{ this.handleKeyDown(event) }}
                       options={this.state.services}
                       groupBy={option => option.category}
-                      getOptionLabel={option => option.name.split('/')[0]}
+                      getOptionLabel={option => option.label}
                       value={this.state.service}
                       disabled={!this.isCreation()}
                       renderInput={params => (
                         <TextField {...params} label={this.isCreation() ? "Tapez votre service" : ""} variant="outlined" fullWidth />
                       )}
+                      renderOption= {(option, {value}) => {
+                        return (
+                           <div>
+                           {option ? option.label.split('/')[0] : ''}
+                           </div>
+                       );
+                      }}
                     />
+                    :
+                    <Select
+                      options={this.state.services}
+                      onChange={ this.onChange }
+                      //onKeyDown={(event) =>{ this.handleKeyDown(event) }}
+                      disabled={!this.isCreation()}
+                      searchable={true}
+                      searchBy={'label'}
+                      searchFn={this.searchFn}
+                    />
+                  }
                   </Grid>
                 </Grid>
+                :
+                null
+                }
               </Grid>
             </Grid>
           </Grid>

@@ -14,6 +14,7 @@ import styles from './security/securityStyle'
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import {checkPass1, checkPass2} from '../../utils/passwords';
 
 moment.locale('fr');
 
@@ -28,8 +29,9 @@ class security extends React.Component {
             newPassword: '',
             newPassword2: '',
             check : false,
-            checkbuttonvalidate : false,
-            testpremier : false,
+            check1 : false,
+            check2 : false,
+            wrongPassword : false,
             last_login: [],
         };
         this.callDrawer = this.callDrawer.bind(this)
@@ -54,41 +56,24 @@ class security extends React.Component {
 
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
+    };
+
+    onChangePassword = e => {
+        this.setState({ [e.target.name]: e.target.value, wrongPassword: false });
         if(e.target.value !== '') {
-            this.setState({testpremier : true});
+            this.setState({check : true});
 
         } else {
-            this.setState({testpremier: false})
+            this.setState({check: false})
         }
     };
 
-    onChangeNewPassword = e => {
-        this.setState({ [e.target.name]: e.target.value });
-        if(e.target.value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})")){
-            this.setState({newPassword: e.target.value});
-        }
-    };
-
-   onChangeNewPassword2 = e => {
-        this.setState({ [e.target.name]: e.target.value });
-        if(e.target.value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})") && this.state.newPassword === this.state.newPassword2){
-            this.setState({newPassword2: e.target.value});
-            this.setState({check: false});
-            this.setState({checkbuttonvalidate : true});
-        } else {
-            this.setState({check: true});
-            this.setState({checkbuttonvalidate : false});
-        }
-    };
 
     onClick1 = () => {
-        if(this.state.newPassword === this.state.newPassword2){
-            this.setState({check: false});
-            this.setState({checkbuttonvalidate : true});
-        } else {
-            this.setState({check: true});
-            this.setState({checkbuttonvalidate : false});
-        }
+        this.setState({
+            check1: checkPass1(this.state.newPassword).check,
+            check2: checkPass2(this.state.newPassword,this.state.newPassword2).check
+        });
     };
 
 
@@ -101,7 +86,12 @@ class security extends React.Component {
                 toast.info('Mot de passe modifié');
                 setTimeout(() => window.location.reload(), 2000);
             })
-            .catch();
+            .catch(err => {
+                console.log(err)
+                if (err.response.data.wrongPassword){
+                    this.setState({wrongPassword: true})
+                }
+            });
     };
 
     callDrawer(){
@@ -110,7 +100,7 @@ class security extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const testpremier = this.state.testpremier ?  <Button type="submit" style={{color:"white"}} variant="contained" color="primary"> Valider</Button> :  <Button disabled style={{color:"white"}} type="submit" variant="contained" color="primary">Valider</Button>;
+        const checkButtonValidate = this.state.check && this.state.check1 && this.state.check2;
         const {last_login} = this.state;
 
         return (
@@ -122,7 +112,7 @@ class security extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         <Grid style={{zIndex: 0}}>
-                            <ResponsiveDrawer ref={this.child} isActiveIndex={4}/>
+                            <ResponsiveDrawer ref={this.child} isActiveIndex={4} itemsDrawers={'account'}/>
                         </Grid>
                         <Grid>
                             <Grid>
@@ -159,8 +149,10 @@ class security extends React.Component {
                                                 type="password"
                                                 name="password"
                                                 value={this.state.password}
-                                                onChange={this.onChange}
+                                                onChange={this.onChangePassword}
                                                 variant={"outlined"}
+                                                error={this.state.wrongPassword}
+                                                helperText={this.state.wrongPassword?"Mot de passe erroné":""}
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={4}>
@@ -173,8 +165,11 @@ class security extends React.Component {
                                                 type="password"
                                                 name="newPassword"
                                                 value={this.state.newPassword}
-                                                onChange={this.onChangeNewPassword}
+                                                onChange={this.onChange}
                                                 variant={"outlined"}
+                                                onKeyUp={this.onClick1}
+                                                error={checkPass1(this.state.newPassword).error}
+                                                helperText={checkPass1(this.state.newPassword).error}
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={4}>
@@ -187,15 +182,18 @@ class security extends React.Component {
                                                 name="newPassword2"
                                                 style={{width:'100%'}}
                                                 value={this.state.newPassword2}
-                                                onChange={this.onChangeNewPassword2}
+                                                onChange={this.onChange}
                                                 variant={"outlined"}
                                                 onKeyUp={this.onClick1}
+                                                error={checkPass2(this.state.newPassword,this.state.newPassword2).error}
+                                                helperText={checkPass2(this.state.newPassword,this.state.newPassword2).error}
                                             />
                                         </Grid>
-                                        {this.state.check ? <p style={{color : 'red'}}>Mot de passe invalide</p> : null}
                                         <Grid item style={{ display: 'flex', justifyContent: 'left', marginTop: 30 }}>
-                                            {this.state.checkbuttonvalidate  ?
-                                                testpremier
+                                            {checkButtonValidate  ?
+                                                <Button type="submit" style={{color:"white"}} variant="contained" color="primary">
+                                                    Valider
+                                                </Button>
                                                 :
                                                 <Button disabled type="submit" variant="contained" style={{color: 'white'}} color="primary">
                                                     Valider

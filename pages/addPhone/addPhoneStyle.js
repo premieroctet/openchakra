@@ -2,13 +2,16 @@ export default theme => ({
   mainContainer:{
     [theme.breakpoints.down("xs")]:{
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
+
     }
   },
   signupContainer: {
     alignItems: 'center',
-    height: '100vh',
     flexDirection: 'column',
+    [theme.breakpoints.down('xs')]:{
+      marginBottom: 200
+    }
 
   },
   card: {

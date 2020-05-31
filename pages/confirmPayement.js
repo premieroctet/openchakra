@@ -51,6 +51,7 @@ class ConfirmPayement extends React.Component {
 
   componentDidMount() {
     const bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
+    this.setState({bookingObj: bookingObj});
 
     axios.defaults.headers.common["Authorization"] = localStorage.getItem( "token");
 
@@ -63,9 +64,6 @@ class ConfirmPayement extends React.Component {
       recipient: localStorage.getItem("recipient"),
       prestations: bookingObj.prestations,
       bookingObj: bookingObj,
-      city: bookingObj.address.city,
-      address: bookingObj.address.address,
-      zip_code: bookingObj.address.zip_code,
       date: bookingObj.date_prestation,
       hour: bookingObj.time_prestation,
       travel_tax: bookingObj.travel_tax,
@@ -115,7 +113,12 @@ class ConfirmPayement extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { currentUser, user } = this.state;
+    const { currentUser, user, bookingObj } = this.state;
+
+    if(currentUser && bookingObj){
+      var checkAdd = currentUser.billing_address.address === bookingObj.address.address &&  currentUser.billing_address.zip_code === bookingObj.address.zip_code && currentUser.billing_address.city === bookingObj.address.city ;
+    }
+
 
     const pricedPrestations=this.computePricedPrestations();
     const countPrestations=this.computeCountPrestations();
@@ -177,7 +180,9 @@ class ConfirmPayement extends React.Component {
                           <Grid item xs={9} style={{marginLeft: 25}}>
                             <p>Adresse de la prestation:</p>{" "}
                             <p>
-                              {this.state.address}, {this.state.zip_code} {this.state.city}{" "}
+                              {bookingObj.address ?
+                                checkAdd ? "A mon adresse principale" : `Chez ${user.firstname}` : "En visio"
+                              }
                             </p>
                           </Grid>
                         </Grid>

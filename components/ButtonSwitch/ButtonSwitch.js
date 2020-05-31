@@ -109,7 +109,11 @@ class ButtonSwitch extends React.Component {
   }
 
   onChangePrice(event) {
-    this.setState({price: parseInt(event.target.value)}, () => this.fireChange());
+    var price=parseInt(event.target.value)
+    if (isNaN(price)) {
+      price=0
+    }
+    this.setState({price: price}, () => this.fireChange());
   }
 
   onChangeLabel(event) {

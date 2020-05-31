@@ -29,17 +29,18 @@ const {computeDistanceKm}=require('../../utils/functions');
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import UserAvatar from '../Avatar/UserAvatar';
-import { computeAverageNotes, computeSumSkills } from '../../utils/functions';
+import { computeAverageNotes } from '../../utils/functions';
 
 class CardPreview extends React.Component{
   constructor(props){
     super(props);
     this.state = {
+      cpData : {},
       dense: true,
-      score: 0,
-      service: [],
-      alfred:[],
-      shop:[],
+      score: null,
+      service: null,
+      alfred:null,
+      shop:null,
       open: false,
       id_service: '',
       page: false,
@@ -48,10 +49,16 @@ class CardPreview extends React.Component{
   }
 
   componentDidMount() {
+    axios.get(`/myAlfred/api/serviceUser/cardPreview/${this.props.services}`)
+      .then (res => {
+        this.setState({cpData: res.data})
+      })
+      .catch (err => console.error(err))
+    /**
     if(typeof this.props.services.user === 'string'){
       axios.get('/myAlfred/api/shop/alfred/'+this.props.services.user)
         .then( res => {
-          this.setState({shop: res.data, alfred:res.data.alfred, score:res.data.alfred.score}, () =>
+          this.setState({alfred:res.data.alfred, score:res.data.alfred.score}, () =>
             axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${this.props.services.user}`)
               .then (res => {
                 var reviews = res.data;
@@ -67,7 +74,7 @@ class CardPreview extends React.Component{
     }else{
       axios.get('/myAlfred/api/shop/alfred/'+this.props.services.user._id)
         .then( res => {
-          this.setState({shop: res.data, alfred:res.data.alfred, score:res.data.alfred.score}, () =>
+          this.setState({alfred:res.data.alfred, score:res.data.alfred.score}, () =>
             axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${this.props.services.user._id}`)
               .then (res => {
                 var reviews = res.data;
@@ -80,7 +87,7 @@ class CardPreview extends React.Component{
           )
         })
         .catch( err => console.log(err))
-    }
+    }*/
 
 
   }
@@ -104,11 +111,11 @@ class CardPreview extends React.Component{
   }
 
   render(){
-    const {classes, services, userState, isOwner, gps, needAvatar} = this.props;
-    const service = services.service;
-    const { shop, reviews } = this.state;
+    const {classes, userState, isOwner, gps, needAvatar, isAdmin} = this.props;
+    const { reviews } = this.state;
+    const { cpData } = this.state;
 
-    const distance = gps ? computeDistanceKm(gps, services.service_address.gps) : '';
+    const distance = gps ? computeDistanceKm(gps, cpData.gps) : '';
 
     const StyledRating = withStyles({
       iconFilled: {
@@ -118,21 +125,20 @@ class CardPreview extends React.Component{
 
       const notes = computeAverageNotes(reviews.map(r => r.note_alfred));
 
-
     return (
       <Grid>
         <Card className={classes.card}>
-          <Grid className={classes.cardMedia} style={{ backgroundImage:  'url("' + service.picture + '")'}}>
-            { shop.is_professional ?
+          <Grid className={classes.cardMedia} style={{ backgroundImage:  'url("' + cpData.picture + '")'}}>
+            { cpData.is_professional ?
               <Grid className={classes.statusMedia}>
                 <Chip label="PRO" className={classes.chipStyle}/>
               </Grid>
               :null
             }
-            {userState && isOwner ?
+            {userState && isOwner || isAdmin  ?
               <Grid>
                 <Grid className={classes.actionMediaEdit}>
-                  <Link href={'/myShop/services?id=' + services._id}>
+                  <Link href={'/myShop/services?id=' + cpData._id}>
                     <IconButton aria-label="Edit" className={classes.iconButtonStyle}>
                       <EditIcon style={{color: '#4fbdd7'}}/>
                     </IconButton>
@@ -140,7 +146,7 @@ class CardPreview extends React.Component{
                 </Grid>
                 <Grid className={classes.actionMediaRemove}>
                   <IconButton aria-label="remove" className={classes.iconButtonStyle}>
-                    <DeleteForeverIcon onClick={()=>this.handleClickOpen(services._id)} style={{color: '#f87280'}}/>
+                    <DeleteForeverIcon onClick={()=>this.handleClickOpen(cpData._id)} style={{color: '#f87280'}}/>
                   </IconButton>
                 </Grid>
               </Grid>
@@ -149,15 +155,13 @@ class CardPreview extends React.Component{
             { needAvatar ?
               <Grid className={classes.avatar}>
                 <Grid>
-                  <UserAvatar classes={'avatarLetter'} user={services.user} className={classes.avatarLetter} />
+                  <UserAvatar user={cpData.alfred} className={classes.avatarLetter} />
                 </Grid>
                 <Grid style={{marginTop: 20}}>
                   <Grid style={{display:'flex', flexDirection: 'column'}} className={classes.contentDistanceUnderAvatar}>
                     <Grid>
                       <Typography component="p" className={classes.sizeTextUnderAvatar}>
-                        {services.service_address ?
-                          services.service_address.city === undefined || services.service_address.city === "" ? "Non renseigné" : services.service_address.city : "Non renseigné"
-                        }
+                        {cpData.city}
 
                       </Typography>
                     </Grid>
@@ -191,7 +195,7 @@ class CardPreview extends React.Component{
                 </Typography>
                 <Grid className={classes.cardContentHeader}>
                   <Typography component="p" className={classes.sizeText}>
-                    {service.label}
+                    {cpData.label}
                   </Typography>
                 </Grid>
                 <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
@@ -205,15 +209,13 @@ class CardPreview extends React.Component{
                   needAvatar === false ?
                     <Grid className={classes.flexPosition}>
                       <Typography variant="body2" color="textSecondary" component="p" className={classes.sizeText}>
-                        {services.service_address ?
-                          services.service_address.city === undefined || services.service_address.city === "" ? "Non renseigné" : services.service_address.city : "Non renseigné"
-                        }
+                        { cpData.city }
                       </Typography>
                       <RoomIcon className={classes.checkCircleIcon}/>
                     </Grid> : null
                 }
                 <Grid>
-                  <Link href={'userServicePreview?id=' + services._id}>
+                  <Link href={'userServicePreview?id=' + cpData._id}>
                     <Button variant="contained" color="primary" className={classes.button}>
                       {userState && isOwner ? "Visualiser" : "Réserver"}
                     </Button>
@@ -227,7 +229,7 @@ class CardPreview extends React.Component{
                   <Grid>
                     <ListItem className={classes.noPadding}>
                       <ListItemIcon className={classes.minWidth}>
-                        <img src={services.graduated && services.graduated !== "" && services.graduated !== null && services.graduated !== undefined ? '../../static/assets/img/iconCardAlfred/graduated.svg' : '../../static/assets/img/iconCardAlfred/no_graduated.svg'} alt={'Diplome'} title={'Diplome'} className={classes.imageStyle}/>
+                        <img src={cpData.graduated ? '/static/assets/img/iconCardAlfred/graduated.svg' : '/static/assets/img/iconCardAlfred/no_graduated.svg'} alt={'Diplome'} title={'Diplome'} className={classes.imageStyle}/>
                       </ListItemIcon>
                       <ListItemText
                         classes={{primary:classes.sizeText}}
@@ -238,7 +240,7 @@ class CardPreview extends React.Component{
                   <Grid>
                     <ListItem className={classes.noPadding} style={{marginLeft : 5}}>
                       <ListItemIcon  className={classes.minWidth}>
-                        <img src={services.is_certified && services.is_certified !== "" && services.is_certified !== null && services.is_certified !== undefined ? '../../static/assets/img/iconCardAlfred/certificate.svg' : '../../static/assets/img/iconCardAlfred/no_certificate.svg'} alt={'Certifié'} title={'Certifié'} className={classes.imageStyle}/>
+                        <img src={cpData.is_certified  ? '/static/assets/img/iconCardAlfred/certificate.svg' : '/static/assets/img/iconCardAlfred/no_certificate.svg'} alt={'Certifié'} title={'Certifié'} className={classes.imageStyle}/>
                       </ListItemIcon>
                       <ListItemText
                         classes={{primary:classes.sizeText}}
@@ -249,7 +251,7 @@ class CardPreview extends React.Component{
                   <Grid>
                     <ListItem className={classes.noPadding} style={{marginLeft : 5}}>
                       <ListItemIcon className={classes.minWidth}>
-                        <img src={services.level && services.level !== "" && services.level !== null && services.level !== undefined ? '../../static/assets/img/iconCardAlfred/experience.svg' : '../../static/assets/img/iconCardAlfred/no_experience.svg'} alt={'Expérimenté'} title={'Expérimenté'} className={classes.imageStyle}/>
+                        <img src={cpData.level ? '/static/assets/img/iconCardAlfred/experience.svg' : '/static/assets/img/iconCardAlfred/no_experience.svg'} alt={'Expérimenté'} title={'Expérimenté'} className={classes.imageStyle}/>
                       </ListItemIcon>
                       <ListItemText
                         classes={{primary:classes.sizeText}}

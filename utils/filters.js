@@ -12,7 +12,7 @@ const isServiceAroundGPS = (serviceUser, coordinates) => {
     const latAlfred = serviceGPS.lat;
     const lngAlfred = serviceGPS.lng;
     if (isEmpty(latAlfred) || isEmpty(lngAlfred)) {
-      console.warn("Incorect GPS in "+serviceUser._id+":"+JSON.stringify(serviceGPS));
+      console.warn("Incorrect GPS in "+serviceUser._id+":"+JSON.stringify(serviceGPS));
       return false;
     }
     else {
@@ -22,9 +22,19 @@ const isServiceAroundGPS = (serviceUser, coordinates) => {
       const removeIndex = service.findIndex(i => i._id == serviceUser._id);
       service.splice(removeIndex, 1);
       }*/
-      var distance = geolib.convertDistance( geolib.getDistance( {latitude:coordinates.lat, longitude:coordinates.lng}, {latitude:latAlfred, longitude: lngAlfred}), 'km').toFixed(2);
-      var in_perimeter = distance < serviceUser.perimeter;
-      return in_perimeter;
+      try {
+        const dist= geolib.getDistance(
+          {latitude:coordinates.lat.toString(), longitude:coordinates.lng.toString()},
+          {latitude:latAlfred.toString(), longitude: lngAlfred.toString()})
+        var distance = geolib.convertDistance( dist, 'km').toFixed(2);
+        var in_perimeter = distance < serviceUser.perimeter;
+        return in_perimeter;
+      }
+      catch (err) {
+        console.error(`Error computing distance between ${coordinates} and ${latAlfred}/${lngAlfred}`);
+        console.error(err)
+        return false;
+      }
     }
   }
 }
@@ -36,17 +46,30 @@ isServiceAtAlfredOrVisio = su => {
 
 const sortfn = gps => {
   const sort = (su1, su2) => {
-    var d1 = geolib.getDistance(gps, su1.service_address.gps); 
-    var d2 = geolib.getDistance(gps, su2.service_address.gps); 
-    return d1-d2; 
+    var d1, d2;
+    try {
+      d1 = geolib.getDistance(gps, su1.service_address.gps);
+    }
+    catch (e) {
+      console.warn(`Warning: GPS incorrect pour serviceUser ${su1._id}`)
+      d1 = 100000;
+    }
+    try {
+      d2 = geolib.getDistance(gps, su2.service_address.gps);
+    }
+    catch (e) {
+      console.warn(`Warning: GPS incorrect pour serviceUser ${su2._id}`)
+      d2 = 100000;
+    }
+    return d1-d2;
   }
   return sort;
 }
- 
+
 
 const filterServicesGPS = (serviceUsers, coordinates) => {
   var filteredServiceUsers=serviceUsers.filter( su => isServiceAtAlfredOrVisio(su) || isServiceAroundGPS(su, coordinates) );
-  filteredServiceUsers.sort(sortfn(coordinates)); 
+  filteredServiceUsers.sort(sortfn(coordinates));
   return filteredServiceUsers;
 }
 

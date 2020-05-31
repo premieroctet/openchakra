@@ -157,21 +157,10 @@ export default theme => ({
     marginLeft: "4%"
   },
   toggle: {
-    [theme.breakpoints.down("sm")]: {
-      marginLeft: "-75px",
-      transition: "margin-left 0.7s",
-
-      "&:hover": {
-        marginLeft: "0px",
-        transition: "margin-left 0.7s",
-        boxShadow: "11px 6px 23px -24px rgba(0,0,0,0.75)"
-      }
-    }
+    zIndex: 0,
   },
   paddresp: {
-    [theme.breakpoints.up("md")]: {
-      paddingLeft: 55
-    },
+    paddingLeft: 55,
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 15
     }
@@ -214,5 +203,12 @@ export default theme => ({
     [theme.breakpoints.down('xs')]: {
       display: 'none'
     }
-  }
+  },
+  menuButton: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
+  },
 })

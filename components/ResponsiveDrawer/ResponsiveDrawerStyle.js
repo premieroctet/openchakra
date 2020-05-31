@@ -27,6 +27,13 @@ export default theme => ({
   drawerPaper: {
     width: drawerWidth,
   },
+  drawerPaperMargin:{
+    width: drawerWidth,
+    marginTop: 100,
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 'inherit',
+    },
+  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),

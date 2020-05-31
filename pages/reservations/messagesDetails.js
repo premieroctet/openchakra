@@ -174,6 +174,7 @@ class MessagesDetails extends React.Component {
   render() {
     const { classes } = this.props;
     const { bookingObj } = this.state;
+
     return (
       <Fragment>
         <Layout>
@@ -279,15 +280,9 @@ class MessagesDetails extends React.Component {
                     <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
                   </Grid>
                   <Typography style={{ marginTop: "3px", color: "#9B9B9B" }}>
-                    {bookingObj === null || typeof this.state.userData.billing_address === 'undefined'
-                      ? null
-                      : convertDistance(
-                          getDistance(
-                            this.state.userData.billing_address.gps,
-                            bookingObj.address.gps
-                          ),
-                          "km"
-                        ).toFixed(2)}{" "}
+                    {bookingObj == undefined || bookingObj.address == undefined || this.state.userData.billing_address == undefined ||this.state.userData == undefined ? 0
+                      : convertDistance(getDistance(this.state.userData.billing_address.gps, bookingObj.address.gps),"km").toFixed(2)
+                    }{" "}
                     km
                   </Typography>
                 </Grid>
@@ -414,9 +409,9 @@ class MessagesDetails extends React.Component {
                   );
                 })}
                 {typeof this.state.roomData.messages !== "undefined" ? (
-                  <div style={{ margin: "auto", marginBottom: "10px" }}>
-                    <Grid container>
-                      <Grid item xs={5}>
+                  <Grid style={{ margin: "auto", marginBottom: "10px" }}>
+                    <Grid container className={classes.containerNewMessage}>
+                      <Grid item className={classes.widthBar}>
                         <hr
                           style={{
                             background: "#80808070",
@@ -425,7 +420,7 @@ class MessagesDetails extends React.Component {
                           }}
                         />
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item>
                         <p
                           style={{
                             width: "100px",
@@ -437,7 +432,7 @@ class MessagesDetails extends React.Component {
                           Nouveaux Messages
                         </p>
                       </Grid>
-                      <Grid item xs={5}>
+                      <Grid item className={classes.widthBar}>
                         <hr
                           style={{
                             background: "#80808070",
@@ -447,7 +442,7 @@ class MessagesDetails extends React.Component {
                         />
                       </Grid>
                     </Grid>
-                  </div>
+                  </Grid>
                 ) : null}
                 {this.state.messages.map((message, index) => {
                   return (

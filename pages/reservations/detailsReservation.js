@@ -171,7 +171,6 @@ class DetailsReservation extends React.Component {
   render() {
     const { classes } = this.props;
     const { bookingObj, splitAddress, currentUser, categoryLabel } = this.state;
-    console.log(bookingObj)
 
     const pricedPrestations=this.computePricedPrestations();
     const countPrestations=this.computeCountPrestations();
@@ -558,9 +557,8 @@ class DetailsReservation extends React.Component {
                             </Grid>
                             <Grid item style={{ paddingLeft: "3%" }}>
                               <Typography>
-                                {bookingObj === null
-                                  ? null
-                                  : `${bookingObj.address.address}, ${bookingObj.address.zip_code} ${bookingObj.address.city}`}
+                                {bookingObj.address ?
+                                   `${bookingObj.address.address}, ${bookingObj.address.zip_code} ${bookingObj.address.city}`: "En visio"}
                               </Typography>
                             </Grid>
                           </Grid>

@@ -1,5 +1,5 @@
 const appName = 'myalfred';
-const databaseName = 'test-myAlfred';
+const databaseName = 'test-myAlfred-V2';
 const serverPort = process.env.PORT || 3122;
 
 const source=require("./client_id.json")
@@ -39,6 +39,11 @@ const computeUrl= (req) => {
   return 'https://'+req.headers.host;
 };
 
+const SIRET = {
+  token : 'ca27811b-126c-35db-aaf0-49aea431706e',
+  siretUrl : 'https://api.insee.fr/entreprises/sirene/V3/siret',
+  sirenUrl : 'https://api.insee.fr/entreprises/sirene/V3/siren',
+}
 // Public API
 module.exports = {
     databaseName: databaseName,
@@ -46,4 +51,5 @@ module.exports = {
     completeConfig,
     mailConfig,
     computeUrl,
+    SIRET
 }

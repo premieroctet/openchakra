@@ -82,4 +82,14 @@ export default theme => ({
     margin: 'auto',
     fontSize: 'xx-large',
   },
+  containerNewMessage:{
+    justifyContent : 'space-between',
+    width: '100%'
+  },
+  widthBar:{
+    width: '40%',
+    [theme.breakpoints.down("xs")]: {
+      width: '30%',
+    }
+  }
 })

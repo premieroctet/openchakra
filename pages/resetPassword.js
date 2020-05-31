@@ -5,10 +5,11 @@ import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-
+import {checkPass1, checkPass2} from '../utils/passwords';
 import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
+import {toast} from "react-toastify";
 
 const styles = {
     loginContainer: {
@@ -30,9 +31,10 @@ class resetPassword extends React.Component {
 
         this.state = {
             password: '',
+            password2:'',
             token: '',
-            email: ''
-
+            status1: {error:'', check:false},
+            status2: {error:'', check:false},
         };
     }
 
@@ -47,27 +49,33 @@ class resetPassword extends React.Component {
     }
 
     onChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
+        this.setState({
+            [e.target.name]: e.target.value,
+        });
     };
+
+    onChange2 = e => {
+        this.setState({
+            status1: checkPass1(this.state.password),
+            status2: checkPass2(this.state.password, this.state.password2),
+        })
+    }
 
     onSubmit = e => {
         e.preventDefault();
-
         const data = {
             password: this.state.password,
             token: this.state.token,
-            email: this.state.email
-
         };
-
+        console.log("1")
         axios.post('/myAlfred/api/users/resetPassword',data)
             .then(res => {
-
-                alert('Mot de passe modifié avec succès');
+                console.log("2")
+                toast.info('Mot de passe modifié avec succès');
                 Router.push({pathname:'/login'})
             })
             .catch(err => {
-                console.log(err);
+                toast.error(err.response.data.msg)
             })
 
 
@@ -89,20 +97,6 @@ class resetPassword extends React.Component {
                                 <Grid item>
                                     <TextField
                                         id="standard-with-placeholder"
-                                        label="Email"
-                                        placeholder="Email"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="email"
-                                        name="email"
-                                        value={this.state.email}
-                                        onChange={this.onChange}
-
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
                                         label="Nouveau mot de passe"
                                         placeholder="Mot de passe"
                                         margin="normal"
@@ -111,11 +105,29 @@ class resetPassword extends React.Component {
                                         name="password"
                                         value={this.state.password}
                                         onChange={this.onChange}
-
+                                        onKeyUp={this.onChange2}
+                                        error={this.state.status1.error}
+                                        helperText={this.state.status1.error}
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        label="Répéter le mot de passe"
+                                        placeholder="Mot de passe"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="password"
+                                        name="password2"
+                                        value={this.state.password2}
+                                        onChange={this.onChange}
+                                        onKeyUp={this.onChange2}
+                                        error={this.state.status2.error}
+                                        helperText={this.state.status2.error}
                                     />
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
+                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }} disabled={!(this.state.status1.check && this.state.status2.check)}>
                                         Valider
                                     </Button>
                                 </Grid>

@@ -72,8 +72,10 @@ class SearchPage extends React.Component {
             visibleCategories:[],
             catCount:{}, // cat id => # of items to display
             availabilities:[],
+            isAdmin: false
         };
         this.filter=this.filter.bind(this);
+        this.searchCallback=this.searchCallback.bind(this);
     }
 
     static getInitialProps ({ query: { keyword, city, gps, selectedAddress, category, service, prestation, search, date} }) {
@@ -84,10 +86,6 @@ class SearchPage extends React.Component {
       }
       return init;
     }
-
-    onChangeCity({suggestion}) {
-      this.setState({gps:suggestion.latlng, city: suggestion.name});
-    };
 
     onChangeInterval(startDate, endDate) {
       if (startDate) { startDate.hour(0).minute(0).second(0).millisecond(0)};
@@ -139,6 +137,7 @@ class SearchPage extends React.Component {
                   axios.get('/myAlfred/api/users/current')
                     .then(res => {
                       let user = res.data;
+                      this.setState({isAdmin: user.is_admin});
                       st['user']=user;
                       var allAddresses={'main': user.billing_address.gps}
                       user.service_address.forEach( ad => allAddresses[ad._id]={lat:ad.lat, lng:ad.lng});
@@ -150,19 +149,27 @@ class SearchPage extends React.Component {
                          st['gps']=allAddresses['main'];
                          st['selectedAddress']='main';
                       }
-                      this.setState(st, () => { if ('search' in this.props) {this.search('date' in this.props)}});
+                      this.setState(st, () => { if (this.props.search) {this.search('date' in this.props)}});
                     })
                     .catch(err => {
-                      this.setState(st, () => { if ('search' in this.props) {this.search('date' in this.props)}});
+                      this.setState(st, () => { if (this.props.search) {this.search('date' in this.props)}});
                     });
                })
            })
-           .catch(err => { console.log(err)});
+           .catch(err => {
+             console.log(err)
+           });
+    }
+
+    searchCallback = q => {
+        if (!('gps' in q)) {
+          q['gps']=null
+        }
+        this.setState(q, () => this.search())
     }
 
     onChange = e => {
         var {name, value} = e.target;
-        console.log("onChange:"+name+","+value);
         this.setState({ [e.target.name]: e.target.value });
         if (name === 'selectedAddress') {
           this.setState({gps: value === 'all'?null: 'gps' in value ? value.gps : {'lat':value['lat'], 'lng':value['lng']}})
@@ -207,7 +214,6 @@ class SearchPage extends React.Component {
           }
         });
         serviceUsersDisplay=filtered;
-        console.log("After:"+serviceUsersDisplay.length);
       }
 
       var visibleCategories=[];
@@ -227,9 +233,12 @@ class SearchPage extends React.Component {
         var filters={}
 
         // GPS
-        if (this.state.gps) { filters['gps']=this.state.gps; }
+        if (this.state.gps) {
+          filters['gps']=this.state.gps; }
        // Keyword search disables cat/ser/presta filter
-       if (this.state.keyword) { filters['keyword']=this.state.keyword; }
+       if (this.state.keyword) {
+         filters['keyword']=this.state.keyword;
+       }
        else {
          // Category
          if (this.props.category) { filters['category']=this.props.category; }
@@ -307,7 +316,7 @@ class SearchPage extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const {user, categories, gps} = this.state;
+        const {user, categories, gps, isAdmin} = this.state;
         const serviceUsers = this.state.serviceUsersDisplay;
 
         const statusFilterBg=this.isStatusFilterSet() ? '#2FBCD3':'white';
@@ -315,7 +324,7 @@ class SearchPage extends React.Component {
 
         return (
           <Fragment>
-            <Layout>
+            <Layout searchCallback={this.searchCallback} >
               <Grid container className={classes.bigContainer}>
                 <Grid container className={classes.respfilter}>
                   <Grid item xs={12} style={{height: 50}}>
@@ -450,12 +459,12 @@ class SearchPage extends React.Component {
                                   <h3 style={{marginLeft:15}}>{cat.label}</h3>
                                 </Grid> : null
                               }
-                                <Grid container spacing={2} style={{marginLeft: 15, marginRight : 15, marginTop: 5}}>
+                                <Grid container spacing={2} className={classes.containerCardPreview}>
                                 {
                                    this.restrictServices(serviceUsers, cat).map(su => {
                                     return (
-                                      <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
-                                        <CardPreview services={su} alfred={user} gps={gps} needAvatar={true} key={moment()} />
+                                      <Grid item xs={12} sm={12} md={12} lg={3} xl={3} className={classes.paddingResponsive}>
+                                        <CardPreview services={su._id} gps={user ? user.billing_address.gps : null} needAvatar={true} key={su._id} isAdmin={isAdmin}/>
                                       </Grid>
                                     )
                                   })

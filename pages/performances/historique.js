@@ -1,157 +1,32 @@
 import React, {Fragment} from 'react';
-import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import moment from 'moment';
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import Footer from '../../hoc/Layout/Footer/Footer';
 import { Typography } from '@material-ui/core';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
-
+import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import styles from './historique/historiqueStyle'
 
 moment.locale('fr');
 
-const styles = theme => ({
-    bigContainer: {
-        marginTop: 75,
-        flexGrow: 1,
-        [theme.breakpoints.down('xs')]: {
-            marginBottom: 100,
-        }
-    },
-    exportSVG: {
-        fontFamily: 'sans-serif!important',
-        color: '#2FBCD3',
-    },
-    exportPNG: {
-        fontFamily: 'sans-serif!important',
-        color: '#2FBCD3',
-    },
-    hidesm: {
-        minWidth: '271px',
-        [theme.breakpoints.down('sm')]: {
-            display:'none'
-        }
-    }
-
-    ,hidelg: {
-        [theme.breakpoints.up('md')]: {
-            display:'none',
-        }
-
-    },
-    trigger:{
-        [theme.breakpoints.down('sm')]: {
-            marginTop: -10,
-            width: '100%',
-            marginLeft:'0px',
-            height:'30px',
-            backgroundColor:'#2FBCD3',
-
-            display:'block',
-            transition: 'display 0.7s',
-            borderRadius:'5px',
-            '&:focus': {
-                display:'none',
-                transition: 'display 0.7s',
-
-            }
-        }
-
-    },
-    responsiveContainer: {
-        [theme.breakpoints.down('sm')]: {
-            width:'135%!important',
-
-        }
-    }
-
-    ,toggle: {
-        [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
-            transition: 'margin-left 0.7s',
-
-            '&:hover': {
-                marginLeft:'0px',
-                transition: 'margin-left 0.7s',
-                boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-
-            }
-        }
-    },
-    tabscontainer:{width:'60%',
-        [theme.breakpoints.down('sm')]: {
-            width:'100%',}},
-
-    tabweb:{width:'100%', position:'sticky', top:'35px', fontSize:15, backgroundColor:'white', zIndex:'20',
-        [theme.breakpoints.down('sm')]: {
-            display: 'none'}},
-
-
-    tabmobile:{
-        fontSize:'10px', fontWeight:'300', marginTop:'-100px', height:60, backgroundColor:'white', position:'sticky', top:55, zIndex:20,
-        [theme.breakpoints.up('md')]: {
-            display: 'none',
-        }},
-    trait:{
-        width: '100%',
-        height: 4,
-        backgroundColor: 'rgb(47, 188, 211)',
-        borderColor: 'transparent',
-        [theme.breakpoints.down('sm')]: {
-        },
-    },
-    trait1:{
-        width: '100%',
-
-        height: 4,
-        backgroundColor: 'lightgray',
-        borderColor: 'transparent'
-    },
-    trait2:{
-        width: '100%',
-        height: 4,
-        backgroundColor: 'lightgray',
-        borderColor: 'transparent',
-    },
-    trait3:{
-        width: '100%',
-
-        height: 4,
-        backgroundColor: 'rgb(47, 188, 211)',
-        borderColor: 'transparent'
-    },
-    historesp: {
-        [theme.breakpoints.down('sm')]: {
-            marginTop: '150px',
-        },
-    },
-    shopbar:{
-        [theme.breakpoints.down('md')]: {
-            display: 'none',
-        }
-    },
-    bottombar:{visibility:'hidden', [theme.breakpoints.down('sm')]: {
-            visibility:'visible',
-            boxShadow: '2px -5px 14px -15px rgba(0,0,0,0.75)'
-        }},
-    topbar:{visibility:'visible', position: 'sticky', top: 75, zIndex:999,[theme.breakpoints.down('sm')]: {
-            visibility:'hidden',
-        }},
-
-});
 
 class Historique extends React.Component {
     constructor(props) {
         super(props);
+        this.child = React.createRef();
         this.state = {
             tabs: false,
             bookingsPaid: [],
             bookingsPaidSoon: [],
             userId: ''
         }
+        this.callDrawer = this.callDrawer.bind(this)
     }
 
     componentDidMount() {
@@ -194,6 +69,9 @@ class Historique extends React.Component {
         this.setState({ tabs: false });
     };
 
+    callDrawer(){
+        this.child.current.handleDrawerToggle();
+    }
 
     render() {
         const {classes} = this.props;
@@ -207,103 +85,29 @@ class Historique extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         <NavBarShop userId={this.state.userId}/>
-                        <Grid className={classes.toggle}  item xs={3} style={{}}>
-
-                            <div className={classes.trigger}></div>
-                            <Grid container style={{justifyContent: 'center',}}>
-                                <Grid item style={{marginTop: 30,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/performances/revenus'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex',cursor:"pointer"}}>
-                                            <img src={'../static/revenus.svg'} alt={'user'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Mes revenus
-                                            </a>
-                                        </div>
-                                    </Link>
+                        <Grid className={classes.toggle}>
+                            <Grid>
+                                <ResponsiveDrawer ref={this.child} isActiveIndex={3} itemsDrawers={'performance'} needMargin={true}/>
+                            </Grid>
+                            <Grid>
+                                <Grid>
+                                    <IconButton
+                                      color="inherit"
+                                      aria-label="open drawer"
+                                      edge="start"
+                                      onClick={this.callDrawer}
+                                      className={classes.menuButton}
+                                    >
+                                        <MenuIcon />
+                                    </IconButton>
                                 </Grid>
-
-                                <Grid item style={{marginTop: 30,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/performances/revenus'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center',cursor:"pointer"}}>
-                                            <img src={'../static/revenus.svg'} alt={'user'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a  style={{fontSize: '1.1rem',cursor:"pointer"}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/performances/statistiques'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex',cursor:"pointer"}}>
-                                            <img src={'../static/view.svg'} alt={'sign'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Mes statistiques
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10}} className={classes.hidelg}>
-                                    <Link href={'/performances/statistiques'}>
-                                        <div style={{padding: '30px',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center',cursor:"pointer"}}>
-                                            <img src={'../static/view.svg'} alt={'sign'} height={70} width={27} style={{marginleft: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/performances/evaluations'}>
-                                        <div style={{lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center',cursor:"pointer"}}>
-                                            <img src={'../static/chat.svg'} alt={'picture'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/performances/evaluations'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex',cursor:"pointer"}}>
-                                            <img src={'../static/chat.svg'} alt={'picture'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Mes évaluations
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidelg}>
-                                    <Link href={'/performances/historique'}>
-                                        <div style={{padding:'30px', lineHeight:'4',paddingLeft:5,paddingRight:5,display:'flex', justifyContent:'center',cursor:"pointer"}}>
-                                            <img src={'../static/history-2.svg'} alt={'check'} height={70} width={27} style={{marginRight: 4}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-                                <Grid item style={{marginTop: 10,width: 281}} className={classes.hidesm}>
-                                    <Link href={'/performances/historique'}>
-                                        <div style={{border: '0.2px solid lightgrey',lineHeight:'2',paddingLeft:5,paddingRight:5,display:'flex',cursor:"pointer"}}>
-                                            <img src={'../static/history-2.svg'} alt={'check'} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                                            <a style={{fontSize: '1.1rem',cursor:"pointer"}}>
-                                                Historique des <br/>transactions
-                                            </a>
-                                        </div>
-                                    </Link>
-                                </Grid>
-
-
                             </Grid>
                         </Grid>
-
-                        <Grid item xs={9} style={{paddingLeft: 20, marginBottom: '20px',minHeight:530}}>
+                        <Grid item xs={9} style={{paddingLeft: 55, marginBottom: '20px',minHeight:530}}>
                             <Grid container className={classes.tabweb} style={{paddingRight:30}}>
                                 <Grid item xs={6} style={{textAlign:"center"}}>
                                     <div>
-                                        <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '0%',position: 'sticky'}}>Versements effectués</h2>
+                                        <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '0%',position: 'sticky'}}>Versement reçu</h2>
                                     </div>
                                 </Grid>
                                 <Grid item xs={6} >
@@ -334,7 +138,7 @@ class Historique extends React.Component {
                             </Grid>
                             <Grid container className={classes.tabmobile}>
                                 <Grid item xs={6} style={{textAlign:"center"}}>
-                                    <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '25%'}}>Versements effectués</h2>
+                                    <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '25%'}}>Versement reçu</h2>
                                 </Grid>
                                 <Grid item xs={6} >
                                     <h2 onClick={this.handleClicktabs2}  style={{color:'#828181',fontWeight: '100', textAlign: 'center',cursor: 'pointer'}}>Versements à venir</h2><br/>

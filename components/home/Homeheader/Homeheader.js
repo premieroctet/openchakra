@@ -161,13 +161,16 @@ const styles = theme => ({
     right: '0%',
     margin:'auto',
   },
-  test: {
+  reactDatePicker: {
     '& .react-datepicker-wrapper, .react-datepicker__input-container': {
       display: 'block'
     }
   },
   '& .react-datepicker-wrapper, .react-datepicker__input-container':{
     display: 'block'
+  },
+  '& .react-datepicker-wrapper':{
+    width: '100% !important'
   }
 });
 
@@ -298,7 +301,7 @@ class Homeheader extends React.Component {
                       dateFormat="dd/MM/yyyy"
                       placeholderText={moment(this.state.date).format('DD/MM/YYYY')}
                       minDate={new Date()}
-                      className={classes.test}
+                      className={classes.reactDatePicker}
                     />
                    </Grid>
                 </Grid>

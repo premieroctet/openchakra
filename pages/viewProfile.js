@@ -163,7 +163,7 @@ class viewProfile extends React.Component {
                                   needAvatar={false}
                                   userState={this.state.userState}
                                   alfred={user_infos}
-                                  services={this.state.services[result]}
+                                  services={this.state.services[result]._id}
                                   needRefresh={this.needRefresh}/>
                               </Grid>
                             )

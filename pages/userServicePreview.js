@@ -45,10 +45,13 @@ import Commentary from '../components/Commentary/Commentary';
 import fr from 'date-fns/locale/fr';
 import Switch from '@material-ui/core/Switch';
 import BookingDetail from '../components/BookingDetail/BookingDetail';
+import {Helmet} from 'react-helmet';
 import {toast} from 'react-toastify';
 const moment = require('moment');
 moment.locale('fr');
 registerLocale('fr', fr);
+import Link from 'next/link';
+
 
 
 const IOSSwitch = withStyles(theme => ({
@@ -398,13 +401,24 @@ class UserServicesPreview extends React.Component {
       }
     });
 
+    let place;
+    switch (this.state.location) {
+      case 'client':
+        place = this.state.user.billing_address;
+        break;
+      case 'alfred':
+        place = this.state.serviceUser.service_address;
+        break;
+    }
+
+
     var chatPromise = actual ? emptyPromise({ res: null }) : axios.post("/myAlfred/api/chatRooms/addAndConnect", { emitter: this.state.user._id, recipient: this.state.serviceUser.user._id });
 
     chatPromise.then( res => {
       let bookingObj = {
         reference: computeBookingReference(this.state.user, this.state.serviceUser.user),
         service: this.state.serviceUser.service.label,
-        address: this.state.serviceUser.service_address,
+        address: place,
         equipments: this.state.serviceUser.equipments,
         amount: this.state.total,
         date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
@@ -504,10 +518,10 @@ class UserServicesPreview extends React.Component {
                   <label>{p.prestation.label}</label>
                 </Grid>
                 <Grid style={{width: '50%'}}>
-                  <label>{p.price.toFixed(2)}€</label>
+                  <label>{p.price ? p.price.toFixed(2) : "?"}€</label>
                 </Grid>
                 <Grid style={{width: '50%'}}>
-                  <label>{p.billing.label}</label>
+                  <label>{p.billing ? p.billing.label : '?'}</label>
                 </Grid>
               </Grid>
             </Grid>
@@ -761,6 +775,15 @@ class UserServicesPreview extends React.Component {
    );
 
     return (
+      <>
+          <Helmet>
+            <meta property="og:image" content={`/${service.picture}`} />
+            <meta property="og:image:secure_url" content={`/${service.picture}`} />
+            <meta property="og:description" content={`${service.label} par ${alfred.firstname}`} />
+            <meta property="description" content={`${service.label} par ${alfred.firstname}`} />
+            <meta property="og:type" content="website" />
+            <meta property="og:url"content="https://my-alfred.io" />
+            </Helmet>
       <Grid>
         <Layout>
           <Grid style={{width: '100%'}}>
@@ -806,6 +829,23 @@ class UserServicesPreview extends React.Component {
                     <Grid item className={classes.itemAvatar}>
                       <UserAvatar classes={'avatarLetter'} user={alfred} className={classes.avatarLetter} />
                       <Typography style={{marginTop:20}} className={classes.textAvatar}>{alfred.firstname}</Typography>
+                      <Grid style={{textAlign : 'center'}}>
+                        <Link
+                          href={{
+                            pathname: "/viewProfile",
+                            query: { id: this.state.alfred._id }
+                          }}
+                        >
+                          <Typography
+                            style={{
+                              color: "rgb(47, 188, 211)",
+                              cursor: "pointer"
+                            }}
+                          >
+                            Voir le profil
+                          </Typography>
+                        </Link>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -1080,7 +1120,7 @@ class UserServicesPreview extends React.Component {
           </Grid>
         </Layout>
       </Grid>
-
+      </>
     )
   }
 }

@@ -18,6 +18,7 @@ import styles from './NavBarStyle'
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
+const moment = require('moment');
 
 class NavBar extends Component {
   constructor(props) {
@@ -237,7 +238,7 @@ class NavBar extends Component {
         <Link href={user && user.is_alfred ? `/shop?id_alfred=${user._id}` : '/creaShop/creaShop'}>
           <MenuItem>
             <Typography>
-              <a className={classes.navbarLinkMobile}>{user && user.is_alfred ? "Ma boutique" : "Créer ma boutique"}</a>
+              <a className={classes.navbarLinkMobile}>{user && user.is_alfred ? "Ma boutique" : "Proposer mes services"}</a>
             </Typography>
           </MenuItem>
         </Link>
@@ -297,7 +298,7 @@ class NavBar extends Component {
               </Grid>
                 {hiddingPanel ?
                   <Grid className={this.state.isSearch ? classes.search : classes.searchHidden}>
-                    <SearchInput />
+                    <SearchInput searchCallback={this.props.searchCallback} />
                   </Grid>: null
                 }
               <Hidden xsDown>
@@ -330,7 +331,7 @@ class NavBar extends Component {
                     <Typography className={classes.navbarItem}>
                       <Link href={'/creaShop/creaShop'}>
                         <a className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.navbarLink}>
-                          Créer ma boutique
+                          Proposer mes services
                         </a>
                       </Link>
                     </Typography>}
