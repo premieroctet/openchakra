@@ -164,7 +164,7 @@ class shop extends React.Component {
                                           needAvatar={false}
                                           userState={this.state.userState}
                                           alfred={this.state.alfred}
-                                          services={this.state.services[result]}
+                                          services={this.state.services[result]._id}
                                           needRefresh={this.needRefresh}
                                           isAdmin={isAdmin}
                                         />

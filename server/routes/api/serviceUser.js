@@ -650,6 +650,35 @@ router.post('/nearCity',(req,res)=> {
 
 });
 
+// @Route GET /myAlfred/api/serviceUser/cardPreview/:id
+// Data fro serviceUser cardPreview
+// @Access private
+router.get('/cardPreview/:id', (req,res)=> {
+  const suId = mongoose.Types.ObjectId(req.params.id)
+  ServiceUser.findOne(suId, 'label picture alfred service service_address.city service_address.gps graduated is_certified level')
+    .populate({path : 'service', select:'picture label'})
+    .populate({path : 'user', select:'firstname picture'})
+    .catch (err => {
+      console.error(err)
+      res.status(404).json({error: err})
+    })
+    .then ( su => {
+      Shop.findOne({alfred: su.user}, 'is_professional')
+        .catch (err => {
+          console.error(err)
+          res.status(404).json({error: err})
+        })
+        .then( shop => {
+          const result={
+            _id: su._id, label : su.service.label, picture : su.service.picture,
+            alfred: su.user, city: su.service_address.city, graduated: su.graduated,
+            is_certified: su.is_certified, level : su.level, is_professional: shop.is_professional,
+            gps: su.service_address.gps
+          }
+          res.json(result)
+        })
+    })
+})
 // @Route GET /myAlfred/api/serviceUser/nearOther
 // View all service around other address
 // @Access private

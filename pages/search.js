@@ -464,7 +464,7 @@ class SearchPage extends React.Component {
                                    this.restrictServices(serviceUsers, cat).map(su => {
                                     return (
                                       <Grid item xs={12} sm={12} md={12} lg={3} xl={3} className={classes.paddingResponsive}>
-                                        <CardPreview services={su} alfred={user} gps={gps} needAvatar={true} key={su._id} isAdmin={isAdmin}/>
+                                        <CardPreview services={su._id} gps={user ? user.billing_address.gps : null} needAvatar={true} key={su._id} isAdmin={isAdmin}/>
                                       </Grid>
                                     )
                                   })
