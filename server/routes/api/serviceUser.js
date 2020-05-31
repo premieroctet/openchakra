@@ -538,6 +538,7 @@ router.get('/near/:service',passport.authenticate('jwt',{session:false}),(req,re
 // TODO : include services if visio or @alfred
 router.post('/search',(req,res)=> {
 
+    const start = process.hrtime()
     baseUrl = computeUrl(req);
     console.log("ServiceUSer search with filter:"+JSON.stringify(req.body));
     const instance = axios.create({
@@ -624,10 +625,14 @@ router.post('/search',(req,res)=> {
                     return true
                   }
                 })
+                const elapsed = process.hrtime(start)
+                console.log(`Search took ${elapsed[0]}s ${elapsed[1]/1000}ms`)
                 res.json(services)
               })
           }
           else {
+            const elapsed = process.hrtime(start)
+            console.log(`Search took ${elapsed[0]}s ${elapsed[1]/1000}ms`)
             res.json(services);
         }
         })
@@ -657,7 +662,7 @@ router.get('/cardPreview/:id', (req,res)=> {
   const suId = mongoose.Types.ObjectId(req.params.id)
   ServiceUser.findOne(suId, 'label picture alfred service service_address.city service_address.gps graduated is_certified level')
     .populate({path : 'service', select:'picture label'})
-    .populate({path : 'user', select:'firstname picture'})
+    .populate({path : 'user', select:'firstname picture avatar_letters'})
     .catch (err => {
       console.error(err)
       res.status(404).json({error: err})

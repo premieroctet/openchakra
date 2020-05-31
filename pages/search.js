@@ -131,7 +131,7 @@ class SearchPage extends React.Component {
             var catCount={}
             res.data.forEach( c => catCount[c._id]=8);
             st['catCount']=catCount;
-             axios.get('/myAlfred/api/shop/all')
+             axios.get('/myAlfred/api/shop/allStatus')
                .then( res => {
                   st['shops']=res.data;
                   axios.get('/myAlfred/api/users/current')

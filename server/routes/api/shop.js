@@ -199,6 +199,20 @@ router.get('/all', (req, res) => {
       }));
 });
 
+// @Route GET /myAlfred/api/shop/allStatus
+// View all shop status (pro/particular)
+router.get('/allStatus', (req, res) => {
+    Shop.find({}, 'is_particular is_professional')
+        .populate({path : 'alfred', select : '_id'})
+        .then(shops => {
+          res.json(shops);
+        })
+        .catch(err => {
+          console.error(err)
+          res.status(404).json({shop: 'No shop found'})
+        })
+})
+
 // @Route GET /myAlfred/api/shop/:id
 // View one shop
 router.get('/all/:id', (req, res) => {
