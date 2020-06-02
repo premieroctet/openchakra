@@ -50,7 +50,7 @@ class Commentary extends React.Component{
         }
         this.setState({reviews:reviews})
       })
-      .catch (err => console.log(err));
+      .catch (err => console.error(err));
   }
 
   render(){

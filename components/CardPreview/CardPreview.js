@@ -60,7 +60,7 @@ class CardPreview extends React.Component{
                 }
                 this.setState({reviews:reviews})
               })
-              .catch (err => console.log(err))
+              .catch (err => console.error(err))
           )
         })
         .catch( err => console.log(err))
@@ -76,10 +76,10 @@ class CardPreview extends React.Component{
                 }
                 this.setState({reviews:reviews})
               })
-              .catch (err => console.log(err))
+              .catch (err => console.error(err))
           )
         })
-        .catch( err => console.log(err))
+        .catch( err => console.error(err))
     }
 
 
