@@ -115,10 +115,16 @@ const BookingSchema = new Schema({
       required : true,
       default: 0,
     },
+    mangopay_payin_id: {
+      type: String,
+    },
     mangopay_transfer_id: {
       type: String,
     },
     mangopay_payout_id: {
+      type: String,
+    },
+    mangopay_refund_id: {
       type: String,
     },
 });
