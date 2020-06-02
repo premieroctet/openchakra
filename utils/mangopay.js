@@ -242,7 +242,7 @@ const payAlfred = booking => {
                         return
                       })
                 }
-                apimangoApi.Users.getBankAccounts(id_mangopay_alfred)
+                mangoApi.Users.getBankAccounts(id_mangopay_alfred)
                   .catch (err => {
                     console.log(err);
                     return
