@@ -84,7 +84,7 @@ class transactions extends React.Component {
                 <Layout>
                     <Grid container className={classes.bigContainer}>
                         <Grid style={{zIndex: 0}}>
-                            <ResponsiveDrawer ref={this.child} isActiveIndex={3}/>
+                            <ResponsiveDrawer ref={this.child} isActiveIndex={3} itemsDrawers={'account'}/>
                         </Grid>
                         <Grid>
                             <Grid>

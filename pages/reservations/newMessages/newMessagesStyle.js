@@ -93,16 +93,7 @@ export default theme => ({
   },
 
   toggle: {
-    [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
-      transition: 'margin-left 0.7s',
-
-      '&:hover': {
-        marginLeft:'0px',
-        transition: 'margin-left 0.7s',
-        boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-
-      }
-    }
+    zIndex:0
   },
   trigger:{
     [theme.breakpoints.down('sm')]: {
@@ -178,5 +169,12 @@ export default theme => ({
     cursor: "pointer",
     lineHeight: "3",
     marginTop: "5%"
-  }
+  },
+  menuButton: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
+  },
 })

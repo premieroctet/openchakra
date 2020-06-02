@@ -9,10 +9,11 @@ const selectService = (shop) =>{
 };
 
 const selectPrestation = (shop) =>{
+  console.debug(`Validating prestations : ${JSON.stringify(shop.prestations)}`)
   if (Object.keys(shop.prestations).length===0) return "disabled";
   return !Object.values(shop.prestations)
     .every(v => {
-      return !(v.price === 0 || v.billing == null || Object.keys(v.billing).length === 0);
+      return !(v.price == 0 || v.billing == null || Object.keys(v.billing).length === 0);
     });
 };
 
@@ -39,8 +40,9 @@ const introduceYou = (shop) =>{
   if (shop.is_particular===true) return false;
   // Pro
   if (shop.company==null) return true;
-  if (Object.values(shop.company).some(v => v==null || v==='')) return true;
+  if (!shop.company.siret) return true;
   if (shop.is_certified===false) return true;
+  return false;
 };
 
 export {creaShopPresentation, selectService, selectPrestation, settingService, assetsService, settingShop, introduceYou}

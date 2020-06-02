@@ -184,7 +184,7 @@ router.put('/billing/all/:id',passport.authenticate('jwt',{session: false}),(req
 
 // USERS
 
-// @Route GET /myAlfred/admin/users/all
+// @Route GET /myAlfred/api/admin/users/all
 // List all users
 router.get('/users/all',passport.authenticate('jwt',{session:false}),(req,res) => {
     const token = req.headers.authorization.split(' ')[1];
@@ -192,8 +192,8 @@ router.get('/users/all',passport.authenticate('jwt',{session:false}),(req,res) =
     const admin = decode.is_admin;
 
     if(admin) {
-        User.find({})
-            .sort({name: 1})
+        User.find({}, 'firstname name email is_alfred is_admin')
+            .sort({creation_date: -1})
             .then(user => {
                 if (!user) {
                     res.status(400).json({msg: 'No users found'});
@@ -207,7 +207,7 @@ router.get('/users/all',passport.authenticate('jwt',{session:false}),(req,res) =
     }
 });
 
-// @Route GET /myAlfred/admin/users/users
+// @Route GET /myAlfred/api/admin/users/users
 // List all simple users
 router.get('/users/users',passport.authenticate('jwt',{session:false}),(req,res) => {
     const token = req.headers.authorization.split(' ')[1];
@@ -228,7 +228,7 @@ router.get('/users/users',passport.authenticate('jwt',{session:false}),(req,res)
 
 });
 
-// @Route GET /myAlfred/admin/users/users/:id
+// @Route GET /myAlfred/api/admin/users/users/:id
 // Get one user
 router.get('/users/users/:id',passport.authenticate('jwt',{session:false}),(req,res) => {
     const token = req.headers.authorization.split(' ')[1];
@@ -269,7 +269,7 @@ router.put('/users/users/:id',passport.authenticate('jwt',{session: false}),(req
 
 });
 
-// @Route PUT /myAlfred/admin/users/users/idCard/:id
+// @Route PUT /myAlfred/api/admin/users/users/idCard/:id
 // Validate id card for a user
 // @Access private
 router.put('/users/users/idCard/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -289,7 +289,7 @@ router.put('/users/users/idCard/:id',passport.authenticate('jwt',{session: false
 
 });
 
-// @Route PUT /myAlfred/admin/users/users/idCard/delete:id
+// @Route PUT /myAlfred/api/admin/users/users/idCard/delete:id
 // Delete id card for a user
 // @Access private
 router.put('/users/users/idCard/delete/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -331,6 +331,28 @@ router.delete('/users/users/:id',passport.authenticate('jwt',{session: false}),(
 
 });
 
+// @Route GET /myAlfred/api/admmin/shop/all
+// View all shop
+router.get('/shop/all', (req, res) => {
+    Shop.find({}, '_id creation_date')
+      .sort({creation_date:-1})
+      .populate('alfred','_id firstname name email')
+      .then(shop => {
+          if (typeof shop !== 'undefined' && shop.length > 0) {
+              res.json(shop);
+          }
+          else {
+              return res.status(400).json({
+                  msg: 'No shop found'
+              });
+          }
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({shop: 'No shop found'})});
+});
+
+
 // @Route GET /myAlfred/api/admin/users/alfred
 // List all alfred
 router.get('/users/alfred',passport.authenticate('jwt',{session:false}),(req,res) => {
@@ -354,7 +376,7 @@ router.get('/users/alfred',passport.authenticate('jwt',{session:false}),(req,res
     }
 });
 
-// @Route GET /myAlfred/admin/users/alfred/:id
+// @Route GET /myAlfred/api/admin/users/alfred/:id
 // Get one alfred
 router.get('/users/alfred/:id',passport.authenticate('jwt',{session:false}),(req,res) => {
     const token = req.headers.authorization.split(' ')[1];
@@ -376,7 +398,7 @@ router.get('/users/alfred/:id',passport.authenticate('jwt',{session:false}),(req
     }
 });
 
-// @Route PUT /myAlfred/admin/users/alfred/:id
+// @Route PUT /myAlfred/api/admin/users/alfred/:id
 // Update an alfred
 // @Access private
 router.put('/users/alfred/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -396,7 +418,7 @@ router.put('/users/alfred/:id',passport.authenticate('jwt',{session: false}),(re
 
 });
 
-// @Route PUT /myAlfred/admin/users/alfred/idCard/:id
+// @Route PUT /myAlfred/api/admin/users/alfred/idCard/:id
 // Validate id card for an alfred
 // @Access private
 router.put('/users/alfred/idCard/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -416,7 +438,7 @@ router.put('/users/alfred/idCard/:id',passport.authenticate('jwt',{session: fals
 
 });
 
-// @Route PUT /myAlfred/admin/users/alfred/idCard/delete:id
+// @Route PUT /myAlfred/api/admin/users/alfred/idCard/delete:id
 // Delete id card for an alfred
 // @Access private
 router.put('/users/alfred/idCard/delete/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -436,7 +458,7 @@ router.put('/users/alfred/idCard/delete/:id',passport.authenticate('jwt',{sessio
 
 });
 
-// @Route DELETE /myAlfred/admin/users/alfred/:id
+// @Route DELETE /myAlfred/api/admin/users/alfred/:id
 // Delete one alfred
 // @Access private
 router.delete('/users/alfred/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -455,7 +477,7 @@ router.delete('/users/alfred/:id',passport.authenticate('jwt',{session: false}),
         .catch(err => res.status(404).json({ user: 'No user found' }));
 });
 
-// @Route GET /myAlfred/admin/users/admin
+// @Route GET /myAlfred/api/admin/users/admin
 // List all admin
 // @Access private and for admin only
 router.get('/users/admin',passport.authenticate('jwt',{session: false}),(req, res)=> {
@@ -478,7 +500,7 @@ router.get('/users/admin',passport.authenticate('jwt',{session: false}),(req, re
     }
 });
 
-// @Route GET /myAlfred/admin/users/admin/:id
+// @Route GET /myAlfred/api/admin/users/admin/:id
 // Get one admin
 // @Access private and for admin only
 router.get('/users/admin/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -500,7 +522,7 @@ router.get('/users/admin/:id',passport.authenticate('jwt',{session: false}),(req
     }
 });
 
-// @Route POST /myAlfred/admin/users/admin
+// @Route POST /myAlfred/api/admin/users/admin
 // Add an admin
 // @Access private and for admin only
 router.post('/users/admin', passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -550,7 +572,7 @@ router.post('/users/admin', passport.authenticate('jwt',{session: false}),(req, 
 });
 
 
-// @Route PUT /myAlfred/admin/users/admin/:id
+// @Route PUT /myAlfred/api/admin/users/admin/:id
 // Update an admin
 // @Access private
 router.put('/users/admin/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -573,7 +595,7 @@ router.put('/users/admin/:id',passport.authenticate('jwt',{session: false}),(req
 
 });
 
-// @Route DELETE /myAlfred/admin/users/admin/:id
+// @Route DELETE /myAlfred/api/admin/users/admin/:id
 // Delete one admin
 // @Access private
 router.delete('/users/admin/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -631,7 +653,7 @@ router.post('/calculating/all', passport.authenticate('jwt',{session: false}),(r
 
 });
 
-// @Route GET /myAlfred/admin/calculating/all
+// @Route GET /myAlfred/api/admin/calculating/all
 // View all calculating system
 // @Access private
 router.get('/calculating/all',passport.authenticate('jwt',{session:false}), (req,res)=> {
@@ -657,7 +679,7 @@ router.get('/calculating/all',passport.authenticate('jwt',{session:false}), (req
 
 });
 
-// @Route GET /myAlfred/admin/calculating/all/:id
+// @Route GET /myAlfred/api/admin/calculating/all/:id
 // View one calculating system
 // @Access private
 router.get('/calculating/all/:id',passport.authenticate('jwt',{session:false}), (req,res)=> {
@@ -682,7 +704,7 @@ router.get('/calculating/all/:id',passport.authenticate('jwt',{session:false}), 
 
 });
 
-// @Route DELETE /myAlfred/admin/calculating/all/:id
+// @Route DELETE /myAlfred/api/admin/calculating/all/:id
 // Delete one calculating system
 // @Access private
 router.delete('/calculating/all/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -701,7 +723,7 @@ router.delete('/calculating/all/:id',passport.authenticate('jwt',{session: false
         .catch(err => res.status(404).json({ calculating: 'No calculating found' }));
 });
 
-// @Route PUT /myAlfred/admin/calculating/all/:id
+// @Route PUT /myAlfred/api/admin/calculating/all/:id
 // Update a calculating system
 // @Access private
 router.put('calculating/all/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -724,7 +746,7 @@ router.put('calculating/all/:id',passport.authenticate('jwt',{session: false}),(
 // FILTER PRESENTATION
 
 
-// @Route POST /myAlfred/admin/filterPresentation/all
+// @Route POST /myAlfred/api/admin/filterPresentation/all
 // Add filterPresentation for prestation
 // @Access private
 router.post('/filterPresentation/all', passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -758,7 +780,7 @@ router.post('/filterPresentation/all', passport.authenticate('jwt',{session: fal
 
 });
 
-// @Route GET /myAlfred/admin/filterPresentation/all
+// @Route GET /myAlfred/api/admin/filterPresentation/all
 // View all filterPresentation
 // @Access private
 router.get('/filterPresentation/all', passport.authenticate('jwt',{session: false}),(req,res)=> {
@@ -784,7 +806,7 @@ router.get('/filterPresentation/all', passport.authenticate('jwt',{session: fals
 
 });
 
-// @Route GET /myAlfred/admin/filterPresentation/all/:id
+// @Route GET /myAlfred/api/admin/filterPresentation/all/:id
 // View one filterPresentation
 // @Access private
 router.get('/filterPresentation/all/:id', passport.authenticate('jwt',{session: false}),(req,res)=> {
@@ -807,7 +829,7 @@ router.get('/filterPresentation/all/:id', passport.authenticate('jwt',{session: 
 
 });
 
-// @Route DELETE /myAlfred/admin/filterPresentation/all/:id
+// @Route DELETE /myAlfred/api/admin/filterPresentation/all/:id
 // Delete one filterPresentation
 // @Access private
 router.delete('/filterPresentation/all/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -826,7 +848,7 @@ router.delete('/filterPresentation/all/:id',passport.authenticate('jwt',{session
         .catch(err => res.status(404).json({ filterPresentation: 'No filterPresentation found' }));
 });
 
-// @Route PUT /myAlfred/admin/filterPresentation/all/:id
+// @Route PUT /myAlfred/api/admin/filterPresentation/all/:id
 // Update a filterPresentation
 // @Access private
 router.put('/filterPresentation/all/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -848,7 +870,7 @@ router.put('/filterPresentation/all/:id',passport.authenticate('jwt',{session: f
 
 // JOB
 
-// @Route POST /myAlfred/admin/job/all
+// @Route POST /myAlfred/api/admin/job/all
 // Add job for prestation
 // @Access private
 router.post('/job/all', passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -882,7 +904,7 @@ router.post('/job/all', passport.authenticate('jwt',{session: false}),(req, res)
 
 });
 
-// @Route GET /myAlfred/admin/job/all
+// @Route GET /myAlfred/api/admin/job/all
 // View all job
 // @Access private
 router.get('/job/all', passport.authenticate('jwt',{session: false}),(req,res)=> {
@@ -906,7 +928,7 @@ router.get('/job/all', passport.authenticate('jwt',{session: false}),(req,res)=>
 
 });
 
-// @Route GET /myAlfred/admin/job/all/:id
+// @Route GET /myAlfred/api/admin/job/all/:id
 // View one job
 // @Access private
 router.get('/job/all/:id', passport.authenticate('jwt',{session: false}),(req,res)=> {
@@ -929,7 +951,7 @@ router.get('/job/all/:id', passport.authenticate('jwt',{session: false}),(req,re
 
 });
 
-// @Route DELETE /myAlfred/admin/job/all/:id
+// @Route DELETE /myAlfred/api/admin/job/all/:id
 // Delete one job
 // @Access private
 router.delete('/job/all/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -948,7 +970,7 @@ router.delete('/job/all/:id',passport.authenticate('jwt',{session: false}),(req,
         .catch(err => res.status(404).json({ job: 'No job found' }));
 });
 
-// @Route PUT /myAlfred/admin/job/all/:id
+// @Route PUT /myAlfred/api/admin/job/all/:id
 // Update a job
 // @Access private
 router.put('/job/all/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -970,7 +992,7 @@ router.put('/job/all/:id',passport.authenticate('jwt',{session: false}),(req, re
 
 // SEARCH FILTER
 
-// @Route POST /myAlfred/admin/searchFilter/all
+// @Route POST /myAlfred/api/admin/searchFilter/all
 // Add searchFilter for prestation
 // @Access private
 router.post('/searchFilter/all', passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -1004,7 +1026,7 @@ router.post('/searchFilter/all', passport.authenticate('jwt',{session: false}),(
 
 });
 
-// @Route GET /myAlfred/admin/searchFilter/all
+// @Route GET /myAlfred/api/admin/searchFilter/all
 // View all searchFilter
 // @Access private
 router.get('/searchFilter/all', passport.authenticate('jwt',{session: false}),(req,res)=> {
@@ -1029,7 +1051,7 @@ router.get('/searchFilter/all', passport.authenticate('jwt',{session: false}),(r
 
 });
 
-// @Route GET /myAlfred/admin/searchFilter/all/:id
+// @Route GET /myAlfred/api/admin/searchFilter/all/:id
 // View one searchFilter
 // @Access private
 router.get('/searchFilter/all/:id', passport.authenticate('jwt',{session: false}),(req,res)=> {
@@ -1052,7 +1074,7 @@ router.get('/searchFilter/all/:id', passport.authenticate('jwt',{session: false}
 
 });
 
-// @Route DELETE /myAlfred/admin/searchFilter/all/:id
+// @Route DELETE /myAlfred/api/admin/searchFilter/all/:id
 // Delete one searchFilter
 // @Access private
 router.delete('/searchFilter/all/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -1071,7 +1093,7 @@ router.delete('/searchFilter/all/:id',passport.authenticate('jwt',{session: fals
         .catch(err => res.status(404).json({ searchFilter: 'No searchFilter found' }));
 });
 
-// @Route PUT /myAlfred/admin/searchFilter/all/:id
+// @Route PUT /myAlfred/api/admin/searchFilter/all/:id
 // Update a searchFilter
 // @Access private
 router.put('/searchFilter/all/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -1093,7 +1115,7 @@ router.put('/searchFilter/all/:id',passport.authenticate('jwt',{session: false})
 
 // TAGS
 
-// @Route POST /myAlfred/admin/tags/all
+// @Route POST /myAlfred/api/admin/tags/all
 // Add tags for service
 // @Access private
 router.post('/tags/all', passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -1129,7 +1151,7 @@ router.post('/tags/all', passport.authenticate('jwt',{session: false}),(req, res
 
 });
 
-// @Route GET /myAlfred/admin/tags/all
+// @Route GET /myAlfred/api/admin/tags/all
 // View all tags
 // @Access private
 router.get('/tags/all', passport.authenticate('jwt',{session: false}),(req,res)=> {
@@ -1155,7 +1177,7 @@ router.get('/tags/all', passport.authenticate('jwt',{session: false}),(req,res)=
 
 });
 
-// @Route GET /myAlfred/admin/tags/all/:id
+// @Route GET /myAlfred/api/admin/tags/all/:id
 // View one tag
 // @Access private
 router.get('/tags/all/:id', passport.authenticate('jwt',{session: false}),(req,res)=> {
@@ -1178,7 +1200,7 @@ router.get('/tags/all/:id', passport.authenticate('jwt',{session: false}),(req,r
 
 });
 
-// @Route DELETE /myAlfred/admin/tags/all/:id
+// @Route DELETE /myAlfred/api/admin/tags/all/:id
 // Delete one tag
 // @Access private
 router.delete('/tags/all/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -1197,7 +1219,7 @@ router.delete('/tags/all/:id',passport.authenticate('jwt',{session: false}),(req
         .catch(err => res.status(404).json({ tagsnotfound: 'No tags found' }));
 });
 
-// @Route PUT /myAlfred/admin/tags/all/:id
+// @Route PUT /myAlfred/api/admin/tags/all/:id
 // Update a tag
 // @Access private
 router.put('/tags/all/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -1229,7 +1251,7 @@ const storageCat = multer.diskStorage({
 });
 const uploadCat = multer({ storage: storageCat });
 
-// @Route POST /myAlfred/admin/category/all
+// @Route POST /myAlfred/api/admin/category/all
 // Add category for prestation
 // @Access private
 router.post('/category/all', uploadCat.single('picture'),passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -1266,7 +1288,7 @@ router.post('/category/all', uploadCat.single('picture'),passport.authenticate('
 
 });
 
-// @Route POST /myAlfred/admin/category/editPicture/:id
+// @Route POST /myAlfred/api/admin/category/editPicture/:id
 // Edit the picture of a category
 // @Access private
 router.post('/category/editPicture/:id', uploadCat.single('picture'),passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -1289,7 +1311,7 @@ router.post('/category/editPicture/:id', uploadCat.single('picture'),passport.au
 
 });
 
-// @Route GET /myAlfred/admin/category/all
+// @Route GET /myAlfred/api/admin/category/all
 // View all categories
 // @Access private
 router.get('/category/all', passport.authenticate('jwt',{session: false}),(req,res)=> {
@@ -1316,7 +1338,7 @@ router.get('/category/all', passport.authenticate('jwt',{session: false}),(req,r
 
 });
 
-// @Route GET /myAlfred/admin/category/all/:id
+// @Route GET /myAlfred/api/admin/category/all/:id
 // View one category
 // @Access private
 router.get('/category/all/:id', passport.authenticate('jwt',{session: false}),(req,res)=> {
@@ -1340,7 +1362,7 @@ router.get('/category/all/:id', passport.authenticate('jwt',{session: false}),(r
 
 });
 
-// @Route DELETE /myAlfred/admin/category/all/:id
+// @Route DELETE /myAlfred/api/admin/category/all/:id
 // Delete one category
 // @Access private
 router.delete('/category/all/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -1359,7 +1381,7 @@ router.delete('/category/all/:id',passport.authenticate('jwt',{session: false}),
         .catch(err => res.status(404).json({ category: 'No category found' }));
 });
 
-// @Route PUT /myAlfred/admin/category/all/:id
+// @Route PUT /myAlfred/api/admin/category/all/:id
 // Update a category
 // @Access private
 router.put('/category/all/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -1392,7 +1414,7 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage: storage });
-// @Route POST /myAlfred/admin/equipment/all
+// @Route POST /myAlfred/api/admin/equipment/all
 // Add equipment for service
 // @Access private
 router.post('/equipment/all',upload.fields([{name: 'logo',maxCount: 1}, {name:'logo2',maxCount:1}]),passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -1430,7 +1452,7 @@ router.post('/equipment/all',upload.fields([{name: 'logo',maxCount: 1}, {name:'l
 
 });
 
-// @Route POST /myAlfred/admin/equipment/editPicture/:id
+// @Route POST /myAlfred/api/admin/equipment/editPicture/:id
 // Edit the logo for equipment
 // @Access private
 router.post('/equipment/editPicture/:id',upload.fields([{name: 'logo',maxCount: 1}, {name:'logo2',maxCount:1}]),passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -1452,7 +1474,7 @@ router.post('/equipment/editPicture/:id',upload.fields([{name: 'logo',maxCount: 
 
 });
 
-// @Route GET /myAlfred/admin/equipment/all
+// @Route GET /myAlfred/api/admin/equipment/all
 // View all equipments
 // @Access private
 router.get('/equipment/all', passport.authenticate('jwt',{session: false}),(req,res)=> {
@@ -1478,7 +1500,7 @@ router.get('/equipment/all', passport.authenticate('jwt',{session: false}),(req,
 
 });
 
-// @Route GET /myAlfred/admin/equipment/all/:id
+// @Route GET /myAlfred/api/admin/equipment/all/:id
 // View one equipments
 // @Access private
 router.get('/equipment/all/:id', passport.authenticate('jwt',{session: false}),(req,res)=> {
@@ -1501,7 +1523,7 @@ router.get('/equipment/all/:id', passport.authenticate('jwt',{session: false}),(
 
 });
 
-// @Route DELETE /myAlfred/admin/equipment/all/:id
+// @Route DELETE /myAlfred/api/admin/equipment/all/:id
 // Delete one equipment system
 // @Access private
 router.delete('/equipment/all/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -1520,7 +1542,7 @@ router.delete('/equipment/all/:id',passport.authenticate('jwt',{session: false})
         .catch(err => res.status(404).json({ equipmentnotfound: 'No equipment found' }));
 });
 
-// @Route PUT /myAlfred/admin/equipment/all/:id
+// @Route PUT /myAlfred/api/admin/equipment/all/:id
 // Update a equipment system
 // @Access private
 router.put('/equipment/all/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -1555,7 +1577,7 @@ const storageService = multer.diskStorage({
 });
 const uploadService = multer({ storage: storageService });
 
-// @Route POST /myAlfred/admin/service/all
+// @Route POST /myAlfred/api/admin/service/all
 // Add service for prestation
 // @Access private
 router.post('/service/all', uploadService.single('picture'),passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -1603,7 +1625,7 @@ router.post('/service/all', uploadService.single('picture'),passport.authenticat
 
 });
 
-// @Route POST /myAlfred/admin/service/editPicture/:id
+// @Route POST /myAlfred/api/admin/service/editPicture/:id
 // Edit picture
 // @Access private
 router.post('/service/editPicture/:id',uploadService.single('picture'),passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -1624,7 +1646,7 @@ router.post('/service/editPicture/:id',uploadService.single('picture'),passport.
 
 });
 
-// @Route GET /myAlfred/admin/service/all
+// @Route GET /myAlfred/api/admin/service/all
 // View all service
 // @Access private
 router.get('/service/all',passport.authenticate('jwt',{session:false}),(req,res)=> {
@@ -1668,7 +1690,7 @@ router.get('/service/all',passport.authenticate('jwt',{session:false}),(req,res)
 
 });
 
-// @Route GET /myAlfred/admin/service/all/:id
+// @Route GET /myAlfred/api/admin/service/all/:id
 // View one service
 // @Access private
 router.get('/service/all/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
@@ -1695,7 +1717,7 @@ router.get('/service/all/:id',passport.authenticate('jwt',{session:false}),(req,
 
 });
 
-// @Route DELETE /myAlfred/admin/service/all/:id
+// @Route DELETE /myAlfred/api/admin/service/all/:id
 // Delete one service
 // @Access private
 router.delete('/service/all/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -1714,7 +1736,7 @@ router.delete('/service/all/:id',passport.authenticate('jwt',{session: false}),(
         .catch(err => res.status(404).json({ service: 'No service found' }));
 });
 
-// @Route PUT /myAlfred/admin/service/all/:id
+// @Route PUT /myAlfred/api/admin/service/all/:id
 // Update a service
 // @Access private
 router.put('/service/all/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -1758,7 +1780,7 @@ const storagePrestation = multer.diskStorage({
 });
 const uploadPrestation = multer({ storage: storagePrestation });
 
-// @Route POST /myAlfred/admin/prestation/all
+// @Route POST /myAlfred/api/admin/prestation/all
 // Add a prestation
 // @Access private
 router.post('/prestation/all',uploadPrestation.single('picture'),passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -1772,7 +1794,7 @@ router.post('/prestation/all',uploadPrestation.single('picture'),passport.authen
             return res.status(400).json(errors);
         }
 
-        Prestation.findOne({label: req.body.label, filter_presentation: req.body.filter_presentation})
+        Prestation.findOne({label: req.body.label, filter_presentation: req.body.filter_presentation, service: req.body.service})
             .then(prestation => {
                 if(prestation) {
                     errors.label = 'Cette prestation existe déjà';
@@ -1805,7 +1827,7 @@ router.post('/prestation/all',uploadPrestation.single('picture'),passport.authen
 
 });
 
-// @Route POST /myAlfred/admin/prestation/editPicture/:id
+// @Route POST /myAlfred/api/admin/prestation/editPicture/:id
 // Edit picture
 // @Access private
 router.post('/prestation/editPicture/:id',uploadPrestation.single('picture'),passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -1835,16 +1857,10 @@ router.get('/prestation/all',passport.authenticate('jwt',{session:false}),(req,r
     const admin = decode.is_admin;
 
     if(admin) {
-        Prestation.find()
-            .sort({label:1, category:1})
-            .populate('category')
-            .populate('job')
-            .populate('service')
-            .populate('billing')
-            .populate('search_filter')
-            .populate('filter_presentation')
-            .populate('calculating')
-            .populate('tags')
+        Prestation.find({}, 'label private_alfred')
+            .sort({s_label:1, category:1})
+            .populate({path : 'service', select : 'label', populate : {path : 'category', select : 'label'}})
+            .populate('filter_presentation', 'label')
             .then(prestation => {
                 if (!prestation) {
                     return res.status(400).json({msg: 'No prestation found'});
@@ -1988,7 +2004,7 @@ router.post('/shopBanner/all', uploadBanner.single('picture'),passport.authentic
 
 });
 
-// @Route POST /myAlfred/admin/shopBanner/editPicture/:id
+// @Route POST /myAlfred/api/admin/shopBanner/editPicture/:id
 // Edit picture
 // @Access private
 router.post('/shopBanner/editPicture/:id',uploadBanner.single('picture'),passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -2097,7 +2113,7 @@ router.put('/shopBanner/all/:id',passport.authenticate('jwt',{session: false}),(
 
 // OPTIONS
 
-// @Route POST /myAlfred/admin/options/all
+// @Route POST /myAlfred/api/admin/options/all
 // Add options
 // @Access private
 router.post('/options/all', passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -2128,7 +2144,7 @@ router.post('/options/all', passport.authenticate('jwt',{session: false}),(req, 
 
 });
 
-// @Route GET /myAlfred/admin/options/all
+// @Route GET /myAlfred/api/admin/options/all
 // View all options
 // @Access private
 router.get('/options/all', passport.authenticate('jwt',{session: false}),(req,res)=> {
@@ -2151,7 +2167,7 @@ router.get('/options/all', passport.authenticate('jwt',{session: false}),(req,re
 
 });
 
-// @Route GET /myAlfred/admin/options/all/:id
+// @Route GET /myAlfred/api/admin/options/all/:id
 // View one option
 // @Access private
 router.get('/options/all/:id', passport.authenticate('jwt',{session: false}),(req,res)=> {
@@ -2174,7 +2190,7 @@ router.get('/options/all/:id', passport.authenticate('jwt',{session: false}),(re
 
 });
 
-// @Route DELETE /myAlfred/admin/options/all/:id
+// @Route DELETE /myAlfred/api/admin/options/all/:id
 // Delete one option
 // @Access private
 router.delete('/options/all/:id',passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -2193,7 +2209,7 @@ router.delete('/options/all/:id',passport.authenticate('jwt',{session: false}),(
         .catch(err => res.status(404).json({ optionsnotfound: 'No options found' }));
 });
 
-// @Route PUT /myAlfred/admin/options/all/:id
+// @Route PUT /myAlfred/api/admin/options/all/:id
 // Update an option
 // @Access private
 router.put('/options/all/:id',passport.authenticate('jwt',{session: false}),(req, res) => {
@@ -2240,12 +2256,43 @@ router.get('/statistics', (req,res)=> {
                      .then(services => {
                        stats['services'] = services.length;
                        stats['prestations'] = services.map( s => s.prestations.length).reduce( (acc, value) => acc+value);
-                       res.json(stats);      
+                       res.json(stats);
                    })
                 })
             })
     } else {
         res.status(403).json({msg: 'Access denied'});
+    }
+
+
+});
+
+// @Route GET /myAlfred/api/admin/statistics
+// Get satistics (users, shops, services)
+// @Access private
+//router.get('/statistics',passport.authenticate('jwt',{session:false}),(req,res)=> {
+router.get('/booking/all', (req,res)=> {
+    //
+    //const token = req.headers.authorization.split(' ')[1];
+    //const decode = jwt.decode(token);
+    //const admin = decode.is_admin;
+    //
+    const admin=true;
+
+    if(admin) {
+      Booking.find()
+        .populate('alfred', 'firstname name')
+        .populate('user', 'firstname name')
+        .sort({date : -1})
+          .catch(err => {
+            console.error(err)
+            res.status(404).json({bookings: 'Error'})
+          })
+          .then(bookings => {
+            res.json(bookings);
+          })
+    } else {
+      res.status(403).json({msg: 'Access denied'});
     }
 
 

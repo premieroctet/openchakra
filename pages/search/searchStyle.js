@@ -12,13 +12,13 @@ export default theme => ({
     objectFit: 'cover',
   },
   respfilter:{
-    position: 'sticky',
-    top: 60,
+    position: 'fixed',
+    top: 65,
     zIndex: 10,
     background: 'white',
     height: 60,
     [theme.breakpoints.down('sm')]: {
-      top: 200,
+      top: 65,
     },
     [theme.breakpoints.down('xs')]: {
       top: 230
@@ -56,7 +56,7 @@ export default theme => ({
   },
   containerTitle:{
     [theme.breakpoints.down("xs")]: {
-      marginTop: 160
+      marginTop: 200
     }
   },
   filterStatus:{
@@ -69,6 +69,15 @@ export default theme => ({
     zIndex: 1,
     [theme.breakpoints.down("xs")]: {
       width: 200
+    }
+  },
+  containerCardPreview:{
+    padding: 10
+  },
+  paddingResponsive:{
+    [theme.breakpoints.down("xs")]: {
+      padding: '0 !important',
+      marginBottom: 20
     }
   }
 })

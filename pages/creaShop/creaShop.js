@@ -17,10 +17,12 @@ import IntroduceYou from '../../components/CreaShop/IntroduceYou/IntroduceYou';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
-import {ALF_CONDS, CANCEL_MODE} from '../../utils/consts.js';
+import {ALF_CONDS, CANCEL_MODE, GID_LEN} from '../../utils/consts.js';
 import { toast } from 'react-toastify';
 import Router from "next/router";
-import {creaShopPresentation, selectService, selectPrestation, settingService, assetsService, settingShop, introduceYou} from '../../utils/validationSteps/validationSteps'
+import {creaShopPresentation, selectService, selectPrestation, settingService, assetsService, settingShop, introduceYou} from '../../utils/validationSteps/validationSteps';
+import {SCHEDULE_SUBTITLE, SCHEDULE_TITLE} from '../../utils/messages'
+const {createDefaultAvailability}=require('../../utils/dateutils');
 
 class creaShop extends React.Component {
   constructor(props) {
@@ -55,11 +57,8 @@ class creaShop extends React.Component {
 	      level: '',
         service_address: null,
         perimeter: 10,
-        availabilities: [],
+        availabilities: [createDefaultAvailability()],
       },
-      title: "Précisez vos disponibilités si vous le souhaitez ! ",
-      subtitle : "Si aucune disponibilité n’est précisée, vos services pourront être réservés à tout moment. Si vous précisez vos disponibilités, seules les plages horaires indiquées pourront être réservées. Vous pouvez appliquer une récurrence à vos disponibilités afin de gagner du temps ! Par exemple, si vous êtes disponible tous les lundis et mardis, vous pouvez cocher la case Récurrence, et cliquer sur Lu et Ma afin de répéter votre disponibilité sur une durée que vous pouvez définir."
-
     };
     this.onServiceChanged = this.onServiceChanged.bind(this);
     this.onPrestaChanged = this.onPrestaChanged.bind(this);
@@ -67,6 +66,7 @@ class creaShop extends React.Component {
     this.preferencesChanged = this.preferencesChanged.bind(this);
     this.assetsChanged = this.assetsChanged.bind(this);
     this.availabilityCreated = this.availabilityCreated.bind(this);
+    this.availabilityUpdated = this.availabilityUpdated.bind(this);
     this.availabilityDeleted = this.availabilityDeleted.bind(this);
     this.conditionsChanged = this.conditionsChanged.bind(this);
     this.shopSettingsChanged = this.shopSettingsChanged.bind(this);
@@ -93,7 +93,7 @@ class creaShop extends React.Component {
         });
       })
       .catch(error => {
-        console.log(error);
+        console.error(error);
       })
   }
 
@@ -111,21 +111,27 @@ class creaShop extends React.Component {
   }
 
   availabilityCreated(avail) {
-    console.log("Availability created:"+JSON.stringify(avail, null, 2));
     let shop = this.state.shop;
     shop.availabilities.push(avail);
     this.setState({shop: shop});
   }
 
-  availabilityDeleted(avail_id) {
-    console.log("Availability id deleted:"+JSON.stringify(avail_id, null, 2));
+  availabilityDeleted(avail) {
     let shop = this.state.shop;
-    shop.availabilities=shop.availabilities.filter(avail => avail.ui_id !== avail_id);
+    shop.availabilities=shop.availabilities.filter(av => av._id !== avail._id);
+    this.setState({shop: shop});
+  }
+
+  availabilityUpdated(avail) {
+    let shop = this.state.shop;
+    // Remove
+    shop.availabilities=shop.availabilities.filter(av => av._id !== avail._id);
+    // Add
+    shop.availabilities.push(avail);
     this.setState({shop: shop});
   }
 
   handleNext = () => {
-    console.log("Handle next");
     if (this.state.activeStep<9) {
       this.setState({activeStep: this.state.activeStep + 1});
     }
@@ -136,6 +142,11 @@ class creaShop extends React.Component {
       Object.keys(cloned_shop.prestations).forEach(key => { if (key<0) cloned_shop.prestations[key]._id = null });
       cloned_shop.prestations = JSON.stringify(cloned_shop.prestations);
       cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
+      cloned_shop.availabilities.forEach( a => {
+        if (a._id.length==GID_LEN) {
+          a._id=null
+        }
+      })
 
       axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
       axios.post('/myAlfred/api/shop/add', cloned_shop)
@@ -152,7 +163,7 @@ class creaShop extends React.Component {
 
             axios.post('/myAlfred/api/serviceUser/addDiploma/'+su_id,formData)
               .then(() => { console.log("Diplôme ajouté"); })
-              .catch(err => console.log(err))
+              .catch(err => console.error(err))
           }
 
           if(cloned_shop.certificationPicture !== null) {
@@ -164,7 +175,7 @@ class creaShop extends React.Component {
 
             axios.post('/myAlfred/api/serviceUser/addCertification/'+su_id,formData)
               .then(() => { console.log("Certification ajoutée"); })
-              .catch(err => console.log(err))
+              .catch(err => console.error(err))
           }
 
           toast.info("Boutique créée avec succès");
@@ -188,7 +199,6 @@ class creaShop extends React.Component {
   onServiceChanged(service_id){
     let shop = this.state.shop;
     shop.service = service_id;
-    console.log("CreaShop setting service "+service_id);
     this.setState({shop: shop});
   }
 
@@ -196,7 +206,6 @@ class creaShop extends React.Component {
     let shop=this.state.shop;
     shop.prestations=prestations;
     this.setState({shop: shop});
-    console.log("CreaShop:onPrestaChanged:"+JSON.stringify(prestations));
   }
 
   settingsChanged(location, travel_tax, pick_tax, selectedStuff) {
@@ -278,7 +287,7 @@ class creaShop extends React.Component {
       case 5:
         return <AssetsService data={shop} onChange={this.assetsChanged} type={"creaShop"}/>;
       case 6:
-        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} selectable={true} height={400}/>;
+        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} onUpdateAvailability={this.availabilityUpdated} title={SCHEDULE_TITLE} subtitle={SCHEDULE_SUBTITLE} selectable={true} height={700}/>;
       case 7:
         return <BookingConditions conditions={shop.my_alfred_conditions} booking_request={shop.booking_request}  onChange={this.conditionsChanged} />;
       case 8:
@@ -294,8 +303,6 @@ class creaShop extends React.Component {
 
     const {classes} = this.props;
     let hideRightPanel = this.isRightPanelHidden();
-
-    console.log("service address:"+JSON.stringify(this.state.service_address));
 
     return(
       <Grid>

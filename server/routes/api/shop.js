@@ -8,6 +8,7 @@ const emptyPromise = require('../../../utils/promise.js');
 const {data2ServiceUser} = require('../../../utils/mapping');
 const {sendShopDeleted,sendShopOnline} = require ('../../../utils/mailing');
 const {createMangoProvider} = require('../../../utils/mangopay');
+const {GID_LEN} = require('../../../utils/consts');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -108,7 +109,7 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
 
                     // FIX : créer les prestations custom avant
                     req.body.prestations=JSON.parse(req.body.prestations);
-                    let newPrestations = Object.values(req.body.prestations).filter(p => p._id == null);
+                    let newPrestations = Object.values(req.body.prestations).filter(p => p._id && p._id.length == GID_LEN);
                     console.log("newPrestations:" + JSON.stringify(newPrestations));
                     let newPrestaModels = newPrestations.map(p => Prestation({ ...p, service: req.body.service, billing: [p.billing], filter_presentation: null, private_alfred: req.user.id }));
                     console.log("newPrestationsModel before save:" + JSON.stringify(newPrestaModels));
@@ -129,9 +130,14 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
 
                             Object.values(req.body.prestations).forEach(presta => {
                                 console.log("Ajout presta : " + JSON.stringify(presta));
-                                p = { prestation: presta._id, billing: presta.billing, price: presta.price };
-                                su.prestations.push(p);
-                                console.log("Presta ajoutée : " + JSON.stringify(p));
+                                if (!presta.price) {
+                                  console.error(`Presta ${presta._id} : non ajoutée, prix à 0`)
+                                }
+                                else {
+                                  p = { prestation: presta._id, billing: presta.billing, price: presta.price };
+                                  su.prestations.push(p);
+                                  console.log("Presta ajoutée : " + JSON.stringify(p));
+                                }
                             });
 
                             su.save()
@@ -167,34 +173,30 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
 // @Route GET /myAlfred/api/shop/all
 // View all shop
 router.get('/all', (req, res) => {
-
     Shop.find()
-        .populate('alfred','-id_card')
-        .populate('services')
-        .populate({
-            path: 'services',
-            populate: {
-                path: 'service',
-                select: 'label'
-            }
-        })
-        .then(shop => {
-            if (typeof shop !== 'undefined' && shop.length > 0) {
-                res.json(shop);
-            }
-            else {
-                return res.status(400).json({
-                    msg: 'No shop found'
-                });
-            }
-
-
-        })
-        .catch(err => res.status(404).json({
-            shop: 'No shop found'
-        }));
-
-
+      .sort({creation_date:-1})
+      .populate('alfred','-id_card')
+      .populate('services')
+      .populate({
+          path: 'services',
+          populate: {
+              path: 'service',
+              select: 'label'
+          }
+      })
+      .then(shop => {
+          if (typeof shop !== 'undefined' && shop.length > 0) {
+              res.json(shop);
+          }
+          else {
+              return res.status(400).json({
+                  msg: 'No shop found'
+              });
+          }
+      })
+      .catch(err => res.status(404).json({
+          shop: 'No shop found'
+      }));
 });
 
 // @Route GET /myAlfred/api/shop/:id

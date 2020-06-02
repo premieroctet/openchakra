@@ -34,4 +34,8 @@ export default theme => ({
   badge:{
     color: "white",
   },
+  boxRating:{
+    padding: 0,
+    margin: 0
+  }
 });

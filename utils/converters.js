@@ -1,7 +1,9 @@
-import { RRule, RRuleSet, rrulestr } from 'rrule'
-import {ALL_SERVICES, generate_id} from './consts.js';
-
+const { RRule, RRuleSet, rrulestr }=require('rrule')
+const {ALL_SERVICES, generate_id} = require('./consts.js');
+const moment=require('moment-timezone')
 const EV_AVAIL_DAY_MAPPING='monday tuesday wednesday thursday friday saturday sunday'.split(' ');
+
+const DAYS='Lu Ma Me Je Ve Sa Di'.split(' ');
 
 const DAY_MAPPING={
         'monday': RRule.MO,
@@ -45,12 +47,12 @@ const computeRecurrency = (period, event, dayOfWeek) => {
 
 const avail2event = availab => {
   let result=[];
-  "monday tuesday wednesday thursday friday saturday sunday".split(' ').forEach(day => {
+  EV_AVAIL_DAY_MAPPING.forEach(day => {
     let evts = availab[day]['event'];
     evts.forEach(e => {
-      let title = e.all_services ? "Tous services" : e.services.map( s => s.label).join('\n');
+      let title = e.all_services ? "Disponible" : e.services.map( s => s.label).join('\n');
       let res= {
-        ui_id: availab.ui_id || availab._id,
+        _id : availab._id,
         title: title,
         start: new Date(e.begin),
         end: new Date(e.end),
@@ -70,31 +72,74 @@ const availabilities2events= avails => {
 
 
 const eventUI2availability = event => {
-  let avail = {ui_id: generate_id() }
+
+  let avail = {_id: event._id==null ? generate_id() : event._id }
 
   let startDate=new Date(event.selectedDateStart);
   let endDate=new Date(event.selectedDateEnd);
 
-  let recurrent = event.recurrDays.size > 0;
+  let recurrent = event.recurrDays.size > 0 && event.isExpanded;
   let selDay=(startDate.getDay()+6)%7;
   let all_services = event.servicesSelected.indexOf(ALL_SERVICES)>-1;
   let services=[]
   if (!all_services) {
     services=event.servicesSelected.map(s => ({ label:s[0], value:s[1]}));
-  } 
-  
+  }
+
   const inner_event = { 'begin': startDate, 'end': endDate, services:services, all_services : all_services }
   EV_AVAIL_DAY_MAPPING.forEach( (item, index) => {
     let include = recurrent ? event.recurrDays.has(index) : index==selDay;
     avail[item] = include ? {'event':[inner_event]} : {'event': []};
-  })  
-  if (event.isExpanded==='panel1') {
+  })
+  if (recurrent) {
+    console.log('RECURRENCE')
     avail['period']={active:true, month_begin: new Date(event.selectedDateStart), month_end: event.selectedDateEndRecu ? new Date(event.selectedDateEndRecu):null };
   }
   else {
+    console.log('NO RECURRENCE')
     avail['period']={active:false, month_begin: null, month_end: null};
   }
+  console.log(`Converted ${JSON.stringify(event, null, 2)} to ${JSON.stringify(avail, null, 2)}`)
   return avail;
 };
 
-export {availabilities2events, eventUI2availability};
+const availability2eventUI = avail => {
+
+  var eventUI = {
+    _id : avail._id,
+    selectedDateStart: null,
+    selectedDateEnd: null,
+    recurrDays: new Set(),
+    isExpanded: avail['period'].active ? 'panel1' : false,
+    servicesSelected: [ALL_SERVICES],
+    selectedDateEndRecu: null,
+  }
+
+  if (avail['period'].active) {
+    eventUI.isExpanded = 'panel1';
+    eventUI.selectedDateEndRecu = avail.period.month_end;
+  }
+  else {
+    eventUI.isExpanded = false;
+  }
+
+  EV_AVAIL_DAY_MAPPING.forEach((day, index) => {
+    const ev = avail[day].event;
+    if (ev.length >0) {
+      if (eventUI.isExpanded) {
+        eventUI.recurrDays.add(index);
+      }
+      eventUI.selectedDateStart=moment(ev[0].begin).toDate()
+      eventUI.selectedDateEnd=moment(ev[0].end).toDate()
+      eventUI.selectedTimeStart=moment(ev[0].begin).tz('Europe/Paris').format('HH:mm')
+      eventUI.selectedTimeEnd=moment(ev[0].end).tz('Europe/Paris').format('HH:mm')
+    }
+  })
+
+  console.log(`converting ${JSON.stringify(avail, null, 2)} tp ${JSON.stringify(eventUI, null, 2)}`)
+
+  return eventUI
+
+};
+
+module.exports={availabilities2events, eventUI2availability, availability2eventUI, DAYS};

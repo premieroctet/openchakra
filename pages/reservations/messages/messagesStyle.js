@@ -91,18 +91,8 @@ export default theme => ({
       zIndex: 20
     }
   },
-
   toggle: {
-    [theme.breakpoints.down('sm')]: {  marginLeft:'-75px',
-      transition: 'margin-left 0.7s',
-
-      '&:hover': {
-        marginLeft:'0px',
-        transition: 'margin-left 0.7s',
-        boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-
-      }
-    }
+   zIndex: 0
   },
   trigger:{
     [theme.breakpoints.down('sm')]: {
@@ -111,14 +101,12 @@ export default theme => ({
       marginLeft:'0px',
       height:'30px',
       backgroundColor:'#2FBCD3',
-
       display:'block',
       transition: 'display 0.7s',
       borderRadius:'5px',
       '&:focus': {
         display:'none',
         transition: 'display 0.7s',
-
       }
     },
   },
@@ -182,5 +170,12 @@ export default theme => ({
   noTextDecoration:{
     textDecoration: "none",
     color: "white"
-  }
+  },
+  menuButton: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
+  },
 })

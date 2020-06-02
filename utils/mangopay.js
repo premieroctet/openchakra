@@ -34,8 +34,6 @@ HOOK_TYPES.forEach(hookType => {
   });
 })
 
-
-
 const createMangoClient = user => {
   var userData = {
     PersonType: "NATURAL",
@@ -199,19 +197,19 @@ const requireKycValidation = (user, documentId) => {
 
 
 const payAlfred = booking => {
-  console.log(`Starting paying of booking #${booking._id}`)
+  console.log(`Starting paying of booking ${JSON.stringify(booking)}`)
   const amount = (booking.amount-booking.fees) * 100;
   const id_mangopay_user = booking.user.id_mangopay;
   const id_mangopay_alfred = booking.alfred.mangopay_provider_id;
 
-  api.Users.getWallets(id_mangopay_user)
+  mangoApi.Users.getWallets(id_mangopay_user)
     .catch( err => {
       console.error("Err:"+JSON.stringify(err));
       return;
     })
     .then(wallets => {
       const wallet_id = wallets[0].Id;
-      api.Users.getWallets(id_mangopay_alfred)
+      mangoApi.Users.getWallets(id_mangopay_alfred)
         .catch(err => {
           console.error(`GetWallets Alfred ${id_mangopay_alfred}:${JSON.stringify(err)}`)
           return
@@ -222,7 +220,7 @@ const payAlfred = booking => {
           const transferPromise=booking.mangopay_transfer_id ?
             emptyPromise()
             :
-            api.Transfers.create({
+            mangoApi.Transfers.create({
               AuthorId: id_mangopay_user,
               DebitedFunds: { Currency: 'EUR', Amount: amount },
               Fees: { Currency: "EUR", Amount: 0 },
@@ -244,7 +242,7 @@ const payAlfred = booking => {
                         return
                       })
                 }
-                api.Users.getBankAccounts(id_mangopay_alfred)
+                apimangoApi.Users.getBankAccounts(id_mangopay_alfred)
                   .catch (err => {
                     console.log(err);
                     return
@@ -255,7 +253,7 @@ const payAlfred = booking => {
                         console.log(`No active bank account for Alfred ${id_mangopay_alfred}`);
                         return
                       }
-                      api.PayOuts.create({
+                      mangoApi.PayOuts.create({
                           AuthorId: id_mangopay_alfred,
                           DebitedFunds: { Currency: "EUR", Amount: amount },
                           Fees: { Currency: "EUR", Amount: 0 },
@@ -295,5 +293,6 @@ module.exports = {
   createMangoClient,
   createMangoProvider,
   addIdIfRequired,
-  requireKycValidation
+  requireKycValidation,
+  payAlfred,
 };

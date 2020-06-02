@@ -2,21 +2,35 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const moment = require('moment');
-
+const {availability2eventUI, eventUI2availability} =require('../../../utils/converters');
 const Availability = require('../../models/Availability');
+const {createDefaultAvailability}=require('../../../utils/dateutils');
+
 moment.locale('fr');
 router.get('/test',(req, res) => res.json({msg: 'Availability Works!'}) );
 
 
 // @Route POST /myAlfred/api/availability/add
-// add an availability for one user
+// add an availability for current user
 // access private
 router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=> {
 
     const newAvailability = new Availability({user:req.user.id, ...req.body});
-    
-    newAvailability.save().then(availability => res.json(availability)).catch(err => console.log(err));
-    console.log("After adding availability:"+JSON.stringify(req.body));
+
+    newAvailability.save()
+      .then(availability => {
+        res.json(availability)
+        console.log(`After adding availability:${JSON.stringify(availability)}`);
+      })
+      .catch(err => console.log(err));
+});
+
+// @Route GET /myAlfred/api/availability/toEventUI
+// Get converted availability to eventUI
+// access public
+router.get('/toEventUI',(req,res)=> {
+  const eventUI=createDefaultAvailability();
+  res.json({avail:eventUI});
 });
 
 // @Route POST /myAlfred/api/availability/update
@@ -60,7 +74,7 @@ router.get('/userAvailabilities/:id',(req,res)=> {
 });
 
 // @Route GET /myAlfred/api/availability/currentAlfred
-// Get all availability for one service
+// Get all availabilities for current user
 router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,res)=> {
     Availability.find({user: req.user.id})
         .then(availability => {

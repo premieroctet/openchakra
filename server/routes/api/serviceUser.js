@@ -5,8 +5,10 @@ const mongoose = require('mongoose');
 const path = require('path');
 const ServiceUser = require('../../models/ServiceUser');
 const Shop = require('../../models/Shop');
+const Service = require('../../models/Service');
 const User = require('../../models/User');
 const Availability = require('../../models/Availability');
+const Prestation = require('../../models/Prestation');
 const axios = require('axios');
 const https = require('https');
 const multer = require("multer");
@@ -19,7 +21,10 @@ const {data2ServiceUser} = require('../../../utils/mapping');
 const emptyPromise = require('../../../utils/promise');
 const { computeUrl } = require('../../../config/config');
 const { filterServicesGPS} = require('../../../utils/filters');
-
+const {createQuery, matches} = require('../../../utils/text')
+const intersection = require('array-intersection');
+const {GID_LEN} = require ('../../../utils/consts')
+//mongoose.set('debug', true)
 
 moment.locale('fr');
 const storage = multer.diskStorage({
@@ -154,11 +159,11 @@ router.post('/myShop/add', upload.fields([{ name: 'file_diploma', maxCount: 1 },
                 });
             }
             const data = req.body;
-            var su = data2ServiceUser(data, new ServiceUser()); 
+            var su = data2ServiceUser(data, new ServiceUser());
             su.user = req.user.id;
 
             // FIX : créer les prestations custom avant
-            let newPrestations = Object.values(req.body.prestations).filter(p => p._id == null);
+            let newPrestations = Object.values(req.body.prestations).filter(p => p._id && p._id.length == GID_LEN);
             let newPrestaModels = newPrestations.map(p => Prestation({ ...p, service: req.body.service, billing: [p.billing], filter_presentation: null, private_alfred: req.user.id }));
 
             const r = newPrestaModels.length > 0 ? Prestation.collection.insert(newPrestaModels) : emptyPromise({ insertedIds: [] });
@@ -171,7 +176,7 @@ router.post('/myShop/add', upload.fields([{ name: 'file_diploma', maxCount: 1 },
                  const newp = { prestation: presta._id, billing: presta.billing, price: presta.price };
                  su.prestations.push(newp);
                });
-               
+
                su.save().then((su) => {
                  Shop.findOne({ alfred: req.user.id })
                    .then(shop => {
@@ -219,7 +224,7 @@ router.put('/edit/:id', passport.authenticate('jwt', { session: false }), (req, 
             su.prestations = [];
 
             // FIX : créer les prestations custom avant
-            let newPrestations = Object.values(req.body.prestations).filter(p => p._id == null);
+            let newPrestations = Object.values(req.body.prestations).filter(p => p._id && p._id.length == GID_LEN);
             let newPrestaModels = newPrestations.map(p => Prestation({ ...p, service: req.body.service, billing: [p.billing], filter_presentation: null, private_alfred: req.user.id }));
 
             const r = newPrestaModels.length > 0 ? Prestation.collection.insert(newPrestaModels) : emptyPromise({ insertedIds: [] });
@@ -231,9 +236,9 @@ router.put('/edit/:id', passport.authenticate('jwt', { session: false }), (req, 
                Object.values(req.body.prestations).forEach(presta => {
                  const newp = { prestation: presta._id, billing: presta.billing, price: presta.price };
                  su.prestations.push(newp);
-               });     
+               });
                su.save().then((su) => {
-                  res.json(su); 
+                  res.json(su);
                 })
              })
 
@@ -551,10 +556,11 @@ router.post('/search',(req,res)=> {
 
       const obj = {begin,end,beginDay,endDay};
 
-      datesPromise=axios.post(baseUrl+'/myAlfred/api/availability/filterDate',obj) 
+      datesPromise=axios.post(baseUrl+'/myAlfred/api/availability/filterDate',obj)
     }
 
     keywordPromise.then( result => {
+      console.log(`/service/:keyword returned ${result.data}`)
       var allowedServices=result.data;
       // Result is object category => [arr of services] or null
       if (allowedServices!=null) {
@@ -568,9 +574,13 @@ router.post('/search',(req,res)=> {
         .populate('user','-id_card')
         .populate({path: 'service', populate: {path:'category'}})
         .then(services => {
-          console.log("SU.prestations:"+JSON.stringify(services[0].prestations, null, 2));
           if ('gps' in req.body) {
-            services = filterServicesGPS(services, req.body.gps);
+            try {
+              services = filterServicesGPS(services, JSON.parse(req.body.gps));
+            }
+            catch (err) {
+              services = filterServicesGPS(services, req.body.gps);
+            }
           }
           if (allowedServices!=null) {
             services = services.filter( su => allowedServices.includes(su.service._id.toString()) );
@@ -594,8 +604,32 @@ router.post('/search',(req,res)=> {
             });
             services = filtered;
           }
-          console.log("Returned services:"+services.length);
-          res.json(services);
+          if ('keyword' in req.body) {
+            const keyword = req.body.keyword;
+            Prestation.find()
+              .populate("job")
+              .then( prestas => {
+                prestas = prestas.filter( p => {
+                  const keep = matches(p.s_label, keyword) || (p.job && matches(p.job.s_label, keyword))
+                  return keep
+                })
+                const ids = prestas.map( p => p._id.toString())
+                services = services.filter( s => {
+                  if (matches(s.service.s_label, keyword) || matches(s.service.category.s_label, keyword)) {
+                    return true;
+                  }
+                  pids = s.prestations.map( pp => pp.prestation ? pp.prestation.toString() : '')
+                  const contains = intersection(ids, pids).length>0
+                  if (contains) {
+                    return true
+                  }
+                })
+                res.json(services)
+              })
+          }
+          else {
+            res.json(services);
+        }
         })
         .catch(err => { console.error(err); res.status(404).json({ service: 'No service found' })});
     });
@@ -616,6 +650,35 @@ router.post('/nearCity',(req,res)=> {
 
 });
 
+// @Route GET /myAlfred/api/serviceUser/cardPreview/:id
+// Data fro serviceUser cardPreview
+// @Access private
+router.get('/cardPreview/:id', (req,res)=> {
+  const suId = mongoose.Types.ObjectId(req.params.id)
+  ServiceUser.findOne(suId, 'label picture alfred service service_address.city service_address.gps graduated is_certified level')
+    .populate({path : 'service', select:'picture label'})
+    .populate({path : 'user', select:'firstname picture'})
+    .catch (err => {
+      console.error(err)
+      res.status(404).json({error: err})
+    })
+    .then ( su => {
+      Shop.findOne({alfred: su.user}, 'is_professional')
+        .catch (err => {
+          console.error(err)
+          res.status(404).json({error: err})
+        })
+        .then( shop => {
+          const result={
+            _id: su._id, label : su.service.label, picture : su.service.picture,
+            alfred: su.user, city: su.service_address.city, graduated: su.graduated,
+            is_certified: su.is_certified, level : su.level, is_professional: shop.is_professional,
+            gps: su.service_address.gps
+          }
+          res.json(result)
+        })
+    })
+})
 // @Route GET /myAlfred/api/serviceUser/nearOther
 // View all service around other address
 // @Access private
@@ -837,11 +900,8 @@ router.post('/home/search',(req,res)=> {
 // @Route GET /myAlfred/api/serviceUser/:id
 // View one serviceUser
 // @Access private
-router.get('/:id', passport.authenticate('jwt', {
-    session: false
-}), (req, res) => {
+router.get('/:id', (req, res) => {
 
-    console.log("Getting serviceUser # "+req.params.id);
     ServiceUser.findById(req.params.id)
         .populate('user','-id_card')
         .populate('service')

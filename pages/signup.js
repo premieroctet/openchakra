@@ -1,5 +1,4 @@
-import React, { Fragment } from 'react';
-
+import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
@@ -11,82 +10,16 @@ import Router from 'next/router';
 import Layout from '../hoc/Layout/Layout';
 import axios from "axios";
 import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import AlgoliaPlaces from "algolia-places-react";
-import DatePicker, {registerLocale,setDefaultLocale} from "react-datepicker";
+import DatePicker, {registerLocale} from "react-datepicker";
 import fr from 'date-fns/locale/fr';
-import Footer from '../hoc/Layout/Footer/Footer';
 import { toast } from 'react-toastify';
 import {Helmet} from 'react-helmet';
+import styles from './signup/signupStyle'
+import {checkPass1, checkPass2} from '../utils/passwords';
 
 registerLocale('fr', fr);
 
-const styles = theme => ({
-  fullContainer: {
-    backgroundImage: 'url(../static/background/connexion_inscription.png)',
-    backgroundPosition: 'center',
-    backgroundSize: 'contain',
-    backgroundRepeat:'no-repeat',
-    alignItems: 'center',
-    height: '180vh',
-    justifyContent: 'top',
-    flexDirection: 'column',
-  },
-  signupContainer: {
-    backgroundColor: 'rgba(0,0,0, 0.15)',
-    backgroundPosition: 'center',
-    backgroundSize: 'cover',
-    alignItems: 'center',
-    height: '180vh',
-    flexDirection: 'column',
-    position: 'absolute',
-    top: '82%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    zIndex: '2',
-  },
-  card: {
-    //padding: '1.5rem 3rem',
-    maxWidth: 600,
-    marginTop: 170,
-    boxShadow: '0px 2px 66px -37px rgba(10,10,10,0.65)',
-    [theme.breakpoints.down("xs")]:{
-      marginTop: 250
-    }
-  },
-  datenaissance: {
-    marginTop: 20,
-    width: '100%'
-  },
-  banner: {
-    marginBottom: 25,
-    backgroundColor: '#2FBCD3',
-    height: 80,
-
-  },
-  newContainer: {
-    padding: 10,
-  },
-  title: {
-    color: 'white',
-    display: 'flex',
-    justifyContent: 'center',
-    marginTop: 0,
-    paddingTop: 22,
-    letterSpacing: 1,
-  },
-  country: {
-    width: '100%'
-  },
-
-  birthday:{
-    height:40,
-    fontSize: '0.9rem'
-  }
-
-
-
-});
 
 class signup extends React.Component {
       constructor(props) {
@@ -103,8 +36,8 @@ class signup extends React.Component {
           zip_code: '',
           country: '',
           checked: false,
-          check2: false,
-          check3: false,
+          status1: {error:'', check:false},
+          status2: {error:'', check:false},
           errors: {},
           lat: '',
           lng: '',
@@ -129,26 +62,10 @@ class signup extends React.Component {
       };
 
   onChangePassword = e => {
-    this.setState({ [e.target.name]: e.target.value });
-    this.setState({ check3: false});
-    this.setState({password: e.target.value});
-    if(e.target.value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})")){
-      this.setState({check2: true});
-    } else {
-      this.setState({check2: false});
-    }
-    this.setState({check3: this.state.password2===e.target.value})
-  };
-
-  onChangePassword2 = e => {
-    this.setState({ [e.target.name]: e.target.value });
-    console.log("Target:"+e.target.name+":Pass1,2:"+this.state.password+","+this.state.password2);
-    this.setState({password2: e.target.value});
-    if(this.state.password===e.target.value) {
-      this.setState({check3: true});
-    } else {
-      this.setState({check3: false});
-    }
+    this.setState({
+      status1: checkPass1(this.state.password),
+      status2: checkPass2(this.state.password, this.state.password2),
+    })
   };
 
     onChangeAddress({suggestion}) {
@@ -363,13 +280,12 @@ class signup extends React.Component {
                             type="password"
                             name="password"
                             value={this.state.password}
-                            onChange={this.onChangePassword}
-                            error={errors.password}
-                            helperText="8 caractères minimum dont
-                                  une majuscule, une minuscule et un chiffre"
+                            onChange={this.onChange}
+                            onKeyUp ={this.onChangePassword}
+                            error={this.state.status1.error}
+                            helperText={this.state.status1.error}
                         />
                       </Grid>
-                      {!this.state.check2 ? <em style={{color:'red'}}>Mot de passe invalide</em> : null}
                       <Grid item style={{width: '100%'}}>
                         <TextField
                             label="Saisir à nouveau le mot de passe"
@@ -380,11 +296,12 @@ class signup extends React.Component {
                             type="password"
                             name="password2"
                             value={this.state.password2}
-                            onChange={this.onChangePassword2}
-                            error={errors.password2}
+                            onChange={this.onChange}
+                            onKeyUp ={this.onChangePassword}
+                            error={this.state.status2.error}
+                            helperText={this.state.status2.error}
                         />
                       </Grid>
-                      {!this.state.check3 ? <em style={{color:'red'}}>Les mots de passe saisis sont différents</em> : null}
                     </Grid>
                     <Typography style={{fontSize: '1.2rem', width:'100%', marginTop: 15}}>Date de naissance</Typography>
                     <p>Pour vous inscrire, vous devez être âgé d’au moins 16 ans. Les autres<br/>
@@ -406,26 +323,29 @@ class signup extends React.Component {
                       <em style={{color:'red'}}>
                         {this.state.errors.birthday}
                       </em>
-                    <Grid container style={{marginTop: 15}}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                              checked={this.state.checked}
-                              onChange={this.handleChecked}
-                              value="checked"
-                              color="primary"
-                          />
-                        }
-                        label="J’accepte les conditions générales d’utilisation de My-Alfred."
-                      />
+                    <Grid container style={{marginTop: 15, alignItems: 'center'}}>
+                      <Grid>
+                        <Checkbox
+                          checked={this.state.checked}
+                          onChange={this.handleChecked}
+                          value="checked"
+                          color="primary"
+                        />
+                      </Grid>
+                      <Grid>
+                        <a href={"footer/cguPage"} target="_blank">J’accepte les conditions générales d’utilisation de My-Alfred.</a>
+                      </Grid>
                     </Grid>
 
                     <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                      {this.state.checked && this.state.check2 ? <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color:"white" }}>
+                       <Button
+                           disabled = {!(this.state.checked && this.state.status1.check && this.state.status2.check)}
+                           type="submit"
+                           variant="contained"
+                           color="primary"
+                           style={{ width: '100%',color:"white" }}>
                         Inscription
-                      </Button> : <Button disabled type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
-                        Inscription
-                      </Button> }
+                      </Button>
 
                     </Grid>
                   </form>

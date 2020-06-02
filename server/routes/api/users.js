@@ -695,27 +695,25 @@ router.post('/forgotPassword',(req,res) => {
 // @Route POST /myAlfred/api/users/resetPassword
 // Reset the password
 router.post('/resetPassword',(req,res) => {
-   const password = req.body.password;
-   const token = req.body.token;
-   const email = req.body.email;
-    //console.log(token);
-   User.findOne({email: email})
-       .populate('resetToken')
-       .then(user => {
-
-           if(user.resetToken.token === token) {
-               bcrypt.genSalt(10, (err, salt) => {
-                   bcrypt.hash(password, salt, (err, hash) => {
-                       if (err) throw err;
-                       user.updateOne({password: hash})
-                           .then(user => res.json({success: 'password update'}))
-                           .catch(err => console.log(err));
-                   })
-               })
-           } else {
-               res.json({msg: 'Invalid token'})
-           }
-       })
+    const password = req.body.password;
+    const token = req.body.token;
+    ResetToken.findOne({token: token})
+        .then(resetToken => {
+            User.findOne({resetToken: new mongoose.Types.ObjectId(resetToken._id)})
+                .then(user=>{
+                    if (!user) throw err;
+                    bcrypt.genSalt(10, (err, salt) => {
+                        bcrypt.hash(password, salt, (err, hash) => {
+                            if (err) throw err;
+                            user.updateOne({password: hash, resetToken: undefined})
+                                .then(user => res.json({success: 'password update'}))
+                                .catch(err => console.log(err));
+                        })
+                    })
+                })
+                .catch(err => res.status(400).json({msg: 'Token expiré'}))
+        })
+        .catch(err => res.status(400).json({msg: 'Token invalide'}))
 });
 
 // @Route PUT /myAlfred/api/users/profile/editProfile
@@ -750,8 +748,8 @@ router.put('/profile/editPassword',passport.authenticate('jwt',{session:false}),
     const password = req.body.password;
     const newPassword = req.body.newPassword;
 
-    if(newPassword.length < 8) {
-        return res.status(400).json({error: '8 characters minimum'})
+    if(!newPassword.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})")) {
+        return res.status(400).json({error: 'Le nouveau mot de passe doit contenir au moins :\n\t- 8 caractères\n\t- 1 minuscule\n\t- 1 majuscule\n\t- 1 chiffre'})
     } else {
         User.findById(req.user.id)
             .then(user => {
@@ -763,14 +761,14 @@ router.put('/profile/editPassword',passport.authenticate('jwt',{session:false}),
                                     if (err) throw err;
                                     user.password = hash;
                                     user.save()
-                                        .then(user => res.json({success: 'Password update'}))
+                                        .then(user => res.json({success: 'Mot de passe mis à jour'}))
                                         .catch(err => console.log(err));
                                 })
                             })
 
 
                         } else {
-                            return res.status(400).json({error: 'Incorrect password'});
+                            return res.status(400).json({error: 'Mot de passe incorrect', wrongPassword: true});
                         }
                     });
             })

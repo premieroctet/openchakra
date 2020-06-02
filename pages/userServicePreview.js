@@ -45,10 +45,13 @@ import Commentary from '../components/Commentary/Commentary';
 import fr from 'date-fns/locale/fr';
 import Switch from '@material-ui/core/Switch';
 import BookingDetail from '../components/BookingDetail/BookingDetail';
+import {Helmet} from 'react-helmet';
 import {toast} from 'react-toastify';
 const moment = require('moment');
 moment.locale('fr');
 registerLocale('fr', fr);
+import Link from 'next/link';
+
 
 
 const IOSSwitch = withStyles(theme => ({
@@ -115,7 +118,7 @@ class UserServicesPreview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: {},
+      user: null,
       shop: {},
       serviceUser: {},
       alfred:{},
@@ -158,70 +161,94 @@ class UserServicesPreview extends React.Component {
   }
 
   componentDidMount() {
+    let bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
+    console.log(`Bookingobj:${JSON.stringify(bookingObj)}`)
+
     const id = this.props.service_id;
     localStorage.setItem("path", Router.pathname);
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-      "token"
-    );
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem("token")
+    axios.get(`/myAlfred/api/serviceUser/${id}`)
+      .then(res => {
+      let serviceUser = res.data;
+      var count = {}
+      serviceUser.prestations.forEach( p => count[p._id]=0);
+
+      if (bookingObj) {
+        serviceUser.prestations.forEach( p => {
+          const bookP=bookingObj.prestations.find( bp => {
+            return bp.name==p.prestation.label
+          })
+          if (bookP) {
+            count[p._id]=parseInt(bookP.value)
+          }
+        });
+
+        this.setState({
+          date: moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate(),
+          time: moment(bookingObj.time_prestation).toDate(),
+          location: bookingObj.location,
+          commission: bookingObj.fees,
+        })
+      }
+
+      this.setState({
+        serviceUser: serviceUser,
+        service: serviceUser.service,
+        equipments: serviceUser.equipments,
+        prestations: serviceUser.prestations,
+        allEquipments : serviceUser.service.equipments,
+        alfred: serviceUser.user,
+        count: count,
+        //location: location,
+        pick_tax: null,
+      }, () => {
+        if (!bookingObj) this.setDefaultLocation()
+      });
+
+
+      axios.get('/myAlfred/api/reviews/'+serviceUser.user._id)
+        .then(response => {
+          const skills=response.data;
+          this.setState({skills:skills});
+        })
+        .catch(function(error){ console.error(error); });
+      axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
+        .then(res => {
+          let availabilities = res.data;
+          this.setState({ availabilities: availabilities });
+        })
+        .catch(err => console.log(err));
+      axios.get("/myAlfred/api/shop/alfred/" + this.state.alfred._id).then(res => {
+        let shop = res.data;
+        this.setState({
+          shop: shop,
+          flexible: shop.flexible_cancel,
+          moderate: shop.moderate_cancel,
+          strict: shop.strict_cancel,
+        });
+      })
+      .catch(err => console.error(err));
+      })
+      .catch(err =>{
+        console.error(err)
+      });
     axios.get("/myAlfred/api/users/current")
       .then(res => {
         let user = res.data;
         this.setState({ user: user, });
-        axios.get(`/myAlfred/api/serviceUser/${id}`).then(res => {
-          let serviceUser = res.data;
-          // Prestas booked : 0 for each
-          var count = {}
-          serviceUser.prestations.forEach( p => count[p._id]=0);
-
-          var location=null;
-
-          this.setState({
-            serviceUser: serviceUser,
-            service: serviceUser.service,
-            equipments: serviceUser.equipments,
-            prestations: serviceUser.prestations,
-            allEquipments : serviceUser.service.equipments,
-            alfred: serviceUser.user,
-            count: count,
-            location: location,
-            pick_tax: null,
-          }, () => this.setDefaultLocation());
-
-          axios.get('/myAlfred/api/reviews/'+serviceUser.user._id)
-            .then(response => {
-              const skills=response.data;
-              this.setState({skills:skills});
-            })
-            .catch(function(error){ console.log(error); });
-          axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
-            .then(res => {
-              let availabilities = res.data;
-              this.setState({ availabilities: availabilities });
-            })
-            .catch(err => console.log(err));
-          axios.get("/myAlfred/api/shop/alfred/" + this.state.alfred._id).then(res => {
-            let shop = res.data;
-            this.setState({
-              shop: shop,
-              flexible: shop.flexible_cancel,
-              moderate: shop.moderate_cancel,
-              strict: shop.strict_cancel,
-            });
-          })
-          .catch(err => console.log(err));
-        }).catch(err =>{
-          console.log(err)
-        });
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
+        /**
         if (err.response.status === 401 || err.response.status === 403) {
           localStorage.removeItem("token");
           Router.push({ pathname: "/login" });
         }
+        */
       });
 
-    setTimeout(this.checkBook, 3000);
+    localStorage.removeItem("bookingObj")
+    setTimeout(() => {this.computeTotal()}, 3000);
   }
 
   setDefaultLocation = () => {
@@ -273,6 +300,7 @@ class UserServicesPreview extends React.Component {
     if (reservationDate && reservationDate.isBefore(moment())) { errors['datetime']='Réservation impossible avant maintenant'}
 
     if (!this.state.location) { errors['location']='Sélectionnez un lieu de prestation'}
+    console.log(`Errors:${JSON.stringify(errors)}`)
     this.setState({errors:errors});
   }
 
@@ -391,6 +419,7 @@ class UserServicesPreview extends React.Component {
   book = (actual) => { //actual : true=> book, false=>infos request
 
     const count=this.state.count;
+    const user=this.state.user;
     var prestations=[];
     this.state.prestations.forEach(p => {
       if (this.state.count[p._id]) {
@@ -398,19 +427,34 @@ class UserServicesPreview extends React.Component {
       }
     });
 
-    var chatPromise = actual ? emptyPromise({ res: null }) : axios.post("/myAlfred/api/chatRooms/addAndConnect", { emitter: this.state.user._id, recipient: this.state.serviceUser.user._id });
+    let place;
+    if (user) {
+      switch (this.state.location) {
+        case 'client':
+          place = this.state.user.billing_address;
+          break;
+        case 'alfred':
+          place = this.state.serviceUser.service_address;
+          break;
+      }
+    }
+
+
+    var chatPromise = (actual || !user) ? emptyPromise({ res: null }) : axios.post("/myAlfred/api/chatRooms/addAndConnect", { emitter: this.state.user._id, recipient: this.state.serviceUser.user._id });
 
     chatPromise.then( res => {
       let bookingObj = {
-        reference: computeBookingReference(this.state.user, this.state.serviceUser.user),
+        reference: user ? computeBookingReference(user, this.state.serviceUser.user) : '',
         service: this.state.serviceUser.service.label,
-        address: this.state.serviceUser.service_address,
+        serviceId: this.state.serviceUser.service._id,
+        address: place,
+        location: this.state.location,
         equipments: this.state.serviceUser.equipments,
         amount: this.state.total,
         date_prestation: moment(this.state.date).format("DD/MM/YYYY"),
         time_prestation: this.state.time,
         alfred: this.state.serviceUser.user._id,
-        user: this.state.user._id,
+        user: user ? user._id : null,
         prestations: prestations,
         travel_tax: this.computeTravelTax() ,
         pick_tax: this.computePickTax() ,
@@ -421,7 +465,7 @@ class UserServicesPreview extends React.Component {
 
       console.log("BookingObj:"+JSON.stringify(bookingObj, null, 2));
 
-      if (!actual) {
+      if (!actual && user) {
         bookingObj['chatroom']=res.data._id;
       }
 
@@ -431,29 +475,44 @@ class UserServicesPreview extends React.Component {
 
       if (actual) {
         localStorage.setItem("bookingObj", JSON.stringify(bookingObj));
-        localStorage.setItem("emitter", this.state.user._id);
-        localStorage.setItem("recipient", this.state.serviceUser.user._id);
-        localStorage.removeItem('address');
+        if (user) {
+          localStorage.setItem("emitter", this.state.user._id);
+          localStorage.setItem("recipient", this.state.serviceUser.user._id);
+          localStorage.removeItem('address');
+        }
 
-        Router.push({
-          pathname: "/confirmPayement",
-          query: { id: this.props.service_id }
-        })
+        if (!this.state.user) {
+          localStorage.removeItem("token");
+          Router.push({ pathname: "/login" });
+        }
+        else {
+          Router.push({
+            pathname: "/confirmPayement",
+            query: { id: this.props.service_id }
+          })
+        }
       }
       else {
-        axios.post("/myAlfred/api/booking/add", bookingObj)
-          .then(response => {
-            axios.put('/myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, { booking: response.data._id })
-              .then(() => {
-                localStorage.removeItem('address');
-                Router.push({
-                  pathname: "/reservations/messagesDetails",
-                  query: { id: bookingObj.chatroom, booking:response.data._id }
-                });
-              })
-          })
-          .catch(err => console.log(err));
-
+        if (!user) {
+          localStorage.removeItem("token");
+          localStorage.setItem("bookingObj", JSON.stringify(bookingObj));
+          localStorage.setItem("path", Router.pathname);
+          Router.push({ pathname: "/login" });
+        }
+        else {
+          axios.post("/myAlfred/api/booking/add", bookingObj)
+            .then(response => {
+              axios.put('/myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, { booking: response.data._id })
+                .then(() => {
+                  localStorage.removeItem('address');
+                  Router.push({
+                    pathname: "/reservations/messagesDetails",
+                    query: { id: bookingObj.chatroom, booking:response.data._id }
+                  });
+                })
+            })
+            .catch(err => console.log(err));
+        }
       }
     })
   }
@@ -504,10 +563,10 @@ class UserServicesPreview extends React.Component {
                   <label>{p.prestation.label}</label>
                 </Grid>
                 <Grid style={{width: '50%'}}>
-                  <label>{p.price.toFixed(2)}€</label>
+                  <label>{p.price ? p.price.toFixed(2) : "?"}€</label>
                 </Grid>
                 <Grid style={{width: '50%'}}>
-                  <label>{p.billing.label}</label>
+                  <label>{p.billing ? p.billing.label : '?'}</label>
                 </Grid>
               </Grid>
             </Grid>
@@ -761,6 +820,15 @@ class UserServicesPreview extends React.Component {
    );
 
     return (
+      <>
+          <Helmet>
+            <meta property="og:image" content={`/${service.picture}`} />
+            <meta property="og:image:secure_url" content={`/${service.picture}`} />
+            <meta property="og:description" content={`${service.label} par ${alfred.firstname}`} />
+            <meta property="description" content={`${service.label} par ${alfred.firstname}`} />
+            <meta property="og:type" content="website" />
+            <meta property="og:url"content="https://my-alfred.io" />
+            </Helmet>
       <Grid>
         <Layout>
           <Grid style={{width: '100%'}}>
@@ -806,6 +874,23 @@ class UserServicesPreview extends React.Component {
                     <Grid item className={classes.itemAvatar}>
                       <UserAvatar classes={'avatarLetter'} user={alfred} className={classes.avatarLetter} />
                       <Typography style={{marginTop:20}} className={classes.textAvatar}>{alfred.firstname}</Typography>
+                      <Grid style={{textAlign : 'center'}}>
+                        <Link
+                          href={{
+                            pathname: "/viewProfile",
+                            query: { id: this.state.alfred._id }
+                          }}
+                        >
+                          <Typography
+                            style={{
+                              color: "rgb(47, 188, 211)",
+                              cursor: "pointer"
+                            }}
+                          >
+                            Voir le profil
+                          </Typography>
+                        </Link>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -1080,7 +1165,7 @@ class UserServicesPreview extends React.Component {
           </Grid>
         </Layout>
       </Grid>
-
+      </>
     )
   }
 }

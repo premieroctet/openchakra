@@ -75,7 +75,59 @@ class ResponsiveDrawer extends React.Component{
           url: '/profile/reviews',
           isActivePics: 'Commentaires active'
         }
+      ],
+      itemsDrawerReservations:[
+        {
+          text: 'Toutes mes réservations',
+          url: 'allReservations',
+          isActivePics: 'Toutes mes réservations active'
+        },
+        {
+          text: 'Mes réservations à venir',
+          url: 'comingReservations',
+          isActivePics: 'Mes réservations à venir active'
+        },
+        {
+          text: 'Mes réservations terminées',
+          url: 'finishedReservations',
+          isActivePics: 'Mes réservations terminées active'
+        }
+      ],
+      itemsDrawerMessages:[
+        {
+          text: 'Tous les messages',
+          url : '/reservations/messages',
+          isActivePics: 'Tous les messages active'
+        },
+        {
+          text: 'Messages non lus',
+          url: '/reservations/newMessages',
+          isActivePics: 'Messages non lus active'
+        }
+      ],
+      itemsDrawerPerformances:[
+        {
+          text: 'Mes revenus',
+          url: '/performances/revenus',
+          isActivePics: 'Mes revenus active'
+        },
+        {
+          text: 'Mes statistiques',
+          url: '/performances/statistiques',
+          isActivePics: 'Mes statistiques active'
+        },
+        {
+          text: 'Mes évaluations',
+          url: '/performances/evaluations',
+          isActivePics: 'Mes évaluations active'
+        },
+        {
+          text: 'Historique des versements',
+          url : '/performances/historique',
+          isActivePics: 'Historique des versements active'
+        }
       ]
+
     }
   }
   handleDrawerToggle = () => {
@@ -85,7 +137,15 @@ class ResponsiveDrawer extends React.Component{
   theme = () => useTheme();
 
   drawer(classes){
-    let itemsDrawer = this.props.itemsDrawers && this.props. itemsDrawers === 'profil' ? this.state.itemsDrawerProfil : this.state.itemsDrawerAccount;
+    let itemsDrawer;
+      switch (this.props.itemsDrawers) {
+        case 'profil' : itemsDrawer = this.state.itemsDrawerProfil;break;
+        case 'reservation' : itemsDrawer = this.state.itemsDrawerReservations;break;
+        case 'account': itemsDrawer = this.state.itemsDrawerAccount;break;
+        case 'message': itemsDrawer = this.state.itemsDrawerMessages;break;
+        case 'performance': itemsDrawer = this.state.itemsDrawerPerformances;break;
+      }
+
     return (
       <Grid>
         <Grid className={classes.toolbar} />
@@ -108,7 +168,7 @@ class ResponsiveDrawer extends React.Component{
 
   render() {
 
-    const { classes, windows }= this.props;
+    const { classes, windows, needMargin }= this.props;
     const { mobileOpen } = this.state;
     const container = windows !== undefined ? () => windows.document.body : undefined;
 
@@ -137,7 +197,7 @@ class ResponsiveDrawer extends React.Component{
           <Hidden xsDown implementation="css">
             <Drawer
               classes={{
-                paper: classes.drawerPaper,
+                paper: needMargin ? classes.drawerPaperMargin : classes.drawerPaper,
               }}
               variant="permanent"
               open

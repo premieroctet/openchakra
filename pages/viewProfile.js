@@ -80,7 +80,7 @@ class viewProfile extends React.Component {
               "/myAlfred/api/reviews/profile/customerReviewsCurrent/" +
               this.props.user_id
           )
-          .then(res => this.setState({ customerReviews: res.data })).catch(error => {console.log(error)});
+          .then(res => this.setState({ customerReviews: res.data })).catch(error => {console.error(error)});
 
         axios
           .get(
@@ -89,7 +89,7 @@ class viewProfile extends React.Component {
           )
           .then(res => this.setState({ alfredReviews: res.data }));
       })
-      .catch(err => {console.log(err)});
+      .catch(err => {console.err(err)});
   }
 
   handleClick() {
@@ -163,7 +163,7 @@ class viewProfile extends React.Component {
                                   needAvatar={false}
                                   userState={this.state.userState}
                                   alfred={user_infos}
-                                  services={this.state.services[result]}
+                                  services={this.state.services[result]._id}
                                   needRefresh={this.needRefresh}/>
                               </Grid>
                             )

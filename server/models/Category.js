@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const {normalize} = require('../../utils/text')
 
 const CategorySchema = new Schema({
     label: {
@@ -15,9 +16,24 @@ const CategorySchema = new Schema({
     tags: [{
     type: Schema.Types.ObjectId,
     ref: 'tag'
-    }]
+  }],
+  s_label: {
+    type: String,
+    default: function() {
+      return normalize(this.label)
+    }
+  },
 });
 
 CategorySchema.index({label:'text'});
 
-module.exports = Category = mongoose.model('category',CategorySchema);
+const Category = mongoose.model('category',CategorySchema);
+
+// To update s_label
+Category.find({})
+  .then (categories => {
+    categories.forEach( c => c.save());
+  }
+)
+
+module.exports = Category;
