@@ -63,6 +63,7 @@ class siret extends React.Component {
               this.setCompanyData(res.data.etablissement);
             })
             .catch(err => {
+              console.error(err)
                axios.get(`${SIRET.sirenUrl}/${code}`, config)
                  .then(res => {
                    this.setCompanyData(res.data);
