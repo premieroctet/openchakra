@@ -404,8 +404,8 @@ new CronJob('0 */5 * * * *', function() {
     Booking.find({status: 'Terminée',paid:false})
         .populate('user')
         .populate('alfred')
-        .then(booking => {
-            booking.forEach(b => {
+        .then(bookings => {
+            bookings.forEach(booking => {
               payAlfred(booking)
             })
         })

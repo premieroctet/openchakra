@@ -25,4 +25,16 @@ const matches = (str, keywords) => {
   return ok
 }
 
-module.exports = {normalize, createQuery, matches}
+const formatIban = iban => {
+  const result = iban.split('').map( (l, idx) => (idx+1)%4==0 ? l+" " : l).join('')
+  return result
+}
+
+const maskIban = iban => {
+  const len=iban.length
+  const masked = iban.slice(0, 4)+"X".repeat(len-8)+iban.slice(-4)
+  return masked
+}
+
+
+module.exports = {normalize, createQuery, matches, formatIban, maskIban, }

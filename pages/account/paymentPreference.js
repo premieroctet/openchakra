@@ -19,6 +19,7 @@ import {Helmet} from 'react-helmet';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import {formatIban} from '../../utils/text';
 
 
 moment.locale('fr');
@@ -36,6 +37,7 @@ class paymentPreference extends React.Component {
             haveAccount: false,
             bic: '',
             iban: '',
+            errors : {},
         };
         this.callDrawer = this.callDrawer.bind(this)
 
@@ -95,6 +97,7 @@ class paymentPreference extends React.Component {
         iban: this.state.iban
       };
 
+      this.setState({errors: {}})
       axios.post('/myAlfred/api/payment/bankAccount',data)
           .then(res => {
               toast.info('RIB ajouté');
@@ -109,7 +112,15 @@ class paymentPreference extends React.Component {
                   })
 
           })
-          .catch()
+          .catch( err => {
+            toast.error("Erreur à l'ajout du RIB")
+            try {
+              this.setState({errors: err.response.data.errors})
+            }
+            catch (err) {
+              console.error(err)
+            }
+          })
     };
 
     deleteAccount(id){
@@ -145,8 +156,9 @@ class paymentPreference extends React.Component {
 
     render(){
         const {classes} = this.props;
-        const {accounts, clickAdd, clickDelete, haveAccount } = this.state;
+        const {accounts, clickAdd, clickDelete, haveAccount, errors } = this.state;
 
+        console.log(JSON.stringify(errors, null, 2))
       return (
         <Fragment>
           <Helmet>
@@ -182,7 +194,7 @@ class paymentPreference extends React.Component {
                           <Grid item className={classes.containerBank}>
                             <p>Compte bancaire (par défaut)</p>
                             {haveAccount ?
-                              <p>{accounts[0].OwnerName}, {accounts[0].IBAN}</p>
+                              <p>{accounts[0].OwnerName}, {formatIban(accounts[0].IBAN)}</p>
                               :
                               <p>Aucun rib</p>
                             }
@@ -211,6 +223,8 @@ class paymentPreference extends React.Component {
                                         variant="outlined"
                                         placeholder={'IBAN'}
                                         label={'IBAN'}
+                                        error={errors.iban}
+                                        helperText={errors.iban}
                                     />
                                     </Grid>
                                     <Grid item xs={12}>
@@ -223,6 +237,8 @@ class paymentPreference extends React.Component {
                                           variant="outlined"
                                           placeholder={'Code SWIFT / BIC'}
                                           label={'Code SWIFT / BIC'}
+                                          error={errors.bic}
+                                          helperText={errors.bic}
                                       />
                                     </Grid>
                                     <Grid item xs={12} style={{display: "flex", justifyContent: "flex-end"}}>
