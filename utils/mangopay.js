@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const {getHost}=require('./mailing')
 const emptyPromise = require('./promise');
-const {Users, } = require('mangopay2-nodejs-sdk');
+const mangopay = require('mangopay2-nodejs-sdk');
 
 // PROD !!!!!
 /**
@@ -259,7 +259,7 @@ const payAlfred = booking => {
                           Fees: { Currency: "EUR", Amount: 0 },
                           BankAccountId: accounts[0].Id,
                           DebitedWalletId: id_wallet_alfred,
-                          BankWireRef: `My Alfred ${booking.reference}`,
+                          BankWireRef: `My Alfred`,
                           PaymentType: "BANK_WIRE"
                         })
                         .catch ( err => {
