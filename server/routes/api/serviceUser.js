@@ -918,9 +918,7 @@ router.post('/home/search',(req,res)=> {
 // @Route GET /myAlfred/api/serviceUser/:id
 // View one serviceUser
 // @Access private
-router.get('/:id', passport.authenticate('jwt', {
-    session: false
-}), (req, res) => {
+router.get('/:id', (req, res) => {
 
     ServiceUser.findById(req.params.id)
         .populate('user','-id_card')

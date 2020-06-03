@@ -10,6 +10,7 @@ const _ = require('lodash');
 const moment = require('moment');
 const request = require('request');
 const {mangoApi}=require('../../../utils/mangopay');
+const {maskIban}=require('../../../utils/text');
 const {getHost}=require('../../../utils/mailing')
 var parse = require('url-parse');
 const { inspect } = require('util');
@@ -269,6 +270,7 @@ router.post('/bankAccount',passport.authenticate('jwt',{session:false}),(req,res
     User.findById(req.user.id)
         .then(user => {
             const id_mangopay = user.id_mangopay;
+            const id_mangopay_provider = user.mangopay_provider_id;
             const billing_address = user.billing_address;
             const address = billing_address.address;
             const city = billing_address.city;
@@ -290,11 +292,24 @@ router.post('/bankAccount',passport.authenticate('jwt',{session:false}),(req,res
 
             mangoApi.Users.createBankAccount(id_mangopay,account)
                 .then(newAccount => {
-                    res.json({msg: "Compte créé"})
+                  console.log(`Mango bank account:${JSON.stringify(newAccount)}`)
+                  res.json({msg: "Compte créé"})
+                })
+                .catch (err => {
+                  console.error(`${JSON.stringify(err)}`)
+                  errors={}
+                  if (err.errors.BIC) errors['bic']='Le code BIC est incorrect'
+                  if (err.errors.IBAN) errors['iban']='Le code IBAN est incorrect'
+                  console.error(`Error:${errors}`)
+                  res.status(404).json({errors : errors})
                 })
 
 
-        })
+      })
+      .catch (err => {
+        console.error(`Error:${err}`)
+        res.status(404).json({errors : "Utilisateur non reconnu"})
+      })
 });
 
 
@@ -344,11 +359,16 @@ router.get('/activeAccount',passport.authenticate('jwt',{session:false}),(req,re
                 .then(accounts => {
                     accounts.forEach(a => {
                         if(a.Active){
+                            a.IBAN = maskIban(a.IBAN)
                             allAccount.push(a)
                         }
                     });
                     res.json(allAccount);
                 })
+        })
+        .catch ( err => {
+          console.error(JSON.stringify(err))
+          res.json([])
         })
 });
 
