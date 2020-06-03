@@ -543,7 +543,7 @@ router.post('/search',(req,res)=> {
 
   console.log(`Searching ${JSON.stringify(req.body)}`)
 
-  ServiceUser.find({}, 'prestations.prestation service_address location')
+  ServiceUser.find({}, 'prestations.prestation service_address location perimeter')
     .populate({ path : 'user', select : 'firstname' })
     .populate({ path : 'service', select : 'label s_label',
         populate : { path : 'category', select : 's_label', }
@@ -574,7 +574,7 @@ router.post('/search',(req,res)=> {
         }
       }
       const elapsed = process.hrtime(start2)
-      console.log(`Fast Search took ${elapsed[0]}s ${elapsed[1]/1e6}ms`)
+      console.log(`Fast Search found ${sus.length} services in ${elapsed[0]}s ${elapsed[1]/1e6}ms`)
       res.json(sus)
     })
     .catch( err => {

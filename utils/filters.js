@@ -28,7 +28,7 @@ const isServiceAroundGPS = (serviceUser, coordinates) => {
         const dist= geolib.getDistance(
           {latitude:coordinates.lat.toString(), longitude:coordinates.lng.toString()},
           {latitude:latAlfred.toString(), longitude: lngAlfred.toString()})
-        var distance = geolib.convertDistance( dist, 'km').toFixed(2);
+        var distance = geolib.convertDistance( dist, 'km');
         var in_perimeter = distance < serviceUser.perimeter;
         return in_perimeter;
       }
@@ -62,8 +62,6 @@ const sortfn = gps => {
       console.warn(`Warning: GPS incorrect pour serviceUser ${su2._id}`)
       d2 = 100000;
     }
-    const c1=su1.service_address.city.toLowerCase()
-    const c2=su2.service_address.city.toLowerCase()
     return d1-d2;
   }
   return sort;

@@ -1,6 +1,7 @@
 
 const normalize = str => {
-  return str.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+  const normalized = str.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+  return normalized
 }
 
 const createRegExps = str => {
