@@ -72,7 +72,8 @@ class SearchPage extends React.Component {
             visibleCategories:[],
             catCount:{}, // cat id => # of items to display
             availabilities:[],
-            isAdmin: false
+            isAdmin: false,
+            searching : false,
         };
         this.filter=this.filter.bind(this);
         this.searchCallback=this.searchCallback.bind(this);
@@ -229,6 +230,9 @@ class SearchPage extends React.Component {
     }
 
      search(forceFilter) {
+
+       this.setState({searching: true})
+
        const address = this.state.selectedAddress;
         var filters={}
 
@@ -249,6 +253,10 @@ class SearchPage extends React.Component {
        }
 
        axios.post('/myAlfred/api/serviceUser/search', filters)
+         .catch (err => {
+           console.error(err)
+           this.setState({searching : false})
+         })
          .then(res => {
            let serviceUsers = res.data;
            this.setState({serviceUsers:serviceUsers, serviceUsersDisplay:serviceUsers});
@@ -265,7 +273,12 @@ class SearchPage extends React.Component {
            axios.get('/myAlfred/api/availability/all')
              .then( res => {
                this.setState({availabilities: res.data, visibleCategories:visibleCategories, categories:categories, proAlfred:proAlfred}, () => { if (forceFilter) { this.filter()}});
-             });
+               this.setState({searching : false})
+             })
+             .catch (err => {
+               console.error(err)
+               this.setState({searching : false})
+             })
          })
     }
 
@@ -486,13 +499,18 @@ class SearchPage extends React.Component {
                               </Grid>
                             ))}
                           </Grid>
-                          {this.props.search && serviceUsers.length === 0 && !this.isSubFilterSet() ?
-                            <p>Nous n'avons pas trouvé de résultat pour votre recherche</p>
+                          { this.state.searching ?
+                            <Typography>Recherche en cours</Typography>
                             :
                             null
                           }
-                          {this.props.search && serviceUsers.length === 0 && this.isSubFilterSet() ?
-                            <p><Button onClick={() => this.resetFilter()}>Aucun résultat, supprimer les filtres</Button></p> :  null
+                          {!this.state.searching && this.props.search && serviceUsers.length === 0 && !this.isSubFilterSet() ?
+                            <Typography>Nous n'avons pas trouvé de résultat pour votre recherche</Typography>
+                            :
+                            null
+                          }
+                          {!this.state.searching && this.props.search && serviceUsers.length === 0 && this.isSubFilterSet() ?
+                            <Typography><Button onClick={() => this.resetFilter()}>Aucun résultat, supprimer les filtres</Button></Typography> :  null
                           }
                  </Grid>
                 { this.props.search || serviceUsers.length>0 ? null:
