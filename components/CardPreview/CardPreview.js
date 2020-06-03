@@ -214,7 +214,8 @@ class CardPreview extends React.Component{
                 <Grid>
                   <Link href={'userServicePreview?id=' + services._id}>
                     <Button variant="contained" color="primary" className={classes.button}>
-                      {userState && isOwner ? "Visualiser" : "Réserver"}
+                      { /** userState && isOwner ? "Visualiser" : "Réserver" */ }
+                      Visualiser
                     </Button>
                   </Link>
                 </Grid>
