@@ -29,11 +29,4 @@ CategorySchema.index({label:'text'});
 
 const Category = mongoose.model('category',CategorySchema);
 
-// To update s_label
-Category.find({})
-  .then (categories => {
-    categories.forEach( c => c.save());
-  }
-)
-
 module.exports = Category;

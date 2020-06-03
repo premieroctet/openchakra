@@ -89,7 +89,7 @@ class viewProfile extends React.Component {
           )
           .then(res => this.setState({ alfredReviews: res.data }));
       })
-      .catch(err => {console.err(err)});
+      .catch(err => {console.error(err)});
   }
 
   handleClick() {

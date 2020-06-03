@@ -63,11 +63,4 @@ ServiceSchema.index({label:'text'});
 
 const Service = mongoose.model('service',ServiceSchema);
 
-// To update s_label
-Service.find({})
-  .then (services => {
-    services.forEach( s => s.save());
-  }
-)
-
 module.exports = Service;

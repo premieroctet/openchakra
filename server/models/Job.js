@@ -18,12 +18,4 @@ const JobSchema = new Schema({
 
 const Job = mongoose.model('job',JobSchema);
 
-// To update s_label
-Job.find({})
-  .then (jobs => {
-    jobs.forEach( j => j.save());
-  }
-)
-
-
 module.exports = Job;

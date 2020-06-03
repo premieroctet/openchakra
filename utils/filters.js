@@ -1,5 +1,7 @@
 const geolib = require('geolib');
 const isEmpty = require('../server/validation/is-empty');
+const { createRegExps } = require('./text')
+
 
 const isServiceAroundGPS = (serviceUser, coordinates) => {
 
@@ -31,8 +33,7 @@ const isServiceAroundGPS = (serviceUser, coordinates) => {
         return in_perimeter;
       }
       catch (err) {
-        console.error(`Error computing distance between ${coordinates} and ${latAlfred}/${lngAlfred}`);
-        console.error(err)
+        console.error(`Error computing distance between ${coordinates} and ${latAlfred}/${lngAlfred}:${JSON.stringify(err)}`);
         return false;
       }
     }
@@ -61,6 +62,8 @@ const sortfn = gps => {
       console.warn(`Warning: GPS incorrect pour serviceUser ${su2._id}`)
       d2 = 100000;
     }
+    const c1=su1.service_address.city.toLowerCase()
+    const c2=su2.service_address.city.toLowerCase()
     return d1-d2;
   }
   return sort;
@@ -73,4 +76,16 @@ const filterServicesGPS = (serviceUsers, coordinates) => {
   return filteredServiceUsers;
 }
 
-module.exports = { filterServicesGPS };
+const filterServicesKeyword = (serviceUsers, keyword) => {
+  const regexps = createRegExps(keyword)
+  const filteredServices = serviceUsers.filter( su =>
+      regexps.some(r => r.test(su.service.s_label)) ||
+      regexps.some(r => r.test(su.service.category.s_label)) ||
+      su.prestations.some(p => p.prestation && p.prestation.s_label && p.prestation.job ?
+         regexps.some(r => r.test(p.prestation.s_label)) || regexps.some(r => r.test(p.prestation.job.s_label))
+        : false)
+  )
+  return filteredServices
+}
+
+module.exports = { filterServicesGPS, filterServicesKeyword };

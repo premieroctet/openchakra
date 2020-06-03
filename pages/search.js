@@ -73,6 +73,7 @@ class SearchPage extends React.Component {
             catCount:{}, // cat id => # of items to display
             availabilities:[],
             isAdmin: false,
+            mounted : false,
             searching : false,
         };
         this.filter=this.filter.bind(this);
@@ -160,6 +161,7 @@ class SearchPage extends React.Component {
            .catch(err => {
              console.log(err)
            });
+           this.setState({mouting : false})
     }
 
     searchCallback = q => {
@@ -504,7 +506,7 @@ class SearchPage extends React.Component {
                             :
                             null
                           }
-                          {!this.state.searching && this.props.search && serviceUsers.length === 0 && !this.isSubFilterSet() ?
+                          {!(this.state.searching || !this.state.mounted) && this.props.search && serviceUsers.length === 0 && !this.isSubFilterSet() ?
                             <Typography>Nous n'avons pas trouvé de résultat pour votre recherche</Typography>
                             :
                             null

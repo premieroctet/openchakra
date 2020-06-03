@@ -3,14 +3,14 @@ const normalize = str => {
   return str.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
 }
 
-const createRegexps = str => {
+const createRegExps = str => {
   str = normalize(str).split(' ')
   const regexps = str.map( s => new RegExp(s, "i"))
   return regexps
 }
 
 const createQuery = str => {
-  const regexps = createRegexps(str)
+  const regexps = createRegExps(str)
   var criterions=[]
   regexps.forEach( r => {
     criterions.push({'s_label' : { $regex : r}})
@@ -20,7 +20,7 @@ const createQuery = str => {
 }
 
 const matches = (str, keywords) => {
-  const regexps = createRegexps(keywords)
+  const regexps = createRegExps(keywords)
   const ok = regexps.some ( r => str.match(r) )
   return ok
 }
@@ -36,5 +36,4 @@ const maskIban = iban => {
   return masked
 }
 
-
-module.exports = {normalize, createQuery, matches, formatIban, maskIban, }
+module.exports = {normalize, createQuery, matches, formatIban, maskIban, createRegExps}

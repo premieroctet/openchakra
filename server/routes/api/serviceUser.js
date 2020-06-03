@@ -20,8 +20,8 @@ const isEmpty = require('../../validation/is-empty');
 const {data2ServiceUser} = require('../../../utils/mapping');
 const emptyPromise = require('../../../utils/promise');
 const { computeUrl } = require('../../../config/config');
-const { filterServicesGPS} = require('../../../utils/filters');
-const {createQuery, matches} = require('../../../utils/text')
+const { filterServicesGPS, filterServicesKeyword} = require('../../../utils/filters');
+const {createQuery, createRegExps, matches} = require('../../../utils/text')
 const intersection = require('array-intersection');
 const {GID_LEN} = require ('../../../utils/consts')
 //mongoose.set('debug', true)
@@ -532,126 +532,56 @@ router.get('/near/:service',passport.authenticate('jwt',{session:false}),(req,re
 });
 
 // @Route POST /myAlfred/api/serviceUser/search
-// Search serviceUser according to optional coordinates, dates, etc...
-// FIX : filter availabilities
-// FIX : filter status (pro or individual)
-// TODO : include services if visio or @alfred
+// Search serviceUser according to optional coordinates, keyword, cat/service/prestation
 router.post('/search',(req,res)=> {
+  const start2=process.hrtime()
+  const kw = req.body.keyword
+  const gps = req.body.gps
+  const category = req.body.category
+  const service = req.body.service
+  const prestation = req.body.prestation
 
-    const start = process.hrtime()
-    baseUrl = computeUrl(req);
-    console.log("ServiceUSer search with filter:"+JSON.stringify(req.body));
-    const instance = axios.create({
-      httpsAgent: new https.Agent({rejectUnauthorized: false})
-    });
+  console.log(`Searching ${JSON.stringify(req.body)}`)
 
-    var kwUrl = `${baseUrl}/myAlfred/api/service/keyword/${req.body.keyword}`;
-    var keywordPromise = 'keyword' in req.body ?  instance.get(kwUrl) : emptyPromise({data: null});
-
-    var datesPromise = emptyPromise({data: null});
-    if ('startDate' in req.body || 'endDate' in req.body) {
-      const begin = req.body.startDate || null;
-      const end = req.body.endDate || null;
-      const beginDay =  begin ? moment(begin).format('dddd') : null;
-      const endDay =  end ? moment(end).format('dddd') : null;
-
-      const obj = {begin,end,beginDay,endDay};
-
-      datesPromise=axios.post(baseUrl+'/myAlfred/api/availability/filterDate',obj)
-    }
-
-    keywordPromise.then( result => {
-      console.log(`/service/:keyword returned ${result.data}`)
-      var allowedServices=result.data;
-      // Result is object category => [arr of services] or null
-      if (allowedServices!=null) {
-        allowedServices= Object.values(allowedServices);
-        if (allowedServices.length>0) {
-          allowedServices=allowedServices.reduce( (acc, arr) => acc.concat(arr));
-          allowedServices=allowedServices.map( service => service.id.toString());
+  ServiceUser.find({}, 'prestations.prestation service_address location')
+    .populate({ path : 'user', select : 'firstname' })
+    .populate({ path : 'service', select : 'label s_label',
+        populate : { path : 'category', select : 's_label', }
+    })
+    .populate({
+      path : 'prestations.prestation', select : 's_label',
+      populate : { path : 'job', select : 's_label' }
+    })
+    .then( sus => {
+      if (category) {
+        sus = sus.filter( su => su.service.category._id.toString()==category );
+      }
+      if (service) {
+        sus = sus.filter( su => su.service._id.toString()==service );
+      }
+      if (prestation) {
+        sus = sus.filter( su => su.prestations.some( p => p.prestation._id.toString()==prestation))
+      }
+      if (kw) {
+        sus = filterServicesKeyword(sus, kw)
+      }
+      if (gps) {
+        try {
+          sus = filterServicesGPS(sus, JSON.parse(req.body.gps));
+        }
+        catch (err) {
+          sus  = filterServicesGPS(sus, req.body.gps);
         }
       }
-
-      const start2=process.hrtime()
-      Prestation.find({}, 'label')
-        .populate('job')
-        .populate({
-          path : 'service',
-          select: 'label',
-        })
-        .then( res => {
-          console.log(res.length)
-          const elapsed = process.hrtime(start2)
-          console.log(`Fast Search took ${elapsed[0]}s ${elapsed[1]/1000}ms`)
-        })
-      ServiceUser.find()
-        .populate('user','-id_card')
-        .populate({path: 'service', populate: {path:'category'}})
-        .then(services => {
-          if ('gps' in req.body) {
-            try {
-              services = filterServicesGPS(services, JSON.parse(req.body.gps));
-            }
-            catch (err) {
-              services = filterServicesGPS(services, req.body.gps);
-            }
-          }
-          if (allowedServices!=null) {
-            services = services.filter( su => allowedServices.includes(su.service._id.toString()) );
-          }
-          if ('category' in req.body) {
-            services = services.filter( su => su.service.category._id==req.body.category );
-          }
-          if ('service' in req.body) {
-            services = services.filter( su => su.service._id==req.body.service );
-          }
-          if ('prestation' in req.body) {
-            var filtered=[];
-            services.forEach( s => {
-              // FIX : certains ServiceUser avec prestations à None, maybe des privées...
-              try {
-                if (s.prestations.filter(p => p.prestation._id==req.body.prestation).length>0) {
-                  filtered.push(s);
-                }
-              }
-              catch (error) { console.error(error)}
-            });
-            services = filtered;
-          }
-          if ('keyword' in req.body) {
-            const keyword = req.body.keyword;
-            Prestation.find()
-              .populate("job")
-              .then( prestas => {
-                prestas = prestas.filter( p => {
-                  const keep = matches(p.s_label, keyword) || (p.job && matches(p.job.s_label, keyword))
-                  return keep
-                })
-                const ids = prestas.map( p => p._id.toString())
-                services = services.filter( s => {
-                  if (matches(s.service.s_label, keyword) || matches(s.service.category.s_label, keyword)) {
-                    return true;
-                  }
-                  pids = s.prestations.map( pp => pp.prestation ? pp.prestation.toString() : '')
-                  const contains = intersection(ids, pids).length>0
-                  if (contains) {
-                    return true
-                  }
-                })
-                const elapsed = process.hrtime(start)
-                console.log(`Search took ${elapsed[0]}s ${elapsed[1]/1000}ms`)
-                res.json(services)
-              })
-          }
-          else {
-            const elapsed = process.hrtime(start)
-            console.log(`Search took ${elapsed[0]}s ${elapsed[1]/1000}ms`)
-            res.json(services)
-        }
-        })
-        .catch(err => { console.error(err); res.status(404).json({ service: 'No service found' })});
-    });
-});
+      const elapsed = process.hrtime(start2)
+      console.log(`Fast Search took ${elapsed[0]}s ${elapsed[1]/1e6}ms`)
+      res.json(sus)
+    })
+    .catch( err => {
+      console.error(err)
+      res.json(err)
+    })
+})
 
 // @Route GET /myAlfred/api/serviceUser/near/:city
 // View all serviceUser by city

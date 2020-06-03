@@ -56,7 +56,7 @@ const PrestationSchema = new Schema({
     s_label: {
       type: String,
       default: function() {
-        return normalize(this.label)
+        return this.label ? normalize(this.label) : ''
       }
     },
 });
@@ -64,12 +64,5 @@ const PrestationSchema = new Schema({
 PrestationSchema.index({label:'text'});
 
 const Prestation = mongoose.model('prestation',PrestationSchema);
-
-// To update s_label
-Prestation.find({})
-  .then (prestations => {
-    prestations.forEach( p => p.save());
-  }
-)
 
 module.exports = Prestation;
