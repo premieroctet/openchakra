@@ -571,6 +571,19 @@ router.post('/search',(req,res)=> {
           allowedServices=allowedServices.map( service => service.id.toString());
         }
       }
+
+      const start2=process.hrtime()
+      Prestation.find({}, 'label')
+        .populate('job')
+        .populate({
+          path : 'service',
+          select: 'label',
+        })
+        .then( res => {
+          console.log(res.length)
+          const elapsed = process.hrtime(start2)
+          console.log(`Fast Search took ${elapsed[0]}s ${elapsed[1]/1000}ms`)
+        })
       ServiceUser.find()
         .populate('user','-id_card')
         .populate({path: 'service', populate: {path:'category'}})
@@ -633,7 +646,7 @@ router.post('/search',(req,res)=> {
           else {
             const elapsed = process.hrtime(start)
             console.log(`Search took ${elapsed[0]}s ${elapsed[1]/1000}ms`)
-            res.json(services);
+            res.json(services)
         }
         })
         .catch(err => { console.error(err); res.status(404).json({ service: 'No service found' })});
