@@ -158,9 +158,13 @@ class CardPreview extends React.Component{
                 <Grid style={{marginTop: 20}}>
                   <Grid style={{display:'flex', flexDirection: 'column'}} className={classes.contentDistanceUnderAvatar}>
                     <Grid>
+                    { cpData.alfred ?
+                      <Typography component="p" className={classes.sizeTextUnderAvatar}>{cpData.alfred.firstname}</Typography>
+                      :
+                      null
+                    }
                       <Typography component="p" className={classes.sizeTextUnderAvatar}>
                         {cpData.city}
-
                       </Typography>
                     </Grid>
                     { distance ?
