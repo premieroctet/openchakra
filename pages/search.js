@@ -73,7 +73,7 @@ class SearchPage extends React.Component {
             catCount:{}, // cat id => # of items to display
             availabilities:[],
             isAdmin: false,
-            mounted : false,
+            mounting : true,
             searching : false,
         };
         this.filter=this.filter.bind(this);
@@ -128,15 +128,29 @@ class SearchPage extends React.Component {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
         axios.get('/myAlfred/api/category/all/sort')
+          .catch(err => {
+            console.log(err)
+            this.setState({mounting : false})
+          })
           .then(res => {
             st['categories']=res.data;
             var catCount={}
             res.data.forEach( c => catCount[c._id]=8);
             st['catCount']=catCount;
              axios.get('/myAlfred/api/shop/allStatus')
+               .catch(err => {
+                 console.log(err)
+                 this.setState({mounting : false})
+               })
                .then( res => {
                   st['shops']=res.data;
                   axios.get('/myAlfred/api/users/current')
+                    .catch(err => {
+                      this.setState(st, () => {
+                        if (this.props.search) {this.search('date' in this.props)}
+                        this.setState({mounting : false})
+                      })
+                    })
                     .then(res => {
                       let user = res.data;
                       this.setState({isAdmin: user.is_admin});
@@ -151,17 +165,13 @@ class SearchPage extends React.Component {
                          st['gps']=allAddresses['main'];
                          st['selectedAddress']='main';
                       }
-                      this.setState(st, () => { if (this.props.search) {this.search('date' in this.props)}});
+                      this.setState(st, () => {
+                        if (this.props.search) {this.search('date' in this.props)}
+                        this.setState({mounting : false})
+                      })
                     })
-                    .catch(err => {
-                      this.setState(st, () => { if (this.props.search) {this.search('date' in this.props)}});
-                    });
                })
            })
-           .catch(err => {
-             console.log(err)
-           });
-           this.setState({mouting : false})
     }
 
     searchCallback = q => {
@@ -330,12 +340,30 @@ class SearchPage extends React.Component {
     }
 
     render() {
-        const {classes} = this.props;
-        const {user, categories, gps, isAdmin} = this.state;
+        const {classes, search} = this.props
+        const {user, categories, gps, isAdmin, mounting, searching} = this.state;
         const serviceUsers = this.state.serviceUsersDisplay;
 
         const statusFilterBg=this.isStatusFilterSet() ? '#2FBCD3':'white';
         const dateFilterBg=this.isDateFilterSet() ? '#2FBCD3':'white';
+
+        var resultMessage
+        const res={mounting, searching, search}
+
+        if (mounting || search!='1') {
+          resultMessage =
+            <Typography></Typography>
+        }
+        else if (searching) {
+          resultMessage =
+            <Typography>Recherche en cours</Typography>
+        }
+        else if (serviceUsers.length==0){
+          resultMessage = this.isSubFilterSet() ?
+            <Typography><Button onClick={() => this.resetFilter()}>Aucun résultat, cliquez ici pour supprimer les filtres et relancer la recherche</Button></Typography>
+            :
+            <Typography>Nous n'avons pas trouvé de résultat pour votre recherche</Typography>
+        }
 
         return (
           <Fragment>
@@ -501,19 +529,7 @@ class SearchPage extends React.Component {
                               </Grid>
                             ))}
                           </Grid>
-                          { this.state.searching ?
-                            <Typography>Recherche en cours</Typography>
-                            :
-                            null
-                          }
-                          {!(this.state.searching || !this.state.mounted) && this.props.search && serviceUsers.length === 0 && !this.isSubFilterSet() ?
-                            <Typography>Nous n'avons pas trouvé de résultat pour votre recherche</Typography>
-                            :
-                            null
-                          }
-                          {!this.state.searching && this.props.search && serviceUsers.length === 0 && this.isSubFilterSet() ?
-                            <Typography><Button onClick={() => this.resetFilter()}>Aucun résultat, supprimer les filtres</Button></Typography> :  null
-                          }
+                          { resultMessage }
                  </Grid>
                 { this.props.search || serviceUsers.length>0 ? null:
                   <>
