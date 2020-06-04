@@ -13,11 +13,6 @@ module.exports = function validateShopInput(data) {
     const is_professional = data.is_professional;
     const siret = parseInt(data.siret,10);
 
-    if(Validator.isEmpty(data.welcome_message)) {
-        errors.welcome_message = 'Welcome message is required';
-    }
-
-
     if(is_particular === '0' && is_professional === '0'){
         errors.status = 'Are you particular or professional ?'
     }
