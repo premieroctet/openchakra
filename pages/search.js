@@ -145,12 +145,6 @@ class SearchPage extends React.Component {
                .then( res => {
                   st['shops']=res.data;
                   axios.get('/myAlfred/api/users/current')
-                    .catch(err => {
-                      this.setState(st, () => {
-                        if (this.props.search) {this.search('date' in this.props)}
-                        this.setState({mounting : false})
-                      })
-                    })
                     .then(res => {
                       let user = res.data;
                       this.setState({isAdmin: user.is_admin});
@@ -165,6 +159,12 @@ class SearchPage extends React.Component {
                          st['gps']=allAddresses['main'];
                          st['selectedAddress']='main';
                       }
+                      this.setState(st, () => {
+                        if (this.props.search) {this.search('date' in this.props)}
+                        this.setState({mounting : false})
+                      })
+                    })
+                    .catch(err => {
                       this.setState(st, () => {
                         if (this.props.search) {this.search('date' in this.props)}
                         this.setState({mounting : false})
@@ -250,7 +250,15 @@ class SearchPage extends React.Component {
 
         // GPS
         if (this.state.gps) {
-          filters['gps']=this.state.gps; }
+          filters['gps']=this.state.gps
+          filters['perimeter']=true
+        }
+        // "Search everywhere" : provide GPS of first users' addresses if any, no limit
+        else if (this.state.user && this.state.user.billing_address) {
+          filters['gps']=this.state.user.billing_address.gps
+          filters['perimeter']=false
+        }
+
        // Keyword search disables cat/ser/presta filter
        if (this.state.keyword) {
          filters['keyword']=this.state.keyword;
@@ -507,7 +515,7 @@ class SearchPage extends React.Component {
                                    this.restrictServices(serviceUsers, cat).map(su => {
                                     return (
                                       <Grid item xs={12} sm={12} md={12} lg={3} xl={3} className={classes.paddingResponsive}>
-                                        <CardPreview services={su._id} gps={user ? user.billing_address.gps : null} needAvatar={true} key={su._id} isAdmin={isAdmin}/>
+                                        <CardPreview services={su._id} gps={user ? user.billing_address.gps : this.state.gps} needAvatar={true} key={su._id} isAdmin={isAdmin}/>
                                       </Grid>
                                     )
                                   })

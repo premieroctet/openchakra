@@ -537,6 +537,7 @@ router.post('/search',(req,res)=> {
   const category = req.body.category
   const service = req.body.service
   const prestation = req.body.prestation
+  const restrictPerimeter = req.body.perimeter
 
   console.log(`Searching ${JSON.stringify(req.body)}`)
 
@@ -564,10 +565,10 @@ router.post('/search',(req,res)=> {
       }
       if (gps) {
         try {
-          sus = filterServicesGPS(sus, JSON.parse(req.body.gps));
+          sus = filterServicesGPS(sus, JSON.parse(req.body.gps), restrictPerimeter);
         }
         catch (err) {
-          sus  = filterServicesGPS(sus, req.body.gps);
+          sus  = filterServicesGPS(sus, req.body.gps, restrictPerimeter);
         }
       }
       const elapsed = process.hrtime(start2)

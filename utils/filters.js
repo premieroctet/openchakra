@@ -68,8 +68,8 @@ const sortfn = gps => {
 }
 
 
-const filterServicesGPS = (serviceUsers, coordinates) => {
-  var filteredServiceUsers=serviceUsers.filter( su => isServiceAtAlfredOrVisio(su) || isServiceAroundGPS(su, coordinates) );
+const filterServicesGPS = (serviceUsers, coordinates, restrict) => {
+  var filteredServiceUsers=serviceUsers.filter( su => isServiceAtAlfredOrVisio(su) || !restrict || isServiceAroundGPS(su, coordinates) );
   filteredServiceUsers.sort(sortfn(coordinates));
   return filteredServiceUsers;
 }
