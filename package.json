@@ -18,7 +18,6 @@
     "@zeit/next-css": "^1.0.1",
     "algolia-places-react": "^1.4.1",
     "apexcharts": "^3.10.1",
-    "array-intersection": "^0.1.2",
     "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",

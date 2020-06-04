@@ -21,10 +21,7 @@ const {data2ServiceUser} = require('../../../utils/mapping');
 const emptyPromise = require('../../../utils/promise');
 const { computeUrl } = require('../../../config/config');
 const { filterServicesGPS, filterServicesKeyword} = require('../../../utils/filters');
-const {createQuery, createRegExps, matches} = require('../../../utils/text')
-const intersection = require('array-intersection');
 const {GID_LEN} = require ('../../../utils/consts')
-//mongoose.set('debug', true)
 
 moment.locale('fr');
 const storage = multer.diskStorage({

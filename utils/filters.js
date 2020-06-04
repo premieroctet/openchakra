@@ -1,6 +1,6 @@
 const geolib = require('geolib');
 const isEmpty = require('../server/validation/is-empty');
-const { createRegExps } = require('./text')
+const { createRegExp } = require('./text')
 
 
 const isServiceAroundGPS = (serviceUser, coordinates) => {
@@ -75,13 +75,13 @@ const filterServicesGPS = (serviceUsers, coordinates) => {
 }
 
 const filterServicesKeyword = (serviceUsers, keyword) => {
-  const regexps = createRegExps(keyword)
+  const regexp = createRegExp(keyword)
   const filteredServices = serviceUsers.filter( su => {
-      return regexps.some(r => r.test(su.service.s_label)) ||
-             regexps.some(r => r.test(su.service.category.s_label)) ||
+      return regexp.test(su.service.s_label) ||
+             regexp.test(su.service.category.s_label) ||
              su.prestations.some(p => p.prestation  &&
-               (regexps.some(r => r.test(p.prestation.s_label) ||
-               (p.prestation.job && regexps.some(r => r.test(p.prestation.job.s_label)))))
+               (regexp.test(p.prestation.s_label) ||
+               (p.prestation.job && regexp.test(p.prestation.job.s_label)))
              )
   })
   return filteredServices

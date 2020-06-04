@@ -5,27 +5,23 @@ const normalize = str => {
   return normalized
 }
 
-const createRegExps = str => {
+const createRegExp = str => {
   str = normalize(str).split(/ |'/g)
   // Remove articles
   str = str.filter( s => !ARTICLES.includes(s))
-  const regexps = str.map( s => new RegExp(s, "i"))
-  return regexps
+  const regexp = new RegExp(str.join('|'), "i")
+  return regexp
 }
 
 const createQuery = str => {
-  const regexps = createRegExps(str)
-  var criterions=[]
-  regexps.forEach( r => {
-    criterions.push({'s_label' : { $regex : r}})
-  })
-  const query={ $or : criterions }
+  const regexp = createRegExp(str)
+  const query={'s_label' : { $regex : regexp}}
   return query
 }
 
 const matches = (str, keywords) => {
-  const regexps = createRegExps(keywords)
-  const ok = regexps.some ( r => str.match(r) )
+  const regexps = createRegExp(keywords)
+  const ok = regexps.test(str)
   return ok
 }
 
@@ -40,4 +36,4 @@ const maskIban = iban => {
   return masked
 }
 
-module.exports = {normalize, createQuery, matches, formatIban, maskIban, createRegExps}
+module.exports = {normalize, createQuery, matches, formatIban, maskIban, createRegExp}
