@@ -1,3 +1,4 @@
+const ARTICLES="le la les un une de des d l à".split(/ /g)
 
 const normalize = str => {
   const normalized = str.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
@@ -5,7 +6,9 @@ const normalize = str => {
 }
 
 const createRegExps = str => {
-  str = normalize(str).split(' ')
+  str = normalize(str).split(/ |'/g)
+  // Remove articles
+  str = str.filter( s => !ARTICLES.includes(s))
   const regexps = str.map( s => new RegExp(s, "i"))
   return regexps
 }
