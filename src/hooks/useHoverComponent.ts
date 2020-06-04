@@ -33,13 +33,15 @@ export const useHoverComponent = (
         )
         const hoverClientY = clientOffset && clientOffset.y - top
 
+        if (toIndex === -1) return
+
         // check hasPassedMid
         if (fromIndex < toIndex && hoverClientY && hoverClientY < hoverMiddleY)
           return
 
         if (fromIndex > toIndex && hoverClientY && hoverClientY > hoverMiddleY)
           return
-
+      
         dispatch.components.moveSelectedComponentChildren({
           parentId: selectedComponent.parent,
           fromIndex,
