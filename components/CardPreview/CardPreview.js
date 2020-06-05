@@ -110,7 +110,6 @@ class CardPreview extends React.Component{
 
   render(){
     const {classes, userState, isOwner, gps, needAvatar, isAdmin} = this.props;
-    const { reviews } = this.state;
     const { cpData } = this.state;
 
     var distance = gps ? computeDistanceKm(gps, cpData.gps) : null
@@ -122,7 +121,7 @@ class CardPreview extends React.Component{
       },
     })(Rating);
 
-      const notes = computeAverageNotes(reviews.map(r => r.note_alfred));
+      const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {};
 
     return (
       <Grid>

@@ -615,13 +615,16 @@ router.get('/cardPreview/:id', (req,res)=> {
           res.status(404).json({error: err})
         })
         .then( shop => {
-          const result={
-            _id: su._id, label : su.service.label, picture : su.service.picture,
-            alfred: su.user, city: su.service_address.city, graduated: su.graduated,
-            is_certified: su.is_certified, level : su.level, is_professional: shop.is_professional,
-            gps: su.service_address.gps
-          }
-          res.json(result)
+          Reviews.find({ alfred: su.user, note_client: undefined, serviceUser: su._id })
+            .then ( reviews => {
+              const result={
+                _id: su._id, label : su.service.label, picture : su.service.picture,
+                alfred: su.user, city: su.service_address.city, graduated: su.graduated,
+                is_certified: su.is_certified, level : su.level, is_professional: shop.is_professional,
+                gps: su.service_address.gps, reviews: reviews
+              }
+              res.json(result)
+            })
         })
     })
 })
