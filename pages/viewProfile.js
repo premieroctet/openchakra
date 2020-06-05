@@ -23,7 +23,8 @@ class viewProfile extends React.Component {
     super(props);
     this.state = {
       depliage: false,
-      customerComments: false, // False : display Alfred comments, tru display customer comments
+      // Commentaires clients par défaut
+      customerComments: true, // False : display Alfred comments, tru display customer comments
       user_id: null,
       user_infos: null,
       alfredReviews: null,
@@ -96,19 +97,21 @@ class viewProfile extends React.Component {
     this.setState({ depliage: true });
   }
 
-  handleClicktabs2 = () => {
-    this.setState({ customerComments: true });
+  handleClickCustomerComments = () => {
+    if (!this.state.customerComments) {
+      this.setState({ customerComments: true })
+    }
   };
 
-  handleClicktabs = () => {
-    this.setState({ customerComments: false });
+  handleClickAlfredComments = () => {
+    if (this.state.customerComments) {
+      this.setState({ customerComments: false });
+    }
   };
 
   render() {
     const { classes } = this.props;
     const { customerComments, user_infos } = this.state;
-
-    console.log(user_infos, 'user_infos')
 
     return (
       <Fragment>
@@ -238,78 +241,41 @@ class viewProfile extends React.Component {
                         <Grid item xs={6} style={{ textAlign: "center" }}>
                           <div>
                             <h2
-                              onClick={this.handleClicktabs}
+                              onClick={this.handleClickCustomerComments}
                               style={{ fontSize: "1.1rem", color: "#828181", fontWeight: "100", cursor: "pointer", marginLeft: "0%" }}
                             >
-                              De la part des Alfred
+                              De la part des clients
                             </h2>
                           </div>
                         </Grid>
                         <Grid item xs={6}>
                           <h2
-                            onClick={this.handleClicktabs2}
+                            onClick={this.handleClickAlfredComments}
                             style={{ fontSize: "1.1rem", color: "#828181", fontWeight: "100", cursor: "pointer", marginLeft: "0%" }}
                           >
-                            De la part des clients
+                            De la part des Alfred
                           </h2>
                           <br />
                         </Grid>
 
                         <Grid item xs={6}>
-                          {customerComments ? (
-                            <React.Fragment>
-                              <hr
-                                onClick={this.handleClicktabs}
-                                className={classes.trait1}
-                                style={{
-                                  marginTop: "-25px",
-                                  cursor: "pointer"
-                                }}
-                              />
-                            </React.Fragment>
-                          ) : (
-                            <React.Fragment>
-                              <hr
-                                onClick={this.handleClicktabs}
-                                className={classes.trait3}
-                                style={{
-                                  marginTop: "-25px",
-                                  cursor: "pointer"
-                                }}
-                              />
-                            </React.Fragment>
-                          )}
+                          <hr
+                            onClick={this.handleClickCustomerComments}
+                            className={customerComments ? classes.trait3 : classes.trait1}
+                            style={{ marginTop: "-25px", cursor: "pointer" }}
+                          />
                         </Grid>
                         <Grid item xs={6}>
-                          {customerComments ? (
-                            <React.Fragment>
-                              <hr
-                                onClick={this.handleClicktabs2}
-                                className={classes.trait}
-                                style={{
-                                  marginTop: "-25px",
-                                  cursor: "pointer"
-                                }}
-                              />
-                            </React.Fragment>
-                          ) : (
-                            <React.Fragment>
-                              <hr
-                                onClick={this.handleClicktabs2}
-                                className={classes.trait2}
-                                style={{
-                                  marginTop: "-25px",
-                                  cursor: "pointer"
-                                }}
-                              />
-                            </React.Fragment>
-                          )}
+                          <hr
+                            onClick={this.handleClickAlfredComments}
+                            className={customerComments ? classes.trait2 : classes.trait}
+                            style={{ marginTop: "-25px", cursor: "pointer" }}
+                          />
                         </Grid>
                         <Grid container>
                         <Grid container style={{ marginTop: "20px" }} className={classes.tabweb}>
                           <Commentary user_id={this.props.user_id} alfred_mode={customerComments} key={moment()}/>
                         </Grid>
-
                         </Grid>
                       </Grid>
                     </Grid>
