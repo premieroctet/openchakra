@@ -9,6 +9,7 @@ import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import Checkbox from '@material-ui/core/Checkbox';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+const {frenchFormat}=require('../../utils/text')
 
 class AlfredConditionsBooking extends React.Component{
   constructor(props){
@@ -148,7 +149,7 @@ class AlfredConditionsBooking extends React.Component{
                       />
                     </Grid>
                     <Grid>
-                      <p>Les utilisateurs peuvent réserver les services de {alfred.firstname} sans demande de réservation.</p>
+                      <p>{ frenchFormat(`Les utilisateurs peuvent réserver les services de ${alfred.firstname} sans demande de réservation.`) }</p>
                     </Grid>
                   </Grid> : null
                 }

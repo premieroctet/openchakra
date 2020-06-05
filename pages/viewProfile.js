@@ -13,7 +13,7 @@ import UserAvatar from '../components/Avatar/UserAvatar';
 import About from '../components/About/About';
 import CardPreview from '../components/CardPreview/CardPreview';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-
+const {frenchFormat}=require('../utils/text')
 
 
 moment.locale("fr");
@@ -154,7 +154,7 @@ class viewProfile extends React.Component {
                       <Grid className={classes.servicesContainer}>
                         <Grid className={classes.largeWidth}>
                           <Typography variant="h3" className={classes.titleAbout}>
-                            Les services de {user_infos.firstname}
+                            { frenchFormat(`Les services de ${user_infos.firstname}`) }
                           </Typography>
                         </Grid>
                         <Grid container className={classes.cardPreviewContainer} spacing={2}>

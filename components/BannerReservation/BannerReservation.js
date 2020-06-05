@@ -8,6 +8,8 @@ import Fab from '@material-ui/core/Fab';
 import Chip from '@material-ui/core/Chip';
 import Link from 'next/link';
 import '../../static/assets/police/signatra.css'
+const {frenchFormat}=require('../../utils/text')
+
 
 class BannerReservation extends React.Component{
 
@@ -42,7 +44,7 @@ class BannerReservation extends React.Component{
                     aria-label="add"
                     className={classes.margin}
                   >
-                    <p style={{color: 'white'}}>Boutique de {user.firstname}</p>
+                    <p style={{color: 'white'}}>{frenchFormat(`Les services de ${user.firstname}`)}</p>
                   </Fab>
                 </Link>
               </Grid>

@@ -15,6 +15,8 @@ import io from "socket.io-client";
 import About from '../../components/About/About';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
+const {frenchFormat}=require('../../utils/text')
+
 registerLocale('fr', fr);
 moment.locale("fr");
 const _ = require("lodash");
@@ -191,7 +193,7 @@ class Confirm extends React.Component {
                                   fontWeight: "100"
                                 }}
                             >
-                              Confirmer la réservation de {`${bookingObj.user.firstname} ${bookingObj.user.name}`}{" "}
+                              { frenchFormat(`Confirmer la réservation de ${bookingObj.user.firstname} ${bookingObj.user.name} `) }
                             </h2>
                           </Grid>
                         </Grid>

@@ -51,7 +51,7 @@ const moment = require('moment');
 moment.locale('fr');
 registerLocale('fr', fr);
 import Link from 'next/link';
-
+const {frenchFormat}=require('../utils/text')
 
 
 const IOSSwitch = withStyles(theme => ({
@@ -967,7 +967,7 @@ class UserServicesPreview extends React.Component {
                 <Grid className={classes.scheduleContainer}>
                   <Grid className={classes.scheduleContainerTitle}>
                     <Grid>
-                      <Typography variant="h6">Les disponibilités de {alfred.firstname}</Typography>
+                      <Typography variant="h6">{ frenchFormat(`Les disponibilités de ${alfred.firstname}`) }</Typography>
                     </Grid>
                     <Grid className={classes.hrStyle}>
                       <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
@@ -1000,7 +1000,7 @@ class UserServicesPreview extends React.Component {
                 </Grid>
                 <Grid className={classes.delayPrevenance}>
                   <Grid>
-                    <Typography variant="h6">Délai de prévenance de votre Alfred</Typography>
+                    <Typography variant="h6">{ frenchFormat(`Délai de prévenance de ${alfred.firstname}`) }</Typography>
                   </Grid>
                   <Grid className={classes.hrStyle}>
                     <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
@@ -1023,7 +1023,7 @@ class UserServicesPreview extends React.Component {
                 </Grid>
                 <Grid className={classes.perimeterContent}>
                   <Grid>
-                    <Typography variant="h6">Le périmètre d’intervention de votre Alfred</Typography>
+                    <Typography variant="h6">{ frenchFormat(`Périmètre d'intervention de ${alfred.firstname}`) }</Typography>
                   </Grid>
                   <Grid className={classes.hrStyle}>
                     <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
@@ -1051,7 +1051,7 @@ class UserServicesPreview extends React.Component {
                 </Grid>
                 <Grid className={classes.bookingConditionContent} >
                   <Grid className={classes.bookingConditionContentTitle}>
-                    <Typography variant="h6">Les conditions d’annulation de votre Alfred</Typography>
+                    <Typography variant="h6">{ frenchFormat(`Les conditions d’annulation de ${alfred.firstname}`) }</Typography>
                   </Grid>
                   <Grid className={classes.hrStyle}>
                     <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>
@@ -1124,7 +1124,7 @@ class UserServicesPreview extends React.Component {
                 </Grid>
                 <Grid className={classes.commentaryContent}>
                 <Grid className={classes.bookingConditionContentTitle}>
-                  <Typography variant="h6">Les évaluations de votre Alfred</Typography>
+                  <Typography variant="h6">{ frenchFormat(`Les évaluations de ${alfred.firstname}`) }</Typography>
                 </Grid>
                 <Grid className={classes.hrStyle}>
                   <hr style={{color : 'rgb(80, 80, 80, 0.2)'}}/>

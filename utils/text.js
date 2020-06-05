@@ -36,4 +36,10 @@ const maskIban = iban => {
   return masked
 }
 
-module.exports = {normalize, createQuery, matches, formatIban, maskIban, createRegExp}
+const frenchFormat = str => {
+  const reg = /de ([aeiou])/i
+  const result = str.replace(reg, "d'$1")
+  return result
+}
+
+module.exports = {normalize, createQuery, matches, formatIban, maskIban, createRegExp, frenchFormat}

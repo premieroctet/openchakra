@@ -231,16 +231,9 @@ class Evaluate extends React.Component {
 
     }
 
-
-
-
-
-
     render() {
         const {classes} = this.props;
         const {user} = this.state;
-
-
 
         return (
             <Fragment>
@@ -275,7 +268,7 @@ class Evaluate extends React.Component {
                                         <Grid item xs={12} style={{textAlign:'left'}}>
 
 
-                                            <p style={{fontSize:'25px'}}>Qu’avez vous pensé de la prestation de votre Alfred ?</p>
+                                            <p style={{fontSize:'25px'}}>Qu’avez-vous pensé de la prestation de votre Alfred ?</p>
 
 
                                             <br></br>

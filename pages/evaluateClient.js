@@ -263,7 +263,7 @@ class EvaluateClient extends React.Component {
                                         <Grid item xs={12} style={{textAlign:'left'}}>
 
 
-                                            <p style={{fontSize:'25px'}}>Qu’avez vous pensé de votre client ?</p>
+                                            <p style={{fontSize:'25px'}}>Qu’avez-vous pensé de votre client ?</p>
 
 
                                             <br></br>

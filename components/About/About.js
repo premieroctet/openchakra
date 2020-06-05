@@ -15,7 +15,7 @@ import moment from 'moment';
 import Link from 'next/link';
 import axios from 'axios';
 import Badge from '@material-ui/core/Badge';
-
+const {frenchFormat}=require('../../utils/text')
 moment.locale('fr');
 
 // FIX : Commentaires : faire un lien vers le profil
@@ -73,12 +73,14 @@ class About extends React.Component{
       },
     })(Rating);
 
+    const inProfile = process.browser && window.location.pathname.includes('viewProfile')
+
     return (
       <Grid container className={classes.mainContainer}>
         <Grid item style={{width: '100%'}}>
           <Grid className={classes.titleContainer}>
             <Typography variant="h3" className={classes.titleAbout}>
-              A propos de {user.firstname}
+              {frenchFormat(`A propos de ${user.firstname}`)}
             </Typography>
           </Grid>
           <List dense={this.state.dense} className={classes.listStyle}>
@@ -173,8 +175,8 @@ class About extends React.Component{
             <ListItem>
               <Link
                 href={{
-                  pathname: "/viewProfile",
-                  query: { id: alfred }
+                  pathname: inProfile ? "/shop" : "/viewProfile",
+                  query: inProfile ? { id_alfred : alfred } : { id : alfred }
                 }}
               >
                 <Typography
@@ -183,7 +185,7 @@ class About extends React.Component{
                     cursor: "pointer"
                   }}
                 >
-                  Voir le profil
+                { inProfile ? 'Voir les services' :  'Voir le profil' }
                 </Typography>
               </Link>
             </ListItem>

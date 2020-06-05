@@ -19,6 +19,7 @@ import AlfredWelcomedMessage from '../components/AlfredWelcomedMessage/AlfredWel
 import {Helmet} from 'react-helmet';
 import NavbarMobile from '../components/NavbarMobile/NavbarMobile';
 import Commentary from '../components/Commentary/Commentary';
+const {frenchFormat}=require('../utils/text')
 
 class shop extends React.Component {
     constructor(props) {
@@ -152,7 +153,7 @@ class shop extends React.Component {
                       <Grid className={classes.servicesContainer}>
                           <Grid className={classes.largeWidth}>
                               <Typography variant="h3" className={classes.titleShop}>
-                                  Les services de {this.state.alfred.firstname}
+                                  { frenchFormat(`Les services de ${this.state.alfred.firstname}`) }
                               </Typography>
                           </Grid>
                           <Grid container className={classes.cardPreviewContainer} spacing={2}>

@@ -19,6 +19,7 @@ import About from '../../components/About/About';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import Typography from '@material-ui/core/Typography';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
+const {frenchFormat}=require('../../utils/text')
 
 const Input2 = ({value,  onClick }) => (
     <Button value={value} color={"inherit"} variant={"outlined"} style={{color:"gray"}} className="example-custom-input" onClick={onClick}>
@@ -167,7 +168,7 @@ class Preapprouve extends React.Component {
                                   fontWeight: "100"
                                 }}
                             >
-                              Pré-approuver la réservation de {`${bookingObj.user.firstname} ${bookingObj.user.name}`}{" "}
+                              { frenchFormat(`Pré-approuver la réservation de ${bookingObj.user.firstname} ${bookingObj.user.name} `) }
                             </h2>
                           </Grid>
                         </Grid>

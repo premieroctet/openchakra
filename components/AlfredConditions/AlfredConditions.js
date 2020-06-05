@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+const {frenchFormat}=require('../../utils/text')
 
 class AlfredConditions extends React.Component{
   constructor(props){
@@ -78,7 +79,7 @@ class AlfredConditions extends React.Component{
           <Grid className={classes.contentPosition}>
             <Grid className={classes.containerBooking}>
               <Grid className={classes.containerTitle}>
-                <h3>Les conditions de réservation de {alfred.firstname}</h3>
+                <h3>{ frenchFormat(`Les conditions de réservation de ${alfred.firstname}`)}</h3>
               </Grid>
               {userState && isOwner ?
                 <Grid className={classes.editCancelButton}>

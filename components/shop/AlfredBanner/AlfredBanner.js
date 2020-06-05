@@ -9,6 +9,7 @@ import LocalSeeIcon from '@material-ui/icons/LocalSee';
 import { toast } from 'react-toastify';
 import { Carousel } from 'react-responsive-carousel';
 import Modal from '@material-ui/core/Modal';
+const {frenchFormat}=require('../../../utils/text')
 
 class alfredBanner extends React.Component{
 
@@ -63,7 +64,7 @@ class alfredBanner extends React.Component{
                 <Grid container className={classes.container}>
                     <Grid item className={classes.itemAvatar}>
                       <UserAvatar classes={'avatarLetter'} user={alfred} className={classes.avatarLetter} />
-                        <Typography style={{marginTop:20}} className={classes.textAvatar}>Boutique de {alfred.firstname}</Typography>
+                        <Typography style={{marginTop:20}} className={classes.textAvatar}>{frenchFormat(`Les services de ${alfred.firstname}`)}</Typography>
                     </Grid>
                 </Grid>
             </Grid>

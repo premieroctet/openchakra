@@ -9,6 +9,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import styles from '../shop/componentStyle'
 import axios from 'axios';
 import { toast } from 'react-toastify';
+const {frenchFormat}=require('../../utils/text')
 
 class AlfredConditionsCancel extends React.Component{
   constructor(props){
@@ -100,7 +101,7 @@ class AlfredConditionsCancel extends React.Component{
             <Grid className={classes.contentPosition}>
               <Grid className={classes.containerBooking}>
                 <Grid className={classes.containerTitle}>
-                  <h3>Conditions d’annulation de {alfred.firstname}</h3>
+                  <h3>{ frenchFormat(`Conditions d’annulation de ${alfred.firstname}`) }</h3>
                 </Grid>
                 {userState && isOwner ?
                   <Grid className={classes.editCancelButton}>
