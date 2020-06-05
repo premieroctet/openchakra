@@ -113,7 +113,8 @@ class CardPreview extends React.Component{
     const { reviews } = this.state;
     const { cpData } = this.state;
 
-    const distance = gps ? computeDistanceKm(gps, cpData.gps) : '';
+    var distance = gps ? computeDistanceKm(gps, cpData.gps) : null
+    distance = distance ? distance.toFixed(0) : '';
 
     const StyledRating = withStyles({
       iconFilled: {

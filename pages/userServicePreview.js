@@ -252,7 +252,6 @@ class UserServicesPreview extends React.Component {
   }
 
   setDefaultLocation = () => {
-    console.log("Setting default location");
     const serviceUser = this.state.serviceUser;
     const user = this.state.user;
     var location = serviceUser.location.client && this.isInPerimeter() ? "client" : serviceUser.location.alfred ? "alfred" : serviceUser.location.visio ? "visio" : null;
