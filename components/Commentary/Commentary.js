@@ -113,36 +113,34 @@ class Commentary extends React.Component{
            <Grid style={{display: 'flex', width: '100%', flexDirection: 'column'}}>
              <hr className={classes.hrSeparator}/>
              <Grid className={classes.mainContainerAvatarAndAbout}>
+               {alfred_mode ?
+                 <Grid item className={classes.containerAlfredMode}>
+                   <Grid style={{justifyContent: 'center', display: 'flex', flexDirection: 'column'}}>
+                     <Grid style={{width: '100%', display:'flex', alignItems: 'center'}}>
+                       <Grid style={{marginRight:15}}>
+                         <Avatar className={classes.picsSize}/>
+                       </Grid>
+                       <Grid>
+                         <p style={{color:'#4fbdd7'}}>
+                           {r.serviceUser.service.label} {alfred_mode ? `pour ${r.user.firstname}` : `par ${r.alfred.firstname}`}
+                         </p>
+                         <p style={{color:'#505050'}}>
+                           {moment(r.date).format('DD/MM/YYYY - HH:mm')}
+                         </p>
+                       </Grid>
+                     </Grid>
+                     <Skills alfred={r.user} skills={r.note_alfred} hideCount={true}/>
+                   </Grid>
+                 </Grid> : null
+               }
                <Grid className={classes.containerAvatarAndAbout}>
-                 <Grid style={{width: '100%', display:'flex', alignItems: 'center'}}>
-                   <Grid style={{marginRight:15}}>
-                     <Avatar className={classes.picsSize}/>
-                   </Grid>
-                   <Grid>
-                     <p style={{color:'#4fbdd7'}}>
-                       {r.serviceUser.service.label} {alfred_mode ? `pour ${r.user.firstname}` : `par ${r.alfred.firstname}`}
-                     </p>
-                     <p style={{color:'#505050'}}>
-                       {moment(r.date).format('DD/MM/YYYY - HH:mm')}
-                     </p>
-                   </Grid>
-                 </Grid>
                  <Grid style={{display:'flex', alignItems :'center'}}>
                    <Grid className={classes.containerNotes}>
                      <Notes alfred_mode={alfred_mode} notes={alfred_mode ? r.note_alfred : r.note_client} key={moment()} />
                    </Grid>
                  </Grid>
                </Grid>
-               {alfred_mode ?
-                 <Grid item className={classes.containerAlfredMode}>
-                   <Grid style={{
-                     justifyContent: 'center',
-                     display: 'flex'
-                   }}>
-                     <Skills alfred={r.user} skills={r.note_alfred} hideCount={true}/>
-                   </Grid>
-                 </Grid> : null
-               }
+
              </Grid>
 
              <Grid style={{marginTop: 30}}>

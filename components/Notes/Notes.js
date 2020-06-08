@@ -23,11 +23,11 @@ class Notes extends React.Component{
 
     if (alfred_mode) {
       return (
-        <Grid>
+        <Grid className={classes.mainContainerNotes}>
           <Grid>
             <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
               <Grid container style={{alignItems:'center'}}>
-                <Grid className={classes.widthP}>
+                <Grid>
                   <p>Qualité</p>
                 </Grid>
                 <Grid className={classes.marginLeft}>
@@ -36,11 +36,11 @@ class Notes extends React.Component{
               </Grid>
             </Box>
           </Grid>
-          <Grid>
+          <Grid style={{marginLeft: 20}}>
             <Grid>
               <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
                 <Grid container style={{alignItems:'center'}}>
-                  <Grid className={classes.widthP}>
+                  <Grid>
                     <p>Prix</p>
                   </Grid>
                   <Grid className={classes.marginLeft}>
@@ -50,11 +50,11 @@ class Notes extends React.Component{
               </Box>
             </Grid>
           </Grid>
-          <Grid>
+          <Grid  style={{marginLeft: 20}}>
             <Grid>
               <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
                 <Grid container style={{alignItems:'center'}}>
-                  <Grid className={classes.widthP}>
+                  <Grid>
                     <p>Relationnel</p>
                   </Grid>
                   <Grid className={classes.marginLeft}>
@@ -73,10 +73,10 @@ class Notes extends React.Component{
           <Grid>
             <Grid>
               <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-                <Grid className={classes.widthP}>
+                <Grid>
                   <p>Accueil</p>
                 </Grid>
-                <Grid className={classes.marginLeft}>
+                <Grid>
                   <StyledRating name="read-only" value={parseInt(notes.reception)} readOnly className={classes.ratingStyle}/>
                 </Grid>
               </Box>
@@ -85,7 +85,7 @@ class Notes extends React.Component{
           <Grid>
             <Grid>
               <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-                <Grid className={classes.widthP}>
+                <Grid>
                   <p>Précision</p>
                 </Grid>
                 <Grid className={classes.marginLeft}>
@@ -97,7 +97,7 @@ class Notes extends React.Component{
           <Grid>
             <Grid>
               <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-                <Grid className={classes.widthP}>
+                <Grid>
                   <p>Relationnel</p>
                 </Grid>
                 <Grid className={classes.marginLeft}>

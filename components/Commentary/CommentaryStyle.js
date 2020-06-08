@@ -46,10 +46,13 @@ export default theme => ({
     color: 'white'
   },
   containerAvatarAndAbout:{
-    width: '50%',
+    width: '100%',
+    marginTop: 15,
     [theme.breakpoints.down('xs')]:{
-      width: '100%'
+      marginTop: '15%',
+
     }
+
   },
   containerGeneralNotes:{
     width: '50%',
@@ -76,9 +79,7 @@ export default theme => ({
   mainContainerAvatarAndAbout:{
     display : 'flex',
     marginTop: 30,
-    [theme.breakpoints.down('xs')]:{
-      flexDirection: 'column'
-    }
+    flexDirection: 'column'
   },
   containerNotes:{
     display:'flex',
@@ -90,12 +91,7 @@ export default theme => ({
     }
   },
   containerAlfredMode:{
-    width: '50%',
-    justifyContent: 'center',
+    width: '100%',
     display: 'flex',
-    [theme.breakpoints.down('xs')]:{
-      width: '100%',
-      marginTop: '15%'
-    }
   }
 })

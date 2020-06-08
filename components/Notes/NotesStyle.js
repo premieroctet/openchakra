@@ -44,10 +44,8 @@ export default theme=>({
   marginLeft:{
     marginLeft: 10
   },
-  widthP:{
-    width: 156,
-    [theme.breakpoints.down('xs')]: {
-      width: 150
-    },
-  },
+  mainContainerNotes:{
+    display: 'flex',
+
+  }
 })
