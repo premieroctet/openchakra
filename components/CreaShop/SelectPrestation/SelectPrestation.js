@@ -66,7 +66,7 @@ class SelectPrestation extends React.Component {
 
   addCustomPrestation() {
     let grouped=this.state.grouped;
-    let custom_presta = {_id: generate_id(), label:"", service: this.state.service, billing:this.state.all_billings, description:'', price:0};
+    let custom_presta = {_id: generate_id(), label:"", service: this.state.service, billing:this.state.all_billings, description:'', price:null};
     grouped[CUSTOM_PRESTATIONS_FLTR].push(custom_presta);
     this.setState({grouped: grouped});
   }
@@ -131,7 +131,7 @@ class SelectPrestation extends React.Component {
                         return(
                           <Grid key={p._id} item xl={6} lg={6} md={6} sm={12} xs={12}>
                             <ButtonSwitch isOption={true} isPrice={true} width={"100%"} label={p.label} id={p._id} checked={presta!=null}
-                                          billings={p.billing} onChange={this.prestationSelected} isEditable={isEditable} price={presta?presta.price:0} billing={presta?presta.billing:null}/>
+                                          billings={p.billing} onChange={this.prestationSelected} isEditable={isEditable} price={presta?presta.price:null} billing={presta?presta.billing:null}/>
                             <hr style={{color: "rgb(255, 249, 249, 0.6)", borderRadius: 10}}/>
                           </Grid>
                          )
