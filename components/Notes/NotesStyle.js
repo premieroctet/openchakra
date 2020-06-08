@@ -10,6 +10,7 @@ export default theme=>({
         alignItems: 'center',
     },
   },
+
   cardSkills:{
     display: 'flex',
     flexDirection: 'column',
@@ -17,19 +18,23 @@ export default theme=>({
     width: 'auto',
     margin: 'auto'
   },
+
   avatarSize:{
     width: 100,
     height: 100
   },
+
   chipStyle:{
     margin : 15
   },
+
   bigWidth: {
     width :500,
     [theme.breakpoints.down('xs')]: {
       width: 'auto'
     },
   },
+
   middleWidth: {
     width : 400,
     [theme.breakpoints.down('xs')]: {
@@ -43,25 +48,29 @@ export default theme=>({
     margin: 0,
     padding : 0
   },
+  
   marginLeft:{
     marginLeft: 10,
     [theme.breakpoints.down('xs')]:{
       marginLeft: 'inherit'
     }
   },
+
   mainContainerNotes:{
     display: 'flex',
   },
+
   marinContainerNotes:{
     marginLeft: 20,
     [theme.breakpoints.down('xs')]:{
       marginLeft: 'inherit'
     }
   },
+
   centerLabelandRating:{
     alignItems:'center',
     [theme.breakpoints.down('xs')]:{
       justifyContent: 'center'
     }
-}
+  }
 })

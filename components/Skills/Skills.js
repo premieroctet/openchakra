@@ -34,7 +34,6 @@ class Skills extends React.Component{
           picsLabel: 'reactivity',
         },
       }
-
     }
   }
 
@@ -60,7 +59,6 @@ class Skills extends React.Component{
                 </Grid>
               </Grid> : null
           }
-
           <Grid container className={classes.mainContainer}>
             {
               Object.entries(this.state.skills).map(result =>{
