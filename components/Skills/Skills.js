@@ -39,12 +39,12 @@ class Skills extends React.Component{
   }
 
   render(){
-    const {classes, skills, alfred, widthHr, hideCount, onClick} = this.props;
+    const {classes,hideCount, onClick} = this.props;
 
     const skillClicked = (e, name) => {
       e.stopPropagation();
       if (onClick) { onClick(name)}
-    }
+    };
 
     return (
       <Grid>
@@ -66,7 +66,7 @@ class Skills extends React.Component{
                       :
                       <Chip label={skillCount} className={classes.chipStyle} />
                     }
-                    <Typography >{value.label}</Typography>
+                    <Typography>{value.label}</Typography>
                   </Grid>
                 )
               })

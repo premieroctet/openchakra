@@ -1,3 +1,5 @@
+import Rating from '@material-ui/lab/Rating';
+
 export default theme=>({
   mainContainer:{
     display: 'flex',
@@ -42,10 +44,24 @@ export default theme=>({
     padding : 0
   },
   marginLeft:{
-    marginLeft: 10
+    marginLeft: 10,
+    [theme.breakpoints.down('xs')]:{
+      marginLeft: 'inherit'
+    }
   },
   mainContainerNotes:{
     display: 'flex',
-
-  }
+  },
+  marinContainerNotes:{
+    marginLeft: 20,
+    [theme.breakpoints.down('xs')]:{
+      marginLeft: 'inherit'
+    }
+  },
+  centerLabelandRating:{
+    alignItems:'center',
+    [theme.breakpoints.down('xs')]:{
+      justifyContent: 'center'
+    }
+}
 })

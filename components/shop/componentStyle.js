@@ -83,9 +83,7 @@ export default theme => ({
     color: "rgba(84,89,95,0.95)",
     letterSpacing: -1,
     fontWeight: "bold",
-    [theme.breakpoints.down('xs')]: {
-      width: '60%',
-    },
+      width: '100%'
   },
   texfieldContentWelcomedMessage:{
     width: '100%',

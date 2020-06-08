@@ -49,7 +49,7 @@ export default theme => ({
     width: '100%',
     marginTop: 15,
     [theme.breakpoints.down('xs')]:{
-      marginTop: '15%',
+      marginTop: '10%',
 
     }
 
@@ -63,17 +63,13 @@ export default theme => ({
   mainContainer:{
     display: 'flex',
     width: '100%',
-    [theme.breakpoints.down('xs')]:{
-     flexDirection: 'column'
-    }
+    flexDirection: 'column'
   },
   containerSkills:{
-    width: '50%',
-    justifyContent :'center',
+    width: '100%',
     display: 'flex',
     [theme.breakpoints.down('xs')]:{
-      width: '100%',
-      marginTop: '15%'
+      marginTop: '5%'
     }
   },
   mainContainerAvatarAndAbout:{

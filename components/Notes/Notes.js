@@ -26,9 +26,9 @@ class Notes extends React.Component{
         <Grid className={classes.mainContainerNotes}>
           <Grid>
             <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-              <Grid container style={{alignItems:'center'}}>
+              <Grid container className={classes.centerLabelandRating}>
                 <Grid>
-                  <p>Qualité</p>
+                  <Typography>Qualité</Typography>
                 </Grid>
                 <Grid className={classes.marginLeft}>
                   <StyledRating name="read-only" value={parseInt(notes.prestation_quality)} readOnly className={classes.ratingStyle}/>
@@ -36,12 +36,12 @@ class Notes extends React.Component{
               </Grid>
             </Box>
           </Grid>
-          <Grid style={{marginLeft: 20}}>
+          <Grid className={classes.marinContainerNotes}>
             <Grid>
               <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-                <Grid container style={{alignItems:'center'}}>
+                <Grid container className={classes.centerLabelandRating}>
                   <Grid>
-                    <p>Prix</p>
+                    <Typography>Prix</Typography>
                   </Grid>
                   <Grid className={classes.marginLeft}>
                     <StyledRating name="read-only" value={parseInt(notes.quality_price)} readOnly className={classes.ratingStyle} />
@@ -50,12 +50,12 @@ class Notes extends React.Component{
               </Box>
             </Grid>
           </Grid>
-          <Grid  style={{marginLeft: 20}}>
+          <Grid className={classes.marinContainerNotes}>
             <Grid>
               <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
-                <Grid container style={{alignItems:'center'}}>
+                <Grid container className={classes.centerLabelandRating}>
                   <Grid>
-                    <p>Relationnel</p>
+                    <Typography>Relationnel</Typography>
                   </Grid>
                   <Grid className={classes.marginLeft}>
                     <StyledRating name="read-only" value={parseInt(notes.relational)} readOnly className={classes.ratingStyle}/>
@@ -74,7 +74,7 @@ class Notes extends React.Component{
             <Grid>
               <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
                 <Grid>
-                  <p>Accueil</p>
+                  <Typography>Accueil</Typography>
                 </Grid>
                 <Grid>
                   <StyledRating name="read-only" value={parseInt(notes.reception)} readOnly className={classes.ratingStyle}/>
@@ -82,11 +82,11 @@ class Notes extends React.Component{
               </Box>
             </Grid>
           </Grid>
-          <Grid>
+          <Grid className={classes.marinContainerNotes}>
             <Grid>
               <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
                 <Grid>
-                  <p>Précision</p>
+                  <Typography>Précision</Typography>
                 </Grid>
                 <Grid className={classes.marginLeft}>
                   <StyledRating name="read-only" value={parseInt(notes.accuracy)} readOnly className={classes.ratingStyle} />
@@ -94,11 +94,11 @@ class Notes extends React.Component{
               </Box>
             </Grid>
           </Grid>
-          <Grid>
+          <Grid className={classes.marinContainerNotes}>
             <Grid>
               <Box component="fieldset" mb={3} borderColor="transparent" className={classes.labelRating}>
                 <Grid>
-                  <p>Relationnel</p>
+                  <Typography>Relationnel</Typography>
                 </Grid>
                 <Grid className={classes.marginLeft}>
                   <StyledRating name="read-only" value={parseInt(notes.relational)} readOnly className={classes.ratingStyle}/>

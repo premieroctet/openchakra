@@ -1,16 +1,17 @@
 export default theme=>({
   mainContainer:{
     display: 'flex',
+    flexDirection: 'row',
       [theme.breakpoints.down('xs')]: {
-        flexDirection: 'column',
         alignItems: 'center',
+        justifyContent: 'center'
     },
   },
   cardSkills:{
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: 'auto',
+    width: 120,
     margin: 10
   },
   avatarSize:{
@@ -20,4 +21,5 @@ export default theme=>({
   chipStyle:{
     margin : 15
   },
+
 })
