@@ -111,7 +111,7 @@ class ButtonSwitch extends React.Component {
   onChangePrice(event) {
     var price=parseInt(event.target.value)
     if (isNaN(price)) {
-      price=0
+      price=null
     }
     this.setState({price: price}, () => this.fireChange());
   }
@@ -138,7 +138,14 @@ class ButtonSwitch extends React.Component {
           <Grid>
             <span>
         {isEditable ?
-           <CssTextField placeholder='Saisissez un intitulé' value={this.state.label} onChange={this.onChangeLabel} />
+           <CssTextField
+           label={'Intitulé'}
+            placeholder={'Saisissez un intitulé'}
+            value={this.state.label}
+            onChange={this.onChangeLabel}
+            error={!this.state.label}
+            helperText={this.state.label ? null : 'Obligatoire'}
+           />
            :
            label === undefined ? "label introuvable" : label}
             </span>
@@ -150,7 +157,7 @@ class ButtonSwitch extends React.Component {
               <Grid style={{display:'flex'}}>
                 <CssTextField
                   value={this.state.price}
-                  label={`Prix`}
+                  label={'Tarif'}
                   type="number"
                   className={classes.textField}
                   disabled={!checked || priceDisabled}
@@ -161,6 +168,8 @@ class ButtonSwitch extends React.Component {
                     },
                     endAdornment: <InputAdornment position="start">€</InputAdornment>,
                   }}
+                  error={!this.state.price}
+                  helperText={this.state.price ? null : 'Obligatoire'}
                 />
                 { isOption ?
                   <Select

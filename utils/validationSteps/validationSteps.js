@@ -13,7 +13,7 @@ const selectPrestation = (shop) =>{
   if (Object.keys(shop.prestations).length===0) return "disabled";
   return !Object.values(shop.prestations)
     .every(v => {
-      return !(v.price == 0 || v.billing == null || Object.keys(v.billing).length === 0);
+      return !(!v.price || !v.billing || isEmpty(v.label) || Object.keys(v.billing).length === 0);
     });
 };
 

@@ -57,11 +57,11 @@ class IntroduceYou extends React.Component {
           <Grid className={classes.contentLeft}>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>Indiquez votre message de bienvenue ! </Typography>
+                <Typography className={classes.policySizeTitle}>Précisez votre statut ! </Typography>
               </Grid>
               <Grid>
                 <Grid>
-                  <h3 className={classes.policySizeSubtitle}>Les utilisateurs recevront votre message lorsque vous confirmerez leur réservation. </h3>
+                  <h3 className={classes.policySizeSubtitle}>Indiquez si vous proposez vos services en tant que particulier ou via une entreprise</h3>
                 </Grid>
               </Grid>
               <Grid>
@@ -111,14 +111,14 @@ class IntroduceYou extends React.Component {
                           }
                           label={
                             <p className={classes.policySizeSubtitle}>
-                            Je suis un professionnel
+                            Je suis un professionnel/J'ai un numéro de SIRET
                           </p>
                           }
                         />
                       </Grid>
                       <Grid item xs={11}>
                         <p className={classes.policySizeContent}>
-                          Un statut professionnel est nécessaire pour les métiers réglementés et permet une activité régulière sur My-Alfred. Seuls les professionnels peuvent proposer leurs services aux entreprises qui ont besoin d’une facture. Un statut professionnel est requis dès lors que votre activité devient régulière.
+                          Un statut professionnel avec un numéro de SIRET est nécessaire pour les métiers réglementés et permet une activité régulière sur My-Alfred. Seuls les professionnels peuvent proposer leurs services aux entreprises qui ont besoin d’une facture. Un statut professionnel est requis dès lors que votre activité devient régulière.
                         </p>
                         {this.state.is_particular ? null:
                           <React.Fragment><div>
