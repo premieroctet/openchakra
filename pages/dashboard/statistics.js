@@ -40,13 +40,13 @@ const styles = theme => ({
     width: 100,
     height: 100,
     marginTop: -10,
-    fontSize: 50,
+    fontSize: 35,
   },
   bigAvatar: {
     width: 200,
     height: 200,
     marginTop: -10,
-    fontSize: 100,
+    fontSize: 70,
   },
 
 });
