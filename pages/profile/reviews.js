@@ -146,7 +146,7 @@ class reviews extends React.Component {
 
                             </Grid>
                             <Grid container className={classes.tabmobile}>
-                                <Grid item xs={6} style={{ textAlign: "center" }}>
+                                <Grid item style={{ textAlign: "center" }}>
                                     <h2
                                         onClick={()=>this.handleClicktabs()}
                                         style={{
@@ -160,7 +160,7 @@ class reviews extends React.Component {
                                         Commentaires de mes Alfred
                                     </h2>
                                 </Grid>
-                                <Grid item xs={6}>
+                                <Grid item>
                                     <h2
                                         onClick={()=>this.handleClicktabs2()}
                                         style={{
@@ -204,18 +204,13 @@ class reviews extends React.Component {
                             null
                           }
                             {tabs ?
-
-                                    <Grid container style={{marginTop: '3%', width: '90%'}}>
-                                        <Commentary alfred_mode={true} user_id={user._id} key={moment()}/>
-                                    </Grid>
-
+                              <Grid container style={{marginTop: '3%', width: '90%'}}>
+                                  <Commentary alfred_mode={true} user_id={user._id} key={moment()} styleComponent={true}/>
+                              </Grid>
                                 :
-
-                                    <Grid container style={{marginTop: '3%', width:'90%'}}>
-                                        <Commentary alfred_mode={false} user_id={user._id} key={moment()}/>
-                                    </Grid>
-
-
+                              <Grid container style={{marginTop: '3%', width:'90%'}}>
+                                  <Commentary alfred_mode={false} user_id={user._id} key={moment()} styleComponent={true}/>
+                              </Grid>
                             }
                         </Grid>
                     </Grid>

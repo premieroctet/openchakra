@@ -68,9 +68,7 @@ export default theme => ({
   containerSkills:{
     width: '100%',
     display: 'flex',
-    [theme.breakpoints.down('xs')]:{
-      marginTop: '5%'
-    }
+    marginTop: '5%'
   },
   mainContainerAvatarAndAbout:{
     display : 'flex',
@@ -81,9 +79,10 @@ export default theme => ({
     display:'flex',
     flexDirection: 'column',
     width: '50%',
-    marginLeft: 15,
+    marginLeft: 10,
     [theme.breakpoints.down('xs')]:{
       width: '100%',
+      marginLeft: 'inherit'
     }
   },
   containerAlfredMode:{

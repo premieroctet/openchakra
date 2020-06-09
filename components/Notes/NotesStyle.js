@@ -48,16 +48,12 @@ export default theme=>({
     margin: 0,
     padding : 0
   },
-  
-  marginLeft:{
-    marginLeft: 10,
-    [theme.breakpoints.down('xs')]:{
-      marginLeft: 'inherit'
-    }
-  },
 
   mainContainerNotes:{
     display: 'flex',
+    [theme.breakpoints.down('xs')]:{
+      display: 'initial'
+    }
   },
 
   marinContainerNotes:{
@@ -70,7 +66,14 @@ export default theme=>({
   centerLabelandRating:{
     alignItems:'center',
     [theme.breakpoints.down('xs')]:{
-      justifyContent: 'center'
+      justifyContent: 'initial'
     }
-  }
+  },
+
+  noMarginContainerNotes:{
+    margin: 0
+  },
+  widthContainerText:{
+      width: 162
+  },
 })

@@ -55,7 +55,7 @@ class Commentary extends React.Component{
 
   render(){
     const {owner, reviews} = this.state;
-    const {classes, alfred_mode} = this.props;
+    const {classes, alfred_mode, styleComponent} = this.props;
 
   const StyledRating = withStyles({
       iconFilled: {
@@ -96,18 +96,19 @@ class Commentary extends React.Component{
                     <hr style={{color : 'rgb(80, 80, 80, 0.2)', margin: 0}}/>
                   </Grid>
                 </Grid>
+                { alfred_mode ?
+                  <Grid className={classes.containerSkills}>
+                    <Skills alfred={owner} skills={skills}/>
+                  </Grid>
+                  :
+                  null
+                }
               </Grid>
               <Grid style={{marginTop: 30, marginLeft:5}}>
-                <Notes alfred_mode={alfred_mode} notes={notes} key={moment()} />
+                <Notes alfred_mode={alfred_mode} notes={notes} key={moment()} styleComponent={styleComponent}/>
               </Grid>
             </Grid>
-            { alfred_mode ?
-              <Grid className={classes.containerSkills}>
-                <Skills alfred={owner} skills={skills}/>
-              </Grid>
-              :
-              null
-            }
+
           </Grid>
           {reviews.map( (r) => (
            <Grid style={{display: 'flex', width: '100%', flexDirection: 'column'}}>
@@ -136,7 +137,7 @@ class Commentary extends React.Component{
                <Grid className={classes.containerAvatarAndAbout}>
                  <Grid style={{display:'flex', alignItems :'center'}}>
                    <Grid className={classes.containerNotes}>
-                     <Notes alfred_mode={alfred_mode} notes={alfred_mode ? r.note_alfred : r.note_client} key={moment()} />
+                     <Notes alfred_mode={alfred_mode} notes={alfred_mode ? r.note_alfred : r.note_client} key={moment()} styleComponent={styleComponent ? styleComponent : false}/>
                    </Grid>
                  </Grid>
                </Grid>
