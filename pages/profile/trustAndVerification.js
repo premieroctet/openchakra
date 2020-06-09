@@ -31,6 +31,8 @@ import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Siret from '../../components/WizardForm/Siret';
+const {CESU}=require('../../utils/consts')
+const {RadioGroup, Radio} = require('react-radio-group')
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -116,6 +118,8 @@ class trustAndVerification extends React.Component {
             smsCodeOpen: false, // Show/hide SMS code modal
             smsCode: '', // Typed SMS code
             smsError: null,
+            cesu: null,
+            cis: false,
         };
         this.editSiret = this.editSiret.bind(this);
         this.callDrawer = this.callDrawer.bind(this)
@@ -146,7 +150,7 @@ class trustAndVerification extends React.Component {
                     axios.get('/myAlfred/api/shop/currentAlfred')
                         .then(response => {
                             let result = response.data;
-                            this.setState({professional: result.is_professional,particular:result.is_particular,company: result.company});
+                            this.setState({cis : result.cis, cesu: result.cesu, professional: result.is_professional,particular:result.is_particular,company: result.company});
 
                             if(result.is_professional === true) {
                                 this.setState({siret: result.company.siret,name: result.company.name,naf_ape: result.company.naf_ape,
@@ -180,7 +184,12 @@ class trustAndVerification extends React.Component {
       });
     };
 
-    onChange2 = event => {
+    onCesuChange = value => {
+      const event = {target: { name : 'cesu', value : value}}
+      this.onChange(event)
+    }
+
+    onChangePartPro = event => {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
@@ -304,6 +313,7 @@ class trustAndVerification extends React.Component {
             creation_date: this.state.creation_date,
             siret: this.state.siret,
             naf_ape: this.state.naf_ape,
+            cesu: this.state.cesu,
         };
         axios
             .put('/myAlfred/api/shop/editStatus', newStatus)
@@ -617,7 +627,7 @@ class trustAndVerification extends React.Component {
                                                 control={
                                                     <Checkbox
                                                         checked={this.state.particular}
-                                                        onChange={(e)=>{this.onChange2(e);this.handleChecked2()}}
+                                                        onChange={(e)=>{this.onChangePartPro(e);this.handleChecked2()}}
                                                         value={this.state.particular}
                                                         name="particular"
                                                         color="primary"
@@ -628,12 +638,22 @@ class trustAndVerification extends React.Component {
                                                 label="Je suis un particulier"
                                             />
                                         </Grid>
+                                        { this.state.particular ?
+                                          <Grid style={{ marginLeft:40}}>
+                                          <RadioGroup name={'cesu'} selectedValue={this.state.cesu} onChange={this.onCesuChange}>
+                                            <div><Radio value={CESU[0]}/>Je veux être déclaré(e) en CESU</div>
+                                            <div><Radio value={CESU[1]}/>J'accepte d'être déclaré en CESU</div>
+                                            <div><Radio value={CESU[2]}/>Je n'accepte pas d'être déclaré(e) en CESU RAJOUT TOOLTIP</div>
+                                          </RadioGroup>
+                                          </Grid>
+                                          : null
+                                        }
                                         <Grid item xs={12}>
                                             <FormControlLabel
                                                 control={
                                                     <Checkbox
                                                         checked={this.state.professional}
-                                                        onChange={(e)=>{this.onChange2(e);this.handleChecked()}}
+                                                        onChange={(e)=>{this.onChangePartPro(e);this.handleChecked()}}
                                                         value={this.state.professional}
                                                         name="professional"
                                                         color="primary"
@@ -646,7 +666,23 @@ class trustAndVerification extends React.Component {
                                         </Grid>
                                     </Grid>
                                     {professional ?
+                                      <>
+                                      <FormControlLabel
+                                        control={
+                                          <Checkbox
+                                            checked={this.state.cis}
+                                            onChange={(e)=>{this.onChangePartPro}}
+                                            value={this.state.cis}
+                                            name="cis"
+                                            color="primary"
+                                            icon={<CircleUnchecked style={{fontSize: 30}} />}
+                                            checkedIcon={<FilledButton />}
+                                          />
+                                        }
+                                      label="Je suis éligible au Crédit Impôt Service"
+                                      />
                                       <Siret onChange={this.onSiretChanged}/>
+                                      </>
                                         : null}
                                     <Grid item xs={5}>
                                         <Button className={classes.respenr2} onClick={this.editSiret} type="submit" variant="contained" color="primary" style={{color:'white',marginTop:15 }}>

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const {CESU}=require('../../utils/consts')
 
 const ShopSchema = new Schema({
     booking_request: {
@@ -78,6 +79,18 @@ const ShopSchema = new Schema({
         ref: 'users'
     },
     picture: String,
+    // particulier CESU : oblige, accepte, refuse
+    cesu : {
+        type: String,
+        enum: CESU,
+        default: 'Disabled',
+    },
+    // Eligible au crédit impôt service
+    cis : {
+      type: Boolean,
+      default: false,
+      required : true,
+    },
     creation_date: {
         type: Date,
         default: Date.now

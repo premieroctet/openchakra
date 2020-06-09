@@ -295,9 +295,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
     session: false
 }), (req, res) => {
 
-    Shop.findOne({
-            alfred: req.user.id
-        })
+    Shop.findOne({alfred: req.user.id})
         .populate('alfred')
         .populate({
             path: 'services.label',
@@ -432,12 +430,8 @@ router.put('/editParameters', passport.authenticate('jwt', {
 // @Route PUT /myAlfred/api/shop/editStatus
 // Edit personal status for a shop
 // @Access private
-router.put('/editStatus', passport.authenticate('jwt', {
-    session: false
-}), (req, res) => {
-    Shop.findOneAndUpdate({
-            alfred: req.user.id
-        }, {
+router.put('/editStatus', passport.authenticate('jwt', {session: false}), (req, res) => {
+    Shop.findOneAndUpdate({alfred: req.user.id }, {
             is_particular: req.body.is_particular,
             is_professional: req.body.is_professional,
             company : req.body.is_particular ? null: {
@@ -446,7 +440,9 @@ router.put('/editStatus', passport.authenticate('jwt', {
               siret: req.body.siret,
               naf_ape: req.body.naf_ape,
               status: req.body.status,
-            }
+            },
+            cesu: req.body.cesu,
+            cis : req.bosy.cis,
         }, { new: true })
         .then(shop => {
             res.json(shop)

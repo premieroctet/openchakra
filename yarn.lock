@@ -12562,6 +12562,13 @@ react-portal@^4.2.0:
   dependencies:
     prop-types "^15.5.8"
 
+react-radio-group@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/react-radio-group/-/react-radio-group-3.0.3.tgz#60bb29c7ad05d8b6f67cf443af0767ee2007cf98"
+  integrity sha512-MUNRRjZqQ2y+1K6rBuH0zO+gLVmCnWIcc5GnNwr9WNoUwZ9FUAKJ1UfsKXwYS93whR6/qrZKoVgiOltRkbzezw==
+  dependencies:
+    prop-types "^15.5.8"
+
 react-responsive-carousel@^3.1.49:
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/react-responsive-carousel/-/react-responsive-carousel-3.2.4.tgz#06b2bbb0824878cb9883b9902f3c178262ee7da3"
