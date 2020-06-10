@@ -442,7 +442,7 @@ router.put('/editStatus', passport.authenticate('jwt', {session: false}), (req, 
               status: req.body.status,
             },
             cesu: req.body.cesu,
-            cis : req.bosy.cis,
+            cis : req.body.cis,
         }, { new: true })
         .then(shop => {
             res.json(shop)

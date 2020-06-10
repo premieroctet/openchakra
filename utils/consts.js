@@ -1,5 +1,4 @@
 const crypto = require('crypto');
-const Enum=require('enum')
 const ALL_SERVICES=['Tous les services', null];
 
 

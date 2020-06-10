@@ -33,7 +33,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Siret from '../../components/WizardForm/Siret';
 const {CESU}=require('../../utils/consts')
 const {RadioGroup, Radio} = require('react-radio-group')
-
+import ButtonSwitch from '../../components/ButtonSwitch/ButtonSwitch';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 moment.locale('fr');
@@ -123,7 +123,7 @@ class trustAndVerification extends React.Component {
         };
         this.editSiret = this.editSiret.bind(this);
         this.callDrawer = this.callDrawer.bind(this)
-        this.onSiretChanged = this.onSiretChanged.bind(this)
+        this.onSiretChange = this.onSiretChange.bind(this)
     }
 
     componentDidMount() {
@@ -189,6 +189,11 @@ class trustAndVerification extends React.Component {
       this.onChange(event)
     }
 
+    onCISChange = (id, checked) => {
+      const event = {target: { name : 'cis', value : checked}}
+      this.onChange(event)
+    }
+
     onChangePartPro = event => {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -199,19 +204,18 @@ class trustAndVerification extends React.Component {
         });
     };
 
-    onSiretChanged = data => {
-      console.log(`Siret changed : ${JSON.stringify(data)}`)
+    onSiretChange = data => {
       this.setState(data)
     }
 
-    onChangeRecto = e => {
+    onRectoChange = e => {
         this.setState({id_recto:e.target.files[0],haveCard:false});
         this.setState({
             file:
                 URL.createObjectURL(e.target.files[0])    })
     };
 
-    onChangeVerso = e => {
+    onVersoChange = e => {
         this.setState({id_verso:e.target.files[0]});
         this.setState({
             file2:
@@ -314,6 +318,7 @@ class trustAndVerification extends React.Component {
             siret: this.state.siret,
             naf_ape: this.state.naf_ape,
             cesu: this.state.cesu,
+            cis: this.state.cis,
         };
         axios
             .put('/myAlfred/api/shop/editStatus', newStatus)
@@ -497,7 +502,7 @@ class trustAndVerification extends React.Component {
                                                                 <label className={classes.forminputs}>
                                                                     <Edit color={'primary'} style={{cursor:"pointer"}}/>
                                                                     <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
-                                                                           onChange={this.onChangeRecto}
+                                                                           onChange={this.onRectoChange}
                                                                            className="form-control" accept=".jpg,.jpeg,.png,.pdf"
                                                                     />
                                                                 </label>
@@ -518,7 +523,7 @@ class trustAndVerification extends React.Component {
                                                         <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
                                                             <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger recto</p>
                                                             <input disabled={!this.state.selected} id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
-                                                                   onChange={this.onChangeRecto}
+                                                                   onChange={this.onRectoChange}
                                                                    className="form-control" accept=".jpg,.jpeg,.png,.pdf"
                                                             />
                                                         </label>
@@ -531,7 +536,7 @@ class trustAndVerification extends React.Component {
                                                             <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
                                                                 <Edit style={{cursor:"pointer"}}/>
                                                                 <input  id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
-                                                                       onChange={this.onChangeRecto}
+                                                                       onChange={this.onRectoChange}
                                                                        className="form-control" accept=".jpg,.jpeg,.png,.pdf"
                                                                 />
                                                             </label>
@@ -562,7 +567,7 @@ class trustAndVerification extends React.Component {
                                                                 <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
                                                                     <Edit style={{cursor:"pointer"}}/>
                                                                     <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
-                                                                           onChange={this.onChangeVerso}
+                                                                           onChange={this.onVersoChange}
                                                                            className="form-control" accept=".jpg,.jpeg,.png,.pdf"
                                                                     />
                                                                 </label>
@@ -583,7 +588,7 @@ class trustAndVerification extends React.Component {
                                                         <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
                                                             <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger verso (sauf passeport)</p>
                                                             <input disabled={this.state.type === 'passeport' || !this.state.selected} id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
-                                                                   onChange={this.onChangeVerso}
+                                                                   onChange={this.onVersoChange}
                                                                    className="form-control" accept=".jpg,.jpeg,.png,.pdf"
                                                             />
                                                         </label>
@@ -596,7 +601,7 @@ class trustAndVerification extends React.Component {
                                                             <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
                                                                 <Edit style={{cursor:"pointer"}}/>
                                                                 <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
-                                                                       onChange={this.onChangeVerso}
+                                                                       onChange={this.onVersoChange}
                                                                        className="form-control" accept=".jpg,.jpeg,.png,.pdf"
                                                                 />
                                                             </label>
@@ -667,21 +672,8 @@ class trustAndVerification extends React.Component {
                                     </Grid>
                                     {professional ?
                                       <>
-                                      <FormControlLabel
-                                        control={
-                                          <Checkbox
-                                            checked={this.state.cis}
-                                            onChange={(e)=>{this.onChangePartPro}}
-                                            value={this.state.cis}
-                                            name="cis"
-                                            color="primary"
-                                            icon={<CircleUnchecked style={{fontSize: 30}} />}
-                                            checkedIcon={<FilledButton />}
-                                          />
-                                        }
-                                      label="Je suis éligible au Crédit Impôt Service"
-                                      />
-                                      <Siret onChange={this.onSiretChanged}/>
+                                      <ButtonSwitch label="Je suis éligible au Crédit Impôt Service" onChange={this.onCISChange} checked={this.state.cis} />
+                                      <Siret onChange={this.onSiretChange}/>
                                       </>
                                         : null}
                                     <Grid item xs={5}>
