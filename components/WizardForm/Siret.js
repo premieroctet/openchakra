@@ -27,10 +27,19 @@ class siret extends React.Component {
             name: '',
             status: '',
         };
+        if (this.props.company) {
+          this.state = this.props.company
+        }
         this.onChange = this.onChange.bind(this);
         this.setCompanyData = this.setCompanyData.bind(this);
     }
 
+    componentWillReceiveProps(nextProps){
+       if(nextProps.company){
+         this.setState(nextProps.company)
+       }
+    }
+    
     onChange = e => {
       let {name, value} = e.target;
       if (name==='siret') {

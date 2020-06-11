@@ -72,6 +72,7 @@
     "react-multistep": "^3.6.6",
     "react-number-format": "^4.3.0",
     "react-pdf": "^4.1.0",
+    "react-radio-group": "^3.0.3",
     "react-responsive-carousel": "^3.1.49",
     "react-select": "^3.0.8",
     "react-star-ratings": "^2.3.0",

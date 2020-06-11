@@ -9,7 +9,9 @@ import Siret from '../../WizardForm/Siret';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from '../componentStyle';
-
+const {CESU}=require('../../../utils/consts')
+const {RadioGroup, Radio} = require('react-radio-group')
+import ButtonSwitch from '../../../components/ButtonSwitch/ButtonSwitch';
 
 class IntroduceYou extends React.Component {
   constructor(props) {
@@ -17,12 +19,28 @@ class IntroduceYou extends React.Component {
     this.state = {
       is_particular: this.props.is_particular,
       company: this.props.company,
-      is_certified: this.props.is_certified
+      is_certified: this.props.is_certified,
+      cesu : null,
+      cis: false,
     };
 
     this.onStatusChanged=this.onStatusChanged.bind(this);
     this.onCertifiedChanged=this.onCertifiedChanged.bind(this);
     this.onCompanyChanged=this.onCompanyChanged.bind(this);
+  }
+
+  fireChange() {
+    this.props.onChange(this.state.is_particular, this.state.company, this.state.is_certified, this.state.cesu, this.state.cis)
+  }
+
+  onCesuChange = value => {
+    this.setState({cesu : value},
+      () => this.fireChange())
+  }
+
+  onCISChange = (id, checked) => {
+    this.setState({cis : checked},
+      () => this.fireChange())
   }
 
   onStatusChanged(event, checked) {
@@ -33,19 +51,20 @@ class IntroduceYou extends React.Component {
     console.log("Is particular is "+req);
     const company=req ? null : this.state.company;
     this.setState({is_particular: req, company: company},
-      () => this.props.onChange(req, this.state.company, this.state.is_certified));
+      () => this.fireChange())
 
   }
 
   onCertifiedChanged(event) {
     console.log("Certified change:"+event.target.checked);
     this.setState({is_certified: event.target.checked},
-      () => this.props.onChange(this.state.is_particular, this.state.company, this.state.is_certified));
+      () => this.fireChange())
   }
 
   onCompanyChanged(company) {
+    console.log(`Company changed:${JSON.stringify(company)}`)
     this.setState({company: company},
-      () => this.props.onChange(this.state.is_particular, this.state.company, this.state.is_certified));
+      () => this.fireChange())
   }
 
   render() {
@@ -93,6 +112,16 @@ class IntroduceYou extends React.Component {
                           En tant que particulier, vous pouvez rendre des services occasionnels sur My-Alfred. Si votre activité devient régulière, un statut professionnel (micro-entrepreneur,...) s’impose. Il est également requis pour certains secteurs d’activité réglementés.
                         </p>
                       </Grid>
+                      { this.state.is_particular ?
+                        <Grid style={{ marginLeft:40}}>
+                        <RadioGroup name={'cesu'} selectedValue={this.state.cesu} onChange={this.onCesuChange}>
+                          <div><Radio value={CESU[0]}/>Je veux être déclaré(e) en CESU</div>
+                          <div><Radio value={CESU[1]}/>J'accepte d'être déclaré en CESU</div>
+                          <div><Radio value={CESU[2]}/>Je n'accepte pas d'être déclaré(e) en CESU RAJOUT TOOLTIP</div>
+                        </RadioGroup>
+                        </Grid>
+                        : null
+                      }
                     </Grid>
                     <Grid container style={{ marginTop: 10, marginBottom: 100 }}>
                       <Grid item xs={12}>
@@ -122,6 +151,7 @@ class IntroduceYou extends React.Component {
                         </p>
                         {this.state.is_particular ? null:
                           <React.Fragment><div>
+                            <ButtonSwitch label="Je suis éligible au Crédit Impôt Service" onChange={this.onCISChange} checked={this.state.cis} />
                             <Siret onChange={this.onCompanyChanged} company={this.state.company} />
                           </div>
                           <FormControlLabel

@@ -294,4 +294,7 @@ const ENTITES={
   "9900" : "Autre personne morale de droit privé",
   "9970" : "Groupement de coopération sanitaire à gestion privée",
 }
-module.exports={ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR, generate_id, COMM_ALFRED, COMM_CLIENT, GID_LEN, ENTITES};
+
+const CESU= ['Mandatory', 'Optional', 'Disabled']
+
+module.exports={ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR, generate_id, COMM_ALFRED, COMM_CLIENT, GID_LEN, ENTITES, CESU};

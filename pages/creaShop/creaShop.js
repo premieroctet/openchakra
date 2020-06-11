@@ -258,15 +258,19 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
-  introduceChanged(is_particular, company, is_certified) {
+  introduceChanged(is_particular, company, is_certified, cesu, cis) {
     let shop=this.state.shop;
     shop.is_particular=is_particular;
     shop.is_certified=is_certified;
     if (is_particular) {
       shop.company=null;
+      shop.cesu = cesu
+      shop.cis=false
     }
     else {
       shop.company=company;
+      shop.cesu=null
+      shop.cis=cis
     }
     this.setState({shop: shop});
   }
