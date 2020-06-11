@@ -89,7 +89,6 @@ const ShopSchema = new Schema({
     cis : {
       type: Boolean,
       default: false,
-      required : true,
     },
     creation_date: {
         type: Date,

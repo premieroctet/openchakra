@@ -88,6 +88,8 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
             shop.is_particular = req.body.is_particular;
             shop.is_professional = !shop.is_particular;
             shop.level=req.body.level;
+            shop.cesu=req.body.cesu;
+            shop.cis=req.body.cis;
 
             // FIX: save company
             shop.company = null;
