@@ -9,54 +9,63 @@ import {
     Text
 } from 'react-native'
 import WebView from 'react-native-webview'
+import {BackHandler } from 'react-native'
+import { createStackNavigator } from '@react-navigation/stack';
 
-const App = () => {
-    const [canGoBack, setCanGoBack] = useState(false);
-    const [canGoForward, setCanGoForward] = useState(false);
-    const [currentUrl, setCurrentUrl] = useState('');
+const Stack = createStackNavigator();
 
-    const webviewRef = useRef(null);
+export default class App extends React.Component{
+    constructor() {
+        super();
+        this.state={
+            canGoBack: false
+        }
+    }
 
-    backButtonHandler = () => {
-        if (webviewRef.current) webviewRef.current.goBack()
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+    }
+
+    handleBackPress = () => {
+        if (this.state.canGoBack) {
+            this.refWeb.goBack();
+        }
+        else{
+            this.props.navigation.goBack(null)
+        }
+        return true;
     };
 
-    frontButtonHandler = () => {
-        if (webviewRef.current) webviewRef.current.goForward()
-    };
+    onNavigationStateChange(navState) {
+        this.setState({
+            canGoBack: navState.canGoBack
+        });
+    }
 
-    return (
-        <>
-            <StatusBar barStyle='dark-content' />
-            <SafeAreaView style={styles.flexContainer}>
-                <WebView
-                    source={{ uri: 'https://my-alfred.io/' }}
-                    startInLoadingState={true}
-                    renderLoading={() => (
-                        <ActivityIndicator
-                            color='black'
-                            size='large'
-                            style={styles.flexContainer}
+    render(){
+        return (
+            <>
+                <Stack.Navigator>
+                    <StatusBar barStyle='dark-content' />
+                    <SafeAreaView style={styles.flexContainer}>
+                        <WebView
+                            ref={(myWeb) => this.refWeb = myWeb}
+                            onNavigationStateChange={this.onNavigationStateChange.bind(this)}
+                            source={{ uri: 'https://my-alfred.io/' }}
+                            startInLoadingState={true}
+                            renderLoading={() => (
+                                <ActivityIndicator
+                                    color='black'
+                                    size='large'
+                                    style={styles.flexContainer}
+                                />
+                            )}
                         />
-                    )}
-                    ref={webviewRef}
-                    onNavigationStateChange={navState => {
-                        setCanGoBack(navState.canGoBack);
-                        setCanGoForward(navState.canGoForward);
-                        setCurrentUrl(navState.url)
-                    }}
-                />
-                <View style={styles.tabBarContainer}>
-                    <TouchableOpacity onPress={backButtonHandler}>
-                        <Text style={styles.button}>Précédent</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={frontButtonHandler}>
-                        <Text style={styles.button}>Forward</Text>
-                    </TouchableOpacity>
-                </View>
-            </SafeAreaView>
-        </>
-    )
+                    </SafeAreaView>
+                </Stack.Navigator>
+            </>
+        );
+    }
 };
 
 const styles = StyleSheet.create({
@@ -73,6 +82,5 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 24
     }
-})
+});
 
-export default App
