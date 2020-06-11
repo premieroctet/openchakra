@@ -673,7 +673,7 @@ class trustAndVerification extends React.Component {
                                     {professional ?
                                       <>
                                       <ButtonSwitch label="Je suis éligible au Crédit Impôt Service" onChange={this.onCISChange} checked={this.state.cis} />
-                                      <Siret onChange={this.onSiretChange}/>
+                                      <Siret onChange={this.onSiretChange} company={this.state}/>
                                       </>
                                         : null}
                                     <Grid item xs={5}>
