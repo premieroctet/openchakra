@@ -1,86 +1,87 @@
-import React, { useState, useRef } from 'react'
+import React, { Fragment } from "react";
 import {
     SafeAreaView,
     StyleSheet,
-    StatusBar,
-    ActivityIndicator,
+    ScrollView,
     View,
-    TouchableOpacity,
-    Text
-} from 'react-native'
-import WebView from 'react-native-webview'
-import {BackHandler } from 'react-native'
-import { createStackNavigator } from '@react-navigation/stack';
+    Text,
+    BackHandler,
+    StatusBar
+} from "react-native";
+import { WebView } from "react-native-webview";
+import {
+    Header,
+    LearnMoreLinks,
+    Colors,
+    DebugInstructions,
+    ReloadInstructions
+} from "react-native/Libraries/NewAppScreen";
 
-const Stack = createStackNavigator();
-
-export default class App extends React.Component{
-    constructor() {
-        super();
-        this.state={
-            canGoBack: false
-        }
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.startingUrl =
+            "https://my-alfred.io/";
+        this.handleBackButton = this.handleBackButton.bind(this);
     }
 
     componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+        BackHandler.addEventListener("hardwareBackPress", this.handleBackButton);
     }
 
-    handleBackPress = () => {
-        if (this.state.canGoBack) {
-            this.refWeb.goBack();
+    componentWillUnmount() {
+        BackHandler.removeEventListener("hardwareBackPress", this.handleBackButton);
+    }
+
+    handleBackButton = () => {
+        console.log(this.state);
+        const { canGoBack } = this.state;
+        if (canGoBack) {
+            this.webView.goBack();
+            return true;
+        } else {
+            return false;
         }
-        else{
-            this.props.navigation.goBack(null)
-        }
-        return true;
     };
 
-    onNavigationStateChange(navState) {
-        this.setState({
-            canGoBack: navState.canGoBack
-        });
-    }
-
-    render(){
+    render() {
         return (
-            <>
-                <Stack.Navigator>
-                    <StatusBar barStyle='dark-content' />
-                    <SafeAreaView style={styles.flexContainer}>
-                        <WebView
-                            ref={(myWeb) => this.refWeb = myWeb}
-                            onNavigationStateChange={this.onNavigationStateChange.bind(this)}
-                            source={{ uri: 'https://my-alfred.io/' }}
-                            startInLoadingState={true}
-                            renderLoading={() => (
-                                <ActivityIndicator
-                                    color='black'
-                                    size='large'
-                                    style={styles.flexContainer}
-                                />
-                            )}
-                        />
-                    </SafeAreaView>
-                </Stack.Navigator>
-            </>
+            <Fragment>
+                <WebView
+                    source={{ uri: this.startingUrl }}
+                    style={{ marginTop: 20 }}
+                    ref={webView => (this.webView = webView)}
+                    injectedJavaScript={`
+                      (function() {
+                        function wrap(fn) {
+                          return function wrapper() {
+                            var res = fn.apply(this, arguments);
+                            window.ReactNativeWebView.postMessage('navigationStateChange');
+                            return res;
+                          }
+                        }
+            
+                        history.pushState = wrap(history.pushState);
+                        history.replaceState = wrap(history.replaceState);
+                        window.addEventListener('popstate', function() {
+                          window.ReactNativeWebView.postMessage('navigationStateChange');
+                        });
+                      })();
+            
+                      true;
+                    `}
+                    onMessage={({ nativeEvent: state }) => {
+                        if (state.data === "navigationStateChange") {
+                            // Navigation state updated, can check state.canGoBack, etc.
+                            this.setState({
+                                canGoBack: state.canGoBack
+                            });
+                        }
+                    }}
+                />
+            </Fragment>
         );
     }
-};
+}
 
-const styles = StyleSheet.create({
-    flexContainer: {
-        flex: 1
-    },
-    tabBarContainer: {
-        padding: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        backgroundColor: '#b43757'
-    },
-    button: {
-        color: 'white',
-        fontSize: 24
-    }
-});
-
+export default App;
