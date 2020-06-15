@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-navigation/stack": "^5.5.1",
+    "native-base": "^2.13.12",
     "react": "16.11.0",
     "react-native": "0.62.2",
     "react-native-webview": "^10.2.3"
