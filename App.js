@@ -1,12 +1,15 @@
 import React from "react";
 import {
-    StyleSheet,
     View,
-    ActivityIndicator,
 } from "react-native";
 import {WebView} from 'react-native-webview';
+import SplahScreen from 'react-native-splash-screen'
 
 class App extends React.Component {
+
+    componentDidMount(){
+        SplahScreen.hide()
+    }
 
     render() {
         return (
@@ -14,24 +17,11 @@ class App extends React.Component {
                 <WebView
                     allowsBackForwardNavigationGestures
                     source={{ uri: "https://my-alfred.io/" }}
-                    startInLoadingState={true}
-                    renderLoading={() => (
-                        <ActivityIndicator
-                            color='black'
-                            size='large'
-                            style={styles.flexContainer}
-                        />
-                    )}
+                    style={{marginTop: 20}}
                 />
             </View>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    flexContainer: {
-        flex: 1
-    },
-});
 
 export default App;
