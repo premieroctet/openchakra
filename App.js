@@ -15,11 +15,10 @@ class App extends React.Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <StatusBar backgroundColor='#4f6d7a' barStyle={"light-content"}/>
+                <StatusBar barStyle={"default"}/>
                 <WebView
                     allowsBackForwardNavigationGestures
                     source={{ uri: "https://my-alfred.io/" }}
-                    style={{marginTop: 20}}
                 />
             </View>
         );
