@@ -20,6 +20,7 @@ const Service = require('../../../models/Service');
 const Prestation = require('../../../models/Prestation');
 const ShopBanner = require('../../../models/ShopBanner');
 const Options = require('../../../models/Options');
+const Prospect = require('../../../models/Prospect');
 const validatePrestationInput = require('../../../validation/prestation');
 const validateRegisterAdminInput = require('../../../validation/registerAdmin');
 const validateCategoryInput = require('../../../validation/category');
@@ -75,7 +76,7 @@ router.get('/shops/extract',passport.authenticate('jwt',{session:false}),(req,re
       Shop.find()
         .then ( shops => {
             users.forEach ( user => {
-              var shop=shops.filter( s => s.alfred._id.equals(user._id))
+              var shop=shops.filter( s => s.alfred && s.alfred._id.equals(user._id))
               shop=shop.length>0?shop[0]:{_doc:{}}
               var data={}
               Object.keys(user._doc).forEach( k => {
@@ -90,6 +91,29 @@ router.get('/shops/extract',passport.authenticate('jwt',{session:false}),(req,re
         })
         .catch ()
   })
+});
+
+// @Route GET /myAlfred/api/admin/prospect/tocontact
+// View all billings system
+// @Access public
+router.get('/prospect/tocontact/:category',(req,res)=> {
+  var result=[]
+  Prospect.find({$and : [{ category: req.params.category}, { $or : [{ contacted : false}, { contacted : null}]}]})
+  .then( prospects => {
+    prospects.forEach ( p => {
+      data=[]
+      data.push(`="${p.phone.replace(/^0/, '+33')}"`)
+      data.push(p.category)
+      data.push(p.name)
+      data.push(p.city)
+      data.push(p.zip_code)
+      result.push(data.join(';'))
+    })
+    res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    res.set('Content-Disposition', `attachment; filename="export_${req.params.category}.csv"`)
+    res.send(result.join('\n'))
+  })
+  .catch ()
 });
 
 // @Route GET /myAlfred/api/admin/billing/all
@@ -2263,21 +2287,15 @@ router.get('/statistics', (req,res)=> {
     } else {
         res.status(403).json({msg: 'Access denied'});
     }
-
-
 });
 
-// @Route GET /myAlfred/api/admin/statistics
-// Get satistics (users, shops, services)
+// @Route GET /myAlfred/api/admin/booking/all
+// Get all bookings
 // @Access private
-//router.get('/statistics',passport.authenticate('jwt',{session:false}),(req,res)=> {
-router.get('/booking/all', (req,res)=> {
-    //
-    //const token = req.headers.authorization.split(' ')[1];
-    //const decode = jwt.decode(token);
-    //const admin = decode.is_admin;
-    //
-    const admin=true;
+router.get('/booking/all',passport.authenticate('jwt',{session:false}),(req,res)=> {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
 
     if(admin) {
       Booking.find()
@@ -2294,8 +2312,42 @@ router.get('/booking/all', (req,res)=> {
     } else {
       res.status(403).json({msg: 'Access denied'});
     }
-
-
 });
 
+// @Route GET /myAlfred/api/admin/prospect/all
+// Get all prospect
+// @Access private
+router.get('/prospect/all',passport.authenticate('jwt',{session:false}),(req,res)=> {
+  const token = req.headers.authorization.split(' ')[1];
+  const decode = jwt.decode(token);
+  const admin = decode.is_admin;
+
+  if(admin) {
+    // TODO: Use aggregate
+    Prospect.find()
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({prospects: 'Error'})
+      })
+      .then(prospects => {
+        counts={}
+        contacted={}
+        prospects.forEach( p => {
+          counts[p.category] = counts.hasOwnProperty(p.category) ? counts[p.category]+1 : 1
+          const contact = p.contacted ? 1 : 0
+          contacted[p.category] = contacted.hasOwnProperty(p.category) ? contacted[p.category]+ contact : contact
+        });
+        var result=[]
+        Object.keys(counts).forEach(key => {
+          result.push({category: key, count : counts[key], contacted: contacted[key]})
+        });
+
+        res.json(result);
+      })
+  } else {
+    res.status(403).json({prospects: 'Access denied'});
+  }
+});
+
+passport.authenticate('jwt',{session: false}),
 module.exports = router;
