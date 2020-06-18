@@ -169,7 +169,8 @@ class all extends React.Component {
                                                 <TableCell>Catégorie</TableCell>
                                                 <TableCell># prospects</TableCell>
                                                 <TableCell># contactés</TableCell>
-                                                <TableCell>non contactés</TableCell>
+                                                <TableCell># non contactés</TableCell>
+                                                <TableCell>A contacter</TableCell>
                                                 </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -177,7 +178,7 @@ class all extends React.Component {
                                                 .map((p,index) =>
                                                     <TableRow key={index}>
                                                         <TableCell component="th" scope="row">
-                                                            {p.category.replace('_', ' ')}
+                                                            {p.category.replace(/_/g, ' ')}
                                                         </TableCell>
                                                         <TableCell component="th" scope="row">
                                                           { p.count}
@@ -185,8 +186,13 @@ class all extends React.Component {
                                                         <TableCell component="th" scope="row">
                                                           { p.contacted}
                                                         </TableCell>
+                                                        <TableCell component="th" scope="row">
+                                                          { p.not_contacted}
+                                                        </TableCell>
                                                         <TableCell>
-                                                          <Link href={`/myAlfred/api/admin/prospect/tocontact/${p.category}`} >Download</Link>
+                                                          <Link href={`/myAlfred/api/admin/prospect/tocontact/${p.category}`} >
+                                                            { `Liste ${p.category.replace(/_/g, ' ')}` }
+                                                          </Link>
                                                         </TableCell>
                                                     </TableRow>
                                                 )}
