@@ -1,7 +1,8 @@
 import React from "react";
 import {
     View,
-    StatusBar
+    StatusBar,
+    SafeAreaView
 } from "react-native";
 import {WebView} from 'react-native-webview';
 import SplahScreen from 'react-native-splash-screen'
@@ -14,13 +15,16 @@ class App extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
-                <StatusBar barStyle={"default"}/>
-                <WebView
-                    allowsBackForwardNavigationGestures
-                    source={{ uri: "https://my-alfred.io/" }}
-                />
-            </View>
+            <SafeAreaView style={{ flex: 1 }}>
+                <StatusBar barStyle="dark-content" />
+                <View style={{ flex: 1 }}>
+                    <WebView
+                        allowsBackForwardNavigationGestures
+                        mediaPlaybackRequiresUserAction={true}
+                        source={{ uri: "https://my-alfred.io/" }}
+                    />
+                </View>
+            </SafeAreaView>
         );
     }
 }
