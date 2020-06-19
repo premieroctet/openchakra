@@ -4,7 +4,7 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-
+const moment=require('moment')
 
 const validateBillingInput = require('../../../validation/billing');
 const Billing = require('../../../models/Billing');
@@ -118,8 +118,9 @@ router.get('/prospect/tocontact/:category/:keywords?',(req,res)=> {
         data.push(p.zip_code)
         result.push(data.join(';'))
       })
+      const filename=`export_${req.params.category}_${keywords}_${moment().format('DDMMYYHHmm')}.csv`
       res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-      res.set('Content-Disposition', `attachment; filename="export_${req.params.category}_${keywords}.csv"`)
+      res.set('Content-Disposition', `attachment; filename="${filename}"`)
       res.send(result.join('\n'))
     })
   })
