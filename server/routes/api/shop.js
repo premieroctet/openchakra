@@ -436,6 +436,7 @@ router.put('/editStatus', passport.authenticate('jwt', {session: false}), (req, 
     Shop.findOneAndUpdate({alfred: req.user.id }, {
             is_particular: req.body.is_particular,
             is_professional: req.body.is_professional,
+            social_security: req.body.social_security,
             company : req.body.is_particular ? null: {
               name: req.body.name,
               creation_date: req.body.creation_date,

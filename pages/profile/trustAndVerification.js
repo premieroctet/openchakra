@@ -32,9 +32,11 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Siret from '../../components/WizardForm/Siret';
 const {CESU}=require('../../utils/consts')
-const {RadioGroup, Radio} = require('react-radio-group')
+import {Radio, RadioGroup } from '@material-ui/core';
 import ButtonSwitch from '../../components/ButtonSwitch/ButtonSwitch';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+
+const {checkSocialSecurity}=require('../../utils/social_security')
 
 moment.locale('fr');
 
@@ -124,6 +126,7 @@ class trustAndVerification extends React.Component {
         this.editSiret = this.editSiret.bind(this);
         this.callDrawer = this.callDrawer.bind(this)
         this.onSiretChange = this.onSiretChange.bind(this)
+        this.statusSaveDisabled = this.statusSaveDisabled.bind(this)
     }
 
     componentDidMount() {
@@ -150,7 +153,8 @@ class trustAndVerification extends React.Component {
                     axios.get('/myAlfred/api/shop/currentAlfred')
                         .then(response => {
                             let result = response.data;
-                            this.setState({cis : result.cis, cesu: result.cesu, professional: result.is_professional,particular:result.is_particular,company: result.company});
+                            this.setState({cis : result.cis, cesu: result.cesu, professional: result.is_professional,particular:result.is_particular,
+                              company: result.company, social_security: result.social_security});
 
                             if(result.is_professional === true) {
                                 this.setState({siret: result.company.siret,name: result.company.name,naf_ape: result.company.naf_ape,
@@ -183,11 +187,6 @@ class trustAndVerification extends React.Component {
         if (name=='siret') this.handleSiret()
       });
     };
-
-    onCesuChange = value => {
-      const event = {target: { name : 'cesu', value : value}}
-      this.onChange(event)
-    }
 
     onCISChange = (id, checked) => {
       const event = {target: { name : 'cis', value : checked}}
@@ -319,6 +318,7 @@ class trustAndVerification extends React.Component {
             naf_ape: this.state.naf_ape,
             cesu: this.state.cesu,
             cis: this.state.cis,
+            social_security: this.state.social_security,
         };
         axios
             .put('/myAlfred/api/shop/editStatus', newStatus)
@@ -370,9 +370,23 @@ class trustAndVerification extends React.Component {
         this.child.current.handleDrawerToggle();
     }
 
+    statusSaveDisabled = () => {
+      console.log( `statusSaveDisabled`)
+      const particular=this.state.particular
+      const cesu=this.state.cesu
+      const ss_id=this.state.social_security
+      console.log( `${particular},${JSON.stringify(cesu)},${ss_id}`)
+      if (particular) {
+        if (cesu==CESU[0] || cesu==CESU[1]) {
+          return checkSocialSecurity(ss_id)!=null
+        }
+      }
+      return false
+    }
+
     render() {
         const {classes} = this.props;
-        const {user, ext, ext2, professional, alfred} = this.state;
+        const {user, ext, ext2, professional, alfred, cesu} = this.state;
 
         return (
             <Fragment>
@@ -645,10 +659,38 @@ class trustAndVerification extends React.Component {
                                         </Grid>
                                         { this.state.particular ?
                                           <Grid style={{ marginLeft:40}}>
-                                          <RadioGroup name={'cesu'} selectedValue={this.state.cesu} onChange={this.onCesuChange}>
-                                            <div><Radio value={CESU[0]}/>Je veux être déclaré(e) en CESU</div>
-                                            <div><Radio value={CESU[1]}/>J'accepte d'être déclaré en CESU</div>
-                                            <div><Radio value={CESU[2]}/>Je n'accepte pas d'être déclaré(e) en CESU RAJOUT TOOLTIP</div>
+                                          <RadioGroup name={'cesu'} value={cesu} onChange={this.onChange}>
+                                          <Grid style={{ display: 'flex'}}>
+                                            <div><Radio color="primary" value={CESU[0]}/>Je veux être déclaré(e) en CESU</div>
+                                            { cesu==CESU[0] ?
+                                            <TextField
+                                              id="ss1"
+                                              type="number"
+                                              name='social_security'
+                                              placeholder="N° SS (13+2 chiffres)"
+                                              value={this.state.social_security}
+                                              onChange={ this.onChange}
+                                              errors={this.state.social_security}
+                                            />
+                                            :
+                                             null}
+                                            </Grid>
+                                            <Grid style={{ display: 'flex'}}>
+                                              <div><Radio color="primary" value={CESU[1]}/>J'accepte d'être déclaré en CESU</div>
+                                              { cesu==CESU[1] ?
+                                              <TextField
+                                                id="ss2"
+                                                type="number"
+                                                name='social_security'
+                                                placeholder="N° SS (13+2 chiffres)"
+                                                value={this.state.social_security}
+                                                onChange={ this.onChange}
+                                                errors={this.state.social_security}
+                                              />
+                                              :
+                                              null}
+                                              </Grid>
+                                            <div><Radio color="primary" value={CESU[2]}/>Je n'accepte pas d'être déclaré(e) en CESU RAJOUT TOOLTIP</div>
                                           </RadioGroup>
                                           </Grid>
                                           : null
@@ -677,7 +719,7 @@ class trustAndVerification extends React.Component {
                                       </>
                                         : null}
                                     <Grid item xs={5}>
-                                        <Button className={classes.respenr2} onClick={this.editSiret} type="submit" variant="contained" color="primary" style={{color:'white',marginTop:15 }}>
+                                        <Button disabled={this.statusSaveDisabled()} className={classes.respenr2} onClick={this.editSiret} type="submit" variant="contained" color="primary" style={{color:'white',marginTop:15 }}>
                                             Enregistrer
                                         </Button>
                                     </Grid>

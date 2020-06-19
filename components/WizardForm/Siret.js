@@ -39,7 +39,7 @@ class siret extends React.Component {
          this.setState(nextProps.company)
        }
     }
-    
+
     onChange = e => {
       let {name, value} = e.target;
       if (name==='siret') {
@@ -83,7 +83,7 @@ class siret extends React.Component {
                       status: '',
                       creation_date:'',
                       naf_ape: '',
-                      errors: 'Siret/Siren inconnu, merci de saisir les données manuellement'
+                      errors: 'Siret/Siren inconnu, merci de saisir les données ci-dessous si possible'
                     }, () => this.props.onChange(this.state));
                     console.error(err);
                  })

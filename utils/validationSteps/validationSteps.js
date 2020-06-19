@@ -38,7 +38,9 @@ const settingShop = (shop) =>{
 
 const introduceYou = (shop) =>{
   if (shop.is_particular===true) {
-    return !shop.cesu;
+    if (!shop.cesu) {
+      return true
+    }
   }
   // Pro
   if (shop.company==null) return true;

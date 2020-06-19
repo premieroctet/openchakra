@@ -11,6 +11,7 @@ import { withStyles } from '@material-ui/core/styles';
 import styles from '../componentStyle';
 const {CESU}=require('../../../utils/consts')
 import {Radio, RadioGroup } from '@material-ui/core';
+import TextField from "@material-ui/core/TextField";
 import ButtonSwitch from '../../../components/ButtonSwitch/ButtonSwitch';
 
 class IntroduceYou extends React.Component {
@@ -22,6 +23,7 @@ class IntroduceYou extends React.Component {
       is_certified: this.props.is_certified,
       cesu : null,
       cis: false,
+      social_security: null,
     };
 
     this.onStatusChanged=this.onStatusChanged.bind(this);
@@ -33,8 +35,10 @@ class IntroduceYou extends React.Component {
     this.props.onChange(this.state.is_particular, this.state.company, this.state.is_certified, this.state.cesu, this.state.cis)
   }
 
-  onCesuChange = value => {
-    this.setState({cesu : value},
+  onChange = event => {
+    const {name, value}=event.target
+    console.log(`onChange:${name}=>${value}`)
+    this.setState({[name] : value},
       () => this.fireChange())
   }
 
@@ -66,6 +70,9 @@ class IntroduceYou extends React.Component {
 
   render() {
     const {classes} = this.props;
+
+    const {cesu}=this.state
+    console.log(`CESU:${this.state.cesu}`)
 
     return (
       <Grid className={classes.mainContainer}>
@@ -111,9 +118,37 @@ class IntroduceYou extends React.Component {
                       </Grid>
                       { this.state.is_particular ?
                         <Grid style={{ marginLeft:40}}>
-                        <RadioGroup name={'cesu'} selectedValue={this.state.cesu} onChange={this.onCesuChange}>
+                        <RadioGroup name={'cesu'} value={this.state.cesu} onChange={this.onChange}>
+                          <Grid style={{ display: 'flex'}}>
                           <div><Radio color="primary" value={CESU[0]}/>Je veux être déclaré(e) en CESU</div>
+                          { cesu==CESU[0] ?
+                          <TextField
+                            id="ss1"
+                            type="number"
+                            name='social_security'
+                            placeholder="N° SS (13+2 chiffres)"
+                            value={this.state.social_security}
+                            onChange={ this.onChange}
+                            errors={this.state.social_security}
+                          />
+                          :
+                           null}
+                           </Grid>
+                           <Grid style={{ display: 'flex'}}>
                           <div><Radio color="primary" value={CESU[1]}/>J'accepte d'être déclaré en CESU</div>
+                          { cesu==CESU[1] ?
+                          <TextField
+                            id="ss1"
+                            type="number"
+                            name='social_security'
+                            placeholder="N° SS (13+2 chiffres)"
+                            value={this.state.social_security}
+                            onChange={ this.onChange}
+                            errors={this.state.social_security}
+                          />
+                          :
+                           null}
+                           </Grid>
                           <div><Radio color="primary" value={CESU[2]}/>Je n'accepte pas d'être déclaré(e) en CESU RAJOUT TOOLTIP</div>
                         </RadioGroup>
                         </Grid>

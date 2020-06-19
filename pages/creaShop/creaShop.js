@@ -28,7 +28,7 @@ class creaShop extends React.Component {
   constructor(props) {
         super(props);
     this.state={
-      activeStep: 0,
+      activeStep: 9,
       user_id: null,
       shop:{
         booking_request: true,     // true/false
