@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from '../componentStyle';
 const {CESU}=require('../../../utils/consts')
-const {RadioGroup, Radio} = require('react-radio-group')
+import {Radio, RadioGroup } from '@material-ui/core';
 import ButtonSwitch from '../../../components/ButtonSwitch/ButtonSwitch';
 
 class IntroduceYou extends React.Component {
@@ -45,10 +45,7 @@ class IntroduceYou extends React.Component {
 
   onStatusChanged(event, checked) {
    let id=event.target.id;
-    console.log("Status changed:"+id+checked);
-    console.log("State:"+JSON.stringify(this.state));
     let req = (id==='particular' && checked) || (id==='professional' && !checked);
-    console.log("Is particular is "+req);
     const company=req ? null : this.state.company;
     this.setState({is_particular: req, company: company},
       () => this.fireChange())
@@ -115,9 +112,9 @@ class IntroduceYou extends React.Component {
                       { this.state.is_particular ?
                         <Grid style={{ marginLeft:40}}>
                         <RadioGroup name={'cesu'} selectedValue={this.state.cesu} onChange={this.onCesuChange}>
-                          <div><Radio value={CESU[0]}/>Je veux être déclaré(e) en CESU</div>
-                          <div><Radio value={CESU[1]}/>J'accepte d'être déclaré en CESU</div>
-                          <div><Radio value={CESU[2]}/>Je n'accepte pas d'être déclaré(e) en CESU RAJOUT TOOLTIP</div>
+                          <div><Radio color="primary" value={CESU[0]}/>Je veux être déclaré(e) en CESU</div>
+                          <div><Radio color="primary" value={CESU[1]}/>J'accepte d'être déclaré en CESU</div>
+                          <div><Radio color="primary" value={CESU[2]}/>Je n'accepte pas d'être déclaré(e) en CESU RAJOUT TOOLTIP</div>
                         </RadioGroup>
                         </Grid>
                         : null
