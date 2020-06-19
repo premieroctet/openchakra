@@ -351,12 +351,19 @@ class signup extends React.Component {
                   </form>
                   <hr/>
                   <Grid container>
-                  <Grid item>
-                  <p>Vous avez déjà un compte My Alfred ? </p>
+                    <Grid item>
+                      <p>Vous avez déjà un compte My Alfred ? </p>
+                    </Grid>
+                    <Grid item style={{paddingTop: 16, marginLeft: 5}}>
+                      <Link href={'/login'}><a style={{color:'#68b7c5', textDecoration: 'none'}}>Connexion</a></Link>
+                    </Grid>
                   </Grid>
-                  <Grid item style={{paddingTop: 16, marginLeft: 5}}>
-                    <Link href={'/login'}><a style={{color:'#68b7c5', textDecoration: 'none'}}>Connexion</a></Link>
-                  </Grid>
+                  <Grid>
+                    <Grid>
+                      <Link href={'/needHelp/needHelp'} target="_blank">
+                        <a target="_blank">Besoin d'aide ? Prendez rendez-vous avec un technicien MyAlfred</a>
+                      </Link>
+                    </Grid>
                   </Grid>
                 </div>
               </Card>
