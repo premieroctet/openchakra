@@ -114,24 +114,27 @@ class all extends React.Component {
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
-
+        this.load = this.load.bind(this);
     }
 
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get("/myAlfred/api/admin/prospect/all")
-            .then((response) => {
-              console.log(`Prospects:${JSON.stringify(response.data)}`)
-                this.setState({prospects: response.data})
-            }).catch((error) => {
-              console.log(error);
-              if(error.response.status === 401 || error.response.status === 403) {
-                  localStorage.removeItem('token');
-                  Router.push({pathname: '/login'})
-              }
-        });
+        this.load()
+    }
+
+    load() {
+      axios.get("/myAlfred/api/admin/prospect/all")
+          .then((response) => {
+              this.setState({prospects: response.data})
+          }).catch((error) => {
+            console.log(error);
+            if(error.response.status === 401 || error.response.status === 403) {
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
+            }
+      });
     }
 
     handleChangePage(event, page) {
@@ -190,9 +193,17 @@ class all extends React.Component {
                                                           { p.not_contacted}
                                                         </TableCell>
                                                         <TableCell>
-                                                          <Link href={`/myAlfred/api/admin/prospect/tocontact/${p.category}`} >
+                                                          { p.not_contacted ?
+                                                          <a href={`/myAlfred/api/admin/prospect/tocontact/${p.category}`}
+                                                            onClick={
+                                                              () => setTimeout(this.load, 2000)
+                                                            }
+                                                          >
                                                             { `Liste ${p.category.replace(/_/g, ' ')}` }
-                                                          </Link>
+                                                          </a>
+                                                          :
+                                                          <div>Aucun nouveau contact</div>
+                                                          }
                                                         </TableCell>
                                                     </TableRow>
                                                 )}

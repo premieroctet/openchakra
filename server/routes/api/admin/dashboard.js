@@ -99,21 +99,29 @@ router.get('/shops/extract',passport.authenticate('jwt',{session:false}),(req,re
 router.get('/prospect/tocontact/:category/:keywords?',(req,res)=> {
   const keywords=req.params.keywords || ''
   var result=[]
-  Prospect.find({$and : [{ category: req.params.category, keywords: keywords}, { $or : [{ contacted : false}, { contacted : null}]}]})
+  Prospect.find(
+    {$and : [{ category: req.params.category, keywords: keywords}, { $or : [{ contacted : false}, { contacted : null}]}]}
+  )
   .sort({category: 1})
   .then( prospects => {
-    prospects.forEach ( p => {
-      data=[]
-      data.push(`="${p.phone.replace(/^0/, '+33')}"`)
-      data.push(p.category+"/"+p.keywords)
-      data.push(p.name)
-      data.push(p.city)
-      data.push(p.zip_code)
-      result.push(data.join(';'))
+    Prospect.updateMany(
+      {$and : [{ category: req.params.category, keywords: keywords}, { $or : [{ contacted : false}, { contacted : null}]}]},
+      { contacted : true }
+    )
+    .then ( dummy => {
+      prospects.forEach ( p => {
+        data=[]
+        data.push(`="${p.phone.replace(/^0/, '+33')}"`)
+        data.push(p.category+"/"+p.keywords)
+        data.push(p.name)
+        data.push(p.city)
+        data.push(p.zip_code)
+        result.push(data.join(';'))
+      })
+      res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+      res.set('Content-Disposition', `attachment; filename="export_${req.params.category}_${keywords}.csv"`)
+      res.send(result.join('\n'))
     })
-    res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    res.set('Content-Disposition', `attachment; filename="export_${req.params.category}_${keywords}.csv"`)
-    res.send(result.join('\n'))
   })
   .catch ()
 });
