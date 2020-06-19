@@ -361,7 +361,7 @@ class signup extends React.Component {
                   <Grid>
                     <Grid>
                       <Link href={'/needHelp/needHelp'} target="_blank">
-                        <a target="_blank">Besoin d'aide ? Prendez rendez-vous avec un technicien MyAlfred</a>
+                        <a target="_blank">Besoin d'aide pour proposer vos services ? Prenez rendez-vous avec l'équipe My Alfred ici.</a>
                       </Link>
                     </Grid>
                   </Grid>
