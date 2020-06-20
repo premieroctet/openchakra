@@ -30,6 +30,7 @@ class creaShop extends React.Component {
     this.state={
       activeStep: 0,
       user_id: null,
+      saving: false,
       shop:{
         booking_request: true,     // true/false
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
@@ -98,6 +99,7 @@ class creaShop extends React.Component {
   }
 
   nextDisabled() {
+
     let shop = this.state.shop;
     let pageIndex = this.state.activeStep;
     if (pageIndex===0) { return creaShopPresentation() }
@@ -106,7 +108,7 @@ class creaShop extends React.Component {
     if (pageIndex===3) { return settingService(shop) }
     if (pageIndex===5) { return assetsService(shop) }
     if (pageIndex===8) { return settingShop(shop) }
-    if (pageIndex===9) { return introduceYou(shop) }
+    if (pageIndex===9) { return this.state.saving || introduceYou(shop) }
     return false;
   }
 
@@ -137,6 +139,7 @@ class creaShop extends React.Component {
     }
     // last page => post
     else {
+      this.setState({saving: true})
       let cloned_shop = _.cloneDeep(this.state.shop);
       console.log("CreaShop:sending shop "+JSON.stringify(cloned_shop, null, 2));
       Object.keys(cloned_shop.prestations).forEach(key => { if (key<0) cloned_shop.prestations[key]._id = null });
@@ -182,6 +185,7 @@ class creaShop extends React.Component {
           Router.push(`/shop?id_alfred=${this.state.user_id}`);
       })
       .catch(err => {
+        this.setState({saving: false})
         toast.error(err);
       })
 
@@ -258,15 +262,19 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
-  introduceChanged(is_particular, company, is_certified) {
+  introduceChanged(is_particular, company, is_certified, cesu, cis) {
     let shop=this.state.shop;
     shop.is_particular=is_particular;
     shop.is_certified=is_certified;
     if (is_particular) {
       shop.company=null;
+      shop.cesu = cesu
+      shop.cis=false
     }
     else {
       shop.company=company;
+      shop.cesu=null
+      shop.cis=cis
     }
     this.setState({shop: shop});
   }
