@@ -77,8 +77,8 @@ const filterServicesGPS = (serviceUsers, coordinates, restrict) => {
 const filterServicesKeyword = (serviceUsers, keyword) => {
   const regexp = createRegExp(keyword)
   const filteredServices = serviceUsers.filter( su => {
-      return regexp.test(su.service.s_label) ||
-             regexp.test(su.service.category.s_label) ||
+      return regexp.test(su.service ? su.service.s_label : '') ||
+             regexp.test(su.service ? su.service.category.s_label : '') ||
              su.prestations.some(p => p.prestation  &&
                (regexp.test(p.prestation.s_label) ||
                (p.prestation.job && regexp.test(p.prestation.job.s_label)))
