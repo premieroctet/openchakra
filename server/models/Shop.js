@@ -82,7 +82,7 @@ const ShopSchema = new Schema({
     // particulier CESU : oblige, accepte, refuse
     cesu : {
         type: String,
-        enum: CESU,
+        enum: [...CESU, null],
         default: 'Disabled',
     },
     // Eligible au crédit impôt service
