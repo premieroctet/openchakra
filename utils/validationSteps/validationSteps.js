@@ -1,5 +1,6 @@
 import isEmpty from '../../server/validation/is-empty';
-
+const {CESU}=require('../consts')
+const {checkSocialSecurity}=require('../social_security')
 const creaShopPresentation = () => {
   return false;
 };
@@ -37,10 +38,17 @@ const settingShop = (shop) =>{
 };
 
 const introduceYou = (shop) =>{
-  if (shop.is_particular===true) {
+  if (shop.is_particular) {
     if (!shop.cesu) {
       return true
     }
+    if ([CESU[0], CESU[1]].includes(shop.cesu)) {
+      const res=checkSocialSecurity(shop.social_security)
+      if (res) {
+        return true
+      }
+    }
+    return false
   }
   // Pro
   if (shop.company==null) return true;

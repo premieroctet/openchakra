@@ -34,8 +34,9 @@ import Siret from '../../components/WizardForm/Siret';
 const {CESU}=require('../../utils/consts')
 import {Radio, RadioGroup } from '@material-ui/core';
 import ButtonSwitch from '../../components/ButtonSwitch/ButtonSwitch';
+const {Information}=require('../../components/Information')
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
-
+const I18N = require('../../utils/i18n')
 const {checkSocialSecurity}=require('../../utils/social_security')
 
 moment.locale('fr');
@@ -122,11 +123,13 @@ class trustAndVerification extends React.Component {
             smsError: null,
             cesu: null,
             cis: false,
+            notice: false,
         };
         this.editSiret = this.editSiret.bind(this);
         this.callDrawer = this.callDrawer.bind(this)
         this.onSiretChange = this.onSiretChange.bind(this)
         this.statusSaveDisabled = this.statusSaveDisabled.bind(this)
+        this.displayInfo = this.displayInfo.bind(this)
     }
 
     componentDidMount() {
@@ -384,6 +387,10 @@ class trustAndVerification extends React.Component {
       return false
     }
 
+    displayInfo = () => {
+      toast.error('test')
+    }
+
     render() {
         const {classes} = this.props;
         const {user, ext, ext2, professional, alfred, cesu} = this.state;
@@ -632,13 +639,20 @@ class trustAndVerification extends React.Component {
                                                 <Button type={"submit"} color={"secondary"} variant={"contained"} style={{color:"white"}}>Enregistrer</Button>
                                             </Grid>
                                         }
-                                    </form>
+                                  </form>
                                 </Grid>
 
                             </Grid>
                             {alfred ?
                                 <React.Fragment><Grid container>
                                     <h2 style={{fontWeight:'100'}}>Votre statut</h2>
+                                    &nbsp;
+                                    <img src="/static/assets/img/info.svg" width={16} onClick={() => this.setState({notice: true})}/>
+                                    <Information
+                                      open={this.state.notice}
+                                      onClose={() => this.setState({notice: false})}
+                                      text={ I18N.CESU_NOTICE }
+                                    />
                                 </Grid>
                                     <Grid container>
                                         <Grid item xs={12}>
@@ -660,10 +674,11 @@ class trustAndVerification extends React.Component {
                                         { this.state.particular ?
                                           <Grid style={{ marginLeft:40}}>
                                           <RadioGroup name={'cesu'} value={cesu} onChange={this.onChange}>
-                                          <Grid style={{ display: 'flex'}}>
                                             <div><Radio color="primary" value={CESU[0]}/>Je veux être déclaré(e) en CESU</div>
                                             { cesu==CESU[0] ?
-                                            <TextField
+                                              <Grid style={{ display: 'flex', marginLeft:40}}>
+                                              <div>N° sécurité sociale</div>&nbsp;
+                                              <TextField
                                               id="ss1"
                                               type="number"
                                               name='social_security'
@@ -672,12 +687,13 @@ class trustAndVerification extends React.Component {
                                               onChange={ this.onChange}
                                               errors={this.state.social_security}
                                             />
+                                            </Grid>
                                             :
                                              null}
-                                            </Grid>
-                                            <Grid style={{ display: 'flex'}}>
                                               <div><Radio color="primary" value={CESU[1]}/>J'accepte d'être déclaré en CESU</div>
                                               { cesu==CESU[1] ?
+                                                <Grid style={{ display: 'flex', marginLeft:40}}>
+                                                <div>N° sécurité sociale</div>&nbsp;
                                               <TextField
                                                 id="ss2"
                                                 type="number"
@@ -687,10 +703,10 @@ class trustAndVerification extends React.Component {
                                                 onChange={ this.onChange}
                                                 errors={this.state.social_security}
                                               />
+                                              </Grid>
                                               :
                                               null}
-                                              </Grid>
-                                            <div><Radio color="primary" value={CESU[2]}/>Je n'accepte pas d'être déclaré(e) en CESU RAJOUT TOOLTIP</div>
+                                              <div><Radio color="primary" value={CESU[2]}/>Je n'accepte pas d'être déclaré(e) en CESU</div>
                                           </RadioGroup>
                                           </Grid>
                                           : null

@@ -58,6 +58,9 @@ class creaShop extends React.Component {
         service_address: null,
         perimeter: 10,
         availabilities: [createDefaultAvailability()],
+        cesu: null,
+        cis: false,
+        social_security: null,
       },
     };
     this.onServiceChanged = this.onServiceChanged.bind(this);
@@ -258,7 +261,7 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
-  introduceChanged(is_particular, company, is_certified, cesu, cis) {
+  introduceChanged(is_particular, company, is_certified, cesu, cis, social_security) {
     let shop=this.state.shop;
     shop.is_particular=is_particular;
     shop.is_certified=is_certified;
@@ -266,6 +269,7 @@ class creaShop extends React.Component {
       shop.company=null;
       shop.cesu = cesu
       shop.cis=false
+      shop.social_security=social_security
     }
     else {
       shop.company=company;
