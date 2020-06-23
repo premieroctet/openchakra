@@ -577,7 +577,7 @@ router.post('/search',(req,res)=> {
     })
     .catch( err => {
       console.error(err)
-      res.json(err)
+      res.status(404).json(err)
     })
 })
 
