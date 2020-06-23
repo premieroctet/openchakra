@@ -85,10 +85,16 @@ class DetailsReservation extends React.Component {
         });
         this.socket.on("displayStatus", data => {
           this.setState({bookingObj: data})
+        })
       })
-    }).catch(error => { console.log(error) })
-    }).catch(error => {
+      .catch(error => { console.log(error) })
+    })
+    .catch(error => {
       console.log(error)
+      if(error.response && error.response.status === 401 || error.response.status === 403) {
+          localStorage.removeItem('token');
+          Router.push({pathname: '/login'})
+      }
     });
 
   }
