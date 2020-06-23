@@ -273,10 +273,6 @@ class SearchPage extends React.Component {
        }
 
        axios.post('/myAlfred/api/serviceUser/search', filters)
-         .catch (err => {
-           console.error(err)
-           this.setState({searching : false})
-         })
          .then(res => {
            let serviceUsers = res.data;
            this.setState({serviceUsers:serviceUsers, serviceUsersDisplay:serviceUsers});
@@ -300,6 +296,10 @@ class SearchPage extends React.Component {
                this.setState({searching : false})
              })
          })
+         .catch (err => {
+           console.error(err)
+           this.setState({searching : false})
+         })
     }
 
     statusFilterToggled(){
@@ -320,7 +320,7 @@ class SearchPage extends React.Component {
 
     restrictServices(serviceUsers, category) {
       const nbToDisplay=this.state.catCount[category._id];
-      return serviceUsers.filter( s => s.service.category._id === category._id).slice(0, nbToDisplay);
+      return serviceUsers.filter( s => s.service && s.service.category && s.service.category._id === category._id).slice(0, nbToDisplay);
     }
 
     hasMoreToDisplay(serviceUsers, category) {

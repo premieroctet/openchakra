@@ -558,7 +558,7 @@ router.post('/search',(req,res)=> {
         sus = sus.filter( su => su.service._id.toString()==service );
       }
       if (prestation) {
-        sus = sus.filter( su => su.prestations.some( p => p.prestation._id.toString()==prestation))
+        sus = sus.filter( su => su.prestations.some( p => p.prestation && p.prestation._id.toString()==prestation))
       }
       if (kw) {
         sus = filterServicesKeyword(sus, kw)
