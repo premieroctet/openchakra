@@ -4,7 +4,8 @@ const CESU_NOTICE="Quel que soit votre statut, My Alfred est tenu de déclarer\
   <ul><li>vos revenus dépassent 3000 euros</li>\
   <li>vous avez réalisé vingt prestations ou plus</li></ul>"
 
+const OUTSIDE_PERIMETER="Ce service est hors de votre périmètre"
 
 module.exports={
-  CESU_NOTICE,
+  CESU_NOTICE, OUTSIDE_PERIMETER
 };
