@@ -1,8 +1,10 @@
 import React, { memo } from 'react'
 import DragItem from './DragItem'
 import { useSelector } from 'react-redux'
-import { getProxyComponent } from '../../core/selectors/components'
-import { RootState } from '../../core/store'
+import {
+  getProxyComponent,
+  getUserComponentsIds,
+} from '../../core/selectors/components'
 
 const Item: React.FC<{ userComponentId: string }> = ({ userComponentId }) => {
   let component = useSelector(getProxyComponent(userComponentId))
@@ -21,14 +23,12 @@ const Item: React.FC<{ userComponentId: string }> = ({ userComponentId }) => {
 }
 
 const UserComponentsMenu = () => {
-  const userComponentIds = useSelector(
-    (state: RootState) => state.components.present.userComponentIds,
-  )
+  const userComponentIds = useSelector(getUserComponentsIds)
 
   return (
     <>
       {userComponentIds.map(id => (
-        <Item userComponentId={id} />
+        <Item key={id} userComponentId={id} />
       ))}
     </>
   )

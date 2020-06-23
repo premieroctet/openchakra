@@ -47,6 +47,15 @@ const components = createModel({
         userComponentIds: [],
       }
     },
+    resetUserComponents(
+      state: ComponentsState,
+      userComponentIds: string[],
+    ): ComponentsState {
+      return {
+        ...state,
+        userComponentIds,
+      }
+    },
     loadDemo(state: ComponentsState, type: TemplateType): ComponentsState {
       return {
         ...state,
@@ -310,6 +319,33 @@ const components = createModel({
           }
           draftState.components[parentElement.id].children.push(newId)
         }
+      })
+    },
+    detachUserComponent(state: ComponentsState): ComponentsState {
+      return produce(state, (draftState: ComponentsState) => {
+        const selectedComponent = draftState.components[draftState.selectedId]
+        const masterComponent =
+          draftState.components[selectedComponent.instanceOf!]
+
+        const parentElement = draftState.components[selectedComponent.parent]
+
+        const { newId, clonedComponents } = duplicateComponent(
+          masterComponent,
+          draftState.components,
+        )
+
+        delete draftState.components[selectedComponent.id]
+
+        draftState.components = {
+          ...draftState.components,
+          ...clonedComponents,
+        }
+
+        const childIdx = draftState.components[
+          parentElement.id
+        ].children.findIndex(child => child === selectedComponent.id)
+        draftState.components[parentElement.id].children[childIdx] = newId
+        draftState.selectedId = newId
       })
     },
     hover(

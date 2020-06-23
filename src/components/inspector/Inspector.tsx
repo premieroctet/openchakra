@@ -34,6 +34,7 @@ import ActionButton from './ActionButton'
 import { generateComponentCode } from '../../utils/code'
 import useClipboard from '../../hooks/useClipboard'
 import { useInspectorUpdate } from '../../contexts/inspector-context'
+import { FaUnlink } from 'react-icons/fa'
 
 const CodeActionButton = memo(() => {
   const [isLoading, setIsLoading] = useState(false)
@@ -102,6 +103,8 @@ const Inspector = () => {
   const docType = rootParentType || type
   const componentHasChildren = children.length > 0
 
+  const isUserComponent = !!component.instanceOf
+
   useEffect(() => {
     clearActiveProps()
   }, [clearActiveProps])
@@ -134,6 +137,13 @@ const Inspector = () => {
             flexWrap="wrap"
             justify="flex-end"
           >
+            {isUserComponent && (
+              <ActionButton
+                label="Detach"
+                icon={FaUnlink}
+                onClick={() => dispatch.components.detachUserComponent()}
+              />
+            )}
             <CodeActionButton />
             <ActionButton
               label="Duplicate"

@@ -1,7 +1,7 @@
 import { fileOpen, fileSave } from 'browser-nativefs'
 import { INITIAL_COMPONENTS } from '../core/models/components'
 
-export async function loadFromJSON() {
+export async function loadFromJSON<T extends object>() {
   const blob = await fileOpen({
     extensions: ['json'],
     mimeTypes: ['application/json'],
@@ -18,14 +18,19 @@ export async function loadFromJSON() {
   })
 
   try {
-    return JSON.parse(contents)
+    return JSON.parse(contents) as T
   } catch (error) {}
 
-  return INITIAL_COMPONENTS
+  return {
+    components: INITIAL_COMPONENTS,
+  } as T
 }
 
-export async function saveAsJSON(components: IComponents) {
-  const serialized = JSON.stringify(components)
+export async function saveAsJSON(
+  components: IComponents,
+  userComponents: string[],
+) {
+  const serialized = JSON.stringify({ components, userComponents })
   const name = `components.json`
 
   await fileSave(

@@ -13,6 +13,9 @@ export const getUserComponents = (state: RootState) => {
   return userComponents
 }
 
+export const getUserComponentsIds = (state: RootState) =>
+  state.components.present.userComponentIds
+
 // Component selectors
 
 export const getProxyComponent = (id: string | IComponent['id']) => (
@@ -79,8 +82,6 @@ export const getIsPartOfUserComponent = (id: IComponent['id']) => (
     component,
     state.components.present.components,
   )
-
-  console.log('parents', parents, component.type)
 
   return userComponentIds.some(userComponentId =>
     parents.includes(userComponentId),

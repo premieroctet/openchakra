@@ -16,7 +16,10 @@ import {
 import useDispatch from '../hooks/useDispatch'
 import { loadFromJSON, saveAsJSON } from '../utils/import'
 import { useSelector } from 'react-redux'
-import { getComponents } from '../core/selectors/components'
+import {
+  getComponents,
+  getUserComponentsIds,
+} from '../core/selectors/components'
 import { FaBomb, FaSave } from 'react-icons/fa'
 import { GoRepo } from 'react-icons/go'
 import { FiUpload } from 'react-icons/fi'
@@ -42,9 +45,10 @@ const CustomMenuButton: React.FC<
 
 const ExportMenuItem = () => {
   const components = useSelector(getComponents)
+  const userComponents = useSelector(getUserComponentsIds)
 
   return (
-    <MenuItem onClick={() => saveAsJSON(components)}>
+    <MenuItem onClick={() => saveAsJSON(components, userComponents)}>
       <Box mr={2} as={FaSave} />
       Save components
     </MenuItem>
@@ -69,8 +73,14 @@ const HeaderMenu = () => {
           <ExportMenuItem />
           <MenuItem
             onClick={async () => {
-              const components = await loadFromJSON()
+              const { components, userComponents } = await loadFromJSON<{
+                components: IComponents
+                userComponents?: string[]
+              }>()
               dispatch.components.reset(components)
+              if (userComponents) {
+                dispatch.components.resetUserComponents(userComponents)
+              }
             }}
           >
             <Box mr={2} as={FiUpload} />
