@@ -510,7 +510,7 @@ router.post('/login',(req, res)=> {
                         // User matched
                         const payload = {id: user.id, name: user.name, firstname: user.firstname, is_admin: user.is_admin, is_alfred: user.is_alfred}; // Create JWT payload
                         // Sign token
-                        jwt.sign(payload, keys.secretOrKey, (err, token) => {
+                        jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
                             res.json({success: true, token: 'Bearer ' + token});
                         });
                     } else {

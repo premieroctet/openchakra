@@ -20,7 +20,6 @@ const UserSchema = new Schema({
     },
     password: {
         type: String,
-        required: true
     },
     birthday: {
         type: Date,
@@ -296,6 +295,14 @@ const UserSchema = new Schema({
       default: function() {
         return null;
       }
+    },
+    external_auth: {
+        provider: {
+            type: String
+        },
+        id: {
+            type: String
+        }
     }
 });
 

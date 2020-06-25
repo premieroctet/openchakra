@@ -1,6 +1,5 @@
 const express = require('express');
 const next = require('next');
-
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const dev = process.env.NODE_DEV !== 'production'; //true false
@@ -15,6 +14,7 @@ const { config } = require('../config/config');
 const http = require('http')
 const https = require('https')
 const fs = require('fs')
+const authRoutes = require("./routes/api/authentication");
 const users = require('./routes/api/users');
 const category = require('./routes/api/category');
 const billing = require('./routes/api/billing');
@@ -67,7 +67,7 @@ const SERVER_PROD=true;
 
 
 // DB config
-   // const db = require('./config/keys').mongoUri;
+   // const db = require('./config/keys').MONGODB.mongoUri;
 
 // Connect to MongoDB
     mongoose.connect(config.databaseUrl,{useNewUrlParser: true})
@@ -82,7 +82,7 @@ const SERVER_PROD=true;
 
 
 // Passport config
-    require('./config/passport')(passport);
+    require('./config/passport');
 
     app.use(cors());
 
@@ -114,6 +114,15 @@ const SERVER_PROD=true;
     app.use('/myAlfred/api/performances',performances);
     app.use('/myAlfred/api/payment',payment);
     app.use('/myAlfred/api/touch',touch);
+    app.use('/myAlfred/api/authentication', authRoutes)
+
+    const authCheck = (req, res, next) => {
+        next();
+    };
+
+//    app.get("/", authCheck, (req, res) => {
+//        res.status(200)
+//    });
 
     //const port = process.env.PORT || 5000;
     const rootPath = require('path').join(__dirname, '/..')

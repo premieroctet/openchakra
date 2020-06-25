@@ -12,6 +12,9 @@ import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 import {Helmet} from 'react-helmet';
+import OAuth from '../components/OAuth'
+
+const providers = ['google']
 
 const styles = theme => ({
   fullContainer: {
@@ -193,6 +196,17 @@ class login extends React.Component {
                 <Grid item style={{display:'flex',flexDirection:'column'}}>
                   <Link href={"/forgotPassword"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Mot de passe oublié ?</a></Link>
                   <Link href={"/signup"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Pas encore inscrit ? Inscrivez-vous !</a></Link>
+                </Grid>
+                <Grid item style={{display:'flex',flexDirection:'column'}}>
+                  <hr/>
+                  <div>
+                    {providers.map(provider =>
+                        <OAuth
+                            provider={provider}
+                            key={provider}
+                        />
+                    )}
+                  </div>
                 </Grid>
               </Grid>
             </Card>
