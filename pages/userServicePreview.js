@@ -46,12 +46,13 @@ import fr from 'date-fns/locale/fr';
 import Switch from '@material-ui/core/Switch';
 import BookingDetail from '../components/BookingDetail/BookingDetail';
 import {Helmet} from 'react-helmet';
-import {toast} from 'react-toastify';
 const moment = require('moment');
 moment.locale('fr');
 registerLocale('fr', fr);
 import Link from 'next/link';
 const {frenchFormat}=require('../utils/text')
+const {Information}=require('../components/Information')
+const I18N=require('../utils/i18n')
 
 
 const IOSSwitch = withStyles(theme => ({
@@ -150,7 +151,8 @@ class UserServicesPreview extends React.Component {
         reactive:0,
       },
       errors:{},
-      isChecked: false
+      isChecked: false,
+      warningPerimeter:false,
     },
     this.onQtyChanged = this.onQtyChanged.bind(this);
     this.checkBook = this.checkBook.bind(this);
@@ -168,84 +170,77 @@ class UserServicesPreview extends React.Component {
     localStorage.setItem("path", Router.pathname);
     axios.defaults.headers.common["Authorization"] = localStorage.getItem("token")
     axios.get(`/myAlfred/api/serviceUser/${id}`)
-      .then(res => {
-      let serviceUser = res.data;
-      var count = {}
-      serviceUser.prestations.forEach( p => count[p._id]=0);
+    .then(res => {
 
-      if (bookingObj) {
-        serviceUser.prestations.forEach( p => {
-          const bookP=bookingObj.prestations.find( bp => {
-            return bp.name==p.prestation.label
-          })
-          if (bookP) {
-            count[p._id]=parseInt(bookP.value)
-          }
-        });
-
-        this.setState({
-          date: moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate(),
-          time: moment(bookingObj.time_prestation).toDate(),
-          location: bookingObj.location,
-          commission: bookingObj.fees,
-        })
-      }
-
-      this.setState({
-        serviceUser: serviceUser,
-        service: serviceUser.service,
-        equipments: serviceUser.equipments,
-        prestations: serviceUser.prestations,
-        allEquipments : serviceUser.service.equipments,
-        alfred: serviceUser.user,
-        count: count,
-        //location: location,
-        pick_tax: null,
-      }, () => {
-        if (!bookingObj) this.setDefaultLocation()
-      });
-
-
-      axios.get('/myAlfred/api/reviews/'+serviceUser.user._id)
-        .then(response => {
-          const skills=response.data;
-          this.setState({skills:skills});
-        })
-        .catch(function(error){ console.error(error); });
-      axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
+        axios.get("/myAlfred/api/users/current")
         .then(res => {
-          let availabilities = res.data;
-          this.setState({ availabilities: availabilities });
+          let user = res.data;
+          this.setState({ user: user, });
         })
-        .catch(err => console.log(err));
-      axios.get("/myAlfred/api/shop/alfred/" + this.state.alfred._id).then(res => {
-        let shop = res.data;
-        this.setState({
-          shop: shop,
-          flexible: shop.flexible_cancel,
-          moderate: shop.moderate_cancel,
-          strict: shop.strict_cancel,
-        });
-      })
-      .catch(err => console.error(err));
-      })
-      .catch(err =>{
-        console.error(err)
-      });
-    axios.get("/myAlfred/api/users/current")
-      .then(res => {
-        let user = res.data;
-        this.setState({ user: user, });
-      })
-      .catch(err => {
-        console.error(err);
-        /**
-        if (err.response.status === 401 || err.response.status === 403) {
-          localStorage.removeItem("token");
-          Router.push({ pathname: "/login" });
-        }
-        */
-      });
+        .catch(err => console.error(err))
+        .finally ( () => {
+
+          let serviceUser = res.data;
+          var count = {}
+          serviceUser.prestations.forEach( p => count[p._id]=0);
+
+          if (bookingObj) {
+            serviceUser.prestations.forEach( p => {
+              const bookP=bookingObj.prestations.find( bp => {
+                return bp.name==p.prestation.label
+              })
+              if (bookP) {
+                count[p._id]=parseInt(bookP.value)
+              }
+            });
+          }
+
+          axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
+            .then(res => {
+              let availabilities = res.data;
+              this.setState({ availabilities: availabilities });
+            })
+            .catch(err => console.log(err));
+
+          axios.get('/myAlfred/api/reviews/'+serviceUser.user._id)
+            .then(response => {
+              const skills=response.data;
+              this.setState({skills:skills});
+            })
+            .catch(error =>  console.error(error));
+
+          axios.get("/myAlfred/api/shop/alfred/" + serviceUser.user._id)
+            .then(res => {
+              let shop = res.data;
+              this.setState({
+                shop: shop,
+                flexible: shop.flexible_cancel,
+                moderate: shop.moderate_cancel,
+                strict: shop.strict_cancel,
+              });
+            })
+            .catch(err => console.error(err));
+
+          this.setState({
+            serviceUser: serviceUser,
+            service: serviceUser.service,
+            equipments: serviceUser.equipments,
+            prestations: serviceUser.prestations,
+            allEquipments : serviceUser.service.equipments,
+            alfred: serviceUser.user,
+            count: count,
+            pick_tax: null,
+            date: bookingObj ? moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate() : null,
+            time: bookingObj ? moment(bookingObj.time_prestation).toDate() : null,
+            location: bookingObj ? bookingObj.location : null,
+            commission: bookingObj ? bookingObj.fees : null,
+          }, () => {
+            if (!bookingObj) this.setDefaultLocation()
+          });
+
+        })
+    })
+    .catch(err =>console.error(err))
 
     localStorage.removeItem("bookingObj")
     setTimeout(() => {this.computeTotal()}, 3000);
@@ -254,8 +249,10 @@ class UserServicesPreview extends React.Component {
   setDefaultLocation = () => {
     const serviceUser = this.state.serviceUser;
     const user = this.state.user;
-    var location = serviceUser.location.client && this.isInPerimeter() ? "client" : serviceUser.location.alfred ? "alfred" : serviceUser.location.visio ? "visio" : null;
-    if (location==null) { toast.error('Ce service est hors de votre périmètre')}
+    var location = serviceUser.location.client && (!user || this.isInPerimeter()) ? "client" : serviceUser.location.alfred ? "alfred" : serviceUser.location.visio ? "visio" : null;
+    if (location==null && user) {
+      this.setState({warningPerimeter: true})
+    }
     this.setState({location: location});
   }
 
@@ -299,7 +296,6 @@ class UserServicesPreview extends React.Component {
     if (reservationDate && reservationDate.isBefore(moment())) { errors['datetime']='Réservation impossible avant maintenant'}
 
     if (!this.state.location) { errors['location']='Sélectionnez un lieu de prestation'}
-    console.log(`Errors:${JSON.stringify(errors)}`)
     this.setState({errors:errors});
   }
 
@@ -394,11 +390,12 @@ class UserServicesPreview extends React.Component {
   }
 
   isInPerimeter = () => {
-    if (isEmpty(this.state.serviceUser)||isEmpty(this.state.user)) { return true}
+    if (isEmpty(this.state.serviceUser)||isEmpty(this.state.user)) { return false}
     const coordSU = this.state.serviceUser.service_address.gps;
     const coordUser = this.state.user.billing_address.gps;
     const dist=computeDistanceKm(coordSU, coordUser);
-    return dist<this.state.serviceUser.perimeter;
+    const inPerimeter=dist<this.state.serviceUser.perimeter;
+    return inPerimeter;
   }
 
   getLocationLabel = () => {
@@ -830,6 +827,12 @@ class UserServicesPreview extends React.Component {
             </Helmet>
       <Grid>
         <Layout>
+          <Information
+            open={this.state.warningPerimeter}
+            onClose={() => this.setState({warningPerimeter: false})}
+            type='warning'
+            text={ I18N.OUTSIDE_PERIMETER }
+          />
           <Grid style={{width: '100%'}}>
             <BannerReservation serviceUser={service} shop={shop} user={alfred}/>
             <Grid className={classes.mainContainer}>

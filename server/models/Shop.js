@@ -82,7 +82,7 @@ const ShopSchema = new Schema({
     // particulier CESU : oblige, accepte, refuse
     cesu : {
         type: String,
-        enum: CESU,
+        enum: [...CESU, null],
         default: 'Disabled',
     },
     // Eligible au crédit impôt service
@@ -98,6 +98,10 @@ const ShopSchema = new Schema({
     id_mangopay: {
         type: String
     },
+    // SS number
+    social_security: {
+      type: String,
+    }
 });
 
 module.exports = Shop = mongoose.model('shop',ShopSchema);

@@ -114,24 +114,27 @@ class all extends React.Component {
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
-
+        this.load = this.load.bind(this);
     }
 
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        axios.get("/myAlfred/api/admin/prospect/all")
-            .then((response) => {
-              console.log(`Prospects:${JSON.stringify(response.data)}`)
-                this.setState({prospects: response.data})
-            }).catch((error) => {
-              console.log(error);
-              if(error.response.status === 401 || error.response.status === 403) {
-                  localStorage.removeItem('token');
-                  Router.push({pathname: '/login'})
-              }
-        });
+        this.load()
+    }
+
+    load() {
+      axios.get("/myAlfred/api/admin/prospect/all")
+          .then((response) => {
+              this.setState({prospects: response.data})
+          }).catch((error) => {
+            console.log(error);
+            if(error.response.status === 401 || error.response.status === 403) {
+                localStorage.removeItem('token');
+                Router.push({pathname: '/login'})
+            }
+      });
     }
 
     handleChangePage(event, page) {
@@ -169,7 +172,8 @@ class all extends React.Component {
                                                 <TableCell>Catégorie</TableCell>
                                                 <TableCell># prospects</TableCell>
                                                 <TableCell># contactés</TableCell>
-                                                <TableCell>non contactés</TableCell>
+                                                <TableCell># non contactés</TableCell>
+                                                <TableCell>A contacter</TableCell>
                                                 </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -177,7 +181,7 @@ class all extends React.Component {
                                                 .map((p,index) =>
                                                     <TableRow key={index}>
                                                         <TableCell component="th" scope="row">
-                                                            {p.category.replace('_', ' ')}
+                                                            {p.category.replace(/_/g, ' ')}
                                                         </TableCell>
                                                         <TableCell component="th" scope="row">
                                                           { p.count}
@@ -185,8 +189,21 @@ class all extends React.Component {
                                                         <TableCell component="th" scope="row">
                                                           { p.contacted}
                                                         </TableCell>
+                                                        <TableCell component="th" scope="row">
+                                                          { p.not_contacted}
+                                                        </TableCell>
                                                         <TableCell>
-                                                          <Link href={`/myAlfred/api/admin/prospect/tocontact/${p.category}`} >Download</Link>
+                                                          { p.not_contacted ?
+                                                          <a href={`/myAlfred/api/admin/prospect/tocontact/${p.category}`}
+                                                            onClick={
+                                                              () => setTimeout(this.load, 2000)
+                                                            }
+                                                          >
+                                                            { `Liste ${p.category.replace(/_/g, ' ')}` }
+                                                          </a>
+                                                          :
+                                                          <div>Aucun nouveau contact</div>
+                                                          }
                                                         </TableCell>
                                                     </TableRow>
                                                 )}

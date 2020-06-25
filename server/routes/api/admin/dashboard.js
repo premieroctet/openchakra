@@ -4,7 +4,7 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-
+const moment=require('moment')
 
 const validateBillingInput = require('../../../validation/billing');
 const Billing = require('../../../models/Billing');
@@ -96,22 +96,33 @@ router.get('/shops/extract',passport.authenticate('jwt',{session:false}),(req,re
 // @Route GET /myAlfred/api/admin/prospect/tocontact
 // View all billings system
 // @Access public
-router.get('/prospect/tocontact/:category',(req,res)=> {
+router.get('/prospect/tocontact/:category/:keywords?',(req,res)=> {
+  const keywords=req.params.keywords || ''
   var result=[]
-  Prospect.find({$and : [{ category: req.params.category}, { $or : [{ contacted : false}, { contacted : null}]}]})
+  Prospect.find(
+    {$and : [{ category: req.params.category, keywords: keywords}, { $or : [{ contacted : false}, { contacted : null}]}]}
+  )
+  .sort({category: 1})
   .then( prospects => {
-    prospects.forEach ( p => {
-      data=[]
-      data.push(`="${p.phone.replace(/^0/, '+33')}"`)
-      data.push(p.category)
-      data.push(p.name)
-      data.push(p.city)
-      data.push(p.zip_code)
-      result.push(data.join(';'))
+    Prospect.updateMany(
+      {$and : [{ category: req.params.category, keywords: keywords}, { $or : [{ contacted : false}, { contacted : null}]}]},
+      { contacted : true }
+    )
+    .then ( dummy => {
+      prospects.forEach ( p => {
+        data=[]
+        data.push(`="${p.phone.replace(/^0/, '+33')}"`)
+        data.push(p.category+"/"+p.keywords)
+        data.push(p.name)
+        data.push(p.city)
+        data.push(p.zip_code)
+        result.push(data.join(';'))
+      })
+      const filename=`export_${req.params.category}_${keywords}_${moment().format('DDMMYYHHmm')}.csv`
+      res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+      res.set('Content-Disposition', `attachment; filename="${filename}"`)
+      res.send(result.join('\n'))
     })
-    res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    res.set('Content-Disposition', `attachment; filename="export_${req.params.category}.csv"`)
-    res.send(result.join('\n'))
   })
   .catch ()
 });
@@ -2325,6 +2336,7 @@ router.get('/prospect/all',passport.authenticate('jwt',{session:false}),(req,res
   if(admin) {
     // TODO: Use aggregate
     Prospect.find()
+      .sort({category: 1, keywords:1})
       .catch(err => {
         console.error(err)
         res.status(404).json({prospects: 'Error'})
@@ -2333,13 +2345,14 @@ router.get('/prospect/all',passport.authenticate('jwt',{session:false}),(req,res
         counts={}
         contacted={}
         prospects.forEach( p => {
-          counts[p.category] = counts.hasOwnProperty(p.category) ? counts[p.category]+1 : 1
+          const key=`${p.category}/${p.keywords}`
+          counts[key] = counts.hasOwnProperty(key) ? counts[key]+1 : 1
           const contact = p.contacted ? 1 : 0
-          contacted[p.category] = contacted.hasOwnProperty(p.category) ? contacted[p.category]+ contact : contact
+          contacted[key] = contacted.hasOwnProperty(key) ? contacted[key]+ contact : contact
         });
         var result=[]
         Object.keys(counts).forEach(key => {
-          result.push({category: key, count : counts[key], contacted: contacted[key]})
+          result.push({category: key, count : counts[key], contacted: contacted[key], not_contacted: counts[key]-contacted[key]})
         });
 
         res.json(result);

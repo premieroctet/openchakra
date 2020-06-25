@@ -75,6 +75,11 @@ class NewMessages extends React.Component {
     const { isAlfred } = this.state;
     const tabs = this.state.tabs;
 
+    const nbNew = this.state.alfredReservations.length + this.state.userReservations.length
+    const msgTitle =
+      nbNew==0 ? "Vous n'avez aucun nouveau message"
+      : nbNew==1 ? "Vous avez 1 nouveau message"
+        : `Vous avez ${nbNew} nouveaux messages`
     return (
       <Fragment>
         <Layout>
@@ -112,7 +117,7 @@ class NewMessages extends React.Component {
                   Mes messages non lus
                 </Typography>
                 <Typography style={{ fontSize: "0.8rem", marginBottom: "4%" }}>
-                  vous avez {this.state.alfredReservations.length + this.state.userReservations.length} nouveaux messages
+                  { msgTitle }
                 </Typography>
 
                 { isAlfred ?
