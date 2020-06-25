@@ -7,12 +7,12 @@ import { withStyles } from '@material-ui/core/styles';
 import Schedule from '../../components/Schedule/Schedule';
 import { toast } from 'react-toastify';
 import {Helmet} from 'react-helmet';
-import { SCHEDULE_SUBTITLE, SCHEDULE_TITLE } from '../../utils/messages';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 const {GID_LEN} = require('../../utils/consts')
 import styles from './myAvailabilities/myAvailabilitiesStyle'
 import Router from 'next/router';
+const I18N = require('../../utils/i18n')
 moment.locale('fr');
 
 class myAvailabilities extends React.Component {
@@ -181,7 +181,7 @@ class myAvailabilities extends React.Component {
                 }
                 <Grid container className={classes.containercalendar}>
                   <Grid style={{width:'90%'}}>
-                    <Schedule height={700} availabilities={this.state.availabilities} title={SCHEDULE_TITLE} subtitle={SCHEDULE_SUBTITLE} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} onUpdateAvailability={this.availabilityUpdate} selectable={true}/>
+                    <Schedule height={700} availabilities={this.state.availabilities} title={I18N.SCHEDULE_TITLE} subtitle={I18N.SCHEDULE_SUBTITLE} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} onUpdateAvailability={this.availabilityUpdate} selectable={true}/>
                   </Grid>
                 </Grid>
               </Layout>

@@ -21,14 +21,14 @@ import {ALF_CONDS, CANCEL_MODE, GID_LEN} from '../../utils/consts.js';
 import { toast } from 'react-toastify';
 import Router from "next/router";
 import {creaShopPresentation, selectService, selectPrestation, settingService, assetsService, settingShop, introduceYou} from '../../utils/validationSteps/validationSteps';
-import {SCHEDULE_SUBTITLE, SCHEDULE_TITLE} from '../../utils/messages'
 const {createDefaultAvailability}=require('../../utils/dateutils');
+const I18N = require('../../utils/i18n')
 
 class creaShop extends React.Component {
   constructor(props) {
         super(props);
     this.state={
-      activeStep: 0,
+      activeStep: 6,
       user_id: null,
       saving: false,
       shop:{
@@ -299,7 +299,7 @@ class creaShop extends React.Component {
       case 5:
         return <AssetsService data={shop} onChange={this.assetsChanged} type={"creaShop"}/>;
       case 6:
-        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} onUpdateAvailability={this.availabilityUpdated} title={SCHEDULE_TITLE} subtitle={SCHEDULE_SUBTITLE} selectable={true} height={700}/>;
+        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} onUpdateAvailability={this.availabilityUpdated} title={I18N.SCHEDULE_TITLE} subtitle={I18N.SCHEDULE_SUBTITLE} selectable={true} height={700}/>;
       case 7:
         return <BookingConditions conditions={shop.my_alfred_conditions} booking_request={shop.booking_request}  onChange={this.conditionsChanged} />;
       case 8:
