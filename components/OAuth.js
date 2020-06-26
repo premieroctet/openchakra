@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-const { getHost } = require('../utils/mailing')
-
+//import getHost from '../utils/mailing'
+const getHost = () => {return 'https://lvh.me/'}
 
 export default class OAuth extends Component {
 
@@ -12,8 +12,6 @@ export default class OAuth extends Component {
     }
 
     componentDidMount() {
-        this.popup.close()
-        this.setState({user})
     }
 
     checkPopup() {
