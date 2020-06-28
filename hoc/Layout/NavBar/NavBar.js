@@ -387,7 +387,7 @@ class NavBar extends Component {
                     <React.Fragment>
                       <React.Fragment>
                         <IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit">
-                          <UserAvatar user={user} className={classes.bigAvatar} />
+                          <UserAvatar user={user} className={classes.bigAvatar} warnings={true}/>
                         </IconButton>
                       </React.Fragment>
                     </React.Fragment>

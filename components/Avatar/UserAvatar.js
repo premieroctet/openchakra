@@ -24,15 +24,18 @@ class UserAvatar extends React.Component{
   componentDidMount() {
     const token = localStorage.getItem('token');
     if (token !== null) {
-      this.setState({ logged: true });
       const token2 = localStorage.getItem('token').split(' ')[1];
       const decode = jwt.decode(token2);
       const alfred_id = decode.id;
-      this.setState({currentUser: alfred_id})
-
-      // Check once then every 20s
-      this.checkWarnings(token)
-      setInterval(() => this.checkWarnings(token) , 20000)
+      this.setState({currentUser: alfred_id},
+        () => {
+          // Check once then every 20s
+          if (this.props.warnings==true) {
+            this.checkWarnings(token)
+            setInterval(() => this.checkWarnings(token) , 20000)
+          }
+        }
+      )
     }
   }
 
