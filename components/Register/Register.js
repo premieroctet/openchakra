@@ -18,6 +18,7 @@ import {withStyles} from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 
 registerLocale('fr', fr);
 
@@ -134,20 +135,27 @@ class Register extends React.Component{
             case 0:
                 return (
                     <Grid container>
-                        <Grid item style={{width: '100%'}}>
-                            <TextField
-                                label="Email"
-                                placeholder="Email"
-                                margin="normal"
-                                style={{ width: '100%' }}
-                                variant="outlined"
-                                type="email"
-                                name="email"
-                                value={this.state.email}
-                                onChange={this.onChange}
-                                error={errors.email}
-                            />
-                            <em style={{color:'red'}}>{errors.email}</em>
+                        <Grid className={classes.margin}>
+                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%'}}>
+                                <Grid item>
+                                    <AccountCircle />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        id="input-with-icon-grid"
+                                        label="Email"
+                                        placeholder="Email"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="email"
+                                        name="email"
+                                        value={this.state.email}
+                                        onChange={this.onChange}
+                                        error={errors.email}
+                                    />
+                                    <em style={{color:'red'}}>{errors.email}</em>
+                                </Grid>
+                            </Grid>
                         </Grid>
                         <Grid item style={{width: '100%'}}>
                             <TextField
@@ -363,9 +371,13 @@ class Register extends React.Component{
                 <Grid>
                     <Card>
                         <div className={classes.newContainer}>
-                            <div className={classes.banner}>
-                                <h2 className={classes.title}>Inscription</h2>
-                            </div>
+                            <Grid>
+                                <h2 style={{
+                                    textAlign: 'center', margin: '0px auto 1.6rem', fontSize: "1.6rem",
+                                    color: "rgba(84,89,95,0.95)",
+                                    letterSpacing: -1,
+                                    fontWeight: "bold"}}>Inscription</h2>
+                            </Grid>
                            <Grid styles={{width: '100%', height: '100%'}}>
                                {this.renderSwitch(activeStep, classes, errors)}
                            </Grid>
@@ -375,7 +387,7 @@ class Register extends React.Component{
                                     <p>Vous avez déjà un compte My Alfred ? </p>
                                 </Grid>
                                 <Grid item style={{paddingTop: 16, marginLeft: 5}}>
-                                    <Link href={'/login'}><a style={{color:'#68b7c5', textDecoration: 'none'}}>Connexion</a></Link>
+                                    <Button color={"primary"} onClick={this.props.callLogin}>Connexion</Button>
                                 </Grid>
 
                             </Grid>

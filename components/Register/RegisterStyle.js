@@ -8,22 +8,8 @@ export default theme => ({
         marginTop: 20,
         width: '100%'
     },
-    banner: {
-        marginBottom: 25,
-        backgroundColor: '#2FBCD3',
-        height: 80,
-
-    },
     newContainer: {
         padding: 10,
-    },
-    title: {
-        color: 'white',
-        display: 'flex',
-        justifyContent: 'center',
-        marginTop: 0,
-        paddingTop: 22,
-        letterSpacing: 1,
     },
     country: {
         width: '100%'
@@ -36,5 +22,9 @@ export default theme => ({
     rootStepper:{
         width: '100%',
         flexGrow: 1,
+    },
+    margin:{
+        margin: theme.spacing(1),
+        width: '100%'
     }
 })
