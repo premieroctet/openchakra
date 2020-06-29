@@ -1,7 +1,6 @@
 import React, { memo } from 'react'
 import FormControl from '~components/inspector/controls/FormControl'
 import {
-  Slider,
   SliderTrack,
   SliderThumb,
   NumberInput,
@@ -43,17 +42,16 @@ const AvatarGroupPanel = () => {
       </FormControl>
 
       <FormControl label="Spacing">
-        <Slider
+        <SliderTrack
           onChange={value => setValue('spacing', value)}
           min={-3}
           max={6}
           step={1}
           defaultValue={spacing}
         >
-          <SliderTrack />
           <SliderFilledTrack />
-          <SliderThumb />
-        </Slider>
+        </SliderTrack>
+        <SliderThumb />
       </FormControl>
 
       <FormControl label="max">

@@ -95,7 +95,7 @@ const Header = () => {
         </Flex>
 
         <Flex flexGrow={1} justifyContent="space-between" alignItems="center">
-          <Stack isInline spacing={4} justify="center" align="center">
+          <Stack direction="row" spacing={4} justify="center" align="center">
             <Box>
               <HeaderMenu />
             </Box>
@@ -119,7 +119,7 @@ const Header = () => {
               </Tooltip>
               <Switch
                 isChecked={showLayout}
-                color="teal"
+                colorScheme="teal"
                 boxSize="sm"
                 onChange={() => dispatch.app.toggleBuilderMode()}
                 id="preview"
@@ -133,7 +133,7 @@ const Header = () => {
               <Switch
                 isChecked={showCode}
                 id="code"
-                color="teal"
+                colorScheme="teal"
                 onChange={() => dispatch.app.toggleCodePanel()}
                 boxSize="sm"
               />

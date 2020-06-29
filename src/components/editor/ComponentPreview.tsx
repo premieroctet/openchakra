@@ -15,7 +15,7 @@ import * as Chakra from '@chakra-ui/core'
 import { getComponentBy } from '~core/selectors/components'
 import { InputRightElementPreview } from '~components/editor/previews/InputRightElement'
 import { InputLeftElementPreview } from '~components/editor/previews/InputLeftElement'
-import AspectRatioBoxPreview from '~components/editor/previews/AspectRatioBoxPreview'
+import AspectRatioPreview from '~components/editor/previews/AspectRatioBoxPreview'
 import PreviewContainer from '~components/editor/PreviewContainer'
 import WithChildrenPreviewContainer from '~components/editor/WithChildrenPreviewContainer'
 
@@ -136,8 +136,8 @@ const ComponentPreview: React.FC<{
       return <AccordionItemPreview component={component} />
     case 'AccordionPanel':
       return <AccordionPanelPreview component={component} />
-    case 'AspectRatioBox':
-      return <AspectRatioBoxPreview component={component} />
+    case 'AspectRatio':
+      return <AspectRatioPreview component={component} />
     default:
       return null
   }

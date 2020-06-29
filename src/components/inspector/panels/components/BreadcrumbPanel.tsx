@@ -7,7 +7,6 @@ const BreadcrumbPanel = () => {
     <>
       <TextControl name="separator" label="Separator" />
       <TextControl name="spacing" label="Spacing" />
-      <SwitchControl label="With separator" name="addSeparator" />
     </>
   )
 }

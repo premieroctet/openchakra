@@ -8,7 +8,6 @@ import {
   PseudoBox,
   PopoverBody,
   IconButton,
-  Slider,
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
@@ -77,24 +76,25 @@ const ColorsControl = (props: ColorControlPropsType) => {
       </Grid>
 
       {props.enableHues && (
-        <Slider
-          onChange={value => {
-            value = value === 0 ? 50 : value
-            setHue(value)
-          }}
-          min={0}
-          max={900}
-          step={100}
-          value={hue}
-        >
-          <SliderTrack />
-          <SliderFilledTrack />
+        <>
+          <SliderTrack
+            onChange={value => {
+              value = value === 0 ? 50 : value
+              setHue(value)
+            }}
+            min={0}
+            max={900}
+            step={100}
+            value={hue}
+          >
+            <SliderFilledTrack />
+          </SliderTrack>
           <SliderThumb size={8}>
             <Box borderRadius="full" fontSize="xs">
               {hue}
             </Box>
           </SliderThumb>
-        </Slider>
+        </>
       )}
     </>
   )

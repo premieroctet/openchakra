@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-  Slider,
-  SliderTrack,
-  SliderFilledTrack,
-  SliderThumb,
-} from '@chakra-ui/core'
+import { SliderTrack, SliderFilledTrack } from '@chakra-ui/core'
 import ColorsControl from '~components/inspector/controls/ColorsControl'
 import FormControl from '~components/inspector/controls/FormControl'
 import { useForm } from '~hooks/useForm'
@@ -21,23 +16,21 @@ const ProgressPanel = () => {
   return (
     <>
       <FormControl label="Value">
-        <Slider
+        <SliderTrack
           onChange={value => setValue('value', value)}
           min={0}
           max={100}
           step={1}
           defaultValue={value}
         >
-          <SliderTrack />
           <SliderFilledTrack />
-          <SliderThumb />
-        </Slider>
+        </SliderTrack>
       </FormControl>
 
       <SwitchControl label="Has stripe" name="hasStripe" />
       <SwitchControl label="Is animated" name="isAnimated" />
 
-      <ColorsControl label="Color" name="color" />
+      <ColorsControl label="Color Scheme" name="colorScheme" />
 
       <SizeControl label="Size" options={['sm', 'md', 'lg']} value={size} />
     </>

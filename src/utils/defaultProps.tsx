@@ -31,7 +31,7 @@ import {
   TabPanelsProps,
   TabsProps,
   InputProps,
-  AspectRatioBoxProps,
+  AspectRatioProps,
   BreadcrumbItemProps,
   EditableProps,
   MenuProps,
@@ -96,7 +96,7 @@ type PreviewDefaultProps = {
   InputRightAddon?: any
   InputLeftElement?: any
   InputRightElement?: any
-  AspectRatioBox?: AspectRatioBoxProps
+  AspectRatio?: AspectRatioProps
   Breadcrumb?: BreadcrumbItemProps
   BreadcrumbItem?: BreadcrumbItemProps
   BreadcrumbLink?: any
@@ -264,7 +264,6 @@ export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
   Flex: { display: 'flex' },
   Breadcrumb: {
     separator: '/',
-    addSeparator: true,
   },
   CloseButton: { size: 'md' },
 }

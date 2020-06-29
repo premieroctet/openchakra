@@ -49,7 +49,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'Tab',
   'Accordion',
   'Editable',
-  'AspectRatioBox',
+  'AspectRatio',
   'Breadcrumb',
   'BreadcrumbItem',
   'BreadcrumbLink',

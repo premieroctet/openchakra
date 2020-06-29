@@ -4,7 +4,7 @@ import { useInteractive } from '~hooks/useInteractive'
 import { useDropComponent } from '~hooks/useDropComponent'
 import ComponentPreview from '~components/editor/ComponentPreview'
 
-const AspectRatioBoxPreview: React.FC<{ component: IComponent }> = ({
+const AspectRatioPreview: React.FC<{ component: IComponent }> = ({
   component,
 }) => {
   const { props, ref } = useInteractive(component, true)
@@ -27,7 +27,7 @@ const AspectRatioBoxPreview: React.FC<{ component: IComponent }> = ({
         {!children.length ? (
           /*
            * We need at least one children because of the implementation
-           * of AspectRatioBox
+           * of AspectRatio
            */
           <Box />
         ) : (
@@ -40,4 +40,4 @@ const AspectRatioBoxPreview: React.FC<{ component: IComponent }> = ({
   )
 }
 
-export default AspectRatioBoxPreview
+export default AspectRatioPreview

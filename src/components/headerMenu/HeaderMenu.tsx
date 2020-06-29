@@ -41,7 +41,7 @@ const ImportMenuItem = dynamic(() => import('./ImportMenuItem'), { ssr: false })
 
 const HeaderMenu = () => {
   return (
-    <Menu>
+    <Menu zIndex={100}>
       <CustomMenuButton
         rightIcon="chevron-down"
         as={Button}
@@ -52,7 +52,7 @@ const HeaderMenu = () => {
         Editor
       </CustomMenuButton>
       <LightMode>
-        <MenuList zIndex={100}>
+        <MenuList>
           <ExportMenuItem />
           <ImportMenuItem />
 

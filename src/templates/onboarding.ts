@@ -170,7 +170,6 @@ export const onboarding: IComponents = {
     props: {
       isInline: true,
       spacing: '3',
-      shouldWrapChildren: true,
     },
     children: ['comp-K6GOJIZK48606', 'comp-K6GOMJN7JIXFL'],
     type: 'Stack',
@@ -346,7 +345,7 @@ export const onboarding: IComponents = {
     id: 'comp-K6GOPXN2COS0O',
     props: {
       isInline: true,
-      shouldWrapChildren: true,
+
       spacing: '4',
       p: '',
       m: '',
@@ -481,7 +480,7 @@ export const onboarding: IComponents = {
     id: 'comp-K6GXFBY5JLD6C',
     props: {
       isInline: false,
-      shouldWrapChildren: true,
+
       justifyContent: 'flex-start',
       alignItems: 'flex-start',
       ml: '',
@@ -538,7 +537,7 @@ export const onboarding: IComponents = {
     props: {
       ml: '',
       isInline: false,
-      shouldWrapChildren: true,
+
       spacing: '2',
     },
     children: ['comp-K6GYJVZZPAWEH', 'comp-K6GYL9G557J57'],
@@ -577,7 +576,7 @@ export const onboarding: IComponents = {
     props: {
       ml: '4',
       spacing: '2',
-      shouldWrapChildren: true,
+
       mt: '4',
       mr: '4',
     },
@@ -749,7 +748,6 @@ export const onboarding: IComponents = {
   'comp-K6H0PTU71NGNY': {
     id: 'comp-K6H0PTU71NGNY',
     props: {
-      shouldWrapChildren: true,
       spacing: '4',
       ml: '4',
       mt: '4',
@@ -766,7 +764,6 @@ export const onboarding: IComponents = {
   'comp-K6H0PXX1VMIEO': {
     id: 'comp-K6H0PXX1VMIEO',
     props: {
-      shouldWrapChildren: true,
       spacing: '2',
     },
     children: ['comp-K6H0Q3HFG0Q14', 'comp-K6H0RNTHVY7IT'],
@@ -804,7 +801,6 @@ export const onboarding: IComponents = {
     id: 'comp-K6H0VNVDZ2TRH',
     props: {
       spacing: '2',
-      shouldWrapChildren: true,
     },
     children: ['comp-K6H0VZBSG4SCN', 'comp-K6H0WPDNKQ6CR'],
     type: 'Stack',
@@ -897,7 +893,6 @@ export const onboarding: IComponents = {
   'comp-K6H175A76GO7R': {
     id: 'comp-K6H175A76GO7R',
     props: {
-      shouldWrapChildren: true,
       spacing: '2',
     },
     children: ['comp-K6H17C6VB8XQL', 'comp-K6H17HIGGSUHM'],
@@ -1076,7 +1071,6 @@ export const onboarding: IComponents = {
   'comp-K6H1TRQ8GRP98': {
     id: 'comp-K6H1TRQ8GRP98',
     props: {
-      shouldWrapChildren: true,
       spacing: '5',
       pl: '4',
       pt: '4',
@@ -1093,7 +1087,6 @@ export const onboarding: IComponents = {
   'comp-K6H1UG7QF7UP4': {
     id: 'comp-K6H1UG7QF7UP4',
     props: {
-      shouldWrapChildren: true,
       spacing: '2',
     },
     children: ['comp-K6H1UMW2YLSAB', 'comp-K6H1VU1P3OYRQ'],
@@ -1128,9 +1121,7 @@ export const onboarding: IComponents = {
   },
   'comp-K6H1WTCRIIFNG': {
     id: 'comp-K6H1WTCRIIFNG',
-    props: {
-      shouldWrapChildren: true,
-    },
+    props: {},
     children: ['comp-K6H1XCSNJY88G', 'comp-K6H1XZB37JTJ4'],
     type: 'Stack',
     parent: 'comp-K6H1TRQ8GRP98',
@@ -1164,7 +1155,6 @@ export const onboarding: IComponents = {
   'comp-K6HM4MGL0S6AH': {
     id: 'comp-K6HM4MGL0S6AH',
     props: {
-      shouldWrapChildren: true,
       spacing: '4',
     },
     children: [
@@ -1207,7 +1197,6 @@ export const onboarding: IComponents = {
     id: 'comp-K6HM7KLJLO714',
     props: {
       isInline: true,
-      shouldWrapChildren: true,
     },
     children: [
       'comp-K6HM7F0ZLPGFE',
@@ -1233,7 +1222,6 @@ export const onboarding: IComponents = {
     id: 'comp-K6HM9HOFHX07Z',
     props: {
       isInline: true,
-      shouldWrapChildren: true,
     },
     children: ['comp-K6HM9L3VKMKHN', 'comp-K6HM9Y9W5FRUJ'],
     type: 'Stack',
@@ -1268,7 +1256,6 @@ export const onboarding: IComponents = {
     id: 'comp-K6HMA6UCR000W',
     props: {
       isInline: true,
-      shouldWrapChildren: true,
     },
     children: ['comp-K6HMAAF672VE5', 'comp-K6HMAKMTZWD8Z'],
     type: 'Stack',
@@ -1315,7 +1302,6 @@ export const onboarding: IComponents = {
   'comp-K6HMEG7J926M9': {
     id: 'comp-K6HMEG7J926M9',
     props: {
-      shouldWrapChildren: true,
       isInline: true,
     },
     children: [

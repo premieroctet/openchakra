@@ -125,7 +125,7 @@ export const productHunt: IComponents = {
     props: {
       isInline: true,
       isReversed: false,
-      shouldWrapChildren: true,
+
       alignItems: 'center',
       spacing: '3',
     },
@@ -278,7 +278,7 @@ export const productHunt: IComponents = {
     id: 'comp-K6IB42UQBXOB8',
     props: {
       isInline: true,
-      shouldWrapChildren: true,
+
       spacing: '2',
       alignItems: 'center',
     },
@@ -305,7 +305,6 @@ export const productHunt: IComponents = {
   'comp-K6IB6HDI4V5B0': {
     id: 'comp-K6IB6HDI4V5B0',
     props: {
-      shouldWrapChildren: true,
       spacing: '0',
     },
     children: [
