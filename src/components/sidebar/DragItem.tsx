@@ -1,8 +1,14 @@
 import React from 'react'
 import { useDrag } from 'react-dnd'
-import { Text, PseudoBox, Icon, Box } from '@chakra-ui/core'
+import { Text, PseudoBox, Icon, Box, IconButton, Flex } from '@chakra-ui/core'
 
-const DragItem: React.FC<ComponentItemProps> = ({
+interface IProps extends ComponentItemProps {
+  onDelete?: () => void
+  children: React.ReactNode
+  isDeletable?: boolean
+}
+
+const DragItem = ({
   type,
   soon,
   label,
@@ -10,7 +16,9 @@ const DragItem: React.FC<ComponentItemProps> = ({
   isChild,
   rootParentType,
   userComponentId,
-}) => {
+  onDelete,
+  isDeletable,
+}: IProps) => {
   const [, drag] = useDrag({
     item: { id: type, type, isMeta, rootParentType, userComponentId },
   })
@@ -52,54 +60,71 @@ const DragItem: React.FC<ComponentItemProps> = ({
       p={1}
       display="flex"
       alignItems="center"
+      justifyContent="space-between"
       {...boxProps}
     >
-      <Icon fontSize="xs" mr={2} name="drag-handle" />
+      <Flex direction="row" alignItems="center">
+        <Icon fontSize="xs" mr={2} name="drag-handle" />
 
-      <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
-        {label}
-      </Text>
-
-      {userComponentId && (
-        <Box
-          ml={2}
-          borderWidth="1px"
-          color="yellow.100"
-          borderColor="yellow.100"
-          fontSize="xs"
-          rounded={4}
-          px={1}
+        <Text
+          letterSpacing="wide"
+          fontSize="sm"
+          textTransform="capitalize"
+          style={{ textOverflow: 'ellipsis' }}
         >
-          custom
-        </Box>
-      )}
+          {label}
+        </Text>
 
-      {isMeta && (
-        <Box
-          ml={2}
-          borderWidth="1px"
-          color="teal.300"
-          borderColor="teal.600"
-          fontSize="xs"
-          rounded={4}
-          px={1}
-        >
-          preset
-        </Box>
-      )}
+        {userComponentId && (
+          <Box
+            ml={2}
+            borderWidth="1px"
+            color="yellow.100"
+            borderColor="yellow.100"
+            fontSize="xs"
+            rounded={4}
+            px={1}
+          >
+            custom
+          </Box>
+        )}
 
-      {soon && (
-        <Box
-          ml={2}
-          borderWidth="1px"
-          color="whiteAlpha.500"
-          borderColor="whiteAlpha.300"
-          fontSize="xs"
-          rounded={4}
-          px={1}
-        >
-          soon
-        </Box>
+        {isMeta && (
+          <Box
+            ml={2}
+            borderWidth="1px"
+            color="teal.300"
+            borderColor="teal.600"
+            fontSize="xs"
+            rounded={4}
+            px={1}
+          >
+            preset
+          </Box>
+        )}
+
+        {soon && (
+          <Box
+            ml={2}
+            borderWidth="1px"
+            color="whiteAlpha.500"
+            borderColor="whiteAlpha.300"
+            fontSize="xs"
+            rounded={4}
+            px={1}
+          >
+            soon
+          </Box>
+        )}
+      </Flex>
+      {isDeletable && (
+        <IconButton
+          size="xs"
+          aria-label="Remove user component"
+          icon="close"
+          variant="ghost"
+          onClick={onDelete}
+        />
       )}
     </PseudoBox>
   )

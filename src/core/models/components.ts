@@ -3,7 +3,11 @@ import produce from 'immer'
 import { DEFAULT_PROPS } from '../../utils/defaultProps'
 import templates, { TemplateType } from '../../templates'
 import { generateId } from '../../utils/generateId'
-import { duplicateComponent, deleteComponent } from '../../utils/recursive'
+import {
+  duplicateComponent,
+  deleteComponent,
+  detachUserComponent,
+} from '../../utils/recursive'
 import omit from 'lodash/omit'
 import each from 'lodash/each'
 
@@ -84,28 +88,6 @@ const components = createModel({
         let component = draftState.components[componentId]
         component.userComponentName = name
         draftState.userComponentIds.push(componentId)
-
-        if (component && component.parent) {
-          const children = draftState.components[
-            component.parent
-          ].children.filter((id: string) => id !== componentId)
-
-          const id = generateId('instance')
-          children.push(id)
-
-          draftState.components[component.parent].children = children
-
-          draftState.components[id] = {
-            id,
-            props: {},
-            children: [],
-            type: component.type,
-
-            parent: component.parent,
-            rootParentType: component.rootParentType,
-            instanceOf: component.id,
-          }
-        }
       })
     },
     addUserComponent(
@@ -324,28 +306,32 @@ const components = createModel({
     detachUserComponent(state: ComponentsState): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
         const selectedComponent = draftState.components[draftState.selectedId]
-        const masterComponent =
-          draftState.components[selectedComponent.instanceOf!]
-
-        const parentElement = draftState.components[selectedComponent.parent]
-
-        const { newId, clonedComponents } = duplicateComponent(
-          masterComponent,
+        const newId = detachUserComponent(
+          selectedComponent,
           draftState.components,
         )
-
-        delete draftState.components[selectedComponent.id]
-
-        draftState.components = {
-          ...draftState.components,
-          ...clonedComponents,
-        }
-
-        const childIdx = draftState.components[
-          parentElement.id
-        ].children.findIndex(child => child === selectedComponent.id)
-        draftState.components[parentElement.id].children[childIdx] = newId
         draftState.selectedId = newId
+      })
+    },
+    removeUserComponent(
+      state: ComponentsState,
+      userComponentId: string,
+    ): ComponentsState {
+      return produce(state, (draftState: ComponentsState) => {
+        const masterComponent = draftState.components[userComponentId]
+        const instances = Object.values(draftState.components).filter(
+          comp => comp.instanceOf === masterComponent.id,
+        )
+
+        instances.forEach(instance => {
+          detachUserComponent(instance, draftState.components)
+        })
+        masterComponent.userComponentName = undefined
+        draftState.userComponentIds = draftState.userComponentIds.filter(
+          id => id !== userComponentId,
+        )
+
+        draftState.selectedId = DEFAULT_ID
       })
     },
     hover(

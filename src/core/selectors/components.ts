@@ -70,7 +70,7 @@ export const getIsUserComponent = (id: IComponent['id']) => (
 ) => {
   const component = state.components.present.components[id]
 
-  return !!component.instanceOf || component.userComponentName
+  return !!component.instanceOf || !!component.userComponentName
 }
 
 export const getIsPartOfUserComponent = (id: IComponent['id']) => (

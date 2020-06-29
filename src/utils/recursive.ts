@@ -72,3 +72,26 @@ export const getComponentParents = (
 
   return parents
 }
+
+export const detachUserComponent = (
+  componentToDetach: IComponent,
+  components: IComponents,
+) => {
+  const masterComponent = components[componentToDetach.instanceOf!]
+  const parentElement = components[componentToDetach.parent]
+  const { newId, clonedComponents } = duplicateComponent(
+    masterComponent,
+    components,
+  )
+  delete components[componentToDetach.id]
+  components = {
+    ...components,
+    ...clonedComponents,
+  }
+  const childIdx = components[parentElement.id].children.findIndex(
+    child => child === componentToDetach.id,
+  )
+  components[parentElement.id].children[childIdx] = newId
+
+  return newId
+}

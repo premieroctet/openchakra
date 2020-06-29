@@ -5,6 +5,7 @@ import { useDrag } from 'react-dnd'
 import {
   getIsSelectedComponent,
   getIsHovered,
+  getIsPartOfUserComponent,
 } from '../core/selectors/components'
 import { getShowLayout, getFocusedComponent } from '../core/selectors/app'
 
@@ -17,9 +18,15 @@ export const useInteractive = (
   const isComponentSelected = useSelector(getIsSelectedComponent(component.id))
   const isHovered = useSelector(getIsHovered(component.id))
   const focusInput = useSelector(getFocusedComponent(component.id))
+  const isPartOfUserComponent = useSelector(
+    getIsPartOfUserComponent(component.id),
+  )
 
   const [, drag] = useDrag({
     item: { id: component.id, type: component.type, isMoved: true },
+    canDrag: () => {
+      return !isPartOfUserComponent
+    },
   })
 
   const ref = useRef<HTMLDivElement>(null)

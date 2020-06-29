@@ -83,8 +83,8 @@ const Inspector = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [componentName, onChangeComponentName] = useState('')
-  const initialRef = React.useRef<HTMLInputElement>(null)
-  const saveComponent = () => {
+  const saveComponent = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     dispatch.components.saveUserComponent({
       componentId: component.id,
       name: componentName,
@@ -150,7 +150,13 @@ const Inspector = () => {
               onClick={() => dispatch.components.duplicate()}
               icon="copy"
             />
-            <ActionButton label="Component" onClick={onOpen} icon={IoMdSave} />
+            {!isUserComponent && (
+              <ActionButton
+                label="Component"
+                onClick={onOpen}
+                icon={IoMdSave}
+              />
+            )}
             <ActionButton
               label="Reset props"
               icon={IoMdRefresh}
@@ -187,12 +193,7 @@ const Inspector = () => {
         parentIsRoot={parentIsRoot}
       />
 
-      <Modal
-        onClose={onClose}
-        isOpen={isOpen}
-        isCentered
-        initialFocusRef={initialRef}
-      >
+      <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent>
           <form onSubmit={saveComponent}>
@@ -203,12 +204,11 @@ const Inspector = () => {
                 <FormLabel>Component name</FormLabel>
                 <Input
                   size="md"
-                  as="input"
+                  autoFocus
                   variant="outline"
                   isFullWidth
                   focusBorderColor="blue.500"
                   errorBorderColor="red.500"
-                  ref={initialRef}
                   value={componentName}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     onChangeComponentName(e.target.value)

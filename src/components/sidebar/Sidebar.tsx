@@ -11,9 +11,15 @@ import {
 import DragItem from './DragItem'
 import UserComponentsMenu from './UserComponentsMenu'
 import { menuItems, MenuItem } from './menu'
+import useDispatch from '../../hooks/useDispatch'
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
+  const dispatch = useDispatch()
+
+  const onDeleteUserComponent = (id: string) => {
+    dispatch.components.removeUserComponent(id)
+  }
 
   return (
     <DarkMode>
@@ -55,7 +61,7 @@ const Menu = () => {
           />
         </InputGroup>
 
-        <UserComponentsMenu />
+        <UserComponentsMenu onDelete={onDeleteUserComponent} />
 
         {(Object.keys(menuItems) as ComponentType[])
           .filter(c => c.toLowerCase().includes(searchTerm.toLowerCase()))

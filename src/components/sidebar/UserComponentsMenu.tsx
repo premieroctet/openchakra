@@ -6,7 +6,12 @@ import {
   getUserComponentsIds,
 } from '../../core/selectors/components'
 
-const Item: React.FC<{ userComponentId: string }> = ({ userComponentId }) => {
+interface IItemProps {
+  userComponentId: string
+  onDelete: (id: string) => void
+}
+
+const Item = ({ userComponentId, onDelete }: IItemProps) => {
   let component = useSelector(getProxyComponent(userComponentId))
 
   return component ? (
@@ -16,19 +21,25 @@ const Item: React.FC<{ userComponentId: string }> = ({ userComponentId }) => {
       type={component.type}
       id={component.id}
       userComponentId={component.id}
+      isDeletable
+      onDelete={() => onDelete(userComponentId)}
     >
       {component.userComponentName}
     </DragItem>
   ) : null
 }
 
-const UserComponentsMenu = () => {
+interface IUserComponentsMenuProps {
+  onDelete: (id: string) => void
+}
+
+const UserComponentsMenu = ({ onDelete }: IUserComponentsMenuProps) => {
   const userComponentIds = useSelector(getUserComponentsIds)
 
   return (
     <>
       {userComponentIds.map(id => (
-        <Item key={id} userComponentId={id} />
+        <Item key={id} userComponentId={id} onDelete={onDelete} />
       ))}
     </>
   )
