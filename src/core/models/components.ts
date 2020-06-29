@@ -277,7 +277,10 @@ const components = createModel({
     ): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
         draftState.selectedId = payload.root
-        draftState.components[payload.parent].children.push(payload.root)
+        const parent = draftState.components[payload.parent]
+        draftState.components[
+          parent.instanceOf || payload.parent
+        ].children.push(payload.root)
 
         draftState.components = {
           ...draftState.components,
