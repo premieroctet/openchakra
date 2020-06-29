@@ -18,7 +18,7 @@ const VariantsControl = (props: VariantsControlPropsType) => {
         id={props.name}
         onChange={setValueFromEvent}
         name={props.name}
-        size="sm"
+        boxSize="sm"
         value={props.value || ''}
       >
         <option>solid</option>

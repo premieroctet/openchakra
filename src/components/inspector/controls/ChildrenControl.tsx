@@ -31,7 +31,7 @@ const ChildrenControl: React.FC = () => {
       <Input
         id="children"
         name="children"
-        size="sm"
+        boxSize="sm"
         value={children}
         type="text"
         onChange={setValueFromEvent}

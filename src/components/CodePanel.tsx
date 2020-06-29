@@ -36,10 +36,10 @@ const CodePanel = () => {
     >
       <Button
         onClick={onCopy}
-        size="sm"
+        boxSize="sm"
         position="absolute"
         textTransform="uppercase"
-        variantColor="teal"
+        colorScheme="teal"
         fontSize="xs"
         height="24px"
         top={4}

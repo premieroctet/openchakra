@@ -32,7 +32,7 @@ const EffectsPanel = () => {
         </Slider>
       </FormControl>
 
-      <TextControl name="shadow" label="Shadow" />
+      <TextControl name="boxShadow" label="Box Shadow" />
     </>
   )
 }

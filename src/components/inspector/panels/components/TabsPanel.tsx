@@ -22,7 +22,7 @@ const TabsPanel = () => {
         <Select
           name="variant"
           id="variant"
-          size="sm"
+          boxSize="sm"
           value={variant || ''}
           onChange={setValueFromEvent}
         >
@@ -39,7 +39,7 @@ const TabsPanel = () => {
         <Select
           name="orientation"
           id="orientation"
-          size="sm"
+          boxSize="sm"
           value={orientation || ''}
           onChange={setValueFromEvent}
         >
@@ -52,7 +52,7 @@ const TabsPanel = () => {
         <Select
           name="size"
           id="size"
-          size="sm"
+          boxSize="sm"
           value={size || ''}
           onChange={setValueFromEvent}
         >
@@ -61,7 +61,7 @@ const TabsPanel = () => {
           <option>lg</option>
         </Select>
       </FormControl>
-      <ColorsControl label="Variant Color" name="variantColor" />
+      <ColorsControl label="Color Scheme" name="colorScheme" />
     </>
   )
 }

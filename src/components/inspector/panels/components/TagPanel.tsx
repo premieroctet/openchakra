@@ -29,7 +29,7 @@ const TagPanel = () => {
           id="variant"
           onChange={setValueFromEvent}
           name="variant"
-          size="sm"
+          boxSize="sm"
           value={variant || ''}
         >
           <option>solid</option>
@@ -38,7 +38,7 @@ const TagPanel = () => {
         </Select>
       </FormControl>
 
-      <ColorsControl label="Variant Color" name="variantColor" />
+      <ColorsControl label="Color Scheme" name="colorScheme" />
 
       <SizeControl name="rounded" label="Border radius" value={rounded} />
 

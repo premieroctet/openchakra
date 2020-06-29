@@ -45,9 +45,9 @@ const HeaderMenu = () => {
       <CustomMenuButton
         rightIcon="chevron-down"
         as={Button}
-        size="xs"
+        boxSize="xs"
         variant="ghost"
-        variantColor="gray"
+        colorScheme="gray"
       >
         Editor
       </CustomMenuButton>

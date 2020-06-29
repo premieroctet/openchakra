@@ -45,7 +45,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
             bg="white"
             px={6}
             py={6}
-            shadow="sm"
+            boxShadow="sm"
             width="lg"
           >
             <Box as={FaBomb} fontSize="100px" />
@@ -60,7 +60,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
                 }}
                 variant="outline"
                 rightIcon="check-circle"
-                size="sm"
+                boxSize="sm"
                 mt={4}
                 display="block"
               >

@@ -41,7 +41,7 @@ export default class AppErrorBoundary extends Component<
             bg="white"
             px={6}
             py={6}
-            shadow="sm"
+            boxShadow="sm"
             width="lg"
           >
             <Box as={FaBomb} fontSize="100px" />
@@ -56,7 +56,7 @@ export default class AppErrorBoundary extends Component<
                 }}
                 variant="outline"
                 rightIcon="check-circle"
-                size="sm"
+                boxSize="sm"
                 mt={4}
                 display="block"
               >

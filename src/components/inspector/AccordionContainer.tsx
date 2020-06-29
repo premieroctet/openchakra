@@ -1,7 +1,7 @@
 import React, { ReactNode, memo } from 'react'
 import {
   AccordionItem,
-  AccordionHeader,
+  AccordionButton,
   AccordionIcon,
   AccordionPanel,
   Box,
@@ -15,12 +15,12 @@ const AccordionContainer: React.FC<{
 } & AccordionItemProps> = ({ title, children, defaultIsOpen = true }) => {
   return (
     <AccordionItem defaultIsOpen={defaultIsOpen}>
-      <AccordionHeader zIndex={2} px={3} py={2} fontSize="sm">
+      <AccordionButton zIndex={2} px={3} py={2} fontSize="sm">
         <Box flex="1" textAlign="left">
           {title}
         </Box>
         <AccordionIcon />
-      </AccordionHeader>
+      </AccordionButton>
       <AccordionPanel bg="white" px={3} pb={4}>
         {children}
       </AccordionPanel>

@@ -25,12 +25,12 @@ const TextControl: React.FC<TextControlPropsType> = ({
   return (
     <FormControl hasColumn={hasColumn} htmlFor={name} label={label}>
       <Input
-        rounded="md"
+        borderRadius="md"
         autoComplete="off"
         id={name}
         name={name}
         autoFocus={autoFocus}
-        size="sm"
+        boxSize="sm"
         value={value || ''}
         type="text"
         width={hasColumn ? '3rem' : '100%'}

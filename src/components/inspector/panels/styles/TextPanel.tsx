@@ -35,8 +35,8 @@ const TextPanel = () => {
           onClick={() => {
             setValue('fontWeight', fontWeight ? null : 'bold')
           }}
-          size="xs"
-          variantColor={fontWeight ? 'whatsapp' : 'gray'}
+          boxSize="xs"
+          colorScheme={fontWeight ? 'whatsapp' : 'gray'}
           variant={fontWeight ? 'solid' : 'outline'}
         >
           Bold
@@ -47,8 +47,8 @@ const TextPanel = () => {
           onClick={() => {
             setValue('fontStyle', fontStyle === 'italic' ? null : 'italic')
           }}
-          size="xs"
-          variantColor={fontStyle === 'italic' ? 'whatsapp' : 'gray'}
+          boxSize="xs"
+          colorScheme={fontStyle === 'italic' ? 'whatsapp' : 'gray'}
           variant={fontStyle === 'italic' ? 'solid' : 'outline'}
         >
           Italic
@@ -56,14 +56,14 @@ const TextPanel = () => {
       </FormControl>
 
       <FormControl label="Text align">
-        <ButtonGroup size="xs" isAttached>
+        <ButtonGroup boxSize="xs" isAttached>
           <IconButton
             aria-label="bold"
             icon={MdFormatAlignLeft}
             onClick={() => {
               setValue('textAlign', 'left')
             }}
-            variantColor={textAlign === 'left' ? 'whatsapp' : 'gray'}
+            colorScheme={textAlign === 'left' ? 'whatsapp' : 'gray'}
             variant={textAlign === 'left' ? 'solid' : 'outline'}
           />
 
@@ -73,7 +73,7 @@ const TextPanel = () => {
             onClick={() => {
               setValue('textAlign', 'center')
             }}
-            variantColor={textAlign === 'center' ? 'whatsapp' : 'gray'}
+            colorScheme={textAlign === 'center' ? 'whatsapp' : 'gray'}
             variant={textAlign === 'center' ? 'solid' : 'outline'}
           />
 
@@ -83,7 +83,7 @@ const TextPanel = () => {
             onClick={() => {
               setValue('textAlign', 'right')
             }}
-            variantColor={textAlign === 'right' ? 'whatsapp' : 'gray'}
+            colorScheme={textAlign === 'right' ? 'whatsapp' : 'gray'}
             variant={textAlign === 'right' ? 'solid' : 'outline'}
           />
 
@@ -93,7 +93,7 @@ const TextPanel = () => {
             onClick={() => {
               setValue('textAlign', 'justify')
             }}
-            variantColor={textAlign === 'justify' ? 'whatsapp' : 'gray'}
+            colorScheme={textAlign === 'justify' ? 'whatsapp' : 'gray'}
             variant={textAlign === 'justify' ? 'solid' : 'outline'}
           />
         </ButtonGroup>

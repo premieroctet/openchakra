@@ -29,7 +29,7 @@ const ElementListItem = forwardRef(
         boxSizing="border-box"
         transition="margin 200ms"
         my={1}
-        rounded="md"
+        borderRadius="md"
         p={1}
         display="flex"
         alignItems="center"
@@ -50,7 +50,7 @@ const ElementListItem = forwardRef(
             label="Inspect"
             onClick={onSelect}
             icon="settings"
-            variantColor="blackAlpha"
+            colorScheme="blackAlpha"
           />
         </Flex>
       </PseudoBox>

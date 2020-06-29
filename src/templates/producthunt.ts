@@ -17,7 +17,7 @@ export const productHunt: IComponents = {
       alignItems: 'flex-start',
       justifyContent: 'space-between',
       p: '5',
-      shadow: 'sm',
+      boxShadow: 'sm',
     },
     children: ['comp-K6IAUUX80CXD6', 'comp-K6IAWV0WFDNW7'],
     type: 'Box',

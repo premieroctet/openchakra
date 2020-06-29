@@ -15,7 +15,7 @@ export const menuItems: MenuItems = {
     children: {
       Accordion: {},
       AccordionItem: {},
-      AccordionHeader: {},
+      AccordionButton: {},
       AccordionPanel: {},
       AccordionIcon: {},
     },
@@ -107,7 +107,6 @@ export const menuItems: MenuItems = {
 
 export const componentsList: ComponentType[] = [
   'Accordion',
-  'AccordionHeader',
   'AccordionIcon',
   'AccordionItem',
   'AccordionPanel',

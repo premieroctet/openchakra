@@ -18,7 +18,7 @@ const TextareaPanel = () => {
     <>
       <FormControl label="Placeholder">
         <Input
-          size="sm"
+          boxSize="sm"
           value={placeholder || ''}
           type="text"
           name="placeholder"
@@ -30,7 +30,7 @@ const TextareaPanel = () => {
         <Select
           name="resize"
           id="size"
-          size="sm"
+          boxSize="sm"
           value={resize || ''}
           onChange={setValueFromEvent}
         >

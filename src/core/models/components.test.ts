@@ -68,13 +68,13 @@ describe('Components model', () => {
   it('should update props', async () => {
     const nextState = components.reducers.updateProps(STATE, {
       id: 'button-testid',
-      name: 'variantColor',
+      name: 'colorScheme',
       value: 'teal.300',
     })
 
     expect(nextState.components['button-testid'].props).toEqual({
       children: 'Button text',
-      variantColor: 'teal.300',
+      colorScheme: 'teal.300',
     })
   })
 

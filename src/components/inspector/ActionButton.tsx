@@ -13,7 +13,7 @@ interface Props
   label: string
   isLoading?: boolean
   onClick?: IconButtonProps['onClick']
-  variantColor?: IconButtonProps['variantColor']
+  colorScheme?: IconButtonProps['colorScheme']
 }
 
 const ActionButton: React.FC<Props> = ({
@@ -21,21 +21,21 @@ const ActionButton: React.FC<Props> = ({
   as,
   label,
   onClick,
-  variantColor,
+  colorScheme,
   isLoading,
   ...props
 }) => {
   return (
     <Tooltip hasArrow aria-label={label} label={label} zIndex={11} {...props}>
       <IconButton
-        size="xs"
+        boxSize="xs"
         variant="ghost"
         as={as}
         isLoading={isLoading}
         onClick={onClick}
         icon={icon}
         aria-label={label}
-        variantColor={variantColor}
+        colorScheme={colorScheme}
       />
     </Tooltip>
   )

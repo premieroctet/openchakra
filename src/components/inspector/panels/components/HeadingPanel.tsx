@@ -19,7 +19,7 @@ const HeadingPanel = () => {
         <Select
           name="size"
           id="size"
-          size="sm"
+          boxSize="sm"
           value={size}
           onChange={setValueFromEvent}
         >
@@ -33,7 +33,7 @@ const HeadingPanel = () => {
       </FormControl>
       <FormControl label="As">
         <Select
-          size="sm"
+          boxSize="sm"
           value={as || ''}
           onChange={setValueFromEvent}
           name="as"

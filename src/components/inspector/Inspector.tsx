@@ -54,7 +54,7 @@ const CodeActionButton = memo(() => {
     <ActionButton
       isLoading={isLoading}
       label="Copy code component"
-      variantColor={hasCopied ? 'green' : 'gray'}
+      colorScheme={hasCopied ? 'green' : 'gray'}
       onClick={async () => {
         setIsLoading(true)
         const code = await generateComponentCode({
@@ -119,7 +119,7 @@ const Inspector = () => {
           color="yellow.900"
           py={2}
           px={2}
-          shadow="sm"
+          boxShadow="sm"
           bg="yellow.100"
           display="flex"
           justifyContent="space-between"

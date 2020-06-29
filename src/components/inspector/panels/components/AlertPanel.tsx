@@ -15,7 +15,7 @@ const AlertPanel = () => {
         <Select
           name="status"
           id="status"
-          size="sm"
+          boxSize="sm"
           value={status || 'info'}
           onChange={setValueFromEvent}
         >
@@ -30,7 +30,7 @@ const AlertPanel = () => {
         <Select
           name="variant"
           id="variant"
-          size="sm"
+          boxSize="sm"
           value={variant || 'subtle'}
           onChange={setValueFromEvent}
         >

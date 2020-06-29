@@ -13,7 +13,7 @@ const RadioGroupPanel = () => {
     <>
       <FormControl label="Spacing">
         <Input
-          size="sm"
+          boxSize="sm"
           value={spacing || ''}
           name="spacing"
           onChange={setValueFromEvent}

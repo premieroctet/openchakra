@@ -28,7 +28,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
         ml: -1,
         mr: 1,
         bg: 'teal.100',
-        shadow: 'sm',
+        boxShadow: 'sm',
         color: 'teal.800',
       },
     }
@@ -43,7 +43,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
       boxSizing="border-box"
       transition="margin 200ms"
       my={1}
-      rounded="md"
+      borderRadius="md"
       p={1}
       display="flex"
       alignItems="center"
@@ -62,7 +62,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
           color="teal.300"
           borderColor="teal.600"
           fontSize="xs"
-          rounded={4}
+          borderRadius={4}
           px={1}
         >
           preset
@@ -76,7 +76,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
           color="whiteAlpha.500"
           borderColor="whiteAlpha.300"
           fontSize="xs"
-          rounded={4}
+          borderRadius={4}
           px={1}
         >
           soon

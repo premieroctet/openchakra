@@ -7,7 +7,7 @@ import AvatarPreview, {
   AvatarGroupPreview,
 } from '~components/editor/previews/AvatarPreview'
 import AccordionPreview, {
-  AccordionHeaderPreview,
+  AccordionButtonPreview,
   AccordionItemPreview,
   AccordionPanelPreview,
 } from '~components/editor/previews/AccordionPreview'
@@ -130,8 +130,8 @@ const ComponentPreview: React.FC<{
       return <AlertPreview component={component} />
     case 'Accordion':
       return <AccordionPreview component={component} />
-    case 'AccordionHeader':
-      return <AccordionHeaderPreview component={component} />
+    case 'AccordionButton':
+      return <AccordionButtonPreview component={component} />
     case 'AccordionItem':
       return <AccordionItemPreview component={component} />
     case 'AccordionPanel':

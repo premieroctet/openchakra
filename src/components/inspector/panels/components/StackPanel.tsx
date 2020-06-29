@@ -21,7 +21,7 @@ const StackPanel = () => {
       <FormControl label="Justify content">
         <Select
           name="justifyContent"
-          size="sm"
+          boxSize="sm"
           value={justifyContent || ''}
           onChange={setValueFromEvent}
         >
@@ -35,7 +35,7 @@ const StackPanel = () => {
       <FormControl label="Align items">
         <Select
           name="alignItems"
-          size="sm"
+          boxSize="sm"
           value={alignItems || ''}
           onChange={setValueFromEvent}
         >

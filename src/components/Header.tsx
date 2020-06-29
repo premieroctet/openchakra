@@ -57,7 +57,7 @@ const CodeSandboxButton = () => {
         isLoading={isLoading}
         rightIcon="external-link"
         variant="ghost"
-        size="xs"
+        boxSize="xs"
       >
         Export code
       </Button>
@@ -120,7 +120,7 @@ const Header = () => {
               <Switch
                 isChecked={showLayout}
                 color="teal"
-                size="sm"
+                boxSize="sm"
                 onChange={() => dispatch.app.toggleBuilderMode()}
                 id="preview"
               />
@@ -135,7 +135,7 @@ const Header = () => {
                 id="code"
                 color="teal"
                 onChange={() => dispatch.app.toggleCodePanel()}
-                size="sm"
+                boxSize="sm"
               />
             </FormControl>
           </Stack>
@@ -149,7 +149,7 @@ const Header = () => {
                     <Button
                       ml={4}
                       rightIcon="small-close"
-                      size="xs"
+                      boxSize="xs"
                       variant="ghost"
                     >
                       Clear
@@ -166,9 +166,9 @@ const Header = () => {
                       </PopoverBody>
                       <PopoverFooter display="flex" justifyContent="flex-end">
                         <Button
-                          size="sm"
+                          boxSize="sm"
                           variant="ghost"
-                          variantColor="red"
+                          colorScheme="red"
                           rightIcon="check"
                           onClick={() => {
                             dispatch.components.reset()
@@ -196,7 +196,7 @@ const Header = () => {
           spacing="2"
         >
           <Link isExternal href="https://github.com/premieroctet/openchakra">
-            <Box as={DiGithubBadge} size="8" color="gray.200" />
+            <Box as={DiGithubBadge} boxSize="8" color="gray.200" />
           </Link>
           <Box lineHeight="shorter" color="white" fontSize="xs">
             by{' '}

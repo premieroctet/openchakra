@@ -10,7 +10,7 @@ export const airbnbCard: IComponents = {
     id: 'comp-root',
     props: {
       bg: '#ffffff',
-      rounded: 'lg',
+      borderRadius: 'lg',
       width: 'sm',
       minHeight: 'sm',
       border: '1px solid lightgrey',
@@ -75,9 +75,9 @@ export const airbnbCard: IComponents = {
     props: {
       children: 'NEW',
       variant: 'subtle',
-      variantColor: 'teal',
+      colorScheme: 'teal',
       mr: '2',
-      rounded: 'lg',
+      borderRadius: 'lg',
       pl: '2',
       pr: '2',
     },

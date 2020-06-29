@@ -4,7 +4,7 @@ import { init } from '@rematch/core'
 import { Provider } from 'react-redux'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { ChakraProvider, theme } from '@chakra-ui/core'
 
 import ComponentPreview from './ComponentPreview'
 import { storeConfig } from '~core/store'
@@ -20,11 +20,11 @@ function renderWithRedux(
 ) {
   return {
     ...render(
-      <ThemeProvider theme={theme}>
+      <ChakraProvider theme={theme}>
         <DndProvider backend={Backend}>
           <Provider store={store}>{components}</Provider>
         </DndProvider>
-      </ThemeProvider>,
+      </ChakraProvider>,
     ),
     // adding `store` to the returned utilities to allow us
     // to reference it in our tests (just try to avoid using
@@ -83,7 +83,7 @@ const componentsToTest = [
   'AlertDescription',
   'Stack',
   'Accordion',
-  // 'AccordionHeader',
+  // 'AccordionButton',
   'RadioGroup',
   'Select',
   'InputGroup',

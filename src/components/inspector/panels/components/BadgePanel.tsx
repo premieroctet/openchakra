@@ -20,7 +20,7 @@ const BadgePanel = () => {
           id="variant"
           onChange={setValueFromEvent}
           name="variant"
-          size="sm"
+          boxSize="sm"
           value={variant || ''}
         >
           <option>solid</option>
@@ -29,7 +29,7 @@ const BadgePanel = () => {
         </Select>
       </FormControl>
 
-      <ColorsControl label="Variant color" name="variantColor" />
+      <ColorsControl label="Color Scheme" name="colorScheme" />
     </>
   )
 }

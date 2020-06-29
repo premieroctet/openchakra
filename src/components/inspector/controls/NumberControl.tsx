@@ -26,7 +26,7 @@ const NumberControl: React.FC<NumberControlPropsType> = ({
 
   return (
     <FormControl htmlFor={name} label={label}>
-      <NumberInput size="sm" value={value} onChange={onChange} {...props} />
+      <NumberInput boxSize="sm" value={value} onChange={onChange} {...props} />
     </FormControl>
   )
 }

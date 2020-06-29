@@ -1,3180 +1,3076 @@
 {
-	"id": 0,
-	"name": "undefined",
-	"kind": 0,
-	"flags": {},
-	"originalName": "",
-	"children": [
-		{
-			"id": 63,
-			"name": "IAvatar",
-			"kind": 256,
-			"kindString": "Interface",
-			"flags": {
-				"isExported": true
-			},
-			"children": [
-				{
-					"id": 67,
-					"name": "children",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The badge at the bottom right corner of the avatar."
-					},
-					"sources": [
-						{
-							"fileName": "Avatar/index.d.ts",
-							"line": 28,
-							"character": 10
-						}
-					],
-					"type": {
-						"type": "reference",
-						"name": "React.ReactNode"
-					}
-				},
-				{
-					"id": 64,
-					"name": "name",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The name of the person in the avatar.",
-						"text": "- if `src` has loaded, the name will be used as the `alt` attribute of the `img`\n- If `src` is not loaded, the name will be used to create the initials\n"
-					},
-					"sources": [
-						{
-							"fileName": "Avatar/index.d.ts",
-							"line": 14,
-							"character": 6
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "string"
-							}
-						]
-					}
-				},
-				{
-					"id": 66,
-					"name": "showBorder",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "If `true`, the `Avatar` will show a border around it.",
-						"text": "Best for a group of avatars\n"
-					},
-					"sources": [
-						{
-							"fileName": "Avatar/index.d.ts",
-							"line": 24,
-							"character": 12
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "false"
-							},
-							{
-								"type": "intrinsic",
-								"name": "true"
-							}
-						]
-					}
-				},
-				{
-					"id": 65,
-					"name": "size",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The size of the avatar."
-					},
-					"sources": [
-						{
-							"fileName": "Avatar/index.d.ts",
-							"line": 18,
-							"character": 6
-						}
-					],
-					"type": {
-						"type": "reference",
-						"id": 69,
-						"name": "Size"
-					}
-				},
-				{
-					"id": 68,
-					"name": "src",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The image url of the `Avatar`"
-					},
-					"sources": [
-						{
-							"fileName": "Avatar/index.d.ts",
-							"line": 32,
-							"character": 5
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "string"
-							}
-						]
-					}
-				}
-			],
-			"groups": [
-				{
-					"title": "Properties",
-					"kind": 1024,
-					"children": [
-						67,
-						64,
-						66,
-						65,
-						68
-					]
-				}
-			],
-			"sources": [
-				{
-					"fileName": "Avatar/index.d.ts",
-					"line": 7,
-					"character": 24
-				}
-			]
-		},
-		{
-			"id": 78,
-			"name": "IAvatarGroup",
-			"kind": 256,
-			"kindString": "Interface",
-			"flags": {
-				"isExported": true
-			},
-			"children": [
-				{
-					"id": 80,
-					"name": "children",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true
-					},
-					"comment": {
-						"shortText": "The children of the avatar group.",
-						"text": "Ideally should be `Avatar` and `MoreIndicator` components\n"
-					},
-					"sources": [
-						{
-							"fileName": "AvatarGroup/index.d.ts",
-							"line": 21,
-							"character": 10
-						}
-					],
-					"type": {
-						"type": "reference",
-						"name": "React.ReactNode"
-					}
-				},
-				{
-					"id": 82,
-					"name": "max",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The maximum number of visible avatars"
-					},
-					"sources": [
-						{
-							"fileName": "AvatarGroup/index.d.ts",
-							"line": 29,
-							"character": 5
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "number"
-							}
-						]
-					}
-				},
-				{
-					"id": 79,
-					"name": "size",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The size of the avatar group."
-					},
-					"sources": [
-						{
-							"fileName": "AvatarGroup/index.d.ts",
-							"line": 15,
-							"character": 6
-						}
-					],
-					"type": {
-						"type": "indexedAccess",
-						"indexType": {
-							"type": "stringLiteral",
-							"value": "size"
-						},
-						"objectType": {
-							"type": "reference",
-							"name": "IAvatar"
-						}
-					}
-				},
-				{
-					"id": 81,
-					"name": "spacing",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The space between the avatars in the group."
-					},
-					"sources": [
-						{
-							"fileName": "AvatarGroup/index.d.ts",
-							"line": 25,
-							"character": 9
-						}
-					],
-					"type": {
-						"type": "indexedAccess",
-						"indexType": {
-							"type": "stringLiteral",
-							"value": "marginLeft"
-						},
-						"objectType": {
-							"type": "reference",
-							"name": "BoxProps"
-						}
-					}
-				}
-			],
-			"groups": [
-				{
-					"title": "Properties",
-					"kind": 1024,
-					"children": [
-						80,
-						82,
-						79,
-						81
-					]
-				}
-			],
-			"sources": [
-				{
-					"fileName": "AvatarGroup/index.d.ts",
-					"line": 11,
-					"character": 22
-				}
-			]
-		},
-		{
-			"id": 1,
-			"name": "IBadge",
-			"kind": 256,
-			"kindString": "Interface",
-			"flags": {
-				"isExported": true
-			},
-			"children": [
-				{
-					"id": 3,
-					"name": "variant",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The variant of the badge"
-					},
-					"sources": [
-						{
-							"fileName": "Badge/index.d.ts",
-							"line": 15,
-							"character": 9
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "stringLiteral",
-								"value": "solid"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "subtle"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "outline"
-							}
-						]
-					}
-				},
-				{
-					"id": 2,
-					"name": "variantColor",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The color scheme of the badge",
-						"text": "🚨Note: This should be one of the color keys in the theme that has `100` - `900` color values (e.g.`green`, `red`).",
-						"tags": [
-							{
-								"tag": "see",
-								"text": "http://chakra-ui.com/theme#colors\n"
-							}
-						]
-					},
-					"sources": [
-						{
-							"fileName": "Badge/index.d.ts",
-							"line": 11,
-							"character": 14
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "string"
-							}
-						]
-					}
-				}
-			],
-			"groups": [
-				{
-					"title": "Properties",
-					"kind": 1024,
-					"children": [
-						3,
-						2
-					]
-				}
-			],
-			"sources": [
-				{
-					"fileName": "Badge/index.d.ts",
-					"line": 4,
-					"character": 23
-				}
-			]
-		},
-		{
-			"id": 23,
-			"name": "IButton",
-			"kind": 256,
-			"kindString": "Interface",
-			"flags": {
-				"isExported": true
-			},
-			"children": [
-				{
-					"id": 33,
-					"name": "children",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true
-					},
-					"comment": {
-						"shortText": "The content of the button."
-					},
-					"sources": [
-						{
-							"fileName": "Button/index.d.ts",
-							"line": 50,
-							"character": 10
-						}
-					],
-					"type": {
-						"type": "reference",
-						"name": "React.ReactNode"
-					}
-				},
-				{
-					"id": 36,
-					"name": "iconSpacing",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The space between the button icon and label.\nUse the styled-system tokens or add custom values as a string"
-					},
-					"sources": [
-						{
-							"fileName": "Button/index.d.ts",
-							"line": 65,
-							"character": 13
-						}
-					],
-					"type": {
-						"type": "indexedAccess",
-						"indexType": {
-							"type": "stringLiteral",
-							"value": "margin"
-						},
-						"objectType": {
-							"type": "reference",
-							"name": "PseudoBoxProps"
-						}
-					}
-				},
-				{
-					"id": 28,
-					"name": "isActive",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "If `true`, the button will be styled in it's active state."
-					},
-					"sources": [
-						{
-							"fileName": "Button/index.d.ts",
-							"line": 29,
-							"character": 10
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "false"
-							},
-							{
-								"type": "intrinsic",
-								"name": "true"
-							}
-						]
-					}
-				},
-				{
-					"id": 29,
-					"name": "isDisabled",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "If `true`, the button will be disabled."
-					},
-					"sources": [
-						{
-							"fileName": "Button/index.d.ts",
-							"line": 33,
-							"character": 12
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "false"
-							},
-							{
-								"type": "intrinsic",
-								"name": "true"
-							}
-						]
-					}
-				},
-				{
-					"id": 31,
-					"name": "isFullWidth",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "If `true`, the button will take up the full width of its container."
-					},
-					"sources": [
-						{
-							"fileName": "Button/index.d.ts",
-							"line": 42,
-							"character": 13
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "false"
-							},
-							{
-								"type": "intrinsic",
-								"name": "true"
-							}
-						]
-					}
-				},
-				{
-					"id": 25,
-					"name": "isLoading",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "If `true`, the button will show a spinner."
-					},
-					"sources": [
-						{
-							"fileName": "Button/index.d.ts",
-							"line": 14,
-							"character": 11
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "false"
-							},
-							{
-								"type": "intrinsic",
-								"name": "true"
-							}
-						]
-					}
-				},
-				{
-					"id": 34,
-					"name": "leftIcon",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "If added, the button will show an icon before the button's label.\nUse the icon key in `theme.iconPath`"
-					},
-					"sources": [
-						{
-							"fileName": "Button/index.d.ts",
-							"line": 55,
-							"character": 10
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "reference",
-								"name": "Icons"
-							},
-							{
-								"type": "reference",
-								"name": "React.ComponentType"
-							}
-						]
-					}
-				},
-				{
-					"id": 30,
-					"name": "loadingText",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The label to show in the button when `isLoading` is true\nIf no text is passed, it only shows the spinner"
-					},
-					"sources": [
-						{
-							"fileName": "Button/index.d.ts",
-							"line": 38,
-							"character": 13
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "string"
-							}
-						]
-					}
-				},
-				{
-					"id": 35,
-					"name": "rightIcon",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "If added, the button will show an icon after the button's label.\nUse the icon key in `theme.iconPath`"
-					},
-					"sources": [
-						{
-							"fileName": "Button/index.d.ts",
-							"line": 60,
-							"character": 11
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "reference",
-								"name": "Icons"
-							},
-							{
-								"type": "reference",
-								"name": "React.ComponentType"
-							}
-						]
-					}
-				},
-				{
-					"id": 24,
-					"name": "size",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The size of the button"
-					},
-					"sources": [
-						{
-							"fileName": "Button/index.d.ts",
-							"line": 10,
-							"character": 6
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "stringLiteral",
-								"value": "xs"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "sm"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "md"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "lg"
-							}
-						]
-					}
-				},
-				{
-					"id": 32,
-					"name": "type",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The html button type to use."
-					},
-					"sources": [
-						{
-							"fileName": "Button/index.d.ts",
-							"line": 46,
-							"character": 6
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "stringLiteral",
-								"value": "button"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "reset"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "submit"
-							}
-						]
-					}
-				},
-				{
-					"id": 27,
-					"name": "variant",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The variant of the button style to use."
-					},
-					"sources": [
-						{
-							"fileName": "Button/index.d.ts",
-							"line": 25,
-							"character": 9
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "stringLiteral",
-								"value": "outline"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "ghost"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "unstyled"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "link"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "solid"
-							}
-						]
-					}
-				},
-				{
-					"id": 26,
-					"name": "variantColor",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The color scheme of the button.",
-						"text": "🚨Note: This should be one of the color keys in the theme that has `100` - `900` color values (e.g.`green`, `red`).",
-						"tags": [
-							{
-								"tag": "see",
-								"text": "http://chakra-ui.com/theme#colors\n"
-							}
-						]
-					},
-					"sources": [
-						{
-							"fileName": "Button/index.d.ts",
-							"line": 21,
-							"character": 14
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "string"
-							}
-						]
-					}
-				}
-			],
-			"groups": [
-				{
-					"title": "Properties",
-					"kind": 1024,
-					"children": [
-						33,
-						36,
-						28,
-						29,
-						31,
-						25,
-						34,
-						30,
-						35,
-						24,
-						32,
-						27,
-						26
-					]
-				}
-			],
-			"sources": [
-				{
-					"fileName": "Button/index.d.ts",
-					"line": 6,
-					"character": 24
-				}
-			]
-		},
-		{
-			"id": 6,
-			"name": "ICheckbox",
-			"kind": 256,
-			"kindString": "Interface",
-			"flags": {
-				"isExported": true
-			},
-			"children": [
-				{
-					"id": 20,
-					"name": "children",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The children is the label to be displayed to the right of the checkbox."
-					},
-					"sources": [
-						{
-							"fileName": "Checkbox/index.d.ts",
-							"line": 70,
-							"character": 10
-						}
-					],
-					"type": {
-						"type": "reference",
-						"name": "React.ReactNode"
-					}
-				},
-				{
-					"id": 11,
-					"name": "defaultIsChecked",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "If `true`, the checkbox will be initially checked."
-					},
-					"sources": [
-						{
-							"fileName": "Checkbox/index.d.ts",
-							"line": 30,
-							"character": 18
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "false"
-							},
-							{
-								"type": "intrinsic",
-								"name": "true"
-							}
-						]
-					}
-				},
-				{
-					"id": 7,
-					"name": "id",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "id assigned to input"
-					},
-					"sources": [
-						{
-							"fileName": "Checkbox/index.d.ts",
-							"line": 9,
-							"character": 4
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "string"
-							}
-						]
-					}
-				},
-				{
-					"id": 12,
-					"name": "isChecked",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "If `true`, the checkbox will be checked.\nYou'll need to pass `onChange` to update it's value (since it's now controlled)"
-					},
-					"sources": [
-						{
-							"fileName": "Checkbox/index.d.ts",
-							"line": 35,
-							"character": 11
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "false"
-							},
-							{
-								"type": "intrinsic",
-								"name": "true"
-							}
-						]
-					}
-				},
-				{
-					"id": 15,
-					"name": "isDisabled",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "If `true`, the checkbox will be disabled"
-					},
-					"sources": [
-						{
-							"fileName": "Checkbox/index.d.ts",
-							"line": 47,
-							"character": 12
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "false"
-							},
-							{
-								"type": "intrinsic",
-								"name": "true"
-							}
-						]
-					}
-				},
-				{
-					"id": 13,
-					"name": "isFullWidth",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "If `true`, the checkbox should take up the full width of the parent."
-					},
-					"sources": [
-						{
-							"fileName": "Checkbox/index.d.ts",
-							"line": 39,
-							"character": 13
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "false"
-							},
-							{
-								"type": "intrinsic",
-								"name": "true"
-							}
-						]
-					}
-				},
-				{
-					"id": 19,
-					"name": "isIndeterminate",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "If `true`, the checkbox will be indeterminate.\nThis only affects the icon shown inside checkbox\nand does not modify the isChecked property."
-					},
-					"sources": [
-						{
-							"fileName": "Checkbox/index.d.ts",
-							"line": 66,
-							"character": 17
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "false"
-							},
-							{
-								"type": "intrinsic",
-								"name": "true"
-							}
-						]
-					}
-				},
-				{
-					"id": 17,
-					"name": "isInvalid",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "If `true`, the checkbox is marked as invalid.\nChanges style of unchecked state."
-					},
-					"sources": [
-						{
-							"fileName": "Checkbox/index.d.ts",
-							"line": 56,
-							"character": 11
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "false"
-							},
-							{
-								"type": "intrinsic",
-								"name": "true"
-							}
-						]
-					}
-				},
-				{
-					"id": 16,
-					"name": "isReadOnly",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "If `true`, the checkbox will be readonly"
-					},
-					"sources": [
-						{
-							"fileName": "Checkbox/index.d.ts",
-							"line": 51,
-							"character": 12
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "false"
-							},
-							{
-								"type": "intrinsic",
-								"name": "true"
-							}
-						]
-					}
-				},
-				{
-					"id": 8,
-					"name": "name",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The name of the input field in a checkbox\n(Useful for form submission)."
-					},
-					"sources": [
-						{
-							"fileName": "Checkbox/index.d.ts",
-							"line": 14,
-							"character": 6
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "string"
-							}
-						]
-					}
-				},
-				{
-					"id": 18,
-					"name": "onChange",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The callback invoked when the checked state of the `Checkbox` changes.."
-					},
-					"sources": [
-						{
-							"fileName": "Checkbox/index.d.ts",
-							"line": 60,
-							"character": 10
-						}
-					],
-					"type": {
-						"type": "reference",
-						"typeArguments": [
-							{
-								"type": "reference",
-								"name": "HTMLInputElement"
-							}
-						],
-						"name": "React.ChangeEventHandler"
-					}
-				},
-				{
-					"id": 14,
-					"name": "size",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The size (width and height) of the checkbox"
-					},
-					"sources": [
-						{
-							"fileName": "Checkbox/index.d.ts",
-							"line": 43,
-							"character": 6
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "stringLiteral",
-								"value": "sm"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "md"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "lg"
-							}
-						]
-					}
-				},
-				{
-					"id": 9,
-					"name": "value",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The value to be used in the checkbox input.\nThis is the value that will be returned on form submission."
-					},
-					"sources": [
-						{
-							"fileName": "Checkbox/index.d.ts",
-							"line": 19,
-							"character": 7
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "string"
-							},
-							{
-								"type": "intrinsic",
-								"name": "number"
-							}
-						]
-					}
-				},
-				{
-					"id": 10,
-					"name": "variantColor",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The color scheme of the checkbox.",
-						"text": "🚨Note: This should be one of the color keys in the theme that has `100` - `900` color values (e.g.`green`, `red`).",
-						"tags": [
-							{
-								"tag": "see",
-								"text": "http://chakra-ui.com/theme#colors\n"
-							}
-						]
-					},
-					"sources": [
-						{
-							"fileName": "Checkbox/index.d.ts",
-							"line": 26,
-							"character": 14
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "string"
-							}
-						]
-					}
-				}
-			],
-			"groups": [
-				{
-					"title": "Properties",
-					"kind": 1024,
-					"children": [
-						20,
-						11,
-						7,
-						12,
-						15,
-						13,
-						19,
-						17,
-						16,
-						8,
-						18,
-						14,
-						9,
-						10
-					]
-				}
-			],
-			"sources": [
-				{
-					"fileName": "Checkbox/index.d.ts",
-					"line": 5,
-					"character": 26
-				}
-			]
-		},
-		{
-			"id": 54,
-			"name": "IIcon",
-			"kind": 256,
-			"kindString": "Interface",
-			"flags": {
-				"isExported": true
-			},
-			"children": [
-				{
-					"id": 57,
-					"name": "color",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The color of the icon."
-					},
-					"sources": [
-						{
-							"fileName": "Icon/index.d.ts",
-							"line": 18,
-							"character": 7
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "string"
-							}
-						]
-					}
-				},
-				{
-					"id": 59,
-					"name": "focusable",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "If `false`, it means the icon is used within interactive\nelement and won't be focuable."
-					},
-					"sources": [
-						{
-							"fileName": "Icon/index.d.ts",
-							"line": 27,
-							"character": 11
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "false"
-							},
-							{
-								"type": "intrinsic",
-								"name": "true"
-							}
-						]
-					}
-				},
-				{
-					"id": 56,
-					"name": "name",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The name of the icon."
-					},
-					"sources": [
-						{
-							"fileName": "Icon/index.d.ts",
-							"line": 14,
-							"character": 6
-						}
-					],
-					"type": {
-						"type": "reference",
-						"name": "Icons"
-					}
-				},
-				{
-					"id": 58,
-					"name": "role",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The role of the icon. `presentation` or `img`"
-					},
-					"sources": [
-						{
-							"fileName": "Icon/index.d.ts",
-							"line": 22,
-							"character": 6
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "stringLiteral",
-								"value": "presentation"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "img"
-							}
-						]
-					}
-				},
-				{
-					"id": 55,
-					"name": "size",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The size of the icon."
-					},
-					"sources": [
-						{
-							"fileName": "Icon/index.d.ts",
-							"line": 10,
-							"character": 6
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "string"
-							}
-						]
-					}
-				}
-			],
-			"groups": [
-				{
-					"title": "Properties",
-					"kind": 1024,
-					"children": [
-						57,
-						59,
-						56,
-						58,
-						55
-					]
-				}
-			],
-			"sources": [
-				{
-					"fileName": "Icon/index.d.ts",
-					"line": 6,
-					"character": 15
-				}
-			]
-		},
-		{
-			"id": 39,
-			"name": "IImage",
-			"kind": 256,
-			"kindString": "Interface",
-			"flags": {
-				"isExported": true
-			},
-			"children": [
-				{
-					"id": 42,
-					"name": "alt",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The alt text that describes the image"
-					},
-					"sources": [
-						{
-							"fileName": "Image/index.d.ts",
-							"line": 17,
-							"character": 5
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "string"
-							}
-						]
-					}
-				},
-				{
-					"id": 41,
-					"name": "fallbackSrc",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "In event there was an error loading the `src`, specify a fallback\nIn most cases, this can be an avatar or image placeholder"
-					},
-					"sources": [
-						{
-							"fileName": "Image/index.d.ts",
-							"line": 13,
-							"character": 13
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "string"
-							}
-						]
-					}
-				},
-				{
-					"id": 50,
-					"name": "htmlHeight",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The native HTML `height` attribute to the passed to the `img`"
-					},
-					"sources": [
-						{
-							"fileName": "Image/index.d.ts",
-							"line": 33,
-							"character": 12
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "string"
-							},
-							{
-								"type": "intrinsic",
-								"name": "number"
-							}
-						]
-					}
-				},
-				{
-					"id": 49,
-					"name": "htmlWidth",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The native HTML `width` attribute to the passed to the `img`"
-					},
-					"sources": [
-						{
-							"fileName": "Image/index.d.ts",
-							"line": 29,
-							"character": 11
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "string"
-							},
-							{
-								"type": "intrinsic",
-								"name": "number"
-							}
-						]
-					}
-				},
-				{
-					"id": 51,
-					"name": "ignoreFallback",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "Opt out of the `fallbackSrc` logic and use the `Image` directly"
-					},
-					"sources": [
-						{
-							"fileName": "Image/index.d.ts",
-							"line": 37,
-							"character": 16
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "false"
-							},
-							{
-								"type": "intrinsic",
-								"name": "true"
-							}
-						]
-					}
-				},
-				{
-					"id": 46,
-					"name": "onError",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "A callback for when there was an error loading the image `src`"
-					},
-					"sources": [
-						{
-							"fileName": "Image/index.d.ts",
-							"line": 25,
-							"character": 9
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "reflection",
-								"declaration": {
-									"id": 47,
-									"name": "__type",
-									"kind": 65536,
-									"kindString": "Type literal",
-									"flags": {
-										"isExported": true
-									},
-									"signatures": [
-										{
-											"id": 48,
-											"name": "__call",
-											"kind": 4096,
-											"kindString": "Call signature",
-											"flags": {
-												"isExported": true
-											},
-											"type": {
-												"type": "intrinsic",
-												"name": "void"
-											}
-										}
-									]
-								}
-							}
-						]
-					}
-				},
-				{
-					"id": 43,
-					"name": "onLoad",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "A callback for when the image `src` has been loaded"
-					},
-					"sources": [
-						{
-							"fileName": "Image/index.d.ts",
-							"line": 21,
-							"character": 8
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "reflection",
-								"declaration": {
-									"id": 44,
-									"name": "__type",
-									"kind": 65536,
-									"kindString": "Type literal",
-									"flags": {
-										"isExported": true
-									},
-									"signatures": [
-										{
-											"id": 45,
-											"name": "__call",
-											"kind": 4096,
-											"kindString": "Call signature",
-											"flags": {
-												"isExported": true
-											},
-											"type": {
-												"type": "intrinsic",
-												"name": "void"
-											}
-										}
-									]
-								}
-							}
-						]
-					}
-				},
-				{
-					"id": 40,
-					"name": "src",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The path to the image source"
-					},
-					"sources": [
-						{
-							"fileName": "Image/index.d.ts",
-							"line": 8,
-							"character": 5
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "intrinsic",
-								"name": "undefined"
-							},
-							{
-								"type": "intrinsic",
-								"name": "string"
-							}
-						]
-					}
-				}
-			],
-			"groups": [
-				{
-					"title": "Properties",
-					"kind": 1024,
-					"children": [
-						42,
-						41,
-						50,
-						49,
-						51,
-						46,
-						43,
-						40
-					]
-				}
-			],
-			"sources": [
-				{
-					"fileName": "Image/index.d.ts",
-					"line": 4,
-					"character": 16
-				}
-			]
-		},
-		{
-			"id": 75,
-			"name": "IMoreIndicator",
-			"kind": 256,
-			"kindString": "Interface",
-			"flags": {
-				"isExported": true
-			},
-			"children": [
-				{
-					"id": 77,
-					"name": "label",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true
-					},
-					"sources": [
-						{
-							"fileName": "AvatarGroup/index.d.ts",
-							"line": 8,
-							"character": 7
-						}
-					],
-					"type": {
-						"type": "reference",
-						"name": "React.ReactNode"
-					}
-				},
-				{
-					"id": 76,
-					"name": "size",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"sources": [
-						{
-							"fileName": "AvatarGroup/index.d.ts",
-							"line": 7,
-							"character": 6
-						}
-					],
-					"type": {
-						"type": "indexedAccess",
-						"indexType": {
-							"type": "stringLiteral",
-							"value": "size"
-						},
-						"objectType": {
-							"type": "reference",
-							"name": "IAvatar"
-						}
-					}
-				}
-			],
-			"groups": [
-				{
-					"title": "Properties",
-					"kind": 1024,
-					"children": [
-						77,
-						76
-					]
-				}
-			],
-			"sources": [
-				{
-					"fileName": "AvatarGroup/index.d.ts",
-					"line": 6,
-					"character": 24
-				}
-			]
-		},
-		{
-			"id": 85,
-			"name": "ITag",
-			"kind": 256,
-			"kindString": "Interface",
-			"flags": {
-				"isExported": true
-			},
-			"children": [
-				{
-					"id": 87,
-					"name": "size",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The size of the tag."
-					},
-					"sources": [
-						{
-							"fileName": "Tag/index.d.ts",
-							"line": 16,
-							"character": 6
-						}
-					],
-					"type": {
-						"type": "union",
-						"types": [
-							{
-								"type": "stringLiteral",
-								"value": "sm"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "md"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "lg"
-							}
-						]
-					}
-				},
-				{
-					"id": 86,
-					"name": "variant",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The variant of the tag."
-					},
-					"sources": [
-						{
-							"fileName": "Tag/index.d.ts",
-							"line": 12,
-							"character": 9
-						}
-					],
-					"type": {
-						"type": "indexedAccess",
-						"indexType": {
-							"type": "stringLiteral",
-							"value": "variant"
-						},
-						"objectType": {
-							"type": "reference",
-							"name": "IBadge"
-						}
-					}
-				},
-				{
-					"id": 88,
-					"name": "variantColor",
-					"kind": 1024,
-					"kindString": "Property",
-					"flags": {
-						"isExported": true,
-						"isOptional": true
-					},
-					"comment": {
-						"shortText": "The color scheme of the tag."
-					},
-					"sources": [
-						{
-							"fileName": "Tag/index.d.ts",
-							"line": 20,
-							"character": 14
-						}
-					],
-					"type": {
-						"type": "indexedAccess",
-						"indexType": {
-							"type": "stringLiteral",
-							"value": "variantColor"
-						},
-						"objectType": {
-							"type": "reference",
-							"name": "IBadge"
-						}
-					}
-				}
-			],
-			"groups": [
-				{
-					"title": "Properties",
-					"kind": 1024,
-					"children": [
-						87,
-						86,
-						88
-					]
-				}
-			],
-			"sources": [
-				{
-					"fileName": "Tag/index.d.ts",
-					"line": 8,
-					"character": 21
-				}
-			]
-		},
-		{
-			"id": 83,
-			"name": "AvatarGroupProps",
-			"kind": 4194304,
-			"kindString": "Type alias",
-			"flags": {
-				"isExported": true
-			},
-			"sources": [
-				{
-					"fileName": "AvatarGroup/index.d.ts",
-					"line": 32,
-					"character": 28
-				}
-			],
-			"type": {
-				"type": "intersection",
-				"types": [
-					{
-						"type": "reference",
-						"id": 78,
-						"name": "IAvatarGroup"
-					},
-					{
-						"type": "reference",
-						"typeArguments": [
-							{
-								"type": "reference",
-								"name": "BoxProps"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "size"
-							}
-						],
-						"name": "Omit"
-					}
-				]
-			}
-		},
-		{
-			"id": 70,
-			"name": "AvatarNameProps",
-			"kind": 4194304,
-			"kindString": "Type alias",
-			"flags": {
-				"isExported": true
-			},
-			"sources": [
-				{
-					"fileName": "Avatar/index.d.ts",
-					"line": 35,
-					"character": 27
-				}
-			],
-			"type": {
-				"type": "intersection",
-				"types": [
-					{
-						"type": "indexedAccess",
-						"indexType": {
-							"type": "stringLiteral",
-							"value": "name"
-						},
-						"objectType": {
-							"type": "reference",
-							"name": "IAvatar"
-						}
-					},
-					{
-						"type": "reference",
-						"name": "BoxProps"
-					}
-				]
-			}
-		},
-		{
-			"id": 73,
-			"name": "AvatarProps",
-			"kind": 4194304,
-			"kindString": "Type alias",
-			"flags": {
-				"isExported": true
-			},
-			"sources": [
-				{
-					"fileName": "Avatar/index.d.ts",
-					"line": 40,
-					"character": 23
-				}
-			],
-			"type": {
-				"type": "intersection",
-				"types": [
-					{
-						"type": "reference",
-						"id": 63,
-						"name": "IAvatar"
-					},
-					{
-						"type": "reference",
-						"typeArguments": [
-							{
-								"type": "reference",
-								"name": "BoxProps"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "size"
-							}
-						],
-						"name": "Omit"
-					}
-				]
-			}
-		},
-		{
-			"id": 4,
-			"name": "BadgeProps",
-			"kind": 4194304,
-			"kindString": "Type alias",
-			"flags": {
-				"isExported": true
-			},
-			"sources": [
-				{
-					"fileName": "Badge/index.d.ts",
-					"line": 18,
-					"character": 22
-				}
-			],
-			"type": {
-				"type": "intersection",
-				"types": [
-					{
-						"type": "reference",
-						"id": 1,
-						"name": "IBadge"
-					},
-					{
-						"type": "reference",
-						"name": "BoxProps"
-					}
-				]
-			}
-		},
-		{
-			"id": 37,
-			"name": "ButtonProps",
-			"kind": 4194304,
-			"kindString": "Type alias",
-			"flags": {
-				"isExported": true
-			},
-			"sources": [
-				{
-					"fileName": "Button/index.d.ts",
-					"line": 68,
-					"character": 23
-				}
-			],
-			"type": {
-				"type": "intersection",
-				"types": [
-					{
-						"type": "reference",
-						"id": 23,
-						"name": "IButton"
-					},
-					{
-						"type": "reference",
-						"typeArguments": [
-							{
-								"type": "reference",
-								"name": "PseudoBoxProps"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "size"
-							}
-						],
-						"name": "Omit"
-					}
-				]
-			}
-		},
-		{
-			"id": 21,
-			"name": "CheckboxProps",
-			"kind": 4194304,
-			"kindString": "Type alias",
-			"flags": {
-				"isExported": true
-			},
-			"sources": [
-				{
-					"fileName": "Checkbox/index.d.ts",
-					"line": 73,
-					"character": 25
-				}
-			],
-			"type": {
-				"type": "intersection",
-				"types": [
-					{
-						"type": "reference",
-						"id": 6,
-						"name": "ICheckbox"
-					},
-					{
-						"type": "reference",
-						"typeArguments": [
-							{
-								"type": "reference",
-								"name": "HTMLInputElement"
-							}
-						],
-						"name": "RefAttributes"
-					},
-					{
-						"type": "reference",
-						"typeArguments": [
-							{
-								"type": "reference",
-								"name": "BoxProps"
-							},
-							{
-								"type": "union",
-								"types": [
-									{
-										"type": "stringLiteral",
-										"value": "onChange"
-									},
-									{
-										"type": "stringLiteral",
-										"value": "defaultChecked"
-									}
-								]
-							}
-						],
-						"name": "Omit"
-					}
-				]
-			}
-		},
-		{
-			"id": 60,
-			"name": "IconProps",
-			"kind": 4194304,
-			"kindString": "Type alias",
-			"flags": {
-				"isExported": true
-			},
-			"sources": [
-				{
-					"fileName": "Icon/index.d.ts",
-					"line": 30,
-					"character": 21
-				}
-			],
-			"type": {
-				"type": "intersection",
-				"types": [
-					{
-						"type": "reference",
-						"id": 54,
-						"name": "IIcon"
-					},
-					{
-						"type": "reference",
-						"typeArguments": [
-							{
-								"type": "reference",
-								"name": "BoxProps"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "size"
-							}
-						],
-						"name": "Omit"
-					}
-				]
-			}
-		},
-		{
-			"id": 52,
-			"name": "ImageProps",
-			"kind": 4194304,
-			"kindString": "Type alias",
-			"flags": {
-				"isExported": true
-			},
-			"sources": [
-				{
-					"fileName": "Image/index.d.ts",
-					"line": 40,
-					"character": 22
-				}
-			],
-			"type": {
-				"type": "intersection",
-				"types": [
-					{
-						"type": "reference",
-						"id": 39,
-						"name": "IImage"
-					},
-					{
-						"type": "reference",
-						"name": "BoxProps"
-					}
-				]
-			}
-		},
-		{
-			"id": 69,
-			"name": "Size",
-			"kind": 4194304,
-			"kindString": "Type alias",
-			"flags": {
-				"isExported": true
-			},
-			"sources": [
-				{
-					"fileName": "Avatar/index.d.ts",
-					"line": 5,
-					"character": 9
-				}
-			],
-			"type": {
-				"type": "union",
-				"types": [
-					{
-						"type": "stringLiteral",
-						"value": "2xs"
-					},
-					{
-						"type": "stringLiteral",
-						"value": "xs"
-					},
-					{
-						"type": "stringLiteral",
-						"value": "sm"
-					},
-					{
-						"type": "stringLiteral",
-						"value": "md"
-					},
-					{
-						"type": "stringLiteral",
-						"value": "lg"
-					},
-					{
-						"type": "stringLiteral",
-						"value": "xl"
-					},
-					{
-						"type": "stringLiteral",
-						"value": "2xl"
-					}
-				]
-			}
-		},
-		{
-			"id": 93,
-			"name": "TagIconProps",
-			"kind": 4194304,
-			"kindString": "Type alias",
-			"flags": {
-				"isExported": true
-			},
-			"sources": [
-				{
-					"fileName": "Tag/index.d.ts",
-					"line": 29,
-					"character": 17
-				}
-			],
-			"type": {
-				"type": "intersection",
-				"types": [
-					{
-						"type": "reference",
-						"typeArguments": [
-							{
-								"type": "reference",
-								"id": 60,
-								"name": "IconProps"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "name"
-							}
-						],
-						"name": "Omit"
-					},
-					{
-						"type": "reflection",
-						"declaration": {
-							"id": 94,
-							"name": "__type",
-							"kind": 65536,
-							"kindString": "Type literal",
-							"flags": {
-								"isExported": true
-							},
-							"children": [
-								{
-									"id": 95,
-									"name": "icon",
-									"kind": 32,
-									"kindString": "Variable",
-									"flags": {
-										"isExported": true
-									},
-									"sources": [
-										{
-											"fileName": "Tag/index.d.ts",
-											"line": 30,
-											"character": 6
-										}
-									],
-									"type": {
-										"type": "union",
-										"types": [
-											{
-												"type": "indexedAccess",
-												"indexType": {
-													"type": "stringLiteral",
-													"value": "name"
-												},
-												"objectType": {
-													"type": "reference",
-													"name": "IconProps"
-												}
-											},
-											{
-												"type": "reference",
-												"name": "React.ComponentType"
-											}
-										]
-									}
-								}
-							],
-							"groups": [
-								{
-									"title": "Variables",
-									"kind": 32,
-									"children": [
-										95
-									]
-								}
-							],
-							"sources": [
-								{
-									"fileName": "Tag/index.d.ts",
-									"line": 29,
-									"character": 45
-								}
-							]
-						}
-					}
-				]
-			}
-		},
-		{
-			"id": 89,
-			"name": "TagProps",
-			"kind": 4194304,
-			"kindString": "Type alias",
-			"flags": {
-				"isExported": true
-			},
-			"sources": [
-				{
-					"fileName": "Tag/index.d.ts",
-					"line": 22,
-					"character": 20
-				}
-			],
-			"type": {
-				"type": "intersection",
-				"types": [
-					{
-						"type": "reference",
-						"id": 85,
-						"name": "ITag"
-					},
-					{
-						"type": "reference",
-						"typeArguments": [
-							{
-								"type": "reference",
-								"name": "PseudoBoxProps"
-							},
-							{
-								"type": "stringLiteral",
-								"value": "size"
-							}
-						],
-						"name": "Omit"
-					}
-				]
-			}
-		},
-		{
-			"id": 74,
-			"name": "Avatar",
-			"kind": 32,
-			"kindString": "Variable",
-			"flags": {
-				"isExported": true,
-				"isConst": true
-			},
-			"comment": {
-				"shortText": "The Avatar component is used to represent user, and displays the profile\npicture, initials or fallback icon."
-			},
-			"sources": [
-				{
-					"fileName": "Avatar/index.d.ts",
-					"line": 45,
-					"character": 20
-				}
-			],
-			"type": {
-				"type": "reference",
-				"typeArguments": [
-					{
-						"type": "reference",
-						"id": 73,
-						"name": "AvatarProps"
-					}
-				],
-				"name": "React.FC"
-			}
-		},
-		{
-			"id": 72,
-			"name": "AvatarBadge",
-			"kind": 32,
-			"kindString": "Variable",
-			"flags": {
-				"isExported": true,
-				"isConst": true
-			},
-			"sources": [
-				{
-					"fileName": "Avatar/index.d.ts",
-					"line": 38,
-					"character": 24
-				}
-			],
-			"type": {
-				"type": "reference",
-				"typeArguments": [
-					{
-						"type": "reference",
-						"name": "BoxProps"
-					}
-				],
-				"name": "React.FC"
-			}
-		},
-		{
-			"id": 84,
-			"name": "AvatarGroup",
-			"kind": 32,
-			"kindString": "Variable",
-			"flags": {
-				"isExported": true,
-				"isConst": true
-			},
-			"comment": {
-				"shortText": "AvatarGroup is a wrapper to render a collection of evenly spaced avatars."
-			},
-			"sources": [
-				{
-					"fileName": "AvatarGroup/index.d.ts",
-					"line": 36,
-					"character": 25
-				}
-			],
-			"type": {
-				"type": "reference",
-				"typeArguments": [
-					{
-						"type": "reference",
-						"id": 83,
-						"name": "AvatarGroupProps"
-					}
-				],
-				"name": "React.FC"
-			}
-		},
-		{
-			"id": 71,
-			"name": "AvatarName",
-			"kind": 32,
-			"kindString": "Variable",
-			"flags": {
-				"isExported": true,
-				"isConst": true
-			},
-			"sources": [
-				{
-					"fileName": "Avatar/index.d.ts",
-					"line": 36,
-					"character": 23
-				}
-			],
-			"type": {
-				"type": "reference",
-				"typeArguments": [
-					{
-						"type": "reference",
-						"id": 70,
-						"name": "AvatarNameProps"
-					}
-				],
-				"name": "React.FC"
-			}
-		},
-		{
-			"id": 5,
-			"name": "Badge",
-			"kind": 32,
-			"kindString": "Variable",
-			"flags": {
-				"isExported": true,
-				"isConst": true
-			},
-			"comment": {
-				"shortText": "The Badge component is used for state, general text, and number labels."
-			},
-			"sources": [
-				{
-					"fileName": "Badge/index.d.ts",
-					"line": 23,
-					"character": 19
-				}
-			],
-			"type": {
-				"type": "reference",
-				"typeArguments": [
-					{
-						"type": "reference",
-						"id": 4,
-						"name": "BadgeProps"
-					}
-				],
-				"name": "React.FC"
-			}
-		},
-		{
-			"id": 38,
-			"name": "Button",
-			"kind": 32,
-			"kindString": "Variable",
-			"flags": {
-				"isExported": true,
-				"isConst": true
-			},
-			"sources": [
-				{
-					"fileName": "Button/index.d.ts",
-					"line": 70,
-					"character": 20
-				}
-			],
-			"type": {
-				"type": "reference",
-				"typeArguments": [
-					{
-						"type": "reference",
-						"id": 37,
-						"name": "ButtonProps"
-					}
-				],
-				"name": "React.FC"
-			}
-		},
-		{
-			"id": 22,
-			"name": "Checkbox",
-			"kind": 32,
-			"kindString": "Variable",
-			"flags": {
-				"isExported": true,
-				"isConst": true
-			},
-			"sources": [
-				{
-					"fileName": "Checkbox/index.d.ts",
-					"line": 77,
-					"character": 22
-				}
-			],
-			"type": {
-				"type": "reference",
-				"typeArguments": [
-					{
-						"type": "reference",
-						"id": 21,
-						"name": "CheckboxProps"
-					}
-				],
-				"name": "React.FC"
-			}
-		},
-		{
-			"id": 61,
-			"name": "Icon",
-			"kind": 32,
-			"kindString": "Variable",
-			"flags": {
-				"isExported": true,
-				"isConst": true
-			},
-			"sources": [
-				{
-					"fileName": "Icon/index.d.ts",
-					"line": 32,
-					"character": 18
-				}
-			],
-			"type": {
-				"type": "reference",
-				"typeArguments": [
-					{
-						"type": "reference",
-						"id": 60,
-						"name": "IconProps"
-					}
-				],
-				"name": "React.FC"
-			}
-		},
-		{
-			"id": 53,
-			"name": "Image",
-			"kind": 32,
-			"kindString": "Variable",
-			"flags": {
-				"isExported": true,
-				"isConst": true
-			},
-			"sources": [
-				{
-					"fileName": "Image/index.d.ts",
-					"line": 42,
-					"character": 19
-				}
-			],
-			"type": {
-				"type": "reference",
-				"typeArguments": [
-					{
-						"type": "reference",
-						"id": 52,
-						"name": "ImageProps"
-					}
-				],
-				"name": "React.FC"
-			}
-		},
-		{
-			"id": 90,
-			"name": "Tag",
-			"kind": 32,
-			"kindString": "Variable",
-			"flags": {
-				"isExported": true,
-				"isConst": true
-			},
-			"sources": [
-				{
-					"fileName": "Tag/index.d.ts",
-					"line": 23,
-					"character": 17
-				}
-			],
-			"type": {
-				"type": "reference",
-				"typeArguments": [
-					{
-						"type": "reference",
-						"id": 89,
-						"name": "TagProps"
-					}
-				],
-				"name": "React.FC"
-			}
-		},
-		{
-			"id": 92,
-			"name": "TagCloseButton",
-			"kind": 32,
-			"kindString": "Variable",
-			"flags": {
-				"isExported": true,
-				"isConst": true
-			},
-			"sources": [
-				{
-					"fileName": "Tag/index.d.ts",
-					"line": 27,
-					"character": 27
-				}
-			],
-			"type": {
-				"type": "reference",
-				"typeArguments": [
-					{
-						"type": "reference",
-						"name": "PseudoBoxProps"
-					}
-				],
-				"name": "React.FC"
-			}
-		},
-		{
-			"id": 96,
-			"name": "TagIcon",
-			"kind": 32,
-			"kindString": "Variable",
-			"flags": {
-				"isExported": true,
-				"isConst": true
-			},
-			"sources": [
-				{
-					"fileName": "Tag/index.d.ts",
-					"line": 32,
-					"character": 20
-				}
-			],
-			"type": {
-				"type": "reference",
-				"typeArguments": [
-					{
-						"type": "reference",
-						"id": 93,
-						"name": "TagIconProps"
-					}
-				],
-				"name": "React.FC"
-			}
-		},
-		{
-			"id": 91,
-			"name": "TagLabel",
-			"kind": 32,
-			"kindString": "Variable",
-			"flags": {
-				"isExported": true,
-				"isConst": true
-			},
-			"sources": [
-				{
-					"fileName": "Tag/index.d.ts",
-					"line": 26,
-					"character": 21
-				}
-			],
-			"type": {
-				"type": "reference",
-				"typeArguments": [
-					{
-						"type": "reference",
-						"name": "BoxProps"
-					}
-				],
-				"name": "React.FC"
-			}
-		},
-		{
-			"id": 62,
-			"name": "Text",
-			"kind": 32,
-			"kindString": "Variable",
-			"flags": {
-				"isExported": true,
-				"isConst": true
-			},
-			"sources": [
-				{
-					"fileName": "Text/index.d.ts",
-					"line": 4,
-					"character": 18
-				}
-			],
-			"type": {
-				"type": "reference",
-				"typeArguments": [
-					{
-						"type": "reference",
-						"name": "BoxProps"
-					}
-				],
-				"name": "React.FC"
-			}
-		}
-	],
-	"groups": [
-		{
-			"title": "Interfaces",
-			"kind": 256,
-			"children": [
-				63,
-				78,
-				1,
-				23,
-				6,
-				54,
-				39,
-				75,
-				85
-			]
-		},
-		{
-			"title": "Type aliases",
-			"kind": 4194304,
-			"children": [
-				83,
-				70,
-				73,
-				4,
-				37,
-				21,
-				60,
-				52,
-				69,
-				93,
-				89
-			]
-		},
-		{
-			"title": "Variables",
-			"kind": 32,
-			"children": [
-				74,
-				72,
-				84,
-				71,
-				5,
-				38,
-				22,
-				61,
-				53,
-				90,
-				92,
-				96,
-				91,
-				62
-			]
-		}
-	]
+  "id": 0,
+  "name": "undefined",
+  "kind": 0,
+  "flags": {},
+  "originalName": "",
+  "children": [
+    {
+      "id": 63,
+      "name": "IAvatar",
+      "kind": 256,
+      "kindString": "Interface",
+      "flags": {
+        "isExported": true
+      },
+      "children": [
+        {
+          "id": 67,
+          "name": "children",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The badge at the bottom right corner of the avatar."
+          },
+          "sources": [
+            {
+              "fileName": "Avatar/index.d.ts",
+              "line": 28,
+              "character": 10
+            }
+          ],
+          "type": {
+            "type": "reference",
+            "name": "React.ReactNode"
+          }
+        },
+        {
+          "id": 64,
+          "name": "name",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The name of the person in the avatar.",
+            "text": "- if `src` has loaded, the name will be used as the `alt` attribute of the `img`\n- If `src` is not loaded, the name will be used to create the initials\n"
+          },
+          "sources": [
+            {
+              "fileName": "Avatar/index.d.ts",
+              "line": 14,
+              "character": 6
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "string"
+              }
+            ]
+          }
+        },
+        {
+          "id": 66,
+          "name": "showBorder",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "If `true`, the `Avatar` will show a border around it.",
+            "text": "Best for a group of avatars\n"
+          },
+          "sources": [
+            {
+              "fileName": "Avatar/index.d.ts",
+              "line": 24,
+              "character": 12
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "false"
+              },
+              {
+                "type": "intrinsic",
+                "name": "true"
+              }
+            ]
+          }
+        },
+        {
+          "id": 65,
+          "name": "size",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The size of the avatar."
+          },
+          "sources": [
+            {
+              "fileName": "Avatar/index.d.ts",
+              "line": 18,
+              "character": 6
+            }
+          ],
+          "type": {
+            "type": "reference",
+            "id": 69,
+            "name": "Size"
+          }
+        },
+        {
+          "id": 68,
+          "name": "src",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The image url of the `Avatar`"
+          },
+          "sources": [
+            {
+              "fileName": "Avatar/index.d.ts",
+              "line": 32,
+              "character": 5
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "string"
+              }
+            ]
+          }
+        }
+      ],
+      "groups": [
+        {
+          "title": "Properties",
+          "kind": 1024,
+          "children": [67, 64, 66, 65, 68]
+        }
+      ],
+      "sources": [
+        {
+          "fileName": "Avatar/index.d.ts",
+          "line": 7,
+          "character": 24
+        }
+      ]
+    },
+    {
+      "id": 78,
+      "name": "IAvatarGroup",
+      "kind": 256,
+      "kindString": "Interface",
+      "flags": {
+        "isExported": true
+      },
+      "children": [
+        {
+          "id": 80,
+          "name": "children",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "The children of the avatar group.",
+            "text": "Ideally should be `Avatar` and `MoreIndicator` components\n"
+          },
+          "sources": [
+            {
+              "fileName": "AvatarGroup/index.d.ts",
+              "line": 21,
+              "character": 10
+            }
+          ],
+          "type": {
+            "type": "reference",
+            "name": "React.ReactNode"
+          }
+        },
+        {
+          "id": 82,
+          "name": "max",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The maximum number of visible avatars"
+          },
+          "sources": [
+            {
+              "fileName": "AvatarGroup/index.d.ts",
+              "line": 29,
+              "character": 5
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "number"
+              }
+            ]
+          }
+        },
+        {
+          "id": 79,
+          "name": "size",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The size of the avatar group."
+          },
+          "sources": [
+            {
+              "fileName": "AvatarGroup/index.d.ts",
+              "line": 15,
+              "character": 6
+            }
+          ],
+          "type": {
+            "type": "indexedAccess",
+            "indexType": {
+              "type": "stringLiteral",
+              "value": "size"
+            },
+            "objectType": {
+              "type": "reference",
+              "name": "IAvatar"
+            }
+          }
+        },
+        {
+          "id": 81,
+          "name": "spacing",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The space between the avatars in the group."
+          },
+          "sources": [
+            {
+              "fileName": "AvatarGroup/index.d.ts",
+              "line": 25,
+              "character": 9
+            }
+          ],
+          "type": {
+            "type": "indexedAccess",
+            "indexType": {
+              "type": "stringLiteral",
+              "value": "marginLeft"
+            },
+            "objectType": {
+              "type": "reference",
+              "name": "BoxProps"
+            }
+          }
+        }
+      ],
+      "groups": [
+        {
+          "title": "Properties",
+          "kind": 1024,
+          "children": [80, 82, 79, 81]
+        }
+      ],
+      "sources": [
+        {
+          "fileName": "AvatarGroup/index.d.ts",
+          "line": 11,
+          "character": 22
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "IBadge",
+      "kind": 256,
+      "kindString": "Interface",
+      "flags": {
+        "isExported": true
+      },
+      "children": [
+        {
+          "id": 3,
+          "name": "variant",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The variant of the badge"
+          },
+          "sources": [
+            {
+              "fileName": "Badge/index.d.ts",
+              "line": 15,
+              "character": 9
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "stringLiteral",
+                "value": "solid"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "subtle"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "outline"
+              }
+            ]
+          }
+        },
+        {
+          "id": 2,
+          "name": "colorScheme",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The color scheme of the badge",
+            "text": "🚨Note: This should be one of the color keys in the theme that has `100` - `900` color values (e.g.`green`, `red`).",
+            "tags": [
+              {
+                "tag": "see",
+                "text": "http://chakra-ui.com/theme#colors\n"
+              }
+            ]
+          },
+          "sources": [
+            {
+              "fileName": "Badge/index.d.ts",
+              "line": 11,
+              "character": 14
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "string"
+              }
+            ]
+          }
+        }
+      ],
+      "groups": [
+        {
+          "title": "Properties",
+          "kind": 1024,
+          "children": [3, 2]
+        }
+      ],
+      "sources": [
+        {
+          "fileName": "Badge/index.d.ts",
+          "line": 4,
+          "character": 23
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "name": "IButton",
+      "kind": 256,
+      "kindString": "Interface",
+      "flags": {
+        "isExported": true
+      },
+      "children": [
+        {
+          "id": 33,
+          "name": "children",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "The content of the button."
+          },
+          "sources": [
+            {
+              "fileName": "Button/index.d.ts",
+              "line": 50,
+              "character": 10
+            }
+          ],
+          "type": {
+            "type": "reference",
+            "name": "React.ReactNode"
+          }
+        },
+        {
+          "id": 36,
+          "name": "iconSpacing",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The space between the button icon and label.\nUse the styled-system tokens or add custom values as a string"
+          },
+          "sources": [
+            {
+              "fileName": "Button/index.d.ts",
+              "line": 65,
+              "character": 13
+            }
+          ],
+          "type": {
+            "type": "indexedAccess",
+            "indexType": {
+              "type": "stringLiteral",
+              "value": "margin"
+            },
+            "objectType": {
+              "type": "reference",
+              "name": "PseudoBoxProps"
+            }
+          }
+        },
+        {
+          "id": 28,
+          "name": "isActive",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "If `true`, the button will be styled in it's active state."
+          },
+          "sources": [
+            {
+              "fileName": "Button/index.d.ts",
+              "line": 29,
+              "character": 10
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "false"
+              },
+              {
+                "type": "intrinsic",
+                "name": "true"
+              }
+            ]
+          }
+        },
+        {
+          "id": 29,
+          "name": "isDisabled",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "If `true`, the button will be disabled."
+          },
+          "sources": [
+            {
+              "fileName": "Button/index.d.ts",
+              "line": 33,
+              "character": 12
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "false"
+              },
+              {
+                "type": "intrinsic",
+                "name": "true"
+              }
+            ]
+          }
+        },
+        {
+          "id": 31,
+          "name": "isFullWidth",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "If `true`, the button will take up the full width of its container."
+          },
+          "sources": [
+            {
+              "fileName": "Button/index.d.ts",
+              "line": 42,
+              "character": 13
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "false"
+              },
+              {
+                "type": "intrinsic",
+                "name": "true"
+              }
+            ]
+          }
+        },
+        {
+          "id": 25,
+          "name": "isLoading",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "If `true`, the button will show a spinner."
+          },
+          "sources": [
+            {
+              "fileName": "Button/index.d.ts",
+              "line": 14,
+              "character": 11
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "false"
+              },
+              {
+                "type": "intrinsic",
+                "name": "true"
+              }
+            ]
+          }
+        },
+        {
+          "id": 34,
+          "name": "leftIcon",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "If added, the button will show an icon before the button's label.\nUse the icon key in `theme.iconPath`"
+          },
+          "sources": [
+            {
+              "fileName": "Button/index.d.ts",
+              "line": 55,
+              "character": 10
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "reference",
+                "name": "Icons"
+              },
+              {
+                "type": "reference",
+                "name": "React.ComponentType"
+              }
+            ]
+          }
+        },
+        {
+          "id": 30,
+          "name": "loadingText",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The label to show in the button when `isLoading` is true\nIf no text is passed, it only shows the spinner"
+          },
+          "sources": [
+            {
+              "fileName": "Button/index.d.ts",
+              "line": 38,
+              "character": 13
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "string"
+              }
+            ]
+          }
+        },
+        {
+          "id": 35,
+          "name": "rightIcon",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "If added, the button will show an icon after the button's label.\nUse the icon key in `theme.iconPath`"
+          },
+          "sources": [
+            {
+              "fileName": "Button/index.d.ts",
+              "line": 60,
+              "character": 11
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "reference",
+                "name": "Icons"
+              },
+              {
+                "type": "reference",
+                "name": "React.ComponentType"
+              }
+            ]
+          }
+        },
+        {
+          "id": 24,
+          "name": "size",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The size of the button"
+          },
+          "sources": [
+            {
+              "fileName": "Button/index.d.ts",
+              "line": 10,
+              "character": 6
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "stringLiteral",
+                "value": "xs"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "sm"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "md"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "lg"
+              }
+            ]
+          }
+        },
+        {
+          "id": 32,
+          "name": "type",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The html button type to use."
+          },
+          "sources": [
+            {
+              "fileName": "Button/index.d.ts",
+              "line": 46,
+              "character": 6
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "stringLiteral",
+                "value": "button"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "reset"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "submit"
+              }
+            ]
+          }
+        },
+        {
+          "id": 27,
+          "name": "variant",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The variant of the button style to use."
+          },
+          "sources": [
+            {
+              "fileName": "Button/index.d.ts",
+              "line": 25,
+              "character": 9
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "stringLiteral",
+                "value": "outline"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "ghost"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "unstyled"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "link"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "solid"
+              }
+            ]
+          }
+        },
+        {
+          "id": 26,
+          "name": "colorScheme",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The color scheme of the button.",
+            "text": "🚨Note: This should be one of the color keys in the theme that has `100` - `900` color values (e.g.`green`, `red`).",
+            "tags": [
+              {
+                "tag": "see",
+                "text": "http://chakra-ui.com/theme#colors\n"
+              }
+            ]
+          },
+          "sources": [
+            {
+              "fileName": "Button/index.d.ts",
+              "line": 21,
+              "character": 14
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "string"
+              }
+            ]
+          }
+        }
+      ],
+      "groups": [
+        {
+          "title": "Properties",
+          "kind": 1024,
+          "children": [33, 36, 28, 29, 31, 25, 34, 30, 35, 24, 32, 27, 26]
+        }
+      ],
+      "sources": [
+        {
+          "fileName": "Button/index.d.ts",
+          "line": 6,
+          "character": 24
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "ICheckbox",
+      "kind": 256,
+      "kindString": "Interface",
+      "flags": {
+        "isExported": true
+      },
+      "children": [
+        {
+          "id": 20,
+          "name": "children",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The children is the label to be displayed to the right of the checkbox."
+          },
+          "sources": [
+            {
+              "fileName": "Checkbox/index.d.ts",
+              "line": 70,
+              "character": 10
+            }
+          ],
+          "type": {
+            "type": "reference",
+            "name": "React.ReactNode"
+          }
+        },
+        {
+          "id": 11,
+          "name": "defaultIsChecked",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "If `true`, the checkbox will be initially checked."
+          },
+          "sources": [
+            {
+              "fileName": "Checkbox/index.d.ts",
+              "line": 30,
+              "character": 18
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "false"
+              },
+              {
+                "type": "intrinsic",
+                "name": "true"
+              }
+            ]
+          }
+        },
+        {
+          "id": 7,
+          "name": "id",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "id assigned to input"
+          },
+          "sources": [
+            {
+              "fileName": "Checkbox/index.d.ts",
+              "line": 9,
+              "character": 4
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "string"
+              }
+            ]
+          }
+        },
+        {
+          "id": 12,
+          "name": "isChecked",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "If `true`, the checkbox will be checked.\nYou'll need to pass `onChange` to update it's value (since it's now controlled)"
+          },
+          "sources": [
+            {
+              "fileName": "Checkbox/index.d.ts",
+              "line": 35,
+              "character": 11
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "false"
+              },
+              {
+                "type": "intrinsic",
+                "name": "true"
+              }
+            ]
+          }
+        },
+        {
+          "id": 15,
+          "name": "isDisabled",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "If `true`, the checkbox will be disabled"
+          },
+          "sources": [
+            {
+              "fileName": "Checkbox/index.d.ts",
+              "line": 47,
+              "character": 12
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "false"
+              },
+              {
+                "type": "intrinsic",
+                "name": "true"
+              }
+            ]
+          }
+        },
+        {
+          "id": 13,
+          "name": "isFullWidth",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "If `true`, the checkbox should take up the full width of the parent."
+          },
+          "sources": [
+            {
+              "fileName": "Checkbox/index.d.ts",
+              "line": 39,
+              "character": 13
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "false"
+              },
+              {
+                "type": "intrinsic",
+                "name": "true"
+              }
+            ]
+          }
+        },
+        {
+          "id": 19,
+          "name": "isIndeterminate",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "If `true`, the checkbox will be indeterminate.\nThis only affects the icon shown inside checkbox\nand does not modify the isChecked property."
+          },
+          "sources": [
+            {
+              "fileName": "Checkbox/index.d.ts",
+              "line": 66,
+              "character": 17
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "false"
+              },
+              {
+                "type": "intrinsic",
+                "name": "true"
+              }
+            ]
+          }
+        },
+        {
+          "id": 17,
+          "name": "isInvalid",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "If `true`, the checkbox is marked as invalid.\nChanges style of unchecked state."
+          },
+          "sources": [
+            {
+              "fileName": "Checkbox/index.d.ts",
+              "line": 56,
+              "character": 11
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "false"
+              },
+              {
+                "type": "intrinsic",
+                "name": "true"
+              }
+            ]
+          }
+        },
+        {
+          "id": 16,
+          "name": "isReadOnly",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "If `true`, the checkbox will be readonly"
+          },
+          "sources": [
+            {
+              "fileName": "Checkbox/index.d.ts",
+              "line": 51,
+              "character": 12
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "false"
+              },
+              {
+                "type": "intrinsic",
+                "name": "true"
+              }
+            ]
+          }
+        },
+        {
+          "id": 8,
+          "name": "name",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The name of the input field in a checkbox\n(Useful for form submission)."
+          },
+          "sources": [
+            {
+              "fileName": "Checkbox/index.d.ts",
+              "line": 14,
+              "character": 6
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "string"
+              }
+            ]
+          }
+        },
+        {
+          "id": 18,
+          "name": "onChange",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The callback invoked when the checked state of the `Checkbox` changes.."
+          },
+          "sources": [
+            {
+              "fileName": "Checkbox/index.d.ts",
+              "line": 60,
+              "character": 10
+            }
+          ],
+          "type": {
+            "type": "reference",
+            "typeArguments": [
+              {
+                "type": "reference",
+                "name": "HTMLInputElement"
+              }
+            ],
+            "name": "React.ChangeEventHandler"
+          }
+        },
+        {
+          "id": 14,
+          "name": "size",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The size (width and height) of the checkbox"
+          },
+          "sources": [
+            {
+              "fileName": "Checkbox/index.d.ts",
+              "line": 43,
+              "character": 6
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "stringLiteral",
+                "value": "sm"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "md"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "lg"
+              }
+            ]
+          }
+        },
+        {
+          "id": 9,
+          "name": "value",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The value to be used in the checkbox input.\nThis is the value that will be returned on form submission."
+          },
+          "sources": [
+            {
+              "fileName": "Checkbox/index.d.ts",
+              "line": 19,
+              "character": 7
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "string"
+              },
+              {
+                "type": "intrinsic",
+                "name": "number"
+              }
+            ]
+          }
+        },
+        {
+          "id": 10,
+          "name": "colorScheme",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The color scheme of the checkbox.",
+            "text": "🚨Note: This should be one of the color keys in the theme that has `100` - `900` color values (e.g.`green`, `red`).",
+            "tags": [
+              {
+                "tag": "see",
+                "text": "http://chakra-ui.com/theme#colors\n"
+              }
+            ]
+          },
+          "sources": [
+            {
+              "fileName": "Checkbox/index.d.ts",
+              "line": 26,
+              "character": 14
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "string"
+              }
+            ]
+          }
+        }
+      ],
+      "groups": [
+        {
+          "title": "Properties",
+          "kind": 1024,
+          "children": [20, 11, 7, 12, 15, 13, 19, 17, 16, 8, 18, 14, 9, 10]
+        }
+      ],
+      "sources": [
+        {
+          "fileName": "Checkbox/index.d.ts",
+          "line": 5,
+          "character": 26
+        }
+      ]
+    },
+    {
+      "id": 54,
+      "name": "IIcon",
+      "kind": 256,
+      "kindString": "Interface",
+      "flags": {
+        "isExported": true
+      },
+      "children": [
+        {
+          "id": 57,
+          "name": "color",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The color of the icon."
+          },
+          "sources": [
+            {
+              "fileName": "Icon/index.d.ts",
+              "line": 18,
+              "character": 7
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "string"
+              }
+            ]
+          }
+        },
+        {
+          "id": 59,
+          "name": "focusable",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "If `false`, it means the icon is used within interactive\nelement and won't be focuable."
+          },
+          "sources": [
+            {
+              "fileName": "Icon/index.d.ts",
+              "line": 27,
+              "character": 11
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "false"
+              },
+              {
+                "type": "intrinsic",
+                "name": "true"
+              }
+            ]
+          }
+        },
+        {
+          "id": 56,
+          "name": "name",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The name of the icon."
+          },
+          "sources": [
+            {
+              "fileName": "Icon/index.d.ts",
+              "line": 14,
+              "character": 6
+            }
+          ],
+          "type": {
+            "type": "reference",
+            "name": "Icons"
+          }
+        },
+        {
+          "id": 58,
+          "name": "role",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The role of the icon. `presentation` or `img`"
+          },
+          "sources": [
+            {
+              "fileName": "Icon/index.d.ts",
+              "line": 22,
+              "character": 6
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "stringLiteral",
+                "value": "presentation"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "img"
+              }
+            ]
+          }
+        },
+        {
+          "id": 55,
+          "name": "size",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The size of the icon."
+          },
+          "sources": [
+            {
+              "fileName": "Icon/index.d.ts",
+              "line": 10,
+              "character": 6
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "string"
+              }
+            ]
+          }
+        }
+      ],
+      "groups": [
+        {
+          "title": "Properties",
+          "kind": 1024,
+          "children": [57, 59, 56, 58, 55]
+        }
+      ],
+      "sources": [
+        {
+          "fileName": "Icon/index.d.ts",
+          "line": 6,
+          "character": 15
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "name": "IImage",
+      "kind": 256,
+      "kindString": "Interface",
+      "flags": {
+        "isExported": true
+      },
+      "children": [
+        {
+          "id": 42,
+          "name": "alt",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The alt text that describes the image"
+          },
+          "sources": [
+            {
+              "fileName": "Image/index.d.ts",
+              "line": 17,
+              "character": 5
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "string"
+              }
+            ]
+          }
+        },
+        {
+          "id": 41,
+          "name": "fallbackSrc",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "In event there was an error loading the `src`, specify a fallback\nIn most cases, this can be an avatar or image placeholder"
+          },
+          "sources": [
+            {
+              "fileName": "Image/index.d.ts",
+              "line": 13,
+              "character": 13
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "string"
+              }
+            ]
+          }
+        },
+        {
+          "id": 50,
+          "name": "htmlHeight",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The native HTML `height` attribute to the passed to the `img`"
+          },
+          "sources": [
+            {
+              "fileName": "Image/index.d.ts",
+              "line": 33,
+              "character": 12
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "string"
+              },
+              {
+                "type": "intrinsic",
+                "name": "number"
+              }
+            ]
+          }
+        },
+        {
+          "id": 49,
+          "name": "htmlWidth",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The native HTML `width` attribute to the passed to the `img`"
+          },
+          "sources": [
+            {
+              "fileName": "Image/index.d.ts",
+              "line": 29,
+              "character": 11
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "string"
+              },
+              {
+                "type": "intrinsic",
+                "name": "number"
+              }
+            ]
+          }
+        },
+        {
+          "id": 51,
+          "name": "ignoreFallback",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "Opt out of the `fallbackSrc` logic and use the `Image` directly"
+          },
+          "sources": [
+            {
+              "fileName": "Image/index.d.ts",
+              "line": 37,
+              "character": 16
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "false"
+              },
+              {
+                "type": "intrinsic",
+                "name": "true"
+              }
+            ]
+          }
+        },
+        {
+          "id": 46,
+          "name": "onError",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "A callback for when there was an error loading the image `src`"
+          },
+          "sources": [
+            {
+              "fileName": "Image/index.d.ts",
+              "line": 25,
+              "character": 9
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "reflection",
+                "declaration": {
+                  "id": 47,
+                  "name": "__type",
+                  "kind": 65536,
+                  "kindString": "Type literal",
+                  "flags": {
+                    "isExported": true
+                  },
+                  "signatures": [
+                    {
+                      "id": 48,
+                      "name": "__call",
+                      "kind": 4096,
+                      "kindString": "Call signature",
+                      "flags": {
+                        "isExported": true
+                      },
+                      "type": {
+                        "type": "intrinsic",
+                        "name": "void"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": 43,
+          "name": "onLoad",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "A callback for when the image `src` has been loaded"
+          },
+          "sources": [
+            {
+              "fileName": "Image/index.d.ts",
+              "line": 21,
+              "character": 8
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "reflection",
+                "declaration": {
+                  "id": 44,
+                  "name": "__type",
+                  "kind": 65536,
+                  "kindString": "Type literal",
+                  "flags": {
+                    "isExported": true
+                  },
+                  "signatures": [
+                    {
+                      "id": 45,
+                      "name": "__call",
+                      "kind": 4096,
+                      "kindString": "Call signature",
+                      "flags": {
+                        "isExported": true
+                      },
+                      "type": {
+                        "type": "intrinsic",
+                        "name": "void"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": 40,
+          "name": "src",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The path to the image source"
+          },
+          "sources": [
+            {
+              "fileName": "Image/index.d.ts",
+              "line": 8,
+              "character": 5
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "intrinsic",
+                "name": "undefined"
+              },
+              {
+                "type": "intrinsic",
+                "name": "string"
+              }
+            ]
+          }
+        }
+      ],
+      "groups": [
+        {
+          "title": "Properties",
+          "kind": 1024,
+          "children": [42, 41, 50, 49, 51, 46, 43, 40]
+        }
+      ],
+      "sources": [
+        {
+          "fileName": "Image/index.d.ts",
+          "line": 4,
+          "character": 16
+        }
+      ]
+    },
+    {
+      "id": 75,
+      "name": "IMoreIndicator",
+      "kind": 256,
+      "kindString": "Interface",
+      "flags": {
+        "isExported": true
+      },
+      "children": [
+        {
+          "id": 77,
+          "name": "label",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true
+          },
+          "sources": [
+            {
+              "fileName": "AvatarGroup/index.d.ts",
+              "line": 8,
+              "character": 7
+            }
+          ],
+          "type": {
+            "type": "reference",
+            "name": "React.ReactNode"
+          }
+        },
+        {
+          "id": 76,
+          "name": "size",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "sources": [
+            {
+              "fileName": "AvatarGroup/index.d.ts",
+              "line": 7,
+              "character": 6
+            }
+          ],
+          "type": {
+            "type": "indexedAccess",
+            "indexType": {
+              "type": "stringLiteral",
+              "value": "size"
+            },
+            "objectType": {
+              "type": "reference",
+              "name": "IAvatar"
+            }
+          }
+        }
+      ],
+      "groups": [
+        {
+          "title": "Properties",
+          "kind": 1024,
+          "children": [77, 76]
+        }
+      ],
+      "sources": [
+        {
+          "fileName": "AvatarGroup/index.d.ts",
+          "line": 6,
+          "character": 24
+        }
+      ]
+    },
+    {
+      "id": 85,
+      "name": "ITag",
+      "kind": 256,
+      "kindString": "Interface",
+      "flags": {
+        "isExported": true
+      },
+      "children": [
+        {
+          "id": 87,
+          "name": "size",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The size of the tag."
+          },
+          "sources": [
+            {
+              "fileName": "Tag/index.d.ts",
+              "line": 16,
+              "character": 6
+            }
+          ],
+          "type": {
+            "type": "union",
+            "types": [
+              {
+                "type": "stringLiteral",
+                "value": "sm"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "md"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "lg"
+              }
+            ]
+          }
+        },
+        {
+          "id": 86,
+          "name": "variant",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The variant of the tag."
+          },
+          "sources": [
+            {
+              "fileName": "Tag/index.d.ts",
+              "line": 12,
+              "character": 9
+            }
+          ],
+          "type": {
+            "type": "indexedAccess",
+            "indexType": {
+              "type": "stringLiteral",
+              "value": "variant"
+            },
+            "objectType": {
+              "type": "reference",
+              "name": "IBadge"
+            }
+          }
+        },
+        {
+          "id": 88,
+          "name": "colorScheme",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true,
+            "isOptional": true
+          },
+          "comment": {
+            "shortText": "The color scheme of the tag."
+          },
+          "sources": [
+            {
+              "fileName": "Tag/index.d.ts",
+              "line": 20,
+              "character": 14
+            }
+          ],
+          "type": {
+            "type": "indexedAccess",
+            "indexType": {
+              "type": "stringLiteral",
+              "value": "colorScheme"
+            },
+            "objectType": {
+              "type": "reference",
+              "name": "IBadge"
+            }
+          }
+        }
+      ],
+      "groups": [
+        {
+          "title": "Properties",
+          "kind": 1024,
+          "children": [87, 86, 88]
+        }
+      ],
+      "sources": [
+        {
+          "fileName": "Tag/index.d.ts",
+          "line": 8,
+          "character": 21
+        }
+      ]
+    },
+    {
+      "id": 83,
+      "name": "AvatarGroupProps",
+      "kind": 4194304,
+      "kindString": "Type alias",
+      "flags": {
+        "isExported": true
+      },
+      "sources": [
+        {
+          "fileName": "AvatarGroup/index.d.ts",
+          "line": 32,
+          "character": 28
+        }
+      ],
+      "type": {
+        "type": "intersection",
+        "types": [
+          {
+            "type": "reference",
+            "id": 78,
+            "name": "IAvatarGroup"
+          },
+          {
+            "type": "reference",
+            "typeArguments": [
+              {
+                "type": "reference",
+                "name": "BoxProps"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "size"
+              }
+            ],
+            "name": "Omit"
+          }
+        ]
+      }
+    },
+    {
+      "id": 70,
+      "name": "AvatarNameProps",
+      "kind": 4194304,
+      "kindString": "Type alias",
+      "flags": {
+        "isExported": true
+      },
+      "sources": [
+        {
+          "fileName": "Avatar/index.d.ts",
+          "line": 35,
+          "character": 27
+        }
+      ],
+      "type": {
+        "type": "intersection",
+        "types": [
+          {
+            "type": "indexedAccess",
+            "indexType": {
+              "type": "stringLiteral",
+              "value": "name"
+            },
+            "objectType": {
+              "type": "reference",
+              "name": "IAvatar"
+            }
+          },
+          {
+            "type": "reference",
+            "name": "BoxProps"
+          }
+        ]
+      }
+    },
+    {
+      "id": 73,
+      "name": "AvatarProps",
+      "kind": 4194304,
+      "kindString": "Type alias",
+      "flags": {
+        "isExported": true
+      },
+      "sources": [
+        {
+          "fileName": "Avatar/index.d.ts",
+          "line": 40,
+          "character": 23
+        }
+      ],
+      "type": {
+        "type": "intersection",
+        "types": [
+          {
+            "type": "reference",
+            "id": 63,
+            "name": "IAvatar"
+          },
+          {
+            "type": "reference",
+            "typeArguments": [
+              {
+                "type": "reference",
+                "name": "BoxProps"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "size"
+              }
+            ],
+            "name": "Omit"
+          }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "name": "BadgeProps",
+      "kind": 4194304,
+      "kindString": "Type alias",
+      "flags": {
+        "isExported": true
+      },
+      "sources": [
+        {
+          "fileName": "Badge/index.d.ts",
+          "line": 18,
+          "character": 22
+        }
+      ],
+      "type": {
+        "type": "intersection",
+        "types": [
+          {
+            "type": "reference",
+            "id": 1,
+            "name": "IBadge"
+          },
+          {
+            "type": "reference",
+            "name": "BoxProps"
+          }
+        ]
+      }
+    },
+    {
+      "id": 37,
+      "name": "ButtonProps",
+      "kind": 4194304,
+      "kindString": "Type alias",
+      "flags": {
+        "isExported": true
+      },
+      "sources": [
+        {
+          "fileName": "Button/index.d.ts",
+          "line": 68,
+          "character": 23
+        }
+      ],
+      "type": {
+        "type": "intersection",
+        "types": [
+          {
+            "type": "reference",
+            "id": 23,
+            "name": "IButton"
+          },
+          {
+            "type": "reference",
+            "typeArguments": [
+              {
+                "type": "reference",
+                "name": "PseudoBoxProps"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "size"
+              }
+            ],
+            "name": "Omit"
+          }
+        ]
+      }
+    },
+    {
+      "id": 21,
+      "name": "CheckboxProps",
+      "kind": 4194304,
+      "kindString": "Type alias",
+      "flags": {
+        "isExported": true
+      },
+      "sources": [
+        {
+          "fileName": "Checkbox/index.d.ts",
+          "line": 73,
+          "character": 25
+        }
+      ],
+      "type": {
+        "type": "intersection",
+        "types": [
+          {
+            "type": "reference",
+            "id": 6,
+            "name": "ICheckbox"
+          },
+          {
+            "type": "reference",
+            "typeArguments": [
+              {
+                "type": "reference",
+                "name": "HTMLInputElement"
+              }
+            ],
+            "name": "RefAttributes"
+          },
+          {
+            "type": "reference",
+            "typeArguments": [
+              {
+                "type": "reference",
+                "name": "BoxProps"
+              },
+              {
+                "type": "union",
+                "types": [
+                  {
+                    "type": "stringLiteral",
+                    "value": "onChange"
+                  },
+                  {
+                    "type": "stringLiteral",
+                    "value": "defaultChecked"
+                  }
+                ]
+              }
+            ],
+            "name": "Omit"
+          }
+        ]
+      }
+    },
+    {
+      "id": 60,
+      "name": "IconProps",
+      "kind": 4194304,
+      "kindString": "Type alias",
+      "flags": {
+        "isExported": true
+      },
+      "sources": [
+        {
+          "fileName": "Icon/index.d.ts",
+          "line": 30,
+          "character": 21
+        }
+      ],
+      "type": {
+        "type": "intersection",
+        "types": [
+          {
+            "type": "reference",
+            "id": 54,
+            "name": "IIcon"
+          },
+          {
+            "type": "reference",
+            "typeArguments": [
+              {
+                "type": "reference",
+                "name": "BoxProps"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "size"
+              }
+            ],
+            "name": "Omit"
+          }
+        ]
+      }
+    },
+    {
+      "id": 52,
+      "name": "ImageProps",
+      "kind": 4194304,
+      "kindString": "Type alias",
+      "flags": {
+        "isExported": true
+      },
+      "sources": [
+        {
+          "fileName": "Image/index.d.ts",
+          "line": 40,
+          "character": 22
+        }
+      ],
+      "type": {
+        "type": "intersection",
+        "types": [
+          {
+            "type": "reference",
+            "id": 39,
+            "name": "IImage"
+          },
+          {
+            "type": "reference",
+            "name": "BoxProps"
+          }
+        ]
+      }
+    },
+    {
+      "id": 69,
+      "name": "Size",
+      "kind": 4194304,
+      "kindString": "Type alias",
+      "flags": {
+        "isExported": true
+      },
+      "sources": [
+        {
+          "fileName": "Avatar/index.d.ts",
+          "line": 5,
+          "character": 9
+        }
+      ],
+      "type": {
+        "type": "union",
+        "types": [
+          {
+            "type": "stringLiteral",
+            "value": "2xs"
+          },
+          {
+            "type": "stringLiteral",
+            "value": "xs"
+          },
+          {
+            "type": "stringLiteral",
+            "value": "sm"
+          },
+          {
+            "type": "stringLiteral",
+            "value": "md"
+          },
+          {
+            "type": "stringLiteral",
+            "value": "lg"
+          },
+          {
+            "type": "stringLiteral",
+            "value": "xl"
+          },
+          {
+            "type": "stringLiteral",
+            "value": "2xl"
+          }
+        ]
+      }
+    },
+    {
+      "id": 93,
+      "name": "TagIconProps",
+      "kind": 4194304,
+      "kindString": "Type alias",
+      "flags": {
+        "isExported": true
+      },
+      "sources": [
+        {
+          "fileName": "Tag/index.d.ts",
+          "line": 29,
+          "character": 17
+        }
+      ],
+      "type": {
+        "type": "intersection",
+        "types": [
+          {
+            "type": "reference",
+            "typeArguments": [
+              {
+                "type": "reference",
+                "id": 60,
+                "name": "IconProps"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "name"
+              }
+            ],
+            "name": "Omit"
+          },
+          {
+            "type": "reflection",
+            "declaration": {
+              "id": 94,
+              "name": "__type",
+              "kind": 65536,
+              "kindString": "Type literal",
+              "flags": {
+                "isExported": true
+              },
+              "children": [
+                {
+                  "id": 95,
+                  "name": "icon",
+                  "kind": 32,
+                  "kindString": "Variable",
+                  "flags": {
+                    "isExported": true
+                  },
+                  "sources": [
+                    {
+                      "fileName": "Tag/index.d.ts",
+                      "line": 30,
+                      "character": 6
+                    }
+                  ],
+                  "type": {
+                    "type": "union",
+                    "types": [
+                      {
+                        "type": "indexedAccess",
+                        "indexType": {
+                          "type": "stringLiteral",
+                          "value": "name"
+                        },
+                        "objectType": {
+                          "type": "reference",
+                          "name": "IconProps"
+                        }
+                      },
+                      {
+                        "type": "reference",
+                        "name": "React.ComponentType"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "groups": [
+                {
+                  "title": "Variables",
+                  "kind": 32,
+                  "children": [95]
+                }
+              ],
+              "sources": [
+                {
+                  "fileName": "Tag/index.d.ts",
+                  "line": 29,
+                  "character": 45
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 89,
+      "name": "TagProps",
+      "kind": 4194304,
+      "kindString": "Type alias",
+      "flags": {
+        "isExported": true
+      },
+      "sources": [
+        {
+          "fileName": "Tag/index.d.ts",
+          "line": 22,
+          "character": 20
+        }
+      ],
+      "type": {
+        "type": "intersection",
+        "types": [
+          {
+            "type": "reference",
+            "id": 85,
+            "name": "ITag"
+          },
+          {
+            "type": "reference",
+            "typeArguments": [
+              {
+                "type": "reference",
+                "name": "PseudoBoxProps"
+              },
+              {
+                "type": "stringLiteral",
+                "value": "size"
+              }
+            ],
+            "name": "Omit"
+          }
+        ]
+      }
+    },
+    {
+      "id": 74,
+      "name": "Avatar",
+      "kind": 32,
+      "kindString": "Variable",
+      "flags": {
+        "isExported": true,
+        "isConst": true
+      },
+      "comment": {
+        "shortText": "The Avatar component is used to represent user, and displays the profile\npicture, initials or fallback icon."
+      },
+      "sources": [
+        {
+          "fileName": "Avatar/index.d.ts",
+          "line": 45,
+          "character": 20
+        }
+      ],
+      "type": {
+        "type": "reference",
+        "typeArguments": [
+          {
+            "type": "reference",
+            "id": 73,
+            "name": "AvatarProps"
+          }
+        ],
+        "name": "React.FC"
+      }
+    },
+    {
+      "id": 72,
+      "name": "AvatarBadge",
+      "kind": 32,
+      "kindString": "Variable",
+      "flags": {
+        "isExported": true,
+        "isConst": true
+      },
+      "sources": [
+        {
+          "fileName": "Avatar/index.d.ts",
+          "line": 38,
+          "character": 24
+        }
+      ],
+      "type": {
+        "type": "reference",
+        "typeArguments": [
+          {
+            "type": "reference",
+            "name": "BoxProps"
+          }
+        ],
+        "name": "React.FC"
+      }
+    },
+    {
+      "id": 84,
+      "name": "AvatarGroup",
+      "kind": 32,
+      "kindString": "Variable",
+      "flags": {
+        "isExported": true,
+        "isConst": true
+      },
+      "comment": {
+        "shortText": "AvatarGroup is a wrapper to render a collection of evenly spaced avatars."
+      },
+      "sources": [
+        {
+          "fileName": "AvatarGroup/index.d.ts",
+          "line": 36,
+          "character": 25
+        }
+      ],
+      "type": {
+        "type": "reference",
+        "typeArguments": [
+          {
+            "type": "reference",
+            "id": 83,
+            "name": "AvatarGroupProps"
+          }
+        ],
+        "name": "React.FC"
+      }
+    },
+    {
+      "id": 71,
+      "name": "AvatarName",
+      "kind": 32,
+      "kindString": "Variable",
+      "flags": {
+        "isExported": true,
+        "isConst": true
+      },
+      "sources": [
+        {
+          "fileName": "Avatar/index.d.ts",
+          "line": 36,
+          "character": 23
+        }
+      ],
+      "type": {
+        "type": "reference",
+        "typeArguments": [
+          {
+            "type": "reference",
+            "id": 70,
+            "name": "AvatarNameProps"
+          }
+        ],
+        "name": "React.FC"
+      }
+    },
+    {
+      "id": 5,
+      "name": "Badge",
+      "kind": 32,
+      "kindString": "Variable",
+      "flags": {
+        "isExported": true,
+        "isConst": true
+      },
+      "comment": {
+        "shortText": "The Badge component is used for state, general text, and number labels."
+      },
+      "sources": [
+        {
+          "fileName": "Badge/index.d.ts",
+          "line": 23,
+          "character": 19
+        }
+      ],
+      "type": {
+        "type": "reference",
+        "typeArguments": [
+          {
+            "type": "reference",
+            "id": 4,
+            "name": "BadgeProps"
+          }
+        ],
+        "name": "React.FC"
+      }
+    },
+    {
+      "id": 38,
+      "name": "Button",
+      "kind": 32,
+      "kindString": "Variable",
+      "flags": {
+        "isExported": true,
+        "isConst": true
+      },
+      "sources": [
+        {
+          "fileName": "Button/index.d.ts",
+          "line": 70,
+          "character": 20
+        }
+      ],
+      "type": {
+        "type": "reference",
+        "typeArguments": [
+          {
+            "type": "reference",
+            "id": 37,
+            "name": "ButtonProps"
+          }
+        ],
+        "name": "React.FC"
+      }
+    },
+    {
+      "id": 22,
+      "name": "Checkbox",
+      "kind": 32,
+      "kindString": "Variable",
+      "flags": {
+        "isExported": true,
+        "isConst": true
+      },
+      "sources": [
+        {
+          "fileName": "Checkbox/index.d.ts",
+          "line": 77,
+          "character": 22
+        }
+      ],
+      "type": {
+        "type": "reference",
+        "typeArguments": [
+          {
+            "type": "reference",
+            "id": 21,
+            "name": "CheckboxProps"
+          }
+        ],
+        "name": "React.FC"
+      }
+    },
+    {
+      "id": 61,
+      "name": "Icon",
+      "kind": 32,
+      "kindString": "Variable",
+      "flags": {
+        "isExported": true,
+        "isConst": true
+      },
+      "sources": [
+        {
+          "fileName": "Icon/index.d.ts",
+          "line": 32,
+          "character": 18
+        }
+      ],
+      "type": {
+        "type": "reference",
+        "typeArguments": [
+          {
+            "type": "reference",
+            "id": 60,
+            "name": "IconProps"
+          }
+        ],
+        "name": "React.FC"
+      }
+    },
+    {
+      "id": 53,
+      "name": "Image",
+      "kind": 32,
+      "kindString": "Variable",
+      "flags": {
+        "isExported": true,
+        "isConst": true
+      },
+      "sources": [
+        {
+          "fileName": "Image/index.d.ts",
+          "line": 42,
+          "character": 19
+        }
+      ],
+      "type": {
+        "type": "reference",
+        "typeArguments": [
+          {
+            "type": "reference",
+            "id": 52,
+            "name": "ImageProps"
+          }
+        ],
+        "name": "React.FC"
+      }
+    },
+    {
+      "id": 90,
+      "name": "Tag",
+      "kind": 32,
+      "kindString": "Variable",
+      "flags": {
+        "isExported": true,
+        "isConst": true
+      },
+      "sources": [
+        {
+          "fileName": "Tag/index.d.ts",
+          "line": 23,
+          "character": 17
+        }
+      ],
+      "type": {
+        "type": "reference",
+        "typeArguments": [
+          {
+            "type": "reference",
+            "id": 89,
+            "name": "TagProps"
+          }
+        ],
+        "name": "React.FC"
+      }
+    },
+    {
+      "id": 92,
+      "name": "TagCloseButton",
+      "kind": 32,
+      "kindString": "Variable",
+      "flags": {
+        "isExported": true,
+        "isConst": true
+      },
+      "sources": [
+        {
+          "fileName": "Tag/index.d.ts",
+          "line": 27,
+          "character": 27
+        }
+      ],
+      "type": {
+        "type": "reference",
+        "typeArguments": [
+          {
+            "type": "reference",
+            "name": "PseudoBoxProps"
+          }
+        ],
+        "name": "React.FC"
+      }
+    },
+    {
+      "id": 96,
+      "name": "TagIcon",
+      "kind": 32,
+      "kindString": "Variable",
+      "flags": {
+        "isExported": true,
+        "isConst": true
+      },
+      "sources": [
+        {
+          "fileName": "Tag/index.d.ts",
+          "line": 32,
+          "character": 20
+        }
+      ],
+      "type": {
+        "type": "reference",
+        "typeArguments": [
+          {
+            "type": "reference",
+            "id": 93,
+            "name": "TagIconProps"
+          }
+        ],
+        "name": "React.FC"
+      }
+    },
+    {
+      "id": 91,
+      "name": "TagLabel",
+      "kind": 32,
+      "kindString": "Variable",
+      "flags": {
+        "isExported": true,
+        "isConst": true
+      },
+      "sources": [
+        {
+          "fileName": "Tag/index.d.ts",
+          "line": 26,
+          "character": 21
+        }
+      ],
+      "type": {
+        "type": "reference",
+        "typeArguments": [
+          {
+            "type": "reference",
+            "name": "BoxProps"
+          }
+        ],
+        "name": "React.FC"
+      }
+    },
+    {
+      "id": 62,
+      "name": "Text",
+      "kind": 32,
+      "kindString": "Variable",
+      "flags": {
+        "isExported": true,
+        "isConst": true
+      },
+      "sources": [
+        {
+          "fileName": "Text/index.d.ts",
+          "line": 4,
+          "character": 18
+        }
+      ],
+      "type": {
+        "type": "reference",
+        "typeArguments": [
+          {
+            "type": "reference",
+            "name": "BoxProps"
+          }
+        ],
+        "name": "React.FC"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "title": "Interfaces",
+      "kind": 256,
+      "children": [63, 78, 1, 23, 6, 54, 39, 75, 85]
+    },
+    {
+      "title": "Type aliases",
+      "kind": 4194304,
+      "children": [83, 70, 73, 4, 37, 21, 60, 52, 69, 93, 89]
+    },
+    {
+      "title": "Variables",
+      "kind": 32,
+      "children": [74, 72, 84, 71, 5, 38, 22, 61, 53, 90, 92, 96, 91, 62]
+    }
+  ]
 }

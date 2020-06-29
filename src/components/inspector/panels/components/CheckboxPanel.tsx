@@ -15,12 +15,12 @@ const CheckboxPanel = () => {
     <>
       <ChildrenControl />
       <SwitchControl label="Checked" name="isChecked" />
-      <ColorsControl label="Variant Color" name="variantColor" />
+      <ColorsControl label="Color Scheme" name="colorScheme" />
       <FormControl label="Size" htmlFor="size">
         <Select
           name="size"
           id="size"
-          size="sm"
+          boxSize="sm"
           value={size || 'md'}
           onChange={setValueFromEvent}
         >

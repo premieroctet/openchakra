@@ -24,7 +24,7 @@ const InputPanel = () => {
           id="variant"
           onChange={setValueFromEvent}
           name="variant"
-          size="sm"
+          boxSize="sm"
           value={variant || ''}
         >
           <option>outline</option>

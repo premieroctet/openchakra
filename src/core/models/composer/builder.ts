@@ -73,7 +73,7 @@ export const buildAccordion = (parent: string): ComposedComponent => {
 
   const nodeId = composer.addNode({ type: 'Accordion', parent })
   const itemId = composer.addNode({ type: 'AccordionItem', parent: nodeId })
-  const headerId = composer.addNode({ type: 'AccordionHeader', parent: itemId })
+  const headerId = composer.addNode({ type: 'AccordionButton', parent: itemId })
   const panelId = composer.addNode({ type: 'AccordionPanel', parent: itemId })
 
   composer.addNode({ type: 'Text', parent: headerId, rootParentType: 'Text' })

@@ -36,7 +36,7 @@ type ComponentType =
   | 'Stack'
   | 'Accordion'
   | 'AccordionItem'
-  | 'AccordionHeader'
+  | 'AccordionButton'
   | 'AccordionPanel'
   | 'AccordionIcon'
   | 'FormControl'

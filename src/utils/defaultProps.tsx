@@ -23,7 +23,7 @@ import {
   FlexProps,
   StackProps,
   AccordionProps,
-  AccordionHeaderProps,
+  AccordionButtonProps,
   AccordionItemProps,
   FormControlProps,
   TabListProps,
@@ -75,7 +75,7 @@ type PreviewDefaultProps = {
   Flex?: FlexProps
   Stack?: StackProps
   Accordion?: Omit<AccordionProps, 'children'>
-  AccordionHeader?: AccordionHeaderProps
+  AccordionButton?: AccordionButtonProps
   AccordionItem?: Omit<AccordionItemProps, 'children'>
   AccordionPanel?: any
   AccordionIcon?: IconProps

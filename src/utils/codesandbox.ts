@@ -1,9 +1,9 @@
-import { getParameters } from "codesandbox/lib/api/define";
+import { getParameters } from 'codesandbox/lib/api/define'
 
 export const buildParameters = (code: string): string => {
   return getParameters({
     files: {
-      "public/index.html": {
+      'public/index.html': {
         content: `<!DOCTYPE html>
 <html lang="en">
 
@@ -24,9 +24,9 @@ export const buildParameters = (code: string): string => {
 </body>
 
 </html>`,
-        isBinary: false
+        isBinary: false,
       },
-      "index.js": {
+      'index.js': {
         content: `import React from "react";
 import ReactDOM from "react-dom";
 
@@ -35,13 +35,13 @@ import App from "./App";
 const rootElement = document.getElementById("root");
 ReactDOM.render(<App />, rootElement);
 `,
-        isBinary: false
+        isBinary: false,
       },
-      "App.js": {
+      'App.js': {
         content: code,
-        isBinary: false
+        isBinary: false,
       },
-      "package.json": {
+      'package.json': {
         content: `{
   "name": "react",
   "version": "1.0.0",
@@ -51,8 +51,6 @@ ReactDOM.render(<App />, rootElement);
   "dependencies": {
     "@chakra-ui/core": "0.5.2",
     "@emotion/core": "10.0.27",
-    "@emotion/styled": "10.0.27",
-    "emotion-theming": "10.0.27",
     "react": "16.12.0",
     "react-dom": "16.12.0",
     "react-scripts": "3.0.1"
@@ -73,8 +71,8 @@ ReactDOM.render(<App />, rootElement);
     "not op_mini all"
   ]
 }`,
-        isBinary: false
-      }
-    }
-  });
-};
+        isBinary: false,
+      },
+    },
+  })
+}

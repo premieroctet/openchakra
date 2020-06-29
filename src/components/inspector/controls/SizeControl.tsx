@@ -20,7 +20,7 @@ const SizeControl = (props: SizeControlPropsType) => {
   return (
     <FormControl label={props.label} htmlFor={props.name || 'size'}>
       <Select
-        size="sm"
+        boxSize="sm"
         id={props.name || 'size'}
         name={props.name || 'size'}
         value={props.value || ''}

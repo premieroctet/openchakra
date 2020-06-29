@@ -18,7 +18,7 @@ const SwitchPanel = () => {
         <Select
           name="size"
           id="size"
-          size="sm"
+          boxSize="sm"
           value={size || ''}
           onChange={setValueFromEvent}
         >

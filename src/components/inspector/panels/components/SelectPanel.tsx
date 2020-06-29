@@ -19,7 +19,7 @@ const SelectPanel = () => {
         <Select
           name="size"
           id="size"
-          size="sm"
+          boxSize="sm"
           value={size || ''}
           onChange={setValueFromEvent}
         >
@@ -36,7 +36,7 @@ const SelectPanel = () => {
         <Select
           name="variant"
           id="variant"
-          size="sm"
+          boxSize="sm"
           value={variant}
           onChange={setValueFromEvent}
         >
