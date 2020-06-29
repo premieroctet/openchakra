@@ -13,7 +13,10 @@ router.get("/google_hook", googleAuth, (req,res) => {
         const payload = {id: "5ebbfe46bed2fb7e1ba6a052", name: "Martinez", firstname: "Mateo", is_admin: false, is_alfred: false}; // Create JWT payload
 
         jwt.sign(payload, "secret", (err, token) => {
-            res.send({success: true, token: 'Bearer ' + token});
+            res
+                .status("201")
+                .cookie('token', 'Bearer ' + token)
+                .redirect('/')
         });
     }
 )

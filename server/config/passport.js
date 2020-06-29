@@ -33,13 +33,14 @@ passport.use(new GoogleStrategy({
     function(token, tokenSecret, profile, done) {
         console.log(token, tokenSecret, profile, done)
         console.log("ok?")
-    /*
-    User.findOrCreate({ googleId: profile.id }, function (err, user) {
-        console.log(user)
-        return done(err, user);
+        return done(null, profile)
+        /*
+        User.findOrCreate({ googleId: profile.id }, function (err, user) {
+            console.log(user)
+            return done(err, user);
 
-    });
-*/
+        });
+    */
 }));
 
 
