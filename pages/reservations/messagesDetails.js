@@ -12,6 +12,7 @@ import convertDistance from "geolib/es/convertDistance";
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import styles from './messagesDetails/messagesDetailsStyle'
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
+import Router from "next/router";
 
 moment.locale("fr");
 
@@ -36,6 +37,21 @@ class MessagesDetails extends React.Component {
   }
 
   componentDidMount() {
+    localStorage.setItem('path',Router.pathname);
+
+    axios.get("/myAlfred/api/users/current")
+      .then(res => {
+        this.setState({ userData: res.data });
+        this.setState({ emitter: res.data._id });
+        this.setState({ recipientpic: res.data.picture });
+      })
+      .catch (err => {
+        if(err.response && (err.response.status === 401 || err.response.status === 403)) {
+            localStorage.removeItem('token');
+            Router.push({pathname: '/login'})
+        }
+      })
+
     const id = this.props.chatroomId;
 
     const div = document.getElementById("chat");
@@ -48,11 +64,6 @@ class MessagesDetails extends React.Component {
     );
     axios.put('/myAlfred/api/chatRooms/viewMessages/' + this.props.chatroomId)
       .then()
-    axios.get("/myAlfred/api/users/current").then(res => {
-      this.setState({ userData: res.data });
-      this.setState({ emitter: res.data._id });
-      this.setState({ recipientpic: res.data.picture });
-    });
     axios
       .get("/myAlfred/api/booking/" + this.props.bookingId)
       .then(res => this.setState({ bookingObj: res.data }))

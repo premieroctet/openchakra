@@ -5,6 +5,7 @@ import Badge from '@material-ui/core/Badge';
 import Grid from '@material-ui/core/Grid';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
+import axios from "axios";
 import styles from './UserAvatarStyle'
 const jwt = require('jsonwebtoken');
 
@@ -23,12 +24,35 @@ class UserAvatar extends React.Component{
   componentDidMount() {
     const token = localStorage.getItem('token');
     if (token !== null) {
-      this.setState({ logged: true });
       const token2 = localStorage.getItem('token').split(' ')[1];
       const decode = jwt.decode(token2);
       const alfred_id = decode.id;
-      this.setState({currentUser: alfred_id})
+      this.setState({currentUser: alfred_id},
+        () => {
+          // Check once then every 20s
+          if (this.props.warnings==true) {
+            this.checkWarnings(token)
+            setInterval(() => this.checkWarnings(token) , 20000)
+          }
+        }
+      )
     }
+  }
+
+  checkWarnings = token => {
+    axios.defaults.headers.common["Authorization"] = token
+    axios.get('/myAlfred/api/chatRooms/nonViewedMessagesCount')
+      .then( res => {
+        const nbMessages=res.data
+        if (nbMessages>0) {
+          const plural = nbMessages==1 ? "" : "s"
+          this.setState({kyc: [`Vous avez ${res.data} message${plural} non lu${plural}`]})
+        }
+        else {
+          this.setState({kyc: null})
+        }
+      })
+      .catch (err => console.error(err))
   }
 
   ifOwner(){
@@ -65,7 +89,7 @@ class UserAvatar extends React.Component{
 
     if(user){
       var owner = currentUser === user._id;
-      var kyc = user.kyc_errors;
+      var kyc = this.state.kyc
     }
 
     if(user){
@@ -113,13 +137,13 @@ class UserAvatar extends React.Component{
                     horizontal: 'left',
                   }}
                 >
-                  <Typography>Veuillez compléter votre profil :</Typography>
+                  <ul>
                   {
-
                     kyc.map(res => (
-                      <p>- {res}</p>
+                      <li>{res}</li>
                     ))
                   }
+                  </ul>
                 </Popover>
               </Grid> :
               <Grid>

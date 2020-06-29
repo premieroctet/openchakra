@@ -21,15 +21,16 @@ import {ALF_CONDS, CANCEL_MODE, GID_LEN} from '../../utils/consts.js';
 import { toast } from 'react-toastify';
 import Router from "next/router";
 import {creaShopPresentation, selectService, selectPrestation, settingService, assetsService, settingShop, introduceYou} from '../../utils/validationSteps/validationSteps';
-import {SCHEDULE_SUBTITLE, SCHEDULE_TITLE} from '../../utils/messages'
 const {createDefaultAvailability}=require('../../utils/dateutils');
+const I18N = require('../../utils/i18n')
 
 class creaShop extends React.Component {
   constructor(props) {
         super(props);
     this.state={
-      activeStep: 0,
+      activeStep: 6,
       user_id: null,
+      saving: false,
       shop:{
         booking_request: true,     // true/false
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
@@ -58,6 +59,9 @@ class creaShop extends React.Component {
         service_address: null,
         perimeter: 10,
         availabilities: [createDefaultAvailability()],
+        cesu: null,
+        cis: false,
+        social_security: null,
       },
     };
     this.onServiceChanged = this.onServiceChanged.bind(this);
@@ -98,6 +102,7 @@ class creaShop extends React.Component {
   }
 
   nextDisabled() {
+
     let shop = this.state.shop;
     let pageIndex = this.state.activeStep;
     if (pageIndex===0) { return creaShopPresentation() }
@@ -106,7 +111,7 @@ class creaShop extends React.Component {
     if (pageIndex===3) { return settingService(shop) }
     if (pageIndex===5) { return assetsService(shop) }
     if (pageIndex===8) { return settingShop(shop) }
-    if (pageIndex===9) { return introduceYou(shop) }
+    if (pageIndex===9) { return this.state.saving || introduceYou(shop) }
     return false;
   }
 
@@ -137,6 +142,7 @@ class creaShop extends React.Component {
     }
     // last page => post
     else {
+      this.setState({saving: true})
       let cloned_shop = _.cloneDeep(this.state.shop);
       console.log("CreaShop:sending shop "+JSON.stringify(cloned_shop, null, 2));
       Object.keys(cloned_shop.prestations).forEach(key => { if (key<0) cloned_shop.prestations[key]._id = null });
@@ -182,6 +188,7 @@ class creaShop extends React.Component {
           Router.push(`/shop?id_alfred=${this.state.user_id}`);
       })
       .catch(err => {
+        this.setState({saving: false})
         toast.error(err);
       })
 
@@ -258,7 +265,7 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
-  introduceChanged(is_particular, company, is_certified, cesu, cis) {
+  introduceChanged(is_particular, company, is_certified, cesu, cis, social_security) {
     let shop=this.state.shop;
     shop.is_particular=is_particular;
     shop.is_certified=is_certified;
@@ -266,6 +273,7 @@ class creaShop extends React.Component {
       shop.company=null;
       shop.cesu = cesu
       shop.cis=false
+      shop.social_security=social_security
     }
     else {
       shop.company=company;
@@ -291,7 +299,7 @@ class creaShop extends React.Component {
       case 5:
         return <AssetsService data={shop} onChange={this.assetsChanged} type={"creaShop"}/>;
       case 6:
-        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} onUpdateAvailability={this.availabilityUpdated} title={SCHEDULE_TITLE} subtitle={SCHEDULE_SUBTITLE} selectable={true} height={700}/>;
+        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted} onUpdateAvailability={this.availabilityUpdated} title={I18N.SCHEDULE_TITLE} subtitle={I18N.SCHEDULE_SUBTITLE} selectable={true} height={700}/>;
       case 7:
         return <BookingConditions conditions={shop.my_alfred_conditions} booking_request={shop.booking_request}  onChange={this.conditionsChanged} />;
       case 8:

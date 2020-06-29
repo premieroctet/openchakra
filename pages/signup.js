@@ -207,7 +207,6 @@ class signup extends React.Component {
                             language: 'fr',
                             countries: ['fr'],
                             type: 'address',
-                            useDeviceLocation: 'true'
                         }}
                         onChange={(suggestion) =>this.onChangeAddress(suggestion)}
                       /></Grid>
