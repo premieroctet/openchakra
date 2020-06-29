@@ -146,6 +146,19 @@ class signup extends React.Component {
                   <div className={classes.banner}>
                     <h2 className={classes.title}>Inscription</h2>
                   </div>
+
+                  <div style={{ align : 'center', width: '100%' }} >
+                    <Link href={'/login'}>
+                      <Button
+                        style={{ color: 'white', width: '100%'}}
+                        variant="contained"
+                        color={'primary'}
+                      >
+                        J'ai déjà un compte
+                      </Button>
+                    </Link>
+                  </div>
+
                   <form onSubmit={this.onSubmit}>
                     <Grid container>
                       <Grid item style={{width: '100%'}}>

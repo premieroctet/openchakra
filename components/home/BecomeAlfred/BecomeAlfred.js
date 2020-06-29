@@ -142,7 +142,7 @@ class becomeAlfred extends React.Component{
               <Card className={classes.card1}>
                 <CardMedia
                     className={classes.cover}
-                    image='../../../static/becomeAlfred.jpg'
+                    image='/static/becomeAlfred.jpg'
                     title="Live from space album cover"
                 />
                 <Grid item xs={12} className={classes.details}>
@@ -164,34 +164,6 @@ class becomeAlfred extends React.Component{
                       </a>
                     </Link>
                   </CardContent>
-                </Grid>
-              </Card>
-              <Card className={classes.card22}>
-                <Grid item xs={12} className={classes.details}>
-                  <CardActionArea className={classes.centercontent}>
-                    <CardMedia
-                        className={classes.media}
-                        image='../../../static/becomeAlfred.jpg'
-                        title="Live from space album cover"
-                    />
-                    <CardContent>
-                      <Typography component="h5" variant="h5" className={classes.padding}>
-                        Devenir Alfred
-                      </Typography>
-                      <Typography variant="body1" color="textSecondary" className={classes.padding}>
-                        Créez en quelques minutes votre espace Alfred,
-                        répertoriez vos services, indiquez vos disponibilités,
-                        vos tarifs et profitez d’un complément de revenu !
-                      </Typography>
-                    </CardContent>
-                    <Link href={this.state.logged && this.state.alfred ?  `/shop?id_alfred=${this.state.userId}`  : this.state.logged && !this.state.alfred ? '/creaShop/creaShop' : '/signup'}>
-                      <a style={{textDecoration:'none'}}>
-                        <Button variant="contained" color={"primary"} className={classes.margin}>
-                          Proposer mes services
-                        </Button>
-                      </a>
-                    </Link>
-                  </CardActionArea>
                 </Grid>
               </Card>
             </Grid>
