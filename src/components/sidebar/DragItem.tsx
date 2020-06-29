@@ -1,6 +1,23 @@
 import React from 'react'
 import { useDrag } from 'react-dnd'
-import { Text, PseudoBox, Icon, Box, IconButton, Flex } from '@chakra-ui/core'
+import {
+  Text,
+  PseudoBox,
+  Icon,
+  Box,
+  IconButton,
+  Flex,
+  PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  Button,
+  LightMode,
+} from '@chakra-ui/core'
 
 interface IProps extends ComponentItemProps {
   onDelete?: () => void
@@ -126,13 +143,49 @@ const DragItem = ({
         )}
       </Flex>
       {isDeletable && (
-        <IconButton
-          size="xs"
-          aria-label="Remove user component"
-          icon="close"
-          variant="ghost"
-          onClick={onDelete}
-        />
+        <Popover placement="bottom-end">
+          {({ onClose }) => (
+            <>
+              <PopoverTrigger>
+                <IconButton
+                  size="xs"
+                  aria-label="Remove user component"
+                  icon="close"
+                  variant="ghost"
+                />
+              </PopoverTrigger>
+              <LightMode>
+                <PopoverContent zIndex={100}>
+                  <PopoverArrow />
+                  <PopoverCloseButton />
+                  <PopoverHeader>Are you sure ?</PopoverHeader>
+                  <PopoverBody fontSize="sm">
+                    Do you really want to remove this user component ? By doing
+                    so, the placed user components will be detached.
+                  </PopoverBody>
+                  <PopoverFooter display="flex" justifyContent="flex-end">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      variantColor="red"
+                      rightIcon="check"
+                      onClick={() => {
+                        if (onDelete) {
+                          onDelete()
+                        }
+                        if (onClose) {
+                          onClose()
+                        }
+                      }}
+                    >
+                      Yes
+                    </Button>
+                  </PopoverFooter>
+                </PopoverContent>
+              </LightMode>
+            </>
+          )}
+        </Popover>
       )}
     </PseudoBox>
   )
