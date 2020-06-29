@@ -123,5 +123,28 @@ export default theme =>({
   },
   iconBlack:{
     color: 'black'
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: 10,
+    boxShadow: 'theme.shadows[5]',
+    padding: theme.spacing(2, 4, 3),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+  test:{
+    '& .MuiDialogContent-dividers':{
+      borderTop: 'inherit !important'
+    }
   }
+
 })

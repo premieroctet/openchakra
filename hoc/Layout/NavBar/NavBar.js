@@ -19,6 +19,34 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 const moment = require('moment');
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
+import LogIn from '../../../components/LogIn/LogIn';
+import Register from '../../../components/Register/Register';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import Slide from '@material-ui/core/Slide';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import CloseIcon from '@material-ui/icons/Close';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+      <MuiDialogTitle disableTypography {...other}>
+        <Typography variant="h6">{children}</Typography>
+        {onClose ? (
+            <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+              <CloseIcon color={'secondary'} />
+            </IconButton>
+        ) : null}
+      </MuiDialogTitle>
+  );
+});
 
 class NavBar extends Component {
   constructor(props) {
@@ -33,6 +61,8 @@ class NavBar extends Component {
       isIndex: false,
       isSearch: false,
       user:{},
+      setOpenLogin: false,
+      setOpenRegister: false,
     };
   }
 
@@ -106,10 +136,37 @@ class NavBar extends Component {
     this.setState({ mobileMoreAnchorEl: null });
   };
 
+  handleOpenLogin = () => {
+    this.setState({setOpenLogin : true});
+  };
+
+  handleCloseLogin = () => {
+    this.setState({setOpenLogin : false});
+  };
+
+  handleOpenRegister = () => {
+    this.setState({setOpenRegister : true});
+  };
+
+  handleCloseRegister = () => {
+    this.setState({setOpenRegister : false});
+  };
 
   render() {
-    const { anchorEl, mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged, user } = this.state;
+    const { mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged, user } = this.state;
     const { classes } = this.props;
+
+    const modalLogin = () =>{
+      return(
+          <LogIn/>
+      )
+    };
+
+    const modalRegister = () =>{
+      return(
+          <Register/>
+      )
+    };
 
     const logoutMobile = [
       <Link href={'/profile/editProfile'}>
@@ -173,15 +230,32 @@ class NavBar extends Component {
       ];
 
     const doublemenuitem1 = [
-      <Link href={'/login'}>
         <MenuItem key={1}>
-          <Typography>
-            <a>Connexion</a>
-          </Typography>
+          <button type="button" onClick={this.handleOpen}>
+            Connexion
+          </button>
+          <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            className={classes.modal}
+            open={this.state.setOpen}
+            onClose={this.handleClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 500,
+            }}
+        >
+          <Fade in={this.state.setOpen}>
+            <div className={classes.paper}>
+              <login/>
+            </div>
+          </Fade>
+        </Modal>
+
         </MenuItem>
-      </Link>
       ,
-      <Link href={'/signup'}>
+      <Link href={'/'}>
         <MenuItem key={2}>
           <Typography>
             <a>Inscription</a>
@@ -205,17 +279,32 @@ class NavBar extends Component {
     );
 
     const doublemenuitem = [
-      <Link href={'/login'}>
-        <MenuItem key={1}>
-          <Typography>
-            <a className={classes.navbarLinkMobile}>
-              Connexion
-            </a>
-          </Typography>
-        </MenuItem>
-      </Link>
+      <MenuItem key={1}>
+        <button type="button" onClick={this.handleOpen}>
+          Connexion
+        </button>
+        <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            className={classes.modal}
+            open={this.state.setOpen}
+            onClose={this.handleClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 500,
+            }}
+        >
+          <Fade in={this.state.setOpen}>
+            <div className={classes.paper}>
+              <login/>
+            </div>
+          </Fade>
+        </Modal>
+
+      </MenuItem>
       ,
-      <Link href={'/signup'}>
+      <Link href={'/'}>
       <MenuItem key={2}>
         <Typography>
           <a className={classes.navbarLinkMobile}>
@@ -368,20 +457,44 @@ class NavBar extends Component {
                   </Typography>
                   {logged ? null :
                     <React.Fragment>
-                      <Link href={'/login'}>
-                        <Button variant="outlined" color={'primary'} className={classes.buttonLogin}>
-                          Connexion
-                        </Button>
-                      </Link>
-                      <Link href={'/signup'}>
-                        <Button
-                          style={{ color: 'white'}}
-                          variant="contained"
-                          color={'primary'}
-                        >
-                          Inscription
-                        </Button>
-                      </Link>
+                      <Button color="primary" onClick={this.handleOpenLogin}>
+                        Connexion
+                      </Button>
+                      <Dialog
+                          scroll={'paper'}
+                          aria-labelledby="scroll-dialog-title"
+                          aria-describedby="scroll-dialog-description"
+                          className={classes.modal}
+                          open={this.state.setOpenLogin}
+                          onClose={this.handleCloseLogin}
+                          TransitionComponent={Transition}
+                      >
+                        <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
+                        <DialogContent>
+                          <div className={classes.paper}>
+                            {modalLogin()}
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                      <Button color="primary" variant={"contained"} onClick={this.handleOpenRegister} style={{color:'white'}}>
+                        Inscription
+                      </Button>
+                      <Dialog
+                          scroll={'paper'}
+                          aria-labelledby="scroll-dialog-title"
+                          aria-describedby="scroll-dialog-description"
+                          className={classes.modal}
+                          open={this.state.setOpenRegister}
+                          onClose={this.handleCloseRegister}
+                          TransitionComponent={Transition}
+                      >
+                        <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
+                        <DialogContent dividers={false} className={classes.test} >
+                          <div className={classes.paper}>
+                            {modalRegister()}
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </React.Fragment>}
                   {logged ?
                     <React.Fragment>
