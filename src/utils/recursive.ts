@@ -4,6 +4,7 @@ import { generateId } from './generateId'
 export const duplicateComponent = (
   componentToClone: IComponent,
   components: IComponents,
+  removeUserComponentDatas: boolean = false,
 ) => {
   const clonedComponents: IComponents = {}
 
@@ -15,6 +16,10 @@ export const duplicateComponent = (
 
     clonedComponents[newid] = {
       ...component,
+      instanceOf: removeUserComponentDatas ? undefined : component.instanceOf,
+      userComponentName: removeUserComponentDatas
+        ? undefined
+        : component.userComponentName,
       id: newid,
       props: { ...component.props },
       children,
@@ -82,6 +87,7 @@ export const detachUserComponent = (
   const { newId, clonedComponents } = duplicateComponent(
     masterComponent,
     components,
+    true,
   )
   delete components[componentToDetach.id]
   components = {
@@ -93,5 +99,5 @@ export const detachUserComponent = (
   )
   components[parentElement.id].children[childIdx] = newId
 
-  return newId
+  return { newId, components }
 }

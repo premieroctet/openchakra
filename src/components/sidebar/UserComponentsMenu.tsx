@@ -23,6 +23,7 @@ const Item = ({ userComponentId, onDelete }: IItemProps) => {
       userComponentId={component.id}
       isDeletable
       onDelete={() => onDelete(userComponentId)}
+      userComponentName={component.userComponentName}
     >
       {component.userComponentName}
     </DragItem>

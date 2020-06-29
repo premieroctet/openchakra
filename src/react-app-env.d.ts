@@ -105,4 +105,5 @@ interface ComponentItemProps {
   soon?: boolean
   rootParentType?: ComponentType
   userComponentId?: string
+  userComponentName?: string
 }

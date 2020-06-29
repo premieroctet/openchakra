@@ -41,6 +41,7 @@ export const useDropComponent = (
           type: item.type,
           parentName: componentId,
           instanceOf: item.userComponentId,
+          userComponentName: item.userComponentName,
         })
       } else {
         dispatch.components.addComponent({

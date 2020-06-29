@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { XYCoord, useDrop, DragObjectWithType, useDrag } from 'react-dnd'
 import ElementListItem from './ElementListItem'
 
-interface Props extends Pick<IComponent, 'type' | 'id'> {
+interface Props extends Pick<IComponent, 'type' | 'id' | 'userComponentName'> {
   index: number
   moveItem?: (dragIndex: number, hoverIndex: number) => void
   onSelect: (id: IComponent['id']) => void
@@ -20,6 +20,7 @@ const ElementListItemDraggable: React.FC<Props> = ({
   index,
   onHover,
   onUnhover,
+  userComponentName,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   const [, drop] = useDrop({
@@ -80,6 +81,7 @@ const ElementListItemDraggable: React.FC<Props> = ({
       onMouseOut={onUnhover}
       type={type}
       draggable
+      userComponentName={userComponentName}
     />
   )
 }

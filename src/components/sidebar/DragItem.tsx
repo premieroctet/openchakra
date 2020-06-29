@@ -18,9 +18,17 @@ const DragItem = ({
   userComponentId,
   onDelete,
   isDeletable,
+  userComponentName,
 }: IProps) => {
   const [, drag] = useDrag({
-    item: { id: type, type, isMeta, rootParentType, userComponentId },
+    item: {
+      id: type,
+      type,
+      isMeta,
+      rootParentType,
+      userComponentId,
+      userComponentName,
+    },
   })
 
   let boxProps: any = {

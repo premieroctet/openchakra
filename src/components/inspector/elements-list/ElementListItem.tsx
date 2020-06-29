@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react'
 import { Icon, PseudoBox, Text, PseudoBoxProps, Flex } from '@chakra-ui/core'
 import ActionButton from '../ActionButton'
 
-interface Props extends Pick<IComponent, 'type'> {
+interface Props extends Pick<IComponent, 'type' | 'userComponentName'> {
   opacity?: number
   onSelect: PseudoBoxProps['onClick']
   onMouseOver: PseudoBoxProps['onMouseOver']
@@ -12,7 +12,15 @@ interface Props extends Pick<IComponent, 'type'> {
 
 const ElementListItem = forwardRef(
   (
-    { type, opacity = 1, onSelect, onMouseOut, onMouseOver, draggable }: Props,
+    {
+      type,
+      opacity = 1,
+      onSelect,
+      onMouseOut,
+      onMouseOver,
+      draggable,
+      userComponentName,
+    }: Props,
     ref: React.Ref<HTMLDivElement>,
   ) => {
     return (
@@ -34,7 +42,7 @@ const ElementListItem = forwardRef(
           <Flex align="center">
             {draggable && <Icon fontSize="xs" mr={2} name="arrow-up-down" />}
             <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
-              {type}
+              {userComponentName || type}
             </Text>
           </Flex>
           <ActionButton

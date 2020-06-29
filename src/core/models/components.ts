@@ -88,6 +88,29 @@ const components = createModel({
         let component = draftState.components[componentId]
         component.userComponentName = name
         draftState.userComponentIds.push(componentId)
+
+        if (component && component.parent) {
+          const children = draftState.components[
+            component.parent
+          ].children.filter((id: string) => id !== componentId)
+
+          const id = generateId('instance')
+          children.push(id)
+
+          draftState.components[component.parent].children = children
+
+          draftState.components[id] = {
+            id,
+            props: {},
+            children: [],
+            type: component.type,
+
+            parent: component.parent,
+            rootParentType: component.rootParentType,
+            instanceOf: component.id,
+            userComponentName: component.userComponentName,
+          }
+        }
       })
     },
     addUserComponent(
@@ -96,6 +119,7 @@ const components = createModel({
         type: ComponentType
         parentName: string
         instanceOf: string
+        userComponentName?: string
       },
     ): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
@@ -110,6 +134,7 @@ const components = createModel({
           type: payload.type,
           parent: payload.parentName,
           instanceOf: payload.instanceOf,
+          userComponentName: payload.userComponentName,
         }
       })
     },
@@ -306,10 +331,11 @@ const components = createModel({
     detachUserComponent(state: ComponentsState): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
         const selectedComponent = draftState.components[draftState.selectedId]
-        const newId = detachUserComponent(
+        const { newId, components } = detachUserComponent(
           selectedComponent,
           draftState.components,
         )
+        draftState.components = components
         draftState.selectedId = newId
       })
     },
@@ -320,16 +346,37 @@ const components = createModel({
       return produce(state, (draftState: ComponentsState) => {
         const masterComponent = draftState.components[userComponentId]
         const instances = Object.values(draftState.components).filter(
-          comp => comp.instanceOf === masterComponent.id,
+          comp =>
+            comp.instanceOf === masterComponent.id &&
+            !comp.id.startsWith('instance'),
+        )
+        const mainInstance = Object.values(draftState.components).find(
+          elem =>
+            elem.instanceOf === masterComponent.id &&
+            elem.id.startsWith('instance'),
         )
 
         instances.forEach(instance => {
-          detachUserComponent(instance, draftState.components)
+          const { components } = detachUserComponent(
+            instance,
+            draftState.components,
+          )
+          draftState.components = components
         })
         masterComponent.userComponentName = undefined
         draftState.userComponentIds = draftState.userComponentIds.filter(
           id => id !== userComponentId,
         )
+
+        if (mainInstance) {
+          delete draftState.components[mainInstance?.id]
+        }
+        const mainInstanceParentIndex = draftState.components[
+          masterComponent.parent
+        ].children.findIndex(child => child === mainInstance?.id)
+        draftState.components[masterComponent.parent].children[
+          mainInstanceParentIndex
+        ] = masterComponent.id
 
         draftState.selectedId = DEFAULT_ID
       })
