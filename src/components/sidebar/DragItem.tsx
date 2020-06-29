@@ -155,7 +155,7 @@ const DragItem = ({
                 />
               </PopoverTrigger>
               <LightMode>
-                <PopoverContent zIndex={100}>
+                <PopoverContent zIndex={100} color="teal.800">
                   <PopoverArrow />
                   <PopoverCloseButton />
                   <PopoverHeader>Are you sure ?</PopoverHeader>

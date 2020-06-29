@@ -1,4 +1,4 @@
-import React, { useState, memo, useEffect } from 'react'
+import React, { useState, memo, useEffect, useMemo } from 'react'
 import {
   Link,
   Box,
@@ -16,6 +16,7 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
+  FormErrorMessage,
 } from '@chakra-ui/core'
 import Panels from './panels/Panels'
 import { GoRepo, GoCode } from 'react-icons/go'
@@ -92,6 +93,9 @@ const Inspector = () => {
     onClose()
     onChangeComponentName('')
   }
+  const isValidComponentName = useMemo(() => {
+    return !!componentName.match(/^[A-Z]\w*$/g)
+  }, [componentName])
 
   const { clearActiveProps } = useInspectorUpdate()
 
@@ -200,7 +204,7 @@ const Inspector = () => {
             <ModalHeader>Save this component</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <FormControl>
+              <FormControl isInvalid={!isValidComponentName}>
                 <FormLabel>Component name</FormLabel>
                 <Input
                   size="md"
@@ -214,6 +218,12 @@ const Inspector = () => {
                     onChangeComponentName(e.target.value)
                   }
                 />
+                {!isValidComponentName && (
+                  <FormErrorMessage>
+                    Component name must start with a capital character and must
+                    not contain space or special character
+                  </FormErrorMessage>
+                )}
                 <FormHelperText>
                   This will save this component in the library and allow to
                   reuse it later.
@@ -221,7 +231,12 @@ const Inspector = () => {
               </FormControl>
             </ModalBody>
             <ModalFooter>
-              <Button variantColor="blue" mr={3} type="submit">
+              <Button
+                variantColor="blue"
+                mr={3}
+                type="submit"
+                isDisabled={!isValidComponentName}
+              >
                 Save
               </Button>
               <Button onClick={onClose}>Cancel</Button>
