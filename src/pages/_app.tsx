@@ -1,6 +1,6 @@
 import React from 'react'
 import { ChakraProvider, CSSReset } from '@chakra-ui/core'
-import theme from '@chakra-ui/theme'
+import theme from '~chakra'
 import 'react-color-picker/index.css'
 import '@reach/combobox/styles.css'
 

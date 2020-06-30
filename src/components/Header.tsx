@@ -20,6 +20,7 @@ import {
   PopoverFooter,
   Tooltip,
 } from '@chakra-ui/core'
+import { ExternalLinkIcon, SmallCloseIcon, CheckIcon } from '@chakra-ui/icons'
 import { DiGithubBadge } from 'react-icons/di'
 import { AiFillThunderbolt } from 'react-icons/ai'
 import { buildParameters } from '~utils/codesandbox'
@@ -55,7 +56,8 @@ const CodeSandboxButton = () => {
           )
         }}
         isLoading={isLoading}
-        rightIcon="external-link"
+        //@ts-ignore
+        rightIcon={<ExternalLinkIcon />}
         variant="ghost"
         boxSize="xs"
       >
@@ -140,7 +142,7 @@ const Header = () => {
             </FormControl>
           </Stack>
 
-          <Stack isInline>
+          <Stack direction="row">
             <CodeSandboxButton />
             <Popover>
               {({ onClose }) => (
@@ -148,7 +150,8 @@ const Header = () => {
                   <PopoverTrigger>
                     <Button
                       ml={4}
-                      rightIcon="small-close"
+                      //@ts-ignore
+                      rightIcon={<SmallCloseIcon />}
                       boxSize="xs"
                       variant="ghost"
                     >
@@ -169,7 +172,8 @@ const Header = () => {
                           boxSize="sm"
                           variant="ghost"
                           colorScheme="red"
-                          rightIcon="check"
+                          //@ts-ignore
+                          rightIcon={<CheckIcon />}
                           onClick={() => {
                             dispatch.components.reset()
                             if (onClose) {
@@ -192,7 +196,7 @@ const Header = () => {
           justifyContent="flex-end"
           width="13rem"
           align="center"
-          isInline
+          direction="row"
           spacing="2"
         >
           <Link isExternal href="https://github.com/premieroctet/openchakra">

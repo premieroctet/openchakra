@@ -6,6 +6,7 @@ import {
   IconButton,
 } from '@chakra-ui/core'
 
+//@ts-ignore
 interface Props
   extends Omit<TooltipProps, 'label' | 'aria-label' | 'children'> {
   icon: IconButtonProps['icon']

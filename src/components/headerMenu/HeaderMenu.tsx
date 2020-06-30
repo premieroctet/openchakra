@@ -41,7 +41,7 @@ const ImportMenuItem = dynamic(() => import('./ImportMenuItem'), { ssr: false })
 
 const HeaderMenu = () => {
   return (
-    <Menu zIndex={100}>
+    <Menu>
       <CustomMenuButton
         rightIcon="chevron-down"
         as={Button}
