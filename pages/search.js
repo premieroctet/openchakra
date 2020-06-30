@@ -297,6 +297,8 @@ class SearchPage extends React.Component {
              })
            })
            var proAlfred=this.state.shops.filter( s => s.is_professional).map( s => s.alfred._id);
+           this.setState({visibleCategories:visibleCategories, categories:categories, proAlfred:proAlfred},
+             () => { if (forceFilter) { this.filter()}});
            this.setState({searching : false})
          })
          .catch (err => {
