@@ -10,6 +10,7 @@ import {
   NumberDecrementStepper,
   SliderFilledTrack,
   Select,
+  Slider,
 } from '@chakra-ui/core'
 import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'
@@ -42,16 +43,18 @@ const AvatarGroupPanel = () => {
       </FormControl>
 
       <FormControl label="Spacing">
-        <SliderTrack
+        <Slider
           onChange={value => setValue('spacing', value)}
           min={-3}
           max={6}
           step={1}
           defaultValue={spacing}
         >
-          <SliderFilledTrack />
-        </SliderTrack>
-        <SliderThumb />
+          <SliderTrack>
+            <SliderFilledTrack />
+          </SliderTrack>
+          <SliderThumb />
+        </Slider>
       </FormControl>
 
       <FormControl label="max">

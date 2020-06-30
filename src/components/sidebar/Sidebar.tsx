@@ -3,11 +3,11 @@ import {
   Box,
   Input,
   InputGroup,
-  Icon,
   InputRightElement,
   DarkMode,
   IconButton,
 } from '@chakra-ui/core'
+import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
 import { menuItems, MenuItem } from '~componentsList'
 
@@ -34,14 +34,16 @@ const Menu = () => {
               <IconButton
                 color="gray.300"
                 aria-label="clear"
-                icon="close"
+                //@ts-ignore
+                icon={<CloseIcon />}
                 boxSize="xs"
                 onClick={() => setSearchTerm('')}
               >
                 x
               </IconButton>
             ) : (
-              <Icon name="search" color="gray.300" />
+              //@ts-ignore
+              <SearchIcon color="gray.300" />
             )}
           </InputRightElement>
           <Input

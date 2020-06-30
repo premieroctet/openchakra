@@ -19,6 +19,7 @@ import {
   useDisclosure,
   Text,
 } from '@chakra-ui/core'
+import { CopyIcon, CheckIcon } from '@chakra-ui/icons'
 import Panels from '~components/inspector/panels/Panels'
 import { GoRepo, GoCode } from 'react-icons/go'
 import { FiTrash2 } from 'react-icons/fi'
@@ -66,7 +67,8 @@ const CodeActionButton = memo(() => {
         onCopy(await formatCode(code))
         setIsLoading(false)
       }}
-      icon={hasCopied ? 'check' : GoCode}
+      //@ts-ignore
+      icon={hasCopied ? <CheckIcon /> : <GoCode />}
     />
   )
 })
@@ -134,7 +136,7 @@ const Inspector = () => {
         </Box>
         {!isRoot && (
           <Stack
-            isInline
+            direction="row"
             py={2}
             spacing={4}
             align="center"
@@ -154,11 +156,12 @@ const Inspector = () => {
             <ActionButton
               label="Duplicate"
               onClick={() => dispatch.components.duplicate()}
-              icon="copy"
+              //@ts-ignore
+              icon={<CopyIcon />}
             />
             <ActionButton
               label="Reset props"
-              icon={IoMdRefresh}
+              icon={<IoMdRefresh />}
               onClick={() => dispatch.components.resetProps(component.id)}
             />
             <ActionButton
@@ -170,13 +173,13 @@ const Inspector = () => {
                   '_blank',
                 )
               }}
-              icon={GoRepo}
+              icon={<GoRepo />}
             />
             <ActionButton
               bg="red.500"
               label="Remove"
               onClick={() => dispatch.components.deleteComponent(component.id)}
-              icon={FiTrash2}
+              icon={<FiTrash2 />}
             />
           </Stack>
         )}

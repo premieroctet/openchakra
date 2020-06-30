@@ -18,6 +18,7 @@ import {
   TabPanel,
   Input,
   useTheme,
+  Slider,
 } from '@chakra-ui/core'
 import FormControl from './FormControl'
 import { useForm } from '~hooks/useForm'
@@ -76,7 +77,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
 
       {props.enableHues && (
         <>
-          <SliderTrack
+          <Slider
             onChange={value => {
               //@ts-ignore
               value = value === 0 ? 50 : value
@@ -88,13 +89,15 @@ const ColorsControl = (props: ColorControlPropsType) => {
             step={100}
             value={hue}
           >
-            <SliderFilledTrack />
-          </SliderTrack>
-          <SliderThumb boxSize={8}>
-            <Box borderRadius="full" fontSize="xs">
-              {hue}
-            </Box>
-          </SliderThumb>
+            <SliderTrack>
+              <SliderFilledTrack />
+            </SliderTrack>
+            <SliderThumb boxSize={8}>
+              <Box borderRadius="full" fontSize="xs">
+                {hue}
+              </Box>
+            </SliderThumb>
+          </Slider>
         </>
       )}
     </>

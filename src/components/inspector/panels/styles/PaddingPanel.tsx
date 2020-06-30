@@ -6,9 +6,14 @@ import {
   SimpleGrid,
   InputGroup,
   InputLeftElement,
-  Icon,
   Box,
 } from '@chakra-ui/core'
+import {
+  ArrowBackIcon,
+  ArrowForwardIcon,
+  ArrowUpIcon,
+  ChevronDownIcon,
+} from '@chakra-ui/icons'
 import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'
 
@@ -65,7 +70,8 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
           <InputGroup boxSize="sm">
             <InputLeftElement
               children={
-                <Icon fontSize="md" name="arrow-back" color="gray.300" />
+                //@ts-ignore
+                <ArrowBackIcon fontSize="md" color="gray.300" />
               }
             />
             <Input
@@ -82,7 +88,8 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
           <InputGroup boxSize="sm">
             <InputLeftElement
               children={
-                <Icon fontSize="md" name="arrow-forward" color="gray.300" />
+                //@ts-ignore
+                <ArrowForwardIcon fontSize="md" color="gray.300" />
               }
             />
             <Input
@@ -98,7 +105,10 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
 
           <InputGroup boxSize="sm">
             <InputLeftElement
-              children={<Icon fontSize="md" name="arrow-up" color="gray.300" />}
+              children={
+                //@ts-ignore
+                <ArrowUpIcon fontSize="md" color="gray.300" />
+              }
             />
             <Input
               placeholder="top"
@@ -114,7 +124,8 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
           <InputGroup boxSize="sm">
             <InputLeftElement
               children={
-                <Icon fontSize="md" name="chevron-down" color="gray.300" />
+                //@ts-ignore
+                <ChevronDownIcon fontSize="md" color="gray.300" />
               }
             />
             <Input

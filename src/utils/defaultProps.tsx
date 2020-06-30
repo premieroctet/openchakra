@@ -42,7 +42,8 @@ import {
   InputGroupProps,
   GridProps,
 } from '@chakra-ui/core'
-import { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
+
+import { CopyIcon, ChevronDownIcon } from '@chakra-ui/icons'
 
 type PreviewDefaultProps = {
   Badge?: BadgeProps
@@ -80,7 +81,7 @@ type PreviewDefaultProps = {
   AccordionPanel?: any
   AccordionIcon?: IconProps
   FormControl?: FormControlProps
-  FormLabel?: FormLabelProps
+  FormLabel?: any
   FormHelperText?: any
   FormErrorMessage?: any
   Grid?: GridProps
@@ -120,7 +121,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Divider: { borderColor: 'blackAlpha.500' },
   IconButton: {
     'aria-label': 'icon',
-    icon: 'copy',
+    icon: <CopyIcon path="" />,
   },
   Icon: { name: 'copy' },
   Image: {
@@ -175,7 +176,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Radio: { children: 'Radio' },
   ListItem: { children: 'list' },
   AccordionItem: {
-    defaultIsOpen: true,
+    //defaultIsOpen: true,
   },
   InputLeftAddon: { children: 'left' },
   InputRightAddon: {
@@ -190,7 +191,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     size: 'md',
   },
   Select: {
-    icon: 'chevron-down',
+    icon: <ChevronDownIcon path="" />,
   },
 }
 
@@ -269,6 +270,7 @@ export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
 }
 
 export const getDefaultFormProps = (type: ComponentType) => {
+  //@ts-ignore
   const chakraDefaultProps = Chakra[type].defaultProps
 
   return { ...chakraDefaultProps, ...DEFAULT_FORM_PROPS[type] }

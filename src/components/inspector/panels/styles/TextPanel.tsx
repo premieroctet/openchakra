@@ -31,7 +31,7 @@ const TextPanel = () => {
         <IconButton
           mr={1}
           aria-label="bold"
-          icon={GoBold}
+          icon={<GoBold />}
           onClick={() => {
             setValue('fontWeight', fontWeight ? null : 'bold')
           }}
@@ -43,7 +43,7 @@ const TextPanel = () => {
         </IconButton>
         <IconButton
           aria-label="italic"
-          icon={GoItalic}
+          icon={<GoItalic />}
           onClick={() => {
             setValue('fontStyle', fontStyle === 'italic' ? null : 'italic')
           }}
@@ -59,7 +59,7 @@ const TextPanel = () => {
         <ButtonGroup boxSize="xs" isAttached>
           <IconButton
             aria-label="bold"
-            icon={MdFormatAlignLeft}
+            icon={<MdFormatAlignLeft />}
             onClick={() => {
               setValue('textAlign', 'left')
             }}
@@ -69,7 +69,7 @@ const TextPanel = () => {
 
           <IconButton
             aria-label="italic"
-            icon={MdFormatAlignCenter}
+            icon={<MdFormatAlignCenter />}
             onClick={() => {
               setValue('textAlign', 'center')
             }}
@@ -79,7 +79,7 @@ const TextPanel = () => {
 
           <IconButton
             aria-label="italic"
-            icon={MdFormatAlignRight}
+            icon={<MdFormatAlignRight />}
             onClick={() => {
               setValue('textAlign', 'right')
             }}
@@ -89,7 +89,7 @@ const TextPanel = () => {
 
           <IconButton
             aria-label="italic"
-            icon={MdFormatAlignJustify}
+            icon={<MdFormatAlignJustify />}
             onClick={() => {
               setValue('textAlign', 'justify')
             }}
