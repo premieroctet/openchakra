@@ -112,10 +112,10 @@ class UserAvatar extends React.Component{
                   aria-haspopup="true"
                 >
                   {
-                    user.picture===undefined || user.picture==='' ?
-                      this.avatarWithoutPics(user, className)
-                      :
+                    user.picture ?
                       this.avatarWithPics(user, className)
+                      :
+                      this.avatarWithoutPics(user, className)
                   }
                 </Badge>
                 <Popover
@@ -148,10 +148,10 @@ class UserAvatar extends React.Component{
               </Grid> :
               <Grid>
                 {
-                  user.picture===undefined || user.picture==='' ?
-                    this.avatarWithoutPics(user, className)
-                    :
+                  user.picture ?
                     this.avatarWithPics(user, className)
+                    :
+                    this.avatarWithoutPics(user, className)
                 }
               </Grid>
           }
