@@ -16,7 +16,7 @@ router.get("/google_hook", googleAuth, (req,res) => {
             res
                 .status("201")
                 .cookie('token', 'Bearer ' + token)
-                .redirect('/')
+                .end()
         });
     }
 )

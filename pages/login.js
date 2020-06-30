@@ -97,6 +97,11 @@ class login extends React.Component {
     };
   }
 
+  componentDidMount() {
+    if (cookie.load('token'))
+      Router.push('/')
+  }
+
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };

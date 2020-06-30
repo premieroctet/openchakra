@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Router from 'next/router';
+import cookie from 'react-cookies'
 
 //import getHost from '../utils/mailing'
 const getHost = () => {return 'https://lvh.me/'}
@@ -18,9 +19,14 @@ export default class OAuth extends Component {
     checkPopup() {
         const check = setInterval(() => {
             const { popup } = this
+            if (cookie.load('token')){
+                clearInterval(check)
+                this.popup.close()
+                Router.push('/')
+            }
             if (!popup || popup.closed || popup.closed === undefined) {
                 clearInterval(check)
-                Router.push('/')
+                this.setState({disabled: ''})
             }
         }, 1000)
     }
