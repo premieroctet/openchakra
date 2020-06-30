@@ -19,6 +19,10 @@ import MobileStepper from '@material-ui/core/MobileStepper';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 registerLocale('fr', fr);
 
@@ -136,11 +140,11 @@ class Register extends React.Component{
                 return (
                     <Grid container>
                         <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%'}}>
+                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
                                 <Grid item>
-                                    <AccountCircle />
+                                    <MailOutlineIcon style={{color:'rgba(84,89,95,0.95)'}}/>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{width: '70%'}}>
                                     <TextField
                                         id="input-with-icon-grid"
                                         label="Email"
@@ -157,36 +161,92 @@ class Register extends React.Component{
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item style={{width: '100%'}}>
-                            <TextField
-                                id="standard-with-placeholder"
-                                label="Prénom"
-                                placeholder="Prénom"
-                                margin="normal"
-                                style={{ width: '100%' }}
-                                variant="outlined"
-                                type="text"
-                                name="firstname"
-                                value={this.state.firstname}
-                                onChange={this.onChange}
-                                error={errors.firstname}
-                            />
-                            <em style={{color:'red'}}>{errors.firstname}</em>
+                        <Grid className={classes.margin}>
+                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
+                                <Grid item>
+                                    <PersonOutlineIcon style={{color:'rgba(84,89,95,0.95)'}}/>
+                                </Grid>
+                                <Grid item style={{width: '70%'}}>
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        label="Prénom"
+                                        placeholder="Prénom"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="text"
+                                        name="firstname"
+                                        value={this.state.firstname}
+                                        onChange={this.onChange}
+                                        error={errors.firstname}
+                                    />
+                                </Grid>
+                                <em style={{color:'red'}}>{errors.firstname}</em>
+                            </Grid>
                         </Grid>
-                        <Grid item style={{width: '100%'}}>
-                            <TextField
-                                label="Nom"
-                                placeholder="Nom"
-                                margin="normal"
-                                variant="outlined"
-                                style={{ width: '100%' }}
-                                type="text"
-                                name="name"
-                                value={this.state.name}
-                                onChange={this.onChange}
-                                error={errors.name}
-                            />
-                            <em style={{color:'red'}}>{errors.name}</em>
+                        <Grid  className={classes.margin}>
+                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
+                                <Grid item>
+                                    <PersonOutlineIcon style={{color:'rgba(84,89,95,0.95)'}}/>
+                                </Grid>
+                                <Grid item style={{width: '70%'}}>
+                                    <TextField
+                                        label="Nom"
+                                        placeholder="Nom"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="text"
+                                        name="name"
+                                        value={this.state.name}
+                                        onChange={this.onChange}
+                                        error={errors.name}
+                                    />
+                                </Grid>
+                                <em style={{color:'red'}}>{errors.name}</em>
+                            </Grid>
+                        </Grid>
+                        <Grid className={classes.margin}>
+                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
+                                <Grid item>
+                                    <LockOpenOutlinedIcon style={{color:'rgba(84,89,95,0.95)'}}/>
+                                </Grid>
+                                <Grid item style={{width: '70%'}}>
+                                    <TextField
+                                        label="Créer un mot de passe"
+                                        placeholder="Créer un mot de passe"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="password"
+                                        name="password"
+                                        value={this.state.password}
+                                        onChange={this.onChange}
+                                        onKeyUp ={this.onChangePassword}
+                                        error={this.state.status1.error}
+                                        helperText={this.state.status1.error}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid className={classes.margin}>
+                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
+                                <Grid item>
+                                    <LockOutlinedIcon style={{color:'rgba(84,89,95,0.95)'}}/>
+                                </Grid>
+                                <Grid item style={{width: '70%'}}>
+                                    <TextField
+                                        label="Confirmer mot de passe"
+                                        placeholder="Confirmer mot de passe"
+                                        margin="normal"
+                                        style={{ width: '100%' }}
+                                        type="password"
+                                        name="password2"
+                                        value={this.state.password2}
+                                        onChange={this.onChange}
+                                        onKeyUp ={this.onChangePassword}
+                                        error={this.state.status2.error}
+                                        helperText={this.state.status2.error}
+                                    />
+                                </Grid>
+                            </Grid>
                         </Grid>
                     </Grid>
                 );
@@ -273,38 +333,7 @@ class Register extends React.Component{
             case 2:
                 return (
                     <Grid>
-                        <Grid item style={{width: '100%'}}>
-                            <TextField
-                                label="Créer un mot de passe"
-                                placeholder="Créer un mot de passe"
-                                margin="normal"
-                                style={{ width: '100%' }}
-                                variant="outlined"
-                                type="password"
-                                name="password"
-                                value={this.state.password}
-                                onChange={this.onChange}
-                                onKeyUp ={this.onChangePassword}
-                                error={this.state.status1.error}
-                                helperText={this.state.status1.error}
-                            />
-                        </Grid>
-                        <Grid item style={{width: '100%'}}>
-                            <TextField
-                                label="Saisir à nouveau le mot de passe"
-                                placeholder="Saisir à nouveau le mot de passe"
-                                margin="normal"
-                                style={{ width: '100%' }}
-                                variant="outlined"
-                                type="password"
-                                name="password2"
-                                value={this.state.password2}
-                                onChange={this.onChange}
-                                onKeyUp ={this.onChangePassword}
-                                error={this.state.status2.error}
-                                helperText={this.state.status2.error}
-                            />
-                        </Grid>
+
                         <Typography style={{fontSize: '1.2rem', width:'100%', marginTop: 15}}>Date de naissance</Typography>
                         <p>Pour vous inscrire, vous devez être âgé d’au moins 16 ans. Les autres<br/>
                             utilisateurs ne verront pas votre date de naissance.
@@ -370,7 +399,7 @@ class Register extends React.Component{
             <Grid  className={classes.fullContainer}>
                 <Grid>
                     <Card>
-                        <div className={classes.newContainer}>
+                        <Grid className={classes.newContainer}>
                             <Grid>
                                 <h2 style={{
                                     textAlign: 'center', margin: '0px auto 1.6rem', fontSize: "1.6rem",
@@ -378,41 +407,42 @@ class Register extends React.Component{
                                     letterSpacing: -1,
                                     fontWeight: "bold"}}>Inscription</h2>
                             </Grid>
-                           <Grid styles={{width: '100%', height: '100%'}}>
+                           <Grid style={{width: '100%', height: '100%', margin:'0px auto 1.6rem'}}>
                                {this.renderSwitch(activeStep, classes, errors)}
                            </Grid>
-                            <hr/>
-                            <Grid container>
-                                <Grid item>
-                                    <p>Vous avez déjà un compte My Alfred ? </p>
+                            <Grid style={{marginTop: 10}}>
+                                <hr/>
+                                <Grid container style={{alignItems: 'center'}}>
+                                    <Grid item>
+                                        <p>Vous avez déjà un compte My Alfred ? </p>
+                                    </Grid>
+                                    <Grid item style={{marginLeft: 5}}>
+                                        <Button color={"primary"} onClick={this.props.callLogin}>Connexion</Button>
+                                    </Grid>
                                 </Grid>
-                                <Grid item style={{paddingTop: 16, marginLeft: 5}}>
-                                    <Button color={"primary"} onClick={this.props.callLogin}>Connexion</Button>
+                                <Grid>
+                                    <MobileStepper
+                                        variant="progress"
+                                        steps={3}
+                                        position="static"
+                                        activeStep={activeStep}
+                                        className={classes.rootStepper}
+                                        nextButton={
+                                            <Button size="small" onClick={this.handleNext} disabled={activeStep === 2}>
+                                                Suivant
+                                                <KeyboardArrowRight />
+                                            </Button>
+                                        }
+                                        backButton={
+                                            <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
+                                                <KeyboardArrowLeft />
+                                                Précédent
+                                            </Button>
+                                        }
+                                    />
                                 </Grid>
-
                             </Grid>
-                            <Grid>
-                                <MobileStepper
-                                    variant="progress"
-                                    steps={3}
-                                    position="static"
-                                    activeStep={activeStep}
-                                    className={classes.rootStepper}
-                                    nextButton={
-                                        <Button size="small" onClick={this.handleNext} disabled={activeStep === 2}>
-                                            Suivant
-                                            <KeyboardArrowRight />
-                                        </Button>
-                                    }
-                                    backButton={
-                                        <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
-                                            <KeyboardArrowLeft />
-                                            Précédent
-                                        </Button>
-                                    }
-                                />
-                            </Grid>
-                        </div>
+                        </Grid>
                     </Card>
                 </Grid>
             </Grid>
