@@ -28,6 +28,7 @@ import Section22 from '../components/home/section22';
 import setAuthToken from '../utils/setAuthToken';
 import Router from "next/router";
 import {Helmet} from 'react-helmet';
+import cookie from 'react-cookies'
 
 class Home extends React.Component {
     constructor(props) {
@@ -38,7 +39,7 @@ class Home extends React.Component {
 
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
-        const token = localStorage.getItem('token');
+        const token = cookie.load('token')
         axios.get("/myAlfred/api/touch/");
         if (token) {
             Router.push('/search');
@@ -46,7 +47,7 @@ class Home extends React.Component {
     }
 
     logout() {
-        localStorage.removeItem('token');
+        cookie.remove('token', { path: '/' })
         // Remove auth header for future requests
         setAuthToken(false);
         window.location.reload();

@@ -15,6 +15,7 @@ import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import cookie from 'react-cookies'
 
 class NewMessages extends React.Component {
   constructor(props) {
@@ -32,9 +33,7 @@ class NewMessages extends React.Component {
   }
 
   componentDidMount() {
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-        "token"
-    );
+    axios.defaults.headers.common["Authorization"] = cookie.load('token')
 
     axios.get("/myAlfred/api/users/current").then(res => {
       this.setState({ idEmitter: res.data._id });

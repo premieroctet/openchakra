@@ -11,6 +11,7 @@ import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
 import Select2 from 'react-select';
+import cookie from 'react-cookies'
 
 const styles = {
     loginContainer: {
@@ -78,7 +79,7 @@ class view extends React.Component {
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.category_id;
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
         axios.get(`/myAlfred/api/admin/category/all/${id}`)
             .then(response => {
                let category = response.data;
@@ -92,7 +93,7 @@ class view extends React.Component {
             .catch(err => {
                 console.log(err);
                 if(err.response.status === 401 || err.response.status === 403 ) {
-                    localStorage.removeItem('token');
+                    cookie.remove('token', { path: '/' })
                     Router.push({pathname: '/login'})
                 }
             });

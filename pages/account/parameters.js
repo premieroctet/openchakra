@@ -19,6 +19,7 @@ import styles from './parameters/parametersStyle'
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import cookie from "react-cookies"
 
 
 class parameters extends React.Component {
@@ -39,7 +40,7 @@ class parameters extends React.Component {
 
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
         axios
             .get('/myAlfred/api/users/current')
             .then(res => {
@@ -48,7 +49,7 @@ class parameters extends React.Component {
             })
             .catch(err => {
                     if(err.response.status === 401 || err.response.status === 403) {
-                        localStorage.removeItem('token');
+                        cookie.remove('token', { path: '/' })
                         Router.push({pathname: '/login'})
                     }
                 }
@@ -90,7 +91,7 @@ class parameters extends React.Component {
                             .then(() => {
                                 this.setState({open:false});
                                 toast.error('Boutique supprimée');
-                                localStorage.removeItem('token');
+                                cookie.remove('token', { path: '/' })
                                 Router.push('/login');
 
                             })
@@ -117,7 +118,7 @@ class parameters extends React.Component {
                                 .then(() => {
                                     this.setState({open2:false});
                                     toast.error('Compte désactivé');
-                                    localStorage.removeItem('token');
+                                    cookie.remove('token', { path: '/' })
                                     Router.push('/');
                                 })
                                 .catch();
@@ -135,7 +136,7 @@ class parameters extends React.Component {
                 .then(() => {
                     this.setState({open2:false});
                     toast.error('Compte désactivé');
-                    localStorage.removeItem('token');
+                    cookie.remove('token', { path: '/' })
                     Router.push('/');
                 })
                 .catch();

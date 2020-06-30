@@ -22,6 +22,7 @@ import Link from "next/link";
 import HomeIcon from '@material-ui/icons/Home';
 import Typography from "@material-ui/core/Typography";
 import moment from 'moment-timezone';
+import cookie from 'react-cookies'
 moment.locale('fr');
 
 const {config} = require('../../../config/config');
@@ -117,7 +118,7 @@ class all extends React.Component {
 
     componentDidMount() {
         localStorage.setItem('path', Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
 
         axios.get("/myAlfred/api/admin/shop/all")
           .then((response) => {
@@ -128,7 +129,7 @@ class all extends React.Component {
           .catch((error) => {
             console.log(error);
             if(error.response.status === 401 || error.response.status === 403) {
-                localStorage.removeItem('token');
+                cookie.remove('token', { path: '/' })
                 Router.push({pathname: '/login'})
             }
         });

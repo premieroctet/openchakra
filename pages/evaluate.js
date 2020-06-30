@@ -10,6 +10,7 @@ import StarRatings from 'react-star-ratings';
 import {toast} from 'react-toastify';
 import TextField from "@material-ui/core/TextField";
 import Skills from '../components/Skills/Skills';
+import cookie from 'react-cookies'
 
 const styles = theme => ({
     bigContainer: {
@@ -144,7 +145,7 @@ class Evaluate extends React.Component {
     componentDidMount() {
         const id = this.props.service_id;
         localStorage.setItem('path',Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
         axios
             .get('/myAlfred/api/users/current')
             .then(res => {
@@ -153,7 +154,7 @@ class Evaluate extends React.Component {
             })
             .catch(err => {
                     if(err.response.status === 401 || err.response.status === 403) {
-                        localStorage.removeItem('token');
+                        cookie.remove('token', { path: '/' })
                         Router.push({pathname: '/login'})
                     }
                 }

@@ -25,6 +25,7 @@ import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import styles from './paymentMethod/paymentMethodStyle';
+import cookie from 'react-cookies'
 
 
 moment.locale('fr');
@@ -52,7 +53,7 @@ class paymentMethod extends React.Component {
 
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
         axios
             .get('/myAlfred/api/users/current')
             .then(res => {
@@ -62,7 +63,7 @@ class paymentMethod extends React.Component {
             })
             .catch(err => {
                     if(err.response.status === 401 || err.response.status === 403) {
-                        localStorage.removeItem('token');
+                        cookie.remove('token', { path: '/' })
                         Router.push({pathname: '/login'})
                     }
                 }

@@ -18,6 +18,7 @@ import styles from './NavBarStyle'
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
+import cookie from 'react-cookies'
 const moment = require('moment');
 
 class NavBar extends Component {
@@ -43,8 +44,8 @@ class NavBar extends Component {
   }
 
   componentDidMount() {
-    const token = localStorage.getItem('token');
-    if (token !== null) {
+    const token = cookie.load('token')
+    if (token) {
       this.setState({ logged: true });
       axios.defaults.headers.common['Authorization'] = token;
     }
@@ -73,7 +74,7 @@ class NavBar extends Component {
 
 
   logout2() {
-    localStorage.removeItem('token');
+    cookie.remove('token', { path: '/' })
     localStorage.removeItem('path');
     // Remove auth header for future requests
     setAuthToken(false);

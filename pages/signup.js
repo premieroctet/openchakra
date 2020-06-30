@@ -17,6 +17,7 @@ import { toast } from 'react-toastify';
 import {Helmet} from 'react-helmet';
 import styles from './signup/signupStyle'
 import {checkPass1, checkPass2} from '../utils/passwords';
+import cookie from 'react-cookies'
 
 registerLocale('fr', fr);
 
@@ -49,8 +50,8 @@ class signup extends React.Component {
       }
 
       componentDidMount() {
-        const token = localStorage.getItem('token');
-        if(token !== null) {
+        const token = cookie.load('token');
+        if(token) {
           toast.warn('Vous êtes déjà inscrit');
           Router.push('/')
         }
@@ -111,7 +112,6 @@ class signup extends React.Component {
               axios.post('/myAlfred/api/users/login',{username, password})
                   .then(response => {
                     const {token} = response.data;
-                    localStorage.setItem('token',token);
                     axios.defaults.headers.common['Authorization'] = token;
                     Router.push({pathname:'/addPicture'})
                   })

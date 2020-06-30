@@ -12,6 +12,7 @@ import About from '../components/About/About';
 import UserAvatar from '../components/Avatar/UserAvatar';
 import BookingDetail from '../components/BookingDetail/BookingDetail';
 import styles from './confirmPayement/confirmPayement';
+import cookie from 'react-cookies'
 const {booking_datetime_str} = require('../utils/dateutils');
 
 moment.locale("fr");
@@ -50,10 +51,11 @@ class ConfirmPayement extends React.Component {
   }
 
   componentDidMount() {
+    const token = cookie.load('token')
     const bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
     this.setState({bookingObj: bookingObj});
 
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem( "token");
+    axios.defaults.headers.common["Authorization"] = token
 
     axios.get("/myAlfred/api/users/current").then(res => {
       this.setState({ currentUser: res.data });
@@ -75,7 +77,7 @@ class ConfirmPayement extends React.Component {
 
     const id = this.props.shop_id;
     localStorage.setItem("path", Router.pathname);
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem( "token");
+    axios.defaults.headers.common["Authorization"] = token
 
     axios.get("/myAlfred/api/serviceUser/" + id).then(res => {
       this.setState({

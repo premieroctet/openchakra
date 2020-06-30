@@ -19,6 +19,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Chip from "@material-ui/core/Chip";
 import Link from "next/link";
+import cookie from 'react-cookies'
 
 const styles = {
     loginContainer: {
@@ -109,7 +110,7 @@ class view extends React.Component {
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.prestation_id;
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
         axios.get(`/myAlfred/api/admin/prestation/all/${id}`)
             .then(response => {
                 let prestation = response.data;
@@ -140,7 +141,7 @@ class view extends React.Component {
             .catch(err => {
                 console.log(err);
                 if(err.response.status === 401 || err.response.status === 403) {
-                    localStorage.removeItem('token');
+                    cookie.remove('token', { path: '/' })
                     Router.push({pathname: '/login'})
                 }
             });

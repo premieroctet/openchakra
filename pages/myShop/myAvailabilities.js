@@ -13,6 +13,7 @@ import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 const {GID_LEN} = require('../../utils/consts')
 import styles from './myAvailabilities/myAvailabilitiesStyle'
 import Router from 'next/router';
+import cookie from 'react-cookies'
 moment.locale('fr');
 
 class myAvailabilities extends React.Component {
@@ -44,13 +45,13 @@ class myAvailabilities extends React.Component {
 
     componentDidMount() {
 
-       const auth = localStorage.getItem('token');
-       if(!this.props.aboutId && auth === null) {
+       const auth = cookie.load('token')
+       if(!this.props.aboutId && !auth) {
          localStorage.setItem('path',Router.pathname);
          Router.push('/login')
        }
       // FIX : get current availabilities
-      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+      axios.defaults.headers.common['Authorization'] = auth
 
       axios.get('/myAlfred/api/availability/currentAlfred')
         .then ( res => {
@@ -101,7 +102,7 @@ class myAvailabilities extends React.Component {
       if (avail._id.length==GID_LEN) {
         avail._id = null
       }
-      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+      axios.defaults.headers.common['Authorization'] = cookie.load('token')
       axios.post('/myAlfred/api/availability/add',avail)
           .then(res => {
               toast.info('Disponibilité ajoutée avec succès !');
@@ -118,7 +119,7 @@ class myAvailabilities extends React.Component {
     }
 
     availabilityUpdate(avail) {
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
         axios.post('/myAlfred/api/availability/update', avail)
           .then( res => {
 
@@ -132,7 +133,7 @@ class myAvailabilities extends React.Component {
     }
 
     availabilityDelete(avail) {
-      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+      axios.defaults.headers.common['Authorization'] = cookie.load('token')
 
       axios.delete('/myAlfred/api/availability/'+avail._id)
           .then(res => {

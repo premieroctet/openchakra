@@ -17,6 +17,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import styles from './addPhone/addPhoneStyle'
+import cookie from 'react-cookies'
 
 class addPhone extends React.Component {
     constructor(props) {
@@ -34,7 +35,7 @@ class addPhone extends React.Component {
     }
 
     componentDidMount() {
-      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+      axios.defaults.headers.common['Authorization'] = cookie.load('token')
     }
 
     onChange(e) {
@@ -61,7 +62,7 @@ class addPhone extends React.Component {
             phone: this.state.phone,
             phone_confirmed: this.state.phoneConfirmed
         };
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
         axios
             .put('/myAlfred/api/users/profile/phone', newPhone)
             .then(res => {

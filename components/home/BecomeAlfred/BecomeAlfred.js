@@ -10,6 +10,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import Button from '@material-ui/core/Button';
 import Link from 'next/link';
 import axios from 'axios';
+import cookie from "react-cookies";
 const jwt = require('jsonwebtoken');
 
 const styles = theme => ({
@@ -114,10 +115,10 @@ class becomeAlfred extends React.Component{
   }
 
   componentDidMount() {
-    const token = localStorage.getItem('token');
+    const token = cookie.load('token')
     if (token) {
       this.setState({logged:true});
-      const token2 = localStorage.getItem('token').split(' ')[1];
+      const token2 = token.split(' ')[1];
       const decode = jwt.decode(token2);
       this.setState({alfred: decode.is_alfred});
 

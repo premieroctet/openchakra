@@ -17,6 +17,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Chip from '@material-ui/core/Chip';
 import Select2 from 'react-select';
+import cookie from 'react-cookies'
 
 const styles = theme => ({
     signupContainer: {
@@ -95,7 +96,7 @@ class add extends React.Component {
 
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
 
         axios.get("/myAlfred/api/admin/category/all")
             .then((response) => {
@@ -272,7 +273,7 @@ class add extends React.Component {
                     this.setState({errors: err.response.data});
 
                 if(err.response.status === 401 || err.response.status === 403) {
-                    localStorage.removeItem('token');
+                    cookie.remove('token', { path: '/' })
                     Router.push({pathname: '/login'})
                 }
                 }

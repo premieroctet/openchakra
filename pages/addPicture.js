@@ -13,6 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import { toast } from 'react-toastify';
 import axios from "axios";
+import cookie from 'react-cookies'
 
 
 const styles = theme => ({
@@ -80,7 +81,7 @@ class addPicture extends React.Component {
     handleLater(e) {
         e.preventDefault();
 
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
 
         axios.put("/myAlfred/api/users/profile/pictureLater", { picture: 'static/basicavatar.png' })
             .then((response) => {
@@ -94,7 +95,7 @@ class addPicture extends React.Component {
         e.preventDefault();
 
 
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
         const formData = new FormData();
         formData.append('myImage',this.state.picture);
         const config = {

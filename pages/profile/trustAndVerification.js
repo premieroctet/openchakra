@@ -34,6 +34,7 @@ import Siret from '../../components/WizardForm/Siret';
 const {CESU}=require('../../utils/consts')
 const {RadioGroup, Radio} = require('react-radio-group')
 import ButtonSwitch from '../../components/ButtonSwitch/ButtonSwitch';
+import cookie from 'react-cookies'
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 moment.locale('fr');
@@ -128,7 +129,7 @@ class trustAndVerification extends React.Component {
 
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
         axios
             .get('/myAlfred/api/users/current')
             .then(res => {
@@ -161,7 +162,7 @@ class trustAndVerification extends React.Component {
             })
             .catch(err => {
                     if(err.response.status === 401 || err.response.status === 403) {
-                        localStorage.removeItem('token');
+                        cookie.remove('token', { path: '/' })
                         Router.push({pathname: '/login'})
                     }
                 }

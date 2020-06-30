@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
 import axios from 'axios';
 import isEmpty from '../../../server/validation/is-empty';
+import cookie from 'react-cookies'
 
 class SettingService extends React.Component {
   constructor(props) {
@@ -32,7 +33,7 @@ class SettingService extends React.Component {
   }
 
   componentDidMount() {
-    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common['Authorization'] = cookie.load('token')
     axios.get(`/myAlfred/api/service/${this.props.service}`)
       .then(response => {
         let service = response.data;

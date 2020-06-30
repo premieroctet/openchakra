@@ -41,6 +41,7 @@ import Section19 from '../components/home/section19';
 import Section21 from '../components/home/section21';
 import Section22 from '../components/home/section22';
 import styles from './search/searchStyle'
+import cookie from 'react-cookies'
 const {isIntervalAvailable} = require('../utils/dateutils');
 
 moment.locale('fr');
@@ -125,7 +126,7 @@ class SearchPage extends React.Component {
         if ('prestation' in this.props) {
           st['prestation']=this.props.prestation;
         }
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
 
         axios.get('/myAlfred/api/category/all/sort')
           .catch(err => {

@@ -15,6 +15,8 @@ import Button from '@material-ui/core/Button';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import cookie from 'react-cookies'
+import Router from "next/router";
 
 class Messages extends React.Component {
   constructor(props) {
@@ -34,9 +36,11 @@ class Messages extends React.Component {
   }
 
   componentDidMount() {
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-        "token"
-    );
+    const token = cookie.load('token')
+    if (!token) {
+      Router.push('/login');
+    }
+    axios.defaults.headers.common["Authorization"] = token
     axios.get("/myAlfred/api/users/current").then(res => {
       this.setState({ idEmitter: res.data._id,currentUser: res.data });
       if(res.data.is_alfred === true){

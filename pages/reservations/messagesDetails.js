@@ -12,6 +12,7 @@ import convertDistance from "geolib/es/convertDistance";
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import styles from './messagesDetails/messagesDetailsStyle'
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
+import cookie from 'react-cookies'
 
 moment.locale("fr");
 
@@ -43,9 +44,7 @@ class MessagesDetails extends React.Component {
       div.scrollTop = 99999;
     }, 450);
 
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-      "token"
-    );
+    axios.defaults.headers.common["Authorization"] = cookie.load('token')
     axios.put('/myAlfred/api/chatRooms/viewMessages/' + this.props.chatroomId)
       .then()
     axios.get("/myAlfred/api/users/current").then(res => {

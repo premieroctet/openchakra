@@ -18,6 +18,7 @@ import Button from '@material-ui/core/Button';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Router from 'next/router';
+import cookie from 'react-cookies'
 
 
 moment.locale("fr");
@@ -52,7 +53,7 @@ class DetailsReservation extends React.Component {
 
     this.setState({ booking_id: booking_id });
 
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
+    axios.defaults.headers.common["Authorization"] = cookie.load('token')
 +-
     axios.get("/myAlfred/api/users/current").then(res => {
       let result = res.data

@@ -13,6 +13,7 @@ import axios from 'axios';
 import Router from "next/router";
 import {Helmet} from 'react-helmet';
 import OAuth from '../components/OAuth'
+import cookie from 'react-cookies'
 
 const providers = ['google']
 
@@ -110,8 +111,7 @@ class login extends React.Component {
 
     axios.post('/myAlfred/api/users/login',user)
         .then(res => {
-          const {token} = res.data;
-          localStorage.setItem('token',token);
+          const token = cookie.load('token')
           setAuthToken(token);
           axios.put('/myAlfred/api/users/account/lastLogin')
               .then(data => {

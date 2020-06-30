@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import styles from './UserAvatarStyle'
+import cookie from 'react-cookies'
 const jwt = require('jsonwebtoken');
 
 class UserAvatar extends React.Component{
@@ -21,10 +22,10 @@ class UserAvatar extends React.Component{
   }
 
   componentDidMount() {
-    const token = localStorage.getItem('token');
-    if (token !== null) {
+    const token = cookie.load('token')
+    if (token) {
       this.setState({ logged: true });
-      const token2 = localStorage.getItem('token').split(' ')[1];
+      const token2 = token.split(' ')[1];
       const decode = jwt.decode(token2);
       const alfred_id = decode.id;
       this.setState({currentUser: alfred_id})

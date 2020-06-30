@@ -15,6 +15,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import AlgoliaPlaces from 'algolia-places-react';
 import moment from 'moment';
 import Hidden from '@material-ui/core/Hidden';
+import cookie from 'react-cookies'
 var parse = require('url-parse');
 
 class SearchInput extends React.Component{
@@ -33,7 +34,7 @@ class SearchInput extends React.Component{
   componentDidMount() {
     var query=parse(window.location.href, true).query;
     query.gps='gps' in query ? JSON.parse(query.gps) : null;
-    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common['Authorization'] = cookie.load('token')
     axios.get('/myAlfred/api/users/current')
      .then(res => {
        let user = res.data;

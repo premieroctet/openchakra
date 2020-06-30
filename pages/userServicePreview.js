@@ -51,6 +51,7 @@ const moment = require('moment');
 moment.locale('fr');
 registerLocale('fr', fr);
 import Link from 'next/link';
+import cookie from 'react-cookies'
 const {frenchFormat}=require('../utils/text')
 
 
@@ -166,7 +167,7 @@ class UserServicesPreview extends React.Component {
 
     const id = this.props.service_id;
     localStorage.setItem("path", Router.pathname);
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem("token")
+    axios.defaults.headers.common["Authorization"] = cookie.load('token')
     axios.get(`/myAlfred/api/serviceUser/${id}`)
       .then(res => {
       let serviceUser = res.data;
@@ -241,7 +242,7 @@ class UserServicesPreview extends React.Component {
         console.error(err);
         /**
         if (err.response.status === 401 || err.response.status === 403) {
-          localStorage.removeItem("token");
+          cookie.remove('token', { path: '/' })
           Router.push({ pathname: "/login" });
         }
         */
@@ -481,7 +482,7 @@ class UserServicesPreview extends React.Component {
         }
 
         if (!this.state.user) {
-          localStorage.removeItem("token");
+          cookie.remove('token', { path: '/' })
           Router.push({ pathname: "/login" });
         }
         else {
@@ -493,7 +494,7 @@ class UserServicesPreview extends React.Component {
       }
       else {
         if (!user) {
-          localStorage.removeItem("token");
+          cookie.remove('token', { path: '/' })
           localStorage.setItem("bookingObj", JSON.stringify(bookingObj));
           localStorage.setItem("path", Router.pathname);
           Router.push({ pathname: "/login" });
