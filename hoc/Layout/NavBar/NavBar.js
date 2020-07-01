@@ -18,10 +18,6 @@ import styles from './NavBarStyle'
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
-const moment = require('moment');
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
 import LogIn from '../../../components/LogIn/LogIn';
 import Register from '../../../components/Register/Register';
 import Dialog from '@material-ui/core/Dialog';
@@ -138,12 +134,10 @@ class NavBar extends Component {
   };
 
   handleOpenLogin = () => {
-    console.log('bonjour')
     this.setState({setOpenLogin : true, setOpenRegister: false});
   };
 
   handleCloseLogin = () => {
-    console.log('héhéhéhé')
     this.setState({setOpenLogin : false});
   };
 
@@ -167,7 +161,7 @@ class NavBar extends Component {
 
     const modalRegister = () =>{
       return(
-          <Register callLogin={this.handleOpenLogin}/>
+          <Register callLogin={this.handleOpenLogin} closeLOgin={this.componentDidMount}/>
       )
     };
 
@@ -237,7 +231,7 @@ class NavBar extends Component {
       <Grid key={1} onClick={this.handleOpenLogin}>
         <Typography>
           <a className={classes.navbarLinkMobile}>
-            test
+            Connexion
           </a>
         </Typography>
         <Dialog

@@ -1,6 +1,5 @@
 import React from 'react';
 import {toast} from 'react-toastify';
-import Router from 'next/router';
 import {checkPass1, checkPass2} from '../../utils/passwords';
 import axios from 'axios';
 import Card from '@material-ui/core/Card';
@@ -8,17 +7,15 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import {Typography} from '@material-ui/core';
 import AlgoliaPlaces from 'algolia-places-react';
-import DatePicker, {registerLocale} from 'react-datepicker';
+import {registerLocale} from 'react-datepicker';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
-import Link from 'next/link';
 import fr from "date-fns/locale/fr";
 import styles from './RegisterStyle';
 import {withStyles} from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
@@ -72,7 +69,7 @@ class Register extends React.Component{
         this.state = {
             firstname:'',
             name: '',
-            birthday: '',
+            birthday: new Date(),
             email: '',
             password: '',
             password2: '',
@@ -104,11 +101,7 @@ class Register extends React.Component{
     }
 
     componentDidMount() {
-        const token = localStorage.getItem('token');
-        if(token !== null) {
-            toast.warn('Vous êtes déjà inscrit');
-            Router.push('/')
-        }
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     }
 
     onChange = e => {
@@ -148,18 +141,15 @@ class Register extends React.Component{
         this.setState({city: suggestion.city, address: suggestion.name, zip_code: suggestion.postcode,country: suggestion.country,
             lat: suggestion.latlng.lat, lng: suggestion.latlng.lng});
 
-    }
-
-    onChangeBirthday = date => {
-        this.setState({birthday: date})
     };
 
     handleChecked () {
         this.setState({checked: !this.state.checked});
-    }
+    };
 
     sendSms = () => {
-        axios.post('/myAlfred/api/users/sendSMSVerification', {phone: this.state.phone})
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.post('/myAlfred/api/users/sendSMSVerification', this.state.phone)
             .then (res => {
                 var txt="Le SMS a été envoyé";
                 toast.info(txt);
@@ -169,14 +159,13 @@ class Register extends React.Component{
                 toast.error("Impossible d'envoyer le SMS");
                 this.setState({serverError: true});
             })
-    }
+    };
 
     checkSmsCode = () => {
-        const sms_code = this.state.smsCode;
-        axios.post("/myAlfred/api/users/checkSMSVerification", {sms_code:sms_code})
+        axios.post("/myAlfred/api/users/checkSMSVerification",  this.state.smsCode)
             .then( res => {
                 if (res.data.sms_code_ok) {
-                    toast.info("Votre numéro de téléphone est validé")
+                    toast.info("Votre numéro de téléphone est validé");
                     this.setState({smsCodeOpen: false, phoneConfirmed:true});
                 }
                 else {
@@ -184,7 +173,7 @@ class Register extends React.Component{
                 }
             })
             .catch(err => toast.error("Erreur à la vérification du code"))
-    }
+    };
 
     onSubmit = e => {
         e.preventDefault();
@@ -231,7 +220,7 @@ class Register extends React.Component{
                     }).then(
                         axios.post("/myAlfred/api/users/profile/picture",formData,config)
                             .then((response) => {
-                                toast.info('Photo de profil ajoutée');
+                                this.props.closeLOgin()
                             }).catch((error) => {
                             console.log(error)
                         })
@@ -266,8 +255,24 @@ class Register extends React.Component{
             .catch(err =>
                 console.log(err)
             );
+    };
 
+    onChangeBirthdayDate = (e) =>{
+        let day = new Date(this.state.birthday);
+        day.setDate(e.target.value);
+        this.setState({birthday: day})
+    };
 
+    onChangeBirthdayMonth = (e) =>{
+        let month = new Date(this.state.birthday);
+        month.setMonth(e.target.value - 1 );
+        this.setState({birthday: month})
+    };
+
+    onChangeBirthdayYear = (e) =>{
+        let year = new Date(this.state.birthday);
+        year.setFullYear(e.target.value);
+        this.setState({birthday: year})
     };
 
 
@@ -455,8 +460,7 @@ class Register extends React.Component{
                                            <TextField
                                                label="Jour"
                                                placeholder="Jour"
-                                               name={'bithdayDay'}
-                                               onChange={this.onChange}
+                                               onChange={this.onChangeBirthdayDate}
                                                inputProps={{
                                                    maxLength: 2,
                                                }}
@@ -469,8 +473,7 @@ class Register extends React.Component{
                                             <TextField
                                                 label="Mois"
                                                 placeholder="Mois"
-                                                name={'bithdayMonth'}
-                                                onChange={this.onChange}
+                                                onChange={this.onChangeBirthdayMonth}
                                                 inputProps={{
                                                     maxLength: 2,
                                                 }}
@@ -483,8 +486,7 @@ class Register extends React.Component{
                                             <TextField
                                                 label="Année"
                                                 placeholder="Année"
-                                                name={'bithdayYear'}
-                                                onChange={this.onChange}
+                                                onChange={this.onChangeBirthdayYear}
                                                 inputProps={{
                                                     maxLength: 4
                                                 }}
@@ -589,7 +591,7 @@ class Register extends React.Component{
                                     <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                         <Button
                                             disabled = {!(this.state.checked && this.state.status1.check && this.state.status2.check)}
-                                            onCLick={this.onSubmit}
+                                            onClick={this.onSubmit}
                                             variant="contained"
                                             color="primary"
                                             style={{ width: '100%',color:"white" }}>
@@ -678,16 +680,3 @@ class Register extends React.Component{
 }
 
 export default withStyles(styles)(Register);
-
-
-{/*<DatePicker
-                                            selected={this.state.birthday}
-                                            onChange={(date)=>this.onChangeBirthday(date)}
-                                            locale='fr'
-                                            placeholderText="jj/mm/aaaa"
-                                            showYearDropdown
-                                            showMonthDropdown
-                                            className={classes.birthday}
-                                            maxDate={new Date()}
-                                            dateFormat="dd/MM/yyyy"
-                                        />*/}

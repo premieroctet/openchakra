@@ -86,7 +86,7 @@ class addPhone extends React.Component {
             toast.error("Impossible d'envoyer le SMS");
             this.setState({serverError: true});
         })
-    }
+    };
 
     checkSmsCode = () => {
       const sms_code = this.state.smsCode;
@@ -101,7 +101,7 @@ class addPhone extends React.Component {
           }
         })
         .catch(err => toast.error("Erreur à la vérification du code"))
-    }
+    };
 
 
     render() {
