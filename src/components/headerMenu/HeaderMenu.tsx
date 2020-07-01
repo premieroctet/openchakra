@@ -14,6 +14,7 @@ import {
   MenuButtonProps,
   ButtonProps,
 } from '@chakra-ui/core'
+import { ChevronDownIcon } from '@chakra-ui/icons'
 import { FaBomb } from 'react-icons/fa'
 import { GoRepo } from 'react-icons/go'
 
@@ -43,7 +44,7 @@ const HeaderMenu = () => {
   return (
     <Menu>
       <CustomMenuButton
-        rightIcon="chevron-down"
+        rightIcon={<ChevronDownIcon path="" />}
         as={Button}
         boxSize="xs"
         variant="ghost"
