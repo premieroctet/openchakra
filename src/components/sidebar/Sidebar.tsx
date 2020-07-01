@@ -34,16 +34,14 @@ const Menu = () => {
               <IconButton
                 color="gray.300"
                 aria-label="clear"
-                //@ts-ignore
-                icon={<CloseIcon />}
+                icon={<CloseIcon path="" />}
                 boxSize="xs"
                 onClick={() => setSearchTerm('')}
               >
                 x
               </IconButton>
             ) : (
-              //@ts-ignore
-              <SearchIcon color="gray.300" />
+              <SearchIcon path="" color="gray.300" />
             )}
           </InputRightElement>
           <Input

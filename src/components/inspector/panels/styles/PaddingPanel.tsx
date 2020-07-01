@@ -70,8 +70,7 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
           <InputGroup boxSize="sm">
             <InputLeftElement
               children={
-                //@ts-ignore
-                <ArrowBackIcon fontSize="md" color="gray.300" />
+                <ArrowBackIcon path="" fontSize="md" color="gray.300" />
               }
             />
             <Input
@@ -88,8 +87,7 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
           <InputGroup boxSize="sm">
             <InputLeftElement
               children={
-                //@ts-ignore
-                <ArrowForwardIcon fontSize="md" color="gray.300" />
+                <ArrowForwardIcon path="" fontSize="md" color="gray.300" />
               }
             />
             <Input
@@ -105,10 +103,7 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
 
           <InputGroup boxSize="sm">
             <InputLeftElement
-              children={
-                //@ts-ignore
-                <ArrowUpIcon fontSize="md" color="gray.300" />
-              }
+              children={<ArrowUpIcon path="" fontSize="md" color="gray.300" />}
             />
             <Input
               placeholder="top"
@@ -124,8 +119,7 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
           <InputGroup boxSize="sm">
             <InputLeftElement
               children={
-                //@ts-ignore
-                <ChevronDownIcon fontSize="md" color="gray.300" />
+                <ChevronDownIcon path="" fontSize="md" color="gray.300" />
               }
             />
             <Input

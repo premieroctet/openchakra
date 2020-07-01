@@ -100,16 +100,14 @@ const CustomPropsPanel = () => {
               variant="ghost"
               boxSize="xs"
               aria-label="edit"
-              //@ts-ignore
-              icon={<EditIcon />}
+              icon={<EditIcon path="" />}
             />
             <IconButton
               onClick={() => onDelete(propsName)}
               variant="ghost"
               boxSize="xs"
               aria-label="delete"
-              //@ts-ignore
-              icon={<SmallCloseIcon />}
+              icon={<SmallCloseIcon path="" />}
             />
           </ButtonGroup>
         </Flex>

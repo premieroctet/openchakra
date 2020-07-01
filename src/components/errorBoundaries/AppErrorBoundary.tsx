@@ -56,8 +56,7 @@ export default class AppErrorBoundary extends Component<
                   window.location.reload()
                 }}
                 variant="outline"
-                //@ts-ignore
-                rightIcon={<CheckCircleIcon />}
+                rightIcon={<CheckCircleIcon path="" />}
                 boxSize="sm"
                 mt={4}
                 display="block"

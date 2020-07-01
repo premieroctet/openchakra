@@ -56,8 +56,7 @@ const CodeSandboxButton = () => {
           )
         }}
         isLoading={isLoading}
-        //@ts-ignore
-        rightIcon={<ExternalLinkIcon />}
+        rightIcon={<ExternalLinkIcon path="" />}
         variant="ghost"
         boxSize="xs"
       >
@@ -150,8 +149,7 @@ const Header = () => {
                   <PopoverTrigger>
                     <Button
                       ml={4}
-                      //@ts-ignore
-                      rightIcon={<SmallCloseIcon />}
+                      rightIcon={<SmallCloseIcon path="" />}
                       boxSize="xs"
                       variant="ghost"
                     >
@@ -172,8 +170,7 @@ const Header = () => {
                           boxSize="sm"
                           variant="ghost"
                           colorScheme="red"
-                          //@ts-ignore
-                          rightIcon={<CheckIcon />}
+                          rightIcon={<CheckIcon path="" />}
                           onClick={() => {
                             dispatch.components.reset()
                             if (onClose) {

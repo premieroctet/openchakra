@@ -42,20 +42,15 @@ const ElementListItem = forwardRef(
       >
         <Flex justify="space-between" align="center" w="100%">
           <Flex align="center">
-            {draggable && (
-              //@ts-ignore
-              <ArrowUpDownIcon fontSize="xs" mr={2} />
-            )}
+            {draggable && <ArrowUpDownIcon path="" fontSize="xs" mr={2} />}
             <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
               {name || type}
             </Text>
           </Flex>
           <ActionButton
             label="Inspect"
-            //@ts-ignore
-            onClick={onSelect}
-            //@ts-ignore
-            icon={<SettingsIcon />}
+            onClick={() => onSelect}
+            icon={<SettingsIcon path="" />}
             colorScheme="blackAlpha"
           />
         </Flex>

@@ -60,8 +60,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
                   this.setState({ hasError: false })
                 }}
                 variant="outline"
-                //@ts-ignore
-                rightIcon={<CheckCircleIcon />}
+                rightIcon={<CheckCircleIcon path="" />}
                 boxSize="sm"
                 mt={4}
                 display="block"

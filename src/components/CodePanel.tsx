@@ -18,8 +18,8 @@ const CodePanel = () => {
 
     getCode()
   }, [components])
-  //@ts-ignore
-  const [hasCopied, onCopy] = useClipboard(code)
+
+  const [hasCopied, onCopy] = useClipboard(code!)
 
   return (
     <Box

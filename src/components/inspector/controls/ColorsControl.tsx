@@ -79,9 +79,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
         <>
           <Slider
             onChange={value => {
-              //@ts-ignore
               value = value === 0 ? 50 : value
-              //@ts-ignore
               setHue(value)
             }}
             min={0}
