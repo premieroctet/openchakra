@@ -31,6 +31,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
 const {isPhoneOk}=require('../../utils/sms');
 import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined';
+import Router from 'next/router';
 
 registerLocale('fr', fr);
 
@@ -220,7 +221,8 @@ class Register extends React.Component{
                     }).then(
                         axios.post("/myAlfred/api/users/profile/picture",formData,config)
                             .then((response) => {
-                                this.props.closeLOgin()
+                                console.log(response, 'response')
+                               // Router.push('/checkEmail');
                             }).catch((error) => {
                             console.log(error)
                         })
@@ -286,7 +288,7 @@ class Register extends React.Component{
                                 <Grid item>
                                     <MailOutlineIcon style={{color:'rgba(84,89,95,0.95)'}}/>
                                 </Grid>
-                                <Grid item style={{width: '70%'}}>
+                                <Grid item className={classes.widthTextField}>
                                     <TextField
                                         id="input-with-icon-grid"
                                         label="Email"
@@ -308,7 +310,7 @@ class Register extends React.Component{
                                 <Grid item>
                                     <PersonOutlineIcon style={{color:'rgba(84,89,95,0.95)'}}/>
                                 </Grid>
-                                <Grid item style={{width: '70%'}}>
+                                <Grid item className={classes.widthTextField}>
                                     <TextField
                                         id="standard-with-placeholder"
                                         label="Prénom"
@@ -330,7 +332,7 @@ class Register extends React.Component{
                                 <Grid item>
                                     <PersonOutlineIcon style={{color:'rgba(84,89,95,0.95)'}}/>
                                 </Grid>
-                                <Grid item style={{width: '70%'}}>
+                                <Grid item className={classes.widthTextField}>
                                     <TextField
                                         label="Nom"
                                         placeholder="Nom"
@@ -351,7 +353,7 @@ class Register extends React.Component{
                                 <Grid item>
                                     <LockOpenOutlinedIcon style={{color:'rgba(84,89,95,0.95)'}}/>
                                 </Grid>
-                                <Grid item style={{width: '70%'}}>
+                                <Grid item className={classes.widthTextField}>
                                     <TextField
                                         label="Créer un mot de passe"
                                         placeholder="Créer un mot de passe"
@@ -373,7 +375,7 @@ class Register extends React.Component{
                                 <Grid item>
                                     <LockOutlinedIcon style={{color:'rgba(84,89,95,0.95)'}}/>
                                 </Grid>
-                                <Grid item style={{width: '70%'}}>
+                                <Grid item className={classes.widthTextField}>
                                     <TextField
                                         label="Confirmer mot de passe"
                                         placeholder="Confirmer mot de passe"
@@ -622,56 +624,58 @@ class Register extends React.Component{
         return(
             <Grid  className={classes.fullContainer}>
                 <Grid>
-                    <Card>
-                        <Grid className={classes.newContainer}>
-                            {
-                                activeStep === 0 ?
-                                    <Grid>
-                                        <h2 style={{
-                                            textAlign: 'center', margin: '0px auto 1.6rem', fontSize: "1.6rem",
-                                            color: "rgba(84,89,95,0.95)",
-                                            letterSpacing: -1,
-                                            fontWeight: "bold"}}>Inscription</h2>
-                                    </Grid> : null
-                            }
-
-                           <Grid style={{width: '100%', height: '100%', margin:'0px auto 1.6rem'}}>
-                               {this.renderSwitch(activeStep, classes, errors)}
-                           </Grid>
-                            <Grid style={{marginTop: 10}}>
-                                <hr/>
-                                <Grid container style={{alignItems: 'center'}}>
-                                    <Grid item>
-                                        <p>Vous avez déjà un compte My Alfred ? </p>
-                                    </Grid>
-                                    <Grid item style={{marginLeft: 5}}>
-                                        <Button color={"primary"} onClick={this.props.callLogin}>Connexion</Button>
-                                    </Grid>
-                                </Grid>
+                    <Grid className={classes.newContainer}>
+                        {
+                            activeStep === 0 ?
                                 <Grid>
-                                    <MobileStepper
-                                        variant="progress"
-                                        steps={2}
-                                        position="static"
-                                        activeStep={activeStep}
-                                        className={classes.rootStepper}
-                                        nextButton={
-                                            <Button size="small" onClick={this.handleNext} disabled={activeStep === 1}>
-                                                Suivant
-                                                <KeyboardArrowRight />
-                                            </Button>
-                                        }
-                                        backButton={
-                                            <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
-                                                <KeyboardArrowLeft />
-                                                Précédent
-                                            </Button>
-                                        }
-                                    />
+                                    <h2 style={{
+                                        textAlign: 'center', margin: '0px auto 1.6rem', fontSize: "1.6rem",
+                                        color: "rgba(84,89,95,0.95)",
+                                        letterSpacing: -1,
+                                        fontWeight: "bold"}}>Inscription</h2>
+                                </Grid> : null
+                        }
+
+                       <Grid style={{width: '100%', height: '100%', margin:'0px auto 1.6rem'}}>
+                           {this.renderSwitch(activeStep, classes, errors)}
+                       </Grid>
+                        <Grid style={{marginTop: 10}}>
+                            <hr/>
+                            <Grid container className={classes.bottomContainer}>
+                                <Grid item>
+                                    <p>Vous avez déjà un compte My Alfred ? </p>
+                                </Grid>
+                                <Grid item style={{marginLeft: 5}}>
+                                    <Button color={"primary"} onClick={this.props.callLogin}>Connexion</Button>
                                 </Grid>
                             </Grid>
+                            <Grid>
+                                <MobileStepper
+                                    variant="progress"
+                                    steps={2}
+                                    position="static"
+                                    activeStep={activeStep}
+                                    className={classes.rootStepper}
+                                    classes={{
+                                        root: classes.containerStepper,
+                                        progress: classes.progress
+                                    }}
+                                    nextButton={
+                                        <Button size="small" onClick={this.handleNext} disabled={activeStep === 1}>
+                                            Suivant
+                                            <KeyboardArrowRight />
+                                        </Button>
+                                    }
+                                    backButton={
+                                        <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
+                                            <KeyboardArrowLeft />
+                                            Précédent
+                                        </Button>
+                                    }
+                                />
+                            </Grid>
                         </Grid>
-                    </Card>
+                    </Grid>
                 </Grid>
             </Grid>
         );

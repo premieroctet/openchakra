@@ -22,6 +22,7 @@ export default theme => ({
     rootStepper:{
         width: '100%',
         flexGrow: 1,
+
     },
     margin:{
         margin: theme.spacing(1),
@@ -77,4 +78,26 @@ export default theme => ({
         paddingTop: 22,
         letterSpacing: 1,
     },
+    widthTextField:{
+        width: '70%',
+        [theme.breakpoints.down("xs")]:{
+            width: '80%',
+        }
+    },
+    bottomContainer:{
+        alignItems: 'center',
+        [theme.breakpoints.down("xs")]:{
+           justifyContent: 'center',
+        }
+    },
+    progress:{
+        [theme.breakpoints.down("xs")]:{
+            width: '25%',
+        }
+    },
+    containerStepper:{
+        [theme.breakpoints.down("xs")]:{
+
+        }
+    }
 })

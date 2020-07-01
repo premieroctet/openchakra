@@ -228,7 +228,7 @@ class NavBar extends Component {
       ];
 
     const doublemenuitem = [
-      <Grid key={1} onClick={this.handleOpenLogin}>
+      <MenuItem key={1} onClick={this.handleOpenLogin}>
         <Typography>
           <a className={classes.navbarLinkMobile}>
             Connexion
@@ -242,6 +242,7 @@ class NavBar extends Component {
             open={this.state.setOpenLogin}
             onClose={this.handleCloseLogin}
             TransitionComponent={Transition}
+            fullScreen={true}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
           <DialogContent>
@@ -250,12 +251,12 @@ class NavBar extends Component {
             </div>
           </DialogContent>
         </Dialog>
-      </Grid>
+      </MenuItem>
       ,
-      <Grid key={2} onClick={this.handleOpenRegister}>
+      <MenuItem key={2} onClick={this.handleOpenRegister}>
         <Typography>
           <a className={classes.navbarLinkMobile}>
-            Inscription
+            test
           </a>
         </Typography>
         <Dialog
@@ -266,15 +267,16 @@ class NavBar extends Component {
             open={this.state.setOpenRegister}
             onClose={this.handleCloseRegister}
             TransitionComponent={Transition}
+            fullScreen={true}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
-          <DialogContent dividers={false} className={classes.test} >
+          <DialogContent dividers={false} className={classes.test} classes={{root: classes.muidialogContent}} >
             <div className={classes.paper}>
               {modalRegister()}
             </div>
           </DialogContent>
         </Dialog>
-      </Grid>
+      </MenuItem>
     ];
 
     const renderAvatarMenu = (

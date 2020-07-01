@@ -128,23 +128,30 @@ export default theme =>({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
     borderRadius: 10,
     boxShadow: 'theme.shadows[5]',
-    padding: theme.spacing(2, 4, 3),
+    margin: '0px !important',
+    padding: 0,
   },
   closeButton: {
     position: 'absolute',
     right: theme.spacing(1),
     top: theme.spacing(1),
-    color: theme.palette.grey[500],
   },
   test:{
     '& .MuiDialogContent-dividers':{
       borderTop: 'inherit !important'
     }
+  },
+  muidialogContent:{
+    [theme.breakpoints.down('xs')]: {
+     padding: 0
+    },
   }
+
 
 })
