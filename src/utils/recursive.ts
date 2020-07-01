@@ -1,4 +1,5 @@
 import omit from 'lodash/omit'
+import each from 'lodash/each'
 import { generateId } from './generateId'
 
 export const duplicateComponent = (
@@ -45,6 +46,28 @@ export const deleteComponent = (
   components: IComponents,
 ) => {
   let updatedComponents = { ...components }
+
+  if (component.instanceOf) {
+    each(updatedComponents, comp => {
+      if (comp.parent === component.id && component.instanceOf) {
+        comp.parent = component.instanceOf
+      }
+    })
+  }
+
+  // Remove self
+  if (component && component.parent) {
+    let parent = updatedComponents[component.parent]
+
+    if (parent.instanceOf) {
+      parent = updatedComponents[parent.instanceOf]
+    }
+
+    const children = parent.children.filter((id: string) => id !== component.id)
+
+    parent.children = children
+  }
+
   const deleteRecursive = (
     children: IComponent['children'],
     id: IComponent['id'],
@@ -84,18 +107,23 @@ export const detachUserComponent = (
 ) => {
   const masterComponent = components[componentToDetach.instanceOf!]
   const parentElement = components[componentToDetach.parent]
+  const detachedId = componentToDetach.id
   const { newId, clonedComponents } = duplicateComponent(
     masterComponent,
     components,
     true,
   )
-  delete components[componentToDetach.id]
+  masterComponent.children.forEach(child => {
+    components[child].parent = masterComponent.id
+  })
+  // debugger
   components = {
     ...components,
     ...clonedComponents,
   }
+  components = omit(components, detachedId)
   const childIdx = components[parentElement.id].children.findIndex(
-    child => child === componentToDetach.id,
+    child => child === detachedId,
   )
   components[parentElement.id].children[childIdx] = newId
 

@@ -166,29 +166,6 @@ const components = createModel({
       return produce(state, (draftState: ComponentsState) => {
         let component = draftState.components[componentId]
 
-        if (component.instanceOf) {
-          each(draftState.components, comp => {
-            if (comp.parent === component.id && component.instanceOf) {
-              comp.parent = component.instanceOf
-            }
-          })
-        }
-
-        // Remove self
-        if (component && component.parent) {
-          let parent = draftState.components[component.parent]
-
-          if (parent.instanceOf) {
-            parent = draftState.components[parent.instanceOf]
-          }
-
-          const children = parent.children.filter(
-            (id: string) => id !== componentId,
-          )
-
-          parent.children = children
-        }
-
         draftState.selectedId = DEFAULT_ID
         draftState.components = deleteComponent(
           component,
@@ -371,15 +348,21 @@ const components = createModel({
           id => id !== userComponentId,
         )
 
-        if (mainInstance) {
-          delete draftState.components[mainInstance?.id]
-        }
         const mainInstanceParentIndex = draftState.components[
           masterComponent.parent
         ].children.findIndex(child => child === mainInstance?.id)
         draftState.components[masterComponent.parent].children[
           mainInstanceParentIndex
         ] = masterComponent.id
+
+        if (mainInstance) {
+          each(draftState.components, comp => {
+            if (comp.parent === mainInstance.id) {
+              comp.parent = masterComponent.id
+            }
+          })
+          delete draftState.components[mainInstance.id]
+        }
 
         draftState.selectedId = DEFAULT_ID
       })
