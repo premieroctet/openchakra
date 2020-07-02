@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import ColorsControl from '~components/inspector/controls/ColorsControl'
 import InputSuggestion from '~components/inspector/inputs/InputSuggestion'
-import theme from '~chakra'
+import theme from '@chakra-ui/theme'
 import { ComboboxOption } from '@reach/combobox'
 import FormControl from '~components/inspector/controls/FormControl'
 import { useForm } from '~hooks/useForm'
