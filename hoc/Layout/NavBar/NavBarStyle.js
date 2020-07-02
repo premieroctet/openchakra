@@ -128,7 +128,14 @@ export default theme =>({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-
+    '& .MuiDialog-paper':{
+      margin: '0px !important'
+    }
+  },
+  modalWeb:{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
@@ -142,16 +149,13 @@ export default theme =>({
     right: theme.spacing(1),
     top: theme.spacing(1),
   },
-  test:{
+  dialogContentContainer:{
     '& .MuiDialogContent-dividers':{
       borderTop: 'inherit !important'
     }
   },
   muidialogContent:{
-    [theme.breakpoints.down('xs')]: {
      padding: 0
-    },
-  }
-
+  },
 
 })

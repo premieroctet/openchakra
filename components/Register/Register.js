@@ -2,7 +2,6 @@ import React from 'react';
 import {toast} from 'react-toastify';
 import {checkPass1, checkPass2} from '../../utils/passwords';
 import axios from 'axios';
-import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import {Typography} from '@material-ui/core';
@@ -284,9 +283,9 @@ class Register extends React.Component{
                 return (
                     <Grid container>
                         <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
+                            <Grid container spacing={1} alignItems="flex-end"  className={classes.genericContainer}>
                                 <Grid item>
-                                    <MailOutlineIcon style={{color:'rgba(84,89,95,0.95)'}}/>
+                                    <MailOutlineIcon className={classes.colorIcon}/>
                                 </Grid>
                                 <Grid item className={classes.widthTextField}>
                                     <TextField
@@ -306,9 +305,9 @@ class Register extends React.Component{
                             </Grid>
                         </Grid>
                         <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
+                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                                 <Grid item>
-                                    <PersonOutlineIcon style={{color:'rgba(84,89,95,0.95)'}}/>
+                                    <PersonOutlineIcon className={classes.colorIcon}/>
                                 </Grid>
                                 <Grid item className={classes.widthTextField}>
                                     <TextField
@@ -328,9 +327,9 @@ class Register extends React.Component{
                             </Grid>
                         </Grid>
                         <Grid  className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
+                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                                 <Grid item>
-                                    <PersonOutlineIcon style={{color:'rgba(84,89,95,0.95)'}}/>
+                                    <PersonOutlineIcon className={classes.colorIcon}/>
                                 </Grid>
                                 <Grid item className={classes.widthTextField}>
                                     <TextField
@@ -349,9 +348,9 @@ class Register extends React.Component{
                             </Grid>
                         </Grid>
                         <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
+                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                                 <Grid item>
-                                    <LockOpenOutlinedIcon style={{color:'rgba(84,89,95,0.95)'}}/>
+                                    <LockOpenOutlinedIcon className={classes.colorIcon}/>
                                 </Grid>
                                 <Grid item className={classes.widthTextField}>
                                     <TextField
@@ -371,9 +370,9 @@ class Register extends React.Component{
                             </Grid>
                         </Grid>
                         <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
+                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                                 <Grid item>
-                                    <LockOutlinedIcon style={{color:'rgba(84,89,95,0.95)'}}/>
+                                    <LockOutlinedIcon className={classes.colorIcon}/>
                                 </Grid>
                                 <Grid item className={classes.widthTextField}>
                                     <TextField
@@ -398,14 +397,20 @@ class Register extends React.Component{
                 return (
                     <Grid container>
                         <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
-                                <input accept="image/*" className="input" style={{display:'none'}} id="icon-button-file" type="file" onChange={(event) =>{this.handleChange(event);this.onChangePicture(event)}} name={"myImage"} />
+                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
+                                <input accept="image/*"
+                                       className="input"
+                                       style={{display:'none'}}
+                                       id="icon-button-file"
+                                       type="file"
+                                       onChange={(event) =>{this.handleChange(event);this.onChangePicture(event)}}
+                                       name={"myImage"}
+                                />
                                 <label htmlFor="icon-button-file">
                                     <IconButton
                                         color="primary"
                                         className={classes.button}
-                                        style={{width:150, height:150,backgroundColor:'lightgray',backgroundImage:`url('${this.state.file}')`,
-                                            backgroundSize:"cover",backgroundPosition:"center"}}
+                                        style={{backgroundImage:`url('${this.state.file}')`,}}
                                         component="span"
                                     >
                                         {this.state.file === null ?
@@ -417,18 +422,18 @@ class Register extends React.Component{
                             </Grid>
                         </Grid>
                         <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
+                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                                 <Grid>
-                                    <Typography style={{fontSize: '1.2rem', width:'100%', marginTop: 15}}>Adresse postale</Typography>
+                                    <Typography className={classes.subtitle}>Adresse postale</Typography>
                                 </Grid>
                                 <Grid>
-                                    <p>Votre adresse ne sera pas visible, mais nous l’utiliserons pour vous proposer
+                                    <p className={classes.textStyle}>Votre adresse ne sera pas visible, mais nous l’utiliserons pour vous proposer
                                         ou proposer vos services aux utilisateurs ou Alfred proches de chez vous.</p>
                                 </Grid>
                             </Grid>
                         </Grid>
                         <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
+                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                                 <Grid item style={{width: '100%'}}>
                                     <AlgoliaPlaces
                                         className={classes.textFieldAlgo}
@@ -447,12 +452,12 @@ class Register extends React.Component{
                             </Grid>
                         </Grid>
                         <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
+                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                                 <Grid>
-                                    <Typography style={{fontSize: '1.2rem', width:'100%', marginTop: 15}}>Date de naissance</Typography>
+                                    <Typography className={classes.subtitle}>Date de naissance</Typography>
                                 </Grid>
                                 <Grid>
-                                    <p>Pour vous inscrire, vous devez être âgé d’au moins 16 ans. Les autres
+                                    <p className={classes.textStyle}>Pour vous inscrire, vous devez être âgé d’au moins 16 ans. Les autres
                                         utilisateurs ne verront pas votre date de naissance.
                                     </p>
                                 </Grid>
@@ -502,20 +507,20 @@ class Register extends React.Component{
                             </Grid>
                         </Grid>
                         <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
+                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                                 <Grid className={classes.newContainer}>
                                     <Grid>
-                                        <Typography style={{fontSize: '1.2rem', width:'100%', marginTop: 15 }}>Téléphone</Typography>
+                                        <Typography className={classes.subtitle}>Téléphone</Typography>
                                     </Grid>
                                     <Grid>
-                                        <p>L'ajout de votre numéro de téléphone permet aux membres My-Alfred
+                                        <p className={classes.textStyle}>L'ajout de votre numéro de téléphone permet aux membres My-Alfred
                                             de disposer d'un moyen pour vous contacter.
                                         </p>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
+                                <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                                     <Grid item>
-                                        <PhoneIphoneOutlinedIcon style={{color:'rgba(84,89,95,0.95)'}}/>
+                                        <PhoneIphoneOutlinedIcon className={classes.colorIcon}/>
                                     </Grid>
                                     <Grid item style={{width: '70%'}}>
                                         <TextField
@@ -532,8 +537,14 @@ class Register extends React.Component{
                                     </Grid>
                                 </Grid>
                                 <Grid>
-                                    <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                        <Button disabled={!this.state.phoneOk} onClick={this.onSubmitPhone} variant="contained" color="primary" style={{ width: '100%', color: 'white' }}>
+                                    <Grid item className={classes.genericContainerAndMargin}>
+                                        <Button
+                                            disabled={!this.state.phoneOk}
+                                            onClick={this.onSubmitPhone}
+                                            variant="contained"
+                                            color="primary"
+                                            style={{ width: '100%', color: 'white' }}
+                                        >
                                             {this.state.phoneConfirmed ? `Suivant` : this.state.serverError ? `Confirmer plus tard` : `Je confirme mon numéro`}
                                         </Button>
                                     </Grid>
@@ -541,7 +552,7 @@ class Register extends React.Component{
                             </Grid>
                         </Grid>
                         <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
+                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                                 <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
                                     <DialogTitle id="form-dialog-title">Confirmation du numéro de téléphone</DialogTitle>
                                     <DialogContent>
@@ -575,7 +586,7 @@ class Register extends React.Component{
                             </Grid>
                         </Grid>
                         <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" style={{width: '100%', justifyContent: 'center'}}>
+                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                                 <Grid>
                                     <Grid container style={{marginTop: 15, alignItems: 'center'}}>
                                         <Grid>
@@ -590,7 +601,7 @@ class Register extends React.Component{
                                             <a href={"footer/cguPage"} target="_blank">J’accepte les conditions générales d’utilisation de My-Alfred.</a>
                                         </Grid>
                                     </Grid>
-                                    <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+                                    <Grid item className={classes.genericContainerAndMargin}>
                                         <Button
                                             disabled = {!(this.state.checked && this.state.status1.check && this.state.status2.check)}
                                             onClick={this.onSubmit}
@@ -628,15 +639,11 @@ class Register extends React.Component{
                         {
                             activeStep === 0 ?
                                 <Grid>
-                                    <h2 style={{
-                                        textAlign: 'center', margin: '0px auto 1.6rem', fontSize: "1.6rem",
-                                        color: "rgba(84,89,95,0.95)",
-                                        letterSpacing: -1,
-                                        fontWeight: "bold"}}>Inscription</h2>
+                                    <h2 className={classes.titleRegister}>Inscription</h2>
                                 </Grid> : null
                         }
 
-                       <Grid style={{width: '100%', height: '100%', margin:'0px auto 1.6rem'}}>
+                       <Grid className={classes.containerSwitch}>
                            {this.renderSwitch(activeStep, classes, errors)}
                        </Grid>
                         <Grid style={{marginTop: 10}}>
@@ -657,7 +664,6 @@ class Register extends React.Component{
                                     activeStep={activeStep}
                                     className={classes.rootStepper}
                                     classes={{
-                                        root: classes.containerStepper,
                                         progress: classes.progress
                                     }}
                                     nextButton={

@@ -9,7 +9,10 @@ export default theme => ({
         width: '100%'
     },
     newContainer: {
-        padding: 10,
+        padding: '5%',
+        [theme.breakpoints.down("xs")]:{
+            padding: 10
+        }
     },
     country: {
         width: '100%'
@@ -86,18 +89,52 @@ export default theme => ({
     },
     bottomContainer:{
         alignItems: 'center',
-        [theme.breakpoints.down("xs")]:{
-           justifyContent: 'center',
-        }
+        justifyContent: 'center',
     },
     progress:{
         [theme.breakpoints.down("xs")]:{
             width: '25%',
         }
     },
-    containerStepper:{
-        [theme.breakpoints.down("xs")]:{
-
-        }
+    titleRegister:{
+        textAlign: 'center',
+        margin: '0px auto 1.6rem',
+        fontSize: "1.6rem",
+        color: "rgba(84,89,95,0.95)",
+        letterSpacing: -1,
+        fontWeight: "bold"
+    },
+    containerSwitch:{
+        width: '100%',
+        height: '100%',
+        margin:'0px auto 1.6rem'
+    },
+    genericContainer:{
+        width: '100%',
+        justifyContent: 'center'
+    },
+    genericContainerAndMargin:{
+        display: 'flex',
+        justifyContent: 'center',
+        marginTop: 30
+    },
+    colorIcon:{
+        color:'rgba(84,89,95,0.95)'
+    },
+    button:{
+        width:150,
+        height:150,
+        backgroundColor:'lightgray',
+        backgroundSize:"cover",
+        backgroundPosition:"center"
+    },
+    subtitle:{
+        fontSize: '1.2rem',
+        width:'100%',
+        marginTop: 15,
+        textAlign: 'center'
+    },
+    textStyle:{
+        textAlign: 'center'
     }
 })

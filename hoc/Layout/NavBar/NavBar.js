@@ -32,7 +32,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
-  console.log(onClose,'testhere');
   return (
       <MuiDialogTitle disableTypography {...other}>
         <Typography variant="h6">{children}</Typography>
@@ -59,7 +58,10 @@ class NavBar extends Component {
       isSearch: false,
       user:{},
       setOpenLogin: false,
+      setOpenMobileLogin: false,
       setOpenRegister: false,
+      setOpenMobileRegister: false,
+
     };
   }
 
@@ -133,16 +135,28 @@ class NavBar extends Component {
     this.setState({ mobileMoreAnchorEl: null });
   };
 
-  handleOpenLogin = () => {
-    this.setState({setOpenLogin : true, setOpenRegister: false});
+  handleOpenLogin = (e) => {
+    this.handleMenuClose();
+    if(e.target.name === 'mobile'){
+      this.setState({setOpenMobileLogin : true, setOpenMobileRegister : false});
+    }else{
+      this.setState({setOpenLogin : true, setOpenRegister: false});
+
+    }
   };
 
   handleCloseLogin = () => {
     this.setState({setOpenLogin : false});
   };
 
-  handleOpenRegister = () => {
-    this.setState({setOpenRegister : true, setOpenLogin : false});
+  handleOpenRegister = (e) => {
+    this.handleMenuClose();
+    if(e.target.name === 'mobile'){
+      this.setState({setOpenMobileRegister : true, setOpenMobileLogin : false});
+    }else{
+      this.setState({setOpenRegister : true, setOpenLogin : false});
+
+    }
   };
 
   handleCloseRegister = () => {
@@ -155,7 +169,7 @@ class NavBar extends Component {
 
     const modalLogin = () =>{
       return(
-          <LogIn/>
+          <LogIn callRegister={this.handleOpenRegister}/>
       )
     };
 
@@ -239,9 +253,11 @@ class NavBar extends Component {
             aria-labelledby="scroll-dialog-title"
             aria-describedby="scroll-dialog-description"
             className={classes.modal}
-            open={this.state.setOpenLogin}
+            open={this.state.setOpenMobileLogin}
             onClose={this.handleCloseLogin}
             TransitionComponent={Transition}
+            name={'mobile'}
+            fullWidth={true}
             fullScreen={true}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
@@ -256,7 +272,7 @@ class NavBar extends Component {
       <MenuItem key={2} onClick={this.handleOpenRegister}>
         <Typography>
           <a className={classes.navbarLinkMobile}>
-            test
+            Inscription
           </a>
         </Typography>
         <Dialog
@@ -264,13 +280,13 @@ class NavBar extends Component {
             aria-labelledby="scroll-dialog-title"
             aria-describedby="scroll-dialog-description"
             className={classes.modal}
-            open={this.state.setOpenRegister}
+            name={'mobile'}
+            open={this.state.setOpenMobileRegister}
             onClose={this.handleCloseRegister}
             TransitionComponent={Transition}
-            fullScreen={true}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
-          <DialogContent dividers={false} className={classes.test} classes={{root: classes.muidialogContent}} >
+          <DialogContent dividers={false} className={classes.dialogContentContainer} classes={{root: classes.muidialogContent}} >
             <div className={classes.paper}>
               {modalRegister()}
             </div>
@@ -468,7 +484,7 @@ class NavBar extends Component {
                           TransitionComponent={Transition}
                       >
                         <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
-                        <DialogContent dividers={false} className={classes.test} >
+                        <DialogContent dividers={false} className={classes.muidialogContent} >
                           <div className={classes.paper}>
                             {modalRegister()}
                           </div>

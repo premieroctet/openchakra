@@ -11,14 +11,6 @@ export default theme => ({
         justifyContent:'center',
         width: '40%',
     },
-    card: {
-        padding: '1.5rem 3rem',
-        width: 400,
-        marginTop: '15%',
-        [theme.breakpoints.down('sm')]: {
-            width: 'auto',
-        }
-    },
     cardContant: {
         flexDirection: 'column',
     },
@@ -49,13 +41,36 @@ export default theme => ({
             width : 'inherit'
         }
     },
-    [theme.breakpoints.only('xs')]:{
-        loginContainer:{
-            marginTop:75
-        }
-    },
     hrStyle:{
         borderWidth: 0.5,
         color:'lightgray'
-    }
+    },
+    margin:{
+        margin: theme.spacing(1),
+        width: '100%'
+    },
+    genericContainer:{
+        width: '100%',
+        justifyContent: 'center'
+    },
+    colorIcon:{
+        color:'rgba(84,89,95,0.95)'
+    },
+    widthTextField:{
+        width: '70%',
+        [theme.breakpoints.down("xs")]:{
+            width: '80%',
+        }
+    },
+    newContainer: {
+        padding: '5%',
+        [theme.breakpoints.down("xs")]:{
+            padding: 10
+        }
+    },
+    containerDialogContent:{
+        width: '100%',
+        height: '100%',
+        margin:'0px auto 1.6rem'
+    },
 })
