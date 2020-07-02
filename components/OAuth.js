@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Router from 'next/router';
-import cookie from 'react-cookies'
 
 //import getHost from '../utils/mailing'
 const getHost = () => {return 'https://lvh.me/'}
@@ -13,44 +12,10 @@ export default class OAuth extends Component {
         disabled: ''
     }
 
-    componentDidMount() {
-    }
-
-    checkPopup() {
-        const check = setInterval(() => {
-            const { popup } = this
-            if (cookie.load('token')){
-                clearInterval(check)
-                this.popup.close()
-                Router.push('/')
-            }
-            if (!popup || popup.closed || popup.closed === undefined) {
-                clearInterval(check)
-                this.setState({disabled: ''})
-            }
-        }, 1000)
-    }
-
-    openPopup() {
-        const { provider } = this.props
-        const width = 600, height = 600
-        const left = (window.innerWidth / 2) - (width / 2)
-        const top = (window.innerHeight / 2) - (height / 2)
-        const url = new URL(`/myAlfred/api/authentication/${provider}`, getHost()).toString()
-
-        return window.open(url, '',
-            `toolbar=no, location=no, directories=no, status=no, menubar=no, 
-      scrollbars=no, resizable=no, copyhistory=no, width=${width}, 
-      height=${height}, top=${top}, left=${left}`
-        )
-    }
-
     startAuth = () => {
-        if (!this.state.disabled) {
-            this.popup = this.openPopup()
-            this.checkPopup()
-            this.setState({disabled: 'disabled'})
-        }
+        const { provider } = this.props
+        const url = new URL(`/myAlfred/api/authentication/${provider}`, getHost()).toString()
+        Router.push(url)
     }
 
     render() {
