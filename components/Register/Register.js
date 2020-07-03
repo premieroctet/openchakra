@@ -100,8 +100,13 @@ class Register extends React.Component{
         this.onChangeAddress = this.onChangeAddress.bind(this);
     }
 
+
     componentDidMount() {
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        const token = localStorage.getItem('token');
+        if(token !== null) {
+            toast.warn('Vous êtes déjà inscrit');
+            Router.push('/')
+        }
     }
 
     onChange = e => {
@@ -191,10 +196,38 @@ class Register extends React.Component{
             country: this.state.country,
             lat: this.state.lat,
             lng: this.state.lng,
-
         };
+
         const username = this.state.email;
         const password = this.state.password;
+
+
+
+        console.log("Submitting");
+        axios
+            .post('/myAlfred/api/users/register', newUser)
+            .then(res => {
+                toast.info('Inscription réussie');
+                axios.post('/myAlfred/api/users/login',{username, password})
+                    .then(response => {
+                        console.log(response, 'first response');
+                        const {token} = response.data;
+                        localStorage.setItem('token',token);
+                        axios.defaults.headers.common['Authorization'] = token;
+                    })
+                    .catch( err => {
+                        console.log(err)
+                    }).then(this.addPhoto).catch(err => console.log(err))
+            })
+            .catch(err => {
+                    console.log(err);
+                    this.setState({errors: err.response.data})
+                }
+            );
+    };
+
+    addPhoto = () => {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
         const formData = new FormData();
         formData.append('myImage',this.state.picture);
@@ -204,34 +237,16 @@ class Register extends React.Component{
             }
         };
 
-        console.log("Submitting");
-        axios
-            .post('/myAlfred/api/users/register', newUser)
-            .then(res => {
-                toast.info('Inscription réussie');
-                axios.post('/myAlfred/api/users/login',{username, password})
-                    .then(response => {
-                        const {token} = response.data;
-                        localStorage.setItem('token',token);
-                        axios.defaults.headers.common['Authorization'] = token;
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    }).then(
-                        axios.post("/myAlfred/api/users/profile/picture",formData,config)
-                            .then((response) => {
-                                console.log(response, 'response')
-                               // Router.push('/checkEmail');
-                            }).catch((error) => {
-                            console.log(error)
-                        })
-                )
+        if(this.state.picture === ''){
+            Router.push('/checkEmail');
+        }else{
+            axios.post("/myAlfred/api/users/profile/picture",formData,config)
+                .then(() => {
+                    Router.push('/checkEmail');
+                }).catch((error) => {
+                console.log(error)
             })
-            .catch(err => {
-                    console.log(err);
-                    this.setState({errors: err.response.data})
-                }
-            );
+        }
     };
 
 
