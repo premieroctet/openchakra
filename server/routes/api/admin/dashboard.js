@@ -1835,19 +1835,22 @@ router.post('/prestation/all',uploadPrestation.single('picture'),passport.authen
                     errors.label = 'Cette prestation existe déjà';
                     return res.status(400).json(errors);
                 } else {
+                    console.log(`Body:${JSON.stringify(req.body)}`)
                     const newPrestation = new Prestation({
                         label: req.body.label,
                         price: req.body.price,
                         service: mongoose.Types.ObjectId(req.body.service),
                         billing: JSON.parse(req.body.billing),
                         filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
-                        search_filter: JSON.parse(req.body.search_filter),
-                        category: mongoose.Types.ObjectId(req.body.category),
-                        calculating: mongoose.Types.ObjectId(req.body.calculating),
+                        search_filter: null,
+                        category: null,
+                        calculating: null,
                         job: mongoose.Types.ObjectId(req.body.job),
                         description: req.body.description,
-                        picture: req.body.picture.path,
-                        tags: JSON.parse(req.body.tags)
+                        //picture: req.body.picture.path,
+                        picture: req.file.path,
+                        tags: JSON.parse(req.body.tags),
+                        cesu_eligible: req.body.cesu_eligible,
                     });
                     newPrestation.save()
                      .then(prestation => res.json(prestation))
