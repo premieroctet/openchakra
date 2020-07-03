@@ -24,8 +24,8 @@ class UserAvatar extends React.Component{
 
   componentDidMount() {
     const token = cookie.load('token')
-    if (token !== null) {
-      const token2 = localStorage.getItem('token').split(' ')[1];
+    if (token) {
+      const token2 = token.split(' ')[1];
       const decode = jwt.decode(token2);
       const alfred_id = decode.id;
       this.setState({currentUser: alfred_id},

@@ -48,7 +48,7 @@ class MessagesDetails extends React.Component {
       })
       .catch (err => {
         if(err.response && (err.response.status === 401 || err.response.status === 403)) {
-            localStorage.removeItem('token');
+            cookie.remove('token', { path: '/' })
             Router.push({pathname: '/login'})
         }
       })

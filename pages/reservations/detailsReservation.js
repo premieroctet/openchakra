@@ -93,7 +93,7 @@ class DetailsReservation extends React.Component {
     .catch(error => {
       console.log(error)
       if(error.response && error.response.status === 401 || error.response.status === 403) {
-          localStorage.removeItem('token');
+          cookie.remove('token', { path: '/' })
           Router.push({pathname: '/login'})
       }
     });
