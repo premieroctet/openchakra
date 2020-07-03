@@ -171,7 +171,7 @@ class Register extends React.Component{
             .then( res => {
                 if (res.data.sms_code_ok) {
                     toast.info("Votre numéro de téléphone est validé");
-                    this.setState({smsCodeOpen: false, phoneConfirmed:true});
+                    this.setState({smsCodeOpen: false, phoneConfirmed:true}, () => Router.push('/checkEmail'));
                 }
                 else {
                     toast.error("Le code est incorrect")
@@ -214,11 +214,15 @@ class Register extends React.Component{
                     })
                     .catch( err => {
                         console.log(err)
-                    }).then(this.addPhoto).catch(err => console.log(err))
+                    })
+                    .then(this.addPhoto).catch(err => console.log(err))
+                    .then(this.onSubmitPhone).catch(err => console.log(err))
             })
             .catch(err => {
-                    console.log(err);
+                let error = Object.values(err.response.data);
+                    toast.error(error.toString());
                     this.setState({errors: err.response.data})
+
                 }
             );
     };
@@ -226,23 +230,17 @@ class Register extends React.Component{
     addPhoto = () => {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
-        const formData = new FormData();
-        formData.append('myImage',this.state.picture);
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
-        };
+        if(this.state.picture !== ''){
+            const formData = new FormData();
+            formData.append('myImage',this.state.picture);
+            const config = {
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            };
 
-        if(this.state.picture === ''){
-            Router.push('/checkEmail');
-        }else{
             axios.post("/myAlfred/api/users/profile/picture",formData,config)
-                .then((res) => {
-                    if(res){
-                        Router.push('/checkEmail');
-                    }
-                }).catch((error) => {
+                .catch((error) => {
                 console.log(error)
             })
         }
@@ -250,7 +248,7 @@ class Register extends React.Component{
 
 
     onSubmitPhone = e => {
-        e.preventDefault();
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
         if (!this.state.phoneConfirmed && !this.state.serverError) {
             this.sendSms();
@@ -261,7 +259,7 @@ class Register extends React.Component{
             phone: this.state.phone,
             phone_confirmed: this.state.phoneConfirmed
         };
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+
         axios
             .put('/myAlfred/api/users/profile/phone', newPhone)
             .then(res => {
@@ -288,6 +286,10 @@ class Register extends React.Component{
         let year = new Date(this.state.birthday);
         year.setFullYear(e.target.value);
         this.setState({birthday: year})
+    };
+
+    confirmLater = () =>{
+        Router.push('/checkEmail');
     };
 
 
@@ -550,19 +552,6 @@ class Register extends React.Component{
                                         />
                                     </Grid>
                                 </Grid>
-                                <Grid>
-                                    <Grid item className={classes.genericContainerAndMargin}>
-                                        <Button
-                                            disabled={!this.state.phoneOk}
-                                            onClick={this.onSubmitPhone}
-                                            variant="contained"
-                                            color="primary"
-                                            style={{ width: '100%', color: 'white' }}
-                                        >
-                                            {this.state.phoneConfirmed ? `Suivant` : this.state.serverError ? `Confirmer plus tard` : `Je confirme mon numéro`}
-                                        </Button>
-                                    </Grid>
-                                </Grid>
                             </Grid>
                         </Grid>
                         <Grid className={classes.margin}>
@@ -586,8 +575,8 @@ class Register extends React.Component{
                                         />
                                     </DialogContent>
                                     <DialogActions>
-                                        <Button onClick={() => this.setState({smsCodeOpen:false})} color="primary">
-                                            Annuler
+                                        <Button onClick={() => this.confirmLater()} color="primary">
+                                            Confirmer plus tard
                                         </Button>
                                         <Button
                                             disabled={this.state.smsCode.length!==4}
@@ -644,7 +633,7 @@ class Register extends React.Component{
 
     render(){
         const { classes } = this.props;
-        const { errors, activeStep } = this.state;
+        const { errors, activeStep, status1, status2 } = this.state;
 
         return(
             <Grid  className={classes.fullContainer}>
@@ -681,7 +670,7 @@ class Register extends React.Component{
                                         progress: classes.progress
                                     }}
                                     nextButton={
-                                        <Button size="small" onClick={this.handleNext} disabled={activeStep === 1}>
+                                        <Button size="small" onClick={this.handleNext} disabled={!(status1.check && status2.check && this.state.email !== '') || activeStep === 1 }>
                                             Suivant
                                             <KeyboardArrowRight />
                                         </Button>
