@@ -33,7 +33,7 @@ class NavBar extends Component {
       isTop: true,
       isIndex: false,
       isSearch: false,
-      user:{},
+      user:null,
     };
   }
 
@@ -239,7 +239,7 @@ class NavBar extends Component {
         <Link href={user && user.is_alfred ? `/shop?id_alfred=${user._id}` : '/creaShop/creaShop'}>
           <MenuItem>
             <Typography>
-              <a className={classes.navbarLinkMobile}>{user && user.is_alfred ? "Ma boutique" : "Proposer mes services"}</a>
+              <a className={classes.navbarLinkMobile}>{user && user.is_alfred ? "Ma boutique" : user ? "Proposer mes services" : ""}</a>
             </Typography>
           </MenuItem>
         </Link>
@@ -332,7 +332,7 @@ class NavBar extends Component {
                     <Typography className={classes.navbarItem}>
                       <Link href={'/creaShop/creaShop'}>
                         <a className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.navbarLink}>
-                          Proposer mes services
+                          { user && user.is_alfred==false ? `Proposer mes services` : '' }
                         </a>
                       </Link>
                     </Typography>}
@@ -388,7 +388,7 @@ class NavBar extends Component {
                     <React.Fragment>
                       <React.Fragment>
                         <IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit">
-                          <UserAvatar user={user} className={classes.bigAvatar} />
+                          <UserAvatar user={user} className={classes.bigAvatar} warnings={true}/>
                         </IconButton>
                       </React.Fragment>
                     </React.Fragment>

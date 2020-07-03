@@ -154,6 +154,25 @@ router.get('/nonViewedMessages', passport.authenticate('jwt', { session: false }
   .catch(err => console.log(err))
 })
 
+router.get('/nonViewedMessagesCount', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const user = mongoose.Types.ObjectId(req.user.id);
+  ChatRooms.find({ $or: [ { emitter: user }, { recipient: user } ] })
+  .populate('emitter','id')
+  .populate('recipient','id')
+  .then(chatrooms => {
+    let nonReadChats = 0
+    chatrooms.forEach(chatroom => {
+      for (let i = 0; i < chatroom.messages.length; i++) {
+        if (chatroom.messages[i].viewed === false && chatroom.messages[i].idsender != req.user.id) {
+          nonReadChats++
+        }
+      }
+    })
+    res.status(200).json(nonReadChats);
+  })
+  .catch(err => console.error(err))
+})
+
 router.put('/addBookingId/:id', ( req, res ) => {
   ChatRooms.findByIdAndUpdate(req.params.id, { booking: mongoose.Types.ObjectId(req.body.booking)})
     .then(chatroom => {

@@ -4,7 +4,7 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-
+const moment=require('moment')
 
 const validateBillingInput = require('../../../validation/billing');
 const Billing = require('../../../models/Billing');
@@ -96,22 +96,33 @@ router.get('/shops/extract',passport.authenticate('jwt',{session:false}),(req,re
 // @Route GET /myAlfred/api/admin/prospect/tocontact
 // View all billings system
 // @Access public
-router.get('/prospect/tocontact/:category',(req,res)=> {
+router.get('/prospect/tocontact/:category/:keywords?',(req,res)=> {
+  const keywords=req.params.keywords || ''
   var result=[]
-  Prospect.find({$and : [{ category: req.params.category}, { $or : [{ contacted : false}, { contacted : null}]}]})
+  Prospect.find(
+    {$and : [{ category: req.params.category, keywords: keywords}, { $or : [{ contacted : false}, { contacted : null}]}]}
+  )
+  .sort({category: 1})
   .then( prospects => {
-    prospects.forEach ( p => {
-      data=[]
-      data.push(`="${p.phone.replace(/^0/, '+33')}"`)
-      data.push(p.category)
-      data.push(p.name)
-      data.push(p.city)
-      data.push(p.zip_code)
-      result.push(data.join(';'))
+    Prospect.updateMany(
+      {$and : [{ category: req.params.category, keywords: keywords}, { $or : [{ contacted : false}, { contacted : null}]}]},
+      { contacted : true }
+    )
+    .then ( dummy => {
+      prospects.forEach ( p => {
+        data=[]
+        data.push(`="${p.phone.replace(/^0/, '+33')}"`)
+        data.push(p.category+"/"+p.keywords)
+        data.push(p.name)
+        data.push(p.city)
+        data.push(p.zip_code)
+        result.push(data.join(';'))
+      })
+      const filename=`export_${req.params.category}_${keywords}_${moment().format('DDMMYYHHmm')}.csv`
+      res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+      res.set('Content-Disposition', `attachment; filename="${filename}"`)
+      res.send(result.join('\n'))
     })
-    res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    res.set('Content-Disposition', `attachment; filename="export_${req.params.category}.csv"`)
-    res.send(result.join('\n'))
   })
   .catch ()
 });
@@ -1824,19 +1835,22 @@ router.post('/prestation/all',uploadPrestation.single('picture'),passport.authen
                     errors.label = 'Cette prestation existe déjà';
                     return res.status(400).json(errors);
                 } else {
+                    console.log(`Body:${JSON.stringify(req.body)}`)
                     const newPrestation = new Prestation({
                         label: req.body.label,
                         price: req.body.price,
                         service: mongoose.Types.ObjectId(req.body.service),
                         billing: JSON.parse(req.body.billing),
                         filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
-                        search_filter: JSON.parse(req.body.search_filter),
-                        category: mongoose.Types.ObjectId(req.body.category),
-                        calculating: mongoose.Types.ObjectId(req.body.calculating),
+                        search_filter: null,
+                        category: null,
+                        calculating: null,
                         job: mongoose.Types.ObjectId(req.body.job),
                         description: req.body.description,
-                        picture: req.body.picture.path,
-                        tags: JSON.parse(req.body.tags)
+                        //picture: req.body.picture.path,
+                        picture: req.file.path,
+                        tags: JSON.parse(req.body.tags),
+                        cesu_eligible: req.body.cesu_eligible,
                     });
                     newPrestation.save()
                      .then(prestation => res.json(prestation))
@@ -1881,7 +1895,7 @@ router.get('/prestation/all',passport.authenticate('jwt',{session:false}),(req,r
     const admin = decode.is_admin;
 
     if(admin) {
-        Prestation.find({}, 'label private_alfred')
+        Prestation.find({}, 'label private_alfred cesu_eligible')
             .sort({s_label:1, category:1})
             .populate({path : 'service', select : 'label', populate : {path : 'category', select : 'label'}})
             .populate('filter_presentation', 'label')
@@ -1966,15 +1980,21 @@ router.put('/prestation/all/:id',passport.authenticate('jwt',{session: false}),(
                 billing: req.body.billing,
                 filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
                 search_filter: req.body.search_filter,
-                category: mongoose.Types.ObjectId(req.body.category),
+                category: null,
                 calculating: mongoose.Types.ObjectId(req.body.calculating),
-                job: mongoose.Types.ObjectId(req.body.job),
+                job: req.body.job ? mongoose.Types.ObjectId(req.body.job) : null,
                 description: req.body.description,
-                tags: req.body.tags}}, {new: true})
+                tags: req.body.tags,
+                cesu_eligible: req.body.cesu_eligible,
+              }},
+              {new: true})
             .then(prestation => {
                 res.json(prestation);
             })
-            .catch(err => res.status(404).json({ prestationnotfound: 'No prestation found' }));
+            .catch(err => {
+              console.error(err)
+              res.status(404).json({ error: err })
+            });
     } else {
         res.status(403).json({msg: 'Access denied'});
     }
@@ -2325,6 +2345,7 @@ router.get('/prospect/all',passport.authenticate('jwt',{session:false}),(req,res
   if(admin) {
     // TODO: Use aggregate
     Prospect.find()
+      .sort({category: 1, keywords:1})
       .catch(err => {
         console.error(err)
         res.status(404).json({prospects: 'Error'})
@@ -2333,13 +2354,14 @@ router.get('/prospect/all',passport.authenticate('jwt',{session:false}),(req,res
         counts={}
         contacted={}
         prospects.forEach( p => {
-          counts[p.category] = counts.hasOwnProperty(p.category) ? counts[p.category]+1 : 1
+          const key=`${p.category}/${p.keywords}`
+          counts[key] = counts.hasOwnProperty(key) ? counts[key]+1 : 1
           const contact = p.contacted ? 1 : 0
-          contacted[p.category] = contacted.hasOwnProperty(p.category) ? contacted[p.category]+ contact : contact
+          contacted[key] = contacted.hasOwnProperty(key) ? contacted[key]+ contact : contact
         });
         var result=[]
         Object.keys(counts).forEach(key => {
-          result.push({category: key, count : counts[key], contacted: contacted[key]})
+          result.push({category: key, count : counts[key], contacted: contacted[key], not_contacted: counts[key]-contacted[key]})
         });
 
         res.json(result);

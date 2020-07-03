@@ -20,6 +20,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Chip from "@material-ui/core/Chip";
 import Link from "next/link";
 import cookie from 'react-cookies'
+import Checkbox from '@material-ui/core/Checkbox'
 
 const styles = {
     loginContainer: {
@@ -72,13 +73,11 @@ class view extends React.Component {
             current_category: '',
             current_billing: [],
             current_filter_presentation: '',
-            current_calculating: '',
-            current_job: '',
+            current_job: null,
             current_tags: [],
             all_category: [],
             all_service: [],
             all_billing: [],
-            all_calculating: [],
             all_job: [],
             all_search_filter: [],
             all_filter_presentation: [],
@@ -86,9 +85,9 @@ class view extends React.Component {
             category: '',
             service: '',
             billing: '',
+            cesu_eligible: false,
             filter_presentation: '',
             search_filter: [],
-            calculating: '',
             job: '',
             description: '',
             tags: [],
@@ -115,11 +114,12 @@ class view extends React.Component {
             .then(response => {
                 let prestation = response.data;
                 this.setState({prestation: prestation, current_service: prestation.service,
-                    current_billing: prestation.billing, current_category: prestation.category, current_calculating:prestation.calculating,
+                    current_billing: prestation.billing, current_category: prestation.category,
                     current_job: prestation.job, current_filter_presentation: prestation.filter_presentation,
-                    current_search_filter: prestation.search_filter, current_tags: prestation.tags});
-                this.setState({category: prestation.category._id, service: prestation.service._id,billing: prestation.billing._id,
-                filter_presentation: prestation.filter_presentation._id,calculating: prestation.calculating._id,job: prestation.job._id});
+                    current_search_filter: prestation.search_filter, current_tags: prestation.tags,
+                    cesu_eligible: prestation.cesu_eligible });
+                this.setState({service: prestation.service._id,billing: prestation.billing._id,
+                filter_presentation: prestation.filter_presentation ? prestation.filter_presentation._id : null, job: prestation.job ? prestation.job._id : ''});
 
                 this.setState({selectedTags :this.state.current_tags.map(b => ({
                         label: b.label,
@@ -139,8 +139,8 @@ class view extends React.Component {
 
             })
             .catch(err => {
-                console.log(err);
-                if(err.response.status === 401 || err.response.status === 403) {
+                console.error(err);
+                if(err.response && (err.response.status === 401 || err.response.status === 403)) {
                     cookie.remove('token', { path: '/' })
                     Router.push({pathname: '/login'})
                 }
@@ -166,14 +166,6 @@ class view extends React.Component {
             .then((response) => {
                 let billing = response.data;
                 this.setState({all_billing: billing})
-            }).catch((error) => {
-            console.log(error)
-        });
-
-        axios.get("/myAlfred/api/admin/calculating/all")
-            .then((response) => {
-                let calculating = response.data;
-                this.setState({all_calculating: calculating})
             }).catch((error) => {
             console.log(error)
         });
@@ -218,8 +210,20 @@ class view extends React.Component {
         this.setState({prestation:state});
     };
 
+    onCesuChange = e => {
+      const checked = e.target.checked
+      this.setState({cesu_eligible:checked});
+    };
+
     onChange2 = e => {
-        this.setState({ [e.target.name]: e.target.value });
+      const {name, value} = e.target
+      this.setState({ [name]: value });
+      if (name=='service') {
+        this.setState({current_service: this.state.all_service.find(s => s._id.toString()==value.toString())})
+      }
+      if (name=='filter_presentation') {
+        this.setState({current_filter_presentation: this.state.all_filter_presentation.find(f => f._id.toString()==value.toString())})
+      }
     };
 
     handleChangeFilter = selectedFilter => {
@@ -269,21 +273,23 @@ class view extends React.Component {
         const service = this.state.service;
         const category = this.state.category;
         const billing = arrayBilling;
-        const calculating = this.state.calculating;
         const search_filter = arrayFilter;
         const job = this.state.job;
         const filter_presentation = this.state.filter_presentation;
         const { label,price,description } = this.state.prestation;
         const id = this.props.prestation_id;
-        axios.put(`/myAlfred/api/admin/prestation/all/${id}`,{label,price,billing,category,service,search_filter,filter_presentation,
-                                                                                calculating,job,description,tags})
-            .then(res => {
+        const calculating = null
+        const cesu_eligible = this.state.cesu_eligible
 
+        axios.put(`/myAlfred/api/admin/prestation/all/${id}`,{
+          label,price,billing,category,service,search_filter,filter_presentation,
+          calculating,job,description,tags, cesu_eligible})
+            .then(res => {
                 alert('Prestation modifiée avec succès');
                 Router.push({pathname:'/dashboard/prestations/all'})
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
             })
 
 
@@ -311,7 +317,6 @@ class view extends React.Component {
         const {current_service} = this.state;
         const {current_billing} = this.state;
         const {current_category} = this.state;
-        const {current_calculating} = this.state;
         const {current_search_filter} = this.state;
         const {current_filter_presentation} = this.state;
         const {current_job} = this.state;
@@ -319,7 +324,6 @@ class view extends React.Component {
         const {all_category} = this.state;
         const {all_service} = this.state;
         const {all_billing} = this.state;
-        const {all_calculating} = this.state;
         const {all_search_filter} = this.state;
         const {all_filter_presentation} = this.state;
         const {all_job} = this.state;
@@ -369,6 +373,14 @@ class view extends React.Component {
 
                                     />
                                 </Grid>
+                                <Grid item style={{marginTop: 20, display: 'flex', 'align-items':'center'}} >
+                                  <Checkbox
+                                    name={`cesu_eligible`}
+                                    checked={this.state.cesu_eligible}
+                                    onChange={this.onCesuChange}
+                                  />
+                                  <Typography>Eligible au CESU</Typography>
+                                </Grid>
                                 <Grid item style={{marginTop: 20}}>
                                     <Typography style={{ fontSize: 20 }}>Prix moyen</Typography>
                                     <TextField
@@ -382,28 +394,29 @@ class view extends React.Component {
 
                                     />
                                 </Grid>
-                                <Grid item style={{width: '100%',marginTop:20}}>
-                                    <Typography style={{ fontSize: 20 }}>{current_category.label}</Typography>
-                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
-                                        <InputLabel shrink htmlFor="genre-label-placeholder">
-                                            Catégorie
-                                        </InputLabel>
-                                        <Select
-                                            input={<Input name="category" id="genre-label-placeholder" />}
-                                            displayEmpty
-                                            name="category"
-                                            value={this.state.category}
-                                            onChange={this.onChange2}
-                                            className={classes.selectEmpty}
-                                        >
-                                            <MenuItem value="">
-                                                <em>...</em>
-                                            </MenuItem>
-                                            {categories}
-                                        </Select>
-                                    </FormControl>
-
-                                </Grid>
+                                { /**
+                                  <Grid item style={{width: '100%',marginTop:20}}>
+                                      <Typography style={{ fontSize: 20 }}>{current_category.label}</Typography>
+                                      <FormControl className={classes.formControl} style={{width: '100%'}}>
+                                          <InputLabel shrink htmlFor="genre-label-placeholder">
+                                              Catégorie
+                                          </InputLabel>
+                                          <Select
+                                              input={<Input name="category" id="genre-label-placeholder" />}
+                                              displayEmpty
+                                              name="category"
+                                              value={this.state.category}
+                                              onChange={this.onChange2}
+                                              className={classes.selectEmpty}
+                                          >
+                                              <MenuItem value="">
+                                                  <em>...</em>
+                                              </MenuItem>
+                                              {categories}
+                                          </Select>
+                                      </FormControl>
+                                  </Grid>
+                                */ }
                                 <Grid item style={{width: '100%',marginTop:20}}>
                                     <Typography style={{ fontSize: 20 }}>{current_service.label}</Typography>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
@@ -445,31 +458,6 @@ class view extends React.Component {
                                     </FormControl>
                                 </Grid>
                                 <Grid item style={{width: '100%',marginTop:20}}>
-                                    <Typography style={{ fontSize: 20 }}>{current_calculating.label}</Typography>
-                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
-                                        <InputLabel shrink htmlFor="genre-label-placeholder">
-                                            Méthode de calcul
-                                        </InputLabel>
-                                        <Select
-                                            input={<Input name="calculating" id="genre-label-placeholder" />}
-                                            displayEmpty
-                                            name="calculating"
-                                            value={this.state.calculating}
-                                            onChange={this.onChange2}
-                                            className={classes.selectEmpty}
-                                        >
-                                            <MenuItem value="">
-                                                <em>...</em>
-                                            </MenuItem>
-                                            {all_calculating.map(e => (
-                                                <MenuItem key={e._id} value={e._id} >
-                                                    {e.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                                <Grid item style={{width: '100%',marginTop:20}}>
                                     <Typography style={{ fontSize: 20 }}>{current_filter_presentation.label}</Typography>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
@@ -496,22 +484,7 @@ class view extends React.Component {
                                 </Grid>
 
                                 <Grid item style={{width: '100%',marginTop:20}}>
-                                    <Typography style={{ fontSize: 20 }}>Filtres de recherche</Typography>
-
-                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
-                                        <Select2
-                                            value={this.state.selectedFilter}
-                                            onChange={this.handleChangeFilter}
-                                            options={options}
-                                            isMulti
-                                            isSearchable
-                                            closeMenuOnSelect={false}
-
-                                        />
-                                    </FormControl>
-                                </Grid>
-                                <Grid item style={{width: '100%',marginTop:20}}>
-                                    <Typography style={{ fontSize: 20 }}>{current_job.label}</Typography>
+                                    <Typography style={{ fontSize: 20 }}>{current_job ? current_job.label : ''}</Typography>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
                                         <InputLabel shrink htmlFor="genre-label-placeholder">
                                             Métier
@@ -524,7 +497,7 @@ class view extends React.Component {
                                             onChange={this.onChange2}
                                             className={classes.selectEmpty}
                                         >
-                                            <MenuItem value="">
+                                            <MenuItem key={''} value="">
                                                 <em>...</em>
                                             </MenuItem>
                                             {all_job.map(e => (

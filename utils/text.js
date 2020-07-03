@@ -5,11 +5,32 @@ const normalize = str => {
   return normalized
 }
 
+// Escapes special characters for regex
+const escapeText = txt => {
+  return txt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 const createRegExp = str => {
-  str = normalize(str).split(/ |'/g)
+  str = escapeText(normalize(str)).split(/ |'/g)
   // Remove articles
   str = str.filter( s => !ARTICLES.includes(s))
   const regexp = new RegExp(str.join('|'), "i")
+  return regexp
+}
+
+const createRegExpAND = str => {
+  str = escapeText(normalize(str)).split(/ |'/g)
+  // Remove articles
+  str = str.filter( s => !ARTICLES.includes(s))
+  const regexp = new RegExp(str.map( s => `(?=.*\\b${s}\\b)`).join(''), "i")
+  return regexp
+}
+
+const createRegExpOR = str => {
+  str = escapeText(normalize(str)).split(/ |'/g)
+  // Remove articles
+  str = str.filter( s => !ARTICLES.includes(s))
+  const regexp = new RegExp(str.map( s => `\\b${s}\\b`).join('|'), "i")
   return regexp
 }
 
@@ -42,4 +63,4 @@ const frenchFormat = str => {
   return result
 }
 
-module.exports = {normalize, createQuery, matches, formatIban, maskIban, createRegExp, frenchFormat}
+module.exports = {normalize, createQuery, matches, formatIban, maskIban, createRegExp, createRegExpOR, createRegExpAND, frenchFormat}

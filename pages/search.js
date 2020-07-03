@@ -72,7 +72,6 @@ class SearchPage extends React.Component {
             dateFilterVisible:false,
             visibleCategories:[],
             catCount:{}, // cat id => # of items to display
-            availabilities:[],
             isAdmin: false,
             mounting : true,
             searching : false,
@@ -91,8 +90,12 @@ class SearchPage extends React.Component {
     }
 
     onChangeInterval(startDate, endDate) {
-      if (startDate) { startDate.hour(0).minute(0).second(0).millisecond(0)};
-      if (endDate) { endDate.hour(23).minute(59).second(59).millisecond(999)};
+      if (startDate) {
+        startDate.hour(0).minute(0).second(0).millisecond(0)
+      };
+      if (endDate) {
+        endDate.hour(23).minute(59).second(59).millisecond(999)
+      };
       this.setState({startDate:startDate, endDate:endDate});
     }
 
@@ -130,7 +133,7 @@ class SearchPage extends React.Component {
 
         axios.get('/myAlfred/api/category/all/sort')
           .catch(err => {
-            console.log(err)
+            console.error(err)
             this.setState({mounting : false})
           })
           .then(res => {
@@ -140,7 +143,7 @@ class SearchPage extends React.Component {
             st['catCount']=catCount;
              axios.get('/myAlfred/api/shop/allStatus')
                .catch(err => {
-                 console.log(err)
+                 console.error(err)
                  this.setState({mounting : false})
                })
                .then( res => {
@@ -221,25 +224,33 @@ class SearchPage extends React.Component {
       const end=this.state.endDate;
 
       if (start && end) {
-        const filtered = [];
-        serviceUsersDisplay.forEach( su => {
-          if (isIntervalAvailable(start, end, su.service._id, this.state.availabilities.filter( a => a.user===su.user._id))) {
-            filtered.push(su);
-          }
-        });
-        serviceUsersDisplay=filtered;
+        axios.post('/myAlfred/api/availability/check', {
+          start: moment(start).unix(),
+          end: moment(end).unix(),
+          serviceUsers : serviceUsersDisplay.map (su => su._id ),
+        })
+          .then ( response => {
+            const filteredServiceUsers = response.data
+            serviceUsersDisplay = serviceUsersDisplay.filter( su => filteredServiceUsers.includes(su._id.toString()))
+            this.setFilteredServiceUsers(serviceUsersDisplay)
+          })
       }
+      else {
+        this.setFilteredServiceUsers(serviceUsersDisplay)
+      }
+    }
 
+    setFilteredServiceUsers = serviceUsers => {
       var visibleCategories=[];
       this.state.categories.forEach(e => {
-        serviceUsersDisplay.forEach(a => {
+        serviceUsers.forEach(a => {
           if(a.service.category._id === e._id){
             visibleCategories.push(e.label);
           }
         })
       })
 
-      this.setState({serviceUsersDisplay: serviceUsersDisplay, visibleCategories:visibleCategories});
+      this.setState({serviceUsersDisplay: serviceUsers, visibleCategories:visibleCategories});
     }
 
      search(forceFilter) {
@@ -274,10 +285,6 @@ class SearchPage extends React.Component {
        }
 
        axios.post('/myAlfred/api/serviceUser/search', filters)
-         .catch (err => {
-           console.error(err)
-           this.setState({searching : false})
-         })
          .then(res => {
            let serviceUsers = res.data;
            this.setState({serviceUsers:serviceUsers, serviceUsersDisplay:serviceUsers});
@@ -291,15 +298,13 @@ class SearchPage extends React.Component {
              })
            })
            var proAlfred=this.state.shops.filter( s => s.is_professional).map( s => s.alfred._id);
-           axios.get('/myAlfred/api/availability/all')
-             .then( res => {
-               this.setState({availabilities: res.data, visibleCategories:visibleCategories, categories:categories, proAlfred:proAlfred}, () => { if (forceFilter) { this.filter()}});
-               this.setState({searching : false})
-             })
-             .catch (err => {
-               console.error(err)
-               this.setState({searching : false})
-             })
+           this.setState({visibleCategories:visibleCategories, categories:categories, proAlfred:proAlfred},
+             () => { if (forceFilter) { this.filter()}});
+           this.setState({searching : false})
+         })
+         .catch (err => {
+           console.error(err)
+           this.setState({searching : false})
          })
     }
 
@@ -321,7 +326,7 @@ class SearchPage extends React.Component {
 
     restrictServices(serviceUsers, category) {
       const nbToDisplay=this.state.catCount[category._id];
-      return serviceUsers.filter( s => s.service.category._id === category._id).slice(0, nbToDisplay);
+      return serviceUsers.filter( s => s.service && s.service.category && s.service.category._id === category._id).slice(0, nbToDisplay);
     }
 
     hasMoreToDisplay(serviceUsers, category) {

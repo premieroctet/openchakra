@@ -273,7 +273,6 @@ class Homeheader extends React.Component {
                             language: 'fr',
                             countries: ['fr'],
                             type: 'city',
-                            useDeviceLocation: 'true'
                           }}
                           onChange={(suggestion) =>this.onChangeCity(suggestion)}
                           onClear={()=>this.setState({city:'', gps:null}, () => this.checkGPS())}

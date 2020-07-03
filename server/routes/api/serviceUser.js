@@ -558,7 +558,7 @@ router.post('/search',(req,res)=> {
         sus = sus.filter( su => su.service._id.toString()==service );
       }
       if (prestation) {
-        sus = sus.filter( su => su.prestations.some( p => p.prestation._id.toString()==prestation))
+        sus = sus.filter( su => su.prestations.some( p => p.prestation && p.prestation._id.toString()==prestation))
       }
       if (kw) {
         sus = filterServicesKeyword(sus, kw)
@@ -577,7 +577,7 @@ router.post('/search',(req,res)=> {
     })
     .catch( err => {
       console.error(err)
-      res.json(err)
+      res.status(404).json(err)
     })
 })
 
@@ -715,12 +715,26 @@ router.get('/all/nearOther/:id/:service',passport.authenticate('jwt',{session:fa
 // @Access private
 router.get('/home', (req, res) => {
 
-    ServiceUser.find()
-        .populate('user',['picture','firstname'])
-        .populate('service')
-        .then(service => {
-            if (typeof service !== 'undefined' && service.length > 0) {
-                res.json(service);
+    const shuffleArray = array => {
+      let i = array.length - 1;
+      for (; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+      }
+      return array;
+    }
+
+
+    ServiceUser.find({}, 'user service')
+    // {e.service.picture} title={e.service.label} alfred={e.user.firstname} user={e.user} score={e.user.score} /
+        .populate('user', 'picture firstname score')
+        .populate('service', 'label picture')
+        .then(services => {
+            if (typeof services !== 'undefined' && services.length > 0) {
+                services=shuffleArray(services)
+                res.json(services.slice(0, 6));
             }
             else {
                 return res.status(400).json({
@@ -729,9 +743,10 @@ router.get('/home', (req, res) => {
             }
 
         })
-        .catch(err => res.status(404).json({
-            service: 'No service found'
-        }));
+        .catch(err => {
+          console.error(err)
+          res.status(404).json({service: 'No service found'})
+        });
 });
 
 // @Route GET /myAlfred/api/serviceUser/currentAlfred
@@ -769,82 +784,6 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
             service: 'No service found'
         }));
 });
-
-// @Route POST /myAlfred/api/serviceUser/home/search
-// Get services with home search
-// @Access private
-router.post('/home/search',(req,res)=> {
-    const service = req.body.service;
-    const serviceLabel = req.body.serviceLabel;
-    const city = req.body.city;
-    const date = req.body.date;
-    const dateISO = req.body.dateISO;
-    const hour = parseInt(req.body.hour.slice(0,2));
-    const allServices = [];
-    const day = req.body.day.toLowerCase();
-
-    ServiceUser.find({service: service,'service_address.city':city})
-        .populate('service')
-        .populate('user','-id_card')
-        .populate({path: 'service', populate: { path: 'category' }})
-        .then(serviceUser => {
-            serviceUser.forEach(s => {
-                Availability.find({user:s.user._id})
-                    .then(a => {
-
-                        a.forEach(p => {
-
-                            if(!p.period.active && p[day].event.length){
-                                p[day].event.forEach(z => {
-                                    const begin = new Date(z.begin).getHours();
-                                    const end = new Date(z.end).getHours();
-                                    if(hour >= begin && hour <= end){
-
-                                        if(z.all_services === true){
-                                            allServices.push(s);
-
-                                        } else {
-                                            z.services.forEach(t => {
-                                                if(t.label === serviceLabel){
-
-                                                    allServices.push(s);
-                                                }
-                                            })
-                                        }
-                                    }
-                                })
-                            } else {
-                                let begin = p.period.month_begin;
-                                let end = p.period.month_end;
-                                const between = moment(new Date(dateISO)).isBetween(begin,end);
-                                if(between && p[day].event.length){
-                                    p[day].event.forEach(z => {
-                                        const begin = new Date(z.begin).getHours();
-                                        const end = new Date(z.end).getHours();
-                                        if(hour >= begin && hour <= end){
-                                            if(z.all_services){
-                                                allServices.push(s)
-                                            } else {
-                                                z.services.forEach(t => {
-                                                    if(t.label === serviceLabel){
-                                                        allServices.push(s)
-                                                    }
-                                                })
-                                            }
-                                        }
-                                    })
-                                }
-                            }
-                        })
-                    })
-                    .catch(errors => console.log(errors))
-            });
-            res.json(allServices);
-
-        })
-        .catch(err => res.status(404).json({ service: 'No service found' }));
-});
-
 
 // @Route GET /myAlfred/api/serviceUser/:id
 // View one serviceUser

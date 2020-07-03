@@ -39,7 +39,7 @@ class siret extends React.Component {
          this.setState(nextProps.company)
        }
     }
-    
+
     onChange = e => {
       let {name, value} = e.target;
       if (name==='siret') {
@@ -83,7 +83,6 @@ class siret extends React.Component {
                       status: '',
                       creation_date:'',
                       naf_ape: '',
-                      errors: 'Siret/Siren inconnu, merci de saisir les données manuellement'
                     }, () => this.props.onChange(this.state));
                     console.error(err);
                  })
@@ -126,9 +125,9 @@ class siret extends React.Component {
             <Grid container>
                 <Grid item style={{display: 'flex'}}>
                   <Grid>
+                    <Typography>SIRET/SIREN</Typography>
                     <TextField
                       id="filled-with-placeholder"
-                      label="Siret/Siren"
                       placeholder="Siret/Siren"
                       margin="normal"
                       variant="outlined"
@@ -164,7 +163,7 @@ class siret extends React.Component {
                   <Typography>Nom entreprise</Typography>
                   <TextField
                     id="filled-with-placeholder"
-                    label="Nom"
+                    placeholder="Nom"
                     margin="normal"
                     variant="outlined"
                     type="text"
@@ -177,7 +176,7 @@ class siret extends React.Component {
                   <Typography>Code NAF/APE</Typography>
                   <TextField
                   id="filled-with-placeholder"
-                  label="Code NAF/APE"
+                  placeholder="Code NAF/APE"
                   margin="normal"
                   variant="outlined"
                   type="text"
@@ -190,7 +189,7 @@ class siret extends React.Component {
                   <Typography>Statut juridique</Typography>
                   <TextField
                   id="filled-with-placeholder"
-                  label="Statut juridique"
+                  placeholder="Statut juridique"
                   margin="normal"
                   variant="outlined"
                   type="text"
