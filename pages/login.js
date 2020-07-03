@@ -14,6 +14,9 @@ import Router from "next/router";
 import {Helmet} from 'react-helmet';
 import OAuth from '../components/OAuth'
 import cookie from 'react-cookies'
+import qs from 'query-string'
+import { toast } from 'react-toastify'
+
 
 const providers = ['google']
 
@@ -100,6 +103,10 @@ class login extends React.Component {
   componentDidMount() {
     if (cookie.load('token'))
       Router.push('/')
+    const params=qs.parse(location.search)
+    if(params.error === "existingEmail"){
+      toast.error("Un autre compte utilise déjà cet email")
+    }
   }
 
   onChange = e => {

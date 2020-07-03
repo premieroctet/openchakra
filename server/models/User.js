@@ -300,6 +300,9 @@ const UserSchema = new Schema({
         provider: {
             type: String
         },
+        token: {
+            type: String
+        },
         id: {
             type: String
         }
