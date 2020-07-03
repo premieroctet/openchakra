@@ -463,9 +463,10 @@ class NavBar extends Component {
                           open={this.state.setOpenLogin}
                           onClose={this.handleCloseLogin}
                           TransitionComponent={Transition}
+                          classes={{paperWidthSm: classes.widthSm}}
                       >
                         <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
-                        <DialogContent>
+                        <DialogContent classes={{root: classes.widthLoginContent}}>
                           <div className={classes.paper}>
                             {modalLogin()}
                           </div>

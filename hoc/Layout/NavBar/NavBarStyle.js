@@ -143,6 +143,7 @@ export default theme =>({
     boxShadow: 'theme.shadows[5]',
     margin: '0px !important',
     padding: 0,
+    width: '100%'
   },
   closeButton: {
     position: 'absolute',
@@ -157,5 +158,12 @@ export default theme =>({
   muidialogContent:{
      padding: 0
   },
+  widthLoginContent:{
+    display:'flex',
+    justifyContent: 'center'
+  },
+  widthSm:{
+    minWidth: 350
+  }
 
 })

@@ -64,7 +64,7 @@ class LogIn extends React.Component {
         const {errors} = this.state;
         return (
             <Grid className={classes.fullContainer}>
-                <Grid>
+                <Grid style={{width: '100%'}}>
                     <Grid className={classes.newContainer}>
                         <Grid item className={classes.loginContainer}>
                             <Typography style={{ fontSize: 30 }}>Connexion</Typography>

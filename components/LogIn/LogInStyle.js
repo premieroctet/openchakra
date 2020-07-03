@@ -3,13 +3,13 @@ export default theme => ({
         display:'flex',
         flexDirection:'row',
         width: '100%',
+        justifyContent: 'center'
     },
     loginContainer: {
         display:'flex',
         flexDirection:'column',
         alignItems:'center',
         justifyContent:'center',
-        width: '40%',
     },
     cardContant: {
         flexDirection: 'column',
