@@ -201,12 +201,9 @@ class Register extends React.Component{
         const username = this.state.email;
         const password = this.state.password;
 
-
-
-        console.log("Submitting");
         axios
             .post('/myAlfred/api/users/register', newUser)
-            .then(res => {
+            .then(() => {
                 toast.info('Inscription réussie');
                 axios.post('/myAlfred/api/users/login',{username, password})
                     .then(response => {
@@ -241,8 +238,10 @@ class Register extends React.Component{
             Router.push('/checkEmail');
         }else{
             axios.post("/myAlfred/api/users/profile/picture",formData,config)
-                .then(() => {
-                    Router.push('/checkEmail');
+                .then((res) => {
+                    if(res){
+                        Router.push('/checkEmail');
+                    }
                 }).catch((error) => {
                 console.log(error)
             })
