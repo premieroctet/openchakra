@@ -59,6 +59,10 @@ const PrestationSchema = new Schema({
         return this.label ? normalize(this.label) : ''
       }
     },
+    cesu_eligible: {
+      type: Boolean,
+      default: false,
+    },
 });
 
 PrestationSchema.index({label:'text'});
