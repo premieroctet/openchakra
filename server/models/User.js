@@ -24,7 +24,6 @@ const UserSchema = new Schema({
     birthday: {
         type: Date,
         max: `${year}-01-01`,
-        required: true
     },
     phone: {
         type: String
