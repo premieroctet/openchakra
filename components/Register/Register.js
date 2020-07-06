@@ -161,6 +161,7 @@ class Register extends React.Component{
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.post('/myAlfred/api/users/sendSMSVerification', this.state.phone)
             .then (res => {
+                console.log(res, 'code')
                 var txt="Le SMS a été envoyé";
                 toast.info(txt);
                 this.setState({smsCodeOpen:true})
@@ -172,8 +173,10 @@ class Register extends React.Component{
     };
 
     checkSmsCode = () => {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.post("/myAlfred/api/users/checkSMSVerification",  this.state.smsCode)
             .then( res => {
+                console.log(res,'res,registerJS');
                 if (res.data.sms_code_ok) {
                     toast.info("Votre numéro de téléphone est validé");
                     this.setState({smsCodeOpen: false, phoneConfirmed:true});
@@ -612,7 +615,7 @@ class Register extends React.Component{
                                     </Grid>
                                     <Grid item className={classes.responsiveButton}>
                                         <Grid item style={{marginRight:'1%' }}>
-                                            <Link href={'/#register_done'}>
+                                            <Link href={'/search'}>
                                                 <a style={{textDecoration:'none'}}>
                                                     <Button variant={"contained"} color={"primary"} style={{color:"white"}}>Commencez à explorer</Button>
                                                 </a>
@@ -644,7 +647,7 @@ class Register extends React.Component{
                                             placeholder="0000"
                                             maxLength="4"
                                             value={this.state.smsCode}
-                                            onChange={ e => { console.log(e.target.value); this.setState({smsCode: e.target.value})}}
+                                            onChange={ e => { this.setState({smsCode: e.target.value})}}
                                             fullWidth
                                             errors={this.state.smsError}
                                         />
