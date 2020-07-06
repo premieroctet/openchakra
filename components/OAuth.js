@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import Router from 'next/router';
-
-import { getHost } from '../utils/mailing' //TODO fix import
-//const getHost = () => {return 'https://lvh.me/'} //Temp fix
+import Router from 'next/router'
 
 export default class OAuth extends Component {
 
@@ -13,8 +10,7 @@ export default class OAuth extends Component {
 
     startAuth = () => {
         const { provider } = this.props
-        const url = new URL(`/myAlfred/api/authentication/${provider}`, getHost()).toString()
-        Router.push(url)
+        Router.push(`/myAlfred/api/authentication/${provider}`)
     }
 
     render() {

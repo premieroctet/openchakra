@@ -57,7 +57,7 @@ const addUserDB = user => {
             email: user.emails[0].value,
             //birthday:
             //phone:
-            picture: user.picture,
+            picture: user.photos[0].value,
             /*billing_address:{
                 address: this.state.address,
                 zip_code: this.state.zip_code,
@@ -74,7 +74,6 @@ const addUserDB = user => {
         console.log(newUser)
         newUser.save()
             .then(user => {
-                if (err) console.error(err)
                 console.log("HERE : ", user)
                 resolve(user)
             }).catch(err=>{
