@@ -48,8 +48,8 @@ class paymentChoice extends React.Component {
                 this.setState({user: res.data});
             })
             .catch(err => {
-                    console.log(err);
-                    if(err.response.status === 401 || err.response.status === 403) {
+                    console.err(err);
+                    if(err.response && (err.response.status === 401 || err.response.status === 403)) {
                         localStorage.removeItem('token');
                         Router.push({pathname: '/login'})
                     }
@@ -60,6 +60,9 @@ class paymentChoice extends React.Component {
             .then(response => {
                 let cards = response.data;
                 this.setState({cards:cards});
+            })
+            .catch(err => {
+              console.error(err);
             })
     }
 
@@ -82,16 +85,17 @@ class paymentChoice extends React.Component {
     pay(){
         const total = parseFloat(this.props.total);
         const fees = parseFloat(this.props.fees);
-        const data = {
-            amount: total,
-            fees: fees
-        };
+        const data = { amount: total, fees: fees };
+
         axios.post('/myAlfred/api/payment/payIn',data)
-            .then(res => {
-                localStorage.setItem('booking_id',this.state.booking_id);
-                let payIn = res.data;
-                Router.push(payIn.RedirectURL)
-            })
+          .then(res => {
+            localStorage.setItem('booking_id',this.state.booking_id);
+            let payIn = res.data;
+            Router.push(payIn.RedirectURL)
+          })
+          .catch(err => {
+            console.error(err);
+          })
     }
 
     render() {
