@@ -37,6 +37,7 @@ class ConfirmPayement extends React.Component {
       total: 0,
       fees: null,
       grandTotal: null,
+      cesu_total: 0,
       checkedOption: false,
       optionPrice: null,
       date: null,
@@ -72,6 +73,7 @@ class ConfirmPayement extends React.Component {
       pick_tax: bookingObj.pick_tax,
       fees: bookingObj.fees,
       grandTotal: bookingObj.amount,
+      cesu_total: bookingObj.cesu_amount,
       alfredId: bookingObj.alfred._id
     })
 
@@ -195,7 +197,7 @@ class ConfirmPayement extends React.Component {
                             Paiement
                           </h3>
                           <Grid className={classes.widthLarge}>
-                            <BookingDetail prestations={pricedPrestations} count={countPrestations} total={this.state.grandTotal} client_fee={this.state.fees} travel_tax={this.state.travel_tax} pick_tax={this.state.pick_tax}/>
+                            <BookingDetail prestations={pricedPrestations} count={countPrestations} total={this.state.grandTotal} client_fee={this.state.fees} travel_tax={this.state.travel_tax} pick_tax={this.state.pick_tax} cesu_total={this.state.cesu_total}/>
                             <Grid item className={classes.buttonContainerPiad}>
                               <Grid item>
                                 <Button

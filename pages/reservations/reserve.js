@@ -39,6 +39,7 @@ class Reserve extends React.Component {
       pick_tax: null,
       travel_tax: null,
       total: 0,
+      cesu_total: 0,
       fees: null,
       checkedOption: false,
       optionPrice: null,
@@ -79,6 +80,7 @@ class Reserve extends React.Component {
             pick_tax: bookingObj.pick_tax,
             fees: bookingObj.fees,
             total: bookingObj.amount,
+            cesu_total: bookingObj.cesu_amount,
             alfredId: bookingObj.alfred._id
           });
 
@@ -169,7 +171,7 @@ class Reserve extends React.Component {
                         <h3 className={classes.h3Style}>
                           Détail de la réservation
                         </h3>
-                        <BookingDetail prestations={pricedPrestations} count={countPrestations} total={this.state.total} client_fee={this.state.fees} travel_tax={this.state.travel_tax} pick_tax={this.state.pick_tax}/>
+                        <BookingDetail prestations={pricedPrestations} count={countPrestations} total={this.state.total} client_fee={this.state.fees} travel_tax={this.state.travel_tax} pick_tax={this.state.pick_tax} cesu_total={this.state.cesu_total}/>
                       </Grid>
                       <Grid container>
                         <Grid item xs={12}>

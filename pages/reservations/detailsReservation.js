@@ -830,15 +830,7 @@ class DetailsReservation extends React.Component {
                 <Grid container style={{display: 'flex', flexDirection: 'column',}}>
                   <Grid  style={{display: 'flex', width: '70%', justifyContent: 'space-between'}}>
                     <Grid item>
-                      <BookingDetail
-                        prestations={pricedPrestations}
-                        count={countPrestations}
-                        alfred_fee={alfred_fee}
-                        client_fee={client_fee}
-                        travel_tax={this.state.bookingObj?this.state.bookingObj.travel_tax : 0}
-                        pick_tax={this.state.bookingObj?this.state.bookingObj.pick_tax : 0}
-                        total={amount}
-                      />
+                      <BookingDetail prestations={pricedPrestations} count={countPrestations} alfred_fee={alfred_fee} client_fee={client_fee} travel_tax={this.state.bookingObj?this.state.bookingObj.travel_tax : 0}  pick_tax={this.state.bookingObj?this.state.bookingObj.pick_tax : 0} total={amount} cesu_total={this.state.bookingObj?this.state.bookingObj.cesu_amount : 0} />
                     </Grid>
                   </Grid>
                 </Grid>

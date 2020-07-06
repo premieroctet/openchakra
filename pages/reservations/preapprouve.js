@@ -203,13 +203,7 @@ class Preapprouve extends React.Component {
                                 Détail de la réservation
                               </h3>
                               <Grid xs={12}>
-                                <BookingDetail
-                                  prestations={pricedPrestations}
-                                  count={countPrestations}
-                                  travel_tax={this.state.bookingObj?this.state.bookingObj.travel_tax : 0}
-                                  pick_tax={this.state.bookingObj?this.state.bookingObj.pick_tax : 0}
-                                  total={amount}
-                                />
+                                <BookingDetail prestations={pricedPrestations} count={countPrestations} travel_tax={this.state.bookingObj?this.state.bookingObj.travel_tax : 0} pick_tax={this.state.bookingObj?this.state.bookingObj.pick_tax : 0} total={amount} cesu_total={this.state.bookingObj?this.state.bookingObj.cesu_amount : 0 }/>
                               </Grid>
                             </Grid>
                             <Grid container>

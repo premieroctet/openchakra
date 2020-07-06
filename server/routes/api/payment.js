@@ -109,7 +109,11 @@ router.post('/payIn',passport.authenticate('jwt',{session:false}),(req,res)=> {
                             res.json(data)
                         })
                 })
-        });
+        })
+        .catch( error => {
+          console.error(error)
+          res.status(404).json({error:err})
+        })
 });
 
 // POST /myAlfred/api/payment/payInCreate
