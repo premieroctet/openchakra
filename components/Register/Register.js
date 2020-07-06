@@ -211,7 +211,6 @@ class Register extends React.Component{
                 toast.info('Inscription réussie');
                 axios.post('/myAlfred/api/users/login',{username, password})
                     .then(response => {
-                        console.log(response, 'first response');
                         const {token} = response.data;
                         localStorage.setItem('token',token);
                         axios.defaults.headers.common['Authorization'] = token;
@@ -220,12 +219,13 @@ class Register extends React.Component{
                         console.log(err)
                     })
                     .then(this.addPhoto).catch(err => console.log(err))
+                    .then(this.setState({ activeStep: this.state.activeStep + 1})).catch(err => console.log(err))
                     .then(this.onSubmitPhone).catch(err => console.log(err))
             })
             .catch(err => {
                 let error = Object.values(err.response.data);
                     toast.error(error.toString());
-                    this.setState({errors: err.response.data, activeStep: this.state.activeStep - 1})
+                    this.setState({errors: err.response.data, activeStep: 1})
                 }
             );
     };
@@ -292,7 +292,7 @@ class Register extends React.Component{
     };
 
     confirmLater = () =>{
-        this.setState({smsCodeOpen: false, phoneConfirmed: false});
+        this.setState({smsCodeOpen: false});
     };
 
     onChangeEmail= (event) =>{
@@ -312,7 +312,6 @@ class Register extends React.Component{
             this.setState({firstPageValidator: true})
         }
     };
-
 
     renderSwitch(stepIndex, classes, errors) {
         switch(stepIndex) {
@@ -670,14 +669,13 @@ class Register extends React.Component{
     }
 
     handleNext = (activeStep) => {
-        this.setState({activeStep: this.state.activeStep + 1 }, () => this.checkState());
-    };
-
-    checkState= () => {
-        if(this.state.activeStep === 2){
+        if(activeStep === 1){
             this.onSubmit();
+        }else{
+            this.setState({activeStep: this.state.activeStep + 1 });
         }
     };
+
 
     handleBack = () => {
         this.setState({activeStep: this.state.activeStep - 1 });
@@ -725,7 +723,7 @@ class Register extends React.Component{
                                                 progress: classes.progress
                                             }}
                                             nextButton={
-                                                <Button size="small" onClick={this.handleNext} disabled={firstPageValidator}>
+                                                <Button size="small" onClick={() => this.handleNext(activeStep)} disabled={firstPageValidator}>
                                                     {activeStep <= 1 ? "Suivant" : "Terminer"}
                                                     <KeyboardArrowRight />
                                                 </Button>
