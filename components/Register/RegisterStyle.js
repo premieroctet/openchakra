@@ -136,5 +136,20 @@ export default theme => ({
     },
     textStyle:{
         textAlign: 'center'
-    }
+    },
+    responsiveButton:{
+        display:'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10,
+        [theme.breakpoints.down('xs')]:{
+            flexDirection: 'column',
+            justifyContent: 'center',
+        }
+    },
+    responsiveSecondaryButton:{
+        [theme.breakpoints.down('xs')]:{
+            marginTop: '2%'
+        }
+    },
 })

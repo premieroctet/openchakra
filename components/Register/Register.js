@@ -31,6 +31,7 @@ import Dialog from '@material-ui/core/Dialog';
 const {isPhoneOk}=require('../../utils/sms');
 import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined';
 import Router from 'next/router';
+import Link from 'next/link';
 
 registerLocale('fr', fr);
 
@@ -95,6 +96,9 @@ class Register extends React.Component{
             smsError: null,
             phoneConfirmed: false,
             serverError:false, // Si erreur serveur pour l''envoi du SMS, continuer quand même
+            errorEmailType: '',
+            emailValidator: false,
+            firstPageValidator: true
         };
         this.handleChecked = this.handleChecked.bind(this);
         this.onChangeAddress = this.onChangeAddress.bind(this);
@@ -109,8 +113,9 @@ class Register extends React.Component{
         }
     }
 
+
     onChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
+        this.setState({ [e.target.name]: e.target.value }, () => this.validatorFirstStep());
     };
 
     onChangePhone(e) {
@@ -139,7 +144,7 @@ class Register extends React.Component{
         this.setState({
             status1: checkPass1(this.state.password),
             status2: checkPass2(this.state.password, this.state.password2),
-        })
+        }, () => this.validatorFirstStep())
     };
 
     onChangeAddress({suggestion}) {
@@ -171,7 +176,7 @@ class Register extends React.Component{
             .then( res => {
                 if (res.data.sms_code_ok) {
                     toast.info("Votre numéro de téléphone est validé");
-                    this.setState({smsCodeOpen: false, phoneConfirmed:true}, () => Router.push('/checkEmail'));
+                    this.setState({smsCodeOpen: false, phoneConfirmed:true});
                 }
                 else {
                     toast.error("Le code est incorrect")
@@ -180,8 +185,7 @@ class Register extends React.Component{
             .catch(err => toast.error("Erreur à la vérification du code"))
     };
 
-    onSubmit = e => {
-        e.preventDefault();
+    onSubmit = () => {
 
         const newUser = {
             firstname: this.state.firstname,
@@ -221,8 +225,7 @@ class Register extends React.Component{
             .catch(err => {
                 let error = Object.values(err.response.data);
                     toast.error(error.toString());
-                    this.setState({errors: err.response.data})
-
+                    this.setState({errors: err.response.data, activeStep: this.state.activeStep - 1})
                 }
             );
     };
@@ -289,7 +292,25 @@ class Register extends React.Component{
     };
 
     confirmLater = () =>{
-        Router.push('/checkEmail');
+        this.setState({smsCodeOpen: false, phoneConfirmed: false});
+    };
+
+    onChangeEmail= (event) =>{
+        const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if(event.target.value.match(regex)){
+            this.setState({emailValidator: true, emailError: ''})
+        }else{
+            this.setState({emailValidator: false, emailError: 'Veuillez entrer une adresse email valide.'})
+        }
+        this.setState({email: event.target.value}, () => this.validatorFirstStep());
+    };
+
+    validatorFirstStep = () => {
+        if(this.state.errorEmailType === '' && this.state.email !== '' && this.state.emailValidator && this.state.firstname !== '' && this.state.name !== '' && this.state.status1.check && this.state.status2.check){
+            this.setState({firstPageValidator: false})
+        }else{
+            this.setState({firstPageValidator: true})
+        }
     };
 
 
@@ -311,10 +332,10 @@ class Register extends React.Component{
                                         margin="normal"
                                         style={{ width: '100%' }}
                                         type="email"
-                                        name="email"
                                         value={this.state.email}
-                                        onChange={this.onChange}
-                                        error={errors.email}
+                                        onChange={this.onChangeEmail}
+                                        error={this.state.emailError}
+                                        helperText={this.state.emailError}
                                     />
                                     <em style={{color:'red'}}>{errors.email}</em>
                                 </Grid>
@@ -556,6 +577,61 @@ class Register extends React.Component{
                         </Grid>
                         <Grid className={classes.margin}>
                             <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
+                                <Grid>
+                                    <Grid container style={{marginTop: 15, alignItems: 'center'}}>
+                                        <Grid>
+                                            <Checkbox
+                                                checked={this.state.checked}
+                                                onChange={this.handleChecked}
+                                                value="checked"
+                                                color="primary"
+                                            />
+                                        </Grid>
+                                        <Grid>
+                                            <a href={"footer/cguPage"} target="_blank">J’accepte les conditions générales d’utilisation de My-Alfred.</a>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                );
+            case 2:
+                return(
+                    <Grid container>
+                        <Grid className={classes.margin}>
+                            <Grid container spacing={1} alignItems="flex-end"  className={classes.genericContainer}>
+                                <Grid>
+                                    <h2 className={classes.titleRegister}>Inscription terminée</h2>
+                                </Grid>
+                                <div className={classes.newContainer}>
+                                    <Grid container style={{display: 'flex', justifyContent: 'center', marginTop: 20, height: 100 /*safari*/}}>
+                                        <img src='../../static/happy_castor.svg' style={{width: 100}} alt={'success'}/>
+                                    </Grid>
+                                    <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 10, textAlign: 'center'}}>
+                                        <p>Inscription réussie ! Vous pouvez maintenant proposer ou rechercher vos services sur My Alfred</p>
+                                    </Grid>
+                                    <Grid item className={classes.responsiveButton}>
+                                        <Grid item style={{marginRight:'1%' }}>
+                                            <Link href={'/#register_done'}>
+                                                <a style={{textDecoration:'none'}}>
+                                                    <Button variant={"contained"} color={"primary"} style={{color:"white"}}>Commencez à explorer</Button>
+                                                </a>
+                                            </Link>
+                                        </Grid>
+                                        <Grid item className={classes.responsiveSecondaryButton}>
+                                            <Link href={'/creaShop/creaShop'}>
+                                                <a style={{textDecoration:'none'}}>
+                                                    <Button variant={"contained"} color={"secondary"} style={{color:"white"}}>Proposer mes services</Button>
+                                                </a>
+                                            </Link>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+                            </Grid>
+                        </Grid>
+                        <Grid className={classes.margin}>
+                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                                 <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
                                     <DialogTitle id="form-dialog-title">Confirmation du numéro de téléphone</DialogTitle>
                                     <DialogContent>
@@ -588,42 +664,19 @@ class Register extends React.Component{
                                 </Dialog>
                             </Grid>
                         </Grid>
-                        <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-                                <Grid>
-                                    <Grid container style={{marginTop: 15, alignItems: 'center'}}>
-                                        <Grid>
-                                            <Checkbox
-                                                checked={this.state.checked}
-                                                onChange={this.handleChecked}
-                                                value="checked"
-                                                color="primary"
-                                            />
-                                        </Grid>
-                                        <Grid>
-                                            <a href={"footer/cguPage"} target="_blank">J’accepte les conditions générales d’utilisation de My-Alfred.</a>
-                                        </Grid>
-                                    </Grid>
-                                    <Grid item className={classes.genericContainerAndMargin}>
-                                        <Button
-                                            disabled = {!(this.state.checked && this.state.status1.check && this.state.status2.check)}
-                                            onClick={this.onSubmit}
-                                            variant="contained"
-                                            color="primary"
-                                            style={{ width: '100%',color:"white" }}>
-                                            Inscription
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                        </Grid>
                     </Grid>
-                );
+                )
         }
     }
 
-    handleNext = () => {
-        this.setState({activeStep: this.state.activeStep + 1 });
+    handleNext = (activeStep) => {
+        this.setState({activeStep: this.state.activeStep + 1 }, () => this.checkState());
+    };
+
+    checkState= () => {
+        if(this.state.activeStep === 2){
+            this.onSubmit();
+        }
     };
 
     handleBack = () => {
@@ -633,7 +686,7 @@ class Register extends React.Component{
 
     render(){
         const { classes } = this.props;
-        const { errors, activeStep, status1, status2 } = this.state;
+        const { errors, activeStep, firstPageValidator } = this.state;
 
         return(
             <Grid  className={classes.fullContainer}>
@@ -646,44 +699,48 @@ class Register extends React.Component{
                                 </Grid> : null
                         }
 
-                       <Grid className={classes.containerSwitch}>
-                           {this.renderSwitch(activeStep, classes, errors)}
-                       </Grid>
-                        <Grid style={{marginTop: 10}}>
-                            <hr/>
-                            <Grid container className={classes.bottomContainer}>
-                                <Grid item>
-                                    <p>Vous avez déjà un compte My Alfred ? </p>
-                                </Grid>
-                                <Grid item style={{marginLeft: 5}}>
-                                    <Button color={"primary"} onClick={this.props.callLogin}>Connexion</Button>
-                                </Grid>
-                            </Grid>
-                            <Grid>
-                                <MobileStepper
-                                    variant="progress"
-                                    steps={2}
-                                    position="static"
-                                    activeStep={activeStep}
-                                    className={classes.rootStepper}
-                                    classes={{
-                                        progress: classes.progress
-                                    }}
-                                    nextButton={
-                                        <Button size="small" onClick={this.handleNext} disabled={!(status1.check && status2.check && this.state.email !== '') || activeStep === 1 }>
-                                            Suivant
-                                            <KeyboardArrowRight />
-                                        </Button>
-                                    }
-                                    backButton={
-                                        <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
-                                            <KeyboardArrowLeft />
-                                            Précédent
-                                        </Button>
-                                    }
-                                />
-                            </Grid>
+                        <Grid className={classes.containerSwitch}>
+                            {this.renderSwitch(activeStep, classes, errors)}
                         </Grid>
+                        {
+                            activeStep < 2 ?
+                                <Grid style={{marginTop: 10}}>
+                                    <hr/>
+                                    <Grid container className={classes.bottomContainer}>
+                                        <Grid item>
+                                            <p>Vous avez déjà un compte My Alfred ? </p>
+                                        </Grid>
+                                        <Grid item style={{marginLeft: 5}}>
+                                            <Button color={"primary"} onClick={this.props.callLogin}>Connexion</Button>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid>
+                                        <MobileStepper
+                                            variant="progress"
+                                            steps={2}
+                                            position="static"
+                                            activeStep={activeStep}
+                                            className={classes.rootStepper}
+                                            classes={{
+                                                progress: classes.progress
+                                            }}
+                                            nextButton={
+                                                <Button size="small" onClick={this.handleNext} disabled={firstPageValidator}>
+                                                    {activeStep <= 1 ? "Suivant" : "Terminer"}
+                                                    <KeyboardArrowRight />
+                                                </Button>
+                                            }
+                                            backButton={
+                                                <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
+                                                    <KeyboardArrowLeft />
+                                                    Précédent
+                                                </Button>
+                                            }
+                                        />
+                                    </Grid>
+                                </Grid> : null
+                        }
+
                     </Grid>
                 </Grid>
             </Grid>
