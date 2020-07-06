@@ -11,7 +11,6 @@ const moment = require('moment');
 const request = require('request');
 const {mangoApi}=require('../../../utils/mangopay');
 const {maskIban}=require('../../../utils/text');
-const {getHost}=require('../../../utils/mailing')
 var parse = require('url-parse');
 const { inspect } = require('util');
 

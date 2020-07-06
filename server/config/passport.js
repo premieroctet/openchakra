@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const User = mongoose.model('users');
 
 const keys = require('../config/keys');
-const { getHost } = require('../../utils/mailing')
+const { getHost } = require('../../utils/infra')
 
 const { OAuth2Strategy: GoogleStrategy } = require("passport-google-oauth")
 const JwtStrategy = require('passport-jwt').Strategy ;

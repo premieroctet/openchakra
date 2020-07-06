@@ -1,7 +1,7 @@
 const moment = require('moment');
 const path = require('path');
 const fs = require('fs');
-const {getHost}=require('./mailing')
+const {getHost}=require('./infra')
 const emptyPromise = require('./promise');
 const mangopay = require('mangopay2-nodejs-sdk');
 
