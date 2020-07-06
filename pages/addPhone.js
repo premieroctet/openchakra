@@ -69,7 +69,7 @@ class addPhone extends React.Component {
                 Router.push('/checkEmail');
             })
             .catch(err =>
-                console.log(err)
+                console.error(err)
             );
 
 

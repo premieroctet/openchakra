@@ -130,7 +130,7 @@ router.post('/add', upload.fields([{ name: 'diploma', maxCount: 1 }, { name: 'ce
             fields.pick_tax = req.body.pick_tax === "null" ? null : req.body.pick_tax;
 
             const newService = new ServiceUser(fields);
-            newService.save().then(service => res.json(service)).catch(err => console.log(err));
+            newService.save().then(service => res.json(service)).catch(err => console.error(err));
 
         })
         .catch(error => {
@@ -178,11 +178,11 @@ router.post('/myShop/add', upload.fields([{ name: 'file_diploma', maxCount: 1 },
                  Shop.findOne({ alfred: req.user.id })
                    .then(shop => {
                      shop.services.unshift(su._id);
-                     shop.save().then(newShop => res.json(su)).catch(err => console.log(err));
+                     shop.save().then(newShop => res.json(su)).catch(err => console.error(err));
                    })
                    .catch(error => console.log(error))
                 })
-                .catch(err => console.log(err));
+                .catch(err => console.error(err));
              })
 
 
@@ -200,7 +200,7 @@ router.put('/editStatus',passport.authenticate('jwt',{session:false}),(req,res) 
         .then(serviceUser => {
             res.json(serviceUser)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 });
 
 // @Route PUT /myAlfred/api/serviceUser/edit/:id
@@ -240,7 +240,7 @@ router.put('/edit/:id', passport.authenticate('jwt', { session: false }), (req, 
              })
 
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 });
 
 // @Route PUT /myAlfred/api/serviceUser/editWithCity/:id
@@ -268,10 +268,10 @@ router.put('/editWithCity/:id', passport.authenticate('jwt', {
             serviceUser.level = req.body.level;
 
 
-            serviceUser.save().then(service => res.json(service)).catch(err => console.log(err));
+            serviceUser.save().then(service => res.json(service)).catch(err => console.error(err));
 
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 });
 
 // @Route PUT /myAlfred/api/serviceUser/addPrestation
@@ -291,10 +291,10 @@ router.put('/addPrestation/:id', passport.authenticate('jwt', {
             serviceUser.prestations.unshift(newPrestation);
 
 
-            serviceUser.save().then(service => res.json(service)).catch(err => console.log(err));
+            serviceUser.save().then(service => res.json(service)).catch(err => console.error(err));
 
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 });
 
 // @Route PUT /myAlfred/api/serviceUser/editPrestation
@@ -314,10 +314,10 @@ router.put('/editPrestation/:id', passport.authenticate('jwt', {
             serviceUser.prestations[index].price = req.body.price;
 
 
-            serviceUser.save().then(service => res.json(service)).catch(err => console.log(err));
+            serviceUser.save().then(service => res.json(service)).catch(err => console.error(err));
 
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 });
 
 // @Route POST /myAlfred/api/serviceUser/addDiploma/:id
@@ -335,9 +335,9 @@ router.post('/addDiploma/:id', upload.single('file_diploma'), passport.authentic
             }
             serviceUser.graduated = true;
 
-            serviceUser.save().then(service => res.json(service)).catch(err => console.log(err));
+            serviceUser.save().then(service => res.json(service)).catch(err => console.error(err));
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 });
 
 // @Route POST /myAlfred/api/serviceUser/addCertification/:id
@@ -355,9 +355,9 @@ router.post('/addCertification/:id', upload.single('file_certification'), passpo
             }
             serviceUser.is_certified = true;
 
-            serviceUser.save().then(service => res.json(service)).catch(err => console.log(err));
+            serviceUser.save().then(service => res.json(service)).catch(err => console.error(err));
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 });
 
 // @Route GET /myAlfred/api/serviceUser/all
@@ -437,7 +437,7 @@ router.get('/category/:id', (req, res) => {
             }
 
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 });
 
 // @Route GET /myAlfred/api/serviceUser/near
@@ -483,7 +483,7 @@ router.get('/near', passport.authenticate('jwt', { session: false }), (req, res)
                     res.json(allService);
 
                 })
-                .catch(err => { console.log(err); res.status(404).json({ service: 'No service found' })});
+                .catch(err => { console.error(err); res.status(404).json({ service: 'No service found' })});
         });
 
 });
@@ -830,7 +830,7 @@ router.get('/allUserServices/:id', (req, res) => {
         .then(services => {
             res.json(services);
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 })
 
 
@@ -889,7 +889,7 @@ router.delete('/delete/diploma/:id', passport.authenticate('jwt', {
             services.diploma = undefined;
             services.graduated = false;
 
-            services.save().then(service => res.json(service)).catch(err => console.log(err));
+            services.save().then(service => res.json(service)).catch(err => console.error(err));
 
         })
         .catch(err => res.status(404).json({
@@ -908,7 +908,7 @@ router.delete('/delete/certification/:id', passport.authenticate('jwt', {
             services.certification = undefined;
             services.is_certified = false;
 
-            services.save().then(service => res.json(service)).catch(err => console.log(err));
+            services.save().then(service => res.json(service)).catch(err => console.error(err));
 
         })
         .catch(err => res.status(404).json({
@@ -955,7 +955,7 @@ router.delete('/:id', passport.authenticate('jwt', {
                         shop.services.splice(removeIndex, 1);
 
 
-                        shop.save().then(newShop => res.json(newShop)).catch(err => console.log(err));
+                        shop.save().then(newShop => res.json(newShop)).catch(err => console.error(err));
                     })
             });
         })

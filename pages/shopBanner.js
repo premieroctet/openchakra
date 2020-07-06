@@ -19,7 +19,7 @@ class ShopBanner extends React.Component {
 
                 this.setState({banner: banner})
             })
-            .catch(err =>{console.log(err)});
+            .catch(err =>{console.error(err)});
     }
 
     onSubmit = e => {

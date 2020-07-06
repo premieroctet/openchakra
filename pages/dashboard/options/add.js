@@ -71,7 +71,7 @@ class add extends React.Component {
                 Router.push({pathname:'/dashboard/options/all'})
             })
             .catch(err => {
-                    console.log(err);
+                    console.error(err);
                     if(err.response.status === 401 || err.response.status === 403) {
                         localStorage.removeItem('token');
                         Router.push({pathname: '/login'})

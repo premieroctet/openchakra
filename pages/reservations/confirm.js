@@ -128,7 +128,7 @@ class Confirm extends React.Component {
           this.setState({bookingObj: res.data})
             setTimeout(()=>this.socket.emit("changeStatus", res.data),100)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
       return null;
     } else {
       axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
@@ -136,7 +136,7 @@ class Confirm extends React.Component {
             this.setState({bookingObj: res.data})
             setTimeout(()=>this.socket.emit("changeStatus", res.data),100)
           })
-          .catch(err => console.log(err))
+          .catch(err => console.error(err))
     }
   }
 

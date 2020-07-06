@@ -44,7 +44,7 @@ router.post('/add/alfred',passport.authenticate('jwt',{session: false}),(req,res
                 const newReviews = new Reviews(reviewFields);
                 newReviews.save().then(() => {
                     Booking.findByIdAndUpdate(req.body.booking,{alfred_evaluated: true}).then(()=>res.json('ok')).catch(error => console.log(error))
-                }).catch(err => console.log(err));
+                }).catch(err => console.error(err));
 
                 User.findByIdAndUpdate(req.body.alfred, {
                     $inc: {number_of_reviews: 1}
@@ -59,14 +59,14 @@ router.post('/add/alfred',passport.authenticate('jwt',{session: false}),(req,res
                                     // FIX : mauvais calcul de moyenne
                                     user.score = ((user.score + score)/2).toFixed(2);
                                 }
-                                user.save().then(users => console.log('reviews update')).catch(err => console.log(err));
+                                user.save().then(users => console.log('reviews update')).catch(err => console.error(err));
                             })
                             .catch(error => {
                                 console.log(error)
                             })
                         }
                     )
-                    .catch(err => console.log(err));
+                    .catch(err => console.error(err));
 });
 
 // @Route POST /myAlfred/api/reviews/add/client
@@ -97,7 +97,7 @@ router.post('/add/client',passport.authenticate('jwt',{session: false}),(req,res
     const newReviews = new Reviews(reviewFields);
     newReviews.save().then(() => {
         Booking.findByIdAndUpdate(req.body.booking,{user_evaluated: true}).then(()=>res.json('ok')).catch(error => console.log(error))
-    }).catch(err => console.log(err));
+    }).catch(err => console.error(err));
 
     User.findByIdAndUpdate(req.body.client, {
         $inc: {number_of_reviews_client: 1}
@@ -111,14 +111,14 @@ router.post('/add/client',passport.authenticate('jwt',{session: false}),(req,res
                         } else {
                             user.score_client = ((user.score_client + score)/2).toFixed(2);
                         }
-                        user.save().then(users => console.log('reviews update')).catch(err => console.log(err));
+                        user.save().then(users => console.log('reviews update')).catch(err => console.error(err));
                     })
                     .catch(error => {
                         console.log(error)
                     })
             }
         )
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 });
 
 // @Route GET /myAlfred/api/reviews/:user_id
@@ -145,7 +145,7 @@ router.get('/:user_id',passport.authenticate('jwt',{session:false}),(req,res)=> 
         res.json(result);
       }
     })
-    .catch(err => console.log(err) && res.status(404).json(result));
+    .catch(err => console.error(err) && res.status(404).json(result));
 });
 
 // @Route GET /myAlfred/api/reviews/all

@@ -119,7 +119,7 @@ class login extends React.Component {
                   Router.back();
                 }
               })
-              .catch(err=> console.log(err));
+              .catch(err=> console.error(err));
 
 
 
@@ -127,7 +127,7 @@ class login extends React.Component {
 
         })
         .catch(err => {
-          console.log(err);
+          console.error(err);
           if (err.response) {
             this.setState({errors: err.response.data});
           }

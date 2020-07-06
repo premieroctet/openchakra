@@ -325,7 +325,7 @@ router.get('/cards',passport.authenticate('jwt',{session:false}),(req,res)=> {
         .then(user => {
             mangoApi.Users.getCards(user.id_mangopay).then(cards => res.json(cards))
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 
 });
 
@@ -347,7 +347,7 @@ router.get('/cardsActive',passport.authenticate('jwt',{session:false}),(req,res)
                     res.json(allCards);
                 })
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 
 });
 
@@ -410,7 +410,7 @@ router.put('/account',passport.authenticate('jwt',{session:false}),(req,res)=> {
                 account=> {
                     res.status(200).json(account)
                 }
-            ).catch(err => console.log(err));
+            ).catch(err => console.error(err));
         })
 
 });

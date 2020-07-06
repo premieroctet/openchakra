@@ -27,7 +27,7 @@ router.post('/add',(req, res) => {
                         email: req.body.email
                     });
 
-                    newNewsletter.save().then(newsletter => res.json(newsletter)).catch(err => console.log(err));
+                    newNewsletter.save().then(newsletter => res.json(newsletter)).catch(err => console.error(err));
                 }
             })
 

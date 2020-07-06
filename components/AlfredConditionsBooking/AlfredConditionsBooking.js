@@ -82,7 +82,7 @@ class AlfredConditionsBooking extends React.Component{
         this.props.stateButton({stateEditButton : false});
         this.props.needRefresh();
       })
-      .catch(err => console.log(err))
+      .catch(err => console.error(err))
   };
 
   render(){

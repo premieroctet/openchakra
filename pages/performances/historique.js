@@ -39,14 +39,14 @@ class Historique extends React.Component {
                 let bookingsPaid = res.data;
                 this.setState({bookingsPaid: bookingsPaid})
             })
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
 
         axios.get('/myAlfred/api/booking/getPaidSoon')
             .then(res => {
                 let bookingsPaidSoon = res.data;
                 this.setState({bookingsPaidSoon: bookingsPaidSoon})
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
 
         axios.get('/myAlfred/api/users/current').then(res => {
             let user = res.data;
