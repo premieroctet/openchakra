@@ -450,47 +450,51 @@ class NavBar extends Component {
                     </Link>
                   </Typography>
                   {logged ? null :
-                    <React.Fragment>
-                      <Button color="primary" onClick={this.handleOpenLogin}>
-                        Connexion
-                      </Button>
-                      <Dialog
-                          scroll={'paper'}
-                          aria-labelledby="scroll-dialog-title"
-                          aria-describedby="scroll-dialog-description"
-                          className={classes.modal}
-                          open={this.state.setOpenLogin}
-                          onClose={this.handleCloseLogin}
-                          TransitionComponent={Transition}
-                          classes={{paperWidthSm: classes.widthSm}}
-                      >
-                        <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
-                        <DialogContent classes={{root: classes.widthLoginContent}}>
-                          <div className={classes.paper}>
-                            {modalLogin()}
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-                      <Button color="primary" variant={"contained"} onClick={this.handleOpenRegister} style={{color:'white'}}>
-                        Inscription
-                      </Button>
-                      <Dialog
-                          scroll={'paper'}
-                          aria-labelledby="scroll-dialog-title"
-                          aria-describedby="scroll-dialog-description"
-                          className={classes.modal}
-                          open={this.state.setOpenRegister}
-                          onClose={this.handleCloseRegister}
-                          TransitionComponent={Transition}
-                      >
-                        <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
-                        <DialogContent dividers={false} className={classes.muidialogContent} >
-                          <div className={classes.paper}>
-                            {modalRegister()}
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-                    </React.Fragment>}
+                    <Grid container>
+                      <Grid style={{marginRight: 20}}>
+                        <Button color="primary" onClick={this.handleOpenLogin}>
+                          Connexion
+                        </Button>
+                        <Dialog
+                            scroll={'paper'}
+                            aria-labelledby="scroll-dialog-title"
+                            aria-describedby="scroll-dialog-description"
+                            className={classes.modal}
+                            open={this.state.setOpenLogin}
+                            onClose={this.handleCloseLogin}
+                            TransitionComponent={Transition}
+                            classes={{paperWidthSm: classes.widthSm}}
+                        >
+                          <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
+                          <DialogContent classes={{root: classes.widthLoginContent}}>
+                            <div className={classes.paper}>
+                              {modalLogin()}
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </Grid>
+                      <Grid>
+                        <Button color="primary" variant={"contained"} onClick={this.handleOpenRegister} style={{color:'white'}}>
+                          Inscription
+                        </Button>
+                        <Dialog
+                            scroll={'paper'}
+                            aria-labelledby="scroll-dialog-title"
+                            aria-describedby="scroll-dialog-description"
+                            className={classes.modal}
+                            open={this.state.setOpenRegister}
+                            onClose={this.handleCloseRegister}
+                            TransitionComponent={Transition}
+                        >
+                          <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
+                          <DialogContent dividers={false} className={classes.muidialogContent} >
+                            <div className={classes.paper}>
+                              {modalRegister()}
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </Grid>
+                    </Grid>}
                   {logged ?
                     <React.Fragment>
                       <React.Fragment>
