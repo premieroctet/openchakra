@@ -116,14 +116,6 @@ const SERVER_PROD=true;
     app.use('/myAlfred/api/touch',touch);
     app.use('/myAlfred/api/authentication', authRoutes)
 
-    const authCheck = (req, res, next) => {
-        next();
-    };
-
-//    app.get("/", authCheck, (req, res) => {
-//        res.status(200)
-//    });
-
     //const port = process.env.PORT || 5000;
     const rootPath = require('path').join(__dirname, '/..')
     glob.sync(rootPath + '/server/api/*.js').forEach(controllerPath => {

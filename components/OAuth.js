@@ -2,13 +2,12 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Router from 'next/router';
 
-//import getHost from '../utils/mailing'
-const getHost = () => {return 'https://lvh.me/'}
+import { getHost } from '../utils/mailing' //TODO fix import
+//const getHost = () => {return 'https://lvh.me/'} //Temp fix
 
 export default class OAuth extends Component {
 
     state = {
-        user: {},
         disabled: ''
     }
 
