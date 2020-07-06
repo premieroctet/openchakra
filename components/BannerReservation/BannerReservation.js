@@ -24,7 +24,7 @@ class BannerReservation extends React.Component{
 
     return (
       <Grid>
-        <Grid container className={classes.bannerContainer} style={{ backgroundImage:  'url("../../' + serviceUser.picture + '")'}}>
+        <Grid container className={classes.bannerContainer} style={{ backgroundImage:  'url("' + serviceUser.picture + '")'}}>
           { shop.is_professional ?
             <Grid className={classes.statusMedia}>
               <Chip label="PRO" className={classes.chipStyle}/>

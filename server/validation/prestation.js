@@ -12,7 +12,6 @@ module.exports = function validatePrestationInput(data) {
     data.service = !isEmpty(data.service) ? data.service : '';
     data.filter_presentation = !isEmpty(data.filter_presentation) ? data.filter_presentation : '';
     data.search_filter = !isEmpty(data.search_filter) ? data.search_filter : '';
-    data.category = !isEmpty(data.category) ? data.category : '';
     data.calculating = !isEmpty(data.calculating) ? data.calculating : '';
     data.job = !isEmpty(data.job) ? data.job : '';
     data.description = !isEmpty(data.description) ? data.description : '';
@@ -40,10 +39,6 @@ module.exports = function validatePrestationInput(data) {
         errors.search_filter = 'Veuillez sélectionner un moins 1 filtre de recherche';
     }
     */
-
-    if(Validator.isEmpty(data.category)) {
-        errors.category = 'Veuillez sélectionner une catégorie';
-    }
 
     if(Validator.isEmpty(data.calculating)) {
         errors.calculating = 'Veuillez sélectionner une méthode de calcul';

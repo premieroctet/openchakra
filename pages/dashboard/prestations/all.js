@@ -166,6 +166,7 @@ class all extends React.Component {
                                                 <TableCell>Label</TableCell>
                                                 <TableCell>Catégorie</TableCell>
                                                 <TableCell>Service</TableCell>
+                                                <TableCell>Eligible au CESU</TableCell>
                                                 <TableCell>Filtre de présentation</TableCell>
                                                 <TableCell>Privée</TableCell>
                                                 <TableCell>Action</TableCell>
@@ -183,6 +184,9 @@ class all extends React.Component {
                                                         </TableCell>
                                                         <TableCell component="th" scope="row">
                                                             {e.service.label}
+                                                        </TableCell>
+                                                        <TableCell component="th" scope="row">
+                                                            { e.cesu_eligible ? "X" : ""}
                                                         </TableCell>
                                                         <TableCell component="th" scope="row">
                                                             {(e.filter_presentation || {label: 'Aucun'}).label}

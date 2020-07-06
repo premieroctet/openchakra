@@ -4,7 +4,10 @@ const passport = require('passport');
 const moment = require('moment');
 const {availability2eventUI, eventUI2availability} =require('../../../utils/converters');
 const Availability = require('../../models/Availability');
+const ServiceUser = require('../../models/ServiceUser');
 const {createDefaultAvailability}=require('../../../utils/dateutils');
+const mongoose = require('mongoose');
+const {isIntervalAvailable} = require('../../../utils/dateutils');
 
 moment.locale('fr');
 router.get('/test',(req, res) => res.json({msg: 'Availability Works!'}) );
@@ -69,8 +72,34 @@ router.get('/userAvailabilities/:id',(req,res)=> {
             res.json(availability);
         })
         .catch(err => {
-            console.log(err);
+            console.error(err);
         })
+});
+
+// @Route POST /myAlfred/api/availability/check
+// Checks availabilities fouseravatarr serviceusers between start and end
+// Returns available serviceUser ids
+router.post('/check',(req,res)=> {
+  const start=moment(req.body.start*1000)
+  const end=moment(req.body.end*1000)
+  const serviceUserIds=req.body.serviceUsers
+
+  ServiceUser.find({ _id : { $in : serviceUserIds.map( su => mongoose.Types.ObjectId(su))}}, 'user service')
+    .then ( serviceUsers => {
+      Availability.find({ user : { $in : serviceUsers.map( su => mongoose.Types.ObjectId(su.user))}})
+        .then ( availabilities => {
+
+          var filtered=[]
+          serviceUsers.forEach( su => {
+            if (isIntervalAvailable(start, end, su.service, availabilities.filter( a => a.user.toString()===su.user.toString()))) {
+              filtered.push(su._id)
+            }
+          });
+          res.json(filtered)
+        })
+        .catch (err  => console.error(err))
+    })
+    .catch (err  => console.error(err))
 });
 
 // @Route GET /myAlfred/api/availability/currentAlfred
