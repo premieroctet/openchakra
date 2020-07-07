@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Router from 'next/router'
+import {FacebookLoginButton, GoogleLoginButton} from "react-social-login-buttons";
 
 export default class OAuth extends Component {
 
-    state = {
-        disabled: ''
-    }
+    components = {
+        google: GoogleLoginButton,
+        facebook: FacebookLoginButton
+    };
 
     startAuth = () => {
         const { provider } = this.props
@@ -15,18 +17,13 @@ export default class OAuth extends Component {
 
     render() {
         const { provider } = this.props
-        const { disabled } = this.state
-
+        const ProviderLoginButton = this.components[provider]
         return (
             <div>
                 {
-                    <div className='button-wrapper fadein-fast'>
-                        <button
-                            onClick={this.startAuth}
-                            className={`${provider} ${disabled} button`}
-                        >
-                        </button>
-                    </div>
+                    <ProviderLoginButton
+                        onClick={this.startAuth}
+                    />
                 }
             </div>
         )

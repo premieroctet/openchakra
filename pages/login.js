@@ -18,7 +18,7 @@ import qs from 'query-string'
 import { toast } from 'react-toastify'
 
 
-const providers = ['google']
+const providers = ['google','facebook']
 
 const styles = theme => ({
   fullContainer: {
@@ -209,9 +209,9 @@ class login extends React.Component {
                   <Link href={"/forgotPassword"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Mot de passe oublié ?</a></Link>
                   <Link href={"/signup"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Pas encore inscrit ? Inscrivez-vous !</a></Link>
                 </Grid>
-                <Grid item style={{display:'flex',flexDirection:'column'}}>
-                  <hr/>
+                <Grid item style={{display:'flex',justifyContent: 'center', marginTop: 5}}>
                   <div>
+                    <hr className={classes.hrStyle}/>
                     {providers.map(provider =>
                         <OAuth
                             provider={provider}
