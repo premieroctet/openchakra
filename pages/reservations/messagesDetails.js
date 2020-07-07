@@ -13,6 +13,9 @@ import UserAvatar from '../../components/Avatar/UserAvatar';
 import styles from './messagesDetails/messagesDetailsStyle'
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import Router from "next/router";
+import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
 moment.locale("fr");
 
@@ -20,7 +23,7 @@ moment.locale("fr");
 class MessagesDetails extends React.Component {
   constructor(props) {
     super(props);
-
+      this.child = React.createRef();
     this.state = {
       userData: {},
       message: "",
@@ -131,6 +134,10 @@ class MessagesDetails extends React.Component {
     }
   }
 
+    callDrawer = () =>{
+        this.child.current.handleDrawerToggle();
+    }
+
   static getInitialProps({ query: { id, booking } }) {
     return {
       chatroomId: id,
@@ -187,430 +194,385 @@ class MessagesDetails extends React.Component {
     const { bookingObj } = this.state;
 
     return (
-      <Fragment>
-        <Layout>
-          <Grid container>
-            <Grid
-              className={classes.toggle}
-              item
-              xs={3}
-              style={{ height: "100vh" }}
-            >
-              <Grid
-                container
-                style={{
-                  justifyContent: "center",
-                  position: "sticky",
-                  top: 100
-                }}
-              >
-                <Grid
-                  item
-                  style={{ marginTop: 30, width: 281, height: 70 }}
-                  className={classes.hidesm}
-                >
-                  <Link href={"/reservations/messages"}>
-                    <div
-                      style={{
-                        border: "0.2px solid lightgrey",
-                        lineHeight: "4",
-                        paddingLeft: 5,
-                        paddingRight: 5,
-                        display: "flex",
-                        height: 70,
-                        cursor: "pointer"
-                      }}
-                    >
-                      <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
-                        Tous les messages
-                      </a>
-                    </div>
-                  </Link>
-                </Grid>
-
-                <Grid
-                  item
-                  style={{ marginTop: 10, width: 281, height: 70 }}
-                  className={classes.hidesm}
-                >
-                  <Link href={"/reservations/newMessages"}>
-                    <div
-                      style={{
-                        border: "0.2px solid lightgrey",
-                        lineHeight: "4",
-                        paddingLeft: 5,
-                        paddingRight: 5,
-                        display: "flex",
-                        height: 70,
-                        cursor: "pointer"
-                      }}
-                    >
-                      <a style={{ fontSize: "1.1rem", cursor: "pointer" }}>
-                        Messages non lus
-                      </a>
-                    </div>
-                  </Link>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item className={classes.Rightcontent} xs={12} sm={12} md={7}>
-              <Grid container style={{marginTop: "80px",}}>
-                <Typography
-                    style={{
-                      fontSize: "1.1rem",
-                      marginBottom: "15px",
-                      color: bookingObj === null ? null : bookingObj.status === 'Confirmée' ? "#419F41" : bookingObj.status === 'En attente de confirmation' || bookingObj.status === "Demande d'infos" ? "#F87280" : bookingObj.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D"
-                    }}
-                >
-                  {bookingObj === null ? null : bookingObj.status}
-                </Typography>
-              </Grid>
-              <Grid container className={classes.mobilerow}>
-                <Grid item style={{ marginRight: "5%" }}>
-                  <UserAvatar user={bookingObj === null ? null : this.state.userData._id === bookingObj.alfred._id ? bookingObj.user:bookingObj.alfred} classes={'avatarLetter'} className={classes.avatarLetter} />
-                </Grid>
-                <Grid item xs={5} md={7}>
-                  <Typography style={{fontSize: "1.3rem" }}>
-                    {bookingObj === null
-                        ? null
-                        : this.state.userData._id === bookingObj.alfred._id
-                            ? bookingObj.user.firstname
-                            : bookingObj.alfred.firstname} {bookingObj === null
-                      ? null
-                      : this.state.userData._id === bookingObj.alfred._id
-                          ? bookingObj.user.name
-                          : bookingObj.alfred.name}
-                  </Typography>
-                  <Typography style={{ marginTop: "3px", color: "#9B9B9B" }}>
-                    {bookingObj?bookingObj.service:''} le
-                    {" "}{bookingObj === null ? null : bookingObj.date_prestation}
-                  </Typography>
-                </Grid>
-                <Grid item xs={2}>
-                  <Grid>
-                    <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
-                  </Grid>
-                  <Typography style={{ marginTop: "3px", color: "#9B9B9B" }}>
-                    {bookingObj == undefined || bookingObj.address == undefined || this.state.userData.billing_address == undefined ||this.state.userData == undefined ? 0
-                      : convertDistance(getDistance(this.state.userData.billing_address.gps, bookingObj.address.gps),"km").toFixed(2)
-                    }{" "}
-                    km
-                  </Typography>
-                </Grid>
-              </Grid>
-
-              <div
-                id="chat"
-                className={classes.scrollbar}
-                style={{
-                  height: "57vh",
-                  overflow: "auto",
-                  overflowX: "hidden"
-                }}
-              >
-                {this.state.oldMessagesDisplay.map((oldMessage, index) => {
-                  return (
-                    <div key={index}>
-                      <Grid
-                        container
+        <Fragment>
+            <Layout>
+                <Grid container>
+                    <Grid className={classes.toggle}>
+                        <Grid>
+                            <ResponsiveDrawer ref={this.child} isActiveIndex={false} itemsDrawers={'message'} needMargin={true}/>
+                        </Grid>
+                        <Grid>
+                            <Grid>
+                                <IconButton
+                                    color="inherit"
+                                    aria-label="open drawer"
+                                    edge="start"
+                                    onClick={this.callDrawer}
+                                    className={classes.menuButton}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                <Grid item className={classes.Rightcontent} xs={12} sm={12} md={7}>
+                  <Grid container>
+                    <Typography
                         style={{
-                          flexDirection: "column",
-                          alignItems: "stretch",
-                          maxWidth: "100%"
+                          fontSize: "1.1rem",
+                          marginBottom: "15px",
+                          color: bookingObj === null ? null : bookingObj.status === 'Confirmée' ? "#419F41" : bookingObj.status === 'En attente de confirmation' || bookingObj.status === "Demande d'infos" ? "#F87280" : bookingObj.status === "Pré-approuvée" ? "#F89B72" : "#5D5D5D"
                         }}
-                      >
-                        {this.state.emitter === oldMessage.idsender ? (
-                          <React.Fragment>
-                            <Grid
-                              item
-                              xs={9}
-                              style={{
-                                maxWidth: "100%",
-                                alignSelf: "flex-end",
-                                marginTop: "15px",
-                                marginBottom: "5px"
-                              }}
-                            >
-                              <div
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  alignItems: "stretch"
-                                }}
-                              >
-                                <Typography
-                                  style={{
-                                    alignSelf: "flex-end",
-                                    marginRight: "40px"
-                                  }}
-                                  className={classes.currentmsg}
-                                >
-                                  {oldMessage.content}
-                                </Typography>
-                                <img
-                                  style={{
-                                    width: "30px",
-                                    height: "30px",
-                                    borderRadius: "50%",
-                                    objectFit: "cover",
-                                    alignSelf: "flex-end",
-                                    marginBottom: "15px",
-                                    marginTop: "-44px"
-                                  }}
-                                  src={`../../${oldMessage.thepicture}`}
-                                />
-                              </div>
-                              <Typography className={classes.current}>
-                                {moment(oldMessage.date).calendar()}
-                              </Typography>
-                            </Grid>
-                          </React.Fragment>
-                        ) : (
-                          <React.Fragment>
-                            <Grid
-                              item
-                              xs={9}
-                              style={{
-                                maxWidth: "100%",
-                                alignSelf: "flex-start",
-                                marginTop: "15px",
-                                marginBottom: "5px"
-                              }}
-                            >
-                              <div
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  alignItems: "stretch"
-                                }}
-                              >
-                                <Typography
-                                  style={{ alignSelf: "flex-start" }}
-                                  className={classes.othermsg}
-                                >
-                                  {oldMessage.content}
-                                </Typography>
-                                <img
-                                  style={{
-                                    width: "30px",
-                                    height: "30px",
-                                    borderRadius: "50%",
-                                    objectFit: "cover",
-                                    alignSelf: "flex-start",
-                                    marginBottom: "15px",
-                                    marginTop: "-44px"
-                                  }}
-                                  src={`../../${oldMessage.thepicture}`}
-                                />
-                              </div>
-                              <Typography
-                                style={{
-                                  color: "#6a6a6c",
-                                  fontSize: "0.8rem",
-                                  marginLeft: "13px"
-                                }}
-                              >
-                                {moment(oldMessage.date).calendar()}
-                              </Typography>
-                            </Grid>
-                          </React.Fragment>
-                        )}
+                    >
+                      {bookingObj === null ? null : bookingObj.status}
+                    </Typography>
+                  </Grid>
+                  <Grid container className={classes.mobilerow}>
+                    <Grid item style={{ marginRight: "5%" }}>
+                      <UserAvatar user={bookingObj === null ? null : this.state.userData._id === bookingObj.alfred._id ? bookingObj.user:bookingObj.alfred} classes={'avatarLetter'} className={classes.avatarLetter} />
+                    </Grid>
+                    <Grid item xs={5} md={7}>
+                      <Typography style={{fontSize: "1.3rem" }}>
+                        {bookingObj === null
+                            ? null
+                            : this.state.userData._id === bookingObj.alfred._id
+                                ? bookingObj.user.firstname
+                                : bookingObj.alfred.firstname} {bookingObj === null
+                          ? null
+                          : this.state.userData._id === bookingObj.alfred._id
+                              ? bookingObj.user.name
+                              : bookingObj.alfred.name}
+                      </Typography>
+                      <Typography style={{ marginTop: "3px", color: "#9B9B9B" }}>
+                        {bookingObj?bookingObj.service:''} le
+                        {" "}{bookingObj === null ? null : bookingObj.date_prestation}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <Grid>
+                        <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
                       </Grid>
-                    </div>
-                  );
-                })}
-                {typeof this.state.roomData.messages !== "undefined" ? (
-                  <Grid style={{ margin: "auto", marginBottom: "10px" }}>
-                    <Grid container className={classes.containerNewMessage}>
-                      <Grid item className={classes.widthBar}>
-                        <hr
-                          style={{
-                            background: "#80808070",
-                            height: "1px",
-                            border: "none"
-                          }}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <p
-                          style={{
-                            width: "100px",
-                            textAlign: "center",
-                            margin: "auto",
-                            color: "#adadad"
-                          }}
-                        >
-                          Nouveaux Messages
-                        </p>
-                      </Grid>
-                      <Grid item className={classes.widthBar}>
-                        <hr
-                          style={{
-                            background: "#80808070",
-                            height: "1px",
-                            border: "none"
-                          }}
-                        />
-                      </Grid>
+                      <Typography style={{ marginTop: "3px", color: "#9B9B9B" }}>
+                        {bookingObj == undefined || bookingObj.address == undefined || this.state.userData.billing_address == undefined ||this.state.userData == undefined ? 0
+                          : convertDistance(getDistance(this.state.userData.billing_address.gps, bookingObj.address.gps),"km").toFixed(2)
+                        }{" "}
+                        km
+                      </Typography>
                     </Grid>
                   </Grid>
-                ) : null}
-                {this.state.messages.map((message, index) => {
-                  return (
-                    <div key={index}>
-                      <Grid
-                        container
-                        style={{
-                          flexDirection: "column",
-                          alignItems: "stretch",
-                          maxWidth: "100%"
-                        }}
-                      >
-                        {this.state.emitter === message.idsender ? (
-                          <React.Fragment>
-                            <Grid
-                              item
-                              xs={8}
-                              style={{
-                                maxWidth: "100%",
-                                alignSelf: "flex-end",
-                                marginTop: "5px",
-                                marginBottom: "15px"
-                              }}
-                            >
-                              <div
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  alignItems: "stretch"
-                                }}
-                              >
-                                <Typography
+
+                  <div
+                    id="chat"
+                    className={classes.scrollbar}
+                    style={{
+                      height: "57vh",
+                      overflow: "auto",
+                      overflowX: "hidden"
+                    }}
+                  >
+                    {this.state.oldMessagesDisplay.map((oldMessage, index) => {
+                      return (
+                        <div key={index}>
+                          <Grid
+                            container
+                            style={{
+                              flexDirection: "column",
+                              alignItems: "stretch",
+                              maxWidth: "100%"
+                            }}
+                          >
+                            {this.state.emitter === oldMessage.idsender ? (
+                              <React.Fragment>
+                                <Grid
+                                  item
+                                  xs={9}
                                   style={{
+                                    maxWidth: "100%",
                                     alignSelf: "flex-end",
-                                    marginRight: "40px"
+                                    marginTop: "15px",
+                                    marginBottom: "5px"
                                   }}
-                                  className={classes.currentmsg}
                                 >
-                                  {message.content}
-                                </Typography>
-                                <img
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      alignItems: "stretch"
+                                    }}
+                                  >
+                                    <Typography
+                                      style={{
+                                        alignSelf: "flex-end",
+                                        marginRight: "40px"
+                                      }}
+                                      className={classes.currentmsg}
+                                    >
+                                      {oldMessage.content}
+                                    </Typography>
+                                    <img
+                                      style={{
+                                        width: "30px",
+                                        height: "30px",
+                                        borderRadius: "50%",
+                                        objectFit: "cover",
+                                        alignSelf: "flex-end",
+                                        marginBottom: "15px",
+                                        marginTop: "-44px"
+                                      }}
+                                      src={`../../${oldMessage.thepicture}`}
+                                    />
+                                  </div>
+                                  <Typography className={classes.current}>
+                                    {moment(oldMessage.date).calendar()}
+                                  </Typography>
+                                </Grid>
+                              </React.Fragment>
+                            ) : (
+                              <React.Fragment>
+                                <Grid
+                                  item
+                                  xs={9}
                                   style={{
-                                    width: "30px",
-                                    height: "30px",
-                                    borderRadius: "50%",
-                                    objectFit: "cover",
-                                    alignSelf: "flex-end",
-                                    marginBottom: "15px",
-                                    marginTop: "-44px"
-                                  }}
-                                  src={`../../${message.thepicture}`}
-                                />
-                              </div>
-                              <Typography className={classes.current}>
-                                {moment(message.date).calendar()}
-                              </Typography>
-                            </Grid>
-                          </React.Fragment>
-                        ) : (
-                          <React.Fragment>
-                            <Grid
-                              item
-                              xs={8}
-                              style={{
-                                maxWidth: "100%",
-                                alignSelf: "flex-start",
-                                marginTop: "15px",
-                                marginBottom: "5px"
-                              }}
-                            >
-                              <div
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  alignItems: "stretch"
-                                }}
-                              >
-                                <Typography
-                                  style={{ alignSelf: "flex-start" }}
-                                  className={classes.othermsg}
-                                >
-                                  {message.content}
-                                </Typography>
-                                <img
-                                  style={{
-                                    width: "30px",
-                                    height: "30px",
-                                    borderRadius: "50%",
-                                    objectFit: "cover",
+                                    maxWidth: "100%",
                                     alignSelf: "flex-start",
-                                    marginBottom: "15px",
-                                    marginTop: "-44px"
+                                    marginTop: "15px",
+                                    marginBottom: "5px"
                                   }}
-                                  src={`../../${message.thepicture}`}
-                                />
-                              </div>
-                              <Typography
-                                style={{
-                                  color: "#6a6a6c",
-                                  fontSize: "0.8rem",
-                                  marginLeft: "13px"
-                                }}
-                              >
-                                {moment(message.date).calendar()}
-                              </Typography>
-                            </Grid>
-                          </React.Fragment>
-                        )}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      alignItems: "stretch"
+                                    }}
+                                  >
+                                    <Typography
+                                      style={{ alignSelf: "flex-start" }}
+                                      className={classes.othermsg}
+                                    >
+                                      {oldMessage.content}
+                                    </Typography>
+                                    <img
+                                      style={{
+                                        width: "30px",
+                                        height: "30px",
+                                        borderRadius: "50%",
+                                        objectFit: "cover",
+                                        alignSelf: "flex-start",
+                                        marginBottom: "15px",
+                                        marginTop: "-44px"
+                                      }}
+                                      src={`../../${oldMessage.thepicture}`}
+                                    />
+                                  </div>
+                                  <Typography
+                                    style={{
+                                      color: "#6a6a6c",
+                                      fontSize: "0.8rem",
+                                      marginLeft: "13px"
+                                    }}
+                                  >
+                                    {moment(oldMessage.date).calendar()}
+                                  </Typography>
+                                </Grid>
+                              </React.Fragment>
+                            )}
+                          </Grid>
+                        </div>
+                      );
+                    })}
+                    {typeof this.state.roomData.messages !== "undefined" ? (
+                      <Grid style={{ margin: "auto", marginBottom: "10px" }}>
+                        <Grid container className={classes.containerNewMessage}>
+                          <Grid item className={classes.widthBar}>
+                            <hr
+                              style={{
+                                background: "#80808070",
+                                height: "1px",
+                                border: "none"
+                              }}
+                            />
+                          </Grid>
+                          <Grid item>
+                            <p
+                              style={{
+                                width: "100px",
+                                textAlign: "center",
+                                margin: "auto",
+                                color: "#adadad"
+                              }}
+                            >
+                              Nouveaux Messages
+                            </p>
+                          </Grid>
+                          <Grid item className={classes.widthBar}>
+                            <hr
+                              style={{
+                                background: "#80808070",
+                                height: "1px",
+                                border: "none"
+                              }}
+                            />
+                          </Grid>
+                        </Grid>
                       </Grid>
-                    </div>
-                  );
-                })}
-              </div>
-              <form
-                onSubmit={this.handleSubmit}
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  alignItems: "stretch",
-                  position: "relative",
-                  height: "12vh",
-                  boxShadow: "0 -5px 5px -5px rgba(51, 51, 51, 0.29)"
-                }}
-              >
-                <input
-                  size={4}
-                  style={{
-                    fontSize: "18px",
-                    width: "90%",
-                    border: "none",
-                    boxShadow: "0px 0px 6px rgba(128, 128, 128, 0.29)",
-                    height: "60px",
-                    alignSelf: "center",
-                    margin: "10px 5%",
-                    padding: "20px"
-                  }}
-                  type="text"
-                  placeholder={"Saisissez un message"}
-                  autoFocus={true}
-                  value={this.state.message}
-                  onChange={this.handleChange}
-                />
-                <img
-                  className={classes.send}
-                  onClick={this.handleSubmit}
-                  src="../../static/arrow/arrowsend.svg"
-                  style={{
-                    width: "20px",
-                    height: "20px",
-                    cursor: "pointer",
-                    position: "absolute",
-                    top: "30px"
-                  }}
-                />
-              </form>
-            </Grid>
-          </Grid>
+                    ) : null}
+                    {this.state.messages.map((message, index) => {
+                      return (
+                        <div key={index}>
+                          <Grid
+                            container
+                            style={{
+                              flexDirection: "column",
+                              alignItems: "stretch",
+                              maxWidth: "100%"
+                            }}
+                          >
+                            {this.state.emitter === message.idsender ? (
+                              <React.Fragment>
+                                <Grid
+                                  item
+                                  xs={8}
+                                  style={{
+                                    maxWidth: "100%",
+                                    alignSelf: "flex-end",
+                                    marginTop: "5px",
+                                    marginBottom: "15px"
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      alignItems: "stretch"
+                                    }}
+                                  >
+                                    <Typography
+                                      style={{
+                                        alignSelf: "flex-end",
+                                        marginRight: "40px"
+                                      }}
+                                      className={classes.currentmsg}
+                                    >
+                                      {message.content}
+                                    </Typography>
+                                    <img
+                                      style={{
+                                        width: "30px",
+                                        height: "30px",
+                                        borderRadius: "50%",
+                                        objectFit: "cover",
+                                        alignSelf: "flex-end",
+                                        marginBottom: "15px",
+                                        marginTop: "-44px"
+                                      }}
+                                      src={`../../${message.thepicture}`}
+                                    />
+                                  </div>
+                                  <Typography className={classes.current}>
+                                    {moment(message.date).calendar()}
+                                  </Typography>
+                                </Grid>
+                              </React.Fragment>
+                            ) : (
+                              <React.Fragment>
+                                <Grid
+                                  item
+                                  xs={8}
+                                  style={{
+                                    maxWidth: "100%",
+                                    alignSelf: "flex-start",
+                                    marginTop: "15px",
+                                    marginBottom: "5px"
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      alignItems: "stretch"
+                                    }}
+                                  >
+                                    <Typography
+                                      style={{ alignSelf: "flex-start" }}
+                                      className={classes.othermsg}
+                                    >
+                                      {message.content}
+                                    </Typography>
+                                    <img
+                                      style={{
+                                        width: "30px",
+                                        height: "30px",
+                                        borderRadius: "50%",
+                                        objectFit: "cover",
+                                        alignSelf: "flex-start",
+                                        marginBottom: "15px",
+                                        marginTop: "-44px"
+                                      }}
+                                      src={`../../${message.thepicture}`}
+                                    />
+                                  </div>
+                                  <Typography
+                                    style={{
+                                      color: "#6a6a6c",
+                                      fontSize: "0.8rem",
+                                      marginLeft: "13px"
+                                    }}
+                                  >
+                                    {moment(message.date).calendar()}
+                                  </Typography>
+                                </Grid>
+                              </React.Fragment>
+                            )}
+                          </Grid>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <form
+                    onSubmit={this.handleSubmit}
+                    style={{
+                      width: "100%",
+                      flexDirection: "column",
+                      alignItems: "stretch",
+                      position: "relative",
+                      height: "12vh",
+                      boxShadow: "0 -5px 5px -5px rgba(51, 51, 51, 0.29)"
+                    }}
+                  >
+                    <input
+                      size={4}
+                      style={{
+                        fontSize: "18px",
+                        width: "90%",
+                        border: "none",
+                        boxShadow: "0px 0px 6px rgba(128, 128, 128, 0.29)",
+                        height: "60px",
+                        alignSelf: "center",
+                        margin: "10px 5%",
+                        padding: "20px"
+                      }}
+                      type="text"
+                      placeholder={"Saisissez un message"}
+                      autoFocus={true}
+                      value={this.state.message}
+                      onChange={this.handleChange}
+                    />
+                    <img
+                      className={classes.send}
+                      onClick={this.handleSubmit}
+                      src="../../static/arrow/arrowsend.svg"
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        cursor: "pointer",
+                        position: "absolute",
+                        top: "30px"
+                      }}
+                    />
+                  </form>
+                </Grid>
+              </Grid>
         </Layout>
       </Fragment>
     );
