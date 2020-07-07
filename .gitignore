@@ -160,7 +160,7 @@ $RECYCLE.BIN/
 
 !static
 static/*
-!static/assets
+static/assets
 !static/service
 !static/category
 !static/prestation
