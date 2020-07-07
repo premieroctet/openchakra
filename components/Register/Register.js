@@ -713,6 +713,13 @@ class Register extends React.Component{
                                         </Grid>
                                     </Grid>
                                     <Grid>
+                                        <Grid>
+                                            <Link href={'/needHelp/needHelp'} target="_blank">
+                                                <a target="_blank"  style={{color: 'blue', textAlign: 'center', display: 'flex', justifyContent: 'center'}}>Besoin d'aide pour proposer vos services ? Prenez rendez-vous avec l'équipe My Alfred ici.</a>
+                                            </Link>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid>
                                         <MobileStepper
                                             variant="progress"
                                             steps={2}
