@@ -269,6 +269,7 @@ class Register extends React.Component{
         axios
             .put('/myAlfred/api/users/profile/phone', newPhone)
             .then(res => {
+                console.log(res, 'onsubimitphone')
                 toast.info('Téléphone ajouté');
             })
             .catch(err =>
