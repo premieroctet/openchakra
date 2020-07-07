@@ -155,11 +155,8 @@ router.get('/sendMailVerification',passport.authenticate('jwt',{session:false}),
 // @access private
 router.post('/checkSMSVerification',passport.authenticate('jwt',{session:false}),(req,res) => {
     const sms_code=req.body.sms_code;
-    console.log(req.body, 'le body');
-    console.log(sms_code, 'sms_code');
     User.findById(req.user.id)
         .then(user => {
-            console.log(user.sms_code, 'usersmscode');
           if (user.sms_code == sms_code) {
             console.log("Code SSMS OK pour moi");
             User.findByIdAndUpdate(req.user.id, {sms_code:null, phone_confirmed: true})

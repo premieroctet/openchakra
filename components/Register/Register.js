@@ -161,7 +161,6 @@ class Register extends React.Component{
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
         axios.post('/myAlfred/api/users/sendSMSVerification', this.state.phone)
             .then (res => {
-                console.log(res, 'code')
                 var txt="Le SMS a été envoyé";
                 toast.info(txt);
                 this.setState({smsCodeOpen:true})
@@ -174,9 +173,8 @@ class Register extends React.Component{
 
     checkSmsCode = () => {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.post("/myAlfred/api/users/checkSMSVerification",  this.state.smsCode)
+        axios.post("/myAlfred/api/users/checkSMSVerification",  {sms_code: this.state.smsCode }  )
             .then( res => {
-                console.log(res,'res,registerJS');
                 if (res.data.sms_code_ok) {
                     toast.info("Votre numéro de téléphone est validé");
                     this.setState({smsCodeOpen: false, phoneConfirmed:true});
@@ -258,7 +256,6 @@ class Register extends React.Component{
 
         if (!this.state.phoneConfirmed && !this.state.serverError) {
             this.sendSms();
-            return false;
         }
 
         const newPhone = {
@@ -269,7 +266,6 @@ class Register extends React.Component{
         axios
             .put('/myAlfred/api/users/profile/phone', newPhone)
             .then(res => {
-                console.log(res, 'onsubimitphone')
                 toast.info('Téléphone ajouté');
             })
             .catch(err =>
