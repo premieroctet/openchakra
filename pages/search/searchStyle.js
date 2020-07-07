@@ -3,9 +3,7 @@ export default theme => ({
     marginTop: 80,
     minHeight: 530
   },
-  card: {
-    margin: 20,
-  },
+
   media: {
     height: "250px!important",
     position: 'relative',
@@ -55,6 +53,7 @@ export default theme => ({
     width: '150px'
   },
   containerTitle:{
+    marginTop: 70,
     [theme.breakpoints.down("xs")]: {
       marginTop: 200
     }
@@ -72,7 +71,7 @@ export default theme => ({
     }
   },
   containerCardPreview:{
-    padding: 10
+    padding: 5
   },
   paddingResponsive:{
     [theme.breakpoints.down("xs")]: {
