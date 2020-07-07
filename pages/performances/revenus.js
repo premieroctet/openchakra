@@ -187,12 +187,12 @@ class revenus extends React.Component {
                     this.state.juneAmount+this.state.julyAmount+this.state.augustAmount+this.state.septemberAmount+this.state.octoberAmount+
                     this.state.novemberAmount+this.state.decemberAmount});
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
         axios.get('/myAlfred/api/performances/incomes/totalComing/'+year)
             .then(res => {
                 this.setState({totalComing: parseInt(res.data),totalYear:parseInt(res.data)+this.state.totalPaid});
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
 
         axios.get('/myAlfred/api/users/current').then(res => {
             let user = res.data;
@@ -299,13 +299,13 @@ class revenus extends React.Component {
                         this.state.juneAmount+this.state.julyAmount+this.state.augustAmount+this.state.septemberAmount+this.state.octoberAmount+
                         this.state.novemberAmount+this.state.decemberAmount});
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
 
         axios.get('/myAlfred/api/performances/incomes/totalComing/'+this.state.year)
             .then(res => {
                 this.setState({totalComing: parseFloat(res.data),totalYear:parseFloat(res.data)+this.state.totalPaid});
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
     };
 
     callDrawer(){

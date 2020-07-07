@@ -68,14 +68,14 @@ router.post('/addAndConnect', (req, res) => {
         chatRoomFields.recipient = recipient;
 
         const newChat = new ChatRooms(chatRoomFields);
-        newChat.save().then(chat => res.json(chat)).catch(err => console.log(err));
+        newChat.save().then(chat => res.json(chat)).catch(err => console.error(err));
       }
 
       if (users) {
         return res.status(400).json({msg: 'chat déjà existant'})
       }
     })
-    .catch(err => console.log(err));
+    .catch(err => console.error(err));
 })
 
 router.put('/saveMessages/:id', (req, res) => {
@@ -96,11 +96,11 @@ router.put('/saveMessages/:id', (req, res) => {
               sendNewMessageToAlfred(b, req.params.id, req);
             }
           })
-          .catch (err => console.log(err))
+          .catch (err => console.error(err))
         return res.json();
       }
     })
-    .catch(err => console.log(err));
+    .catch(err => console.error(err));
 })
 
 router.put('/viewMessages/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -111,7 +111,7 @@ router.put('/viewMessages/:id', passport.authenticate('jwt', {session: false}), 
           message.viewed = true;
         }
       })
-      chatroom.save().then(() => res.json(chatroom)).catch(err => console.log(err))
+      chatroom.save().then(() => res.json(chatroom)).catch(err => console.error(err))
     })
 })
 
@@ -151,7 +151,7 @@ router.get('/nonViewedMessages', passport.authenticate('jwt', { session: false }
     })
     res.status(200).json(nonReadChats);
   })
-  .catch(err => console.log(err))
+  .catch(err => console.error(err))
 })
 
 router.get('/nonViewedMessagesCount', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -179,7 +179,7 @@ router.put('/addBookingId/:id', ( req, res ) => {
       if (!chatroom) return res.status(404).json({msg: 'error'})
       if (chatroom) return res.json(chatroom);
     })
-    .catch(err => console.log(err))
+    .catch(err => console.error(err))
 })
 
 new CronJob('0 */30 * * * *', function() {
@@ -221,7 +221,7 @@ new CronJob('0 */30 * * * *', function() {
         }
       })
     })
-    .catch(err => console.log(err))
+    .catch(err => console.error(err))
 }, null, true, 'Europe/Paris');
 
 module.exports = router;

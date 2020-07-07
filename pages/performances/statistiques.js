@@ -41,19 +41,19 @@ class Statistiques extends React.Component {
             .then(res => {
                 this.setState({totalIncomes: res.data.incomes,totalPrestations: res.data.prestations})
             })
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
 
         axios.get('/myAlfred/api/performances/statistics/totalViewsServices')
             .then(res => {
                 this.setState({totalViewsServices: res.data})
             })
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
 
         axios.get('/myAlfred/api/performances/statistics/totalReviews')
             .then(res => {
                 this.setState({totalReviews: res.data})
             })
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
 
         axios.get('/myAlfred/api/serviceUser/currentAlfred')
             .then(res => {
@@ -80,7 +80,7 @@ class Statistiques extends React.Component {
                         .catch(errors => console.log(errors))
                 })
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
 
         axios.get('/myAlfred/api/users/current').then(res => {
             let user = res.data;

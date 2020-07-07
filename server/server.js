@@ -72,7 +72,7 @@ const SERVER_PROD=true;
 // Connect to MongoDB
     mongoose.connect(config.databaseUrl,{useNewUrlParser: true})
         .then(() => console.log(`MongoDB connected to ${config.databaseUrl}`))
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 
 // Passport middleware
     app.use(passport.initialize());

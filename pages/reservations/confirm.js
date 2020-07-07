@@ -128,7 +128,7 @@ class Confirm extends React.Component {
           this.setState({bookingObj: res.data})
             setTimeout(()=>this.socket.emit("changeStatus", res.data),100)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
       return null;
     } else {
       axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
@@ -136,7 +136,7 @@ class Confirm extends React.Component {
             this.setState({bookingObj: res.data})
             setTimeout(()=>this.socket.emit("changeStatus", res.data),100)
           })
-          .catch(err => console.log(err))
+          .catch(err => console.error(err))
     }
   }
 
@@ -227,7 +227,7 @@ class Confirm extends React.Component {
                                 Détail de la réservation
                               </h3>
                               <Grid xs={12}>
-                                <BookingDetail
+                                <BookingDetail cesu_total={this.state.bookingObj?this.state.bookingObj.cesu_amount : 0}
                                   prestations={pricedPrestations}
                                   count={countPrestations}
                                   travel_tax={this.state.bookingObj?this.state.bookingObj.travel_tax : 0}

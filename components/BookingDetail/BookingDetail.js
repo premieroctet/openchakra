@@ -9,7 +9,7 @@ class BookingDetail extends React.Component{
   }
 
   render() {
-    const {classes, prestations, count, travel_tax, pick_tax, total, alfred_fee, client_fee} = this.props;
+    const {classes, prestations, count, travel_tax, pick_tax, total, alfred_fee, client_fee, cesu_total} = this.props;
 
     return (
       <Grid>
@@ -48,6 +48,18 @@ class BookingDetail extends React.Component{
               </Grid>
             </Grid>:null}
           { /* End pick tax */ }
+          { client_fee && cesu_total ?
+            <Grid className={classes.flexContent}>
+              <Grid>
+                <p>{"Sous-total CESU"}</p>
+              </Grid>
+              <Grid>
+                <p>{cesu_total.toFixed(2)}€</p>
+              </Grid>
+            </Grid>
+            :
+            null
+          }
           { /* Start commission */ }
           {client_fee && client_fee !== 0 ?
             <Grid className={classes.flexContent}>

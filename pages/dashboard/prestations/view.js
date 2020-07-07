@@ -303,7 +303,7 @@ class view extends React.Component {
                 Router.push({pathname:'/dashboard/prestations/all'})
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
             })
 
 

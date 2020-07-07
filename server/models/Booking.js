@@ -64,7 +64,20 @@ const BookingSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
-    prestations: [{}],
+    prestations: [{
+      name: {
+        type: String,
+        required: true,
+      },
+      price: {
+        type: Number,
+        required: true,
+      },
+      value: {
+        type: Number,
+        required: true,
+      },
+    }],
     option: {
         label: {
             type: String
@@ -127,6 +140,10 @@ const BookingSchema = new Schema({
     mangopay_refund_id: {
       type: String,
     },
+    cesu_amount: {
+      type: Number,
+      default: 0,
+    }
 });
 
 module.exports = Booking = mongoose.model('booking',BookingSchema);

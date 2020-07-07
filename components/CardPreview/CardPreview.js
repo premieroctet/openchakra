@@ -70,7 +70,7 @@ class CardPreview extends React.Component{
               .catch (err => console.error(err))
           )
         })
-        .catch( err => console.log(err))
+        .catch( err => console.error(err))
     }else{
       axios.get('/myAlfred/api/shop/alfred/'+this.props.services.user._id)
         .then( res => {
@@ -105,7 +105,7 @@ class CardPreview extends React.Component{
         this.setState({open:false,id_service:''});
         this.props.needRefresh();
       })
-      .catch(err => console.log(err))
+      .catch(err => console.error(err))
   }
 
   render(){

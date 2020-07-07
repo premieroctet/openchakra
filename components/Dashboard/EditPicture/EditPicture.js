@@ -35,7 +35,7 @@ class EditPicture extends React.Component {
         this.setState({result: result});
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
         if(err.response.status === 401 || err.response.status === 403) {
           localStorage.removeItem('token');
           Router.push({pathname: '/login'})
@@ -57,7 +57,7 @@ class EditPicture extends React.Component {
         Router.push({pathname:`/dashboard/${this.props.type}`+`s/all`})
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
       })
   };
 
