@@ -163,7 +163,11 @@ export default theme =>({
     justifyContent: 'center'
   },
   widthSm:{
-    minWidth: 350
+    width: 400,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%'
+    },
+
   }
 
 })

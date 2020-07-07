@@ -36,9 +36,11 @@ const DialogTitle = withStyles(styles)((props) => {
       <MuiDialogTitle disableTypography {...other}>
         <Typography variant="h6">{children}</Typography>
         {onClose ? (
-            <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
-              <CloseIcon color={'secondary'} />
-            </IconButton>
+            <Link href={'/'}>
+              <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+                <CloseIcon color={'secondary'} />
+              </IconButton>
+            </Link>
         ) : null}
       </MuiDialogTitle>
   );
@@ -162,13 +164,18 @@ class NavBar extends Component {
     this.setState({setOpenRegister : false});
   };
 
+  needRefresh = () => {
+    this.setState({setOpenLogin: false});
+    Router.push('/search')
+  };
+
   render() {
     const { mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged, user } = this.state;
     const { classes } = this.props;
 
     const modalLogin = () =>{
       return(
-          <LogIn callRegister={this.handleOpenRegister}/>
+          <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh}/>
       )
     };
 
