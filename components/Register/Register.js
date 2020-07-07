@@ -587,7 +587,7 @@ class Register extends React.Component{
                                             />
                                         </Grid>
                                         <Grid>
-                                            <a href={"footer/cguPage"} target="_blank">J’accepte les conditions générales d’utilisation de My-Alfred.</a>
+                                            <a href={"footer/cguPage"} target="_blank" style={{color: 'blue'}}>J’accepte les conditions générales d’utilisation de My-Alfred.</a>
                                         </Grid>
                                     </Grid>
                                 </Grid>
