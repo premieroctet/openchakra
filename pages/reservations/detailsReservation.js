@@ -18,6 +18,9 @@ import Button from '@material-ui/core/Button';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Router from 'next/router';
+import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
 
 moment.locale("fr");
@@ -25,6 +28,7 @@ moment.locale("fr");
 class DetailsReservation extends React.Component {
   constructor(props) {
     super(props);
+    this.child = React.createRef();
     this.state = {
       value: 4,
       modal1: false,
@@ -110,7 +114,7 @@ class DetailsReservation extends React.Component {
 
         this.socket.emit("changeStatus", this.state.bookingObj);
       })
-      .catch(err => console.log(err));
+      .catch(err => console.error(err));
   }
 
   handleOpen1() {
@@ -174,6 +178,10 @@ class DetailsReservation extends React.Component {
     });
   }
 
+  callDrawer = () =>{
+    this.child.current.handleDrawerToggle();
+  }
+
   render() {
     const { classes } = this.props;
     const { bookingObj, splitAddress, currentUser, categoryLabel } = this.state;
@@ -203,78 +211,25 @@ class DetailsReservation extends React.Component {
 
               {/*/////////////////////////////////////////////////////////////////////////////////////////*/}
 
-              <Grid container style={{ marginBottom: "10%" }}>
-                <Grid className={classes.toggle} item xs={3} style={{height: "100%"}}>
-                  <Grid container style={{justifyContent: "center", position: "sticky", top: 100}}>
-                    <Grid item style={{ marginTop: 30, width: 281, height: 70 }} className={classes.hidesm}>
-                      <Link href={"allReservations"}>
-                        <div
-                            style={{
-                              border: "0.2px solid lightgrey",
-                              lineHeight: "4",
-                              paddingLeft: 5,
-                              paddingRight: 5,
-                              display: "flex",
-                              height: 70
-                            }}
-                        >
-                          <a style={{ fontSize: "1.1rem", cursor: "pointer" }}> Toutes mes réservations</a>
-                        </div>
-                      </Link>
-                    </Grid>
-
-                    <Grid
-                        item
-                        style={{ marginTop: 10, width: 281, height: 70 }}
-                        className={classes.hidesm}
-                    >
-                      <Link href={"comingReservations"}>
-                        <div
-                            style={{
-                              border: "0.2px solid lightgrey",
-                              lineHeight: "4",
-                              paddingLeft: 5,
-                              paddingRight: 5,
-                              display: "flex",
-                              height: 70
-                            }}
-                        >
-                          <a
-                              style={{ fontSize: "1.1rem", cursor: "pointer" }}
-                          >
-                            Mes réservations à venir
-                          </a>
-                        </div>
-                      </Link>
-                    </Grid>
-
-                    <Grid
-                        item
-                        style={{ marginTop: 10, width: 281, height: 70 }}
-                        className={classes.hidesm}
-                    >
-                      <Link href={"finishedReservations"}>
-                        <div
-                            style={{
-                              border: "0.2px solid lightgrey",
-                              lineHeight: "4",
-                              paddingLeft: 5,
-                              paddingRight: 5,
-                              display: "flex",
-                              height: 70
-                            }}
-                        >
-                          <a
-                              style={{ fontSize: "1.1rem", cursor: "pointer" }}
-                          >
-                            Mes réservations terminées
-                          </a>
-                        </div>
-                      </Link>
+              <Grid container>
+                <Grid className={classes.toggle}>
+                  <Grid>
+                    <ResponsiveDrawer ref={this.child} isActiveIndex={false} itemsDrawers={'reservation'} needMargin={true}/>
+                  </Grid>
+                  <Grid>
+                    <Grid>
+                      <IconButton
+                          color="inherit"
+                          aria-label="open drawer"
+                          edge="start"
+                          onClick={this.callDrawer}
+                          className={classes.menuButton}
+                      >
+                        <MenuIcon />
+                      </IconButton>
                     </Grid>
                   </Grid>
                 </Grid>
-
                 <Grid className={classes.Rightcontent} item xs={12} sm={9} md={7}>
                   <Typography
                       style={{
@@ -829,15 +784,7 @@ class DetailsReservation extends React.Component {
                 <Grid container style={{display: 'flex', flexDirection: 'column',}}>
                   <Grid  style={{display: 'flex', width: '70%', justifyContent: 'space-between'}}>
                     <Grid item>
-                      <BookingDetail
-                        prestations={pricedPrestations}
-                        count={countPrestations}
-                        alfred_fee={alfred_fee}
-                        client_fee={client_fee}
-                        travel_tax={this.state.bookingObj?this.state.bookingObj.travel_tax : 0}
-                        pick_tax={this.state.bookingObj?this.state.bookingObj.pick_tax : 0}
-                        total={amount}
-                      />
+                      <BookingDetail prestations={pricedPrestations} count={countPrestations} alfred_fee={alfred_fee} client_fee={client_fee} travel_tax={this.state.bookingObj?this.state.bookingObj.travel_tax : 0}  pick_tax={this.state.bookingObj?this.state.bookingObj.pick_tax : 0} total={amount} cesu_total={this.state.bookingObj?this.state.bookingObj.cesu_amount : 0} />
                     </Grid>
                   </Grid>
                 </Grid>

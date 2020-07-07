@@ -25,7 +25,7 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res) => {
         messageFields.receiver = mongoose.Types.ObjectId(req.body.receiver);
 
         const newMessage = new Message(messageFields);
-        newMessage.save().then(message => res.json(message)).catch(err => console.log(err));
+        newMessage.save().then(message => res.json(message)).catch(err => console.error(err));
 });
 
 // @Route GET /myAlfred/api/message/all

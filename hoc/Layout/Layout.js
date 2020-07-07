@@ -1,7 +1,5 @@
 import React, { Fragment } from 'react';
 import NavBar from './NavBar/NavBar';
-import Loader from '../../components/Loader';
-import Router from 'next/router';
 import axios from 'axios';
 
 
@@ -38,7 +36,6 @@ class Layout extends React.Component {
 
     return(
       <Fragment>
-        <Loader />
           <NavBar gps={gps} user={user} addressSelected={addressSelected} searchCallback={this.props.searchCallback} />
         {children}
       </Fragment>

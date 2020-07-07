@@ -168,7 +168,7 @@ router.post('/add', passport.authenticate('jwt', { session: false }), async(req,
                         })
                 })
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 
 });
 
@@ -375,7 +375,7 @@ router.put('/editBanner', passport.authenticate('jwt', {
             res.json(shop)
         })
         .catch(err => {
-            console.log(err)
+            console.error(err)
         })
 });
 
@@ -396,7 +396,7 @@ router.put('/editWelcomeMessage', passport.authenticate('jwt', {
             res.json(shop)
         })
         .catch(err => {
-            console.log(err)
+            console.error(err)
         })
 });
 
@@ -426,7 +426,7 @@ router.put('/editParameters', passport.authenticate('jwt', {
             res.json(shop)
         })
         .catch(err => {
-            console.log(err)
+            console.error(err)
         })
 });
 
@@ -452,7 +452,7 @@ router.put('/editStatus', passport.authenticate('jwt', {session: false}), (req, 
             res.json(shop)
         })
         .catch(err => {
-            console.log(err)
+            console.error(err)
         })
 });
 

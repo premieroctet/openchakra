@@ -90,7 +90,7 @@ class view extends React.Component {
 
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
                 if(err.response.status === 401 || err.response.status === 403 ) {
                     localStorage.removeItem('token');
                     Router.push({pathname: '/login'})
@@ -140,7 +140,7 @@ class view extends React.Component {
                 Router.push({pathname:'/dashboard/category/all'})
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
 
             })
 
@@ -156,7 +156,7 @@ class view extends React.Component {
                 Router.push({pathname:'/dashboard/category/all'})
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
 
             })
 

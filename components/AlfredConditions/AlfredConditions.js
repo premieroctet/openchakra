@@ -63,7 +63,7 @@ class AlfredConditions extends React.Component{
         this.setState({stateEditButton: false});
         this.props.needRefresh();
       })
-      .catch(err => console.log(err))
+      .catch(err => console.error(err))
   };
 
   render(){

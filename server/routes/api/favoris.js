@@ -19,7 +19,7 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res) => {
                 //add a favoris in the list
                 if(req.body.alfred) {
                     favoris.alfred.unshift(mongoose.Types.ObjectId(req.body.alfred));
-                    favoris.save().then(list => res.json(list)).catch(err => console.log(err));
+                    favoris.save().then(list => res.json(list)).catch(err => console.error(err));
                 } else {
                     return res.status(400).json({msg: 'This favoris list already exists'});
                 }
@@ -31,7 +31,7 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res) => {
                 favorisFields.alfred.unshift(mongoose.Types.ObjectId(req.body.alfred));
 
                 const newFavoris = new Favoris(favorisFields);
-                newFavoris.save().then(favoris => res.json(favoris)).catch(err => console.log(err));
+                newFavoris.save().then(favoris => res.json(favoris)).catch(err => console.error(err));
             }
         })
 });

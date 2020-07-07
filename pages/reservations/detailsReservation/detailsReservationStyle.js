@@ -54,9 +54,7 @@ export default theme => ({
     }
   },
   toggle: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
+    zIndex:0
   },
   avatarLetter:{
     width: 100,
@@ -215,5 +213,12 @@ export default theme => ({
       justifyContent : 'center',
       marginTop: '5%'
     }
-  }
+  },
+  menuButton: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
+  },
 })

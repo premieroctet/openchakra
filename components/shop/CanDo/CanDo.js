@@ -129,7 +129,7 @@ class canDo extends React.Component{
 
     axios.get('/myAlfred/api/serviceUser/allUserServices/' + id_alfred)
         .then(res => this.setState({services: res.data}))
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
   }
 
   render() {

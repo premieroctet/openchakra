@@ -244,7 +244,7 @@ const payAlfred = booking => {
                 }
                 mangoApi.Users.getBankAccounts(id_mangopay_alfred)
                   .catch (err => {
-                    console.log(err);
+                    console.error(err);
                     return
                   })
                   .then ( accounts => {
@@ -263,7 +263,7 @@ const payAlfred = booking => {
                           PaymentType: "BANK_WIRE"
                         })
                         .catch ( err => {
-                          console.log(err);
+                          console.error(err);
                           return
                         })
                         .then(
