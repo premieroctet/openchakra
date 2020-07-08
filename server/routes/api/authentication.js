@@ -2,6 +2,7 @@ const router = require("express").Router();
 const passport = require("passport");
 const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
+const keys = require('../../config/keys');
 
 
 const googleAuth = passport.authenticate('google', { session:false, scope: ['profile email https://www.googleapis.com/auth/user.addresses.read https://www.googleapis.com/auth/user.birthday.read'] })
@@ -36,13 +37,13 @@ router.get("/google_hook", googleAuth, async (req,res) => {
 const sendCookie = (res,user) => {
     const payload = {id: user.id, name: user.name, firstname: user.firstname, is_admin: user.is_admin, is_alfred: user.is_alfred} // Create JWT payload
 
-    jwt.sign(payload, "secret", (err, token) => {
-        res.status("201")
-           .cookie('token', 'Bearer ' + token, {
+    jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
+        res.cookie('token', 'Bearer ' + token, {
                httpOnly: false,
                secure: true,
                sameSite: true
            })
+           .status("201")
            .redirect('/')
     })
 }
