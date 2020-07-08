@@ -192,7 +192,7 @@ class services extends React.Component {
 
                   axios.post('/myAlfred/api/serviceUser/addDiploma/'+res.data._id,formData)
                     .then(() => { console.log("Diplôme ajouté"); })
-                    .catch(err => console.log(err))
+                    .catch(err => console.error(err))
                 }
 
                 if(this.state.shop.certificationPicture !== null) {
@@ -204,7 +204,7 @@ class services extends React.Component {
 
                   axios.post('/myAlfred/api/serviceUser/addCertification/'+res.data._id,formData)
                     .then(() => { console.log("Certification ajoutée"); })
-                    .catch(err => console.log(err))
+                    .catch(err => console.error(err))
                 }
 
                 toast.info("Service "+(this.isNewService() ? "créé" : "modifié")+" avec succès");

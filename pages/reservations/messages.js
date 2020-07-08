@@ -57,14 +57,14 @@ class Messages extends React.Component {
         .then(res => {
           this.setState({ alfredReservations: res.data });
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 
     axios
         .get("/myAlfred/api/booking/userBooking")
         .then(res => {
           this.setState({ userReservations: res.data });
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 
 
     axios

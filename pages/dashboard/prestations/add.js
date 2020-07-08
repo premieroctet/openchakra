@@ -210,7 +210,7 @@ class add extends React.Component {
                 Router.push({pathname:'/dashboard/prestations/all'})
             })
             .catch(err => {
-                    console.log(err);
+                    console.error(err);
                     this.setState({errors: err.response.data});
 
                 if(err.response.status === 401 || err.response.status === 403) {

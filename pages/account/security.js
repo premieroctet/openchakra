@@ -88,7 +88,7 @@ class security extends React.Component {
                 setTimeout(() => window.location.reload(), 2000);
             })
             .catch(err => {
-                console.log(err)
+                console.error(err)
                 if (err.response.data.wrongPassword){
                     this.setState({wrongPassword: true})
                 }

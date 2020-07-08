@@ -208,7 +208,7 @@ class UserServicesPreview extends React.Component {
               let availabilities = res.data;
               this.setState({ availabilities: availabilities });
             })
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
 
           axios.get('/myAlfred/api/reviews/'+serviceUser.user._id)
             .then(response => {
@@ -518,7 +518,7 @@ class UserServicesPreview extends React.Component {
                   });
                 })
             })
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
         }
       }
     })

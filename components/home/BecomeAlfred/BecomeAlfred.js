@@ -129,7 +129,7 @@ class becomeAlfred extends React.Component{
           let user = res.data;
           this.setState({user:user, alfred:user.is_alfred, userId: user._id});
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     }
   }
 

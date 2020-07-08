@@ -157,7 +157,7 @@ class myBestSellers extends React.Component{
                 self.setState({booking: booking})
               })
               .catch(function (err) {
-                console.log(err);
+                console.error(err);
               })
 
 

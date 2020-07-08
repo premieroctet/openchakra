@@ -44,7 +44,7 @@ class PaymentChoiceCreate extends React.Component {
                 this.setState({user: res.data});
             })
             .catch(err => {
-                    console.log(err);
+                    console.error(err);
                     if(err.response.status === 401 || err.response.status === 403) {
                         cookie.remove('token', { path: '/' })
                         Router.push({pathname: '/login'})

@@ -111,7 +111,7 @@ class DetailsReservation extends React.Component {
 
         this.socket.emit("changeStatus", this.state.bookingObj);
       })
-      .catch(err => console.log(err));
+      .catch(err => console.error(err));
   }
 
   handleOpen1() {

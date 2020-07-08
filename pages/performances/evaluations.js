@@ -48,7 +48,7 @@ class Evaluations extends React.Component {
             .then(res => {
                 this.setState({reviews:res.data})
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
 
     }
 

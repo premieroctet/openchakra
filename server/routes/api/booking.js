@@ -91,7 +91,7 @@ router.get('/confirmPendingBookings', passport.authenticate('jwt', { session: fa
             }
         })
     })
-    .catch(err => console.log(err))
+    .catch(err => console.error(err))
 })
 
 router.get('/endConfirmedBookings', passport.authenticate('jwt', { session : false }), ( req, res ) => {
@@ -164,11 +164,11 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
               if (booking.status == 'Confirmée') {
                 sendNewBooking(book, req);
               }
-            }).catch(err => console.log(err));
+            }).catch(err => console.error(err));
           res.json(booking);
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => console.error(err));
 })
 
 // @Route GET /myAlfred/booking/all
@@ -208,7 +208,7 @@ router.get('/myBooking',passport.authenticate('jwt',{session:false}),(req,res) =
 
 
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 
 });
 
@@ -227,7 +227,7 @@ router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,re
                 return res.status(400).json({msg: 'No booking found'});
             }
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 
 });
 
@@ -249,7 +249,7 @@ router.get('/last/:id',(req,res) => {
 
 
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 
 });
 
@@ -262,7 +262,7 @@ router.get('/getPaid',passport.authenticate('jwt',{session:false}),(req,res)=> {
         .then(booking => {
             res.json(booking)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 });
 
 // GET /myAlfred/api/booking/getPaidSoon
@@ -274,7 +274,7 @@ router.get('/getPaidSoon',passport.authenticate('jwt',{session:false}),(req,res)
         .then(booking => {
             res.json(booking)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 });
 
 // GET /myAlfred/api/booking/account/paid
@@ -286,7 +286,7 @@ router.get('/account/paid',passport.authenticate('jwt',{session:false}),(req,res
         .then(booking => {
             res.json(booking)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 });
 
 // GET /myAlfred/api/booking/account/paidSoon
@@ -298,7 +298,7 @@ router.get('/account/paidSoon',passport.authenticate('jwt',{session:false}),(req
         .then(booking => {
             res.json(booking)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 });
 
 // @Route GET /myAlfred/booking/:id
@@ -318,7 +318,7 @@ router.get('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
                 return res.status(400).json({msg: 'No booking found'});
             }
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 });
 
 
@@ -369,7 +369,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', { session: false }
               return res.json(booking);
             }
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 });
 
 // Handle confirmated and after en date => to terminate

@@ -66,7 +66,7 @@ class MessagesDetails extends React.Component {
     axios
       .get("/myAlfred/api/booking/" + this.props.bookingId)
       .then(res => this.setState({ bookingObj: res.data }))
-      .catch(err => console.log(err));
+      .catch(err => console.error(err));
     axios
       .get(`/myAlfred/api/chatRooms/userChatRoom/${id}`)
       .then(res => {
@@ -98,7 +98,7 @@ class MessagesDetails extends React.Component {
           }, () => this.showNotification(data));
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => console.error(err));
   }
 
   handleChange(event) {

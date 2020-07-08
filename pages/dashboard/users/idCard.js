@@ -86,7 +86,7 @@ class idCard extends React.Component {
 
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
                 if(err.response.status === 401 || err.response.status === 403) {
                     cookie.remove('token', { path: '/' })
                     Router.push({pathname: '/login'})
@@ -106,7 +106,7 @@ class idCard extends React.Component {
                 alert('Carte d\'identité validée');
                 Router.push({pathname: '/dashboard/users/all'})
             })
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
     }
 
     deleteCard() {
@@ -116,7 +116,7 @@ class idCard extends React.Component {
                 alert('Validation supprimée');
                 Router.push({pathname: '/dashboard/users/all'})
             })
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
     }
 
 

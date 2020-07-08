@@ -31,7 +31,7 @@ passport.use( new JwtStrategy(jwt_opts, (jwt_payload, done) => {
             }
             return done(null, false);
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 }));
 
 

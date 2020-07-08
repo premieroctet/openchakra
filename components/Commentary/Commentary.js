@@ -37,7 +37,7 @@ class Commentary extends React.Component{
         .then (res => {
           this.setState({owner:res.data})
         })
-        .catch (err => console.log(err));
+        .catch (err => console.error(err));
     }
 
     const req = alfred_mode ? 'customerReviewsCurrent':'alfredReviewsCurrent';

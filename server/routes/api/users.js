@@ -129,7 +129,7 @@ router.post('/register',(req,res) =>{
                               sendVerificationMail(user, req)
                               res.json(user);
                             })
-                            .catch(err => console.log(err));
+                            .catch(err => console.error(err));
                     })
                 })
             }
@@ -146,7 +146,7 @@ router.get('/sendMailVerification',passport.authenticate('jwt',{session:false}),
           res.json({})
         })
         .catch(err => {
-            console.log(err)
+            console.error(err)
         })
 });
 
@@ -157,11 +157,11 @@ router.post('/checkSMSVerification',passport.authenticate('jwt',{session:false})
     const sms_code=req.body.sms_code;
     User.findById(req.user.id)
         .then(user => {
-          if (user.sms_code==sms_code) {
+          if (user.sms_code == sms_code) {
             console.log("Code SSMS OK pour moi");
             User.findByIdAndUpdate(req.user.id, {sms_code:null, phone_confirmed: true})
               .then( u => console.log("OK"))
-              .catch( err => console.log(err))
+              .catch( err => console.error(err))
             res.json({sms_code_ok:true})
           }
           else {
@@ -207,7 +207,7 @@ router.post('/validateAccount',(req,res) => {
             res.json(user)
         })
         .catch(err => {
-            console.log(err)
+            console.error(err)
         })
 });
 
@@ -230,7 +230,7 @@ router.put('/profile/billingAddress',passport.authenticate('jwt',{session: false
             user.billing_address.gps.lng = req.body.lng;
 
 
-            user.save().then(user => res.json(user)).catch(err => console.log(err));
+            user.save().then(user => res.json(user)).catch(err => console.error(err));
 
         })
 });
@@ -256,7 +256,7 @@ router.put('/profile/serviceAddress',passport.authenticate('jwt',{session: false
             user.service_address.push(address);
 
 
-            user.save().then(user => res.json(user)).catch(err => console.log(err));
+            user.save().then(user => res.json(user)).catch(err => console.error(err));
 
 
         })
@@ -275,7 +275,7 @@ router.get('/profile/address/:id',passport.authenticate('jwt',{session:false}),(
             const obj = address[selected];
             res.json(obj);
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 });
 
 // @Route PUT /myAlfred/api/users/profile/address/:id
@@ -297,9 +297,9 @@ router.put('/profile/address/:id',passport.authenticate('jwt',{session:false}),(
             user.service_address[index].lat = req.body.lat;
             user.service_address[index].lng = req.body.lng;
 
-            user.save().then(address => res.json(address)).catch(err => console.log(err));
+            user.save().then(address => res.json(address)).catch(err => console.error(err));
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 });
 
 // @Route DELETE /myAlfred/api/users/profile/address/:id
@@ -313,9 +313,9 @@ router.delete('/profile/address/:id',passport.authenticate('jwt',{session:false}
                 .indexOf(req.params.id);
             user.service_address.splice(index,1);
 
-            user.save().then(address => res.json(address)).catch(err => console.log(err));
+            user.save().then(address => res.json(address)).catch(err => console.error(err));
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 });
 
 // @Route PUT /myAlfred/api/users/profile/phone
@@ -330,7 +330,7 @@ router.put('/profile/phone',passport.authenticate('jwt',{session:false}),(req,re
             res.json(user)
         })
         .catch(err => {
-            console.log(err)
+            console.error(err)
         })
 });
 
@@ -345,7 +345,7 @@ router.put('/profile/job',passport.authenticate('jwt',{session:false}),(req,res)
             res.json(user)
         })
         .catch(err => {
-            console.log(err)
+            console.error(err)
         })
 });
 
@@ -360,7 +360,7 @@ router.post('/profile/picture',upload.single('myImage'),passport.authenticate('j
             res.json(user)
         })
         .catch(err => {
-            console.log(err)
+            console.error(err)
         })
 });
 
@@ -372,7 +372,7 @@ router.put('/profile/pictureLater', passport.authenticate('jwt', { session: fals
         .then(user => {
             res.json(user)
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 })
 
 // @Route POST /myAlfred/api/users/profile/idCard
@@ -394,10 +394,10 @@ router.post('/profile/idCard',upload2.fields([{name: 'myCardR',maxCount: 1}, {na
                 addIdIfRequired(user);
                 res.json(user)
               })
-              .catch(err => console.log(err));
+              .catch(err => console.error(err));
         })
         .catch(err => {
-            console.log(err)
+            console.error(err)
         })
 });
 
@@ -410,10 +410,10 @@ router.post('/profile/idCard/addVerso',upload2.single('myCardV'),passport.authen
             user.id_card.verso = req.file.path;
 
 
-            user.save().then(user => res.json(user)).catch(err => console.log(err));
+            user.save().then(user => res.json(user)).catch(err => console.error(err));
         })
         .catch(err => {
-            console.log(err)
+            console.error(err)
         })
 });
 
@@ -473,7 +473,7 @@ router.post('/register/alfred', (req, res) => {
                         newUser.password = hash;
                         newUser.save()
                             .then(user => res.json(user))
-                            .catch(err => console.log(err));
+                            .catch(err => console.error(err));
                     })
                 })
             }
@@ -666,7 +666,7 @@ router.get('/email/check',(req,res) => {
           res.json(user);
         })
         .catch(err => {
-            console.log(err);
+            console.error(err);
           res.json(null);
         })
 
@@ -687,7 +687,7 @@ router.post('/forgotPassword',(req,res) => {
                 const newToken = new ResetToken({token:token});
                 newToken.save().then(token =>{
                     user.update({resetToken: token._id})
-                      .catch(err => console.log(err));
+                      .catch(err => console.error(err));
                 });
 
                 sendResetPassword(user, token, req);
@@ -711,7 +711,7 @@ router.post('/resetPassword',(req,res) => {
                             if (err) throw err;
                             user.updateOne({password: hash, resetToken: undefined})
                                 .then(user => res.json({success: 'password update'}))
-                                .catch(err => console.log(err));
+                                .catch(err => console.error(err));
                         })
                     })
                 })
@@ -739,10 +739,10 @@ router.put('/profile/editProfile',passport.authenticate('jwt',{session:false}),(
                     .then(user => {
                         res.json({success: "Profile updated !"})
                     })
-                    .catch(err => console.log(err))
+                    .catch(err => console.error(err))
             }
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 });
 
 // @Route PUT /myAlfred/api/users/profile/editPassword
@@ -766,7 +766,7 @@ router.put('/profile/editPassword',passport.authenticate('jwt',{session:false}),
                                     user.password = hash;
                                     user.save()
                                         .then(user => res.json({success: 'Mot de passe mis à jour'}))
-                                        .catch(err => console.log(err));
+                                        .catch(err => console.error(err));
                                 })
                             })
 
@@ -811,9 +811,9 @@ router.put('/account/notifications',passport.authenticate('jwt',{session:false})
                 user.notifications_assistance.push = req.body.assistance_push;
                 user.notifications_assistance.sms = req.body.assistance_sms;
 
-                user.save().then(result => res.json(result)).catch(err => console.log(err));
+                user.save().then(result => res.json(result)).catch(err => console.error(err));
             })
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
 });
 
 // @Route PUT /myAlfred/api/users/account/rib
@@ -831,9 +831,9 @@ router.put('/account/rib',passport.authenticate('jwt',{session:false}),(req,res)
 
 
 
-            user.save().then(result => res.json(result)).catch(err => console.log(err));
+            user.save().then(result => res.json(result)).catch(err => console.error(err));
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 });
 
 // @Route PUT /myAlfred/api/users/account/lastLogin
@@ -850,9 +850,9 @@ router.put('/account/lastLogin',passport.authenticate('jwt',{session: false}),(r
                 arrayLogin.unshift(Date.now());
             }
 
-            user.save().then(result => res.json(result)).catch(err => console.log(err));
+            user.save().then(result => res.json(result)).catch(err => console.error(err));
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 });
 
 // @Route PUT /myAlfred/api/users/account/indexGoogle
@@ -863,7 +863,7 @@ router.put('/account/indexGoogle',passport.authenticate('jwt',{session: false}),
         .then(user => {
             res.json(user);
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 });
 
 // @Route DELETE /myAlfred/api/users/profile/picture/delete
@@ -876,7 +876,7 @@ router.delete('/profile/picture/delete',passport.authenticate('jwt',{session:fal
         .then(user => {
             res.json(user)
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 });
 
 // @Route PUT /myAlfred/api/users/current/delete
@@ -888,7 +888,7 @@ router.put('/current/delete',passport.authenticate('jwt',{session:false}),(req,r
         .then(() => {
              res.json({msg:'Compte désactivé'});
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 });
 
 // @Route DELETE /myAlfred/api/users/profile/idCard/recto
@@ -899,10 +899,10 @@ router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false
         .then(user => {
             user.id_card = undefined;
 
-            user.save().then(user => res.json(user)).catch(err => console.log(err));
+            user.save().then(user => res.json(user)).catch(err => console.error(err));
         })
         .catch(err => {
-            console.log(err)
+            console.error(err)
         })
 });
 

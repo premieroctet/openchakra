@@ -25,7 +25,7 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=> {
         res.json(availability)
         console.log(`After adding availability:${JSON.stringify(availability)}`);
       })
-      .catch(err => console.log(err));
+      .catch(err => console.error(err));
 });
 
 // @Route GET /myAlfred/api/availability/toEventUI
@@ -48,9 +48,9 @@ router.post('/update',passport.authenticate('jwt',{session: false}),(req,res)=> 
             .then (availability => {
               res.json(availability)
             })
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 });
 
 
@@ -60,7 +60,7 @@ router.get('/userAvailabilities', (req, res) => {
             res.json(availabilities);
         })
         .catch(err => {
-            console.log(err);
+            console.error(err);
         })
 })
 
@@ -110,7 +110,7 @@ router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,re
             res.json(availability);
         })
         .catch(err => {
-            console.log(err);
+            console.error(err);
         })
 
 
@@ -162,7 +162,7 @@ router.post('/filterDate',(req,res)=>{
            });
            res.json(allAvailability)
        })
-       .catch(err => console.log(err));
+       .catch(err => console.error(err));
 });
 
 // @Route POST /myAlfred/api/availability/home/date
@@ -197,7 +197,7 @@ router.post('/home/date',(req,res)=>{
             });
             res.json(allAvailability)
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 });
 
 // @Route GET /myAlfred/api/availability/all
@@ -208,7 +208,7 @@ router.get('/all',(req,res)=> {
       res.json(availability);
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
     })
 });
 
@@ -223,7 +223,7 @@ router.get('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
             res.json(availability);
         })
         .catch(err => {
-            console.log(err);
+            console.error(err);
         })
 
 
@@ -248,9 +248,9 @@ router.put('/:id',passport.authenticate('jwt',{session: false}),(req,res)=> {
             fields.period.month_begin = req.body.month_begin;
             fields.period.month_end = req.body.month_end;
 
-            fields.save().then(availability => res.json(availability)).catch(err => console.log(err));
+            fields.save().then(availability => res.json(availability)).catch(err => console.error(err));
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 
 });
 
@@ -264,7 +264,7 @@ router.delete('/currentAlfred',passport.authenticate('jwt',{session:false}),(req
             res.json({success: true});
         })
         .catch(err => {
-            console.log(err);
+            console.error(err);
         })
 
 
@@ -279,7 +279,7 @@ router.delete('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
             availability.remove().then(() => res.json({msg: 'Ok'})).catch(error => console.log(error))
         })
         .catch(err => {
-            console.log(err);
+            console.error(err);
         })
 
 

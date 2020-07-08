@@ -60,7 +60,7 @@ class home extends React.Component {
         axios.defaults.headers.common['Authorization'] = auth
         axios.get("/myAlfred/api/admin/shops/extract")
           .then (res => this.setState({shopsData: res.data}))
-          .catch (err => console.log(err));
+          .catch (err => console.error(err));
     }
 
     render() {

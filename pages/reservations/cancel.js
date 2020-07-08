@@ -151,7 +151,7 @@ class Cancel extends React.Component {
           setTimeout(()=> this.socket.emit("changeStatus", res.data),100)
         })
 
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
   }
 
   render() {
