@@ -41,7 +41,6 @@ import Section19 from '../components/home/section19';
 import Section21 from '../components/home/section21';
 import Section22 from '../components/home/section22';
 import styles from './search/searchStyle'
-const {isIntervalAvailable} = require('../utils/dateutils');
 
 moment.locale('fr');
 

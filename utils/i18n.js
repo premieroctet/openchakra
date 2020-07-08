@@ -3,7 +3,7 @@ finances publiques vos revenus générés <b>si les deux conditions suivantes so
 réunies dans l'année civile :</b><ul><li>vos revenus dépassent 3000 euros</li>\
 <li>vous avez réalisé vingt prestations ou plus</li></ul>"
 
-const OUTSIDE_PERIMETER="Ce service est hors de votre périmètre"
+const OUTSIDE_PERIMETER="Ce service est hors de votre périmètre."
 
 const SCHEDULE_TITLE='Précisez vos disponibilités si vous le souhaitez !'
 

@@ -50,9 +50,9 @@ const moment = require('moment');
 moment.locale('fr');
 registerLocale('fr', fr);
 import Link from 'next/link';
-const {frenchFormat}=require('../utils/text')
-const {Information}=require('../components/Information')
-const I18N=require('../utils/i18n')
+const {frenchFormat}=require('../utils/text');
+import Information from '../components/Information/Information';
+const I18N=require('../utils/i18n');
 
 
 const IOSSwitch = withStyles(theme => ({
@@ -153,7 +153,7 @@ class UserServicesPreview extends React.Component {
       },
       errors:{},
       isChecked: false,
-      warningPerimeter:false,
+      warningPerimeter:true,
       use_cesu: false,
     },
     this.onQtyChanged = this.onQtyChanged.bind(this);

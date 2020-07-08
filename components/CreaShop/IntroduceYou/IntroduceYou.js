@@ -13,7 +13,7 @@ const {CESU}=require('../../../utils/consts')
 import {Radio, RadioGroup } from '@material-ui/core';
 import TextField from "@material-ui/core/TextField";
 import ButtonSwitch from '../../../components/ButtonSwitch/ButtonSwitch';
-const {Information}=require('../../../components/Information')
+import Information from '../../Information/Information';
 const I18N = require('../../../utils/i18n')
 
 class IntroduceYou extends React.Component {

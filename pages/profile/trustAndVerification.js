@@ -34,7 +34,7 @@ import Siret from '../../components/WizardForm/Siret';
 const {CESU}=require('../../utils/consts')
 import {Radio, RadioGroup } from '@material-ui/core';
 import ButtonSwitch from '../../components/ButtonSwitch/ButtonSwitch';
-const {Information}=require('../../components/Information')
+import Information from '../../components/Information/Information';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 const I18N = require('../../utils/i18n')
 const {checkSocialSecurity}=require('../../utils/social_security')
