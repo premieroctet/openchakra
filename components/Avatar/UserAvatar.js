@@ -71,8 +71,9 @@ class UserAvatar extends React.Component{
   };
 
   avatarWithPics(user, className) {
+    const url = user.picture.match(/^https?:\/\//)?user.picture:'/'+user.picture
     return(
-      <Avatar alt="photo de profil" src={"/"+user.picture} className={className} />
+      <Avatar alt="photo de profil" src={url} className={className} />
     )
   }
 
