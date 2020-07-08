@@ -106,8 +106,8 @@ class Register extends React.Component{
 
 
     componentDidMount() {
-        const token = localStorage.getItem('token');
-        if(token !== null) {
+        const token = cookie.load('token')
+        if(token) {
             toast.warn('Vous êtes déjà inscrit');
             Router.push('/')
         }
@@ -158,7 +158,7 @@ class Register extends React.Component{
     };
 
     sendSms = () => {
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
         axios.post('/myAlfred/api/users/sendSMSVerification', this.state.phone)
             .then (res => {
                 var txt="Le SMS a été envoyé";
@@ -172,7 +172,7 @@ class Register extends React.Component{
     };
 
     checkSmsCode = () => {
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
         axios.post("/myAlfred/api/users/checkSMSVerification",  {sms_code: this.state.smsCode }  )
             .then( res => {
                 if (res.data.sms_code_ok) {
@@ -212,8 +212,7 @@ class Register extends React.Component{
                 toast.info('Inscription réussie');
                 axios.post('/myAlfred/api/users/login',{username, password})
                     .then(response => {
-                        const {token} = response.data;
-                        localStorage.setItem('token',token);
+                        const token = cookie.load('token')
                         axios.defaults.headers.common['Authorization'] = token;
                     })
                     .catch( err => {
@@ -232,7 +231,7 @@ class Register extends React.Component{
     };
 
     addPhoto = () => {
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
 
         if(this.state.picture !== ''){
             const formData = new FormData();
@@ -252,7 +251,7 @@ class Register extends React.Component{
 
 
     onSubmitPhone = e => {
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token');
 
         if (!this.state.phoneConfirmed && !this.state.serverError) {
             this.sendSms();

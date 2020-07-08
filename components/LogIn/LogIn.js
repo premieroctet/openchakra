@@ -11,6 +11,7 @@ import axios from 'axios';
 import Router from "next/router";
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
+import OAuth from '../OAuth'
 
 class LogIn extends React.Component {
     constructor(props) {
@@ -21,6 +22,8 @@ class LogIn extends React.Component {
             password: '',
             errors: {}
         };
+
+        this.providers = ['google']
     }
 
     onChange = e => {
@@ -37,18 +40,17 @@ class LogIn extends React.Component {
 
         axios.post('/myAlfred/api/users/login',user)
             .then(res => {
-                const {token} = res.data;
-                localStorage.setItem('token',token);
+                const token = cookie.load('token')
                 setAuthToken(token);
                 axios.put('/myAlfred/api/users/account/lastLogin')
                     .then(data => {
                         let path = localStorage.getItem('path');
                         this.props.login()
                     })
-                    .catch(err=> console.log(err));
+                    .catch(err=> console.error(err));
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
                 if (err.response) {
                     this.setState({errors: err.response.data});
                 }
@@ -121,6 +123,17 @@ class LogIn extends React.Component {
                         <Grid item style={{display:'flex',flexDirection:'column', marginBottom: '10%'}}>
                             <Link href={"/forgotPassword"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Mot de passe oublié ?</a></Link>
                             <a color="primary" onClick={this.props.callRegister} style={{textDecoration: 'none', color: '#2FBCD3', cursor: 'pointer'}}>Pas encore inscrit ? Inscrivez-vous !</a>
+                        </Grid>
+                        <Grid item style={{display:'flex',justifyContent: 'center', marginTop: 5}}>
+                            <div>
+                                <hr className={classes.hrStyle}/>
+                                {this.providers.map(provider =>
+                                    <OAuth
+                                        provider={provider}
+                                        key={provider}
+                                    />
+                                )}
+                            </div>
                         </Grid>
                     </Grid>
                 </Grid>

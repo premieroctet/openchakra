@@ -54,7 +54,7 @@ class DetailsReservation extends React.Component {
     this.setState({ booking_id: booking_id });
 
     axios.defaults.headers.common["Authorization"] = cookie.load('token')
-+-
+
     axios.get("/myAlfred/api/users/current").then(res => {
       let result = res.data
       this.setState({ currentUser: result });
