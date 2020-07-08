@@ -480,19 +480,19 @@ class SearchPage extends React.Component {
                   <Grid className={classes.containerTitle}>
                     <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Que recherchez-vous {user?user.firstname:''} ?</h3>
                   </Grid>
-                    <Grid container style={{overflowX: 'scroll', width: '100%'}} spacing={2} wrap={'nowrap'}>
+                    <Grid container style={{overflowX: 'scroll', width: '100%', marginLeft: 1}} spacing={2} wrap={'nowrap'}>
                       {categories.map((cat, index) => (
                         <Grid item key={index}>
                           <Link href={'/search?search=1&category='+cat._id+(gps?'&gps='+JSON.stringify(gps):'')}>
                             <Card style={{borderRadius: 35, width: '100%', margin: 10}}>
                               <CardActionArea>
                                 <CardMedia
-                                    style={{minHeight:150, minWidth: 180}}
+                                    style={{minHeight:150, minWidth: 200}}
                                     image={cat.picture}
                                     title={cat.label}
                                 />
-                                <CardContent style={{padding: '5px'}}>
-                                  <Typography gutterBottom style={{fontSize: '1.1rem', textAlign: 'center'}}>
+                                <CardContent style={{minHeight: 50}}>
+                                  <Typography style={{fontSize: '0.9rem', textAlign: 'center'}}>
                                       {cat.label}
                                   </Typography>
                                 </CardContent>

@@ -1,7 +1,10 @@
 export default theme => ({
   bigContainer: {
     marginTop: 80,
-    minHeight: 530
+    minHeight: 530,
+    overflowX: 'hidden',
+    overflowY: 'hidden',
+
   },
 
   media: {
