@@ -154,6 +154,7 @@ class UserServicesPreview extends React.Component {
       errors:{},
       isChecked: false,
       warningPerimeter:false,
+      use_cesu: false,
     },
     this.onQtyChanged = this.onQtyChanged.bind(this);
     this.checkBook = this.checkBook.bind(this);
@@ -224,6 +225,7 @@ class UserServicesPreview extends React.Component {
                 flexible: shop.flexible_cancel,
                 moderate: shop.moderate_cancel,
                 strict: shop.strict_cancel,
+                use_cesu: shop.cesu!='Disabled'
               });
             })
             .catch(err => console.error(err));
@@ -385,15 +387,23 @@ class UserServicesPreview extends React.Component {
     this.state.prestations.forEach( p => {
       if (count[p._id]>0) {
         totalPrestations += count[p._id]*p.price
-        if (p.prestation.cesu_eligible) {
+        if (p.prestation.cesu_eligible && this.state.use_cesu) {
           totalCesu += count[p._id]*p.price
+          totalCesu += count[p._id]*p.price*COMM_CLIENT
         }
       }
     });
     const travelTax = this.computeTravelTax();
-    totalPrestations+=travelTax ? parseFloat(travelTax) : 0;
     const pickTax = this.computePickTax();
+    totalPrestations+=travelTax ? parseFloat(travelTax) : 0;
     totalPrestations+=pickTax ? parseFloat(pickTax) : 0;
+
+    // Ajout frais dep & retrait/livraison si CESU
+    if (totalCesu) {
+        totalCesu += travelTax ? parseFloat(travelTax) : 0
+        totalCesu += pickTax ? parseFloat(pickTax) : 0
+    }
+
     var commission=totalPrestations*COMM_CLIENT;
     var total=totalPrestations;
     total+=commission;
@@ -576,7 +586,7 @@ class UserServicesPreview extends React.Component {
                   <label>{p.billing ? p.billing.label : '?'}</label>
                 </Grid>
                 <Grid style={{width: '10%'}}>
-                  {p.prestation.cesu_eligible ?
+                  {p.prestation.cesu_eligible && this.state.use_cesu ?
                     <img src="/static/assets/img/cesu.svg" width="40px" title={`${p.prestation.label} est une prestation éligible au CESU`}/>
                     :
                     <div style={{ width: '40px'}}/>

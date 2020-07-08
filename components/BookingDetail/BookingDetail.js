@@ -48,18 +48,6 @@ class BookingDetail extends React.Component{
               </Grid>
             </Grid>:null}
           { /* End pick tax */ }
-          { client_fee && cesu_total ?
-            <Grid className={classes.flexContent}>
-              <Grid>
-                <p>{"Sous-total CESU"}</p>
-              </Grid>
-              <Grid>
-                <p>{cesu_total.toFixed(2)}€</p>
-              </Grid>
-            </Grid>
-            :
-            null
-          }
           { /* Start commission */ }
           {client_fee && client_fee !== 0 ?
             <Grid className={classes.flexContent}>
@@ -83,7 +71,7 @@ class BookingDetail extends React.Component{
           }
           { /* End commission */ }
           { /* Start total */ }
-          <Grid className={classes.flexContent}>
+          <Grid className={classes.flexContent} style={{ 'font-weight': 'bold' }}>
             <Grid>
               <p>{client_fee !== 0 ? "Total" : "Total à percevoir"}</p>
             </Grid>
@@ -92,6 +80,20 @@ class BookingDetail extends React.Component{
             </Grid>
           </Grid>
           { /* End total */ }
+          { /* Start CESU */ }
+          { client_fee && cesu_total ?
+            <Grid className={classes.flexContent} style={{ 'margin-left': '20px', 'font-weight': 'bold' }}>
+              <Grid>
+                <p>{"dont CESU"}</p>
+              </Grid>
+              <Grid>
+                <p>{cesu_total.toFixed(2)}€</p>
+              </Grid>
+            </Grid>
+            :
+            null
+          }
+          { /* End CESU */ }
         </Grid>
 
       </Grid>
