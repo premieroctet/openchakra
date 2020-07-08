@@ -610,10 +610,6 @@ router.get('/cardPreview/:id', (req,res)=> {
     })
     .then ( su => {
       Shop.findOne({alfred: su.user}, 'is_professional')
-        .catch (err => {
-          console.error(err)
-          res.status(404).json({error: err})
-        })
         .then( shop => {
           Reviews.find({ alfred: su.user, note_client: undefined, serviceUser: su._id })
             .then ( reviews => {
@@ -625,6 +621,10 @@ router.get('/cardPreview/:id', (req,res)=> {
               }
               res.json(result)
             })
+        })
+        .catch (err => {
+          console.error(err)
+          res.status(404).json({error: err})
         })
     })
 })
