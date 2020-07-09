@@ -44,7 +44,7 @@ class Layout extends React.Component {
 
     return(
       <Fragment>
-          <NavBar gps={gps} user={user} addressSelected={addressSelected} searchCallback={this.props.searchCallback} googleAuth={this.props.googleAuth} />
+          <NavBar gps={gps} user={user} addressSelected={addressSelected} searchCallback={this.props.searchCallback}/>
         {children}
       </Fragment>
     );

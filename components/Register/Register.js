@@ -34,6 +34,8 @@ import Router from 'next/router';
 import Link from 'next/link';
 import cookie from 'react-cookies'
 import OAuth from '../OAuth/OAuth';
+var parse = require('url-parse');
+const {Information}=require('../Information');
 
 registerLocale('fr', fr);
 
@@ -63,7 +65,6 @@ NumberFormatCustom.propTypes = {
     name: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
 };
-
 
 class Register extends React.Component{
 
@@ -100,7 +101,8 @@ class Register extends React.Component{
             serverError:false, // Si erreur serveur pour l''envoi du SMS, continuer quand même
             errorEmailType: '',
             emailValidator: false,
-            firstPageValidator: true
+            firstPageValidator: true,
+            errorExistEmail: false
         };
         this.handleChecked = this.handleChecked.bind(this);
         this.onChangeAddress = this.onChangeAddress.bind(this);
@@ -109,16 +111,20 @@ class Register extends React.Component{
     }
 
     componentDidMount() {
-        if(this.props.googleAuth){
+        let query = parse(window.location.href,true).query;
+        if(query.google_id){
             this.setState({
-                google_id: this.props.googleAuth.google_id,
-                email: this.props.googleAuth.email,
-                name: this.props.googleAuth.lastName,
-                firstname: this.props.googleAuth.firstName,
+                google_id: query.google_id,
+                email: query.email,
+                name: query.lastName,
+                firstname: query.firstName,
                 activeStep: 1,
                 firstPageValidator: false,
-                picture: this.props.picture
+                picture: query.picture
             })
+        }
+        if(query.error){
+            this.setState({errorExistEmail: true})
         }
         const token = cookie.load('token');
         if(token) {
@@ -332,6 +338,12 @@ class Register extends React.Component{
             case 0:
                 return (
                     <Grid container>
+                        <Information
+                            open={this.state.errorExistEmail}
+                            onClose={() => this.setState({errorExistEmail: false})}
+                            type='warning'
+                            text={'Oups ! Email déjà enregistrer.'}
+                        />
                         <Grid className={classes.margin}>
                             <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
                                 <Grid item>

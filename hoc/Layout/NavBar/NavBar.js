@@ -27,6 +27,9 @@ import Slide from '@material-ui/core/Slide';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
 
+var parse = require('url-parse');
+
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -75,9 +78,14 @@ class NavBar extends Component {
   }
 
   componentDidMount() {
-    if(this.props.googleAuth !== null){
-      this.setState({setOpenRegister: true, setOpenLogin: false })
+    var query = parse(window.location.href,true).query;
+    if(query.google_id || query.error){
+      this.setState({
+        setOpenRegister: true,
+        setOpenLogin: false
+      })
     }
+
     const token = cookie.load('token')
     if (token) {
       this.setState({ logged: true });
