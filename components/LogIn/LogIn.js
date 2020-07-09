@@ -11,7 +11,7 @@ import axios from 'axios';
 import Router from "next/router";
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
-import OAuth from '../OAuth';
+import OAuth from '../OAuth/OAuth';
 import cookie from 'react-cookies'
 
 

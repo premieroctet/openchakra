@@ -33,7 +33,7 @@ import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined';
 import Router from 'next/router';
 import Link from 'next/link';
 import cookie from 'react-cookies'
-import OAuth from '../OAuth';
+import OAuth from '../OAuth/OAuth';
 
 registerLocale('fr', fr);
 
@@ -337,7 +337,7 @@ class Register extends React.Component{
                                 <Grid item>
                                     <img src={'../static/background/connexion.svg'} alt={'bienvenu'} style={{width:100, height:100}}/>
                                 </Grid>
-                                <Grid>
+                                <Grid style={{width: '70%'}}>
                                     {this.providers.map(provider =>
                                         <OAuth
                                             provider={provider}
