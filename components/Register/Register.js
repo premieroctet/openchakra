@@ -111,6 +111,7 @@ class Register extends React.Component{
     componentDidMount() {
         if(this.props.googleAuth){
             this.setState({
+                googleId: this.props.googleAuth.googleId,
                 email: this.props.googleAuth.email,
                 name: this.props.googleAuth.lastName,
                 firstname: this.props.googleAuth.firstName,
@@ -201,6 +202,7 @@ class Register extends React.Component{
     onSubmit = () => {
 
         const newUser = {
+            googleId: this.state.googleId,
             firstname: this.state.firstname,
             name: this.state.name,
             birthday: this.state.birthday,

@@ -115,7 +115,7 @@ class LogIn extends React.Component {
                                     </Grid>
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%',color: 'white' }}>
+                                    <Button type="submit" variant="outlined" color="primary" style={{ width: '100%',color: 'white' }}>
                                         Connexion
                                     </Button>
                                 </Grid>
