@@ -297,13 +297,16 @@ const UserSchema = new Schema({
     },
     external_auth: {
         provider: {
-            type: String
+            type: String,
+            enum:["google","facebook"],
+            required:true
         },
         token: {
             type: String
         },
         id: {
-            type: String
+            type: String,
+            required:true
         }
     }
 });
