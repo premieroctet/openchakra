@@ -46,6 +46,7 @@
     "next-routes": "^1.4.2",
     "nodemailer": "^6.2.1",
     "passport": "^0.4.0",
+    "passport-facebook": "^3.0.0",
     "passport-google-oauth": "^2.0.0",
     "passport-jwt": "^4.0.0",
     "pm2": "^4.1.2",

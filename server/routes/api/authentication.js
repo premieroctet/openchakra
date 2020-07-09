@@ -5,31 +5,61 @@ const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const {getHost} = require('../../../utils/infra')
 
-const googleAuth = passport.authenticate('google', { session:false, scope: ['profile email'] })
+const googleAuth = passport.authenticate('google', {session:false, scope: ['profile', 'email'] })
+const facebookAuth = passport.authenticate('facebook', {session:false, scope: ['email']})
 
 // @Route GET /myAlfred/api/authentication/google
 // Starts google authentication
 router.get('/google', googleAuth)
 
 // @Route GET /myAlfred/api/authentication/google_hook
-// Authenticate user with google
+// Google callback
 router.get("/google_hook", googleAuth, (req,res) => authController(req,res,"google"))
 
 
 
+// @Route GET /myAlfred/api/authentication/facebook
+// Starts facebook authentication
+router.get('/facebook', facebookAuth)
+
+// @Route GET /myAlfred/api/authentication/facebook_hook
+// Facebook callback
+router.get("/facebook_hook", facebookAuth, (req,res) => authController(req,res))
+
+
+
 // Check for email in database and login or register
-const authController = (req,res,provider) => {
-    User.findOne({email: req.user.emails[0].value})
+const authController = (req,res) => {
+
+    const userData = extractUser(req)
+
+    User.findOne({email: userData.email})
         .then(user => {
             if (!user) {
-                redirectRegistration(req, res, provider)
-            } else if (user.external_auth.provider === provider) {
-                sendCookie(req.user, res)
+                redirectRegistration(userData, res)
+            } else if (user.external_auth.provider === userData.provider) {
+                sendCookie(user, res)
             } else {
                 res.status(403).redirect('/?error=existingEmail')
             }
         }).catch(err => console.error(err))
 }
+
+
+// Extract user data depending on the provider
+const extractUser = (req) => {
+    console.log(req.user)
+    var user = {
+            id: req.user.id,
+            lastName: req.user.name.familyName,
+            firstName: req.user.name.givenName,
+            email: req.user.emails[0].value,
+            picture: req.user.photos[0].value,
+            provider: req.user.provider
+        }
+    return user
+}
+
 
 //Create JWT cookie with user credentials
 const sendCookie = (user,res) => {
@@ -47,13 +77,13 @@ const sendCookie = (user,res) => {
 }
 
 // Sendback user to / to finish registration
-const redirectRegistration = (req, res, provider) => {
+const redirectRegistration = (user, res) => {
     const url = new URLSearchParams({
-        [provider+"_id"]: req.user.id,
-        "lastname": req.user.name.familyName,
-        "firstname": req.user.name.givenName,
-        "email": req.user.emails[0].value,
-        "picture": req.user.photos[0].value
+        [user.provider+"_id"]: user.id,
+        "lastname": user.lastName,
+        "firstname": user.firstName,
+        "email": user.email,
+        "picture": user.picture
     })
     res.status(200).redirect(new URL("?"+url.toString(), getHost()))
 }
