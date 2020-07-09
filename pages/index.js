@@ -41,7 +41,7 @@ class Home extends React.Component {
         return {
             googleObject: {
                 service_id: id,
-                googleId: google_id,
+                google_id: google_id,
                 firstName: firstname,
                 lastName: lastname,
                 email: email,
@@ -73,7 +73,7 @@ class Home extends React.Component {
                   <title>Services rémunérés entre particuliers - My Alfred </title>
                   <meta property="description" content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple" />
                 </Helmet>
-                <Layout googleAuth={this.props.googleObject.googleId ? this.props.googleObject : null}/>
+                <Layout googleAuth={this.props.googleObject.google_id ? this.props.googleObject : null}/>
                 <Homeheader/>
                 <SerenityNeed/>
                 <BecomeAlfred />

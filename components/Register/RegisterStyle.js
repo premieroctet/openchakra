@@ -112,7 +112,6 @@ export default theme => ({
     genericContainer:{
         width: '100%',
         justifyContent: 'center',
-        flexDirection : 'column'
     },
     genericContainerAndMargin:{
         display: 'flex',
@@ -153,4 +152,9 @@ export default theme => ({
             marginTop: '2%'
         }
     },
+    flexContainerPics:{
+        display:'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+    }
 })
