@@ -111,7 +111,7 @@ class Register extends React.Component{
     componentDidMount() {
         if(this.props.googleAuth){
             this.setState({
-                google_id: this.props.googleAuth.googleId,
+                google_id: this.props.googleAuth.google_id,
                 email: this.props.googleAuth.email,
                 name: this.props.googleAuth.lastName,
                 firstname: this.props.googleAuth.firstName,
@@ -203,7 +203,7 @@ class Register extends React.Component{
     onSubmit = () => {
 
         const newUser = {
-            googleId: this.state.googleId,
+            google_id: this.state.google_id,
             firstname: this.state.firstname,
             name: this.state.name,
             birthday: this.state.birthday,
@@ -333,7 +333,7 @@ class Register extends React.Component{
                 return (
                     <Grid container>
                         <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
+                            <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
                                 <Grid item>
                                     <img src={'../static/background/connexion.svg'} alt={'bienvenu'} style={{width:100, height:100}}/>
                                 </Grid>
