@@ -37,6 +37,19 @@ class Home extends React.Component {
         }
     }
 
+    static getInitialProps ({ query: { id, firstname, google_id, lastname, email, picture } }) {
+        return {
+            googleObject: {
+                service_id: id,
+                googleId: google_id,
+                firstName: firstname,
+                lastName: lastname,
+                email: email,
+                picture: picture
+            }
+        }
+    }
+
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
         const token = cookie.load('token')
@@ -60,7 +73,7 @@ class Home extends React.Component {
                   <title>Services rémunérés entre particuliers - My Alfred </title>
                   <meta property="description" content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple" />
                 </Helmet>
-                <Layout/>
+                <Layout googleAuth={this.props.googleObject.googleId ? this.props.googleObject : null}/>
                 <Homeheader/>
                 <SerenityNeed/>
                 <BecomeAlfred />

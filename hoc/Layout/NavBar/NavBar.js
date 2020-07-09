@@ -64,6 +64,7 @@ class NavBar extends Component {
       setOpenRegister: false,
       setOpenMobileRegister: false,
       user:null,
+      google_id: props.google_id
     };
   }
 
@@ -74,6 +75,9 @@ class NavBar extends Component {
   }
 
   componentDidMount() {
+    if(this.props.googleAuth !== null){
+      this.setState({setOpenRegister: true, setOpenLogin: false })
+    }
     const token = cookie.load('token')
     if (token) {
       this.setState({ logged: true });
@@ -182,7 +186,7 @@ class NavBar extends Component {
 
     const modalRegister = () =>{
       return(
-          <Register callLogin={this.handleOpenLogin} closeLOgin={this.componentDidMount}/>
+          <Register callLogin={this.handleOpenLogin} closeLOgin={this.componentDidMount} googleAuth={this.props.googleAuth}/>
       )
     };
 

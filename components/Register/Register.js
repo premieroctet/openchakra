@@ -33,6 +33,7 @@ import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined';
 import Router from 'next/router';
 import Link from 'next/link';
 import cookie from 'react-cookies'
+import OAuth from '../OAuth';
 
 registerLocale('fr', fr);
 
@@ -103,11 +104,21 @@ class Register extends React.Component{
         };
         this.handleChecked = this.handleChecked.bind(this);
         this.onChangeAddress = this.onChangeAddress.bind(this);
+        this.providers = ['google', 'facebook'];
+
     }
 
-
     componentDidMount() {
-        const token = cookie.load('token')
+        if(this.props.googleAuth){
+            this.setState({
+                email: this.props.googleAuth.email,
+                name: this.props.googleAuth.lastName,
+                firstname: this.props.googleAuth.firstName,
+                activeStep: 1,
+                firstPageValidator: false
+            })
+        }
+        const token = cookie.load('token');
         if(token) {
             toast.warn('Vous êtes déjà inscrit');
             Router.push('/')
@@ -736,7 +747,7 @@ class Register extends React.Component{
                                                 </Button>
                                             }
                                             backButton={
-                                                <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
+                                                <Button size="small" onClick={this.handleBack} disabled={activeStep === 0 || this.props.googleAuth}>
                                                     <KeyboardArrowLeft />
                                                     Précédent
                                                 </Button>
