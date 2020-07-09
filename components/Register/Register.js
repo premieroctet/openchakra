@@ -104,7 +104,7 @@ class Register extends React.Component{
         };
         this.handleChecked = this.handleChecked.bind(this);
         this.onChangeAddress = this.onChangeAddress.bind(this);
-        this.providers = ['google', 'facebook'];
+        this.providers = ['google'];
 
     }
 
@@ -329,6 +329,21 @@ class Register extends React.Component{
             case 0:
                 return (
                     <Grid container>
+                        <Grid className={classes.margin}>
+                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
+                                <Grid item>
+                                    <img src={'../static/background/connexion.svg'} alt={'bienvenu'} style={{width:100, height:100}}/>
+                                </Grid>
+                                <Grid>
+                                    {this.providers.map(provider =>
+                                        <OAuth
+                                            provider={provider}
+                                            key={provider}
+                                        />
+                                    )}
+                                </Grid>
+                            </Grid>
+                        </Grid>
                         <Grid className={classes.margin}>
                             <Grid container spacing={1} alignItems="flex-end"  className={classes.genericContainer}>
                                 <Grid item>
