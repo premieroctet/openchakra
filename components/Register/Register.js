@@ -111,12 +111,13 @@ class Register extends React.Component{
     componentDidMount() {
         if(this.props.googleAuth){
             this.setState({
-                googleId: this.props.googleAuth.googleId,
+                google_id: this.props.googleAuth.googleId,
                 email: this.props.googleAuth.email,
                 name: this.props.googleAuth.lastName,
                 firstname: this.props.googleAuth.firstName,
                 activeStep: 1,
-                firstPageValidator: false
+                firstPageValidator: false,
+                picture: this.props.picture
             })
         }
         const token = cookie.load('token');
