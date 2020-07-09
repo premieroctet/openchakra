@@ -2,15 +2,14 @@ const fs = require('fs');
 
 const getHost = () => {
     try {
-        var data = fs.readFileSync('host.txt', 'utf8');
-        return data;
+        return fs.readFileSync('host.txt', 'utf8');
     }
     catch (err) {
         console.error(err);
         return null;
     }
-}
+};
 
 module.exports = {
     getHost
-}
+};

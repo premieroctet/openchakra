@@ -11,7 +11,9 @@ import axios from 'axios';
 import Router from "next/router";
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
-import OAuth from '../OAuth'
+import OAuth from '../OAuth';
+import cookie from 'react-cookies'
+
 
 class LogIn extends React.Component {
     constructor(props) {
@@ -22,8 +24,7 @@ class LogIn extends React.Component {
             password: '',
             errors: {}
         };
-
-        this.providers = ['google']
+        this.providers = ['google', 'facebook']
     }
 
     onChange = e => {
