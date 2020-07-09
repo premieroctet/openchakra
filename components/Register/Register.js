@@ -116,8 +116,8 @@ class Register extends React.Component{
             this.setState({
                 google_id: query.google_id,
                 email: query.email,
-                name: query.lastName,
-                firstname: query.firstName,
+                name: query.lastname,
+                firstname: query.firstname,
                 activeStep: 1,
                 firstPageValidator: false,
                 picture: query.picture
