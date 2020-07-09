@@ -22,13 +22,14 @@ import { toast } from 'react-toastify';
 import Router from "next/router";
 import {creaShopPresentation, selectService, selectPrestation, settingService, assetsService, settingShop, introduceYou} from '../../utils/validationSteps/validationSteps';
 const {createDefaultAvailability}=require('../../utils/dateutils');
+import cookie from 'react-cookies'
 const I18N = require('../../utils/i18n')
 
 class creaShop extends React.Component {
   constructor(props) {
         super(props);
     this.state={
-      activeStep: 6,
+      activeStep: 0,
       user_id: null,
       saving: false,
       shop:{
@@ -80,12 +81,12 @@ class creaShop extends React.Component {
 
   componentDidMount() {
         localStorage.setItem('path',Router.pathname);
-        const token = localStorage.getItem('token');
-        if (token === null) {
+        const token = cookie.load('token')
+        if (!token) {
             Router.push('/login');
         }
 
-    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common['Authorization'] = token;
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
@@ -154,7 +155,7 @@ class creaShop extends React.Component {
         }
       })
 
-      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+      axios.defaults.headers.common['Authorization'] = cookie.load('token')
       axios.post('/myAlfred/api/shop/add', cloned_shop)
         .then(res => {
 

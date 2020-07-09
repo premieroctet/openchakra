@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import NavBar from './NavBar/NavBar';
-import Loader from '../../components/Loader';
-import Router from 'next/router';
+import cookie from 'react-cookies'
 import axios from 'axios';
 
 
@@ -14,12 +13,19 @@ class Layout extends React.Component {
   }
 
   componentDidMount() {
+    const token = cookie.load('token')
+    if (token) {
+      this.setState({ logged: true });
+      axios.defaults.headers.common['Authorization'] = token;
+    }
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
         this.setState({
           user:user,
+        })
+        this.setState({
           address: user.billing_address,
           addressSelected: user.billing_address,
           otherAddress: user.service_address,
@@ -27,7 +33,7 @@ class Layout extends React.Component {
         });
       })
       .catch(err => {
-        console.log("Not connected");
+        console.error(err)
       });
   }
 
@@ -38,7 +44,6 @@ class Layout extends React.Component {
 
     return(
       <Fragment>
-        <Loader />
           <NavBar gps={gps} user={user} addressSelected={addressSelected} searchCallback={this.props.searchCallback} />
         {children}
       </Fragment>

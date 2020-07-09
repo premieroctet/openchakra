@@ -18,7 +18,34 @@ import styles from './NavBarStyle'
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
-const moment = require('moment');
+import cookie from 'react-cookies'
+import LogIn from '../../../components/LogIn/LogIn';
+import Register from '../../../components/Register/Register';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import Slide from '@material-ui/core/Slide';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import CloseIcon from '@material-ui/icons/Close';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+      <MuiDialogTitle disableTypography {...other}>
+        <Typography variant="h6">{children}</Typography>
+        {onClose ? (
+            <Link href={'/'}>
+              <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+                <CloseIcon color={'secondary'} />
+              </IconButton>
+            </Link>
+        ) : null}
+      </MuiDialogTitle>
+  );
+});
 
 class NavBar extends Component {
   constructor(props) {
@@ -32,7 +59,11 @@ class NavBar extends Component {
       isTop: true,
       isIndex: false,
       isSearch: false,
-      user:{},
+      setOpenLogin: false,
+      setOpenMobileLogin: false,
+      setOpenRegister: false,
+      setOpenMobileRegister: false,
+      user:null,
     };
   }
 
@@ -43,8 +74,8 @@ class NavBar extends Component {
   }
 
   componentDidMount() {
-    const token = localStorage.getItem('token');
-    if (token !== null) {
+    const token = cookie.load('token')
+    if (token) {
       this.setState({ logged: true });
       axios.defaults.headers.common['Authorization'] = token;
     }
@@ -73,7 +104,7 @@ class NavBar extends Component {
 
 
   logout2() {
-    localStorage.removeItem('token');
+    cookie.remove('token', { path: '/' })
     localStorage.removeItem('path');
     // Remove auth header for future requests
     setAuthToken(false);
@@ -106,10 +137,55 @@ class NavBar extends Component {
     this.setState({ mobileMoreAnchorEl: null });
   };
 
+  handleOpenLogin = (e) => {
+    this.handleMenuClose();
+    if(e.target.name === 'mobile'){
+      this.setState({setOpenMobileLogin : true, setOpenMobileRegister : false});
+    }else{
+      this.setState({setOpenLogin : true, setOpenRegister: false});
+
+    }
+  };
+
+  handleCloseLogin = () => {
+    this.setState({setOpenLogin : false});
+  };
+
+  handleOpenRegister = (e) => {
+    this.handleMenuClose();
+    if(e.target.name === 'mobile'){
+      this.setState({setOpenMobileRegister : true, setOpenMobileLogin : false});
+    }else{
+      this.setState({setOpenRegister : true, setOpenLogin : false});
+
+    }
+  };
+
+  handleCloseRegister = () => {
+    this.setState({setOpenRegister : false});
+  };
+
+  needRefresh = () => {
+    this.setState({setOpenLogin: false});
+    Router.push('/search')
+  };
 
   render() {
-    const { anchorEl, mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged, user } = this.state;
+    const { mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged, user } = this.state;
     const { classes } = this.props;
+
+    const modalLogin = () =>{
+      return(
+          <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh}/>
+      )
+    };
+
+    const modalRegister = () =>{
+      return(
+          <Register callLogin={this.handleOpenLogin} closeLOgin={this.componentDidMount}/>
+      )
+    };
+
 
     const logoutMobile = [
       <Link href={'/profile/editProfile'}>
@@ -172,24 +248,59 @@ class NavBar extends Component {
         </MenuItem>
       ];
 
-    const doublemenuitem1 = [
-      <Link href={'/login'}>
-        <MenuItem key={1}>
-          <Typography>
-            <a>Connexion</a>
-          </Typography>
-        </MenuItem>
-      </Link>
+    const doublemenuitem = [
+      <MenuItem key={1} onClick={this.handleOpenLogin}>
+        <Typography>
+          <a className={classes.navbarLinkMobile}>
+            Connexion
+          </a>
+        </Typography>
+        <Dialog
+            scroll={'paper'}
+            aria-labelledby="scroll-dialog-title"
+            aria-describedby="scroll-dialog-description"
+            className={classes.modal}
+            open={this.state.setOpenMobileLogin}
+            onClose={this.handleCloseLogin}
+            TransitionComponent={Transition}
+            name={'mobile'}
+            fullWidth={true}
+            fullScreen={true}
+        >
+          <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
+          <DialogContent>
+            <div className={classes.paper}>
+              {modalLogin()}
+            </div>
+          </DialogContent>
+        </Dialog>
+      </MenuItem>
       ,
-      <Link href={'/signup'}>
-        <MenuItem key={2}>
-          <Typography>
-            <a>Inscription</a>
-          </Typography>
-        </MenuItem>
-      </Link>
-
-    ]
+      <MenuItem key={2} onClick={this.handleOpenRegister}>
+        <Typography>
+          <a className={classes.navbarLinkMobile}>
+            Inscription
+          </a>
+        </Typography>
+        <Dialog
+            scroll={'paper'}
+            aria-labelledby="scroll-dialog-title"
+            aria-describedby="scroll-dialog-description"
+            className={classes.modal}
+            name={'mobile'}
+            open={this.state.setOpenMobileRegister}
+            onClose={this.handleCloseRegister}
+            TransitionComponent={Transition}
+        >
+          <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
+          <DialogContent dividers={false} className={classes.dialogContentContainer} classes={{root: classes.muidialogContent}} >
+            <div className={classes.paper}>
+              {modalRegister()}
+            </div>
+          </DialogContent>
+        </Dialog>
+      </MenuItem>
+    ];
 
     const renderAvatarMenu = (
       <Menu
@@ -200,31 +311,11 @@ class NavBar extends Component {
         onClose={this.handleMenuClose}
       >
         {logged ? logoutAvatar :
-          doublemenuitem1}
+          doublemenuitem}
       </Menu>
     );
 
-    const doublemenuitem = [
-      <Link href={'/login'}>
-        <MenuItem key={1}>
-          <Typography>
-            <a className={classes.navbarLinkMobile}>
-              Connexion
-            </a>
-          </Typography>
-        </MenuItem>
-      </Link>
-      ,
-      <Link href={'/signup'}>
-      <MenuItem key={2}>
-        <Typography>
-          <a className={classes.navbarLinkMobile}>
-            Inscription
-          </a>
-        </Typography>
-      </MenuItem>
-      </Link>
-    ];
+
 
     const renderMobileMenu = (
       <Menu
@@ -238,7 +329,7 @@ class NavBar extends Component {
         <Link href={user && user.is_alfred ? `/shop?id_alfred=${user._id}` : '/creaShop/creaShop'}>
           <MenuItem>
             <Typography>
-              <a className={classes.navbarLinkMobile}>{user && user.is_alfred ? "Ma boutique" : "Proposer mes services"}</a>
+              <a className={classes.navbarLinkMobile}>{user && user.is_alfred ? "Ma boutique" : user ? "Proposer mes services" : ""}</a>
             </Typography>
           </MenuItem>
         </Link>
@@ -331,7 +422,7 @@ class NavBar extends Component {
                     <Typography className={classes.navbarItem}>
                       <Link href={'/creaShop/creaShop'}>
                         <a className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.navbarLink}>
-                          Proposer mes services
+                          { user && user.is_alfred==false ? `Proposer mes services` : '' }
                         </a>
                       </Link>
                     </Typography>}
@@ -367,27 +458,56 @@ class NavBar extends Component {
                     </Link>
                   </Typography>
                   {logged ? null :
-                    <React.Fragment>
-                      <Link href={'/login'}>
-                        <Button variant="outlined" color={'primary'} className={classes.buttonLogin}>
+                    <Grid container>
+                      <Grid style={{marginRight: 20}}>
+                        <Button color="primary" onClick={this.handleOpenLogin}>
                           Connexion
                         </Button>
-                      </Link>
-                      <Link href={'/signup'}>
-                        <Button
-                          style={{ color: 'white'}}
-                          variant="contained"
-                          color={'primary'}
+                        <Dialog
+                            scroll={'paper'}
+                            aria-labelledby="scroll-dialog-title"
+                            aria-describedby="scroll-dialog-description"
+                            className={classes.modal}
+                            open={this.state.setOpenLogin}
+                            onClose={this.handleCloseLogin}
+                            TransitionComponent={Transition}
+                            classes={{paperWidthSm: classes.widthSm}}
                         >
+                          <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
+                          <DialogContent classes={{root: classes.widthLoginContent}}>
+                            <div className={classes.paper}>
+                              {modalLogin()}
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </Grid>
+                      <Grid>
+                        <Button color="primary" variant={"contained"} onClick={this.handleOpenRegister} style={{color:'white'}}>
                           Inscription
                         </Button>
-                      </Link>
-                    </React.Fragment>}
+                        <Dialog
+                            scroll={'paper'}
+                            aria-labelledby="scroll-dialog-title"
+                            aria-describedby="scroll-dialog-description"
+                            className={classes.modal}
+                            open={this.state.setOpenRegister}
+                            onClose={this.handleCloseRegister}
+                            TransitionComponent={Transition}
+                        >
+                          <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
+                          <DialogContent dividers={false} className={classes.muidialogContent} >
+                            <div className={classes.paper}>
+                              {modalRegister()}
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </Grid>
+                    </Grid>}
                   {logged ?
                     <React.Fragment>
                       <React.Fragment>
                         <IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit">
-                          <UserAvatar user={user} className={classes.bigAvatar} />
+                          <UserAvatar user={user} className={classes.bigAvatar} warnings={true}/>
                         </IconButton>
                       </React.Fragment>
                     </React.Fragment>

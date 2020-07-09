@@ -123,5 +123,51 @@ export default theme =>({
   },
   iconBlack:{
     color: 'black'
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    '& .MuiDialog-paper':{
+      margin: '0px !important'
+    }
+  },
+  modalWeb:{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: 10,
+    boxShadow: 'theme.shadows[5]',
+    margin: '0px !important',
+    padding: 0,
+    width: '100%'
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+  },
+  dialogContentContainer:{
+    '& .MuiDialogContent-dividers':{
+      borderTop: 'inherit !important'
+    }
+  },
+  muidialogContent:{
+     padding: 0
+  },
+  widthLoginContent:{
+    display:'flex',
+    justifyContent: 'center'
+  },
+  widthSm:{
+    width: 400,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%'
+    },
+
   }
+
 })

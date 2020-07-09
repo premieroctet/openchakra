@@ -19,6 +19,7 @@ import About from '../../components/About/About';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import Typography from '@material-ui/core/Typography';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
+import cookie from 'react-cookies'
 const {frenchFormat}=require('../../utils/text')
 
 const Input2 = ({value,  onClick }) => (
@@ -54,7 +55,7 @@ class Preapprouve extends React.Component {
     const booking_id = this.props.booking_id;
     this.setState({booking_id: booking_id});
 
-    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common['Authorization'] = cookie.load('token')
     axios.get('/myAlfred/api/booking/' + booking_id)
         .then(res => {
           this.setState({ bookingObj: res.data })
@@ -202,13 +203,7 @@ class Preapprouve extends React.Component {
                                 Détail de la réservation
                               </h3>
                               <Grid xs={12}>
-                                <BookingDetail
-                                  prestations={pricedPrestations}
-                                  count={countPrestations}
-                                  travel_tax={this.state.bookingObj?this.state.bookingObj.travel_tax : 0}
-                                  pick_tax={this.state.bookingObj?this.state.bookingObj.pick_tax : 0}
-                                  total={amount}
-                                />
+                                <BookingDetail prestations={pricedPrestations} count={countPrestations} travel_tax={this.state.bookingObj?this.state.bookingObj.travel_tax : 0} pick_tax={this.state.bookingObj?this.state.bookingObj.pick_tax : 0} total={amount} cesu_total={this.state.bookingObj?this.state.bookingObj.cesu_amount : 0 }/>
                               </Grid>
                             </Grid>
                             <Grid container>

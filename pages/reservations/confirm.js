@@ -15,6 +15,7 @@ import io from "socket.io-client";
 import About from '../../components/About/About';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
+import cookie from 'react-cookies'
 const {frenchFormat}=require('../../utils/text')
 
 registerLocale('fr', fr);
@@ -66,7 +67,7 @@ class Confirm extends React.Component {
     const booking_id = this.props.booking_id;
     this.setState({booking_id: booking_id});
 
-    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common['Authorization'] = cookie.load('token')
 
     axios.get("/myAlfred/api/users/current").then(res => {
       this.setState({ currentUser: res.data });
@@ -128,7 +129,7 @@ class Confirm extends React.Component {
           this.setState({bookingObj: res.data})
             setTimeout(()=>this.socket.emit("changeStatus", res.data),100)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
       return null;
     } else {
       axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
@@ -136,7 +137,7 @@ class Confirm extends React.Component {
             this.setState({bookingObj: res.data})
             setTimeout(()=>this.socket.emit("changeStatus", res.data),100)
           })
-          .catch(err => console.log(err))
+          .catch(err => console.error(err))
     }
   }
 
@@ -227,7 +228,7 @@ class Confirm extends React.Component {
                                 Détail de la réservation
                               </h3>
                               <Grid xs={12}>
-                                <BookingDetail
+                                <BookingDetail cesu_total={this.state.bookingObj?this.state.bookingObj.cesu_amount : 0}
                                   prestations={pricedPrestations}
                                   count={countPrestations}
                                   travel_tax={this.state.bookingObj?this.state.bookingObj.travel_tax : 0}

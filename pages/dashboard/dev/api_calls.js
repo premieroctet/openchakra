@@ -12,6 +12,7 @@ import Link from "next/link";
 import { toast } from 'react-toastify';
 import APIS from './apis_list';
 import Layout from '../../../hoc/Layout/Layout';
+import cookie from 'react-cookies'
 
 const jwt = require('jsonwebtoken');
 const styles = theme => ({
@@ -47,13 +48,13 @@ class home extends React.Component {
 
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
-        const auth = localStorage.getItem('token');
-        if(auth === null) {
+        const auth = cookie.load('token')
+        if(!auth) {
             Router.push('/login')
         } else {
 
 
-            const token = localStorage.getItem('token').split(' ')[1];
+            const token = auth.split(' ')[1];
             const decode = jwt.decode(token);
             this.setState({is_admin: decode.is_admin});
         }

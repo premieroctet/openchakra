@@ -13,6 +13,7 @@ import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import styles from './statistiques/statistiquesStyle'
+import cookie from 'react-cookies'
 
 moment.locale('fr');
 const _ = require('lodash');
@@ -36,24 +37,24 @@ class Statistiques extends React.Component {
     componentDidMount() {
 
         localStorage.setItem('path',Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
         axios.get('/myAlfred/api/performances/statistics/totalBookings')
             .then(res => {
                 this.setState({totalIncomes: res.data.incomes,totalPrestations: res.data.prestations})
             })
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
 
         axios.get('/myAlfred/api/performances/statistics/totalViewsServices')
             .then(res => {
                 this.setState({totalViewsServices: res.data})
             })
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
 
         axios.get('/myAlfred/api/performances/statistics/totalReviews')
             .then(res => {
                 this.setState({totalReviews: res.data})
             })
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
 
         axios.get('/myAlfred/api/serviceUser/currentAlfred')
             .then(res => {
@@ -80,7 +81,7 @@ class Statistiques extends React.Component {
                         .catch(errors => console.log(errors))
                 })
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
 
         axios.get('/myAlfred/api/users/current').then(res => {
             let user = res.data;

@@ -9,6 +9,7 @@ import styles from '../componentStyle'
 import {CUSTOM_PRESTATIONS_FLTR, generate_id, GID_LEN} from '../../../utils/consts';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import cookie from 'react-cookies'
 const jwt = require('jsonwebtoken');
 
 class SelectPrestation extends React.Component {
@@ -29,13 +30,14 @@ class SelectPrestation extends React.Component {
 
   componentDidMount() {
 
-    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
     // Get current alfred id
-    const token2 = localStorage.getItem('token').split(' ')[1];
+    const token = cookie.load('token')
+    const token2 = token.split(' ')[1];
     const decode = jwt.decode(token2);
     const alfred_id = decode.id;
 
     let billings=null;
+    axios.defaults.headers.common['Authorization'] = token;
     axios.get(`/myAlfred/api/billing/all`)
       .then(res => {
         billings=res.data;

@@ -56,7 +56,7 @@ router.post('/billing/all', passport.authenticate('jwt',{session: false}),(req, 
                         label: req.body.label
                     });
 
-                    newBilling.save().then(billing => res.json(billing)).catch(err => console.log(err));
+                    newBilling.save().then(billing => res.json(billing)).catch(err => console.error(err));
                 }
             })
     } else {
@@ -593,7 +593,7 @@ router.post('/users/admin', passport.authenticate('jwt',{session: false}),(req, 
                             newUser.password = hash;
                             newUser.save()
                                 .then(user => res.json(user))
-                                .catch(err => console.log(err));
+                                .catch(err => console.error(err));
                         })
                     })
                 }
@@ -678,7 +678,7 @@ router.post('/calculating/all', passport.authenticate('jwt',{session: false}),(r
                         label: req.body.label
                     });
 
-                    newCalculating.save().then(calculating => res.json(calculating)).catch(err => console.log(err));
+                    newCalculating.save().then(calculating => res.json(calculating)).catch(err => console.error(err));
                 }
             })
     } else {
@@ -805,7 +805,7 @@ router.post('/filterPresentation/all', passport.authenticate('jwt',{session: fal
                         label: req.body.label
                     });
 
-                    newFilterPresentation.save().then(filterPresentation => res.json(filterPresentation)).catch(err => console.log(err));
+                    newFilterPresentation.save().then(filterPresentation => res.json(filterPresentation)).catch(err => console.error(err));
                 }
             })
     } else {
@@ -929,7 +929,7 @@ router.post('/job/all', passport.authenticate('jwt',{session: false}),(req, res)
                         label: req.body.label
                     });
 
-                    newJob.save().then(job => res.json(job)).catch(err => console.log(err));
+                    newJob.save().then(job => res.json(job)).catch(err => console.error(err));
                 }
             })
     } else {
@@ -1051,7 +1051,7 @@ router.post('/searchFilter/all', passport.authenticate('jwt',{session: false}),(
                         label: req.body.label
                     });
 
-                    newSearchFilter.save().then(searchFilter => res.json(searchFilter)).catch(err => console.log(err));
+                    newSearchFilter.save().then(searchFilter => res.json(searchFilter)).catch(err => console.error(err));
                 }
             })
     } else {
@@ -1176,7 +1176,7 @@ router.post('/tags/all', passport.authenticate('jwt',{session: false}),(req, res
                         description: req.body.description
                     });
 
-                    newTags.save().then(tags => res.json(tags)).catch(err => console.log(err));
+                    newTags.save().then(tags => res.json(tags)).catch(err => console.error(err));
                 }
             })
     } else {
@@ -1313,7 +1313,7 @@ router.post('/category/all', uploadCat.single('picture'),passport.authenticate('
                         tags: JSON.parse(req.body.tags),
                     });
 
-                    newCategory.save().then(category => res.json(category)).catch(err => console.log(err));
+                    newCategory.save().then(category => res.json(category)).catch(err => console.error(err));
                 }
             })
     } else {
@@ -1477,7 +1477,7 @@ router.post('/equipment/all',upload.fields([{name: 'logo',maxCount: 1}, {name:'l
                         name_logo2: req.files['logo2'][0].filename
                     });
 
-                    newEquipment.save().then(equipment => res.json(equipment)).catch(err => console.log(err));
+                    newEquipment.save().then(equipment => res.json(equipment)).catch(err => console.error(err));
                 }
             })
     } else {
@@ -1650,7 +1650,7 @@ router.post('/service/all', uploadService.single('picture'),passport.authenticat
                         travel_tax: req.body.travel_tax
                     });
 
-                    newService.save().then(service => res.json(service)).catch(err => console.log(err));
+                    newService.save().then(service => res.json(service)).catch(err => console.error(err));
                 }
             })
     } else {
@@ -1835,19 +1835,22 @@ router.post('/prestation/all',uploadPrestation.single('picture'),passport.authen
                     errors.label = 'Cette prestation existe déjà';
                     return res.status(400).json(errors);
                 } else {
+                    console.log(`Body:${JSON.stringify(req.body)}`)
                     const newPrestation = new Prestation({
                         label: req.body.label,
                         price: req.body.price,
                         service: mongoose.Types.ObjectId(req.body.service),
                         billing: JSON.parse(req.body.billing),
                         filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
-                        search_filter: JSON.parse(req.body.search_filter),
-                        category: mongoose.Types.ObjectId(req.body.category),
-                        calculating: mongoose.Types.ObjectId(req.body.calculating),
+                        search_filter: null,
+                        category: null,
+                        calculating: null,
                         job: mongoose.Types.ObjectId(req.body.job),
                         description: req.body.description,
-                        picture: req.body.picture.path,
-                        tags: JSON.parse(req.body.tags)
+                        //picture: req.body.picture.path,
+                        picture: req.file.path,
+                        tags: JSON.parse(req.body.tags),
+                        cesu_eligible: req.body.cesu_eligible,
                     });
                     newPrestation.save()
                      .then(prestation => res.json(prestation))
@@ -1892,7 +1895,7 @@ router.get('/prestation/all',passport.authenticate('jwt',{session:false}),(req,r
     const admin = decode.is_admin;
 
     if(admin) {
-        Prestation.find({}, 'label private_alfred')
+        Prestation.find({}, 'label private_alfred cesu_eligible')
             .sort({s_label:1, category:1})
             .populate({path : 'service', select : 'label', populate : {path : 'category', select : 'label'}})
             .populate('filter_presentation', 'label')
@@ -1977,15 +1980,21 @@ router.put('/prestation/all/:id',passport.authenticate('jwt',{session: false}),(
                 billing: req.body.billing,
                 filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
                 search_filter: req.body.search_filter,
-                category: mongoose.Types.ObjectId(req.body.category),
+                category: null,
                 calculating: mongoose.Types.ObjectId(req.body.calculating),
-                job: mongoose.Types.ObjectId(req.body.job),
+                job: req.body.job ? mongoose.Types.ObjectId(req.body.job) : null,
                 description: req.body.description,
-                tags: req.body.tags}}, {new: true})
+                tags: req.body.tags,
+                cesu_eligible: req.body.cesu_eligible,
+              }},
+              {new: true})
             .then(prestation => {
                 res.json(prestation);
             })
-            .catch(err => res.status(404).json({ prestationnotfound: 'No prestation found' }));
+            .catch(err => {
+              console.error(err)
+              res.status(404).json({ error: err })
+            });
     } else {
         res.status(403).json({msg: 'Access denied'});
     }
@@ -2030,7 +2039,7 @@ router.post('/shopBanner/all', uploadBanner.single('picture'),passport.authentic
 
                     });
 
-                    newBanner.save().then(banner => res.json(banner)).catch(err => console.log(err));
+                    newBanner.save().then(banner => res.json(banner)).catch(err => console.error(err));
                 }
             })
     } else {
@@ -2169,7 +2178,7 @@ router.post('/options/all', passport.authenticate('jwt',{session: false}),(req, 
                         billing: req.body.billing
                     });
 
-                    newOptions.save().then(options => res.json(options)).catch(err => console.log(err));
+                    newOptions.save().then(options => res.json(options)).catch(err => console.error(err));
                 }
             })
     } else {

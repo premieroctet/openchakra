@@ -17,6 +17,8 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Chip from '@material-ui/core/Chip';
 import Select2 from 'react-select';
+import cookie from 'react-cookies'
+import Checkbox from '@material-ui/core/Checkbox'
 
 const styles = theme => ({
     signupContainer: {
@@ -63,92 +65,58 @@ class add extends React.Component {
         this.state = {
             label: '',
             price: '',
-            category: '',
-            category_label: '',
             service: '',
             billing: '',
             filter_presentation: '',
-            search_filter: [],
-            calculating: '',
             job: '',
             description: '',
             picture: null,
             tags: [],
             all_tags: [],
-            all_category: [],
             all_service: [],
             all_billing: [],
-            all_calculating: [],
             all_job: [],
-            all_search_filter: [],
             all_filter_presentation: [],
-            selectedOption: null,
             selectedTags: null,
             selectedBilling: null,
+            cesu_eligible: false,
             errors: {},
         };
         this.onChangeFile = this.onChangeFile.bind(this);
-        this.handleChangeSelect = this.handleChangeSelect.bind(this);
         this.handleChangeTags = this.handleChangeTags.bind(this);
         this.handleChangeBilling = this.handleChangeBilling.bind(this);
     }
 
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-
-        axios.get("/myAlfred/api/admin/category/all")
-            .then((response) => {
-                let category = response.data;
-                this.setState({all_category: category})
-            }).catch((error) => {
-            console.log(error);
-
-        });
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
 
         axios.get("/myAlfred/api/admin/service/all")
             .then((response) => {
                 let service = response.data;
                 this.setState({all_service: service})
-            }).catch((error) => {
-            console.log(error)
-        });
+            })
+            .catch(error => {
+              console.error(error)
+            });
 
         axios.get("/myAlfred/api/admin/billing/all")
             .then((response) => {
                 let billing = response.data;
                 this.setState({all_billing: billing})
-            }).catch((error) => {
-            console.log(error)
-        });
-
-        axios.get("/myAlfred/api/admin/calculating/all")
-            .then((response) => {
-                let calculating = response.data;
-                let calc_number=calculating.find( c => c.label=='Nombre')._id;
-                this.setState({
-                  calculating: calc_number,
-                  all_calculating: calculating
-                })
-            }).catch((error) => {
-            console.log(error)
-        });
+            })
+            .catch(error => {
+              console.error(error)
+            });
 
         axios.get("/myAlfred/api/admin/job/all")
             .then((response) => {
                 let job = response.data;
                 this.setState({all_job: job})
-            }).catch((error) => {
-            console.log(error)
-        });
-
-        axios.get("/myAlfred/api/admin/searchFilter/all")
-            .then((response) => {
-                let search_filter = response.data;
-                this.setState({all_search_filter: search_filter})
-            }).catch((error) => {
-            console.log(error)
-        });
+            })
+            .catch(error => {
+              console.error(error)
+            });
 
         axios.get("/myAlfred/api/admin/filterPresentation/all")
             .then((response) => {
@@ -178,25 +146,14 @@ class add extends React.Component {
         if (name=='service' && value!='') {
           let service = this.state.all_service.find(s => s._id==value);
           console.log(service);
-          if (service && service.category) {
-            this.setState({
-              category: service.category._id,
-              category_label: service.category.label
-            });
-          }
         }
     };
 
-    handleChange = e => {
-        this.setState({search_filter: e.target.value})
-
-
+    onCesuChange = e => {
+      const checked = e.target.checked
+      this.setState({cesu_eligible:checked});
     };
 
-    handleChangeSelect = selectedOption => {
-        this.setState({ selectedOption });
-
-    };
 
     handleChangeTags = selectedTags => {
         this.setState({ selectedTags });
@@ -208,12 +165,6 @@ class add extends React.Component {
 
     };
 
-    handleChange2 = e => {
-        this.setState({tags: e.target.value})
-
-
-    };
-
     onChangeFile(e){
         this.setState({picture:e.target.files[0]})
     }
@@ -222,14 +173,6 @@ class add extends React.Component {
         let arrayFilter = [];
         let arrayTags = [];
         let arrayBilling = [];
-        if(this.state.selectedOption != null){
-            this.state.selectedOption.forEach(c => {
-
-                arrayFilter.push(c.value);
-
-            });
-        }
-
         if(this.state.selectedTags != null){
             this.state.selectedTags.forEach(w => {
 
@@ -250,16 +193,15 @@ class add extends React.Component {
         const formData = new FormData();
         formData.append('label',this.state.label);
         formData.append('price',this.state.price);
-        formData.append('category',this.state.category);
         formData.append('service',this.state.service);
         formData.append('billing',JSON.stringify(arrayBilling));
-        formData.append('calculating',this.state.calculating);
+        formData.append('calculating',null);
         formData.append('job',this.state.job);
-        formData.append('search_filter',JSON.stringify(arrayFilter));
         formData.append('filter_presentation',this.state.filter_presentation);
         formData.append('description',this.state.description);
         formData.append('picture',this.state.picture);
         formData.append('tags',JSON.stringify(arrayTags));
+        formData.append('cesu_eligible', this.state.cesu_eligible);
 
         axios
             .post('/myAlfred/api/admin/prestation/all', formData)
@@ -268,11 +210,11 @@ class add extends React.Component {
                 Router.push({pathname:'/dashboard/prestations/all'})
             })
             .catch(err => {
-                    console.log(err);
+                    console.error(err);
                     this.setState({errors: err.response.data});
 
                 if(err.response.status === 401 || err.response.status === 403) {
-                    localStorage.removeItem('token');
+                    cookie.remove('token', { path: '/' })
                     Router.push({pathname: '/login'})
                 }
                 }
@@ -283,26 +225,14 @@ class add extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const {all_category} = this.state;
         const {all_service} = this.state;
         const {all_billing} = this.state;
-        const {all_calculating} = this.state;
-        const {all_search_filter} = this.state;
         const {all_filter_presentation} = this.state;
         const {all_job} = this.state;
         const {all_tags} = this.state;
         const {errors} = this.state;
 
         console.log("State.billing:"+JSON.stringify(this.state.billing));
-
-        const categories = all_category.map(e => (
-            <MenuItem value={e._id}>{e.label}</MenuItem>
-        ));
-
-        const options = all_search_filter.map(filter => ({
-            label: filter.label,
-            value: filter._id
-        }));
 
         const optionsTags = all_tags.map(tag => ({
             label: tag.label,
@@ -339,6 +269,14 @@ class add extends React.Component {
                                         onChange={this.onChange}
                                         error={errors.label}
                                     />
+                                </Grid>
+                                <Grid item style={{marginTop: 20, display: 'flex', 'align-items':'center'}} >
+                                  <Checkbox
+                                    name={`cesu_eligible`}
+                                    checked={this.state.cesu_eligible}
+                                    onChange={this.onCesuChange}
+                                  />
+                                  <Typography>Eligible au CESU</Typography>
                                 </Grid>
                                 <Grid item style={{marginTop: 20}}>
                                     <TextField
@@ -382,13 +320,6 @@ class add extends React.Component {
                                     <em>{errors.service}</em>
                                 </Grid>
                                 <Grid item style={{width: '100%',marginTop: 20}}>
-                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
-                                      <Typography style={{ fontSize: 17 }}>Catégorie</Typography>
-                                        <div>{this.state.category_label||'Aucune'}</div>
-                                    </FormControl>
-                                    <em>{errors.category}</em>
-                                </Grid>
-                                <Grid item style={{width: '100%',marginTop: 20}}>
                                     <Typography style={{ fontSize: 17 }}>Méthodes de facturation*</Typography>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
 
@@ -403,33 +334,6 @@ class add extends React.Component {
                                         />
                                     </FormControl>
                                     <em style={{color: 'red'}}>{errors.billing}</em>
-                                </Grid>
-                                <Grid item style={{width: '100%',marginTop: 20}}>
-                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
-                                        <InputLabel shrink htmlFor="genre-label-placeholder">
-                                            Méthode de calcul*
-                                        </InputLabel>
-                                        <Select
-                                            input={<Input name="calculating" id="genre-label-placeholder" />}
-                                            displayEmpty
-                                            name="calculating"
-                                            value={this.state.calculating}
-                                            onChange={this.onChange}
-                                            className={classes.selectEmpty}
-                                            error={errors.calculating}
-                                        >
-                                            <MenuItem value="">
-                                                <em>...</em>
-                                            </MenuItem>
-                                            {all_calculating.map(e => (
-                                                <MenuItem key={e._id} value={e._id} >
-                                                    {e.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                        <FormHelperText>Sélectionner une méthode de calcul</FormHelperText>
-                                    </FormControl>
-                                    <em>{errors.calculating}</em>
                                 </Grid>
                                 <Grid item style={{width: '100%',marginTop: 20}}>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>
@@ -457,22 +361,6 @@ class add extends React.Component {
                                         <FormHelperText>Sélectionner un filtre de présentation</FormHelperText>
                                     </FormControl>
                                     <em>{errors.filter_presentation}</em>
-                                </Grid>
-                                <Grid item style={{width: '100%',marginTop: 20}}>
-                                    <Typography style={{ fontSize: 17 }}>Filtres de recherche</Typography>
-                                    <FormControl className={classes.formControl} style={{width: '100%'}}>
-
-                                        <Select2
-                                            value={this.state.selectedOption}
-                                            onChange={this.handleChangeSelect}
-                                            options={options}
-                                            isMulti
-                                            isSearchable
-                                            closeMenuOnSelect={false}
-
-                                        />
-                                    </FormControl>
-                                    <em>{errors.search_filter}</em>
                                 </Grid>
                                 <Grid item style={{width: '100%',marginTop:20}}>
                                     <FormControl className={classes.formControl} style={{width: '100%'}}>

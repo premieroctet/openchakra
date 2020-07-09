@@ -10,6 +10,7 @@ import axios from 'axios';
 import Router from "next/router";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import cookie from 'react-cookies'
 
 const styles = {
     loginContainer: {
@@ -56,7 +57,7 @@ class view extends React.Component {
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.alfred_id;
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
         axios.get(`/myAlfred/api/admin/users/alfred/${id}`)
             .then(response => {
 
@@ -66,9 +67,9 @@ class view extends React.Component {
 
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
                 if(err.response.status === 401 || err.response.status === 403) {
-                    localStorage.removeItem('token');
+                    cookie.remove('token', { path: '/' })
                     Router.push({pathname: '/login'})
                 }
             })
@@ -97,7 +98,7 @@ class view extends React.Component {
 
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
             })
 
 
@@ -113,7 +114,7 @@ class view extends React.Component {
 
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
 
             })
 

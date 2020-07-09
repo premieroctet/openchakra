@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Router from 'next/router';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from "axios";
+import cookie from 'react-cookies'
 
 const styles = theme => ({
     signupContainer: {
@@ -65,7 +66,7 @@ class add extends React.Component {
                     'content-type': 'multipart/form-data'
                 }
             };
-            axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+            axios.defaults.headers.common['Authorization'] = cookie.load('token')
             axios.post("/myAlfred/api/admin/equipment/all",formData,config)
                 .then((response) => {
                     alert("Equipment ajouté");
@@ -74,7 +75,7 @@ class add extends React.Component {
                     console.log(error);
                     this.setState({errors: error.response.data});
                 if(error.response.status === 401 || error.response.status === 403 ) {
-                    localStorage.removeItem('token');
+                    cookie.remove('token', { path: '/' })
                     Router.push({pathname: '/login'})
                 }
             });

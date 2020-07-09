@@ -16,6 +16,7 @@ import axios from 'axios';
 import Router from "next/router";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import cookie from 'react-cookies'
 
 const styles = {
     loginContainer: {
@@ -64,7 +65,7 @@ class idCard extends React.Component {
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.alfred_id;
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
         axios.get(`/myAlfred/api/admin/users/alfred/${id}`)
             .then(response => {
 
@@ -85,9 +86,9 @@ class idCard extends React.Component {
 
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
                 if(err.response.status === 401 || err.response.status === 403) {
-                    localStorage.removeItem('token');
+                    cookie.remove('token', { path: '/' })
                     Router.push({pathname: '/login'})
                 }
             })
@@ -105,7 +106,7 @@ class idCard extends React.Component {
                 alert('Carte d\'identité validée');
                 Router.push({pathname: '/dashboard/alfred/all'})
             })
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
     }
 
     deleteCard() {
@@ -115,7 +116,7 @@ class idCard extends React.Component {
                 alert('Validation supprimée');
                 Router.push({pathname: '/dashboard/alfred/all'})
             })
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
     }
 
 

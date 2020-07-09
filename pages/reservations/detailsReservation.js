@@ -18,6 +18,7 @@ import Button from '@material-ui/core/Button';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Router from 'next/router';
+import cookie from 'react-cookies'
 
 
 moment.locale("fr");
@@ -52,8 +53,8 @@ class DetailsReservation extends React.Component {
 
     this.setState({ booking_id: booking_id });
 
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
-+-
+    axios.defaults.headers.common["Authorization"] = cookie.load('token')
+
     axios.get("/myAlfred/api/users/current").then(res => {
       let result = res.data
       this.setState({ currentUser: result });
@@ -92,7 +93,7 @@ class DetailsReservation extends React.Component {
     .catch(error => {
       console.log(error)
       if(error.response && error.response.status === 401 || error.response.status === 403) {
-          localStorage.removeItem('token');
+          cookie.remove('token', { path: '/' })
           Router.push({pathname: '/login'})
       }
     });
@@ -110,7 +111,7 @@ class DetailsReservation extends React.Component {
 
         this.socket.emit("changeStatus", this.state.bookingObj);
       })
-      .catch(err => console.log(err));
+      .catch(err => console.error(err));
   }
 
   handleOpen1() {
@@ -829,15 +830,7 @@ class DetailsReservation extends React.Component {
                 <Grid container style={{display: 'flex', flexDirection: 'column',}}>
                   <Grid  style={{display: 'flex', width: '70%', justifyContent: 'space-between'}}>
                     <Grid item>
-                      <BookingDetail
-                        prestations={pricedPrestations}
-                        count={countPrestations}
-                        alfred_fee={alfred_fee}
-                        client_fee={client_fee}
-                        travel_tax={this.state.bookingObj?this.state.bookingObj.travel_tax : 0}
-                        pick_tax={this.state.bookingObj?this.state.bookingObj.pick_tax : 0}
-                        total={amount}
-                      />
+                      <BookingDetail prestations={pricedPrestations} count={countPrestations} alfred_fee={alfred_fee} client_fee={client_fee} travel_tax={this.state.bookingObj?this.state.bookingObj.travel_tax : 0}  pick_tax={this.state.bookingObj?this.state.bookingObj.pick_tax : 0} total={amount} cesu_total={this.state.bookingObj?this.state.bookingObj.cesu_amount : 0} />
                     </Grid>
                   </Grid>
                 </Grid>

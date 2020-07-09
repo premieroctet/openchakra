@@ -13,6 +13,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import useAutocomplete from '@material-ui/lab/useAutocomplete';
 const {matches, normalize} = require('../../../utils/text')
 import Select from "react-dropdown-select";
+import cookie from "react-cookies"
 
 class SelectService extends React.Component {
   constructor(props) {
@@ -29,7 +30,7 @@ class SelectService extends React.Component {
   setServices(pattern) {
     pattern = pattern || '%20';
     var kw_url = `/myAlfred/api/service/keyword/${pattern}`;
-    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common['Authorization'] = cookie.load('token')
     axios.get(kw_url)
       .then((response) => {
         let data = response.data;

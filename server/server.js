@@ -72,7 +72,7 @@ const SERVER_PROD=true;
 // Connect to MongoDB
     mongoose.connect(config.databaseUrl,{useNewUrlParser: true})
         .then(() => console.log(`MongoDB connected to ${config.databaseUrl}`))
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
 
 // Passport middleware
     app.use(passport.initialize());
@@ -115,14 +115,6 @@ const SERVER_PROD=true;
     app.use('/myAlfred/api/payment',payment);
     app.use('/myAlfred/api/touch',touch);
     app.use('/myAlfred/api/authentication', authRoutes)
-
-    const authCheck = (req, res, next) => {
-        next();
-    };
-
-//    app.get("/", authCheck, (req, res) => {
-//        res.status(200)
-//    });
 
     //const port = process.env.PORT || 5000;
     const rootPath = require('path').join(__dirname, '/..')

@@ -22,7 +22,7 @@ router.post('/add',passport.authenticate('jwt',{session:false}),(req,res) => {
            };
 
            calendar.events.unshift(newEvent);
-           calendar.save().then(event => res.json(event)).catch(err => console.log(err));
+           calendar.save().then(event => res.json(event)).catch(err => console.error(err));
        } else {
            const eventField = {};
            eventField.user = req.user.id;
@@ -38,7 +38,7 @@ router.post('/add',passport.authenticate('jwt',{session:false}),(req,res) => {
            eventField.events.unshift(events);
            const newEvent = new Calendar(eventField);
 
-           newEvent.save().then(event => res.json(event)).catch(err => console.log(err));
+           newEvent.save().then(event => res.json(event)).catch(err => console.error(err));
        }
     });
 });

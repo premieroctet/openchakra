@@ -1,7 +1,7 @@
 const moment = require('moment');
 const path = require('path');
 const fs = require('fs');
-const {getHost}=require('./mailing')
+const {getHost}=require('./infra')
 const emptyPromise = require('./promise');
 const mangopay = require('mangopay2-nodejs-sdk');
 
@@ -244,7 +244,7 @@ const payAlfred = booking => {
                 }
                 mangoApi.Users.getBankAccounts(id_mangopay_alfred)
                   .catch (err => {
-                    console.log(err);
+                    console.error(err);
                     return
                   })
                   .then ( accounts => {
@@ -263,7 +263,7 @@ const payAlfred = booking => {
                           PaymentType: "BANK_WIRE"
                         })
                         .catch ( err => {
-                          console.log(err);
+                          console.error(err);
                           return
                         })
                         .then(

@@ -71,9 +71,11 @@ const isIntervalAvailable = (start, end, serviceId, avails) => {
   if (isEmpty(avails)) {
     return true;
   }
-  var m=moment(start);
-  while (m.isBefore(end)) {
-    if (isMomentAvailable(m, serviceId, avails)) { return true};
+  var m=start;
+  while (start.isBefore(end)) {
+    if (isMomentAvailable(m, serviceId, avails)) {
+      return true
+    };
     m.add(15, 'minutes');
   }
   return false;

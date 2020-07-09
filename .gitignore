@@ -161,6 +161,9 @@ $RECYCLE.BIN/
 !static
 static/*
 !static/assets
+!static/service
+!static/category
+!static/prestation
 
 # Vi swap files
 **/*.swp

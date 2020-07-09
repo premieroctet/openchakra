@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
+import cookie from 'react-cookies'
 
 const styles = {
     loginContainer: {
@@ -51,7 +52,7 @@ class view extends React.Component {
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
         const id = this.props.billing_id;
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
         axios.get(`/myAlfred/api/admin/billing/all/${id}`)
             .then(response => {
                 let billing = response.data;
@@ -59,9 +60,9 @@ class view extends React.Component {
 
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
                 if(err.response.status === 401 || err.response.status === 403) {
-                    localStorage.removeItem('token');
+                    cookie.remove('token', { path: '/' })
                     Router.push({pathname: '/login'})
                 }
             })
@@ -86,7 +87,7 @@ class view extends React.Component {
                 Router.push({pathname:'/dashboard/billing/all'})
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
 
             })
 
@@ -102,8 +103,8 @@ class view extends React.Component {
                 Router.push({pathname:'/dashboard/billing/all'})
             })
             .catch(err => {
-                console.log(err);
-                localStorage.removeItem('token');
+                console.error(err);
+                cookie.remove('token', { path: '/' })
                 Router.push({pathname: '/login'})
             })
 

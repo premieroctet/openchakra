@@ -15,6 +15,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import MapComponent from '../../components/map';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import cookie from "react-cookies";
 
 const jwt = require('jsonwebtoken');
 const styles = theme => ({
@@ -69,12 +70,12 @@ class ServicesMap extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    const auth = localStorage.getItem('token');
-    if (auth === null) {
+    const auth = cookie.load('token')
+    if (!auth) {
       Router.push('/login')
     }
     else {
-      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+      axios.defaults.headers.common['Authorization'] = auth
       axios.get("/myAlfred/api/service/allCount")
         .then(response => {
           this.setState({ allServices: response.data })

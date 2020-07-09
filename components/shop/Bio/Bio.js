@@ -7,6 +7,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Card from "@material-ui/core/Card";
 import axios from "axios";
 import Router from "next/router";
+import cookie from "react-cookies"
 
 const styles = theme => ({
   container: {
@@ -86,7 +87,7 @@ class bio extends React.Component {
 
   componentDidMount() {
       localStorage.setItem('path',Router.pathname);
-      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+      axios.defaults.headers.common['Authorization'] = cookie.load('token')
     let self = this;
 
 

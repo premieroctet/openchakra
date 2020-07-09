@@ -3,7 +3,7 @@ const {SIB}=require('./sendInBlue');
 const {computeUrl } = require('../config/config');
 const {booking_datetime_str} = require('./dateutils');
 const {fillSms} = require('./sms')
-var fs = require('fs');
+const {getHost} = require('./infra')
 
 // Templates
 
@@ -50,17 +50,6 @@ const SMS_CONTENTS = {
   [NEW_BOOKING]:                  "{{ params.client_firstname }} a réservé votre service {{ params.service_label }}",
   [BOOKING_EXPIRED_2_CLIENT]:     "Votre réservation du service {{ params.service_label }} par {{ params.alfred_firstname }} est expirée",
   [BOOKING_EXPIRED_2_ALFRED]:     "La réservation de votre service {{ params.service_label }} par {{ params.client_firstname }} est expirée",
-}
-
-const getHost = () => {
-  try {
-    var data = fs.readFileSync('host.txt', 'utf8');
-    return data;
-  }
-  catch (err) {
-      console.error(err);
-      return null;
-  }
 }
 
 const sendNotification = (notif_index, destinee, params) => {
@@ -382,5 +371,5 @@ module.exports={
   sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingDetails, sendBookingInfos, sendNewBooking,
   sendShopOnline,sendBookingRefusedToClient, sendAskingInfo, sendNewMessageToAlfred, sendNewMessageToClient,
   sendAskInfoPreapproved, sendResetPassword, sendNewBookingManual, sendVerificationSMS, sendLeaveCommentForClient,
-  sendLeaveCommentForAlfred, getHost
+  sendLeaveCommentForAlfred
 }

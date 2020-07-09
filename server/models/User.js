@@ -24,7 +24,6 @@ const UserSchema = new Schema({
     birthday: {
         type: Date,
         max: `${year}-01-01`,
-        required: true
     },
     phone: {
         type: String
@@ -298,10 +297,16 @@ const UserSchema = new Schema({
     },
     external_auth: {
         provider: {
+            type: String,
+            enum:["google","facebook"],
+            required:true
+        },
+        token: {
             type: String
         },
         id: {
-            type: String
+            type: String,
+            required:true
         }
     }
 });

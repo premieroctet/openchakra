@@ -13,6 +13,7 @@ import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import styles from './evaluations/evaluationsStyle'
+import cookie from 'react-cookies'
 
 moment.locale('fr');
 
@@ -30,7 +31,7 @@ class Evaluations extends React.Component {
     componentDidMount() {
 
         localStorage.setItem('path',Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
 
         axios.get('/myAlfred/api/users/current').then(res => {
             let user = res.data;
@@ -47,7 +48,7 @@ class Evaluations extends React.Component {
             .then(res => {
                 this.setState({reviews:res.data})
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
 
     }
 

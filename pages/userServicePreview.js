@@ -50,6 +50,7 @@ const moment = require('moment');
 moment.locale('fr');
 registerLocale('fr', fr);
 import Link from 'next/link';
+import cookie from 'react-cookies'
 const {frenchFormat}=require('../utils/text')
 const {Information}=require('../components/Information')
 const I18N=require('../utils/i18n')
@@ -140,6 +141,7 @@ class UserServicesPreview extends React.Component {
       count:{},
       totalPrestations: 0,
       commission: 0,
+      cesu_total: 0,
       total: 0,
       location:null,
       date:null,
@@ -164,11 +166,17 @@ class UserServicesPreview extends React.Component {
 
   componentDidMount() {
     let bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
-    console.log(`Bookingobj:${JSON.stringify(bookingObj)}`)
 
     const id = this.props.service_id;
+
+    if (bookingObj) {
+      if (bookingObj.serviceUserId.toString()!==id) {
+        bookingObj = null
+        localStorage.removeItem("bookingObj")
+      }
+    }
     localStorage.setItem("path", Router.pathname);
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem("token")
+    axios.defaults.headers.common["Authorization"] = cookie.load('token')
     axios.get(`/myAlfred/api/serviceUser/${id}`)
     .then(res => {
 
@@ -200,7 +208,7 @@ class UserServicesPreview extends React.Component {
               let availabilities = res.data;
               this.setState({ availabilities: availabilities });
             })
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
 
           axios.get('/myAlfred/api/reviews/'+serviceUser.user._id)
             .then(response => {
@@ -372,11 +380,15 @@ class UserServicesPreview extends React.Component {
 
   computeTotal = () => {
     var totalPrestations=0;
+    var totalCesu = 0
     var count=this.state.count;
     var su=this.state.serviceUser;
     this.state.prestations.forEach( p => {
       if (count[p._id]>0) {
-        totalPrestations += count[p._id]*p.price;
+        totalPrestations += count[p._id]*p.price
+        if (p.prestation.cesu_eligible) {
+          totalCesu += count[p._id]*p.price
+        }
       }
     });
     const travelTax = this.computeTravelTax();
@@ -386,7 +398,7 @@ class UserServicesPreview extends React.Component {
     var commission=totalPrestations*COMM_CLIENT;
     var total=totalPrestations;
     total+=commission;
-    this.setState({totalPrestations:totalPrestations, commission:commission, total:total}, () => this.checkBook())
+    this.setState({totalPrestations:totalPrestations, commission:commission, total:total, cesu_total: totalCesu}, () => this.checkBook())
   }
 
   isInPerimeter = () => {
@@ -454,12 +466,11 @@ class UserServicesPreview extends React.Component {
         prestations: prestations,
         travel_tax: this.computeTravelTax() ,
         pick_tax: this.computePickTax() ,
+        cesu_amount: this.state.cesu_total,
         fees: this.state.commission,
         status: actual ? "En attente de confirmation" : "Demande d'infos",
         serviceUserId: this.state.serviceUser._id,
       };
-
-      console.log("BookingObj:"+JSON.stringify(bookingObj, null, 2));
 
       if (!actual && user) {
         bookingObj['chatroom']=res.data._id;
@@ -478,7 +489,7 @@ class UserServicesPreview extends React.Component {
         }
 
         if (!this.state.user) {
-          localStorage.removeItem("token");
+          cookie.remove('token', { path: '/' })
           Router.push({ pathname: "/login" });
         }
         else {
@@ -490,7 +501,7 @@ class UserServicesPreview extends React.Component {
       }
       else {
         if (!user) {
-          localStorage.removeItem("token");
+          cookie.remove('token', { path: '/' })
           localStorage.setItem("bookingObj", JSON.stringify(bookingObj));
           localStorage.setItem("path", Router.pathname);
           Router.push({ pathname: "/login" });
@@ -507,7 +518,7 @@ class UserServicesPreview extends React.Component {
                   });
                 })
             })
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
         }
       }
     })
@@ -556,13 +567,21 @@ class UserServicesPreview extends React.Component {
               </Grid>
               <Grid style={{display: 'flex', width: '100%', alignItems: 'center'}}>
                 <Grid style={{width: '100%', marginLeft: 10}}>
-                  <label>{p.prestation.label}</label>
+                  <label>{p.prestation.label}
+                  </label>
                 </Grid>
                 <Grid style={{width: '50%'}}>
                   <label>{p.price ? p.price.toFixed(2) : "?"}€</label>
                 </Grid>
                 <Grid style={{width: '50%'}}>
                   <label>{p.billing ? p.billing.label : '?'}</label>
+                </Grid>
+                <Grid style={{width: '10%'}}>
+                  {p.prestation.cesu_eligible ?
+                    <img src="/static/assets/img/cesu.svg" width="40px" title={`${p.prestation.label} est une prestation éligible au CESU`}/>
+                    :
+                    <div style={{ width: '40px'}}/>
+                  }
                 </Grid>
               </Grid>
             </Grid>
@@ -774,7 +793,7 @@ class UserServicesPreview extends React.Component {
         </Grid>
       </Grid>
         <Grid style={{display: 'flex', flexDirection:'column', marginLeft:15, marginRight:15, marginBottom:30}}>
-          <BookingDetail prestations={pricedPrestations} count={this.state.count} travel_tax={this.computeTravelTax()} pick_tax={this.state.pick_tax} total={this.state.total} client_fee={this.state.commission}/>
+          <BookingDetail prestations={pricedPrestations} count={this.state.count} travel_tax={this.computeTravelTax()} pick_tax={this.state.pick_tax} total={this.state.total} client_fee={this.state.commission} cesu_total={this.state.cesu_total}/>
         </Grid>
         <Grid>
           <Grid style={{display: 'flex', justifyContent: 'space-around' }}>

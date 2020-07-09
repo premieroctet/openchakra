@@ -10,6 +10,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import Button from '@material-ui/core/Button';
 import Link from 'next/link';
 import axios from 'axios';
+import cookie from "react-cookies";
 const jwt = require('jsonwebtoken');
 
 const styles = theme => ({
@@ -114,10 +115,10 @@ class becomeAlfred extends React.Component{
   }
 
   componentDidMount() {
-    const token = localStorage.getItem('token');
+    const token = cookie.load('token')
     if (token) {
       this.setState({logged:true});
-      const token2 = localStorage.getItem('token').split(' ')[1];
+      const token2 = token.split(' ')[1];
       const decode = jwt.decode(token2);
       this.setState({alfred: decode.is_alfred});
 
@@ -128,7 +129,7 @@ class becomeAlfred extends React.Component{
           let user = res.data;
           this.setState({user:user, alfred:user.is_alfred, userId: user._id});
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     }
   }
 
@@ -142,7 +143,7 @@ class becomeAlfred extends React.Component{
               <Card className={classes.card1}>
                 <CardMedia
                     className={classes.cover}
-                    image='../../../static/becomeAlfred.jpg'
+                    image='/static/becomeAlfred.jpg'
                     title="Live from space album cover"
                 />
                 <Grid item xs={12} className={classes.details}>
@@ -164,34 +165,6 @@ class becomeAlfred extends React.Component{
                       </a>
                     </Link>
                   </CardContent>
-                </Grid>
-              </Card>
-              <Card className={classes.card22}>
-                <Grid item xs={12} className={classes.details}>
-                  <CardActionArea className={classes.centercontent}>
-                    <CardMedia
-                        className={classes.media}
-                        image='../../../static/becomeAlfred.jpg'
-                        title="Live from space album cover"
-                    />
-                    <CardContent>
-                      <Typography component="h5" variant="h5" className={classes.padding}>
-                        Devenir Alfred
-                      </Typography>
-                      <Typography variant="body1" color="textSecondary" className={classes.padding}>
-                        Créez en quelques minutes votre espace Alfred,
-                        répertoriez vos services, indiquez vos disponibilités,
-                        vos tarifs et profitez d’un complément de revenu !
-                      </Typography>
-                    </CardContent>
-                    <Link href={this.state.logged && this.state.alfred ?  `/shop?id_alfred=${this.state.userId}`  : this.state.logged && !this.state.alfred ? '/creaShop/creaShop' : '/signup'}>
-                      <a style={{textDecoration:'none'}}>
-                        <Button variant="contained" color={"primary"} className={classes.margin}>
-                          Proposer mes services
-                        </Button>
-                      </a>
-                    </Link>
-                  </CardActionArea>
                 </Grid>
               </Card>
             </Grid>

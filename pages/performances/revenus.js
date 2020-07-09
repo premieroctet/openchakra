@@ -22,6 +22,7 @@ import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import cookie from 'react-cookies'
 
 const Chart = loadable(() => import('react-apexcharts'));
 
@@ -113,7 +114,7 @@ class revenus extends React.Component {
     componentDidMount() {
 
         localStorage.setItem('path',Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
         const revenus1layer = this.state.revenus;
         revenus1layer.forEach((revenus1layerbis) => {
             const revenus2layer = revenus1layerbis.data;
@@ -187,12 +188,12 @@ class revenus extends React.Component {
                     this.state.juneAmount+this.state.julyAmount+this.state.augustAmount+this.state.septemberAmount+this.state.octoberAmount+
                     this.state.novemberAmount+this.state.decemberAmount});
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
         axios.get('/myAlfred/api/performances/incomes/totalComing/'+year)
             .then(res => {
                 this.setState({totalComing: parseInt(res.data),totalYear:parseInt(res.data)+this.state.totalPaid});
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
 
         axios.get('/myAlfred/api/users/current').then(res => {
             let user = res.data;
@@ -299,13 +300,13 @@ class revenus extends React.Component {
                         this.state.juneAmount+this.state.julyAmount+this.state.augustAmount+this.state.septemberAmount+this.state.octoberAmount+
                         this.state.novemberAmount+this.state.decemberAmount});
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
 
         axios.get('/myAlfred/api/performances/incomes/totalComing/'+this.state.year)
             .then(res => {
                 this.setState({totalComing: parseFloat(res.data),totalYear:parseFloat(res.data)+this.state.totalPaid});
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
     };
 
     callDrawer(){

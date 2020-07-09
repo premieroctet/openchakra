@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import styles from './EditPictureStyle'
+import cookie from 'react-cookies'
 
 class EditPicture extends React.Component {
 
@@ -27,7 +28,7 @@ class EditPicture extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path',Router.pathname);
-    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common['Authorization'] = cookie.load('token')
     axios.get(`/myAlfred/api/admin/${this.props.type}/all/${this.props.id}`)
       .then(response => {
         console.log(response, ' response');
@@ -35,9 +36,9 @@ class EditPicture extends React.Component {
         this.setState({result: result});
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
         if(err.response.status === 401 || err.response.status === 403) {
-          localStorage.removeItem('token');
+          cookie.remove('token', { path: '/' })
           Router.push({pathname: '/login'})
         }
       });
@@ -57,7 +58,7 @@ class EditPicture extends React.Component {
         Router.push({pathname:`/dashboard/${this.props.type}`+`s/all`})
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
       })
   };
 

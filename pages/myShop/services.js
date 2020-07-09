@@ -17,6 +17,7 @@ import {ALF_CONDS, CANCEL_MODE} from '../../utils/consts.js';
 import { toast } from 'react-toastify';
 import Router from "next/router";
 import {selectService, selectPrestation, settingService, assetsService} from '../../utils/validationSteps/validationSteps';
+import cookie from 'react-cookies'
 
 
 class services extends React.Component {
@@ -69,12 +70,12 @@ class services extends React.Component {
 
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
-        const token = localStorage.getItem('token');
-        if (token === null) {
+        const token = cookie.load('token')
+        if (!token) {
             Router.push('/login');
         }
 
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = token
         axios.get('/myAlfred/api/users/current')
           .then(res => {
               let user = res.data;
@@ -92,7 +93,7 @@ class services extends React.Component {
 
         if (this.isNewService()) {
           // Get shop to update exclusion services list
-          axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+          axios.defaults.headers.common['Authorization'] = token
           axios.get(`/myAlfred/api/serviceUser/currentAlfred`)
             .then( response  =>  {
               let serviceUsers = response.data;
@@ -102,7 +103,7 @@ class services extends React.Component {
         }
 
         if (!this.isNewService()) {
-          axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+          axios.defaults.headers.common['Authorization'] = token
           axios.get(`/myAlfred/api/serviceUser/${this.props.service_user_id}`)
             .then(res => {
               let resultat = res.data;
@@ -178,8 +179,7 @@ class services extends React.Component {
             cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
 
             let full_url = this.isNewService() ? '/myAlfred/api/serviceUser/myShop/add' : `/myAlfred/api/serviceUser/edit/${this.props.service_user_id}`;
-            axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-            axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+            axios.defaults.headers.common['Authorization'] = cookie.load('token')
             (this.isNewService() ? axios.post : axios.put)(full_url, cloned_shop)
               .then(res => {
 
@@ -192,7 +192,7 @@ class services extends React.Component {
 
                   axios.post('/myAlfred/api/serviceUser/addDiploma/'+res.data._id,formData)
                     .then(() => { console.log("Diplôme ajouté"); })
-                    .catch(err => console.log(err))
+                    .catch(err => console.error(err))
                 }
 
                 if(this.state.shop.certificationPicture !== null) {
@@ -204,7 +204,7 @@ class services extends React.Component {
 
                   axios.post('/myAlfred/api/serviceUser/addCertification/'+res.data._id,formData)
                     .then(() => { console.log("Certification ajoutée"); })
-                    .catch(err => console.log(err))
+                    .catch(err => console.error(err))
                 }
 
                 toast.info("Service "+(this.isNewService() ? "créé" : "modifié")+" avec succès");

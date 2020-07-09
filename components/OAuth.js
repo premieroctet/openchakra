@@ -1,67 +1,29 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-
-const { getHost } = require('../utils/mailing')
-
+import Router from 'next/router'
+import {FacebookLoginButton, GoogleLoginButton} from "react-social-login-buttons";
 
 export default class OAuth extends Component {
 
-    state = {
-        user: {},
-        disabled: ''
-    }
-
-    componentDidMount() {
-        this.popup.close()
-        this.setState({user})
-    }
-
-    checkPopup() {
-        const check = setInterval(() => {
-            const { popup } = this
-            if (!popup || popup.closed || popup.closed === undefined) {
-                clearInterval(check)
-                this.setState({ disabled: ''})
-            }
-        }, 1000)
-    }
-
-    openPopup() {
-        const { provider } = this.props
-        const width = 600, height = 600
-        const left = (window.innerWidth / 2) - (width / 2)
-        const top = (window.innerHeight / 2) - (height / 2)
-        const url = new URL(`/myAlfred/api/authentication/${provider}`, getHost()).toString()
-
-        return window.open(url, '',
-            `toolbar=no, location=no, directories=no, status=no, menubar=no, 
-      scrollbars=no, resizable=no, copyhistory=no, width=${width}, 
-      height=${height}, top=${top}, left=${left}`
-        )
-    }
+    components = {
+        google: GoogleLoginButton,
+        facebook: FacebookLoginButton
+    };
 
     startAuth = () => {
-        if (!this.state.disabled) {
-            this.popup = this.openPopup()
-            this.checkPopup()
-            this.setState({disabled: 'disabled'})
-        }
+        const { provider } = this.props
+        Router.push(`/myAlfred/api/authentication/${provider}`)
     }
 
     render() {
         const { provider } = this.props
-        const { disabled } = this.state
-
+        const ProviderLoginButton = this.components[provider]
         return (
             <div>
                 {
-                    <div className='button-wrapper fadein-fast'>
-                        <button
-                            onClick={this.startAuth}
-                            className={`${provider} ${disabled} button`}
-                        >
-                        </button>
-                    </div>
+                    <ProviderLoginButton
+                        onClick={this.startAuth}
+                    />
                 }
             </div>
         )

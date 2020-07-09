@@ -14,6 +14,7 @@ import Notes from '../Notes/Notes';
 import {computeAverageNotes, computeSumSkills} from '../../utils/functions';
 import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
+import cookie from "react-cookies"
 
 class Commentary extends React.Component{
   constructor(props){
@@ -30,13 +31,13 @@ class Commentary extends React.Component{
     const service_id = this.props.service_id;
     const alfred_mode = this.props.alfred_mode;
 
-    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common['Authorization'] = cookie.load('token')
     if (user_id) {
       axios.get('/myAlfred/api/users/users/'+user_id)
         .then (res => {
           this.setState({owner:res.data})
         })
-        .catch (err => console.log(err));
+        .catch (err => console.error(err));
     }
 
     const req = alfred_mode ? 'customerReviewsCurrent':'alfredReviewsCurrent';

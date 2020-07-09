@@ -7,6 +7,7 @@ import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import axios from "axios";
 import styles from './UserAvatarStyle'
+import cookie from 'react-cookies'
 const jwt = require('jsonwebtoken');
 
 class UserAvatar extends React.Component{
@@ -22,17 +23,20 @@ class UserAvatar extends React.Component{
   }
 
   componentDidMount() {
-    const token = localStorage.getItem('token');
-    if (token !== null) {
-      this.setState({ logged: true });
-      const token2 = localStorage.getItem('token').split(' ')[1];
+    const token = cookie.load('token')
+    if (token) {
+      const token2 = token.split(' ')[1];
       const decode = jwt.decode(token2);
       const alfred_id = decode.id;
-      this.setState({currentUser: alfred_id})
-
-      // Check once then every 20s
-      this.checkWarnings(token)
-      setInterval(() => this.checkWarnings(token) , 20000)
+      this.setState({currentUser: alfred_id},
+        () => {
+          // Check once then every 20s
+          if (this.props.warnings==true) {
+            this.checkWarnings(token)
+            setInterval(() => this.checkWarnings(token) , 20000)
+          }
+        }
+      )
     }
   }
 
@@ -67,8 +71,9 @@ class UserAvatar extends React.Component{
   };
 
   avatarWithPics(user, className) {
+    const url = user.picture.match(/^https?:\/\//)?user.picture:'/'+user.picture
     return(
-      <Avatar alt="photo de profil" src={"/"+user.picture} className={className} />
+      <Avatar alt="photo de profil" src={url} className={className} />
     )
   }
 
@@ -109,10 +114,10 @@ class UserAvatar extends React.Component{
                   aria-haspopup="true"
                 >
                   {
-                    user.picture===undefined || user.picture==='' ?
-                      this.avatarWithoutPics(user, className)
-                      :
+                    user.picture ?
                       this.avatarWithPics(user, className)
+                      :
+                      this.avatarWithoutPics(user, className)
                   }
                 </Badge>
                 <Popover
@@ -145,10 +150,10 @@ class UserAvatar extends React.Component{
               </Grid> :
               <Grid>
                 {
-                  user.picture===undefined || user.picture==='' ?
-                    this.avatarWithoutPics(user, className)
-                    :
+                  user.picture ?
                     this.avatarWithPics(user, className)
+                    :
+                    this.avatarWithoutPics(user, className)
                 }
               </Grid>
           }

@@ -8,6 +8,7 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import Footer from '../hoc/Layout/Footer/Footer';
+import cookie from 'react-cookies'
 
 const styles = theme => ({
     bigContainer: {
@@ -25,7 +26,7 @@ class merciClient extends React.Component {
 
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
     }
 
 

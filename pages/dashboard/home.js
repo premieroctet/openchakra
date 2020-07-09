@@ -11,6 +11,7 @@ import Layout from '../../hoc/Layout/Layout';
 import axios from "axios";
 import Link from "next/link";
 import { CSVLink} from "react-csv";
+import cookie from 'react-cookies'
 
 
 const jwt = require('jsonwebtoken');
@@ -48,18 +49,18 @@ class home extends React.Component {
 
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
-        const auth = localStorage.getItem('token');
-        if(auth === null) {
+        const auth = cookie.load('token')
+        if(!auth) {
             Router.push('/login')
         } else {
-            const token = localStorage.getItem('token').split(' ')[1];
+            const token = auth.split(' ')[1];
             const decode = jwt.decode(token);
             this.setState({is_admin: decode.is_admin});
         }
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = auth
         axios.get("/myAlfred/api/admin/shops/extract")
           .then (res => this.setState({shopsData: res.data}))
-          .catch (err => console.log(err));
+          .catch (err => console.error(err));
     }
 
     render() {

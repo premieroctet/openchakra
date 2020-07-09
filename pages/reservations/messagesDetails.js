@@ -12,6 +12,7 @@ import convertDistance from "geolib/es/convertDistance";
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import styles from './messagesDetails/messagesDetailsStyle'
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
+import cookie from 'react-cookies'
 import Router from "next/router";
 
 moment.locale("fr");
@@ -47,7 +48,7 @@ class MessagesDetails extends React.Component {
       })
       .catch (err => {
         if(err.response && (err.response.status === 401 || err.response.status === 403)) {
-            localStorage.removeItem('token');
+            cookie.remove('token', { path: '/' })
             Router.push({pathname: '/login'})
         }
       })
@@ -59,15 +60,13 @@ class MessagesDetails extends React.Component {
       div.scrollTop = 99999;
     }, 450);
 
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-      "token"
-    );
+    axios.defaults.headers.common["Authorization"] = cookie.load('token')
     axios.put('/myAlfred/api/chatRooms/viewMessages/' + this.props.chatroomId)
       .then()
     axios
       .get("/myAlfred/api/booking/" + this.props.bookingId)
       .then(res => this.setState({ bookingObj: res.data }))
-      .catch(err => console.log(err));
+      .catch(err => console.error(err));
     axios
       .get(`/myAlfred/api/chatRooms/userChatRoom/${id}`)
       .then(res => {
@@ -99,7 +98,7 @@ class MessagesDetails extends React.Component {
           }, () => this.showNotification(data));
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => console.error(err));
   }
 
   handleChange(event) {

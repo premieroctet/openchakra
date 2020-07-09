@@ -11,7 +11,6 @@ const moment = require('moment');
 const request = require('request');
 const {mangoApi}=require('../../../utils/mangopay');
 const {maskIban}=require('../../../utils/text');
-const {getHost}=require('../../../utils/mailing')
 var parse = require('url-parse');
 const { inspect } = require('util');
 
@@ -110,7 +109,11 @@ router.post('/payIn',passport.authenticate('jwt',{session:false}),(req,res)=> {
                             res.json(data)
                         })
                 })
-        });
+        })
+        .catch( error => {
+          console.error(error)
+          res.status(404).json({error:err})
+        })
 });
 
 // POST /myAlfred/api/payment/payInCreate
@@ -321,7 +324,7 @@ router.get('/cards',passport.authenticate('jwt',{session:false}),(req,res)=> {
         .then(user => {
             mangoApi.Users.getCards(user.id_mangopay).then(cards => res.json(cards))
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 
 });
 
@@ -343,7 +346,7 @@ router.get('/cardsActive',passport.authenticate('jwt',{session:false}),(req,res)
                     res.json(allCards);
                 })
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 
 });
 
@@ -406,7 +409,7 @@ router.put('/account',passport.authenticate('jwt',{session:false}),(req,res)=> {
                 account=> {
                     res.status(200).json(account)
                 }
-            ).catch(err => console.log(err));
+            ).catch(err => console.error(err));
         })
 
 });
