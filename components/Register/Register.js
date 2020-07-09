@@ -32,6 +32,7 @@ const {isPhoneOk}=require('../../utils/sms');
 import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined';
 import Router from 'next/router';
 import Link from 'next/link';
+import cookie from 'react-cookies'
 
 registerLocale('fr', fr);
 
