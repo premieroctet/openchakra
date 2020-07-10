@@ -224,30 +224,31 @@ class Register extends React.Component{
             lng: this.state.lng,
         };
 
-        const username = this.state.email;
-        const password = this.state.password;
+        const username = this.state.email
+        const password = this.state.password
+        const google_id = this.state.google_id
 
         axios
             .post('/myAlfred/api/users/register', newUser)
             .then(() => {
                 toast.info('Inscription réussie');
-                axios.post('/myAlfred/api/users/login',{username, password})
-                    .then(response => {
-                        const token = cookie.load('token')
-                        axios.defaults.headers.common['Authorization'] = token;
-                    })
-                    .catch( err => {
-                        console.log(err)
-                    })
-                    .then(this.addPhoto).catch(err => console.log(err))
-                    .then(this.setState({ activeStep: this.state.activeStep + 1})).catch(err => console.log(err))
-                    .then(this.onSubmitPhone).catch(err => console.log(err))
+                axios.post('/myAlfred/api/users/login',{username, password, google_id})
+                  .then(response => {
+                      const token = cookie.load('token')
+                      axios.defaults.headers.common['Authorization'] = token;
+                  })
+                  .catch( err => {
+                      console.log(err)
+                  })
+                  .then(this.addPhoto).catch(err => console.log(err))
+                  .then(this.setState({ activeStep: this.state.activeStep + 1})).catch(err => console.log(err))
+                  .then(this.onSubmitPhone).catch(err => console.log(err))
             })
             .catch(err => {
                 let error = Object.values(err.response.data);
-                    toast.error(error.toString());
-                    this.setState({errors: err.response.data, activeStep: 1})
-                }
+                toast.error(error.toString());
+                this.setState({errors: err.response.data, activeStep: 1})
+              }
             );
     };
 
