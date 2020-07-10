@@ -33,14 +33,20 @@ const authController = (req,res) => {
 
     const userData = extractUser(req)
 
-    User.findOne({email: userData.email})
+    User.findOne({"external_auth.id": userData.id})
         .then(user => {
             if (!user) {
-                redirectRegistration(userData, res)
+                User.findOne({email: userData.email})
+                    .then(user => {
+                        if (!user)
+                            redirectRegistration(userData, res)
+                        else
+                            res.status(403).redirect('/?error=existingEmail')
+                    }).catch(err => {throw err})
             } else if (user.external_auth.provider === userData.provider) {
                 sendCookie(user, res)
             } else {
-                res.status(403).redirect('/?error=existingEmail')
+                res.status(403).redirect('/?error=wrongProvider')
             }
         }).catch(err => console.error(err))
 }
