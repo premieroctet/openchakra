@@ -118,7 +118,6 @@ class Register extends React.Component{
                 email: query.email,
                 name: query.lastname,
                 firstname: query.firstname,
-                activeStep: 1,
                 firstPageValidator: false,
                 picture: query.picture,
                 file: query.picture
@@ -346,28 +345,34 @@ class Register extends React.Component{
                             type='warning'
                             text={'Oups ! Email déjà enregistrer.'}
                         />
-                        <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
-                                <Grid item>
-                                    <h3 style={{color: "rgba(84,89,95,0.95)", fontWeight: "bold", letterSpacing: -1}}>Avec</h3>
+                        { !this.state.google_id ?
+                            <Grid className={classes.margin}>
+                                <Grid container spacing={1} alignItems="flex-end"  className={classes.genericContainer}>
+                                    <Grid className={classes.margin}>
+                                        <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
+                                            <Grid item>
+                                                <h3 style={{color: "rgba(84,89,95,0.95)", fontWeight: "bold", letterSpacing: -1}}>Avec</h3>
+                                            </Grid>
+                                            <Grid style={{width: '70%'}}>
+                                                {this.providers.map(provider =>
+                                                    <OAuth
+                                                        provider={provider}
+                                                        key={provider}
+                                                    />
+                                                )}
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid className={classes.margin}>
+                                        <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
+                                            <Grid>
+                                                <h3 style={{color: "rgba(84,89,95,0.95)", fontWeight: "bold", letterSpacing: -1}}>Ou</h3>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
-                                <Grid style={{width: '70%'}}>
-                                    {this.providers.map(provider =>
-                                        <OAuth
-                                            provider={provider}
-                                            key={provider}
-                                        />
-                                    )}
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                        <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
-                                <Grid>
-                                    <h3 style={{color: "rgba(84,89,95,0.95)", fontWeight: "bold", letterSpacing: -1}}>Ou</h3>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                            </Grid> : null
+                        }
                         <Grid className={classes.margin}>
                             <Grid container spacing={1} alignItems="flex-end"  className={classes.genericContainer}>
                                 <Grid item>
@@ -385,6 +390,7 @@ class Register extends React.Component{
                                         onChange={this.onChangeEmail}
                                         error={this.state.emailError}
                                         helperText={this.state.emailError}
+                                        disabled={!!this.state.google_id}
                                     />
                                     <em style={{color:'red'}}>{errors.email}</em>
                                 </Grid>
@@ -433,50 +439,56 @@ class Register extends React.Component{
                                 <em style={{color:'red'}}>{errors.name}</em>
                             </Grid>
                         </Grid>
-                        <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-                                <Grid item>
-                                    <LockOpenOutlinedIcon className={classes.colorIcon}/>
+                        { !this.state.google_id ?
+                            <Grid className={classes.margin}>
+                                <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
+                                    <Grid className={classes.margin}>
+                                        <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
+                                            <Grid item>
+                                                <LockOpenOutlinedIcon className={classes.colorIcon}/>
+                                            </Grid>
+                                            <Grid item className={classes.widthTextField}>
+                                                <TextField
+                                                    label="Créer un mot de passe"
+                                                    placeholder="Créer un mot de passe"
+                                                    margin="normal"
+                                                    style={{ width: '100%' }}
+                                                    type="password"
+                                                    name="password"
+                                                    value={this.state.password}
+                                                    onChange={this.onChange}
+                                                    onKeyUp ={this.onChangePassword}
+                                                    error={this.state.status1.error}
+                                                    helperText={this.state.status1.error}
+                                                />
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid className={classes.margin}>
+                                        <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
+                                            <Grid item>
+                                                <LockOutlinedIcon className={classes.colorIcon}/>
+                                            </Grid>
+                                            <Grid item className={classes.widthTextField}>
+                                                <TextField
+                                                    label="Confirmer mot de passe"
+                                                    placeholder="Confirmer mot de passe"
+                                                    margin="normal"
+                                                    style={{ width: '100%' }}
+                                                    type="password"
+                                                    name="password2"
+                                                    value={this.state.password2}
+                                                    onChange={this.onChange}
+                                                    onKeyUp ={this.onChangePassword}
+                                                    error={this.state.status2.error}
+                                                    helperText={this.state.status2.error}
+                                                />
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
-                                <Grid item className={classes.widthTextField}>
-                                    <TextField
-                                        label="Créer un mot de passe"
-                                        placeholder="Créer un mot de passe"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="password"
-                                        name="password"
-                                        value={this.state.password}
-                                        onChange={this.onChange}
-                                        onKeyUp ={this.onChangePassword}
-                                        error={this.state.status1.error}
-                                        helperText={this.state.status1.error}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                        <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-                                <Grid item>
-                                    <LockOutlinedIcon className={classes.colorIcon}/>
-                                </Grid>
-                                <Grid item className={classes.widthTextField}>
-                                    <TextField
-                                        label="Confirmer mot de passe"
-                                        placeholder="Confirmer mot de passe"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="password"
-                                        name="password2"
-                                        value={this.state.password2}
-                                        onChange={this.onChange}
-                                        onKeyUp ={this.onChangePassword}
-                                        error={this.state.status2.error}
-                                        helperText={this.state.status2.error}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                            </Grid> : null
+                        }
                     </Grid>
                 );
             case 1:
