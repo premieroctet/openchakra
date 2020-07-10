@@ -24,7 +24,7 @@ class LogIn extends React.Component {
             errors: {}
         };
 
-        this.providers = ['google']
+        this.providers = ['google','facebook']
     }
 
     onChange = e => {

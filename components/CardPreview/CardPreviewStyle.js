@@ -153,7 +153,8 @@ export default theme => ({
     transform: 'translate(-50%, -50%)',
     display: 'flex',
     flexDirection: 'column',
-    alignItems : 'center'
+    alignItems : 'center',
+    width: '100%'
   },
   avatarLetter:{
     height: 95,
