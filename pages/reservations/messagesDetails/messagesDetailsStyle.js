@@ -66,8 +66,9 @@ export default theme => ({
     marginLeft: "4%"
   },
   toggle: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
+    zIndex: 0,
+    [theme.breakpoints.down("xs")]: {
+      marginTop:70,
     }
   },
   mobilerow:{
@@ -91,5 +92,12 @@ export default theme => ({
     [theme.breakpoints.down("xs")]: {
       width: '30%',
     }
-  }
+  },
+  menuButton: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
+  },
 })
