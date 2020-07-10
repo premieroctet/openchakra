@@ -6,23 +6,18 @@ const keys = require('../../config/keys');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const path = require('path');
-
 const CronJob = require('cron').CronJob;
-
 const validateRegisterInput = require('../../validation/register');
 const validateSimpleRegisterInput = require('../../validation/simpleRegister');
 const validateLoginInput = require('../../validation/login');
-
 const {sendResetPassword, sendVerificationMail, sendVerificationSMS} = require('../../../utils/mailing');
-
 const User = require('../../models/User');
 const ResetToken = require('../../models/ResetToken');
 const crypto = require('crypto');
 const multer = require("multer");
-
 const {computeUrl } = require('../../../config/config');
-
 const {addIdIfRequired, createMangoClient} = require('../../../utils/mangopay')
+const {GOOGLE_PROVIDER, FACEBOOK_PROVIDER} = require('../../../utils/consts')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -84,6 +79,9 @@ router.get('/test',(req, res) => res.json({msg: 'Users Works!'}) );
 // @Route POST /myAlfred/api/users/register
 // Register
 router.post('/register',(req,res) =>{
+
+    console.log(`Register received:${JSON.stringify(req.body)}`)
+
     const {errors, isValid} = validateSimpleRegisterInput(req.body);
 
     if(!isValid) {
@@ -110,13 +108,17 @@ router.post('/register',(req,res) =>{
                 userFields.billing_address.city = req.body.city;
                 userFields.billing_address.country = req.body.country;
 
-
-
                 userFields.billing_address.gps = {};
                 userFields.billing_address.gps.lat = req.body.lat;
                 userFields.billing_address.gps.lng = req.body.lng;
                 userFields.service_address = [];
                 userFields.last_login = [];
+
+                const google_id=req.body.google_id || null
+
+                if (google_id) {
+                  userFields.external_auth= { provider: GOOGLE_PROVIDER, id: google_id }
+                }
 
                 const newUser = new User(userFields);
                 bcrypt.genSalt(10, (err, salt) => {
@@ -497,6 +499,7 @@ router.post('/login',(req, res)=> {
     // Find user by email
     User.findOne({email})
         .then(user => {
+          console.log(`Login found user ${JSON.stringify(user)}`)
             // Check for user
             if(!user) {
                 errors.username = 'Mot de passe ou email incorrect';
@@ -504,24 +507,39 @@ router.post('/login',(req, res)=> {
             }
 
             // Check password
-            bcrypt.compare(password, user.password)
-                .then(isMatch => {
-                    if(isMatch && user.active === true) {
-                        // User matched
-                        const payload = {id: user.id, name: user.name, firstname: user.firstname, is_admin: user.is_admin, is_alfred: user.is_alfred}; // Create JWT payload
-                        // Sign token
-                        jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
-                            res.cookie('token', 'Bearer ' + token,{
-                                httpOnly: false,
-                                secure: true,
-                                sameSite: true
-                            }).status(201).json()
-                        });
-                    } else {
-                        errors.password = 'Mot de passe ou email incorrect';
-                        return res.status(400).json(errors);
-                    }
-                });
+            if (user.external_auth) {
+              // User matched
+              const payload = {id: user.id, name: user.name, firstname: user.firstname, is_admin: user.is_admin, is_alfred: user.is_alfred}; // Create JWT payload
+              // Sign token
+              jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
+                  res.cookie('token', 'Bearer ' + token,{
+                      httpOnly: false,
+                      secure: true,
+                      sameSite: true
+                  }).status(201).json()
+                  return
+              })
+            }
+            else {
+              bcrypt.compare(password, user.password)
+                  .then(isMatch => {
+                      if(isMatch && user.active === true) {
+                          // User matched
+                          const payload = {id: user.id, name: user.name, firstname: user.firstname, is_admin: user.is_admin, is_alfred: user.is_alfred}; // Create JWT payload
+                          // Sign token
+                          jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
+                              res.cookie('token', 'Bearer ' + token,{
+                                  httpOnly: false,
+                                  secure: true,
+                                  sameSite: true
+                              }).status(201).json()
+                          });
+                      } else {
+                          errors.password = 'Mot de passe ou email incorrect';
+                          return res.status(400).json(errors);
+                      }
+                  })
+            }
         });
 });
 

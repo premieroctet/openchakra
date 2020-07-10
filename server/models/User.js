@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const year = new Date().getFullYear()-16;
+const {GOOGLE_PROVIDER}=require('../../utils/consts')
 
 const UserSchema = new Schema({
     name: {
@@ -298,7 +299,7 @@ const UserSchema = new Schema({
     external_auth: {
         provider: {
             type: String,
-            enum:["google","facebook"],
+            enum:[GOOGLE_PROVIDER, "facebook"],
             required:true
         },
         token: {
