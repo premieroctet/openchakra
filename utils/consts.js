@@ -297,7 +297,11 @@ const ENTITES={
 
 const CESU= ['Mandatory', 'Optional', 'Disabled']
 
+const GOOGLE_PROVIDER='google'
+const FACEBOOK_PROVIDER='google'
+
 module.exports={
   ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR,
   generate_id, COMM_ALFRED, COMM_CLIENT, GID_LEN, ENTITES, CESU,
+  GOOGLE_PROVIDER, FACEBOOK_PROVIDER,
 };
