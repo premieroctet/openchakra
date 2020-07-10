@@ -156,5 +156,5 @@ export default theme => ({
         display:'flex',
         flexDirection: 'column',
         alignItems: 'center'
-    }
+    },
 })

@@ -347,7 +347,7 @@ class Register extends React.Component{
                         <Grid className={classes.margin}>
                             <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
                                 <Grid item>
-                                    <img src={'../static/background/connexion.svg'} alt={'bienvenu'} style={{width:100, height:100}}/>
+                                    <h3 style={{color: "rgba(84,89,95,0.95)", fontWeight: "bold", letterSpacing: -1}}>Avec</h3>
                                 </Grid>
                                 <Grid style={{width: '70%'}}>
                                     {this.providers.map(provider =>
@@ -356,6 +356,13 @@ class Register extends React.Component{
                                             key={provider}
                                         />
                                     )}
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid>
+                            <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
+                                <Grid>
+                                    <h3 style={{color: "rgba(84,89,95,0.95)", fontWeight: "bold", letterSpacing: -1}}>Ou</h3>
                                 </Grid>
                             </Grid>
                         </Grid>

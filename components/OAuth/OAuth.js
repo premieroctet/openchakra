@@ -17,22 +17,20 @@ class OAuth extends Component {
     };
 
     startAuth = () => {
-        const { provider } = this.props
+        const { provider } = this.props;
         Router.push(`/myAlfred/api/authentication/${provider}`)
-    }
+    };
 
     render() {
-        const { provider } = this.props
-        const ProviderLoginButton = this.components[provider]
+        const { provider } = this.props;
+        const { classes } = this.props;
+        const ProviderLoginButton = this.components[provider];
 
         return (
-            <Grid>
-              <Grid container style={{display: 'flex', border:'1px solid rgba(0, 0, 0, 0.54)', borderRadius: 35, alignItems: 'center'}} on onClick={this.startAuth}>
+            <Grid className={classes.containerOauth}>
+              <Grid container className={classes.contentOauth} onClick={this.startAuth}>
                   <Grid style={{margin: 10}}>
-                      <img src={'../../static/assets/img/unnamed.png'} alt={'google'} title={'google'} width={20}/>
-                  </Grid>
-                  <Grid>
-                      <Divider orientation="vertical" flexItem />
+                      <img src={'../../static/assets/img/unamed.png'} alt={'google'} title={'google'} width={20}/>
                   </Grid>
                   <Grid>
                       <p style={{
