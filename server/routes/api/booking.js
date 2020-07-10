@@ -142,6 +142,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
     bookingFields.pick_tax = req.body.pick_tax;
     bookingFields.status = req.body.status;
     bookingFields.serviceUserId = req.body.serviceUserId;
+    bookingFields.cesu_amount = req.body.cesu_amount;
 
     const newBooking = new Booking(bookingFields);
 
