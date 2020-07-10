@@ -487,6 +487,7 @@ router.post('/register/alfred', (req, res) => {
 // @Route POST /myAlfred/api/users/login
 // Login
 router.post('/login',(req, res)=> {
+
     const {errors, isValid} = validateLoginInput(req.body);
 
     if(!isValid) {
