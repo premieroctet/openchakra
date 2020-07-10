@@ -27,7 +27,7 @@ class OAuth extends Component {
         const ProviderLoginButton = this.components[provider];
 
         return (
-            <Grid className={classes.containerOauth}>
+            <Grid>
               <Grid container className={classes.contentOauth} onClick={this.startAuth}>
                   <Grid style={{margin: 10}}>
                       <img src={'../../static/assets/img/unamed.png'} alt={'google'} title={'google'} width={20}/>
@@ -39,7 +39,7 @@ class OAuth extends Component {
                           fontFamily: 'Helvetica',
                           fontWeight: 400,
                           lineHeight: 1
-                      }}>Connexion</p>
+                      }}>S'inscrire avec Gmail</p>
                   </Grid>
               </Grid>
             </Grid>

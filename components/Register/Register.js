@@ -359,7 +359,7 @@ class Register extends React.Component{
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid>
+                        <Grid className={classes.margin}>
                             <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
                                 <Grid>
                                     <h3 style={{color: "rgba(84,89,95,0.95)", fontWeight: "bold", letterSpacing: -1}}>Ou</h3>
