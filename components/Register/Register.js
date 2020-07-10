@@ -120,7 +120,8 @@ class Register extends React.Component{
                 firstname: query.firstname,
                 activeStep: 1,
                 firstPageValidator: false,
-                picture: query.picture
+                picture: query.picture,
+                file: query.picture
             })
         }
         if(query.error){
@@ -494,7 +495,7 @@ class Register extends React.Component{
                                     <IconButton
                                         color="primary"
                                         className={classes.button}
-                                        style={{backgroundImage:`url('${this.state.file}')`,}}
+                                        style={{backgroundImage:`url('${this.state.file}')`}}
                                         component="span"
                                     >
                                         {this.state.file === null ?
@@ -784,7 +785,7 @@ class Register extends React.Component{
                                                 </Button>
                                             }
                                             backButton={
-                                                <Button size="small" onClick={this.handleBack} disabled={activeStep === 0 || this.props.googleAuth}>
+                                                <Button size="small" onClick={this.handleBack} disabled={activeStep === 0 || this.state.google_id}>
                                                     <KeyboardArrowLeft />
                                                     Précédent
                                                 </Button>

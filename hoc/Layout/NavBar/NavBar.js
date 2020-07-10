@@ -194,7 +194,7 @@ class NavBar extends Component {
 
     const modalRegister = () =>{
       return(
-          <Register callLogin={this.handleOpenLogin} closeLOgin={this.componentDidMount} googleAuth={this.props.googleAuth}/>
+          <Register callLogin={this.handleOpenLogin} closeLOgin={this.componentDidMount}/>
       )
     };
 

@@ -3,11 +3,9 @@ import PropTypes from 'prop-types'
 import Router from 'next/router'
 import {FacebookLoginButton, GoogleLoginButton} from "react-social-login-buttons";
 import withStyles from '@material-ui/core/styles/withStyles';
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import styles from './OAuthStyle' ;
-import DeleteIcon from '@material-ui/icons/Delete';
-import Divider from '@material-ui/core/Divider';
+
 
 class OAuth extends Component {
 
