@@ -71,6 +71,20 @@ export default theme => ({
     containerDialogContent:{
         width: '100%',
         height: '100%',
-        margin:'0px auto 1.6rem'
+        marginBottom:'1.6rem',
+        marginTop:'-1.6rem'
+    },
+    titleRegister:{
+        textAlign: 'center',
+        margin: '0px auto 1.6rem',
+        fontSize: "1.6rem",
+        color: "rgba(84,89,95,0.95)",
+        letterSpacing: -1,
+        fontWeight: "bold"
+    },
+    flexContainerPics:{
+        display:'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
     },
 })

@@ -798,7 +798,7 @@ class Register extends React.Component{
                                                 </Button>
                                             }
                                             backButton={
-                                                <Button size="small" onClick={this.handleBack} disabled={activeStep === 0 || this.state.google_id}>
+                                                <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
                                                     <KeyboardArrowLeft />
                                                     Précédent
                                                 </Button>

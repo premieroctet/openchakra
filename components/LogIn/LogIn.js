@@ -24,7 +24,7 @@ class LogIn extends React.Component {
             password: '',
             errors: {}
         };
-        this.providers = ['google', 'facebook']
+        this.providers = ['google']
     }
 
     onChange = e => {
@@ -65,9 +65,32 @@ class LogIn extends React.Component {
             <Grid className={classes.fullContainer}>
                 <Grid style={{width: '100%'}}>
                     <Grid className={classes.newContainer}>
-                        <Grid item className={classes.loginContainer}>
-                            <Typography style={{ fontSize: 30 }}>Connexion</Typography>
-                            <img src={'../static/background/connexion.svg'} alt={'bienvenu'} style={{width:100, height:100}}/>
+                        <Grid>
+                            <h2 className={classes.titleRegister}>Connexion</h2>
+                        </Grid>
+                        <Grid className={classes.margin}>
+                            <Grid container spacing={1} alignItems="flex-end"  className={classes.genericContainer}>
+                                <Grid className={classes.margin}>
+                                    <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
+                                        <Grid style={{width: '100%'}}>
+                                            {this.providers.map(provider =>
+                                                <OAuth
+                                                    provider={provider}
+                                                    key={provider}
+                                                    text={'login'}
+                                                />
+                                            )}
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid className={classes.margin}>
+                                    <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
+                                        <Grid>
+                                            <h3 style={{color: "rgba(84,89,95,0.95)", fontWeight: "bold", letterSpacing: -1}}>Ou</h3>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
                         </Grid>
                         <Grid className={classes.containerDialogContent}>
                             <form onSubmit={this.onSubmit} style={{marginBottom:15}}>
@@ -115,7 +138,7 @@ class LogIn extends React.Component {
                                     </Grid>
                                 </Grid>
                                 <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                                    <Button type="submit" variant="outlined" color="primary" style={{ width: '100%',color: 'white' }}>
+                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%', color: 'white'}}>
                                         Connexion
                                     </Button>
                                 </Grid>
@@ -124,17 +147,6 @@ class LogIn extends React.Component {
                         <Grid item style={{display:'flex',flexDirection:'column', marginBottom: '10%'}}>
                             <Link href={"/forgotPassword"}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Mot de passe oublié ?</a></Link>
                             <a color="primary" onClick={this.props.callRegister} style={{textDecoration: 'none', color: '#2FBCD3', cursor: 'pointer'}}>Pas encore inscrit ? Inscrivez-vous !</a>
-                        </Grid>
-                        <Grid item style={{display:'flex',justifyContent: 'center', marginTop: 5}}>
-                            <div>
-                                <hr className={classes.hrStyle}/>
-                                {this.providers.map(provider =>
-                                    <OAuth
-                                        provider={provider}
-                                        key={provider}
-                                    />
-                                )}
-                            </div>
                         </Grid>
                     </Grid>
                 </Grid>

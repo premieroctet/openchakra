@@ -20,7 +20,7 @@ class OAuth extends Component {
     };
 
     render() {
-        const { provider } = this.props;
+        const { provider, text } = this.props;
         const { classes } = this.props;
         const ProviderLoginButton = this.components[provider];
 
@@ -37,7 +37,7 @@ class OAuth extends Component {
                           fontFamily: 'Helvetica',
                           fontWeight: 400,
                           lineHeight: 1
-                      }}>S'inscrire avec Gmail</p>
+                      }}>{text === 'login' ? 'Se connecter avec Gmail' : 'S\'inscrire avec Gmail'}</p>
                   </Grid>
               </Grid>
             </Grid>
