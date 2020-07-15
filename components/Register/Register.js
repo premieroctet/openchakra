@@ -36,6 +36,7 @@ import cookie from 'react-cookies'
 import OAuth from '../OAuth/OAuth';
 var parse = require('url-parse');
 import Information from '../Information/Information';
+const {PROVIDERS} = require('../../utils/consts')
 
 registerLocale('fr', fr);
 
@@ -106,8 +107,6 @@ class Register extends React.Component{
         };
         this.handleChecked = this.handleChecked.bind(this);
         this.onChangeAddress = this.onChangeAddress.bind(this);
-        this.providers = ['google'];
-
     }
 
     componentDidMount() {
@@ -351,8 +350,9 @@ class Register extends React.Component{
                                     <img src={'../static/background/connexion.svg'} alt={'bienvenu'} style={{width:100, height:100}}/>
                                 </Grid>
                                 <Grid style={{width: '70%'}}>
-                                    {this.providers.map(provider =>
+                                    {PROVIDERS.map(provider =>
                                         <OAuth
+                                            login={false}
                                             provider={provider}
                                             key={provider}
                                         />
