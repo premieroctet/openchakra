@@ -35,7 +35,7 @@ import Link from 'next/link';
 import cookie from 'react-cookies'
 import OAuth from '../OAuth/OAuth';
 var parse = require('url-parse');
-const {Information}=require('../Information');
+import Information from '../Information/Information';
 
 registerLocale('fr', fr);
 
