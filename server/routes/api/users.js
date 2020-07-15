@@ -355,8 +355,25 @@ router.put('/profile/job',passport.authenticate('jwt',{session:false}),(req,res)
 // Add a picture profile
 // @Access private
 router.post('/profile/picture',upload.single('myImage'),passport.authenticate('jwt',{session:false}),(req,res) => {
+
     User.findByIdAndUpdate(req.user.id, {
-        picture: req.file ? req.file.path : ""
+        picture: req.file ? req.file.path : req.body.avatar
+    },{new:true})
+        .then(user => {
+            res.json(user)
+        })
+        .catch(err => {
+            console.error(err)
+        })
+});
+
+// @Route PUT /myAlfred/api/users/profile/picture
+// Add a picture profile
+// @Access private
+router.post('/profile/avatar', passport.authenticate('jwt',{session:false}),(req,res) => {
+
+    User.findByIdAndUpdate(req.user.id, {
+        picture: req.body.avatar
     },{new:true})
         .then(user => {
             res.json(user)

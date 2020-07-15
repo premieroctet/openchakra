@@ -91,6 +91,8 @@ class Register extends React.Component{
             activeStep: 0,
             file: null,
             picture: '',
+            // Avatar link coming from Google or Facebook
+            avatar: null,
             value:'',
             phone: '',
             phoneOk: false,
@@ -119,7 +121,7 @@ class Register extends React.Component{
                 firstname: query.firstname,
                 activeStep: 1,
                 firstPageValidator: false,
-                picture: query.picture
+                avatar: query.picture
             })
         }
         if(query.error){
@@ -254,9 +256,10 @@ class Register extends React.Component{
     addPhoto = () => {
         axios.defaults.headers.common['Authorization'] = cookie.load('token')
 
-        if(this.state.picture !== ''){
+        if(this.state.picture !== '' || this.state.avatar !== ''){
             const formData = new FormData();
             formData.append('myImage',this.state.picture);
+            formData.append('avatar',this.state.avatar);
             const config = {
                 headers: {
                     'content-type': 'multipart/form-data'
@@ -264,10 +267,16 @@ class Register extends React.Component{
             };
 
             axios.post("/myAlfred/api/users/profile/picture",formData,config)
-                .catch((error) => {
-                console.log(error)
-            })
+              .catch((error) => {
+                console.error(error)
+              })
         }
+        /** else if (this.state.avatar !== '') {
+          axios.post("/myAlfred/api/users/profile/avatar", { avatar: this.state.avatar})
+            .catch((error) => {
+              console.error(error)
+            })
+        } */
     };
 
 
@@ -334,6 +343,9 @@ class Register extends React.Component{
     };
 
     renderSwitch(stepIndex, classes, errors) {
+
+        const picture = this.state.file||this.state.avatar
+
         switch(stepIndex) {
             case 0:
                 return (
@@ -488,13 +500,10 @@ class Register extends React.Component{
                                     <IconButton
                                         color="primary"
                                         className={classes.button}
-                                        style={{backgroundImage:`url('${this.state.file}')`,}}
+                                        style={{backgroundImage:`url(${picture})`,}}
                                         component="span"
                                     >
-                                        {this.state.file === null ?
-                                            <PhotoCamera style={{fontSize: '2rem'}} />
-                                            : null
-                                        }
+                                      <PhotoCamera style={{fontSize: '2rem'}} />
                                     </IconButton>
                                 </label>
                             </Grid>
