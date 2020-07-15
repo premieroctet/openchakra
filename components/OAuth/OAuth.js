@@ -22,7 +22,7 @@ class OAuth extends Component {
     }
 
     render() {
-        const { provider } = this.props
+        const { provider, login } = this.props
         const ProviderLoginButton = this.components[provider]
 
         return (
@@ -41,7 +41,9 @@ class OAuth extends Component {
                           fontFamily: 'Helvetica',
                           fontWeight: 400,
                           lineHeight: 1
-                      }}>Connexion</p>
+                      }}>
+                      { login ? `Connexion ${provider}` : `Inscription ${provider}` }
+                      </p>
                   </Grid>
               </Grid>
             </Grid>
@@ -51,6 +53,8 @@ class OAuth extends Component {
 
 OAuth.propTypes = {
     provider: PropTypes.string.isRequired,
+    // Login : true => connect, false : register
+    login: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(OAuth)
