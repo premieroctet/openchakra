@@ -198,6 +198,8 @@ export default theme => ({
     [theme.breakpoints.down('xs')]: {
       fontSize: '4.5vw',
     },
-  }
+  },
+  noneLink: {
+    textDecoration: 'none',
+  },
 });
-
