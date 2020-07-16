@@ -115,9 +115,13 @@ router.post('/register',(req,res) =>{
                 userFields.last_login = [];
 
                 const google_id=req.body.google_id || null
+                const facebook_id=req.body.facebook_id || null
 
                 if (google_id) {
                   userFields.external_auth= { provider: GOOGLE_PROVIDER, id: google_id }
+                }
+                if (facebook_id) {
+                  userFields.external_auth= { provider: FACEBOOK_PROVIDER, id: facebook_id }
                 }
 
                 const newUser = new User(userFields);

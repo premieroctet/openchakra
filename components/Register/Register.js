@@ -124,6 +124,17 @@ class Register extends React.Component{
                 avatar: query.picture
             })
         }
+        if(query.facebook_id){
+            this.setState({
+                facebook_id: query.facebook_id,
+                email: query.email,
+                name: query.lastname,
+                firstname: query.firstname,
+                activeStep: 1,
+                firstPageValidator: false,
+                avatar: query.picture
+            })
+        }
         if(query.error){
             this.setState({errorExistEmail: true})
         }
@@ -211,6 +222,7 @@ class Register extends React.Component{
 
         const newUser = {
             google_id: this.state.google_id,
+            facebook_id: this.state.facebook_id,
             firstname: this.state.firstname,
             name: this.state.name,
             birthday: this.state.birthday,
@@ -228,29 +240,30 @@ class Register extends React.Component{
         const username = this.state.email
         const password = this.state.password
         const google_id = this.state.google_id
+        const facebook_id = this.state.facebook_id
 
         axios
             .post('/myAlfred/api/users/register', newUser)
             .then(() => {
                 toast.info('Inscription réussie');
-                axios.post('/myAlfred/api/users/login',{username, password, google_id})
+                axios.post('/myAlfred/api/users/login',{username, password, google_id, facebook_id})
                   .then(response => {
                       const token = cookie.load('token')
                       axios.defaults.headers.common['Authorization'] = token;
                   })
                   .catch( err => {
-                      console.log(err)
+                      console.error(err)
                   })
                   .then(this.addPhoto).catch(err => console.log(err))
                   .then(this.setState({ activeStep: this.state.activeStep + 1})).catch(err => console.log(err))
                   .then(this.onSubmitPhone).catch(err => console.log(err))
             })
             .catch(err => {
-                let error = Object.values(err.response.data);
-                toast.error(error.toString());
-                this.setState({errors: err.response.data, activeStep: 1})
-              }
-            );
+              console.error(err)
+              let error = Object.values(err.response.data);
+              toast.error(error.toString());
+              this.setState({errors: err.response.data, activeStep: 1})
+            });
     };
 
     addPhoto = () => {
@@ -354,7 +367,7 @@ class Register extends React.Component{
                             open={this.state.errorExistEmail}
                             onClose={() => this.setState({errorExistEmail: false})}
                             type='warning'
-                            text={'Oups ! Email déjà enregistrer.'}
+                            text={'Oups ! Un compte utilisant cette adresse mail existe déjà'}
                         />
                         <Grid className={classes.margin}>
                             <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
