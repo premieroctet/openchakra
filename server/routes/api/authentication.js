@@ -57,7 +57,7 @@ const extractUser = (req) => {
             id: req.user.id,
             lastName: req.user.name.familyName,
             firstName: req.user.name.givenName,
-            email: req.user.emails[0].value,
+            email: req.user.emails ? req.user.emails[0].value : null,
             picture: req.user.photos[0].value,
             provider: req.user.provider
         }

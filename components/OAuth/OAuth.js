@@ -29,7 +29,7 @@ class OAuth extends Component {
             <Grid>
               <Grid container style={{display: 'flex', border:'1px solid rgba(0, 0, 0, 0.54)', borderRadius: 35, alignItems: 'center'}} on onClick={this.startAuth}>
                   <Grid style={{margin: 10}}>
-                      <img src={'../../static/assets/img/unnamed.png'} alt={'google'} title={'google'} width={20}/>
+                      <img src={'/static/assets/img/btn_google_light_normal_ios.svg'} style={{ width: '40px'}} alt={'google'} title={'google'} width={20}/>
                   </Grid>
                   <Grid>
                       <Divider orientation="vertical" flexItem />
