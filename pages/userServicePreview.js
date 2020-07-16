@@ -190,7 +190,7 @@ class UserServicesPreview extends React.Component {
 
           let serviceUser = res.data;
           var count = {}
-          serviceUser.prestations.forEach( p => count[p._id]=0);
+          serviceUser.prestations.forEach( p => count[p._id]=null);
 
           if (bookingObj) {
             serviceUser.prestations.forEach( p => {
@@ -277,7 +277,7 @@ class UserServicesPreview extends React.Component {
 
   checkBook = () => {
     var errors={}
-    if (Object.values(this.state.count).every( v => v==0)) {
+    if (Object.values(this.state.count).every( v => v==0 || v==null)) {
       errors['prestations']='Sélectionnez au moins une prestation';
     }
     if (this.state.totalPrestations<this.state.serviceUser.minimum_basket) {
@@ -362,13 +362,12 @@ class UserServicesPreview extends React.Component {
 
   onQtyChanged = event => {
     var {name, value} = event.target;
-    if (!value) { value=0}
+    if (!value) { value=null}
     value = parseInt(value);
-    if (!isNaN(value) && value>=0) {
-      var count = this.state.count;
-      count[name]=value;
-      this.setState({count:count}, () => this.computeTotal());
-    }
+    value = !isNaN(value) && value>=0 ? value : null
+    var count = this.state.count;
+    count[name]=value;
+    this.setState({count:count}, () => this.computeTotal());
   }
 
   computeTravelTax = () => {
