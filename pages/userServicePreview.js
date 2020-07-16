@@ -153,7 +153,7 @@ class UserServicesPreview extends React.Component {
       },
       errors:{},
       isChecked: false,
-      warningPerimeter:true,
+      warningPerimeter:false,
       use_cesu: false,
     },
     this.onQtyChanged = this.onQtyChanged.bind(this);
