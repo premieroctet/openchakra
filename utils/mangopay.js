@@ -1,7 +1,6 @@
 const moment = require('moment');
 const path = require('path');
 const fs = require('fs');
-const {getHost}=require('./mailing')
 const emptyPromise = require('./promise');
 const mangopay = require('mangopay2-nodejs-sdk');
 
@@ -18,21 +17,6 @@ const mangoApi = new mangopay({
   clientId: 'testmyalfredv2',
   clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
 });
-
-const HOOK_TYPES="KYC_CREATED KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED".split(' ')
-/** Hook Mangopay */
-
-HOOK_TYPES.forEach(hookType => {
-  const hook_url=new URL('/myAlfred/api/payment/mangopay_hook', getHost());
-  console.log(`Setting hook ${hook_url} for ${hookType}`);
-  mangoApi.Hooks.create({
-    Tag: "MyAlfred hook",
-    EventType: hookType,
-    Status: "ENABLED",
-    Validity: "VALID",
-    Url: hook_url,
-  });
-})
 
 const createMangoClient = user => {
   var userData = {
