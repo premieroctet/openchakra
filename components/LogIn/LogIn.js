@@ -13,7 +13,7 @@ import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
 import OAuth from '../OAuth/OAuth';
 import cookie from 'react-cookies'
-const {PROVIDERS}=require('../../utils/consts')
+const {PROVIDERS}=require('../../utils/consts');
 
 class LogIn extends React.Component {
     constructor(props) {

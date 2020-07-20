@@ -36,7 +36,7 @@ import cookie from 'react-cookies'
 import OAuth from '../OAuth/OAuth';
 var parse = require('url-parse');
 import Information from '../Information/Information';
-const {PROVIDERS} = require('../../utils/consts')
+const {PROVIDERS} = require('../../utils/consts');
 
 registerLocale('fr', fr);
 
@@ -191,7 +191,7 @@ class Register extends React.Component{
     };
 
     sendSms = () => {
-        axios.defaults.headers.common['Authorization'] = cookie.load('token')
+        axios.defaults.headers.common['Authorization'] = cookie.load('token');
         axios.post('/myAlfred/api/users/sendSMSVerification', this.state.phone)
             .then (res => {
                 var txt="Le SMS a été envoyé";
@@ -205,7 +205,7 @@ class Register extends React.Component{
     };
 
     checkSmsCode = () => {
-        axios.defaults.headers.common['Authorization'] = cookie.load('token')
+        axios.defaults.headers.common['Authorization'] = cookie.load('token');
         axios.post("/myAlfred/api/users/checkSMSVerification",  {sms_code: this.state.smsCode }  )
             .then( res => {
                 if (res.data.sms_code_ok) {
@@ -238,10 +238,10 @@ class Register extends React.Component{
             lng: this.state.lng,
         };
 
-        const username = this.state.email
-        const password = this.state.password
-        const google_id = this.state.google_id
-        const facebook_id = this.state.facebook_id
+        const username = this.state.email;
+        const password = this.state.password;
+        const google_id = this.state.google_id;
+        const facebook_id = this.state.facebook_id;
 
         axios
             .post('/myAlfred/api/users/register', newUser)
@@ -249,7 +249,7 @@ class Register extends React.Component{
                 toast.info('Inscription réussie');
                 axios.post('/myAlfred/api/users/login',{username, password, google_id, facebook_id})
                   .then(response => {
-                      const token = cookie.load('token')
+                      const token = cookie.load('token');
                       axios.defaults.headers.common['Authorization'] = token;
                   })
                   .catch( err => {
@@ -268,7 +268,7 @@ class Register extends React.Component{
     };
 
     addPhoto = () => {
-        axios.defaults.headers.common['Authorization'] = cookie.load('token')
+        axios.defaults.headers.common['Authorization'] = cookie.load('token');
 
         if(this.state.picture !== '' || this.state.avatar !== ''){
             const formData = new FormData();
@@ -358,7 +358,7 @@ class Register extends React.Component{
 
     renderSwitch(stepIndex, classes, errors) {
 
-        const picture = this.state.file||this.state.avatar
+        const picture = this.state.file||this.state.avatar;
 
         switch(stepIndex) {
             case 0:

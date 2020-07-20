@@ -25,11 +25,13 @@ class OAuth extends Component {
         const { classes } = this.props;
         const ProviderLoginButton = this.components[provider];
 
+        console.log(provider, 'provider')
+
         return (
             <Grid>
               <Grid container className={classes.contentOauth} onClick={this.startAuth}>
                   <Grid style={{margin: 10}}>
-                      <img src={'/static/assets/img/btn_google_light_normal_ios.svg'} style={{ width: '40px'}} alt={'google'} title={'google'} width={20}/>
+                      <img src={`/static/assets/img/${provider}.png`} alt={provider} title={provider} width={20}/>
                   </Grid>
                   <Grid>
                       <Divider orientation="vertical" flexItem />
@@ -45,7 +47,6 @@ class OAuth extends Component {
                       >
                           { login ? `Connexion ${provider}` : `Inscription ${provider}` }
                       </p>
-                      }}>
                   </Grid>
               </Grid>
             </Grid>
