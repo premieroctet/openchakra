@@ -1,32 +1,91 @@
-import React from "react";
-import {
-    View,
-    StatusBar,
-    SafeAreaView
-} from "react-native";
 import {WebView} from 'react-native-webview';
-import SplahScreen from 'react-native-splash-screen'
+import React, { useState, useRef, useEffect } from 'react'
+import {
+    SafeAreaView,
+    StyleSheet,
+    StatusBar,
+    View,
+    TouchableOpacity,
+    Image
+} from 'react-native';
 
-class App extends React.Component {
+import SplashScreen from 'react-native-splash-screen';
 
-    componentDidMount(){
-        SplahScreen.hide()
-    }
+const App = () => {
+    useEffect(()=>{
 
-    render() {
-        return (
-            <SafeAreaView style={{ flex: 1 }}>
-                <StatusBar barStyle="dark-content" />
-                <View style={{ flex: 1 }}>
-                    <WebView
-                        allowsBackForwardNavigationGestures
-                        mediaPlaybackRequiresUserAction={true}
-                        source={{ uri: "https://my-alfred.io/" }}
-                    />
+        SplashScreen.hide();
+
+    });
+
+    const [canGoBack, setCanGoBack] = useState(false);
+    const [canGoForward, setCanGoForward] = useState(false);
+    const [currentUrl, setCurrentUrl] = useState('');
+
+    const webviewRef = useRef(null);
+
+    backButtonHandler = () => {
+        if (webviewRef.current) webviewRef.current.goBack()
+    };
+
+    frontButtonHandler = () => {
+        if (webviewRef.current) webviewRef.current.goForward()
+    };
+
+    return (
+        <>
+            <StatusBar barStyle="light-content" />
+            <SafeAreaView style={styles.flexContainer}>
+                <WebView
+                    startInLoadingState={true}
+                    allowsBackForwardNavigationGestures
+                    mediaPlaybackRequiresUserAction={true}
+                    source={{ uri: "https://my-alfred.io/" }}
+                    ref={webviewRef}
+                    onNavigationStateChange={navState => {
+                        setCanGoBack(navState.canGoBack)
+                        setCanGoForward(navState.canGoForward)
+                        setCurrentUrl(navState.url)
+                    }}
+                />
+                <View style={styles.tabBarContainer}>
+                    <TouchableOpacity onPress={backButtonHandler}>
+                        <Image
+                            style={styles.icon}
+                            source={require('./static/Navigation/arrow-back-outline.png')}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={frontButtonHandler}>
+                        <Image
+                            style={styles.icon}
+                            source={require('./static/Navigation/arrow-forward-outline.png')}
+                        />
+                    </TouchableOpacity>
                 </View>
             </SafeAreaView>
-        );
-    }
-}
+        </>
+    )
+};
 
-export default App;
+const styles = StyleSheet.create({
+    flexContainer: {
+        flex: 1
+    },
+    tabBarContainer: {
+        padding: 15,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        backgroundColor: 'rgba(210,210,210,1)',
+    },
+    button: {
+        color: 'white',
+        fontSize: 24
+    },
+    icon: {
+        width: 30,
+        height: 30
+    }
+
+});
+
+export default App
