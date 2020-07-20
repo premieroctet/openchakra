@@ -18,6 +18,7 @@ module.exports = function validateSimpleRegisterInput(data) {
     data.city = !isEmpty(data.city) ? data.city : '';
     data.country = !isEmpty(data.country) ? data.country : '';
     data.google_id = !isEmpty(data.google_id) ? data.google_id : '';
+    data.facebook_id = !isEmpty(data.facebook_id) ? data.facebook_id : '';
 
 
     if(Validator.isEmpty(data.name)) {
@@ -36,7 +37,7 @@ module.exports = function validateSimpleRegisterInput(data) {
         errors.email = 'Email invalide';
     }
 
-    if (!data.google_id) {
+    if (!(data.google_id || data.facebook_id)) {
 
       if(Validator.isEmpty(data.password)) {
           errors.password = 'Veuillez saisir un mot de passe';
@@ -53,7 +54,7 @@ module.exports = function validateSimpleRegisterInput(data) {
       if(!Validator.equals(data.password, data.password2)) {
           errors.password2 = 'Password must match';
       }
-      
+
     }
 
     if(Validator.isEmpty(data.address)) {

@@ -35,7 +35,8 @@ import Link from 'next/link';
 import cookie from 'react-cookies'
 import OAuth from '../OAuth/OAuth';
 var parse = require('url-parse');
-const {Information}=require('../Information');
+import Information from '../Information/Information';
+const {PROVIDERS} = require('../../utils/consts')
 
 registerLocale('fr', fr);
 
@@ -90,6 +91,8 @@ class Register extends React.Component{
             activeStep: 0,
             file: null,
             picture: '',
+            // Avatar link coming from Google or Facebook
+            avatar: null,
             value:'',
             phone: '',
             phoneOk: false,
@@ -106,8 +109,6 @@ class Register extends React.Component{
         };
         this.handleChecked = this.handleChecked.bind(this);
         this.onChangeAddress = this.onChangeAddress.bind(this);
-        this.providers = ['google'];
-
     }
 
     componentDidMount() {
@@ -120,7 +121,19 @@ class Register extends React.Component{
                 firstname: query.firstname,
                 firstPageValidator: false,
                 picture: query.picture,
-                file: query.picture
+                file: query.picture,
+                avatar: query.picture
+            })
+        }
+        if(query.facebook_id){
+            this.setState({
+                facebook_id: query.facebook_id,
+                email: query.email,
+                name: query.lastname,
+                firstname: query.firstname,
+                activeStep: 1,
+                firstPageValidator: false,
+                avatar: query.picture
             })
         }
         if(query.error){
@@ -210,6 +223,7 @@ class Register extends React.Component{
 
         const newUser = {
             google_id: this.state.google_id,
+            facebook_id: this.state.facebook_id,
             firstname: this.state.firstname,
             name: this.state.name,
             birthday: this.state.birthday,
@@ -227,37 +241,39 @@ class Register extends React.Component{
         const username = this.state.email
         const password = this.state.password
         const google_id = this.state.google_id
+        const facebook_id = this.state.facebook_id
 
         axios
             .post('/myAlfred/api/users/register', newUser)
             .then(() => {
                 toast.info('Inscription réussie');
-                axios.post('/myAlfred/api/users/login',{username, password, google_id})
+                axios.post('/myAlfred/api/users/login',{username, password, google_id, facebook_id})
                   .then(response => {
                       const token = cookie.load('token')
                       axios.defaults.headers.common['Authorization'] = token;
                   })
                   .catch( err => {
-                      console.log(err)
+                      console.error(err)
                   })
                   .then(this.addPhoto).catch(err => console.log(err))
                   .then(this.setState({ activeStep: this.state.activeStep + 1})).catch(err => console.log(err))
                   .then(this.onSubmitPhone).catch(err => console.log(err))
             })
             .catch(err => {
-                let error = Object.values(err.response.data);
-                toast.error(error.toString());
-                this.setState({errors: err.response.data, activeStep: 1})
-              }
-            );
+              console.error(err)
+              let error = Object.values(err.response.data);
+              toast.error(error.toString());
+              this.setState({errors: err.response.data, activeStep: 1})
+            });
     };
 
     addPhoto = () => {
         axios.defaults.headers.common['Authorization'] = cookie.load('token')
 
-        if(this.state.picture !== ''){
+        if(this.state.picture !== '' || this.state.avatar !== ''){
             const formData = new FormData();
             formData.append('myImage',this.state.picture);
+            formData.append('avatar',this.state.avatar);
             const config = {
                 headers: {
                     'content-type': 'multipart/form-data'
@@ -265,10 +281,16 @@ class Register extends React.Component{
             };
 
             axios.post("/myAlfred/api/users/profile/picture",formData,config)
-                .catch((error) => {
-                console.log(error)
-            })
+              .catch((error) => {
+                console.error(error)
+              })
         }
+        /** else if (this.state.avatar !== '') {
+          axios.post("/myAlfred/api/users/profile/avatar", { avatar: this.state.avatar})
+            .catch((error) => {
+              console.error(error)
+            })
+        } */
     };
 
 
@@ -335,6 +357,9 @@ class Register extends React.Component{
     };
 
     renderSwitch(stepIndex, classes, errors) {
+
+        const picture = this.state.file||this.state.avatar
+
         switch(stepIndex) {
             case 0:
                 return (
@@ -343,7 +368,7 @@ class Register extends React.Component{
                             open={this.state.errorExistEmail}
                             onClose={() => this.setState({errorExistEmail: false})}
                             type='warning'
-                            text={'Oups ! Email déjà enregistrer.'}
+                            text={'Oups ! Un compte utilisant cette adresse mail existe déjà'}
                         />
                         { !this.state.google_id ?
                             <Grid className={classes.margin}>
@@ -354,8 +379,9 @@ class Register extends React.Component{
                                                 <h3 style={{color: "rgba(84,89,95,0.95)", fontWeight: "bold", letterSpacing: -1}}>Avec</h3>
                                             </Grid>
                                             <Grid style={{width: '70%'}}>
-                                                {this.providers.map(provider =>
+                                                {PROVIDERS.map(provider =>
                                                     <OAuth
+                                                        login={false}
                                                         provider={provider}
                                                         key={provider}
                                                     />
@@ -511,10 +537,7 @@ class Register extends React.Component{
                                         style={{backgroundImage:`url('${this.state.file}')`}}
                                         component="span"
                                     >
-                                        {this.state.file === null ?
-                                            <PhotoCamera style={{fontSize: '2rem'}} />
-                                            : null
-                                        }
+                                      <PhotoCamera style={{fontSize: '2rem'}} />
                                     </IconButton>
                                 </label>
                             </Grid>

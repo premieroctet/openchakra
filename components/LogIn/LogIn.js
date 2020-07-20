@@ -13,7 +13,7 @@ import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
 import OAuth from '../OAuth/OAuth';
 import cookie from 'react-cookies'
-
+const {PROVIDERS}=require('../../utils/consts')
 
 class LogIn extends React.Component {
     constructor(props) {
@@ -73,11 +73,11 @@ class LogIn extends React.Component {
                                 <Grid className={classes.margin}>
                                     <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
                                         <Grid style={{width: '100%'}}>
-                                            {this.providers.map(provider =>
+                                            {PROVIDERS.map(provider =>
                                                 <OAuth
+                                                    login={true}
                                                     provider={provider}
                                                     key={provider}
-                                                    text={'login'}
                                                 />
                                             )}
                                         </Grid>

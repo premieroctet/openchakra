@@ -5,6 +5,7 @@ import {FacebookLoginButton, GoogleLoginButton} from "react-social-login-buttons
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
 import styles from './OAuthStyle' ;
+import Divider from '@material-ui/core/Divider';
 
 
 class OAuth extends Component {
@@ -20,7 +21,7 @@ class OAuth extends Component {
     };
 
     render() {
-        const { provider, text } = this.props;
+        const { provider, login } = this.props;
         const { classes } = this.props;
         const ProviderLoginButton = this.components[provider];
 
@@ -28,7 +29,10 @@ class OAuth extends Component {
             <Grid>
               <Grid container className={classes.contentOauth} onClick={this.startAuth}>
                   <Grid style={{margin: 10}}>
-                      <img src={'../../static/assets/img/unamed.png'} alt={'google'} title={'google'} width={20}/>
+                      <img src={'/static/assets/img/btn_google_light_normal_ios.svg'} style={{ width: '40px'}} alt={'google'} title={'google'} width={20}/>
+                  </Grid>
+                  <Grid>
+                      <Divider orientation="vertical" flexItem />
                   </Grid>
                   <Grid>
                       <p style={{
@@ -37,7 +41,11 @@ class OAuth extends Component {
                           fontFamily: 'Helvetica',
                           fontWeight: 400,
                           lineHeight: 1
-                      }}>{text === 'login' ? 'Se connecter avec Gmail' : 'S\'inscrire avec Gmail'}</p>
+                      }}
+                      >
+                          { login ? `Connexion ${provider}` : `Inscription ${provider}` }
+                      </p>
+                      }}>
                   </Grid>
               </Grid>
             </Grid>
@@ -47,6 +55,8 @@ class OAuth extends Component {
 
 OAuth.propTypes = {
     provider: PropTypes.string.isRequired,
+    // Login : true => connect, false : register
+    login: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(OAuth)

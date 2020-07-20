@@ -8,9 +8,10 @@ module.exports = function validateLoginInput(data) {
     data.username = !isEmpty(data.username) ? data.username : '';
     data.password = !isEmpty(data.password) ? data.password : '';
     data.google_id = !isEmpty(data.google_id) ? data.google_id : '';
+    data.facebook_id = !isEmpty(data.facebook_id) ? data.facebook_id : '';
 
 
-    if (!data.google_id) {
+    if (! (data.google_id || data.facebook_id) ) {
       if(!Validator.isEmail(data.username)) {
           errors.username = 'Email invalide';
       }

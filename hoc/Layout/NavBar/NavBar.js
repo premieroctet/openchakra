@@ -67,7 +67,8 @@ class NavBar extends Component {
       setOpenRegister: false,
       setOpenMobileRegister: false,
       user:null,
-      google_id: props.google_id
+      google_id: props.google_id,
+      facebook_id: props.facebook_id,
     };
   }
 
@@ -79,7 +80,7 @@ class NavBar extends Component {
 
   componentDidMount() {
     var query = parse(window.location.href,true).query;
-    if(query.google_id || query.error){
+    if(query.google_id || query.facebook_id ||query.error){
       this.setState({
         setOpenRegister: true,
         setOpenLogin: false
