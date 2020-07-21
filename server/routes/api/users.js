@@ -918,7 +918,7 @@ router.get('/mangopay_kyc', (req,res) => {
       user.kyc_status=kyc_status
       user.mangopay_error = null
       user.save()
-      if (kyc_status==KycDocumentStatus.Refused) {
+      if (kyc_status=='KYC_FAILED') {
         mangoApi.KycDocuments.get(doc_id)
           .then ( doc => {
             user.mangopay_error=doc.RefusedReasonType

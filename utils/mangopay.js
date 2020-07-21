@@ -4,6 +4,8 @@ const fs = require('fs');
 const emptyPromise = require('./promise');
 const mangopay = require('mangopay2-nodejs-sdk');
 const KycDocumentType = require('mangopay2-nodejs-sdk/lib/models/KycDocumentType')
+const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus')
+const PersonType = require('mangopay2-nodejs-sdk/lib/models/PersonType')
 
 // PROD !!!!!
 /**
@@ -22,7 +24,7 @@ const mangoApi = new mangopay({
 
 const createMangoClient = user => {
   var userData = {
-    PersonType: "NATURAL",
+    PersonType: PersonType.Natural,
     FirstName: user.firstname,
     LastName: user.name,
     Birthday: moment(user.birthday).unix(),
@@ -58,7 +60,7 @@ const createMangoProvider = (user, shop) => {
 
   console.log(`Creating mango provider for ${user.name}`)
   var userData = {
-    PersonType: shop.is_particular ? "NATURAL" : "LEGAL",
+    PersonType: shop.is_particular ? PersonType.Natural : PersonType.Legal,
     FirstName: user.firstname,
     LastName: user.name,
     Birthday: moment(user.birthday).unix(),
@@ -123,7 +125,7 @@ const addIdIfRequired = user => {
       const documentId = result.Id;
       console.log(`Create identity proof ${documentId} for provider ${id}`)
       user.identity_proof_id=documentId;
-      return user.save()
+      user.save()
         .then ( u => console.log(`User saved id proof ${user.identity_proof_id}`) )
         .catch ( err => console.error(err) )
 
@@ -137,10 +139,11 @@ const addIdIfRequired = user => {
         .then(resultRecto => {
           const id_verso = user.id_card.verso ? '../../../' + user.id_card.verso : null;
 
+          console.log(`Checking mangopay_provider_status:${user.mangopay_provider_status} against ${PersonType.Natural}`)
           // Natural provider : KYX check is free => send
-          if (user.mangopay_provider_status=='NATURAL') {
+          if (user.mangopay_provider_status==PersonType.Natural) {
             console.log("Natural provider => require KYC")
-            const updateObj = {Id: documentId, Status: "VALIDATION_ASKED"}
+            const updateObj = {Id: documentId, Status: KycDocumentStatus.ValidationAsked}
             mangoApi.Users.updateKycDocument(user.mangopay_provider_id, updateObj)
           }
           if (id_verso !== null) {
