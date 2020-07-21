@@ -293,6 +293,9 @@ const UserSchema = new Schema({
     },
     kyc_status: {
       type: String,
+    },
+    mangopay_error : {
+      type: String
     }
 });
 

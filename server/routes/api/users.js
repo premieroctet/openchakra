@@ -25,6 +25,7 @@ const {mangoApi}=require('../../../utils/mangopay')
 const {computeUrl } = require('../../../config/config');
 
 const {addIdIfRequired, createMangoClient} = require('../../../utils/mangopay')
+const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -909,15 +910,26 @@ router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false
 // Send email
 // @access private
 router.get('/mangopay_kyc', (req,res) => {
-  console.log(`Received KYC URL:${JSON.stringify(req.url)}`)
-  console.log(`Received KYC:${JSON.stringify(req.query)}`)
-  User.findOne({ identity_proof_id : req.query.RessourceId })
+  const doc_id=req.query.RessourceId
+  const kyc_status=req.query.EventType
+  User.findOne({ identity_proof_id : doc_id })
     .then(user => {
-      console.log(`User ${user.email} has KYC status ${req.query.EventType}`)
+      console.log(`User ${user.email} has KYC status ${kyc_status}`)
+      user.kyc_status=kyc_status
+      user.mangopay_error = null
+      user.save()
+      if (kyc_status==KycDocumentStatus.Refused) {
+        mangoApi.KycDocuments.get(doc_id)
+          .then ( doc => {
+            user.mangopay_error=doc.RefusedReasonType
+            user.save()
+          })
+      }
       res.status(200)
     })
     .catch(err => {
       console.error(err)
+      res.status(400)
     })
 });
 
