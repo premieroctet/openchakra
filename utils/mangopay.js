@@ -16,6 +16,7 @@ const mangoApi = new mangopay({
 const mangoApi = new mangopay({
   clientId: 'testmyalfredv2',
   clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
+  logClass: () => {},
 });
 
 const createMangoClient = user => {
@@ -117,9 +118,6 @@ const addIdIfRequired = user => {
   const id = user.mangopay_provider_id;
 
   mangoApi.Users.createKycDocument(id, objStatus)
-    .catch(error => {
-      console.error(`createKycDocument(${id}, ${JSON.stringify(objStatus)}) : ${JSON.stringify(error)}`)
-    })
     .then(result => {
       const documentId = result.Id;
       console.log(`Create identiy proof ${documentId} for provider ${id}`)

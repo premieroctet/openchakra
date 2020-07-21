@@ -291,11 +291,8 @@ const UserSchema = new Schema({
         return (this.firstname.charAt(0)+this.name.charAt(0)).toUpperCase();
       }
     },
-    kyc_errors: {
-      type: [String],
-      default: function() {
-        return null;
-      }
+    kyc_status: {
+      type: String,
     }
 });
 

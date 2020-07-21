@@ -905,25 +905,27 @@ router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false
         })
 });
 
-// @Route GET /myAlfred/api/users/mangopay_hook
+// @Route GET /myAlfred/api/users/mangopay_kyc
 // Send email
 // @access private
-router.get('/mangopay_hook', (req,res) => {
-    User.findById(req.user.id)
-        .then(user => {
-          sendVerificationMail(user, req);
-          res.json({})
-        })
-        .catch(err => {
-            console.error(err)
-        })
+router.get('/mangopay_kyc', (req,res) => {
+  console.log(`Received KYC URL:${JSON.stringify(req.url)}`)
+  console.log(`Received KYC:${JSON.stringify(req.query)}`)
+  User.findOne({ identity_proof_id : req.query.RessourceId })
+    .then(user => {
+      console.log(`User ${user.email} has KYC status ${req.query.EventType}`)
+      res.status(200)
+    })
+    .catch(err => {
+      console.error(err)
+    })
 });
 
 const HOOK_TYPES="KYC_CREATED KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED".split(' ')
 /** Hook Mangopay */
 
 HOOK_TYPES.forEach(hookType => {
-  const hook_url=new URL('/myAlfred/api/users/mangopay_hook', getHost());
+  const hook_url=new URL('/myAlfred/api/users/mangopay_kyc', getHost());
   console.log(`Setting hook ${hook_url} for ${hookType}`);
   mangoApi.Hooks.create({
     Tag: "MyAlfred hook",
@@ -933,7 +935,7 @@ HOOK_TYPES.forEach(hookType => {
     Url: hook_url,
   })
   .then (res => {
-    console.log(`OK : Set hook ${hookType}=> ${hook_url}`)
+    console.log(`Set hook ${hookType} to ${hook_url}`)
   })
   .catch( err => {
     if (err.errors && err.errors.EventType &&  err.errors.EventType.includes('already been registered')) {
@@ -951,6 +953,9 @@ HOOK_TYPES.forEach(hookType => {
             Validity: "VALID",
             Url: hook_url,
           })
+	  .then( () => {
+            console.log(`Updated ${hookType} to ${hook_url}`)
+          })
         })
     }
     else {
@@ -961,7 +966,7 @@ HOOK_TYPES.forEach(hookType => {
 
 
 // Create mango client account for all user with no id_mangopay
-new CronJob('0 */5 * * * *', function() {
+new CronJob('0 */15 * * * *', function() {
   console.log("Customers who need mango account");
   User.find({id_mangopay: null, active:true})
     .then ( usrs => {
