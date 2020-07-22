@@ -180,8 +180,8 @@ class myAvailabilities extends React.Component {
                   : null
                 }
                 <Grid container className={classes.containercalendar}>
-                  <Grid style={{width:'90%'}}>
-                    <Schedule height={700} availabilities={this.state.availabilities} title={I18N.SCHEDULE_TITLE} subtitle={I18N.SCHEDULE_SUBTITLE} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} onUpdateAvailability={this.availabilityUpdate} selectable={true}/>
+                  <Grid style={{width:600}}>
+                    <Schedule height={500} availabilities={this.state.availabilities} title={I18N.SCHEDULE_TITLE} subtitle={I18N.SCHEDULE_SUBTITLE} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} onUpdateAvailability={this.availabilityUpdate} selectable={true}/>
                   </Grid>
                 </Grid>
               </Layout>

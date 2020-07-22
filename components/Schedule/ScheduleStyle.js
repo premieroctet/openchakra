@@ -118,8 +118,17 @@ export default theme => ({
     '& .rbc-allday-cell': {
       display: 'none !important'
     },
-    '& .rbc-toolbar-label':{
-
+    '& .rbc-date-cell':{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    '& .rbc-row-content':{
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center'
     },
     '& .rbc-header':{
       [theme.breakpoints.down('xs')]: {

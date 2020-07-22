@@ -18,7 +18,7 @@ import frLocale from "date-fns/locale/fr";
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import {availabilities2events, eventUI2availability, availability2eventUI, DAYS} from '../../utils/converters';
-import {ALL_SERVICES, GID_LEN} from '../../utils/consts.js';
+import {ALL_SERVICES} from '../../utils/consts.js';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Typography } from '@material-ui/core'; // Import css
 import styles from './ScheduleStyle'
@@ -51,17 +51,6 @@ const formats = {
   dayHeaderFormat: 'dddd DD MMMM'
 };
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
 class Schedule extends React.Component {
   EMPTY_AVAIL = {
     // Availability data
@@ -74,7 +63,7 @@ class Schedule extends React.Component {
     selectedDateEndRecu: null,
     // Days (1=>7)
     recurrDays: new Set(),
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -88,7 +77,7 @@ class Schedule extends React.Component {
       services: [ALL_SERVICES, ...this.props.services] || [ALL_SERVICES],
       ...this.EMPTY_AVAIL
     };
-    this.resetData()
+    this.resetData();
 
     this.closeModal = this.closeModal.bind(this);
     this.toggleEditModal = this.toggleEditModal.bind(this);
@@ -100,7 +89,7 @@ class Schedule extends React.Component {
 
   resetData = () => {
     this.setState(this.EMPTY_AVAIL)
-  }
+  };
   /**
     On peut envoyer si service(s) sélectionné(s), date/heure début et fin saisis
     et, si récurrence, au moins un jour sélectionné
@@ -151,7 +140,6 @@ class Schedule extends React.Component {
     }
     var dt = new Date(start);
     dt.setMonth( dt.getMonth() + 6 );
-    console.log("ToggleAddModal")
       this.setState({
         _id : null,
         selectedDateStart: start,
@@ -170,15 +158,11 @@ class Schedule extends React.Component {
     if (!this.props.onUpdateAvailability) {
       return
     }
-    console.log("ToggleEditModal")
-    console.log(`Event:${JSON.stringify(event)}`)
-    console.log(`Availabilities:${JSON.stringify(this.props.availabilities.map( a => a._id))}`)
     var avail=this.props.availabilities.filter( a => a._id === event._id);
     if (avail.length === 0) {
       return
     }
     avail = avail[0];
-    console.log(`Found availability:${JSON.stringify(avail._id)}`)
 
     const eventUI = availability2eventUI(avail);
 
@@ -195,15 +179,15 @@ class Schedule extends React.Component {
      this.setState({isExpanded: !this.state.isExpanded});
      if (this.state.isExpanded && this.state.recurrDays.size===0 && this.state.selectedDateStart ) {
        let dayOfWeek = new Date(this.state.selectedDateStart).getDay();
-       dayOfWeek = (dayOfWeek+6)%7
+       dayOfWeek = (dayOfWeek+6)%7;
        this.setState({recurrDays: new Set([dayOfWeek])});
      }
    };
 
    handleCancel = () => {
-     this.resetData()
+     this.resetData();
      this.closeModal()
-   }
+   };
 
    handleDateStartChange = date => {
      this.setState({selectedDateStart: date});
@@ -223,8 +207,8 @@ class Schedule extends React.Component {
   };
 
   handleTimeEndChange = time =>{
-    let hours = parseInt(time.target.value.substring(0,2))
-    let minutes = parseInt(time.target.value.substring(3,5))
+    let hours = parseInt(time.target.value.substring(0,2));
+    let minutes = parseInt(time.target.value.substring(3,5));
     this.setState({selectedTimeEnd: time.target.value});
     this.state.selectedDateEnd.setHours(hours);
     this.state.selectedDateEnd.setMinutes(minutes);
@@ -248,7 +232,6 @@ class Schedule extends React.Component {
 
   onDelete = e => {
     let avail=eventUI2availability(this.state);
-    let res = this.props.onDeleteAvailability(avail);
     this.closeModal();
   };
 
@@ -471,7 +454,7 @@ class Schedule extends React.Component {
             </Grid>
         </Fade>
       </Modal>
-      </Grid>
+    </Grid>
     )
   }
 }
