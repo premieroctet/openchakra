@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const year = new Date().getFullYear()-16;
+const {getMangopayMessage}=require('../../utils/i18n')
 
 const UserSchema = new Schema({
     name: {
@@ -296,7 +297,11 @@ const UserSchema = new Schema({
     },
     mangopay_error : {
       type: String
-    }
-});
+    },
+}, { toJSON: { virtuals: true, getters: true } });
+
+UserSchema.virtual('mangopay_message').get( function() {
+    return getMangopayMessage(this.mangopay_error)
+})
 
 module.exports = User = mongoose.model('users',UserSchema);

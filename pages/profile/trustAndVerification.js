@@ -124,6 +124,7 @@ class trustAndVerification extends React.Component {
             cesu: null,
             cis: false,
             notice: false,
+            kyc_error: null,
         };
         this.editSiret = this.editSiret.bind(this);
         this.callDrawer = this.callDrawer.bind(this)
@@ -150,6 +151,9 @@ class trustAndVerification extends React.Component {
                         const extVerso = this.state.card.verso.split('.').pop();
                         this.setState({extVerso:extVerso,haveCardV:true});
                     }
+                }
+                if (user.mangopay_error) {
+                  this.setState( { kyc_error: user.mangopay_message})
                 }
                 if(user.is_alfred) {
                     this.setState({alfred: true});
@@ -484,6 +488,7 @@ class trustAndVerification extends React.Component {
                                 <Grid item>
                                     <h2 style={{fontWeight:'100'}}>Pièce d'identité</h2>
                                     <p style={{color:'#2FBCD3'}}>Vous pouvez ajouter ou modifier une pièce d’identité en sélectionnant le type de pièce et télécharger le document.  Un recto pour le passeport et le recto/verso pour la pièce d’identité</p>
+                                    <em style={{ color : 'red'}}>{this.state.kyc_error}</em><br/>
                                     <TextField
                                         select
                                         className={classes.typeFile}

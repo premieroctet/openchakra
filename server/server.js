@@ -53,7 +53,7 @@ mongoose.set('useUnifiedTopology', true);
 
 nextApp.prepare().then(() => {
 
-const SERVER_PROD=false;
+const SERVER_PROD=true
 
 // Body parser middleware
     app.use(bodyParser.urlencoded({extended: false}));

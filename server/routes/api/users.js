@@ -650,8 +650,7 @@ router.get('/current',passport.authenticate('jwt',{session:false}),(req,res) => 
     User.findById(req.user.id)
         .populate('resetToken')
         .then(user => {
-
-            res.json(user);
+          res.json(user);
         })
         .catch(err => res.status(404).json({ alfred: 'No alfred found' }))
 });
