@@ -897,7 +897,8 @@ router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false
     User.findById(req.user.id)
         .then(user => {
             user.id_card = undefined;
-
+            user.kyc_status = null
+            user.mangopay_error = null
             user.save().then(user => res.json(user)).catch(err => console.error(err));
         })
         .catch(err => {
