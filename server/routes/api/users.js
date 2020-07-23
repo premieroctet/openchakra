@@ -142,6 +142,19 @@ router.post('/register',(req,res) =>{
         })
 });
 
+// @Route GET /myAlfred/api/users/email/
+// Find user by email
+// @access private
+router.get('/email/:email',(req,res) => {
+    User.findOne({ email : req.params.email})
+        .then(user => {
+          res.json(user)
+        })
+        .catch(err => {
+            console.error(err)
+        })
+})
+
 // @Route GET /myAlfred/api/users/sendMailVerification
 // Send email
 // @access private
