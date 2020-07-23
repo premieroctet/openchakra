@@ -169,6 +169,8 @@ class all extends React.Component {
                                             <TableCell>Action</TableCell>
                                             <TableCell>Carte d'identité</TableCell>
                                             <TableCell>Boutique</TableCell>
+                                            <TableCell>Mangopay client</TableCell>
+                                            <TableCell>Mangopay Alfred</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -195,6 +197,12 @@ class all extends React.Component {
                                                     </TableCell>
                                                     <TableCell>
                                                         <Link href={`/shop?id_alfred=${e.alfred._id}`}><a>Consulter</a></Link>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                      <a target="_blank" href={`https://dashboard.mangopay.com/User/${e.alfred.id_mangopay}/Details`}>{e.alfred.id_mangopay}</a>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                      <a target="_blank" href={`https://dashboard.mangopay.com/User/${e.alfred.mangopay_provider_id}/Details`}>{e.alfred.mangopay_provider_id}</a>
                                                     </TableCell>
                                                 </TableRow>
                                             )}

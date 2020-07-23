@@ -227,7 +227,7 @@ router.get('/users/all',passport.authenticate('jwt',{session:false}),(req,res) =
     const admin = decode.is_admin;
 
     if(admin) {
-        User.find({}, 'firstname name email is_alfred is_admin')
+        User.find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date id_card')
             .sort({creation_date: -1})
             .then(user => {
                 if (!user) {
@@ -371,7 +371,7 @@ router.delete('/users/users/:id',passport.authenticate('jwt',{session: false}),(
 router.get('/shop/all', (req, res) => {
     Shop.find({}, '_id creation_date')
       .sort({creation_date:-1})
-      .populate('alfred','_id firstname name email')
+      .populate('alfred','_id firstname name email id_mangopay mangopay_provider_id')
       .then(shop => {
           if (typeof shop !== 'undefined' && shop.length > 0) {
               res.json(shop);
