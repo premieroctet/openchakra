@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const ALL_SERVICES=['Tous les services', null];
-
+const {ENABLE_GF_LOGIN}=require('../config/config')
 
 const ALF_CONDS= { // my alfred condiitons
   BASIC:     "0",
@@ -300,8 +300,7 @@ const CESU= ['Mandatory', 'Optional', 'Disabled']
 const GOOGLE_PROVIDER='google'
 const FACEBOOK_PROVIDER='facebook'
 
-const PROVIDERS=[GOOGLE_PROVIDER, FACEBOOK_PROVIDER]
-//const PROVIDERS=[GOOGLE_PROVIDER]
+const PROVIDERS = ENABLE_GF_LOGIN ? [GOOGLE_PROVIDER, FACEBOOK_PROVIDER] : []
 
 module.exports={
   ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR,

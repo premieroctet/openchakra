@@ -300,14 +300,12 @@ const UserSchema = new Schema({
         provider: {
             type: String,
             enum:[GOOGLE_PROVIDER, "facebook"],
-            required:true
         },
         token: {
             type: String
         },
         id: {
             type: String,
-            required:true
         }
     }
 });

@@ -121,7 +121,7 @@ class NavBar extends Component {
     localStorage.removeItem('path');
     // Remove auth header for future requests
     setAuthToken(false);
-    Router.push('/');
+    Router.push('/?disconnect=1');
   };
 
   handleProfileMenuOpen = event => {

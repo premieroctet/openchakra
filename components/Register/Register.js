@@ -37,6 +37,7 @@ import OAuth from '../OAuth/OAuth';
 var parse = require('url-parse');
 import Information from '../Information/Information';
 const {PROVIDERS} = require('../../utils/consts');
+const {ENABLE_GF_LOGIN} = require('../../config/config');
 
 registerLocale('fr', fr);
 
@@ -370,7 +371,7 @@ class Register extends React.Component{
                             type='warning'
                             text={'Oups ! Un compte utilisant cette adresse mail existe déjà'}
                         />
-                        { !this.state.google_id ?
+                        { !this.state.google_id && ENABLE_GF_LOGIN ?
                             <Grid className={classes.margin}>
                                 <Grid container spacing={1} alignItems="flex-end"  className={classes.genericContainer}>
                                     <Grid className={classes.margin}>

@@ -14,6 +14,7 @@ import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
 import OAuth from '../OAuth/OAuth';
 import cookie from 'react-cookies'
 const {PROVIDERS}=require('../../utils/consts');
+const {ENABLE_GF_LOGIN}=require('../../config/config');
 
 class LogIn extends React.Component {
     constructor(props) {
@@ -24,7 +25,6 @@ class LogIn extends React.Component {
             password: '',
             errors: {}
         };
-        this.providers = ['google']
     }
 
     onChange = e => {
@@ -68,30 +68,34 @@ class LogIn extends React.Component {
                         <Grid>
                             <h2 className={classes.titleRegister}>Connexion</h2>
                         </Grid>
-                        <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end"  className={classes.genericContainer}>
-                                <Grid className={classes.margin}>
-                                    <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
-                                        <Grid style={{width: '100%'}}>
-                                            {PROVIDERS.map(provider =>
-                                                <OAuth
-                                                    login={true}
-                                                    provider={provider}
-                                                    key={provider}
-                                                />
-                                            )}
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                                <Grid className={classes.margin}>
-                                    <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
-                                        <Grid>
-                                            <h3 style={{color: "rgba(84,89,95,0.95)", fontWeight: "bold", letterSpacing: -1}}>Ou</h3>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                        { ENABLE_GF_LOGIN ?
+                          <Grid className={classes.margin}>
+                              <Grid container spacing={1} alignItems="flex-end"  className={classes.genericContainer}>
+                                  <Grid className={classes.margin}>
+                                      <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
+                                          <Grid style={{width: '100%'}}>
+                                              {PROVIDERS.map(provider =>
+                                                  <OAuth
+                                                      login={true}
+                                                      provider={provider}
+                                                      key={provider}
+                                                  />
+                                              )}
+                                          </Grid>
+                                      </Grid>
+                                  </Grid>
+                                  <Grid className={classes.margin}>
+                                      <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
+                                          <Grid>
+                                              <h3 style={{color: "rgba(84,89,95,0.95)", fontWeight: "bold", letterSpacing: -1}}>Ou</h3>
+                                          </Grid>
+                                      </Grid>
+                                  </Grid>
+                              </Grid>
+                          </Grid>
+                          :
+                          null
+                        }
                         <Grid className={classes.containerDialogContent}>
                             <form onSubmit={this.onSubmit} style={{marginBottom:15}}>
                                 <Grid className={classes.margin}>
