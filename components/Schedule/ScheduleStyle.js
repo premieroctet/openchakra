@@ -123,7 +123,13 @@ export default theme => ({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
+        '& :hover':{
+          backgroundColor:'red',
+          borderRadius: 100,
+          padding: 5
+        },
     },
+
     '& .rbc-row-content':{
       height: '100%',
       display: 'flex',
@@ -131,13 +137,6 @@ export default theme => ({
       justifyContent: 'center',
       cursor : 'pointer',
 
-    },
-    '& .rbc-month-row':{
-      '& .rbc-row-bg':{
-        '& .rbc-day-bg:hover':{
-          backgroundColor: 'red'
-        },
-      },
     },
     '& .rbc-header':{
       [theme.breakpoints.down('xs')]: {
@@ -151,7 +150,7 @@ export default theme => ({
       float: 'left'
     },
     '& .rbc-event':{
-      width: '110% !important'
+      backgroundColor: 'transparent'
     }
   },
   heightContainer:{

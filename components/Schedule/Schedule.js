@@ -23,6 +23,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Typography } from '@material-ui/core'; // Import css
 import styles from './ScheduleStyle'
 import PropTypes from 'prop-types';
+import Badge from '@material-ui/core/Badge';
 
 const localizer = momentLocalizer(moment);
 
@@ -66,13 +67,16 @@ const CustomToolbar = (toolbar) => {
   const label = () => {
     const date = moment(toolbar.date);
     return (
-        <span><b>{date.format('MMMM')}</b><span> {date.format('YYYY')}</span></span>
+        <span>
+          <span>{date.format('MMMM')}</span>
+          <span> {date.format('YYYY')}</span>
+        </span>
     );
   };
 
   return (
       <Grid container>
-        <Grid style={{display:'flex', width: '100%', justifyContent: 'space-around', alignItems: 'center', marginBottom : 20}}>
+        <Grid style={{display:'flex', width: '100%', justifyContent: 'space-around', alignItems: 'center', marginBottom : 20, }}>
           <Grid>
             <Button variant={'outlined'} onClick={goToBack} >&#8249;</Button>
           </Grid>
@@ -85,6 +89,14 @@ const CustomToolbar = (toolbar) => {
         </Grid>
       </Grid >
   );
+};
+
+const CustomEvent = (event ) =>{
+
+  return(
+      <Grid style={{borderTop : '25px solid pink', borderRight: '25px solid transparent', height : 0,  width : 0}}>
+      </Grid>
+  )
 };
 
 class Schedule extends React.Component {
@@ -275,24 +287,14 @@ class Schedule extends React.Component {
     this.setState({isModalOpen: false})
   };
 
-  eventStyleGetter = () => {
+ eventStyleGetter = () => {
     var style = {
-      backgroundColor: '#94D6E4',
-      border: '0px',
-      fontWeight: 'bold',
+
     };
     return {
       style: style
     };
   };
-
-
-
-
-
-
-
-
 
   render() {
     const { classes, title, subtitle, selectable, height } = this.props;
@@ -349,7 +351,8 @@ class Schedule extends React.Component {
           timeslots={1}
           eventPropGetter={(this.eventStyleGetter)}
           components={{
-            toolbar: CustomToolbar
+            toolbar: CustomToolbar,
+            event: CustomEvent
           }}
         />
         <Modal
