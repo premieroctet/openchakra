@@ -107,7 +107,9 @@ class Register extends React.Component{
             emailValidator: false,
             firstPageValidator: true,
             secondPageValidator: true,
-            errorExistEmail: false
+            errorExistEmail: false,
+            birthdayError: '',
+            cityError:''
         };
         this.handleChecked = this.handleChecked.bind(this);
         this.onChangeAddress = this.onChangeAddress.bind(this);
@@ -260,8 +262,16 @@ class Register extends React.Component{
             })
             .catch(err => {
               let error = Object.values(err.response.data);
-              toast.error(error.toString());
-              this.setState({errors: err.response.data, activeStep: 0})
+                this.setState({errors: err.response.data});
+                if(error.includes('L\'email existe déjà')){
+                  this.setState({activeStep: 0})
+              }
+              if(error.includes('Veuillez saisir une adresse')){
+                  this.setState({cityError: 'Adresse invalide', activeStep: 1})
+              }
+              if (error.includes('Date de naissance invalide')){
+                    this.setState({birthdayError: 'Date de naissance invalide', activeStep: 1})
+              }
             });
     };
 
@@ -572,7 +582,9 @@ class Register extends React.Component{
 
                                         }}
                                         onChange={(suggestion) =>this.onChangeAddress(suggestion)}
+
                                     />
+                                    <em style={{color:'red'}}>{this.state.cityError}</em>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -599,6 +611,8 @@ class Register extends React.Component{
                                                InputProps={{
                                                    inputComponent: NumberFormatCustom
                                                }}
+                                               error={this.state.birthdayError}
+                                               helperText={this.state.birthdayError}
                                            />
                                        </Grid>
                                         <Grid item style={{width: '30%'}}>
@@ -612,6 +626,7 @@ class Register extends React.Component{
                                                 InputProps={{
                                                     inputComponent: NumberFormatCustom,
                                                 }}
+                                                error={this.state.birthdayError}
                                             />
                                         </Grid>
                                         <Grid item style={{width: '30%'}}>
@@ -625,6 +640,7 @@ class Register extends React.Component{
                                                 InputProps={{
                                                     inputComponent: NumberFormatCustom,
                                                 }}
+                                                error={this.state.birthdayError}
                                             />
                                         </Grid>
                                     </Grid>
