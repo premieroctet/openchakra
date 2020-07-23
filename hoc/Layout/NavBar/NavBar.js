@@ -87,6 +87,13 @@ class NavBar extends Component {
       })
     }
 
+    if(query.signup === 'true'){
+      this.setState({
+        setOpenRegister: true,
+        setOpenLogin: false
+      })
+    };
+
     const token = cookie.load('token')
     if (token) {
       this.setState({ logged: true });
