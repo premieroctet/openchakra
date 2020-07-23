@@ -362,7 +362,6 @@ class Register extends React.Component{
         }
     };
 
-
     renderSwitch(stepIndex, classes, errors) {
 
         switch(stepIndex) {
