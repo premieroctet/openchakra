@@ -19,7 +19,7 @@ const User = require('../../models/User');
 const ResetToken = require('../../models/ResetToken');
 const crypto = require('crypto');
 const multer = require("multer");
-const {getHost}=require('../../../utils/mailing')
+const {getHost}=require('../../../utils/infra')
 const {mangoApi}=require('../../../utils/mangopay')
 
 const {computeUrl } = require('../../../config/config');
