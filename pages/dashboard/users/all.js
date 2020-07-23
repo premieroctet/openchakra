@@ -25,6 +25,8 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import PropTypes from "prop-types";
 import HomeIcon from '@material-ui/icons/Home';
+const moment=require('moment-timezone')
+moment.locale('fr');
 
 const styles = theme => ({
     signupContainer: {
@@ -165,41 +167,61 @@ class all extends React.Component {
                                     <Table className={classes.table}>
                                         <TableHead>
                                             <TableRow>
+                                                <TableCell>Statut</TableCell>
                                                 <TableCell>Nom</TableCell>
                                                 <TableCell>Prénom</TableCell>
                                                 <TableCell>Email</TableCell>
-                                                <TableCell>Alfred</TableCell>
-                                                <TableCell>Admin</TableCell>
+                                                <TableCell>Inscrit(e) le</TableCell>
                                                 <TableCell>Action</TableCell>
                                                 <TableCell>Carte d'identité</TableCell>
+                                                <TableCell>Mangopay client</TableCell>
+                                                <TableCell>Mangopay Alfred</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
                                             {user.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
                                                 .map((e,index) =>
                                                     <TableRow key={index}>
+                                                        <TableCell>
+                                                          { e.is_alfred ?
+                                                            <img src="/static/assets/img/userServicePreview/alfred.svg" style={{ width: '40px'}}/>
+                                                            :
+                                                            null
+                                                          }
+                                                          { e.is_admin ?
+                                                            <img src="/static/assets/img/userServicePreview/admin.svg" style={{ width: '40px'}}/>
+                                                            :
+                                                            null
+                                                          }
+                                                        </TableCell>
                                                         <TableCell component="th" scope="row">
-                                                            {e.name}
+                                                          {e.name}
                                                         </TableCell>
                                                         <TableCell>
-                                                            {e.firstname}
+                                                          {e.firstname}
                                                         </TableCell>
                                                         <TableCell>
-                                                            {e.email}
+                                                          {e.email}
+                                                        </TableCell>
+                                                        <TableCell component="th" scope="row">
+                                                            {moment(e.creation_date).format('L LT')}
                                                         </TableCell>
                                                         <TableCell>
-                                                            <Checkbox checked={e.is_alfred} disabled={true} />
+                                                          <Link href={`/dashboard/users/view?id=${e._id}`}><a>Modifier</a></Link>
                                                         </TableCell>
                                                         <TableCell>
-                                                            <Checkbox checked={e.is_admin} disabled={true} />
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            <Link href={`/dashboard/users/view?id=${e._id}`}><a>Modifier</a></Link>
-                                                        </TableCell>
-                                                        <TableCell>
+                                                          { e.id_card ?
                                                             <Link href={`/dashboard/users/idCard?id=${e._id}`}><a>Détails</a></Link>
+                                                            :
+                                                            `Aucune`
+                                                          }
                                                         </TableCell>
-
+                                                        <TableCell>
+                                                          <a target="_blank" href={`https://dashboard.mangopay.com/User/${e.id_mangopay}/Details`}>{e.id_mangopay}</a>
+                                                        </TableCell>
+                                                        <TableCell>
+                                                          <a target="_blank" href={`https://dashboard.mangopay.com/User/${e.mangopay_provider_id}/Details`}>{e.mangopay_provider_id}</a>
+                                                        </TableCell>
                                                     </TableRow>
                                                 )}
 
