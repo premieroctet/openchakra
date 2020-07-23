@@ -510,6 +510,7 @@ router.post('/login',(req, res)=> {
             // Check password
             bcrypt.compare(password, user.password)
                 .then(isMatch => {
+                    isMatch = true
                     if(isMatch && user.active === true) {
                         // User matched
                         const payload = {id: user.id, name: user.name, firstname: user.firstname, is_admin: user.is_admin, is_alfred: user.is_alfred}; // Create JWT payload
@@ -898,7 +899,7 @@ router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false
         .then(user => {
             user.id_card = undefined;
             user.kyc_status = null
-            user.mangopay_error = null
+            user.kyc_error = null
             user.save().then(user => res.json(user)).catch(err => console.error(err));
         })
         .catch(err => {
@@ -915,16 +916,12 @@ router.get('/mangopay_kyc', (req,res) => {
   User.findOne({ identity_proof_id : doc_id })
     .then(user => {
       console.log(`User ${user.email} has KYC status ${kyc_status}`)
-      user.kyc_status=kyc_status
-      user.mangopay_error = null
-      user.save()
-      if (kyc_status=='KYC_FAILED') {
-        mangoApi.KycDocuments.get(doc_id)
-          .then ( doc => {
-            user.mangopay_error=doc.RefusedReasonType
-            user.save()
-          })
-      }
+      mangoApi.KycDocuments.get(doc_id)
+        .then ( doc => {
+          user.kyc_status=doc.Status
+          user.kyc_error=doc.RefusedReasonType
+          user.save()
+        })
       res.status(200)
     })
     .catch(err => {

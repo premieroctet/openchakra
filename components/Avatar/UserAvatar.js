@@ -53,8 +53,8 @@ class UserAvatar extends React.Component{
       })
       .then( res => {
         const user = res.data
-        if (user.mangopay_message) {
-          kyc.push(user.mangopay_message)
+        if (user.kyc_error_text) {
+          kyc.push(user.kyc_error_text)
         }
       })
       .then ( () => {

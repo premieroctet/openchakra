@@ -295,13 +295,17 @@ const UserSchema = new Schema({
     kyc_status: {
       type: String,
     },
-    mangopay_error : {
+    kyc_error : {
       type: String
     },
 }, { toJSON: { virtuals: true, getters: true } });
 
-UserSchema.virtual('mangopay_message').get( function() {
-    return getMangopayMessage(this.mangopay_error)
+UserSchema.virtual('kyc_error_text').get( function() {
+    return getMangopayMessage(this.kyc_error)
+})
+
+UserSchema.virtual('kyc_status_text').get( function() {
+    return getMangopayMessage(this.kyc_status)
 })
 
 module.exports = User = mongoose.model('users',UserSchema);
