@@ -51,6 +51,42 @@ const formats = {
   dayHeaderFormat: 'dddd DD MMMM'
 };
 
+
+const CustomToolbar = (toolbar) => {
+  const goToBack = () => {
+    toolbar.date.setMonth(toolbar.date.getMonth() - 1);
+    toolbar.onNavigate('prev');
+  };
+
+  const goToNext = () => {
+    toolbar.date.setMonth(toolbar.date.getMonth() + 1);
+    toolbar.onNavigate('next');
+  };
+
+  const label = () => {
+    const date = moment(toolbar.date);
+    return (
+        <span><b>{date.format('MMMM')}</b><span> {date.format('YYYY')}</span></span>
+    );
+  };
+
+  return (
+      <Grid container>
+        <Grid style={{display:'flex', width: '100%', justifyContent: 'space-around', alignItems: 'center', marginBottom : 20}}>
+          <Grid>
+            <Button variant={'outlined'} onClick={goToBack} >&#8249;</Button>
+          </Grid>
+          <Grid>
+            <label>{label()}</label>
+          </Grid>
+          <Grid>
+            <Button variant={'outlined'} onClick={goToNext}>&#8250;</Button>
+          </Grid>
+        </Grid>
+      </Grid >
+  );
+};
+
 class Schedule extends React.Component {
   EMPTY_AVAIL = {
     // Availability data
@@ -250,6 +286,14 @@ class Schedule extends React.Component {
     };
   };
 
+
+
+
+
+
+
+
+
   render() {
     const { classes, title, subtitle, selectable, height } = this.props;
 
@@ -280,8 +324,8 @@ class Schedule extends React.Component {
           localizer={localizer}
           // FIX: use state instead of props
           events={events}
-          defaultView={Views.WEEK}
-          views={['week', 'day', 'month']}
+          defaultView={Views.MONTH}
+          views={['month']}
           defaultDate={new Date()}
           onSelectSlot={this.toggleAddModal}
           onSelectEvent={this.toggleEditModal}
@@ -304,6 +348,9 @@ class Schedule extends React.Component {
           step={60}
           timeslots={1}
           eventPropGetter={(this.eventStyleGetter)}
+          components={{
+            toolbar: CustomToolbar
+          }}
         />
         <Modal
           closeAfterTransition

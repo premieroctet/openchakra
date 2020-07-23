@@ -128,7 +128,16 @@ export default theme => ({
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      cursor : 'pointer',
+
+    },
+    '& .rbc-month-row':{
+      '& .rbc-row-bg':{
+        '& .rbc-day-bg:hover':{
+          backgroundColor: 'red'
+        },
+      },
     },
     '& .rbc-header':{
       [theme.breakpoints.down('xs')]: {
