@@ -106,6 +106,7 @@ class Register extends React.Component{
             errorEmailType: '',
             emailValidator: false,
             firstPageValidator: true,
+            secondPageValidator: true,
             errorExistEmail: false
         };
         this.handleChecked = this.handleChecked.bind(this);
@@ -147,7 +148,6 @@ class Register extends React.Component{
         }
     }
 
-
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value }, () => this.validatorFirstStep());
     };
@@ -188,7 +188,7 @@ class Register extends React.Component{
     };
 
     handleChecked () {
-        this.setState({checked: !this.state.checked});
+        this.setState({checked: !this.state.checked}, () => this.validatorSecondStep());
     };
 
     sendSms = () => {
@@ -253,18 +253,15 @@ class Register extends React.Component{
                       const token = cookie.load('token');
                       axios.defaults.headers.common['Authorization'] = token;
                   })
-                  .catch( err => {
-                      console.error(err)
-                  })
-                  .then(this.addPhoto).catch(err => console.log(err))
-                  .then(this.setState({ activeStep: this.state.activeStep + 1})).catch(err => console.log(err))
-                  .then(this.onSubmitPhone).catch(err => console.log(err))
+                  .catch()
+                  .then(this.addPhoto).catch()
+                  .then(this.setState({ activeStep: this.state.activeStep + 1})).catch()
+                  .then(this.onSubmitPhone).catch()
             })
             .catch(err => {
-              console.error(err)
               let error = Object.values(err.response.data);
               toast.error(error.toString());
-              this.setState({errors: err.response.data, activeStep: 1})
+              this.setState({errors: err.response.data, activeStep: 0})
             });
     };
 
@@ -357,9 +354,16 @@ class Register extends React.Component{
         }
     };
 
-    renderSwitch(stepIndex, classes, errors) {
+    validatorSecondStep = () =>{
+        if(this.state.checked){
+            this.setState({secondPageValidator: false})
+        }else{
+            this.setState({secondPageValidator: true})
+        }
+    };
 
-        const picture = this.state.file||this.state.avatar;
+
+    renderSwitch(stepIndex, classes, errors) {
 
         switch(stepIndex) {
             case 0:
@@ -770,7 +774,7 @@ class Register extends React.Component{
 
     render(){
         const { classes } = this.props;
-        const { errors, activeStep, firstPageValidator } = this.state;
+        const { errors, activeStep, firstPageValidator, secondPageValidator } = this.state;
 
         return(
             <Grid  className={classes.fullContainer}>
@@ -816,8 +820,8 @@ class Register extends React.Component{
                                                 progress: classes.progress
                                             }}
                                             nextButton={
-                                                <Button size="small" onClick={() => this.handleNext(activeStep)} disabled={firstPageValidator}>
-                                                    {activeStep <= 1 ? "Suivant" : "Terminer"}
+                                                <Button size="small" onClick={() => this.handleNext(activeStep)} disabled={activeStep === 0 ? firstPageValidator : secondPageValidator}>
+                                                    {activeStep === 0 ? "Suivant" : "Terminer"}
                                                     <KeyboardArrowRight />
                                                 </Button>
                                             }
