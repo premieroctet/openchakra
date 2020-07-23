@@ -1,10 +1,10 @@
 import {Component} from 'react';
 import Router from "next/router";
 
-class login extends Component {
+class signup extends Component {
 
   componentDidMount() {
-      Router.push('/?login=true')
+      Router.push('/?signup=true')
   }
 
   render() {
@@ -12,4 +12,4 @@ class login extends Component {
   }
 }
 
-export default login;
+export default signup;
