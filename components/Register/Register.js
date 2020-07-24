@@ -801,7 +801,6 @@ class Register extends React.Component{
                                     <h2 className={classes.titleRegister}>Inscription</h2>
                                 </Grid> : null
                         }
-
                         <Grid className={classes.containerSwitch}>
                             {this.renderSwitch(activeStep, classes, errors)}
                         </Grid>
@@ -809,21 +808,6 @@ class Register extends React.Component{
                             activeStep < 2 ?
                                 <Grid style={{marginTop: 10}}>
                                     <hr/>
-                                    <Grid container className={classes.bottomContainer}>
-                                        <Grid item>
-                                            <p>Vous avez déjà un compte My Alfred ? </p>
-                                        </Grid>
-                                        <Grid item style={{marginLeft: 5}}>
-                                            <Button color={"primary"} onClick={this.props.callLogin}>Connexion</Button>
-                                        </Grid>
-                                    </Grid>
-                                    <Grid>
-                                        <Grid>
-                                            <Link href={'/needHelp/needHelp'} target="_blank">
-                                                <a target="_blank"  style={{color: 'blue', textAlign: 'center', display: 'flex', justifyContent: 'center'}}>Besoin d'aide pour proposer vos services ? Prenez rendez-vous avec l'équipe My Alfred ici.</a>
-                                            </Link>
-                                        </Grid>
-                                    </Grid>
                                     <Grid>
                                         <MobileStepper
                                             variant="progress"
@@ -847,6 +831,21 @@ class Register extends React.Component{
                                                 </Button>
                                             }
                                         />
+                                    </Grid>
+                                    <Grid container className={classes.bottomContainer}>
+                                        <Grid item>
+                                            <p>Vous avez déjà un compte My Alfred ? </p>
+                                        </Grid>
+                                        <Grid item style={{marginLeft: 5}}>
+                                            <Button color={"primary"} onClick={this.props.callLogin}>Connexion</Button>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid>
+                                        <Grid>
+                                            <Link href={'/needHelp/needHelp'} target="_blank">
+                                                <a target="_blank"  style={{color: 'blue', textAlign: 'center', display: 'flex', justifyContent: 'center'}}>Besoin d'aide pour proposer vos services ? Prenez rendez-vous avec l'équipe My Alfred ici.</a>
+                                            </Link>
+                                        </Grid>
                                     </Grid>
                                 </Grid> : null
                         }
