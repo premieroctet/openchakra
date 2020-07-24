@@ -197,7 +197,7 @@ class Register extends React.Component{
 
     sendSms = () => {
         axios.defaults.headers.common['Authorization'] = cookie.load('token');
-        axios.post('/myAlfred/api/users/sendSMSVerification', this.state.phone)
+        axios.post('/myAlfred/api/users/sendSMSVerification', { phone: this.state.phone} )
             .then (res => {
                 var txt="Le SMS a été envoyé";
                 toast.info(txt);
