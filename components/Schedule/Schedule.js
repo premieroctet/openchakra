@@ -82,7 +82,7 @@ class Schedule extends React.Component {
     this.state = {
       events: _.cloneDeep(this.props.events),
       title: '',
-      isModalOpen: true,
+      isModalOpen: false,
       dayLayoutAlgorithm: 'no-overlap',
       isExpanded: true,
       services: [ALL_SERVICES, ...this.props.services] || [ALL_SERVICES],
