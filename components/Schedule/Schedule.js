@@ -343,76 +343,64 @@ class Schedule extends React.Component {
                     <h2>{ this.state._id==null ? `Nouvelle disponibilité` : `Modifier disponibilité`}</h2>
                   </Grid>
               </Grid>
-              <Grid container>
+              <Grid container style={{justifyContent: 'center'}}>
                 <form>
-                  <Grid container className={classes.contentTimeSlot}>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
-                      <Grid className={classes.contentTimeSlot}>
-                      <KeyboardDatePicker
-                        disableToolbar
-                        variant="inline"
-                        format="dd/MM/yyyy"
-                        id="date-picker-inline"
-                        label="Date de début"
-                        className={classes.formSchedule}
-                        value={this.state.selectedDateStart}
-                        onChange={this.handleDateStartChange}
-                        KeyboardButtonProps={{
-                          'aria-label': 'change date',
-                        }}
-                        autoOk={true}
-                      />
-                      <TextField
-                        id="time"
-                        label="Heure de début"
-                        type="time"
-                        defaultValue={this.state.selectedTimeStart}
-                        onChange={this.handleTimeStartChange}
-                        className={classes.textField}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        inputProps={{
-                          step: 300, // 5 min
-                        }}
-                      />
-                      </Grid>
-                      <Grid style={{ direction: 'row', justify: 'flex-end'}}>
-                      { /** }
-                      <KeyboardDatePicker
-                        disableToolbar
-                        variant="inline"
-                        format="dd/MM/yyyy"
-                        id="date-picker-inline"
-                        label="Date de fin"
-                        className={classes.formSchedule}
-                        value={this.state.selectedDateEnd}
-                        onChange={this.handleDateEndChange}
-                        KeyboardButtonProps={{
-                          'aria-label': 'change date',
-                        }}
-                        autoOk={true}
-                        minDate={this.state.selectedDateStart}
-                        minDateMessage={`Date de fin incorrecte`}
-                      />
-                      { */ }
-                      <TextField
-                        id="time"
-                        label="Heure de fin"
-                        type="time"
-                        className={classes.textField}
-                        defaultValue={this.state.selectedTimeEnd}
-                        onChange={this.handleTimeEndChange}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        inputProps={{
-                          step: 300, // 5 min
-                        }}
-                      />
-                      </Grid>
-                    </MuiPickersUtilsProvider>
+                  <Grid className={classes.contentTimeSlot}>
+                    <Grid style={{width: '100%'}}>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
+                        <Grid className={classes.contentDateAndTime}>
+                          <Grid>
+                            <KeyboardDatePicker
+                                disableToolbar
+                                variant="inline"
+                                format="dd/MM/yyyy"
+                                id="date-picker-inline"
+                                label="Date de début"
+                                className={classes.formSchedule}
+                                value={this.state.selectedDateStart}
+                                onChange={this.handleDateStartChange}
+                                KeyboardButtonProps={{
+                                  'aria-label': 'change date',
+                                }}
+                                autoOk={true}
+                            />
+                          </Grid>
+                          <Grid>
+                            <TextField
+                                id="time"
+                                label="Heure de début"
+                                type="time"
+                                defaultValue={this.state.selectedTimeStart}
+                                onChange={this.handleTimeStartChange}
+                                className={classes.textField}
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                                inputProps={{
+                                  step: 300, // 5 min
+                                }}
+                            />
+                          </Grid>
+                        </Grid>
+                        <Grid className={classes.contentEndTime}>
+                          <TextField
+                            id="time"
+                            label="Heure de fin"
+                            type="time"
+                            className={classes.textField}
+                            defaultValue={this.state.selectedTimeEnd}
+                            onChange={this.handleTimeEndChange}
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            inputProps={{
+                              step: 300, // 5 min
+                            }}
+                          />
+                        </Grid>
+                      </MuiPickersUtilsProvider>
                     </Grid>
+                  </Grid>
                   <Grid container className={classes.containerRecurrence}>
                     <ExpansionPanel expanded={this.state.isExpanded} style={{width:'100%'}}>
                       <ExpansionPanelSummary>
