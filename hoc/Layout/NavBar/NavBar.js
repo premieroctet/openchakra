@@ -286,6 +286,8 @@ class NavBar extends Component {
             name={'mobile'}
             fullWidth={true}
             fullScreen={true}
+            disableBackdropClick={true}
+            disableEscapeKeyDown={true}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
           <DialogContent>
@@ -311,6 +313,8 @@ class NavBar extends Component {
             open={this.state.setOpenMobileRegister}
             onClose={this.handleCloseRegister}
             TransitionComponent={Transition}
+            disableBackdropClick={true}
+            disableEscapeKeyDown={true}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
           <DialogContent dividers={false} className={classes.dialogContentContainer} classes={{root: classes.muidialogContent}} >
@@ -492,6 +496,8 @@ class NavBar extends Component {
                             onClose={this.handleCloseLogin}
                             TransitionComponent={Transition}
                             classes={{paperWidthSm: classes.widthSm}}
+                            disableBackdropClick={true}
+                            disableEscapeKeyDown={true}
                         >
                           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
                           <DialogContent classes={{root: classes.widthLoginContent}}>
@@ -513,6 +519,8 @@ class NavBar extends Component {
                             open={this.state.setOpenRegister}
                             onClose={this.handleCloseRegister}
                             TransitionComponent={Transition}
+                            disableBackdropClick={true}
+                            disableEscapeKeyDown={true}
                         >
                           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
                           <DialogContent dividers={false} className={classes.muidialogContent} >

@@ -253,7 +253,7 @@ class Register extends React.Component{
             .then(() => {
                 toast.info('Inscription réussie');
                 axios.post('/myAlfred/api/users/login',{username, password, google_id, facebook_id})
-                  .then(response => {
+                  .then( () => {
                       const token = cookie.load('token');
                       axios.defaults.headers.common['Authorization'] = token;
                   })
