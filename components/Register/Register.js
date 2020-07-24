@@ -152,6 +152,12 @@ class Register extends React.Component{
         }
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(this.state.activeStep !== prevState.activeStep){
+            this.props.sendParentData(this.state.activeStep)
+        }
+    };
+
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value }, () => this.validatorFirstStep());
     };

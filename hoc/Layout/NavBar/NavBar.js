@@ -69,6 +69,7 @@ class NavBar extends Component {
       user:null,
       google_id: props.google_id,
       facebook_id: props.facebook_id,
+      activeStep:0
     };
   }
 
@@ -182,12 +183,20 @@ class NavBar extends Component {
   };
 
   handleCloseRegister = () => {
-    this.setState({setOpenRegister : false});
+    if(this.state.activeStep === 2){
+      this.setState({setOpenRegister : false}, () => this.componentDidMount());
+    }else{
+      this.setState({setOpenRegister : false});
+    }
   };
 
   needRefresh = () => {
     this.setState({setOpenLogin: false});
     Router.push('/search')
+  };
+
+  getData = (e) =>{
+    this.setState({activeStep: e})
   };
 
   render() {
@@ -202,7 +211,7 @@ class NavBar extends Component {
 
     const modalRegister = () =>{
       return(
-          <Register callLogin={this.handleOpenLogin} closeLOgin={this.componentDidMount}/>
+          <Register callLogin={this.handleOpenLogin} sendParentData={this.getData}/>
       )
     };
 
