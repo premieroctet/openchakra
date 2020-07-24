@@ -185,7 +185,7 @@ class creaShop extends React.Component {
               .catch(err => console.error(err))
           }
 
-          toast.info("Boutique créée avec succès");
+          toast.info(I18N.SHOP_CREATION_SUCCESSFUL);
           Router.push(`/shop?id_alfred=${this.state.user_id}`);
       })
       .catch(err => {
