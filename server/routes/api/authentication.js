@@ -87,7 +87,8 @@ const redirectRegistration = (user, res) => {
         "lastname": user.lastName,
         "firstname": user.firstName,
         "email": user.email,
-        "picture": user.picture
+        "picture": user.picture,
+        'isLogin': false
     })
     res.status(200).redirect(new URL("?"+url.toString(), getHost()))
 }

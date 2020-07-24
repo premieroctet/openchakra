@@ -2,7 +2,7 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid';
 import Layout from '../../hoc/Layout/Layout';
 
-class needHelp extends React.Component{
+export default class needHelp extends React.Component{
     constructor(props) {
         super(props);
     }
@@ -17,5 +17,3 @@ class needHelp extends React.Component{
         )
     }
 }
-
-export default needHelp

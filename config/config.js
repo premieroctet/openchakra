@@ -44,6 +44,10 @@ const SIRET = {
   siretUrl : 'https://api.insee.fr/entreprises/sirene/V3/siret',
   sirenUrl : 'https://api.insee.fr/entreprises/sirene/V3/siren',
 }
+
+// Enable.disable Google & Facebook login
+const ENABLE_GF_LOGIN=false
+
 // Public API
 module.exports = {
     databaseName: databaseName,
@@ -51,5 +55,6 @@ module.exports = {
     completeConfig,
     mailConfig,
     computeUrl,
-    SIRET
+    SIRET,
+    ENABLE_GF_LOGIN
 }

@@ -72,9 +72,11 @@ module.exports = function validateSimpleRegisterInput(data) {
     if(Validator.isEmpty(data.country)) {
         errors.country = 'Veuillez choisir un pays';
     }
-    if(moment(data.birthday).isAfter(moment().subtract(16,'year'))){
+
+    if(!moment(data.birthday).isValid() ||  moment(data.birthday).isAfter(moment().subtract(16,'year'))){
         errors.birthday = 'Date de naissance invalide';
     }
+
 
 
     return {

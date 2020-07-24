@@ -6,18 +6,26 @@ const keys = require('../../config/keys');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const path = require('path');
+
 const CronJob = require('cron').CronJob;
+
 const validateRegisterInput = require('../../validation/register');
 const validateSimpleRegisterInput = require('../../validation/simpleRegister');
 const validateLoginInput = require('../../validation/login');
+
 const {sendResetPassword, sendVerificationMail, sendVerificationSMS} = require('../../../utils/mailing');
+
 const User = require('../../models/User');
 const ResetToken = require('../../models/ResetToken');
 const crypto = require('crypto');
 const multer = require("multer");
+const {getHost}=require('../../../utils/infra')
+const {mangoApi}=require('../../../utils/mangopay')
+
 const {computeUrl } = require('../../../config/config');
+
 const {addIdIfRequired, createMangoClient} = require('../../../utils/mangopay')
-const {GOOGLE_PROVIDER, FACEBOOK_PROVIDER} = require('../../../utils/consts')
+const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -79,9 +87,6 @@ router.get('/test',(req, res) => res.json({msg: 'Users Works!'}) );
 // @Route POST /myAlfred/api/users/register
 // Register
 router.post('/register',(req,res) =>{
-
-    console.log(`Register received:${JSON.stringify(req.body)}`)
-
     const {errors, isValid} = validateSimpleRegisterInput(req.body);
 
     if(!isValid) {
@@ -108,21 +113,13 @@ router.post('/register',(req,res) =>{
                 userFields.billing_address.city = req.body.city;
                 userFields.billing_address.country = req.body.country;
 
+
+
                 userFields.billing_address.gps = {};
                 userFields.billing_address.gps.lat = req.body.lat;
                 userFields.billing_address.gps.lng = req.body.lng;
                 userFields.service_address = [];
                 userFields.last_login = [];
-
-                const google_id=req.body.google_id || null
-                const facebook_id=req.body.facebook_id || null
-
-                if (google_id) {
-                  userFields.external_auth= { provider: GOOGLE_PROVIDER, id: google_id }
-                }
-                if (facebook_id) {
-                  userFields.external_auth= { provider: FACEBOOK_PROVIDER, id: facebook_id }
-                }
 
                 const newUser = new User(userFields);
                 bcrypt.genSalt(10, (err, salt) => {
@@ -359,25 +356,8 @@ router.put('/profile/job',passport.authenticate('jwt',{session:false}),(req,res)
 // Add a picture profile
 // @Access private
 router.post('/profile/picture',upload.single('myImage'),passport.authenticate('jwt',{session:false}),(req,res) => {
-
     User.findByIdAndUpdate(req.user.id, {
-        picture: req.file ? req.file.path : req.body.avatar
-    },{new:true})
-        .then(user => {
-            res.json(user)
-        })
-        .catch(err => {
-            console.error(err)
-        })
-});
-
-// @Route PUT /myAlfred/api/users/profile/picture
-// Add a picture profile
-// @Access private
-router.post('/profile/avatar', passport.authenticate('jwt',{session:false}),(req,res) => {
-
-    User.findByIdAndUpdate(req.user.id, {
-        picture: req.body.avatar
+        picture: req.file ? req.file.path : ""
     },{new:true})
         .then(user => {
             res.json(user)
@@ -521,7 +501,6 @@ router.post('/login',(req, res)=> {
     // Find user by email
     User.findOne({email})
         .then(user => {
-          console.log(`Login found user ${JSON.stringify(user)}`)
             // Check for user
             if(!user) {
                 errors.username = 'Mot de passe ou email incorrect';
@@ -529,39 +508,20 @@ router.post('/login',(req, res)=> {
             }
 
             // Check password
-            if (user.external_auth) {
-              // User matched
-              const payload = {id: user.id, name: user.name, firstname: user.firstname, is_admin: user.is_admin, is_alfred: user.is_alfred}; // Create JWT payload
-              // Sign token
-              jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
-                  res.cookie('token', 'Bearer ' + token,{
-                      httpOnly: false,
-                      secure: true,
-                      sameSite: true
-                  }).status(201).json()
-                  return
-              })
-            }
-            else {
-              bcrypt.compare(password, user.password)
-                  .then(isMatch => {
-                      if(isMatch && user.active === true) {
-                          // User matched
-                          const payload = {id: user.id, name: user.name, firstname: user.firstname, is_admin: user.is_admin, is_alfred: user.is_alfred}; // Create JWT payload
-                          // Sign token
-                          jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
-                              res.cookie('token', 'Bearer ' + token,{
-                                  httpOnly: false,
-                                  secure: true,
-                                  sameSite: true
-                              }).status(201).json()
-                          });
-                      } else {
-                          errors.password = 'Mot de passe ou email incorrect';
-                          return res.status(400).json(errors);
-                      }
-                  })
-            }
+            bcrypt.compare(password, user.password)
+                .then(isMatch => {
+                    if(isMatch && user.active === true) {
+                        // User matched
+                        const payload = {id: user.id, name: user.name, firstname: user.firstname, is_admin: user.is_admin, is_alfred: user.is_alfred}; // Create JWT payload
+                        // Sign token
+                        jwt.sign(payload, keys.secretOrKey, (err, token) => {
+                            res.json({success: true, token: 'Bearer ' + token});
+                        });
+                    } else {
+                        errors.password = 'Mot de passe ou email incorrect';
+                        return res.status(400).json(errors);
+                    }
+                });
         });
 });
 
@@ -690,8 +650,7 @@ router.get('/current',passport.authenticate('jwt',{session:false}),(req,res) => 
     User.findById(req.user.id)
         .populate('resetToken')
         .then(user => {
-
-            res.json(user);
+          res.json(user);
         })
         .catch(err => res.status(404).json({ alfred: 'No alfred found' }))
 });
@@ -938,7 +897,8 @@ router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false
     User.findById(req.user.id)
         .then(user => {
             user.id_card = undefined;
-
+            user.kyc_status = null
+            user.kyc_error = null
             user.save().then(user => res.json(user)).catch(err => console.error(err));
         })
         .catch(err => {
@@ -946,8 +906,75 @@ router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false
         })
 });
 
+// @Route GET /myAlfred/api/users/mangopay_kyc
+// Send email
+// @access private
+router.get('/mangopay_kyc', (req,res) => {
+  const doc_id=req.query.RessourceId
+  const kyc_status=req.query.EventType
+  User.findOne({ identity_proof_id : doc_id })
+    .then(user => {
+      console.log(`User ${user.email} has KYC status ${kyc_status}`)
+      mangoApi.KycDocuments.get(doc_id)
+        .then ( doc => {
+          user.kyc_status=doc.Status
+          user.kyc_error=doc.RefusedReasonType
+          user.save()
+        })
+      res.status(200)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(400)
+    })
+});
+
+const HOOK_TYPES="KYC_CREATED KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED".split(' ')
+/** Hook Mangopay */
+
+HOOK_TYPES.forEach(hookType => {
+  const hook_url=new URL('/myAlfred/api/users/mangopay_kyc', getHost());
+  console.log(`Setting hook ${hook_url} for ${hookType}`);
+  mangoApi.Hooks.create({
+    Tag: "MyAlfred hook",
+    EventType: hookType,
+    Status: "ENABLED",
+    Validity: "VALID",
+    Url: hook_url,
+  })
+  .then (res => {
+    console.log(`Set hook ${hookType} to ${hook_url}`)
+  })
+  .catch( err => {
+    if (err.errors && err.errors.EventType &&  err.errors.EventType.includes('already been registered')) {
+      mangoApi.Hooks.getAll()
+        .then ( res => {
+          const hookId = res.find( h => h.EventType==hookType).Id
+          return hookId
+        })
+        .then ( hookId => {
+          mangoApi.Hooks.update({
+            Id : hookId,
+            Tag: "MyAlfred hook",
+            EventType: hookType,
+            Status: "ENABLED",
+            Validity: "VALID",
+            Url: hook_url,
+          })
+	  .then( () => {
+            console.log(`Updated ${hookType} to ${hook_url}`)
+          })
+        })
+    }
+    else {
+      console.error(`Error for hook ${hookType}:${JSON.stringify(err)}`)
+    }
+  })
+})
+
+
 // Create mango client account for all user with no id_mangopay
-new CronJob('0 0 * * * *', function() {
+new CronJob('0 */15 * * * *', function() {
   console.log("Customers who need mango account");
   User.find({id_mangopay: null, active:true})
     .then ( usrs => {

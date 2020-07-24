@@ -87,6 +87,13 @@ class NavBar extends Component {
       })
     }
 
+    if(query.signup === 'true'){
+      this.setState({
+        setOpenRegister: true,
+        setOpenLogin: false
+      })
+    };
+
     const token = cookie.load('token')
     if (token) {
       this.setState({ logged: true });
@@ -121,7 +128,7 @@ class NavBar extends Component {
     localStorage.removeItem('path');
     // Remove auth header for future requests
     setAuthToken(false);
-    Router.push('/');
+    Router.push('/?disconnect=1');
   };
 
   handleProfileMenuOpen = event => {
@@ -195,7 +202,7 @@ class NavBar extends Component {
 
     const modalRegister = () =>{
       return(
-          <Register callLogin={this.handleOpenLogin} closeLOgin={this.componentDidMount} googleAuth={this.props.googleAuth}/>
+          <Register callLogin={this.handleOpenLogin} closeLOgin={this.componentDidMount}/>
       )
     };
 

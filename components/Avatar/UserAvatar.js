@@ -42,16 +42,24 @@ class UserAvatar extends React.Component{
 
   checkWarnings = token => {
     axios.defaults.headers.common["Authorization"] = token
+    var kyc=[]
     axios.get('/myAlfred/api/chatRooms/nonViewedMessagesCount')
       .then( res => {
         const nbMessages=res.data
         if (nbMessages>0) {
           const plural = nbMessages==1 ? "" : "s"
-          this.setState({kyc: [`Vous avez ${res.data} message${plural} non lu${plural}`]})
+          kyc.push(`Vous avez ${res.data} message${plural} non lu${plural}`)
         }
-        else {
-          this.setState({kyc: null})
+        return axios.get('/myAlfred/api/users/current')
+      })
+      .then( res => {
+        const user = res.data
+        if (user.kyc_error_text) {
+          kyc.push(user.kyc_error_text)
         }
+      })
+      .then ( () => {
+        this.setState({ kyc : kyc.length > 0 ? kyc : null})
       })
       .catch (err => console.error(err))
   }
