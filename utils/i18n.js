@@ -16,6 +16,8 @@ tous les lundis et mardis, vous pouvez cocher la case Récurrence, et cliquer\
 sur Lu et Ma afin de répéter votre disponibilité sur une durée que vous \
 pouvez définir.'
 
+const SHOP_CREATION_SUCCESSFUL='Vos services sont maintenant disponibles dans my Alfred'
+
 const MANGOPAY_MESSAGES= {
   'DOCUMENT_UNREADABLE'                 : "Pièce d'identité illisible",
   'DOCUMENT_NOT_ACCEPTED'               : "Pièce d'identité invalide : carte d'identité, passeport, permis de conduire ou titre de séjour attendu",
@@ -39,4 +41,4 @@ const getMangopayMessage = msg_id => {
   return MANGOPAY_MESSAGES[msg_id] || `Erreur inconnue:${msg_id}`
 }
 
-module.exports={ CESU_NOTICE, OUTSIDE_PERIMETER, SCHEDULE_TITLE, SCHEDULE_SUBTITLE, getMangopayMessage};
+module.exports={ CESU_NOTICE, OUTSIDE_PERIMETER, SCHEDULE_TITLE, SCHEDULE_SUBTITLE, getMangopayMessage, SHOP_CREATION_SUCCESSFUL};
