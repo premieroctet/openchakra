@@ -515,7 +515,13 @@ router.post('/login',(req, res)=> {
                         const payload = {id: user.id, name: user.name, firstname: user.firstname, is_admin: user.is_admin, is_alfred: user.is_alfred}; // Create JWT payload
                         // Sign token
                         jwt.sign(payload, keys.secretOrKey, (err, token) => {
-                            res.json({success: true, token: 'Bearer ' + token});
+                          jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
+                              res.cookie('token', 'Bearer ' + token,{
+                                  httpOnly: false,
+                                  secure: true,
+                                  sameSite: true
+                              }).status(201).json()
+                          });
                         });
                     } else {
                         errors.password = 'Mot de passe ou email incorrect';
