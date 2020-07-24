@@ -91,7 +91,7 @@ class Register extends React.Component{
             errors: {},
             lat: '',
             lng: '',
-            activeStep: 0,
+            activeStep: 2,
             file: null,
             picture: '',
             // Avatar link coming from Google or Facebook
@@ -694,7 +694,7 @@ class Register extends React.Component{
                                             />
                                         </Grid>
                                         <Grid>
-                                            <a href={"footer/cguPage"} target="_blank" style={{color: 'blue'}}>J’accepte les conditions générales d’utilisation de My-Alfred.</a>
+                                            <a href={"footer/cguPage"} target="_blank" style={{color: '#2FBCD3'}}>J’accepte les conditions générales d’utilisation de My-Alfred.</a>
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -711,7 +711,7 @@ class Register extends React.Component{
                                     <h2 className={classes.titleRegister}>Inscription terminée</h2>
                                 </Grid>
                                 <Grid className={classes.newContainer}>
-                                    <Grid container style={{display: 'flex', justifyContent: 'center', marginTop: 20, height: 100 /*safari*/}}>
+                                    <Grid container style={{display: 'flex', justifyContent: 'center', height: 100 /*safari*/}}>
                                         <img src='../../static/happy_castor.svg' style={{width: 100}} alt={'success'}/>
                                     </Grid>
                                     <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 10, textAlign: 'center'}}>
@@ -732,10 +732,15 @@ class Register extends React.Component{
                                                 </a>
                                             </Link>
                                         </Grid>
+
+                                    </Grid>
+                                    <Grid style={{marginTop: 20}}>
                                         <hr/>
-                                        <Grid>
-                                            <Link href={'/needHelp/needHelp'}>
-                                                <p>Besoin d'aide pour proposer vos services ? Prenez rendez-vous avec l'équipe My Alfred en</p><a target="_blank"  style={{color: 'blue', textAlign: 'center', display: 'flex', justifyContent: 'center'}}>Cliquez ici !</a>
+                                        <Grid style={{marginTop: 20}}>
+                                            <Link href={'/needHelp/needHelp'} target="_blank">
+                                                <a target="_blank"  style={{color: '#2FBCD3', textAlign: 'center', display: 'flex', justifyContent: 'center', textDecoration: 'none'}}>
+                                                    Besoin d'aide pour proposer vos services ? Prenez rendez-vous avec l'équipe My Alfred ici !
+                                                </a>
                                             </Link>
                                         </Grid>
                                     </Grid>
@@ -842,7 +847,7 @@ class Register extends React.Component{
                                     </Grid>
                                     <Grid container className={classes.bottomContainer}>
                                         <Grid item>
-                                            <a color={"primary"} onClick={this.props.callLogin} style={{color: 'blue', cursor: 'pointer'}}>Vous avez déjà un compte My Alfred ?</a>
+                                            <a color={"primary"} onClick={this.props.callLogin} style={{color: '#2FBCD3', cursor: 'pointer'}}>Vous avez déjà un compte My Alfred ?</a>
                                         </Grid>
                                     </Grid>
 
