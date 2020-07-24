@@ -82,7 +82,7 @@ class Schedule extends React.Component {
     this.state = {
       events: _.cloneDeep(this.props.events),
       title: '',
-      isModalOpen: false,
+      isModalOpen: true,
       dayLayoutAlgorithm: 'no-overlap',
       isExpanded: true,
       services: [ALL_SERVICES, ...this.props.services] || [ALL_SERVICES],
@@ -206,8 +206,14 @@ class Schedule extends React.Component {
    }
 
    handleDateStartChange = date => {
-     this.setState({selectedDateStart: date});
-
+     this.setState({selectedDateStart: new Date(date)})
+     // End date is start date with end time
+     var newDateEnd = new Date(date)
+     let hours = parseInt(this.state.selectedTimeEnd.substring(0,2))
+     let minutes = parseInt(this.state.selectedTimeEnd.substring(3,5))
+     newDateEnd.setHours(hours);
+     newDateEnd.setMinutes(minutes);
+     this.setState({selectedDateEnd: newDateEnd});
    };
 
   handleDateEndChange = date => {
@@ -341,11 +347,11 @@ class Schedule extends React.Component {
                 <form>
                   <Grid container className={classes.contentTimeSlot}>
                     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
+                      <Grid className={classes.contentTimeSlot}>
                       <KeyboardDatePicker
                         disableToolbar
                         variant="inline"
                         format="dd/MM/yyyy"
-                        margin="normal"
                         id="date-picker-inline"
                         label="Date de début"
                         className={classes.formSchedule}
@@ -370,11 +376,13 @@ class Schedule extends React.Component {
                           step: 300, // 5 min
                         }}
                       />
+                      </Grid>
+                      <Grid style={{ direction: 'row', justify: 'flex-end'}}>
+                      { /** }
                       <KeyboardDatePicker
                         disableToolbar
                         variant="inline"
                         format="dd/MM/yyyy"
-                        margin="normal"
                         id="date-picker-inline"
                         label="Date de fin"
                         className={classes.formSchedule}
@@ -387,6 +395,7 @@ class Schedule extends React.Component {
                         minDate={this.state.selectedDateStart}
                         minDateMessage={`Date de fin incorrecte`}
                       />
+                      { */ }
                       <TextField
                         id="time"
                         label="Heure de fin"
@@ -401,6 +410,7 @@ class Schedule extends React.Component {
                           step: 300, // 5 min
                         }}
                       />
+                      </Grid>
                     </MuiPickersUtilsProvider>
                     </Grid>
                   <Grid container className={classes.containerRecurrence}>
@@ -436,7 +446,6 @@ class Schedule extends React.Component {
                                 disableToolbar
                                 variant="inline"
                                 format="dd/MM/yyyy"
-                                margin="normal"
                                 id="date-picker-inline"
                                 label="Date de fin"
                                 className={classes.textField}

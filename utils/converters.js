@@ -92,14 +92,11 @@ const eventUI2availability = event => {
     avail[item] = include ? {'event':[inner_event]} : {'event': []};
   })
   if (recurrent) {
-    console.log('RECURRENCE')
     avail['period']={active:true, month_begin: new Date(event.selectedDateStart), month_end: event.selectedDateEndRecu ? new Date(event.selectedDateEndRecu):null };
   }
   else {
-    console.log('NO RECURRENCE')
     avail['period']={active:false, month_begin: null, month_end: null};
   }
-  console.log(`Converted ${JSON.stringify(event, null, 2)} to ${JSON.stringify(avail, null, 2)}`)
   return avail;
 };
 
@@ -135,8 +132,6 @@ const availability2eventUI = avail => {
       eventUI.selectedTimeEnd=moment(ev[0].end).tz('Europe/Paris').format('HH:mm')
     }
   })
-
-  console.log(`converting ${JSON.stringify(avail, null, 2)} tp ${JSON.stringify(eventUI, null, 2)}`)
 
   return eventUI
 
