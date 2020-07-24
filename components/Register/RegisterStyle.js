@@ -90,6 +90,7 @@ export default theme => ({
     bottomContainer:{
         alignItems: 'center',
         justifyContent: 'center',
+        marginTop: 20
     },
     progress:{
         [theme.breakpoints.down("xs")]:{

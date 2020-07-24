@@ -28,16 +28,18 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
-const {isPhoneOk}=require('../../utils/sms');
 import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined';
 import Router from 'next/router';
 import Link from 'next/link';
 import cookie from 'react-cookies'
 import OAuth from '../OAuth/OAuth';
-var parse = require('url-parse');
 import Information from '../Information/Information';
+
+var parse = require('url-parse');
 const {PROVIDERS} = require('../../utils/consts');
 const {ENABLE_GF_LOGIN} = require('../../config/config');
+const {isPhoneOk}=require('../../utils/sms');
+
 
 registerLocale('fr', fr);
 
@@ -263,15 +265,15 @@ class Register extends React.Component{
             .catch(err => {
               let error = Object.values(err.response.data);
                 this.setState({errors: err.response.data});
-                if(error.includes('L\'email existe déjà')){
-                  this.setState({activeStep: 0})
-              }
-              if(error.includes('Veuillez saisir une adresse')){
-                  this.setState({cityError: 'Adresse invalide', activeStep: 1})
-              }
-              if (error.includes('Date de naissance invalide')){
-                    this.setState({birthdayError: 'Date de naissance invalide', activeStep: 1})
-              }
+                  if(error.includes('L\'email existe déjà')){
+                    this.setState({activeStep: 0})
+                  }
+                  if(error.includes('Veuillez saisir une adresse')){
+                      this.setState({cityError: 'Adresse invalide', activeStep: 1})
+                  }
+                  if (error.includes('Date de naissance invalide')){
+                        this.setState({birthdayError: 'Date de naissance invalide', activeStep: 1})
+                  }
             });
     };
 
@@ -708,7 +710,7 @@ class Register extends React.Component{
                                 <Grid>
                                     <h2 className={classes.titleRegister}>Inscription terminée</h2>
                                 </Grid>
-                                <div className={classes.newContainer}>
+                                <Grid className={classes.newContainer}>
                                     <Grid container style={{display: 'flex', justifyContent: 'center', marginTop: 20, height: 100 /*safari*/}}>
                                         <img src='../../static/happy_castor.svg' style={{width: 100}} alt={'success'}/>
                                     </Grid>
@@ -730,8 +732,14 @@ class Register extends React.Component{
                                                 </a>
                                             </Link>
                                         </Grid>
+                                        <hr/>
+                                        <Grid>
+                                            <Link href={'/needHelp/needHelp'}>
+                                                <p>Besoin d'aide pour proposer vos services ? Prenez rendez-vous avec l'équipe My Alfred en</p><a target="_blank"  style={{color: 'blue', textAlign: 'center', display: 'flex', justifyContent: 'center'}}>Cliquez ici !</a>
+                                            </Link>
+                                        </Grid>
                                     </Grid>
-                                </div>
+                                </Grid>
                             </Grid>
                         </Grid>
                         <Grid className={classes.margin}>
@@ -834,19 +842,10 @@ class Register extends React.Component{
                                     </Grid>
                                     <Grid container className={classes.bottomContainer}>
                                         <Grid item>
-                                            <p>Vous avez déjà un compte My Alfred ? </p>
-                                        </Grid>
-                                        <Grid item style={{marginLeft: 5}}>
-                                            <Button color={"primary"} onClick={this.props.callLogin}>Connexion</Button>
+                                            <a color={"primary"} onClick={this.props.callLogin} style={{color: 'blue', cursor: 'pointer'}}>Vous avez déjà un compte My Alfred ?</a>
                                         </Grid>
                                     </Grid>
-                                    <Grid>
-                                        <Grid>
-                                            <Link href={'/needHelp/needHelp'} target="_blank">
-                                                <a target="_blank"  style={{color: 'blue', textAlign: 'center', display: 'flex', justifyContent: 'center'}}>Besoin d'aide pour proposer vos services ? Prenez rendez-vous avec l'équipe My Alfred ici.</a>
-                                            </Link>
-                                        </Grid>
-                                    </Grid>
+
                                 </Grid> : null
                         }
 
