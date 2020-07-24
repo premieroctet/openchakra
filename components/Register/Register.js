@@ -714,7 +714,7 @@ class Register extends React.Component{
                                     <Grid container style={{display: 'flex', justifyContent: 'center', height: 100 /*safari*/}}>
                                         <img src='../../static/happy_castor.svg' style={{width: 100}} alt={'success'}/>
                                     </Grid>
-                                    <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 10, textAlign: 'center'}}>
+                                    <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 20, textAlign: 'center'}}>
                                         <p>Inscription réussie ! Vous pouvez maintenant proposer ou rechercher vos services sur My Alfred</p>
                                     </Grid>
                                     <Grid item className={classes.responsiveButton}>
