@@ -17,6 +17,7 @@ import styles from '../reserve/reserveStyle'
 import About from '../../components/About/About';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
+import cookie from 'react-cookies'
 
 
 class Reserve extends React.Component {
@@ -55,7 +56,7 @@ class Reserve extends React.Component {
     const booking_id = this.props.booking_id;
     this.setState({booking_id: booking_id});
 
-    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common['Authorization'] = cookie.load('token')
 
     axios.get("/myAlfred/api/users/current").then(res => {
       this.setState({ currentUser: res.data });

@@ -1,9 +1,11 @@
 const moment = require('moment');
 const path = require('path');
 const fs = require('fs');
-const {getHost}=require('./mailing')
 const emptyPromise = require('./promise');
 const mangopay = require('mangopay2-nodejs-sdk');
+const KycDocumentType = require('mangopay2-nodejs-sdk/lib/models/KycDocumentType')
+const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus')
+const PersonType = require('mangopay2-nodejs-sdk/lib/models/PersonType')
 
 // PROD !!!!!
 /**
@@ -17,26 +19,12 @@ const mangoApi = new mangopay({
 const mangoApi = new mangopay({
   clientId: 'testmyalfredv2',
   clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
+  logClass: () => {},
 });
-
-const HOOK_TYPES="KYC_CREATED KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED".split(' ')
-/** Hook Mangopay */
-
-HOOK_TYPES.forEach(hookType => {
-  const hook_url=new URL('/myAlfred/api/payment/mangopay_hook', getHost());
-  console.log(`Setting hook ${hook_url} for ${hookType}`);
-  mangoApi.Hooks.create({
-    Tag: "MyAlfred hook",
-    EventType: hookType,
-    Status: "ENABLED",
-    Validity: "VALID",
-    Url: hook_url,
-  });
-})
 
 const createMangoClient = user => {
   var userData = {
-    PersonType: "NATURAL",
+    PersonType: PersonType.Natural,
     FirstName: user.firstname,
     LastName: user.name,
     Birthday: moment(user.birthday).unix(),
@@ -72,7 +60,7 @@ const createMangoProvider = (user, shop) => {
 
   console.log(`Creating mango provider for ${user.name}`)
   var userData = {
-    PersonType: shop.is_particular ? "NATURAL" : "LEGAL",
+    PersonType: shop.is_particular ? PersonType.Natural : PersonType.Legal,
     FirstName: user.firstname,
     LastName: user.name,
     Birthday: moment(user.birthday).unix(),
@@ -128,17 +116,14 @@ const addIdIfRequired = user => {
     return false;
   }
   const objStatus = {
-    Type: 'IDENTITY_PROOF',
+    Type: KycDocumentType.IdentityProof
   }
   const id = user.mangopay_provider_id;
 
   mangoApi.Users.createKycDocument(id, objStatus)
-    .catch(error => {
-      console.error(`createKycDocument(${id}, ${JSON.stringify(objStatus)}) : ${JSON.stringify(error)}`)
-    })
     .then(result => {
       const documentId = result.Id;
-      console.log(`Create identiy proof ${documentId} for provider ${id}`)
+      console.log(`Create identity proof ${documentId} for provider ${id}`)
       user.identity_proof_id=documentId;
       user.save()
         .then ( u => console.log(`User saved id proof ${user.identity_proof_id}`) )
@@ -151,21 +136,15 @@ const addIdIfRequired = user => {
       const KycPageRecto = new mangoApi.models.KycPage({"File": base64Recto});
 
       mangoApi.Users.createKycPage(id, documentId, KycPageRecto)
-        .catch(error => {
-          console.error(`createKycPage(${id}, ${documentId}, KycPageRecto : ${JSON.stringify(error)}`)
-        })
         .then(resultRecto => {
           const id_verso = user.id_card.verso ? '../../../' + user.id_card.verso : null;
 
+          console.log(`Checking mangopay_provider_status:${user.mangopay_provider_status} against ${PersonType.Natural}`)
           // Natural provider : KYX check is free => send
-          if (user.mangopay_provider_status=='NATURAL') {
+          if (user.mangopay_provider_status==PersonType.Natural) {
             console.log("Natural provider => require KYC")
-            try {
-              requireKycValidation(user, documentId);
-            }
-            catch (err) {
-              console.error(err)
-            }
+            const updateObj = {Id: documentId, Status: KycDocumentStatus.ValidationAsked}
+            mangoApi.Users.updateKycDocument(user.mangopay_provider_id, updateObj)
           }
           if (id_verso !== null) {
             const base64Verso = fs.readFileSync(path.resolve(id_verso), 'base64');
@@ -173,28 +152,11 @@ const addIdIfRequired = user => {
 
             mangoApi.Users.createKycPageFromFile(id, documentId, KycPageVerso)
               .then(resultVerso => console.log(`Created KyCPage verso ${JSON.stringify(resultVerso)}`))
-              .catch(err => console.error(err))
           }
         })
-        .catch(err => console.error(res))
-
   })
   .catch (err => console.error(err))
 }
-
-const requireKycValidation = (user, documentId) => {
-
-  console.log("Requiring validation");
-  const updateObj = {
-      Id: documentId,
-      Status: "VALIDATION_ASKED"
-  };
-
-  mangoApi.Users.updateKycDocument(user.mangopay_provider_id, updateObj)
-    .then(updKyc => console.log(`Required validation for document ${JSON.stringify(updKyc)}`))
-    .catch(err => console.error(`Error ${err}`))
-}
-
 
 const payAlfred = booking => {
   console.log(`Starting paying of booking ${JSON.stringify(booking)}`)
@@ -293,6 +255,5 @@ module.exports = {
   createMangoClient,
   createMangoProvider,
   addIdIfRequired,
-  requireKycValidation,
   payAlfred,
 };

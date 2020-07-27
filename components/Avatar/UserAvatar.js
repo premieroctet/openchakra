@@ -7,6 +7,7 @@ import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import axios from "axios";
 import styles from './UserAvatarStyle'
+import cookie from 'react-cookies'
 const jwt = require('jsonwebtoken');
 
 class UserAvatar extends React.Component{
@@ -22,9 +23,9 @@ class UserAvatar extends React.Component{
   }
 
   componentDidMount() {
-    const token = localStorage.getItem('token');
-    if (token !== null) {
-      const token2 = localStorage.getItem('token').split(' ')[1];
+    const token = cookie.load('token')
+    if (token) {
+      const token2 = token.split(' ')[1];
       const decode = jwt.decode(token2);
       const alfred_id = decode.id;
       this.setState({currentUser: alfred_id},
@@ -41,16 +42,24 @@ class UserAvatar extends React.Component{
 
   checkWarnings = token => {
     axios.defaults.headers.common["Authorization"] = token
+    var kyc=[]
     axios.get('/myAlfred/api/chatRooms/nonViewedMessagesCount')
       .then( res => {
         const nbMessages=res.data
         if (nbMessages>0) {
           const plural = nbMessages==1 ? "" : "s"
-          this.setState({kyc: [`Vous avez ${res.data} message${plural} non lu${plural}`]})
+          kyc.push(`Vous avez ${res.data} message${plural} non lu${plural}`)
         }
-        else {
-          this.setState({kyc: null})
+        return axios.get('/myAlfred/api/users/current')
+      })
+      .then( res => {
+        const user = res.data
+        if (user.kyc_error_text) {
+          kyc.push(user.kyc_error_text)
         }
+      })
+      .then ( () => {
+        this.setState({ kyc : kyc.length > 0 ? kyc : null})
       })
       .catch (err => console.error(err))
   }
@@ -70,8 +79,9 @@ class UserAvatar extends React.Component{
   };
 
   avatarWithPics(user, className) {
+    const url = user.picture.match(/^https?:\/\//)?user.picture:'/'+user.picture
     return(
-      <Avatar alt="photo de profil" src={"/"+user.picture} className={className} />
+      <Avatar alt="photo de profil" src={url} className={className} />
     )
   }
 

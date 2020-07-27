@@ -238,8 +238,14 @@ class Schedule extends React.Component {
    };
 
    handleDateStartChange = date => {
-     this.setState({selectedDateStart: date});
-
+     this.setState({selectedDateStart: new Date(date)})
+     // End date is start date with end time
+     var newDateEnd = new Date(date)
+     let hours = parseInt(this.state.selectedTimeEnd.substring(0,2))
+     let minutes = parseInt(this.state.selectedTimeEnd.substring(3,5))
+     newDateEnd.setHours(hours);
+     newDateEnd.setMinutes(minutes);
+     this.setState({selectedDateEnd: newDateEnd});
    };
 
   handleDateEndChange = date => {
@@ -370,72 +376,64 @@ class Schedule extends React.Component {
                     <h2>{ this.state._id==null ? `Nouvelle disponibilité` : `Modifier disponibilité`}</h2>
                   </Grid>
               </Grid>
-              <Grid container>
+              <Grid container style={{justifyContent: 'center'}}>
                 <form>
-                  <Grid container className={classes.contentTimeSlot}>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
-                      <KeyboardDatePicker
-                        disableToolbar
-                        variant="inline"
-                        format="dd/MM/yyyy"
-                        margin="normal"
-                        id="date-picker-inline"
-                        label="Date de début"
-                        className={classes.formSchedule}
-                        value={this.state.selectedDateStart}
-                        onChange={this.handleDateStartChange}
-                        KeyboardButtonProps={{
-                          'aria-label': 'change date',
-                        }}
-                        autoOk={true}
-                      />
-                      <TextField
-                        id="time"
-                        label="Heure de début"
-                        type="time"
-                        defaultValue={this.state.selectedTimeStart}
-                        onChange={this.handleTimeStartChange}
-                        className={classes.textField}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        inputProps={{
-                          step: 300, // 5 min
-                        }}
-                      />
-                      <KeyboardDatePicker
-                        disableToolbar
-                        variant="inline"
-                        format="dd/MM/yyyy"
-                        margin="normal"
-                        id="date-picker-inline"
-                        label="Date de fin"
-                        className={classes.formSchedule}
-                        value={this.state.selectedDateEnd}
-                        onChange={this.handleDateEndChange}
-                        KeyboardButtonProps={{
-                          'aria-label': 'change date',
-                        }}
-                        autoOk={true}
-                        minDate={this.state.selectedDateStart}
-                        minDateMessage={`Date de fin incorrecte`}
-                      />
-                      <TextField
-                        id="time"
-                        label="Heure de fin"
-                        type="time"
-                        className={classes.textField}
-                        defaultValue={this.state.selectedTimeEnd}
-                        onChange={this.handleTimeEndChange}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        inputProps={{
-                          step: 300, // 5 min
-                        }}
-                      />
-                    </MuiPickersUtilsProvider>
+                  <Grid className={classes.contentTimeSlot}>
+                    <Grid style={{width: '100%'}}>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
+                        <Grid className={classes.contentDateAndTime}>
+                          <Grid>
+                            <KeyboardDatePicker
+                                disableToolbar
+                                variant="inline"
+                                format="dd/MM/yyyy"
+                                id="date-picker-inline"
+                                label="Date de début"
+                                className={classes.formSchedule}
+                                value={this.state.selectedDateStart}
+                                onChange={this.handleDateStartChange}
+                                KeyboardButtonProps={{
+                                  'aria-label': 'change date',
+                                }}
+                                autoOk={true}
+                            />
+                          </Grid>
+                          <Grid>
+                            <TextField
+                                id="time"
+                                label="Heure de début"
+                                type="time"
+                                defaultValue={this.state.selectedTimeStart}
+                                onChange={this.handleTimeStartChange}
+                                className={classes.textField}
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                                inputProps={{
+                                  step: 300, // 5 min
+                                }}
+                            />
+                          </Grid>
+                        </Grid>
+                        <Grid className={classes.contentEndTime}>
+                          <TextField
+                            id="time"
+                            label="Heure de fin"
+                            type="time"
+                            className={classes.textField}
+                            defaultValue={this.state.selectedTimeEnd}
+                            onChange={this.handleTimeEndChange}
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            inputProps={{
+                              step: 300, // 5 min
+                            }}
+                          />
+                        </Grid>
+                      </MuiPickersUtilsProvider>
                     </Grid>
+                  </Grid>
                   <Grid container className={classes.containerRecurrence}>
                     <ExpansionPanel expanded={this.state.isExpanded} style={{width:'100%'}}>
                       <ExpansionPanelSummary>
@@ -469,7 +467,6 @@ class Schedule extends React.Component {
                                 disableToolbar
                                 variant="inline"
                                 format="dd/MM/yyyy"
-                                margin="normal"
                                 id="date-picker-inline"
                                 label="Date de fin"
                                 className={classes.textField}

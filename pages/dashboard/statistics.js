@@ -12,6 +12,7 @@ import axios from "axios";
 import Link from "next/link";
 import Avatar from '@material-ui/core/Avatar';
 import HomeIcon from '@material-ui/icons/Home';
+import cookie from 'react-cookies'
 
 
 const jwt = require('jsonwebtoken');
@@ -61,13 +62,13 @@ class statistics extends React.Component {
 
     getCounts() {
 
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
 
         axios.get("/myAlfred/api/admin/statistics")
             .then((response) => { this.setState(response.data)})
             .catch((error) => { console.log(error);
             if(error.response.status === 401 || error.response.status === 403) {
-                localStorage.removeItem('token');
+                cookie.remove('token', { path: '/' })
                 Router.push({pathname: '/login'})
             }
         });
@@ -75,11 +76,11 @@ class statistics extends React.Component {
 
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
-        const auth = localStorage.getItem('token');
-        if(auth === null) {
+        const auth = cookie.load('token')
+        if(!auth) {
             Router.push('/login')
         } else {
-            const token = localStorage.getItem('token').split(' ')[1];
+            const token = auth.split(' ')[1];
             const decode = jwt.decode(token);
             this.setState({is_admin: decode.is_admin});
         }

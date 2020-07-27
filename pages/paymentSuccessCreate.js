@@ -9,6 +9,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import Footer from '../hoc/Layout/Footer/Footer';
 import {toast} from 'react-toastify';
+import cookie from 'react-cookies'
 
 const styles = theme => ({
     bigContainer: {
@@ -39,7 +40,7 @@ class PaymentSuccessCreate extends React.Component {
           return;
         }
 
-        axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
+        axios.defaults.headers.common["Authorization"] = cookie.load('token')
         axios
             .get("/myAlfred/api/users/current")
             .then(res => {
@@ -48,7 +49,7 @@ class PaymentSuccessCreate extends React.Component {
             })
             .catch(err => {
                 if (err.response.status === 401 || err.response.status === 403) {
-                    localStorage.removeItem("token");
+                    cookie.remove('token', { path: '/' })
                     Router.push({ pathname: "/login" });
                 }
             });

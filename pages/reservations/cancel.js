@@ -11,6 +11,7 @@ import dynamic from "next/dynamic";
 import io from "socket.io-client";
 import Router from 'next/router';
 import Typography from "@material-ui/core/Typography";
+import cookie from 'react-cookies'
 const _ = require("lodash");
 moment.locale("fr");
 
@@ -126,7 +127,7 @@ class Cancel extends React.Component {
 
   componentDidMount() {
     const booking_id = this.props.booking_id;
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
+    axios.defaults.headers.common["Authorization"] = cookie.load('token');
     axios.get("/myAlfred/api/users/current").then(res => {
       this.setState({ currUser: res.data });
     });
@@ -142,7 +143,7 @@ class Cancel extends React.Component {
   }
 
   changeStatus(status) {
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
+    axios.defaults.headers.common["Authorization"] = cookie.load('token');
     axios.put('/myAlfred/api/booking/modifyBooking/' + this.props.booking_id, {
       status: status, user:this.state.currUser._id})
         .then(res => {

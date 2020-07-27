@@ -22,6 +22,7 @@ import Link from "next/link";
 import HomeIcon from '@material-ui/icons/Home';
 import Typography from "@material-ui/core/Typography";
 import moment from 'moment-timezone';
+import cookie from 'react-cookies'
 moment.locale('fr');
 
 const {config} = require('../../../config/config');
@@ -117,7 +118,7 @@ class all extends React.Component {
 
     componentDidMount() {
         localStorage.setItem('path', Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
 
         axios.get("/myAlfred/api/admin/shop/all")
           .then((response) => {
@@ -128,7 +129,7 @@ class all extends React.Component {
           .catch((error) => {
             console.log(error);
             if(error.response.status === 401 || error.response.status === 403) {
-                localStorage.removeItem('token');
+                cookie.remove('token', { path: '/' })
                 Router.push({pathname: '/login'})
             }
         });
@@ -168,6 +169,8 @@ class all extends React.Component {
                                             <TableCell>Action</TableCell>
                                             <TableCell>Carte d'identité</TableCell>
                                             <TableCell>Boutique</TableCell>
+                                            <TableCell>Mangopay client</TableCell>
+                                            <TableCell>Mangopay Alfred</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -194,6 +197,12 @@ class all extends React.Component {
                                                     </TableCell>
                                                     <TableCell>
                                                         <Link href={`/shop?id_alfred=${e.alfred._id}`}><a>Consulter</a></Link>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                      <a target="_blank" href={`https://dashboard.mangopay.com/User/${e.alfred.id_mangopay}/Details`}>{e.alfred.id_mangopay}</a>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                      <a target="_blank" href={`https://dashboard.mangopay.com/User/${e.alfred.mangopay_provider_id}/Details`}>{e.alfred.mangopay_provider_id}</a>
                                                     </TableCell>
                                                 </TableRow>
                                             )}

@@ -18,6 +18,7 @@ import styles from './NavBarStyle'
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
+import cookie from 'react-cookies'
 import LogIn from '../../../components/LogIn/LogIn';
 import Register from '../../../components/Register/Register';
 import Dialog from '@material-ui/core/Dialog';
@@ -25,6 +26,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Slide from '@material-ui/core/Slide';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
+
+var parse = require('url-parse');
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -63,6 +67,9 @@ class NavBar extends Component {
       setOpenRegister: false,
       setOpenMobileRegister: false,
       user:null,
+      google_id: props.google_id,
+      facebook_id: props.facebook_id,
+      activeStep:0
     };
   }
 
@@ -73,8 +80,23 @@ class NavBar extends Component {
   }
 
   componentDidMount() {
-    const token = localStorage.getItem('token');
-    if (token !== null) {
+    var query = parse(window.location.href,true).query;
+    if(query.google_id || query.facebook_id ||query.error){
+      this.setState({
+        setOpenRegister: true,
+        setOpenLogin: false
+      })
+    }
+
+    if(query.signup === 'true'){
+      this.setState({
+        setOpenRegister: true,
+        setOpenLogin: false
+      })
+    };
+
+    const token = cookie.load('token')
+    if (token) {
       this.setState({ logged: true });
       axios.defaults.headers.common['Authorization'] = token;
     }
@@ -103,11 +125,11 @@ class NavBar extends Component {
 
 
   logout2() {
-    localStorage.removeItem('token');
+    cookie.remove('token', { path: '/' })
     localStorage.removeItem('path');
     // Remove auth header for future requests
     setAuthToken(false);
-    Router.push('/');
+    Router.push('/?disconnect=1');
   };
 
   handleProfileMenuOpen = event => {
@@ -161,12 +183,20 @@ class NavBar extends Component {
   };
 
   handleCloseRegister = () => {
-    this.setState({setOpenRegister : false});
+    if(this.state.activeStep === 2){
+      this.setState({setOpenRegister : false}, () => this.componentDidMount());
+    }else{
+      this.setState({setOpenRegister : false});
+    }
   };
 
   needRefresh = () => {
     this.setState({setOpenLogin: false});
     Router.push('/search')
+  };
+
+  getData = (e) =>{
+    this.setState({activeStep: e})
   };
 
   render() {
@@ -181,7 +211,7 @@ class NavBar extends Component {
 
     const modalRegister = () =>{
       return(
-          <Register callLogin={this.handleOpenLogin} closeLOgin={this.componentDidMount}/>
+          <Register callLogin={this.handleOpenLogin} sendParentData={this.getData}/>
       )
     };
 
@@ -265,6 +295,8 @@ class NavBar extends Component {
             name={'mobile'}
             fullWidth={true}
             fullScreen={true}
+            disableBackdropClick={true}
+            disableEscapeKeyDown={true}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
           <DialogContent>
@@ -290,6 +322,8 @@ class NavBar extends Component {
             open={this.state.setOpenMobileRegister}
             onClose={this.handleCloseRegister}
             TransitionComponent={Transition}
+            disableBackdropClick={true}
+            disableEscapeKeyDown={true}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
           <DialogContent dividers={false} className={classes.dialogContentContainer} classes={{root: classes.muidialogContent}} >
@@ -471,6 +505,8 @@ class NavBar extends Component {
                             onClose={this.handleCloseLogin}
                             TransitionComponent={Transition}
                             classes={{paperWidthSm: classes.widthSm}}
+                            disableBackdropClick={true}
+                            disableEscapeKeyDown={true}
                         >
                           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
                           <DialogContent classes={{root: classes.widthLoginContent}}>
@@ -492,6 +528,8 @@ class NavBar extends Component {
                             open={this.state.setOpenRegister}
                             onClose={this.handleCloseRegister}
                             TransitionComponent={Transition}
+                            disableBackdropClick={true}
+                            disableEscapeKeyDown={true}
                         >
                           <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
                           <DialogContent dividers={false} className={classes.muidialogContent} >

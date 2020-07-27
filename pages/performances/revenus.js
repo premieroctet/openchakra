@@ -22,6 +22,7 @@ import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import cookie from 'react-cookies'
 
 const Chart = loadable(() => import('react-apexcharts'));
 
@@ -113,7 +114,7 @@ class revenus extends React.Component {
     componentDidMount() {
 
         localStorage.setItem('path',Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
         const revenus1layer = this.state.revenus;
         revenus1layer.forEach((revenus1layerbis) => {
             const revenus2layer = revenus1layerbis.data;

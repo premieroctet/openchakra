@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const year = new Date().getFullYear()-16;
+const {getMangopayMessage}=require('../../utils/i18n')
 
 const UserSchema = new Schema({
     name: {
@@ -291,12 +292,20 @@ const UserSchema = new Schema({
         return (this.firstname.charAt(0)+this.name.charAt(0)).toUpperCase();
       }
     },
-    kyc_errors: {
-      type: [String],
-      default: function() {
-        return null;
-      }
-    }
-});
+    kyc_status: {
+      type: String,
+    },
+    kyc_error : {
+      type: String
+    },
+}, { toJSON: { virtuals: true, getters: true } });
+
+UserSchema.virtual('kyc_error_text').get( function() {
+    return getMangopayMessage(this.kyc_error)
+})
+
+UserSchema.virtual('kyc_status_text').get( function() {
+    return getMangopayMessage(this.kyc_status)
+})
 
 module.exports = User = mongoose.model('users',UserSchema);

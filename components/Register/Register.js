@@ -28,10 +28,18 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
-const {isPhoneOk}=require('../../utils/sms');
 import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined';
 import Router from 'next/router';
 import Link from 'next/link';
+import cookie from 'react-cookies'
+import OAuth from '../OAuth/OAuth';
+import Information from '../Information/Information';
+
+var parse = require('url-parse');
+const {PROVIDERS} = require('../../utils/consts');
+const {ENABLE_GF_LOGIN} = require('../../config/config');
+const {isPhoneOk}=require('../../utils/sms');
+
 
 registerLocale('fr', fr);
 
@@ -62,7 +70,6 @@ NumberFormatCustom.propTypes = {
     onChange: PropTypes.func.isRequired,
 };
 
-
 class Register extends React.Component{
 
     constructor(props) {
@@ -87,6 +94,8 @@ class Register extends React.Component{
             activeStep: 0,
             file: null,
             picture: '',
+            // Avatar link coming from Google or Facebook
+            avatar: null,
             value:'',
             phone: '',
             phoneOk: false,
@@ -98,21 +107,56 @@ class Register extends React.Component{
             serverError:false, // Si erreur serveur pour l''envoi du SMS, continuer quand même
             errorEmailType: '',
             emailValidator: false,
-            firstPageValidator: true
+            firstPageValidator: true,
+            secondPageValidator: true,
+            errorExistEmail: false,
+            birthdayError: '',
+            cityError:''
         };
         this.handleChecked = this.handleChecked.bind(this);
         this.onChangeAddress = this.onChangeAddress.bind(this);
     }
 
-
     componentDidMount() {
-        const token = localStorage.getItem('token');
-        if(token !== null) {
+        let query = parse(window.location.href,true).query;
+        if(query.google_id){
+            this.setState({
+                google_id: query.google_id,
+                email: query.email,
+                name: query.lastname,
+                firstname: query.firstname,
+                firstPageValidator: false,
+                picture: query.picture,
+                file: query.picture,
+                avatar: query.picture
+            })
+        }
+        if(query.facebook_id){
+            this.setState({
+                facebook_id: query.facebook_id,
+                email: query.email,
+                name: query.lastname,
+                firstname: query.firstname,
+                activeStep: 1,
+                firstPageValidator: false,
+                avatar: query.picture
+            })
+        }
+        if(query.error){
+            this.setState({errorExistEmail: true})
+        }
+        const token = cookie.load('token');
+        if(token) {
             toast.warn('Vous êtes déjà inscrit');
             Router.push('/')
         }
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(this.state.activeStep !== prevState.activeStep){
+            this.props.sendParentData(this.state.activeStep)
+        }
+    };
 
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value }, () => this.validatorFirstStep());
@@ -154,12 +198,12 @@ class Register extends React.Component{
     };
 
     handleChecked () {
-        this.setState({checked: !this.state.checked});
+        this.setState({checked: !this.state.checked}, () => this.validatorSecondStep());
     };
 
     sendSms = () => {
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.post('/myAlfred/api/users/sendSMSVerification', this.state.phone)
+        axios.defaults.headers.common['Authorization'] = cookie.load('token');
+        axios.post('/myAlfred/api/users/sendSMSVerification', { phone: this.state.phone} )
             .then (res => {
                 var txt="Le SMS a été envoyé";
                 toast.info(txt);
@@ -172,7 +216,7 @@ class Register extends React.Component{
     };
 
     checkSmsCode = () => {
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token');
         axios.post("/myAlfred/api/users/checkSMSVerification",  {sms_code: this.state.smsCode }  )
             .then( res => {
                 if (res.data.sms_code_ok) {
@@ -189,6 +233,8 @@ class Register extends React.Component{
     onSubmit = () => {
 
         const newUser = {
+            google_id: this.state.google_id,
+            facebook_id: this.state.facebook_id,
             firstname: this.state.firstname,
             name: this.state.name,
             birthday: this.state.birthday,
@@ -205,38 +251,45 @@ class Register extends React.Component{
 
         const username = this.state.email;
         const password = this.state.password;
+        const google_id = this.state.google_id;
+        const facebook_id = this.state.facebook_id;
 
         axios
             .post('/myAlfred/api/users/register', newUser)
             .then(() => {
                 toast.info('Inscription réussie');
-                axios.post('/myAlfred/api/users/login',{username, password})
-                    .then(response => {
-                        const {token} = response.data;
-                        localStorage.setItem('token',token);
-                        axios.defaults.headers.common['Authorization'] = token;
-                    })
-                    .catch( err => {
-                        console.log(err)
-                    })
-                    .then(this.addPhoto).catch(err => console.log(err))
-                    .then(this.setState({ activeStep: this.state.activeStep + 1})).catch(err => console.log(err))
-                    .then(this.onSubmitPhone).catch(err => console.log(err))
+                axios.post('/myAlfred/api/users/login',{username, password, google_id, facebook_id})
+                  .then( () => {
+                      const token = cookie.load('token');
+                      axios.defaults.headers.common['Authorization'] = token;
+                  })
+                  .catch()
+                  .then(this.addPhoto).catch()
+                  .then(this.setState({ activeStep: this.state.activeStep + 1})).catch()
+                  .then(this.onSubmitPhone).catch()
             })
             .catch(err => {
-                let error = Object.values(err.response.data);
-                    toast.error(error.toString());
-                    this.setState({errors: err.response.data, activeStep: 1})
-                }
-            );
+              let error = Object.values(err.response.data);
+                this.setState({errors: err.response.data});
+                  if(error.includes('L\'email existe déjà')){
+                    this.setState({activeStep: 0})
+                  }
+                  if(error.includes('Veuillez saisir une adresse')){
+                      this.setState({cityError: 'Adresse invalide', activeStep: 1})
+                  }
+                  if (error.includes('Date de naissance invalide')){
+                        this.setState({birthdayError: 'Date de naissance invalide', activeStep: 1})
+                  }
+            });
     };
 
     addPhoto = () => {
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token');
 
-        if(this.state.picture !== ''){
+        if(this.state.picture !== '' || this.state.avatar !== ''){
             const formData = new FormData();
             formData.append('myImage',this.state.picture);
+            formData.append('avatar',this.state.avatar);
             const config = {
                 headers: {
                     'content-type': 'multipart/form-data'
@@ -244,15 +297,21 @@ class Register extends React.Component{
             };
 
             axios.post("/myAlfred/api/users/profile/picture",formData,config)
-                .catch((error) => {
-                console.log(error)
-            })
+              .catch((error) => {
+                console.error(error)
+              })
         }
+        /** else if (this.state.avatar !== '') {
+          axios.post("/myAlfred/api/users/profile/avatar", { avatar: this.state.avatar})
+            .catch((error) => {
+              console.error(error)
+            })
+        } */
     };
 
 
     onSubmitPhone = e => {
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token');
 
         if (!this.state.phoneConfirmed && !this.state.serverError) {
             this.sendSms();
@@ -313,11 +372,55 @@ class Register extends React.Component{
         }
     };
 
+    validatorSecondStep = () =>{
+        if(this.state.checked){
+            this.setState({secondPageValidator: false})
+        }else{
+            this.setState({secondPageValidator: true})
+        }
+    };
+
     renderSwitch(stepIndex, classes, errors) {
+
         switch(stepIndex) {
             case 0:
                 return (
                     <Grid container>
+                        <Information
+                            open={this.state.errorExistEmail}
+                            onClose={() => this.setState({errorExistEmail: false})}
+                            type='warning'
+                            text={'Oups ! Un compte utilisant cette adresse mail existe déjà'}
+                        />
+                        { !this.state.google_id && ENABLE_GF_LOGIN ?
+                            <Grid className={classes.margin}>
+                                <Grid container spacing={1} alignItems="flex-end"  className={classes.genericContainer}>
+                                    <Grid className={classes.margin}>
+                                        <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
+                                            <Grid item>
+                                                <h3 style={{color: "rgba(84,89,95,0.95)", fontWeight: "bold", letterSpacing: -1}}>Avec</h3>
+                                            </Grid>
+                                            <Grid style={{width: '70%'}}>
+                                                {PROVIDERS.map(provider =>
+                                                    <OAuth
+                                                        login={false}
+                                                        provider={provider}
+                                                        key={provider}
+                                                    />
+                                                )}
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid className={classes.margin}>
+                                        <Grid container spacing={1} alignItems="flex-end" className={classes.flexContainerPics}>
+                                            <Grid>
+                                                <h3 style={{color: "rgba(84,89,95,0.95)", fontWeight: "bold", letterSpacing: -1}}>Ou</h3>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid> : null
+                        }
                         <Grid className={classes.margin}>
                             <Grid container spacing={1} alignItems="flex-end"  className={classes.genericContainer}>
                                 <Grid item>
@@ -335,6 +438,7 @@ class Register extends React.Component{
                                         onChange={this.onChangeEmail}
                                         error={this.state.emailError}
                                         helperText={this.state.emailError}
+                                        disabled={!!this.state.google_id}
                                     />
                                     <em style={{color:'red'}}>{errors.email}</em>
                                 </Grid>
@@ -383,50 +487,56 @@ class Register extends React.Component{
                                 <em style={{color:'red'}}>{errors.name}</em>
                             </Grid>
                         </Grid>
-                        <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-                                <Grid item>
-                                    <LockOpenOutlinedIcon className={classes.colorIcon}/>
+                        { !this.state.google_id ?
+                            <Grid className={classes.margin}>
+                                <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
+                                    <Grid className={classes.margin}>
+                                        <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
+                                            <Grid item>
+                                                <LockOpenOutlinedIcon className={classes.colorIcon}/>
+                                            </Grid>
+                                            <Grid item className={classes.widthTextField}>
+                                                <TextField
+                                                    label="Créer un mot de passe"
+                                                    placeholder="Créer un mot de passe"
+                                                    margin="normal"
+                                                    style={{ width: '100%' }}
+                                                    type="password"
+                                                    name="password"
+                                                    value={this.state.password}
+                                                    onChange={this.onChange}
+                                                    onKeyUp ={this.onChangePassword}
+                                                    error={this.state.status1.error}
+                                                    helperText={this.state.status1.error}
+                                                />
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid className={classes.margin}>
+                                        <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
+                                            <Grid item>
+                                                <LockOutlinedIcon className={classes.colorIcon}/>
+                                            </Grid>
+                                            <Grid item className={classes.widthTextField}>
+                                                <TextField
+                                                    label="Confirmer mot de passe"
+                                                    placeholder="Confirmer mot de passe"
+                                                    margin="normal"
+                                                    style={{ width: '100%' }}
+                                                    type="password"
+                                                    name="password2"
+                                                    value={this.state.password2}
+                                                    onChange={this.onChange}
+                                                    onKeyUp ={this.onChangePassword}
+                                                    error={this.state.status2.error}
+                                                    helperText={this.state.status2.error}
+                                                />
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
-                                <Grid item className={classes.widthTextField}>
-                                    <TextField
-                                        label="Créer un mot de passe"
-                                        placeholder="Créer un mot de passe"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="password"
-                                        name="password"
-                                        value={this.state.password}
-                                        onChange={this.onChange}
-                                        onKeyUp ={this.onChangePassword}
-                                        error={this.state.status1.error}
-                                        helperText={this.state.status1.error}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                        <Grid className={classes.margin}>
-                            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-                                <Grid item>
-                                    <LockOutlinedIcon className={classes.colorIcon}/>
-                                </Grid>
-                                <Grid item className={classes.widthTextField}>
-                                    <TextField
-                                        label="Confirmer mot de passe"
-                                        placeholder="Confirmer mot de passe"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="password"
-                                        name="password2"
-                                        value={this.state.password2}
-                                        onChange={this.onChange}
-                                        onKeyUp ={this.onChangePassword}
-                                        error={this.state.status2.error}
-                                        helperText={this.state.status2.error}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                            </Grid> : null
+                        }
                     </Grid>
                 );
             case 1:
@@ -446,13 +556,10 @@ class Register extends React.Component{
                                     <IconButton
                                         color="primary"
                                         className={classes.button}
-                                        style={{backgroundImage:`url('${this.state.file}')`,}}
+                                        style={{backgroundImage:`url('${this.state.file}')`}}
                                         component="span"
                                     >
-                                        {this.state.file === null ?
-                                            <PhotoCamera style={{fontSize: '2rem'}} />
-                                            : null
-                                        }
+                                      <PhotoCamera style={{fontSize: '2rem'}} />
                                     </IconButton>
                                 </label>
                             </Grid>
@@ -483,7 +590,9 @@ class Register extends React.Component{
 
                                         }}
                                         onChange={(suggestion) =>this.onChangeAddress(suggestion)}
+
                                     />
+                                    <em style={{color:'red'}}>{this.state.cityError}</em>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -510,6 +619,8 @@ class Register extends React.Component{
                                                InputProps={{
                                                    inputComponent: NumberFormatCustom
                                                }}
+                                               error={this.state.birthdayError}
+                                               helperText={this.state.birthdayError}
                                            />
                                        </Grid>
                                         <Grid item style={{width: '30%'}}>
@@ -523,6 +634,7 @@ class Register extends React.Component{
                                                 InputProps={{
                                                     inputComponent: NumberFormatCustom,
                                                 }}
+                                                error={this.state.birthdayError}
                                             />
                                         </Grid>
                                         <Grid item style={{width: '30%'}}>
@@ -536,6 +648,7 @@ class Register extends React.Component{
                                                 InputProps={{
                                                     inputComponent: NumberFormatCustom,
                                                 }}
+                                                error={this.state.birthdayError}
                                             />
                                         </Grid>
                                     </Grid>
@@ -587,7 +700,7 @@ class Register extends React.Component{
                                             />
                                         </Grid>
                                         <Grid>
-                                            <a href={"footer/cguPage"} target="_blank" style={{color: 'blue'}}>J’accepte les conditions générales d’utilisation de My-Alfred.</a>
+                                            <a href={"footer/cguPage"} target="_blank" style={{color: '#2FBCD3'}}>J’accepte les conditions générales d’utilisation de My-Alfred.</a>
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -603,11 +716,11 @@ class Register extends React.Component{
                                 <Grid>
                                     <h2 className={classes.titleRegister}>Inscription terminée</h2>
                                 </Grid>
-                                <div className={classes.newContainer}>
-                                    <Grid container style={{display: 'flex', justifyContent: 'center', marginTop: 20, height: 100 /*safari*/}}>
+                                <Grid className={classes.newContainer}>
+                                    <Grid container style={{display: 'flex', justifyContent: 'center', height: 100 /*safari*/}}>
                                         <img src='../../static/happy_castor.svg' style={{width: 100}} alt={'success'}/>
                                     </Grid>
-                                    <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 10, textAlign: 'center'}}>
+                                    <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 20, textAlign: 'center'}}>
                                         <p>Inscription réussie ! Vous pouvez maintenant proposer ou rechercher vos services sur My Alfred</p>
                                     </Grid>
                                     <Grid item className={classes.responsiveButton}>
@@ -625,8 +738,19 @@ class Register extends React.Component{
                                                 </a>
                                             </Link>
                                         </Grid>
+
                                     </Grid>
-                                </div>
+                                    <Grid style={{marginTop: 20}}>
+                                        <hr/>
+                                        <Grid style={{marginTop: 20}}>
+                                            <Link href={'/needHelp/needHelp'} target="_blank">
+                                                <a target="_blank"  style={{color: '#2FBCD3', textAlign: 'center', display: 'flex', justifyContent: 'center', textDecoration: 'none'}}>
+                                                    Besoin d'aide pour proposer vos services ? Prenez rendez-vous avec l'équipe My Alfred ici !
+                                                </a>
+                                            </Link>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
                             </Grid>
                         </Grid>
                         <Grid className={classes.margin}>
@@ -684,7 +808,7 @@ class Register extends React.Component{
 
     render(){
         const { classes } = this.props;
-        const { errors, activeStep, firstPageValidator } = this.state;
+        const { errors, activeStep, firstPageValidator, secondPageValidator } = this.state;
 
         return(
             <Grid  className={classes.fullContainer}>
@@ -696,7 +820,6 @@ class Register extends React.Component{
                                     <h2 className={classes.titleRegister}>Inscription</h2>
                                 </Grid> : null
                         }
-
                         <Grid className={classes.containerSwitch}>
                             {this.renderSwitch(activeStep, classes, errors)}
                         </Grid>
@@ -704,21 +827,6 @@ class Register extends React.Component{
                             activeStep < 2 ?
                                 <Grid style={{marginTop: 10}}>
                                     <hr/>
-                                    <Grid container className={classes.bottomContainer}>
-                                        <Grid item>
-                                            <p>Vous avez déjà un compte My Alfred ? </p>
-                                        </Grid>
-                                        <Grid item style={{marginLeft: 5}}>
-                                            <Button color={"primary"} onClick={this.props.callLogin}>Connexion</Button>
-                                        </Grid>
-                                    </Grid>
-                                    <Grid>
-                                        <Grid>
-                                            <Link href={'/needHelp/needHelp'} target="_blank">
-                                                <a target="_blank"  style={{color: 'blue', textAlign: 'center', display: 'flex', justifyContent: 'center'}}>Besoin d'aide pour proposer vos services ? Prenez rendez-vous avec l'équipe My Alfred ici.</a>
-                                            </Link>
-                                        </Grid>
-                                    </Grid>
                                     <Grid>
                                         <MobileStepper
                                             variant="progress"
@@ -730,8 +838,8 @@ class Register extends React.Component{
                                                 progress: classes.progress
                                             }}
                                             nextButton={
-                                                <Button size="small" onClick={() => this.handleNext(activeStep)} disabled={firstPageValidator}>
-                                                    {activeStep <= 1 ? "Suivant" : "Terminer"}
+                                                <Button size="small" onClick={() => this.handleNext(activeStep)} disabled={activeStep === 0 ? firstPageValidator : secondPageValidator}>
+                                                    {activeStep === 0 ? "Suivant" : "Terminer"}
                                                     <KeyboardArrowRight />
                                                 </Button>
                                             }
@@ -743,6 +851,12 @@ class Register extends React.Component{
                                             }
                                         />
                                     </Grid>
+                                    <Grid container className={classes.bottomContainer}>
+                                        <Grid item>
+                                            <a color={"primary"} onClick={this.props.callLogin} style={{color: '#2FBCD3', cursor: 'pointer'}}>Vous avez déjà un compte My Alfred ?</a>
+                                        </Grid>
+                                    </Grid>
+
                                 </Grid> : null
                         }
 

@@ -17,7 +17,8 @@ module.exports = function validateSimpleRegisterInput(data) {
     data.zip_code = !isEmpty(data.zip_code) ? data.zip_code : '';
     data.city = !isEmpty(data.city) ? data.city : '';
     data.country = !isEmpty(data.country) ? data.country : '';
-
+    data.google_id = !isEmpty(data.google_id) ? data.google_id : '';
+    data.facebook_id = !isEmpty(data.facebook_id) ? data.facebook_id : '';
 
 
     if(Validator.isEmpty(data.name)) {
@@ -36,20 +37,24 @@ module.exports = function validateSimpleRegisterInput(data) {
         errors.email = 'Email invalide';
     }
 
-    if(Validator.isEmpty(data.password)) {
-        errors.password = 'Veuillez saisir un mot de passe';
-    }
+    if (!(data.google_id || data.facebook_id)) {
 
-    if(!Validator.isLength(data.password, {min: 8, max: 30})){
-        errors.password = 'Le mot de passe doit contenir 8 caractères minimum';
-    }
+      if(Validator.isEmpty(data.password)) {
+          errors.password = 'Veuillez saisir un mot de passe';
+      }
 
-    if(Validator.isEmpty(data.password2)) {
-        errors.password2 = 'Confirm password field is required';
-    }
+      if(!Validator.isLength(data.password, {min: 8, max: 30})){
+          errors.password = 'Le mot de passe doit contenir 8 caractères minimum';
+      }
 
-    if(!Validator.equals(data.password, data.password2)) {
-        errors.password2 = 'Password must match';
+      if(Validator.isEmpty(data.password2)) {
+          errors.password2 = 'Confirm password field is required';
+      }
+
+      if(!Validator.equals(data.password, data.password2)) {
+          errors.password2 = 'Password must match';
+      }
+
     }
 
     if(Validator.isEmpty(data.address)) {
@@ -67,9 +72,11 @@ module.exports = function validateSimpleRegisterInput(data) {
     if(Validator.isEmpty(data.country)) {
         errors.country = 'Veuillez choisir un pays';
     }
-    if(moment(data.birthday).isAfter(moment().subtract(16,'year'))){
+
+    if(!moment(data.birthday).isValid() ||  moment(data.birthday).isAfter(moment().subtract(16,'year'))){
         errors.birthday = 'Date de naissance invalide';
     }
+
 
 
     return {
@@ -77,5 +84,3 @@ module.exports = function validateSimpleRegisterInput(data) {
         isValid: isEmpty(errors)
     }
 };
-
-

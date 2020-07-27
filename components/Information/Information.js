@@ -18,9 +18,12 @@ class Information extends React.Component {
    - type : 'info' or 'warning'
   */
   render() {
-      const {classes} = this.props;
+    const {classes, open} = this.props;
     const type=this.props.type ? this.props.type : 'info';
 
+    if (!open) {
+      return null
+    }
     return (
       <Dialog aria-labelledby="simple-dialog-title" open={this.props.open} onClose={this.props.onClose} classes={{paper: classes.paperOverride}}>
         <DialogTitle id="alert-dialog-title">{this.props.type ? 'Oups !': 'Info'}</DialogTitle>

@@ -12,6 +12,7 @@ import convertDistance from "geolib/es/convertDistance";
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import styles from './messagesDetails/messagesDetailsStyle'
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
+import cookie from 'react-cookies'
 import Router from "next/router";
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
@@ -50,7 +51,7 @@ class MessagesDetails extends React.Component {
       })
       .catch (err => {
         if(err.response && (err.response.status === 401 || err.response.status === 403)) {
-            localStorage.removeItem('token');
+            cookie.remove('token', { path: '/' })
             Router.push({pathname: '/login'})
         }
       })
@@ -62,9 +63,7 @@ class MessagesDetails extends React.Component {
       div.scrollTop = 99999;
     }, 450);
 
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-      "token"
-    );
+    axios.defaults.headers.common["Authorization"] = cookie.load('token')
     axios.put('/myAlfred/api/chatRooms/viewMessages/' + this.props.chatroomId)
       .then()
     axios

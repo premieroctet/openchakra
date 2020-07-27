@@ -90,6 +90,7 @@ export default theme => ({
     bottomContainer:{
         alignItems: 'center',
         justifyContent: 'center',
+        marginTop: 20
     },
     progress:{
         [theme.breakpoints.down("xs")]:{
@@ -111,7 +112,7 @@ export default theme => ({
     },
     genericContainer:{
         width: '100%',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     genericContainerAndMargin:{
         display: 'flex',
@@ -151,5 +152,10 @@ export default theme => ({
         [theme.breakpoints.down('xs')]:{
             marginTop: '2%'
         }
+    },
+    flexContainerPics:{
+        display:'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
     },
 })

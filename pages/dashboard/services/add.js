@@ -23,6 +23,7 @@ import Chip from '@material-ui/core/Chip';
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Select2 from 'react-select';
+import cookie from 'react-cookies'
 
 
 const styles = theme => ({
@@ -99,7 +100,7 @@ class add extends React.Component {
 
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
 
         axios.get("/myAlfred/api/admin/category/all")
             .then((response) => {
@@ -234,7 +235,7 @@ class add extends React.Component {
                     toast.error(JSON.stringify(err.response.data, null, 2));
                     this.setState({errors: err.response.data});
                 if(err.response.status === 401 || err.response.status === 403 ) {
-                    localStorage.removeItem('token');
+                    cookie.remove('token', { path: '/' })
                     Router.push({pathname: '/login'})
                 }
                 }

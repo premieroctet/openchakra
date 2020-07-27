@@ -21,6 +21,7 @@ import Router from 'next/router';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import cookie from 'react-cookies'
 
 
 moment.locale("fr");
@@ -56,8 +57,8 @@ class DetailsReservation extends React.Component {
 
     this.setState({ booking_id: booking_id });
 
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
-+-
+    axios.defaults.headers.common["Authorization"] = cookie.load('token')
+
     axios.get("/myAlfred/api/users/current").then(res => {
       let result = res.data
       this.setState({ currentUser: result });
@@ -96,7 +97,7 @@ class DetailsReservation extends React.Component {
     .catch(error => {
       console.log(error)
       if(error.response && error.response.status === 401 || error.response.status === 403) {
-          localStorage.removeItem('token');
+          cookie.remove('token', { path: '/' })
           Router.push({pathname: '/login'})
       }
     });

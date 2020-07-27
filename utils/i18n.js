@@ -1,3 +1,5 @@
+const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus')
+
 const CESU_NOTICE="Quel que soit votre statut, My Alfred est tenu de déclarer aux \
 finances publiques vos revenus générés <b>si les deux conditions suivantes sont \
 réunies dans l'année civile :</b><ul><li>vos revenus dépassent 3000 euros</li>\
@@ -14,4 +16,29 @@ tous les lundis et mardis, vous pouvez cocher la case Récurrence, et cliquer\
 sur Lu et Ma afin de répéter votre disponibilité sur une durée que vous \
 pouvez définir.'
 
-module.exports={ CESU_NOTICE, OUTSIDE_PERIMETER, SCHEDULE_TITLE, SCHEDULE_SUBTITLE, };
+const SHOP_CREATION_SUCCESSFUL='Vos services sont maintenant disponibles dans my Alfred'
+
+const MANGOPAY_MESSAGES= {
+  'DOCUMENT_UNREADABLE'                 : "Pièce d'identité illisible",
+  'DOCUMENT_NOT_ACCEPTED'               : "Pièce d'identité invalide : carte d'identité, passeport, permis de conduire ou titre de séjour attendu",
+  'DOCUMENT_HAS_EXPIRED'                : "Pièce d'identité expirée",
+  'DOCUMENT_INCOMPLETE'                 : "Pièce d'identité incomplète ou illisible",
+  'DOCUMENT_DO_NOT_MATCH_USER_DATA'     : "Pièce d'identité ne correspond pas à l'identité que vous avez indiquée",
+  'DOCUMENT_DO_NOT_MATCH_ACCOUNT_DATA'  : "Pièce d'identité ne correspond pas à vops coordonnées bancaires",
+  'DOCUMENT_FALSIFIED'                  : "Pièce d'identité falsifié",
+  'DOCUMENT_MISSING'                    : "Pièce d'identité vide",
+  'UNDERAGE_PERSON'                     : "Vous devez avoir au minimum 18 ans",
+  [KycDocumentStatus.Created]           : "Pièce d'identité enregistrée, en attente de validation",
+  [KycDocumentStatus.ValidationAsked]   : "Pièce d'identité en cours de validation",
+  [KycDocumentStatus.Validated]         : "Pièce d'identité valide",
+  [KycDocumentStatus.Refused]           : "Pièce d'identité refusée, merci d'en fournir une valide",
+}
+
+const getMangopayMessage = msg_id => {
+  if (!msg_id) {
+    return null
+  }
+  return MANGOPAY_MESSAGES[msg_id] || `Erreur inconnue:${msg_id}`
+}
+
+module.exports={ CESU_NOTICE, OUTSIDE_PERIMETER, SCHEDULE_TITLE, SCHEDULE_SUBTITLE, getMangopayMessage, SHOP_CREATION_SUCCESSFUL};

@@ -22,6 +22,7 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import PropTypes from "prop-types";
+import cookie from 'react-cookies'
 
 const styles = theme => ({
     signupContainer: {
@@ -115,7 +116,7 @@ class all extends React.Component {
 
     componentDidMount() {
         localStorage.setItem('path',Router.pathname);
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+        axios.defaults.headers.common['Authorization'] = cookie.load('token')
 
         axios.get("/myAlfred/api/admin/options/all")
             .then((response) => {
@@ -124,7 +125,7 @@ class all extends React.Component {
             }).catch((error) => {
             console.log(error);
             if(error.response.status === 401 || error.response.status === 403) {
-                localStorage.removeItem('token');
+                cookie.remove('token', { path: '/' })
                 Router.push({pathname: '/login'})
             }
         });

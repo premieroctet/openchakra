@@ -22,6 +22,7 @@ import { toast } from 'react-toastify';
 import Router from "next/router";
 import {creaShopPresentation, selectService, selectPrestation, settingService, assetsService, settingShop, introduceYou} from '../../utils/validationSteps/validationSteps';
 const {createDefaultAvailability}=require('../../utils/dateutils');
+import cookie from 'react-cookies'
 const I18N = require('../../utils/i18n')
 
 class creaShop extends React.Component {
@@ -80,12 +81,12 @@ class creaShop extends React.Component {
 
   componentDidMount() {
         localStorage.setItem('path',Router.pathname);
-        const token = localStorage.getItem('token');
-        if (token === null) {
+        const token = cookie.load('token')
+        if (!token) {
             Router.push('/login');
         }
 
-    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common['Authorization'] = token;
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
@@ -154,7 +155,7 @@ class creaShop extends React.Component {
         }
       })
 
-      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+      axios.defaults.headers.common['Authorization'] = cookie.load('token')
       axios.post('/myAlfred/api/shop/add', cloned_shop)
         .then(res => {
 
@@ -184,7 +185,7 @@ class creaShop extends React.Component {
               .catch(err => console.error(err))
           }
 
-          toast.info("Boutique créée avec succès");
+          toast.info(I18N.SHOP_CREATION_SUCCESSFUL);
           Router.push(`/shop?id_alfred=${this.state.user_id}`);
       })
       .catch(err => {

@@ -157,5 +157,15 @@ export default theme => ({
     [theme.breakpoints.down('xs')]:{
       height: 'inherit !important'
     }
+  },
+  contentEndTime:{
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row-reverse',
+    marginTop: 20
+  },
+  contentDateAndTime:{
+    display: 'flex',
+    justifyContent: 'space-between'
   }
 })
