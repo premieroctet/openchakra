@@ -74,6 +74,8 @@ const CustomToolbar = (toolbar) => {
     );
   };
 
+
+
   return (
       <Grid container>
         <Grid style={{display:'flex', width: '100%', justifyContent: 'space-around', alignItems: 'center', marginBottom : 20, }}>
@@ -90,6 +92,20 @@ const CustomToolbar = (toolbar) => {
       </Grid >
   );
 };
+
+const customDayPropGetter = date => {
+  if (date.getDate() === 7 || date.getDate() === 15)
+    return {
+      className: 'special-day',
+      style: {
+        border: 'solid 3px ' + (date.getDate() === 7 ? '#faa' : '#afa'),
+        '& .special-day:hover':{
+          backgroundColor: 'green'
+        }
+      },
+    }
+  else return {}
+}
 
 const CustomEvent = (event ) =>{
 
@@ -293,9 +309,8 @@ class Schedule extends React.Component {
     this.setState({isModalOpen: false})
   };
 
- eventStyleGetter = () => {
+ eventStyleGetter = (event, start, end, isSelected) => {
     var style = {
-
     };
     return {
       style: style

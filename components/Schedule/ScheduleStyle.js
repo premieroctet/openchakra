@@ -110,6 +110,12 @@ export default theme => ({
     '& .rbc-time-view':{
       zIndex:0
     },
+    '& .rbc-month-view':{
+      borderRadius: 10
+    },
+    '& .rbc-month-row':{
+      borderRadius:'0px 0px 10px 5px'
+    },
     '& .rbc-time-header':{
       [theme.breakpoints.down('xs')]: {
         margin: '0 !important'
@@ -133,10 +139,9 @@ export default theme => ({
     '& .rbc-row-content':{
       height: '100%',
       display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
+      flexDirection: 'column-reverse',
+      justifyContent: 'flex-end',
       cursor : 'pointer',
-
     },
     '& .rbc-header':{
       [theme.breakpoints.down('xs')]: {
