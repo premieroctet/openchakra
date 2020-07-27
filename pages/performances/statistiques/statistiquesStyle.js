@@ -40,7 +40,7 @@ export default theme => ({
     },
   },
   myStat:{
-    paddingLeft: '17%',
+    paddingLeft: '15%',
     marginBottom: '20px',
     [theme.breakpoints.down('xs')]: {
       padding: 0,

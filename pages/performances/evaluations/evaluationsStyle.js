@@ -21,9 +21,12 @@ export default theme => ({
   myEvaluations:{
     paddingLeft: 55,
     marginBottom: '20px',
-    minHeight:530,
     [theme.breakpoints.down('xs')]: {
-     padding: 0,
+      padding: 0,
+      display: 'flex',
+      justifyContent : 'center',
+      flexDirection : 'column',
+      marginLeft: 20
     }
   }
 })
