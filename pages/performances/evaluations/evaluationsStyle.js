@@ -4,6 +4,7 @@ export default theme => ({
     flexGrow: 1,
     [theme.breakpoints.down('xs')]: {
       marginBottom: 100,
+      marginTop: 0
     }
   },
   toggle: {
@@ -16,4 +17,13 @@ export default theme => ({
       display: 'none',
     },
   },
+
+  myEvaluations:{
+    paddingLeft: 55,
+    marginBottom: '20px',
+    minHeight:530,
+    [theme.breakpoints.down('xs')]: {
+     padding: 0,
+    }
+  }
 })

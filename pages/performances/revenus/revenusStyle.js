@@ -4,6 +4,7 @@ export default theme => ({
     flexGrow: 1,
     [theme.breakpoints.down('xs')]: {
       marginBottom: 100,
+      marginTop: 0
     }
   },
   hidesm: {
@@ -55,4 +56,11 @@ export default theme => ({
       display: 'none',
     },
   },
+  myRevenu:{
+    paddingLeft: 55,
+    marginBottom: '20px',
+    [theme.breakpoints.down('xs')]: {
+      padding: 0,
+    }
+  }
 })

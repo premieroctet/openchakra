@@ -339,7 +339,7 @@ class revenus extends React.Component {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item xs={9} style={{paddingLeft: 55,  marginBottom: '20px'}}>
+                        <Grid item xs={9} className={classes.myRevenu}>
                             <Grid container style={{marginBottom:20}}>
                                 <Grid item xs={12}>
                                     <h1 style={{color: '#7E7E7E',fontWeight: '100'}}>Mes revenus</h1>
