@@ -105,7 +105,7 @@ class Commentary extends React.Component{
                   null
                 }
               </Grid>
-              <Grid style={{marginTop: 30, marginLeft:5}}>
+              <Grid className={classes.containerNotesComponent}>
                 <Notes alfred_mode={alfred_mode} notes={notes} key={moment()} styleComponent={styleComponent}/>
               </Grid>
             </Grid>

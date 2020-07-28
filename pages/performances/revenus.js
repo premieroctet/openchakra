@@ -339,12 +339,12 @@ class revenus extends React.Component {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item xs={9} style={{paddingLeft: 55,  marginBottom: '20px'}}>
-                            <Grid container style={{marginBottom:20}}>
-                                <Grid item xs={12}>
+                        <Grid item className={classes.myRevenu}>
+                            <Grid container className={classes.mainContainer}>
+                                <Grid item>
                                     <h1 style={{color: '#7E7E7E',fontWeight: '100'}}>Mes revenus</h1>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid item>
                                     <Typography style={{color: '#7E7E7E'}}>Revenus générés depuis l'inscription</Typography>
                                 </Grid>
                             </Grid>
@@ -367,9 +367,9 @@ class revenus extends React.Component {
                                     variant="outlined"
                                 >
 
-                                        <MenuItem value={'2019'}>
-                                            2019
-                                        </MenuItem>
+                                    <MenuItem value={'2019'}>
+                                        2019
+                                    </MenuItem>
                                     <MenuItem value={'2020'}>
                                         2020
                                     </MenuItem>

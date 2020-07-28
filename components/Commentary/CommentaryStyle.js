@@ -55,10 +55,8 @@ export default theme => ({
 
   },
   containerGeneralNotes:{
-    width: '50%',
-    [theme.breakpoints.down('xs')]:{
       width: '100%'
-    }
+
   },
   mainContainer:{
     display: 'flex',
@@ -88,5 +86,14 @@ export default theme => ({
   containerAlfredMode:{
     width: '100%',
     display: 'flex',
+  },
+  containerNotesComponent:{
+    marginTop: 30,
+    marginLeft:5,
+    [theme.breakpoints.down('xs')]:{
+      marginLeft:0,
+      display:'flex',
+      justifyContent : 'center'
+    }
   }
 })

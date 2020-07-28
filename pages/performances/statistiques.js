@@ -127,23 +127,23 @@ class Statistiques extends React.Component {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item xs={9} style={{paddingLeft: 55,  marginBottom: '20px'}}>
-                            <Grid container style={{marginBottom:20}}>
-                                <Grid item xs={12}>
+                        <Grid item className={classes.myStat}>
+                            <Grid container className={classes.mainContainer}>
+                                <Grid item>
                                     <h1 style={{color: '#7E7E7E',fontWeight: '100'}}>Mes statistiques</h1>
                                 </Grid>
-                                <Grid container style={{marginTop: '40px'}}>
-                                    <Grid item className={classes.webview} md={2}/>
-                                    <Grid item xs={3} sm={3} md={2} style={{textAlign: 'center'}}>
+                                <Grid container className={classes.containerStatistique}>
+                                    <Grid item className={classes.webview}/>
+                                    <Grid item style={{textAlign: 'center', padding: 10}}>
                                         <Typography style={{color: '#7E7E7E'}}><span style={{color:'#2FBCD3', fontSize: '1.1rem', fontWeight: 'bold'}}>{this.state.totalIncomes.toFixed(2)}€</span> <br/>Générés depuis l'inscription</Typography>
                                     </Grid>
-                                    <Grid item xs={3} sm={3} md={2} style={{textAlign: 'center'}}>
+                                    <Grid item style={{textAlign: 'center', padding: 10}}>
                                         <Typography style={{color: '#7E7E7E'}}><span style={{color:'#2FBCD3', fontSize: '1.1rem', fontWeight: 'bold'}}>{this.state.totalPrestations}</span> <br/>Prestation(s) réalisée(s)</Typography>
                                     </Grid>
-                                    <Grid item xs={3} sm={3} md={2} style={{textAlign: 'center'}}>
+                                    <Grid item style={{textAlign: 'center', padding: 10}}>
                                         <Typography style={{color: '#7E7E7E'}}><span style={{color:'#2FBCD3', fontSize: '1.1rem', fontWeight: 'bold'}}>{this.state.totalViewsServices}</span> <br/>Vue(s) de vos services depuis l'inscription</Typography>
                                     </Grid>
-                                    <Grid item xs={3} sm={3} md={2} style={{textAlign: 'center'}}>
+                                    <Grid item style={{textAlign: 'center', padding: 10}}>
                                         <Typography style={{color: '#7E7E7E'}}><span style={{color:'#2FBCD3', fontSize: '1.1rem', fontWeight: 'bold'}}>{this.state.totalReviews}</span> <br/>Commentaire(s)</Typography>
                                     </Grid>
                                 </Grid>
@@ -151,11 +151,10 @@ class Statistiques extends React.Component {
                                 {uniqCategory.map((u,index) => (
 
                                 <React.Fragment key={index}>
-                                <Grid container style={{marginTop: '50px'}}>
-                                    <Grid item md={11} xs={4}>
+                                <Grid container  className={classes.containerLabelCategory}>
+                                    <Grid item>
                                         <Typography style={{fontSize: '1.5rem'}}>{u.label}</Typography>
                                     </Grid>
-                                    <Grid item md={10} sm={7} xs={7} style={{borderBottom: '#7E7E7E solid 1px', height: '25px'}}></Grid>
                                 </Grid>
 
                                     {serviceUser.map((s,index2) => {
@@ -163,23 +162,25 @@ class Statistiques extends React.Component {
                                             return (
                                                 <Grid key={index2} className={classes.webview} container>
                                                     <Grid item xs={3}>
-                                                        <Link href={'/myShop/previewService?id='+s._id}><a style={{textDecoration:"none"}}>
-                                                            <img src={"../../"+s.service.picture} style={{width: '100%', height: '170px', objectFit: 'cover'}}/>
-                                                        </a></Link>
+                                                        <Link href={'/myShop/previewService?id='+s._id}>
+                                                            <a style={{textDecoration:"none"}}>
+                                                                <img src={"../../"+s.service.picture} style={{width: '100%', height: '170px', objectFit: 'cover'}} alt={s.service.picture} title={s.service.picture}/>
+                                                            </a>
+                                                        </Link>
                                                     </Grid>
-                                                    <Grid item xs={9}>
+                                                    <Grid item className={classes.containerDetails}>
                                                         <Typography style={{fontSize: '1.1rem', marginLeft: '30px'}}>{s.service.label}</Typography>
                                                         <Grid container style={{marginTop: '20px'}}>
-                                                            <Grid item xs={3} sm={3} md={2} style={{textAlign: 'center'}}>
+                                                            <Grid item style={{textAlign: 'center',  padding: 10}}>
                                                                 <Typography style={{color: '#7E7E7E'}}><span style={{color:'#2FBCD3', fontSize: '1.1rem', fontWeight: 'bold'}}>{this.state[s.service.label+'Incomes']}€</span> <br/>Générés depuis l'inscription</Typography>
                                                             </Grid>
-                                                            <Grid item xs={3} sm={3} md={2} style={{textAlign: 'center'}}>
+                                                            <Grid item style={{textAlign: 'center',  padding: 10}}>
                                                                 <Typography style={{color: '#7E7E7E'}}><span style={{color:'#2FBCD3', fontSize: '1.1rem', fontWeight: 'bold'}}>{this.state[s.service.label+'Prestations']}</span> <br/>Prestation(s) réalisée(s)</Typography>
                                                             </Grid>
-                                                            <Grid item xs={3} sm={3} md={2} style={{textAlign: 'center'}}>
+                                                            <Grid item style={{textAlign: 'center',  padding: 10}}>
                                                                 <Typography style={{color: '#7E7E7E'}}><span style={{color:'#2FBCD3', fontSize: '1.1rem', fontWeight: 'bold'}}>{s.number_of_views}</span> <br/>Vue(s) du service depuis l'inscription</Typography>
                                                             </Grid>
-                                                            <Grid item xs={3} sm={3} md={2} style={{textAlign: 'center'}}>
+                                                            <Grid item style={{textAlign: 'center',  padding: 10}}>
                                                                 <Typography style={{color: '#7E7E7E'}}><span style={{color:'#2FBCD3', fontSize: '1.1rem', fontWeight: 'bold'}}>{this.state[s.service.label+'Reviews']}</span> <br/>Commentaire(s)</Typography>
                                                             </Grid>
                                                         </Grid>
