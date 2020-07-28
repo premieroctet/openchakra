@@ -17,7 +17,7 @@ import Chip from '@material-ui/core/Chip';
 import frLocale from "date-fns/locale/fr";
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import {availabilities2events, eventUI2availability, availability2eventUI, DAYS} from '../../utils/converters';
+import {availabilities2events, eventUI2availability, availability2eventUI, DAYS, LONG_DAYS} from '../../utils/converters';
 import {ALL_SERVICES, GID_LEN} from '../../utils/consts.js';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Typography } from '@material-ui/core'; // Import css
@@ -273,9 +273,29 @@ class Schedule extends React.Component {
     };
   };
 
+  availAsText = () => {
+    const {selectedDateStart, selectedTimeStart, selectedTimeEnd, selectedDateEndRecu, recurrDays, isExpanded} = this.state
+    var value = "Disponible de "+selectedTimeStart+ " à "+selectedTimeEnd
+    value += (isExpanded ? " à partir du " : " le ")+moment(selectedDateStart).format('DD/MM/YY')
+    if (isExpanded && selectedDateEndRecu) {
+      value += " jusqu'au "+moment(selectedDateEndRecu).format('DD/MM/YY')
+    }
+    if (isExpanded) {
+      value += " tous les "
+      var count=0
+      for (var i = 0; i<7; i++) {
+        if (recurrDays.has(i)) {
+          value += LONG_DAYS[i]+(count <recurrDays.size-2 ? ", " : count==recurrDays.size-1 ? "" : " et ")
+          count++
+        }
+      }
+    }
+    return value
+  }
+
   render() {
     const { classes, title, subtitle, selectable, height } = this.props;
-
+    const txt = this.availAsText()
     let events = availabilities2events(this.props.availabilities);
 
     return (
@@ -343,6 +363,11 @@ class Schedule extends React.Component {
                     <h2>{ this.state._id==null ? `Nouvelle disponibilité` : `Modifier disponibilité`}</h2>
                   </Grid>
               </Grid>
+              <Grid container>
+                  <Grid>
+                    { txt }
+                  </Grid>
+              </Grid>
               <Grid container style={{justifyContent: 'center'}}>
                 <form>
                   <Grid className={classes.contentTimeSlot}>
@@ -355,7 +380,7 @@ class Schedule extends React.Component {
                                 variant="inline"
                                 format="dd/MM/yyyy"
                                 id="date-picker-inline"
-                                label="Date de début"
+                                label={ this.state.isExpanded  ? "Date de début" : "Date" }
                                 className={classes.formSchedule}
                                 value={this.state.selectedDateStart}
                                 onChange={this.handleDateStartChange}
@@ -409,7 +434,7 @@ class Schedule extends React.Component {
                           onClick={event => event.stopPropagation()}
                           onFocus={event => event.stopPropagation()}
                           control={<Checkbox />}
-                          label="Récurrence"
+                          label="Répéter tous les"
                           onChange={this.handleChange}
                           checked={this.state.isExpanded}
                         />
@@ -435,7 +460,7 @@ class Schedule extends React.Component {
                                 variant="inline"
                                 format="dd/MM/yyyy"
                                 id="date-picker-inline"
-                                label="Date de fin"
+                                label="jusqu'au"
                                 className={classes.textField}
                                 value={this.state.selectedDateEndRecu}
                                 onChange={this.handleDateEndChangeRecu}

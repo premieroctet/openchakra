@@ -4,6 +4,7 @@ const moment=require('moment-timezone')
 const EV_AVAIL_DAY_MAPPING='monday tuesday wednesday thursday friday saturday sunday'.split(' ');
 
 const DAYS='Lu Ma Me Je Ve Sa Di'.split(' ');
+const LONG_DAYS='lundis mardis mercredis jeudis vendredis samedis dimanches'.split(' ');
 
 const DAY_MAPPING={
         'monday': RRule.MO,
@@ -137,4 +138,5 @@ const availability2eventUI = avail => {
 
 };
 
-module.exports={availabilities2events, eventUI2availability, availability2eventUI, DAYS};
+module.exports={availabilities2events, eventUI2availability, availability2eventUI,
+  DAYS, LONG_DAYS};
