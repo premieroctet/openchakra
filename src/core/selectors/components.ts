@@ -1,3 +1,4 @@
+import map from 'lodash/map'
 import { RootState } from '../store'
 import { getComponentParents } from '../../utils/recursive'
 
@@ -86,4 +87,12 @@ export const getIsPartOfUserComponent = (id: IComponent['id']) => (
   return userComponentIds.some(userComponentId =>
     parents.includes(userComponentId),
   )
+}
+
+export const getUserComponentNames = (state: RootState) => {
+  const names = map(
+    state.components.present.components,
+    comp => comp.userComponentName,
+  ).filter(name => !!name)
+  return [...new Set(names)]
 }

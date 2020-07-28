@@ -27,7 +27,9 @@ export const useInteractive = (
       id: component.id,
       type: component.type,
       isMoved: true,
-      userComponentId: !!component.instanceOf ? component.id : undefined,
+      userComponentId: !!component.instanceOf
+        ? component.instanceOf
+        : undefined,
     },
     canDrag: () => {
       return !isPartOfUserComponent

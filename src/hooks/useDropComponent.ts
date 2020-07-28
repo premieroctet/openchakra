@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import {
   getIsUserComponent,
   getIsPartOfUserComponent,
+  getProxyComponent,
 } from '../core/selectors/components'
 
 export const useDropComponent = (
@@ -18,6 +19,8 @@ export const useDropComponent = (
   const isPartOfUserComponent = useSelector(
     getIsPartOfUserComponent(componentId),
   )
+  const component = useSelector(getProxyComponent(componentId))
+  const trueComponentId = component.instanceOf || component.id
 
   const [{ isOver }, drop] = useDrop({
     accept,
@@ -31,21 +34,23 @@ export const useDropComponent = (
 
       if (item.isMoved) {
         dispatch.components.moveComponent({
-          parentId: componentId,
+          parentId: trueComponentId,
           componentId: item.id,
         })
       } else if (item.isMeta) {
-        dispatch.components.addMetaComponent(builder[item.type](componentId))
+        dispatch.components.addMetaComponent(
+          builder[item.type](trueComponentId),
+        )
       } else if (item.userComponentId) {
         dispatch.components.addUserComponent({
           type: item.type,
-          parentName: componentId,
+          parentName: trueComponentId,
           instanceOf: item.userComponentId,
           userComponentName: item.userComponentName,
         })
       } else {
         dispatch.components.addComponent({
-          parentName: componentId,
+          parentName: trueComponentId,
           type: item.type,
           rootParentType: item.rootParentType,
         })
@@ -56,7 +61,7 @@ export const useDropComponent = (
         return canDrop && !isPartOfUserComponent
       }
       if (isUserComponent) {
-        return canDrop && !item.userComponentId
+        return canDrop && item.userComponentId !== trueComponentId
       }
 
       return canDrop

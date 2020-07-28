@@ -30,6 +30,7 @@ import {
   getComponents,
   getSelectedComponentId,
   getUserComponents,
+  getUserComponentNames,
 } from '../../core/selectors/components'
 import ActionButton from './ActionButton'
 import { generateComponentCode } from '../../utils/code'
@@ -82,6 +83,7 @@ const Inspector = () => {
   const dispatch = useDispatch()
   const component = useSelector(getSelectedComponent)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const userComponentsNames = useSelector(getUserComponentNames)
 
   const [componentName, onChangeComponentName] = useState('')
   const saveComponent = (e: React.FormEvent<HTMLFormElement>) => {
@@ -94,8 +96,11 @@ const Inspector = () => {
     onChangeComponentName('')
   }
   const isValidComponentName = useMemo(() => {
-    return !!componentName.match(/^[A-Z]\w*$/g)
-  }, [componentName])
+    return (
+      !!componentName.match(/^[A-Z]\w*$/g) &&
+      !userComponentsNames.includes(componentName)
+    )
+  }, [componentName, userComponentsNames])
 
   const { clearActiveProps } = useInspectorUpdate()
 
@@ -221,7 +226,8 @@ const Inspector = () => {
                 {!isValidComponentName && (
                   <FormErrorMessage>
                     Component name must start with a capital character and must
-                    not contain space or special character
+                    not contain space or special character, and name should not
+                    be already taken.
                   </FormErrorMessage>
                 )}
                 <FormHelperText>
