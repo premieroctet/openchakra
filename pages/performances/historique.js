@@ -104,18 +104,18 @@ class Historique extends React.Component {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item xs={9} style={{paddingLeft: 55, marginBottom: '20px',minHeight:530}}>
-                            <Grid container className={classes.tabweb} style={{paddingRight:30}}>
-                                <Grid item xs={6} style={{textAlign:"center"}}>
+                        <Grid item className={classes.myHistorique}>
+                            <Grid container>
+                                <Grid item style={{textAlign:"center"}}>
                                     <div>
                                         <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '0%',position: 'sticky'}}>Versement reçu</h2>
                                     </div>
                                 </Grid>
-                                <Grid item xs={6} >
+                                <Grid item>
                                     <h2 onClick={this.handleClicktabs2}  style={{color:'#828181',fontWeight: '100', textAlign: 'center',cursor: 'pointer'}}>Versements à venir</h2><br/>
                                 </Grid>
 
-                                <Grid item xs={6}>
+                                <Grid item>
                                     {tabs ?
                                         <React.Fragment>
                                             <hr className={classes.trait1} style={{marginTop:'-10px'}}/>
@@ -125,7 +125,7 @@ class Historique extends React.Component {
                                             <hr className={classes.trait3} style={{marginTop:'-10px'}}/>
                                         </React.Fragment>}
                                 </Grid>
-                                <Grid item xs={6}>
+                                <Grid item>
                                     {tabs ?
                                         <React.Fragment>
                                             <hr className={classes.trait} style={{marginTop:'-10px'}}/>
@@ -138,14 +138,14 @@ class Historique extends React.Component {
 
                             </Grid>
                             <Grid container className={classes.tabmobile}>
-                                <Grid item xs={6} style={{textAlign:"center"}}>
+                                <Grid item style={{textAlign:"center", width: '50%'}}>
                                     <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '25%'}}>Versement reçu</h2>
                                 </Grid>
-                                <Grid item xs={6} >
+                                <Grid item style={{textAlign:"center", width: '50%'}}>
                                     <h2 onClick={this.handleClicktabs2}  style={{color:'#828181',fontWeight: '100', textAlign: 'center',cursor: 'pointer'}}>Versements à venir</h2><br/>
                                 </Grid>
 
-                                <Grid item xs={6} style={{textAlign:"center"}}>
+                                <Grid item style={{textAlign:"center", width: '50%'}}>
                                     {tabs ?
                                         <React.Fragment>
                                             <hr className={classes.trait1}/>
@@ -155,7 +155,7 @@ class Historique extends React.Component {
                                             <hr className={classes.trait3}/>
                                         </React.Fragment>}
                                 </Grid>
-                                <Grid item xs={6} >
+                                <Grid item style={{textAlign:"center", width: '50%'}}>
                                     {tabs ?
                                         <React.Fragment>
                                             <hr className={classes.trait}/>

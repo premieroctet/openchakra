@@ -4,22 +4,14 @@ export default theme => ({
     flexGrow: 1,
     [theme.breakpoints.down('xs')]: {
       marginBottom: 100,
+      marginTop: 0,
+
     }
   },
   toggle: {
-    zIndex: 0
+    zIndex: 0,
+    margin: 20
   },
-
-  tabweb:{
-    width:'100%',
-    position:'sticky',
-    top:'35px',
-    fontSize:15,
-    backgroundColor:'white',
-    zIndex:'20',
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'}}
-      ,
 
   tabmobile:{
     fontSize:'10px',
@@ -55,18 +47,30 @@ export default theme => ({
     height: 4,
     backgroundColor: 'lightgray',
     borderColor: 'transparent',
+
   },
 
   trait3:{
     width: '100%',
     height: 4,
     backgroundColor: 'rgb(47, 188, 211)',
-    borderColor: 'transparent'
+    borderColor: 'transparent',
   },
 
   historesp: {
     [theme.breakpoints.down('sm')]: {
-      marginTop: '150px',
+      marginTop: 50,
     },
   },
+  myHistorique:{
+    paddingLeft: 55,
+    marginBottom: '20px',
+    [theme.breakpoints.down('xs')]: {
+      padding: 0,
+      display: 'flex',
+      justifyContent : 'center',
+      flexDirection : 'column',
+      marginLeft: 20
+    }
+  }
 })

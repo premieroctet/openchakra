@@ -37,7 +37,8 @@ export default theme => ({
     }
   },
   toggle: {
-    zIndex: 0
+    zIndex: 0,
+    margin: 15
   },
   thechart:{
     [theme.breakpoints.down('sm')]: {
@@ -61,7 +62,7 @@ export default theme => ({
     marginBottom: '20px',
     width: '100%',
     [theme.breakpoints.down('xs')]: {
-      padding: 0,
+      padding: 20,
     }
   },
   mainContainer:{

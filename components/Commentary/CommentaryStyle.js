@@ -56,7 +56,7 @@ export default theme => ({
   },
   containerGeneralNotes:{
       width: '100%'
-    
+
   },
   mainContainer:{
     display: 'flex',
