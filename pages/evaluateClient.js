@@ -9,105 +9,8 @@ import Footer from '../hoc/Layout/Footer/Footer';
 import StarRatings from 'react-star-ratings';
 import {toast} from 'react-toastify';
 import TextField from "@material-ui/core/TextField";
-import cookie from 'react-cookies'
-
-const styles = theme => ({
-    bigContainer: {
-        flexGrow: 1,
-
-    },
-    grosHR: {
-        height: '7px',
-        backgroundColor: '#6ec1e4',
-        width: '76%',
-        float: 'left',
-    },
-    fournitureHR: {
-        height: '5px',
-        backgroundColor: '#6ec1e4',
-        width: '85%',
-        float: 'left',
-    },
-    disponibilityHR: {
-        height: '5px',
-        backgroundColor: '#6ec1e4',
-        width: '103%',
-        float: 'left',
-    },
-    conditionsHR: {
-        height: '5px',
-        backgroundColor: '#6ec1e4',
-        width: '189%',
-        float: 'left',
-    },
-    perimeterHR: {
-        height: '5px',
-        backgroundColor: '#6ec1e4',
-        width: '223%',
-        float: 'left',
-    },
-    dispocard:{
-
-        minHeight:'100px',
-        width:'200px',
-        textAlign:'center',
-
-        boxShadow: '4px 4px 41px -37px rgba(0,0,0,0.0)',
-        border:'solid 1px #ccc',
-        borderRadius:'10px',
-
-
-    },
-    dispocardin:{
-
-        padding:'1%',
-        fontSize:'17px',
-        fontWeight:'bold',
-        marginBottom:10,
-
-
-    },
-
-    prestationlist:{
-
-        padding:'1%',
-
-        marginBottom:10,
-        border:'solid 1px #ccc',
-        borderRadius:'5px',
-
-
-    },
-    prestationside:{
-
-        backgroundColor:'transparent',
-        Border:'0px #ccc solid',
-        borderRadius:'10px',
-        marginRight:'10px',
-        marginLeft:'10px',
-        height:'30px',
-
-
-    },
-
-    dispoheader:{
-
-        height:'2%',
-        color:'white',
-        width:'100%',
-        padding:'1%',
-
-        fontSize:'15px',
-        textAlign:'center',
-
-        borderRadius:'0px',
-        backgroundColor:'#F8727F',
-        marginBottom:'20px'
-
-
-    }
-});
-
+import cookie from 'react-cookies';
+import styles from './evaluateClient/evaluateClientStyle'
 
 class EvaluateClient extends React.Component {
     constructor(props) {
@@ -120,21 +23,13 @@ class EvaluateClient extends React.Component {
             relational: 0,
             content: '',
         };
-        this.changeRating = this.changeRating.bind(this);
-        this.changeRating2 = this.changeRating2.bind(this);
-        this.changeRating3 = this.changeRating3.bind(this);
         this.onComplimentChanged = this.onComplimentChanged.bind(this);
-
-
-
     }
 
     static getInitialProps ({ query: { booking,id,client } }) {
         return { booking:booking,service_id: id,client:client }
 
     }
-
-
 
     componentDidMount() {
         const id = this.props.service_id;
@@ -165,25 +60,25 @@ class EvaluateClient extends React.Component {
     onComplimentChanged = (name) => {
       const org=this.state[name];
       this.setState({[name]: !org});
-    }
+    };
 
-    changeRating( newRating, name ) {
+    changeRating = (newRating) => {
         this.setState({
             accueil: newRating
         });
-    }
+    };
 
-    changeRating2( newRating, name ) {
+    changeRating2 = (newRating) => {
         this.setState({
             accuracy: newRating
         });
-    }
+    };
 
-    changeRating3( newRating, name ) {
+    changeRating3 = (newRating) => {
         this.setState({
             relational: newRating
         });
-    }
+    };
 
     back(){
         Router.back();
@@ -211,69 +106,40 @@ class EvaluateClient extends React.Component {
         axios.post('/myAlfred/api/reviews/add/client',obj)
             .then(() => {
                 toast.info('Commentaire enregistré');
-                //Router.push('/merci')
                 Router.push(`/reservations/detailsReservation?id=${booking}`);
             })
-            .catch(err => {
+            .catch( () => {
                 toast.error('Une erreur est survenue')
             })
 
     }
 
-
-
-
-
-
     render() {
         const {classes} = this.props;
-        const {user} = this.state;
-
-
 
         return (
             <Fragment>
                 <Layout>
                     <Grid container className={classes.bigContainer}>
-
-                        {/*Le Header */}
-
-                        {/*Le Contenu */}
                         <Grid container>
-                            <br></br>
-                            {/*Contenu à Gauche*/}
-
-                            {/*Petite Description*/}
-                            <Grid item md={5} xs={12} style={{textAlign: 'left',margin: '0 auto', float:'right', paddingLeft:'3%'}}>
-                                <div style={{margin: '20px 11%', marginTop: '5%',width: '90%'}}></div>
+                            <Grid item className={classes.mainContainerEvaluateClient}>
                                 <Grid container>
-
-                                    <Grid item xs={12} style={{marginTop:50, marginBottom:30}}>
+                                    <Grid item style={{marginTop:50, marginBottom:30}}>
                                         <h2 style={{fontSize: '2.5rem',color: 'rgba(84,89,95,0.95)',letterSpacing: -1, fontWeight: '100', textAlign:'left'}}>Evaluation & commentaires</h2>
-
                                     </Grid>
                                 </Grid>
-
-
-
-
-                                <div>
-
-                                    <Grid container>
-
-                                        <Grid item xs={12} style={{textAlign:'left'}}>
-
-
+                                <Grid>
+                                    <Grid container className={classes.containerSkillsEvaluate}>
+                                        <Grid item style={{textAlign:'left'}}>
                                             <p style={{fontSize:'25px'}}>Qu’avez-vous pensé de votre client ?</p>
-
-
-                                            <br></br>
-
                                         </Grid>
-                                        <Grid item xs={7} style={{textAlign:'right'}}>
-                                            <Grid container>
-                                                <Grid item xs={7}> <p style={{fontSize:'18px'}}>Accueil</p></Grid>
-                                                <Grid item xs={5} style={{lineHeight:'4'}}><StarRatings
+                                        <Grid item className={classes.skillsEvaluate}>
+                                            <Grid container className={classes.starsValueContainer}>
+                                                <Grid item>
+                                                    <p style={{fontSize:'18px'}}>Accueil</p>
+                                                </Grid>
+                                                <Grid item style={{lineHeight:'4'}}>
+                                                    <StarRatings
                                                     rating={this.state.accueil}
                                                     starRatedColor={"#2FBCD3"}
                                                     changeRating={this.changeRating}
@@ -282,13 +148,15 @@ class EvaluateClient extends React.Component {
                                                     starDimension={'20px'}
                                                     starHoverColor={'#2FBCD3'}
                                                     starSpacing={'3px'}
-                                                /></Grid>
+                                                />
+                                                </Grid>
                                             </Grid>
-                                            <Grid container>
-                                                <Grid item xs={7}>
+                                            <Grid container className={classes.starsValueContainer}>
+                                                <Grid item>
                                                     <p style={{fontSize:'18px'}}>Précision de la demande</p>
                                                 </Grid>
-                                                <Grid item xs={5} style={{lineHeight:'4'}}><StarRatings
+                                                <Grid item style={{lineHeight:'4'}}>
+                                                    <StarRatings
                                                     rating={this.state.accuracy}
                                                     starRatedColor={"#2FBCD3"}
                                                     changeRating={this.changeRating2}
@@ -297,13 +165,15 @@ class EvaluateClient extends React.Component {
                                                     starDimension={'20px'}
                                                     starHoverColor={'#2FBCD3'}
                                                     starSpacing={'3px'}
-                                                /></Grid>
+                                                />
+                                                </Grid>
                                             </Grid>
-                                            <Grid container>
-                                                <Grid item xs={7}>
+                                            <Grid container className={classes.starsValueContainer}>
+                                                <Grid item>
                                                     <p style={{fontSize:'18px'}}>Relationnel</p>
                                                 </Grid>
-                                                <Grid item xs={5} style={{lineHeight:'4'}}><StarRatings
+                                                <Grid item style={{lineHeight:'4'}}>
+                                                    <StarRatings
                                                     rating={this.state.relational}
                                                     starRatedColor={"#2FBCD3"}
                                                     changeRating={this.changeRating3}
@@ -312,27 +182,16 @@ class EvaluateClient extends React.Component {
                                                     starDimension={'20px'}
                                                     starHoverColor={'#2FBCD3'}
                                                     starSpacing={'3px'}
-                                                /></Grid>
+                                                />
+                                                </Grid>
                                             </Grid>
-
                                         </Grid>
                                     </Grid>
-
-                                </div>
-                                <div>
-                                    <br></br>
+                                </Grid>
+                                <Grid>
                                     <p style={{fontSize:'25px'}}>Votre commentaire</p>
-
-                                    {/*<form class="example-form">
-
-
-                                        <mat-form-field class="example-full-width">
-                                            <textarea onChange={(e)=>this.setState({content:e.target.value})}
-                                                      style={{width:'100%', height:'150px', borderRadius:'30px'}} matInput placeholder=""></textarea>
-                                        </mat-form-field>
-                                    </form>*/}
                                     <Grid container>
-                                        <Grid item xs={12}>
+                                        <Grid item style={{width: '100%'}}>
                                             <TextField
                                                 id="outlined-multiline-static"
                                                 style={{width:'100%'}}
@@ -344,31 +203,32 @@ class EvaluateClient extends React.Component {
                                             />
                                         </Grid>
                                     </Grid>
-                                </div>
-
-
-
-                                {/*cadre avec couleur et checkbox*/}
-
-                                <br></br>
-
-                                <Grid style={{float:'left'}} item xs={6}> <Button onClick={()=>this.back()}  color={"white"} variant={"contained"} style={{color:"gray", backgroundColor:'white', fontSize:'16px', width:"100%", paddingLeft:'20px', paddingRight:'20px', marginBottom:50, marginRight:20, borderRadius:'20px', textTransform:'capitalize'}}>Retour</Button>
                                 </Grid>
-                                <Grid style={{float:'right'}} item xs={6}> <Button disabled={this.state.accueil ===0 || this.state.accuracy === 0 || this.state.relational === 0 || !this.state.content.trim()} onClick={()=>this.evaluate()}  color={"primary"} variant={"contained"} style={{color:"white", fontSize:'16px', width:"100%", paddingLeft:'20px', paddingRight:'20px', marginBottom:50, marginRight:20, borderRadius:'20px', textTransform:'capitalize'}}>Terminé</Button>
+                                <Grid className={classes.containerNavigationButton}>
+                                    <Grid>
+                                        <Button
+                                            onClick={()=>this.back()}
+                                            color={"white"}
+                                            variant={"contained"}
+                                        >
+                                            Retour
+                                        </Button>
+                                    </Grid>
+                                    <Grid>
+                                        <Button disabled={this.state.accueil ===0 || this.state.accuracy === 0 || this.state.relational === 0 || !this.state.content.trim()}
+                                                onClick={()=>this.evaluate()}
+                                                color={"primary"}
+                                                variant={"contained"}
+                                        >
+                                            Terminé
+                                        </Button>
+                                    </Grid>
                                 </Grid>
-
-
                             </Grid>
-
-                            {/*Contenu à droite*/}
-                            <Grid item xs={12} md={7} style={{marginTop: '2%', marginBottom: '5%'}}>
-                                <Grid container style={{ backgroundImage: `url('../../static/resa.svg')`,backgroundPosition: "cover", backgroundRepeat:'no-repeat', border: 'thin solid transparent',maxWidth: '100%', height:'90vh', padding:'2%', position: 'sticky', top: 100,}}>
-
-                                </Grid> </Grid>
-                        </Grid>    </Grid>
+                        </Grid>
+                    </Grid>
                 </Layout>
                 <Footer/>
-
             </Fragment>
         );
     };
