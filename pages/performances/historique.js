@@ -106,16 +106,16 @@ class Historique extends React.Component {
                         </Grid>
                         <Grid item className={classes.myHistorique}>
                             <Grid container>
-                                <Grid item style={{textAlign:"center"}}>
+                                <Grid item style={{textAlign:"center", width: '50%'}}>
                                     <div>
                                         <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '0%',position: 'sticky'}}>Versement reçu</h2>
                                     </div>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{textAlign:"center", width: '50%'}}>
                                     <h2 onClick={this.handleClicktabs2}  style={{color:'#828181',fontWeight: '100', textAlign: 'center',cursor: 'pointer'}}>Versements à venir</h2><br/>
                                 </Grid>
 
-                                <Grid item>
+                                <Grid item style={{textAlign:"center", width: '50%'}}>
                                     {tabs ?
                                         <React.Fragment>
                                             <hr className={classes.trait1} style={{marginTop:'-10px'}}/>
@@ -125,7 +125,7 @@ class Historique extends React.Component {
                                             <hr className={classes.trait3} style={{marginTop:'-10px'}}/>
                                         </React.Fragment>}
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{textAlign:"center", width: '50%'}}>
                                     {tabs ?
                                         <React.Fragment>
                                             <hr className={classes.trait} style={{marginTop:'-10px'}}/>
@@ -174,7 +174,7 @@ class Historique extends React.Component {
                                     <React.Fragment>
                                         <Grid className={classes.historesp} container>
                                             {bookingsPaidSoon.map((e,index) => (
-                                                <Grid key={index} container style={{borderBottom: '#9f919178 solid 1px', padding: '20px 0'}}>
+                                                <Grid key={index} style={{borderBottom: '#9f919178 solid 1px', alignItems: 'center'}}>
                                                     <Grid item xs={8}>
                                                         <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{moment(e.end_date).format('DD/MM/YYYY')}</Typography>
                                                         <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.user.firstname} - {e.date_prestation} - {e.service}</Typography>
@@ -191,7 +191,7 @@ class Historique extends React.Component {
                                     <React.Fragment>
                                         <Grid className={classes.historesp} container>
                                             {bookingsPaid.map((e,index) => (
-                                                <Grid key={index} container style={{borderBottom: '#9f919178 solid 1px', padding: '20px 0'}}>
+                                                <Grid key={index} container style={{borderBottom: '#9f919178 solid 1px', alignItems: 'center'}}>
                                                     <Grid item xs={8}>
                                                         <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{moment(e.date_payment).format('DD/MM/YYYY')}</Typography>
                                                         <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.user.firstname} - {e.date_prestation} - {e.service}</Typography>

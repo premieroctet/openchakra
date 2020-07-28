@@ -63,8 +63,9 @@ export default theme => ({
     },
   },
   myHistorique:{
-    paddingLeft: 55,
+    paddingLeft: '15%',
     marginBottom: '20px',
+    width: '100%',
     [theme.breakpoints.down('xs')]: {
       padding: 0,
       display: 'flex',
