@@ -1,4 +1,4 @@
-import { generateComponentCode, generateCode } from './code'
+import { generateComponentCode, generateCode, formatCode } from './code'
 
 const componentFixtures: IComponents = {
   root: {
@@ -17,6 +17,7 @@ const componentFixtures: IComponents = {
     type: 'Box',
     parent: 'root',
     rootParentType: 'Box',
+    componentName: 'MyBox',
   },
   'comp-2': {
     id: 'comp-2',
@@ -32,12 +33,14 @@ const componentFixtures: IComponents = {
 
 describe('Code utils', () => {
   it('should generate component code', async () => {
-    const code = await generateComponentCode(
-      componentFixtures['root'],
-      componentFixtures,
-    )
+    const code = await generateComponentCode({
+      component: componentFixtures['root'],
+      components: componentFixtures,
+      componentName: 'MyBox',
+      forceBuildBlock: true,
+    })
 
-    expect(code).toEqual(`const MyBox = () => (
+    expect(await formatCode(code)).toEqual(`const MyBox = () => (
   <Box bg="whatsapp.500">
     <Text>Lorem Ipsum</Text>
   </Box>
@@ -51,12 +54,16 @@ describe('Code utils', () => {
     expect(code).toEqual(`import React from 'react'
 import { ThemeProvider, CSSReset, theme, Box, Text } from '@chakra-ui/core'
 
+const MyBox = () => (
+  <Box bg="whatsapp.500">
+    <Text>Lorem Ipsum</Text>
+  </Box>
+)
+
 const App = () => (
   <ThemeProvider theme={theme}>
     <CSSReset />
-    <Box bg="whatsapp.500">
-      <Text>Lorem Ipsum</Text>
-    </Box>
+    <MyBox />
   </ThemeProvider>
 )
 
