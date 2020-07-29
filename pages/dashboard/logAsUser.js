@@ -8,7 +8,8 @@ import Button from '@material-ui/core/Button';
 import Layout from '../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from "next/router";
-import Select from "@material-ui/core/Select";
+//import Select from "@material-ui/core/Select";
+import Select from "react-dropdown-select";
 import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
@@ -17,13 +18,15 @@ import cookie from 'react-cookies'
 const styles = {
     loginContainer: {
         alignItems: 'center',
-        height: '80vh',
+        height: '85vh',
         justifyContent: 'center',
         flexDirection: 'column',
+        marginTop: '5%'
     },
     card: {
         padding: '1.5rem 3rem',
-        width: 600,
+        width: 500,
+        height: '100%'
     },
     cardContant: {
         flexDirection: 'column',
@@ -72,9 +75,13 @@ class logAsUser extends React.Component {
         axios.get(`/myAlfred/api/admin/users/all_light`)
             .then(response => {
                 let users = response.data;
-                const muUsers = users.map(user => (
-                    <MenuItem key={user.id} value={user.email}>{user.name} {user.firstname} {user.email}</MenuItem>
-                ));
+                const muUsers = users.map( u => {
+                  return {
+                    label : `${u.name} ${u.firstname} ${u.email}`,
+                    value: u.email,
+                    key: u.id
+                  }
+                })
                 this.setState( { muUsers: muUsers})
 
             })
@@ -88,7 +95,7 @@ class logAsUser extends React.Component {
     }
 
     onUserChanged = e => {
-      this.setState({ user: e.target.value });
+      this.setState({ user: e[0].value });
     }
 
     onSubmit = e => {
@@ -128,10 +135,10 @@ class logAsUser extends React.Component {
                                             input={<Input name="user" id="genre-label-placeholder" />}
                                             displayEmpty
                                             name="user"
-                                            value={this.state.user}
                                             onChange={this.onUserChanged}
+                                            options={muUsers}
+                                            multi={false}
                                         >
-                                            {muUsers}
                                         </Select>
                                     </FormControl>
 
