@@ -226,6 +226,16 @@ const components = createModel({
         }
       })
     },
+    setComponentName(
+      state: ComponentsState,
+      payload: { componentId: string; name: string },
+    ): ComponentsState {
+      return produce(state, draftState => {
+        const component = draftState.components[payload.componentId]
+
+        component.componentName = payload.name
+      })
+    },
     hover(
       state: ComponentsState,
       componentId: IComponent['id'],

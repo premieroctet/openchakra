@@ -1,5 +1,24 @@
-import React, { useState, memo, useEffect } from 'react'
-import { Link, Box, Stack } from '@chakra-ui/core'
+import React, { useState, memo, useEffect, useMemo } from 'react'
+import {
+  Link,
+  Box,
+  Stack,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  FormControl,
+  FormLabel,
+  Input,
+  FormErrorMessage,
+  FormHelperText,
+  ModalFooter,
+  Button,
+  useDisclosure,
+  Text,
+} from '@chakra-ui/core'
 import Panels from './panels/Panels'
 import { GoRepo, GoCode } from 'react-icons/go'
 import { FiTrash2 } from 'react-icons/fi'
@@ -11,11 +30,13 @@ import {
   getSelectedComponent,
   getComponents,
   getSelectedComponentId,
+  getComponentNames,
 } from '../../core/selectors/components'
 import ActionButton from './ActionButton'
-import { generateComponentCode } from '../../utils/code'
+import { generateComponentCode, formatCode } from '../../utils/code'
 import useClipboard from '../../hooks/useClipboard'
 import { useInspectorUpdate } from '../../contexts/inspector-context'
+import { componentsList } from '../../componentsList'
 
 const CodeActionButton = memo(() => {
   const [isLoading, setIsLoading] = useState(false)
@@ -36,8 +57,13 @@ const CodeActionButton = memo(() => {
       variantColor={hasCopied ? 'green' : 'gray'}
       onClick={async () => {
         setIsLoading(true)
-        const code = await generateComponentCode(parent, components)
-        onCopy(code)
+        const code = await generateComponentCode({
+          component: parent,
+          components,
+          componentName: components[selectedId].componentName,
+          forceBuildBlock: true,
+        })
+        onCopy(await formatCode(code))
         setIsLoading(false)
       }}
       icon={hasCopied ? 'check' : GoCode}
@@ -48,8 +74,29 @@ const CodeActionButton = memo(() => {
 const Inspector = () => {
   const dispatch = useDispatch()
   const component = useSelector(getSelectedComponent)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [componentName, onChangeComponentName] = useState('')
+  const componentsNames = useSelector(getComponentNames)
 
   const { clearActiveProps } = useInspectorUpdate()
+
+  const saveComponent = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    dispatch.components.setComponentName({
+      componentId: component.id,
+      name: componentName,
+    })
+    onClose()
+    onChangeComponentName('')
+  }
+  const isValidComponentName = useMemo(() => {
+    return (
+      !!componentName.match(/^[A-Z]\w*$/g) &&
+      !componentsNames.includes(componentName) &&
+      // @ts-ignore
+      !componentsList.includes(componentName)
+    )
+  }, [componentName, componentsNames])
 
   const { type, rootParentType, id, children } = component
 
@@ -75,10 +122,15 @@ const Inspector = () => {
           shadow="sm"
           bg="yellow.100"
           display="flex"
-          alignItems="center"
           justifyContent="space-between"
+          flexDir="column"
         >
           {isRoot ? 'Document' : type}
+          {!!component.componentName && (
+            <Text fontSize="xs" fontWeight="light">
+              {component.componentName}
+            </Text>
+          )}
         </Box>
         {!isRoot && (
           <Stack
@@ -92,6 +144,13 @@ const Inspector = () => {
             justify="flex-end"
           >
             <CodeActionButton />
+            {!component.componentName && (
+              <ActionButton
+                label="Name component"
+                icon="edit"
+                onClick={onOpen}
+              />
+            )}
             <ActionButton
               label="Duplicate"
               onClick={() => dispatch.components.duplicate()}
@@ -132,6 +191,54 @@ const Inspector = () => {
         showChildren={componentHasChildren}
         parentIsRoot={parentIsRoot}
       />
+      <Modal onClose={onClose} isOpen={isOpen} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <form onSubmit={saveComponent}>
+            <ModalHeader>Save this component</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <FormControl isInvalid={!isValidComponentName}>
+                <FormLabel>Component name</FormLabel>
+                <Input
+                  size="md"
+                  autoFocus
+                  variant="outline"
+                  isFullWidth
+                  focusBorderColor="blue.500"
+                  errorBorderColor="red.500"
+                  value={componentName}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    onChangeComponentName(e.target.value)
+                  }
+                />
+                {!isValidComponentName && (
+                  <FormErrorMessage>
+                    Component name must start with a capital character and must
+                    not contain space or special character, and name should not
+                    be already taken (including existing chakra-ui components).
+                  </FormErrorMessage>
+                )}
+                <FormHelperText>
+                  This will name your component that you will see in the code
+                  panel as a separated component.
+                </FormHelperText>
+              </FormControl>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                variantColor="blue"
+                mr={3}
+                type="submit"
+                isDisabled={!isValidComponentName}
+              >
+                Save
+              </Button>
+              <Button onClick={onClose}>Cancel</Button>
+            </ModalFooter>
+          </form>
+        </ModalContent>
+      </Modal>
     </>
   )
 }

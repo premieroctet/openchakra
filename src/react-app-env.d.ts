@@ -83,6 +83,7 @@ interface IComponent {
   id: string
   props: any
   rootParentType?: ComponentType
+  componentName?: string
 }
 
 interface IComponents {
