@@ -13,6 +13,10 @@ const {GID_LEN} = require('../../utils/consts')
 import styles from './myAvailabilities/myAvailabilitiesStyle'
 import Router from 'next/router';
 import cookie from 'react-cookies'
+import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import DrawerSchedule from '../../components/DrawerSchedule/DrawerSchedule';
 const I18N = require('../../utils/i18n')
 moment.locale('fr');
 
@@ -20,6 +24,7 @@ class myAvailabilities extends React.Component {
 
     constructor(props) {
         super(props);
+        this.child = React.createRef();
         this.state = {
             user: {},
             availabilities: [],
@@ -164,6 +169,10 @@ class myAvailabilities extends React.Component {
       this.componentDidMount()
     };
 
+    callDrawer = () =>{
+        this.child.current.handleDrawerToggle();
+    };
+
     render() {
         const {classes} = this.props;
         let isOwner= this.state.idAlfred === this.state.userId;
@@ -171,22 +180,42 @@ class myAvailabilities extends React.Component {
 
       return (
           <Fragment>
-          <Helmet>
-              <title> Mes disponibilités - My Alfred </title>
-              <meta property="description" content="Indiquez vos dispoinibilités pour proposer vos services entre particuliers ! Des services à proximité, rémunérés et assurés ! Vos disponibilités permettront à vos futurs clients de vous réserver directement, au créneau souhaité !" />
-            </Helmet>
+              <Helmet>
+                  <title> Mes disponibilités - My Alfred </title>
+                  <meta property="description" content="Indiquez vos dispoinibilités pour proposer vos services entre particuliers ! Des services à proximité, rémunérés et assurés ! Vos disponibilités permettront à vos futurs clients de vous réserver directement, au créneau souhaité !" />
+              </Helmet>
               <Layout>
-                {isOwner ?
-                  <NavBarShop userId={this.state.userId}/>
-                  : null
-                }
-                <Grid container className={classes.containercalendar}>
-                  <Grid style={{width:600}}>
-                    <Schedule height={500} availabilities={this.state.availabilities} title={I18N.SCHEDULE_TITLE} subtitle={I18N.SCHEDULE_SUBTITLE} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} onUpdateAvailability={this.availabilityUpdate} selectable={true}/>
+                <Grid classes={classes.bigContainer}>
+                    {isOwner ?
+                      <NavBarShop userId={this.state.userId}/>
+                      : null
+                    }
+                  <Grid className={classes.toggle}>
+                      <Grid>
+                          <DrawerSchedule ref={this.child}/>
+                      </Grid>
+                          <Grid>
+                              <Grid>
+                                  <IconButton
+                                      color="inherit"
+                                      aria-label="open drawer"
+                                      edge="start"
+                                      onClick={this.callDrawer}
+                                      className={classes.menuButton}
+                                  >
+                                      <MenuIcon />
+                                  </IconButton>
+                              </Grid>
+                          </Grid>
+                      </Grid>
+                    <Grid container className={classes.containercalendar}>
+                      <Grid>
+                        <Schedule availabilities={this.state.availabilities} title={I18N.SCHEDULE_TITLE} subtitle={I18N.SCHEDULE_SUBTITLE} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} onUpdateAvailability={this.availabilityUpdate} selectable={true}/>
+                      </Grid>
+                    </Grid>
                   </Grid>
-                </Grid>
               </Layout>
-            <NavbarMobile userId={this.state.userId}/>
+                <NavbarMobile userId={this.state.userId}/>
           </Fragment>
         );
     };

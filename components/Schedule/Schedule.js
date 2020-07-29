@@ -23,7 +23,8 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Typography } from '@material-ui/core'; // Import css
 import styles from './ScheduleStyle'
 import PropTypes from 'prop-types';
-import Badge from '@material-ui/core/Badge';
+
+
 
 const localizer = momentLocalizer(moment);
 
@@ -80,38 +81,17 @@ const CustomToolbar = (toolbar) => {
       <Grid container>
         <Grid style={{display:'flex', width: '100%', justifyContent: 'space-around', alignItems: 'center', marginBottom : 20, }}>
           <Grid>
-            <Button variant={'outlined'} onClick={goToBack} >&#8249;</Button>
-          </Grid>
-          <Grid>
             <label>{label()}</label>
-          </Grid>
-          <Grid>
-            <Button variant={'outlined'} onClick={goToNext}>&#8250;</Button>
           </Grid>
         </Grid>
       </Grid >
   );
 };
 
-const customDayPropGetter = date => {
-  if (date.getDate() === 7 || date.getDate() === 15)
-    return {
-      className: 'special-day',
-      style: {
-        border: 'solid 3px ' + (date.getDate() === 7 ? '#faa' : '#afa'),
-        '& .special-day:hover':{
-          backgroundColor: 'green'
-        }
-      },
-    }
-  else return {}
-}
-
-const CustomEvent = (event ) =>{
+const CustomEvent = () =>{
 
   return(
-      <Grid style={{borderTop : '25px solid pink', borderRight: '25px solid transparent', height : 0,  width : 0}}>
-      </Grid>
+      <Grid style={{borderTop : '25px solid pink', borderRight: '25px solid transparent', height : 0,  width : 0}}/>
   )
 };
 
@@ -318,12 +298,12 @@ class Schedule extends React.Component {
   };
 
   render() {
-    const { classes, title, subtitle, selectable, height } = this.props;
+    const { classes, title, subtitle, selectable, height, isModalOpen } = this.props;
 
     let events = availabilities2events(this.props.availabilities);
 
     return (
-      <Grid className={classes.heightContainer} style={{height: height}}>
+      <Grid className={classes.heightContainer} style={{height: height, padding: '1%'}} >
         { title || subtitle  ?
           <Grid style={{ marginBottom: 50 }}>
             { title ?
@@ -339,44 +319,51 @@ class Schedule extends React.Component {
           </Grid>
           : null
         }
-        <Calendar
-          scrollToTime={new Date(1970, 1, 1, 7)}
-          selectable={selectable}
-          popup={false}
-          culture='fr-FR'
-          localizer={localizer}
-          // FIX: use state instead of props
-          events={events}
-          defaultView={Views.MONTH}
-          views={['month']}
-          defaultDate={new Date()}
-          onSelectSlot={this.toggleAddModal}
-          onSelectEvent={this.toggleEditModal}
-          dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
-          messages={{
-            'today': "Aujourd'hui",
-            "previous":'<',
-            "next":">",
-            "month": "Mois",
-            "week": "Semaine",
-            "day": "Aujourd'hui",
-            "agenda": "Agenda",
-            "event" :"Evénement",
-            "date" : "Date",
-            "time" : "Horaires",
-            'noEventsInRange': 'Aucun évènement dans cette période',
-          }}
-          formats={formats}
-          className={classes.sizeSchedulle}
-          step={60}
-          timeslots={1}
-          eventPropGetter={(this.eventStyleGetter)}
-          components={{
-            toolbar: CustomToolbar,
-            event: CustomEvent
-          }}
-        />
-        <Modal
+        <Grid container spacing={3} style={{padding: '1%'}}>
+          {[...Array(12)].map((x, i) =>{
+            let date = new Date();
+            let month = new Date(date.setMonth(date.getMonth() + i));
+              return(
+                <Grid item xl={6} lg={4} xs={12} style={{minHeight: 500}}>
+                  <Calendar
+                      selectable={selectable}
+                      popup={false}
+                      culture='fr-FR'
+                      localizer={localizer}
+                      // FIX: use state instead of props
+                      events={events}
+                      views={['month']}
+                      defaultDate={month}
+                      onSelectSlot={this.toggleAddModal}
+                      onSelectEvent={this.toggleEditModal}
+                      dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
+                      messages={{
+                        'today': "Aujourd'hui",
+                        "previous":'<',
+                        "next":">",
+                        "month": "Mois",
+                        "week": "Semaine",
+                        "day": "Aujourd'hui",
+                        "agenda": "Agenda",
+                        "event" :"Evénement",
+                        "date" : "Date",
+                        "time" : "Horaires",
+                        'noEventsInRange': 'Aucun évènement dans cette période',
+                      }}
+                      formats={formats}
+                      className={classes.sizeSchedulle}
+                      eventPropGetter={(this.eventStyleGetter)}
+                      components={{
+                        toolbar: CustomToolbar,
+                        event: CustomEvent
+                      }}
+                  />
+                </Grid>
+              )
+          }
+          )}
+        </Grid>
+        {/*<Modal
           closeAfterTransition
           BackdropProps={{
             timeout: 500,
@@ -515,7 +502,7 @@ class Schedule extends React.Component {
               </Grid>
             </Grid>
         </Fade>
-      </Modal>
+      </Modal>*/}
     </Grid>
     )
   }

@@ -135,7 +135,9 @@ export default theme => ({
           padding: 5
         },
     },
-
+    '& .rbc-show-more':{
+      display: 'none'
+    },
     '& .rbc-row-content':{
       height: '100%',
       display: 'flex',
@@ -172,5 +174,5 @@ export default theme => ({
   contentDateAndTime:{
     display: 'flex',
     justifyContent: 'space-between'
-  }
+  },
 })
