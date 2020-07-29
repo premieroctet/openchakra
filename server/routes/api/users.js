@@ -531,11 +531,10 @@ router.post('/login',(req, res)=> {
         });
 });
 
-
 // @Route GET /myAlfred/api/users/logout
 // logout
 router.get('/logout', function(req, res) {
-    res.status(200).send({ success: false, token: null });
+  res.status(200).send({ success: false, token: null })
 });
 
 // @Route GET /myAlfred/api/users/all
