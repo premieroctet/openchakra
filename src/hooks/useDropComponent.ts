@@ -44,13 +44,13 @@ export const useDropComponent = (
       } else if (item.userComponentId) {
         dispatch.components.addUserComponent({
           type: item.type,
-          parentName: trueComponentId,
+          parentName: componentId,
           instanceOf: item.userComponentId,
           userComponentName: item.userComponentName,
         })
       } else {
         dispatch.components.addComponent({
-          parentName: trueComponentId,
+          parentName: componentId,
           type: item.type,
           rootParentType: item.rootParentType,
         })

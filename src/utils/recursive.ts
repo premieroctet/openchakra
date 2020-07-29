@@ -15,6 +15,14 @@ export const duplicateComponent = (
       return cloneComponent(components[child])
     })
 
+    if (
+      (component.instanceOf || component.userComponentName) &&
+      component.id !== componentToClone.id
+    ) {
+      clonedComponents[component.id] = component
+      return component.id
+    }
+
     clonedComponents[newid] = {
       ...component,
       instanceOf: removeUserComponentDatas ? undefined : component.instanceOf,
