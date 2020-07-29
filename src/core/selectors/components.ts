@@ -1,3 +1,4 @@
+import map from 'lodash/map'
 import { RootState } from '../store'
 
 export const getComponents = (state: RootState) =>
@@ -38,3 +39,12 @@ export const getHoveredId = (state: RootState) =>
 
 export const getIsHovered = (id: IComponent['id']) => (state: RootState) =>
   getHoveredId(state) === id
+
+export const getComponentNames = (state: RootState) => {
+  const names = map(
+    state.components.present.components,
+    comp => comp.componentName,
+  ).filter(comp => !!comp)
+
+  return Array.from(new Set(names))
+}

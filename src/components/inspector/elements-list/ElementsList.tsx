@@ -31,6 +31,7 @@ const ElementsList: React.FC<Props> = ({
               onSelect={onSelect}
               onHover={onHover}
               onUnhover={onUnhover}
+              name={element.componentName}
             />
           ),
       )}

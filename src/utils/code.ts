@@ -1,10 +1,11 @@
 import isBoolean from 'lodash/isBoolean'
+import filter from 'lodash/filter'
 
 const capitalize = (value: string) => {
   return value.charAt(0).toUpperCase() + value.slice(1)
 }
 
-const formatCode = async (code: string) => {
+export const formatCode = async (code: string) => {
   let formattedCode = `// 🚨 Your props contains invalid code`
 
   const prettier = await import('prettier/standalone')
@@ -22,14 +23,24 @@ const formatCode = async (code: string) => {
   return formattedCode
 }
 
-const buildBlock = (component: IComponent, components: IComponents) => {
+type BuildBlockParams = {
+  component: IComponent
+  components: IComponents
+  forceBuildBlock?: boolean
+}
+
+const buildBlock = ({
+  component,
+  components,
+  forceBuildBlock = false,
+}: BuildBlockParams) => {
   let content = ''
 
   component.children.forEach((key: string) => {
     let childComponent = components[key]
     if (!childComponent) {
       console.error(`invalid component ${key}`)
-    } else {
+    } else if (forceBuildBlock || !childComponent.componentName) {
       const componentName = capitalize(childComponent.type)
       let propsContent = ''
 
@@ -62,33 +73,68 @@ const buildBlock = (component: IComponent, components: IComponents) => {
         content += `<${componentName} ${propsContent}>${childComponent.props.children}</${componentName}>`
       } else if (childComponent.children.length) {
         content += `<${componentName} ${propsContent}>
-      ${buildBlock(childComponent, components)}
+      ${buildBlock({ component: childComponent, components, forceBuildBlock })}
       </${componentName}>`
       } else {
         content += `<${componentName} ${propsContent} />`
       }
+    } else {
+      content += `<${childComponent.componentName} />`
     }
   })
 
   return content
 }
 
-export const generateComponentCode = async (
-  component: IComponent,
-  components: IComponents,
-) => {
-  let code = buildBlock(component, components)
+const buildComponents = (components: IComponents) => {
+  const codes = filter(components, comp => !!comp.componentName).map(comp => {
+    return generateComponentCode({
+      component: { ...components[comp.parent], children: [comp.id] },
+      components,
+      forceBuildBlock: true,
+      componentName: comp.componentName,
+    })
+  })
+
+  return codes.reduce((acc, val) => {
+    return `
+      ${acc}
+
+      ${val}
+    `
+  }, '')
+}
+
+type GenerateComponentCode = {
+  component: IComponent
+  components: IComponents
+  componentName?: string
+  forceBuildBlock?: boolean
+}
+
+export const generateComponentCode = ({
+  component,
+  components,
+  componentName,
+  forceBuildBlock,
+}: GenerateComponentCode) => {
+  let code = buildBlock({
+    component,
+    components,
+    forceBuildBlock,
+  })
 
   code = `
-const My${component.type} = () => (
+const ${componentName} = () => (
   ${code}
 )`
 
-  return await formatCode(code)
+  return code
 }
 
 export const generateCode = async (components: IComponents) => {
-  let code = buildBlock(components.root, components)
+  let code = buildBlock({ component: components.root, components })
+  let componentsCodes = buildComponents(components)
 
   const imports = [
     ...new Set(
@@ -105,6 +151,8 @@ import {
   theme,
   ${imports.join(',')}
 } from "@chakra-ui/core";
+
+${componentsCodes}
 
 const App = () => (
   <ThemeProvider theme={theme}>

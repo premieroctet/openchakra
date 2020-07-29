@@ -8,11 +8,20 @@ interface Props extends Pick<IComponent, 'type'> {
   onMouseOver: PseudoBoxProps['onMouseOver']
   onMouseOut: PseudoBoxProps['onMouseOut']
   draggable?: boolean
+  name?: string
 }
 
 const ElementListItem = forwardRef(
   (
-    { type, opacity = 1, onSelect, onMouseOut, onMouseOver, draggable }: Props,
+    {
+      type,
+      opacity = 1,
+      onSelect,
+      onMouseOut,
+      onMouseOver,
+      draggable,
+      name,
+    }: Props,
     ref: React.Ref<HTMLDivElement>,
   ) => {
     return (
@@ -34,7 +43,7 @@ const ElementListItem = forwardRef(
           <Flex align="center">
             {draggable && <Icon fontSize="xs" mr={2} name="arrow-up-down" />}
             <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
-              {type}
+              {name || type}
             </Text>
           </Flex>
           <ActionButton
