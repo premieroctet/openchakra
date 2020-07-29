@@ -8,6 +8,7 @@ interface Props extends Pick<IComponent, 'type' | 'id'> {
   onSelect: (id: IComponent['id']) => void
   onHover: (id: IComponent['id']) => void
   onUnhover: () => void
+  name?: string
 }
 
 const ITEM_TYPE = 'elementItem'
@@ -20,6 +21,7 @@ const ElementListItemDraggable: React.FC<Props> = ({
   index,
   onHover,
   onUnhover,
+  name,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   const [, drop] = useDrop({
@@ -80,6 +82,7 @@ const ElementListItemDraggable: React.FC<Props> = ({
       onMouseOut={onUnhover}
       type={type}
       draggable
+      name={name}
     />
   )
 }
