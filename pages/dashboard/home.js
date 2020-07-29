@@ -77,7 +77,7 @@ class home extends React.Component {
                                   <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
                                       <Typography style={{ fontSize: 30 }}>Maintenance</Typography>
                                   </Grid>
-                                  <Link href="/dashboard/logAsUser"><a>Connexion en tant qu'utilisateur</a></Link><br/>
+                                  <Link href="/dashboard/logAsUser"><a>Connexion en tant qu'autre utilisateur</a></Link><br/>
                                   <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
                                       <Typography style={{ fontSize: 30 }}>Moniteur</Typography>
                                   </Grid>
