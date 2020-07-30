@@ -319,7 +319,7 @@ class Schedule extends React.Component {
           </Grid>
           : null
         }
-        <Grid container spacing={3} style={{padding: '1%'}}>
+        <Grid container spacing={3}>
           {[...Array(12)].map((x, i) =>{
             let date = new Date();
             let month = new Date(date.setMonth(date.getMonth() + i));

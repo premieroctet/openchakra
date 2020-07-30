@@ -185,7 +185,7 @@ class myAvailabilities extends React.Component {
                   <meta property="description" content="Indiquez vos dispoinibilités pour proposer vos services entre particuliers ! Des services à proximité, rémunérés et assurés ! Vos disponibilités permettront à vos futurs clients de vous réserver directement, au créneau souhaité !" />
               </Helmet>
               <Layout>
-                <Grid classes={classes.bigContainer}>
+                <Grid classes={classes.bigContainer} style={{width: '100%'}}>
                     {isOwner ?
                       <NavBarShop userId={this.state.userId}/>
                       : null
@@ -194,26 +194,26 @@ class myAvailabilities extends React.Component {
                       <Grid>
                           <DrawerSchedule ref={this.child}/>
                       </Grid>
+                      <Grid>
                           <Grid>
-                              <Grid>
-                                  <IconButton
-                                      color="inherit"
-                                      aria-label="open drawer"
-                                      edge="start"
-                                      onClick={this.callDrawer}
-                                      className={classes.menuButton}
-                                  >
-                                      <MenuIcon />
-                                  </IconButton>
-                              </Grid>
+                              <IconButton
+                                  color="inherit"
+                                  aria-label="open drawer"
+                                  edge="start"
+                                  onClick={this.callDrawer}
+                                  className={classes.menuButton}
+                              >
+                                  <MenuIcon />
+                              </IconButton>
                           </Grid>
                       </Grid>
-                    <Grid container className={classes.containercalendar}>
+                  </Grid>
+                  <Grid container className={classes.containercalendar} style={{width:' 70%'}}>
                       <Grid>
                         <Schedule availabilities={this.state.availabilities} title={I18N.SCHEDULE_TITLE} subtitle={I18N.SCHEDULE_SUBTITLE} services={this.state.services} onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDelete} onUpdateAvailability={this.availabilityUpdate} selectable={true}/>
                       </Grid>
-                    </Grid>
                   </Grid>
+                </Grid>
               </Layout>
                 <NavbarMobile userId={this.state.userId}/>
           </Fragment>
