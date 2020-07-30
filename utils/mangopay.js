@@ -143,7 +143,7 @@ const addIdIfRequired = user => {
           // Natural provider : KYX check is free => send
           // TODO : PersonType.Legal : ask for validation only on first resrvation
           //if (user.mangopay_provider_status==PersonType.Natural) {
-            console.log("Natural provider => require KYC")
+            console.log("Asking for KYC validation")
             const updateObj = {Id: documentId, Status: KycDocumentStatus.ValidationAsked}
             mangoApi.Users.updateKycDocument(user.mangopay_provider_id, updateObj)
           //}
