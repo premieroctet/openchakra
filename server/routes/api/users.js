@@ -915,10 +915,14 @@ router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false
 // Send email
 // @access private
 router.get('/mangopay_kyc', (req,res) => {
+  console.log(`Mangopay hook called:${req.originalUrl}`)
   const doc_id=req.query.RessourceId
   const kyc_status=req.query.EventType
   User.findOne({ identity_proof_id : doc_id })
     .then(user => {
+      if (!user) {
+        throw(`Aucun utilisateur trouvé pour identity_proof_id=${doc_id}`)
+      }
       console.log(`User ${user.email} has KYC status ${kyc_status}`)
       mangoApi.KycDocuments.get(doc_id)
         .then ( doc => {
@@ -926,11 +930,11 @@ router.get('/mangopay_kyc', (req,res) => {
           user.kyc_error=doc.RefusedReasonType
           user.save()
         })
-      res.status(200)
+      res.status(200).json({})
     })
     .catch(err => {
       console.error(err)
-      res.status(400)
+      res.status(400).json({})
     })
 });
 
