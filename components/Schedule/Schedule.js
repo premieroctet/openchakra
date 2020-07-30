@@ -303,7 +303,7 @@ class Schedule extends React.Component {
     let events = availabilities2events(this.props.availabilities);
 
     return (
-      <Grid className={classes.heightContainer} style={{height: height, padding: '1%'}} >
+      <Grid className={classes.heightContainer} style={{height: height}} >
         { title || subtitle  ?
           <Grid style={{ marginBottom: 50 }}>
             { title ?
@@ -319,12 +319,12 @@ class Schedule extends React.Component {
           </Grid>
           : null
         }
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           {[...Array(12)].map((x, i) =>{
             let date = new Date();
             let month = new Date(date.setMonth(date.getMonth() + i));
               return(
-                <Grid item xl={6} lg={4} xs={12} style={{minHeight: 500}}>
+                <Grid item xl={4} lg={5} xs={12} style={{height: 500}}>
                   <Calendar
                       selectable={selectable}
                       popup={false}

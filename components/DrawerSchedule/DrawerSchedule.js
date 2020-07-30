@@ -13,7 +13,12 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Chip from '@material-ui/core/Chip';
-import {availabilities2events, eventUI2availability, availability2eventUI, DAYS} from '../../utils/converters';
+import {availabilities2events, eventUI2availability, availability2eventUI, DAYS, TIMESLOTS} from '../../utils/converters';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import frLocale from "date-fns/locale/fr";
+import DoneIcon from '@material-ui/icons/Done';
+import {Button} from '@material-ui/core';
 
 
 class DrawerSchedule extends React.Component{
@@ -21,7 +26,11 @@ class DrawerSchedule extends React.Component{
         super(props);
         this.state={
             mobileOpen: false,
-            recurrDays: new Set()
+            recurrDays: new Set(),
+            recurrSlotTime: new Set(),
+            selectedDateStart: null,
+            selectedDateEnd: null,
+
         }
 
     }
@@ -34,11 +43,21 @@ class DrawerSchedule extends React.Component{
         this.state.recurrDays.has(item) ? this.removeRecurrDay(item) : this.addRecurrDay(item);
     };
 
+    activeTimeSlot = (item) =>{
+        this.state.recurrSlotTime.has(item) ? this.removeSlotTime(item) : this.addSlotTime(item);
+    };
+
     addRecurrDay = (item) => {
         this.setState(({ recurrDays }) => ({
             recurrDays: new Set(recurrDays).add(item)
         }));
-    }
+    };
+
+    addSlotTime = (item) =>{
+        this.setState(({ recurrSlotTime }) => ({
+            recurrSlotTime: new Set(recurrSlotTime).add(item)
+        }));
+    };
 
     removeRecurrDay = (item) => {
         this.setState(({ recurrDays }) => {
@@ -47,6 +66,17 @@ class DrawerSchedule extends React.Component{
 
             return {
                 recurrDays: newChecked
+            };
+        });
+    };
+
+    removeSlotTime = (item) => {
+        this.setState(({ recurrSlotTime }) => {
+            const newChecked = new Set(recurrSlotTime);
+            newChecked.delete(item);
+
+            return {
+                recurrSlotTime: newChecked
             };
         });
     };
@@ -74,25 +104,176 @@ class DrawerSchedule extends React.Component{
                                 </Grid>
                             </Grid>
                         </AccordionSummary>
-                        <AccordionDetails>
-                            <Grid>
-                                <Grid container className={classes.panelFormDays}>
-                                    {[0,1,2,3,4,5,6].map( d => {
-                                        return (<Chip
-                                            clickable
-                                            label={DAYS[d]}
-                                            color={this.state.recurrDays.has(d) ? 'secondary' :  ''}
-                                            className={classes.textFieldChips}
-                                            onClick={() => {
-                                                this.toggleRecurrDay(d);
-                                            }
-                                            } />)
-                                    })}
+                        <AccordionDetails style={{marginBottom: 200}}>
+                            <Grid style={{width: '100%'}}>
+                                <Grid>
+                                    <Grid>
+                                        <h3>Période :</h3>
+                                    </Grid>
+                                    <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
+                                            <Grid style={{display : 'flex', alignItems: 'center'}}>
+                                                <Grid>
+                                                    <KeyboardDatePicker
+                                                        disableToolbar
+                                                        variant="inline"
+                                                        format="dd/MM/yyyy"
+                                                        id="date-picker-inline"
+                                                        label="Date de début"
+                                                        className={classes.formSchedule}
+                                                        value={this.state.selectedDateStart}
+                                                        onChange={this.handleDateStartChange}
+                                                        KeyboardButtonProps={{
+                                                            'aria-label': 'change date',
+                                                        }}
+                                                        autoOk={true}
+                                                    />
+                                                </Grid>
+                                            </Grid>
+                                            <Grid style={{display : 'flex', alignItems: 'center'}}>
+                                                <Grid>
+                                                    <KeyboardDatePicker
+                                                        disableToolbar
+                                                        variant="inline"
+                                                        format="dd/MM/yyyy"
+                                                        id="date-picker-inline"
+                                                        label="Date de fin"
+                                                        className={classes.formSchedule}
+                                                        value={this.state.selectedDateEnd}
+                                                        onChange={this.handleDateStartChange}
+                                                        KeyboardButtonProps={{
+                                                            'aria-label': 'change date',
+                                                        }}
+                                                        autoOk={true}
+                                                    />
+                                                </Grid>
+                                            </Grid>
+                                        </MuiPickersUtilsProvider>
+                                    </Grid>
+                                </Grid>
+                                <Grid>
+                                    <Grid>
+                                        <h3>Jours travaillés :</h3>
+                                    </Grid>
+                                    <Grid container className={classes.panelFormDays}>
+                                        {[0,1,2,3,4,5,6].map( d => {
+                                            return (<Chip
+                                                clickable
+                                                label={DAYS[d]}
+                                                color={this.state.recurrDays.has(d) ? 'secondary' :  ''}
+                                                className={classes.textFieldChips}
+                                                onClick={() => {
+                                                    this.toggleRecurrDay(d);
+                                                }
+                                                } />)
+                                        })}
+                                    </Grid>
+                                </Grid>
+                                <Grid>
+                                    <Grid>
+                                        <h3>Horaires travaillés :</h3>
+                                    </Grid>
+                                    <Grid style={{display: 'flex'}}>
+                                        <Grid>
+                                            <Grid>
+                                                <h4>Nuit</h4>
+                                            </Grid>
+                                            <Grid>
+                                                {[0,1,2,3,4,5].map( t => {
+                                                    return (
+                                                        <Chip
+                                                            clickable
+                                                            label={TIMESLOTS[t]}
+                                                            color={this.state.recurrSlotTime.has(t) ? 'primary' :  ''}
+                                                            className={classes.textFieldChips}
+                                                            onClick={() => {
+                                                                this.activeTimeSlot(t);
+                                                            }}
+                                                        />
+                                                    )
+                                                })}
+                                            </Grid>
+                                        </Grid>
+                                        <Grid>
+                                            <Grid>
+                                                <h4>Matin</h4>
+                                            </Grid>
+                                            <Grid>
+                                                {[6,7,8,9,10,11].map( t => {
+                                                    return (
+                                                        <Chip
+                                                            clickable
+                                                            label={TIMESLOTS[t]}
+                                                            color={this.state.recurrSlotTime.has(t) ? 'primary' :  ''}
+                                                            className={classes.textFieldChips}
+                                                            onClick={() => {
+                                                                this.activeTimeSlot(t);
+                                                            }}
+                                                        />
+                                                    )
+                                                })}
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid style={{display: 'flex'}}>
+                                        <Grid>
+                                            <Grid>
+                                                <h4>Après-midi</h4>
+                                            </Grid>
+                                            <Grid>
+                                                {[12,13,14,15,16,17].map( t => {
+                                                    return (
+                                                        <Chip
+                                                            clickable
+                                                            label={TIMESLOTS[t]}
+                                                            color={this.state.recurrSlotTime.has(t) ? 'primary' :  ''}
+                                                            className={classes.textFieldChips}
+                                                            onClick={() => {
+                                                                this.activeTimeSlot(t);
+                                                            }}
+                                                        />
+                                                    )
+                                                })}
+                                            </Grid>
+                                        </Grid>
+                                        <Grid>
+                                            <Grid>
+                                                <h4>Soirée</h4>
+                                            </Grid>
+                                            <Grid>
+                                                {[18,19,20,21,22,23].map( t => {
+                                                    return (
+                                                        <Chip
+                                                            clickable
+                                                            label={TIMESLOTS[t]}
+                                                            color={this.state.recurrSlotTime.has(t) ? 'primary' :  ''}
+                                                            className={classes.textFieldChips}
+                                                            onClick={() => {
+                                                                this.activeTimeSlot(t);
+                                                            }}
+                                                        />
+                                                    )
+                                                })}
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid style={{marginTop: 30}}>
+                                    <Grid style={{display:'flex', flexDirection:'row-reverse'}}>
+                                        <Button variant={'contained'} color={'primary'} style={{color: 'white'}}>Enregistrer</Button>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         </AccordionDetails>
                     </Accordion>
                 </Grid>
+                <Divider/>
+                <Grid style={{marginTop: 30}}>
+                    <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
+                        <Button variant={'contained'} color={'primary'} style={{color:'white'}}>Ajouter une période</Button>
+                    </Grid>
+                </Grid>
+
             </Grid>
         )
     };
@@ -118,7 +299,6 @@ class DrawerSchedule extends React.Component{
                             onClose={this.handleDrawerToggle}
                             classes={{
                                 paper: classes.drawerPaper,
-                                paperAnchorLeft: classes.paperAnchorLeft
                             }}
                             ModalProps={{
                                 keepMounted: true, // Better open performance on mobile.

@@ -93,23 +93,6 @@ export default theme => ({
     color: 'rgb(72, 72, 72)',
   },
   sizeSchedulle:{
-    '& .rbc-timeslot-group':{
-      minHeight: '25px !important',
-      backgroundColor: '#e6e6e6',
-      [theme.breakpoints.down('xs')]: {
-        minHeight: '50px !important',
-      },
-    },
-    '& .rbc-toolbar':{
-      justifyContent: 'space-between',
-      [theme.breakpoints.down('xs')]: {
-        justifyContent: 'center',
-        flexDirection: 'column'
-      },
-    },
-    '& .rbc-time-view':{
-      zIndex:0
-    },
     '& .rbc-month-view':{
       borderRadius: 10
     },
@@ -131,8 +114,6 @@ export default theme => ({
       alignItems: 'center',
         '& :hover':{
           backgroundColor:'red',
-          borderRadius: 100,
-          padding: 5
         },
     },
     '& .rbc-show-more':{
@@ -149,12 +130,6 @@ export default theme => ({
       [theme.breakpoints.down('xs')]: {
         whiteSpace: 'inherit !important'
       },
-    },
-    [theme.breakpoints.down('xs')]: {
-      justifyContent: 'center',
-    },
-    '& .rbc-btn-group :nth-child(2)':{
-      float: 'left'
     },
     '& .rbc-event':{
       backgroundColor: 'transparent'

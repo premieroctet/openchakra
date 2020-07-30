@@ -31,19 +31,17 @@ export default theme => ({
         flexGrow: 1,
         padding: theme.spacing(3),
     },
-    paperAnchorLeft:{
-        left:'inherit !important ',
-        right:'0 !important',
-        backgroundColor: 'red'
-    },
     panelFormDays:{
-        width : '250px',
-        [theme.breakpoints.down('xs')]: {
-            width: '100%'
-        },
+        width: '100%'
     },
     textFieldChips: {
         color: 'white'
 
+    },
+    formSchedule:{
+        [theme.breakpoints.down('xs')]: {
+            width: '100%',
+            marginBottom: '5%'
+        },
     },
 })
