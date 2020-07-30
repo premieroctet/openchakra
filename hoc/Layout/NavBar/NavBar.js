@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import cookie from 'react-cookies'
+const jwt = require('jsonwebtoken');
 import LogIn from '../../../components/LogIn/LogIn';
 import Register from '../../../components/Register/Register';
 import Dialog from '@material-ui/core/Dialog';
@@ -71,7 +72,9 @@ class NavBar extends Component {
       facebook_id: props.facebook_id,
       activeStep:0
     };
+
   }
+
 
   componentDidUpdate(prevProps, prevState, snapshot) {
    if(prevProps !== ""){
@@ -199,6 +202,15 @@ class NavBar extends Component {
     this.setState({activeStep: e})
   };
 
+  is_admin = () => {
+    var is_admin=false
+    const coo=cookie.load('token')
+    if (coo) {
+      return jwt.decode(coo.split(' ')[1]).is_admin
+    }
+    return false
+  }
+
   render() {
     const { mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged, user } = this.state;
     const { classes } = this.props;
@@ -216,7 +228,7 @@ class NavBar extends Component {
     };
 
 
-    const logoutMobile = [
+    var loggedMenu = [
       <Link href={'/profile/editProfile'}>
 
       <MenuItem key={1}>
@@ -238,7 +250,7 @@ class NavBar extends Component {
       </MenuItem>
       </Link>
       ,
-      <MenuItem key={3} onClick={()=>this.logout2()}>
+      <MenuItem key={4} onClick={()=>this.logout2()}>
         <Typography>
           <a style={{color: "red",}} className={classes.navbarLinkMobile}>
             Déconnexion
@@ -246,36 +258,19 @@ class NavBar extends Component {
         </Typography>
       </MenuItem>];
 
-    const logoutAvatar =
-      [
-        <Link href={'/profile/editProfile'}>
-        <MenuItem key={1}>
-          <Typography>
-            <a className={classes.navbarLinkMobile}>
-              Profil
-            </a>
-          </Typography>
-        </MenuItem>
-        </Link>
-        ,
-        <Link href={'/account/notifications'}>
-        <MenuItem key={2}>
-          <Typography>
-            <a className={classes.navbarLinkMobile}>
-              Mon compte
-            </a>
-          </Typography>
-        </MenuItem>
-        </Link>
-        ,
-        <MenuItem key={3} onClick={()=>this.logout2()}>
-          <Typography>
-            <a style={{color: "red",}} className={classes.navbarLinkMobile}>
-              Déconnexion
-            </a>
-          </Typography>
-        </MenuItem>
-      ];
+    if (this.is_admin()) {
+      const DASHBOARD_MENU=<Link href={'/dashboard/home'}>
+              <MenuItem key={3}>
+                <Typography>
+                  <a className={classes.navbarLinkMobile}>
+                    Dashboard
+                  </a>
+                </Typography>
+              </MenuItem>
+            </Link>
+
+      loggedMenu.splice(2, 0, DASHBOARD_MENU)
+    }
 
     const doublemenuitem = [
       <MenuItem key={1} onClick={this.handleOpenLogin}>
@@ -343,7 +338,7 @@ class NavBar extends Component {
         open={Boolean(avatarMoreAnchorEl)}
         onClose={this.handleMenuClose}
       >
-        {logged ? logoutAvatar :
+        {logged ? loggedMenu :
           doublemenuitem}
       </Menu>
     );
@@ -391,7 +386,7 @@ class NavBar extends Component {
           </Typography>
         </MenuItem>
         </Link>
-        {logged ? logoutMobile :
+        {logged ? loggedMenu :
           doublemenuitem}
       </Menu>
     );
