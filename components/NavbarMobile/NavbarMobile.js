@@ -53,7 +53,8 @@ class NavbarMobile extends React.Component {
         <Grid style={{
           width: '100%',
           position: 'fixed',
-          bottom: 0
+          bottom: 0,
+          zIndex: 4
         }}>
           <BottomNavigation showLabels className={classes.bottombar} onChange={(event, value) => {this.switchUrl(value)}}>
             <BottomNavigationAction className={classes.root} label="Boutique" value={"Shop"} icon={<ShoppingCartIcon color={'primary'}/>}/>

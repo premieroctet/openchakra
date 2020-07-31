@@ -19,6 +19,9 @@ import DateFnsUtils from '@date-io/date-fns';
 import frLocale from "date-fns/locale/fr";
 import DoneIcon from '@material-ui/icons/Done';
 import {Button} from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
+
 
 
 class DrawerSchedule extends React.Component{
@@ -84,8 +87,17 @@ class DrawerSchedule extends React.Component{
     drawer = (classes) => {
         return (
             <Grid>
-                <Grid>
-                    <h1>Paramètrez vos disponibilités</h1>
+                <Grid style={{display: 'flex', alignItems: 'center'}}>
+                    <Grid>
+                        <h1>Paramètrez vos disponibilités</h1>
+                    </Grid>
+                    <Hidden smUp implementation="css">
+                        <Grid>
+                            <IconButton aria-label="CLOSE">
+                                <CloseIcon color={'secondary'} onClick={this.handleDrawerToggle} />
+                            </IconButton>
+                        </Grid>
+                    </Hidden>
                 </Grid>
                 <Divider />
                 <Grid>

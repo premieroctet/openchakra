@@ -9,15 +9,17 @@ import { toast } from 'react-toastify';
 import {Helmet} from 'react-helmet';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
-const {GID_LEN} = require('../../utils/consts')
+const {GID_LEN} = require('../../utils/consts');
 import styles from './myAvailabilities/myAvailabilitiesStyle'
 import Router from 'next/router';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import DrawerSchedule from '../../components/DrawerSchedule/DrawerSchedule';
-const I18N = require('../../utils/i18n')
+const I18N = require('../../utils/i18n');
 moment.locale('fr');
 
 class myAvailabilities extends React.Component {
@@ -195,16 +197,12 @@ class myAvailabilities extends React.Component {
                           <DrawerSchedule ref={this.child}/>
                       </Grid>
                       <Grid>
-                          <Grid>
-                              <IconButton
-                                  color="inherit"
-                                  aria-label="open drawer"
-                                  edge="start"
-                                  onClick={this.callDrawer}
-                                  className={classes.menuButton}
-                              >
-                                  <MenuIcon />
-                              </IconButton>
+                          <Grid style={{position: 'fixed', bottom: '10%', zIndex: 5, right: 0}}>
+                              <Fab color="primary" aria-label="add"
+                                   onClick={this.callDrawer}
+                                   className={classes.menuButton}>
+                                  <AddIcon style={{color: 'white'}}/>
+                              </Fab>
                           </Grid>
                       </Grid>
                   </Grid>
