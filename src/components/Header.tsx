@@ -20,7 +20,6 @@ import {
   PopoverFooter,
   Tooltip,
 } from '@chakra-ui/core'
-import dynamic from 'next/dynamic'
 import { DiGithubBadge } from 'react-icons/di'
 import { AiFillThunderbolt } from 'react-icons/ai'
 import { buildParameters } from '../utils/codesandbox'
@@ -29,14 +28,7 @@ import useDispatch from '../hooks/useDispatch'
 import { useSelector } from 'react-redux'
 import { getComponents } from '../core/selectors/components'
 import { getShowLayout, getShowCode } from '../core/selectors/app'
-
-/**
- * HeaderMenu component uses functions located in utils folder
- * that uses web browser APIs, which causes an error during the page
- * generation. By doing that, we make sure to import the component only in
- * a web browser environment
- */
-const HeaderMenu = dynamic(() => import('./HeaderMenu'), { ssr: false })
+import HeaderMenu from './headerMenu/HeaderMenu'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
