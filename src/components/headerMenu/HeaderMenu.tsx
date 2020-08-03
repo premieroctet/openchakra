@@ -1,4 +1,5 @@
 import React, { memo } from 'react'
+import dynamic from 'next/dynamic'
 import {
   Box,
   Button,
@@ -13,13 +14,8 @@ import {
   MenuButtonProps,
   ButtonProps,
 } from '@chakra-ui/core'
-import useDispatch from '../hooks/useDispatch'
-import { loadFromJSON, saveAsJSON } from '../utils/import'
-import { useSelector } from 'react-redux'
-import { getComponents } from '../core/selectors/components'
-import { FaBomb, FaSave } from 'react-icons/fa'
+import { FaBomb } from 'react-icons/fa'
 import { GoRepo } from 'react-icons/go'
-import { FiUpload } from 'react-icons/fi'
 
 type MenuItemLinkProps = MenuItemProps | LinkProps
 
@@ -40,19 +36,10 @@ const CustomMenuButton: React.FC<
   return <MenuButton as={Button} {...props} />
 })
 
-const ExportMenuItem = () => {
-  const components = useSelector(getComponents)
+const ExportMenuItem = dynamic(() => import('./ExportMenuItem'), { ssr: false })
+const ImportMenuItem = dynamic(() => import('./ImportMenuItem'), { ssr: false })
 
-  return (
-    <MenuItem onClick={() => saveAsJSON(components)}>
-      <Box mr={2} as={FaSave} />
-      Save components
-    </MenuItem>
-  )
-}
 const HeaderMenu = () => {
-  const dispatch = useDispatch()
-
   return (
     <Menu>
       <CustomMenuButton
@@ -67,15 +54,7 @@ const HeaderMenu = () => {
       <LightMode>
         <MenuList zIndex={100}>
           <ExportMenuItem />
-          <MenuItem
-            onClick={async () => {
-              const components = await loadFromJSON()
-              dispatch.components.reset(components)
-            }}
-          >
-            <Box mr={2} as={FiUpload} />
-            Import components
-          </MenuItem>
+          <ImportMenuItem />
 
           <MenuDivider />
 

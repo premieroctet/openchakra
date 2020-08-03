@@ -28,7 +28,7 @@ import useDispatch from '../hooks/useDispatch'
 import { useSelector } from 'react-redux'
 import { getComponents } from '../core/selectors/components'
 import { getShowLayout, getShowCode } from '../core/selectors/app'
-import HeaderMenu from './HeaderMenu'
+import HeaderMenu from './headerMenu/HeaderMenu'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)

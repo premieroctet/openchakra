@@ -5,7 +5,6 @@ import {
   ComboboxPopover,
   ComboboxList,
 } from '@reach/combobox'
-import '@reach/combobox/styles.css'
 import { Input } from '@chakra-ui/core'
 import { useForm } from '../../../hooks/useForm'
 

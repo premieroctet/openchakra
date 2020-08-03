@@ -20,6 +20,8 @@
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
     "lz-string": "^1.4.4",
+    "next": "^9.5.1",
+    "next-redux-wrapper": "^6.0.2",
     "prism-react-renderer": "^1.0.2",
     "react": "^16.12.0",
     "react-color": "^2.18.0",
@@ -39,9 +41,10 @@
     "webpack-bundle-analyzer": "^3.6.0"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test --env=jsdom",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "jest",
     "analyze": "BUNDLE_VISUALIZE=1 react-app-rewired build"
   },
   "eslintConfig": {
@@ -60,6 +63,7 @@
     ]
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^9.5.1",
     "@testing-library/jest-dom": "^5.1.1",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^8.1.0",
@@ -69,13 +73,14 @@
     "@types/prettier": "^1.19.0",
     "@types/react-color": "^3.0.1",
     "@types/react-redux": "^7.1.7",
-    "customize-cra": "^0.9.1",
-    "customize-cra-react-refresh": "^1.0.1",
+    "babel-jest": "^26.2.2",
     "husky": "^4.2.1",
     "lint-staged": "^10.0.7",
+    "next-compose-plugins": "^2.2.0",
+    "next-transpile-modules": "^4.0.2",
     "prettier": "^1.19.1",
     "pretty-quick": "^2.0.1",
-    "react-app-rewired": "^2.1.5",
+    "ts-jest": "^26.1.4",
     "typedoc": "^0.16.9"
   },
   "husky": {
@@ -88,5 +93,29 @@
       "eslint src/**/*.{ts,tsx} --fix",
       "git add"
     ]
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(svg|jpg|png|css)$": "<rootDir>/empty-module.js"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts",
+      "tsx"
+    ],
+    "transform": {
+      "^.+\\.(js)$": "babel-jest",
+      "^.+\\.ts(x)?$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "src/**/*.(t|j)s(x)?",
+      "!**/node_modules/**"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.test.json"
+      }
+    }
   }
 }
