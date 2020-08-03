@@ -14,8 +14,6 @@ import InputSuggestion from '../../inputs/InputSuggestion'
 import { useForm } from '../../../../hooks/useForm'
 import usePropsSelector from '../../../../hooks/usePropsSelector'
 
-import '@reach/combobox/styles.css'
-
 const TextPanel = () => {
   const { setValue, setValueFromEvent } = useForm()
   const theme = useTheme()

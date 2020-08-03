@@ -25,7 +25,6 @@ import FormControl from './FormControl'
 import { useForm } from '../../../hooks/useForm'
 import omit from 'lodash/omit'
 import ColorPicker from 'coloreact'
-import 'react-color-picker/index.css'
 import usePropsSelector from '../../../hooks/usePropsSelector'
 
 type ColorControlPropsType = {

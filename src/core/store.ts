@@ -3,6 +3,7 @@ import { combineReducers } from 'redux'
 import undoable from 'redux-undo'
 import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import { createWrapper, MakeStore } from 'next-redux-wrapper'
 
 import { ComponentsStateWithUndo } from './models/components'
 import { AppState } from './models/app'
@@ -14,7 +15,7 @@ export type RootState = {
   components: ComponentsStateWithUndo
 }
 
-const version = parseInt(process.env.REACT_APP_VERSION || '1', 10)
+const version = parseInt(process.env.NEXT_PUBLIC_VERSION || '1', 10)
 
 const persistConfig = {
   key: `openchakra_v${version}`,
@@ -26,7 +27,9 @@ const persistConfig = {
 
 const persistPlugin = {
   onStoreCreated(store: any) {
-    persistStore(store)
+    if (process.browser) {
+      persistStore(store)
+    }
   },
 }
 
@@ -51,4 +54,6 @@ export const storeConfig = {
 }
 
 // @ts-ignore
-export const store = init(storeConfig)
+export const makeStore: MakeStore<RootState> = () => init(storeConfig)
+
+export const wrapper = createWrapper<RootState>(makeStore, { debug: true })

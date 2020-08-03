@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useMemo } from 'react'
 import {
   Box,
   Button,
@@ -14,12 +14,12 @@ import {
   ButtonProps,
 } from '@chakra-ui/core'
 import useDispatch from '../hooks/useDispatch'
-import { loadFromJSON, saveAsJSON } from '../utils/import'
 import { useSelector } from 'react-redux'
 import { getComponents } from '../core/selectors/components'
 import { FaBomb, FaSave } from 'react-icons/fa'
 import { GoRepo } from 'react-icons/go'
 import { FiUpload } from 'react-icons/fi'
+import { saveAsJSON, loadFromJSON } from '../utils/import'
 
 type MenuItemLinkProps = MenuItemProps | LinkProps
 

@@ -37,3 +37,5 @@ export async function saveAsJSON(components: IComponents) {
     (window as any).handle,
   )
 }
+
+export default { saveAsJSON, loadFromJSON }
