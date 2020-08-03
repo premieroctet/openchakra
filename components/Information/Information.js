@@ -28,9 +28,8 @@ class Information extends React.Component {
       <Dialog aria-labelledby="simple-dialog-title" open={this.props.open} onClose={this.props.onClose} classes={{paper: classes.paperOverride}}>
         <DialogTitle id="alert-dialog-title">{this.props.type ? 'Oups !': 'Info'}</DialogTitle>
           <DialogContent>
-              <DialogContentText id="alert-dialog-description" className={classes.textContentDiAlog}>
-                  {this.props.text}
-              </DialogContentText>
+              <DialogContentText id="alert-dialog-description" className={classes.textContentDiAlog}
+                dangerouslySetInnerHTML={{ __html: this.props.text}} />
           </DialogContent>
           <DialogActions>
               <Button onClick={this.props.onClose} color="primary">
