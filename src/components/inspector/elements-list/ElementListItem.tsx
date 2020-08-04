@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react'
 import { Icon, PseudoBox, Text, PseudoBoxProps, Flex } from '@chakra-ui/core'
-import ActionButton from '../ActionButton'
+import ActionButton from '~components/inspector/ActionButton'
 
 interface Props extends Pick<IComponent, 'type'> {
   opacity?: number

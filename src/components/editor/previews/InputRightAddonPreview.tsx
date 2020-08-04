@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, InputRightAddon } from '@chakra-ui/core'
-import { useInteractive } from '../../../hooks/useInteractive'
+import { useInteractive } from '~hooks/useInteractive'
 
 const InputRightAddonPreview: React.FC<{ component: IComponent }> = ({
   component,

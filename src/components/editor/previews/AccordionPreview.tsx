@@ -1,6 +1,6 @@
 import React from 'react'
-import { useInteractive } from '../../../hooks/useInteractive'
-import { useDropComponent } from '../../../hooks/useDropComponent'
+import { useInteractive } from '~hooks/useInteractive'
+import { useDropComponent } from '~hooks/useDropComponent'
 import {
   Box,
   Accordion,
@@ -8,8 +8,8 @@ import {
   AccordionItem,
   AccordionPanel,
 } from '@chakra-ui/core'
-import ComponentPreview from '../ComponentPreview'
-import { AccordionWhitelist } from '../../../utils/editor'
+import ComponentPreview from '~components/editor/ComponentPreview'
+import { AccordionWhitelist } from '~utils/editor'
 
 const acceptedTypes: ComponentType[] = ['AccordionItem']
 

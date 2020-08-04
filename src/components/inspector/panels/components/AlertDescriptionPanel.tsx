@@ -1,8 +1,8 @@
-import React from "react";
-import ChildrenControl from "../../controls/ChildrenControl";
+import React from 'react'
+import ChildrenControl from '~components/inspector/controls/ChildrenControl'
 
 const AlertDescriptionPanel = () => {
-  return <ChildrenControl />;
-};
+  return <ChildrenControl />
+}
 
-export default AlertDescriptionPanel;
+export default AlertDescriptionPanel

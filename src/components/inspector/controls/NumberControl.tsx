@@ -1,8 +1,8 @@
 import React, { ReactNode, useCallback } from 'react'
 import { NumberInput, NumberInputProps } from '@chakra-ui/core'
 import FormControl from './FormControl'
-import { useForm } from '../../../hooks/useForm'
-import usePropsSelector from '../../../hooks/usePropsSelector'
+import { useForm } from '~hooks/useForm'
+import usePropsSelector from '~hooks/usePropsSelector'
 
 type NumberControlPropsType = NumberInputProps & {
   name: string

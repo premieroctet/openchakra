@@ -1,13 +1,13 @@
 import React, { memo } from 'react'
 import { Box, Text, Link } from '@chakra-ui/core'
-import ComponentPreview from './ComponentPreview'
-import { useDropComponent } from '../../hooks/useDropComponent'
+import { useDropComponent } from '~hooks/useDropComponent'
 import SplitPane from 'react-split-pane'
-import CodePanel from '../CodePanel'
+import CodePanel from '~components/CodePanel'
 import { useSelector } from 'react-redux'
-import useDispatch from '../../hooks/useDispatch'
-import { getComponents } from '../../core/selectors/components'
-import { getShowLayout, getShowCode } from '../../core/selectors/app'
+import useDispatch from '~hooks/useDispatch'
+import { getComponents } from '~core/selectors/components'
+import { getShowLayout, getShowCode } from '~core/selectors/app'
+import ComponentPreview from '~components/editor/ComponentPreview'
 
 export const gridStyles = {
   backgroundImage:

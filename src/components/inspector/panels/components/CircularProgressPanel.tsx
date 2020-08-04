@@ -5,12 +5,12 @@ import {
   SliderFilledTrack,
   SliderThumb,
 } from '@chakra-ui/core'
-import FormControl from '../../controls/FormControl'
-import { useForm } from '../../../../hooks/useForm'
-import ColorsControl from '../../controls/ColorsControl'
-import usePropsSelector from '../../../../hooks/usePropsSelector'
-import SwitchControl from '../../controls/SwitchControl'
-import TextControl from '../../controls/TextControl'
+import FormControl from '~components/inspector/controls/FormControl'
+import { useForm } from '~hooks/useForm'
+import ColorsControl from '~components/inspector/controls/ColorsControl'
+import usePropsSelector from '~hooks/usePropsSelector'
+import SwitchControl from '~components/inspector/controls/SwitchControl'
+import TextControl from '~components/inspector/controls/TextControl'
 
 const CircularProgressPanel = () => {
   const { setValue } = useForm()

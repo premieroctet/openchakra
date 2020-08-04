@@ -1,16 +1,16 @@
-import React, { ReactNode } from "react";
-import { Select } from "@chakra-ui/core";
-import FormControl from "./FormControl";
-import { useForm } from "../../../hooks/useForm";
+import React, { ReactNode } from 'react'
+import { Select } from '@chakra-ui/core'
+import FormControl from './FormControl'
+import { useForm } from '~hooks/useForm'
 
 type VariantsControlPropsType = {
-  name: string;
-  label: string | ReactNode;
-  value: string;
-};
+  name: string
+  label: string | ReactNode
+  value: string
+}
 
 const VariantsControl = (props: VariantsControlPropsType) => {
-  const { setValueFromEvent } = useForm();
+  const { setValueFromEvent } = useForm()
 
   return (
     <FormControl htmlFor={props.name} label={props.label}>
@@ -19,7 +19,7 @@ const VariantsControl = (props: VariantsControlPropsType) => {
         onChange={setValueFromEvent}
         name={props.name}
         size="sm"
-        value={props.value || ""}
+        value={props.value || ''}
       >
         <option>solid</option>
         <option>outline</option>
@@ -29,7 +29,7 @@ const VariantsControl = (props: VariantsControlPropsType) => {
         <option>subtle</option>
       </Select>
     </FormControl>
-  );
-};
+  )
+}
 
-export default VariantsControl;
+export default VariantsControl

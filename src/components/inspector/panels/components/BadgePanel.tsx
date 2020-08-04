@@ -1,15 +1,15 @@
-import React, { memo } from "react";
-import { Select } from "@chakra-ui/core";
+import React, { memo } from 'react'
+import { Select } from '@chakra-ui/core'
 
-import ColorsControl from "../../controls/ColorsControl";
-import ChildrenControl from "../../controls/ChildrenControl";
-import FormControl from "../../controls/FormControl";
-import { useForm } from "../../../../hooks/useForm";
-import usePropsSelector from "../../../../hooks/usePropsSelector";
+import ColorsControl from '~components/inspector/controls/ColorsControl'
+import ChildrenControl from '~components/inspector/controls/ChildrenControl'
+import FormControl from '~components/inspector/controls/FormControl'
+import { useForm } from '~hooks/useForm'
+import usePropsSelector from '~hooks/usePropsSelector'
 
 const BadgePanel = () => {
-  const { setValueFromEvent } = useForm();
-  const variant = usePropsSelector("variant");
+  const { setValueFromEvent } = useForm()
+  const variant = usePropsSelector('variant')
 
   return (
     <>
@@ -21,7 +21,7 @@ const BadgePanel = () => {
           onChange={setValueFromEvent}
           name="variant"
           size="sm"
-          value={variant || ""}
+          value={variant || ''}
         >
           <option>solid</option>
           <option>outline</option>
@@ -31,7 +31,7 @@ const BadgePanel = () => {
 
       <ColorsControl label="Variant color" name="variantColor" />
     </>
-  );
-};
+  )
+}
 
-export default memo(BadgePanel);
+export default memo(BadgePanel)

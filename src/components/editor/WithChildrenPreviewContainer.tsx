@@ -1,7 +1,7 @@
 import React, { FunctionComponent, ComponentClass } from 'react'
-import { useInteractive } from '../../hooks/useInteractive'
-import { useDropComponent } from '../../hooks/useDropComponent'
-import ComponentPreview from './ComponentPreview'
+import { useInteractive } from '~hooks/useInteractive'
+import { useDropComponent } from '~hooks/useDropComponent'
+import ComponentPreview from '~components/editor/ComponentPreview'
 import { Box } from '@chakra-ui/core'
 
 const WithChildrenPreviewContainer: React.FC<{

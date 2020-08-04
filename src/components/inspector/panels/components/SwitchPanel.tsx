@@ -1,14 +1,14 @@
-import React, { memo } from "react";
-import { Select } from "@chakra-ui/core";
-import ColorsControl from "../../controls/ColorsControl";
-import FormControl from "../../controls/FormControl";
-import { useForm } from "../../../../hooks/useForm";
-import usePropsSelector from "../../../../hooks/usePropsSelector";
-import SwitchControl from "../../controls/SwitchControl";
+import React, { memo } from 'react'
+import { Select } from '@chakra-ui/core'
+import ColorsControl from '~components/inspector/controls/ColorsControl'
+import FormControl from '~components/inspector/controls/FormControl'
+import { useForm } from '~hooks/useForm'
+import usePropsSelector from '~hooks/usePropsSelector'
+import SwitchControl from '~components/inspector/controls/SwitchControl'
 
 const SwitchPanel = () => {
-  const { setValueFromEvent } = useForm();
-  const size = usePropsSelector("size");
+  const { setValueFromEvent } = useForm()
+  const size = usePropsSelector('size')
 
   return (
     <>
@@ -19,7 +19,7 @@ const SwitchPanel = () => {
           name="size"
           id="size"
           size="sm"
-          value={size || ""}
+          value={size || ''}
           onChange={setValueFromEvent}
         >
           <option>sm</option>
@@ -30,7 +30,7 @@ const SwitchPanel = () => {
 
       <ColorsControl label="Color" name="color" />
     </>
-  );
-};
+  )
+}
 
-export default memo(SwitchPanel);
+export default memo(SwitchPanel)

@@ -1,14 +1,14 @@
 import React, { memo, useMemo } from 'react'
-import FormControl from '../../controls/FormControl'
-import { useForm } from '../../../../hooks/useForm'
-import usePropsSelector from '../../../../hooks/usePropsSelector'
+import FormControl from '~components/inspector/controls/FormControl'
+import { useForm } from '~hooks/useForm'
+import usePropsSelector from '~hooks/usePropsSelector'
 import {
   Slider,
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
 } from '@chakra-ui/core'
-import TextControl from '../../controls/TextControl'
+import TextControl from '~components/inspector/controls/TextControl'
 
 const EffectsPanel = () => {
   const { setValue } = useForm()

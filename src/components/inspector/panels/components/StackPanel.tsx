@@ -1,10 +1,10 @@
 import React from 'react'
-import SwitchControl from '../../controls/SwitchControl'
-import TextControl from '../../controls/TextControl'
-import FormControl from '../../controls/FormControl'
+import SwitchControl from '~components/inspector/controls/SwitchControl'
+import TextControl from '~components/inspector/controls/TextControl'
+import FormControl from '~components/inspector/controls/FormControl'
 import { Select } from '@chakra-ui/core'
-import usePropsSelector from '../../../../hooks/usePropsSelector'
-import { useForm } from '../../../../hooks/useForm'
+import usePropsSelector from '~hooks/usePropsSelector'
+import { useForm } from '~hooks/useForm'
 
 const StackPanel = () => {
   const { setValueFromEvent } = useForm()

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Box, Flex, Stack, Button } from '@chakra-ui/core'
 import { FaBomb } from 'react-icons/fa'
-import { gridStyles } from '../editor/Editor'
-import { bugsnagClient } from '../../utils/bugsnag'
+import { gridStyles } from '~components/editor/Editor'
+import { bugsnagClient } from '~utils/bugsnag'
 
 type ErrorBoundaryState = {
   hasError: boolean

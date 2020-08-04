@@ -1,8 +1,8 @@
 import React, { memo } from 'react'
 import { Select } from '@chakra-ui/core'
-import FormControl from '../../controls/FormControl'
-import { useForm } from '../../../../hooks/useForm'
-import usePropsSelector from '../../../../hooks/usePropsSelector'
+import FormControl from '~components/inspector/controls/FormControl'
+import { useForm } from '~hooks/useForm'
+import usePropsSelector from '~hooks/usePropsSelector'
 import FlexPanel from './FlexPanel'
 
 const DisplayPanel = () => {

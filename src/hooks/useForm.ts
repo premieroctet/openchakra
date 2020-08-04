@@ -1,7 +1,7 @@
 import { ChangeEvent, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import useDispatch from './useDispatch'
-import { getSelectedComponentId } from '../core/selectors/components'
+import { getSelectedComponentId } from '~core/selectors/components'
 
 export const useForm = () => {
   const dispatch = useDispatch()
