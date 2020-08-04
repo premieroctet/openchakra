@@ -111,10 +111,12 @@ const createMangoProvider = (user, shop) => {
 
 const addIdIfRequired = user => {
   console.log("addIdIfRequired")
+
   if (!user.mangopay_provider_id) {
     console.log(`User ${user._id}:pas besoin d'envoyer l'ID pour un client`)
     return false;
   }
+
   const objStatus = {
     Type: KycDocumentType.IdentityProof
   }
@@ -130,29 +132,22 @@ const addIdIfRequired = user => {
         .catch ( err => console.error(err) )
 
       const id_recto = path.resolve(user.id_card.recto);
-
-      // FIX vérifier sous quelle forme envoyer le fichier
-      const base64Recto = fs.readFileSync(id_recto, 'base64');
-      const KycPageRecto = new mangoApi.models.KycPage({"File": base64Recto});
-
-      mangoApi.Users.createKycPage(id, documentId, KycPageRecto)
+      mangoApi.Users.createKycPageFromFile(id, documentId, id_recto)
         .then(resultRecto => {
-          const id_verso = user.id_card.verso ? '../../../' + user.id_card.verso : null;
+          console.log(`Created KyCPage recto ${id_recto}`)
+          const id_verso = user.id_card.verso ? path.resolve(user.id_card.verso) : null;
 
-          console.log(`Checking mangopay_provider_status:${user.mangopay_provider_status} against ${PersonType.Natural}`)
-          // Natural provider : KYX check is free => send
-          if (user.mangopay_provider_status==PersonType.Natural) {
-            console.log("Natural provider => require KYC")
+          const prom= id_verso==null ? emptyPromise() : mangoApi.Users.createKycPageFromFile(id, documentId, id_verso)
+          prom.then(resultVerso => {
+            console.log(resultVerso ? `Created KyCPage verso ${id_verso}` : `No verso required`)
+            // TODO : PersonType.Legal : ask for validation only on first resrvation
+            console.log("Asking for KYC validation")
             const updateObj = {Id: documentId, Status: KycDocumentStatus.ValidationAsked}
             mangoApi.Users.updateKycDocument(user.mangopay_provider_id, updateObj)
-          }
-          if (id_verso !== null) {
-            const base64Verso = fs.readFileSync(path.resolve(id_verso), 'base64');
-            const KycPageVerso = new mangoApi.models.KycPage({"File": base64Verso});
-
-            mangoApi.Users.createKycPageFromFile(id, documentId, KycPageVerso)
-              .then(resultVerso => console.log(`Created KyCPage verso ${JSON.stringify(resultVerso)}`))
-          }
+          })
+          .catch (err => {
+            console.error(`While creating KycPageFromFile:${JSON.stringify(err)}`)
+          })
         })
   })
   .catch (err => console.error(err))

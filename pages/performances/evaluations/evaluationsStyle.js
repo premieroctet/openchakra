@@ -4,10 +4,12 @@ export default theme => ({
     flexGrow: 1,
     [theme.breakpoints.down('xs')]: {
       marginBottom: 100,
+      marginTop: 0
     }
   },
   toggle: {
-    zIndex: 0
+    zIndex: 0,
+    margin: 15
   },
   menuButton: {
     marginLeft: theme.spacing(1),
@@ -16,4 +18,16 @@ export default theme => ({
       display: 'none',
     },
   },
+
+  myEvaluations:{
+    paddingLeft: 55,
+    marginBottom: '20px',
+    [theme.breakpoints.down('xs')]: {
+      padding: 0,
+      display: 'flex',
+      justifyContent : 'center',
+      flexDirection : 'column',
+      marginLeft: 20
+    }
+  }
 })

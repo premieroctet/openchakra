@@ -84,9 +84,9 @@ class Evaluations extends React.Component {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item xs={9} style={{paddingLeft: 55, marginBottom: '20px',minHeight:530}}>
+                        <Grid item className={classes.myEvaluations}>
                             <Grid container style={{marginBottom:20}}>
-                                <Grid item xs={12}>
+                                <Grid item>
                                     <h1 style={{color: '#7E7E7E',fontWeight: '100'}}>Mes évaluations</h1>
                                 </Grid>
                             </Grid>

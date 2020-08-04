@@ -21,7 +21,7 @@ const crypto = require('crypto');
 const multer = require("multer");
 const {getHost}=require('../../../utils/infra')
 const {mangoApi}=require('../../../utils/mangopay')
-
+const fs = require('fs')
 const {computeUrl } = require('../../../config/config');
 
 const {addIdIfRequired, createMangoClient} = require('../../../utils/mangopay')
@@ -393,7 +393,7 @@ router.post('/profile/idCard',upload2.fields([{name: 'myCardR',maxCount: 1}, {na
 
             user.save()
               .then(user => {
-                console.log("Sending ID to Mangopay if required");
+                console.log(`Saved idCard user:${JSON.stringify(user.id_card)}`)
                 addIdIfRequired(user);
                 res.json(user)
               })
@@ -531,11 +531,10 @@ router.post('/login',(req, res)=> {
         });
 });
 
-
 // @Route GET /myAlfred/api/users/logout
 // logout
 router.get('/logout', function(req, res) {
-    res.status(200).send({ success: false, token: null });
+  res.status(200).send({ success: false, token: null })
 });
 
 // @Route GET /myAlfred/api/users/all
@@ -916,10 +915,14 @@ router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false
 // Send email
 // @access private
 router.get('/mangopay_kyc', (req,res) => {
+  console.log(`Mangopay hook called:${req.originalUrl}`)
   const doc_id=req.query.RessourceId
   const kyc_status=req.query.EventType
   User.findOne({ identity_proof_id : doc_id })
     .then(user => {
+      if (!user) {
+        throw(`Aucun utilisateur trouvé pour identity_proof_id=${doc_id}`)
+      }
       console.log(`User ${user.email} has KYC status ${kyc_status}`)
       mangoApi.KycDocuments.get(doc_id)
         .then ( doc => {
@@ -927,11 +930,11 @@ router.get('/mangopay_kyc', (req,res) => {
           user.kyc_error=doc.RefusedReasonType
           user.save()
         })
-      res.status(200)
+      res.status(200).json({})
     })
     .catch(err => {
       console.error(err)
-      res.status(400)
+      res.status(400).json({})
     })
 });
 
@@ -983,6 +986,7 @@ HOOK_TYPES.forEach(hookType => {
 new CronJob('0 */15 * * * *', function() {
   console.log("Customers who need mango account");
   User.find({id_mangopay: null, active:true})
+    .limit(100)
     .then ( usrs => {
       usrs.forEach( user => {
         console.log(`Found customer ${user.name}`)

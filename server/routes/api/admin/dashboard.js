@@ -21,6 +21,7 @@ const Prestation = require('../../../models/Prestation');
 const ShopBanner = require('../../../models/ShopBanner');
 const Options = require('../../../models/Options');
 const Prospect = require('../../../models/Prospect');
+const keys = require('../../../config/keys');
 const validatePrestationInput = require('../../../validation/prestation');
 const validateRegisterAdminInput = require('../../../validation/registerAdmin');
 const validateCategoryInput = require('../../../validation/category');
@@ -241,6 +242,69 @@ router.get('/users/all',passport.authenticate('jwt',{session:false}),(req,res) =
         res.status(400).json({msg: 'Access denied'});
     }
 });
+
+// @Route GET /myAlfred/api/admin/users/all_light
+// List all users (firstname, name, email)
+router.get('/users/all_light',passport.authenticate('jwt',{session:false}),(req,res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = jwt.decode(token);
+    const admin = decode.is_admin;
+
+    if(admin) {
+        User.find({ active: true}, 'firstname name email')
+          .sort({name: 1})
+          .then(user => {
+              if (!user) {
+                  res.status(400).json({msg: 'No users found'});
+              }
+              res.json(user);
+          })
+          .catch(err => res.status(404).json({user: 'No users found'}))
+    } else {
+        res.status(400).json({msg: 'Access denied'});
+    }
+});
+
+// @Route POST /myAlfred/api/admin/loginAs
+// Login as user (for admins only)
+router.post('/loginAs', passport.authenticate('jwt',{session:false}), (req, res)=> {
+
+    const user=req.user
+    if (!user.is_admin) {
+      res.status(403).json({msg: 'Access denied'});
+      return
+    }
+    const email = req.body.username;
+
+    // Find user by email
+    User.findOne({email})
+      .then(user => {
+        // Check for user
+        if(!user) {
+          errors = `Pas d'utilisateur connu avec l'email ${email}`;
+          return res.status(400).json(errors);
+        }
+
+        if(user.active === true) {
+          // User matched
+          const payload = {id: user.id, name: user.name, firstname: user.firstname, is_admin: user.is_admin, is_alfred: user.is_alfred}; // Create JWT payload
+          // Sign token
+          jwt.sign(payload, keys.secretOrKey, (err, token) => {
+            jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
+              res.cookie('token', 'Bearer ' + token,{
+                httpOnly: false,
+                secure: true,
+                sameSite: true
+              }).status(201).json()
+            });
+          });
+        } else {
+          errors = 'Utilisateur inactif';
+          return res.status(400).json(errors);
+        }
+      });
+});
+
 
 // @Route GET /myAlfred/api/admin/users/users
 // List all simple users

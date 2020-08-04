@@ -75,6 +75,10 @@ class home extends React.Component {
                             {admin ?
                               <Grid>
                                   <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
+                                      <Typography style={{ fontSize: 30 }}>Maintenance</Typography>
+                                  </Grid>
+                                  <Link href="/dashboard/logAsUser"><a>Connexion en tant qu'autre utilisateur</a></Link><br/>
+                                  <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
                                       <Typography style={{ fontSize: 30 }}>Moniteur</Typography>
                                   </Grid>
                                   <Link href="/dashboard/statistics"><a>Statistiques</a></Link><br/>
