@@ -1,10 +1,10 @@
 import React, { memo } from 'react'
 import { Select } from '@chakra-ui/core'
-import FormControl from '../../controls/FormControl'
-import { useForm } from '../../../../hooks/useForm'
-import usePropsSelector from '../../../../hooks/usePropsSelector'
-import SwitchControl from '../../controls/SwitchControl'
-import TextControl from '../../controls/TextControl'
+import FormControl from '~components/inspector/controls/FormControl'
+import { useForm } from '~hooks/useForm'
+import usePropsSelector from '~hooks/usePropsSelector'
+import SwitchControl from '~components/inspector/controls/SwitchControl'
+import TextControl from '~components/inspector/controls/TextControl'
 
 const AvatarPanel = () => {
   const { setValueFromEvent } = useForm()

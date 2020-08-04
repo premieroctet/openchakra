@@ -1,13 +1,13 @@
-import React, { memo } from "react";
-import { Select } from "@chakra-ui/core";
-import FormControl from "../../controls/FormControl";
-import { useForm } from "../../../../hooks/useForm";
-import ColorsControl from "../../controls/ColorsControl";
-import usePropsSelector from "../../../../hooks/usePropsSelector";
+import React, { memo } from 'react'
+import { Select } from '@chakra-ui/core'
+import FormControl from '~components/inspector/controls/FormControl'
+import { useForm } from '~hooks/useForm'
+import ColorsControl from '~components/inspector/controls/ColorsControl'
+import usePropsSelector from '~hooks/usePropsSelector'
 
 const DividerPanel = () => {
-  const { setValueFromEvent } = useForm();
-  const orientation = usePropsSelector("orientation");
+  const { setValueFromEvent } = useForm()
+  const orientation = usePropsSelector('orientation')
 
   return (
     <>
@@ -16,7 +16,7 @@ const DividerPanel = () => {
           name="orientation"
           id="orientation"
           size="sm"
-          value={orientation || "horizontal"}
+          value={orientation || 'horizontal'}
           onChange={setValueFromEvent}
         >
           <option>horizontal</option>
@@ -30,7 +30,7 @@ const DividerPanel = () => {
         enableHues
       />
     </>
-  );
-};
+  )
+}
 
-export default memo(DividerPanel);
+export default memo(DividerPanel)

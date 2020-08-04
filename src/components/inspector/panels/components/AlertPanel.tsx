@@ -1,13 +1,13 @@
-import React, { memo } from "react";
-import { Select } from "@chakra-ui/core";
-import FormControl from "../../controls/FormControl";
-import { useForm } from "../../../../hooks/useForm";
-import usePropsSelector from "../../../../hooks/usePropsSelector";
+import React, { memo } from 'react'
+import { Select } from '@chakra-ui/core'
+import FormControl from '~components/inspector/controls/FormControl'
+import { useForm } from '~hooks/useForm'
+import usePropsSelector from '~hooks/usePropsSelector'
 
 const AlertPanel = () => {
-  const { setValueFromEvent } = useForm();
-  const variant = usePropsSelector("variant");
-  const status = usePropsSelector("status");
+  const { setValueFromEvent } = useForm()
+  const variant = usePropsSelector('variant')
+  const status = usePropsSelector('status')
 
   return (
     <>
@@ -16,7 +16,7 @@ const AlertPanel = () => {
           name="status"
           id="status"
           size="sm"
-          value={status || "info"}
+          value={status || 'info'}
           onChange={setValueFromEvent}
         >
           <option>error</option>
@@ -31,7 +31,7 @@ const AlertPanel = () => {
           name="variant"
           id="variant"
           size="sm"
-          value={variant || "subtle"}
+          value={variant || 'subtle'}
           onChange={setValueFromEvent}
         >
           <option>subtle</option>
@@ -41,7 +41,7 @@ const AlertPanel = () => {
         </Select>
       </FormControl>
     </>
-  );
-};
+  )
+}
 
-export default memo(AlertPanel);
+export default memo(AlertPanel)

@@ -1,5 +1,5 @@
-import React, { memo } from "react";
-import FormControl from "../../controls/FormControl";
+import React, { memo } from 'react'
+import FormControl from '~components/inspector/controls/FormControl'
 import {
   Slider,
   SliderTrack,
@@ -10,17 +10,17 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   SliderFilledTrack,
-  Select
-} from "@chakra-ui/core";
-import { useForm } from "../../../../hooks/useForm";
-import usePropsSelector from "../../../../hooks/usePropsSelector";
+  Select,
+} from '@chakra-ui/core'
+import { useForm } from '~hooks/useForm'
+import usePropsSelector from '~hooks/usePropsSelector'
 
 const AvatarGroupPanel = () => {
-  const { setValue, setValueFromEvent } = useForm();
+  const { setValue, setValueFromEvent } = useForm()
 
-  const size = usePropsSelector("size");
-  const spacing = usePropsSelector("spacing");
-  const max = usePropsSelector("max");
+  const size = usePropsSelector('size')
+  const spacing = usePropsSelector('spacing')
+  const max = usePropsSelector('max')
 
   return (
     <>
@@ -29,7 +29,7 @@ const AvatarGroupPanel = () => {
           name="size"
           id="size"
           size="sm"
-          value={size || ""}
+          value={size || ''}
           onChange={setValueFromEvent}
         >
           <option>2xs</option>
@@ -44,7 +44,7 @@ const AvatarGroupPanel = () => {
 
       <FormControl label="Spacing">
         <Slider
-          onChange={value => setValue("spacing", value)}
+          onChange={value => setValue('spacing', value)}
           min={-3}
           max={6}
           step={1}
@@ -59,7 +59,7 @@ const AvatarGroupPanel = () => {
       <FormControl label="max">
         <NumberInput
           size="sm"
-          onChange={value => setValue("max", value)}
+          onChange={value => setValue('max', value)}
           value={max}
           min={1}
         >
@@ -71,7 +71,7 @@ const AvatarGroupPanel = () => {
         </NumberInput>
       </FormControl>
     </>
-  );
-};
+  )
+}
 
-export default memo(AvatarGroupPanel);
+export default memo(AvatarGroupPanel)

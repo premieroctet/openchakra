@@ -1,5 +1,5 @@
-import { DEFAULT_PROPS } from '../../../utils/defaultProps'
-import { generateId } from '../../../utils/generateId'
+import { DEFAULT_PROPS } from '~utils/defaultProps'
+import { generateId } from '~utils/generateId'
 
 type AddNode = {
   type: ComponentType

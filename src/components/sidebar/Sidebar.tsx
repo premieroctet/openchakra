@@ -9,7 +9,7 @@ import {
   IconButton,
 } from '@chakra-ui/core'
 import DragItem from './DragItem'
-import { menuItems, MenuItem } from '../../componentsList'
+import { menuItems, MenuItem } from '~componentsList'
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')

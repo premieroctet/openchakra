@@ -14,7 +14,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "~*": ["src/*"]
+    }
   },
   "include": ["src", "next-env.d.ts"],
   "exclude": ["node_modules"]

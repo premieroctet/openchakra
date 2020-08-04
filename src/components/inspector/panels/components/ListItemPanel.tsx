@@ -1,12 +1,12 @@
-import React, { memo } from "react";
-import ChildrenControl from "../../controls/ChildrenControl";
+import React, { memo } from 'react'
+import ChildrenControl from '~components/inspector/controls/ChildrenControl'
 
 const ListItemPanel = () => {
   return (
     <>
       <ChildrenControl />
     </>
-  );
-};
+  )
+}
 
-export default memo(ListItemPanel);
+export default memo(ListItemPanel)

@@ -6,7 +6,7 @@ import {
   ComboboxList,
 } from '@reach/combobox'
 import { Input } from '@chakra-ui/core'
-import { useForm } from '../../../hooks/useForm'
+import { useForm } from '~hooks/useForm'
 
 type FormControlPropType = {
   handleChange: any

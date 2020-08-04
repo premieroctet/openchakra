@@ -1,25 +1,25 @@
-import React from "react";
-import { Select } from "@chakra-ui/core";
-import { useForm } from "../../../../hooks/useForm";
-import SizeControl from "../../controls/SizeControl";
-import ChildrenControl from "../../controls/ChildrenControl";
-import ColorsControl from "../../controls/ColorsControl";
-import FormControl from "../../controls/FormControl";
-import usePropsSelector from "../../../../hooks/usePropsSelector";
-import SwitchControl from "../../controls/SwitchControl";
+import React from 'react'
+import { Select } from '@chakra-ui/core'
+import { useForm } from '~hooks/useForm'
+import SizeControl from '~components/inspector/controls/SizeControl'
+import ChildrenControl from '~components/inspector/controls/ChildrenControl'
+import ColorsControl from '~components/inspector/controls/ColorsControl'
+import FormControl from '~components/inspector/controls/FormControl'
+import usePropsSelector from '~hooks/usePropsSelector'
+import SwitchControl from '~components/inspector/controls/SwitchControl'
 
 const TagPanel = () => {
-  const { setValueFromEvent } = useForm();
+  const { setValueFromEvent } = useForm()
 
-  const size = usePropsSelector("size");
-  const variant = usePropsSelector("variant");
-  const rounded = usePropsSelector("rounded");
+  const size = usePropsSelector('size')
+  const variant = usePropsSelector('variant')
+  const rounded = usePropsSelector('rounded')
 
   return (
     <>
       <ChildrenControl />
       <SizeControl
-        options={["sm", "md", "lg"]}
+        options={['sm', 'md', 'lg']}
         name="size"
         label="Size"
         value={size}
@@ -30,7 +30,7 @@ const TagPanel = () => {
           onChange={setValueFromEvent}
           name="variant"
           size="sm"
-          value={variant || ""}
+          value={variant || ''}
         >
           <option>solid</option>
           <option>outline</option>
@@ -44,7 +44,7 @@ const TagPanel = () => {
 
       <SwitchControl label="Inline" name="isInline" />
     </>
-  );
-};
+  )
+}
 
-export default TagPanel;
+export default TagPanel

@@ -1,8 +1,8 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { getSelectedComponentChildren } from '../../core/selectors/components'
-import ElementsList from './elements-list/ElementsList'
-import useDispatch from '../../hooks/useDispatch'
+import { getSelectedComponentChildren } from '~core/selectors/components'
+import ElementsList from '~components/inspector/elements-list/ElementsList'
+import useDispatch from '~hooks/useDispatch'
 
 const ChildrenInspector = () => {
   const childrenComponent = useSelector(getSelectedComponentChildren)

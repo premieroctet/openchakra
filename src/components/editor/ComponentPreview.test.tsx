@@ -7,7 +7,7 @@ import Backend from 'react-dnd-html5-backend'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 
 import ComponentPreview from './ComponentPreview'
-import { storeConfig } from '../../core/store'
+import { storeConfig } from '~core/store'
 
 function renderWithRedux(
   components: React.ReactNode,

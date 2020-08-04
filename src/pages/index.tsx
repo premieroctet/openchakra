@@ -2,15 +2,16 @@ import React from 'react'
 import { Flex, Box } from '@chakra-ui/core'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
-import Editor from '../components/editor/Editor'
-import Inspector from '../components/inspector/Inspector'
-import Sidebar from '../components/sidebar/Sidebar'
-import Header from '../components/Header'
 import { Global } from '@emotion/core'
 import { HotKeys } from 'react-hotkeys'
-import useShortcuts, { keyMap } from '../hooks/useShortcuts'
-import EditorErrorBoundary from '../components/errorBoundaries/EditorErrorBoundary'
-import { InspectorProvider } from '../contexts/inspector-context'
+import Metadata from '~components/Metadata'
+import useShortcuts, { keyMap } from '~hooks/useShortcuts'
+import Header from '~components/Header'
+import Sidebar from '~components/sidebar/Sidebar'
+import EditorErrorBoundary from '~components/errorBoundaries/EditorErrorBoundary'
+import Editor from '~components/editor/Editor'
+import { InspectorProvider } from '~contexts/inspector-context'
+import Inspector from '~components/inspector/Inspector'
 
 const App = () => {
   const { handlers } = useShortcuts()
@@ -22,6 +23,8 @@ const App = () => {
           html: { minWidth: '860px', backgroundColor: '#1a202c' },
         })}
       />
+
+      <Metadata />
 
       <Header />
       <DndProvider backend={Backend}>

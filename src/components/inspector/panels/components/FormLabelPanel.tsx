@@ -1,5 +1,5 @@
 import React from 'react'
-import ChildrenControl from '../../controls/ChildrenControl'
+import ChildrenControl from '~components/inspector/controls/ChildrenControl'
 
 const FormLabelPanel = () => {
   return (

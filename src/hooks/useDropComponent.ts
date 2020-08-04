@@ -1,7 +1,7 @@
 import { useDrop, DropTargetMonitor } from 'react-dnd'
-import { rootComponents } from '../utils/editor'
+import { rootComponents } from '~utils/editor'
 import useDispatch from './useDispatch'
-import builder from '../core/models/composer/builder'
+import builder from '~core/models/composer/builder'
 
 export const useDropComponent = (
   componentId: string,

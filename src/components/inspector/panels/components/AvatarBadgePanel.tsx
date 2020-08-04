@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import ColorsControl from '../../controls/ColorsControl'
+import ColorsControl from '~components/inspector/controls/ColorsControl'
 
 const AvatarPanel = () => (
   <>
