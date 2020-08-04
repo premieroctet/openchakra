@@ -115,6 +115,9 @@ export default theme => ({
       cursor : 'pointer',
       height: '100%'
     },
+    '& .rbc-day-bg rbc-off-range-bg':{
+      display : 'none'
+    },
     '& .rbc-header':{
       [theme.breakpoints.down('xs')]: {
         whiteSpace: 'inherit !important'

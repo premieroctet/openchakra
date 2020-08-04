@@ -55,15 +55,6 @@ const formats = {
 
 
 const CustomToolbar = (toolbar) => {
-  const goToBack = () => {
-    toolbar.date.setMonth(toolbar.date.getMonth() - 1);
-    toolbar.onNavigate('prev');
-  };
-
-  const goToNext = () => {
-    toolbar.date.setMonth(toolbar.date.getMonth() + 1);
-    toolbar.onNavigate('next');
-  };
 
   const label = () => {
     const date = moment(toolbar.date);
@@ -81,9 +72,6 @@ const CustomToolbar = (toolbar) => {
           <Grid>
             <label>{label()}</label>
           </Grid>
-          <Grid>
-            <Button variant={'outlined'} onClick={goToNext}>&#8250;</Button>
-          </Grid>
         </Grid>
       </Grid >
   );
@@ -97,10 +85,13 @@ const CustomMonthDateHeader = (dateheader) =>{
   )
 };
 
-const MyCustomEventWrapper = (mycustom) =>{
-  return(
-      <Grid style={{borderTop : '25px solid pink', borderRight: '25px solid transparent', height : 0,  width : 0}}/>
-  )
+const MyCustomEventWrapper = (event) =>{
+  if(event){
+    return <Grid style={{borderTop : '25px solid pink', borderRight: '25px solid transparent', height : 0,  width : 0}}/>
+  }else{
+    return  <Grid style={{borderTop : '25px solid green', borderRight: '25px solid transparent', height : 0,  width : 0}}/>
+  }
+
 };
 
 class Schedule extends React.Component {
@@ -344,7 +335,7 @@ class Schedule extends React.Component {
   }
 
   render() {
-    const { classes, title, subtitle, selectable, height } = this.props;
+    const { classes, title, subtitle, selectable, height, nbSchedule } = this.props;
     const txt = this.availAsText()
     let events = availabilities2events(this.props.availabilities);
 
@@ -368,7 +359,7 @@ class Schedule extends React.Component {
           : null
         }
         <Grid container spacing={2}>
-          {[...Array(12)].map((x, i) =>{
+          {[...Array(nbSchedule)].map((x, i) =>{
             let date = new Date();
             let month = new Date(date.setMonth(date.getMonth() + i));
               return(
