@@ -104,15 +104,12 @@ export default theme => ({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-        '& :hover':{
-          backgroundColor:'red',
-        },
+      cursor : 'pointer',
     },
     '& .rbc-row-content':{
       display: 'flex',
       flexDirection: 'column-reverse',
       justifyContent: 'flex-end',
-      cursor : 'pointer',
       height: '100%'
     },
     '& .rbc-day-bg rbc-off-range-bg':{
@@ -145,4 +142,13 @@ export default theme => ({
     display: 'flex',
     justifyContent: 'space-between'
   },
+  dateButton:{
+    backgroundColor: 'green',
+    '& :hover':{
+      backgroundColor:'yellow',
+    },
+    '& :active':{
+      backgroundColor:'brown',
+    },
+  }
 })

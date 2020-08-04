@@ -13,16 +13,13 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Chip from '@material-ui/core/Chip';
-import {availabilities2events, eventUI2availability, availability2eventUI, DAYS, TIMESLOTS} from '../../utils/converters';
+import {DAYS, TIMESLOTS} from '../../utils/converters';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import frLocale from "date-fns/locale/fr";
-import DoneIcon from '@material-ui/icons/Done';
 import {Button} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
-
-
 
 class DrawerSchedule extends React.Component{
     constructor(props) {

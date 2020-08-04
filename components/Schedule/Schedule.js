@@ -17,7 +17,8 @@ import Chip from '@material-ui/core/Chip';
 import frLocale from "date-fns/locale/fr";
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import {availabilities2events, eventUI2availability, availability2eventUI, DAYS, LONG_DAYS} from '../../utils/converters';
+import {availabilities2events, eventUI2availability, availability2eventUI, LONG_DAYS} from '../../utils/converters';
+import { isAlfredDateAvailable, hasAlfredDateEvent } from '../../utils/dateutils';
 import {ALL_SERVICES, GID_LEN} from '../../utils/consts.js';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Typography } from '@material-ui/core'; // Import css
@@ -54,45 +55,7 @@ const formats = {
 };
 
 
-const CustomToolbar = (toolbar) => {
 
-  const label = () => {
-    const date = moment(toolbar.date);
-    return (
-        <span>
-          <span>{date.format('MMMM')}</span>
-          <span> {date.format('YYYY')}</span>
-        </span>
-    );
-  };
-
-  return (
-      <Grid container>
-        <Grid style={{display:'flex', width: '100%', justifyContent: 'space-around', alignItems: 'center', marginBottom : 20, }}>
-          <Grid>
-            <label>{label()}</label>
-          </Grid>
-        </Grid>
-      </Grid >
-  );
-};
-
-const CustomMonthDateHeader = (dateheader) =>{
-  return(
-      <Grid>
-        <p>{dateheader.label}</p>
-      </Grid>
-  )
-};
-
-const MyCustomEventWrapper = (event) =>{
-  if(event){
-    return <Grid style={{borderTop : '25px solid pink', borderRight: '25px solid transparent', height : 0,  width : 0}}/>
-  }else{
-    return  <Grid style={{borderTop : '25px solid green', borderRight: '25px solid transparent', height : 0,  width : 0}}/>
-  }
-
-};
 
 class Schedule extends React.Component {
   EMPTY_AVAIL = {
@@ -307,11 +270,18 @@ class Schedule extends React.Component {
   };
 
   selectedEvent = (event) =>{
-    console.log(event, 'event')
+    console.log(event,'event');
+    let alfredAvailable = isAlfredDateAvailable(event);
+    let hasDateEvent = hasAlfredDateEvent(event);
+    console.log(alfredAvailable, 'selectedEvent');
+    console.log(hasDateEvent, 'selectedEvent');
   };
 
   selectSlot = (slot) =>{
-    console.log(slot, 'slot')
+    let alfredAvailable = isAlfredDateAvailable(slot.slots);
+    let hasDateEvent = hasAlfredDateEvent(slot.slots);
+    console.log(alfredAvailable, 'alfredAvailable');
+    console.log(hasDateEvent, 'hasAlfredDateEvent');
   };
 
   availAsText = () => {
@@ -334,11 +304,47 @@ class Schedule extends React.Component {
     return value
   }
 
+
+
+  myCustomEventWrapper = (event) =>{
+    return <Grid style={{borderTop : '25px solid pink', borderRight: '25px solid transparent', height : 0,  width : 0}}/>
+  };
+
+  customToolbar = (toolbar) => {
+
+    const label = () => {
+      const date = moment(toolbar.date);
+      return (
+          <span>
+          <span>{date.format('MMMM')}</span>
+          <span> {date.format('YYYY')}</span>
+        </span>
+      );
+    };
+
+    return (
+        <Grid container>
+          <Grid style={{display:'flex', width: '100%', justifyContent: 'space-around', alignItems: 'center', marginBottom : 20, }}>
+            <Grid>
+              <label>{label()}</label>
+            </Grid>
+          </Grid>
+        </Grid >
+    );
+  };
+
   render() {
     const { classes, title, subtitle, selectable, height, nbSchedule } = this.props;
     const txt = this.availAsText()
     let events = availabilities2events(this.props.availabilities);
 
+    const CustomMonthDateHeader = (dateheader) =>{
+      return(
+          <Grid className={classes.dateButton}>
+            <p>{dateheader.label}</p>
+          </Grid>
+      )
+    };
 
 
     return (
@@ -393,10 +399,10 @@ class Schedule extends React.Component {
                       className={classes.sizeSchedulle}
                       eventPropGetter={(this.eventStyleGetter)}
                       components={{
-                        toolbar: CustomToolbar,
-                        eventWrapper: MyCustomEventWrapper,
+                        toolbar: this.customToolbar,
+                        //eventWrapper: this.myCustomEventWrapper,
                         month:{
-                          dateHeader: CustomMonthDateHeader,
+                          //dateHeader: CustomMonthDateHeader,
                         }
                       }}
                   />
