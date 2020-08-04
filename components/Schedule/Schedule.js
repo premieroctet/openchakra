@@ -75,21 +75,29 @@ const CustomToolbar = (toolbar) => {
     );
   };
 
-
-
   return (
       <Grid container>
         <Grid style={{display:'flex', width: '100%', justifyContent: 'space-around', alignItems: 'center', marginBottom : 20, }}>
           <Grid>
             <label>{label()}</label>
           </Grid>
+          <Grid>
+            <Button variant={'outlined'} onClick={goToNext}>&#8250;</Button>
+          </Grid>
         </Grid>
       </Grid >
   );
 };
 
-const CustomEvent = () =>{
+const CustomMonthDateHeader = (dateheader) =>{
+  return(
+      <Grid>
+        <p>{dateheader.label}</p>
+      </Grid>
+  )
+};
 
+const MyCustomEventWrapper = (mycustom) =>{
   return(
       <Grid style={{borderTop : '25px solid pink', borderRight: '25px solid transparent', height : 0,  width : 0}}/>
   )
@@ -290,11 +298,29 @@ class Schedule extends React.Component {
   };
 
  eventStyleGetter = (event, start, end, isSelected) => {
-    var style = {
+
+   let newStyle = {
+     backgroundColor: "lightgrey",
+     color: 'black',
+     borderRadius: "0px",
+     border: "none"
+   };
+
+   if (isSelected){
+     newStyle.backgroundColor = "lightgreen"
+   }
+
+   return {
+      style: newStyle
     };
-    return {
-      style: style
-    };
+  };
+
+  selectedEvent = (event) =>{
+    console.log(event, 'event')
+  };
+
+  selectSlot = (slot) =>{
+    console.log(slot, 'slot')
   };
 
   render() {
@@ -334,8 +360,8 @@ class Schedule extends React.Component {
                       events={events}
                       views={['month']}
                       defaultDate={month}
-                      onSelectSlot={this.toggleAddModal}
-                      onSelectEvent={this.toggleEditModal}
+                      onSelectSlot={this.selectSlot}
+                      onSelectEvent={this.selectedEvent}
                       dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
                       messages={{
                         'today': "Aujourd'hui",
@@ -355,7 +381,10 @@ class Schedule extends React.Component {
                       eventPropGetter={(this.eventStyleGetter)}
                       components={{
                         toolbar: CustomToolbar,
-                        event: CustomEvent
+                        eventWrapper: MyCustomEventWrapper,
+                        month:{
+                          dateHeader: CustomMonthDateHeader,
+                        }
                       }}
                   />
                 </Grid>

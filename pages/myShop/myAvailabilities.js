@@ -187,7 +187,7 @@ class myAvailabilities extends React.Component {
                   <meta property="description" content="Indiquez vos dispoinibilités pour proposer vos services entre particuliers ! Des services à proximité, rémunérés et assurés ! Vos disponibilités permettront à vos futurs clients de vous réserver directement, au créneau souhaité !" />
               </Helmet>
               <Layout>
-                <Grid classes={classes.bigContainer} style={{width: '100%'}}>
+                <Grid className={classes.bigContainer} style={{width: '100%'}}>
                     {isOwner ?
                       <NavBarShop userId={this.state.userId}/>
                       : null

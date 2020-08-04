@@ -1,4 +1,4 @@
-const widthDrawer = 550;
+const widthDrawer = '30%';
 
 export default theme => ({
     drawer: {

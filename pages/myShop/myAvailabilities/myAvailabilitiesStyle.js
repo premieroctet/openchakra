@@ -1,7 +1,5 @@
 export default theme => ({
   bigContainer: {
-    marginTop: 100,
-    flexGrow: 1,
     [theme.breakpoints.down('xs')]: {
       marginBottom: 100,
     }

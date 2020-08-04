@@ -99,14 +99,6 @@ export default theme => ({
     '& .rbc-month-row':{
       borderRadius:'0px 0px 10px 5px'
     },
-    '& .rbc-time-header':{
-      [theme.breakpoints.down('xs')]: {
-        margin: '0 !important'
-      },
-    },
-    '& .rbc-allday-cell': {
-      display: 'none !important'
-    },
     '& .rbc-date-cell':{
       display: 'flex',
       flexDirection: 'column',
@@ -116,15 +108,12 @@ export default theme => ({
           backgroundColor:'red',
         },
     },
-    '& .rbc-show-more':{
-      display: 'none'
-    },
     '& .rbc-row-content':{
-      height: '100%',
       display: 'flex',
       flexDirection: 'column-reverse',
       justifyContent: 'flex-end',
       cursor : 'pointer',
+      height: '100%'
     },
     '& .rbc-header':{
       [theme.breakpoints.down('xs')]: {
@@ -133,6 +122,9 @@ export default theme => ({
     },
     '& .rbc-event':{
       backgroundColor: 'transparent'
+    },
+    '& .rb-day-bg':{
+      height: '100px !important'
     }
   },
   heightContainer:{
