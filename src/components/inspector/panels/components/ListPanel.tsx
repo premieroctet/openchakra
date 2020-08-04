@@ -1,12 +1,12 @@
-import React, { memo } from "react";
-import FormControl from "../../controls/FormControl";
-import { Select } from "@chakra-ui/core";
-import { useForm } from "../../../../hooks/useForm";
-import usePropsSelector from "../../../../hooks/usePropsSelector";
+import React, { memo } from 'react'
+import FormControl from '~components/inspector/controls/FormControl'
+import { Select } from '@chakra-ui/core'
+import { useForm } from '~hooks/useForm'
+import usePropsSelector from '~hooks/usePropsSelector'
 
 const CodePanel = () => {
-  const { setValueFromEvent } = useForm();
-  const styleType = usePropsSelector("styleType");
+  const { setValueFromEvent } = useForm()
+  const styleType = usePropsSelector('styleType')
 
   return (
     <>
@@ -15,7 +15,7 @@ const CodePanel = () => {
           name="styleType"
           id="styleType"
           size="sm"
-          value={styleType || "md"}
+          value={styleType || 'md'}
           onChange={setValueFromEvent}
         >
           <option>none</option>
@@ -29,7 +29,7 @@ const CodePanel = () => {
         </Select>
       </FormControl>
     </>
-  );
-};
+  )
+}
 
-export default memo(CodePanel);
+export default memo(CodePanel)

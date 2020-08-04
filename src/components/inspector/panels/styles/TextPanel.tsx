@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import { IconButton, ButtonGroup, useTheme } from '@chakra-ui/core'
-import ColorsControl from '../../controls/ColorsControl'
+import ColorsControl from '~components/inspector/controls/ColorsControl'
 import { GoBold, GoItalic } from 'react-icons/go'
 import {
   MdFormatAlignLeft,
@@ -8,11 +8,11 @@ import {
   MdFormatAlignCenter,
   MdFormatAlignJustify,
 } from 'react-icons/md'
-import FormControl from '../../controls/FormControl'
+import FormControl from '~components/inspector/controls/FormControl'
 import { ComboboxOption } from '@reach/combobox'
-import InputSuggestion from '../../inputs/InputSuggestion'
-import { useForm } from '../../../../hooks/useForm'
-import usePropsSelector from '../../../../hooks/usePropsSelector'
+import InputSuggestion from '~components/inspector/inputs/InputSuggestion'
+import { useForm } from '~hooks/useForm'
+import usePropsSelector from '~hooks/usePropsSelector'
 
 const TextPanel = () => {
   const { setValue, setValueFromEvent } = useForm()

@@ -1,5 +1,5 @@
 import React from 'react'
-import SwitchControl from '../../controls/SwitchControl'
+import SwitchControl from '~components/inspector/controls/SwitchControl'
 
 const AccordionItemPanel = () => {
   return (

@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react'
 import { Icon, useTheme } from '@chakra-ui/core'
 import FormControl from './FormControl'
-import { useForm } from '../../../hooks/useForm'
-import usePropsSelector from '../../../hooks/usePropsSelector'
-import InputSuggestion from '../inputs/InputSuggestion'
+import { useForm } from '~hooks/useForm'
+import usePropsSelector from '~hooks/usePropsSelector'
+import InputSuggestion from '~components/inspector/inputs/InputSuggestion'
 import { ComboboxOption, ComboboxOptionText } from '@reach/combobox'
 import { Icons } from '@chakra-ui/core/dist/theme/icons'
 

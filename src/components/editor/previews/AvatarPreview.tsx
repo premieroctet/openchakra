@@ -6,11 +6,11 @@ import {
   AvatarBadge,
   BoxProps,
 } from '@chakra-ui/core'
-import { useInteractive } from '../../../hooks/useInteractive'
-import { useDropComponent } from '../../../hooks/useDropComponent'
-import ComponentPreview from '../ComponentPreview'
+import { useInteractive } from '~hooks/useInteractive'
+import { useDropComponent } from '~hooks/useDropComponent'
+import ComponentPreview from '~components/editor/ComponentPreview'
 import { useSelector } from 'react-redux'
-import { getComponents } from '../../../core/selectors/components'
+import { getComponents } from '~core/selectors/components'
 
 const AvatarPreview: React.FC<IPreviewProps & {
   spacing?: BoxProps['marginLeft']

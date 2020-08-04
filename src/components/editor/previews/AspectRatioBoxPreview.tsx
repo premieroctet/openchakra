@@ -1,8 +1,8 @@
 import React from 'react'
 import { Box, AspectRatioBox } from '@chakra-ui/core'
-import { useInteractive } from '../../../hooks/useInteractive'
-import { useDropComponent } from '../../../hooks/useDropComponent'
-import ComponentPreview from '../ComponentPreview'
+import { useInteractive } from '~hooks/useInteractive'
+import { useDropComponent } from '~hooks/useDropComponent'
+import ComponentPreview from '~components/editor/ComponentPreview'
 
 const AspectRatioBoxPreview: React.FC<{ component: IComponent }> = ({
   component,

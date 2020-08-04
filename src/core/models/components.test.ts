@@ -1,5 +1,5 @@
 import components, { ComponentsState, INITIAL_COMPONENTS } from './components'
-import { onboarding } from '../../templates/onboarding'
+import { onboarding } from '~templates/onboarding'
 import produce from 'immer'
 
 const STATE: ComponentsState = {

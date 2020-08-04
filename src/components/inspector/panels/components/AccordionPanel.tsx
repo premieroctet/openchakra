@@ -1,5 +1,5 @@
-import React from "react";
-import SwitchControl from "../../controls/SwitchControl";
+import React from 'react'
+import SwitchControl from '~components/inspector/controls/SwitchControl'
 
 const AccordionPanel = () => {
   return (
@@ -7,7 +7,7 @@ const AccordionPanel = () => {
       <SwitchControl label="Allow multiple" name="allowMultiple" />
       <SwitchControl label="Allow toggle" name="allowToggle" />
     </>
-  );
-};
+  )
+}
 
-export default AccordionPanel;
+export default AccordionPanel

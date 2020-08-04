@@ -96,7 +96,8 @@
   },
   "jest": {
     "moduleNameMapper": {
-      "\\.(svg|jpg|png|css)$": "<rootDir>/empty-module.js"
+      "\\.(svg|jpg|png|css)$": "<rootDir>/empty-module.js",
+      "~(.*)$": "<rootDir>/src/$1"
     },
     "moduleFileExtensions": [
       "js",

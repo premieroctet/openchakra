@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
-import ColorsControl from '../../controls/ColorsControl'
-import IconControl from '../../controls/IconControl'
+import ColorsControl from '~components/inspector/controls/ColorsControl'
+import IconControl from '~components/inspector/controls/IconControl'
 
 const ListIconPanel = () => {
   return (

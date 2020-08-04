@@ -22,13 +22,13 @@ import {
 } from '@chakra-ui/core'
 import { DiGithubBadge } from 'react-icons/di'
 import { AiFillThunderbolt } from 'react-icons/ai'
-import { buildParameters } from '../utils/codesandbox'
-import { generateCode } from '../utils/code'
-import useDispatch from '../hooks/useDispatch'
+import { buildParameters } from '~utils/codesandbox'
+import { generateCode } from '~utils/code'
+import useDispatch from '~hooks/useDispatch'
 import { useSelector } from 'react-redux'
-import { getComponents } from '../core/selectors/components'
-import { getShowLayout, getShowCode } from '../core/selectors/app'
-import HeaderMenu from './headerMenu/HeaderMenu'
+import { getComponents } from '~core/selectors/components'
+import { getShowLayout, getShowCode } from '~core/selectors/app'
+import HeaderMenu from '~components/headerMenu/HeaderMenu'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)

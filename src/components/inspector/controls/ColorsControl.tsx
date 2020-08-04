@@ -22,10 +22,10 @@ import {
   useTheme,
 } from '@chakra-ui/core'
 import FormControl from './FormControl'
-import { useForm } from '../../../hooks/useForm'
+import { useForm } from '~hooks/useForm'
 import omit from 'lodash/omit'
 import ColorPicker from 'coloreact'
-import usePropsSelector from '../../../hooks/usePropsSelector'
+import usePropsSelector from '~hooks/usePropsSelector'
 
 type ColorControlPropsType = {
   name: string
