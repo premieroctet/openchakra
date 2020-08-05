@@ -25,8 +25,6 @@ import { Typography } from '@material-ui/core'; // Import css
 import styles from './ScheduleStyle'
 import PropTypes from 'prop-types';
 
-
-
 const localizer = momentLocalizer(moment);
 
 const formats = {
@@ -77,6 +75,7 @@ class Schedule extends React.Component {
     this.state = {
       events: _.cloneDeep(this.props.events),
       title: '',
+      eventsSelected: [],
       isModalOpen: false,
       dayLayoutAlgorithm: 'no-overlap',
       isExpanded: true,
@@ -251,63 +250,48 @@ class Schedule extends React.Component {
     this.setState({isModalOpen: false})
   };
 
- eventStyleGetter = (event, start, end, isSelected) => {
-
-   let newStyle = {
-     backgroundColor: "lightgrey",
-     color: 'black',
-     borderRadius: "0px",
-     border: "none"
-   };
-
-   if (isSelected){
-     newStyle.backgroundColor = "lightgreen"
-   }
-
-   return {
-      style: newStyle
-    };
-  };
-
   selectedEvent = (event) =>{
     console.log(event,'event');
     let alfredAvailable = isAlfredDateAvailable(event);
     let hasDateEvent = hasAlfredDateEvent(event);
-    console.log(alfredAvailable, 'selectedEvent');
-    console.log(hasDateEvent, 'selectedEvent');
+
   };
 
   selectSlot = (slot) =>{
     let alfredAvailable = isAlfredDateAvailable(slot.slots);
     let hasDateEvent = hasAlfredDateEvent(slot.slots);
-    console.log(alfredAvailable, 'alfredAvailable');
-    console.log(hasDateEvent, 'hasAlfredDateEvent');
+    console.log(slot)
+
+
+    this.setState({
+      eventsSelected: [
+        ...this.state.eventsSelected,
+        {
+          event
+        },
+      ],
+    });
+
   };
 
   availAsText = () => {
-    const {selectedDateStart, selectedTimeStart, selectedTimeEnd, selectedDateEndRecu, recurrDays, isExpanded} = this.state
-    var value = "Disponible de "+selectedTimeStart+ " à "+selectedTimeEnd
-    value += (isExpanded ? " à partir du " : " le ")+moment(selectedDateStart).format('DD/MM/YY')
+    const {selectedDateStart, selectedTimeStart, selectedTimeEnd, selectedDateEndRecu, recurrDays, isExpanded} = this.state;
+    let value = "Disponible de "+selectedTimeStart+ " à "+selectedTimeEnd;
+    value += (isExpanded ? " à partir du " : " le ")+moment(selectedDateStart).format('DD/MM/YY');
     if (isExpanded && selectedDateEndRecu) {
       value += " jusqu'au "+moment(selectedDateEndRecu).format('DD/MM/YY')
     }
     if (isExpanded) {
-      value += " tous les "
-      var count=0
+      value += " tous les ";
+      let count=0;
       for (var i = 0; i<7; i++) {
         if (recurrDays.has(i)) {
-          value += LONG_DAYS[i]+(count <recurrDays.size-2 ? ", " : count==recurrDays.size-1 ? "" : " et ")
+          value += LONG_DAYS[i]+(count <recurrDays.size-2 ? ", " : count === recurrDays.size-1 ? "" : " et ");
           count++
         }
       }
     }
     return value
-  }
-
-
-
-  myCustomEventWrapper = (event) =>{
-    return <Grid style={{borderTop : '25px solid pink', borderRight: '25px solid transparent', height : 0,  width : 0}}/>
   };
 
   customToolbar = (toolbar) => {
@@ -335,16 +319,54 @@ class Schedule extends React.Component {
 
   render() {
     const { classes, title, subtitle, selectable, height, nbSchedule } = this.props;
-    const txt = this.availAsText()
+    const txt = this.availAsText();
     let events = availabilities2events(this.props.availabilities);
 
-    const CustomMonthDateHeader = (dateheader) =>{
-      return(
-          <Grid className={classes.dateButton}>
-            <p>{dateheader.label}</p>
-          </Grid>
-      )
+    const CustomMonthDateHeader = (event) =>{
+      if(event.isOffRange){
+        return null
+      }else{
+        return(
+            <Grid>
+              <p style={{margin: 0}}>{event.label}</p>
+            </Grid>
+        )
+      }
     };
+
+    const MyDateCellWrapper = (event) =>{
+      let propsStyle = event.children.props['className'];
+
+      if(propsStyle === 'rbc-day-bg rbc-off-range-bg'){
+        return(
+            <Grid style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD'}}/>
+        )
+      }
+      if(propsStyle === 'rbc-day-bg rbc-today'){
+        return (
+            <Grid onClick={() => this.selectSlot} style={{cursor: 'pointer', width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'rgba(79, 189, 215, 0.2)'}}/>
+        )
+      }else{
+        return(
+            <Grid onClick={() => this.selectSlot} style={{cursor: 'pointer', width: '100%', height :'100%', borderLeft:'1px solid #DDD'}}/>
+        )
+      }
+
+
+    };
+
+    const MyEventWrapper = (event) =>{
+      console.log(event.children.props.children)
+      return(
+          <Grid style={{borderTop : '25px solid pink',
+            borderRight: '25px solid transparent',
+            height : 0,
+            width : 0,
+            borderRadius: 0,
+            padding: 0,
+            margin: 0,}}/>
+      )
+    }
 
 
     return (
@@ -397,12 +419,19 @@ class Schedule extends React.Component {
                       }}
                       formats={formats}
                       className={classes.sizeSchedulle}
-                      eventPropGetter={(this.eventStyleGetter)}
                       components={{
                         toolbar: this.customToolbar,
-                        //eventWrapper: this.myCustomEventWrapper,
+                        //event: MyEvent, // used by each view (Month, Day, Week)
+                        eventWrapper: MyEventWrapper,
+                        //eventContainerWrapper: MyEventContainerWrapper,
+                        //dayWrapper: MyDayWrapper,
+                        dateCellWrapper: MyDateCellWrapper,
+                        //timeSlotWrapper: MyTimeSlotWrapper,
+                        //timeGutterHeader: MyTimeGutterWrapper,
                         month:{
-                          //dateHeader: CustomMonthDateHeader,
+                          dateHeader: CustomMonthDateHeader,
+                          //header: MyMonthHeader,
+                          //event: MyMonthEvent,
                         }
                       }}
                   />

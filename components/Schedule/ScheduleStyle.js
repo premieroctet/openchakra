@@ -97,7 +97,8 @@ export default theme => ({
       borderRadius: 10
     },
     '& .rbc-month-row':{
-      borderRadius:'0px 0px 10px 5px'
+      borderRadius:'0px 0px 10px 5px',
+      display:'flex',
     },
     '& .rbc-date-cell':{
       display: 'flex',
@@ -109,8 +110,7 @@ export default theme => ({
     '& .rbc-row-content':{
       display: 'flex',
       flexDirection: 'column-reverse',
-      justifyContent: 'flex-end',
-      height: '100%'
+      justifyContent: 'center',
     },
     '& .rbc-day-bg rbc-off-range-bg':{
       display : 'none'
@@ -125,6 +125,9 @@ export default theme => ({
     },
     '& .rb-day-bg':{
       height: '100px !important'
+    },
+    '& .rbc-row-segment':{
+      padding:0
     }
   },
   heightContainer:{
@@ -142,13 +145,4 @@ export default theme => ({
     display: 'flex',
     justifyContent: 'space-between'
   },
-  dateButton:{
-    backgroundColor: 'green',
-    '& :hover':{
-      backgroundColor:'yellow',
-    },
-    '& :active':{
-      backgroundColor:'brown',
-    },
-  }
 })
