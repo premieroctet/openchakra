@@ -344,11 +344,11 @@ class Schedule extends React.Component {
       }
       if(propsStyle === 'rbc-day-bg rbc-today'){
         return (
-            <Grid onClick={() => this.selectSlot} style={{cursor: 'pointer', width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'rgba(79, 189, 215, 0.2)'}}/>
+            <Grid onClick={() => this.selectSlot} style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'rgba(79, 189, 215, 0.2)'}}/>
         )
       }else{
         return(
-            <Grid onClick={() => this.selectSlot} style={{cursor: 'pointer', width: '100%', height :'100%', borderLeft:'1px solid #DDD'}}/>
+            <Grid onClick={() => this.selectSlot} style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD'}}/>
         )
       }
 

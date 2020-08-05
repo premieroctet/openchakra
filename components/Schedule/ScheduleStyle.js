@@ -105,7 +105,6 @@ export default theme => ({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      cursor : 'pointer',
     },
     '& .rbc-row-content':{
       display: 'flex',
