@@ -80,7 +80,8 @@ class Schedule extends React.Component {
       dayLayoutAlgorithm: 'no-overlap',
       isExpanded: true,
       services: [ALL_SERVICES, ...this.props.services] || [ALL_SERVICES],
-      ...this.EMPTY_AVAIL
+      ...this.EMPTY_AVAIL,
+      view : Views.MONTH,
     };
     this.resetData();
   }
@@ -254,10 +255,7 @@ class Schedule extends React.Component {
     let hasDateEvent = hasAlfredDateEvent(start);
     let array = Object.values(this.state.eventsSelected);
 
-   this.setState( {eventsSelected:[...this.state.eventsSelected, start]
-   })
-
-
+   this.setState( {eventsSelected:[...this.state.eventsSelected, start]}, () => console.log(`Selected events: ${this.state.eventsSelected}`))
   };
 
   availAsText = () => {
@@ -305,12 +303,23 @@ class Schedule extends React.Component {
 
   render() {
     const { classes, title, subtitle, selectable, height, nbSchedule } = this.props;
+    const { view } = this.state;
+
     const txt = this.availAsText();
-    //let events = availabilities2events(this.props.availabilities);
-    let events = this.props.availabilities;
+    let events = availabilities2events(this.props.availabilities);
+    if (view === Views.MONTH) {
+      let known_dates = [];
+      events = events.filter ( e => {
+        const dateStr = moment(e.start).format('DD/MM/YYYY');
+        if (known_dates.includes(dateStr)) {
+          return false
+        }
+        known_dates.push(dateStr);
+        return true
+      })
+    }
 
     const CustomMonthDateHeader = (event) =>{
-      console.log(event, 'event')
       if(event.isOffRange){
         return null
       }else{
@@ -377,7 +386,7 @@ class Schedule extends React.Component {
         <Grid container spacing={2}>
           {[...Array(nbSchedule)].map((x, i) =>{
             let date = new Date();
-            let month = new Date(date.setMonth(date.getMonth() + i));
+            let month = new Date(date.setMonth(date.getMonth() + (i-3)));
               return(
                 <Grid item xl={4} lg={5} xs={12} style={{height: 500}}>
                   <Calendar
@@ -387,7 +396,7 @@ class Schedule extends React.Component {
                       localizer={localizer}
                       // FIX: use state instead of props
                       events={events}
-                      views={['month']}
+                      views={[this.state.view]}
                       defaultDate={month}
                       onSelectSlot={this.selectSlot}
                       onSelectEvent={this.selectedEvent}
