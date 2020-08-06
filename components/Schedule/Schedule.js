@@ -260,17 +260,11 @@ class Schedule extends React.Component {
   selectSlot = (slot) =>{
     let alfredAvailable = isAlfredDateAvailable(slot.slots);
     let hasDateEvent = hasAlfredDateEvent(slot.slots);
-    console.log(slot)
+    let array = Object.values(this.state.eventsSelected);
 
+   this.setState( {eventsSelected:[...this.state.eventsSelected, slot.slots[0]]
+   })
 
-    this.setState({
-      eventsSelected: [
-        ...this.state.eventsSelected,
-        {
-          event
-        },
-      ],
-    });
 
   };
 
@@ -327,8 +321,8 @@ class Schedule extends React.Component {
         return null
       }else{
         return(
-            <Grid>
-              <p style={{margin: 0}}>{event.label}</p>
+            <Grid className={classes.labelSelector}>
+              <p style={{margin: 0, cursor:'pointer'}}>{event.label}</p>
             </Grid>
         )
       }
@@ -344,11 +338,11 @@ class Schedule extends React.Component {
       }
       if(propsStyle === 'rbc-day-bg rbc-today'){
         return (
-            <Grid onClick={() => this.selectSlot} style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'rgba(79, 189, 215, 0.2)'}}/>
+            <Grid onClick={() => this.selectSlot} style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'rgba(79, 189, 215, 0.2)', cursor:'pointer'}}/>
         )
       }else{
         return(
-            <Grid onClick={() => this.selectSlot} style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD'}}/>
+            <Grid onClick={() => this.selectSlot} style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD', cursor:'pointer'}}/>
         )
       }
 
@@ -356,7 +350,6 @@ class Schedule extends React.Component {
     };
 
     const MyEventWrapper = (event) =>{
-      console.log(event.children.props.children)
       return(
           <Grid style={{borderTop : '25px solid pink',
             borderRight: '25px solid transparent',
@@ -366,8 +359,7 @@ class Schedule extends React.Component {
             padding: 0,
             margin: 0,}}/>
       )
-    }
-
+    };
 
     return (
       <Grid className={classes.heightContainer} style={{height: height}} >

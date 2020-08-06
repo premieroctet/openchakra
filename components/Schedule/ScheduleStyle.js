@@ -105,6 +105,7 @@ export default theme => ({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
+      padding: 0
     },
     '& .rbc-row-content':{
       display: 'flex',
@@ -144,4 +145,15 @@ export default theme => ({
     display: 'flex',
     justifyContent: 'space-between'
   },
+  labelSelector:{
+    '& :hover':{
+      backgroundColor: 'green',
+      height: 50,
+      width: 50,
+      borderRadius:50,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }
+  }
 })
