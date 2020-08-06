@@ -6,7 +6,15 @@ class scheduleTest extends React.Component{
     constructor(props) {
         super(props);
         this.state={
-            events: [],
+            events: [
+                {
+                    id: 0,
+                    title: 'All Day Event very long title',
+                    allDay: true,
+                    start: new Date(),
+                    end: new Date(),
+                }
+            ],
             services: []
         }
     }

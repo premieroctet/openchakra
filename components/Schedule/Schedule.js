@@ -83,13 +83,6 @@ class Schedule extends React.Component {
       ...this.EMPTY_AVAIL
     };
     this.resetData();
-
-    this.closeModal = this.closeModal.bind(this);
-    this.toggleEditModal = this.toggleEditModal.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
-    this.resetData = this.resetData.bind(this);
-
   }
 
   resetData = () => {
@@ -180,7 +173,7 @@ class Schedule extends React.Component {
     }
   };
 
-   handleChange(){
+   handleChange = () =>{
      this.setState({isExpanded: !this.state.isExpanded});
      if (this.state.isExpanded && this.state.recurrDays.size===0 && this.state.selectedDateStart ) {
        let dayOfWeek = new Date(this.state.selectedDateStart).getDay();
@@ -313,7 +306,8 @@ class Schedule extends React.Component {
   render() {
     const { classes, title, subtitle, selectable, height, nbSchedule } = this.props;
     const txt = this.availAsText();
-    let events = availabilities2events(this.props.availabilities);
+    //let events = availabilities2events(this.props.availabilities);
+    let events = this.props.availabilities;
 
     const CustomMonthDateHeader = (event) =>{
       console.log(event, 'event')
