@@ -251,18 +251,17 @@ class Schedule extends React.Component {
   };
 
   selectedEvent = (event) =>{
-    console.log(event,'event');
     let alfredAvailable = isAlfredDateAvailable(event);
     let hasDateEvent = hasAlfredDateEvent(event);
 
   };
 
-  selectSlot = (slot) =>{
-    let alfredAvailable = isAlfredDateAvailable(slot.slots);
-    let hasDateEvent = hasAlfredDateEvent(slot.slots);
+  selectSlot = ({start, end, action}) =>{
+    let alfredAvailable = isAlfredDateAvailable(start);
+    let hasDateEvent = hasAlfredDateEvent(start);
     let array = Object.values(this.state.eventsSelected);
 
-   this.setState( {eventsSelected:[...this.state.eventsSelected, slot.slots[0]]
+   this.setState( {eventsSelected:[...this.state.eventsSelected, start]
    })
 
 
@@ -317,6 +316,7 @@ class Schedule extends React.Component {
     let events = availabilities2events(this.props.availabilities);
 
     const CustomMonthDateHeader = (event) =>{
+      console.log(event, 'event')
       if(event.isOffRange){
         return null
       }else{
@@ -345,20 +345,22 @@ class Schedule extends React.Component {
             <Grid onClick={() => this.selectSlot} style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD', cursor:'pointer'}}/>
         )
       }
-
-
     };
 
     const MyEventWrapper = (event) =>{
-      return(
-          <Grid style={{borderTop : '25px solid pink',
-            borderRight: '25px solid transparent',
-            height : 0,
-            width : 0,
-            borderRadius: 0,
-            padding: 0,
-            margin: 0,}}/>
-      )
+
+       return(
+            <Grid
+                style={{
+                  borderTop : '25px solid pink',
+                  borderRight: '25px solid transparent',
+                  height : 0,
+                  width : 0,
+                  borderRadius: 0,
+                  padding: 0,
+                  margin: 0
+            }}/>
+        )
     };
 
     return (

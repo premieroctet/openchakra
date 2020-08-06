@@ -148,8 +148,6 @@ export default theme => ({
   labelSelector:{
     '& :hover':{
       backgroundColor: 'green',
-      height: 50,
-      width: 50,
       borderRadius:50,
       display: 'flex',
       alignItems: 'center',
