@@ -938,7 +938,7 @@ router.get('/mangopay_kyc', (req,res) => {
     })
 });
 
-const HOOK_TYPES="KYC_CREATED KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED".split(' ')
+const HOOK_TYPES="KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED".split(' ')
 /** Hook Mangopay */
 
 HOOK_TYPES.forEach(hookType => {
