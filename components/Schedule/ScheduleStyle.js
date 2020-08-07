@@ -147,10 +147,10 @@ export default theme => ({
   },
   labelSelector:{
     '& :hover':{
-      backgroundColor: 'green',
-      height: 50,
-      width: 50,
-      borderRadius:50,
+      backgroundColor: 'cyan',
+      height: 25,
+      width: 25,
+      borderRadius:25,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',

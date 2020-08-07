@@ -17,7 +17,7 @@ import Chip from '@material-ui/core/Chip';
 import frLocale from "date-fns/locale/fr";
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import {availabilities2events, eventUI2availability, availability2eventUI, LONG_DAYS} from '../../utils/converters';
+import {bookings2events, availabilities2events, eventUI2availability, availability2eventUI, LONG_DAYS} from '../../utils/converters';
 import { isAlfredDateAvailable, hasAlfredDateEvent } from '../../utils/dateutils';
 import {ALL_SERVICES, GID_LEN} from '../../utils/consts.js';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -74,6 +74,7 @@ class Schedule extends React.Component {
 
     this.state = {
       events: _.cloneDeep(this.props.events),
+      availabilities: _.cloneDeep(this.props.availabilities),
       title: '',
       eventsSelected: [],
       isModalOpen: false,
@@ -316,7 +317,9 @@ class Schedule extends React.Component {
     const { view } = this.state
 
     const txt = this.availAsText();
-    let events = availabilities2events(this.props.availabilities);
+    //let events = availabilities2events(this.props.availabilities);
+    let events = bookings2events(this.props.bookings);
+
     if (view==Views.MONTH) {
       var known_dates = []
       events = events.filter ( e => {

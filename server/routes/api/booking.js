@@ -172,7 +172,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
       .catch(err => console.error(err));
 })
 
-// @Route GET /myAlfred/booking/all
+// @Route GET /myAlfred/api/booking/all
 // View all booking
 // @Access private
 router.get('/all',passport.authenticate('jwt',{session:false}),(req,res)=> {

@@ -168,6 +168,9 @@ class services extends React.Component {
     }
 
     handleNext = () => {
+        if (!token) {
+            Router.push('/login');
+        }
         if (this.state.activeStep<4) {
             this.setState({activeStep: this.state.activeStep + 1});
         }
