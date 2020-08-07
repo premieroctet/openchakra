@@ -85,13 +85,6 @@ class Schedule extends React.Component {
       view : Views.MONTH,
     };
     this.resetData();
-
-    this.closeModal = this.closeModal.bind(this);
-    this.toggleEditModal = this.toggleEditModal.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
-    this.resetData = this.resetData.bind(this);
-
   }
 
   resetData = () => {
@@ -182,7 +175,7 @@ class Schedule extends React.Component {
     }
   };
 
-   handleChange(){
+   handleChange = () =>{
      this.setState({isExpanded: !this.state.isExpanded});
      if (this.state.isExpanded && this.state.recurrDays.size===0 && this.state.selectedDateStart ) {
        let dayOfWeek = new Date(this.state.selectedDateStart).getDay();
@@ -253,21 +246,18 @@ class Schedule extends React.Component {
   };
 
   selectedEvent = (event) =>{
-    console.log(event,'event');
     let alfredAvailable = isAlfredDateAvailable(event);
     let hasDateEvent = hasAlfredDateEvent(event);
 
   };
 
-  selectSlot = (slot) =>{
-    let alfredAvailable = isAlfredDateAvailable(slot.slots);
-    let hasDateEvent = hasAlfredDateEvent(slot.slots);
+  selectSlot = ({start, end, action}) =>{
+    let alfredAvailable = isAlfredDateAvailable(start);
+    let hasDateEvent = hasAlfredDateEvent(start);
     let array = Object.values(this.state.eventsSelected);
 
-     this.setState( {eventsSelected:[...this.state.eventsSelected, slot.slots[0]] },
-       () => console.log(`Selected events: ${this.state.eventsSelected}`)
-     )
-   }
+   this.setState( {eventsSelected:[...this.state.eventsSelected, start]}, () => console.log(`Selected events: ${this.state.eventsSelected}`))
+  };
 
   availAsText = () => {
     const {selectedDateStart, selectedTimeStart, selectedTimeEnd, selectedDateEndRecu, recurrDays, isExpanded} = this.state;
@@ -314,20 +304,20 @@ class Schedule extends React.Component {
 
   render() {
     const { classes, title, subtitle, selectable, height, nbSchedule } = this.props;
-    const { view } = this.state
+    const { view } = this.state;
 
     const txt = this.availAsText();
-    //let events = availabilities2events(this.props.availabilities);
     let events = bookings2events(this.props.bookings);
 
+    // Month view : at most one event per day
     if (view==Views.MONTH) {
       var known_dates = []
       events = events.filter ( e => {
-        const dateStr = moment(e.start).format('DD/MM/YYYY')
+        const dateStr = moment(e.start).format('DD/MM/YYYY');
         if (known_dates.includes(dateStr)) {
           return false
         }
-        known_dates.push(dateStr)
+        known_dates.push(dateStr);
         return true
       })
     }
@@ -349,7 +339,7 @@ class Schedule extends React.Component {
 
       if(propsStyle === 'rbc-day-bg rbc-off-range-bg'){
         return(
-            <Grid style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD'}}/>
+            <Grid style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'white', zIndex:5}}/>
         )
       }
       if(propsStyle === 'rbc-day-bg rbc-today'){
@@ -361,20 +351,23 @@ class Schedule extends React.Component {
             <Grid onClick={() => this.selectSlot} style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD', cursor:'pointer'}}/>
         )
       }
-
-
     };
 
     const MyEventWrapper = (event) =>{
-      return(
-          <Grid style={{borderTop : '25px solid pink',
-            borderRight: '25px solid transparent',
-            height : 0,
-            width : 0,
-            borderRadius: 0,
-            padding: 0,
-            margin: 0,}}/>
-      )
+
+       return(
+            <Grid
+                style={{
+                  borderTop : '25px solid pink',
+                  borderRight: '25px solid transparent',
+                  height : 0,
+                  width : 0,
+                  borderRadius: 0,
+                  padding: 0,
+                  margin: 0,
+                  marginLeft: 1
+            }}/>
+        )
     };
 
     return (
