@@ -307,6 +307,8 @@ class Schedule extends React.Component {
 
     const txt = this.availAsText();
     let events = availabilities2events(this.props.availabilities);
+
+
     if (view === Views.MONTH) {
       let known_dates = [];
       events = events.filter ( e => {
@@ -336,7 +338,7 @@ class Schedule extends React.Component {
 
       if(propsStyle === 'rbc-day-bg rbc-off-range-bg'){
         return(
-            <Grid style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD'}}/>
+            <Grid style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'white', zIndex:5}}/>
         )
       }
       if(propsStyle === 'rbc-day-bg rbc-today'){
@@ -361,7 +363,8 @@ class Schedule extends React.Component {
                   width : 0,
                   borderRadius: 0,
                   padding: 0,
-                  margin: 0
+                  margin: 0,
+                  marginLeft: 1
             }}/>
         )
     };
