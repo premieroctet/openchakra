@@ -6,6 +6,8 @@ const keys = require('../../config/keys');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const path = require('path');
+const axiosCookieJarSupport = require('axios-cookiejar-support').default;
+const tough = require('tough-cookie');
 
 const CronJob = require('cron').CronJob;
 
@@ -22,10 +24,32 @@ const multer = require("multer");
 const {getHost}=require('../../../utils/infra')
 const {mangoApi}=require('../../../utils/mangopay')
 const fs = require('fs')
+const axios = require('axios')
 const {computeUrl } = require('../../../config/config');
 
 const {addIdIfRequired, createMangoClient} = require('../../../utils/mangopay')
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus')
+
+axios.defaults.withCredentials = true
+
+// DEBUGGING AXIOS
+/**
+require('axios-debug-log')({
+  request: function (debug, config) {
+    debug('Request:' + JSON.stringify(config, null, 2))
+  },
+  response: function (debug, response) {
+    debug(
+      'Response with ' +JSON.stringify(response.headers),
+      'from ' + response.config.url
+    )
+  },
+  error: function (debug, error) {
+    // Read https://www.npmjs.com/package/axios#handling-errors for more info
+    debug('Boom', error)
+  }
+})
+*/
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -911,31 +935,59 @@ router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false
         })
 });
 
-// @Route GET /myAlfred/api/users/mangopay_kyc
+// @Route GET /myAlfred/api/users/siren_proof
 // Send email
 // @access private
-router.get('/mangopay_kyc', (req,res) => {
-  console.log(`Mangopay hook called:${req.originalUrl}`)
-  const doc_id=req.query.RessourceId
-  const kyc_status=req.query.EventType
-  User.findOne({ identity_proof_id : doc_id })
-    .then(user => {
-      if (!user) {
-        throw(`Aucun utilisateur trouvé pour identity_proof_id=${doc_id}`)
-      }
-      console.log(`User ${user.email} has KYC status ${kyc_status}`)
-      mangoApi.KycDocuments.get(doc_id)
-        .then ( doc => {
-          user.kyc_status=doc.Status
-          user.kyc_error=doc.RefusedReasonType
-          user.save()
-        })
-      res.status(200).json({})
+router.get('/siren_proof/:siren', (req,res) => {
+  const siren='514067685'
+  console.log(`Getting SIREN proof:${req.params.siren}`)
+
+  axiosCookieJarSupport(axios);
+  const cookieJar = new tough.CookieJar();
+
+  const transport = axios.create({
+    jar: cookieJar,
+    withCredentials: true,
+  })
+
+  transport.post('https://avis-situation-sirene.insee.fr/jsp/avis-formulaire.jsp')
+  .then (response => {
+    console.log(JSON.stringify(response.headers))
+  transport.post('https://avis-situation-sirene.insee.fr/IdentificationListeSiret.action',
+    data={
+      'form.siren': siren,
+      'form.critere': 'S',
+      'form.nic': '',
+      'form.departement': '',
+      'form.departement_actif' : '',
+    },
+    headers={
+      'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Accept-Language': 'fr-FR,fr;q=0.9,en;q=0.8',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Host': 'avis-situation-sirene.insee.fr',
+      'Origin': 'https://avis-situation-sirene.insee.fr',
+      'Pragma': 'no-cache',
+      'Referer': 'https://avis-situation-sirene.insee.fr/',
+      'Sec-Fetch-Dest': 'document',
+      'Sec-Fetch-Mode': 'navigate',
+      'Sec-Fetch-Site': 'same-origin',
+      'Sec-Fetch-User': '?1',
+      'Upgrade-Insecure-Requests': '1',
     })
-    .catch(err => {
+    .then (response => {
+      //fs.writeFile('/home/seb/test.html', response.data, function (err) {})
+      res.send(response.data)
+    })
+    .catch( err => {
       console.error(err)
-      res.status(400).json({})
+      res.json(err.response.data)
     })
+  })
 });
 
 const HOOK_TYPES="KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED".split(' ')
