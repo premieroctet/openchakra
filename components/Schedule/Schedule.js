@@ -76,6 +76,7 @@ class Schedule extends React.Component {
       events: _.cloneDeep(this.props.events),
       availabilities: _.cloneDeep(this.props.availabilities),
       title: '',
+      addClass: 'labelSelectorActive',
       eventsSelected: [],
       isModalOpen: false,
       dayLayoutAlgorithm: 'no-overlap',
@@ -302,9 +303,15 @@ class Schedule extends React.Component {
     );
   };
 
+  changeClasses = (classes) => {
+    console.log(classes, 'classes')
+      this.setState({addClass: 'Schedule-labelSelectorActive-85'});
+
+  }
+
   render() {
     const { classes, title, subtitle, selectable, height, nbSchedule } = this.props;
-    const { view } = this.state;
+    const { view, addClass } = this.state;
 
     const txt = this.availAsText();
     let events = bookings2events(this.props.bookings);
@@ -327,7 +334,7 @@ class Schedule extends React.Component {
         return null
       }else{
         return(
-            <Grid className={classes.labelSelector}>
+            <Grid className={addClass} onClick={() => this.changeClasses(classes)}>
               <p style={{margin: 0, cursor:'pointer'}}>{event.label}</p>
             </Grid>
         )

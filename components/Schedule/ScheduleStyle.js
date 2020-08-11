@@ -129,7 +129,7 @@ export default theme => ({
     },
     '& .rbc-row-segment':{
       padding:0
-    }
+    },
   },
   heightContainer:{
     [theme.breakpoints.down('xs')]:{
@@ -151,15 +151,16 @@ export default theme => ({
     display: 'flex',
     alignItems: 'center',
     marginTop: 5,
-    '& :hover':{
-      backgroundColor: '#008489',
-      height: 30,
-      width: 30,
-      borderRadius:50,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color:'white'
-    }
-  }
+  },
+  labelSelectorActive:{
+    backgroundColor: '#008489',
+    height: 30,
+    width: 30,
+    borderRadius:50,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color:'white'
+  },
+
 })
