@@ -21,7 +21,7 @@ const crypto = require('crypto');
 const multer = require("multer");
 const {getHost}=require('../../../utils/infra')
 const {mangoApi}=require('../../../utils/mangopay')
-
+const fs = require('fs')
 const {computeUrl } = require('../../../config/config');
 
 const {addIdIfRequired, createMangoClient} = require('../../../utils/mangopay')
@@ -393,7 +393,7 @@ router.post('/profile/idCard',upload2.fields([{name: 'myCardR',maxCount: 1}, {na
 
             user.save()
               .then(user => {
-                console.log("Sending ID to Mangopay if required");
+                console.log(`Saved idCard user:${JSON.stringify(user.id_card)}`)
                 addIdIfRequired(user);
                 res.json(user)
               })
@@ -938,7 +938,7 @@ router.get('/mangopay_kyc', (req,res) => {
     })
 });
 
-const HOOK_TYPES="KYC_CREATED KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED".split(' ')
+const HOOK_TYPES="KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED".split(' ')
 /** Hook Mangopay */
 
 HOOK_TYPES.forEach(hookType => {
@@ -986,6 +986,7 @@ HOOK_TYPES.forEach(hookType => {
 new CronJob('0 */15 * * * *', function() {
   console.log("Customers who need mango account");
   User.find({id_mangopay: null, active:true})
+    .limit(100)
     .then ( usrs => {
       usrs.forEach( user => {
         console.log(`Found customer ${user.name}`)
