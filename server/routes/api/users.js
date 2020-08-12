@@ -1079,23 +1079,27 @@ router.get('/mangopay_kyc', (req,res) => {
   const kyc_status=req.query.EventType
   User.findOne({ identity_proof_id : doc_id })
     .then(user => {
-      console.log(`User ${user.email} has KYC status ${kyc_status}`)
-      user.kyc_status=kyc_status
-      user.mangopay_error = null
-      user.save()
-      if (kyc_status=='KYC_FAILED') {
-        mangoApi.KycDocuments.get(doc_id)
-          .then ( doc => {
-            user.mangopay_error=doc.RefusedReasonType
-            user.save()
-          })
+      if (user) {
+        console.log(`User ${user.email} has KYC status ${kyc_status}`)
+        user.kyc_status=kyc_status
+        user.mangopay_error = null
+        user.save()
+        if (kyc_status=='KYC_FAILED') {
+          mangoApi.KycDocuments.get(doc_id)
+            .then ( doc => {
+              user.mangopay_error=doc.RefusedReasonType
+              user.save()
+            })
+        }
       }
-      res.status(200)
+      else {
+        console.error(`Could not find user with identity_proof_id ${doc_id}`)
+      }
     })
     .catch(err => {
       console.error(err)
-      res.status(200)
     })
+  res.status(200)
 });
 
 
