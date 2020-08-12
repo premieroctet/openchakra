@@ -90,6 +90,27 @@ const upload2 = multer({ storage: storage2,fileFilter: function (req, file, call
         callback(null, true)
     } });
 
+// Registration proof storage
+const storage3 = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'static/profile/registrationProof/')
+    },
+    filename: function (req, file, cb) {
+        let datetimestamp = Date.now();
+        let key = crypto.randomBytes(5).toString('hex');
+        let key2 = crypto.randomBytes(10).toString('hex');
+        cb(null, datetimestamp+'_'+key+ '_'+key2+path.extname(file.originalname) )
+
+    }
+});
+const upload3 = multer({ storage: storage3,fileFilter: function (req, file, callback) {
+        let ext = path.extname(file.originalname);
+        if(ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg' && ext !== '.PNG' && ext !== '.JPG' && ext !== '.JPEG' && ext !== '.PDF') {
+            return callback(new Error('Error extension'))
+        }
+        callback(null, true)
+    } });
+
 const sendAccountValidation = (request, user) => {
 
   let link=new URL('/validateAccount?user='+user._id, computeUrl(request));
@@ -442,6 +463,23 @@ router.post('/profile/idCard/addVerso',upload2.single('myCardV'),passport.authen
         .catch(err => {
             console.error(err)
         })
+});
+
+// @Route POST /myAlfred/api/users/profile/registrationProof/add
+// Add a registration proof
+// @Access private
+router.post('/profile/registrationProof/add',upload3.single('registrationProof'),passport.authenticate('jwt',{session:false}),(req,res) => {
+    User.findById(req.user.id)
+      .then(user => {
+        user.registration_proof = req.file.path;
+        return user.save()
+      })
+      .then(user => {
+        res.json(user)
+      })
+      .catch(err => {
+        console.error(err)
+      })
 });
 
 // @Route POST /myAlfred/api/users/register/alfred
@@ -1032,6 +1070,33 @@ HOOK_TYPES.forEach(hookType => {
     }
   })
 })
+
+// @Route GET /myAlfred/api/users/mangopay_kyc
+// Send email
+// @access private
+router.get('/mangopay_kyc', (req,res) => {
+  const doc_id=req.query.RessourceId
+  const kyc_status=req.query.EventType
+  User.findOne({ identity_proof_id : doc_id })
+    .then(user => {
+      console.log(`User ${user.email} has KYC status ${kyc_status}`)
+      user.kyc_status=kyc_status
+      user.mangopay_error = null
+      user.save()
+      if (kyc_status=='KYC_FAILED') {
+        mangoApi.KycDocuments.get(doc_id)
+          .then ( doc => {
+            user.mangopay_error=doc.RefusedReasonType
+            user.save()
+          })
+      }
+      res.status(200)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(200)
+    })
+});
 
 
 // Create mango client account for all user with no id_mangopay
