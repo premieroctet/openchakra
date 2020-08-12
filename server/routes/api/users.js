@@ -1077,6 +1077,7 @@ HOOK_TYPES.forEach(hookType => {
 router.get('/mangopay_kyc', (req,res) => {
   const doc_id=req.query.RessourceId
   const kyc_status=req.query.EventType
+  console.log(`Mangopay called ${req.url}`)
   User.findOne({ identity_proof_id : doc_id })
     .then(user => {
       if (user) {
@@ -1091,15 +1092,17 @@ router.get('/mangopay_kyc', (req,res) => {
               user.save()
             })
         }
+        res.status(200).json()
       }
       else {
         console.error(`Could not find user with identity_proof_id ${doc_id}`)
+        res.status(200).json()
       }
     })
     .catch(err => {
       console.error(err)
+      res.status(200).json()
     })
-  res.status(200)
 });
 
 
