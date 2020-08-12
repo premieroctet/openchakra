@@ -143,6 +143,17 @@ const createDefaultAvailability = () => {
   const avail=eventUI2availability(eventUI)
 
   return avail;
+};
+
+/** Moment mmt's date is available for alfred_id => true/false */
+const isAlfredDateAvailable = (mmt, alfred_id) => {
+  return true
 }
 
-module.exports={isMomentAvailable, isIntervalAvailable, getDeadLine, booking_datetime_str, createDefaultAvailability};
+/** Moment mmt's date contains at least one event for alfred_id => true/false */
+const hasAlfredDateEvent = (mmt, alfred_id) => {
+  return true
+}
+
+module.exports={isMomentAvailable, isIntervalAvailable, getDeadLine, booking_datetime_str,
+  createDefaultAvailability, isAlfredDateAvailable, hasAlfredDateEvent};
