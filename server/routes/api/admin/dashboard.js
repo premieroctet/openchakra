@@ -265,6 +265,25 @@ router.get('/users/all_light',passport.authenticate('jwt',{session:false}),(req,
     }
 });
 
+// @Route GET /myAlfred/api/admin/serviceUsersMap
+// View all service per user for map view (light)
+// @Access private
+router.get('/serviceUsersMap', (req, res) => {
+
+    ServiceUser.find({}, '_id service_address.gps')
+        //.populate('user','-id_card')
+        .populate('service', '_id label')
+        .populate('user', 'firstname')
+        .then(services => {
+          res.json(services)
+        })
+        .catch(err => {
+          console.error(err)
+          res.status(404).json({service: 'No service found'})
+        });
+});
+
+
 // @Route POST /myAlfred/api/admin/loginAs
 // Login as user (for admins only)
 router.post('/loginAs', passport.authenticate('jwt',{session:false}), (req, res)=> {
