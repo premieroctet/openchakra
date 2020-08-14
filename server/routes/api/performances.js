@@ -33,36 +33,33 @@ router.get('/incomes/:year',passport.authenticate('jwt',{session:false}),(req,re
     const november = [];
     const december = [];
     Booking.find({alfred: req.user.id,status:'Terminée'})
-        .then(booking => {
-
-                booking.forEach(b => {
-                    const date = b.date_prestation.slice(6,10);
-                    if(date === year){
-                        const month = b.date_prestation.slice(3,5);
-                        switch (month) {
-                            case '01' : january.push(b);break;
-                            case '02' : february.push(b);break;
-                            case '03' : march.push(b);break;
-                            case '04' : april.push(b);break;
-                            case '05' : may.push(b);break;
-                            case '06' : june.push(b);break;
-                            case '07' : july.push(b);break;
-                            case '08' : august.push(b);break;
-                            case '09' : september.push(b);break;
-                            case '10' : october.push(b);break;
-                            case '11' : november.push(b);break;
-                            case '12' : december.push(b);break;
-                        }
-                    }
-                        bookings.push(january,february,march,april,may,june,july,august,september,october,november,december)
-                });
-                res.json(bookings)
-
-        })
-        .catch(err => res.status(404).json({ booking: 'No booking found' }));
-
-
-
+      .then(booking => {
+        booking.forEach(b => {
+            const date = b.date_prestation.slice(6,10);
+            if(date === year){
+                const month = b.date_prestation.slice(3,5);
+                switch (month) {
+                    case '01' : january.push(b);break;
+                    case '02' : february.push(b);break;
+                    case '03' : march.push(b);break;
+                    case '04' : april.push(b);break;
+                    case '05' : may.push(b);break;
+                    case '06' : june.push(b);break;
+                    case '07' : july.push(b);break;
+                    case '08' : august.push(b);break;
+                    case '09' : september.push(b);break;
+                    case '10' : october.push(b);break;
+                    case '11' : november.push(b);break;
+                    case '12' : december.push(b);break;
+                }
+            }
+        });
+        bookings.push(january,february,march,april,may,june,july,august,september,october,november,december)
+        res.json(bookings)
+      })
+      .catch(err => {
+        res.status(404).json({ booking: 'No booking found' })
+      });
 });
 
 
@@ -98,7 +95,7 @@ router.get('/statistics/totalBookings',passport.authenticate('jwt',{session:fals
         .then(booking => {
 
             booking.forEach(b => {
-                totalIncomes += b.amount-b.fees;
+                totalIncomes += b.alfred_amount
                 totalPrestations += b.prestations.length
 
             });

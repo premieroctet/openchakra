@@ -108,7 +108,7 @@ class Historique extends React.Component {
                             <Grid container>
                                 <Grid item style={{textAlign:"center", width: '50%'}}>
                                     <div>
-                                        <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '0%',position: 'sticky'}}>Versement reçu</h2>
+                                        <h2 onClick={this.handleClicktabs} style={{color:'#828181',fontWeight: '100',cursor: 'pointer',marginLeft: '0%',position: 'sticky'}}>Versements reçus</h2>
                                     </div>
                                 </Grid>
                                 <Grid item style={{textAlign:"center", width: '50%'}}>
@@ -176,11 +176,11 @@ class Historique extends React.Component {
                                             {bookingsPaidSoon.map((e,index) => (
                                                 <Grid key={index} style={{borderBottom: '#9f919178 solid 1px', alignItems: 'center'}}>
                                                     <Grid item xs={8}>
-                                                        <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{moment(e.end_date).format('DD/MM/YYYY')}</Typography>
+                                                        <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Prestation terminée le {moment(e.end_date).format('DD/MM/YYYY')}</Typography>
                                                         <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.user.firstname} - {e.date_prestation} - {e.service}</Typography>
                                                     </Grid>
                                                     <Grid item xs={4}>
-                                                        <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{(e.amount-(e.fees*2)).toFixed(2)}€</Typography>
+                                                        <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{e.alfred_amount.toFixed(2)}€</Typography>
                                                     </Grid>
                                                 </Grid>
                                             ))}
@@ -193,11 +193,11 @@ class Historique extends React.Component {
                                             {bookingsPaid.map((e,index) => (
                                                 <Grid key={index} container style={{borderBottom: '#9f919178 solid 1px', alignItems: 'center'}}>
                                                     <Grid item xs={8}>
-                                                        <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{moment(e.date_payment).format('DD/MM/YYYY')}</Typography>
+                                                        <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>Prestation payée le {moment(e.date_payment).format('DD/MM/YYYY')}</Typography>
                                                         <Typography style={{marginBottom: '30px', fontSize: '1.1rem'}}>{e.user.firstname} - {e.date_prestation} - {e.service}</Typography>
                                                     </Grid>
                                                     <Grid item xs={4}>
-                                                        <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{(e.amount-(e.fees*2)).toFixed(2)}€</Typography>
+                                                        <Typography style={{color: '#26A7C6', textAlign: 'center',marginTop: '20px', fontSize: '1.5rem'}}>{e.alfred_amount.toFixed(2)}€</Typography>
                                                     </Grid>
                                                 </Grid>
                                             ))}
