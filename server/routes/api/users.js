@@ -27,7 +27,7 @@ const fs = require('fs')
 const axios = require('axios')
 const {computeUrl } = require('../../../config/config');
 
-const {addIdIfRequired, createMangoClient} = require('../../../utils/mangopay')
+const {addIdIfRequired, addRegistrationProof, createMangoClient} = require('../../../utils/mangopay')
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus')
 
 axios.defaults.withCredentials = true
@@ -475,6 +475,7 @@ router.post('/profile/registrationProof/add',upload3.single('registrationProof')
         return user.save()
       })
       .then(user => {
+        addRegistrationProof(user)
         res.json(user)
       })
       .catch(err => {
