@@ -482,6 +482,23 @@ router.post('/profile/registrationProof/add',upload3.single('registrationProof')
       })
 });
 
+// @Route DELETE /myAlfred/api/users/profile/registrationProof
+// Deletes a registration proof
+// @Access private
+router.delete('/profile/registrationProof', passport.authenticate('jwt',{session:false}),(req,res) => {
+    User.findById(req.user.id)
+      .then(user => {
+        user.registration_proof = null
+        return user.save()
+      })
+      .then(user => {
+        res.json(user)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+});
+
 // @Route POST /myAlfred/api/users/register/alfred
 // Register an alfred
 router.post('/register/alfred', (req, res) => {

@@ -115,6 +115,9 @@ const UserSchema = new Schema({
           type: String
       }
     },
+    registration_proof: {
+      type: String,
+    },
     account: {
         bank: {
             type: String
