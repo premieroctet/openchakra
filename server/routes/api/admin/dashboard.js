@@ -26,7 +26,7 @@ const validatePrestationInput = require('../../../validation/prestation');
 const validateRegisterAdminInput = require('../../../validation/registerAdmin');
 const validateCategoryInput = require('../../../validation/category');
 const validateServiceInput = require('../../../validation/service');
-
+const {addIdIfRequired} = require('../../../../utils/mangopay')
 const multer = require("multer");
 
 // BILLING
@@ -265,6 +265,25 @@ router.get('/users/all_light',passport.authenticate('jwt',{session:false}),(req,
     }
 });
 
+// @Route GET /myAlfred/api/admin/serviceUsersMap
+// View all service per user for map view (light)
+// @Access private
+router.get('/serviceUsersMap', (req, res) => {
+
+    ServiceUser.find({}, '_id service_address.gps')
+        //.populate('user','-id_card')
+        .populate('service', '_id label')
+        .populate('user', 'firstname')
+        .then(services => {
+          res.json(services)
+        })
+        .catch(err => {
+          console.error(err)
+          res.status(404).json({service: 'No service found'})
+        });
+});
+
+
 // @Route POST /myAlfred/api/admin/loginAs
 // Login as user (for admins only)
 router.post('/loginAs', passport.authenticate('jwt',{session:false}), (req, res)=> {
@@ -435,7 +454,7 @@ router.delete('/users/users/:id',passport.authenticate('jwt',{session: false}),(
 router.get('/shop/all', (req, res) => {
     Shop.find({}, '_id creation_date')
       .sort({creation_date:-1})
-      .populate('alfred','_id firstname name email id_mangopay mangopay_provider_id')
+      .populate('alfred','_id firstname name email id_mangopay mangopay_provider_id kyc_status kyc_error id_card')
       .then(shop => {
           if (typeof shop !== 'undefined' && shop.length > 0) {
               res.json(shop);
@@ -2430,6 +2449,30 @@ router.get('/prospect/all',passport.authenticate('jwt',{session:false}),(req,res
 
         res.json(result);
       })
+  } else {
+    res.status(403).json({prospects: 'Access denied'});
+  }
+});
+
+// @Route POST /myAlfred/api/admin/kyc_validate/:alfred_id
+// Get all prospect
+// @Access private
+router.post('/kyc_validate/:alfred_id',passport.authenticate('jwt',{session:false}),(req,res)=> {
+  const token = req.headers.authorization.split(' ')[1];
+  const decode = jwt.decode(token);
+  const admin = decode.is_admin;
+
+  if(admin) {
+    User.findOne({ _id : mongoose.Types.ObjectId(req.params.alfred_id)})
+      .then(user => {
+        addIdIfRequired(user)
+        res.json(result);
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({prospects: 'Error'})
+      })
+
   } else {
     res.status(403).json({prospects: 'Access denied'});
   }

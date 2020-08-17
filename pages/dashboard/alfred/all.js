@@ -14,6 +14,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
@@ -23,6 +24,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import Typography from "@material-ui/core/Typography";
 import moment from 'moment-timezone';
 import cookie from 'react-cookies'
+const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus')
 moment.locale('fr');
 
 const {config} = require('../../../config/config');
@@ -109,7 +111,7 @@ class all extends React.Component {
         this.state = {
             alfred: [],
             page: 0,
-            rowsPerPage: 10,
+            rowsPerPage: 100,
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -143,6 +145,10 @@ class all extends React.Component {
         this.setState({ page: 0, rowsPerPage: event.target.value });
     }
 
+    kyc_validation = alfred_id => {
+      axios.post(`/myAlfred/api/admin/kyc_validate/${alfred_id}`)
+        .then( res => console.log(res))
+    }
 
     render() {
         const { classes } = this.props;
@@ -167,10 +173,11 @@ class all extends React.Component {
                                             <TableCell>Email</TableCell>
                                             <TableCell>Boutique créée le</TableCell>
                                             <TableCell>Action</TableCell>
-                                            <TableCell>Carte d'identité</TableCell>
                                             <TableCell>Boutique</TableCell>
-                                            <TableCell>Mangopay client</TableCell>
-                                            <TableCell>Mangopay Alfred</TableCell>
+                                            <TableCell>Mangopay client/Alfred</TableCell>
+                                            <TableCell>Carte d'identité</TableCell>
+                                            <TableCell>Statut KYC</TableCell>
+                                            <TableCell></TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -193,16 +200,29 @@ class all extends React.Component {
                                                         <Link href={`/dashboard/alfred/view?id=${e.alfred._id}`}><a>Modifier</a></Link>
                                                     </TableCell>
                                                     <TableCell>
-                                                        <Link href={`/dashboard/alfred/idCard?id=${e.alfred._id}`}><a>Détails</a></Link>
-                                                    </TableCell>
-                                                    <TableCell>
                                                         <Link href={`/shop?id_alfred=${e.alfred._id}`}><a>Consulter</a></Link>
                                                     </TableCell>
                                                     <TableCell>
                                                       <a target="_blank" href={`https://dashboard.mangopay.com/User/${e.alfred.id_mangopay}/Details`}>{e.alfred.id_mangopay}</a>
+                                                        &nbsp;-&nbsp;
+                                                      <a target="_blank" href={`https://dashboard.mangopay.com/User/${e.alfred.mangopay_provider_id}/Details`}>{e.alfred.mangopay_provider_id}</a>
                                                     </TableCell>
                                                     <TableCell>
-                                                      <a target="_blank" href={`https://dashboard.mangopay.com/User/${e.alfred.mangopay_provider_id}/Details`}>{e.alfred.mangopay_provider_id}</a>
+                                                      { e.alfred.id_card ?
+                                                      <Link href={`/dashboard/alfred/idCard?id=${e.alfred._id}`} target={`_blank`}><a>Détails</a></Link>
+                                                      :
+                                                      `Aucune`
+                                                      }
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        { e.alfred.kyc_status_text }<br/>{ e.alfred.kyc_error }
+                                                    </TableCell>
+                                                    <TableCell>
+                                                    { e.alfred.id_card && e.alfred.kyc_status!=KycDocumentStatus.Validated ?
+                                                          <Button color="primary" onClick={ () => this.kyc_validation(e.alfred._id)}>Validation Mangopay</Button>
+                                                      :
+                                                      null
+                                                    }
                                                     </TableCell>
                                                 </TableRow>
                                             )}
@@ -211,7 +231,7 @@ class all extends React.Component {
                                 </Table>
                             </div>
                             <TablePagination
-                                rowsPerPageOptions={[10, 25]}
+                                rowsPerPageOptions={[10, 25, 50, 100]}
                                 component="div"
                                 count={alfred.length}
                                 rowsPerPage={this.state.rowsPerPage}

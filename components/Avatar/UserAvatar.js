@@ -20,6 +20,7 @@ class UserAvatar extends React.Component{
       owner: false,
       userId: ''
     }
+    this.interval_id = null
   }
 
   componentDidMount() {
@@ -33,11 +34,15 @@ class UserAvatar extends React.Component{
           // Check once then every 20s
           if (this.props.warnings==true) {
             this.checkWarnings(token)
-            setInterval(() => this.checkWarnings(token) , 20000)
+            this.interval_id = setInterval(() => this.checkWarnings(token) , 20000)
           }
         }
       )
     }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval_id)
   }
 
   checkWarnings = token => {

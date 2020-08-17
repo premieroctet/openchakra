@@ -16,7 +16,7 @@ import MapComponent from '../../components/map';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import cookie from "react-cookies";
-
+import AlgoliaPlaces from 'algolia-places-react'
 const jwt = require('jsonwebtoken');
 const styles = theme => ({
   signupContainer: {
@@ -59,11 +59,14 @@ class ServicesMap extends React.Component {
     super(props);
     this.state = {
       allServices: [],
-      selectedService: 'all',
+      selectedService: 'none',
       services: [],
-      serviceCircles: [],
+      allServiceCircles: [],
+      displayedServiceCircles: [],
       userCircles: [],
       displayUsers:false,
+      centerLat: 47.5,
+      centerLon: 1.71,
     }
     this.onChange = this.onChange.bind(this);
   }
@@ -82,16 +85,17 @@ class ServicesMap extends React.Component {
         })
         .catch(err => console.error(err));
       // Services
-      axios.get("/myAlfred/api/serviceUser/all")
+      axios.get("/myAlfred/api/admin/serviceUsersMap")
         .then(response => {
           const serviceCircles = response.data.map(s => ({
             coordinates: s.service_address.gps,
             label: `${s.user.firstname}-${s.service.label}`,
             link: `/userServicePreview?id=${s._id}`,
+            service: s.service._id,
           }))
           this.setState({
             services: response.data,
-            serviceCircles: serviceCircles
+            allServiceCircles: serviceCircles
           })
         })
         .catch(err => console.error(err));
@@ -112,18 +116,19 @@ class ServicesMap extends React.Component {
     }
   }
 
+  onChangeCity = suggestion => {
+    const lat = suggestion.suggestion.latlng.lat
+    const lon = suggestion.suggestion.latlng.lng
+    this.setState({ centerLat: lat, centerLon: lon})
+  }
+
   onChange = ev => {
     const { name, value } = ev.target;
     if (name=='selectedService') {
-      const filtered = value=='all' ? this.state.services : value=='none' ? [] : this.state.services.filter(s => s.service._id.toString() == value)
-      const serviceCircles = filtered.map(s => ({
-        coordinates: s.service_address.gps,
-        label: `${s.user.firstname}-${s.service.label}`,
-        link: `/userServicePreview?id=${s._id}`,
-      }))
+      const displayedServiceCircles = value=='all' ? this.state.allServiceCircles : value=='none' ? [] : this.state.allServiceCircles.filter(s => s.service == value)
       this.setState({
         selectedService: value,
-        serviceCircles: serviceCircles
+        displayedServiceCircles: displayedServiceCircles
       })
     }
     if (name=='displayUsers') {
@@ -133,16 +138,29 @@ class ServicesMap extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { serviceCircles, userCircles, allServices, selectedService, displayUsers, } = this.state;
+    const { displayedServiceCircles, userCircles, allServices, selectedService, displayUsers, centerLat, centerLon} = this.state;
 
-    const allCircles= displayUsers ? userCircles.concat(serviceCircles) : serviceCircles
+    const allCircles= displayUsers ? userCircles.concat(displayedServiceCircles) : displayedServiceCircles
     return (
       <Layout>
         <Grid style={{width : '100%', height:700}}>
             { /* <MapComponent position={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]} perimeter={serviceUser.perimeter*1000} alfred={alfred.firstname}/> */ }
-            <MapComponent position={[47.5, 1.71]} zoom={6} circles={allCircles}/>
+            <MapComponent position={[centerLat, centerLon]} zoom={6} circles={allCircles}/>
           </Grid>
           <Grid style={{width : '100%'}}>
+          <Grid><AlgoliaPlaces
+            placeholder='Centrer sur une ville'
+            style={{color: '#505050'}}
+            options={{
+              appId: 'plKATRG826CP',
+              apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+              language: 'fr',
+              countries: ['fr'],
+              type: 'city',
+            }}
+            onChange={(suggestion) =>this.onChangeCity(suggestion)}
+            onClear={()=>this.setState({city:'', gps:null})}
+          /></Grid>
           <Grid style={{display: 'flex', 'align-items':'center'}}>
           <Select
             renderValue={selected => selected=='all' ? 'Tous' : selected=='none' ? 'Aucun' : allServices.filter(s => s._id===selected)[0].label}
@@ -157,7 +175,7 @@ class ServicesMap extends React.Component {
             ))}
 
             </Select>
-            <Typography>{serviceCircles.length} services</Typography>
+            <Typography>{displayedServiceCircles.length} services</Typography>
             </Grid>
             <Grid style={{display: 'flex', 'align-items':'center'}}>
             <Checkbox name={`displayUsers`} checked={this.state.displayUsers} onChange={this.onChange}/>

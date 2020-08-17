@@ -144,6 +144,11 @@ const BookingSchema = new Schema({
       type: Number,
       default: 0,
     }
-});
+}, { toJSON: { virtuals: true, getters: true } });
+
+BookingSchema.virtual('alfred_amount').get( function() {
+    return this.amount-this.fees
+})
+
 
 module.exports = Booking = mongoose.model('booking',BookingSchema);

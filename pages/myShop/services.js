@@ -182,7 +182,7 @@ class services extends React.Component {
             cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
 
             let full_url = this.isNewService() ? '/myAlfred/api/serviceUser/myShop/add' : `/myAlfred/api/serviceUser/edit/${this.props.service_user_id}`;
-            axios.defaults.headers.common['Authorization'] = cookie.load('token')
+
             (this.isNewService() ? axios.post : axios.put)(full_url, cloned_shop)
               .then(res => {
 
