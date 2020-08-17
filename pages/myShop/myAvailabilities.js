@@ -30,6 +30,7 @@ class myAvailabilities extends React.Component {
         this.state = {
             user: {},
             availabilities: [],
+            bookings: [],
             alfred:[],
             id: props.aboutId,
             shop:[],
@@ -210,6 +211,7 @@ class myAvailabilities extends React.Component {
                       <Grid>
                         <Schedule
                             availabilities={this.state.availabilities}
+                            bookings={this.state.bookings}
                             title={I18N.SCHEDULE_TITLE}
                             subtitle={I18N.SCHEDULE_SUBTITLE}
                             services={this.state.services}

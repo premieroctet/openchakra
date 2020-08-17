@@ -164,5 +164,25 @@ const availability2eventUI = avail => {
   return eventUI
 
 };
+const booking2event = booking => {
+    console.log(`Converting ${JSON.stringify(booking)}`)
+    let res= {
+      _id : booking._id,
+      title: booking.service,
+      start: booking.date,
+      end: booking.date,
+    }
+    return res
+}
 
-module.exports={availabilities2events, eventUI2availability, availability2eventUI, DAYS, LONG_DAYS, TIMESLOTS};
+const bookings2events = bookings => {
+  console.log(`Converting ${JSON.stringify(bookings)}`)
+  if (!bookings) return []
+  const events = bookings.map( b => booking2event(b))
+  return events
+}
+
+module.exports={availabilities2events, eventUI2availability, availability2eventUI,
+   DAYS, LONG_DAYS, TIMESLOTS,
+   bookings2events
+};
