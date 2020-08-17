@@ -99,7 +99,9 @@ export default theme => ({
     '& .rbc-month-row':{
       borderRadius:'0px 0px 10px 5px',
       display:'flex',
+      justifyContent: 'center'
     },
+
     '& .rbc-date-cell':{
       display: 'flex',
       flexDirection: 'column',
@@ -109,9 +111,15 @@ export default theme => ({
       height: '100%'
     },
     '& .rbc-row-content':{
-      display: 'flex',
-      flexDirection: 'column-reverse',
-      justifyContent: 'center',
+      display:'flex',
+      flexDirection: 'column',
+      height: '100%',
+      justifyContent: 'center'
+    },
+    '& .rbc-row-content .rbc-row:nth-child(2)':{
+      position: 'absolute',
+      width: '100%',
+      top: 0
     },
     '& .rbc-day-bg rbc-off-range-bg':{
       display : 'none'

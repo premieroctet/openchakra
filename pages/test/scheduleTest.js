@@ -26,7 +26,7 @@ class scheduleTest extends React.Component{
         .then(response => {
           this.setState({bookings: response.data})
           console.log(`${JSON.stringify(response.data[0])}`)
-        })
+        }).catch(err => console.log(err))
     }
 
     render(){
