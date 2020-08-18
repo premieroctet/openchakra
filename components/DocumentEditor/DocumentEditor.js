@@ -6,9 +6,6 @@ import Delete from '@material-ui/icons/DeleteOutlined';
 import { Document,Page } from 'react-pdf'
 import styles from './DocumentEditorStyle'
 import axios from 'axios'
-import detectContentType from 'detect-content-type'
-
-//const FileType = require('file-type');
 
 class DocumentEditor extends React.Component{
   constructor(props){
