@@ -127,6 +127,7 @@ const addIdIfRequired = user => {
       const documentId = result.Id;
       console.log(`Create identity proof ${documentId} for provider ${id}`)
       user.identity_proof_id=documentId;
+      user.kyc_status=KycDocumentStatus.Created
       user.save()
         .then ( u => console.log(`User saved id proof ${user.identity_proof_id}`) )
         .catch ( err => console.error(err) )
@@ -144,6 +145,12 @@ const addIdIfRequired = user => {
             console.log("Asking for KYC validation")
             const updateObj = {Id: documentId, Status: KycDocumentStatus.ValidationAsked}
             mangoApi.Users.updateKycDocument(user.mangopay_provider_id, updateObj)
+              .then( () => console.log('Validation asked OK'))
+              .catch( err => console.error('Validation asked error:${err}'))
+            user.kyc_status=KycDocumentStatus.ValidationAsked
+            user.save()
+              .then ( u => console.log(`User ${user._id} set ${user.identity_proof_id} to ${KycDocumentStatus.ValidationAsked}`) )
+              .catch ( err => console.error(err) )
           })
           .catch (err => {
             console.error(`While creating KycPageFromFile:${JSON.stringify(err)}`)

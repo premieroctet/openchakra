@@ -58,7 +58,7 @@ export default theme => ({
     },
   },
   myRevenu:{
-    paddingLeft: '15%',
+    paddingLeft: '20%',
     marginBottom: '20px',
     width: '100%',
     [theme.breakpoints.down('xs')]: {
