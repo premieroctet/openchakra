@@ -59,8 +59,8 @@ class UserAvatar extends React.Component{
       })
       .then( res => {
         const user = res.data
-        if (user.kyc_error_text) {
-          kyc.push(user.kyc_error_text)
+        if (user.id_card_error_text) {
+          kyc.push(user.id_card_error_text)
         }
       })
       .then ( () => {
