@@ -91,8 +91,8 @@ class trustAndVerification extends React.Component {
             cesu: null,
             cis: false,
             notice: false,
-            kyc_status: null,
-            kyc_error: null,
+            id_card_status: null,
+            id_card_error: null,
             deleteConfirmMessage: null,
         };
         this.editSiret = this.editSiret.bind(this);
@@ -133,9 +133,9 @@ class trustAndVerification extends React.Component {
                   const ext = user.registration_proof.split('.').pop();
                   this.setState({extRegistrationProof:ext});
                 }
-                this.setState( { kyc_status: user.kyc_status_text})
-                if (user.kyc_error) {
-                  this.setState( { kyc_error: user.kyc_error_text})
+                this.setState( { id_card_status: user.id_card_status_text})
+                if (user.id_card_error) {
+                  this.setState( { id_card_error: user.id_card_error_text})
                 }
                 if(user.is_alfred) {
                     this.setState({alfred: true});
@@ -505,8 +505,8 @@ class trustAndVerification extends React.Component {
                                 <Grid item>
                                     <h2 style={{fontWeight:'100'}}>Pièce d'identité</h2>
                                     <p style={{color:'#2FBCD3'}}>Vous pouvez ajouter ou modifier une pièce d’identité en sélectionnant le type de pièce et télécharger le document.<br/>Un recto pour le passeport et le recto/verso pour la pièce d’identité</p>
-                                    <em >{this.state.kyc_status}</em><br/>
-                                    <em style={{ color : 'red'}}>{this.state.kyc_error}</em><br/>
+                                    <em >{this.state.id_card_status}</em><br/>
+                                    <em style={{ color : 'red'}}>{this.state.id_card_error}</em><br/>
                                     <TextField
                                         select
                                         className={classes.typeFile}

@@ -981,9 +981,9 @@ router.put('/current/delete',passport.authenticate('jwt',{session:false}),(req,r
 router.delete('/profile/idCard/recto',passport.authenticate('jwt',{session:false}),(req,res) => {
     User.findById(req.user.id)
         .then(user => {
-            user.id_card = undefined;
-            user.kyc_status = null
-            user.kyc_error = null
+            user.id_card = null
+            user.id_card_status = null
+            user.id_card_error = null
             user.save().then(user => res.json(user)).catch(err => console.error(err));
         })
         .catch(err => {
@@ -1096,20 +1096,23 @@ router.get('/mangopay_kyc', (req,res) => {
   const doc_id=req.query.RessourceId
   const kyc_status=req.query.EventType
   console.log(`Mangopay called ${req.url}`)
-  User.findOne({ identity_proof_id : doc_id })
+  User.findOne({ $or : [{ identity_proof_id : doc_id }, { registration_proof_id : doc_id }]})
     .then(user => {
       if (user) {
-        console.log(`User ${user.email} received event ${kyc_status} for document ${doc_id}`)
+        // Got callback for id proof or registration proof ?
+        const is_id_card = user.identity_proof_id == doc_id
+        const proof_prefix= is_id_card ? 'id_card' : 'registration_proof'
+        console.log(`User ${user.email} received event ${kyc_status} for document ${doc_id} (${proof_prefix})`)
         mangoApi.KycDocuments.get(doc_id)
           .then ( doc => {
-            user.kyc_status=doc.Status
-            user.mangopay_error=doc.RefusedReasonType
+            user[proof_prefix+'_status']=doc.Status
+            user[proof_prefix+'_error']=doc.RefusedReasonType
             user.save()
         })
         res.status(200).json()
       }
       else {
-        console.error(`Could not find user with identity_proof_id ${doc_id}`)
+        console.error(`Could not find user with identity_proof_id or registration_proof_id ${doc_id}`)
         res.status(200).json()
       }
     })
@@ -1121,7 +1124,7 @@ router.get('/mangopay_kyc', (req,res) => {
 
 
 // Create mango client account for all user with no id_mangopay
-new CronJob('0 */15 * * * *', function() {
+new CronJob('0 */5 * * * *', function() {
   console.log("Customers who need mango account");
   User.find({id_mangopay: null, active:true})
     .limit(100)

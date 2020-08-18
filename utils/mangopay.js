@@ -127,7 +127,7 @@ const addIdIfRequired = user => {
       const documentId = result.Id;
       console.log(`Create identity proof ${documentId} for provider ${id}`)
       user.identity_proof_id=documentId;
-      user.kyc_status=KycDocumentStatus.Created
+      user.id_card_status=KycDocumentStatus.Created
       user.save()
         .then ( u => console.log(`User saved id proof ${user.identity_proof_id}`) )
         .catch ( err => console.error(err) )
@@ -147,7 +147,7 @@ const addIdIfRequired = user => {
             mangoApi.Users.updateKycDocument(user.mangopay_provider_id, updateObj)
               .then( () => console.log('Validation asked OK'))
               .catch( err => console.error('Validation asked error:${err}'))
-            user.kyc_status=KycDocumentStatus.ValidationAsked
+            user.id_card_status=KycDocumentStatus.ValidationAsked
             user.save()
               .then ( u => console.log(`User ${user._id} set ${user.identity_proof_id} to ${KycDocumentStatus.ValidationAsked}`) )
               .catch ( err => console.error(err) )
@@ -177,7 +177,7 @@ const addRegistrationProof = user => {
       const documentId = result.Id;
       console.log(`Create identity proof ${documentId} for provider ${id}`)
       user.registration_proof_id=documentId;
-      user.kyc_status=KycDocumentStatus.Created
+      user.registration_proof_status=KycDocumentStatus.Created
       user.save()
         .then ( u => console.log(`User saved registration proof ${user.identity_proof_id}`) )
         .catch ( err => console.error(err) )
@@ -192,7 +192,7 @@ const addRegistrationProof = user => {
           mangoApi.Users.updateKycDocument(user.mangopay_provider_id, updateObj)
             .then( () => console.log('Validation asked OK'))
             .catch( err => console.error('Validation asked error:${err}'))
-          user.kyc_status=KycDocumentStatus.ValidationAsked
+          user.registration_proof_status=KycDocumentStatus.ValidationAsked
           user.save()
             .then ( u => console.log(`User ${user._id} set ${user.registration_proof_id} to ${KycDocumentStatus.ValidationAsked}`) )
             .catch ( err => console.error(err) )
