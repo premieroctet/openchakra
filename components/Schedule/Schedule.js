@@ -58,7 +58,7 @@ const formats = {
 class Schedule extends React.Component {
   EMPTY_AVAIL = {
     // Availability data
-    servicesSelected:[ALL_SERVICES],
+    servicesSelected: [ALL_SERVICES],
     _id: null,
     selectedDateStart: null,
     selectedTimeStart: null,
@@ -77,13 +77,13 @@ class Schedule extends React.Component {
       availabilities: _.cloneDeep(this.props.availabilities),
       title: '',
       addClass: 'labelSelectorActive',
-      eventsSelected: [],
+      eventsSelected: new Set(),
       isModalOpen: false,
       dayLayoutAlgorithm: 'no-overlap',
       isExpanded: true,
       services: [ALL_SERVICES, ...this.props.services] || [ALL_SERVICES],
       ...this.EMPTY_AVAIL,
-      view : Views.MONTH,
+      view: Views.MONTH,
     };
     this.resetData();
   }
@@ -91,14 +91,15 @@ class Schedule extends React.Component {
   resetData = () => {
     this.setState(this.EMPTY_AVAIL)
   };
+
   /**
-    On peut envoyer si service(s) sélectionné(s), date/heure début et fin saisis
-    et, si récurrence, au moins un jour sélectionné
-  */
+   On peut envoyer si service(s) sélectionné(s), date/heure début et fin saisis
+   et, si récurrence, au moins un jour sélectionné
+   */
   isButtonSendEnabled() {
-    let enabled=this.state.servicesSelected.length>0;
+    let enabled = this.state.servicesSelected.length > 0;
     enabled = enabled && this.state.selectedDateStart && this.state.selectedTimeStart && this.state.selectedDateEnd && this.state.selectedTimeEnd;
-    enabled = enabled && (!this.state.isExpanded || this.state.recurrDays.size>0);
+    enabled = enabled && (!this.state.isExpanded || this.state.recurrDays.size > 0);
     return enabled;
   }
 
@@ -107,51 +108,52 @@ class Schedule extends React.Component {
   }
 
   addRecurrDay(item) {
-    this.setState(({ recurrDays }) => ({
+    this.setState(({recurrDays}) => ({
       recurrDays: new Set(recurrDays).add(item)
     }));
   }
 
   removeRecurrDay(item) {
-    this.setState(({ recurrDays }) => {
+    this.setState(({recurrDays}) => {
       const newChecked = new Set(recurrDays);
       newChecked.delete(item);
 
       return {
-       recurrDays: newChecked
+        recurrDays: newChecked
       };
     });
   }
 
 
   onChangeServices = e => {
-    let all_serv = e.target.value.filter(serv => serv[0]===ALL_SERVICES[0]);
-    let contains = all_serv.length>0;
+    let all_serv = e.target.value.filter(serv => serv[0] === ALL_SERVICES[0]);
+    let contains = all_serv.length > 0;
     if (contains) {
       this.setState({servicesSelected: [ALL_SERVICES]});
-    }
-    else {
-      this.setState({servicesSelected: e.target.value });
+    } else {
+      this.setState({servicesSelected: e.target.value});
     }
   };
 
-  toggleAddModal =  ({ start, end })  => {
+  toggleAddModal = ({start, end}) => {
     if (!this.props.onCreateAvailability) {
       return
     }
     var dt = new Date(start);
-    dt.setMonth( dt.getMonth() + 6 );
-      this.setState({
-        _id : null,
-        selectedDateStart: start,
-        selectedDateEnd: end,
-        selectedTimeStart: start.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
-        selectedTimeEnd: end.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
-        selectedDateEndRecu: dt,
-        servicesSelected: [ALL_SERVICES],
-        isModalOpen: !this.state.isModalOpen,
-        recurrDays: new Set([0, 1, 2, 3, 4 , 5])
-      }, () => { console.log(`Id:${this.state._id}`)});
+    dt.setMonth(dt.getMonth() + 6);
+    this.setState({
+      _id: null,
+      selectedDateStart: start,
+      selectedDateEnd: end,
+      selectedTimeStart: start.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
+      selectedTimeEnd: end.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
+      selectedDateEndRecu: dt,
+      servicesSelected: [ALL_SERVICES],
+      isModalOpen: !this.state.isModalOpen,
+      recurrDays: new Set([0, 1, 2, 3, 4, 5])
+    }, () => {
+      console.log(`Id:${this.state._id}`)
+    });
 
   };
 
@@ -159,7 +161,7 @@ class Schedule extends React.Component {
     if (!this.props.onUpdateAvailability) {
       return
     }
-    var avail=this.props.availabilities.filter( a => a._id === event._id);
+    var avail = this.props.availabilities.filter(a => a._id === event._id);
     if (avail.length === 0) {
       return
     }
@@ -176,61 +178,60 @@ class Schedule extends React.Component {
     }
   };
 
-   handleChange = () =>{
-     this.setState({isExpanded: !this.state.isExpanded});
-     if (this.state.isExpanded && this.state.recurrDays.size===0 && this.state.selectedDateStart ) {
-       let dayOfWeek = new Date(this.state.selectedDateStart).getDay();
-       dayOfWeek = (dayOfWeek+6)%7;
-       this.setState({recurrDays: new Set([dayOfWeek])});
-     }
-   };
+  handleChange = () => {
+    this.setState({isExpanded: !this.state.isExpanded});
+    if (this.state.isExpanded && this.state.recurrDays.size === 0 && this.state.selectedDateStart) {
+      let dayOfWeek = new Date(this.state.selectedDateStart).getDay();
+      dayOfWeek = (dayOfWeek + 6) % 7;
+      this.setState({recurrDays: new Set([dayOfWeek])});
+    }
+  };
 
-   handleCancel = () => {
-     this.resetData();
-     this.closeModal()
-   };
+  handleCancel = () => {
+    this.resetData();
+    this.closeModal()
+  };
 
-   handleDateStartChange = date => {
-     this.setState({selectedDateStart: new Date(date)})
-     // End date is start date with end time
-     var newDateEnd = new Date(date)
-     let hours = parseInt(this.state.selectedTimeEnd.substring(0,2))
-     let minutes = parseInt(this.state.selectedTimeEnd.substring(3,5))
-     newDateEnd.setHours(hours);
-     newDateEnd.setMinutes(minutes);
-     this.setState({selectedDateEnd: newDateEnd});
-   };
+  handleDateStartChange = date => {
+    this.setState({selectedDateStart: new Date(date)})
+    // End date is start date with end time
+    var newDateEnd = new Date(date)
+    let hours = parseInt(this.state.selectedTimeEnd.substring(0, 2))
+    let minutes = parseInt(this.state.selectedTimeEnd.substring(3, 5))
+    newDateEnd.setHours(hours);
+    newDateEnd.setMinutes(minutes);
+    this.setState({selectedDateEnd: newDateEnd});
+  };
 
   handleDateEndChange = date => {
     this.setState({selectedDateEnd: date});
   };
 
-  handleTimeStartChange = time =>{
-    let hours = parseInt(time.target.value.substring(0,2));
-    let minutes = parseInt(time.target.value.substring(3,5));
+  handleTimeStartChange = time => {
+    let hours = parseInt(time.target.value.substring(0, 2));
+    let minutes = parseInt(time.target.value.substring(3, 5));
     this.setState({selectedTimeStart: time.target.value});
     this.state.selectedDateStart.setHours(hours);
     this.state.selectedDateStart.setMinutes(minutes);
   };
 
-  handleTimeEndChange = time =>{
-    let hours = parseInt(time.target.value.substring(0,2));
-    let minutes = parseInt(time.target.value.substring(3,5));
+  handleTimeEndChange = time => {
+    let hours = parseInt(time.target.value.substring(0, 2));
+    let minutes = parseInt(time.target.value.substring(3, 5));
     this.setState({selectedTimeEnd: time.target.value});
     this.state.selectedDateEnd.setHours(hours);
     this.state.selectedDateEnd.setMinutes(minutes);
   };
 
   handleDateEndChangeRecu = date => {
-    this.setState({ selectedDateEndRecu: date });
+    this.setState({selectedDateEndRecu: date});
   };
 
   onSubmit = e => {
-    let avail=eventUI2availability(this.state);
-    if (this.state._id==null) { // Modif
+    let avail = eventUI2availability(this.state);
+    if (this.state._id == null) { // Modif
       this.props.onCreateAvailability(avail);
-    }
-    else {
+    } else {
       this.props.onUpdateAvailability(avail);
     }
     this.closeModal();
@@ -238,26 +239,35 @@ class Schedule extends React.Component {
   };
 
   onDelete = e => {
-    let avail=eventUI2availability(this.state);
+    let avail = eventUI2availability(this.state);
     this.closeModal();
   };
 
-  closeModal = () =>{
+  closeModal = () => {
     this.setState({isModalOpen: false})
   };
 
-  selectedEvent = (event) =>{
+  selectedEvent = (event) => {
     let alfredAvailable = isAlfredDateAvailable(event);
     let hasDateEvent = hasAlfredDateEvent(event);
 
   };
 
-  selectSlot = ({start, end, action}) =>{
+  selectSlot = ({start, end, action}) => {
     let alfredAvailable = isAlfredDateAvailable(start);
     let hasDateEvent = hasAlfredDateEvent(start);
-    let array = Object.values(this.state.eventsSelected);
-
-   this.setState( {eventsSelected:[...this.state.eventsSelected, start]}, () => console.log(`Selected events: ${this.state.eventsSelected}`))
+    let newDate = moment(start).format('YYYY-MM-DD');
+      if(this.state.eventsSelected.has(newDate)){
+        this.setState(({eventsSelected}) => {
+          const newChecked = new Set(eventsSelected);
+          newChecked.delete(newDate);
+          return {
+            eventsSelected: newChecked
+          };
+        });
+      }else{
+        this.setState(({eventsSelected}) => ({eventsSelected: new Set(eventsSelected).add(newDate)}));
+      }
   };
 
   availAsText = () => {
@@ -304,10 +314,9 @@ class Schedule extends React.Component {
   };
 
   changeClasses = (classes) => {
-    console.log(classes, 'classes')
       this.setState({addClass: 'Schedule-labelSelectorActive-85'});
 
-  }
+  };
 
   render() {
     const { classes, title, subtitle, selectable, height, nbSchedule } = this.props;
@@ -378,7 +387,7 @@ class Schedule extends React.Component {
     };
 
     return (
-      <Grid className={classes.heightContainer} style={{height: height}} >
+      <Grid className={classes.heightContainer} style={{height: height, overflow: 'hidden'}} >
         { title || subtitle  ?
           <Grid style={{ marginBottom: 50 }}>
             { title ?
@@ -394,7 +403,7 @@ class Schedule extends React.Component {
           </Grid>
           : null
         }
-        <Grid container spacing={2}>
+        <Grid container spacing={1} style={{padding: '1%'}}>
           {[...Array(nbSchedule)].map((x, i) =>{
             let date = new Date();
             let month = new Date(date.setMonth(date.getMonth() + (i-3)));
