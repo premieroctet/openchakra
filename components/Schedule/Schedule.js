@@ -245,16 +245,10 @@ class Schedule extends React.Component {
   };
 
   selectedEvent = (event) => {
-    let alfredAvailable = isAlfredDateAvailable(event);
-    let hasDateEvent = hasAlfredDateEvent(event);
 
   };
 
   selectSlot = ({start, end, action}) => {
-    let alfredAvailable = isAlfredDateAvailable(start);
-    let hasDateEvent = hasAlfredDateEvent(start);
-
-
     let newDate = moment(start).format('YYYY-MM-DD');
       if(this.state.eventsSelected.has(newDate)){
         this.setState(({eventsSelected}) => {
