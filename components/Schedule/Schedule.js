@@ -263,9 +263,9 @@ class Schedule extends React.Component {
           return {
             eventsSelected: newChecked
           };
-        }, () => this.props.bonjour());
+        } );
       }else{
-        this.setState(({eventsSelected}) => ({eventsSelected: new Set(eventsSelected).add(newDate)}), () => this.props.bonjour());
+        this.setState(({eventsSelected}) => ({eventsSelected: new Set(eventsSelected).add(newDate)}));
       }
   };
 
