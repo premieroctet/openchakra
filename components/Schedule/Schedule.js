@@ -18,12 +18,13 @@ import frLocale from "date-fns/locale/fr";
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import {bookings2events, availabilities2events, eventUI2availability, availability2eventUI, LONG_DAYS} from '../../utils/converters';
-import { isAlfredDateAvailable, hasAlfredDateEvent } from '../../utils/dateutils';
+import { isAlfredDateAvailable, hasAlfredDateBooking } from '../../utils/dateutils';
 import {ALL_SERVICES, GID_LEN} from '../../utils/consts.js';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Typography } from '@material-ui/core'; // Import css
 import styles from './ScheduleStyle'
 import PropTypes from 'prop-types';
+const {isDateAvailable}=require('../../utils/dateutils')
 
 const localizer = momentLocalizer(moment);
 
@@ -73,8 +74,6 @@ class Schedule extends React.Component {
     super(props);
 
     this.state = {
-      events: _.cloneDeep(this.props.events),
-      availabilities: _.cloneDeep(this.props.availabilities),
       title: '',
       addClass: 'labelSelectorActive',
       eventsSelected: [],
@@ -253,8 +252,8 @@ class Schedule extends React.Component {
   };
 
   selectSlot = ({start, end, action}) =>{
-    let alfredAvailable = isAlfredDateAvailable(start);
-    let hasDateEvent = hasAlfredDateEvent(start);
+    let alfredAvailable = isAlfredDateAvailable(start, this.props.availabilities);
+    let hasDateEvent = hasAlfredDateBooking(start);
     let array = Object.values(this.state.eventsSelected);
 
    this.setState( {eventsSelected:[...this.state.eventsSelected, start]}, () => console.log(`Selected events: ${this.state.eventsSelected}`))
@@ -318,14 +317,9 @@ class Schedule extends React.Component {
 
     // Month view : at most one event per day
     if (view==Views.MONTH) {
-      var known_dates = []
-      events = events.filter ( e => {
-        const dateStr = moment(e.start).format('DD/MM/YYYY');
-        if (known_dates.includes(dateStr)) {
-          return false
-        }
-        known_dates.push(dateStr);
-        return true
+      events = _.uniq(events, event => {
+        console.log(date_prestation)
+        return moment(event.start).format('DD/MM/YYYY')
       })
     }
 
@@ -342,21 +336,37 @@ class Schedule extends React.Component {
     };
 
     const MyDateCellWrapper = (event) =>{
+
       let propsStyle = event.children.props['className'];
+
+      var off_range_style={width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'white', zIndex:5}
+      var today_style = {width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'rgba(79, 189, 215, 0.2)', cursor:'pointer'}
+      var day_style = {width: '100%', height :'100%', borderLeft:'1px solid #DDD', cursor:'pointer'}
+      var non_available_style = {width: '100%', height :'100%', borderLeft:'1px solid #DDD', cursor:'pointer', backgroundColor:'lightgrey'}
+
+      const m=moment(event.value)
+      const isAvailable = isDateAvailable(m, this.props.availabilities)
 
       if(propsStyle === 'rbc-day-bg rbc-off-range-bg'){
         return(
-            <Grid style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'white', zIndex:5}}/>
+            <Grid style={off_range_style}/>
         )
       }
       if(propsStyle === 'rbc-day-bg rbc-today'){
         return (
-            <Grid onClick={() => this.selectSlot} style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'rgba(79, 189, 215, 0.2)', cursor:'pointer'}}/>
+            <Grid onClick={() => this.selectSlot} style={{today_style}}/>
         )
       }else{
-        return(
-            <Grid onClick={() => this.selectSlot} style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD', cursor:'pointer'}}/>
-        )
+        if (isAvailable) {
+          return(
+            <Grid onClick={() => this.selectSlot} style={day_style}/>
+          )
+        }
+        else {
+          return(
+            <Grid onClick={() => this.selectSlot} style={non_available_style}/>
+          )
+        }
       }
     };
 
@@ -372,7 +382,7 @@ class Schedule extends React.Component {
                   borderRadius: 0,
                   padding: 0,
                   margin: 0,
-                  marginLeft: 1
+                  marginLeft: 1,
             }}/>
         )
     };
