@@ -1,7 +1,10 @@
 const { RRule, RRuleSet, rrulestr }=require('rrule');
 const {ALL_SERVICES, generate_id}=require('./consts.js');
 const isEmpty = require('../server/validation/is-empty');
-const moment=require('moment-timezone');
+var moment=require('moment-timezone')
+const {extendMoment}=require('moment-range')
+moment = extendMoment(moment);
+
 const {eventUI2availability}=require('./converters');
 const DAYS=['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
@@ -20,7 +23,6 @@ const numberToDay = (number) => {
 
 const isMomentInEvent = (m, serviceId, event, checkTimeOnly) => {
   if (!event.all_services && !event.services.map(s => s.value).includes(serviceId)) {
-    console.log(`ServiceId ${serviceId} not found in ${JSON.stringify(event.services)}`);
     return false;
   }
 
@@ -41,7 +43,7 @@ const isMomentInAvail = (m, serviceId, avail) => {
 
   var period=false;
   // Check period
-  if (avail['period'] && avail['period']['active']) {
+  if (avail.period && avail.period.active) {
     var period=true;
     const start=moment(avail.period.month_begin);
     const end=moment(avail.period.month_end);
@@ -56,14 +58,21 @@ const isMomentInAvail = (m, serviceId, avail) => {
     return false;
   }
   // Test event. If in period, check only time
-  return events.some( e => isMomentInEvent(m, serviceId, e, period));
+  const res= events.some( e => isMomentInEvent(m, serviceId, e, period));
+  if (res) {
+    console.log(`Moment ${m} in ${JSON.stringify(avail._id)}`)
+  }
+  return res
 }
 
 const isMomentAvailable = (mom, serviceId, avails) => {
+  var res=false
   if (isEmpty(avails)) {
-    return true;
+    res=true
   }
-  const res= avails.some(a => isMomentInAvail(mom, serviceId, a));
+  else {
+    res= avails.some(a => isMomentInAvail(mom, serviceId, a));
+  }
   return res;
 }
 
@@ -145,15 +154,51 @@ const createDefaultAvailability = () => {
   return avail;
 };
 
+// Check if mmt's date is event
+const eventIncludesDate = (event, mmt) => {
+    return moment(event.begin).format('DD/MM/YYYY')==mmt.format('DD/MM/YYYY')
+}
+
+const availIncludesDate = (avail, mmt) => {
+    const mmt_day=mmt.weekday()
+    const day_attrib=DAYS[mmt_day]
+    //console.log(`${mmt} (${mmt_day}) is a ${day_attrib}`)
+
+    // Check day
+    const hasEvents=avail[day_attrib] && avail[day_attrib].event && avail[day_attrib].event.length>0
+
+    if (!hasEvents) {
+      return false
+    }
+    // Check if event in period
+    const hasPeriod=avail.period && avail.period.active
+    if (hasPeriod) {
+      var range=moment.range(avail.period.month_begin, avail.period.month_end)
+      range = range.snapTo('day')
+      if (!range.contains(mmt)) {
+        return false
+      }
+    }
+    else {
+      if (!avail[day_attrib].event.some( event => eventIncludesDate(event, mmt))) {
+        return false
+      }
+    }
+    return true
+}
+
 /** Moment mmt's date is available for alfred_id => true/false */
-const isAlfredDateAvailable = (mmt, alfred_id) => {
-  return true
+const isDateAvailable = (mmt, availabilities) => {
+  if (!availabilities || availabilities.length==0) {
+    return true
+  }
+  return availabilities.some( avail => availIncludesDate(avail, mmt));
 }
 
 /** Moment mmt's date contains at least one event for alfred_id => true/false */
-const hasAlfredDateEvent = (mmt, alfred_id) => {
+const hasAlfredDateBooking = (mmt, bookings) => {
   return true
 }
 
 module.exports={isMomentAvailable, isIntervalAvailable, getDeadLine, booking_datetime_str,
-  createDefaultAvailability, isAlfredDateAvailable, hasAlfredDateEvent};
+  createDefaultAvailability, isDateAvailable, hasAlfredDateBooking};

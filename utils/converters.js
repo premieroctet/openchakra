@@ -165,20 +165,19 @@ const availability2eventUI = avail => {
 
 };
 const booking2event = booking => {
-    console.log(`Converting ${JSON.stringify(booking)}`)
     let res= {
       _id : booking._id,
       title: booking.service,
-      start: booking.date,
-      end: booking.date,
+      start: moment(booking.date_prestation_moment),
+      // TODO : compute proper end date
+      end: moment(booking.date_prestation_moment).add(1, "hours"),
     }
     return res
 }
 
 const bookings2events = bookings => {
-  console.log(`Converting ${JSON.stringify(bookings)}`)
   if (!bookings) return []
-  const events = bookings.map( b => booking2event(b))
+  const events = bookings.map( booking => booking2event(booking))
   return events
 }
 

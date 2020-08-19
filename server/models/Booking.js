@@ -1,4 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
+const moment=require('moment')
+
 const Schema = mongoose.Schema;
 
 const BookingSchema = new Schema({
@@ -149,6 +151,25 @@ const BookingSchema = new Schema({
 BookingSchema.virtual('alfred_amount').get( function() {
     return this.amount-this.fees
 })
+
+BookingSchema.virtual('date_prestation_moment').get( function() {
+    if (!this.date_prestation) {
+      return null
+    }
+    const res=moment(moment(this.date_prestation, 'DD/MM/YYYY').format('YYYY-MM-DD')+' '+moment(this.time_prestation).format('HH:mm'))
+    return res
+})
+
+BookingSchema.virtual('calendar_display').get( function() {
+    if (!this.status) {
+      return false
+    }
+    if ('Annulée Expirée Refusée'.split(' ').includes(this.status)) {
+      return false
+    }
+    return true
+})
+
 
 
 module.exports = Booking = mongoose.model('booking',BookingSchema);

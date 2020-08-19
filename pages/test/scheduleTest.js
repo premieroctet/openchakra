@@ -8,14 +8,9 @@ class scheduleTest extends React.Component{
     constructor(props) {
         super(props);
         this.state={
-            bookings: [
-                {
-                    id: 0,
-                    service: 'All Day Event very long title',
-                    date: new Date(),
-                }
-            ],
-            services: []
+            bookings: [],
+            services: [],
+            availabilities: [],
         }
     }
 
@@ -24,22 +19,27 @@ class scheduleTest extends React.Component{
       axios.defaults.headers.common['Authorization'] = token
       axios.get("/myAlfred/api/admin/booking/all")
         .then(response => {
+          console.log(`Got ${response.data.length} bookings`)
           this.setState({bookings: response.data})
-          console.log(`${JSON.stringify(response.data[0])}`)
         }).catch(err => console.log(err))
+        axios.get("/myAlfred/api/availability/all")
+          .then(response => {
+            this.setState({availabilities: response.data.slice(0, 2)})
+          }).catch(err => console.log(err))
     }
 
     render(){
-        const {bookings, services} = this.state;
+        const {bookings, services, availabilities} = this.state;
 
         return(
 
             <Grid>
                 <Schedule
                     selectable={true}
-                    nbSchedule={15}
+                    nbSchedule={1}
                     bookings={bookings}
                     services={services}
+                    availabilities={availabilities}
                 />
             </Grid>
         );

@@ -84,7 +84,6 @@ class Schedule extends React.Component {
       ...this.EMPTY_AVAIL,
       view : Views.MONTH,
     };
-    this.resetData();
   }
 
   resetData = () => {
@@ -309,19 +308,18 @@ class Schedule extends React.Component {
   }
 
   render() {
-    const { classes, title, subtitle, selectable, height, nbSchedule } = this.props;
+    const { classes, title, subtitle, selectable, height, nbSchedule, bookings} = this.props;
     const { view, addClass } = this.state;
 
     const txt = this.availAsText();
-    let events = bookings2events(this.props.bookings);
+    const half=Math.floor(nbSchedule/2)
 
-    // Month view : at most one event per day
+    let events = bookings2events(bookings.filter( b => b.calendar_display));
+
     if (view==Views.MONTH) {
-      events = _.uniq(events, event => {
-        console.log(date_prestation)
-        return moment(event.start).format('DD/MM/YYYY')
-      })
+      events = _.uniqBy(events, e => e.start.format('DD/MM/YYYY'))
     }
+
 
     const CustomMonthDateHeader = (event) =>{
       if(event.isOffRange){
@@ -405,9 +403,11 @@ class Schedule extends React.Component {
           : null
         }
         <Grid container spacing={2}>
-          {[...Array(nbSchedule)].map((x, i) =>{
+          { [...Array(nbSchedule)].map((x, i) =>{
             let date = new Date();
-            let month = new Date(date.setMonth(date.getMonth() + (i-3)));
+            let month = new Date(date.setMonth(date.getMonth() + (i-half)));
+            const monthStr=moment(month).format('M')
+            const selEvents=events.filter( e => moment(e.start).format('M')==monthStr)
               return(
                 <Grid item xl={4} lg={5} xs={12} style={{height: 500}}>
                   <Calendar
@@ -416,7 +416,7 @@ class Schedule extends React.Component {
                       culture='fr-FR'
                       localizer={localizer}
                       // FIX: use state instead of props
-                      events={events}
+                      events={selEvents}
                       views={[this.state.view]}
                       defaultDate={month}
                       onSelectSlot={this.selectSlot}
@@ -458,151 +458,6 @@ class Schedule extends React.Component {
           }
           )}
         </Grid>
-        {/*<Modal
-          closeAfterTransition
-          BackdropProps={{
-            timeout: 500,
-          }}
-          open={this.state.isModalOpen}
-          onClose={this.closeModal}
-        >
-          <Fade in={this.state.isModalOpen}>
-            <Grid container className={classes.modalContainer}>
-              <Grid container>
-                  <Grid>
-                    <h2>{ this.state._id==null ? `Nouvelle disponibilité` : `Modifier disponibilité`}</h2>
-                  </Grid>
-              </Grid>
-              <Grid container>
-                  <Grid>
-                    { txt }
-                  </Grid>
-              </Grid>
-              <Grid container style={{justifyContent: 'center'}}>
-                <form>
-                  <Grid className={classes.contentTimeSlot}>
-                    <Grid style={{width: '100%'}}>
-                      <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
-                        <Grid className={classes.contentDateAndTime}>
-                          <Grid>
-                            <KeyboardDatePicker
-                                disableToolbar
-                                variant="inline"
-                                format="dd/MM/yyyy"
-                                id="date-picker-inline"
-                                label={ this.state.isExpanded  ? "Date de début" : "Date" }
-                                className={classes.formSchedule}
-                                value={this.state.selectedDateStart}
-                                onChange={this.handleDateStartChange}
-                                KeyboardButtonProps={{
-                                  'aria-label': 'change date',
-                                }}
-                                autoOk={true}
-                            />
-                          </Grid>
-                          <Grid>
-                            <TextField
-                                id="time"
-                                label="Heure de début"
-                                type="time"
-                                defaultValue={this.state.selectedTimeStart}
-                                onChange={this.handleTimeStartChange}
-                                className={classes.textField}
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                                inputProps={{
-                                  step: 300, // 5 min
-                                }}
-                            />
-                          </Grid>
-                        </Grid>
-                        <Grid className={classes.contentEndTime}>
-                          <TextField
-                            id="time"
-                            label="Heure de fin"
-                            type="time"
-                            className={classes.textField}
-                            defaultValue={this.state.selectedTimeEnd}
-                            onChange={this.handleTimeEndChange}
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
-                            inputProps={{
-                              step: 300, // 5 min
-                            }}
-                          />
-                        </Grid>
-                      </MuiPickersUtilsProvider>
-                    </Grid>
-                  </Grid>
-                  <Grid container className={classes.containerRecurrence}>
-                    <ExpansionPanel expanded={this.state.isExpanded} style={{width:'100%'}}>
-                      <ExpansionPanelSummary>
-                        <FormControlLabel
-                          aria-label="Acknowledge"
-                          onClick={event => event.stopPropagation()}
-                          onFocus={event => event.stopPropagation()}
-                          control={<Checkbox />}
-                          label="Répéter tous les"
-                          onChange={this.handleChange}
-                          checked={this.state.isExpanded}
-                        />
-                      </ExpansionPanelSummary>
-                      <ExpansionPanelDetails className={classes.panelForm}>
-                        <Grid container className={classes.panelFormDays}>
-                          {[0,1,2,3,4,5,6].map( d => {
-                            return (<Chip
-                              clickable
-                              label={DAYS[d]}
-                              color={this.state.recurrDays.has(d) ? 'secondary' :  ''}
-                              className={this.state.recurrDays.has(d) ? classes.textFieldChips : classes.test}
-                              onClick={() => {
-                                  this.toggleRecurrDay(d);
-                              }
-                            } />)
-                          })}
-                        </Grid>
-                        <Grid container className={classes.panelFormRecu}>
-                          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
-                            <KeyboardDatePicker
-                                disableToolbar
-                                variant="inline"
-                                format="dd/MM/yyyy"
-                                id="date-picker-inline"
-                                label="jusqu'au"
-                                className={classes.textField}
-                                value={this.state.selectedDateEndRecu}
-                                onChange={this.handleDateEndChangeRecu}
-                                KeyboardButtonProps={{
-                                  'aria-label': 'change date',
-                                }}
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                                autoOk={true}
-                              />
-                         </MuiPickersUtilsProvider>
-                        </Grid>
-                      </ExpansionPanelDetails>
-                    </ExpansionPanel>
-                  </Grid>
-                  <Grid container justify="flex-end" style={{marginTop: 20}}>
-                    <Button type="button" variant="contained" className={classes.textFieldButton} color={'secondary'} onClick={() => this.handleCancel()} >Annuler </Button>
-                    <Button type="button" disabled={!this.isButtonSendEnabled()} variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onSubmit()}>
-                      { this.state._id==null ? `Ajouter` : `Modifier` }
-                    </Button>
-                    { this.props.onDeleteAvailability && this.state._id!=null ?
-                        <Button type="button" variant="contained" className={classes.textFieldButton} color={'primary'}  onClick={() => this.onDelete()}>Supprimer </Button>
-                        :
-                        null
-                    }
-                  </Grid>
-                </form>
-              </Grid>
-            </Grid>
-        </Fade>
-      </Modal>*/}
     </Grid>
     )
   }

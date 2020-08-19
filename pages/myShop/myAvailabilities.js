@@ -67,6 +67,12 @@ class myAvailabilities extends React.Component {
         })
         .catch (err => console.error(err))
 
+      axios.get('/myAlfred/api/booking/alfredBooking')
+        .then ( res => {
+          this.setState({bookings: res.data})
+        })
+        .catch (err => console.error(err))
+
       axios.get('/myAlfred/api/users/current').then(res => {
         let user = res.data;
         if(user) {
@@ -219,7 +225,7 @@ class myAvailabilities extends React.Component {
                             onDeleteAvailability={this.availabilityDelete}
                             onUpdateAvailability={this.availabilityUpdate}
                             selectable={true}
-                            nbSchedule={12}
+                            nbSchedule={5}
                         />
                       </Grid>
                   </Grid>
