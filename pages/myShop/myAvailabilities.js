@@ -41,10 +41,6 @@ class myAvailabilities extends React.Component {
             have_picture: false,
             banner:[],
         };
-        this.availabilityCreated = this.availabilityCreated.bind(this);
-        this.availabilityDelete = this.availabilityDelete.bind(this);
-        this.availabilityUpdate = this.availabilityUpdate.bind(this);
-        this.needRefresh = this.needRefresh.bind(this);
     }
 
     static getInitialProps ({ query: { id_alfred } }) {
@@ -111,7 +107,7 @@ class myAvailabilities extends React.Component {
 
     }
 
-    availabilityCreated(avail) {
+    availabilityCreated = (avail) => {
 
       if (avail._id.length==GID_LEN) {
         avail._id = null
@@ -132,7 +128,7 @@ class myAvailabilities extends React.Component {
 		  })
     }
 
-    availabilityUpdate(avail) {
+    availabilityUpdate = (avail) => {
         axios.defaults.headers.common['Authorization'] = cookie.load('token')
         axios.post('/myAlfred/api/availability/update', avail)
           .then( res => {
@@ -146,7 +142,7 @@ class myAvailabilities extends React.Component {
         });
     }
 
-    availabilityDelete(avail) {
+    availabilityDelete = (avail) => {
       axios.defaults.headers.common['Authorization'] = cookie.load('token')
 
       axios.delete('/myAlfred/api/availability/'+avail._id)
@@ -174,7 +170,7 @@ class myAvailabilities extends React.Component {
       });
     }
 
-    needRefresh(){
+    needRefresh = () =>{
       this.componentDidMount()
     };
 
