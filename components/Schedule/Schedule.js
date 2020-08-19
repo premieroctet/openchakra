@@ -79,7 +79,7 @@ class Schedule extends React.Component {
       isModalOpen: false,
       dayLayoutAlgorithm: 'no-overlap',
       isExpanded: true,
-      services: [ALL_SERVICES, ...this.props.services] || [ALL_SERVICES],
+      services: [ALL_SERVICES, ...(this.props.services || [])] || [ALL_SERVICES],
       ...this.EMPTY_AVAIL,
       view: Views.MONTH,
     };
