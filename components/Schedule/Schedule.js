@@ -24,7 +24,6 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Typography } from '@material-ui/core'; // Import css
 import styles from './ScheduleStyle'
 import PropTypes from 'prop-types';
-
 const localizer = momentLocalizer(moment);
 
 const formats = {
@@ -76,7 +75,6 @@ class Schedule extends React.Component {
       events: _.cloneDeep(this.props.events),
       availabilities: _.cloneDeep(this.props.availabilities),
       title: '',
-      addClass: 'labelSelectorActive',
       eventsSelected: new Set(),
       isModalOpen: false,
       dayLayoutAlgorithm: 'no-overlap',
@@ -256,6 +254,8 @@ class Schedule extends React.Component {
   selectSlot = ({start, end, action}) => {
     let alfredAvailable = isAlfredDateAvailable(start);
     let hasDateEvent = hasAlfredDateEvent(start);
+
+
     let newDate = moment(start).format('YYYY-MM-DD');
       if(this.state.eventsSelected.has(newDate)){
         this.setState(({eventsSelected}) => {
@@ -264,9 +264,9 @@ class Schedule extends React.Component {
           return {
             eventsSelected: newChecked
           };
-        });
+        }, () => this.props.bonjour());
       }else{
-        this.setState(({eventsSelected}) => ({eventsSelected: new Set(eventsSelected).add(newDate)}));
+        this.setState(({eventsSelected}) => ({eventsSelected: new Set(eventsSelected).add(newDate)}), () => this.props.bonjour());
       }
   };
 
@@ -313,11 +313,6 @@ class Schedule extends React.Component {
     );
   };
 
-  changeClasses = (classes) => {
-      this.setState({addClass: 'Schedule-labelSelectorActive-85'});
-
-  };
-
   render() {
     const { classes, title, subtitle, selectable, height, nbSchedule } = this.props;
     const { view, addClass } = this.state;
@@ -339,13 +334,17 @@ class Schedule extends React.Component {
     }
 
     const CustomMonthDateHeader = (event) =>{
+      let newDate = moment(event.date).format('YYYY-MM-DD');
+
       if(event.isOffRange){
         return null
       }else{
         return(
-            <Grid className={addClass} onClick={() => this.changeClasses(classes)}>
-              <p style={{margin: 0, cursor:'pointer'}}>{event.label}</p>
+          <Grid className={classes.containerLabelSelector} onClick={() => this.selectSlot}>
+            <Grid className={this.state.eventsSelected.has(newDate) ? classes.labelSelectorActive : classes.labelSelector} >
+              <p style={{cursor:'pointer'}}>{event.label}</p>
             </Grid>
+          </Grid>
         )
       }
     };
@@ -360,11 +359,11 @@ class Schedule extends React.Component {
       }
       if(propsStyle === 'rbc-day-bg rbc-today'){
         return (
-            <Grid onClick={() => this.selectSlot} style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'rgba(79, 189, 215, 0.2)', cursor:'pointer'}}/>
+            <Grid style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'rgba(79, 189, 215, 0.2)', cursor:'pointer'}}/>
         )
       }else{
         return(
-            <Grid onClick={() => this.selectSlot} style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD', cursor:'pointer'}}/>
+            <Grid style={{width: '100%', height :'100%', borderLeft:'1px solid #DDD', cursor:'pointer'}}/>
         )
       }
     };

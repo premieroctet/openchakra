@@ -155,20 +155,37 @@ export default theme => ({
     justifyContent: 'space-between'
   },
   labelSelector:{
-    height:'3vh',
     display: 'flex',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 5,
+    width:'100%',
+    height:'100%',
+    '&:hover':{
+      backgroundColor: '#4fbdd7',
+      borderRadius: 50,
+      width:50,
+      height: 50,
+      color: 'white'
+    }
   },
   labelSelectorActive:{
-    backgroundColor: '#008489',
-    height: 30,
-    width: 30,
-    borderRadius:50,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#4fbdd7',
+    borderRadius: 50,
+    width:50,
+    height: 50,
+    color: 'white'
+  },
+  containerLabelSelector:{
+    width: '100%',
+    height: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color:'white'
-  },
+    cursor:'pointer'
+  }
+
 
 })
