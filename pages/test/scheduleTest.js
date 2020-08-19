@@ -38,15 +38,6 @@ class scheduleTest extends React.Component{
         }).catch(err => console.log(err))
     };
 
-    callDrawer = () =>{
-        this.child.current.handleDrawerToggle();
-    };
-
-    changeIconLogo = () =>{
-        //console.log(this.child.current.state)
-        console.log('bonjour')
-    };
-
     render(){
         const {bookings, services} = this.state;
         const { classes } = this.props;
@@ -57,15 +48,6 @@ class scheduleTest extends React.Component{
                 <Grid className={classes.toggle}>
                     <Grid>
                         <DrawerSchedule ref={this.child}/>
-                    </Grid>
-                    <Grid>
-                        <Grid style={{position: 'fixed', bottom: '2%', zIndex: 6, right: 0}}>
-                            <Fab color="primary" aria-label="add"
-                                 onClick={this.callDrawer}
-                                 className={classes.menuButton}>
-                                <AddIcon style={{color: 'white'}}/>
-                            </Fab>
-                        </Grid>
                     </Grid>
                 </Grid>
                 <Grid container className={classes.containercalendar} style={{width:' 70%'}}>
