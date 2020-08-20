@@ -24,6 +24,8 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Typography } from '@material-ui/core'; // Import css
 import styles from './ScheduleStyle'
 import PropTypes from 'prop-types';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 const {isDateAvailable}=require('../../utils/dateutils')
 
 const localizer = momentLocalizer(moment);
@@ -245,16 +247,10 @@ class Schedule extends React.Component {
   };
 
   selectedEvent = (event) => {
-    let alfredAvailable = isAlfredDateAvailable(event);
-    let hasDateEvent = hasAlfredDateEvent(event);
 
   };
 
   selectSlot = ({start, end, action}) => {
-    let alfredAvailable = isAlfredDateAvailable(start);
-    let hasDateEvent = hasAlfredDateEvent(start);
-
-
     let newDate = moment(start).format('YYYY-MM-DD');
       if(this.state.eventsSelected.has(newDate)){
         this.setState(({eventsSelected}) => {
@@ -263,9 +259,9 @@ class Schedule extends React.Component {
           return {
             eventsSelected: newChecked
           };
-        }, () => this.props.bonjour());
+        } );
       }else{
-        this.setState(({eventsSelected}) => ({eventsSelected: new Set(eventsSelected).add(newDate)}), () => this.props.bonjour());
+        this.setState(({eventsSelected}) => ({eventsSelected: new Set(eventsSelected).add(newDate)}));
       }
   };
 
@@ -361,17 +357,17 @@ class Schedule extends React.Component {
       }
       if(propsStyle === 'rbc-day-bg rbc-today'){
         return (
-            <Grid onClick={() => this.selectSlot} style={{today_style}}/>
+            <Grid style={{today_style}}/>
         )
       }else{
         if (isAvailable) {
           return(
-            <Grid onClick={() => this.selectSlot} style={day_style}/>
+            <Grid style={day_style}/>
           )
         }
         else {
           return(
-            <Grid onClick={() => this.selectSlot} style={non_available_style}/>
+            <Grid style={non_available_style}/>
           )
         }
       }
@@ -467,6 +463,7 @@ class Schedule extends React.Component {
           }
           )}
         </Grid>
+
     </Grid>
     )
   }

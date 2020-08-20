@@ -14,12 +14,4 @@ export default theme => ({
     toggle: {
         zIndex: 0
     },
-    menuButton: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(2),
-        [theme.breakpoints.up('sm')]: {
-            display: 'none',
-        },
-    },
-
 })

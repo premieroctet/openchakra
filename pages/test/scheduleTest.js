@@ -24,10 +24,8 @@ class scheduleTest extends React.Component{
                     date: new Date(),
                 }
             ],
-            services: [],
-            availabilities: [],
+            services: []
         };
-        this.changeIconLogo = this.changeIconLogo.bind(this)
     }
 
     componentDidMount = () => {
@@ -35,37 +33,33 @@ class scheduleTest extends React.Component{
       axios.defaults.headers.common['Authorization'] = token
       axios.get("/myAlfred/api/admin/booking/all")
         .then(response => {
-          console.log(`Got ${response.data.length} bookings`)
           this.setState({bookings: response.data})
+          console.log(`${JSON.stringify(response.data[0])}`)
         }).catch(err => console.log(err))
-        axios.get("/myAlfred/api/availability/all")
-          .then(response => {
-            this.setState({availabilities: response.data.slice(0, 2)})
-          }).catch(err => console.log(err))
-    }
-
-    callDrawer = () =>{
-        this.child.current.handleDrawerToggle();
-    };
-
-    changeIconLogo = () =>{
-        //console.log(this.child.current.state)
-        console.log('bonjour')
     };
 
     render(){
-        const {bookings, services, availabilities} = this.state;
+        const {bookings, services} = this.state;
         const { classes } = this.props;
 
         return(
 
             <Grid>
-                <Schedule
-                    selectable={true}
-                    nbSchedule={5}
-                    bookings={bookings}
-                    availabilities={availabilities}
-                />
+                <Grid className={classes.toggle}>
+                    <Grid>
+                        <DrawerSchedule ref={this.child}/>
+                    </Grid>
+                </Grid>
+                <Grid container className={classes.containercalendar} style={{width:' 70%'}}>
+                    <Grid>
+                        <Schedule
+                            selectable={true}
+                            nbSchedule={15}
+                            bookings={bookings}
+                            services={services}
+                        />
+                    </Grid>
+                </Grid>
             </Grid>
         );
     }
