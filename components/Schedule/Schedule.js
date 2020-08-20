@@ -26,37 +26,11 @@ import styles from './ScheduleStyle'
 import PropTypes from 'prop-types';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-const {isDateAvailable}=require('../../utils/dateutils')
+const {isDateAvailable}=require('../../utils/dateutils');
+moment.locale('fr');
+
 
 const localizer = momentLocalizer(moment);
-
-const formats = {
-  timeGutterFormat : 'HH:mm', // Axe Y horaires week/day
-  eventTimeRangeFormat: ({
-    start,
-    end
-  }, culture, local) =>
-    local.format(start, 'HH:mm', culture) + ' - ' + // Affichage de l'event dans le calendrier h début (week/day)
-    local.format(end, 'HH:mm', culture), // Affichage de l'event dans le calendrier h fin (week/day)
-  dayFormat: 'ddd' + ' ' + 'DD' , // header de weekly (lun. dd/mm) (week)
-  agendaTimeRangeFormat: ({
-    start,
-    end
-  }, culture, local) =>
-    local.format(start, 'HH:mm', culture) + ' - ' + // Affichage de l'event dans Agenda - Horaires h début (agenda)
-    local.format(end, 'HH:mm', culture), // Affichage de l'event dans Agenda - Horaires h fin (agenda)
-  agendaDateFormat: 'ddd' + ' ' + 'DD/MM', // Affichage de l'event dans agenda - Date format (ddd. DD/MM) (agenda)
-  dayRangeHeaderFormat: ({
-    start,
-    end
-  }, culture, local) =>
-    local.format(start,  'MMM' + ' ' + 'YYYY', culture) + // Title de week - date début (week)
-    local.format(end,  '' + ' ' + '', culture),// Title de week - date fin (week)
-  dayHeaderFormat: 'dddd DD MMMM'
-};
-
-
-
 
 class Schedule extends React.Component {
   EMPTY_AVAIL = {
@@ -91,152 +65,6 @@ class Schedule extends React.Component {
     this.setState(this.EMPTY_AVAIL)
   };
 
-  /**
-   On peut envoyer si service(s) sélectionné(s), date/heure début et fin saisis
-   et, si récurrence, au moins un jour sélectionné
-   */
-  isButtonSendEnabled() {
-    let enabled = this.state.servicesSelected.length > 0;
-    enabled = enabled && this.state.selectedDateStart && this.state.selectedTimeStart && this.state.selectedDateEnd && this.state.selectedTimeEnd;
-    enabled = enabled && (!this.state.isExpanded || this.state.recurrDays.size > 0);
-    return enabled;
-  }
-
-  toggleRecurrDay(item) {
-    this.state.recurrDays.has(item) ? this.removeRecurrDay(item) : this.addRecurrDay(item);
-  }
-
-  addRecurrDay(item) {
-    this.setState(({recurrDays}) => ({
-      recurrDays: new Set(recurrDays).add(item)
-    }));
-  }
-
-  removeRecurrDay(item) {
-    this.setState(({recurrDays}) => {
-      const newChecked = new Set(recurrDays);
-      newChecked.delete(item);
-
-      return {
-        recurrDays: newChecked
-      };
-    });
-  }
-
-
-  onChangeServices = e => {
-    let all_serv = e.target.value.filter(serv => serv[0] === ALL_SERVICES[0]);
-    let contains = all_serv.length > 0;
-    if (contains) {
-      this.setState({servicesSelected: [ALL_SERVICES]});
-    } else {
-      this.setState({servicesSelected: e.target.value});
-    }
-  };
-
-  toggleAddModal = ({start, end}) => {
-    if (!this.props.onCreateAvailability) {
-      return
-    }
-    var dt = new Date(start);
-    dt.setMonth(dt.getMonth() + 6);
-    this.setState({
-      _id: null,
-      selectedDateStart: start,
-      selectedDateEnd: end,
-      selectedTimeStart: start.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
-      selectedTimeEnd: end.toLocaleTimeString("fr-FR", {hour12: false}).slice(0, 5),
-      selectedDateEndRecu: dt,
-      servicesSelected: [ALL_SERVICES],
-      isModalOpen: !this.state.isModalOpen,
-      recurrDays: new Set([0, 1, 2, 3, 4, 5])
-    }, () => {
-      console.log(`Id:${this.state._id}`)
-    });
-
-  };
-
-  toggleEditModal = event => {
-    if (!this.props.onUpdateAvailability) {
-      return
-    }
-    var avail = this.props.availabilities.filter(a => a._id === event._id);
-    if (avail.length === 0) {
-      return
-    }
-    avail = avail[0];
-
-    const eventUI = availability2eventUI(avail);
-
-    this.setState({...eventUI, isModalOpen: true});
-
-    if (!this.state.isModalOpen) {
-      this.setState({
-        isModalOpen: !this.state.isModalOpen,
-      });
-    }
-  };
-
-  handleChange = () => {
-    this.setState({isExpanded: !this.state.isExpanded});
-    if (this.state.isExpanded && this.state.recurrDays.size === 0 && this.state.selectedDateStart) {
-      let dayOfWeek = new Date(this.state.selectedDateStart).getDay();
-      dayOfWeek = (dayOfWeek + 6) % 7;
-      this.setState({recurrDays: new Set([dayOfWeek])});
-    }
-  };
-
-  handleCancel = () => {
-    this.resetData();
-    this.closeModal()
-  };
-
-  handleDateStartChange = date => {
-    this.setState({selectedDateStart: new Date(date)})
-    // End date is start date with end time
-    var newDateEnd = new Date(date)
-    let hours = parseInt(this.state.selectedTimeEnd.substring(0, 2))
-    let minutes = parseInt(this.state.selectedTimeEnd.substring(3, 5))
-    newDateEnd.setHours(hours);
-    newDateEnd.setMinutes(minutes);
-    this.setState({selectedDateEnd: newDateEnd});
-  };
-
-  handleDateEndChange = date => {
-    this.setState({selectedDateEnd: date});
-  };
-
-  handleTimeStartChange = time => {
-    let hours = parseInt(time.target.value.substring(0, 2));
-    let minutes = parseInt(time.target.value.substring(3, 5));
-    this.setState({selectedTimeStart: time.target.value});
-    this.state.selectedDateStart.setHours(hours);
-    this.state.selectedDateStart.setMinutes(minutes);
-  };
-
-  handleTimeEndChange = time => {
-    let hours = parseInt(time.target.value.substring(0, 2));
-    let minutes = parseInt(time.target.value.substring(3, 5));
-    this.setState({selectedTimeEnd: time.target.value});
-    this.state.selectedDateEnd.setHours(hours);
-    this.state.selectedDateEnd.setMinutes(minutes);
-  };
-
-  handleDateEndChangeRecu = date => {
-    this.setState({selectedDateEndRecu: date});
-  };
-
-  onSubmit = e => {
-    let avail = eventUI2availability(this.state);
-    if (this.state._id == null) { // Modif
-      this.props.onCreateAvailability(avail);
-    } else {
-      this.props.onUpdateAvailability(avail);
-    }
-    this.closeModal();
-    this.resetData()
-  };
-
   onDelete = e => {
     let avail = eventUI2availability(this.state);
     this.closeModal();
@@ -259,9 +87,9 @@ class Schedule extends React.Component {
           return {
             eventsSelected: newChecked
           };
-        } );
+        }, () => this.props.handleSelection(this.state.eventsSelected));
       }else{
-        this.setState(({eventsSelected}) => ({eventsSelected: new Set(eventsSelected).add(newDate)}));
+        this.setState(({eventsSelected}) => ({eventsSelected: new Set(eventsSelected).add(newDate)}), () => this.props.handleSelection(this.state.eventsSelected));
       }
   };
 
@@ -312,8 +140,7 @@ class Schedule extends React.Component {
     const { classes, title, subtitle, selectable, height, nbSchedule, bookings} = this.props;
     const { view, addClass } = this.state;
 
-    const txt = this.availAsText();
-    const half=Math.floor(nbSchedule/2)
+    const half=Math.floor(nbSchedule/2);
 
     let events = bookings2events(bookings.filter( b => b.calendar_display));
 
@@ -440,7 +267,6 @@ class Schedule extends React.Component {
                         "time" : "Horaires",
                         'noEventsInRange': 'Aucun évènement dans cette période',
                       }}
-                      formats={formats}
                       className={classes.sizeSchedulle}
                       components={{
                         toolbar: this.customToolbar,

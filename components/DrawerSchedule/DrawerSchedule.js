@@ -83,6 +83,10 @@ class DrawerSchedule extends React.Component{
         });
     };
 
+    sendDataToDrawer = (data) =>{
+        console.log(data, 'im in theschedule')
+    };
+
     drawer = (classes) => {
         return (
             <Grid>
