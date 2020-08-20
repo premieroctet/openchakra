@@ -73,15 +73,15 @@
     "@types/prettier": "^1.19.0",
     "@types/react-color": "^3.0.1",
     "@types/react-redux": "^7.1.7",
-    "babel-jest": "^26.2.2",
-    "husky": "^4.2.1",
-    "lint-staged": "^10.0.7",
+    "babel-jest": "^26.3.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
     "next-compose-plugins": "^2.2.0",
-    "next-transpile-modules": "^4.0.2",
-    "prettier": "^1.19.1",
+    "next-transpile-modules": "^4.1.0",
+    "prettier": "^2.0.5",
     "pretty-quick": "^2.0.1",
-    "ts-jest": "^26.1.4",
-    "typedoc": "^0.16.9"
+    "ts-jest": "^26.2.0",
+    "typedoc": "^0.18.0"
   },
   "husky": {
     "hooks": {
