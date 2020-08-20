@@ -357,7 +357,7 @@ class Schedule extends React.Component {
       }
       if(propsStyle === 'rbc-day-bg rbc-today'){
         return (
-            <Grid style={{today_style}}/>
+            <Grid style={today_style}/>
         )
       }else{
         if (isAvailable) {
