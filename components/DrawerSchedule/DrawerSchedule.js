@@ -32,10 +32,15 @@ class DrawerSchedule extends React.Component{
             recurrSlotTime: new Set(),
             selectedDateStart: null,
             selectedDateEnd: null,
+            eventsSelected: new Set()
 
         }
 
     }
+
+    getEventsSelected = (eventsSelected) =>{
+        this.setState({eventsSelected : new Set(eventsSelected)});
+    };
 
     handleDrawerToggle = () =>{
         this.setState({mobileOpen: !this.state.mobileOpen})

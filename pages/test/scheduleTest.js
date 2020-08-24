@@ -41,8 +41,7 @@ class scheduleTest extends React.Component{
     };
 
     sendToDrawer = (eventsSelected) => {
-        console.log(eventsSelected, 'data')
-        console.log(this.scheduleChild.current.state)
+        this.child.current.getEventsSelected(eventsSelected );
     };
 
     render(){
