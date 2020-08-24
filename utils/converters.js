@@ -155,6 +155,6 @@ const bookings2events = bookings => {
 }
 
 module.exports={availabilities2events, eventUI2availability, availability2eventUI,
-   DAYS, LONG_DAYS, TIMESLOTS,
+   DAYS, LONG_DAYS,
    bookings2events
 };
