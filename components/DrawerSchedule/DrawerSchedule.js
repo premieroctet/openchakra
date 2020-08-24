@@ -22,6 +22,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 class DrawerSchedule extends React.Component{
     constructor(props) {
@@ -341,11 +342,20 @@ class DrawerSchedule extends React.Component{
                 </nav>
                 <Grid>
                     <Grid style={{position: 'fixed', bottom: '2%', zIndex: 6, right: 0}}>
-                        <Fab color="primary" aria-label="add"
-                             onClick={this.handleDrawerToggle}
-                             className={classes.menuButton}>
-                            <AddIcon style={{color: 'white'}}/>
-                        </Fab>
+                        {
+                            this.state.eventsSelected.size > 0 ?
+                                <Fab color="primary" aria-label="add"
+                                     onClick={this.handleDrawerToggle}
+                                     className={classes.menuButton}>
+                                    <SettingsIcon style={{color: 'white'}}/>
+                                </Fab>
+                                :
+                                <Fab color="primary" aria-label="add"
+                                     onClick={this.handleDrawerToggle}
+                                     className={classes.menuButton}>
+                                    <AddIcon style={{color: 'white'}}/>
+                                </Fab>
+                        }
                     </Grid>
                 </Grid>
             </Grid>
