@@ -39,14 +39,17 @@ export default theme => ({
     panelFormDays:{
         width: '100%'
     },
-    textFieldChips: {
-        color: 'white'
 
-    },
     formSchedule:{
         [theme.breakpoints.down('xs')]: {
             width: '100%',
             marginBottom: '5%'
         },
     },
+    timerSelectSlot:{
+        display: 'flex',
+        [theme.breakpoints.down('xs')]: {
+            justifyContent : 'space-around'
+        },
+    }
 })

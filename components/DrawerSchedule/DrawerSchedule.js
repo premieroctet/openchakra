@@ -13,7 +13,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Chip from '@material-ui/core/Chip';
-import {DAYS, TIMESLOTS} from '../../utils/converters';
+import {DAYS} from '../../utils/converters';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import frLocale from "date-fns/locale/fr";
@@ -23,6 +23,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import SettingsIcon from '@material-ui/icons/Settings';
+import SelectSlotTimer from '../SelectSlotTimer/SelectSlotTimer';
 
 class DrawerSchedule extends React.Component{
     constructor(props) {
@@ -30,11 +31,9 @@ class DrawerSchedule extends React.Component{
         this.state={
             mobileOpen: false,
             recurrDays: new Set(),
-            recurrSlotTime: new Set(),
             selectedDateStart: null,
             selectedDateEnd: null,
             eventsSelected: new Set()
-
         }
 
     }
@@ -51,9 +50,7 @@ class DrawerSchedule extends React.Component{
         this.state.recurrDays.has(item) ? this.removeRecurrDay(item) : this.addRecurrDay(item);
     };
 
-    activeTimeSlot = (item) =>{
-        this.state.recurrSlotTime.has(item) ? this.removeSlotTime(item) : this.addSlotTime(item);
-    };
+
 
     addRecurrDay = (item) => {
         this.setState(({ recurrDays }) => ({
@@ -61,11 +58,7 @@ class DrawerSchedule extends React.Component{
         }));
     };
 
-    addSlotTime = (item) =>{
-        this.setState(({ recurrSlotTime }) => ({
-            recurrSlotTime: new Set(recurrSlotTime).add(item)
-        }));
-    };
+
 
     removeRecurrDay = (item) => {
         this.setState(({ recurrDays }) => {
@@ -76,21 +69,6 @@ class DrawerSchedule extends React.Component{
                 recurrDays: newChecked
             };
         });
-    };
-
-    removeSlotTime = (item) => {
-        this.setState(({ recurrSlotTime }) => {
-            const newChecked = new Set(recurrSlotTime);
-            newChecked.delete(item);
-
-            return {
-                recurrSlotTime: newChecked
-            };
-        });
-    };
-
-    sendDataToDrawer = (data) =>{
-        console.log(data, 'im in theschedule')
     };
 
     drawer = (classes) => {
@@ -200,19 +178,7 @@ class DrawerSchedule extends React.Component{
                                                 <h4>Nuit</h4>
                                             </Grid>
                                             <Grid>
-                                                {[0,1,2,3,4,5].map( t => {
-                                                    return (
-                                                        <Chip
-                                                            clickable
-                                                            label={TIMESLOTS[t]}
-                                                            color={this.state.recurrSlotTime.has(t) ? 'primary' :  ''}
-                                                            className={classes.textFieldChips}
-                                                            onClick={() => {
-                                                                this.activeTimeSlot(t);
-                                                            }}
-                                                        />
-                                                    )
-                                                })}
+                                                <SelectSlotTimer arrayLength={6} index={0}/>
                                             </Grid>
                                         </Grid>
                                         <Grid>
@@ -220,19 +186,7 @@ class DrawerSchedule extends React.Component{
                                                 <h4>Matin</h4>
                                             </Grid>
                                             <Grid>
-                                                {[6,7,8,9,10,11].map( t => {
-                                                    return (
-                                                        <Chip
-                                                            clickable
-                                                            label={TIMESLOTS[t]}
-                                                            color={this.state.recurrSlotTime.has(t) ? 'primary' :  ''}
-                                                            className={classes.textFieldChips}
-                                                            onClick={() => {
-                                                                this.activeTimeSlot(t);
-                                                            }}
-                                                        />
-                                                    )
-                                                })}
+                                                <SelectSlotTimer arrayLength={12} index={6}/>
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -242,19 +196,7 @@ class DrawerSchedule extends React.Component{
                                                 <h4>Après-midi</h4>
                                             </Grid>
                                             <Grid>
-                                                {[12,13,14,15,16,17].map( t => {
-                                                    return (
-                                                        <Chip
-                                                            clickable
-                                                            label={TIMESLOTS[t]}
-                                                            color={this.state.recurrSlotTime.has(t) ? 'primary' :  ''}
-                                                            className={classes.textFieldChips}
-                                                            onClick={() => {
-                                                                this.activeTimeSlot(t);
-                                                            }}
-                                                        />
-                                                    )
-                                                })}
+                                                <SelectSlotTimer arrayLength={18} index={12}/>
                                             </Grid>
                                         </Grid>
                                         <Grid>
@@ -262,19 +204,7 @@ class DrawerSchedule extends React.Component{
                                                 <h4>Soirée</h4>
                                             </Grid>
                                             <Grid>
-                                                {[18,19,20,21,22,23].map( t => {
-                                                    return (
-                                                        <Chip
-                                                            clickable
-                                                            label={TIMESLOTS[t]}
-                                                            color={this.state.recurrSlotTime.has(t) ? 'primary' :  ''}
-                                                            className={classes.textFieldChips}
-                                                            onClick={() => {
-                                                                this.activeTimeSlot(t);
-                                                            }}
-                                                        />
-                                                    )
-                                                })}
+                                                <SelectSlotTimer arrayLength={24} index={18}/>
                                             </Grid>
                                         </Grid>
                                     </Grid>
