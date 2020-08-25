@@ -3,7 +3,7 @@ const {ALL_SERVICES, generate_id} = require('./consts.js');
 const moment=require('moment-timezone')
 const EV_AVAIL_DAY_MAPPING='monday tuesday wednesday thursday friday saturday sunday'.split(' ');
 
-const DAYS='Lu Ma Me Je Ve Sa Di'.split(' ');
+const DAYS='Lundi Mardi Mercredi Jeudi Vendredi Samedi Dimanche'.split(' ');
 const LONG_DAYS='lundis mardis mercredis jeudis vendredis samedis dimanches'.split(' ');
 
 const DAY_MAPPING={

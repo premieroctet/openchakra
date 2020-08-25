@@ -3,6 +3,8 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import styles from './SelectSlotTimerStyle'
 import withStyles from '@material-ui/core/styles/withStyles';
+import Avatar from '@material-ui/core/Avatar';
+
 
 
 class SelectSlotTimer extends React.Component {
@@ -41,11 +43,12 @@ class SelectSlotTimer extends React.Component {
                 <Chip
                     clickable
                     label={('0' + i).slice(-2) + 'h00 - ' + ('0' + (i+1)).slice(-2) + 'h00'}
-                    color={this.state.recurrSlotTime.has(i) ? 'primary' : ''}
+                    style={{backgroundColor : this.state.recurrSlotTime.has(i) ? '#4fbdd7' : '#c4c4c4'}}
                     className={classes.textFieldChips}
                     onClick={() => {
                         this.activeTimeSlot(i);
                     }}
+                   //avatar={<Avatar alt="avatar" title={'avatar'} src="../../static/assets/img/chat 2.jpg" />}
                 />
             )
         }

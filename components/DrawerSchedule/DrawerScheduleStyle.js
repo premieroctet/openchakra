@@ -37,7 +37,9 @@ export default theme => ({
         padding: theme.spacing(3),
     },
     panelFormDays:{
-        width: '100%'
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'space-between'
     },
 
     formSchedule:{
@@ -46,10 +48,18 @@ export default theme => ({
             marginBottom: '5%'
         },
     },
-    timerSelectSlot:{
-        display: 'flex',
+    containerSelectSlotTimer:{
+        width: '50%',
         [theme.breakpoints.down('xs')]: {
-            justifyContent : 'space-around'
+          textAlign: 'center'
         },
-    }
+
+    },
+    textFieldChips: {
+        color: 'white',
+        fontWeight: 'bold',
+        [theme.breakpoints.down('xs')]: {
+            margin: 5
+        },
+    },
 })

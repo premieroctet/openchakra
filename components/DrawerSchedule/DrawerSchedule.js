@@ -159,7 +159,7 @@ class DrawerSchedule extends React.Component{
                                             return (<Chip
                                                 clickable
                                                 label={DAYS[d]}
-                                                color={this.state.recurrDays.has(d) ? 'secondary' :  ''}
+                                                style={{backgroundColor: this.state.recurrDays.has(d) ? '#F8727F' :  '#c4c4c4'}}
                                                 className={classes.textFieldChips}
                                                 onClick={() => {
                                                     this.toggleRecurrDay(d);
@@ -172,8 +172,8 @@ class DrawerSchedule extends React.Component{
                                     <Grid>
                                         <h3>Horaires travaillés :</h3>
                                     </Grid>
-                                    <Grid style={{display: 'flex'}}>
-                                        <Grid>
+                                    <Grid container>
+                                        <Grid item className={classes.containerSelectSlotTimer}>
                                             <Grid>
                                                 <h4>Nuit</h4>
                                             </Grid>
@@ -181,17 +181,17 @@ class DrawerSchedule extends React.Component{
                                                 <SelectSlotTimer arrayLength={6} index={0}/>
                                             </Grid>
                                         </Grid>
-                                        <Grid>
+                                        <Grid item className={classes.containerSelectSlotTimer}>
                                             <Grid>
                                                 <h4>Matin</h4>
                                             </Grid>
-                                            <Grid>
+                                            <Grid >
                                                 <SelectSlotTimer arrayLength={12} index={6}/>
                                             </Grid>
                                         </Grid>
                                     </Grid>
-                                    <Grid style={{display: 'flex'}}>
-                                        <Grid>
+                                    <Grid container>
+                                        <Grid item className={classes.containerSelectSlotTimer}>
                                             <Grid>
                                                 <h4>Après-midi</h4>
                                             </Grid>
@@ -199,7 +199,7 @@ class DrawerSchedule extends React.Component{
                                                 <SelectSlotTimer arrayLength={18} index={12}/>
                                             </Grid>
                                         </Grid>
-                                        <Grid>
+                                        <Grid item className={classes.containerSelectSlotTimer}>
                                             <Grid>
                                                 <h4>Soirée</h4>
                                             </Grid>
