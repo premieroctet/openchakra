@@ -6,41 +6,41 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import styles from './DrawerScheduleStyle';
-import Divider from '@material-ui/core/Divider';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Chip from '@material-ui/core/Chip';
-import {DAYS} from '../../utils/converters';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
-import frLocale from "date-fns/locale/fr";
-import {Button} from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import SettingsIcon from '@material-ui/icons/Settings';
-import SelectSlotTimer from '../SelectSlotTimer/SelectSlotTimer';
 import DrawerEditingSchedule from '../Drawer/DrawerEditingSchedule/DrawerEditingSchedule';
+import DrawerSettingSchedule from '../Drawer/DrawerSettingSchedule/DrawerSettingSchedule';
 
 class DrawerSchedule extends React.Component{
     constructor(props) {
         super(props);
         this.drawerEditing = React.createRef();
+        this.drawerSetting = React.createRef();
         this.state={
             mobileOpen: false,
             recurrDays: new Set(),
-
             eventsSelected: new Set()
         }
-
     }
 
+    componentDidUpdate(prevProps, prevState){
+        if(this.state.eventsSelected.size !== prevState.eventsSelected.size){
+            console.log('bonjour');
+
+        }
+    };
+
     getEventsSelected = (eventsSelected) =>{
-        this.drawerEditing.current.getEventsSelected(eventsSelected)
+        this.setState({eventsSelected : new Set(eventsSelected)}, () =>this.stateDrawer);
+    };
+
+    stateDrawer = () =>{
+        if(this.state.eventsSelected.size === 0){
+            this.drawerSetting.current.getEventsSelected(this.state.eventsSelected);
+        }else{
+            this.drawerEditing.current.getEventsSelected(this.state.eventsSelected);
+        }
     };
 
 
@@ -74,7 +74,11 @@ class DrawerSchedule extends React.Component{
                                 keepMounted: true, // Better open performance on mobile.
                             }}
                         >
-                            {<DrawerEditingSchedule ref={this.drawerEditing} handleDrawer={this.handleDrawerToggle}/>}
+                            {this.state.eventsSelected.size > 0 ?
+                                <DrawerEditingSchedule ref={this.drawerEditing} handleDrawer={this.handleDrawerToggle}/>
+                                :
+                                <DrawerSettingSchedule ref={this.drawerSetting}  handleDrawer={this.handleDrawerToggle}/>
+                            }
                         </Drawer>
                     </Hidden>
                     <Hidden xsDown implementation="css">
@@ -85,7 +89,11 @@ class DrawerSchedule extends React.Component{
                             variant="permanent"
                             open
                         >
-                            {<DrawerEditingSchedule ref={this.drawerEditing} handleDrawer={this.handleDrawerToggle}/>}
+                            {this.state.eventsSelected.size > 0 ?
+                                <DrawerEditingSchedule ref={this.drawerEditing} handleDrawer={this.handleDrawerToggle}/>
+                                :
+                                <DrawerSettingSchedule ref={this.drawerSetting} handleDrawer={this.handleDrawerToggle}/>
+                            }
                         </Drawer>
                     </Hidden>
                 </nav>
