@@ -36,25 +36,6 @@ export default theme => ({
         flexGrow: 1,
         padding: theme.spacing(3),
     },
-    panelFormDays:{
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'space-between'
-    },
-
-    formSchedule:{
-        [theme.breakpoints.down('xs')]: {
-            width: '100%',
-            marginBottom: '5%'
-        },
-    },
-    containerSelectSlotTimer:{
-        width: '50%',
-        [theme.breakpoints.down('xs')]: {
-          textAlign: 'center'
-        },
-
-    },
     textFieldChips: {
         color: 'white',
         fontWeight: 'bold',
