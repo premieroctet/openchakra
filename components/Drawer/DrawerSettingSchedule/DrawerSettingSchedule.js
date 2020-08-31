@@ -26,7 +26,8 @@ class DrawerSettingSchedule extends React.Component{
             eventsSelected: new Set(),
             selectedDateStart: null,
             selectedDateEnd: null,
-            recurrDays: new Set()
+            recurrDays: new Set(),
+            nbPeriod: 1
         }
     }
 
@@ -56,10 +57,15 @@ class DrawerSettingSchedule extends React.Component{
         this.setState({eventsSelected : new Set(eventsSelected)});
     };
 
+    handlePeriode = () =>{
+      this.setState({nbPeriod : this.state.nbPeriod + 1})
+    };
+
 
     render(){
 
         const {classes} = this.props;
+        const {nbPeriod} = this.state;
 
         return(
             <Grid>
@@ -77,140 +83,147 @@ class DrawerSettingSchedule extends React.Component{
                 </Grid>
                 <Divider />
                 <Grid>
-                    <Accordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
-                        >
-                            <Grid>
-                                <Grid>
-                                    <Typography>Période du 10/07/20 au 31/12/20</Typography>
-                                </Grid>
-                                <Grid>
-                                    <Typography>Vous êtes disponible tous les lundis, mardis, samedis de 5h à 12h et de 14h à 18h</Typography>
-                                </Grid>
-                            </Grid>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <Grid style={{width: '100%'}}>
-                                <Grid>
+                    {[...Array(nbPeriod)].map((x, i) =>{
+                        return(
+                            <Accordion>
+                                <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon />}
+                                    aria-controls="panel1a-content"
+                                    id="panel1a-header"
+                                >
                                     <Grid>
-                                        <h3>Période :</h3>
+                                        <Grid>
+                                            <Typography>Période du 10/07/20 au 31/12/20</Typography>
+                                        </Grid>
+                                        <Grid>
+                                            <Typography>Vous êtes disponible tous les lundis, mardis, samedis de 5h à 12h et de 14h à 18h</Typography>
+                                        </Grid>
                                     </Grid>
-                                    <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
-                                            <Grid style={{display : 'flex', alignItems: 'center'}}>
-                                                <Grid>
-                                                    <KeyboardDatePicker
-                                                        disableToolbar
-                                                        variant="inline"
-                                                        format="dd/MM/yyyy"
-                                                        id="date-picker-inline"
-                                                        label="Date de début"
-                                                        className={classes.formSchedule}
-                                                        value={this.state.selectedDateStart}
-                                                        onChange={this.handleDateStartChange}
-                                                        KeyboardButtonProps={{
-                                                            'aria-label': 'change date',
-                                                        }}
-                                                        autoOk={true}
-                                                    />
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <Grid style={{width: '100%'}}>
+                                        <Grid>
+                                            <Grid>
+                                                <h3>Période :</h3>
+                                            </Grid>
+                                            <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+                                                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
+                                                    <Grid style={{display : 'flex', alignItems: 'center'}}>
+                                                        <Grid>
+                                                            <KeyboardDatePicker
+                                                                disableToolbar
+                                                                variant="inline"
+                                                                format="dd/MM/yyyy"
+                                                                id="date-picker-inline"
+                                                                label="Date de début"
+                                                                className={classes.formSchedule}
+                                                                value={this.state.selectedDateStart}
+                                                                onChange={this.handleDateStartChange}
+                                                                KeyboardButtonProps={{
+                                                                    'aria-label': 'change date',
+                                                                }}
+                                                                autoOk={true}
+                                                            />
+                                                        </Grid>
+                                                    </Grid>
+                                                    <Grid style={{display : 'flex', alignItems: 'center'}}>
+                                                        <Grid>
+                                                            <KeyboardDatePicker
+                                                                disableToolbar
+                                                                variant="inline"
+                                                                format="dd/MM/yyyy"
+                                                                id="date-picker-inline"
+                                                                label="Date de fin"
+                                                                className={classes.formSchedule}
+                                                                value={this.state.selectedDateEnd}
+                                                                onChange={this.handleDateStartChange}
+                                                                KeyboardButtonProps={{
+                                                                    'aria-label': 'change date',
+                                                                }}
+                                                                autoOk={true}
+                                                            />
+                                                        </Grid>
+                                                    </Grid>
+                                                </MuiPickersUtilsProvider>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid>
+                                            <Grid>
+                                                <h3>Jours travaillés :</h3>
+                                            </Grid>
+                                            <Grid container className={classes.panelFormDays}>
+                                                {[0,1,2,3,4,5,6].map( d => {
+                                                    return (
+                                                        <Chip
+                                                            clickable
+                                                            label={DAYS[d]}
+                                                            style={{backgroundColor: this.state.recurrDays.has(d) ? '#F8727F' :  '#c4c4c4'}}
+                                                            className={classes.textFieldChips}
+                                                            onClick={() => {
+                                                            this.toggleRecurrDay(d);
+                                                            }}
+                                                        />
+                                                        )
+                                                })}
+                                            </Grid>
+                                        </Grid>
+                                        <Grid>
+                                            <Grid>
+                                                <h3>Horaires travaillés :</h3>
+                                            </Grid>
+                                            <Grid container>
+                                                <Grid item className={classes.containerSelectSlotTimer}>
+                                                    <Grid>
+                                                        <h4>Nuit</h4>
+                                                    </Grid>
+                                                    <Grid>
+                                                        <SelectSlotTimer arrayLength={6} index={0}/>
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid item className={classes.containerSelectSlotTimer}>
+                                                    <Grid>
+                                                        <h4>Matin</h4>
+                                                    </Grid>
+                                                    <Grid >
+                                                        <SelectSlotTimer arrayLength={12} index={6}/>
+                                                    </Grid>
                                                 </Grid>
                                             </Grid>
-                                            <Grid style={{display : 'flex', alignItems: 'center'}}>
-                                                <Grid>
-                                                    <KeyboardDatePicker
-                                                        disableToolbar
-                                                        variant="inline"
-                                                        format="dd/MM/yyyy"
-                                                        id="date-picker-inline"
-                                                        label="Date de fin"
-                                                        className={classes.formSchedule}
-                                                        value={this.state.selectedDateEnd}
-                                                        onChange={this.handleDateStartChange}
-                                                        KeyboardButtonProps={{
-                                                            'aria-label': 'change date',
-                                                        }}
-                                                        autoOk={true}
-                                                    />
+                                            <Grid container>
+                                                <Grid item className={classes.containerSelectSlotTimer}>
+                                                    <Grid>
+                                                        <h4>Après-midi</h4>
+                                                    </Grid>
+                                                    <Grid>
+                                                        <SelectSlotTimer arrayLength={18} index={12}/>
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid item className={classes.containerSelectSlotTimer}>
+                                                    <Grid>
+                                                        <h4>Soirée</h4>
+                                                    </Grid>
+                                                    <Grid>
+                                                        <SelectSlotTimer arrayLength={24} index={18}/>
+                                                    </Grid>
                                                 </Grid>
                                             </Grid>
-                                        </MuiPickersUtilsProvider>
-                                    </Grid>
-                                </Grid>
-                                <Grid>
-                                    <Grid>
-                                        <h3>Jours travaillés :</h3>
-                                    </Grid>
-                                    <Grid container className={classes.panelFormDays}>
-                                        {[0,1,2,3,4,5,6].map( d => {
-                                            return (<Chip
-                                                clickable
-                                                label={DAYS[d]}
-                                                style={{backgroundColor: this.state.recurrDays.has(d) ? '#F8727F' :  '#c4c4c4'}}
-                                                className={classes.textFieldChips}
-                                                onClick={() => {
-                                                    this.toggleRecurrDay(d);
-                                                }
-                                                } />)
-                                        })}
-                                    </Grid>
-                                </Grid>
-                                <Grid>
-                                    <Grid>
-                                        <h3>Horaires travaillés :</h3>
-                                    </Grid>
-                                    <Grid container>
-                                        <Grid item className={classes.containerSelectSlotTimer}>
-                                            <Grid>
-                                                <h4>Nuit</h4>
-                                            </Grid>
-                                            <Grid>
-                                                <SelectSlotTimer arrayLength={6} index={0}/>
-                                            </Grid>
                                         </Grid>
-                                        <Grid item className={classes.containerSelectSlotTimer}>
-                                            <Grid>
-                                                <h4>Matin</h4>
-                                            </Grid>
-                                            <Grid >
-                                                <SelectSlotTimer arrayLength={12} index={6}/>
+                                        <Grid style={{marginTop: 30}}>
+                                            <Grid style={{display:'flex', flexDirection:'row-reverse'}}>
+                                                <Button variant={'contained'} color={'primary'} style={{color: 'white'}}>Enregistrer</Button>
                                             </Grid>
                                         </Grid>
                                     </Grid>
-                                    <Grid container>
-                                        <Grid item className={classes.containerSelectSlotTimer}>
-                                            <Grid>
-                                                <h4>Après-midi</h4>
-                                            </Grid>
-                                            <Grid>
-                                                <SelectSlotTimer arrayLength={18} index={12}/>
-                                            </Grid>
-                                        </Grid>
-                                        <Grid item className={classes.containerSelectSlotTimer}>
-                                            <Grid>
-                                                <h4>Soirée</h4>
-                                            </Grid>
-                                            <Grid>
-                                                <SelectSlotTimer arrayLength={24} index={18}/>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                                <Grid style={{marginTop: 30}}>
-                                    <Grid style={{display:'flex', flexDirection:'row-reverse'}}>
-                                        <Button variant={'contained'} color={'primary'} style={{color: 'white'}}>Enregistrer</Button>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                        </AccordionDetails>
-                    </Accordion>
+                                </AccordionDetails>
+                            </Accordion>
+                        )
+                        })
+                    }
                 </Grid>
                 <Divider/>
                 <Grid style={{marginTop: 30}}>
                     <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
-                        <Button variant={'contained'} color={'primary'} style={{color:'white'}}>Ajouter une période</Button>
+                        <Button variant={'contained'} color={'primary'} style={{color:'white'}} onClick={this.handlePeriode}>Ajouter une période</Button>
                     </Grid>
                 </Grid>
             </Grid>

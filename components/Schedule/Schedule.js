@@ -148,7 +148,7 @@ class Schedule extends React.Component {
     const MyDateCellWrapper = (event) =>{
 
       let propsStyle = event.children.props['className'];
-      
+
       var off_range_style={width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'white', zIndex:5};
       var today_style = {width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'rgba(79, 189, 215, 0.2)', cursor:'pointer'};
       var day_style = {width: '100%', height :'100%', borderLeft:'1px solid #DDD', cursor:'pointer'};
