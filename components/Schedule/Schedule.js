@@ -93,26 +93,6 @@ class Schedule extends React.Component {
       }
   };
 
-  availAsText = () => {
-    const {selectedDateStart, selectedTimeStart, selectedTimeEnd, selectedDateEndRecu, recurrDays, isExpanded} = this.state;
-    let value = "Disponible de "+selectedTimeStart+ " à "+selectedTimeEnd;
-    value += (isExpanded ? " à partir du " : " le ")+moment(selectedDateStart).format('DD/MM/YY');
-    if (isExpanded && selectedDateEndRecu) {
-      value += " jusqu'au "+moment(selectedDateEndRecu).format('DD/MM/YY')
-    }
-    if (isExpanded) {
-      value += " tous les ";
-      let count=0;
-      for (var i = 0; i<7; i++) {
-        if (recurrDays.has(i)) {
-          value += LONG_DAYS[i]+(count <recurrDays.size-2 ? ", " : count === recurrDays.size-1 ? "" : " et ");
-          count++
-        }
-      }
-    }
-    return value
-  };
-
   customToolbar = (toolbar) => {
 
     const label = () => {

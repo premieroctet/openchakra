@@ -11,6 +11,8 @@ import AddIcon from '@material-ui/icons/Add';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DrawerEditingSchedule from '../Drawer/DrawerEditingSchedule/DrawerEditingSchedule';
 import DrawerSettingSchedule from '../Drawer/DrawerSettingSchedule/DrawerSettingSchedule';
+import cookie from 'react-cookies';
+import axios from "axios";
 
 class DrawerSchedule extends React.Component{
     constructor(props) {
@@ -20,8 +22,22 @@ class DrawerSchedule extends React.Component{
         this.state={
             mobileOpen: false,
             recurrDays: new Set(),
-            eventsSelected: new Set()
+            eventsSelected: new Set(),
+            recurrSlotTime: new Set(),
+            selectedDateStart: null,
+            selectedDateEnd: null,
+            availabilities: [],
         }
+    }
+
+    componentDidMount = () => {
+      const auth = cookie.load('token')
+      axios.defaults.headers.common['Authorization'] = auth
+      axios.get('/myAlfred/api/availability/currentAlfred')
+        .then ( res => {
+          this.setState({availabilities: res.data})
+        })
+        .catch (err => console.error(err))
     }
 
     componentDidUpdate(prevProps, prevState){

@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const moment=require('moment')
+const {DAYS}=require('../../utils/dateutils')
+
 const AvailabilitySchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
@@ -187,6 +190,22 @@ const AvailabilitySchema = new Schema({
     }
 
 
-});
+}, { toJSON: { virtuals: true, getters: true } });
+
+
+AvailabilitySchema.virtual('as_text').get( function() {
+  if (this.period.active) {
+    return `Période du ${moment(this.period.month_begin).format('DD/MM/YY')} au ${moment(this.period.month_end).format('DD/MM/YY')}`
+  }
+  else {
+    DAYS.forEach( d => {
+      if (this[d].event && this[d].event.length>0) {
+        return this[d].event[0].begin
+      }
+    })
+    return null
+  }
+})
+
 
 module.exports = Availability = mongoose.model('availability',AvailabilitySchema);

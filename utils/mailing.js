@@ -54,6 +54,8 @@ const SMS_CONTENTS = {
 
 const sendNotification = (notif_index, destinee, params) => {
 
+  return true
+
   var resultMail=true, resultSms=true;
   // Send mail
   if (notif_index != CONFIRM_PHONE) {
