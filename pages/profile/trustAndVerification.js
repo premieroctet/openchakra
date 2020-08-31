@@ -39,7 +39,7 @@ import Information from '../../components/Information/Information';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 const I18N = require('../../utils/i18n')
 const {checkSocialSecurity}=require('../../utils/social_security')
-
+import  DocumentEditor from '../../components/DocumentEditor/DocumentEditor'
 moment.locale('fr');
 
 const FilledButton = styled.div`
@@ -53,42 +53,6 @@ const FilledButton = styled.div`
     margin-left: 3px;
 `;
 
-class Thumb extends React.Component {
-    state = {
-        loading: false,
-        thumb: undefined,
-    };
-
-    componentWillReceiveProps(nextProps) {
-        if (!nextProps.file) { return; }
-
-        this.setState({ loading: true }, () => {
-            let reader = new FileReader();
-
-            reader.onloadend = () => {
-                this.setState({ loading: false, thumb: reader.result });
-            };
-
-            reader.readAsDataURL(nextProps.file);
-        });
-    }
-
-    render() {
-        const { file } = this.props;
-        const { loading, thumb } = this.state;
-
-        if (!file) { return null; }
-
-        if (loading) { return <p>loading...</p>; }
-
-        return (<img src={thumb}
-                     alt={file.name}
-                     height={'auto'}
-                     width={100}
-        />);
-    }
-}
-
 class trustAndVerification extends React.Component {
     constructor(props) {
         super(props);
@@ -99,15 +63,17 @@ class trustAndVerification extends React.Component {
             selected: false,
             id_recto: null,
             id_verso: null,
+            id_registrationproof: null,
             card:{},
-            haveCard: false,
-            haveCardV: false,
             pageNumber: 1,
             numPages: null,
-            file: null,
-            file2: null,
+            recto_file: null,
+            verso_file: null,
+            registration_proof_file: null,
+            registration_proof: null,
             ext: '',
             extVerso: '',
+            extRegistrationProof: '',
             professional: false,
             particular: false,
             alfred: false,
@@ -125,14 +91,19 @@ class trustAndVerification extends React.Component {
             cesu: null,
             cis: false,
             notice: false,
-            kyc_status: null,
-            kyc_error: null,
+            id_card_status: null,
+            id_card_error: null,
+            deleteConfirmMessage: null,
         };
         this.editSiret = this.editSiret.bind(this);
         this.callDrawer = this.callDrawer.bind(this)
         this.onSiretChange = this.onSiretChange.bind(this)
         this.statusSaveDisabled = this.statusSaveDisabled.bind(this)
         this.displayInfo = this.displayInfo.bind(this)
+        this.deleteRecto = this.deleteRecto.bind(this)
+        this.deleteRegistrationProof = this.deleteRegistrationProof.bind(this)
+        this.handleDelete = this.handleDelete.bind(this)
+        this.handleClose = this.handleClose.bind(this)
     }
 
     componentDidMount() {
@@ -143,20 +114,28 @@ class trustAndVerification extends React.Component {
             .then(res => {
                 let user = res.data;
                 this.setState({user:user});
-                if(user.id_card !== undefined) {
+                if(user.id_card) {
                     this.setState({card:user.id_card});
-                    if(user.id_card.recto !== undefined){
-                        const ext = this.state.card.recto.split('.').pop();
-                        this.setState({ext:ext , haveCard: true});
+                    if(user.id_card.recto){
+                        const ext = user.id_card.recto.split('.').pop();
+                        this.setState({ext:ext});
                     }
-                    if(user.id_card.verso !== undefined){
-                        const extVerso = this.state.card.verso.split('.').pop();
-                        this.setState({extVerso:extVerso,haveCardV:true});
+                    if(user.id_card.verso){
+                        const extVerso = user.id_card.verso.split('.').pop();
+                        this.setState({extVerso:extVerso});
+                    }
+                    if (user.id_card.recto) {
+                      this.setState({ type: user.id_card.verso ? 'identite': 'passeport'})
                     }
                 }
-                this.setState( { kyc_status: user.kyc_status_text})
-                if (user.kyc_error) {
-                  this.setState( { kyc_error: user.kyc_error_text})
+                if(user.registration_proof) {
+                  this.setState({registration_proof: user.registration_proof});
+                  const ext = user.registration_proof.split('.').pop();
+                  this.setState({extRegistrationProof:ext});
+                }
+                this.setState( { id_card_status: user.id_card_status_text})
+                if (user.id_card_error) {
+                  this.setState( { id_card_error: user.id_card_error_text})
                 }
                 if(user.is_alfred) {
                     this.setState({alfred: true});
@@ -174,12 +153,12 @@ class trustAndVerification extends React.Component {
                 }
             })
             .catch(err => {
-                    if(err.response.status === 401 || err.response.status === 403) {
-                        cookie.remove('token', { path: '/' })
-                        Router.push({pathname: '/login'})
-                    }
+                console.error(err)
+                if(err.response.status === 401 || err.response.status === 403) {
+                    cookie.remove('token', { path: '/' })
+                    Router.push({pathname: '/login'})
                 }
-            );
+            });
     }
 
     handleClickOpen() {
@@ -188,6 +167,12 @@ class trustAndVerification extends React.Component {
 
     handleClose() {
         this.setState({open:false});
+        this.setState( { deleteCb : null} )
+    }
+
+    handleDelete() {
+      this.state.deleteCb()
+      this.handleClose()
     }
 
     onChange = e => {
@@ -218,18 +203,19 @@ class trustAndVerification extends React.Component {
     }
 
     onRectoChange = e => {
-        this.setState({id_recto:e.target.files[0],haveCard:false});
-        this.setState({
-            file:
-                URL.createObjectURL(e.target.files[0])    })
+        this.setState({id_recto:e.target.files[0]});
+        this.setState({recto_file:URL.createObjectURL(e.target.files[0])})
     };
 
     onVersoChange = e => {
         this.setState({id_verso:e.target.files[0]});
-        this.setState({
-            file2:
-                URL.createObjectURL(e.target.files[0])    })
+        this.setState({verso_file:URL.createObjectURL(e.target.files[0])})
     };
+
+    onRegistrationProofChanged = e => {
+        this.setState({id_registrationproof:e.target.files[0]});
+        this.setState({registration_proof_file:URL.createObjectURL(e.target.files[0])})
+    }
 
     handleChecked () {
         this.setState({particular: false})
@@ -273,7 +259,7 @@ class trustAndVerification extends React.Component {
         };
         axios.post("/myAlfred/api/users/profile/idCard",formData,config)
             .then((response) => {
-                toast.info('Carte d\'identité ajoutée');
+                toast.info('Pièce d\'identité ajoutée');
                 this.componentDidMount();
             }).catch();
     };
@@ -330,35 +316,63 @@ class trustAndVerification extends React.Component {
             cis: this.state.cis,
             social_security: this.state.social_security,
         };
-        axios
-            .put('/myAlfred/api/shop/editStatus', newStatus)
-            .then(res => {
-                toast.info('Statut modifié');
-                let status;
-                if(this.state.professional === true){
-                    status = 'Pro'
-                } else {
-                    status = 'Particulier'
-                }
-                const data = {status:status};
-                axios.put('/myAlfred/api/serviceUser/editStatus',data)
-                    .then()
-                    .catch()
+        axios.put('/myAlfred/api/shop/editStatus', newStatus)
+          .then(res => {
+              toast.info('Statut modifié');
+              const data = { status : this.state.professional ? 'Pro' : 'Particulier' }
+              return axios.put('/myAlfred/api/serviceUser/editStatus',data)
+          })
+          .then( () => {
+            const formData = new FormData();
+            formData.append('registrationProof',this.state.id_registrationproof)
+            const config = {headers: {'content-type': 'multipart/form-data'}}
+            axios.post("/myAlfred/api/users/profile/registrationProof/add",formData,config)
+              .then((response) => {
+                  toast.info('Document d\'immatriculation ajouté');
+              })
 
-            })
-            .catch();
+          })
+          .catch( err => console.error(err))
     }
 
-    deleteRecto() {
-        this.setState({open:false});
+    deleteRecto(force=false) {
+      if (!force) {
+        this.setState({
+          open: true,
+          deleteCb: () => this.deleteRecto(true),
+          deleteConfirmMessage: I18N.ID_CARD_CONFIRM_DELETION,
+        })
+      }
+      else {
         axios.delete('/myAlfred/api/users/profile/idCard/recto')
-            .then(() => {
-                toast.error('Recto supprimé');
-                setTimeout(() => window.location.reload(), 2000);
+          .then(() => {
+              toast.error('Pièce d\'identité supprimée');
+              setTimeout(() => window.location.reload(), 2000);
+          })
+          .catch( err => {
+            console.error(err)
+          });
+      }
+    }
 
-            })
-            .catch();
-
+    deleteRegistrationProof(force=false) {
+      if (!force) {
+        this.setState({
+          open: true,
+          deleteCb: () => this.deleteRegistrationProof(true),
+          deleteConfirmMessage: I18N.REGISTRATION_PROOF_CONFIRM_DELETION,
+        })
+      }
+      else {
+        axios.delete('/myAlfred/api/users/profile/registrationProof')
+          .then(() => {
+              toast.error('Document d\immatriculation supprimé');
+              setTimeout(() => window.location.reload(), 2000);
+          })
+          .catch( err => {
+            console.error(err)
+          });
+      }
     }
 
     checkSmsCode = () => {
@@ -400,7 +414,7 @@ class trustAndVerification extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const {user, ext, ext2, professional, alfred, cesu} = this.state;
+        const {user, ext, ext2, professional, alfred, cesu, type} = this.state;
 
         return (
             <Fragment>
@@ -491,8 +505,8 @@ class trustAndVerification extends React.Component {
                                 <Grid item>
                                     <h2 style={{fontWeight:'100'}}>Pièce d'identité</h2>
                                     <p style={{color:'#2FBCD3'}}>Vous pouvez ajouter ou modifier une pièce d’identité en sélectionnant le type de pièce et télécharger le document.<br/>Un recto pour le passeport et le recto/verso pour la pièce d’identité</p>
-                                    <em >{this.state.kyc_status}</em><br/>
-                                    <em style={{ color : 'red'}}>{this.state.kyc_error}</em><br/>
+                                    <em >{this.state.id_card_status}</em><br/>
+                                    <em style={{ color : 'red'}}>{this.state.id_card_error}</em><br/>
                                     <TextField
                                         select
                                         className={classes.typeFile}
@@ -511,143 +525,44 @@ class trustAndVerification extends React.Component {
                                         </MenuItem>
                                     </TextField>
                                     <form className={classes.formresp} onSubmit={this.onSubmit}>
-                                        {this.state.haveCard ?
-                                            <Grid item>
-                                                <Grid container style={{alignItems:"center", flexWrap: 'nowrap'}}>
-                                                    <Grid item>
-                                                        <Grid container style={{border:'1px solid lightgrey',marginTop:20,alignItems:"center", justifyContent: 'center'}}>
-                                                            <Grid item>
-                                                                {ext ==='pdf' ?
-                                                                    <Document
-                                                                        file={`../${this.state.card.recto}`}
-                                                                        onLoadSuccess={this.onDocumentLoadSuccess}
-                                                                    >
-                                                                        <Page pageNumber={this.state.pageNumber} width={200} />
-                                                                    </Document>
-                                                                    :
-                                                                    <img src={`../${this.state.card.recto}`} alt={'recto'} width={200}/>
-                                                                }
-                                                            </Grid>
-                                                            <Grid item className={classes.contentIcones}>
-                                                                <label className={classes.forminputs}>
-                                                                    <Edit color={'primary'} style={{cursor:"pointer"}}/>
-                                                                    <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
-                                                                           onChange={this.onRectoChange}
-                                                                           className="form-control" accept=".jpg,.jpeg,.png,.pdf"
-                                                                    />
-                                                                </label>
-                                                                <Delete style={{cursor:"pointer"}} color={"secondary"} onClick={()=>this.handleClickOpen()}/>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </Grid>
-                                                    <Grid item xs={3}>
-                                                        {user.id_confirmed ? <img src={'../static/Confiance et vérification active.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/> :
-                                                            <img src={'../static/Confiance et vérification.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/>
-                                                        }
-                                                    </Grid>
-                                                </Grid>
-                                            </Grid>
-                                            :(
-                                                this.state.file===null ?
-                                                  <Grid item xs={6} className={classes.containerRecto}>
-                                                        <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
-                                                            <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger recto</p>
-                                                            <input disabled={!this.state.selected} id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
-                                                                   onChange={this.onRectoChange}
-                                                                   className="form-control" accept=".jpg,.jpeg,.png,.pdf"
-                                                            />
-                                                        </label>
-                                                    </Grid> :
-                                                    <Grid container style={{marginTop: 20,alignItems:"center"}}>
-                                                        <Grid item xs={6} style={{height:115,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center",
-                                                            backgroundImage:`url('${this.state.file}')`,backgroundPosition:"center",backgroundSize:"cover"}}>
-                                                        </Grid>
-                                                        <Grid item xs={3}>
-                                                            <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
-                                                                <Edit style={{cursor:"pointer"}}/>
-                                                                <input  id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR" type="file"
-                                                                       onChange={this.onRectoChange}
-                                                                       className="form-control" accept=".jpg,.jpeg,.png,.pdf"
-                                                                />
-                                                            </label>
-                                                            <Delete style={{cursor:"pointer"}} color={"secondary"} onClick={()=>this.setState({file:null})}/>
-                                                        </Grid>
-
-                                                    </Grid>
-                                            )}
-
-                                        {this.state.haveCard && this.state.haveCardV ?
-                                            <Grid item xs={12}>
-                                                <Grid container style={{alignItems:"center"}}>
-                                                    <Grid item xs={9}>
-                                                        <Grid container style={{border:'1px solid lightgrey',marginTop:20,alignItems:"center"}}>
-                                                            <Grid item xs={8}>
-                                                                {ext2 ==='pdf' ?
-                                                                    <Document
-                                                                        file={`../${this.state.card.verso}`}
-                                                                        onLoadSuccess={this.onDocumentLoadSuccess}
-                                                                    >
-                                                                        <Page pageNumber={this.state.pageNumber} width={200} />
-                                                                    </Document>
-                                                                    :
-                                                                    <img src={`../${this.state.card.verso}`} alt={'verso'} width={200}/>
-                                                                }
-                                                            </Grid>
-                                                            <Grid item xs={4}>
-                                                                <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
-                                                                    <Edit style={{cursor:"pointer"}}/>
-                                                                    <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
-                                                                           onChange={this.onVersoChange}
-                                                                           className="form-control" accept=".jpg,.jpeg,.png,.pdf"
-                                                                    />
-                                                                </label>
-                                                                <Delete style={{cursor:"pointer"}} color={"secondary"} onClick={()=>this.handleClickOpen()}/>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </Grid>
-                                                    <Grid item xs={3}>
-                                                        {user.id_confirmed ? <img src={'../static/Confiance et vérification active.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/> :
-                                                            <img src={'../static/Confiance et vérification.svg'} alt={'check'} width={28} style={{marginLeft: 5}}/>
-                                                        }
-                                                    </Grid>
-                                                </Grid>
-                                            </Grid>
-                                            :(
-                                                this.state.file2===null ?
-                                                  <Grid item xs={9} className={classes.containerRecto}>
-                                                        <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
-                                                            <p style={{cursor:"pointer",color:'darkgrey',fontSize: '0.9rem'}}>Télécharger verso (sauf passeport)</p>
-                                                            <input disabled={this.state.type === 'passeport' || !this.state.selected} id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
-                                                                   onChange={this.onVersoChange}
-                                                                   className="form-control" accept=".jpg,.jpeg,.png,.pdf"
-                                                            />
-                                                        </label>
-                                                    </Grid> :
-                                                    <Grid container style={{marginTop: 20,alignItems:"center"}}>
-                                                        <Grid item xs={6} style={{height:115,border:'0.2px solid lightgrey',display:"flex",justifyContent:"center",
-                                                            backgroundImage:`url('${this.state.file2}')`,backgroundPosition:"center",backgroundSize:"cover"}}>
-                                                        </Grid>
-                                                        <Grid item xs={3}>
-                                                            <label style={{display: 'inline-block',marginTop:15,textAlign:"center"}} className="forminputs">
-                                                                <Edit style={{cursor:"pointer"}}/>
-                                                                <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardV" type="file"
-                                                                       onChange={this.onVersoChange}
-                                                                       className="form-control" accept=".jpg,.jpeg,.png,.pdf"
-                                                                />
-                                                            </label>
-                                                            <Delete style={{cursor:"pointer"}} color={"secondary"} onClick={()=>this.setState({file2:null})}/>
-                                                        </Grid>
-                                                    </Grid>
-                                            )}
-                                        {this.state.id_recto === null && this.state.id_verso !==null ?
-                                            <Grid item xs={9} className={classes.respenr}  style={{marginTop:20,display:"flex",justifyContent:"flex-end"}}>
-                                                <Button onClick={()=>this.addVerso()} color={"primary"} variant={"contained"} style={{color:"white"}}>Enregistrer verso</Button>
-                                            </Grid>
-                                            :
-                                            <Grid item xs={9} className={classes.respenr} style={{marginTop:20,display:"flex",justifyContent:"flex-start"}}>
-                                                <Button type={"submit"} color={"secondary"} variant={"contained"} style={{color:"white"}}>Enregistrer</Button>
-                                            </Grid>
-                                        }
+                                      { type ?
+                                        <DocumentEditor
+                                          confirmed={user.id_confirmed}
+                                          ext={this.state.ext}
+                                          db_document={this.state.card.recto}
+                                          uploaded_file={this.state.recto_file}
+                                          onChange={this.onRectoChange}
+                                          onDelete={() => this.deleteRecto(false)}
+                                          disabled={!type}
+                                          title={'Télécharger recto'}
+                                        />
+                                        :
+                                        null
+                                      }
+                                      {
+                                        type=='identite' ?
+                                        <DocumentEditor
+                                          confirmed={user.id_confirmed}
+                                          ext={this.state.extVerso}
+                                          db_document={this.state.card.verso}
+                                          uploaded_file={this.state.verso_file}
+                                          onChange={this.onVersoChange}
+                                          onDelete={() => this.deleteRecto(false)}
+                                          disabled={type!='identite'}
+                                          title={'Télécharger verso'}
+                                        />
+                                        :
+                                        null
+                                      }
+                                      {this.state.id_recto === null && this.state.id_verso !==null ?
+                                          <Grid item xs={9} className={classes.respenr}  style={{marginTop:20,display:"flex",justifyContent:"flex-start"}}>
+                                              <Button onClick={()=>this.addVerso()} color={"primary"} variant={"contained"} style={{color:"white"}}>Enregistrer verso</Button>
+                                          </Grid>
+                                          :
+                                          <Grid item xs={9} className={classes.respenr} style={{marginTop:20,display:"flex",justifyContent:"flex-start"}}>
+                                              <Button type={"submit"} color={"secondary"} variant={"contained"} style={{color:"white"}}>Enregistrer</Button>
+                                          </Grid>
+                                      }
                                   </form>
                                 </Grid>
 
@@ -741,8 +656,24 @@ class trustAndVerification extends React.Component {
                                       <>
                                       <ButtonSwitch label="Je suis éligible au Crédit Impôt Service" onChange={this.onCISChange} checked={this.state.cis} />
                                       <Siret onChange={this.onSiretChange} company={this.state}/>
+                                      <h2 style={{fontWeight:'100'}}>Document d'immatriculation</h2>
+                                      <p style={{color:'#2FBCD3'}}>
+                                        Insérez ici le document d'immatriculation de votre entreprise (extrait de K-Bis, document d'immatriculation de micro-entreprise).<br/>
+                                        Vous pouvez télécharger ce document en version PDF&nbsp;
+                                        <a color={"primary"} href='https://avis-situation-sirene.insee.fr/' target='_blank' style={{ textDecoration: 'none', color: '#2FBCD3', cursor: 'pointer' }} >sur le site de l'INSEE (lien)</a>
+                                      </p>
+                                      <DocumentEditor
+                                        ext={this.state.extRegistrationProof}
+                                        db_document={this.state.registration_proof}
+                                        uploaded_file={this.state.registration_proof_file}
+                                        onChange={this.onRegistrationProofChanged}
+                                        onDelete={() => this.deleteRegistrationProof(false)}
+                                        title={'Télécharger document d\'immatriculation'}
+                                      />
                                       </>
-                                        : null}
+                                      :
+                                      null
+                                    }
                                     <Grid item xs={5}>
                                         <Button disabled={this.statusSaveDisabled()} className={classes.respenr2} onClick={this.editSiret} type="submit" variant="contained" color="primary" style={{color:'white',marginTop:15 }}>
                                             Enregistrer
@@ -758,21 +689,21 @@ class trustAndVerification extends React.Component {
 
                 <Dialog
                     open={this.state.open}
-                    onClose={()=>this.handleClose()}
+                    onClose={this.handleClose}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle id="alert-dialog-title">{"Supprimer la carte d'identité"}</DialogTitle>
+                    <DialogTitle id="alert-dialog-title">{"Confirmation"}</DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            Voulez-vous vraiment supprimer votre carte d'identité/passeport ?
+                            { this.state.deleteConfirmMessage }
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={()=>this.handleClose()} color="primary">
+                        <Button onClick={this.handleClose} color="primary">
                             Annuler
                         </Button>
-                        <Button onClick={()=>this.deleteRecto()} color="secondary" autoFocus>
+                        <Button onClick={this.handleDelete} color="secondary" autoFocus>
                             Supprimer
                         </Button>
                     </DialogActions>

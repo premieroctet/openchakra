@@ -454,7 +454,7 @@ router.delete('/users/users/:id',passport.authenticate('jwt',{session: false}),(
 router.get('/shop/all', (req, res) => {
     Shop.find({}, '_id creation_date')
       .sort({creation_date:-1})
-      .populate('alfred','_id firstname name email id_mangopay mangopay_provider_id kyc_status kyc_error id_card')
+      .populate('alfred','_id firstname name email id_mangopay mangopay_provider_id id_card_status id_card_error id_card')
       .then(shop => {
           if (typeof shop !== 'undefined' && shop.length > 0) {
               res.json(shop);

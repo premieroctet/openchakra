@@ -127,7 +127,7 @@ const addIdIfRequired = user => {
       const documentId = result.Id;
       console.log(`Create identity proof ${documentId} for provider ${id}`)
       user.identity_proof_id=documentId;
-      user.kyc_status=KycDocumentStatus.Created
+      user.id_card_status=KycDocumentStatus.Created
       user.save()
         .then ( u => console.log(`User saved id proof ${user.identity_proof_id}`) )
         .catch ( err => console.error(err) )
@@ -147,7 +147,7 @@ const addIdIfRequired = user => {
             mangoApi.Users.updateKycDocument(user.mangopay_provider_id, updateObj)
               .then( () => console.log('Validation asked OK'))
               .catch( err => console.error('Validation asked error:${err}'))
-            user.kyc_status=KycDocumentStatus.ValidationAsked
+            user.id_card_status=KycDocumentStatus.ValidationAsked
             user.save()
               .then ( u => console.log(`User ${user._id} set ${user.identity_proof_id} to ${KycDocumentStatus.ValidationAsked}`) )
               .catch ( err => console.error(err) )
@@ -155,6 +155,47 @@ const addIdIfRequired = user => {
           .catch (err => {
             console.error(`While creating KycPageFromFile:${JSON.stringify(err)}`)
           })
+        })
+  })
+  .catch (err => console.error(err))
+}
+
+const addRegistrationProof = user => {
+  console.log("addRegistrationProof")
+
+  if (!user.mangopay_provider_id) {
+    console.log(`User ${user._id}:pas besoin d'envoyer de preuve d'immatriculation pour un client`)
+    return false;
+  }
+
+  const objStatus = {Type: KycDocumentType.RegistrationProof}
+
+  const id = user.mangopay_provider_id;
+
+  mangoApi.Users.createKycDocument(id, objStatus)
+    .then(result => {
+      const documentId = result.Id;
+      console.log(`Create identity proof ${documentId} for provider ${id}`)
+      user.registration_proof_id=documentId;
+      user.registration_proof_status=KycDocumentStatus.Created
+      user.save()
+        .then ( u => console.log(`User saved registration proof ${user.identity_proof_id}`) )
+        .catch ( err => console.error(err) )
+
+      const id_reg = path.resolve(user.registration_proof);
+      mangoApi.Users.createKycPageFromFile(id, documentId, id_reg)
+        .then(result => {
+          console.log(`Created KyCPage recto ${id_reg}`)
+
+          console.log("Asking for KYC validation")
+          const updateObj = {Id: documentId, Status: KycDocumentStatus.ValidationAsked}
+          mangoApi.Users.updateKycDocument(user.mangopay_provider_id, updateObj)
+            .then( () => console.log('Validation asked OK'))
+            .catch( err => console.error('Validation asked error:${err}'))
+          user.registration_proof_status=KycDocumentStatus.ValidationAsked
+          user.save()
+            .then ( u => console.log(`User ${user._id} set ${user.registration_proof_id} to ${KycDocumentStatus.ValidationAsked}`) )
+            .catch ( err => console.error(err) )
         })
   })
   .catch (err => console.error(err))
@@ -257,5 +298,6 @@ module.exports = {
   createMangoClient,
   createMangoProvider,
   addIdIfRequired,
+  addRegistrationProof,
   payAlfred,
 };

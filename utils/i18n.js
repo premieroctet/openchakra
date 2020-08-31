@@ -18,6 +18,9 @@ pouvez définir.'
 
 const SHOP_CREATION_SUCCESSFUL='Vos services sont maintenant disponibles dans my Alfred'
 
+const ID_CARD_CONFIRM_DELETION="Supprimer votre pièce d'identité ?"
+const REGISTRATION_PROOF_CONFIRM_DELETION="Supprimer votre document d'immatriculation ?"
+
 const MANGOPAY_MESSAGES= {
   'DOCUMENT_UNREADABLE'                 : "Pièce d'identité illisible",
   'DOCUMENT_NOT_ACCEPTED'               : "Pièce d'identité invalide : carte d'identité, passeport, permis de conduire ou titre de séjour attendu",
@@ -41,4 +44,8 @@ const getMangopayMessage = msg_id => {
   return MANGOPAY_MESSAGES[msg_id] || `Erreur inconnue:${msg_id}`
 }
 
-module.exports={ CESU_NOTICE, OUTSIDE_PERIMETER, SCHEDULE_TITLE, SCHEDULE_SUBTITLE, getMangopayMessage, SHOP_CREATION_SUCCESSFUL};
+module.exports={
+  CESU_NOTICE, OUTSIDE_PERIMETER, SCHEDULE_TITLE, SCHEDULE_SUBTITLE,
+  getMangopayMessage, SHOP_CREATION_SUCCESSFUL, ID_CARD_CONFIRM_DELETION,
+  REGISTRATION_PROOF_CONFIRM_DELETION
+};

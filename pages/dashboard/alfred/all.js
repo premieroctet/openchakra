@@ -215,10 +215,10 @@ class all extends React.Component {
                                                       }
                                                     </TableCell>
                                                     <TableCell>
-                                                        { e.alfred.kyc_status_text }<br/>{ e.alfred.kyc_error }
+                                                        { e.alfred.id_card_status_text }<br/>{ e.alfred.id_card_error }
                                                     </TableCell>
                                                     <TableCell>
-                                                    { e.alfred.id_card && e.alfred.kyc_status!=KycDocumentStatus.Validated ?
+                                                    { e.alfred.id_card && e.alfred.id_card_status!=KycDocumentStatus.Validated ?
                                                           <Button color="primary" onClick={ () => this.kyc_validation(e.alfred._id)}>Validation Mangopay</Button>
                                                       :
                                                       null
