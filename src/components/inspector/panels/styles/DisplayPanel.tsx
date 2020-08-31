@@ -13,7 +13,7 @@ const DisplayPanel = () => {
     <>
       <FormControl label="Display">
         <Select
-          boxSize="sm"
+          size="sm"
           value={display || ''}
           onChange={setValueFromEvent}
           name="display"

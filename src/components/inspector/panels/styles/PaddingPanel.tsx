@@ -54,11 +54,11 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
           {type}
         </FormLabel>
 
-        <InputGroup boxSize="sm">
+        <InputGroup size="sm">
           <Input
             mb={1}
             placeholder="All"
-            boxSize="sm"
+            size="sm"
             type="text"
             name={ATTRIBUTES[type].all}
             value={all || ''}
@@ -67,7 +67,7 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
         </InputGroup>
 
         <SimpleGrid columns={2} spacing={1}>
-          <InputGroup boxSize="sm">
+          <InputGroup size="sm">
             <InputLeftElement
               children={
                 <ArrowBackIcon path="" fontSize="md" color="gray.300" />
@@ -75,7 +75,7 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
             />
             <Input
               placeholder="left"
-              boxSize="sm"
+              size="sm"
               type="text"
               name={ATTRIBUTES[type].left}
               value={left || ''}
@@ -84,7 +84,7 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
             />
           </InputGroup>
 
-          <InputGroup boxSize="sm">
+          <InputGroup size="sm">
             <InputLeftElement
               children={
                 <ArrowForwardIcon path="" fontSize="md" color="gray.300" />
@@ -92,7 +92,7 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
             />
             <Input
               placeholder="right"
-              boxSize="sm"
+              size="sm"
               type="text"
               value={right || ''}
               name={ATTRIBUTES[type].right}
@@ -101,13 +101,13 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
             />
           </InputGroup>
 
-          <InputGroup boxSize="sm">
+          <InputGroup size="sm">
             <InputLeftElement
               children={<ArrowUpIcon path="" fontSize="md" color="gray.300" />}
             />
             <Input
               placeholder="top"
-              boxSize="sm"
+              size="sm"
               type="text"
               value={top || ''}
               name={ATTRIBUTES[type].top}
@@ -116,7 +116,7 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
             />
           </InputGroup>
 
-          <InputGroup boxSize="sm">
+          <InputGroup size="sm">
             <InputLeftElement
               children={
                 <ChevronDownIcon path="" fontSize="md" color="gray.300" />
@@ -124,7 +124,7 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
             />
             <Input
               placeholder="bottom"
-              boxSize="sm"
+              size="sm"
               type="text"
               value={bottom || ''}
               name={ATTRIBUTES[type].bottom}

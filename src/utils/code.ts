@@ -1,5 +1,7 @@
 import isBoolean from 'lodash/isBoolean'
 import filter from 'lodash/filter'
+import components from '~core/models/components'
+import { propNames } from '@chakra-ui/core'
 
 const capitalize = (value: string) => {
   return value.charAt(0).toUpperCase() + value.slice(1)
@@ -49,7 +51,11 @@ const buildBlock = ({
       propsNames.forEach((propName: string) => {
         const propsValue = childComponent.props[propName]
 
-        if (propName !== 'children' && propsValue) {
+        if (propName.toLowerCase().includes('icon')) {
+          let operand = `={<${propsValue} />}`
+
+          propsContent += `${propName}${operand} `
+        } else if (propName !== 'children' && propsValue) {
           let operand = `='${propsValue}'`
 
           if (propsValue === true || propsValue === 'true') {
@@ -132,9 +138,18 @@ const ${componentName} = () => (
   return code
 }
 
+const getIconsImports = (components: IComponents) => {
+  return Object.keys(components).flatMap(name => {
+    return Object.keys(components[name].props)
+      .filter(prop => prop.toLowerCase().includes('icon'))
+      .map(prop => components[name].props[prop])
+  })
+}
+
 export const generateCode = async (components: IComponents) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
+  const iconImports = getIconsImports(components)
 
   const imports = [
     ...new Set(
@@ -151,6 +166,11 @@ import {
   theme,
   ${imports.join(',')}
 } from "@chakra-ui/core";
+${
+  iconImports.length
+    ? `import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
+    : undefined
+}
 
 ${componentsCodes}
 

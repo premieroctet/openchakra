@@ -20,7 +20,7 @@ const BadgePanel = () => {
           id="variant"
           onChange={setValueFromEvent}
           name="variant"
-          boxSize="sm"
+          size="sm"
           value={variant || ''}
         >
           <option>solid</option>

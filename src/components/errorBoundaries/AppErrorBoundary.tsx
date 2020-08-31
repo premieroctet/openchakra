@@ -31,7 +31,6 @@ export default class AppErrorBoundary extends Component<
           alignItems="center"
           justifyContent="center"
           flex={1}
-          zIndex={10}
           position="relative"
           height="100vh"
         >
@@ -57,7 +56,7 @@ export default class AppErrorBoundary extends Component<
                 }}
                 variant="outline"
                 rightIcon={<CheckCircleIcon path="" />}
-                boxSize="sm"
+                size="sm"
                 mt={4}
                 display="block"
               >

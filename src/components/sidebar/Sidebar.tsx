@@ -28,14 +28,14 @@ const Menu = () => {
         backgroundColor="#2e3748"
         width="15rem"
       >
-        <InputGroup boxSize="sm" mb={4}>
+        <InputGroup size="sm" mb={4}>
           <InputRightElement>
             {searchTerm ? (
               <IconButton
                 color="gray.300"
                 aria-label="clear"
                 icon={<CloseIcon path="" />}
-                boxSize="xs"
+                size="xs"
                 onClick={() => setSearchTerm('')}
               >
                 x

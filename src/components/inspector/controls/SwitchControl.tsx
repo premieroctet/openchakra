@@ -18,7 +18,7 @@ const SwitchControl: React.FC<SwitchControlPropsType> = ({ name, label }) => {
       <Switch
         name={name}
         id={name}
-        boxSize="sm"
+        size="sm"
         isChecked={value || false}
         onChange={() => setValue(name, !value)}
       />

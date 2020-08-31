@@ -36,7 +36,6 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
           alignItems="center"
           justifyContent="center"
           flex={1}
-          zIndex={10}
           position="relative"
         >
           <Stack
@@ -61,7 +60,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
                 }}
                 variant="outline"
                 rightIcon={<CheckCircleIcon path="" />}
-                boxSize="sm"
+                size="sm"
                 mt={4}
                 display="block"
               >

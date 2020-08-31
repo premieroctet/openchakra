@@ -6,6 +6,7 @@ import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'
 import InputSuggestion from '~components/inspector/inputs/InputSuggestion'
 import { ComboboxOption, ComboboxOptionText } from '@reach/combobox'
+import icons from '~iconsList'
 
 type IconControlProps = {
   name: string
@@ -14,7 +15,6 @@ type IconControlProps = {
 
 const IconControl: React.FC<IconControlProps> = ({ name, label }) => {
   const { setValueFromEvent } = useForm()
-  const theme = useTheme()
   const value = usePropsSelector(name)
 
   return (
@@ -24,14 +24,20 @@ const IconControl: React.FC<IconControlProps> = ({ name, label }) => {
         handleChange={setValueFromEvent}
         name={name}
       >
-        {Object.keys(theme.icons)
+        {(Object.keys(icons) as Array<keyof typeof icons>)
           .filter(icon => icon.includes(value) || !value)
-          .map((icon, index) => (
-            <ComboboxOption key={index} value={icon}>
-              {/* <Icon name={icon} /> */}
-              <ComboboxOptionText />
-            </ComboboxOption>
-          ))}
+          .map((icon, index) => {
+            const IconComponent = icons[icon]
+            return (
+              <ComboboxOption key={index} value={icon}>
+                <IconComponent
+                  // @ts-ignore
+                  path=""
+                />
+                <ComboboxOptionText />
+              </ComboboxOption>
+            )
+          })}
       </InputSuggestion>
     </FormControl>
   )

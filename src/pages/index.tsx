@@ -31,7 +31,7 @@ const App = () => {
         <Flex h="calc(100vh - 3rem)">
           <Sidebar />
           <EditorErrorBoundary>
-            <Box bg="white" flex={1} zIndex={10} position="relative">
+            <Box bg="white" flex={1} position="relative">
               <Editor />
             </Box>
           </EditorErrorBoundary>

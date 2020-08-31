@@ -19,7 +19,7 @@ const ImagePanel = () => {
         <Input
           placeholder="Image URL"
           value={src || ''}
-          boxSize="sm"
+          size="sm"
           name="src"
           onChange={setValueFromEvent}
         />
@@ -29,7 +29,7 @@ const ImagePanel = () => {
         <Input
           placeholder="Image URL"
           value={fallbackSrc || ''}
-          boxSize="sm"
+          size="sm"
           name="fallbackSrc"
           onChange={setValueFromEvent}
         />
@@ -38,7 +38,7 @@ const ImagePanel = () => {
       <FormControl label="Alt" htmlFor="alt">
         <Input
           value={alt || ''}
-          boxSize="sm"
+          size="sm"
           name="alt"
           onChange={setValueFromEvent}
         />
@@ -47,7 +47,7 @@ const ImagePanel = () => {
       <FormControl label="Html height" htmlFor="htmlHeight">
         <Input
           value={htmlHeight || ''}
-          boxSize="sm"
+          size="sm"
           name="htmlHeight"
           onChange={setValueFromEvent}
         />
@@ -56,7 +56,7 @@ const ImagePanel = () => {
       <FormControl label="Html width" htmlFor="htmlWidth">
         <Input
           value={htmlWidth || ''}
-          boxSize="sm"
+          size="sm"
           name="htmlWidth"
           onChange={setValueFromEvent}
         />

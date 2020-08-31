@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, AspectRatioBox } from '@chakra-ui/core'
+import { Box, AspectRatio } from '@chakra-ui/core'
 import { useInteractive } from '~hooks/useInteractive'
 import { useDropComponent } from '~hooks/useDropComponent'
 import ComponentPreview from '~components/editor/ComponentPreview'
@@ -23,7 +23,7 @@ const AspectRatioPreview: React.FC<{ component: IComponent }> = ({
 
   return (
     <Box {...boxProps} ref={drop(ref)}>
-      <AspectRatioBox {...props}>
+      <AspectRatio {...props}>
         {!children.length ? (
           /*
            * We need at least one children because of the implementation
@@ -35,7 +35,7 @@ const AspectRatioPreview: React.FC<{ component: IComponent }> = ({
             <ComponentPreview componentName={children[0]} />
           </Box>
         )}
-      </AspectRatioBox>
+      </AspectRatio>
     </Box>
   )
 }

@@ -5,7 +5,7 @@ import ActionButton from '~components/inspector/ActionButton'
 
 interface Props extends Pick<IComponent, 'type'> {
   opacity?: number
-  onSelect: BoxProps['onClick']
+  onSelect: () => void
   onMouseOver: BoxProps['onMouseOver']
   onMouseOut: BoxProps['onMouseOut']
   draggable?: boolean
@@ -49,7 +49,7 @@ const ElementListItem = forwardRef(
           </Flex>
           <ActionButton
             label="Inspect"
-            onClick={() => onSelect}
+            onClick={onSelect}
             icon={<SettingsIcon path="" />}
             colorScheme="blackAlpha"
           />

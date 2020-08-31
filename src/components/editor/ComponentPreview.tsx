@@ -16,6 +16,7 @@ import { getComponentBy } from '~core/selectors/components'
 import { InputRightElementPreview } from '~components/editor/previews/InputRightElement'
 import { InputLeftElementPreview } from '~components/editor/previews/InputLeftElement'
 import AspectRatioPreview from '~components/editor/previews/AspectRatioBoxPreview'
+import ButtonPreview from '~components/editor/previews/ButtonPreview'
 import PreviewContainer from '~components/editor/PreviewContainer'
 import WithChildrenPreviewContainer from '~components/editor/WithChildrenPreviewContainer'
 
@@ -32,7 +33,6 @@ const ComponentPreview: React.FC<{
   switch (type) {
     // Simple components
     case 'Badge':
-    case 'Button':
     case 'IconButton':
     case 'Image':
     case 'Text':
@@ -93,6 +93,8 @@ const ComponentPreview: React.FC<{
     case 'TabList':
     case 'TabPanels':
     case 'Grid':
+    case 'Center':
+    case 'Container':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -138,6 +140,8 @@ const ComponentPreview: React.FC<{
       return <AccordionPanelPreview component={component} />
     case 'AspectRatio':
       return <AspectRatioPreview component={component} />
+    case 'Button':
+      return <ButtonPreview component={component} />
     default:
       return null
   }

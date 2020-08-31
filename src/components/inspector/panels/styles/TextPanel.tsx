@@ -35,7 +35,7 @@ const TextPanel = () => {
           onClick={() => {
             setValue('fontWeight', fontWeight ? null : 'bold')
           }}
-          boxSize="xs"
+          size="xs"
           colorScheme={fontWeight ? 'whatsapp' : 'gray'}
           variant={fontWeight ? 'solid' : 'outline'}
         >
@@ -47,7 +47,7 @@ const TextPanel = () => {
           onClick={() => {
             setValue('fontStyle', fontStyle === 'italic' ? null : 'italic')
           }}
-          boxSize="xs"
+          size="xs"
           colorScheme={fontStyle === 'italic' ? 'whatsapp' : 'gray'}
           variant={fontStyle === 'italic' ? 'solid' : 'outline'}
         >
@@ -56,7 +56,7 @@ const TextPanel = () => {
       </FormControl>
 
       <FormControl label="Text align">
-        <ButtonGroup boxSize="xs" isAttached>
+        <ButtonGroup size="xs" isAttached>
           <IconButton
             aria-label="bold"
             icon={<MdFormatAlignLeft />}

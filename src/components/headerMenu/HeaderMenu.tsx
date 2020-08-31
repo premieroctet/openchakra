@@ -42,18 +42,18 @@ const ImportMenuItem = dynamic(() => import('./ImportMenuItem'), { ssr: false })
 
 const HeaderMenu = () => {
   return (
-    <Menu>
+    <Menu placement="bottom">
       <CustomMenuButton
         rightIcon={<ChevronDownIcon path="" />}
         as={Button}
-        boxSize="xs"
+        size="xs"
         variant="ghost"
         colorScheme="gray"
       >
         Editor
       </CustomMenuButton>
       <LightMode>
-        <MenuList>
+        <MenuList bg="white" zIndex={999}>
           <ExportMenuItem />
           <ImportMenuItem />
 

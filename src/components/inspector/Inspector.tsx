@@ -19,7 +19,7 @@ import {
   useDisclosure,
   Text,
 } from '@chakra-ui/core'
-import { CopyIcon, CheckIcon } from '@chakra-ui/icons'
+import { CopyIcon, CheckIcon, EditIcon } from '@chakra-ui/icons'
 import Panels from '~components/inspector/panels/Panels'
 import { GoRepo, GoCode } from 'react-icons/go'
 import { FiTrash2 } from 'react-icons/fi'
@@ -137,7 +137,7 @@ const Inspector = () => {
           <Stack
             direction="row"
             py={2}
-            spacing={4}
+            spacing={2}
             align="center"
             zIndex={99}
             px={2}
@@ -148,7 +148,7 @@ const Inspector = () => {
             {!component.componentName && (
               <ActionButton
                 label="Name component"
-                icon="edit"
+                icon={<EditIcon path="" />}
                 onClick={onOpen}
               />
             )}
@@ -193,52 +193,54 @@ const Inspector = () => {
         parentIsRoot={parentIsRoot}
       />
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <form onSubmit={saveComponent}>
-            <ModalHeader>Save this component</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <FormControl isInvalid={!isValidComponentName}>
-                <FormLabel>Component name</FormLabel>
-                <Input
-                  size="md"
-                  autoFocus
-                  variant="outline"
-                  isFullWidth
-                  focusBorderColor="blue.500"
-                  errorBorderColor="red.500"
-                  value={componentName}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    onChangeComponentName(e.target.value)
-                  }
-                />
-                {!isValidComponentName && (
-                  <FormErrorMessage>
-                    Component name must start with a capital character and must
-                    not contain space or special character, and name should not
-                    be already taken (including existing chakra-ui components).
-                  </FormErrorMessage>
-                )}
-                <FormHelperText>
-                  This will name your component that you will see in the code
-                  panel as a separated component.
-                </FormHelperText>
-              </FormControl>
-            </ModalBody>
-            <ModalFooter>
-              <Button
-                variantColor="blue"
-                mr={3}
-                type="submit"
-                isDisabled={!isValidComponentName}
-              >
-                Save
-              </Button>
-              <Button onClick={onClose}>Cancel</Button>
-            </ModalFooter>
-          </form>
-        </ModalContent>
+        <ModalOverlay>
+          <ModalContent>
+            <form onSubmit={saveComponent}>
+              <ModalHeader>Save this component</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <FormControl isInvalid={!isValidComponentName}>
+                  <FormLabel>Component name</FormLabel>
+                  <Input
+                    size="md"
+                    autoFocus
+                    variant="outline"
+                    isFullWidth
+                    focusBorderColor="blue.500"
+                    errorBorderColor="red.500"
+                    value={componentName}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      onChangeComponentName(e.target.value)
+                    }
+                  />
+                  {!isValidComponentName && (
+                    <FormErrorMessage>
+                      Component name must start with a capital character and
+                      must not contain space or special character, and name
+                      should not be already taken (including existing chakra-ui
+                      components).
+                    </FormErrorMessage>
+                  )}
+                  <FormHelperText>
+                    This will name your component that you will see in the code
+                    panel as a separated component.
+                  </FormHelperText>
+                </FormControl>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  colorScheme="blue"
+                  mr={3}
+                  type="submit"
+                  isDisabled={!isValidComponentName}
+                >
+                  Save
+                </Button>
+                <Button onClick={onClose}>Cancel</Button>
+              </ModalFooter>
+            </form>
+          </ModalContent>
+        </ModalOverlay>
       </Modal>
     </>
   )

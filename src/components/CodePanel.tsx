@@ -19,7 +19,7 @@ const CodePanel = () => {
     getCode()
   }, [components])
 
-  const [hasCopied, onCopy] = useClipboard(code!)
+  const { onCopy, hasCopied } = useClipboard(code!)
 
   return (
     <Box
@@ -36,7 +36,7 @@ const CodePanel = () => {
     >
       <Button
         onClick={onCopy}
-        boxSize="sm"
+        size="sm"
         position="absolute"
         textTransform="uppercase"
         colorScheme="teal"

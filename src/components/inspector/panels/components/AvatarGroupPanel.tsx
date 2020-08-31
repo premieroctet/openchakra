@@ -28,7 +28,7 @@ const AvatarGroupPanel = () => {
         <Select
           name="size"
           id="size"
-          boxSize="sm"
+          size="sm"
           value={size || ''}
           onChange={setValueFromEvent}
         >
@@ -59,7 +59,7 @@ const AvatarGroupPanel = () => {
 
       <FormControl label="max">
         <NumberInput
-          boxSize="sm"
+          size="sm"
           onChange={value => setValue('max', value)}
           value={max}
           min={1}

@@ -59,7 +59,7 @@ const CustomPropsPanel = () => {
           }
         }}
       >
-        <InputGroup mb={3} boxSize="sm">
+        <InputGroup mb={3} size="sm">
           <InputRightElement
             children={<Box as={IoIosFlash} color="gray.300" />}
           />
@@ -89,7 +89,7 @@ const CustomPropsPanel = () => {
             <Box>{props[propsName]}</Box>
           </SimpleGrid>
 
-          <ButtonGroup display="flex" boxSize="xs" isAttached>
+          <ButtonGroup display="flex" size="xs" isAttached>
             <IconButton
               onClick={() => {
                 setQuickProps(`${propsName}=`)
@@ -98,14 +98,14 @@ const CustomPropsPanel = () => {
                 }
               }}
               variant="ghost"
-              boxSize="xs"
+              size="xs"
               aria-label="edit"
               icon={<EditIcon path="" />}
             />
             <IconButton
               onClick={() => onDelete(propsName)}
               variant="ghost"
-              boxSize="xs"
+              size="xs"
               aria-label="delete"
               icon={<SmallCloseIcon path="" />}
             />

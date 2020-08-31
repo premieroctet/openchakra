@@ -22,7 +22,7 @@ const TabsPanel = () => {
         <Select
           name="variant"
           id="variant"
-          boxSize="sm"
+          size="sm"
           value={variant || ''}
           onChange={setValueFromEvent}
         >
@@ -39,7 +39,7 @@ const TabsPanel = () => {
         <Select
           name="orientation"
           id="orientation"
-          boxSize="sm"
+          size="sm"
           value={orientation || ''}
           onChange={setValueFromEvent}
         >
@@ -52,7 +52,7 @@ const TabsPanel = () => {
         <Select
           name="size"
           id="size"
-          boxSize="sm"
+          size="sm"
           value={size || ''}
           onChange={setValueFromEvent}
         >

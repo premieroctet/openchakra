@@ -25,7 +25,7 @@ const ButtonPanel = () => {
           id="variant"
           onChange={setValueFromEvent}
           name="variant"
-          boxSize="sm"
+          size="sm"
           value={variant || ''}
         >
           <option>outline</option>

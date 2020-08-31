@@ -15,7 +15,7 @@ const DividerPanel = () => {
         <Select
           name="orientation"
           id="orientation"
-          boxSize="sm"
+          size="sm"
           value={orientation || 'horizontal'}
           onChange={setValueFromEvent}
         >

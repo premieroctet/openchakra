@@ -90,7 +90,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
             <SliderTrack>
               <SliderFilledTrack />
             </SliderTrack>
-            <SliderThumb boxSize={8}>
+            <SliderThumb size={8}>
               <Box borderRadius="full" fontSize="xs">
                 {hue}
               </Box>
@@ -111,7 +111,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
             border={value ? 'none' : '2px solid grey'}
             isRound
             aria-label="Color"
-            boxSize="xs"
+            size="xs"
             {...propsIconButton}
           >
             {props.label}
@@ -121,11 +121,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
           <PopoverArrow />
           <PopoverBody>
             {props.withFullColor ? (
-              <Tabs
-                boxSize="sm"
-                variant="soft-borderRadius"
-                colorScheme="green"
-              >
+              <Tabs size="sm" variant="soft-borderRadius" colorScheme="green">
                 <TabList>
                   <Tab>Theme</Tab>
                   <Tab>All</Tab>
@@ -154,7 +150,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
       </Popover>
       <Input
         width="100px"
-        boxSize="sm"
+        size="sm"
         name={props.name}
         onChange={setValueFromEvent}
         value={value}

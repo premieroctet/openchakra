@@ -251,7 +251,6 @@ export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
   Select: {
     variant: 'outline',
     size: 'md',
-    iconSize: '20px',
     children: (
       <>
         <option value="option1">Option 1</option>

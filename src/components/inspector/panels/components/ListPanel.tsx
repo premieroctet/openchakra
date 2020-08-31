@@ -14,7 +14,7 @@ const CodePanel = () => {
         <Select
           name="styleType"
           id="styleType"
-          boxSize="sm"
+          size="sm"
           value={styleType || 'md'}
           onChange={setValueFromEvent}
         >

@@ -16,7 +16,7 @@ const FlexPanel = () => {
       <FormControl label="Direction">
         <Select
           name="flexDirection"
-          boxSize="sm"
+          size="sm"
           value={flexDirection}
           onChange={setValueFromEvent}
         >
@@ -30,7 +30,7 @@ const FlexPanel = () => {
       <FormControl label="Justify content">
         <Select
           name="justifyContent"
-          boxSize="sm"
+          size="sm"
           value={justifyContent}
           onChange={setValueFromEvent}
         >
@@ -45,7 +45,7 @@ const FlexPanel = () => {
       <FormControl label="Align items">
         <Select
           name="alignItems"
-          boxSize="sm"
+          size="sm"
           value={alignItems || ''}
           onChange={setValueFromEvent}
         >

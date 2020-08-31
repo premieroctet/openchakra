@@ -19,6 +19,7 @@ import {
   LightMode,
   PopoverFooter,
   Tooltip,
+  HStack,
 } from '@chakra-ui/core'
 import { ExternalLinkIcon, SmallCloseIcon, CheckIcon } from '@chakra-ui/icons'
 import { DiGithubBadge } from 'react-icons/di'
@@ -58,7 +59,7 @@ const CodeSandboxButton = () => {
         isLoading={isLoading}
         rightIcon={<ExternalLinkIcon path="" />}
         variant="ghost"
-        boxSize="xs"
+        size="xs"
       >
         Export code
       </Button>
@@ -96,11 +97,11 @@ const Header = () => {
         </Flex>
 
         <Flex flexGrow={1} justifyContent="space-between" alignItems="center">
-          <Stack direction="row" spacing={4} justify="center" align="center">
+          <HStack spacing={4} justify="center" align="center">
             <Box>
               <HeaderMenu />
             </Box>
-            <FormControl>
+            <FormControl flexDirection="row" display="flex" alignItems="center">
               <Tooltip
                 zIndex={100}
                 hasArrow
@@ -114,32 +115,47 @@ const Header = () => {
                   fontSize="xs"
                   htmlFor="preview"
                   pb={0}
+                  m={0}
+                  mr={3}
+                  whiteSpace="nowrap"
                 >
                   Builder mode
                 </FormLabel>
               </Tooltip>
-              <Switch
-                isChecked={showLayout}
-                colorScheme="teal"
-                boxSize="sm"
-                onChange={() => dispatch.app.toggleBuilderMode()}
-                id="preview"
-              />
+              <LightMode>
+                <Switch
+                  isChecked={showLayout}
+                  colorScheme="teal"
+                  size="sm"
+                  onChange={() => dispatch.app.toggleBuilderMode()}
+                  id="preview"
+                />
+              </LightMode>
             </FormControl>
 
-            <FormControl>
-              <FormLabel color="gray.200" fontSize="xs" htmlFor="code" pb={0}>
+            <FormControl display="flex" flexDirection="row" alignItems="center">
+              <FormLabel
+                color="gray.200"
+                fontSize="xs"
+                m={0}
+                mr={3}
+                htmlFor="code"
+                pb={0}
+                whiteSpace="nowrap"
+              >
                 Code panel
               </FormLabel>
-              <Switch
-                isChecked={showCode}
-                id="code"
-                colorScheme="teal"
-                onChange={() => dispatch.app.toggleCodePanel()}
-                boxSize="sm"
-              />
+              <LightMode>
+                <Switch
+                  isChecked={showCode}
+                  id="code"
+                  colorScheme="teal"
+                  onChange={() => dispatch.app.toggleCodePanel()}
+                  size="sm"
+                />
+              </LightMode>
             </FormControl>
-          </Stack>
+          </HStack>
 
           <Stack direction="row">
             <CodeSandboxButton />
@@ -150,7 +166,7 @@ const Header = () => {
                     <Button
                       ml={4}
                       rightIcon={<SmallCloseIcon path="" />}
-                      boxSize="xs"
+                      size="xs"
                       variant="ghost"
                     >
                       Clear
@@ -167,7 +183,7 @@ const Header = () => {
                       </PopoverBody>
                       <PopoverFooter display="flex" justifyContent="flex-end">
                         <Button
-                          boxSize="sm"
+                          size="sm"
                           variant="ghost"
                           colorScheme="red"
                           rightIcon={<CheckIcon path="" />}
@@ -197,7 +213,7 @@ const Header = () => {
           spacing="2"
         >
           <Link isExternal href="https://github.com/premieroctet/openchakra">
-            <Box as={DiGithubBadge} boxSize="8" color="gray.200" />
+            <Box as={DiGithubBadge} size="8" color="gray.200" />
           </Link>
           <Box lineHeight="shorter" color="white" fontSize="xs">
             by{' '}

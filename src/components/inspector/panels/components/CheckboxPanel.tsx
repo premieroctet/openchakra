@@ -20,7 +20,7 @@ const CheckboxPanel = () => {
         <Select
           name="size"
           id="size"
-          boxSize="sm"
+          size="sm"
           value={size || 'md'}
           onChange={setValueFromEvent}
         >

@@ -26,7 +26,7 @@ const DimensionPanel = () => {
 
       <FormControl label="Overflow">
         <Select
-          boxSize="sm"
+          size="sm"
           value={overflow || ''}
           onChange={setValueFromEvent}
           name="overflow"
