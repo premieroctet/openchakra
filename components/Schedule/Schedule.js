@@ -217,8 +217,9 @@ class Schedule extends React.Component {
         <Grid container spacing={1} style={{padding: '1%'}}>
           {[...Array(nbSchedule)].map((x, i) =>{
             let date = new Date();
-            let month = new Date(date.setMonth(date.getMonth() + (i-half)));
-            const monthStr=moment(month).format('M')
+            date.setDate(1)
+            date.setMonth(date.getMonth() + (i-half))
+            const monthStr=moment(date).format('M')
             const selEvents=events.filter( e => moment(e.start).format('M')==monthStr)
               return(
                 <Grid item xl={4} lg={5} xs={12} style={{height: 500}}>
@@ -230,7 +231,7 @@ class Schedule extends React.Component {
                       // FIX: use state instead of props
                       events={selEvents}
                       views={[this.state.view]}
-                      defaultDate={month}
+                      defaultDate={date}
                       onSelectSlot={this.selectSlot}
                       onSelectEvent={this.selectedEvent}
                       dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
