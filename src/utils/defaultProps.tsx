@@ -41,6 +41,10 @@ import {
   RadioGroupProps,
   InputGroupProps,
   GridProps,
+  CenterProps,
+  ContainerProps,
+  Heading,
+  PropsWithAs,
 } from '@chakra-ui/core'
 
 import { CopyIcon, ChevronDownIcon } from '@chakra-ui/icons'
@@ -65,7 +69,7 @@ type PreviewDefaultProps = {
   Code?: any
   Textarea?: any
   CircularProgress?: any
-  Heading?: HeadingProps
+  Heading?: PropsWithAs<typeof Heading, HeadingProps>
   Tag?: TagProps
   SimpleGrid?: SimpleGridProps
   Switch?: SwitchProps
@@ -109,6 +113,8 @@ type PreviewDefaultProps = {
   List?: any
   ListIcon?: IconProps
   ListItem?: any
+  Center?: CenterProps
+  Container?: ContainerProps
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {

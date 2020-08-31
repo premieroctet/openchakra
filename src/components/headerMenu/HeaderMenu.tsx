@@ -45,7 +45,6 @@ const HeaderMenu = () => {
     <Menu placement="bottom">
       <CustomMenuButton
         rightIcon={<ChevronDownIcon path="" />}
-        as={Button}
         size="xs"
         variant="ghost"
         colorScheme="gray"

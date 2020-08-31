@@ -90,7 +90,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
             <SliderTrack>
               <SliderFilledTrack />
             </SliderTrack>
-            <SliderThumb size={8}>
+            <SliderThumb boxSize={8}>
               <Box borderRadius="full" fontSize="xs">
                 {hue}
               </Box>
