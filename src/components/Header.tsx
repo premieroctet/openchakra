@@ -173,7 +173,7 @@ const Header = () => {
                     </Button>
                   </PopoverTrigger>
                   <LightMode>
-                    <PopoverContent zIndex={100}>
+                    <PopoverContent zIndex={100} bg="white">
                       <PopoverArrow />
                       <PopoverCloseButton />
                       <PopoverHeader>Are you sure?</PopoverHeader>
