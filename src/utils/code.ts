@@ -165,10 +165,9 @@ export const generateCode = async (components: IComponents) => {
   code = `import React from 'react';
 import {
   ChakraProvider,
-  CSSReset,
-  theme,
   ${imports.join(',')}
-} from "@chakra-ui/core";${
+} from "@chakra-ui/core";
+import theme from "@chakra-ui/theme";${
     iconImports.length
       ? `
 import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
@@ -178,8 +177,7 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
 ${componentsCodes}
 
 const App = () => (
-  <ChakraProvider theme={theme}>
-    <CSSReset />
+  <ChakraProvider resetCSS theme={theme}>
     ${code}
   </ChakraProvider>
 );

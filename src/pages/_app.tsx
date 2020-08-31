@@ -1,5 +1,5 @@
 import React from 'react'
-import { ChakraProvider, CSSReset } from '@chakra-ui/core'
+import { ChakraProvider } from '@chakra-ui/core'
 import theme from '@chakra-ui/theme'
 import 'react-color-picker/index.css'
 import '@reach/combobox/styles.css'
@@ -11,9 +11,8 @@ import { AppProps } from 'next/app'
 
 const Main = ({ Component, pageProps }: AppProps) => (
   <BugsnagErrorBoundary>
-    <ChakraProvider theme={theme}>
+    <ChakraProvider resetCSS theme={theme}>
       <AppErrorBoundary>
-        <CSSReset />
         <Component {...pageProps} />
       </AppErrorBoundary>
     </ChakraProvider>
