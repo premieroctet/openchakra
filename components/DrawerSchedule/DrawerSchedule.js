@@ -24,13 +24,6 @@ class DrawerSchedule extends React.Component{
         }
     }
 
-    componentDidUpdate(prevProps, prevState){
-        if(this.state.eventsSelected.size !== prevState.eventsSelected.size){
-            console.log('bonjour');
-
-        }
-    };
-
     getEventsSelected = (eventsSelected) =>{
         this.setState({eventsSelected : new Set(eventsSelected)}, () =>this.stateDrawer);
     };

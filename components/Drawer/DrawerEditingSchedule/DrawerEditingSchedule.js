@@ -84,7 +84,7 @@ class DrawerEditingSchedule extends React.Component{
                             <Grid>
                                 <h3>Êtes-vous disponibles ?</h3>
                             </Grid>
-                            <Grid container style={{marginLeft: 10}}>
+                            <Grid container>
                                 <FormControl component="fieldset">
                                     <RadioGroup aria-label="availabilities" name="availabilities" value={availabilities} onChange={this.handleAvailabilities}>
                                         <FormControlLabel value="availabilities" control={<Radio color="primary"/>} label="Disponible" />

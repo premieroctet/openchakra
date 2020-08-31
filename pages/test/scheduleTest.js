@@ -31,11 +31,11 @@ class scheduleTest extends React.Component{
     }
 
     componentDidMount = () => {
-      const token = cookie.load('token')
-      axios.defaults.headers.common['Authorization'] = token
+      const token = cookie.load('token');
+      axios.defaults.headers.common['Authorization'] = token;
       axios.get("/myAlfred/api/admin/booking/all")
         .then(response => {
-          this.setState({bookings: response.data})
+          this.setState({bookings: response.data});
           console.log(`${JSON.stringify(response.data[0])}`)
         }).catch(err => console.log(err))
     };
@@ -57,11 +57,11 @@ class scheduleTest extends React.Component{
                     </Grid>
                 </Grid>
                 <Grid container className={classes.containercalendar} style={{width:' 70%'}}>
-                    <Grid>
+                    <Grid style={{width: '100%'}}>
                         <Schedule
                             ref={this.scheduleChild}
                             selectable={true}
-                            nbSchedule={15}
+                            nbSchedule={2}
                             bookings={bookings}
                             services={services}
                             handleSelection={this.sendToDrawer}

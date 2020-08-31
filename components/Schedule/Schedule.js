@@ -2,30 +2,14 @@ import React from 'react'
 import { Calendar, Views, momentLocalizer   } from 'react-big-calendar';
 import _ from 'lodash'
 import moment from 'moment';
-import Modal from '@material-ui/core/Modal';
-import Fade from '@material-ui/core/Fade';
 import Grid from '@material-ui/core/Grid';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import DateFnsUtils from '@date-io/date-fns';
-import Checkbox from '@material-ui/core/Checkbox';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import withStyles from '@material-ui/core/styles/withStyles';
-import Chip from '@material-ui/core/Chip';
-import frLocale from "date-fns/locale/fr";
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import {bookings2events, availabilities2events, eventUI2availability, availability2eventUI, LONG_DAYS} from '../../utils/converters';
-import { isAlfredDateAvailable, hasAlfredDateBooking } from '../../utils/dateutils';
+import {bookings2events, eventUI2availability, LONG_DAYS} from '../../utils/converters';
 import {ALL_SERVICES, GID_LEN} from '../../utils/consts.js';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Typography } from '@material-ui/core'; // Import css
 import styles from './ScheduleStyle'
 import PropTypes from 'prop-types';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 const {isDateAvailable}=require('../../utils/dateutils');
 moment.locale('fr');
 
@@ -72,10 +56,6 @@ class Schedule extends React.Component {
 
   closeModal = () => {
     this.setState({isModalOpen: false})
-  };
-
-  selectedEvent = (event) => {
-
   };
 
   selectSlot = ({start, end, action}) => {
@@ -168,14 +148,14 @@ class Schedule extends React.Component {
     const MyDateCellWrapper = (event) =>{
 
       let propsStyle = event.children.props['className'];
+      
+      var off_range_style={width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'white', zIndex:5};
+      var today_style = {width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'rgba(79, 189, 215, 0.2)', cursor:'pointer'};
+      var day_style = {width: '100%', height :'100%', borderLeft:'1px solid #DDD', cursor:'pointer'};
+      var non_available_style = {width: '100%', height :'100%', borderLeft:'1px solid #DDD', cursor:'pointer', backgroundColor:'lightgrey'};
 
-      var off_range_style={width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'white', zIndex:5}
-      var today_style = {width: '100%', height :'100%', borderLeft:'1px solid #DDD', backgroundColor: 'rgba(79, 189, 215, 0.2)', cursor:'pointer'}
-      var day_style = {width: '100%', height :'100%', borderLeft:'1px solid #DDD', cursor:'pointer'}
-      var non_available_style = {width: '100%', height :'100%', borderLeft:'1px solid #DDD', cursor:'pointer', backgroundColor:'lightgrey'}
-
-      const m=moment(event.value)
-      const isAvailable = isDateAvailable(m, this.props.availabilities)
+      const m=moment(event.value);
+      const isAvailable = isDateAvailable(m, this.props.availabilities);
 
       if(propsStyle === 'rbc-day-bg rbc-off-range-bg'){
         return(
@@ -184,7 +164,7 @@ class Schedule extends React.Component {
       }
       if(propsStyle === 'rbc-day-bg rbc-today'){
         return (
-            <Grid style={{today_style}}/>
+            <Grid style={today_style}/>
         )
       }else{
         if (isAvailable) {
@@ -238,10 +218,10 @@ class Schedule extends React.Component {
           {[...Array(nbSchedule)].map((x, i) =>{
             let date = new Date();
             let month = new Date(date.setMonth(date.getMonth() + (i-half)));
-            const monthStr=moment(month).format('M')
-            const selEvents=events.filter( e => moment(e.start).format('M')==monthStr)
+            const monthStr=moment(month).format('M');
+            const selEvents=events.filter( e => moment(e.start).format('M')==monthStr);
               return(
-                <Grid item xl={4} lg={5} xs={12} style={{height: 500}}>
+                <Grid item xl={6} lg={5} xs={12} style={{height: 500}}>
                   <Calendar
                       selectable={selectable}
                       popup={false}

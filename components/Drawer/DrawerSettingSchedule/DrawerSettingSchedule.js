@@ -92,7 +92,7 @@ class DrawerSettingSchedule extends React.Component{
                                 </Grid>
                             </Grid>
                         </AccordionSummary>
-                        <AccordionDetails style={{marginBottom: 200}}>
+                        <AccordionDetails>
                             <Grid style={{width: '100%'}}>
                                 <Grid>
                                     <Grid>
