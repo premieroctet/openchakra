@@ -47,13 +47,14 @@ import {
   PropsWithAs,
 } from '@chakra-ui/core'
 
-import { CopyIcon, ChevronDownIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon, CopyIcon } from '@chakra-ui/icons'
+import iconsList from '~iconsList'
 
 type PreviewDefaultProps = {
   Badge?: BadgeProps
   Box?: BoxProps
   Button?: ButtonProps
-  Icon?: IconProps
+  Icon?: IconProps & { icon: keyof typeof iconsList }
   IconButton?: IconButtonProps
   Image?: ImageProps
   Text?: BoxProps
@@ -127,9 +128,10 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Divider: { borderColor: 'blackAlpha.500' },
   IconButton: {
     'aria-label': 'icon',
-    icon: <CopyIcon path="" />,
+    // @ts-ignore
+    icon: 'CopyIcon',
   },
-  Icon: { name: 'copy' },
+  Icon: { icon: 'CopyIcon' },
   Image: {
     height: '100px',
     width: '100px',

@@ -11,19 +11,19 @@ import IconControl from '~components/inspector/controls/IconControl'
 const IconPanel = () => {
   const { setValueFromEvent } = useForm()
 
-  const fontSize = usePropsSelector('fontSize')
+  const boxSize = usePropsSelector('boxSize')
 
   return (
     <>
-      <IconControl label="Icon" name="name" />
+      <IconControl label="Icon" name="icon" />
 
-      <FormControl label="Font size" htmlFor="fontSize">
+      <FormControl label="Size" htmlFor="boxSize">
         <InputSuggestion
-          value={fontSize}
+          value={boxSize}
           handleChange={setValueFromEvent}
-          name="fontSize"
+          name="boxSize"
         >
-          {Object.keys(theme.fontSizes).map((option, index) => (
+          {Object.keys(theme.sizes).map((option, index) => (
             <ComboboxOption key={index} value={option} />
           ))}
         </InputSuggestion>

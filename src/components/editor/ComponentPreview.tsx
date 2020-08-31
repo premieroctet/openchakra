@@ -19,6 +19,8 @@ import AspectRatioPreview from '~components/editor/previews/AspectRatioBoxPrevie
 import ButtonPreview from '~components/editor/previews/ButtonPreview'
 import PreviewContainer from '~components/editor/PreviewContainer'
 import WithChildrenPreviewContainer from '~components/editor/WithChildrenPreviewContainer'
+import IconPreview from './previews/IconPreview'
+import IconButtonPreview from './previews/IconButtonPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -33,7 +35,6 @@ const ComponentPreview: React.FC<{
   switch (type) {
     // Simple components
     case 'Badge':
-    case 'IconButton':
     case 'Image':
     case 'Text':
     case 'Link':
@@ -67,7 +68,6 @@ const ComponentPreview: React.FC<{
     case 'CloseButton':
     case 'AccordionIcon':
     case 'Code':
-    case 'Icon':
     case 'ListIcon':
     case 'Divider':
     case 'AlertDescription':
@@ -142,6 +142,10 @@ const ComponentPreview: React.FC<{
       return <AspectRatioPreview component={component} />
     case 'Button':
       return <ButtonPreview component={component} />
+    case 'Icon':
+      return <IconPreview component={component} />
+    case 'IconButton':
+      return <IconButtonPreview component={component} />
     default:
       return null
   }
