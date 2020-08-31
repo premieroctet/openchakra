@@ -31,6 +31,37 @@ const componentFixtures: IComponents = {
   },
 }
 
+const componentFixturesWithButtonIcon: IComponents = {
+  root: {
+    id: 'root',
+    parent: 'root',
+    type: 'Box',
+    children: ['comp-1'],
+    props: {},
+  },
+  'comp-1': {
+    id: 'comp-1',
+    props: {
+      bg: 'whatsapp.500',
+    },
+    children: ['comp-2'],
+    type: 'Box',
+    parent: 'root',
+    rootParentType: 'Box',
+    componentName: 'MyBox',
+  },
+  'comp-2': {
+    id: 'comp-2',
+    props: {
+      leftIcon: 'PhoneIcon',
+    },
+    children: [],
+    type: 'Button',
+    parent: 'comp-1',
+    rootParentType: 'Button',
+  },
+}
+
 describe('Code utils', () => {
   it('should generate component code', async () => {
     const code = await generateComponentCode({
@@ -64,7 +95,31 @@ const App = () => (
   <ChakraProvider theme={theme}>
     <CSSReset />
     <MyBox />
-  </ThemeProvider>
+  </ChakraProvider>
+)
+
+export default App
+`)
+  })
+
+  it('should generate icons imports and icon instanciation', async () => {
+    const code = await generateCode(componentFixturesWithButtonIcon)
+
+    expect(code).toEqual(`import React from 'react'
+import { ChakraProvider, CSSReset, theme, Box, Button } from '@chakra-ui/core'
+import { PhoneIcon } from '@chakra-ui/icons'
+
+const MyBox = () => (
+  <Box bg="whatsapp.500">
+    <Button leftIcon={<PhoneIcon />} />
+  </Box>
+)
+
+const App = () => (
+  <ChakraProvider theme={theme}>
+    <CSSReset />
+    <MyBox />
+  </ChakraProvider>
 )
 
 export default App
