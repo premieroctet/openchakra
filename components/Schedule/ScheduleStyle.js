@@ -161,7 +161,7 @@ export default theme => ({
     width:'100%',
     height:'100%',
     '&:hover':{
-      backgroundColor: '#4fbdd7',
+      backgroundColor: 'rgba(79, 189, 215,0.5)',
       borderRadius: 50,
       width:50,
       height: 50,

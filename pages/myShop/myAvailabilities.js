@@ -174,8 +174,8 @@ class myAvailabilities extends React.Component {
       this.componentDidMount()
     };
 
-    callDrawer = () =>{
-        this.child.current.handleDrawerToggle();
+    sendToDrawer = (eventsSelected) => {
+        this.child.current.getEventsSelected(eventsSelected);
     };
 
     render() {
@@ -222,6 +222,7 @@ class myAvailabilities extends React.Component {
                             onUpdateAvailability={this.availabilityUpdate}
                             selectable={true}
                             nbSchedule={5}
+                            handleSelection={this.sendToDrawer}
                         />
                       </Grid>
                   </Grid>

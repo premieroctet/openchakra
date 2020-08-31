@@ -36,17 +36,11 @@ export default theme => ({
         flexGrow: 1,
         padding: theme.spacing(3),
     },
-    panelFormDays:{
-        width: '100%'
-    },
     textFieldChips: {
-        color: 'white'
-
-    },
-    formSchedule:{
+        color: 'white',
+        fontWeight: 'bold',
         [theme.breakpoints.down('xs')]: {
-            width: '100%',
-            marginBottom: '5%'
+            margin: 5
         },
     },
 })

@@ -3,35 +3,8 @@ const {ALL_SERVICES, generate_id} = require('./consts.js');
 const moment=require('moment-timezone')
 const EV_AVAIL_DAY_MAPPING='monday tuesday wednesday thursday friday saturday sunday'.split(' ');
 
-const DAYS='Lu Ma Me Je Ve Sa Di'.split(' ');
+const DAYS='Lundi Mardi Mercredi Jeudi Vendredi Samedi Dimanche'.split(' ');
 const LONG_DAYS='lundis mardis mercredis jeudis vendredis samedis dimanches'.split(' ');
-
-const TIMESLOTS = [
-    '00h00 - 01h00',
-    '01h00 - 02h00',
-    '02h00 - 03h00',
-    '03h00 - 04h00',
-    '04h00 - 05h00',
-    '05h00 - 06h00',
-    '06h00 - 07h00',
-    '07h00 - 08h00',
-    '08h00 - 09h00',
-    '09h00 - 10h00',
-    '10h00 - 11h00',
-    '11h00 - 12h00',
-    '12h00 - 13h00',
-    '13h00 - 14h00',
-    '14h00 - 15h00',
-    '15h00 - 16h00',
-    '16h00 - 17h00',
-    '17h00 - 18h00',
-    '18h00 - 19h00',
-    '19h00 - 20h00',
-    '20h00 - 21h00',
-    '21h00 - 22h00',
-    '22h00 - 23h00',
-    '23h00 - 00h00',
-];
 
 const DAY_MAPPING={
         'monday': RRule.MO,
@@ -182,6 +155,6 @@ const bookings2events = bookings => {
 }
 
 module.exports={availabilities2events, eventUI2availability, availability2eventUI,
-   DAYS, LONG_DAYS, TIMESLOTS,
+   DAYS, LONG_DAYS,
    bookings2events
 };

@@ -10,12 +10,14 @@ import AddIcon from '@material-ui/icons/Add';
 import withStyles from '@material-ui/core/styles/withStyles';
 import EditIcon from '@material-ui/icons/Edit';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 
 class scheduleTest extends React.Component{
     constructor(props) {
         super(props);
         this.child = React.createRef();
+        this.scheduleChild = React.createRef();
         this.state={
             bookings: [
                 {
@@ -38,6 +40,10 @@ class scheduleTest extends React.Component{
         }).catch(err => console.log(err))
     };
 
+    sendToDrawer = (eventsSelected) => {
+        this.child.current.getEventsSelected(eventsSelected );
+    };
+
     render(){
         const {bookings, services} = this.state;
         const { classes } = this.props;
@@ -53,10 +59,12 @@ class scheduleTest extends React.Component{
                 <Grid container className={classes.containercalendar} style={{width:' 70%'}}>
                     <Grid>
                         <Schedule
+                            ref={this.scheduleChild}
                             selectable={true}
                             nbSchedule={15}
                             bookings={bookings}
                             services={services}
+                            handleSelection={this.sendToDrawer}
                         />
                     </Grid>
                 </Grid>
