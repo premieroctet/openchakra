@@ -160,9 +160,8 @@ const eventIncludesDate = (event, mmt) => {
 }
 
 const availIncludesDate = (avail, mmt) => {
-    const mmt_day=mmt.weekday()
-    const day_attrib=DAYS[mmt_day]
-    //console.log(`${mmt} (${mmt_day}) is a ${day_attrib}`)
+
+    const day_attrib=numberToDay(mmt.day())
 
     // Check day
     const hasEvents=avail[day_attrib] && avail[day_attrib].event && avail[day_attrib].event.length>0
@@ -201,4 +200,4 @@ const hasAlfredDateBooking = (mmt, bookings) => {
 }
 
 module.exports={isMomentAvailable, isIntervalAvailable, getDeadLine, booking_datetime_str,
-  createDefaultAvailability, isDateAvailable, hasAlfredDateBooking};
+  createDefaultAvailability, isDateAvailable, hasAlfredDateBooking, DAYS};

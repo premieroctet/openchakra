@@ -11,6 +11,8 @@ import AddIcon from '@material-ui/icons/Add';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DrawerEditingSchedule from '../Drawer/DrawerEditingSchedule/DrawerEditingSchedule';
 import DrawerSettingSchedule from '../Drawer/DrawerSettingSchedule/DrawerSettingSchedule';
+import cookie from 'react-cookies';
+import axios from "axios";
 
 class DrawerSchedule extends React.Component{
     constructor(props) {
@@ -20,9 +22,23 @@ class DrawerSchedule extends React.Component{
         this.state={
             mobileOpen: false,
             recurrDays: new Set(),
-            eventsSelected: new Set()
+            eventsSelected: new Set(),
+            recurrSlotTime: new Set(),
+            selectedDateStart: null,
+            selectedDateEnd: null,
+            availabilities: [],
         }
     }
+
+    componentDidMount = () => {
+      const auth = cookie.load('token')
+      axios.defaults.headers.common['Authorization'] = auth
+      axios.get('/myAlfred/api/availability/currentAlfred')
+        .then ( res => {
+          this.setState({availabilities: res.data})
+        })
+        .catch (err => console.error(err))
+    };
 
     getEventsSelected = (eventsSelected) =>{
         this.setState({eventsSelected : new Set(eventsSelected)}, () =>this.stateDrawer);
@@ -52,7 +68,7 @@ class DrawerSchedule extends React.Component{
             <Grid>
                 <CssBaseline />
                 <nav className={classes.drawer} aria-label="mailbox folders">
-                    {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+                    {/* Mobile version */}
                     <Hidden smUp implementation="css">
                         <Drawer
                             container={container}
@@ -77,6 +93,7 @@ class DrawerSchedule extends React.Component{
                             }
                         </Drawer>
                     </Hidden>
+                    {/* Web version */}
                     <Hidden xsDown implementation="css">
                         <Drawer
                             classes={{

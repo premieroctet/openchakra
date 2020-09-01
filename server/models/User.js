@@ -115,6 +115,9 @@ const UserSchema = new Schema({
           type: String
       }
     },
+    registration_proof: {
+      type: String,
+    },
     account: {
         bank: {
             type: String
@@ -286,26 +289,32 @@ const UserSchema = new Schema({
     registration_proof_id : {
       type: String,
     },
-    avatar_letters: {
-      type: String,
-      default: function() {
-        return (this.firstname.charAt(0)+this.name.charAt(0)).toUpperCase();
-      }
-    },
-    kyc_status: {
+    id_card_status: {
       type: String,
     },
-    kyc_error : {
+    id_card_error : {
+      type: String
+    },
+    registration_proof_status: {
+      type: String,
+    },
+    registration_proof_error : {
       type: String
     },
 }, { toJSON: { virtuals: true, getters: true } });
 
-UserSchema.virtual('kyc_error_text').get( function() {
-    return getMangopayMessage(this.kyc_error)
+UserSchema.virtual('id_card_error_text').get( function() {
+    return getMangopayMessage(this.id_card_error)
 })
 
-UserSchema.virtual('kyc_status_text').get( function() {
-    return getMangopayMessage(this.kyc_status)
+UserSchema.virtual('id_card_status_text').get( function() {
+    return getMangopayMessage(this.id_card_status)
+})
+
+UserSchema.virtual('avatar_letters').get( function() {
+  const first_letter = this.firstname ? this.firstname.charAt(0) : ''
+  const second_letter = this.name ? this.name.charAt(0) : ''
+  return (first_letter+second_letter).toUpperCase();
 })
 
 module.exports = User = mongoose.model('users',UserSchema);

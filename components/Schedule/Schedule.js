@@ -73,26 +73,6 @@ class Schedule extends React.Component {
       }
   };
 
-  availAsText = () => {
-    const {selectedDateStart, selectedTimeStart, selectedTimeEnd, selectedDateEndRecu, recurrDays, isExpanded} = this.state;
-    let value = "Disponible de "+selectedTimeStart+ " à "+selectedTimeEnd;
-    value += (isExpanded ? " à partir du " : " le ")+moment(selectedDateStart).format('DD/MM/YY');
-    if (isExpanded && selectedDateEndRecu) {
-      value += " jusqu'au "+moment(selectedDateEndRecu).format('DD/MM/YY')
-    }
-    if (isExpanded) {
-      value += " tous les ";
-      let count=0;
-      for (var i = 0; i<7; i++) {
-        if (recurrDays.has(i)) {
-          value += LONG_DAYS[i]+(count <recurrDays.size-2 ? ", " : count === recurrDays.size-1 ? "" : " et ");
-          count++
-        }
-      }
-    }
-    return value
-  };
-
   customToolbar = (toolbar) => {
 
     const label = () => {
@@ -217,8 +197,9 @@ class Schedule extends React.Component {
         <Grid container spacing={1} style={{padding: '1%'}}>
           {[...Array(nbSchedule)].map((x, i) =>{
             let date = new Date();
-            let month = new Date(date.setMonth(date.getMonth() + (i-half)));
-            const monthStr=moment(month).format('M');
+            date.setDate(1);
+            date.setMonth(date.getMonth() + (i-half));
+            const monthStr=moment(date).format('M');
             const selEvents=events.filter( e => moment(e.start).format('M')==monthStr);
               return(
                 <Grid item xl={6} lg={5} xs={12} style={{height: 500}}>
@@ -230,7 +211,7 @@ class Schedule extends React.Component {
                       // FIX: use state instead of props
                       events={selEvents}
                       views={[this.state.view]}
-                      defaultDate={month}
+                      defaultDate={date}
                       onSelectSlot={this.selectSlot}
                       onSelectEvent={this.selectedEvent}
                       dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
