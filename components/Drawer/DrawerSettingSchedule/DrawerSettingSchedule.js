@@ -33,7 +33,6 @@ class DrawerSettingSchedule extends React.Component{
                 availabilities: null
             }],
             recurrDays: new Set(),
-            nbPeriod: 1,
         }
     }
 
@@ -64,12 +63,17 @@ class DrawerSettingSchedule extends React.Component{
     };
 
     handlePeriode = () =>{
-      this.setState({nbPeriod : this.state.nbPeriod + 1})
+        let myObject = {
+            starDate:null,
+            endDate: null,
+            indexPeriod: this.state.nbPeriod + 1,
+            availabilities: null
+        };
+      this.setState({period: [...this.state.period, myObject]})
     };
 
     handleDate = name => (date) =>{
-        console.log(name, 'indexnormalement')
-        const elementsIndex = this.state.period.findIndex(element => element.indexPeriod == name )
+        const elementsIndex = this.state.period.findIndex(element => element.indexPeriod == name );
         let newArray = [...this.state.period];
         newArray[elementsIndex] = {...newArray[elementsIndex], starDate: date};
         this.setState({
@@ -81,7 +85,7 @@ class DrawerSettingSchedule extends React.Component{
     render(){
 
         const {classes} = this.props;
-        const {nbPeriod, period} = this.state;
+        const {period} = this.state;
 
         return(
             <Grid>
@@ -99,7 +103,7 @@ class DrawerSettingSchedule extends React.Component{
                 </Grid>
                 <Divider />
                 <Grid>
-                    {[...Array(nbPeriod)].map((x, i) =>{
+                    {period.map((x, i) =>{
                         return(
                             <Accordion>
                                 <AccordionSummary
