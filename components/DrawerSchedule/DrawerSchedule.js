@@ -38,13 +38,6 @@ class DrawerSchedule extends React.Component{
           this.setState({availabilities: res.data})
         })
         .catch (err => console.error(err))
-    }
-
-    componentDidUpdate(prevProps, prevState){
-        if(this.state.eventsSelected.size !== prevState.eventsSelected.size){
-            console.log('bonjour');
-
-        }
     };
 
     getEventsSelected = (eventsSelected) =>{
@@ -90,10 +83,13 @@ class DrawerSchedule extends React.Component{
                                 keepMounted: true, // Better open performance on mobile.
                             }}
                         >
-                            {this.state.eventsSelected.size > 0 ?
-                                <DrawerEditingSchedule ref={this.drawerEditing} handleDrawer={this.handleDrawerToggle}/>
-                                :
-                                <DrawerSettingSchedule ref={this.drawerSetting}  handleDrawer={this.handleDrawerToggle} availabilities={this.state.availabilities}/>
+                            {
+                                mobileOpen ?
+                                    this.state.eventsSelected.size > 0 ?
+                                        <DrawerEditingSchedule ref={this.drawerEditing} handleDrawer={this.handleDrawerToggle}/>
+                                        :
+                                        <DrawerSettingSchedule ref={this.drawerSetting}  handleDrawer={this.handleDrawerToggle}/>
+                                : null
                             }
                         </Drawer>
                     </Hidden>
@@ -106,10 +102,13 @@ class DrawerSchedule extends React.Component{
                             variant="permanent"
                             open
                         >
-                            {this.state.eventsSelected.size > 0 ?
-                                <DrawerEditingSchedule ref={this.drawerEditing} handleDrawer={this.handleDrawerToggle}/>
-                                :
-                                <DrawerSettingSchedule ref={this.drawerSetting} handleDrawer={this.handleDrawerToggle} availabilities={this.state.availabilities}/>
+                            {
+                                !mobileOpen ?
+                                    this.state.eventsSelected.size > 0 ?
+                                        <DrawerEditingSchedule ref={this.drawerEditing} handleDrawer={this.handleDrawerToggle}/>
+                                        :
+                                        <DrawerSettingSchedule ref={this.drawerSetting}  handleDrawer={this.handleDrawerToggle}/>
+                                : null
                             }
                         </Drawer>
                     </Hidden>
