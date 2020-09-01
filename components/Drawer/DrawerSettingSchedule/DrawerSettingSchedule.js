@@ -26,8 +26,14 @@ class DrawerSettingSchedule extends React.Component{
             eventsSelected: new Set(),
             selectedDateStart: null,
             selectedDateEnd: null,
+            period: [{
+                starDate:null,
+                endDate: null,
+                indexPeriod: 0,
+                availabilities: null
+            }],
             recurrDays: new Set(),
-            nbPeriod: 1
+            nbPeriod: 1,
         }
     }
 
@@ -61,11 +67,21 @@ class DrawerSettingSchedule extends React.Component{
       this.setState({nbPeriod : this.state.nbPeriod + 1})
     };
 
+    handleDate = name => (date) =>{
+        console.log(name, 'indexnormalement')
+        const elementsIndex = this.state.period.findIndex(element => element.indexPeriod == name )
+        let newArray = [...this.state.period];
+        newArray[elementsIndex] = {...newArray[elementsIndex], starDate: date};
+        this.setState({
+            period: newArray,
+        });
+    };
+
 
     render(){
 
         const {classes} = this.props;
-        const {nbPeriod} = this.state;
+        const {nbPeriod, period} = this.state;
 
         return(
             <Grid>
@@ -117,8 +133,8 @@ class DrawerSettingSchedule extends React.Component{
                                                                 id="date-picker-inline"
                                                                 label="Date de début"
                                                                 className={classes.formSchedule}
-                                                                value={this.state.selectedDateStart}
-                                                                onChange={this.handleDateStartChange}
+                                                                value={period.starDate}
+                                                                onChange={this.handleDate(i)}
                                                                 KeyboardButtonProps={{
                                                                     'aria-label': 'change date',
                                                                 }}
