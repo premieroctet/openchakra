@@ -33,6 +33,7 @@ class DrawerSettingSchedule extends React.Component{
                 availabilities: null
             }],
             recurrDays: new Set(),
+            nbPeriod: 0,
         }
     }
 
@@ -137,7 +138,7 @@ class DrawerSettingSchedule extends React.Component{
                                                                 id="date-picker-inline"
                                                                 label="Date de début"
                                                                 className={classes.formSchedule}
-                                                                value={period.starDate}
+                                                                value={x.starDate}
                                                                 onChange={this.handleDate(i)}
                                                                 KeyboardButtonProps={{
                                                                     'aria-label': 'change date',
