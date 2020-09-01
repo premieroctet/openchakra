@@ -160,7 +160,7 @@ const eventIncludesDate = (event, mmt) => {
 }
 
 const availIncludesDate = (avail, mmt) => {
-  
+
     const day_attrib=numberToDay(mmt.day())
 
     // Check day
@@ -200,4 +200,4 @@ const hasAlfredDateBooking = (mmt, bookings) => {
 }
 
 module.exports={isMomentAvailable, isIntervalAvailable, getDeadLine, booking_datetime_str,
-  createDefaultAvailability, isDateAvailable, hasAlfredDateBooking};
+  createDefaultAvailability, isDateAvailable, hasAlfredDateBooking, DAYS};

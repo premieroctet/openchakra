@@ -82,7 +82,7 @@ class DrawerEditingSchedule extends React.Component{
 
                         <Grid>
                             <Grid>
-                                <h3>Êtes-vous disponibles ?</h3>
+                                <h3>Êtes-vous disponible ?</h3>
                             </Grid>
                             <Grid container style={{marginLeft: 10}}>
                                 <FormControl component="fieldset">

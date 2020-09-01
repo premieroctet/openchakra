@@ -75,7 +75,7 @@ class DrawerSchedule extends React.Component{
             <Grid>
                 <CssBaseline />
                 <nav className={classes.drawer} aria-label="mailbox folders">
-                    {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+                    {/* Mobile version */}
                     <Hidden smUp implementation="css">
                         <Drawer
                             container={container}
@@ -93,10 +93,11 @@ class DrawerSchedule extends React.Component{
                             {this.state.eventsSelected.size > 0 ?
                                 <DrawerEditingSchedule ref={this.drawerEditing} handleDrawer={this.handleDrawerToggle}/>
                                 :
-                                <DrawerSettingSchedule ref={this.drawerSetting}  handleDrawer={this.handleDrawerToggle}/>
+                                <DrawerSettingSchedule ref={this.drawerSetting}  handleDrawer={this.handleDrawerToggle} availabilities={this.state.availabilities}/>
                             }
                         </Drawer>
                     </Hidden>
+                    {/* Web version */}
                     <Hidden xsDown implementation="css">
                         <Drawer
                             classes={{
@@ -108,7 +109,7 @@ class DrawerSchedule extends React.Component{
                             {this.state.eventsSelected.size > 0 ?
                                 <DrawerEditingSchedule ref={this.drawerEditing} handleDrawer={this.handleDrawerToggle}/>
                                 :
-                                <DrawerSettingSchedule ref={this.drawerSetting} handleDrawer={this.handleDrawerToggle}/>
+                                <DrawerSettingSchedule ref={this.drawerSetting} handleDrawer={this.handleDrawerToggle} availabilities={this.state.availabilities}/>
                             }
                         </Drawer>
                     </Hidden>
