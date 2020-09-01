@@ -56,12 +56,12 @@ class scheduleTest extends React.Component{
                         <DrawerSchedule ref={this.child}/>
                     </Grid>
                 </Grid>
-                <Grid container className={classes.containercalendar} style={{width:' 70%'}}>
+                <Grid container className={classes.containercalendar} style={{width:' 65%'}}>
                     <Grid style={{width: '100%'}}>
                         <Schedule
                             ref={this.scheduleChild}
                             selectable={true}
-                            nbSchedule={2}
+                            nbSchedule={6}
                             bookings={bookings}
                             services={services}
                             handleSelection={this.sendToDrawer}
