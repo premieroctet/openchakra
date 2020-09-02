@@ -27,26 +27,6 @@ class DrawerEditingSchedule extends React.Component{
         }
     }
 
-    toggleRecurrDay = (item) => {
-        this.state.recurrDays.has(item) ? this.removeRecurrDay(item) : this.addRecurrDay(item);
-    };
-
-    addRecurrDay = (item) => {
-        this.setState(({ recurrDays }) => ({
-            recurrDays: new Set(recurrDays).add(item)
-        }));
-    };
-
-    removeRecurrDay = (item) => {
-        this.setState(({ recurrDays }) => {
-            const newChecked = new Set(recurrDays);
-            newChecked.delete(item);
-
-            return {
-                recurrDays: newChecked
-            };
-        });
-    };
 
     getEventsSelected = (eventsSelected) =>{
         this.setState({eventsSelected : new Set(eventsSelected)});

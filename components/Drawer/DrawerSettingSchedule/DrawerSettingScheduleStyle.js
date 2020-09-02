@@ -8,7 +8,6 @@ export default theme => ({
     panelFormDays:{
         width: '100%',
         display: 'flex',
-        justifyContent: 'space-between'
     },
     containerSelectSlotTimer:{
         width: '50%',
@@ -19,6 +18,7 @@ export default theme => ({
     },
     textFieldChips:{
         color: 'white',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        margin: 5
     }
 })

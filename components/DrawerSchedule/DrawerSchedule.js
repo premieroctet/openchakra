@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import styles from './DrawerScheduleStyle';
 import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DrawerEditingSchedule from '../Drawer/DrawerEditingSchedule/DrawerEditingSchedule';
 import DrawerSettingSchedule from '../Drawer/DrawerSettingSchedule/DrawerSettingSchedule';
@@ -115,20 +114,11 @@ class DrawerSchedule extends React.Component{
                 </nav>
                 <Grid>
                     <Grid style={{position: 'fixed', bottom: '2%', zIndex: 6, right: 0}}>
-                        {
-                            this.state.eventsSelected.size > 0 ?
-                                <Fab color="primary" aria-label="add"
-                                     onClick={this.handleDrawerToggle}
-                                     className={classes.menuButton}>
-                                    <SettingsIcon style={{color: 'white'}}/>
-                                </Fab>
-                                :
-                                <Fab color="primary" aria-label="add"
-                                     onClick={this.handleDrawerToggle}
-                                     className={classes.menuButton}>
-                                    <AddIcon style={{color: 'white'}}/>
-                                </Fab>
-                        }
+                        <Fab color="primary" aria-label="add"
+                             onClick={this.handleDrawerToggle}
+                             className={classes.menuButton}>
+                            <SettingsIcon style={{color: 'white'}}/>
+                        </Fab>
                     </Grid>
                 </Grid>
             </Grid>

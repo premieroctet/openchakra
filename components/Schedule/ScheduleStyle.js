@@ -99,7 +99,7 @@ export default theme => ({
     '& .rbc-month-row':{
       borderRadius:'0px 0px 10px 5px',
       display:'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
 
     '& .rbc-date-cell':{
@@ -131,9 +131,6 @@ export default theme => ({
     },
     '& .rbc-event':{
       backgroundColor: 'transparent'
-    },
-    '& .rb-day-bg':{
-      height: '100px !important'
     },
     '& .rbc-row-segment':{
       padding:0

@@ -61,7 +61,7 @@ class scheduleTest extends React.Component{
                         <Schedule
                             ref={this.scheduleChild}
                             selectable={true}
-                            nbSchedule={6}
+                            nbSchedule={12}
                             bookings={bookings}
                             services={services}
                             handleSelection={this.sendToDrawer}
