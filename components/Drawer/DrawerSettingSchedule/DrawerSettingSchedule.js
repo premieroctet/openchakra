@@ -60,7 +60,8 @@ class DrawerSettingSchedule extends React.Component{
     };
 
     getEventsSelected = (eventsSelected) =>{
-        this.setState({eventsSelected : new Set(eventsSelected)});
+      console.log(`DrawerSettingSchedule:Selected:${JSON.stringify(eventsSelected)}`)
+      this.setState({eventsSelected : new Set(eventsSelected)});
     };
 
     handlePeriode = () =>{
@@ -70,7 +71,7 @@ class DrawerSettingSchedule extends React.Component{
             indexPeriod: this.state.nbTimeLapse + 1,
             availabilities: null
         };
-      this.setState({period: [...this.state.period, myObject]})
+      this.setState({timeLapse: [...this.state.timeLapse, myObject]})
     };
 
     handleDateStart = index => (date) =>{
@@ -207,7 +208,7 @@ class DrawerSettingSchedule extends React.Component{
                                                         <h4>Nuit</h4>
                                                     </Grid>
                                                     <Grid>
-                                                        <SelectSlotTimer arrayLength={6} index={0}/>
+                                                        <SelectSlotTimer arrayLength={6} index={0} slots={new Set()}/>
                                                     </Grid>
                                                 </Grid>
                                                 <Grid item className={classes.containerSelectSlotTimer}>
@@ -215,7 +216,7 @@ class DrawerSettingSchedule extends React.Component{
                                                         <h4>Matin</h4>
                                                     </Grid>
                                                     <Grid >
-                                                        <SelectSlotTimer arrayLength={12} index={6}/>
+                                                        <SelectSlotTimer arrayLength={12} index={6} slots={new Set()}/>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
@@ -225,7 +226,7 @@ class DrawerSettingSchedule extends React.Component{
                                                         <h4>Après-midi</h4>
                                                     </Grid>
                                                     <Grid>
-                                                        <SelectSlotTimer arrayLength={18} index={12}/>
+                                                        <SelectSlotTimer arrayLength={18} index={12} slots={new Set()}/>
                                                     </Grid>
                                                 </Grid>
                                                 <Grid item className={classes.containerSelectSlotTimer}>
@@ -233,7 +234,7 @@ class DrawerSettingSchedule extends React.Component{
                                                         <h4>Soirée</h4>
                                                     </Grid>
                                                     <Grid>
-                                                        <SelectSlotTimer arrayLength={24} index={18}/>
+                                                        <SelectSlotTimer arrayLength={24} index={18} slots={new Set()}/>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>

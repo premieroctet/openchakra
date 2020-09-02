@@ -28,6 +28,61 @@ router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=> {
       .catch(err => console.error(err));
 });
 
+// @Route POST /myAlfred/api/availability/addRecurrent
+// add a recurrent availability for current user
+// access private
+router.post('/addRecurrent',passport.authenticate('jwt',{session: false}),(req,res)=> {
+
+    const newAvailability = new Availability({
+      user:req.user.id,
+      period: {
+        begin: req.body.begin,
+        end: req.body.end,
+      },
+      punctuals: null,
+      available: req.body.available,
+      days: req.body.days,
+      timelapses: Array(...req.body.timelapses),
+    });
+
+    newAvailability.save()
+      .then(availability => {
+        res.json(availability)
+        console.log(`After adding recurrent availability:${JSON.stringify(availability)}`);
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(400).json(err)
+      });
+});
+
+// @Route POST /myAlfred/api/availability/addPunctual
+// add a recurrent availability for current user
+// access private
+router.post('/addPunctual',passport.authenticate('jwt',{session: false}),(req,res)=> {
+
+  console.log(`Add punctual : dates are ${JSON.stringify(req.body.dates)}`)
+
+  const newAvailability = new Availability({
+    user:req.user.id,
+    period: null,
+    punctuals: Array(...req.body.dates),
+    available: req.body.available,
+    days: null,
+    timelapses: req.body.available ? Array(...req.body.timelapses) : [],
+  });
+
+  newAvailability.save()
+    .then(availability => {
+      res.json(availability)
+      console.log(`After adding punctual availability:${JSON.stringify(availability)}`);
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(400).json(err)
+    });
+});
+
 // @Route GET /myAlfred/api/availability/toEventUI
 // Get converted availability to eventUI
 // access public

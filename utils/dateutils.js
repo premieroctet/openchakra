@@ -161,29 +161,16 @@ const eventIncludesDate = (event, mmt) => {
 
 const availIncludesDate = (avail, mmt) => {
 
-    const day_attrib=numberToDay(mmt.day())
-
-    // Check day
-    const hasEvents=avail[day_attrib] && avail[day_attrib].event && avail[day_attrib].event.length>0
-
-    if (!hasEvents) {
+  if (avail.is_punctual) {
+    return avail.available && avail.punctuals.some( d => moment(d).isSame(mmt, 'day'))
+  }
+  else {
+    var range=moment.range(avail.period.begin, avail.period.end)
+    if (!range.snapTo('day').contains(mmt)) {
       return false
     }
-    // Check if event in period
-    const hasPeriod=avail.period && avail.period.active
-    if (hasPeriod) {
-      var range=moment.range(avail.period.month_begin, avail.period.month_end)
-      range = range.snapTo('day')
-      if (!range.contains(mmt)) {
-        return false
-      }
-    }
-    else {
-      if (!avail[day_attrib].event.some( event => eventIncludesDate(event, mmt))) {
-        return false
-      }
-    }
-    return true
+    return avail.days.includes(mmt.isoWeekday()-1)
+  }
 }
 
 /** Moment mmt's date is available for alfred_id => true/false */
