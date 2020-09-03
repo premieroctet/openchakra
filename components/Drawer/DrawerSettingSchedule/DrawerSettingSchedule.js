@@ -27,10 +27,8 @@ class DrawerSettingSchedule extends React.Component{
             availabilities: [{
                 starDate:null,
                 endDate: null,
-                indexPeriod: 0,
                 recurrDays: new Set(),
             }],
-            nbAvailabilities: 0,
             showFirstPeriod: false
         }
     }
@@ -41,32 +39,30 @@ class DrawerSettingSchedule extends React.Component{
 
 
     addRecurrDay = (day, availIdx) => {
-        let newArray = [...this.state.availabilities];
-        newArray[availIdx] = {...newArray[availIdx], recurrDays : new Set(newArray[availIdx].recurrDays).add(day)};
-        this.setState({
-            availabilities: newArray,
-        });
+        let availabilities = this.state.availabilities;
+        availabilities[availIdx].recurrDays = availabilities[availIdx].recurrDays.add(day);
+        this.setState({availabilities: availabilities });
     };
 
     removeRecurrDay = (day, availIdx) => {
-        let newArray = [...this.state.availabilities];
-        let newChecked = new Set(newArray[availIdx].recurrDays);
+        let availabilities = this.state.availabilities;
+        let newChecked =  new Set(availabilities[availIdx].recurrDays);
+        newChecked.delete(day);
+        this.setState(() =>{return{availabilities: newChecked}});
 
-        this.setState({recurrDays: newChecked.delete(day)});
     };
 
     getEventsSelected = (eventsSelected) =>{
         this.setState({eventsSelected : new Set(eventsSelected)});
     };
 
-    handlePeriode = () =>{
+    handleAvailabilities = () =>{
         let myNewAvailabilities = {
             starDate:null,
             endDate: null,
-            indexPeriod: this.state.nbAvailabilities + 1,
             recurrDays: new Set(),
         };
-      this.setState({availabilities: [...this.state.availabilities, myNewAvailabilities], nbAvailabilities: this.state.nbAvailabilities + 1})
+      this.setState({availabilities: [...this.state.availabilities, myNewAvailabilities]})
     };
 
     showFirstPeriod = () => {
@@ -74,18 +70,25 @@ class DrawerSettingSchedule extends React.Component{
     };
 
     handleDateStart = index => (date) =>{
-        const elementsIndex = this.state.availabilities.findIndex(element => element.indexPeriod == index );
         let newArray = [...this.state.availabilities];
-        newArray[elementsIndex] = {...newArray[elementsIndex], starDate: date};
+        newArray[index] = {...newArray[index], starDate: date};
         this.setState({
             availabilities: newArray,
         });
     };
 
     handleDateEnd = index => (date) => {
-        const elementsIndex = this.state.availabilities.findIndex(element => element.indexPeriod == index );
         let newArray = [...this.state.availabilities];
-        newArray[elementsIndex] = {...newArray[elementsIndex], endDate: date};
+        newArray[index] = {...newArray[index], endDate: date};
+        this.setState({
+            availabilities: newArray,
+        });
+    };
+
+    removeAvailabilities = (index) =>{
+        let newArray = this.state.availabilities;
+        newArray.splice(index, 1);
+
         this.setState({
             availabilities: newArray,
         });
@@ -184,14 +187,14 @@ class DrawerSettingSchedule extends React.Component{
                                                         <h3>Jours travaillés :</h3>
                                                     </Grid>
                                                     <Grid container className={classes.panelFormDays}>
-                                                        {[0,1,2,3,4,5,6].map( d => {
+                                                        {[0,1,2,3,4,5,6].map( index => {
                                                             return (
                                                                 <Chip
                                                                     clickable
-                                                                    label={(DAYS[d]).charAt(0)}
-                                                                    style={{backgroundColor: availabilities[availIdx].recurrDays.has(DAYS[d]) ? '#4fbdd7' :  '#c4c44'}}
+                                                                    label={(DAYS[index]).charAt(0)}
+                                                                    style={{backgroundColor: availabilities[availIdx].recurrDays.has(DAYS[index]) ? '#4fbdd7' :  '#c4c44'}}
                                                                     className={classes.textFieldChips}
-                                                                    onClick={() => this.toggleRecurrDay(DAYS[d], availIdx)}
+                                                                    onClick={() => this.toggleRecurrDay(DAYS[index], availIdx)}
                                                                 />
                                                                 )
                                                         })}
@@ -241,6 +244,7 @@ class DrawerSettingSchedule extends React.Component{
                                                 <Grid style={{marginTop: 30}}>
                                                     <Grid style={{display:'flex', flexDirection:'row-reverse'}}>
                                                         <Button variant={'contained'} color={'primary'} style={{color: 'white'}}>Enregistrer</Button>
+                                                        <Button color={'secondary'} style={{marginRight: 10}} onClick={()=>this.removeAvailabilities(availIdx)}>Supprimer</Button>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
@@ -254,7 +258,7 @@ class DrawerSettingSchedule extends React.Component{
                 <Divider/>
                 <Grid style={{marginTop: 30}}>
                     <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
-                        <Button variant={'contained'} color={'primary'} style={{color:'white'}} onClick={!this.state.showFirstPeriod ? this.showFirstPeriod : this.handlePeriode}>Ajouter une période</Button>
+                        <Button variant={'contained'} color={'primary'} style={{color:'white'}} onClick={!this.state.showFirstPeriod ? this.showFirstPeriod : this.handleAvailabilities}>Ajouter une période</Button>
                     </Grid>
                 </Grid>
             </Grid>
