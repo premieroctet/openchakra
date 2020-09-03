@@ -28,9 +28,9 @@ class DrawerSettingSchedule extends React.Component{
                 starDate:null,
                 endDate: null,
                 recurrDays: new Set(),
+                timelapses: new Set()
             }],
             showFirstPeriod: false,
-            timelapses: new set()
         }
 
     }
@@ -96,15 +96,17 @@ class DrawerSettingSchedule extends React.Component{
         });
     };
 
-    slotTimerChanged = (slotIndex, add) => {
-        var timelapses = this.state.timelapses;
+    slotTimerChanged = availIdx => (slotIndex, add) => {
+        let availabilities = this.state.availabilities;
         if (add) {
-            timelapses.add(slotIndex)
+            availabilities[availIdx].timelapses = availabilities[availIdx].timelapses.add(slotIndex);
+            this.setState({availabilities: availabilities });
         }
         else {
-            timelapses.delete(slotIndex)
+            let availabilities = this.state.availabilities;
+            availabilities[availIdx].timelapses.delete(slotIndex);
+            this.setState({availabilities: availabilities})
         }
-        this.setState({timelapses: timelapses})
     };
 
 
@@ -203,6 +205,7 @@ class DrawerSettingSchedule extends React.Component{
                                                         {[0,1,2,3,4,5,6].map( index => {
                                                             return (
                                                                 <Chip
+                                                                    key={index}
                                                                     clickable
                                                                     label={(DAYS[index]).charAt(0)}
                                                                     style={{backgroundColor: availabilities[availIdx].recurrDays.has(DAYS[index]) ? '#4fbdd7' :  '#c4c4c4'}}
@@ -223,7 +226,7 @@ class DrawerSettingSchedule extends React.Component{
                                                                 <h4>Nuit</h4>
                                                             </Grid>
                                                             <Grid>
-                                                                <SelectSlotTimer arrayLength={6} index={0} slots={this.state.timelapses} onChange={this.slotTimerChanged}/>
+                                                                <SelectSlotTimer arrayLength={6} index={0} slots={availabilities[availIdx].timelapses} onChange={this.slotTimerChanged(availIdx)}/>
                                                             </Grid>
                                                         </Grid>
                                                         <Grid item className={classes.containerSelectSlotTimer}>
@@ -231,7 +234,7 @@ class DrawerSettingSchedule extends React.Component{
                                                                 <h4>Matin</h4>
                                                             </Grid>
                                                             <Grid>
-                                                                <SelectSlotTimer arrayLength={12} index={6} slots={this.state.timelapses} onChange={this.slotTimerChanged}/>
+                                                                <SelectSlotTimer arrayLength={12} index={6} slots={availabilities[availIdx].timelapses} onChange={this.slotTimerChanged(availIdx)}/>
                                                             </Grid>
                                                         </Grid>
                                                     </Grid>
@@ -241,7 +244,7 @@ class DrawerSettingSchedule extends React.Component{
                                                                 <h4>Après-midi</h4>
                                                             </Grid>
                                                             <Grid>
-                                                                <SelectSlotTimer arrayLength={18} index={12} slots={this.state.timelapses} onChange={this.slotTimerChanged}/>
+                                                                <SelectSlotTimer arrayLength={18} index={12} slots={availabilities[availIdx].timelapses} onChange={this.slotTimerChanged(availIdx)}/>
                                                             </Grid>
                                                         </Grid>
                                                         <Grid item className={classes.containerSelectSlotTimer}>
@@ -249,7 +252,7 @@ class DrawerSettingSchedule extends React.Component{
                                                                 <h4>Soirée</h4>
                                                             </Grid>
                                                             <Grid>
-                                                                <SelectSlotTimer arrayLength={24} index={18} slots={this.state.timelapses} onChange={this.slotTimerChanged}/>
+                                                                <SelectSlotTimer arrayLength={24} index={18} slots={availabilities[availIdx].timelapses} onChange={this.slotTimerChanged(availIdx)}/>
                                                             </Grid>
                                                         </Grid>
                                                     </Grid>

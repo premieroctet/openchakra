@@ -23,6 +23,7 @@ class SelectSlotTimer extends React.Component {
         for (let i = index; i < arrayLength; i++ ) {
             items.push(
                 <Chip
+                    key={i}
                     clickable
                     label={('0' + i).slice(-2) + 'h00 - ' + ('0' + (i+1)).slice(-2) + 'h00'}
                     style={{backgroundColor : this.props.slots.has(i) ? '#4fbdd7' : '#c4c4c4'}}

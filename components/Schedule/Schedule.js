@@ -202,7 +202,7 @@ class Schedule extends React.Component {
             const monthStr=moment(date).format('M');
             const selEvents=events.filter( e => moment(e.start).format('M')==monthStr);
               return(
-                <Grid item xl={4} lg={5} xs={12} style={{height: 400}}>
+                <Grid item xl={4} lg={5} xs={12} style={{height: 400}} key={i}>
                   <Calendar
                       selectable={selectable}
                       popup={false}
