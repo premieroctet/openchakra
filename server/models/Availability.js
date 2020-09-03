@@ -5,206 +5,23 @@ const moment=require('moment')
 const {DAYS}=require('../../utils/dateutils')
 
 const AvailabilitySchema = new Schema({
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: 'users'
-    },
-      monday: {
-          event: [{
-              begin: {
-                  type: String
-              },
-              end: {
-                  type: String
-              },
-              services: [{
-                  label: {
-                      type: String
-                  },
-                  value: {
-                    type: Schema.Types.ObjectId,
-                    ref: 'service'
-                  }
-              }],
-              all_services: {
-                  type: Boolean,
-                  default: false
-              }
-          }]
-      },
-      tuesday: {
-            event: [{
-                begin: {
-                    type: String
-                },
-                end: {
-                    type: String
-                },
-                services: [{
-                    label: {
-                        type: String
-                    },
-                    value: {
-                        type: Schema.Types.ObjectId,
-                        ref: 'service'
-                    }
-
-                }],
-                all_services: {
-                    type: Boolean,
-                    default: false
-                }
-            }]
-      },
-      wednesday: {
-            event: [{
-                begin: {
-                    type: String
-                },
-                end: {
-                    type: String
-                },
-                services: [{
-                    label: {
-                        type: String
-                    },
-                    value: {
-                        type: Schema.Types.ObjectId,
-                        ref: 'service'
-                    }
-
-                }],
-                all_services: {
-                    type: Boolean,
-                    default: false
-                }
-            }]
-      },
-      thursday: {
-            event: [{
-                begin: {
-                    type: String
-                },
-                end: {
-                    type: String
-                },
-                services: [{
-                    label: {
-                        type: String
-                    },
-                    value: {
-                        type: Schema.Types.ObjectId,
-                        ref: 'service'
-                    }
-
-                }],
-                all_services: {
-                    type: Boolean,
-                    default: false
-                }
-            }]
-      },
-      friday: {
-            event: [{
-                begin: {
-                    type: String
-                },
-                end: {
-                    type: String
-                },
-                services: [{
-                    label: {
-                        type: String
-                    },
-                    value: {
-                        type: Schema.Types.ObjectId,
-                        ref: 'service'
-                    }
-
-                }],
-                all_services: {
-                    type: Boolean,
-                    default: false
-                }
-            }]
-      },
-      saturday: {
-            event: [{
-                begin: {
-                    type: String
-                },
-                end: {
-                    type: String
-                },
-                services: [{
-                    label: {
-                        type: String
-                    },
-                    value: {
-                        type: Schema.Types.ObjectId,
-                        ref: 'service'
-                    }
-
-                }],
-                all_services: {
-                    type: Boolean,
-                    default: false
-                }
-            }]
-      },
-      sunday: {
-            event: [{
-                begin: {
-                    type: String
-                },
-                end: {
-                    type: String
-                },
-                services: [{
-                    label: {
-                        type: String
-                    },
-                    value: {
-                        type: Schema.Types.ObjectId,
-                        ref: 'service'
-                    }
-
-                }],
-                all_services: {
-                    type: Boolean,
-                    default: false
-                }
-            }]
-      },
+    // Récurrence si period définie
     period: {
-        active: {
-            type: Boolean,
-            default: false
-        },
-        month_begin: {
-            type: Date
-        },
-        month_end: {
-            type: Date
-        }
-    }
+        begin: { type: Date }, // Date début récurrence, heure forcée à 0h00
+        end: { type: Date} // Date fin récurrence, heure forcée à 23h59
+    },
+    // Si non récurrence, date(s) ponctuelle(s)
+    punctuals : [{type : Date}], // Si dispo ponctuelle, date ou dates
+    // Disponibilite : True ou False
+    available : { type : Boolean, required : true},
+    // Alfred
+    user: { type: Schema.Types.ObjectId, ref: 'users', required : true },
+    days : [{type : Number }], // set(0...6) => 0 = lundi
+    timelapses: [{ type : Number }], // set(0..23) => périodes horaires : 0 => 0h→1h, 1=> 1h→2h, etc
+  }, { toJSON: { virtuals: true, getters: true } });
 
-
-}, { toJSON: { virtuals: true, getters: true } });
-
-
-AvailabilitySchema.virtual('as_text').get( function() {
-  if (this.period.active) {
-    return `Période du ${moment(this.period.month_begin).format('DD/MM/YY')} au ${moment(this.period.month_end).format('DD/MM/YY')}`
-  }
-  else {
-    DAYS.forEach( d => {
-      if (this[d].event && this[d].event.length>0) {
-        return this[d].event[0].begin
-      }
-    })
-    return null
-  }
+AvailabilitySchema.virtual('is_punctual').get( function() {
+  return this.punctuals && this.punctuals.length>0
 })
 
 

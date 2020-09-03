@@ -12,23 +12,24 @@ import FormControl from '@material-ui/core/FormControl';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
-
+import axios from "axios";
 
 class DrawerEditingSchedule extends React.Component{
 
     constructor(props) {
-        super(props);
-        this.state={
-            eventsSelected: new Set(),
-            selectedDateStart: null,
-            selectedDateEnd: null,
-            recurrDays: new Set(),
-            availabilities:''
-        }
+      super(props);
+      this.state={
+        available: true,
+        eventsSelected: new Set(),
+        selectedDateStart: null,
+        selectedDateEnd: null,
+        timelapses: new Set(),
+      };
+      this.getEventsSelected = this.getEventsSelected.bind(this)
     }
 
-
     getEventsSelected = (eventsSelected) =>{
+      console.log(`DrawerEditingSchedule:Selected:${JSON.stringify(Array(...eventsSelected))}`);
         this.setState({eventsSelected : new Set(eventsSelected)});
     };
 
@@ -36,6 +37,36 @@ class DrawerEditingSchedule extends React.Component{
         this.setState({availabilities: event.target.value});
     };
 
+    toggleAvailability = () => {
+        this.setState({available: !this.state.available})
+    };
+
+    slotTimerChanged = (slotIndex, add) => {
+      var timelapses = this.state.timelapses;
+      if (add) {
+        timelapses.add(slotIndex)
+      }
+      else {
+        timelapses.delete(slotIndex)
+      }
+      this.setState({timelapses: timelapses})
+    };
+
+    save = () => {
+      axios.post('/myAlfred/api/availability/addPunctual', {
+        dates: Array(...this.state.eventsSelected),
+        available: this.state.available,
+        timelapses: Array(...this.state.timelapses),
+      })
+      .then ( res => {
+        this.props.onAvailabilitySaved ? this.props.onAvailabilitySaved() : () => {}
+      })
+    };
+
+    saveEnabled = () => {
+      const enabled= !this.state.available || this.state.timelapses.size>0
+      return enabled
+    };
 
     render(){
 
@@ -67,23 +98,21 @@ class DrawerEditingSchedule extends React.Component{
                             <Grid container>
                                 <FormControl component="fieldset">
                                     <RadioGroup aria-label="availabilities" name="availabilities" value={availabilities} onChange={this.handleAvailabilities}>
-                                        <FormControlLabel value="availabilities" control={<Radio color="primary"/>} label="Disponible" />
-                                        <FormControlLabel value="notavailabilities" control={<Radio  color="primary"/>} label="Non travaillé" />
+                                        <FormControlLabel onChange={this.toggleAvailability} checked={!this.state.available} value="notavailabilities" control={<Radio  color="primary"/>} label="Indisponible pour la journée" />
+                                        <FormControlLabel onChange={this.toggleAvailability} checked={this.state.available} value="availabilities" control={<Radio color="primary"/>} label="Disponible sur ces horaires : " />
                                     </RadioGroup>
                                 </FormControl>
                             </Grid>
                         </Grid>
+                        { this.state.available ?
                         <Grid>
-                            <Grid>
-                                <h3>Configurez vos disponibilités :</h3>
-                            </Grid>
                             <Grid container>
                                 <Grid item className={classes.containerSelectSlotTimer}>
                                     <Grid>
                                         <h4>Nuit</h4>
                                     </Grid>
                                     <Grid>
-                                        <SelectSlotTimer arrayLength={6} index={0}/>
+                                        <SelectSlotTimer arrayLength={6} index={0} slots={this.state.timelapses} onChange={this.slotTimerChanged}/>
                                     </Grid>
                                 </Grid>
                                 <Grid item className={classes.containerSelectSlotTimer}>
@@ -91,7 +120,7 @@ class DrawerEditingSchedule extends React.Component{
                                         <h4>Matin</h4>
                                     </Grid>
                                     <Grid >
-                                        <SelectSlotTimer arrayLength={12} index={6}/>
+                                        <SelectSlotTimer arrayLength={12} index={6} slots={this.state.timelapses} onChange={this.slotTimerChanged}/>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -101,7 +130,7 @@ class DrawerEditingSchedule extends React.Component{
                                         <h4>Après-midi</h4>
                                     </Grid>
                                     <Grid>
-                                        <SelectSlotTimer arrayLength={18} index={12}/>
+                                        <SelectSlotTimer arrayLength={18} index={12} slots={this.state.timelapses} onChange={this.slotTimerChanged}/>
                                     </Grid>
                                 </Grid>
                                 <Grid item className={classes.containerSelectSlotTimer}>
@@ -109,14 +138,17 @@ class DrawerEditingSchedule extends React.Component{
                                         <h4>Soirée</h4>
                                     </Grid>
                                     <Grid>
-                                        <SelectSlotTimer arrayLength={24} index={18}/>
+                                        <SelectSlotTimer arrayLength={24} index={18} slots={this.state.timelapses} onChange={this.slotTimerChanged}/>
                                     </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>
+                        :
+                        null
+                        }
                         <Grid style={{marginTop: 30}}>
                             <Grid style={{display:'flex', flexDirection:'row-reverse'}}>
-                                <Button variant={'contained'} color={'primary'} style={{color: 'white'}}>Enregistrer</Button>
+                                <Button disabled={!this.saveEnabled()} variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={ () => this.save() }>Enregistrer</Button>
                             </Grid>
                         </Grid>
                     </Grid>

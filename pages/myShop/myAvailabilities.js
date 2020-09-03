@@ -57,12 +57,7 @@ class myAvailabilities extends React.Component {
       // FIX : get current availabilities
       axios.defaults.headers.common['Authorization'] = auth
 
-      axios.get('/myAlfred/api/availability/currentAlfred')
-        .then ( res => {
-          this.setState({availabilities: res.data})
-        })
-        .catch (err => console.error(err))
-
+      this.loadAvailabilities()
       axios.get('/myAlfred/api/booking/alfredBooking')
         .then ( res => {
           this.setState({bookings: res.data})
@@ -107,6 +102,14 @@ class myAvailabilities extends React.Component {
 
     }
 
+    loadAvailabilities = () => {
+      axios.get('/myAlfred/api/availability/currentAlfred')
+        .then ( res => {
+          this.setState({availabilities: res.data})
+        })
+        .catch (err => console.error(err))
+    }
+
     availabilityCreated = (avail) => {
 
       if (avail._id.length==GID_LEN) {
@@ -125,7 +128,7 @@ class myAvailabilities extends React.Component {
           .catch(err => {
             console.error(err);
             toast.error(err);
-		  })
+      })
     }
 
     availabilityUpdate = (avail) => {
@@ -170,18 +173,17 @@ class myAvailabilities extends React.Component {
       });
     }
 
-    needRefresh = () =>{
-      this.componentDidMount()
-    };
-
     sendToDrawer = (eventsSelected) => {
-        this.child.current.getEventsSelected(eventsSelected);
-    };
+      this.child.current.getEventsSelected(eventsSelected);
+    }
+
+    onAvailabilitySaved = () => {
+      this.loadAvailabilities()
+    }
 
     render() {
-        const {classes} = this.props;
-        let isOwner= this.state.idAlfred === this.state.userId;
-
+      const {classes} = this.props;
+      let isOwner= this.state.idAlfred === this.state.userId;
 
       return (
           <Fragment>
@@ -197,7 +199,7 @@ class myAvailabilities extends React.Component {
                     }
                   <Grid className={classes.toggle}>
                       <Grid>
-                          <DrawerSchedule ref={this.child}/>
+                          <DrawerSchedule ref={this.child} onAvailabilitySaved={this.onAvailabilitySaved}/>
                       </Grid>
                       <Grid>
                           <Grid style={{position: 'fixed', bottom: '10%', zIndex: 5, right: 0}}>
@@ -221,7 +223,7 @@ class myAvailabilities extends React.Component {
                             onDeleteAvailability={this.availabilityDelete}
                             onUpdateAvailability={this.availabilityUpdate}
                             selectable={true}
-                            nbSchedule={5}
+                            nbSchedule={1}
                             handleSelection={this.sendToDrawer}
                         />
                       </Grid>

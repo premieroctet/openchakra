@@ -1005,7 +1005,7 @@ class UserServicesPreview extends React.Component {
                     </Grid>
                   </Grid>
                   <Grid>
-                    <Schedule  availabilities={this.state.availabilities} services={[]} selectable={false} height={400}/>
+                    <Schedule  availabilities={this.state.availabilities} bookings={[]} services={[]} selectable={false} height={400} nbSchedule={1}/>
                   </Grid>
                 </Grid>
                 <Grid className={classes.basketMinimumContainer}>
