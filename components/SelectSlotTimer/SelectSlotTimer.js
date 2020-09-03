@@ -26,7 +26,7 @@ class SelectSlotTimer extends React.Component {
                     key={i}
                     clickable
                     label={('0' + i).slice(-2) + 'h00 - ' + ('0' + (i+1)).slice(-2) + 'h00'}
-                    style={{backgroundColor : this.props.slots.has(i) ? '#4fbdd7' : '#c4c4c4'}}
+                    style={{backgroundColor :  this.props.slots ? this.props.slots.has(i) ? '#4fbdd7' : '#c4c4c4' : '#c4c4c4'}}
                     className={classes.textFieldChips}
                     onClick={() => { this.toggleTimeSlot(i) }}
                 />

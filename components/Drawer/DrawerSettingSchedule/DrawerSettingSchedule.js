@@ -63,6 +63,7 @@ class DrawerSettingSchedule extends React.Component{
             starDate:null,
             endDate: null,
             recurrDays: new Set(),
+            timelapses: new Set()
         };
       this.setState({availabilities: [...this.state.availabilities, myNewAvailabilities]})
     };
@@ -274,7 +275,7 @@ class DrawerSettingSchedule extends React.Component{
                 <Divider/>
                 <Grid style={{marginTop: 30}}>
                     <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
-                        <Button variant={'contained'} color={'primary'} style={{color:'white'}} onClick={!this.state.showFirstPeriod ? this.showFirstPeriod : this.handleAvailabilities}>Ajouter une période</Button>
+                        <Button variant={'contained'} color={'primary'} style={{color:'white'}} onClick={ !showFirstPeriod ? this.showFirstPeriod : this.handleAvailabilities}>Ajouter une période</Button>
                     </Grid>
                 </Grid>
             </Grid>
