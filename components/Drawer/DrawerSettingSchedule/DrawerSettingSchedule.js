@@ -46,10 +46,9 @@ class DrawerSettingSchedule extends React.Component{
 
     removeRecurrDay = (day, availIdx) => {
         let availabilities = this.state.availabilities;
-        let newChecked =  new Set(availabilities[availIdx].recurrDays);
-        newChecked.delete(day);
-        this.setState(() =>{return{availabilities: newChecked}});
+        availabilities[availIdx].recurrDays.delete(day);
 
+        this.setState({availabilities: availabilities})
     };
 
     getEventsSelected = (eventsSelected) =>{
@@ -192,7 +191,7 @@ class DrawerSettingSchedule extends React.Component{
                                                                 <Chip
                                                                     clickable
                                                                     label={(DAYS[index]).charAt(0)}
-                                                                    style={{backgroundColor: availabilities[availIdx].recurrDays.has(DAYS[index]) ? '#4fbdd7' :  '#c4c44'}}
+                                                                    style={{backgroundColor: availabilities[availIdx].recurrDays.has(DAYS[index]) ? '#4fbdd7' :  '#c4c4c4'}}
                                                                     className={classes.textFieldChips}
                                                                     onClick={() => this.toggleRecurrDay(DAYS[index], availIdx)}
                                                                 />
