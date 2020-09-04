@@ -109,12 +109,31 @@ export default theme => ({
     borderLeft:'1px solid #DDD',
     backgroundColor: 'white',
   },
-  today_style:{
+  today_style_avail:{
     width: '100%',
     height :'100%',
     borderLeft:'1px solid #DDD',
+    backgroundColor: 'white',
+    cursor:'pointer',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  today_style_off:{
+    width: '100%',
+    height :'100%',
+    borderLeft:'1px solid #DDD',
+    backgroundColor: 'lightgray',
+    cursor:'pointer',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  today_style:{
+    borderRadius: 50,
+    width:35,
+    height: 35,
     backgroundColor: 'rgba(79, 189, 215, 0.2)',
-    cursor:'pointer'
   },
   day_style:{
     width: '100%',
@@ -138,5 +157,6 @@ export default theme => ({
     padding: 0,
     margin: 0,
     marginLeft: 1,
-  }
+  },
+
 })

@@ -104,14 +104,22 @@ class Schedule extends React.Component {
             <Grid className={classes.off_range_style}/>
         )
       }
-      if(propsStyle === 'rbc-day-bg rbc-today'){
-        return (
-            <Grid className={classes.today_style}/>
-        )
-      }else{
+     else{
         if (isAvailable) {
           return(
             <Grid className={classes.day_style}/>
+          )
+        }else if(isAvailable && propsStyle === 'rbc-day-bg rbc-today'){
+          return (
+            <Grid className={classes.today_style_avail}>
+              <Grid className={classes.today_style}/>
+            </Grid>
+          )
+        }else if(!isAvailable && propsStyle === 'rbc-day-bg rbc-today'){
+          return(
+            <Grid className={classes.today_style_off}>
+              <Grid className={classes.today_style}/>
+            </Grid>
           )
         }
         else {
