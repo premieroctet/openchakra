@@ -131,9 +131,9 @@ export default theme => ({
   },
   today_style:{
     borderRadius: 50,
-    width:35,
-    height: 35,
-    backgroundColor: 'rgba(79, 189, 215, 0.2)',
+    width:25,
+    height: 25,
+    border: '2px solid black'
   },
   day_style:{
     width: '100%',
