@@ -77,7 +77,7 @@ class DrawerEditingSchedule extends React.Component{
             <Grid>
                 <Grid style={{display: 'flex', alignItems: 'center'}}>
                     <Grid>
-                        <h1>Modifier vos disponibilités</h1>
+                        <Typography className={classes.policySizeTitle}>Modifier vos disponibilités</Typography>
                     </Grid>
                     <Hidden smUp implementation="css">
                         <Grid>

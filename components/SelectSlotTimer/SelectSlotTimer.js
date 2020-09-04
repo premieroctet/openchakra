@@ -40,7 +40,7 @@ class SelectSlotTimer extends React.Component {
         const {classes, arrayLength, index} = this.props;
 
         return (
-            <Grid>
+            <Grid style={{textAlign: 'center'}}>
                 {this.createRender(arrayLength, index, classes)}
             </Grid>
         )

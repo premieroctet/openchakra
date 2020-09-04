@@ -15,6 +15,16 @@ export default theme => ({
         [theme.breakpoints.down('xs')]: {
             textAlign: 'center'
         },
-
+    },
+    policySizeTitle:{
+        margin: 0,
+        overflowWrap: 'break-word !important',
+        fontSize: 24,
+        fontWeight: 800,
+        lineHeight: '1.25em',
+        fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
+        color: 'rgb(72, 72, 72)',
+        paddingTop: 2,
+        paddingBottom: 2
     },
 })

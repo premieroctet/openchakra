@@ -20,21 +20,17 @@ class DrawerSchedule extends React.Component{
         this.drawerSetting = React.createRef();
         this.state={
             mobileOpen: false,
-            recurrDays: new Set(),
             eventsSelected: new Set(),
-            recurrSlotTime: new Set(),
-            selectedDateStart: null,
-            selectedDateEnd: null,
             availabilities: [],
-        }
-        this.getEventsSelected = this.getEventsSelected.bind(this)
-        this.stateDrawer = this.stateDrawer.bind(this)
+        };
+        this.getEventsSelected = this.getEventsSelected.bind(this);
+        this.stateDrawer = this.stateDrawer.bind(this);
         this.onAvailabilitySaved = this.onAvailabilitySaved.bind(this)
     }
 
     componentDidMount = () => {
-      const auth = cookie.load('token')
-      axios.defaults.headers.common['Authorization'] = auth
+      const auth = cookie.load('token');
+      axios.defaults.headers.common['Authorization'] = auth;
       axios.get('/myAlfred/api/availability/currentAlfred')
         .then ( res => {
           this.setState({availabilities: res.data})
@@ -43,12 +39,10 @@ class DrawerSchedule extends React.Component{
     };
 
     getEventsSelected = (eventsSelected) =>{
-      console.log(`DrawerSchedule:Selected:${JSON.stringify(eventsSelected.size)}`)
       this.setState({eventsSelected : new Set(eventsSelected)}, () => this.stateDrawer());
     };
 
     stateDrawer = () =>{
-      console.log(`stateDrawer`)
       if(this.state.eventsSelected.size === 0){
           this.drawerSetting.current.getEventsSelected(this.state.eventsSelected);
       }else{
@@ -56,14 +50,13 @@ class DrawerSchedule extends React.Component{
       }
     };
 
-
     handleDrawerToggle = () =>{
         this.setState({mobileOpen: !this.state.mobileOpen})
     };
 
     onAvailabilitySaved = () => {
       this.props.onAvailabilitySaved ? this.props.onAvailabilitySaved() : () => {}
-    }
+    };
 
     render(){
         const { classes,  windows }= this.props;
@@ -121,7 +114,7 @@ class DrawerSchedule extends React.Component{
                     </Hidden>
                 </nav>
                 <Grid>
-                    <Grid style={{position: 'fixed', bottom: '2%', zIndex: 6, right: 0}}>
+                    <Grid style={{position: 'fixed', bottom: '10%', zIndex: 6, right: 0}}>
                         <Fab color="primary" aria-label="add"
                              onClick={this.handleDrawerToggle}
                              className={classes.menuButton}>

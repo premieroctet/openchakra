@@ -54,7 +54,6 @@ class DrawerSettingSchedule extends React.Component{
     };
 
     getEventsSelected = (eventsSelected) =>{
-      console.log(`DrawerSettingSchedule:Selected:${JSON.stringify(eventsSelected)}`)
       this.setState({eventsSelected : new Set(eventsSelected)});
     };
 
@@ -120,7 +119,7 @@ class DrawerSettingSchedule extends React.Component{
             <Grid>
                 <Grid style={{display: 'flex', alignItems: 'center'}}>
                     <Grid>
-                        <h1>Paramétrer vos disponibilités</h1>
+                        <Typography className={classes.policySizeTitle}>Paramètrez vos disponibilités</Typography>
                     </Grid>
                     <Hidden smUp implementation="css">
                         <Grid>
@@ -273,7 +272,7 @@ class DrawerSettingSchedule extends React.Component{
                     }
                 </Grid>
                 <Divider/>
-                <Grid style={{marginTop: 30}}>
+                <Grid style={{marginTop: 30, marginBottom: 110}}>
                     <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
                         <Button variant={'contained'} color={'primary'} style={{color:'white'}} onClick={ !showFirstPeriod ? this.showFirstPeriod : this.handleAvailabilities}>Ajouter une période</Button>
                     </Grid>

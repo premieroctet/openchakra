@@ -186,51 +186,42 @@ class myAvailabilities extends React.Component {
       let isOwner= this.state.idAlfred === this.state.userId;
 
       return (
-          <Fragment>
-              <Helmet>
-                  <title> Mes disponibilités - My Alfred </title>
-                  <meta property="description" content="Indiquez vos dispoinibilités pour proposer vos services entre particuliers ! Des services à proximité, rémunérés et assurés ! Vos disponibilités permettront à vos futurs clients de vous réserver directement, au créneau souhaité !" />
-              </Helmet>
-              <Layout>
-                <Grid className={classes.bigContainer} style={{width: '100%'}}>
-                    {isOwner ?
-                      <NavBarShop userId={this.state.userId}/>
-                      : null
-                    }
-                  <Grid className={classes.toggle}>
-                      <Grid>
-                          <DrawerSchedule ref={this.child} onAvailabilitySaved={this.onAvailabilitySaved}/>
-                      </Grid>
-                      <Grid>
-                          <Grid style={{position: 'fixed', bottom: '10%', zIndex: 5, right: 0}}>
-                              <Fab color="primary" aria-label="add"
-                                   onClick={this.callDrawer}
-                                   className={classes.menuButton}>
-                                  <AddIcon style={{color: 'white'}}/>
-                              </Fab>
-                          </Grid>
-                      </Grid>
-                  </Grid>
-                  <Grid container className={classes.containercalendar} style={{width:' 70%'}}>
-                      <Grid>
-                        <Schedule
-                            availabilities={this.state.availabilities}
-                            bookings={this.state.bookings}
-                            title={I18N.SCHEDULE_TITLE}
-                            subtitle={I18N.SCHEDULE_SUBTITLE}
-                            services={this.state.services}
-                            onCreateAvailability={this.availabilityCreated}
-                            onDeleteAvailability={this.availabilityDelete}
-                            onUpdateAvailability={this.availabilityUpdate}
-                            selectable={true}
-                            nbSchedule={1}
-                            handleSelection={this.sendToDrawer}
-                        />
-                      </Grid>
-                  </Grid>
+        <Fragment>
+          <Helmet>
+              <title> Mes disponibilités - My Alfred </title>
+              <meta property="description" content="Indiquez vos dispoinibilités pour proposer vos services entre particuliers ! Des services à proximité, rémunérés et assurés ! Vos disponibilités permettront à vos futurs clients de vous réserver directement, au créneau souhaité !" />
+          </Helmet>
+            <Layout>
+              <Grid className={classes.bigContainer} style={{width: '100%'}}>
+                {isOwner ?
+                  <NavBarShop userId={this.state.userId}/>
+                  : null
+                }
+              </Grid>
+              <Grid className={classes.toggle}>
+                <Grid>
+                  <DrawerSchedule ref={this.child} onAvailabilitySaved={this.onAvailabilitySaved}/>
                 </Grid>
-              </Layout>
-                <NavbarMobile userId={this.state.userId}/>
+              </Grid>
+              <Grid container className={classes.containercalendar} style={{width:' 65%'}}>
+                <Grid>
+                  <Schedule
+                      availabilities={this.state.availabilities}
+                      bookings={this.state.bookings}
+                      title={I18N.SCHEDULE_TITLE}
+                      subtitle={I18N.SCHEDULE_SUBTITLE}
+                      services={this.state.services}
+                      onCreateAvailability={this.availabilityCreated}
+                      onDeleteAvailability={this.availabilityDelete}
+                      onUpdateAvailability={this.availabilityUpdate}
+                      selectable={true}
+                      nbSchedule={12}
+                      handleSelection={this.sendToDrawer}
+                  />
+                </Grid>
+              </Grid>
+            </Layout>
+              <NavbarMobile userId={this.state.userId}/>
           </Fragment>
         );
     };

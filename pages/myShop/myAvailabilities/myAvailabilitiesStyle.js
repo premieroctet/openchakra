@@ -1,12 +1,12 @@
 export default theme => ({
   bigContainer: {
+    marginTop: 100,
     [theme.breakpoints.down('xs')]: {
-      marginBottom: 100,
+      margin: 0,
     }
   },
   containercalendar:{
     display: 'flex',
-    marginTop: 100,
     marginBottom: 200,
     [theme.breakpoints.down('sm')]: {
       width:'100%!important',
