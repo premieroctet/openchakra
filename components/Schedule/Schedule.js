@@ -88,7 +88,7 @@ class Schedule extends React.Component {
         return(
           <Grid className={classes.containerLabelSelector} onClick={() => this.selectSlot}>
             <Grid className={eventsSelected.has(newDate) ? classes.labelSelectorActive : classes.labelSelector} >
-              <p style={{cursor:'pointer'}}>{event.label}</p>
+              <p style={{cursor:'pointer', fontWeight: 'initial'}}>{event.label}</p>
             </Grid>
           </Grid>
         )

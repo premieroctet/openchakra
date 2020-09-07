@@ -127,13 +127,13 @@ export default theme => ({
     cursor:'pointer',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   today_style:{
     borderRadius: 50,
     width:25,
     height: 25,
-    border: '2px solid black'
+    border: '1px solid black',
   },
   day_style:{
     width: '100%',
