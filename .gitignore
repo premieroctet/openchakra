@@ -162,8 +162,10 @@ $RECYCLE.BIN/
 static/*
 static/assets/
 !static/service
-static/category
+static/category/*
 !static/prestation
+
+ios
 
 # Vi swap files
 **/*.swp
