@@ -1,8 +1,8 @@
 export default theme => ({
-  textFieldSiret:{
-    '& .MuiInputLabel-outlined':{
-      zIndex: '0 !important'
-    }
+  textFieldSiret: {
+    '& .MuiInputLabel-outlined': {
+      zIndex: '0 !important',
+    },
   },
   loginContainer: {
     alignItems: 'center',

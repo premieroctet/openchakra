@@ -7,9 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
 
-class Notes extends React.Component{
+class Notes extends React.Component {
 
-  render(){
+  render() {
     var {classes, alfred_mode, notes, styleComponent} = this.props;
 
     notes = notes || {};
@@ -30,7 +30,8 @@ class Notes extends React.Component{
                   <Typography>Qualité</Typography>
                 </Grid>
                 <Grid>
-                  <StyledRating name="read-only" value={parseInt(notes.prestation_quality)} readOnly className={classes.ratingStyle}/>
+                  <StyledRating name="read-only" value={parseInt(notes.prestation_quality)} readOnly
+                                className={classes.ratingStyle}/>
                 </Grid>
               </Grid>
             </Box>
@@ -43,7 +44,8 @@ class Notes extends React.Component{
                     <Typography>Prix</Typography>
                   </Grid>
                   <Grid>
-                    <StyledRating name="read-only" value={parseInt(notes.quality_price)} readOnly className={classes.ratingStyle} />
+                    <StyledRating name="read-only" value={parseInt(notes.quality_price)} readOnly
+                                  className={classes.ratingStyle}/>
                   </Grid>
                 </Grid>
               </Box>
@@ -57,16 +59,16 @@ class Notes extends React.Component{
                     <Typography>Relationnel</Typography>
                   </Grid>
                   <Grid>
-                    <StyledRating name="read-only" value={parseInt(notes.relational)} readOnly className={classes.ratingStyle}/>
+                    <StyledRating name="read-only" value={parseInt(notes.relational)} readOnly
+                                  className={classes.ratingStyle}/>
                   </Grid>
                 </Grid>
               </Box>
             </Grid>
           </Grid>
         </Grid>
-      )
-    }
-    else {
+      );
+    } else {
       return (
         <Grid>
           <Grid>
@@ -76,7 +78,8 @@ class Notes extends React.Component{
                   <Typography>Accueil</Typography>
                 </Grid>
                 <Grid>
-                  <StyledRating name="read-only" value={parseInt(notes.reception)} readOnly className={classes.ratingStyle}/>
+                  <StyledRating name="read-only" value={parseInt(notes.reception)} readOnly
+                                className={classes.ratingStyle}/>
                 </Grid>
               </Box>
             </Grid>
@@ -88,7 +91,8 @@ class Notes extends React.Component{
                   <Typography>Précision</Typography>
                 </Grid>
                 <Grid>
-                  <StyledRating name="read-only" value={parseInt(notes.accuracy)} readOnly className={classes.ratingStyle} />
+                  <StyledRating name="read-only" value={parseInt(notes.accuracy)} readOnly
+                                className={classes.ratingStyle}/>
                 </Grid>
               </Box>
             </Grid>
@@ -100,13 +104,14 @@ class Notes extends React.Component{
                   <Typography>Relationnel</Typography>
                 </Grid>
                 <Grid>
-                  <StyledRating name="read-only" value={parseInt(notes.relational)} readOnly className={classes.ratingStyle}/>
+                  <StyledRating name="read-only" value={parseInt(notes.relational)} readOnly
+                                className={classes.ratingStyle}/>
                 </Grid>
               </Box>
             </Grid>
           </Grid>
         </Grid>
-      )
+      );
     }
 
   }
@@ -117,4 +122,4 @@ Notes.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default  withStyles(styles, { withTheme: true })(Notes);
+export default withStyles(styles, {withTheme: true})(Notes);

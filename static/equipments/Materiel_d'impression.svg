@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#EAEAEA;}
 	.st1{fill:#8C8C8C;}
@@ -58,12 +58,13 @@
 	.st52{fill:none;stroke:#EAEAEA;stroke-width:2;stroke-miterlimit:10;}
 	.st53{fill:none;stroke:#8C8C8C;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<rect x="1" class="st0" width="500" height="500"/>
-<g>
-	<rect x="-1" y="367" class="st24" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 161.0898 405.5557)"><tspan x="0" y="0" class="st23 st42 st43">Matériel </tspan><tspan x="-51.5" y="64.8" class="st23 st42 st43">d’impression</tspan></text>
+    <rect class="st0" height="500" width="500" x="1"/>
+    <g>
+	<rect class="st24" height="144" width="500" x="-1" y="367"/>
+        <text transform="matrix(1 0 0 1 161.0898 405.5557)"><tspan class="st23 st42 st43" x="0" y="0">Matériel </tspan>
+            <tspan class="st23 st42 st43" x="-51.5" y="64.8">d’impression</tspan></text>
 </g>
-<g>
+    <g>
 	<g>
 		<path class="st1" d="M340.3,88v52.6h-50.8V136c0-8.8-7.2-16-16-16h-6.9v-12.6c0-10.7-8.7-19.4-19.4-19.4h-24.3
 			c-10.7,0-19.4,8.7-19.4,19.4c0,3.2-2.6,5.7-5.7,5.7h-18.5V88h-15.1c-0.3,78.1-0.5,156.2-0.8,234.3H354V88H340.3z M277.8,129.6

@@ -1,8 +1,8 @@
 export default theme => ({
-  mainContainer : {
-    display : 'flex',
+  mainContainer: {
+    display: 'flex',
     [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column'
+      flexDirection: 'column',
     },
   },
   root: {
@@ -10,13 +10,13 @@ export default theme => ({
     display: 'flex',
     alignItems: 'center',
     [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column-reverse'
+      flexDirection: 'column-reverse',
     },
   },
   input: {
     marginLeft: theme.spacing(1),
     flex: 1,
-    borderBottom: 0
+    borderBottom: 0,
   },
   iconButton: {
     padding: 10,
@@ -25,7 +25,7 @@ export default theme => ({
     height: 28,
     margin: 4,
   },
-  contentInput:{
+  contentInput: {
     display: 'flex',
     width: '50%',
     alignItems: 'center',
@@ -33,36 +33,36 @@ export default theme => ({
       width: '100%',
       marginTop: 10,
       marginBottom: 10,
-      justifyContent : 'center'
+      justifyContent: 'center',
     },
   },
-  contentInputService:{
+  contentInputService: {
     display: 'flex',
     width: '50%',
-    alignItems:'center',
+    alignItems: 'center',
     [theme.breakpoints.down('xs')]: {
       width: '90%',
       marginTop: 10,
       marginBottom: 10,
-      justifyContent : 'center',
+      justifyContent: 'center',
       border: '1px solid rgb(232, 235, 235)',
       borderRadius: 5,
-      backgroundColor: 'rgb(232, 235, 235)'
+      backgroundColor: 'rgb(232, 235, 235)',
     },
   },
-  contentInputAddress:{
-    width:'95%',
+  contentInputAddress: {
+    width: '95%',
     marginLeft: 20,
     [theme.breakpoints.down('xs')]: {
       width: '70%',
-    }
+    },
   },
-  contentImg:{
-    width : '10%',
-    display: 'flex'
+  contentImg: {
+    width: '10%',
+    display: 'flex',
   },
-  imgStyle:{
-    width : 20,
-    height : 20
-  }
+  imgStyle: {
+    width: 20,
+    height: 20,
+  },
 })

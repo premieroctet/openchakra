@@ -1,54 +1,53 @@
-
-export default theme =>({
+export default theme => ({
   root: {
     width: '100%',
   },
-  appBar:{
+  appBar: {
     boxShadow: 'inherit',
   },
-  appBarTransparent:{
+  appBarTransparent: {
     backgroundColor: 'rgba(0,0,0,.5)',
 
   },
-  mainWrapper:{
+  mainWrapper: {
     display: 'flex',
-    width : '100%',
+    width: '100%',
     alignItems: 'center',
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
       alignItems: 'start',
     },
   },
-  logoNavbar:{
+  logoNavbar: {
     width: 110,
-    cursor: "pointer"
+    cursor: 'pointer',
   },
-  rightContentNavBar:{
+  rightContentNavBar: {
     display: 'flex',
     width: '100%',
     justifyContent: 'flex-end',
     alignItems: 'center',
     [theme.breakpoints.only('sm')]: {
-      width: 'auto'
+      width: 'auto',
     },
   },
   search: {
     marginLeft: 20,
     width: '70%',
     [theme.breakpoints.down('xs')]: {
-      width:'100%',
+      width: '100%',
       display: 'flex',
       flexDirection: 'column',
       marginTop: 20,
       marginBottom: 20,
-      marginLeft: 0
+      marginLeft: 0,
     },
   },
-  searchHidden:{
+  searchHidden: {
     marginLeft: 20,
     width: '70%',
     [theme.breakpoints.down('xs')]: {
-      display: 'none'
+      display: 'none',
     },
   },
   sectionDesktop: {
@@ -64,14 +63,14 @@ export default theme =>({
       display: 'none',
     },
     [theme.breakpoints.up('sm')]: {
-      marginLeft: 20
+      marginLeft: 20,
     },
   },
   navbarItem: {
     alignSelf: 'center',
     color: 'black',
     marginRight: '20px',
-    fontSize: '15px'
+    fontSize: '15px',
   },
   navbarLink: {
     textDecoration: 'none',
@@ -81,21 +80,21 @@ export default theme =>({
     width: 40,
     height: 40,
   },
-  buttonLogin:{
+  buttonLogin: {
     marginRight: '20px',
-    border: '1px solid rgba(255, 255, 255, 1)'
+    border: '1px solid rgba(255, 255, 255, 1)',
   },
-  leftContainer:{
+  leftContainer: {
     width: '100%',
     display: 'flex',
-    justifyContent:'space-between',
+    justifyContent: 'space-between',
     marginTop: 10,
-    marginBottom:10,
+    marginBottom: 10,
     [theme.breakpoints.between('sm', 'xl')]: {
-      width: 'auto'
+      width: 'auto',
     },
   },
-  textBlack:{
+  textBlack: {
     color: 'black',
     margin: 0,
     fontSize: 'initial',
@@ -104,7 +103,7 @@ export default theme =>({
       textDecoration: 'none',
     },
   },
-  textWhite:{
+  textWhite: {
     color: 'white',
     margin: 0,
     fontSize: 'initial',
@@ -118,21 +117,21 @@ export default theme =>({
     color: 'black',
     textDecoration: 'none',
   },
-  iconWhite:{
-    color: 'white'
+  iconWhite: {
+    color: 'white',
   },
-  iconBlack:{
-    color: 'black'
+  iconBlack: {
+    color: 'black',
   },
   modal: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    '& .MuiDialog-paper':{
-      margin: '0px !important'
-    }
+    '& .MuiDialog-paper': {
+      margin: '0px !important',
+    },
   },
-  modalWeb:{
+  modalWeb: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -143,31 +142,31 @@ export default theme =>({
     boxShadow: 'theme.shadows[5]',
     margin: '0px !important',
     padding: 0,
-    width: '100%'
+    width: '100%',
   },
   closeButton: {
     position: 'absolute',
     right: theme.spacing(1),
     top: theme.spacing(1),
   },
-  dialogContentContainer:{
-    '& .MuiDialogContent-dividers':{
-      borderTop: 'inherit !important'
-    }
+  dialogContentContainer: {
+    '& .MuiDialogContent-dividers': {
+      borderTop: 'inherit !important',
+    },
   },
-  muidialogContent:{
-     padding: 0
+  muidialogContent: {
+    padding: 0,
   },
-  widthLoginContent:{
-    display:'flex',
-    justifyContent: 'center'
+  widthLoginContent: {
+    display: 'flex',
+    justifyContent: 'center',
   },
-  widthSm:{
+  widthSm: {
     width: 400,
     [theme.breakpoints.down('xs')]: {
-      width: '100%'
+      width: '100%',
     },
 
-  }
+  },
 
 })

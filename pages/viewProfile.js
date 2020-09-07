@@ -13,10 +13,10 @@ import About from '../components/About/About';
 import CardPreview from '../components/CardPreview/CardPreview';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
-const {frenchFormat}=require('../utils/text')
+const {frenchFormat} = require('../utils/text');
 
 
-moment.locale("fr");
+moment.locale('fr');
 
 class viewProfile extends React.Component {
   constructor(props) {
@@ -35,35 +35,35 @@ class viewProfile extends React.Component {
     };
   }
 
-  static getInitialProps({ query: { id } }) {
-    return { user_id: id };
+  static getInitialProps({query: {id}}) {
+    return {user_id: id};
   }
 
   componentDidMount() {
     const user_id = this.props.user_id;
-    this.setState({ user_id: user_id });
+    this.setState({user_id: user_id});
 
     axios.get('/myAlfred/api/users/current').then(res => {
       let user = res.data;
-      if(user) {
+      if (user) {
         this.setState({
           userState: true,
           userId: user._id,
-        })
+        });
       }
     }).catch(function (error) {
       console.log(error);
     });
 
     axios.get(`/myAlfred/api/shop/alfred/${this.props.user_id}`)
-      .then( response  =>  {
+      .then(response => {
         let shop = response.data;
         this.setState({
           alfred: shop.alfred,
           idAlfred: shop.alfred._id,
           languages: shop.alfred.languages,
           services: shop.services,
-          shop:shop,
+          shop: shop,
         });
 
       })
@@ -72,46 +72,50 @@ class viewProfile extends React.Component {
       });
 
     axios
-      .get("/myAlfred/api/users/users/" + this.props.user_id)
+      .get('/myAlfred/api/users/users/' + this.props.user_id)
       .then(res => {
-        this.setState({ user_infos: res.data });
+        this.setState({user_infos: res.data});
 
         axios
           .get(
-              "/myAlfred/api/reviews/profile/customerReviewsCurrent/" +
-              this.props.user_id
+            '/myAlfred/api/reviews/profile/customerReviewsCurrent/' +
+            this.props.user_id,
           )
-          .then(res => this.setState({ customerReviews: res.data })).catch(error => {console.error(error)});
+          .then(res => this.setState({customerReviews: res.data})).catch(error => {
+          console.error(error);
+        });
 
         axios
           .get(
-              "/myAlfred/api/reviews/profile/alfredReviewsCurrent/" +
-              this.props.user_id
+            '/myAlfred/api/reviews/profile/alfredReviewsCurrent/' +
+            this.props.user_id,
           )
-          .then(res => this.setState({ alfredReviews: res.data }));
+          .then(res => this.setState({alfredReviews: res.data}));
       })
-      .catch(err => {console.error(err)});
+      .catch(err => {
+        console.error(err);
+      });
   }
 
   handleClick() {
-    this.setState({ depliage: true });
+    this.setState({depliage: true});
   }
 
   handleClickCustomerComments = () => {
     if (!this.state.customerComments) {
-      this.setState({ customerComments: true })
+      this.setState({customerComments: true});
     }
   };
 
   handleClickAlfredComments = () => {
     if (this.state.customerComments) {
-      this.setState({ customerComments: false });
+      this.setState({customerComments: false});
     }
   };
 
   render() {
-    const { classes } = this.props;
-    const { customerComments, user_infos } = this.state;
+    const {classes} = this.props;
+    const {customerComments, user_infos} = this.state;
 
     return (
       <Fragment>
@@ -121,18 +125,18 @@ class viewProfile extends React.Component {
               <Grid container className={classes.bigContainer}>
                 {/*//////////////////////////////Container de gauche///////////////////////////////////////////////////////////*/}
 
-                <Grid container style={{ marginBottom: "10%" }}>
+                <Grid container style={{marginBottom: '10%'}}>
                   <Grid className={classes.toggle} item>
                     <Grid container className={classes.mainContainer}>
                       <Grid item>
                         <Grid>
                           <Grid container style={{justifyContent: 'center'}}>
                             <Grid item className={classes.itemAvatar}>
-                              <UserAvatar classes={'avatarLetter'} user={user_infos} className={classes.avatarLetter} />
+                              <UserAvatar classes={'avatarLetter'} user={user_infos} className={classes.avatarLetter}/>
                             </Grid>
-                           <Grid style={{marginLeft: "auto", marginRight: "auto", marginTop: 50}}>
-                             <About alfred={user_infos._id} profil={false} needTitle={false}/>
-                           </Grid>
+                            <Grid style={{marginLeft: 'auto', marginRight: 'auto', marginTop: 50}}>
+                              <About alfred={user_infos._id} profil={false} needTitle={false}/>
+                            </Grid>
                           </Grid>
                         </Grid>
                       </Grid>
@@ -144,21 +148,22 @@ class viewProfile extends React.Component {
                   <Grid className={classes.rightcontent} item>
                     <Grid container>
                       <Grid item className={classes.largeWidth}>
-                        <Typography variant={"h3"} className={classes.titleAbout}>
+                        <Typography variant={'h3'} className={classes.titleAbout}>
                           Bonjour je m'appelle {user_infos.firstname}
                         </Typography>
                         <Grid item xs={12} className={classes.containerDescription}>
-                          <Typography style={{ fontSize: "1rem" }}>{user_infos.description ? user_infos.description : "Aucune description"   }</Typography>
+                          <Typography
+                            style={{fontSize: '1rem'}}>{user_infos.description ? user_infos.description : 'Aucune description'}</Typography>
                         </Grid>
                       </Grid>
                       <Grid className={classes.servicesContainer}>
                         <Grid className={classes.largeWidth}>
                           <Typography variant="h3" className={classes.titleAbout}>
-                            { frenchFormat(`Les services de ${user_infos.firstname}`) }
+                            {frenchFormat(`Les services de ${user_infos.firstname}`)}
                           </Typography>
                         </Grid>
                         <Grid container className={classes.cardPreviewContainer} spacing={2}>
-                          { Object.keys(this.state.services).map( result => {
+                          {Object.keys(this.state.services).map(result => {
                             return (
                               <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
                                 <CardPreview
@@ -169,31 +174,32 @@ class viewProfile extends React.Component {
                                   services={this.state.services[result]._id}
                                   needRefresh={this.needRefresh}/>
                               </Grid>
-                            )
+                            );
                           })
                           }
                         </Grid>
                       </Grid>
 
-                      <Grid item xs={12} style={{ marginTop: "3%" }}>
+                      <Grid item xs={12} style={{marginTop: '3%'}}>
                         <Typography variant="h3" className={classes.titleAbout}>
                           Vérifications
                         </Typography>
                       </Grid>
-                      { !(user_infos.id_confirmed || user_infos.email || user_infos.phone )? (
-                        <Grid style={{ marginTop: "3%" }}>
-                          <Typography variant="h3" className={classes.titleAbout}>Cet utilisateur n'a aucune vérification</Typography>
+                      {!(user_infos.id_confirmed || user_infos.email || user_infos.phone) ? (
+                        <Grid style={{marginTop: '3%'}}>
+                          <Typography variant="h3" className={classes.titleAbout}>Cet utilisateur n'a aucune
+                            vérification</Typography>
                         </Grid>
                       ) : null}
                       <Grid style={{marginLeft: 15, marginTop: 15}}>
                         {user_infos.id_confirmed ? (
-                          <Grid item style={{ marginTop: "15px" }}>
+                          <Grid item style={{marginTop: '15px'}}>
                             <Grid container>
-                              <Grid item style={{ textAlign: "center" }}>
-                                <CheckCircleIcon color={"primary"}/>
+                              <Grid item style={{textAlign: 'center'}}>
+                                <CheckCircleIcon color={'primary'}/>
                               </Grid>
-                              <Grid item style={{ marginLeft: "15px" }}>
-                                <Typography style={{ fontSize: "1rem" }}>
+                              <Grid item style={{marginLeft: '15px'}}>
+                                <Typography style={{fontSize: '1rem'}}>
                                   Pièce d’identité
                                 </Typography>
                               </Grid>
@@ -201,13 +207,13 @@ class viewProfile extends React.Component {
                           </Grid>
                         ) : null}
                         {user_infos.phone ? (
-                          <Grid item style={{ marginTop: "15px" }}>
+                          <Grid item style={{marginTop: '15px'}}>
                             <Grid container>
-                              <Grid item style={{ textAlign: "center" }}>
-                                <CheckCircleIcon color={"primary"}/>
+                              <Grid item style={{textAlign: 'center'}}>
+                                <CheckCircleIcon color={'primary'}/>
                               </Grid>
-                              <Grid item style={{ marginLeft: "15px" }}>
-                                <Typography style={{ fontSize: "1rem" }}>
+                              <Grid item style={{marginLeft: '15px'}}>
+                                <Typography style={{fontSize: '1rem'}}>
                                   Téléphone
                                 </Typography>
                               </Grid>
@@ -215,13 +221,13 @@ class viewProfile extends React.Component {
                           </Grid>
                         ) : null}
                         {user_infos.email ? (
-                          <Grid item style={{ marginTop: "15px" }}>
+                          <Grid item style={{marginTop: '15px'}}>
                             <Grid container>
-                              <Grid item style={{ textAlign: "center" }}>
-                                <CheckCircleIcon color={"primary"}/>
+                              <Grid item style={{textAlign: 'center'}}>
+                                <CheckCircleIcon color={'primary'}/>
                               </Grid>
-                              <Grid item style={{ marginLeft: "15px" }}>
-                                <Typography style={{ fontSize: "1rem" }}>
+                              <Grid item style={{marginLeft: '15px'}}>
+                                <Typography style={{fontSize: '1rem'}}>
                                   Adresse Email
                                 </Typography>
                               </Grid>
@@ -231,18 +237,23 @@ class viewProfile extends React.Component {
                       </Grid>
 
 
-
                       <Grid container className={classes.tabweb}>
-                        <Grid item xs={12} style={{ marginTop: "3%" }}>
+                        <Grid item xs={12} style={{marginTop: '3%'}}>
                           <Typography variant="h3" className={classes.titleAbout}>
                             Commentaires
                           </Typography>
                         </Grid>
-                        <Grid item xs={6} style={{ textAlign: "center" }}>
+                        <Grid item xs={6} style={{textAlign: 'center'}}>
                           <div>
                             <h2
                               onClick={this.handleClickCustomerComments}
-                              style={{ fontSize: "1.1rem", color: "#828181", fontWeight: "100", cursor: "pointer", marginLeft: "0%" }}
+                              style={{
+                                fontSize: '1.1rem',
+                                color: '#828181',
+                                fontWeight: '100',
+                                cursor: 'pointer',
+                                marginLeft: '0%',
+                              }}
                             >
                               De la part des clients
                             </h2>
@@ -251,31 +262,37 @@ class viewProfile extends React.Component {
                         <Grid item xs={6}>
                           <h2
                             onClick={this.handleClickAlfredComments}
-                            style={{ fontSize: "1.1rem", color: "#828181", fontWeight: "100", cursor: "pointer", marginLeft: "0%" }}
+                            style={{
+                              fontSize: '1.1rem',
+                              color: '#828181',
+                              fontWeight: '100',
+                              cursor: 'pointer',
+                              marginLeft: '0%',
+                            }}
                           >
                             De la part des Alfred
                           </h2>
-                          <br />
+                          <br/>
                         </Grid>
 
                         <Grid item xs={6}>
                           <hr
                             onClick={this.handleClickCustomerComments}
                             className={customerComments ? classes.trait3 : classes.trait1}
-                            style={{ marginTop: "-25px", cursor: "pointer" }}
+                            style={{marginTop: '-25px', cursor: 'pointer'}}
                           />
                         </Grid>
                         <Grid item xs={6}>
                           <hr
                             onClick={this.handleClickAlfredComments}
                             className={customerComments ? classes.trait2 : classes.trait}
-                            style={{ marginTop: "-25px", cursor: "pointer" }}
+                            style={{marginTop: '-25px', cursor: 'pointer'}}
                           />
                         </Grid>
                         <Grid container>
-                        <Grid container style={{ marginTop: "20px" }} className={classes.tabweb}>
-                          <Commentary user_id={this.props.user_id} alfred_mode={customerComments} key={moment()}/>
-                        </Grid>
+                          <Grid container style={{marginTop: '20px'}} className={classes.tabweb}>
+                            <Commentary user_id={this.props.user_id} alfred_mode={customerComments} key={moment()}/>
+                          </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -286,7 +303,7 @@ class viewProfile extends React.Component {
               </Grid>
             </Layout>
 
-            <Footer />
+            <Footer/>
           </Grid>
         )}
       </Fragment>

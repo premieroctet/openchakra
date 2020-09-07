@@ -49,7 +49,7 @@ const styles = theme => ({
 
 const popularCategoriesCard = (props) => {
   // eslint-disable-next-line object-curly-newline
-  const { img, classes, categorie} = props;
+  const {img, classes, categorie} = props;
 
   return (
     <Card className={classes.card}>
@@ -70,13 +70,13 @@ const popularCategoriesCard = (props) => {
               </Grid>*/}
               <Grid item xs={3} className={classes.center}>
                 {/*<Badge badgeContent={number} color="primary">*/}
-              {/*<Avatar alt="Unknown" src={Avatar}/>*/}
+                {/*<Avatar alt="Unknown" src={Avatar}/>*/}
                 {/*<People style={{color: 'lightgrey'}}/>*/}
-              {/*</Badge>*/}
+                {/*</Badge>*/}
               </Grid>
             </Grid>
           </Grid>
-          </CardContent>
+        </CardContent>
       </CardActionArea>
     </Card>
   );

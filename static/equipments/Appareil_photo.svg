@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#EAEAEA;}
 	.st1{fill:#8C8C8C;}
@@ -58,20 +58,20 @@
 	.st52{fill:none;stroke:#EAEAEA;stroke-width:2;stroke-miterlimit:10;}
 	.st53{fill:none;stroke:#8C8C8C;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<rect x="-1" y="-1" class="st0" width="500" height="500"/>
-<g>
+    <rect class="st0" height="500" width="500" x="-1" y="-1"/>
+    <g>
 	<g>
 		<path class="st1" d="M333.3,182.8c-2.3,0-4.1,1.8-4.1,4.1c0,2.5,2.1,4.4,4.6,4.1c2.1-0.2,3.7-2,3.7-4.1
 			C337.4,184.6,335.6,182.8,333.3,182.8z"/>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<path class="st1" d="M247.9,149.6c-29.7,0-53.9,24.2-53.9,53.9s24.2,53.9,53.9,53.9s53.9-24.2,53.9-53.9S277.6,149.6,247.9,149.6z
 			 M247.9,249.1c-25.1,0-45.6-20.5-45.6-45.6s20.5-45.6,45.6-45.6s45.6,20.5,45.6,45.6S273,249.1,247.9,249.1z"/>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<path class="st1" d="M341.6,141.3h-4.1c-8.3,0-16.6,0-24.9,0H281c-4-2.1-8.2-3.9-12.4-5.2v-11.4H281c6.9,0,12.4-5.6,12.4-12.4
 			V87.4c0-6.9-5.6-12.4-12.4-12.4h-66.3c-6.9,0-12.4,5.6-12.4,12.4v24.9c0,6.9,5.6,12.4,12.4,12.4h12.4v11.4
@@ -87,14 +87,14 @@
 			h-38c-3.9-6.3-8.8-11.9-14.4-16.6h48.3c2.3,0,4.1,1.9,4.1,4.1V166.2z"/>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<path class="st1" d="M222.7,91.6c-2.3,0-4.1,1.9-4.1,4.1v8.3c0,2.3,1.9,4.1,4.1,4.1c2.3,0,4.1-1.9,4.1-4.1v-8.3
 			C226.9,93.4,225,91.6,222.7,91.6z"/>
 	</g>
 </g>
-<g>
-	<rect x="-8" y="366" class="st24" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 85.1587 404.5557)" class="st23 st35 st36">Appareil photo</text>
+    <g>
+	<rect class="st24" height="144" width="500" x="-8" y="366"/>
+        <text class="st23 st35 st36" transform="matrix(1 0 0 1 85.1587 404.5557)">Appareil photo</text>
 </g>
 </svg>

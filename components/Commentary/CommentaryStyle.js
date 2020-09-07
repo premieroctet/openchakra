@@ -1,99 +1,99 @@
 export default theme => ({
-  avatarSize:{
+  avatarSize: {
     width: 100,
-    height: 100
+    height: 100,
   },
-  cardSkills:{
+  cardSkills: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: 150
+    width: 150,
   },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: '90%'
+    width: '90%',
   },
-  picsSize:{
+  picsSize: {
     height: 70,
-    width: 70
+    width: 70,
   },
-  labelRating:{
+  labelRating: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   },
-  ratingStyle:{
-    marginLeft: '10px'
+  ratingStyle: {
+    marginLeft: '10px',
   },
-  hrSeparator:{
+  hrSeparator: {
     width: '100%',
     marginTop: 30,
-    color : 'rgb(80, 80, 80, 0.2)'
+    color: 'rgb(80, 80, 80, 0.2)',
   },
-  titleSkills:{
-    fontSize: "1.6rem",
-    color: "rgba(84,89,95,0.95)",
+  titleSkills: {
+    fontSize: '1.6rem',
+    color: 'rgba(84,89,95,0.95)',
     letterSpacing: -1,
-    fontWeight: "bold"
+    fontWeight: 'bold',
   },
   flexContainer: {
     display: 'flex',
-    alignItems : 'center',
+    alignItems: 'center',
     margin: 0,
-    padding: 0
+    padding: 0,
   },
   badge: {
-    color: 'white'
+    color: 'white',
   },
-  containerAvatarAndAbout:{
+  containerAvatarAndAbout: {
     width: '100%',
     marginTop: 15,
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('xs')]: {
       marginTop: '10%',
 
-    }
+    },
 
   },
-  containerGeneralNotes:{
-      width: '100%'
+  containerGeneralNotes: {
+    width: '100%',
 
   },
-  mainContainer:{
+  mainContainer: {
     display: 'flex',
     width: '100%',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
-  containerSkills:{
+  containerSkills: {
     width: '100%',
     display: 'flex',
-    marginTop: '5%'
+    marginTop: '5%',
   },
-  mainContainerAvatarAndAbout:{
-    display : 'flex',
+  mainContainerAvatarAndAbout: {
+    display: 'flex',
     marginTop: 30,
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
-  containerNotes:{
-    display:'flex',
+  containerNotes: {
+    display: 'flex',
     flexDirection: 'column',
     width: '50%',
     marginLeft: 10,
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('xs')]: {
       width: '100%',
-      marginLeft: 'inherit'
-    }
+      marginLeft: 'inherit',
+    },
   },
-  containerAlfredMode:{
+  containerAlfredMode: {
     width: '100%',
     display: 'flex',
   },
-  containerNotesComponent:{
+  containerNotesComponent: {
     marginTop: 30,
-    marginLeft:5,
-    [theme.breakpoints.down('xs')]:{
-      marginLeft:0,
-      display:'flex',
-      justifyContent : 'center'
-    }
-  }
+    marginLeft: 5,
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: 0,
+      display: 'flex',
+      justifyContent: 'center',
+    },
+  },
 })

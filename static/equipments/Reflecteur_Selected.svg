@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#4FBDD7;}
 	.st1{fill:#EAEAEA;}
@@ -51,8 +51,8 @@
 	.st45{fill:none;stroke:#FFFFFF;stroke-width:9;stroke-miterlimit:10;}
 	.st46{fill:none;stroke:#4FBDD7;stroke-width:3;stroke-miterlimit:10;}
 </style>
-<rect x="-1" class="st0" width="505" height="500"/>
-<g>
+    <rect class="st0" height="500" width="505" x="-1"/>
+    <g>
 	<g>
 		<path class="st2" d="M283.7,217l10.3-10.6l-68.7-67.1c9.9-7.6,19.5-10.7,19.6-10.7l4.8-4.6c0.1-0.2,5.4-15.2,16.3-26.2
 			c6.5-6.5,14.1-11.4,22.6-14.6l1.2-13.2c-19.9-12-43.7-17.1-66.9-14.4C199,58.5,177.4,69,160.3,86c-17.1,17.1-27.6,38.7-30.3,62.7
@@ -63,8 +63,8 @@
 			c-5,3.1-9.6,6.8-13.9,11.1c-10.1,10.1-16.1,22.5-18.5,28.4C231.3,118.2,219.2,123.8,208.6,134.4z"/>
 	</g>
 </g>
-<g>
-	<rect x="-3" y="366" class="st30" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 137.0303 404.5557)" class="st2 st31 st32">Réflecteur</text>
+    <g>
+	<rect class="st30" height="144" width="500" x="-3" y="366"/>
+        <text class="st2 st31 st32" transform="matrix(1 0 0 1 137.0303 404.5557)">Réflecteur</text>
 </g>
 </svg>

@@ -1,23 +1,21 @@
 const geolib = require('geolib');
 const isEmpty = require('../server/validation/is-empty');
-const { createRegExpOR, createRegExpAND } = require('./text')
+const {createRegExpOR, createRegExpAND} = require('./text');
 
 
 const isServiceAroundGPS = (serviceUser, coordinates) => {
 
   const serviceGPS = serviceUser.service_address.gps;
   if (!serviceGPS) {
-    console.warn("Incorect GPS in "+serviceUser._id+":"+JSON.stringify(serviceGPS));
+    console.warn('Incorect GPS in ' + serviceUser._id + ':' + JSON.stringify(serviceGPS));
     return false;
-  }
-  else {
+  } else {
     const latAlfred = serviceGPS.lat;
     const lngAlfred = serviceGPS.lng;
     if (isEmpty(latAlfred) || isEmpty(lngAlfred)) {
-      console.warn("Incorrect GPS in "+serviceUser._id+":"+JSON.stringify(serviceGPS));
+      console.warn('Incorrect GPS in ' + serviceUser._id + ':' + JSON.stringify(serviceGPS));
       return false;
-    }
-    else {
+    } else {
       // FIX : à vérifier
       /*const isNear = geolib.isPointWithinRadius({latitude: latUser, longitude: lngUser},{latitude:latAlfred,longitude:lngAlfred},(serviceUser.perimeter*1000));
       if(!isNear) {
@@ -25,24 +23,23 @@ const isServiceAroundGPS = (serviceUser, coordinates) => {
       service.splice(removeIndex, 1);
       }*/
       try {
-        const dist= geolib.getDistance(
-          {latitude:coordinates.lat.toString(), longitude:coordinates.lng.toString()},
-          {latitude:latAlfred.toString(), longitude: lngAlfred.toString()})
-        var distance = geolib.convertDistance( dist, 'km');
+        const dist = geolib.getDistance(
+          {latitude: coordinates.lat.toString(), longitude: coordinates.lng.toString()},
+          {latitude: latAlfred.toString(), longitude: lngAlfred.toString()});
+        var distance = geolib.convertDistance(dist, 'km');
         var in_perimeter = distance < serviceUser.perimeter;
         return in_perimeter;
-      }
-      catch (err) {
+      } catch (err) {
         console.error(`Error computing distance between ${coordinates} and ${latAlfred}/${lngAlfred}:${JSON.stringify(err)}`);
         return false;
       }
     }
   }
-}
+};
 
 isServiceAtAlfredOrVisio = su => {
   return su.location.alfred || su.location.visio;
-}
+};
 
 
 const sortfn = gps => {
@@ -50,50 +47,48 @@ const sortfn = gps => {
     var d1, d2;
     try {
       d1 = geolib.getDistance(gps, su1.service_address.gps);
-    }
-    catch (e) {
-      console.warn(`Warning: GPS incorrect pour serviceUser ${su1._id}`)
+    } catch (e) {
+      console.warn(`Warning: GPS incorrect pour serviceUser ${su1._id}`);
       d1 = 100000;
     }
     try {
       d2 = geolib.getDistance(gps, su2.service_address.gps);
-    }
-    catch (e) {
-      console.warn(`Warning: GPS incorrect pour serviceUser ${su2._id}`)
+    } catch (e) {
+      console.warn(`Warning: GPS incorrect pour serviceUser ${su2._id}`);
       d2 = 100000;
     }
-    return d1-d2;
-  }
+    return d1 - d2;
+  };
   return sort;
-}
+};
 
 
 const filterServicesGPS = (serviceUsers, coordinates, restrict) => {
-  var filteredServiceUsers=serviceUsers.filter( su => isServiceAtAlfredOrVisio(su) || !restrict || isServiceAroundGPS(su, coordinates) );
+  var filteredServiceUsers = serviceUsers.filter(su => isServiceAtAlfredOrVisio(su) || !restrict || isServiceAroundGPS(su, coordinates));
   filteredServiceUsers.sort(sortfn(coordinates));
   return filteredServiceUsers;
-}
+};
 
 // Check ANDed words first, then ORed if not result
 const filterServicesKeyword = (serviceUsers, keyword) => {
-  const regExpFunctions=[createRegExpAND, createRegExpOR]
+  const regExpFunctions = [createRegExpAND, createRegExpOR];
 
-  for (i=0; i<regExpFunctions.length; i++){
-    const regExpFn = regExpFunctions[i]
-    const regexp = regExpFn(keyword)
-    const filteredServices = serviceUsers.filter( su => {
-        return regexp.test(su.service ? su.service.s_label : '') ||
-               regexp.test(su.service ? su.service.category.s_label : '') ||
-               su.prestations.some(p => p.prestation  &&
-                 (regexp.test(p.prestation.s_label) ||
-                 (p.prestation.job && regexp.test(p.prestation.job.s_label)))
-               )
-    })
-    if (filteredServices.length>0) {
-      return filteredServices
+  for (i = 0; i < regExpFunctions.length; i++) {
+    const regExpFn = regExpFunctions[i];
+    const regexp = regExpFn(keyword);
+    const filteredServices = serviceUsers.filter(su => {
+      return regexp.test(su.service ? su.service.s_label : '') ||
+        regexp.test(su.service ? su.service.category.s_label : '') ||
+        su.prestations.some(p => p.prestation &&
+          (regexp.test(p.prestation.s_label) ||
+            (p.prestation.job && regexp.test(p.prestation.job.s_label))),
+        );
+    });
+    if (filteredServices.length > 0) {
+      return filteredServices;
     }
   }
-  return []
-}
+  return [];
+};
 
-module.exports = { filterServicesGPS, filterServicesKeyword };
+module.exports = {filterServicesGPS, filterServicesKeyword};

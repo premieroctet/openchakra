@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 
 const button = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { text, variant } = props;
+  const {text, variant} = props;
   return (
     <Button variant={variant}>
       {text}

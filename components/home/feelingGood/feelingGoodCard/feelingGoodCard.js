@@ -17,11 +17,11 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     borderRadius: 0,
-    padding:10,
-    border:'solid thin #ccc',
-    backgroundColor:'transparent',
-    textAlign:'center',
-    margin:10,
+    padding: 10,
+    border: 'solid thin #ccc',
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+    margin: 10,
     boxShadow: '1px 3px 1px transparent',
     height: '90%',
     [theme.breakpoints.down('xs')]: { // tel
@@ -37,7 +37,7 @@ const styles = theme => ({
   gridContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    textAlign:'center'
+    textAlign: 'center',
   },
   gridButton: {
     display: 'flex',
@@ -55,7 +55,7 @@ const styles = theme => ({
   },
   text: {
     paddingTop: '.7rem',
-    textAlign:'center',
+    textAlign: 'center',
   },
   whiteLogo: {
     margin: '.5rem',
@@ -102,48 +102,46 @@ const styles = theme => ({
 });
 
 
-
-class FeelingGoodCard extends React.Component{
+class FeelingGoodCard extends React.Component {
 
   render() {
     // eslint-disable-next-line object-curly-newline
-    const { classes, img, desc, title,alfred,avatar,score,shop,id,gps } = this.props;
+    const {classes, img, desc, title, alfred, avatar, score, shop, id, gps} = this.props;
 
     return (
 
 
-      <Link href={'search?search=1&service='+id+'&gps='+JSON.stringify(gps)}>
-      <Card className={classes.card}>
-        <CardActionArea>
+      <Link href={'search?search=1&service=' + id + '&gps=' + JSON.stringify(gps)}>
+        <Card className={classes.card}>
+          <CardActionArea>
 
-        <CardMedia className={classes.media} image={img}>
-          <div className={classes.lightOverlay}>
-            <Grid container className={classes.avatarContainer}>
-              <Grid container className={classes.gridContainer}>
+            <CardMedia className={classes.media} image={img}>
+              <div className={classes.lightOverlay}>
+                <Grid container className={classes.avatarContainer}>
+                  <Grid container className={classes.gridContainer}>
+
+                  </Grid>
+                </Grid>
+              </div>
+            </CardMedia>
+            <CardContent>
+              <Typography variant="h6" component="h2" style={{textAlign: 'center'}}>
+                <center>{title}</center>
+              </Typography>
+
+              <Grid container>
+
 
               </Grid>
-            </Grid>
-          </div>
-        </CardMedia>
-        <CardContent>
-          <Typography variant="h6" component="h2" style={{textAlign:'center'}}>
-            <center>{title}</center>
-          </Typography>
 
-          <Grid container>
+            </CardContent>
 
+          </CardActionArea>
 
-
-          </Grid>
-
-        </CardContent>
-
-      </CardActionArea>
-
-    </Card>
-    </Link>
-  )
-}
+        </Card>
+      </Link>
+    );
+  }
 
 };
 
@@ -153,6 +151,7 @@ FeelingGoodCard.propTypes = {
 };
 
 export default withStyles(styles)(FeelingGoodCard);
+
 function newFunction() {
   return <Fragment></Fragment>;
 }

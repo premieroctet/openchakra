@@ -15,9 +15,9 @@ const jwt = require('jsonwebtoken');
 
 const styles = theme => ({
   container: {
-    margin:'auto',
+    margin: 'auto',
     fontFamily: 'Helvetica',
-      // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
+    // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
       width: 920,
     },
@@ -31,7 +31,7 @@ const styles = theme => ({
   media: {
     height: 400,
     borderRadius: '20px',
-    margin: '1%'
+    margin: '1%',
   },
   card1: {
     marginTop: '3%',
@@ -67,7 +67,7 @@ const styles = theme => ({
     },
     [theme.breakpoints.up('sm')]: { // medium: 960px or larger
       display: 'flex',
-      width: '100%'
+      width: '100%',
     },
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
       display: 'none',
@@ -103,21 +103,21 @@ const styles = theme => ({
   },
 });
 
-class becomeAlfred extends React.Component{
+class becomeAlfred extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      logged:false,
+      logged: false,
       alfred: false,
-      userId: ""
-    }
+      userId: '',
+    };
   }
 
   componentDidMount() {
-    const token = cookie.load('token')
+    const token = cookie.load('token');
     if (token) {
-      this.setState({logged:true});
+      this.setState({logged: true});
       const token2 = token.split(' ')[1];
       const decode = jwt.decode(token2);
       this.setState({alfred: decode.is_alfred});
@@ -127,9 +127,9 @@ class becomeAlfred extends React.Component{
         .get('/myAlfred/api/users/current')
         .then(res => {
           let user = res.data;
-          this.setState({user:user, alfred:user.is_alfred, userId: user._id});
+          this.setState({user: user, alfred: user.is_alfred, userId: user._id});
         })
-        .catch(err => console.error(err))
+        .catch(err => console.error(err));
     }
   }
 
@@ -137,39 +137,40 @@ class becomeAlfred extends React.Component{
     const {classes} = this.props;
 
     return (
-        <Fragment>
-          <Grid container className={classes.container} wrap="wrap">
-            <Grid item xs={12}>
-              <Card className={classes.card1}>
-                <CardMedia
-                    className={classes.cover}
-                    image='/static/becomeAlfred.jpg'
-                    title="Live from space album cover"
-                />
-                <Grid item xs={12} className={classes.details}>
-                  <CardContent className={classes.content}>
-                    <Typography component="h5" variant="h5" className={classes.padding}>
-                      Devenir Alfred
-                    </Typography>
-                    <Typography style={{width: '100%'}} variant="body1" color="textSecondary"
-                                className={classes.padding}>
-                      Créez en quelques minutes votre espace Alfred,
-                      répertoriez vos services, indiquez vos disponibilités,
-                      vos tarifs et profitez d’un complément de revenu !
-                    </Typography>
-                    <Link href={this.state.logged && this.state.alfred ? `/shop?id_alfred=${this.state.userId}`  : this.state.logged && !this.state.alfred ? '/creaShop/creaShop' : '/signup'}>
-                      <a style={{textDecoration:'none'}}>
-                    <Button variant="contained" color={"primary"} className={classes.margin}>
-                      Proposer mes services
-                    </Button>
-                      </a>
-                    </Link>
-                  </CardContent>
-                </Grid>
-              </Card>
-            </Grid>
+      <Fragment>
+        <Grid container className={classes.container} wrap="wrap">
+          <Grid item xs={12}>
+            <Card className={classes.card1}>
+              <CardMedia
+                className={classes.cover}
+                image='/static/becomeAlfred.jpg'
+                title="Live from space album cover"
+              />
+              <Grid item xs={12} className={classes.details}>
+                <CardContent className={classes.content}>
+                  <Typography component="h5" variant="h5" className={classes.padding}>
+                    Devenir Alfred
+                  </Typography>
+                  <Typography style={{width: '100%'}} variant="body1" color="textSecondary"
+                              className={classes.padding}>
+                    Créez en quelques minutes votre espace Alfred,
+                    répertoriez vos services, indiquez vos disponibilités,
+                    vos tarifs et profitez d’un complément de revenu !
+                  </Typography>
+                  <Link
+                    href={this.state.logged && this.state.alfred ? `/shop?id_alfred=${this.state.userId}` : this.state.logged && !this.state.alfred ? '/creaShop/creaShop' : '/signup'}>
+                    <a style={{textDecoration: 'none'}}>
+                      <Button variant="contained" color={'primary'} className={classes.margin}>
+                        Proposer mes services
+                      </Button>
+                    </a>
+                  </Link>
+                </CardContent>
+              </Grid>
+            </Card>
           </Grid>
-        </Fragment>
+        </Grid>
+      </Fragment>
     );
   }
 }

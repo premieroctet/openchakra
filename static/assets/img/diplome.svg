@@ -1,39 +1,49 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="21.305" height="18.675" viewBox="0 0 26.305 23.675">
-  <g id="Groupe_1739" data-name="Groupe 1739" transform="translate(0 -24)">
-    <g id="Groupe_1597" data-name="Groupe 1597" transform="translate(0 24)">
-      <g id="Groupe_1596" data-name="Groupe 1596" transform="translate(0 0)">
-        <path id="Tracé_13252" data-name="Tracé 13252" d="M24.551,24H4.384a1.754,1.754,0,0,0-1.754,1.754V39.783H.438A.438.438,0,0,0,0,40.221a1.754,1.754,0,0,0,1.754,1.754H14.468v5.261a.438.438,0,0,0,.748.31l2.321-2.321,2.321,2.321a.438.438,0,0,0,.31.128.433.433,0,0,0,.168-.033.438.438,0,0,0,.271-.405V41.975h1.315a1.754,1.754,0,0,0,1.754-1.754V26.192h2.192a.438.438,0,0,0,.438-.438A1.754,1.754,0,0,0,24.551,24Zm-.759,1.315a.877.877,0,0,1,1.518,0Z" transform="translate(0 -24)" fill="#f87280"/>
-      </g>
+<svg height="18.675" viewBox="0 0 26.305 23.675" width="21.305" xmlns="http://www.w3.org/2000/svg">
+    <g data-name="Groupe 1739" id="Groupe_1739" transform="translate(0 -24)">
+        <g data-name="Groupe 1597" id="Groupe_1597" transform="translate(0 24)">
+            <g data-name="Groupe 1596" id="Groupe_1596" transform="translate(0 0)">
+                <path d="M24.551,24H4.384a1.754,1.754,0,0,0-1.754,1.754V39.783H.438A.438.438,0,0,0,0,40.221a1.754,1.754,0,0,0,1.754,1.754H14.468v5.261a.438.438,0,0,0,.748.31l2.321-2.321,2.321,2.321a.438.438,0,0,0,.31.128.433.433,0,0,0,.168-.033.438.438,0,0,0,.271-.405V41.975h1.315a1.754,1.754,0,0,0,1.754-1.754V26.192h2.192a.438.438,0,0,0,.438-.438A1.754,1.754,0,0,0,24.551,24Zm-.759,1.315a.877.877,0,0,1,1.518,0Z" data-name="Tracé 13252"
+                      fill="#f87280"
+                      id="Tracé_13252" transform="translate(0 -24)"/>
+            </g>
+        </g>
+        <g data-name="Groupe 1599" id="Groupe_1599" transform="translate(13.345 32.336)">
+            <g data-name="Groupe 1598" id="Groupe_1598" transform="translate(0 0)">
+                <path d="M251.837,181.493l-.562-1.006.564-1.005a.438.438,0,0,0-.167-.6l-.033-.017-1.047-.479-.135-1.144a.438.438,0,0,0-.487-.384l-.033.005-1.13.224-.782-.847a.452.452,0,0,0-.639,0l-.005,0-.782.847-1.13-.224a.438.438,0,0,0-.515.345q0,.017-.005.033l-.135,1.144-1.046.48a.438.438,0,0,0-.216.581q.008.017.017.033l.564,1-.564,1.005a.438.438,0,0,0,.167.6l.033.017,1.046.48.135,1.145a.438.438,0,0,0,.487.384l.033-.005,1.13-.224.782.847a.438.438,0,0,0,.62.024l.024-.024.782-.847,1.13.224a.432.432,0,0,0,.343-.075.438.438,0,0,0,.175-.3l.135-1.144,1.047-.48a.438.438,0,0,0,.216-.581C251.848,181.515,251.843,181.5,251.837,181.493Zm-1.446-.792.451.8-.838.384a.438.438,0,0,0-.253.347l-.108.918-.906-.179a.432.432,0,0,0-.407.132l-.626.679-.626-.678a.438.438,0,0,0-.322-.141.4.4,0,0,0-.085.009l-.906.179-.108-.918a.438.438,0,0,0-.253-.347l-.838-.384.451-.8a.43.43,0,0,0,0-.429v0l-.451-.8.838-.384a.438.438,0,0,0,.253-.347l.108-.918.906.179a.434.434,0,0,0,.407-.132l.626-.68.626.678a.432.432,0,0,0,.407.132l.906-.179.108.918a.438.438,0,0,0,.253.347l.838.385-.451.8A.439.439,0,0,0,250.39,180.7Z" data-name="Tracé 13253"
+                      fill="#fff"
+                      id="Tracé_13253" transform="translate(-243.512 -176.109)"/>
+            </g>
+        </g>
+        <g data-name="Groupe 1601" id="Groupe_1601" transform="translate(15.345 34.522)">
+            <g data-name="Groupe 1600" id="Groupe_1600" transform="translate(0 0)">
+                <path d="M282.192,216a2.192,2.192,0,1,0,2.192,2.192A2.192,2.192,0,0,0,282.192,216Zm0,3.507a1.315,1.315,0,1,1,1.315-1.315A1.315,1.315,0,0,1,282.192,219.507Z" data-name="Tracé 13254"
+                      fill="#fff"
+                      id="Tracé_13254" transform="translate(-280 -216)"/>
+            </g>
+        </g>
+        <g data-name="Groupe 1603" id="Groupe_1603" transform="translate(9.852 26.657)">
+            <g data-name="Groupe 1602" id="Groupe_1602" transform="translate(0 0)">
+                <rect data-name="Rectangle 2272" fill="#fff" id="Rectangle_2272" transform="translate(0.148 0.388)"
+                      width="6"/>
+            </g>
+        </g>
+        <g data-name="Groupe 1605" id="Groupe_1605" transform="translate(5.254 29.284)">
+            <g data-name="Groupe 1604" id="Groupe_1604" transform="translate(0 0)">
+                <rect data-name="Rectangle 2273" fill="#fff" height="1" id="Rectangle_2273"
+                      transform="translate(-0.254 -0.239)" width="16"/>
+            </g>
+        </g>
+        <g data-name="Groupe 1607" id="Groupe_1607" transform="translate(5.254 31.255)">
+            <g data-name="Groupe 1606" id="Groupe_1606" transform="translate(0 0)">
+                <rect data-name="Rectangle 2274" fill="#fff" height="1" id="Rectangle_2274"
+                      transform="translate(-0.254 -0.209)" width="16"/>
+            </g>
+        </g>
+        <g data-name="Groupe 1609" id="Groupe_1609" transform="translate(5.911 36.509)">
+            <g data-name="Groupe 1608" id="Groupe_1608" transform="translate(0 0)">
+                <rect data-name="Rectangle 2275" fill="#fff" height="2" id="Rectangle_2275"
+                      transform="translate(0.089 -0.463)" width="5"/>
+            </g>
+        </g>
     </g>
-    <g id="Groupe_1599" data-name="Groupe 1599" transform="translate(13.345 32.336)">
-      <g id="Groupe_1598" data-name="Groupe 1598" transform="translate(0 0)">
-        <path id="Tracé_13253" data-name="Tracé 13253" d="M251.837,181.493l-.562-1.006.564-1.005a.438.438,0,0,0-.167-.6l-.033-.017-1.047-.479-.135-1.144a.438.438,0,0,0-.487-.384l-.033.005-1.13.224-.782-.847a.452.452,0,0,0-.639,0l-.005,0-.782.847-1.13-.224a.438.438,0,0,0-.515.345q0,.017-.005.033l-.135,1.144-1.046.48a.438.438,0,0,0-.216.581q.008.017.017.033l.564,1-.564,1.005a.438.438,0,0,0,.167.6l.033.017,1.046.48.135,1.145a.438.438,0,0,0,.487.384l.033-.005,1.13-.224.782.847a.438.438,0,0,0,.62.024l.024-.024.782-.847,1.13.224a.432.432,0,0,0,.343-.075.438.438,0,0,0,.175-.3l.135-1.144,1.047-.48a.438.438,0,0,0,.216-.581C251.848,181.515,251.843,181.5,251.837,181.493Zm-1.446-.792.451.8-.838.384a.438.438,0,0,0-.253.347l-.108.918-.906-.179a.432.432,0,0,0-.407.132l-.626.679-.626-.678a.438.438,0,0,0-.322-.141.4.4,0,0,0-.085.009l-.906.179-.108-.918a.438.438,0,0,0-.253-.347l-.838-.384.451-.8a.43.43,0,0,0,0-.429v0l-.451-.8.838-.384a.438.438,0,0,0,.253-.347l.108-.918.906.179a.434.434,0,0,0,.407-.132l.626-.68.626.678a.432.432,0,0,0,.407.132l.906-.179.108.918a.438.438,0,0,0,.253.347l.838.385-.451.8A.439.439,0,0,0,250.39,180.7Z" transform="translate(-243.512 -176.109)" fill="#fff"/>
-      </g>
-    </g>
-    <g id="Groupe_1601" data-name="Groupe 1601" transform="translate(15.345 34.522)">
-      <g id="Groupe_1600" data-name="Groupe 1600" transform="translate(0 0)">
-        <path id="Tracé_13254" data-name="Tracé 13254" d="M282.192,216a2.192,2.192,0,1,0,2.192,2.192A2.192,2.192,0,0,0,282.192,216Zm0,3.507a1.315,1.315,0,1,1,1.315-1.315A1.315,1.315,0,0,1,282.192,219.507Z" transform="translate(-280 -216)" fill="#fff"/>
-      </g>
-    </g>
-    <g id="Groupe_1603" data-name="Groupe 1603" transform="translate(9.852 26.657)">
-      <g id="Groupe_1602" data-name="Groupe 1602" transform="translate(0 0)">
-        <rect id="Rectangle_2272" data-name="Rectangle 2272" width="6" transform="translate(0.148 0.388)" fill="#fff"/>
-      </g>
-    </g>
-    <g id="Groupe_1605" data-name="Groupe 1605" transform="translate(5.254 29.284)">
-      <g id="Groupe_1604" data-name="Groupe 1604" transform="translate(0 0)">
-        <rect id="Rectangle_2273" data-name="Rectangle 2273" width="16" height="1" transform="translate(-0.254 -0.239)" fill="#fff"/>
-      </g>
-    </g>
-    <g id="Groupe_1607" data-name="Groupe 1607" transform="translate(5.254 31.255)">
-      <g id="Groupe_1606" data-name="Groupe 1606" transform="translate(0 0)">
-        <rect id="Rectangle_2274" data-name="Rectangle 2274" width="16" height="1" transform="translate(-0.254 -0.209)" fill="#fff"/>
-      </g>
-    </g>
-    <g id="Groupe_1609" data-name="Groupe 1609" transform="translate(5.911 36.509)">
-      <g id="Groupe_1608" data-name="Groupe 1608" transform="translate(0 0)">
-        <rect id="Rectangle_2275" data-name="Rectangle 2275" width="5" height="2" transform="translate(0.089 -0.463)" fill="#fff"/>
-      </g>
-    </g>
-  </g>
 </svg>

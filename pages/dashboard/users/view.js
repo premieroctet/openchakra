@@ -12,155 +12,154 @@ import Checkbox from '@material-ui/core/Checkbox';
 import cookie from 'react-cookies';
 
 const styles = {
-    loginContainer: {
-        alignItems: 'center',
-        height: '100vh',
-        justifyContent: 'center',
-        flexDirection: 'column',
-    },
-    card: {
-        padding: '1.5rem 3rem',
-        width: 400,
-    },
-    cardContant: {
-        flexDirection: 'column',
-    },
-    linkText: {
-        textDecoration: 'none',
-        color: 'black',
-        fontSize: 12,
-    },
+  loginContainer: {
+    alignItems: 'center',
+    height: '100vh',
+    justifyContent: 'center',
+    flexDirection: 'column',
+  },
+  card: {
+    padding: '1.5rem 3rem',
+    width: 400,
+  },
+  cardContant: {
+    flexDirection: 'column',
+  },
+  linkText: {
+    textDecoration: 'none',
+    color: 'black',
+    fontSize: 12,
+  },
 };
 
 class view extends React.Component {
 
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            user: {},
-            active: false,
-
-
-        };
-
-        this.handleClick = this.handleClick.bind(this);
-        this.handleInputChange = this.handleInputChange.bind(this);
-    }
-
-    static getInitialProps ({ query: { id } }) {
-        return { user_id: id }
-
-    }
-    componentDidMount() {
-        localStorage.setItem('path',Router.pathname);
-        const id = this.props.user_id;
-        axios.defaults.headers.common['Authorization'] = cookie.load('token')
-        axios.get(`/myAlfred/api/admin/users/users/${id}`)
-            .then(response => {
-                let user = response.data;
-                this.setState({user: user, active: user.active});
-
-            })
-            .catch(err => {
-                console.error(err);
-                if(err.response.status === 401 || err.response.status === 403) {
-                    cookie.remove('token', { path: '/' })
-                    Router.push({pathname: '/login'})
-                }
-            })
-
-    }
-
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-
-        this.setState({
-            [name]: value
-        });
-    }
-
-    onSubmit = e => {
-        e.preventDefault();
-
-        const data = {active: this.state.active};
-        const id = this.props.user_id;
-        axios.put(`/myAlfred/api/admin/users/users/${id}`,data)
-            .then(res => {
-                alert('Utilisateur modifié avec succès');
-                Router.push({pathname:'/dashboard/users/all'})
-            })
-            .catch(err => {
-                console.error(err);
-            })
-    };
-
-    handleClick() {
-        const id = this.props.user_id;
-        axios.delete(`/myAlfred/api/admin/users/users/${id}`)
-            .then(res => {
-
-                alert('Utilisateur supprimé avec succès');
-                Router.push({pathname:'/dashboard/users/all'})
-            })
-            .catch(err => {
-                console.error(err);
-            })
+    this.state = {
+      user: {},
+      active: false,
 
 
     };
 
+    this.handleClick = this.handleClick.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
 
-    render()  {
-        const { classes } = this.props;
-        const {user} = this.state;
+  static getInitialProps({query: {id}}) {
+    return {user_id: id};
+
+  }
+
+  componentDidMount() {
+    localStorage.setItem('path', Router.pathname);
+    const id = this.props.user_id;
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    axios.get(`/myAlfred/api/admin/users/users/${id}`)
+      .then(response => {
+        let user = response.data;
+        this.setState({user: user, active: user.active});
+
+      })
+      .catch(err => {
+        console.error(err);
+        if (err.response.status === 401 || err.response.status === 403) {
+          cookie.remove('token', {path: '/'});
+          Router.push({pathname: '/login'});
+        }
+      });
+
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value,
+    });
+  }
+
+  onSubmit = e => {
+    e.preventDefault();
+
+    const data = {active: this.state.active};
+    const id = this.props.user_id;
+    axios.put(`/myAlfred/api/admin/users/users/${id}`, data)
+      .then(res => {
+        alert('Utilisateur modifié avec succès');
+        Router.push({pathname: '/dashboard/users/all'});
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+
+  handleClick() {
+    const id = this.props.user_id;
+    axios.delete(`/myAlfred/api/admin/users/users/${id}`)
+      .then(res => {
+
+        alert('Utilisateur supprimé avec succès');
+        Router.push({pathname: '/dashboard/users/all'});
+      })
+      .catch(err => {
+        console.error(err);
+      });
 
 
+  };
 
 
-        return (
-            <Layout>
-                <Grid container className={classes.loginContainer}>
-                    <Card className={classes.card}>
-                        <Grid>
-                            <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Typography style={{ fontSize: 30 }}>{user.name} {user.firstname}</Typography>
-                            </Grid>
-                            <form onSubmit={this.onSubmit}>
-                                <Grid item>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={this.state.active}
-                                                onChange={this.handleInputChange}
-                                                value={this.state.active}
-                                                color="primary"
-                                                name={"active"}
-                                            />
-                                        }
-                                        label="Actif ?"
-                                    />
+  render() {
+    const {classes} = this.props;
+    const {user} = this.state;
 
-                                </Grid>
-                                <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
-                                        Modifier
-                                    </Button>
-                                    <Button type="button" variant="contained" color="secondary" style={{ width: '100%' }} onClick={this.handleClick}>
-                                        Supprimer
-                                    </Button>
-                                </Grid>
-                            </form>
-                        </Grid>
-                    </Card>
+
+    return (
+      <Layout>
+        <Grid container className={classes.loginContainer}>
+          <Card className={classes.card}>
+            <Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+                <Typography style={{fontSize: 30}}>{user.name} {user.firstname}</Typography>
+              </Grid>
+              <form onSubmit={this.onSubmit}>
+                <Grid item>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={this.state.active}
+                        onChange={this.handleInputChange}
+                        value={this.state.active}
+                        color="primary"
+                        name={'active'}
+                      />
+                    }
+                    label="Actif ?"
+                  />
+
                 </Grid>
-            </Layout>
-        );
-    };
+                <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
+                  <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
+                    Modifier
+                  </Button>
+                  <Button type="button" variant="contained" color="secondary" style={{width: '100%'}}
+                          onClick={this.handleClick}>
+                    Supprimer
+                  </Button>
+                </Grid>
+              </form>
+            </Grid>
+          </Card>
+        </Grid>
+      </Layout>
+    );
+  };
 }
-
 
 
 export default withStyles(styles)(view);

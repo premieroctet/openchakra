@@ -1,77 +1,77 @@
-export default theme=>({
-  mainContainer:{
+export default theme => ({
+  mainContainer: {
     display: 'flex',
     flexDirection: 'row',
     marginTop: 30,
-      [theme.breakpoints.down('xs')]: {
-        flexDirection: 'column',
-        alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      alignItems: 'center',
     },
   },
 
-  cardSkills:{
+  cardSkills: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     width: 'auto',
-    margin: 'auto'
+    margin: 'auto',
   },
 
-  avatarSize:{
+  avatarSize: {
     width: 100,
-    height: 100
+    height: 100,
   },
 
-  chipStyle:{
-    margin : 15
+  chipStyle: {
+    margin: 15,
   },
 
   bigWidth: {
-    width :500,
+    width: 500,
     [theme.breakpoints.down('xs')]: {
-      width: 'auto'
+      width: 'auto',
     },
   },
 
   middleWidth: {
-    width : 400,
+    width: 400,
     [theme.breakpoints.down('xs')]: {
-      width: 'auto'
+      width: 'auto',
     },
   },
 
-  labelRating:{
+  labelRating: {
     display: 'flex',
     alignItems: 'center',
     margin: 0,
-    padding : 0
+    padding: 0,
   },
 
-  mainContainerNotes:{
+  mainContainerNotes: {
     display: 'flex',
-    [theme.breakpoints.down('xs')]:{
-      display: 'initial'
-    }
+    [theme.breakpoints.down('xs')]: {
+      display: 'initial',
+    },
   },
 
-  marinContainerNotes:{
+  marinContainerNotes: {
     marginLeft: 20,
-    [theme.breakpoints.down('xs')]:{
-      marginLeft: 'inherit'
-    }
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: 'inherit',
+    },
   },
 
-  centerLabelandRating:{
-    alignItems:'center',
-    [theme.breakpoints.down('xs')]:{
-      justifyContent: 'initial'
-    }
+  centerLabelandRating: {
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      justifyContent: 'initial',
+    },
   },
 
-  noMarginContainerNotes:{
-    margin: 0
+  noMarginContainerNotes: {
+    margin: 0,
   },
-  widthContainerText:{
-      width: 162
+  widthContainerText: {
+    width: 162,
   },
 })

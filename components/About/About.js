@@ -15,12 +15,12 @@ import Link from 'next/link';
 import axios from 'axios';
 import Badge from '@material-ui/core/Badge';
 
-const {frenchFormat}=require('../../utils/text')
+const {frenchFormat} = require('../../utils/text');
 moment.locale('fr');
 
 // FIX : Commentaires : faire un lien vers le profil
-class About extends React.Component{
-  constructor(props){
+class About extends React.Component {
+  constructor(props) {
     super(props);
     this.state = {
       alfred: [],
@@ -31,12 +31,12 @@ class About extends React.Component{
       isAlfred: false,
       creationShop: '',
     };
-    this.isAlfred = this.isAlfred.bind(this)
+    this.isAlfred = this.isAlfred.bind(this);
   }
 
   componentDidMount() {
     axios.get(`/myAlfred/api/users/users/${this.props.alfred}`)
-      .then( response  =>  {
+      .then(response => {
         let user = response.data;
         this.setState({
           user: user,
@@ -50,20 +50,20 @@ class About extends React.Component{
       });
   }
 
-  isAlfred(){
-    if(this.state.isAlfred){
-      axios.get(`/myAlfred/api/shop/alfred/${this.state.userId}`).then( response =>{
+  isAlfred() {
+    if (this.state.isAlfred) {
+      axios.get(`/myAlfred/api/shop/alfred/${this.state.userId}`).then(response => {
         let shop = response.data;
         this.setState({
-          creationShop : shop.creation_date
-        })
-      }).catch( error => {
-        console.log(error)
-      })
+          creationShop: shop.creation_date,
+        });
+      }).catch(error => {
+        console.log(error);
+      });
     }
   }
 
-  render(){
+  render() {
     const {languages, user, creationShop} = this.state;
     const {classes, alfred, needTitle} = this.props;
 
@@ -73,7 +73,7 @@ class About extends React.Component{
       },
     })(Rating);
 
-    const inProfile = process.browser && window.location.pathname.includes('viewProfile')
+    const inProfile = process.browser && window.location.pathname.includes('viewProfile');
 
     return (
       <Grid container className={classes.mainContainer}>
@@ -97,13 +97,14 @@ class About extends React.Component{
             <ListItem>
               <ListItemAvatar>
                 <Grid>
-                  <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/commentaires.svg'}/>
+                  <img style={{width: 30, height: 30}} alt={'commentary'} title={'commentary'}
+                       src={'../../static/assets/img/userServicePreview/commentaires.svg'}/>
                 </Grid>
               </ListItemAvatar>
               <Link
                 href={{
-                  pathname: "/viewProfile",
-                  query: { id: alfred }
+                  pathname: '/viewProfile',
+                  query: {id: alfred},
                 }}
               >
                 <a
@@ -118,33 +119,36 @@ class About extends React.Component{
               <ListItem>
                 <ListItemAvatar>
                   <Grid>
-                    <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/id.svg'}/>
+                    <img style={{width: 30, height: 30}} alt={'commentary'} title={'commentary'}
+                         src={'../../static/assets/img/userServicePreview/id.svg'}/>
                   </Grid>
                 </ListItemAvatar>
                 <ListItemText
-                  primary={"Pièce d’identité vérifiée"}
+                  primary={'Pièce d’identité vérifiée'}
                 />
               </ListItem>
               :
               <ListItem>
                 <ListItemAvatar>
                   <Grid>
-                    <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/nonId.svg'}/>
+                    <img style={{width: 30, height: 30}} alt={'commentary'} title={'commentary'}
+                         src={'../../static/assets/img/userServicePreview/nonId.svg'}/>
                   </Grid>
                 </ListItemAvatar>
                 <ListItemText
-                  primary={"Pièce d’identité non vérifiée"}
+                  primary={'Pièce d’identité non vérifiée'}
                 />
               </ListItem>
             }
             <ListItem>
               <ListItemAvatar>
                 <Grid>
-                  <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
+                  <img style={{width: 30, height: 30}} alt={'commentary'} title={'commentary'}
+                       src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
                 </Grid>
               </ListItemAvatar>
               <ListItemText
-                primary={"Membre depuis " + moment(user.creation_date).format('MMMM YYYY')}
+                primary={'Membre depuis ' + moment(user.creation_date).format('MMMM YYYY')}
               />
             </ListItem>
             {
@@ -152,12 +156,13 @@ class About extends React.Component{
                 <ListItem>
                   <ListItemAvatar>
                     <Grid>
-                      <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/alfred.svg'}/>
+                      <img style={{width: 30, height: 30}} alt={'commentary'} title={'commentary'}
+                           src={'../../static/assets/img/userServicePreview/alfred.svg'}/>
                     </Grid>
                   </ListItemAvatar>
                   <ListItemText
                     //TODO A MODIFIER QUAND DATE CREATION BOUTIQUE SERA STOCKE
-                    primary={"Alfred depuis " + moment(creationShop).format('MMMM YYYY')}
+                    primary={'Alfred depuis ' + moment(creationShop).format('MMMM YYYY')}
                   />
                 </ListItem> : null
             }
@@ -165,34 +170,35 @@ class About extends React.Component{
             <ListItem>
               <ListItemAvatar>
                 <Grid>
-                  <img style={{width: 30, height : 30}} alt={"commentary"} title={"commentary"} src={'../../static/assets/img/userServicePreview/langues.svg'}/>
+                  <img style={{width: 30, height: 30}} alt={'commentary'} title={'commentary'}
+                       src={'../../static/assets/img/userServicePreview/langues.svg'}/>
                 </Grid>
               </ListItemAvatar>
-                <ListItemText
-                  primary={languages.length >= 1 ? "Langue : " + languages.join(' - ') : "Langue : non renseigné"}
-                />
+              <ListItemText
+                primary={languages.length >= 1 ? 'Langue : ' + languages.join(' - ') : 'Langue : non renseigné'}
+              />
             </ListItem>
             <ListItem>
               <Link
                 href={{
-                  pathname: inProfile ? "/shop" : "/viewProfile",
-                  query: inProfile ? { id_alfred : alfred } : { id : alfred }
+                  pathname: inProfile ? '/shop' : '/viewProfile',
+                  query: inProfile ? {id_alfred: alfred} : {id: alfred},
                 }}
               >
                 <Typography
                   style={{
-                    color: "rgb(47, 188, 211)",
-                    cursor: "pointer"
+                    color: 'rgb(47, 188, 211)',
+                    cursor: 'pointer',
                   }}
                 >
-                { inProfile ? 'Voir les services' :  'Voir le profil' }
+                  {inProfile ? 'Voir les services' : 'Voir le profil'}
                 </Typography>
               </Link>
             </ListItem>
           </List>
         </Grid>
       </Grid>
-    )
+    );
   }
 }
 
@@ -202,4 +208,4 @@ About.propTypes = {
 
 };
 
-export default  withStyles(styles, { withTheme: true })(About);
+export default withStyles(styles, {withTheme: true})(About);

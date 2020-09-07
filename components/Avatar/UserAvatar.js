@@ -10,21 +10,21 @@ import cookie from 'react-cookies';
 
 const jwt = require('jsonwebtoken');
 
-class UserAvatar extends React.Component{
-  constructor(props){
+class UserAvatar extends React.Component {
+  constructor(props) {
     super(props);
-    this.state={
+    this.state = {
       anchorEl: null,
       currentUser: '',
       kyc: null,
       owner: false,
-      userId: ''
-    }
-    this.interval_id = null
+      userId: '',
+    };
+    this.interval_id = null;
   }
 
   componentDidMount() {
-    const token = cookie.load('token')
+    const token = cookie.load('token');
     if (token) {
       const token2 = token.split(' ')[1];
       const decode = jwt.decode(token2);
@@ -32,83 +32,83 @@ class UserAvatar extends React.Component{
       this.setState({currentUser: alfred_id},
         () => {
           // Check once then every 20s
-          if (this.props.warnings==true) {
-            this.checkWarnings(token)
-            this.interval_id = setInterval(() => this.checkWarnings(token) , 20000)
+          if (this.props.warnings == true) {
+            this.checkWarnings(token);
+            this.interval_id = setInterval(() => this.checkWarnings(token), 20000);
           }
-        }
-      )
+        },
+      );
     }
   }
 
   componentWillUnmount() {
-    clearInterval(this.interval_id)
+    clearInterval(this.interval_id);
   }
 
   checkWarnings = token => {
-    axios.defaults.headers.common["Authorization"] = token
-    var kyc=[]
+    axios.defaults.headers.common['Authorization'] = token;
+    var kyc = [];
     axios.get('/myAlfred/api/chatRooms/nonViewedMessagesCount')
-      .then( res => {
-        const nbMessages=res.data
-        if (nbMessages>0) {
-          const plural = nbMessages==1 ? "" : "s"
-          kyc.push(`Vous avez ${res.data} message${plural} non lu${plural}`)
+      .then(res => {
+        const nbMessages = res.data;
+        if (nbMessages > 0) {
+          const plural = nbMessages == 1 ? '' : 's';
+          kyc.push(`Vous avez ${res.data} message${plural} non lu${plural}`);
         }
-        return axios.get('/myAlfred/api/users/current')
+        return axios.get('/myAlfred/api/users/current');
       })
-      .then( res => {
-        const user = res.data
+      .then(res => {
+        const user = res.data;
         if (user.id_card_error_text) {
-          kyc.push(user.id_card_error_text)
+          kyc.push(user.id_card_error_text);
         }
       })
-      .then ( () => {
-        this.setState({ kyc : kyc.length > 0 ? kyc : null})
+      .then(() => {
+        this.setState({kyc: kyc.length > 0 ? kyc : null});
       })
-      .catch (err => console.error(err))
-  }
+      .catch(err => console.error(err));
+  };
 
-  ifOwner(){
-    if(this.state.currentUser === this.state.userId){
-      this.setState({owner : true})
+  ifOwner() {
+    if (this.state.currentUser === this.state.userId) {
+      this.setState({owner: true});
     }
   };
 
   handlePopoverOpen = (event) => {
-    this.setState({anchorEl: event.currentTarget})
+    this.setState({anchorEl: event.currentTarget});
   };
 
   handlePopoverClose = () => {
-    this.setState({anchorEl: null})
+    this.setState({anchorEl: null});
   };
 
   avatarWithPics(user, className) {
-    const url = user.picture.match(/^https?:\/\//)?user.picture:'/'+user.picture
-    return(
-      <Avatar alt="photo de profil" src={url} className={className} />
-    )
+    const url = user.picture.match(/^https?:\/\//) ? user.picture : '/' + user.picture;
+    return (
+      <Avatar alt="photo de profil" src={url} className={className}/>
+    );
   }
 
-  avatarWithoutPics(user, className){
+  avatarWithoutPics(user, className) {
     return (
       <Avatar alt="photo de profil" className={className}>{user.avatar_letters}</Avatar>
 
-    )
+    );
   }
 
-  render(){
+  render() {
     const {user, className, classes} = this.props;
     const {anchorEl, currentUser} = this.state;
     const open = Boolean(anchorEl);
 
-    if(user){
+    if (user) {
       var owner = currentUser === user._id;
-      var kyc = this.state.kyc
+      var kyc = this.state.kyc;
     }
 
-    if(user){
-      return(
+    if (user) {
+      return (
         <Grid>
           {
             owner && kyc ?
@@ -153,11 +153,11 @@ class UserAvatar extends React.Component{
                   }}
                 >
                   <ul>
-                  {
-                    kyc.map(res => (
-                      <li>{res}</li>
-                    ))
-                  }
+                    {
+                      kyc.map(res => (
+                        <li>{res}</li>
+                      ))
+                    }
                   </ul>
                 </Popover>
               </Grid> :
@@ -172,15 +172,15 @@ class UserAvatar extends React.Component{
           }
 
         </Grid>
-      )
+      );
 
-    }else{
-      return(
-       <Avatar alt="photo de profil" src='/static/basicavatar.png' className={className} />
-      )
+    } else {
+      return (
+        <Avatar alt="photo de profil" src='/static/basicavatar.png' className={className}/>
+      );
     }
 
   }
 }
 
-export default withStyles(styles, { withTheme: true }) (UserAvatar);
+export default withStyles(styles, {withTheme: true})(UserAvatar);

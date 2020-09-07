@@ -11,189 +11,190 @@ import axios from 'axios';
 import Link from 'next/link';
 
 const styles = theme => ({
-    container: {
-        margin: 'auto',
-        width: '100%',
-        textAlign:'center',
-        // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
-        [theme.breakpoints.up('md')]: { // medium: 960px or larger
-            width: 920,
-        },
-        [theme.breakpoints.up('xl')]: { // medium: 960px or larger
-            width: 920,
-        },
+  container: {
+    margin: 'auto',
+    width: '100%',
+    textAlign: 'center',
+    // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
+    [theme.breakpoints.up('md')]: { // medium: 960px or larger
+      width: 920,
     },
-    container1: {
+    [theme.breakpoints.up('xl')]: { // medium: 960px or larger
+      width: 920,
+    },
+  },
+  container1: {
 
-        [theme.breakpoints.down('xs')]: { //  medium: 960px or larger
-            marginTop: '10px!important',
-        },
-        [theme.breakpoints.up('sm')]: { //  medium: 960px or larger
-            marginTop: '10px!important',
-        },
-        [theme.breakpoints.up('md')]: { //  medium: 960px or larger
-            marginTop: '10px!important',
-        },
-        [theme.breakpoints.up('lg')]: { //  medium: 960px or larger
-            marginTop: '10%',
-        },
+    [theme.breakpoints.down('xs')]: { //  medium: 960px or larger
+      marginTop: '10px!important',
     },
-    card: {
+    [theme.breakpoints.up('sm')]: { //  medium: 960px or larger
+      marginTop: '10px!important',
+    },
+    [theme.breakpoints.up('md')]: { //  medium: 960px or larger
+      marginTop: '10px!important',
+    },
+    [theme.breakpoints.up('lg')]: { //  medium: 960px or larger
+      marginTop: '10%',
+    },
+  },
+  card: {
 
-        backgroundColor:'transparent',
-        textAlign:'center',
-        boxShadow: `1px 3px 1px transparent`,
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+    boxShadow: `1px 3px 1px transparent`,
 
-        // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
-        [theme.breakpoints.up('xs')]: { // xs: 600px or larger
-            maxWidth: 450,
-        },
-        [theme.breakpoints.up('sm')]: {
-            maxWidth: 400,
-        },
-        [theme.breakpoints.up('md')]: { // medium: 960px or larger
-            maxWidth: 350,
-        },
+    // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
+    [theme.breakpoints.up('xs')]: { // xs: 600px or larger
+      maxWidth: 450,
     },
-    media2: {
-        height: 200,
-        [theme.breakpoints.down('md')]: {
-            width: '200px!important',
-        },
-        [theme.breakpoints.down('xs')]: {
-            width: '200px!important',
-        },
-        [theme.breakpoints.down('sm')]: {
-            width: '200px!important',
-        },
+    [theme.breakpoints.up('sm')]: {
+      maxWidth: 400,
     },
-    textBox1: {
-        fontFamily: 'Helvetica',
-        color: 'rgba(84,89,95,0.95)',
-        letterSpacing: -2,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: '3%',
-        marginTop: '3%',
+    [theme.breakpoints.up('md')]: { // medium: 960px or larger
+      maxWidth: 350,
     },
-    textBox: {
-        fontFamily: 'Helvetica',
-        textAlign: 'center',
-        fontSize: 15,
-        marginBottom: '3%',
-        marginTop: '3%',
+  },
+  media2: {
+    height: 200,
+    [theme.breakpoints.down('md')]: {
+      width: '200px!important',
     },
-    separatorBlue:{
-        width: '50px'
-    }
+    [theme.breakpoints.down('xs')]: {
+      width: '200px!important',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '200px!important',
+    },
+  },
+  textBox1: {
+    fontFamily: 'Helvetica',
+    color: 'rgba(84,89,95,0.95)',
+    letterSpacing: -2,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: '3%',
+    marginTop: '3%',
+  },
+  textBox: {
+    fontFamily: 'Helvetica',
+    textAlign: 'center',
+    fontSize: 15,
+    marginBottom: '3%',
+    marginTop: '3%',
+  },
+  separatorBlue: {
+    width: '50px',
+  },
 });
 
 function shuffleArray(array) {
-    let i = array.length - 1;
-    for (; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        const temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-    }
-    return array;
+  let i = array.length - 1;
+  for (; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array;
 }
 
 class section10 extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            prestations: [],
-            tags: {},
-        }
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      prestations: [],
+      tags: {},
+    };
+  }
 
-    componentDidMount() {
-        axios.get('/myAlfred/api/tags/prestations/section10')
-            .then(response => {
-                    let data = response.data;
-                    this.setState({tags:data});
-                    axios.get('/myAlfred/api/prestation/all/tags/' + data._id)
-                        .then(res => {
-                            let prestations = res.data;
+  componentDidMount() {
+    axios.get('/myAlfred/api/tags/prestations/section10')
+      .then(response => {
+          let data = response.data;
+          this.setState({tags: data});
+          axios.get('/myAlfred/api/prestation/all/tags/' + data._id)
+            .then(res => {
+              let prestations = res.data;
 
-                            this.setState({prestations: prestations})
+              this.setState({prestations: prestations});
 
-                        })
-                        .catch()
-                }
-            )
+            })
             .catch();
-    }
+        },
+      )
+      .catch();
+  }
 
-    render() {
-        const {classes, gps} = this.props;
-        const {prestations} = this.state;
-        const {tags} = this.state;
-        const resdata = shuffleArray(prestations);
-        const services = resdata.slice(0, 10).map(e => (
-            <Grid item xs={12} sm={6} md={2} lg={2} key={e._id} style={{margin:'0 10px'}}>
-                <Link href={'/search?search=1&service='+e._id+(gps?'&gps='+JSON.stringify(gps):'')}>
-                <Card className={classes.card}>
-                    <CardActionArea>
-                        <CardMedia
-                            className={classes.media2}
-                            image={e.picture}
-                            title={e.label}
-                        />
-                        <CardContent>
-                            <Typography gutterBottom variant="p" component="p" style={{fontSize:16}}>
-                                {e.label}
-                            </Typography>
-                            <Typography component="p">
-                                {e.description}
-                            </Typography>
-                        </CardContent>
-                    </CardActionArea>
-                    <CardActions>
-                    </CardActions>
-                </Card>
-                </Link>
+  render() {
+    const {classes, gps} = this.props;
+    const {prestations} = this.state;
+    const {tags} = this.state;
+    const resdata = shuffleArray(prestations);
+    const services = resdata.slice(0, 10).map(e => (
+      <Grid item xs={12} sm={6} md={2} lg={2} key={e._id} style={{margin: '0 10px'}}>
+        <Link href={'/search?search=1&service=' + e._id + (gps ? '&gps=' + JSON.stringify(gps) : '')}>
+          <Card className={classes.card}>
+            <CardActionArea>
+              <CardMedia
+                className={classes.media2}
+                image={e.picture}
+                title={e.label}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="p" component="p" style={{fontSize: 16}}>
+                  {e.label}
+                </Typography>
+                <Typography component="p">
+                  {e.description}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+            <CardActions>
+            </CardActions>
+          </Card>
+        </Link>
+      </Grid>
+    ));
+
+    return (
+      <Fragment>
+        <div className={classes.container1}>
+          <Grid container className={classes.container}>
+            <Grid item xs={2}/>
+            <Grid item xs={8}>
+              <div>
+                <Typography variant="h4" className={classes.textBox1}>
+                  {tags.title}
+                </Typography>
+                <Grid container>
+                  <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
+                  <Grid item xs={2} sm={4} md={4} lg={4} xl={4} style={{margin: 'auto'}}>
+                    <img alt={'séparateur'} src={'../../../static/separateur-bleu.svg'}
+                         className={classes.separatorBlue}/>
+                  </Grid>
+                  <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
+                  <Grid item xs={5}/>
+                </Grid>
+                <Typography className={classes.textBox}>
+                  {tags.description}
+                </Typography>
+              </div>
             </Grid>
-        ));
-
-        return (
-            <Fragment>
-                <div className={classes.container1}>
-                    <Grid container className={classes.container}>
-                        <Grid item xs={2}/>
-                        <Grid item xs={8}>
-                            <div>
-                                <Typography variant="h4" className={classes.textBox1}>
-                                    {tags.title}
-                                </Typography>
-                                <Grid container>
-                                    <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
-                                    <Grid item xs={2} sm={4} md={4}  lg={4} xl={4} style={{margin:'auto'}}>
-                                        <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
-                                    </Grid>
-                                    <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
-                                    <Grid item xs={5}/>
-                                </Grid>
-                                <Typography className={classes.textBox}>
-                                    {tags.description}
-                                </Typography>
-                            </div>
-                        </Grid>
-                        <Grid item xs={2}/>
-                        <div className="thewrap">
-                            <section className="sectioncard">
-                                {services}
-                            </section>
-                        </div>
-                        <Grid container className="thewrap2">
-                            {services}
-                        </Grid>
-                    </Grid>
-                </div>
-            </Fragment>
-        );
-    }
+            <Grid item xs={2}/>
+            <div className="thewrap">
+              <section className="sectioncard">
+                {services}
+              </section>
+            </div>
+            <Grid container className="thewrap2">
+              {services}
+            </Grid>
+          </Grid>
+        </div>
+      </Fragment>
+    );
+  }
 }
 
 export default withStyles(styles)(section10);

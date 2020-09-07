@@ -20,206 +20,209 @@ moment.locale('fr');
 
 class myAvailabilities extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.child = React.createRef();
-        this.state = {
-            user: {},
-            availabilities: [],
-            bookings: [],
-            alfred:[],
-            id: props.aboutId,
-            shop:[],
-            services: [],
-            userState: false,
-            userId: '',
-            isOwner:false,
-            have_picture: false,
-            banner:[],
-        };
+  constructor(props) {
+    super(props);
+    this.child = React.createRef();
+    this.state = {
+      user: {},
+      availabilities: [],
+      bookings: [],
+      alfred: [],
+      id: props.aboutId,
+      shop: [],
+      services: [],
+      userState: false,
+      userId: '',
+      isOwner: false,
+      have_picture: false,
+      banner: [],
+    };
+  }
+
+  static getInitialProps({query: {id_alfred}}) {
+    return {aboutId: id_alfred};
+  }
+
+  componentDidMount() {
+
+    const auth = cookie.load('token');
+    if (!this.props.aboutId && !auth) {
+      localStorage.setItem('path', Router.pathname);
+      Router.push('/login');
     }
+    // FIX : get current availabilities
+    axios.defaults.headers.common['Authorization'] = auth;
 
-    static getInitialProps ({ query: { id_alfred } }) {
-      return { aboutId: id_alfred }
-    }
+    this.loadAvailabilities();
+    axios.get('/myAlfred/api/booking/alfredBooking')
+      .then(res => {
+        this.setState({bookings: res.data});
+      })
+      .catch(err => console.error(err));
 
-    componentDidMount() {
+    axios.get('/myAlfred/api/users/current').then(res => {
+      let user = res.data;
+      if (user) {
+        this.setState({
+          userState: true,
+          userId: user._id,
+        });
+      }
+    }).catch(function (error) {
+      console.error(error);
+    });
 
-       const auth = cookie.load('token')
-       if(!this.props.aboutId && !auth) {
-         localStorage.setItem('path',Router.pathname);
-         Router.push('/login')
-       }
-      // FIX : get current availabilities
-      axios.defaults.headers.common['Authorization'] = auth
+    axios.get(`/myAlfred/api/shop/alfred/${this.state.id}`)
+      .then(response => {
+        let shop = response.data;
+        this.setState({
+          alfred: shop.alfred,
+          shop: shop,
+          services: shop.services,
+          idAlfred: shop.alfred._id,
+        }, () => this.checkIfOwner());
 
-      this.loadAvailabilities()
-      axios.get('/myAlfred/api/booking/alfredBooking')
-        .then ( res => {
-          this.setState({bookings: res.data})
-        })
-        .catch (err => console.error(err))
+      })
+      .catch(function (error) {
+        console.error();
+        (error);
+      });
 
-      axios.get('/myAlfred/api/users/current').then(res => {
-        let user = res.data;
-        if(user) {
-          this.setState({
-            userState: true,
-            userId: user._id,
-          })
-        }
-      }).catch(function (error) {
+    axios.get('/myAlfred/api/shopBanner/all')
+      .then(response => {
+        let banner = response.data;
+        this.setState({banner: banner});
+      })
+      .catch(function (error) {
         console.error(error);
       });
 
-      axios.get(`/myAlfred/api/shop/alfred/${this.state.id}`)
-        .then( response  =>  {
-          let shop = response.data;
-          this.setState({
-            alfred: shop.alfred,
-            shop:shop,
-            services: shop.services,
-            idAlfred: shop.alfred._id,
-          }, () => this.checkIfOwner());
+  }
 
-        })
-        .catch(function (error) {
-          console.error();(error);
-        });
-
-      axios.get('/myAlfred/api/shopBanner/all')
-        .then(response => {
-          let banner = response.data;
-          this.setState({banner: banner})
-        })
-        .catch(function(error){
-          console.error(error);
-        });
-
-    }
-
-    loadAvailabilities = () => {
-      axios.get('/myAlfred/api/availability/currentAlfred')
-        .then ( res => {
-          this.setState({availabilities: res.data})
-        })
-        .catch (err => console.error(err))
-    }
-
-    availabilityCreated = (avail) => {
-
-      if (avail._id.length==GID_LEN) {
-        avail._id = null
-      }
-      axios.defaults.headers.common['Authorization'] = cookie.load('token')
-      axios.post('/myAlfred/api/availability/add',avail)
-          .then(res => {
-              toast.info('Disponibilité ajoutée avec succès !');
-              axios.get('/myAlfred/api/availability/currentAlfred')
-                .then ( res => {
-                  this.setState({availabilities: res.data});
-                })
-                .catch (err => console.error(err))
-          })
-          .catch(err => {
-            console.error(err);
-            toast.error(err);
+  loadAvailabilities = () => {
+    axios.get('/myAlfred/api/availability/currentAlfred')
+      .then(res => {
+        this.setState({availabilities: res.data});
       })
-    }
+      .catch(err => console.error(err));
+  };
 
-    availabilityUpdate = (avail) => {
-        axios.defaults.headers.common['Authorization'] = cookie.load('token')
-        axios.post('/myAlfred/api/availability/update', avail)
-          .then( res => {
+  availabilityCreated = (avail) => {
+
+    if (avail._id.length == GID_LEN) {
+      avail._id = null;
+    }
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    axios.post('/myAlfred/api/availability/add', avail)
+      .then(res => {
+        toast.info('Disponibilité ajoutée avec succès !');
+        axios.get('/myAlfred/api/availability/currentAlfred')
+          .then(res => {
+            this.setState({availabilities: res.data});
+          })
+          .catch(err => console.error(err));
+      })
+      .catch(err => {
+        console.error(err);
+        toast.error(err);
+      });
+  };
+
+  availabilityUpdate = (avail) => {
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    axios.post('/myAlfred/api/availability/update', avail)
+      .then(res => {
 
 
         axios.get('/myAlfred/api/availability/currentAlfred')
-          .then ( res => {
-            this.setState({availabilities: res.data})
-          })
-          .catch (err => console.error(err))
-        });
-    }
-
-    availabilityDelete = (avail) => {
-      axios.defaults.headers.common['Authorization'] = cookie.load('token')
-
-      axios.delete('/myAlfred/api/availability/'+avail._id)
           .then(res => {
-              toast.info('Disponibilité supprimée avec succès !');
-              let new_availabilities=[];
-              this.state.availabilities.forEach( a => {
-                if (a._id!==avail._id) {
-                  new_availabilities.push(a);
-                }
-              })
-              this.setState({availabilities: new_availabilities});
+            this.setState({availabilities: res.data});
           })
-          .catch(err => {
-            error(err);
-            toast.error(err);
-          })
-    }
-
-    checkIfOwner() {
-      Object.keys(this.state.services).map( result =>{
-        if(this.state.services[result].user === this.state.userId){
-          this.setState({isOwner: true});
-        }
+          .catch(err => console.error(err));
       });
-    }
+  };
 
-    sendToDrawer = (eventsSelected) => {
-      this.child.current.getEventsSelected(eventsSelected);
-    }
+  availabilityDelete = (avail) => {
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
 
-    onAvailabilitySaved = () => {
-      this.loadAvailabilities()
-    }
+    axios.delete('/myAlfred/api/availability/' + avail._id)
+      .then(res => {
+        toast.info('Disponibilité supprimée avec succès !');
+        let new_availabilities = [];
+        this.state.availabilities.forEach(a => {
+          if (a._id !== avail._id) {
+            new_availabilities.push(a);
+          }
+        });
+        this.setState({availabilities: new_availabilities});
+      })
+      .catch(err => {
+        error(err);
+        toast.error(err);
+      });
+  };
 
-    render() {
-      const {classes} = this.props;
-      let isOwner= this.state.idAlfred === this.state.userId;
+  checkIfOwner() {
+    Object.keys(this.state.services).map(result => {
+      if (this.state.services[result].user === this.state.userId) {
+        this.setState({isOwner: true});
+      }
+    });
+  }
 
-      return (
-        <Fragment>
-          <Helmet>
-              <title> Mes disponibilités - My Alfred </title>
-              <meta property="description" content="Indiquez vos dispoinibilités pour proposer vos services entre particuliers ! Des services à proximité, rémunérés et assurés ! Vos disponibilités permettront à vos futurs clients de vous réserver directement, au créneau souhaité !" />
-          </Helmet>
-            <Layout>
-              <Grid className={classes.bigContainer} style={{width: '100%'}}>
-                {isOwner ?
-                  <NavBarShop userId={this.state.userId}/>
-                  : null
-                }
-              </Grid>
-              <Grid className={classes.toggle}>
-                <Grid>
-                  <DrawerSchedule ref={this.child} onAvailabilitySaved={this.onAvailabilitySaved}/>
-                </Grid>
-              </Grid>
-              <Grid container className={classes.containercalendar} style={{width:' 65%'}}>
-                <Grid>
-                  <Schedule
-                      availabilities={this.state.availabilities}
-                      bookings={this.state.bookings}
-                      title={I18N.SCHEDULE_TITLE}
-                      subtitle={I18N.SCHEDULE_SUBTITLE}
-                      services={this.state.services}
-                      onCreateAvailability={this.availabilityCreated}
-                      onDeleteAvailability={this.availabilityDelete}
-                      onUpdateAvailability={this.availabilityUpdate}
-                      selectable={true}
-                      nbSchedule={12}
-                      handleSelection={this.sendToDrawer}
-                  />
-                </Grid>
-              </Grid>
-            </Layout>
-              <NavbarMobile userId={this.state.userId}/>
-          </Fragment>
-        );
-    };
+  sendToDrawer = (eventsSelected) => {
+    this.child.current.getEventsSelected(eventsSelected);
+  };
+
+  onAvailabilitySaved = () => {
+    this.loadAvailabilities();
+  };
+
+  render() {
+    const {classes} = this.props;
+    let isOwner = this.state.idAlfred === this.state.userId;
+
+    return (
+      <Fragment>
+        <Helmet>
+          <title> Mes disponibilités - My Alfred </title>
+          <meta property="description"
+                content="Indiquez vos dispoinibilités pour proposer vos services entre particuliers ! Des services à proximité, rémunérés et assurés ! Vos disponibilités permettront à vos futurs clients de vous réserver directement, au créneau souhaité !"/>
+        </Helmet>
+        <Layout>
+          <Grid className={classes.bigContainer} style={{width: '100%'}}>
+            {isOwner ?
+              <NavBarShop userId={this.state.userId}/>
+              : null
+            }
+          </Grid>
+          <Grid className={classes.toggle}>
+            <Grid>
+              <DrawerSchedule ref={this.child} onAvailabilitySaved={this.onAvailabilitySaved}/>
+            </Grid>
+          </Grid>
+          <Grid container className={classes.containercalendar} style={{width: ' 65%'}}>
+            <Grid>
+              <Schedule
+                availabilities={this.state.availabilities}
+                bookings={this.state.bookings}
+                title={I18N.SCHEDULE_TITLE}
+                subtitle={I18N.SCHEDULE_SUBTITLE}
+                services={this.state.services}
+                onCreateAvailability={this.availabilityCreated}
+                onDeleteAvailability={this.availabilityDelete}
+                onUpdateAvailability={this.availabilityUpdate}
+                selectable={true}
+                nbSchedule={12}
+                handleSelection={this.sendToDrawer}
+              />
+            </Grid>
+          </Grid>
+        </Layout>
+        <NavbarMobile userId={this.state.userId}/>
+      </Fragment>
+    );
+  };
 }
+
 export default withStyles(styles)(myAvailabilities);

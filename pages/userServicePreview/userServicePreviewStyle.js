@@ -1,5 +1,5 @@
 export default theme => ({
-  mainContainer:{
+  mainContainer: {
     marginTop: 100,
     marginLeft: 200,
     marginRight: 200,
@@ -17,48 +17,48 @@ export default theme => ({
     },
     [theme.breakpoints.down('xs')]: {
       marginLeft: 0,
-      marginRight: 0
+      marginRight: 0,
     },
   },
   badge: {
-    color: 'white'
+    color: 'white',
   },
-  boxRating:{
+  boxRating: {
     margin: 0,
   },
-  rating:{
+  rating: {
     marginLeft: -15,
     [theme.breakpoints.down('xs')]: {
-      fontSize: 'large'
-    }
+      fontSize: 'large',
+    },
   },
-  responsiveListContainer:{
+  responsiveListContainer: {
     width: '80%',
     [theme.breakpoints.down('xs')]: {
       margin: 0,
-      height:'auto',
+      height: 'auto',
       display: 'flex',
       flexDirection: 'column',
-      width: '100%'
+      width: '100%',
     },
   },
-  noPadding:{
-    padding:0
+  noPadding: {
+    padding: 0,
 
   },
-  minWidth:{
-    minWidth:30
+  minWidth: {
+    minWidth: 30,
   },
   sizeText: {
-    fontSize: 'small'
+    fontSize: 'small',
   },
-  flexPosition:{
-    display:'flex'
+  flexPosition: {
+    display: 'flex',
   },
   itemAvatar: {
     flexDirection: 'column',
   },
-  avatarLetter:{
+  avatarLetter: {
     height: 100,
     width: 100,
     margin: 'auto',
@@ -70,37 +70,37 @@ export default theme => ({
     margin: 'auto',
     fontSize: 20,
   },
-  skillsContentContainer:{
+  skillsContentContainer: {
     display: 'flex',
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
-      alignItems : 'center'
-    }
+      alignItems: 'center',
+    },
   },
-  leftContainer:{
+  leftContainer: {
     width: '50%',
     [theme.breakpoints.down('md')]: {
-      width: '100%'
-    }
+      width: '100%',
+    },
   },
-  contentRight:{
+  contentRight: {
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    marginLeft: 100
+    marginLeft: 100,
   },
   avatarContainer: {
-    width : '20%',
+    width: '20%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     [theme.breakpoints.down('md')]: {
       width: '100%',
-      display: 'flex'
-    }
+      display: 'flex',
+    },
   },
-  borderContentRight:{
+  borderContentRight: {
     border: '2px solid #d2d2d2',
     borderRadius: 30,
     marginRight: 100,
@@ -114,17 +114,17 @@ export default theme => ({
     [theme.breakpoints.down('md')]: {
       marginRight: 50,
       marginLeft: 50,
-      marginBottom: 20
+      marginBottom: 20,
     },
     [theme.breakpoints.down('xs')]: {
-      margin:0
+      margin: 0,
     },
   },
-  hrStyle:{
+  hrStyle: {
     width: 500,
     [theme.breakpoints.down('xs')]: {
-      width : '90%'
-    }
+      width: '90%',
+    },
   },
   imageStyle: {
     width: 25,
@@ -132,19 +132,19 @@ export default theme => ({
     [theme.breakpoints.down('xs')]: {
       height: 20,
       width: 20,
-    }
+    },
   },
-  buttonReservation:{
+  buttonReservation: {
     position: 'fixed',
-    bottom:0,
+    bottom: 0,
     width: '100%',
-    height: 50
+    height: 50,
   },
-  showReservation:{
-    display:'flex',
+  showReservation: {
+    display: 'flex',
     justifyContent: 'center',
   },
-  iconButtonStyle:{
+  iconButtonStyle: {
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     width: 40,
     height: 40,
@@ -152,190 +152,190 @@ export default theme => ({
       backgroundColor: 'white',
     },
     [theme.breakpoints.down('sm')]: {
-      height:50,
-      width:50,
+      height: 50,
+      width: 50,
     },
     [theme.breakpoints.down('xs')]: {
-      height:20,
-      width:20,
-    }
+      height: 20,
+      width: 20,
+    },
   },
-  drawerContent:{
+  drawerContent: {
     marginTop: 20,
   },
-  avatarAnDescription:{
+  avatarAnDescription: {
     display: ' flex',
     [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column-reverse'
-    }
+      flexDirection: 'column-reverse',
+    },
   },
-  flexContentAvatarAndDescription:{
+  flexContentAvatarAndDescription: {
     width: '80%',
     [theme.breakpoints.down('xs')]: {
       width: '100%',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      textAlign: 'center'
-    }
+      textAlign: 'center',
+    },
   },
-  marginAvatarAndDescriptionContent:{
+  marginAvatarAndDescriptionContent: {
     marginBottom: 10,
     [theme.breakpoints.down('xs')]: {
       marginTop: 10,
-    }
+    },
   },
-  itemListContainer:{
+  itemListContainer: {
     width: '100%',
     display: 'flex',
     [theme.breakpoints.down('xs')]: {
       width: '100%',
-      flexDirection:'column',
-      alignItems: 'center'
-    }
-  },
-  middleHr:{
-    width : 400,
-    [theme.breakpoints.down('xs')]: {
-      width: '90%'
-    }
-  },
-  scheduleContainer:{
-    marginTop: 30,
-  },
-  scheduleContainerTitle:{
-    [theme.breakpoints.down('xs')]: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexDirection : 'column',
-      alignItems: 'center'
-    }
-  },
-  basketMinimumContainer:{
-    marginTop: 30,
-    [theme.breakpoints.down('xs')]: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexDirection : 'column',
-      alignItems: 'center'
-    }
-  },
-  textContentBasket:{
-    [theme.breakpoints.down('xs')]: {
-     textAlign: 'center',
-      marginLeft : 15,
-      marginRight : 15
-    }
-  },
-  priceBasketContent:{
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.down('xs')]: {
-      marginTop: 20
-    }
-  },
-  delayPrevenance:{
-    marginTop: 30,
-    [theme.breakpoints.down('xs')]: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexDirection : 'column',
-      alignItems: 'center'
-    }
-  },
-  textContentDelay:{
-    [theme.breakpoints.down('xs')]: {
-      textAlign: 'center',
-      marginLeft : 15,
-      marginRight : 15
-    }
-  },
-  delayPrevenanceContent:{
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.down('xs')]: {
-      marginTop: 20
-    }
-  },
-  perimeterContent:{
-    marginTop: 30,
-    [theme.breakpoints.down('xs')]: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexDirection : 'column',
-      alignItems: 'center'
-    }
-  },
-  textContentPerimeter:{
-    [theme.breakpoints.down('xs')]: {
-      textAlign: 'center',
-      marginLeft : 15,
-      marginRight : 15
-    }
-  },
-  bookingConditionContent:{
-    marginTop: 30,
-    [theme.breakpoints.down('xs')]: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexDirection : 'column',
-      alignItems: 'center'
-    }
-  },
-  bookingConditionContentTitle:{
-    [theme.breakpoints.down('xs')]: {
-      textAlign: 'center'
-    }
-  },
-  listContent:{
-    display: 'flex',
-    flexDirection : 'column',
-    [theme.breakpoints.down('xs')]: {
-      marginLeft : 15
-    }
-  },
-  listStyle:{
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection : 'row'
-  },
-  commentaryContent:{
-    marginTop: 30,
-    [theme.breakpoints.down('xs')]: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexDirection : 'column',
+      flexDirection: 'column',
       alignItems: 'center',
-      marginBottom: 100
-    }
+    },
   },
-  equipmentsContainer:{
+  middleHr: {
+    width: 400,
+    [theme.breakpoints.down('xs')]: {
+      width: '90%',
+    },
+  },
+  scheduleContainer: {
+    marginTop: 30,
+  },
+  scheduleContainerTitle: {
+    [theme.breakpoints.down('xs')]: {
+      display: 'flex',
+      justifyContent: 'center',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+  },
+  basketMinimumContainer: {
     marginTop: 30,
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
       justifyContent: 'center',
-      flexDirection : 'column',
+      flexDirection: 'column',
       alignItems: 'center',
-      marginBottom: 100
-    }
+    },
   },
-  textEquipments:{
+  textContentBasket: {
     [theme.breakpoints.down('xs')]: {
       textAlign: 'center',
-      marginLeft : 15,
-      marginRight : 15
-    }
+      marginLeft: 15,
+      marginRight: 15,
+    },
   },
-  marginRight:{
-    marginRight: 20
+  priceBasketContent: {
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 20,
+    },
   },
-  textField:{
-    width: 70
+  delayPrevenance: {
+    marginTop: 30,
+    [theme.breakpoints.down('xs')]: {
+      display: 'flex',
+      justifyContent: 'center',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
   },
-  datePickerStyle:{
+  textContentDelay: {
+    [theme.breakpoints.down('xs')]: {
+      textAlign: 'center',
+      marginLeft: 15,
+      marginRight: 15,
+    },
+  },
+  delayPrevenanceContent: {
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 20,
+    },
+  },
+  perimeterContent: {
+    marginTop: 30,
+    [theme.breakpoints.down('xs')]: {
+      display: 'flex',
+      justifyContent: 'center',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+  },
+  textContentPerimeter: {
+    [theme.breakpoints.down('xs')]: {
+      textAlign: 'center',
+      marginLeft: 15,
+      marginRight: 15,
+    },
+  },
+  bookingConditionContent: {
+    marginTop: 30,
+    [theme.breakpoints.down('xs')]: {
+      display: 'flex',
+      justifyContent: 'center',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+  },
+  bookingConditionContentTitle: {
+    [theme.breakpoints.down('xs')]: {
+      textAlign: 'center',
+    },
+  },
+  listContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: 15,
+    },
+  },
+  listStyle: {
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  commentaryContent: {
+    marginTop: 30,
+    [theme.breakpoints.down('xs')]: {
+      display: 'flex',
+      justifyContent: 'center',
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginBottom: 100,
+    },
+  },
+  equipmentsContainer: {
+    marginTop: 30,
+    [theme.breakpoints.down('xs')]: {
+      display: 'flex',
+      justifyContent: 'center',
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginBottom: 100,
+    },
+  },
+  textEquipments: {
+    [theme.breakpoints.down('xs')]: {
+      textAlign: 'center',
+      marginLeft: 15,
+      marginRight: 15,
+    },
+  },
+  marginRight: {
+    marginRight: 20,
+  },
+  textField: {
+    width: 70,
+  },
+  datePickerStyle: {
     borderRadius: 5,
     border: '2px solid #d2d2d2',
     height: 30,
-    boxShadow: '1px 1px 1px 1px gainsboro'
-  }
+    boxShadow: '1px 1px 1px 1px gainsboro',
+  },
 })

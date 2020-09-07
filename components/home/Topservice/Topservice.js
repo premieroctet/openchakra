@@ -48,7 +48,7 @@ const styles = theme => ({
       maxWidth: 350,
     },
     [theme.breakpoints.up('lg')]: {
-      maxWidth: 300
+      maxWidth: 300,
     },
 
   },
@@ -58,7 +58,7 @@ const styles = theme => ({
     },
   },
   media2: {
-    height: 200
+    height: 200,
   },
   textBox1: {
     color: 'rgba(84,89,95,0.95)',
@@ -104,27 +104,27 @@ class TopService extends React.Component {
     this.state = {
       service: [],
       tags: {},
-    }
+    };
   }
 
   componentDidMount() {
 
     axios.get('/myAlfred/api/tags/all')
-        .then(response => {
-              let data = response.data;
-              let random = data[Math.floor(Math.random() * data.length)];
-              this.setState({tags:random});
-              axios.get('/myAlfred/api/service/all/tags/' + random._id)
-                  .then(res => {
-                    let service = res.data;
+      .then(response => {
+          let data = response.data;
+          let random = data[Math.floor(Math.random() * data.length)];
+          this.setState({tags: random});
+          axios.get('/myAlfred/api/service/all/tags/' + random._id)
+            .then(res => {
+              let service = res.data;
 
-                    this.setState({service: service})
+              this.setState({service: service});
 
-                  })
-                  .catch()
-            }
-        )
-        .catch();
+            })
+            .catch();
+        },
+      )
+      .catch();
   }
 
   render() {
@@ -133,58 +133,62 @@ class TopService extends React.Component {
     const {tags} = this.state;
     const resdata = shuffleArray(service);
     const services = resdata.slice(0, 4).map(e => (
-        <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
-          <Card className={classes.card} style={{
-    height:'600px',
-    backgroundColor:'transparent',
-    textAlign:'center',
-    margin:10,
-    boxShadow: '1px 3px 1px transparent'}}>
-            <CardActionArea style={{
-    height:'600px',
-     }}>
-              <CardMedia
-                  className={classes.media2}
-                  image={e.picture}
-                  title="Paysage"
-                  style={{height:'530px', width: '100%',}}
-              />
-              <CardContent>
+      <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
+        <Card className={classes.card} style={{
+          height: '600px',
+          backgroundColor: 'transparent',
+          textAlign: 'center',
+          margin: 10,
+          boxShadow: '1px 3px 1px transparent',
+        }}>
+          <CardActionArea style={{
+            height: '600px',
+          }}>
+            <CardMedia
+              className={classes.media2}
+              image={e.picture}
+              title="Paysage"
+              style={{height: '530px', width: '100%'}}
+            />
+            <CardContent>
 
-                <Typography gutterBottom variant="h5" component="p" style={{fontSize:16, fontWeight:100, textAlign:'center'}}>
-                  {e.label}
-                </Typography>
-                <Typography component="p">
-                  {e.description}
-                </Typography>
+              <Typography gutterBottom variant="h5" component="p"
+                          style={{fontSize: 16, fontWeight: 100, textAlign: 'center'}}>
+                {e.label}
+              </Typography>
+              <Typography component="p">
+                {e.description}
+              </Typography>
 
-              </CardContent>
-            </CardActionArea>
+            </CardContent>
+          </CardActionArea>
 
-          </Card>
-        </Grid>
+        </Card>
+      </Grid>
     ));
 
     return (
-        <Fragment>
-          <Grid container className={classes.container}>
-            <Grid item xs={2}></Grid>
-            <Grid item xs={8}>
-              <div>
-                <Typography variant="h4" className={classes.textBox1}>
-                    {tags.title}
-                </Typography>
-                <Grid container>
-                  <Grid item xs={5}></Grid>
-                  <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
-                  <Grid item xs={5}></Grid>
+      <Fragment>
+        <Grid container className={classes.container}>
+          <Grid item xs={2}></Grid>
+          <Grid item xs={8}>
+            <div>
+              <Typography variant="h4" className={classes.textBox1}>
+                {tags.title}
+              </Typography>
+              <Grid container>
+                <Grid item xs={5}></Grid>
+                <Grid item xs={2}>
+                  <hr className={classes.grosHR}/>
                 </Grid>
-              </div>
-            </Grid>
-            <Grid item xs={2}></Grid>
-            {services}
+                <Grid item xs={5}></Grid>
+              </Grid>
+            </div>
           </Grid>
-        </Fragment>
+          <Grid item xs={2}></Grid>
+          {services}
+        </Grid>
+      </Fragment>
     );
   }
 };

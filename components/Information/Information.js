@@ -11,34 +11,35 @@ import withStyles from '@material-ui/core/styles/withStyles';
 class Information extends React.Component {
 
   /**
-  props:
+   props:
    - open : true/false
    - onClose : callback when closing
    - text : text or html
    - type : 'info' or 'warning'
-  */
+   */
   render() {
     const {classes, open} = this.props;
-    const type=this.props.type ? this.props.type : 'info';
+    const type = this.props.type ? this.props.type : 'info';
 
     if (!open) {
-      return null
+      return null;
     }
     return (
-      <Dialog aria-labelledby="simple-dialog-title" open={this.props.open} onClose={this.props.onClose} classes={{paper: classes.paperOverride}}>
-        <DialogTitle id="alert-dialog-title">{this.props.type ? 'Oups !': 'Info'}</DialogTitle>
-          <DialogContent>
-              <DialogContentText id="alert-dialog-description" className={classes.textContentDiAlog}
-                dangerouslySetInnerHTML={{ __html: this.props.text}} />
-          </DialogContent>
-          <DialogActions>
-              <Button onClick={this.props.onClose} color="primary">
-                  Ok
-              </Button>
-          </DialogActions>
+      <Dialog aria-labelledby="simple-dialog-title" open={this.props.open} onClose={this.props.onClose}
+              classes={{paper: classes.paperOverride}}>
+        <DialogTitle id="alert-dialog-title">{this.props.type ? 'Oups !' : 'Info'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description" className={classes.textContentDiAlog}
+                             dangerouslySetInnerHTML={{__html: this.props.text}}/>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.props.onClose} color="primary">
+            Ok
+          </Button>
+        </DialogActions>
       </Dialog>
-    )
+    );
   }
 }
 
-export default withStyles(styles)(Information)
+export default withStyles(styles)(Information);

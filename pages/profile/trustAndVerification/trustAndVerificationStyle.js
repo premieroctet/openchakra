@@ -10,57 +10,57 @@ export default theme => ({
   hidesm: {
     minWidth: '271px',
     [theme.breakpoints.down('sm')]: {
-      display:'none'
-    }
+      display: 'none',
+    },
   }
-  ,hidelg: {
+  , hidelg: {
     [theme.breakpoints.up('md')]: {
-      display:'none',
-    }
+      display: 'none',
+    },
   },
-  trigger:{
+  trigger: {
     [theme.breakpoints.down('sm')]: {
       marginTop: -10,
       width: '100%',
-      marginLeft:'0px',
-      height:'30px',
-      backgroundColor:'#2FBCD3',
-      display:'block',
+      marginLeft: '0px',
+      height: '30px',
+      backgroundColor: '#2FBCD3',
+      display: 'block',
       transition: 'display 0.7s',
-      borderRadius:'5px',
+      borderRadius: '5px',
       '&:focus': {
-        display:'none',
+        display: 'none',
         transition: 'display 0.7s',
-      }
-    }
+      },
+    },
   },
   buttresp: {
     [theme.breakpoints.down('sm')]: {
-      width:'86%!important',
-      fontSize:'0.7rem'
-    }
+      width: '86%!important',
+      fontSize: '0.7rem',
+    },
   },
   buttresp2: {
     [theme.breakpoints.down('sm')]: {
-      width:'168%!important',
-      fontSize:'0.7rem'
-    }
+      width: '168%!important',
+      fontSize: '0.7rem',
+    },
   },
-  respenr:{
+  respenr: {
     [theme.breakpoints.down('sm')]: {
-      justifyContent:'flex-start!important',
-    }
+      justifyContent: 'flex-start!important',
+    },
   },
   toggle: {
     [theme.breakpoints.down('sm')]: {
-      marginLeft:'-75px',
+      marginLeft: '-75px',
       transition: 'margin-left 0.7s',
       '&:hover': {
-        marginLeft:'0px',
+        marginLeft: '0px',
         transition: 'margin-left 0.7s',
         boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-      }
-    }
+      },
+    },
   },
   menuButton: {
     marginLeft: theme.spacing(1),
@@ -69,58 +69,58 @@ export default theme => ({
       display: 'none',
     },
   },
-  containerLeft:{
+  containerLeft: {
     paddingLeft: 55,
     [theme.breakpoints.down('xs')]: {
       paddingLeft: 'inherit',
     },
   },
-  textField:{
+  textField: {
     marginTop: 15,
-    width:'50%',
-    [theme.breakpoints.down('xs')]:{
-     width:'80%'
-    }
+    width: '50%',
+    [theme.breakpoints.down('xs')]: {
+      width: '80%',
+    },
   },
-  contentIcones:{
+  contentIcones: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%'
+    width: '100%',
   },
-  forminputs:{
+  forminputs: {
     display: 'inline-block',
-    marginTop:5,
-    textAlign:"center"
+    marginTop: 5,
+    textAlign: 'center',
   },
-  containerProfessional:{
+  containerProfessional: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
-  buttonSend:{
+  buttonSend: {
     width: '50%',
-    [theme.breakpoints.down('xs')]:{
-      width:'95%'
-    }
+    [theme.breakpoints.down('xs')]: {
+      width: '95%',
+    },
   },
-  typeFile:{
+  typeFile: {
     width: '35%',
-    [theme.breakpoints.down('xs')]:{
-      width:'70%'
-    }
+    [theme.breakpoints.down('xs')]: {
+      width: '70%',
+    },
   },
-  containerRecto:{
+  containerRecto: {
     marginTop: 20,
-    border:'0.2px solid lightgrey',
-    display:"flex",
-    justifyContent:"center",
+    border: '0.2px solid lightgrey',
+    display: 'flex',
+    justifyContent: 'center',
     width: '35%',
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('xs')]: {
       width: '100%',
-    }
+    },
   },
-  buttonSendSMS:{
+  buttonSendSMS: {
     width: '50%',
 
-  }
+  },
 })

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#4FBDD7;}
 	.st1{fill:#EAEAEA;}
@@ -51,17 +51,17 @@
 	.st45{fill:none;stroke:#FFFFFF;stroke-width:9;stroke-miterlimit:10;}
 	.st46{fill:none;stroke:#4FBDD7;stroke-width:3;stroke-miterlimit:10;}
 </style>
-<rect class="st0" width="500" height="500"/>
-<path class="st2" d="M312.1,250.3c-12,0-21.8,9.8-21.8,21.8s9.8,21.8,21.8,21.8s21.8-9.8,21.8-21.8S324.2,250.3,312.1,250.3z
+    <rect class="st0" height="500" width="500"/>
+    <path class="st2" d="M312.1,250.3c-12,0-21.8,9.8-21.8,21.8s9.8,21.8,21.8,21.8s21.8-9.8,21.8-21.8S324.2,250.3,312.1,250.3z
 	 M312.1,279.4c-4,0-7.3-3.3-7.3-7.3s3.3-7.3,7.3-7.3s7.3,3.3,7.3,7.3S316.1,279.4,312.1,279.4z"/>
-<path class="st2" d="M312.1,75c-28,0-50.9,22.8-50.9,50.9v7.3h-88.2v-29.1h-29.1c-16,0-29.1,13-29.1,29.1v160.8
+    <path class="st2" d="M312.1,75c-28,0-50.9,22.8-50.9,50.9v7.3h-88.2v-29.1h-29.1c-16,0-29.1,13-29.1,29.1v160.8
 	c0,16,13,29.1,29.1,29.1h168.1c28,0,50.9-22.8,50.9-50.9V125.9C363,97.8,340.2,75,312.1,75z M129.5,133.1c0-8,6.5-14.5,14.5-14.5
 	h14.5v146.3h-14.5c-5.3,0-10.3,1.4-14.5,3.9V133.1z M144.1,308.5c-8,0-14.5-6.5-14.5-14.5s6.5-14.5,14.5-14.5h29.1V147.7h88.2v124.5
 	c0,14.2,5.9,27.1,15.3,36.3C270.4,308.5,149.9,308.5,144.1,308.5z M312.1,308.5c-20,0-36.3-16.3-36.3-36.3s16.3-36.3,36.3-36.3
 	s36.3,16.3,36.3,36.3S332.2,308.5,312.1,308.5z M312.1,221.3c-14.2,0-27.1,5.9-36.3,15.3V125.9c0-20,16.3-36.3,36.3-36.3
 	s36.3,16.3,36.3,36.3v110.7C339.2,227.1,326.4,221.3,312.1,221.3z"/>
-<g>
-	<rect x="-2" y="360" class="st30" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 33.1636 398.5557)" class="st2 st31 st32">Bâche de protection</text>
+    <g>
+	<rect class="st30" height="144" width="500" x="-2" y="360"/>
+        <text class="st2 st31 st32" transform="matrix(1 0 0 1 33.1636 398.5557)">Bâche de protection</text>
 </g>
 </svg>

@@ -2,7 +2,7 @@ const isEmpty = require('../server/validation/is-empty');
 
 const data2ServiceUser = (data, su) => {
 
-  console.log("data2ServiceUser:data is "+JSON.stringify(data));
+  console.log('data2ServiceUser:data is ' + JSON.stringify(data));
   su.service = data.service;
   su.perimeter = data.perimeter || 0;
 
@@ -18,26 +18,30 @@ const data2ServiceUser = (data, su) => {
 
   su.graduated = false;
   // FIX : reinsert diploma & certification files
-  console.log("Diploma before:"+JSON.stringify(su.diploma));
+  console.log('Diploma before:' + JSON.stringify(su.diploma));
   if ('diplomaName' in data && 'diplomaYear' in data) {
-    if (su.diploma==null) {su.diploma={}};
+    if (su.diploma == null) {
+      su.diploma = {};
+    }
+    ;
     su.diploma.name = data.diplomaName;
     su.diploma.year = data.diplomaYear;
     su.graduated = true;
-  }
-  else {
+  } else {
     console.log('No file uploaded');
   }
-  console.log("Diploma after:"+JSON.stringify(su.diploma));
+  console.log('Diploma after:' + JSON.stringify(su.diploma));
 
   su.is_certified = false;
   if ('certificationName' in data && 'certificationYear' in data) {
-    if (su.certification==null) {su.certification= {}};
+    if (su.certification == null) {
+      su.certification = {};
+    }
+    ;
     su.certification.name = data.certificationName;
     su.certification.year = data.certificationYear;
     su.is_certified = true;
-  }
-  else {
+  } else {
     console.log('No file uploaded');
   }
 
@@ -45,6 +49,6 @@ const data2ServiceUser = (data, su) => {
   su.equipments = data.equipments;
 
   return su;
-}
+};
 
-module.exports={data2ServiceUser};
+module.exports = {data2ServiceUser};

@@ -26,195 +26,197 @@ import HomeIcon from '@material-ui/icons/Home';
 import cookie from 'react-cookies';
 
 const styles = theme => ({
-    signupContainer: {
-        alignItems: 'center',
-        justifyContent: 'top',
-        flexDirection: 'column',
+  signupContainer: {
+    alignItems: 'center',
+    justifyContent: 'top',
+    flexDirection: 'column',
 
-    },
-    card: {
-        padding: '1.5rem 3rem',
+  },
+  card: {
+    padding: '1.5rem 3rem',
 
-        marginTop: '100px',
-    },
-    cardContant: {
-        flexDirection: 'column',
-    },
-    linkText: {
-        textDecoration: 'none',
-        color: 'black',
-        fontSize: 12,
-        lineHeight: 4.15,
-    },
-    table: {
-        minWidth: 650,
-    },
+    marginTop: '100px',
+  },
+  cardContant: {
+    flexDirection: 'column',
+  },
+  linkText: {
+    textDecoration: 'none',
+    color: 'black',
+    fontSize: 12,
+    lineHeight: 4.15,
+  },
+  table: {
+    minWidth: 650,
+  },
 });
 
 const actionsStyles = theme => ({
-    root: {
-        flexShrink: 0,
-        color: theme.palette.text.secondary,
-        marginLeft: theme.spacing(2.5)
-    }
+  root: {
+    flexShrink: 0,
+    color: theme.palette.text.secondary,
+    marginLeft: theme.spacing(2.5),
+  },
 });
 
 class TablePaginationActions extends React.Component {
-    handleFirstPageButtonClick = event => {
-        this.props.onChangePage(event, 0);
-    };
+  handleFirstPageButtonClick = event => {
+    this.props.onChangePage(event, 0);
+  };
 
-    handleBackButtonClick = event => {
-        this.props.onChangePage(event, this.props.page - 1);
-    };
+  handleBackButtonClick = event => {
+    this.props.onChangePage(event, this.props.page - 1);
+  };
 
-    handleNextButtonClick = event => {
-        this.props.onChangePage(event, this.props.page + 1);
-    };
+  handleNextButtonClick = event => {
+    this.props.onChangePage(event, this.props.page + 1);
+  };
 
-    handleLastPageButtonClick = event => {
-        this.props.onChangePage(event, Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1));
-    };
+  handleLastPageButtonClick = event => {
+    this.props.onChangePage(event, Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1));
+  };
 
-    render() {
-        const { classes, count, page, rowsPerPage, theme } = this.props;
+  render() {
+    const {classes, count, page, rowsPerPage, theme} = this.props;
 
-        return <div className={classes.root}>
-            <IconButton onClick={this.handleFirstPageButtonClick} disabled={page === 0} aria-label="First Page">
-                {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
-            </IconButton>
-            <IconButton onClick={this.handleBackButtonClick} disabled={page === 0} aria-label="Previous Page">
-                {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-            </IconButton>
-            <IconButton onClick={this.handleNextButtonClick} disabled={page >= Math.ceil(count / rowsPerPage) - 1} aria-label="Next Page">
-                {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-            </IconButton>
-            <IconButton onClick={this.handleLastPageButtonClick} disabled={page >= Math.ceil(count / rowsPerPage) - 1} aria-label="Last Page">
-                {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
-            </IconButton>
-        </div>;
-    }
+    return <div className={classes.root}>
+      <IconButton onClick={this.handleFirstPageButtonClick} disabled={page === 0} aria-label="First Page">
+        {theme.direction === 'rtl' ? <LastPageIcon/> : <FirstPageIcon/>}
+      </IconButton>
+      <IconButton onClick={this.handleBackButtonClick} disabled={page === 0} aria-label="Previous Page">
+        {theme.direction === 'rtl' ? <KeyboardArrowRight/> : <KeyboardArrowLeft/>}
+      </IconButton>
+      <IconButton onClick={this.handleNextButtonClick} disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+                  aria-label="Next Page">
+        {theme.direction === 'rtl' ? <KeyboardArrowLeft/> : <KeyboardArrowRight/>}
+      </IconButton>
+      <IconButton onClick={this.handleLastPageButtonClick} disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+                  aria-label="Last Page">
+        {theme.direction === 'rtl' ? <FirstPageIcon/> : <LastPageIcon/>}
+      </IconButton>
+    </div>;
+  }
 }
+
 TablePaginationActions.propTypes = {
-    classes: PropTypes.object.isRequired,
-    count: PropTypes.number.isRequired,
-    onChangePage: PropTypes.func.isRequired,
-    page: PropTypes.number.isRequired,
-    rowsPerPage: PropTypes.number.isRequired,
-    theme: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
+  count: PropTypes.number.isRequired,
+  onChangePage: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+  theme: PropTypes.object.isRequired,
 
 };
-const TablePaginationActionsWrapped = withStyles(actionsStyles, { withTheme: true })(TablePaginationActions);
+const TablePaginationActionsWrapped = withStyles(actionsStyles, {withTheme: true})(TablePaginationActions);
 
 class all extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            billing: [],
-            page: 0,
-            rowsPerPage: 10,
+  constructor(props) {
+    super(props);
+    this.state = {
+      billing: [],
+      page: 0,
+      rowsPerPage: 10,
 
-        };
-
-        this.handleChangePage = this.handleChangePage.bind(this);
-        this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
-
-    }
-
-    componentDidMount() {
-        localStorage.setItem('path',Router.pathname);
-        axios.defaults.headers.common['Authorization'] = cookie.load('token')
-
-        axios.get("/myAlfred/api/admin/billing/all")
-            .then((response) => {
-                let billing = response.data;
-                this.setState({billing: billing})
-            }).catch((error) => {
-            console.log(error);
-            if(error.response.status === 401 || error.response.status === 403) {
-                cookie.remove('token', { path: '/' })
-                Router.push({pathname: '/login'})
-            }
-        });
-    }
-
-    handleChangePage(event, page) {
-        this.setState({page});
-    }
-
-    handleChangeRowsPerPage(event) {
-        this.setState({ page: 0, rowsPerPage: event.target.value });
-    }
-
-
-    render() {
-        const { classes } = this.props;
-        const {billing} = this.state;
-
-        return (
-            <Layout>
-                <Grid container style={{marginTop: 70}}>
-                    <Link href={'/dashboard/home'}>
-                        <Typography  className="retour"><HomeIcon className="retour2"/> <span>Retour</span></Typography>
-                    </Link>
-                </Grid>
-                <Grid container className={classes.signupContainer}>
-                    <Card className={classes.card}>
-                        <Paper style={{width: '100%'}}>
-                            <div>
-                            <Table className={classes.table}>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Label</TableCell>
-                                        <TableCell>Action</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {billing.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-                                        .map((e,index) =>
-                                        <TableRow key={index}>
-                                            <TableCell component="th" scope="row">
-                                                {e.label}
-                                            </TableCell>
-                                            <TableCell>
-                                                <Link href={`/dashboard/billing/view?id=${e._id}`}><a>Modifier</a></Link>
-                                            </TableCell>
-
-                                        </TableRow>
-                                    )}
-
-                                </TableBody>
-                            </Table>
-                            </div>
-                            <TablePagination
-                                rowsPerPageOptions={[10, 25]}
-                                component="div"
-                                count={billing.length}
-                                rowsPerPage={this.state.rowsPerPage}
-                                page={this.state.page}
-                                backIconButtonProps={{
-                                    'aria-label': 'Previous Page',
-                                }}
-                                nextIconButtonProps={{
-                                    'aria-label': 'Next Page',
-                                }}
-                                onChangePage={this.handleChangePage}
-                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                ActionsComponent={TablePaginationActionsWrapped }
-                            />
-                        </Paper>
-                        <Link href={"/dashboard/billing/add"}>
-                            <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
-                                Ajouter
-                            </Button>
-                        </Link>
-                    </Card>
-                </Grid>
-            </Layout>
-        );
     };
-}
 
+    this.handleChangePage = this.handleChangePage.bind(this);
+    this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
+
+  }
+
+  componentDidMount() {
+    localStorage.setItem('path', Router.pathname);
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+
+    axios.get('/myAlfred/api/admin/billing/all')
+      .then((response) => {
+        let billing = response.data;
+        this.setState({billing: billing});
+      }).catch((error) => {
+      console.log(error);
+      if (error.response.status === 401 || error.response.status === 403) {
+        cookie.remove('token', {path: '/'});
+        Router.push({pathname: '/login'});
+      }
+    });
+  }
+
+  handleChangePage(event, page) {
+    this.setState({page});
+  }
+
+  handleChangeRowsPerPage(event) {
+    this.setState({page: 0, rowsPerPage: event.target.value});
+  }
+
+
+  render() {
+    const {classes} = this.props;
+    const {billing} = this.state;
+
+    return (
+      <Layout>
+        <Grid container style={{marginTop: 70}}>
+          <Link href={'/dashboard/home'}>
+            <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour</span></Typography>
+          </Link>
+        </Grid>
+        <Grid container className={classes.signupContainer}>
+          <Card className={classes.card}>
+            <Paper style={{width: '100%'}}>
+              <div>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Label</TableCell>
+                      <TableCell>Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {billing.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+                      .map((e, index) =>
+                        <TableRow key={index}>
+                          <TableCell component="th" scope="row">
+                            {e.label}
+                          </TableCell>
+                          <TableCell>
+                            <Link href={`/dashboard/billing/view?id=${e._id}`}><a>Modifier</a></Link>
+                          </TableCell>
+
+                        </TableRow>,
+                      )}
+
+                  </TableBody>
+                </Table>
+              </div>
+              <TablePagination
+                rowsPerPageOptions={[10, 25]}
+                component="div"
+                count={billing.length}
+                rowsPerPage={this.state.rowsPerPage}
+                page={this.state.page}
+                backIconButtonProps={{
+                  'aria-label': 'Previous Page',
+                }}
+                nextIconButtonProps={{
+                  'aria-label': 'Next Page',
+                }}
+                onChangePage={this.handleChangePage}
+                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActionsWrapped}
+              />
+            </Paper>
+            <Link href={'/dashboard/billing/add'}>
+              <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
+                Ajouter
+              </Button>
+            </Link>
+          </Card>
+        </Grid>
+      </Layout>
+    );
+  };
+}
 
 
 export default withStyles(styles)(all);

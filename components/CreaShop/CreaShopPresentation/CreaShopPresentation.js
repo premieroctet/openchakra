@@ -9,20 +9,20 @@ import '../../../static/assets/police/signatra.css';
 class CreaShopPresentation extends React.Component {
   constructor(props) {
     super(props);
-    this.state={
-
-    }
+    this.state = {};
   }
+
   render() {
     const {classes} = this.props;
 
-    return(
+    return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
           <Grid className={classes.contentLeft}>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
-                <Typography className={classes.policySizeTitle}>Nous allons vous aider à créer votre service & devenir un Alfred en 3 minutes !  </Typography>
+                <Typography className={classes.policySizeTitle}>Nous allons vous aider à créer votre service & devenir
+                  un Alfred en 3 minutes ! </Typography>
               </Grid>
               <Grid className={classes.contentTextSize}>
                 <Grid>
@@ -35,7 +35,9 @@ class CreaShopPresentation extends React.Component {
                       <h3 className={classes.policySizeSubtitle}>Choisissez votre premier super talent ! </h3>
                     </Grid>
                     <Grid>
-                      <p className={classes.policySizeContent}>Sélectionnez le premier service que vous souhaitez proposer ! Et comme un talent en appelle un autre, vous pourrez ajouter autant de services que vous voulez</p>
+                      <p className={classes.policySizeContent}>Sélectionnez le premier service que vous souhaitez
+                        proposer ! Et comme un talent en appelle un autre, vous pourrez ajouter autant de services que
+                        vous voulez</p>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -46,10 +48,12 @@ class CreaShopPresentation extends React.Component {
                   </Grid>
                   <Grid>
                     <Grid>
-                      <h3 className={classes.policySizeSubtitle}>Vous êtes chez vous ! Fixez vos règles et vos conditions…</h3>
+                      <h3 className={classes.policySizeSubtitle}>Vous êtes chez vous ! Fixez vos règles et vos
+                        conditions…</h3>
                     </Grid>
                     <Grid>
-                      <p className={classes.policySizeContent}>Indiquez vos disponibilités, paramètres de réservation et vos conditions d’annulation</p>
+                      <p className={classes.policySizeContent}>Indiquez vos disponibilités, paramètres de réservation et
+                        vos conditions d’annulation</p>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -63,7 +67,8 @@ class CreaShopPresentation extends React.Component {
                       <h3 className={classes.policySizeSubtitle}>Présentez-vous !</h3>
                     </Grid>
                     <Grid>
-                      <p className={classes.policySizeContent}>Renseignez votre profil Alfred, partagez vos réalisations, et décrivez-vous ! </p>
+                      <p className={classes.policySizeContent}>Renseignez votre profil Alfred, partagez vos
+                        réalisations, et décrivez-vous ! </p>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -72,7 +77,7 @@ class CreaShopPresentation extends React.Component {
           </Grid>
         </Grid>
       </Grid>
-    )
+    );
   }
 }
 
@@ -81,4 +86,4 @@ CreaShopPresentation.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default  withStyles(styles, { withTheme: true }) (CreaShopPresentation);
+export default withStyles(styles, {withTheme: true})(CreaShopPresentation);

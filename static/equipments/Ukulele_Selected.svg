@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#4FBDD7;}
 	.st1{fill:#EAEAEA;}
@@ -51,17 +51,18 @@
 	.st45{fill:none;stroke:#FFFFFF;stroke-width:9;stroke-miterlimit:10;}
 	.st46{fill:none;stroke:#4FBDD7;stroke-width:3;stroke-miterlimit:10;}
 </style>
-<rect x="1" y="-1" class="st0" width="500" height="500"/>
-<path class="st2" d="M266,149.1c4.3,1.1,8.2,3.4,11.4,6.6c3.2,3.2,5.5,7.1,6.6,11.4l21.9-21.9l21.9-21.9l-18-18L266,149.1z"/>
-<path class="st2" d="M316.4,94.2l22.5,22.5l13.5-4.5l-31.5-31.5L316.4,94.2z"/>
-<path class="st2" d="M322,75.1l18-18l36,36l-18,18L322,75.1z"/>
-<path class="st2" d="M277.4,191.7c-5,5-11.5,7.4-18,7.4c-6.5,0-13-2.5-18-7.4c-9.9-9.9-9.9-26.1,0-36c0,0,22.9-22.9,22.9-22.9h-31.9
+    <rect class="st0" height="500" width="500" x="1" y="-1"/>
+    <path class="st2"
+          d="M266,149.1c4.3,1.1,8.2,3.4,11.4,6.6c3.2,3.2,5.5,7.1,6.6,11.4l21.9-21.9l21.9-21.9l-18-18L266,149.1z"/>
+    <path class="st2" d="M316.4,94.2l22.5,22.5l13.5-4.5l-31.5-31.5L316.4,94.2z"/>
+    <path class="st2" d="M322,75.1l18-18l36,36l-18,18L322,75.1z"/>
+    <path class="st2" d="M277.4,191.7c-5,5-11.5,7.4-18,7.4c-6.5,0-13-2.5-18-7.4c-9.9-9.9-9.9-26.1,0-36c0,0,22.9-22.9,22.9-22.9h-31.9
 	c-37.2,2.1-69.9,24.9-84,58.5c-19.6,46.9,8.2,88.7,10.2,91.6c27.4,20.1,63.6,23.4,93.3,8.5c33-16.6,52.5-52.9,48.3-90.7l0-31.9l0,0
 	C292.6,176.5,285,184.1,277.4,191.7z M236.9,223.2l-27-27l9-9l27,27L236.9,223.2z"/>
-<path class="st2" d="M272.1,173.7c0-3.4-1.3-6.6-3.7-9c-2.4-2.4-5.6-3.7-9-3.7c-3.4,0-6.6,1.3-9,3.7c-5,5-5,13,0,18c5,5,13,5,18,0
+    <path class="st2" d="M272.1,173.7c0-3.4-1.3-6.6-3.7-9c-2.4-2.4-5.6-3.7-9-3.7c-3.4,0-6.6,1.3-9,3.7c-5,5-5,13,0,18c5,5,13,5,18,0
 	C270.8,180.3,272.1,177.1,272.1,173.7z"/>
-<g>
-	<rect x="-1" y="363" class="st32" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 169.5127 401.5557)" class="st2 st33 st34">Ukulélé</text>
+    <g>
+	<rect class="st32" height="144" width="500" x="-1" y="363"/>
+        <text class="st2 st33 st34" transform="matrix(1 0 0 1 169.5127 401.5557)">Ukulélé</text>
 </g>
 </svg>

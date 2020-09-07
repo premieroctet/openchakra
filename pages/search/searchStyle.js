@@ -8,11 +8,11 @@ export default theme => ({
   },
 
   media: {
-    height: "250px!important",
+    height: '250px!important',
     position: 'relative',
     objectFit: 'cover',
   },
-  respfilter:{
+  respfilter: {
     position: 'fixed',
     top: 65,
     zIndex: 10,
@@ -22,64 +22,64 @@ export default theme => ({
       top: 65,
     },
     [theme.breakpoints.down('xs')]: {
-      top: 230
-    }
+      top: 230,
+    },
   },
   mobilevoir: {
-    [theme.breakpoints.up("md")]: {
-      display: "none!important"
-    }
+    [theme.breakpoints.up('md')]: {
+      display: 'none!important',
+    },
   },
   webvoir: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none!important"
-    }
+    [theme.breakpoints.down('sm')]: {
+      display: 'none!important',
+    },
   },
-  DateInput_input__focused:{
+  DateInput_input__focused: {
     borderBottom: '1px solid #fb1515!important',
   },
   algol: {
     fontFamily: 'Helvetica Neue, Helvetica,sans-serif',
-    '::placeholder':{
+    '::placeholder': {
       color: '#cfcfcf',
     },
-    '&:hover':{
+    '&:hover': {
       border: '1px solid black!important',
       transition: 'border 0.5s',
     },
-    '&:focus':{
+    '&:focus': {
       border: '2px solid #2FBCD3!important',
       transition: 'border 0.5s',
-    }
+    },
   },
-  separatorBlue:{
-    width: '150px'
+  separatorBlue: {
+    width: '150px',
   },
-  containerTitle:{
+  containerTitle: {
     marginTop: 70,
-    [theme.breakpoints.down("xs")]: {
-      marginTop: 200
-    }
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 200,
+    },
   },
-  filterStatus:{
+  filterStatus: {
     borderRadius: '15px',
     backgroundColor: 'white',
     boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px',
     height: '100px',
     marginTop: 8,
-    padding:10,
+    padding: 10,
     zIndex: 1,
-    [theme.breakpoints.down("xs")]: {
-      width: 200
-    }
+    [theme.breakpoints.down('xs')]: {
+      width: 200,
+    },
   },
-  containerCardPreview:{
-    padding: 5
+  containerCardPreview: {
+    padding: 5,
   },
-  paddingResponsive:{
-    [theme.breakpoints.down("xs")]: {
+  paddingResponsive: {
+    [theme.breakpoints.down('xs')]: {
       padding: '0 !important',
-      marginBottom: 20
-    }
-  }
+      marginBottom: 20,
+    },
+  },
 })

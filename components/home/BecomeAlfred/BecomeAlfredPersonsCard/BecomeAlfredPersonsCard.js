@@ -13,7 +13,7 @@ const styles = theme => ({
     minWidth: '300px!important',
     marginRight: '10px!important',
     marginLeft: '10px!important',
-    
+
   },
   card11: {
     display: 'flex',
@@ -34,17 +34,17 @@ const styles = theme => ({
 
 class becomeAlfredPersonsCard extends Component {
 
-  render (props) {  
-  const { classes, avatar } = this.props;
-  return (
-    <Card className={classes.card11}>
-      <CardContent className={classes.card}>
-        <Avatar alt="John Doe" src={avatar} />
-        <Typography className={classes.personName}>John Doe</Typography>
-      </CardContent>
-    </Card>
-  )
-}
+  render(props) {
+    const {classes, avatar} = this.props;
+    return (
+      <Card className={classes.card11}>
+        <CardContent className={classes.card}>
+          <Avatar alt="John Doe" src={avatar}/>
+          <Typography className={classes.personName}>John Doe</Typography>
+        </CardContent>
+      </Card>
+    );
+  }
 }
 
 becomeAlfredPersonsCard.propTypes = {

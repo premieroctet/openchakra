@@ -16,7 +16,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import cookie from 'react-cookies';
 
-moment.locale("fr");
+moment.locale('fr');
 
 class FinishedReservations extends React.Component {
   constructor(props) {
@@ -29,52 +29,52 @@ class FinishedReservations extends React.Component {
       userReservations: [],
       finishedReservations: 0,
       isAlfred: false,
-      userInfo: {}
+      userInfo: {},
     };
-    this.callDrawer = this.callDrawer.bind(this)
+    this.callDrawer = this.callDrawer.bind(this);
 
   }
 
   componentDidMount() {
-    axios.defaults.headers.common["Authorization"] = cookie.load('token')
-    axios.get("/myAlfred/api/users/current").then(res => {
-      let result = res.data
-            this.setState({
-              userInfo: result,
-              user: result._id,
-	      isAlfred: result.is_alfred,
-	      tabs: !result.is_alfred,
-            });
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    axios.get('/myAlfred/api/users/current').then(res => {
+      let result = res.data;
+      this.setState({
+        userInfo: result,
+        user: result._id,
+        isAlfred: result.is_alfred,
+        tabs: !result.is_alfred,
+      });
 
 
-      axios.get("/myAlfred/api/booking/alfredBooking").then(res => {
-        this.setState({ alfredReservations: res.data });
+      axios.get('/myAlfred/api/booking/alfredBooking').then(res => {
+        this.setState({alfredReservations: res.data});
 
-        axios.get("/myAlfred/api/booking/userBooking").then(res => {
-          this.setState({ userReservations: res.data });
+        axios.get('/myAlfred/api/booking/userBooking').then(res => {
+          this.setState({userReservations: res.data});
 
           this.state.alfredReservations.forEach(booking => {
             if (
-              booking.status === "Refusée" ||
-              booking.status === "Annulée" ||
-              booking.status === "Terminée" ||
-              booking.status === "Expirée"
+              booking.status === 'Refusée' ||
+              booking.status === 'Annulée' ||
+              booking.status === 'Terminée' ||
+              booking.status === 'Expirée'
             ) {
               this.setState({
-                finishedReservations: this.state.finishedReservations + 1
+                finishedReservations: this.state.finishedReservations + 1,
               });
             }
           });
 
           this.state.userReservations.forEach(booking => {
             if (
-              booking.status === "Refusée" ||
-              booking.status === "Annulée" ||
-              booking.status === "Terminée" ||
-              booking.status === "Expirée"
+              booking.status === 'Refusée' ||
+              booking.status === 'Annulée' ||
+              booking.status === 'Terminée' ||
+              booking.status === 'Expirée'
             ) {
               this.setState({
-                finishedReservations: this.state.finishedReservations + 1
+                finishedReservations: this.state.finishedReservations + 1,
               });
             }
           });
@@ -84,20 +84,20 @@ class FinishedReservations extends React.Component {
   }
 
   handleClicktabs2 = () => {
-    this.setState({ tabs: true });
+    this.setState({tabs: true});
   };
 
   handleClicktabs = () => {
-    this.setState({ tabs: false });
+    this.setState({tabs: false});
   };
 
-  callDrawer(){
+  callDrawer() {
     this.child.current.handleDrawerToggle();
   }
 
   render() {
-        const {userInfo} = this.state;
-    const { classes } = this.props;
+    const {userInfo} = this.state;
+    const {classes} = this.props;
     const tabs = this.state.tabs;
 
     return (
@@ -126,146 +126,146 @@ class FinishedReservations extends React.Component {
                       onClick={this.callDrawer}
                       className={classes.menuButton}
                     >
-                      <MenuIcon />
+                      <MenuIcon/>
                     </IconButton>
                   </Grid>
                 </Grid>
               </Grid>
               <Grid className={classes.paddresp} item xs={9} sm={9} md={7}>
-                <Typography style={{ fontSize: "2rem", marginTop: "4%" }}>
+                <Typography style={{fontSize: '2rem', marginTop: '4%'}}>
                   Mes réservations terminées
                 </Typography>
-                <Typography style={{ fontSize: "0.8rem", marginBottom: "4%" }}>
+                <Typography style={{fontSize: '0.8rem', marginBottom: '4%'}}>
                   Vous avez {this.state.finishedReservations} réservations
                   terminées
                 </Typography>
-                              {
-                                userInfo.is_alfred ?
-                <Grid container className={classes.tabweb}>
-                  <Grid item xs={6} style={{ textAlign: "center" }}>
-                    <div>
-                      <h2
-                        onClick={this.handleClicktabs}
-                        style={{
-                          color: "#828181",
-                          fontWeight: "100",
-                          cursor: "pointer",
-                          marginLeft: "0%",
-                          position: "sticky"
-                        }}
-                      >
-                        En tant qu'Alfred
-                      </h2>
-                    </div>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <h2
-                      onClick={this.handleClicktabs2}
-                      style={{
-                        color: "#828181",
-                        fontWeight: "100",
-                        textAlign: "center",
-                        cursor: "pointer"
-                      }}
-                    >
-                      {" "}
-                      En tant qu'utilisateur
-                    </h2>
-                    <br />
-                  </Grid>
+                {
+                  userInfo.is_alfred ?
+                    <Grid container className={classes.tabweb}>
+                      <Grid item xs={6} style={{textAlign: 'center'}}>
+                        <div>
+                          <h2
+                            onClick={this.handleClicktabs}
+                            style={{
+                              color: '#828181',
+                              fontWeight: '100',
+                              cursor: 'pointer',
+                              marginLeft: '0%',
+                              position: 'sticky',
+                            }}
+                          >
+                            En tant qu'Alfred
+                          </h2>
+                        </div>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <h2
+                          onClick={this.handleClicktabs2}
+                          style={{
+                            color: '#828181',
+                            fontWeight: '100',
+                            textAlign: 'center',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          {' '}
+                          En tant qu'utilisateur
+                        </h2>
+                        <br/>
+                      </Grid>
 
-                  <Grid item xs={6}>
-                    {tabs ? (
-                      <React.Fragment>
-                        <hr
-                          className={classes.trait1}
-                          style={{ marginTop: "-25px" }}
-                        />
-                      </React.Fragment>
-                    ) : (
-                      <React.Fragment>
-                        <hr
-                          className={classes.trait3}
-                          style={{ marginTop: "-25px" }}
-                        />
-                      </React.Fragment>
-                    )}
-                  </Grid>
-                  <Grid item xs={6}>
-                    {tabs ? (
-                      <React.Fragment>
-                        <hr
-                          className={classes.trait}
-                          style={{ marginTop: "-25px" }}
-                        />
-                      </React.Fragment>
-                    ) : (
-                      <React.Fragment>
-                        <hr
-                          className={classes.trait2}
-                          style={{ marginTop: "-25px" }}
-                        />
-                      </React.Fragment>
-                    )}
-                  </Grid>
-                </Grid>
-                  : null
-                  }
-                  {
-                    userInfo.is_alfred ?
-                <Grid container className={classes.tabmobile}>
-                  <Grid item xs={6} style={{ textAlign: "center" }}>
-                    <h2
-                      onClick={this.handleClicktabs}
-                      style={{
-                        color: "#828181",
-                        fontWeight: "100",
-                        cursor: "pointer",
-                      }}
-                    >
-                      En tant qu'Alfred
-                    </h2>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <h2
-                      onClick={this.handleClicktabs2}
-                      style={{
-                        color: "#828181",
-                        fontWeight: "100",
-                        textAlign: "center",
-                        cursor: "pointer"
-                      }}
-                    >
-                      En tant qu'utilisateur
-                    </h2>
-                    <br />
-                  </Grid>
+                      <Grid item xs={6}>
+                        {tabs ? (
+                          <React.Fragment>
+                            <hr
+                              className={classes.trait1}
+                              style={{marginTop: '-25px'}}
+                            />
+                          </React.Fragment>
+                        ) : (
+                          <React.Fragment>
+                            <hr
+                              className={classes.trait3}
+                              style={{marginTop: '-25px'}}
+                            />
+                          </React.Fragment>
+                        )}
+                      </Grid>
+                      <Grid item xs={6}>
+                        {tabs ? (
+                          <React.Fragment>
+                            <hr
+                              className={classes.trait}
+                              style={{marginTop: '-25px'}}
+                            />
+                          </React.Fragment>
+                        ) : (
+                          <React.Fragment>
+                            <hr
+                              className={classes.trait2}
+                              style={{marginTop: '-25px'}}
+                            />
+                          </React.Fragment>
+                        )}
+                      </Grid>
+                    </Grid>
+                    : null
+                }
+                {
+                  userInfo.is_alfred ?
+                    <Grid container className={classes.tabmobile}>
+                      <Grid item xs={6} style={{textAlign: 'center'}}>
+                        <h2
+                          onClick={this.handleClicktabs}
+                          style={{
+                            color: '#828181',
+                            fontWeight: '100',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          En tant qu'Alfred
+                        </h2>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <h2
+                          onClick={this.handleClicktabs2}
+                          style={{
+                            color: '#828181',
+                            fontWeight: '100',
+                            textAlign: 'center',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          En tant qu'utilisateur
+                        </h2>
+                        <br/>
+                      </Grid>
 
-                  <Grid item xs={6} style={{ textAlign: "center" }}>
-                    {tabs ? (
-                      <React.Fragment>
-                        <hr className={classes.trait1} />
-                      </React.Fragment>
-                    ) : (
-                      <React.Fragment>
-                        <hr className={classes.trait3} />
-                      </React.Fragment>
-                    )}
-                  </Grid>
-                  <Grid item xs={6}>
-                    {tabs ? (
-                      <React.Fragment>
-                        <hr className={classes.trait} />
-                      </React.Fragment>
-                    ) : (
-                      <React.Fragment>
-                        <hr className={classes.trait2} />
-                      </React.Fragment>
-                    )}
-                  </Grid>
-                </Grid>
-                                  : null
-                              }
+                      <Grid item xs={6} style={{textAlign: 'center'}}>
+                        {tabs ? (
+                          <React.Fragment>
+                            <hr className={classes.trait1}/>
+                          </React.Fragment>
+                        ) : (
+                          <React.Fragment>
+                            <hr className={classes.trait3}/>
+                          </React.Fragment>
+                        )}
+                      </Grid>
+                      <Grid item xs={6}>
+                        {tabs ? (
+                          <React.Fragment>
+                            <hr className={classes.trait}/>
+                          </React.Fragment>
+                        ) : (
+                          <React.Fragment>
+                            <hr className={classes.trait2}/>
+                          </React.Fragment>
+                        )}
+                      </Grid>
+                    </Grid>
+                    : null
+                }
 
 
                 {/************************************************************ début en tant que user web **************************************************/}
@@ -275,10 +275,10 @@ class FinishedReservations extends React.Component {
                     {this.state.userReservations.length ? (
                       this.state.userReservations.map((booking, i) => {
                         if (
-                          booking.status === "Refusée" ||
-                          booking.status === "Annulée" ||
-                          booking.status === "Terminée" ||
-                          booking.status === "Expirée"
+                          booking.status === 'Refusée' ||
+                          booking.status === 'Annulée' ||
+                          booking.status === 'Terminée' ||
+                          booking.status === 'Expirée'
                         ) {
                           return (
                             <React.Fragment>
@@ -293,15 +293,15 @@ class FinishedReservations extends React.Component {
                                   md={1}
                                   className={classes.avatarContainer}
                                 >
-                                  <UserAvatar user={booking.alfred} />
+                                  <UserAvatar user={booking.alfred}/>
                                 </Grid>
                                 <Grid item xs={5} md={6} className={classes.descriptionContainer}>
                                   <Grid>
                                     <Typography
                                       style={{
-                                        marginTop: "2%",
-                                        color: "#5D5D5D",
-                                        fontSize: "0.8rem",
+                                        marginTop: '2%',
+                                        color: '#5D5D5D',
+                                        fontSize: '0.8rem',
                                       }}
                                     >
                                       {booking.status} -
@@ -309,15 +309,15 @@ class FinishedReservations extends React.Component {
                                     </Typography>
                                   </Grid>
                                   <Grid>
-                                    <Typography style={{ color: "#9B9B9B", fontSize: "0.8rem" }}>
-                                      {booking.date_prestation} -{" "}
+                                    <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>
+                                      {booking.date_prestation} -{' '}
                                       {moment(booking.time_prestation).format(
-                                        "HH:mm"
+                                        'HH:mm',
                                       )}
                                     </Typography>
                                   </Grid>
                                   <Grid>
-                                    <Typography style={{ color: "#9B9B9B", fontSize: "0.8rem" }}>
+                                    <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>
                                       {booking.service}
                                     </Typography>
                                   </Grid>
@@ -325,17 +325,18 @@ class FinishedReservations extends React.Component {
                                 <Grid item xs={2} className={classes.priceContainer}>
                                   <Typography
                                     style={{
-                                      color: "#4FBDD7",
-                                      fontWeight: "600",
+                                      color: '#4FBDD7',
+                                      fontWeight: '600',
                                     }}
                                   >
-                                    { booking.amount.toFixed(2) } €
+                                    {booking.amount.toFixed(2)} €
                                   </Typography>
                                 </Grid>
                                 <Grid item>
                                   <Grid>
-                                    <Link href={{pathname:"/reservations/detailsReservation", query: { id: booking._id}}}>
-                                      <Button color={"primary"} variant={"outlined"}>Détail</Button>
+                                    <Link
+                                      href={{pathname: '/reservations/detailsReservation', query: {id: booking._id}}}>
+                                      <Button color={'primary'} variant={'outlined'}>Détail</Button>
                                     </Link>
                                   </Grid>
                                 </Grid>
@@ -355,42 +356,42 @@ class FinishedReservations extends React.Component {
                                 <Grid
                                   item
                                   xs={12}
-                                  style={{ display: "flex", justifyContent: 'center', marginTop: "15px" }}
+                                  style={{display: 'flex', justifyContent: 'center', marginTop: '15px'}}
                                 >
-                                  <UserAvatar user={booking.alfred} />
+                                  <UserAvatar user={booking.alfred}/>
                                 </Grid>
                                 <Grid
                                   xs={12}
                                   style={{
-                                    textAlign: "center",
-                                    fontSize: "0.8rem"
+                                    textAlign: 'center',
+                                    fontSize: '0.8rem',
                                   }}
                                 >
                                   <Typography
                                     style={{
-                                      marginTop: "2%",
-                                      color: "#5D5D5D",
-                                      fontSize: "0.8rem"
+                                      marginTop: '2%',
+                                      color: '#5D5D5D',
+                                      fontSize: '0.8rem',
                                     }}
                                   >
-                                    {booking.status} -{" "}
+                                    {booking.status} -{' '}
                                     {booking.alfred.firstname}
                                   </Typography>
                                   <Typography
                                     style={{
-                                      color: "#9B9B9B",
-                                      fontSize: "0.8rem"
+                                      color: '#9B9B9B',
+                                      fontSize: '0.8rem',
                                     }}
                                   >
-                                    {booking.date_prestation} -{" "}
+                                    {booking.date_prestation} -{' '}
                                     {moment(booking.time_prestation).format(
-                                      "HH:mm"
+                                      'HH:mm',
                                     )}
                                   </Typography>
                                   <Typography
                                     style={{
-                                      color: "#9B9B9B",
-                                      fontSize: "0.8rem"
+                                      color: '#9B9B9B',
+                                      fontSize: '0.8rem',
                                     }}
                                   >
                                     {booking.service}
@@ -399,39 +400,39 @@ class FinishedReservations extends React.Component {
                                 <Grid item xs={12} style={{}}>
                                   <Typography
                                     style={{
-                                      color: "#4FBDD7",
-                                      fontWeight: "600",
-                                      paddingTop: "5%",
-                                      textAlign: "center"
+                                      color: '#4FBDD7',
+                                      fontWeight: '600',
+                                      paddingTop: '5%',
+                                      textAlign: 'center',
                                     }}
                                   >
                                     {booking.amount.toFixed(2)}€
                                   </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                  <Link href={{ pathname: "/reservations/detailsReservation", query: { id: booking._id} }} >
-                                  <Typography
-                                    style={{
-                                      height: "45px",
-                                      backgroundColor: "#2FBCD3",
-                                      color: "white",
-                                      textAlign: "center",
-                                      cursor: "pointer",
-                                      lineHeight: "3",
-                                      marginTop: "5%"
-                                    }}
-                                  >
+                                  <Link href={{pathname: '/reservations/detailsReservation', query: {id: booking._id}}}>
+                                    <Typography
+                                      style={{
+                                        height: '45px',
+                                        backgroundColor: '#2FBCD3',
+                                        color: 'white',
+                                        textAlign: 'center',
+                                        cursor: 'pointer',
+                                        lineHeight: '3',
+                                        marginTop: '5%',
+                                      }}
+                                    >
 
                                       <a
                                         style={{
-                                          textDecoration: "none",
-                                          color: "white"
+                                          textDecoration: 'none',
+                                          color: 'white',
                                         }}
                                       >
                                         Détail
                                       </a>
-                                  </Typography>
-                                    </Link>
+                                    </Typography>
+                                  </Link>
                                 </Grid>
                               </Grid>
                             </React.Fragment>
@@ -451,10 +452,10 @@ class FinishedReservations extends React.Component {
                 ) : this.state.alfredReservations.length ? (
                   this.state.alfredReservations.map((booking, i) => {
                     if (
-                      booking.status === "Refusée" ||
-                      booking.status === "Annulée" ||
-                      booking.status === "Terminée" ||
-                      booking.status === "Expirée"
+                      booking.status === 'Refusée' ||
+                      booking.status === 'Annulée' ||
+                      booking.status === 'Terminée' ||
+                      booking.status === 'Expirée'
                     ) {
                       return (
                         <React.Fragment>
@@ -464,39 +465,39 @@ class FinishedReservations extends React.Component {
                             className={classes.webrow}
                           >
                             <Grid item xs={2} md={1} className={classes.avatarContainer}>
-                              <UserAvatar user={booking.user} />
+                              <UserAvatar user={booking.user}/>
                             </Grid>
                             <Grid item xs={5} md={6} className={classes.descriptionContainer}>
                               <Typography
-                                style={{ marginTop: "2%", color: "#5D5D5D" ,fontSize: "0.8rem"}}
+                                style={{marginTop: '2%', color: '#5D5D5D', fontSize: '0.8rem'}}
                               >
                                 {booking.status} - {booking.user.firstname}
                               </Typography>
                               <Grid>
-                                <Typography style={{ color: "#9B9B9B", fontSize: "0.8rem" }}>
-                                  {booking.date_prestation} -{" "}
+                                <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>
+                                  {booking.date_prestation} -{' '}
                                   {moment(booking.time_prestation).format(
-                                    "HH:mm"
+                                    'HH:mm',
                                   )}
                                 </Typography>
                               </Grid>
                               <Grid>
-                                <Typography style={{ color: "#9B9B9B", fontSize: "0.8rem" }}>
+                                <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>
                                   {booking.service}
                                 </Typography>
                               </Grid>
                             </Grid>
                             <Grid item xs={2} className={classes.priceContainer}>
                               <Grid>
-                                                        <Typography style={{color: "#4FBDD7", fontWeight: "600"}}>
-                                                          {(booking.amount - booking.fees).toFixed(2)}€
-                                                        </Typography>
+                                <Typography style={{color: '#4FBDD7', fontWeight: '600'}}>
+                                  {(booking.amount - booking.fees).toFixed(2)}€
+                                </Typography>
                               </Grid>
                             </Grid>
                             <Grid item>
                               <Grid>
-                                <Link href={{pathname: "/reservations/detailsReservation", query: { id: booking._id}}}>
-                                  <Button color={"primary"} variant={"outlined"}>Détail</Button>
+                                <Link href={{pathname: '/reservations/detailsReservation', query: {id: booking._id}}}>
+                                  <Button color={'primary'} variant={'outlined'}>Détail</Button>
                                 </Link>
                               </Grid>
                             </Grid>
@@ -504,44 +505,44 @@ class FinishedReservations extends React.Component {
                           </Grid>
 
                           {/* Mobile */}
+                          <Grid
+                            container
+                            className={classes.mobilerow1}
+                          >
                             <Grid
-                              container
-                              className={classes.mobilerow1}
+                              item
+                              xs={12}
+                              style={{display: 'flex', justifyContent: 'center', marginTop: '15px'}}
                             >
-                              <Grid
-                                item
-                                xs={12}
-                                style={{ display: "flex", justifyContent: 'center', marginTop: "15px" }}
-                              >
-                                <UserAvatar user={booking.user} />
-                              </Grid>
+                              <UserAvatar user={booking.user}/>
+                            </Grid>
                             <Grid
                               item
                               xs={12}
                               style={{
-                                textAlign: "center",
-                                fontSize: "0.8rem"
+                                textAlign: 'center',
+                                fontSize: '0.8rem',
                               }}
                             >
                               <Typography
                                 style={{
-                                  marginTop: "2%",
-                                  fontSize: "0.8rem",
-                                  color: "#5D5D5D"
+                                  marginTop: '2%',
+                                  fontSize: '0.8rem',
+                                  color: '#5D5D5D',
                                 }}
                               >
                                 {booking.status} - {booking.user.firstname}
                               </Typography>
                               <Typography
-                                style={{ color: "#9B9B9B", fontSize: "0.8rem" }}
+                                style={{color: '#9B9B9B', fontSize: '0.8rem'}}
                               >
-                                {booking.date_prestation} -{" "}
+                                {booking.date_prestation} -{' '}
                                 {moment(booking.time_prestation).format(
-                                  "HH:mm"
+                                  'HH:mm',
                                 )}
                               </Typography>
                               <Typography
-                                style={{ color: "#9B9B9B", fontSize: "0.8rem" }}
+                                style={{color: '#9B9B9B', fontSize: '0.8rem'}}
                               >
                                 {booking.service}
                               </Typography>
@@ -549,40 +550,40 @@ class FinishedReservations extends React.Component {
                             <Grid item xs={12} style={{}}>
                               <Typography
                                 style={{
-                                  color: "#4FBDD7",
-                                  fontWeight: "600",
-                                  paddingTop: "5%",
-                                  fontSize: "0.8rem",
-                                  textAlign: "center"
+                                  color: '#4FBDD7',
+                                  fontWeight: '600',
+                                  paddingTop: '5%',
+                                  fontSize: '0.8rem',
+                                  textAlign: 'center',
                                 }}
                               >
-                                                            {(booking.amount - booking.fees).toFixed(2)}€
-                                                        </Typography>
+                                {(booking.amount - booking.fees).toFixed(2)}€
+                              </Typography>
                             </Grid>
                             <Grid item xs={12}>
-                              <Link href={{ pathname: "/reservations/detailsReservation", query: { id: booking._id} }} >
-                              <Typography
-                                style={{
-                                  height: "45px",
-                                  backgroundColor: "#2FBCD3",
-                                  color: "white",
-                                  textAlign: "center",
-                                  cursor: "pointer",
-                                  lineHeight: "3",
-                                  marginTop: "5%"
-                                }}
-                              >
+                              <Link href={{pathname: '/reservations/detailsReservation', query: {id: booking._id}}}>
+                                <Typography
+                                  style={{
+                                    height: '45px',
+                                    backgroundColor: '#2FBCD3',
+                                    color: 'white',
+                                    textAlign: 'center',
+                                    cursor: 'pointer',
+                                    lineHeight: '3',
+                                    marginTop: '5%',
+                                  }}
+                                >
 
                                   <a
                                     style={{
-                                      textDecoration: "none",
-                                      color: "white"
+                                      textDecoration: 'none',
+                                      color: 'white',
                                     }}
                                   >
                                     Détail
                                   </a>
-                              </Typography>
-                                </Link>
+                                </Typography>
+                              </Link>
                             </Grid>
                           </Grid>
                         </React.Fragment>

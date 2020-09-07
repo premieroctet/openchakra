@@ -10,7 +10,7 @@ const styles = theme => ({
     margin: theme.spacing,
   },
   input: {
-    display: 'none'
+    display: 'none',
   },
 });
 
@@ -19,16 +19,17 @@ const Avatarsbutton = (props) => {
   return (
     <div>
       <div>
-        <input accept="image/*" className="input" style={{display:'none'}} id="icon-button-file" type="file" />
+        <input accept="image/*" className="input" style={{display: 'none'}} id="icon-button-file" type="file"/>
         <label htmlFor="icon-button-file">
-        <IconButton color="primary" className={classes.button}  style={{width:70, height:70,backgroundColor:'lightgrey'}} component="span">
-          <PhotoCamera />
-        </IconButton>
-      </label>
+          <IconButton color="primary" className={classes.button}
+                      style={{width: 70, height: 70, backgroundColor: 'lightgrey'}} component="span">
+            <PhotoCamera/>
+          </IconButton>
+        </label>
       </div>
     </div>
   );
-}
+};
 
 Avatarsbutton.propTypes = {
   classes: PropTypes.object.isRequired,

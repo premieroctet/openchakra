@@ -16,17 +16,17 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     borderRadius: 0,
-    padding:10,
-    border:'solid thin #ccc',
-    backgroundColor:'transparent',
-    textAlign:'center',
-    margin:'15px auto',
-    boxShadow: '1px 3px 1px transparent'
+    padding: 10,
+    border: 'solid thin #ccc',
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+    margin: '15px auto',
+    boxShadow: '1px 3px 1px transparent',
   },
   gridContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    textAlign:'center'
+    textAlign: 'center',
   },
   gridButton: {
     display: 'flex',
@@ -44,7 +44,7 @@ const styles = theme => ({
   },
   text: {
     paddingTop: '.7rem',
-    textAlign:'center',
+    textAlign: 'center',
   },
   whiteLogo: {
     margin: '.5rem',
@@ -92,45 +92,43 @@ const styles = theme => ({
 
 const nearbyYouCard = (props) => {
   // eslint-disable-next-line object-curly-newline
-  const { classes, img, title,alfred,user} = props;
+  const {classes, img, title, alfred, user} = props;
   return (
-
 
 
     <Card className={classes.card}>
       <Link href={`/shop?id_alfred=${user._id}`}>
-      <CardActionArea>
+        <CardActionArea>
 
-        <CardMedia className={classes.media} image={img} title={alfred}>
-          <div className={classes.darkOverlay}>
-            <Grid container className={classes.avatarContainer}>
-              <Grid container className={classes.gridContainer}>
+          <CardMedia className={classes.media} image={img} title={alfred}>
+            <div className={classes.darkOverlay}>
+              <Grid container className={classes.avatarContainer}>
+                <Grid container className={classes.gridContainer}>
 
+                </Grid>
+                <Grid container className={classes.locationAvatarGrid}>
+                  <UserAvatar user={user} className={classes.avatar}/>
+                </Grid>
               </Grid>
-              <Grid container className={classes.locationAvatarGrid}>
-                <UserAvatar user={user} className={classes.avatar} />
-              </Grid>
-            </Grid>
-          </div>
-        </CardMedia>
-        <CardContent>
-          <Typography variant="h6" component="h2">
-            {alfred}
-          </Typography>
-
-          <Typography variant="body2" component="p" style={{textAlign:'center'}}>
-               {title}
+            </div>
+          </CardMedia>
+          <CardContent>
+            <Typography variant="h6" component="h2">
+              {alfred}
             </Typography>
 
-          <Grid container>
+            <Typography variant="body2" component="p" style={{textAlign: 'center'}}>
+              {title}
+            </Typography>
+
+            <Grid container>
 
 
+            </Grid>
 
-          </Grid>
+          </CardContent>
 
-        </CardContent>
-
-      </CardActionArea>
+        </CardActionArea>
       </Link>
     </Card>
   );

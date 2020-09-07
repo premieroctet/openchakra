@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#EAEAEA;}
 	.st1{fill:#8C8C8C;}
@@ -58,22 +58,35 @@
 	.st52{fill:none;stroke:#EAEAEA;stroke-width:2;stroke-miterlimit:10;}
 	.st53{fill:none;stroke:#8C8C8C;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<rect x="1" y="1" class="st0" width="500" height="500"/>
-<g>
-	<rect x="-1" y="367" class="st24" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 165.0312 405.5557)" class="st23 st42 st43">Brasure</text>
+    <rect class="st0" height="500" width="500" x="1" y="1"/>
+    <g>
+	<rect class="st24" height="144" width="500" x="-1" y="367"/>
+        <text class="st23 st42 st43" transform="matrix(1 0 0 1 165.0312 405.5557)">Brasure</text>
 </g>
-<ellipse transform="matrix(0.7428 -0.6695 0.6695 0.7428 -4.624 244.2804)" class="st1" cx="315.7" cy="128.2" rx="35.4" ry="1.7"/>
-<ellipse transform="matrix(0.7428 -0.6695 0.6695 0.7428 -0.6405 250.2498)" class="st1" cx="325.4" cy="126" rx="35.4" ry="1.7"/>
-<ellipse transform="matrix(0.7428 -0.6695 0.6695 0.7428 3.6568 257.0361)" class="st1" cx="336.4" cy="123.8" rx="35.4" ry="1.7"/>
-<ellipse transform="matrix(0.7428 -0.6695 0.6695 0.7428 5.8534 262.7545)" class="st1" cx="344.9" cy="123.8" rx="35.4" ry="1.7"/>
-<ellipse transform="matrix(0.7428 -0.6695 0.6695 0.7428 5.6354 266.588)" class="st1" cx="349.8" cy="126" rx="35.4" ry="1.7"/>
-<ellipse transform="matrix(0.7428 -0.6695 0.6695 0.7428 5.7312 271.2384)" class="st1" cx="355.9" cy="128.2" rx="35.4" ry="1.7"/>
-<ellipse transform="matrix(0.7313 -0.6821 0.6821 0.7313 5.2472 279.5451)" class="st1" cx="357.4" cy="133.1" rx="35.4" ry="1.7"/>
-<ellipse transform="matrix(0.7313 -0.6821 0.6821 0.7313 -1.3918 280.3699)" class="st1" cx="355.1" cy="142" rx="35.4" ry="1.7"/>
-<ellipse transform="matrix(0.7313 -0.6821 0.6821 0.7313 -8.7756 281.5045)" class="st1" cx="352.9" cy="151.9" rx="35.4" ry="1.7"/>
-<ellipse transform="matrix(0.7313 -0.6821 0.6821 0.7313 -13.9885 283.6736)" class="st1" cx="353" cy="159.6" rx="35.4" ry="1.7"/>
-<ellipse transform="matrix(0.7313 -0.6821 0.6821 0.7313 -16.2859 286.5673)" class="st1" cx="355.6" cy="164" rx="35.4" ry="1.7"/>
-<ellipse transform="matrix(0.7313 -0.6821 0.6821 0.7313 -19.328 289.7708)" class="st1" cx="358.1" cy="169.4" rx="35.4" ry="1.7"/>
-<rect x="155" y="191.7" transform="matrix(0.6552 -0.7554 0.7554 0.6552 -83.5208 278.239)" class="st1" width="216.2" height="77.8"/>
+    <ellipse class="st1" cx="315.7" cy="128.2" rx="35.4"
+             ry="1.7" transform="matrix(0.7428 -0.6695 0.6695 0.7428 -4.624 244.2804)"/>
+    <ellipse class="st1" cx="325.4" cy="126" rx="35.4" ry="1.7"
+             transform="matrix(0.7428 -0.6695 0.6695 0.7428 -0.6405 250.2498)"/>
+    <ellipse class="st1" cx="336.4" cy="123.8" rx="35.4"
+             ry="1.7" transform="matrix(0.7428 -0.6695 0.6695 0.7428 3.6568 257.0361)"/>
+    <ellipse class="st1" cx="344.9" cy="123.8" rx="35.4"
+             ry="1.7" transform="matrix(0.7428 -0.6695 0.6695 0.7428 5.8534 262.7545)"/>
+    <ellipse class="st1" cx="349.8" cy="126" rx="35.4" ry="1.7"
+             transform="matrix(0.7428 -0.6695 0.6695 0.7428 5.6354 266.588)"/>
+    <ellipse class="st1" cx="355.9" cy="128.2" rx="35.4"
+             ry="1.7" transform="matrix(0.7428 -0.6695 0.6695 0.7428 5.7312 271.2384)"/>
+    <ellipse class="st1" cx="357.4" cy="133.1" rx="35.4"
+             ry="1.7" transform="matrix(0.7313 -0.6821 0.6821 0.7313 5.2472 279.5451)"/>
+    <ellipse class="st1" cx="355.1" cy="142" rx="35.4" ry="1.7"
+             transform="matrix(0.7313 -0.6821 0.6821 0.7313 -1.3918 280.3699)"/>
+    <ellipse class="st1" cx="352.9" cy="151.9" rx="35.4"
+             ry="1.7" transform="matrix(0.7313 -0.6821 0.6821 0.7313 -8.7756 281.5045)"/>
+    <ellipse class="st1" cx="353" cy="159.6" rx="35.4"
+             ry="1.7" transform="matrix(0.7313 -0.6821 0.6821 0.7313 -13.9885 283.6736)"/>
+    <ellipse class="st1" cx="355.6" cy="164" rx="35.4"
+             ry="1.7" transform="matrix(0.7313 -0.6821 0.6821 0.7313 -16.2859 286.5673)"/>
+    <ellipse class="st1" cx="358.1" cy="169.4" rx="35.4"
+             ry="1.7" transform="matrix(0.7313 -0.6821 0.6821 0.7313 -19.328 289.7708)"/>
+    <rect class="st1" height="77.8" transform="matrix(0.6552 -0.7554 0.7554 0.6552 -83.5208 278.239)" width="216.2" x="155"
+          y="191.7"/>
 </svg>

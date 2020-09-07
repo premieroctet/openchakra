@@ -9,87 +9,87 @@ import {RestaurantMenu} from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
 const styles = theme => ({
-    textUp: {
-      textAlign: 'left',
-      paddingTop: '1rem',
-      fontFamily: 'Helvetica',
-      fontWeight: 'bold',
-      fontSize: '20px',
-      color: 'white',
-      letterSpacing: '.2rem',
-    },
-    leh3: {
-      fontWeight: 'bold',
-    },
-    textDown: {
-      textAlign: 'left',
-      fontFamily: 'Helvetica',
-      fontSize: '17px',
-      color: 'white',
-    },
-    textContainer: {
-      flex: 1,
-    },
-    container: {
-      flexDirection: 'column',
-      height: '100%',
-    },
-    row: {
-      flexDirection: 'row',
-      flex: 1,
-    },
-    card: {
-      maxHeight: '300px',
-      height: '200px',
-      borderRadius: '5px',
+  textUp: {
+    textAlign: 'left',
+    paddingTop: '1rem',
+    fontFamily: 'Helvetica',
+    fontWeight: 'bold',
+    fontSize: '20px',
+    color: 'white',
+    letterSpacing: '.2rem',
+  },
+  leh3: {
+    fontWeight: 'bold',
+  },
+  textDown: {
+    textAlign: 'left',
+    fontFamily: 'Helvetica',
+    fontSize: '17px',
+    color: 'white',
+  },
+  textContainer: {
+    flex: 1,
+  },
+  container: {
+    flexDirection: 'column',
+    height: '100%',
+  },
+  row: {
+    flexDirection: 'row',
+    flex: 1,
+  },
+  card: {
+    maxHeight: '300px',
+    height: '200px',
+    borderRadius: '5px',
 
-          // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
+    // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('xs')]: { // xs: 600px or larger
       maxWidth: 450,
       maxHeight: 300,
     },
     [theme.breakpoints.up('sm')]: {
       maxWidth: 400,
-      },
+    },
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
-    maxWidth: 350,
+      maxWidth: 350,
     },
     [theme.breakpoints.up('lg')]: {
-      maxWidth: 300
+      maxWidth: 300,
     },
-    },
-    cardAction: {
-      height: '100%',
-    },
-    cardMedia: {
-      height: '100%',
-    },
-    center: {
-      alignSelf: 'center',
-    },
-    enbas: {
-      alignSelf: 'flex-end',
-    },
-  });
+  },
+  cardAction: {
+    height: '100%',
+  },
+  cardMedia: {
+    height: '100%',
+  },
+  center: {
+    alignSelf: 'center',
+  },
+  enbas: {
+    alignSelf: 'flex-end',
+  },
+});
 
-  const TemptedByCard = (props) => {
-    // eslint-disable-next-line object-curly-newline
-    const { img, classes, desc, avatar } = props;
+const TemptedByCard = (props) => {
+  // eslint-disable-next-line object-curly-newline
+  const {img, classes, desc, avatar} = props;
 
-    return (
-      <Card className={classes.card}>
-        <CardActionArea className={classes.cardAction}>
-          <CardMedia component="div" alt="color" image={img} className={classes.cardMedia}>
-            <Grid container className={classes.container}>
-              <Grid container xs={12} className={classes.row}>
-                <Grid item xs={5}></Grid>
-                <Grid item xs={4}></Grid>
-                <Grid container item xs={3}>
-                 <RestaurantMenu style={{color: 'white', fontSize: '4rem', maxWidth: '100%'}}/>
-                 {/*<Typography className={classes.textUp}>Icon</Typography>*/}
-                </Grid>
+  return (
+    <Card className={classes.card}>
+      <CardActionArea className={classes.cardAction}>
+        <CardMedia component="div" alt="color" image={img} className={classes.cardMedia}>
+          <Grid container className={classes.container}>
+            <Grid container xs={12} className={classes.row}>
+              <Grid item xs={5}></Grid>
+              <Grid item xs={4}></Grid>
+              <Grid container item xs={3}>
+                <RestaurantMenu style={{color: 'white', fontSize: '4rem', maxWidth: '100%'}}/>
+                {/*<Typography className={classes.textUp}>Icon</Typography>*/}
               </Grid>
-              {/*<Grid container xs={12} className={classes.row}>
+            </Grid>
+            {/*<Grid container xs={12} className={classes.row}>
                 <Grid item xs={1}>
                   <Typography className={classes.textDown}></Typography>
                 </Grid>
@@ -100,28 +100,29 @@ const styles = theme => ({
                   <Typography className={classes.textDown}></Typography>
                 </Grid>
                 </Grid>*/}
-              <Grid container xs={12} className={classes.row}>
-                <Grid item xs={1}>
-                  <Typography className={classes.textDown}></Typography>
-                </Grid>
-                <Grid item xs={9} className={classes.center}>
-                  <Typography className={classes.textDown}><span className={classes.leh3}>Prestation</span><br/>{desc}</Typography>
-                </Grid>
-                <Grid item xs={2}>
-                  <Typography className={classes.textDown}></Typography>
-                </Grid>
+            <Grid container xs={12} className={classes.row}>
+              <Grid item xs={1}>
+                <Typography className={classes.textDown}></Typography>
+              </Grid>
+              <Grid item xs={9} className={classes.center}>
+                <Typography className={classes.textDown}><span className={classes.leh3}>Prestation</span><br/>{desc}
+                </Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography className={classes.textDown}></Typography>
               </Grid>
             </Grid>
-          </CardMedia>
-        </CardActionArea>
-      </Card>
-    );
-  };
+          </Grid>
+        </CardMedia>
+      </CardActionArea>
+    </Card>
+  );
+};
 
-  TemptedByCard.propTypes = {
-    img: PropTypes.string.isRequired,
-    classes: PropTypes.objectOf(PropTypes.string).isRequired,
-    desc: PropTypes.string.isRequired,
-  };
+TemptedByCard.propTypes = {
+  img: PropTypes.string.isRequired,
+  classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  desc: PropTypes.string.isRequired,
+};
 
-  export default withStyles(styles)(TemptedByCard);
+export default withStyles(styles)(TemptedByCard);

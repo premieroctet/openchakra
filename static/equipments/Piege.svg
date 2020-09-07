@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-	 viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#EAEAEA;}
 	.st1{fill:#8C8C8C;}
@@ -58,8 +58,8 @@
 	.st52{fill:none;stroke:#EAEAEA;stroke-width:2;stroke-miterlimit:10;}
 	.st53{fill:none;stroke:#8C8C8C;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<rect x="-1" y="-1" class="st0" width="500" height="500"/>
-<path class="st1" d="M381.8,286c-0.1-0.3-0.2-0.5-0.3-0.8c0-0.1-0.1-0.2-0.1-0.3l-9-15c-1.5-2.5-4.2-4.1-7.2-4.1
+    <rect class="st0" height="500" width="500" x="-1" y="-1"/>
+    <path class="st1" d="M381.8,286c-0.1-0.3-0.2-0.5-0.3-0.8c0-0.1-0.1-0.2-0.1-0.3l-9-15c-1.5-2.5-4.2-4.1-7.2-4.1
 	c-2.9,0-5.7,1.5-7.2,4.1l-5.4,9l-5.4-9c-1.5-2.5-4.2-4.1-7.2-4.1c-2.9,0-5.7,1.5-7.2,4.1l-5.4,9l-5.4-9c-1.5-2.5-4.2-4.1-7.2-4.1
 	c-2.9,0-5.7,1.5-7.2,4.1l-5.4,9l-5.4-9c-1.5-2.5-4.2-4.1-7.2-4.1c-2.9,0-5.7,1.5-7.2,4.1l-5.4,9l-5.4-9c-1.5-2.5-4.2-4.1-7.2-4.1
 	c-2.9,0-5.7,1.5-7.2,4.1l-5.4,9l-5.4-9c-1.5-2.5-4.2-4.1-7.2-4.1c-2.9,0-5.7,1.5-7.2,4.1l-7.8,13H186c-2.2-4.7-5.6-8.7-9.9-11.6
@@ -72,11 +72,11 @@
 	C381.9,286.5,381.9,286.2,381.8,286z M151.1,85.6c0-2.3,1.9-4.2,4.2-4.2h12.6v184.7h-6.3l-10.5-14V85.6z M159.5,316.4
 	c-11.6,0-21-9.4-21-21c0-11.6,9.4-21,21-21c11.6,0,21,9.4,21,21C180.5,307,171.1,316.4,159.5,316.4z M373.6,303.9
 	c0,2.3-1.9,4.2-4.2,4.2H202.9l-14-10.5v-6.3h184.7V303.9z"/>
-<path class="st1" d="M159.5,282.9c-7,0-12.6,5.6-12.6,12.6c0,7,5.6,12.6,12.6,12.6c7,0,12.6-5.6,12.6-12.6
+    <path class="st1" d="M159.5,282.9c-7,0-12.6,5.6-12.6,12.6c0,7,5.6,12.6,12.6,12.6c7,0,12.6-5.6,12.6-12.6
 	C172.1,288.5,166.5,282.9,159.5,282.9z M159.5,299.7c-2.3,0-4.2-1.9-4.2-4.2c0-2.3,1.9-4.2,4.2-4.2c2.3,0,4.2,1.9,4.2,4.2
 	C163.7,297.8,161.9,299.7,159.5,299.7z"/>
-<g>
-	<rect y="365" class="st24" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 191.0054 403.5557)" class="st23 st41 st42">Piège</text>
+    <g>
+	<rect class="st24" height="144" width="500" y="365"/>
+        <text class="st23 st41 st42" transform="matrix(1 0 0 1 191.0054 403.5557)">Piège</text>
 </g>
 </svg>

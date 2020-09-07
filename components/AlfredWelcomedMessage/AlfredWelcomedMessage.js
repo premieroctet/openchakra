@@ -7,35 +7,35 @@ import styles from '../shop/componentStyle';
 import Button from '@material-ui/core/Button';
 
 
-class AlfredWelcomedMessage extends React.Component{
-  constructor(props){
+class AlfredWelcomedMessage extends React.Component {
+  constructor(props) {
     super(props);
     this.state = {
-      shop:[],
+      shop: [],
       stateButton: false,
-      newMessage: ""
+      newMessage: '',
     };
-    this.sendNewContent = this.sendNewContent.bind(this)
+    this.sendNewContent = this.sendNewContent.bind(this);
   }
 
-  iscontentChange(event){
-    if(event.target.value !== this.props.shop.welcome_message){
+  iscontentChange(event) {
+    if (event.target.value !== this.props.shop.welcome_message) {
       this.setState({
         stateButton: !this.state.stateEditButton,
-        newMessage: event.target.value
+        newMessage: event.target.value,
       });
-    }else{
-      this.setState({stateButton: false})
+    } else {
+      this.setState({stateButton: false});
     }
   }
 
-  sendNewContent(){
+  sendNewContent() {
     this.setState({stateButton: false});
     this.props.newWelcomedMessage(this.state.newMessage);
   }
 
 
-  render(){
+  render() {
     const {classes, shop, stateButton} = this.props;
 
     return (
@@ -44,9 +44,11 @@ class AlfredWelcomedMessage extends React.Component{
           <h3>Message de bienvenue</h3>
         </Grid>
         <Grid className={classes.containerPositionWelcome}>
-          <Grid className={stateButton.stateEditButton ? classes.responsiveContentWelcomePosition: classes.contentWelcomePosition}>
+          <Grid
+            className={stateButton.stateEditButton ? classes.responsiveContentWelcomePosition : classes.contentWelcomePosition}>
             <Grid className={classes.responsiveImgContent}>
-              <img src={'../../static/assets/img/iconCardAlfred/Castor applaudit.svg'} alt={'fatCastor'} title={'fatCastor'} className={classes.imgFatCastor}/>
+              <img src={'../../static/assets/img/iconCardAlfred/Castor applaudit.svg'} alt={'fatCastor'}
+                   title={'fatCastor'} className={classes.imgFatCastor}/>
             </Grid>
             <Grid className={classes.texfieldContentWelcomedMessage}>
               <TextField
@@ -59,8 +61,8 @@ class AlfredWelcomedMessage extends React.Component{
                 margin="normal"
                 variant="outlined"
                 inputProps={{readOnly: !stateButton.stateEditButton}}
-                onChange={(e)=>{
-                  this.iscontentChange(e)
+                onChange={(e) => {
+                  this.iscontentChange(e);
                 }}
                 InputLabelProps={{
                   shrink: true,
@@ -69,16 +71,17 @@ class AlfredWelcomedMessage extends React.Component{
             </Grid>
             {stateButton.stateEditButton ?
               <Grid>
-                <Button disabled={!this.state.stateButton} color={"primary"} variant={"contained"} onClick={this.sendNewContent}>
+                <Button disabled={!this.state.stateButton} color={'primary'} variant={'contained'}
+                        onClick={this.sendNewContent}>
                   Valider
                 </Button>
-              </Grid>: null
+              </Grid> : null
             }
 
           </Grid>
         </Grid>
       </Grid>
-    )
+    );
   }
 }
 
@@ -87,4 +90,4 @@ AlfredWelcomedMessage.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default  withStyles(styles, { withTheme: true })(AlfredWelcomedMessage);
+export default withStyles(styles, {withTheme: true})(AlfredWelcomedMessage);

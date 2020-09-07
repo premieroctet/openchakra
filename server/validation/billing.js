@@ -2,19 +2,19 @@ const Validator = require('validator');
 const isEmpty = require('./is-empty');
 
 module.exports = function validateBillingInput(data) {
-    let errors = {};
+  let errors = {};
 
 
-    data.label = !isEmpty(data.label) ? data.label : '';
+  data.label = !isEmpty(data.label) ? data.label : '';
 
 
-    if(Validator.isEmpty(data.label)) {
-        errors.label = 'Un label est requis';
-    }
+  if (Validator.isEmpty(data.label)) {
+    errors.label = 'Un label est requis';
+  }
 
 
-    return {
-        errors,
-        isValid: isEmpty(errors)
-    }
+  return {
+    errors,
+    isValid: isEmpty(errors),
+  };
 };

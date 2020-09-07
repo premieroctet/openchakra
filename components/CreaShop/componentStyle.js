@@ -1,35 +1,34 @@
-
 export default theme => ({
-  mainContainer:{
+  mainContainer: {
     width: '100%',
     height: '100%',
   },
-  contentContainer:{
+  contentContainer: {
     display: 'flex',
     height: 700,
-    width: '100%'
+    width: '100%',
   },
-  contentLeftTop:{
-    width : '100%',
+  contentLeftTop: {
+    width: '100%',
     [theme.breakpoints.down('md')]: {
-      display:'flex',
+      display: 'flex',
       flexDirection: 'column',
     },
   },
-  contentTitle:{
+  contentTitle: {
     width: '80%',
   },
-  contentTextSize:{
-    width : 500,
+  contentTextSize: {
+    width: 500,
     marginTop: 30,
     [theme.breakpoints.down('md')]: {
-      width: '100%'
+      width: '100%',
     },
     [theme.breakpoints.down('xs')]: {
-      marginBottom: 100
+      marginBottom: 100,
     },
   },
-  policySizeTitle:{
+  policySizeTitle: {
     margin: 0,
     overflowWrap: 'break-word !important',
     fontSize: 24,
@@ -38,75 +37,75 @@ export default theme => ({
     fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
     color: 'rgb(72, 72, 72)',
     paddingTop: 2,
-    paddingBottom: 2
+    paddingBottom: 2,
   },
-  policySizeStep:{
-    fontFamily: "signatra",
-    fontSize: 30
+  policySizeStep: {
+    fontFamily: 'signatra',
+    fontSize: 30,
   },
-  policySizeSubtitle:{
+  policySizeSubtitle: {
     fontSize: 19,
     lineHeight: '1.43em',
     fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
-    color :'#484848',
+    color: '#484848',
   },
-  policySizeContent:{
+  policySizeContent: {
     fontSize: '0.875rem',
     fontWeight: 400,
     lineHeight: '1.43em',
     fontFamily: 'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif !important',
     color: 'rgb(72, 72, 72)',
   },
-  hrStyle:{
-    color : '#BCBCBC'
+  hrStyle: {
+    color: '#BCBCBC',
   },
-  textFieldSelecteService:{
-    width : 500,
+  textFieldSelecteService: {
+    width: 500,
     [theme.breakpoints.down('md')]: {
-      width: 300
+      width: 300,
     },
   },
-  bottomSpacer:{
-    width : 500,
+  bottomSpacer: {
+    width: 500,
     marginTop: 30,
     [theme.breakpoints.down('md')]: {
-      width: '100%'
+      width: '100%',
     },
   },
-  options:{
+  options: {
     [theme.breakpoints.down('lg')]: {
-      marginBottom: 100
+      marginBottom: 100,
     },
   },
-  button:{
-    width : '60%',
+  button: {
+    width: '60%',
     backgroundColor: 'white',
     border: '1px solid #4fbdd7',
     borderRadius: 25,
-    height : 30,
+    height: 30,
     textAlign: 'left',
     cursor: 'pointer',
-    '&:hover':{
+    '&:hover': {
       backgroundColor: '#4fbdd7',
-      color: 'white'
+      color: 'white',
     },
   },
-  activeButton:{
-    width : '60%',
+  activeButton: {
+    width: '60%',
     backgroundColor: '#4fbdd7',
     border: '1px solid #4fbdd7',
     borderRadius: 25,
-    height : 30,
+    height: 30,
     textAlign: 'left',
     cursor: 'pointer',
-    color: 'white'
+    color: 'white',
   },
   buttonRemove: {
     width: 30,
     height: 30,
     borderRadius: '50%',
     border: '1px solid #2FBCD3',
-    textAlign: "center",
+    textAlign: 'center',
     lineHeight: 1.6,
     cursor: 'pointer',
     display: 'inline-block',
@@ -121,7 +120,7 @@ export default theme => ({
     height: 30,
     borderRadius: '50%',
     border: '1px solid #2FBCD3',
-    textAlign: "center",
+    textAlign: 'center',
     lineHeight: 1.6,
     cursor: 'pointer',
     display: 'inline-block',
@@ -138,72 +137,72 @@ export default theme => ({
       width: '100%!important',
     },
   },
-  contentAddandRemove:{
+  contentAddandRemove: {
     display: 'flex',
     alignItems: 'center',
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column'
+      flexDirection: 'column',
     },
   },
-  subContentAddanRemove:{
+  subContentAddanRemove: {
     [theme.breakpoints.down('sm')]: {
-      width: '100%'
+      width: '100%',
     },
   },
-  contentCityReferency:{
+  contentCityReferency: {
     border: '1px solid #C6C6C6',
-    width:'60%',
+    width: '60%',
     [theme.breakpoints.down('sm')]: {
-      width: '100%'
+      width: '100%',
     },
   },
-  buttonContent:{
-    display:"flex",
-    justifyContent:"flex-end"
+  buttonContent: {
+    display: 'flex',
+    justifyContent: 'flex-end',
   },
-  styleButton:{
-    color:"white",
-    borderRadius:"unset"
+  styleButton: {
+    color: 'white',
+    borderRadius: 'unset',
   },
-  contentIntervention:{
+  contentIntervention: {
     height: 250,
     [theme.breakpoints.down('md')]: {
-      marginBottom : 100
-    }
+      marginBottom: 100,
+    },
   },
-  contentAddandRemoveKm:{
+  contentAddandRemoveKm: {
     display: 'flex',
-    alignItems : 'center'
+    alignItems: 'center',
   },
-  subContentAddanRemoveKm:{
+  subContentAddanRemoveKm: {
     display: 'flex',
-    alignItems : 'center'
+    alignItems: 'center',
   },
-  contentKilometers:{
+  contentKilometers: {
     [theme.breakpoints.down('sm')]: {
-      width : '100%'
-    }
+      width: '100%',
+    },
   },
-  inputDiplomaCertifResp:{
+  inputDiplomaCertifResp: {
     width: '50%',
     marginRight: '5%',
-    zIndex:0,
+    zIndex: 0,
     [theme.breakpoints.down('md')]: {
-      width: '100%'
+      width: '100%',
     },
   },
-  textField:{
+  textField: {
     width: '50%',
-    zIndex:0,
+    zIndex: 0,
     [theme.breakpoints.down('md')]: {
-      width: '100%'
+      width: '100%',
     },
   },
-  describExperience:{
-    zIndex:0,
-    width:'100%'
+  describExperience: {
+    zIndex: 0,
+    width: '100%',
   },
-  texfieldContentWelcomedMessage:{
+  texfieldContentWelcomedMessage: {
     width: '100%',
     marginLeft: 10,
     [theme.breakpoints.down('sm')]: {
@@ -212,27 +211,27 @@ export default theme => ({
   },
   extendedIcon: {
     marginRight: theme.spacing(1),
-    color: 'white'
+    color: 'white',
   },
   margin: {
     margin: theme.spacing(1),
-    color: 'white'
+    color: 'white',
   },
-  maxWidth:{
-    width : '100%'
+  maxWidth: {
+    width: '100%',
   },
-  buttonAddPrestas:{
+  buttonAddPrestas: {
     display: 'flex',
     marginTop: 30,
-    marginBottom: 100
+    marginBottom: 100,
   },
-  marginThirty:{
+  marginThirty: {
     marginBottom: 30,
-    marginTop: 30
-  },
-  containerPrestas:{
     marginTop: 30,
-    width: '100%'
-  }
+  },
+  containerPrestas: {
+    marginTop: 30,
+    width: '100%',
+  },
 
 })

@@ -4,34 +4,34 @@ export default theme => ({
     flexGrow: 1,
     [theme.breakpoints.down('xs')]: {
       marginBottom: 100,
-      marginTop: 0
-    }
+      marginTop: 0,
+    },
   },
   toggle: {
     zIndex: 0,
-    margin: 15
+    margin: 15,
   },
   webview: {
-    [theme.breakpoints.up('xs')]:{
+    [theme.breakpoints.up('xs')]: {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
     },
-    [theme.breakpoints.down('sm')]:{
-      display:'none'
-    }
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    },
   },
   mobileview: {
-    [theme.breakpoints.up('md')]:{
-      display:'none'
-    }
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
   },
-  titreservice:{
-    [theme.breakpoints.up('md')]:{
+  titreservice: {
+    [theme.breakpoints.up('md')]: {
       marginLeft: '30px',
     },
-    [theme.breakpoints.down('sm')]:{
-      marginLeft: '2px'
-    }
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: '2px',
+    },
   },
   menuButton: {
     marginLeft: theme.spacing(1),
@@ -40,39 +40,39 @@ export default theme => ({
       display: 'none',
     },
   },
-  myStat:{
+  myStat: {
     paddingLeft: '20%',
     marginBottom: '20px',
     [theme.breakpoints.down('xs')]: {
       padding: 0,
-    }
+    },
   },
-  containerStatistique:{
+  containerStatistique: {
     marginTop: '40px',
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
-      flexDirection: 'column'
-    }
+      flexDirection: 'column',
+    },
   },
-  mainContainer:{
-    marginBottom:20,
+  mainContainer: {
+    marginBottom: 20,
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
-      justifyContent: 'center'
-    }
+      justifyContent: 'center',
+    },
   },
-  containerLabelCategory:{
+  containerLabelCategory: {
     marginTop: '50px',
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
       justifyContent: 'center',
-      marginBottom: 40
-    }
+      marginBottom: 40,
+    },
   },
-  containerDetails:{
+  containerDetails: {
     [theme.breakpoints.up('xs')]: {
-      marginLeft: 20
-    }
-  }
+      marginLeft: 20,
+    },
+  },
 
 })

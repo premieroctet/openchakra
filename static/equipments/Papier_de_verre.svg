@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500"
+     x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#EAEAEA;}
 	.st1{fill:#8C8C8C;}
@@ -58,11 +59,11 @@
 	.st52{fill:none;stroke:#EAEAEA;stroke-width:2;stroke-miterlimit:10;}
 	.st53{fill:none;stroke:#8C8C8C;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<rect x="1" class="st0" width="500" height="500"/>
-<g>
+    <rect class="st0" height="500" width="500" x="1"/>
+    <g>
 	<g>
-		
-			<image style="overflow:visible;" width="306" height="296" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATIAAAEoCAYAAADbi304AAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+
+			<image style="overflow:visible;" height="296" transform="matrix(1 0 0 1 97 50)" width="306" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATIAAAEoCAYAAADbi304AAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAvwtJREFUeNrs3QewZUXV9vGNmHPO
 OSsKZgyomPMgCig6wJAZSQODIAi4L2VJmEElDyIoI8MIoyRFQQRzzhnMOeeM6Xz965qHGr5637dE
 Qe65rq66de89Z+9Oe69/P2t1797DUKlSpUqVKlWqVKlSpUqVKlWqVKlSpUqVKlWqVKlSpUqVKlWq
@@ -922,12 +923,12 @@ d1F31BkX1jEzM3/SpEmTJk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnS
 pEmTJk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnSpEmT
 Jk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnSpEmTJk2a
 NGnSpEmTJk2aNGnSpEmTJk2aNGnSpEmTJk2aNGnSpElnLf2PAAMAXmX8MXceKqEAAAAASUVORK5C
-YII=" transform="matrix(1 0 0 1 97 50)">
+YII=">
 		</image>
 	</g>
 </g>
-<g>
-	<rect x="1" y="369" class="st24" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 88.5977 407.5557)" class="st23 st25 st26">Papier de verre</text>
+    <g>
+	<rect class="st24" height="144" width="500" x="1" y="369"/>
+        <text class="st23 st25 st26" transform="matrix(1 0 0 1 88.5977 407.5557)">Papier de verre</text>
 </g>
 </svg>

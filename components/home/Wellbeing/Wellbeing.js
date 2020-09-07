@@ -15,15 +15,15 @@ const styles = theme => ({
   container: {
     margin: 'auto',
     width: '100%',
-    textAlign:'center',
+    textAlign: 'center',
     [theme.breakpoints.up('lg')]: { // large: 1280px or larger
       width: 1170,
     },
   },
   card: {
-    backgroundColor:'transparent',
-    textAlign:'center',
-    margin:10,
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+    margin: 10,
     boxShadow: `1px 3px 1px transparent`,
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
     [theme.breakpoints.up('xs')]: { // xs: 600px or larger
@@ -38,7 +38,7 @@ const styles = theme => ({
 
   },
   media2: {
-    height: 200
+    height: 200,
   },
   textBox1: {
     fontFamily: 'Helvetica',
@@ -56,9 +56,9 @@ const styles = theme => ({
     marginBottom: '3%',
     marginTop: '3%',
   },
-  separatorBlue:{
-    width: '50px'
-  }
+  separatorBlue: {
+    width: '50px',
+  },
 });
 
 function shuffleArray(array) {
@@ -78,26 +78,26 @@ class Wellbeing extends React.Component {
     this.state = {
       service: [],
       tags: {},
-    }
+    };
   }
 
   componentDidMount() {
 
     axios.get('/myAlfred/api/tags/services/section7')
-        .then(response => {
-              let data = response.data;
-              this.setState({tags:data});
-              axios.get('/myAlfred/api/service/all/tags/' + data._id)
-                  .then(res => {
-                    let service = res.data;
+      .then(response => {
+          let data = response.data;
+          this.setState({tags: data});
+          axios.get('/myAlfred/api/service/all/tags/' + data._id)
+            .then(res => {
+              let service = res.data;
 
-                    this.setState({service: service})
+              this.setState({service: service});
 
-                  })
-                  .catch()
-            }
-        )
-        .catch();
+            })
+            .catch();
+        },
+      )
+      .catch();
   }
 
   render() {
@@ -106,17 +106,17 @@ class Wellbeing extends React.Component {
     const {tags} = this.state;
     const resdata = shuffleArray(service);
     const services = resdata.slice(0, 6).map(e => (
-        <Grid item xs={12} sm={6} md={4} lg={4} key={e._id}>
-          <Link href={'/search?search=1&service='+e._id+(gps?'&gps='+JSON.stringify(gps):'')}>
+      <Grid item xs={12} sm={6} md={4} lg={4} key={e._id}>
+        <Link href={'/search?search=1&service=' + e._id + (gps ? '&gps=' + JSON.stringify(gps) : '')}>
           <Card className={classes.card}>
             <CardActionArea>
               <CardMedia
-                  className={classes.media2}
-                  image={e.picture}
-                  title={e.label}
+                className={classes.media2}
+                image={e.picture}
+                title={e.label}
               />
               <CardContent>
-                <p style={{ color: 'rgba(0, 0, 0, 0.87)', fontSize: '1.25rem',}}>
+                <p style={{color: 'rgba(0, 0, 0, 0.87)', fontSize: '1.25rem'}}>
                   {e.label}
                 </p>
                 <p>
@@ -127,35 +127,36 @@ class Wellbeing extends React.Component {
             <CardActions>
             </CardActions>
           </Card>
-          </Link>
-        </Grid>
+        </Link>
+      </Grid>
     ));
 
     return (
-        <Fragment>
-          <Grid container className={classes.container}>
-            <Grid item xs={2}/>
-            <Grid item xs={8}>
-              <div>
-                <Typography variant="h4" className={classes.textBox1}>
+      <Fragment>
+        <Grid container className={classes.container}>
+          <Grid item xs={2}/>
+          <Grid item xs={8}>
+            <div>
+              <Typography variant="h4" className={classes.textBox1}>
                 {tags.title}
-                </Typography>
-                <Grid container>
-                  <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
-                  <Grid item xs={2} sm={4} md={4}  lg={4} xl={4} style={{margin:'auto'}}>
-                    <img alt={"séparateur"} src={'../../../static/separateur-bleu.svg'} className={classes.separatorBlue}/>
-                  </Grid>
-                  <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
+              </Typography>
+              <Grid container>
+                <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
+                <Grid item xs={2} sm={4} md={4} lg={4} xl={4} style={{margin: 'auto'}}>
+                  <img alt={'séparateur'} src={'../../../static/separateur-bleu.svg'}
+                       className={classes.separatorBlue}/>
                 </Grid>
-                <Typography className={classes.textBox}>
-                  {tags.description}
-                </Typography>
-              </div>
-            </Grid>
-            <Grid item xs={2}/>
-            {services}
+                <Grid item xs={4} sm={4} md={4} lg={4} xl={4}/>
+              </Grid>
+              <Typography className={classes.textBox}>
+                {tags.description}
+              </Typography>
+            </div>
           </Grid>
-        </Fragment>
+          <Grid item xs={2}/>
+          {services}
+        </Grid>
+      </Fragment>
     );
   }
 }

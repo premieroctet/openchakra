@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#4FBDD7;}
 	.st1{fill:#EAEAEA;}
@@ -51,12 +51,12 @@
 	.st45{fill:none;stroke:#FFFFFF;stroke-width:9;stroke-miterlimit:10;}
 	.st46{fill:none;stroke:#4FBDD7;stroke-width:3;stroke-miterlimit:10;}
 </style>
-<rect x="1" y="2" class="st0" width="500" height="500"/>
-<g>
-	<rect x="2" y="364" class="st2" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 131.0952 402.5557)" class="st3 st4 st5">Cornemuse</text>
+    <rect class="st0" height="500" width="500" x="1" y="2"/>
+    <g>
+	<rect class="st2" height="144" width="500" x="2" y="364"/>
+        <text class="st3 st4 st5" transform="matrix(1 0 0 1 131.0952 402.5557)">Cornemuse</text>
 </g>
-<g>
+    <g>
 	<path class="st3" d="M312.5,177.7l-2.2,0.7l3.8-63.1c2.1-1.2,3.6-3.5,3.8-6.1l1.1-17.6c0.1-2-0.6-3.9-1.9-5.4
 		c-1.3-1.5-3.2-2.4-5.2-2.5l-6.8-0.4c-4.1-0.2-7.7,2.9-7.9,7l-1.1,17.6c-0.1,2,0.6,3.9,1.9,5.4c0.3,0.4,0.7,0.7,1.1,1l-0.8,12.6
 		l-23.5,7.6l-4.3-13.5c1.5-1.9,2.2-4.5,1.4-7l-5.4-16.8c-1.3-3.9-5.7-6.1-9.6-4.8l-6.5,2.1c-3.9,1.3-6.2,5.5-4.9,9.5l5.4,16.8
@@ -71,14 +71,14 @@
 		l-26.5-10.4c-0.9-0.4-1.9-0.5-2.9-0.5c-9.2,0.1-17.8,3.2-25.1,8.8c-7.2,5.6-12.3,13.3-14.7,22.1l-10.9,40l-2.9-0.8l16.7-63.2
 		c4.3-16.2,16.4-28.9,32.3-34l16-5.1c0,0,0,0,0.1,0c0,0,0,0,0,0l15.4-4.9c0.2-0.1,0.5-0.1,0.8-0.2s0.5-0.2,0.7-0.3l15.3-4.9
 		c0,0,0,0,0,0c0,0,0,0,0,0l12.6-4.1c15.7-5,32.5,3.6,37.5,19.2C359.7,226.8,351.1,243.6,335.4,248.7"/>
-	<line class="st17" x1="256.2" y1="211.6" x2="299" y2="258.6"/>
-	<line class="st17" x1="278.3" y1="204.5" x2="324.2" y2="257.2"/>
-	<line class="st17" x1="304.5" y1="196" x2="349.8" y2="245.8"/>
-	<line class="st17" x1="322.6" y1="187.8" x2="360.2" y2="228.6"/>
-	<line class="st17" x1="231.5" y1="224.8" x2="253.2" y2="249.1"/>
-	<line class="st17" x1="216.6" y1="245.3" x2="357" y2="200"/>
-	<line class="st17" x1="241.1" y1="219.6" x2="335.2" y2="188.7"/>
-	<line class="st17" x1="277.9" y1="244.7" x2="356" y2="217.8"/>
-	<line class="st17" x1="301.3" y1="252.7" x2="351.8" y2="235.7"/>
+        <line class="st17" x1="256.2" x2="299" y1="211.6" y2="258.6"/>
+        <line class="st17" x1="278.3" x2="324.2" y1="204.5" y2="257.2"/>
+        <line class="st17" x1="304.5" x2="349.8" y1="196" y2="245.8"/>
+        <line class="st17" x1="322.6" x2="360.2" y1="187.8" y2="228.6"/>
+        <line class="st17" x1="231.5" x2="253.2" y1="224.8" y2="249.1"/>
+        <line class="st17" x1="216.6" x2="357" y1="245.3" y2="200"/>
+        <line class="st17" x1="241.1" x2="335.2" y1="219.6" y2="188.7"/>
+        <line class="st17" x1="277.9" x2="356" y1="244.7" y2="217.8"/>
+        <line class="st17" x1="301.3" x2="351.8" y1="252.7" y2="235.7"/>
 </g>
 </svg>

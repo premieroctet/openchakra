@@ -4,4 +4,4 @@ import RecommandationsCard from './RecommandationsCard';
 
 import LandscapeImage from '../../../../static/bailey-zindel-396398-unsplash.jpg';
 
-storiesOf('RecommandationsCard', module).add('to Storybook', () => <RecommandationsCard img={LandscapeImage} />);
+storiesOf('RecommandationsCard', module).add('to Storybook', () => <RecommandationsCard img={LandscapeImage}/>);

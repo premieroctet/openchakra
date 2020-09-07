@@ -1,24 +1,28 @@
-.DateRangePickerInput__withBorder{
-    border: none!important;
+.DateRangePickerInput__withBorder {
+    border: none !important;
 }
 
-.DateInput_input{
+.DateInput_input {
     width: 70px;
     font-size: 0.8rem;
 }
 
-.DateInput{
+.DateInput {
     width: 70px;
 }
-.DateRangePickerInput_arrow_svg{
+
+.DateRangePickerInput_arrow_svg {
     width: 12px;
 }
-.DateRangePickerInput_arrow{
+
+.DateRangePickerInput_arrow {
     width: 15px;
 }
-.scrollLittle::-webkit-scrollbar{
+
+.scrollLittle::-webkit-scrollbar {
     width: '10px';
 }
-.mui-fixed{
-    box-shadow: none!important;
+
+.mui-fixed {
+    box-shadow: none !important;
 }

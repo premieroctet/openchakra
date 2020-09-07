@@ -17,25 +17,25 @@ const styles = theme => ({
     [theme.breakpoints.up('xs')]: { // xs: 600px or larger
       maxWidth: 450,
     },
-    [theme.breakpoints.up('sm')]: { 
+    [theme.breakpoints.up('sm')]: {
       maxWidth: 400,
-      },
+    },
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
-    maxWidth: 350,
+      maxWidth: 350,
     },
     [theme.breakpoints.up('lg')]: {
-      maxWidth: 300
+      maxWidth: 300,
     },
-    
+
   },
   media: {
     height: 200,
   },
-}); 
+});
 
 const recommandationsCard = (props) => {
   // eslint-disable-next-line object-curly-newline
-  const { classes, img } = props;
+  const {classes, img} = props;
 
   return (
     <Card className={classes.card}>
@@ -46,7 +46,7 @@ const recommandationsCard = (props) => {
           title="Paysage"
         />
         <CardContent>
-          <Chip label="Voyage" color="primary" />
+          <Chip label="Voyage" color="primary"/>
           <Typography gutterBottom variant="h5" component="h2">
             Service Sub Category
           </Typography>

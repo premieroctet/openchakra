@@ -1,16 +1,17 @@
 export default theme => ({
-  bottombar:{
+  bottombar: {
     width: 'auto',
-    backgroundColor : 'white',
+    backgroundColor: 'white',
     [theme.breakpoints.up('md')]: {
-      display: 'none'
-    }},
+      display: 'none',
+    },
+  },
 
   root: {
     minWidth: 'inherit',
-    "& .MuiBottomNavigationAction-label": {
+    '& .MuiBottomNavigationAction-label': {
       fontSize: '0.70rem',
-    }
+    },
   },
 
 })

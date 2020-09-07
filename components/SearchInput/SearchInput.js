@@ -17,74 +17,91 @@ import cookie from 'react-cookies';
 
 var parse = require('url-parse');
 
-class SearchInput extends React.Component{
+class SearchInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       keyword: '',
-      gps:'',
+      gps: '',
       city: '',
       user: null,
       selectedAddress: null,
     };
-    this.findService = this.findService.bind(this)
+    this.findService = this.findService.bind(this);
   }
 
   componentDidMount() {
-    var query=parse(window.location.href, true).query;
-    query.gps='gps' in query ? JSON.parse(query.gps) : null;
-    axios.defaults.headers.common['Authorization'] = cookie.load('token')
+    var query = parse(window.location.href, true).query;
+    query.gps = 'gps' in query ? JSON.parse(query.gps) : null;
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get('/myAlfred/api/users/current')
-     .then(res => {
-       let user = res.data;
-       var allAddresses={'main': user.billing_address}
-       user.service_address.forEach( ad => allAddresses[ad._id]=ad);
-       if (!('selectedAddress' in query)) {
-         query.selectedAddress='main';
-         query.gps=user.billing_address.gps;
-       }
-       query.user=user;
-       query.allAddresses=allAddresses
-       this.setState(query)
-     })
-     .catch(err => { console.log("Not logged"); }
-    );
+      .then(res => {
+        let user = res.data;
+        var allAddresses = {'main': user.billing_address};
+        user.service_address.forEach(ad => allAddresses[ad._id] = ad);
+        if (!('selectedAddress' in query)) {
+          query.selectedAddress = 'main';
+          query.gps = user.billing_address.gps;
+        }
+        query.user = user;
+        query.allAddresses = allAddresses;
+        this.setState(query);
+      })
+      .catch(err => {
+          console.log('Not logged');
+        },
+      );
   }
 
-  findService(){
-    var queryParams={search:1}
-    if (this.state.keyword) { queryParams['keyword']=this.state.keyword};
-    if (this.state.city) { queryParams['city']=this.state.city};
-    if (this.state.gps) { queryParams['gps']=JSON.stringify(this.state.gps)};
-    if (this.state.selectedAddress) { queryParams['selectedAddress']=this.state.selectedAddress}
+  findService() {
+    var queryParams = {search: 1};
+    if (this.state.keyword) {
+      queryParams['keyword'] = this.state.keyword;
+    }
+    ;
+    if (this.state.city) {
+      queryParams['city'] = this.state.city;
+    }
+    ;
+    if (this.state.gps) {
+      queryParams['gps'] = JSON.stringify(this.state.gps);
+    }
+    ;
+    if (this.state.selectedAddress) {
+      queryParams['selectedAddress'] = this.state.selectedAddress;
+    }
     /**
-    TODO : ce code ne change pas l'URL donc si on va sur réserver puis retour,
-    il faut relancer la recherche
-    if (this.props.searchCallback) {
+     TODO : ce code ne change pas l'URL donc si on va sur réserver puis retour,
+     il faut relancer la recherche
+     if (this.props.searchCallback) {
       this.props.searchCallback(queryParams);
     }
-    else {
+     else {
       Router.push({ pathname: '/search', query: queryParams })
     }
-    */
-    Router.push({ pathname: '/search', query: queryParams })
+     */
+    Router.push({pathname: '/search', query: queryParams});
   }
 
   onChange = e => {
     let {name, value} = e.target;
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({[e.target.name]: e.target.value});
     if (name === 'selectedAddress') {
-      if (value==='addAddress') {
-        Router.push('/profile/myAddresses')
-      }
-      else {
-        this.setState({gps: value === 'all'? null : value==='main' ? this.state.allAddresses['main'].gps:{lat:this.state.allAddresses[value].lat, lng:this.state.allAddresses[value].lng}});
+      if (value === 'addAddress') {
+        Router.push('/profile/myAddresses');
+      } else {
+        this.setState({
+          gps: value === 'all' ? null : value === 'main' ? this.state.allAddresses['main'].gps : {
+            lat: this.state.allAddresses[value].lat,
+            lng: this.state.allAddresses[value].lng,
+          },
+        });
       }
     }
   };
 
   onChangeCity({suggestion}) {
-    this.setState({gps:suggestion.latlng, city: suggestion.name});
+    this.setState({gps: suggestion.latlng, city: suggestion.name});
   };
 
   render() {
@@ -103,92 +120,98 @@ class SearchInput extends React.Component{
                 onChange={this.onChange}
                 value={this.state.keyword}
                 name={'keyword'}
-                onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault(); }}
+                onKeyPress={(e) => {
+                  e.key === 'Enter' && e.preventDefault();
+                }}
               />
               <Hidden smUp>
-                <Divider className={classes.divider} orientation="vertical" />
+                <Divider className={classes.divider} orientation="vertical"/>
                 <IconButton className={classes.iconButton} aria-label="menu" onClick={this.findService}>
-                  <Search />
+                  <Search/>
                 </IconButton>
               </Hidden>
             </Grid>
             <Hidden xsDown>
-              <Divider className={classes.divider} orientation="vertical" />
+              <Divider className={classes.divider} orientation="vertical"/>
             </Hidden>
-              {user ?
-                <Grid className={classes.contentInput}>
-                  <Hidden mdUp smUp>
-                    <Grid className={classes.contentImg}>
-                      <img className={classes.imgStyle} src={'../../static/assets/img/navBar/icone.svg'}/>
-                    </Grid>
-                    <Hidden smUp>
-                      <Divider className={classes.divider} orientation="vertical" />
-                    </Hidden>
+            {user ?
+              <Grid className={classes.contentInput}>
+                <Hidden mdUp smUp>
+                  <Grid className={classes.contentImg}>
+                    <img className={classes.imgStyle} src={'../../static/assets/img/navBar/icone.svg'}/>
+                  </Grid>
+                  <Hidden smUp>
+                    <Divider className={classes.divider} orientation="vertical"/>
                   </Hidden>
-                  <Grid className={classes.contentInputAddress}>
-                    <TextField
-                      id="outlined-select-currency"
-                      select
-                      style={{marginTop: '6px', width: '100%'}}
-                      InputProps={{disableUnderline: true}}
-                      value={this.state.selectedAddress}
-                      name={'selectedAddress'}
-                      onChange={(e) => {this.onChange(e);}}
-                      margin="dense"
-                    >
-                      <MenuItem value={'main'}>
-                        Adresse principale, <em> {' '+user.billing_address.address} {user.billing_address.zip_code},{user.billing_address.city}</em>
+                </Hidden>
+                <Grid className={classes.contentInputAddress}>
+                  <TextField
+                    id="outlined-select-currency"
+                    select
+                    style={{marginTop: '6px', width: '100%'}}
+                    InputProps={{disableUnderline: true}}
+                    value={this.state.selectedAddress}
+                    name={'selectedAddress'}
+                    onChange={(e) => {
+                      this.onChange(e);
+                    }}
+                    margin="dense"
+                  >
+                    <MenuItem value={'main'}>
+                      Adresse
+                      principale, <em> {' ' + user.billing_address.address} {user.billing_address.zip_code},{user.billing_address.city}</em>
+                    </MenuItem>
+                    {user.service_address.map(e => (
+                      <MenuItem value={e._id}>
+                        {e.label + ', '} <em> {' ' + e.address},{e.zip_code} {e.city}</em>
                       </MenuItem>
-                      {user.service_address.map(e => (
-                        <MenuItem value={e._id}>
-                          {e.label+', '} <em> {' '+e.address},{e.zip_code} {e.city}</em>
-                        </MenuItem>
-                      ))}
-                      <MenuItem value={'all'}>
-                        Partout, Rechercher des Alfred partout
-                      </MenuItem>
-                      <MenuItem value={'addAddress'}>
-                        <p style={{ color: '#2FBCD3',cursor:'pointer' }}>
-                          Ajouter une adresse
-                        </p>
-                      </MenuItem>
-                    </TextField>
-                  </Grid>
+                    ))}
+                    <MenuItem value={'all'}>
+                      Partout, Rechercher des Alfred partout
+                    </MenuItem>
+                    <MenuItem value={'addAddress'}>
+                      <p style={{color: '#2FBCD3', cursor: 'pointer'}}>
+                        Ajouter une adresse
+                      </p>
+                    </MenuItem>
+                  </TextField>
+                </Grid>
 
+              </Grid>
+              :
+              <Grid className={classes.contentInput}>
+                <Grid style={{width: '100%'}}>
+                  <AlgoliaPlaces
+                    placeholder='Dans quelle ville ?'
+                    style={{color: '#505050'}}
+                    options={{
+                      appId: 'plKATRG826CP',
+                      apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                      language: 'fr',
+                      countries: ['fr'],
+                      type: 'city',
+                    }}
+                    onChange={(suggestion) => this.onChangeCity(suggestion)}
+                    onClear={() => this.setState({city: '', gps: null})}
+                  />
                 </Grid>
-                :
-                <Grid className={classes.contentInput}>
-                  <Grid style={{width: '100%'}}>
-                    <AlgoliaPlaces
-                      placeholder='Dans quelle ville ?'
-                      style={{color: '#505050'}}
-                      options={{
-                        appId: 'plKATRG826CP',
-                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                        language: 'fr',
-                        countries: ['fr'],
-                        type: 'city',
-                      }}
-                      onChange={(suggestion) =>this.onChangeCity(suggestion)}
-                      onClear={()=>this.setState({city:'', gps:null})}
-                    />
-                  </Grid>
-                </Grid>
-              }
+              </Grid>
+            }
             <Hidden xsDown>
-              <Divider className={classes.divider} orientation="vertical" />
+              <Divider className={classes.divider} orientation="vertical"/>
             </Hidden>
             <Hidden xsDown>
               <IconButton className={classes.iconButton} aria-label="menu" onClick={this.findService}>
-                <Search />
+                <Search/>
               </IconButton>
             </Hidden>
           </Paper>
         </Grid>
       </Grid>
-    )
+    );
   }
 }
+
 SearchInput.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,

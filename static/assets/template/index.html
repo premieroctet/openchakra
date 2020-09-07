@@ -2,365 +2,402 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>My Alfred</title>
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
-  <!-- Bootstrap core CSS -->
-  <link href="css/bootstrap.min.css" rel="stylesheet">
-  <!-- Material Design Bootstrap -->
-  <link href="css/mdb.min.css" rel="stylesheet">
-  <!-- Your custom styles (optional) -->
-  <link href="css/style.min.css" rel="stylesheet">
-  <style type="text/css">
-    html,
-    body,
-    header,
-    .view {
-      height: 100%;
-    }
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="ie=edge" http-equiv="x-ua-compatible">
+    <title>My Alfred</title>
+    <!-- Font Awesome -->
+    <link href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" rel="stylesheet">
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="css/mdb.min.css" rel="stylesheet">
+    <!-- Your custom styles (optional) -->
+    <link href="css/style.min.css" rel="stylesheet">
+    <style type="text/css">
+        html,
+        body,
+        header,
+        .view {
+            height: 100%;
+        }
 
-    hr { 
-      display: block;
-      margin-top: 0.5em;
-      margin-bottom: 0.5em;
-      margin-left: auto;
-      margin-right: auto;
-  
-      border-width: 3px;
-      border-color:#2FBCD3;
-      width: 10%;
-    }
-    em{font-size: 11px;
-    color:#333}
-    @media (max-width: 740px) {
-      html,
-      body,
-      header,
-      .view {
-        height: 1000px;
-      }
-    }
+        hr {
+            display: block;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+            margin-left: auto;
+            margin-right: auto;
 
-    @media (min-width: 800px) and (max-width: 850px) {
-      html,
-      body,
-      header,
-      .view {
-        height: 650px;
-      }
-    }
-    @media (min-width: 800px) and (max-width: 850px) {
-              .navbar:not(.top-nav-collapse) {
-                  background: #1C2331!important;
-              }
-          }
+            border-width: 3px;
+            border-color: #2FBCD3;
+            width: 10%;
+        }
 
-          body{overflow-x: hidden}
-  </style>
+        em {
+            font-size: 11px;
+            color: #333
+        }
+
+        @media (max-width: 740px) {
+            html,
+            body,
+            header,
+            .view {
+                height: 1000px;
+            }
+        }
+
+        @media (min-width: 800px) and (max-width: 850px) {
+            html,
+            body,
+            header,
+            .view {
+                height: 650px;
+            }
+        }
+
+        @media (min-width: 800px) and (max-width: 850px) {
+            .navbar:not(.top-nav-collapse) {
+                background: #1C2331 !important;
+            }
+        }
+
+        body {
+            overflow-x: hidden
+        }
+    </style>
 
 
-<script src="https://unpkg.com/jarallax@1.10/dist/jarallax.min.js"></script>
+    <script src="https://unpkg.com/jarallax@1.10/dist/jarallax.min.js"></script>
 
-<script src="https://unpkg.com/jarallax@1.10/dist/jarallax-video.min.js"></script>
+    <script src="https://unpkg.com/jarallax@1.10/dist/jarallax-video.min.js"></script>
 
-<script src="https://unpkg.com/jarallax@1.10/dist/jarallax-element.min.js"></script>
+    <script src="https://unpkg.com/jarallax@1.10/dist/jarallax-element.min.js"></script>
 </head>
 
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+<!-- Navbar -->
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
     <div class="container">
 
-      <!-- Brand -->
-      <a class="navbar-brand" href="https://mdbootstrap.com/docs/jquery/" target="_blank">
-      <img src="img/logo.png" width="100" height="auto">
-      </a>
+        <!-- Brand -->
+        <a class="navbar-brand" href="https://mdbootstrap.com/docs/jquery/" target="_blank">
+            <img height="auto" src="img/logo.png" width="100">
+        </a>
 
-      <!-- Collapse -->
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-        aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+        <!-- Collapse -->
+        <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+                data-target="#navbarSupportedContent"
+                data-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-      <!-- Links -->
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <!-- Links -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-        <!-- Left -->
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            
-          </li>
-         
-         
-        </ul>
+            <!-- Left -->
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
 
-        <!-- Right -->
-        <ul class="navbar-nav nav-flex-icons">
-         
-          
+                </li>
 
-          <li class="nav-item">
-            <a href="#" class="nav-link   rounded"
-              target="_blank" style="background-color:transparent">
-              Inscription
-            </a>
-            
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link   rounded"
-              target="_blank" style="background-color:transparent">
-              Connexion
-            </a>
-            
-          </li>
 
-          <li class="nav-item">
-            <a href="#" class="nav-link   rounded"
-              target="_blank" style="background-color:#2FBCD3; border:snow thin solid">
-              Devenir Alfred
-            </a>
-            
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link" target="_blank">
-              <i class="fab fa-facebook-f"></i>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="https://www.instagram.com/my_alfred_/" class="nav-link" target="_blank">
-              <i class="fab fa-instagram"></i>
-            </a>
-          </li>
-        </ul>
+            </ul>
 
-      </div>
+            <!-- Right -->
+            <ul class="navbar-nav nav-flex-icons">
+
+
+                <li class="nav-item">
+                    <a class="nav-link   rounded" href="#"
+                       style="background-color:transparent" target="_blank">
+                        Inscription
+                    </a>
+
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link   rounded" href="#"
+                       style="background-color:transparent" target="_blank">
+                        Connexion
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link   rounded" href="#"
+                       style="background-color:#2FBCD3; border:snow thin solid" target="_blank">
+                        Devenir Alfred
+                    </a>
+
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.instagram.com/my_alfred_/" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
 
     </div>
-  </nav>
-  <!-- Navbar -->
+</nav>
+<!-- Navbar -->
 
-  <!-- Full Page Intro -->
-  <div class="view full-page-intro jarallax" style="background-image: url('https://pluslite.fr/media/myalfred/bg.jpg'); background-repeat: no-repeat; background-size: cover;" data-jarallax-video="mp4:https://pluslite.fr/media/myalfred/bgdark.mp4">
+<!-- Full Page Intro -->
+<div class="view full-page-intro jarallax"
+     data-jarallax-video="mp4:https://pluslite.fr/media/myalfred/bgdark.mp4"
+     style="background-image: url('https://pluslite.fr/media/myalfred/bg.jpg'); background-repeat: no-repeat; background-size: cover;">
 
     <!-- Mask & flexbox options-->
     <div class="mask rgba-black-light d-flex justify-content-center align-items-center">
 
-      <!-- Content -->
-      <div class="container" style="margin-top:50px">
+        <!-- Content -->
+        <div class="container" style="margin-top:50px">
 
-        <!--Grid row-->
-        <div class="row wow fadeIn">
+            <!--Grid row-->
+            <div class="row wow fadeIn">
 
-          <!--Grid column-->
-          <div class="col-md-6 mb-4 white-text text-center text-md-left">
-<br>
-            <h2 class=" font-weight-bold">Vous connaissez Airbnb pour les logements ? Découvrez My-Alfred pour les services ! </h1>
-           
+                <!--Grid column-->
+                <div class="col-md-6 mb-4 white-text text-center text-md-left">
+                    <br>
+                    <h2 class=" font-weight-bold">Vous connaissez Airbnb pour les logements ? Découvrez My-Alfred pour
+                        les services ! </h1>
 
-            <hr class="hr-light hr-left d-none d-md-block" style="float:left">
-<br><br>
-            <h4 class=" font-weight-bold" >
-              We are coming soon ! 
-            </h4>
-<br>
-            <p class=" display-5 mb-4 d-none d-md-block" style="font-size:1.2em">
-                Créez votre boutique maintenant en quelques minutes, répertoriez vos services, indiquez vos disponibilités, vos tarifs et profitez d’un complément de revenu ! 
-            </p>
-<br>
-            <a target="_blank" href="#" class="btn  btn-lg text-capitalize " style="background-color:#2FBCD3; ">Devenir Alfred
-             
-            </a>
 
-          </div>
-          <!--Grid column-->
+                        <hr class="hr-light hr-left d-none d-md-block" style="float:left">
+                        <br><br>
+                        <h4 class=" font-weight-bold">
+                            We are coming soon !
+                        </h4>
+                        <br>
+                        <p class=" display-5 mb-4 d-none d-md-block" style="font-size:1.2em">
+                            Créez votre boutique maintenant en quelques minutes, répertoriez vos services, indiquez vos
+                            disponibilités, vos tarifs et profitez d’un complément de revenu !
+                        </p>
+                        <br>
+                        <a class="btn  btn-lg text-capitalize " href="#" style="background-color:#2FBCD3; "
+                           target="_blank">Devenir Alfred
 
-          <!--Grid column-->
-          <div class="col-md-6 col-xl-5 mb-4 float-right" style="float: right;">
-            <h5 class="card-header  white-text text-center py-4 " style="background-color:rgb(240, 77, 94)">
-              <a href="#" style="text-decoration:none; color:white"><strong>Créez votre boutique de services</strong></a>
-            </h5>
-            <!--Card-->
-            <div class="card">
+                        </a>
 
-              <!--Card content-->
-              <div class="card-body">
+                </div>
+                <!--Grid column-->
 
-                <p><em>Vivez avec nous l’aventure My-Alfred.  Restez informé et recevez toutes nos actualités !!!</em></p>
+                <!--Grid column-->
+                <div class="col-md-6 col-xl-5 mb-4 float-right" style="float: right;">
+                    <h5 class="card-header  white-text text-center py-4 " style="background-color:rgb(240, 77, 94)">
+                        <a href="#" style="text-decoration:none; color:white"><strong>Créez votre boutique de
+                            services</strong></a>
+                    </h5>
+                    <!--Card-->
+                    <div class="card">
 
-                <!-- Form -->
-                <form name="">
-                  <!-- Heading -->
-                
-                
+                        <!--Card content-->
+                        <div class="card-body">
 
-                  <div class="md-form">
-                    <i class="fas fa-user prefix grey-text"></i>
-                    <input type="text" id="form3" class="form-control">
-                    <label for="form3">Prénom </label>
-                  </div>
-                  <div class="md-form">
-                    <i class="fas fa-envelope prefix grey-text"></i>
-                    <input type="text" id="form2" class="form-control">
-                    <label for="form2">Email </label>
-                  </div>
+                            <p><em>Vivez avec nous l’aventure My-Alfred. Restez informé et recevez toutes nos actualités
+                                !!!</em></p>
 
-                  <fieldset class="form-check">
-                    <input type="checkbox" class="form-check-input" id="checkbox1">
-                    <label for="checkbox1" class="form-check-label dark-grey-text">Je m'abonne à la newsletter !</label>
-                  </fieldset>
-<br><br>
-                  <div class="text-right">
-                    <button class="btn  btn-block my-4    " type="submit" style="background-color:#2FBCD3; color:white">Envoyer</button>
-                    
-                    
-                  </div>
+                            <!-- Form -->
+                            <form name="">
+                                <!-- Heading -->
 
-                </form>
-                <!-- Form -->
 
-              </div>
+                                <div class="md-form">
+                                    <i class="fas fa-user prefix grey-text"></i>
+                                    <input class="form-control" id="form3" type="text">
+                                    <label for="form3">Prénom </label>
+                                </div>
+                                <div class="md-form">
+                                    <i class="fas fa-envelope prefix grey-text"></i>
+                                    <input class="form-control" id="form2" type="text">
+                                    <label for="form2">Email </label>
+                                </div>
+
+                                <fieldset class="form-check">
+                                    <input class="form-check-input" id="checkbox1" type="checkbox">
+                                    <label class="form-check-label dark-grey-text" for="checkbox1">Je m'abonne à la
+                                        newsletter !</label>
+                                </fieldset>
+                                <br><br>
+                                <div class="text-right">
+                                    <button class="btn  btn-block my-4    " style="background-color:#2FBCD3; color:white"
+                                            type="submit">Envoyer
+                                    </button>
+
+
+                                </div>
+
+                            </form>
+                            <!-- Form -->
+
+                        </div>
+
+                    </div>
+                    <!--/.Card-->
+
+                </div>
+                <!--Grid column-->
 
             </div>
-            <!--/.Card-->
-
-          </div>
-          <!--Grid column-->
+            <!--Grid row-->
 
         </div>
-        <!--Grid row-->
-
-      </div>
-      <!-- Content -->
+        <!-- Content -->
 
     </div>
     <!-- Mask & flexbox options-->
 
-  </div>
-  <!-- Full Page Intro -->
+</div>
+<!-- Full Page Intro -->
 
-  <!--Main layout-->
-  <main>
+<!--Main layout-->
+<main>
     <div class="container">
-      <section class="mt-5 wow fadeIn" >
+        <section class="mt-5 wow fadeIn">
 
-        <!--Grid row-->
-        <div class="row bg-white card-body " data-jarallax-element="-140" style="margin-top:-50px; ">
+            <!--Grid row-->
+            <div class="row bg-white card-body " data-jarallax-element="-140" style="margin-top:-50px; ">
 
-          <!--Grid column-->
-          <div class="col-md-12 mb-12 card-body padding-20 ">
+                <!--Grid column-->
+                <div class="col-md-12 mb-12 card-body padding-20 ">
 
-            <!-- Main heading -->
-            <h3 class="h1 mb-3 text-center">Devenez Alfred !</h3>
-            <hr item-width="50%">
-            <p class="text-center">My-Alfred vous permet de mettre à disposition votre boutique de services et vous offre une visibilité rapide sans avoir à engager le moindre coût initial ! My-Alfred gère pour vous le traitement des paiements, l’assistance aux utilisateurs et vous offre une assurance responsabilité civile.</p>
-        
-          </div>
-          
-          <!--Grid column-->
+                    <!-- Main heading -->
+                    <h3 class="h1 mb-3 text-center">Devenez Alfred !</h3>
+                    <hr item-width="50%">
+                    <p class="text-center">My-Alfred vous permet de mettre à disposition votre boutique de services et
+                        vous offre une visibilité rapide sans avoir à engager le moindre coût initial ! My-Alfred gère
+                        pour vous le traitement des paiements, l’assistance aux utilisateurs et vous offre une assurance
+                        responsabilité civile.</p>
 
-          <!--Grid column-->
-         
-          <!--Grid column-->
+                </div>
+
+                <!--Grid column-->
+
+                <!--Grid column-->
+
+                <!--Grid column-->
 
 
-          <br>
-          <br> 
-         
-          
-          <div class="col-md-5 card-body ">
-            <img src="img/1.svg" width="40" height="auto">
-            <br><br>
-                      <h3 class="font-weight-bold">Proposez vos services</h3> 
-           <p>Vous n'avez aucun frais à payer pour proposer vos services. Indiquez simplement les prestations que vous souhaitez réaliser en vous appuyant sur une liste de plus de 1500 services proposées sur My-Alfred. Un service n'apparait pas ? Proposez-le à nos équipes !</p>
-                     </div>  
-                     <div class="col-md-5 d-none d-md-block  mask rgba-black-light  jarallax" style=" background-color:#fff; height:40vh; float:right !important; margin-left:150px;"><video width="100%" height="100%" autoplay="autoplay" loop>
-                      <source src="http://pluslite.fr/media/myalfred/Phone1.mp4" type="video/mp4">
-                    
-                 
-                    </video></div>
-                     
-                     <div  class="col-md-5 d-none d-md-block  justify-content-center align-items-center jarallax  " data-jarallax-element="-140"  style="padding:50px; margin-top:-50px;"> <video width="100%" height="100%" autoplay="autoplay" loop>
-                      <source src="http://pluslite.fr/media/myalfred/Phone2.mp4" type="video/mp4"></div>
-                     <div class="col-md-6 card-body pull-right">
- <img src="img/2.svg" width="40" height="auto">
- <br><br>
-           <h3 class="font-weight-bold">Fixer vos conditions</h3> 
-<p>Indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et tous les critères pour définir votre prestation. Et si vous avez besoin d'aide, nous sommes là pour vous accompagner dans la création de votre boutique de services !</p>
-          </div>
-          
-          <div class="col-md-5 card-body">
-            <img src="img/3.svg" width="40" height="auto">
-            <br><br>
-                      <h3 class="font-weight-bold">Réalisez vos premiers services</h3> 
-           <p>Une fois votre boutique en ligne, les personnes intéressées par vos prestations pourront réserver en ligne vos services. Si vous avez des questions avant la prestation, vous pourrez les contacter !</p>
-                     </div>
-                     <div  class="col-md-5 d-none d-md-block  jarallax"  data-jarallax-element="-100" style=" height:60vh; float:right !important; margin-left:170px; margin-top:-50px;  "><video width="100%" height="100%" autoplay="autoplay" loop>
-                      <source src="http://pluslite.fr/media/myalfred/Phone3.mp4" type="video/mp4">
-                    
-                 
-                    </video></div>      
-        </div>
-        <!--Grid row-->
-       
+                <br>
+                <br>
 
-      </section>
-     
+
+                <div class="col-md-5 card-body ">
+                    <img height="auto" src="img/1.svg" width="40">
+                    <br><br>
+                    <h3 class="font-weight-bold">Proposez vos services</h3>
+                    <p>Vous n'avez aucun frais à payer pour proposer vos services. Indiquez simplement les prestations
+                        que vous souhaitez réaliser en vous appuyant sur une liste de plus de 1500 services proposées
+                        sur My-Alfred. Un service n'apparait pas ? Proposez-le à nos équipes !</p>
+                </div>
+                <div class="col-md-5 d-none d-md-block  mask rgba-black-light  jarallax"
+                     style=" background-color:#fff; height:40vh; float:right !important; margin-left:150px;">
+                    <video autoplay="autoplay" height="100%" loop width="100%">
+                        <source src="http://pluslite.fr/media/myalfred/Phone1.mp4" type="video/mp4">
+
+
+                    </video>
+                </div>
+
+                <div class="col-md-5 d-none d-md-block  justify-content-center align-items-center jarallax  "
+                     data-jarallax-element="-140" style="padding:50px; margin-top:-50px;">
+                    <video autoplay="autoplay" height="100%" loop width="100%">
+                        <source src="http://pluslite.fr/media/myalfred/Phone2.mp4" type="video/mp4">
+                </div>
+                <div class="col-md-6 card-body pull-right">
+                    <img height="auto" src="img/2.svg" width="40">
+                    <br><br>
+                    <h3 class="font-weight-bold">Fixer vos conditions</h3>
+                    <p>Indiquez vos disponibilités (jours, heures...) ainsi que vos tarifs et tous les critères pour
+                        définir votre prestation. Et si vous avez besoin d'aide, nous sommes là pour vous accompagner
+                        dans la création de votre boutique de services !</p>
+                </div>
+
+                <div class="col-md-5 card-body">
+                    <img height="auto" src="img/3.svg" width="40">
+                    <br><br>
+                    <h3 class="font-weight-bold">Réalisez vos premiers services</h3>
+                    <p>Une fois votre boutique en ligne, les personnes intéressées par vos prestations pourront réserver
+                        en ligne vos services. Si vous avez des questions avant la prestation, vous pourrez les
+                        contacter !</p>
+                </div>
+                <div class="col-md-5 d-none d-md-block  jarallax" data-jarallax-element="-100"
+                     style=" height:60vh; float:right !important; margin-left:170px; margin-top:-50px;  ">
+                    <video autoplay="autoplay" height="100%" loop width="100%">
+                        <source src="http://pluslite.fr/media/myalfred/Phone3.mp4" type="video/mp4">
+
+
+                    </video>
+                </div>
+            </div>
+            <!--Grid row-->
+
+
+        </section>
+
     </div>
-    <section> <div class="card card-image jarallax" style="background-color:#fff; margin-top:-100px;"  data-jarallax-video="mp4:https://pluslite.fr/media/myalfred/bgdark.mp4">
+    <section>
+        <div class="card card-image jarallax" data-jarallax-video="mp4:https://pluslite.fr/media/myalfred/bgdark.mp4"
+             style="background-color:#fff; margin-top:-100px;">
 
-          <!-- Content -->
-          <div class="text-white text-center d-flex align-items-center rgba-black-light py-5 px-4 " style="height:60vh">
-            <div class="container"  data-jarallax-element="-140" >
-             
-              <h2 class="card-title pt-2"><strong>Proposez vos services sans faire face à des coûts initiaux</strong></h2>
-              <p>Nous sommes tous des Alfred. Chacun d'entre nous doit pouvoir partager ses savoir faire, ses compétences, ses passions... tantôt Alfred, tantôt consommateur de services d'Alfred, rejoignez la communauté Alfred en quelques clics !</p>
-              <a class="btn" style="background-color:#2FBCD3"><i class="fas fa-heart left"></i> Devenir Alfred</a>
+            <!-- Content -->
+            <div class="text-white text-center d-flex align-items-center rgba-black-light py-5 px-4 "
+                 style="height:60vh">
+                <div class="container" data-jarallax-element="-140">
+
+                    <h2 class="card-title pt-2"><strong>Proposez vos services sans faire face à des coûts
+                        initiaux</strong></h2>
+                    <p>Nous sommes tous des Alfred. Chacun d'entre nous doit pouvoir partager ses savoir faire, ses
+                        compétences, ses passions... tantôt Alfred, tantôt consommateur de services d'Alfred, rejoignez
+                        la communauté Alfred en quelques clics !</p>
+                    <a class="btn" style="background-color:#2FBCD3"><i class="fas fa-heart left"></i> Devenir Alfred</a>
+                </div>
             </div>
-          </div>
-          <footer class="page-footer text-center font-small mt-4 " style="background-color:rgb(70, 70, 80);margin:0px">
+            <footer class="page-footer text-center font-small mt-4 "
+                    style="background-color:rgb(70, 70, 80);margin:0px">
 
-    
 
-    
-   
+                <!--Copyright-->
+                <div class=" py-3">
+                    © 2019 Copyright:
+                    <a href="http://my-alfred.io" target="_blank">my-alfred.io </a>
+                </div>
+                <!--/.Copyright-->
 
-            <!--Copyright-->
-            <div class=" py-3">
-              © 2019 Copyright:
-              <a href="http://my-alfred.io" target="_blank">my-alfred.io </a>
-            </div>
-            <!--/.Copyright-->
-        
-          </footer>
+            </footer>
         </div>
-        
-</section>
 
-  </main>
-  <!--Main layout-->
+    </section>
 
-  <!--Footer-->
-  
-  <!--/.Footer-->
+</main>
+<!--Main layout-->
 
-  <!-- SCRIPTS -->
-  <!-- JQuery -->
-  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-  <!-- Bootstrap tooltips -->
-  <script type="text/javascript" src="js/popper.min.js"></script>
-  <!-- Bootstrap core JavaScript -->
-  <script type="text/javascript" src="js/bootstrap.min.js"></script>
-  <!-- MDB core JavaScript -->
-  <script type="text/javascript" src="js/mdb.min.js"></script>
-  <!-- Initializations -->
-  <script type="text/javascript">
-    // Animations initialization
-    new WOW().init();
-  </script>
+<!--Footer-->
+
+<!--/.Footer-->
+
+<!-- SCRIPTS -->
+<!-- JQuery -->
+<script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+<!-- Bootstrap tooltips -->
+<script src="js/popper.min.js" type="text/javascript"></script>
+<!-- Bootstrap core JavaScript -->
+<script src="js/bootstrap.min.js" type="text/javascript"></script>
+<!-- MDB core JavaScript -->
+<script src="js/mdb.min.js" type="text/javascript"></script>
+<!-- Initializations -->
+<script type="text/javascript">
+  // Animations initialization
+  new WOW().init();
+</script>
 </body>
 
 </html>

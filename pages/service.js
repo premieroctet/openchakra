@@ -5,33 +5,33 @@ import BodySearch from '../components/service-by-category/BodySearch/BodySearch'
 
 class Service extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            id: ''
-        }
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      id: '',
+    };
+  }
 
-    static getInitialProps ({ query: { category } }) {
-        return { categoryId: category }
+  static getInitialProps({query: {category}}) {
+    return {categoryId: category};
 
-    }
+  }
 
-    componentWillMount() {
-        this.setState({id: this.props.categoryId});
-    }
+  componentWillMount() {
+    this.setState({id: this.props.categoryId});
+  }
 
-    render() {
-        return (
-            <Fragment>
-                <Layout>
-                    <SubBar category={this.state.id} />
-                    <BodySearch category={this.state.id} />
-                </Layout>
-            </Fragment>
+  render() {
+    return (
+      <Fragment>
+        <Layout>
+          <SubBar category={this.state.id}/>
+          <BodySearch category={this.state.id}/>
+        </Layout>
+      </Fragment>
 
-        )
-    }
+    );
+  }
 }
 
 

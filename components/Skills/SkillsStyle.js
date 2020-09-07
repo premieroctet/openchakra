@@ -1,13 +1,13 @@
-export default theme=>({
-  mainContainer:{
+export default theme => ({
+  mainContainer: {
     display: 'flex',
     flexDirection: 'row',
-      [theme.breakpoints.down('xs')]: {
-        alignItems: 'center',
-        justifyContent: 'center'
+    [theme.breakpoints.down('xs')]: {
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   },
-  cardSkills:{
+  cardSkills: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -17,29 +17,29 @@ export default theme=>({
       margin: 0,
     },
   },
-  avatarSize:{
+  avatarSize: {
     width: 80,
-    height: 80
+    height: 80,
   },
-  chipStyle:{
-    margin : 15
+  chipStyle: {
+    margin: 15,
   },
   bigWidth: {
-    width :500,
+    width: 500,
     [theme.breakpoints.down('xs')]: {
-      width: 'auto'
+      width: 'auto',
     },
   },
   middleWidth: {
-    width : 400,
+    width: 400,
     [theme.breakpoints.down('xs')]: {
-      width: 'auto'
+      width: 'auto',
     },
   },
-  titleSkills:{
-    fontSize: "1.6rem",
-    color: "rgba(84,89,95,0.95)",
+  titleSkills: {
+    fontSize: '1.6rem',
+    color: 'rgba(84,89,95,0.95)',
     letterSpacing: -1,
-    fontWeight: "bold"
-  }
+    fontWeight: 'bold',
+  },
 })

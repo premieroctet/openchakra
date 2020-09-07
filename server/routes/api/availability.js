@@ -2,69 +2,69 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const moment = require('moment');
-const {availability2eventUI, eventUI2availability} =require('../../../utils/converters');
+const {availability2eventUI, eventUI2availability} = require('../../../utils/converters');
 const Availability = require('../../models/Availability');
 const ServiceUser = require('../../models/ServiceUser');
-const {createDefaultAvailability}=require('../../../utils/dateutils');
+const {createDefaultAvailability} = require('../../../utils/dateutils');
 const mongoose = require('mongoose');
 const {isIntervalAvailable} = require('../../../utils/dateutils');
 
 moment.locale('fr');
-router.get('/test',(req, res) => res.json({msg: 'Availability Works!'}) );
+router.get('/test', (req, res) => res.json({msg: 'Availability Works!'}));
 
 
 // @Route POST /myAlfred/api/availability/add
 // add an availability for current user
 // access private
-router.post('/add',passport.authenticate('jwt',{session: false}),(req,res)=> {
+router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-    const newAvailability = new Availability({user:req.user.id, ...req.body});
+  const newAvailability = new Availability({user: req.user.id, ...req.body});
 
-    newAvailability.save()
-      .then(availability => {
-        res.json(availability)
-        console.log(`After adding availability:${JSON.stringify(availability)}`);
-      })
-      .catch(err => console.error(err));
+  newAvailability.save()
+    .then(availability => {
+      res.json(availability);
+      console.log(`After adding availability:${JSON.stringify(availability)}`);
+    })
+    .catch(err => console.error(err));
 });
 
 // @Route POST /myAlfred/api/availability/addRecurrent
 // add a recurrent availability for current user
 // access private
-router.post('/addRecurrent',passport.authenticate('jwt',{session: false}),(req,res)=> {
+router.post('/addRecurrent', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-    const newAvailability = new Availability({
-      user:req.user.id,
-      period: {
-        begin: req.body.begin,
-        end: req.body.end,
-      },
-      punctuals: null,
-      available: req.body.available,
-      days: req.body.days,
-      timelapses: Array(...req.body.timelapses),
+  const newAvailability = new Availability({
+    user: req.user.id,
+    period: {
+      begin: req.body.begin,
+      end: req.body.end,
+    },
+    punctuals: null,
+    available: req.body.available,
+    days: req.body.days,
+    timelapses: Array(...req.body.timelapses),
+  });
+
+  newAvailability.save()
+    .then(availability => {
+      res.json(availability);
+      console.log(`After adding recurrent availability:${JSON.stringify(availability)}`);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(400).json(err);
     });
-
-    newAvailability.save()
-      .then(availability => {
-        res.json(availability)
-        console.log(`After adding recurrent availability:${JSON.stringify(availability)}`);
-      })
-      .catch(err => {
-        console.error(err)
-        res.status(400).json(err)
-      });
 });
 
 // @Route POST /myAlfred/api/availability/addPunctual
 // add a recurrent availability for current user
 // access private
-router.post('/addPunctual',passport.authenticate('jwt',{session: false}),(req,res)=> {
+router.post('/addPunctual', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  console.log(`Add punctual : dates are ${JSON.stringify(req.body.dates)}`)
+  console.log(`Add punctual : dates are ${JSON.stringify(req.body.dates)}`);
 
   const newAvailability = new Availability({
-    user:req.user.id,
+    user: req.user.id,
     period: null,
     punctuals: Array(...req.body.dates),
     available: req.body.available,
@@ -74,212 +74,254 @@ router.post('/addPunctual',passport.authenticate('jwt',{session: false}),(req,re
 
   newAvailability.save()
     .then(availability => {
-      res.json(availability)
+      res.json(availability);
       console.log(`After adding punctual availability:${JSON.stringify(availability)}`);
     })
     .catch(err => {
-      console.error(err)
-      res.status(400).json(err)
+      console.error(err);
+      res.status(400).json(err);
     });
 });
 
 // @Route GET /myAlfred/api/availability/toEventUI
 // Get converted availability to eventUI
 // access public
-router.get('/toEventUI',(req,res)=> {
-  const eventUI=createDefaultAvailability();
-  res.json({avail:eventUI});
+router.get('/toEventUI', (req, res) => {
+  const eventUI = createDefaultAvailability();
+  res.json({avail: eventUI});
 });
 
 // @Route POST /myAlfred/api/availability/update
 // update an availability for one user
 // access private
-router.post('/update',passport.authenticate('jwt',{session: false}),(req,res)=> {
+router.post('/update', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-    const newAvailability = new Availability({user:req.user.id, ...req.body});
-    newAvailability.delete()
+  const newAvailability = new Availability({user: req.user.id, ...req.body});
+  newAvailability.delete()
+    .then(availability => {
+      availability.save()
         .then(availability => {
-          availability.save()
-            .then (availability => {
-              res.json(availability)
-            })
-            .catch(err => console.error(err));
+          res.json(availability);
         })
         .catch(err => console.error(err));
+    })
+    .catch(err => console.error(err));
 });
 
 
 router.get('/userAvailabilities', (req, res) => {
-    Availability.find()
-        .then(availabilities => {
-            res.json(availabilities);
-        })
-        .catch(err => {
-            console.error(err);
-        })
-})
+  Availability.find()
+    .then(availabilities => {
+      res.json(availabilities);
+    })
+    .catch(err => {
+      console.error(err);
+    });
+});
 
 // @Route GET /myAlfred/api/availability/userAvailabilities/:id
 // Get all availability for one user
-router.get('/userAvailabilities/:id',(req,res)=> {
-    Availability.find({user: req.params.id})
-        .then(availability => {
-            res.json(availability);
-        })
-        .catch(err => {
-            console.error(err);
-        })
+router.get('/userAvailabilities/:id', (req, res) => {
+  Availability.find({user: req.params.id})
+    .then(availability => {
+      res.json(availability);
+    })
+    .catch(err => {
+      console.error(err);
+    });
 });
 
 // @Route POST /myAlfred/api/availability/check
 // Checks availabilities fouseravatarr serviceusers between start and end
 // Returns available serviceUser ids
-router.post('/check',(req,res)=> {
-  const start=moment(req.body.start*1000)
-  const end=moment(req.body.end*1000)
-  const serviceUserIds=req.body.serviceUsers
+router.post('/check', (req, res) => {
+  const start = moment(req.body.start * 1000);
+  const end = moment(req.body.end * 1000);
+  const serviceUserIds = req.body.serviceUsers;
 
-  ServiceUser.find({ _id : { $in : serviceUserIds.map( su => mongoose.Types.ObjectId(su))}}, 'user service')
-    .then ( serviceUsers => {
-      Availability.find({ user : { $in : serviceUsers.map( su => mongoose.Types.ObjectId(su.user))}})
-        .then ( availabilities => {
+  ServiceUser.find({_id: {$in: serviceUserIds.map(su => mongoose.Types.ObjectId(su))}}, 'user service')
+    .then(serviceUsers => {
+      Availability.find({user: {$in: serviceUsers.map(su => mongoose.Types.ObjectId(su.user))}})
+        .then(availabilities => {
 
-          var filtered=[]
-          serviceUsers.forEach( su => {
-            if (isIntervalAvailable(start, end, su.service, availabilities.filter( a => a.user.toString()===su.user.toString()))) {
-              filtered.push(su._id)
+          var filtered = [];
+          serviceUsers.forEach(su => {
+            if (isIntervalAvailable(start, end, su.service, availabilities.filter(a => a.user.toString() === su.user.toString()))) {
+              filtered.push(su._id);
             }
           });
-          res.json(filtered)
+          res.json(filtered);
         })
-        .catch (err  => console.error(err))
+        .catch(err => console.error(err));
     })
-    .catch (err  => console.error(err))
+    .catch(err => console.error(err));
 });
 
 // @Route GET /myAlfred/api/availability/currentAlfred
 // Get all availabilities for current user
-router.get('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,res)=> {
-    Availability.find({user: req.user.id})
-        .then(availability => {
-            res.json(availability);
-        })
-        .catch(err => {
-            console.error(err);
-        })
+router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (req, res) => {
+  Availability.find({user: req.user.id})
+    .then(availability => {
+      res.json(availability);
+    })
+    .catch(err => {
+      console.error(err);
+    });
 
 
 });
 
 // @Route POST /myAlfred/api/availability/filterDate
 // Return availability between 2 dates
-router.post('/filterDate',(req,res)=>{
-    const allAvailability = [];
-    console.log("Filter date received "+JSON.stringify(req.body));
-    const dateBegin = req.body.begin;
-    const dateEnd = req.body.end;
-    const beginDay = req.body.beginDay;
-    const endDay = req.body.endDay;
-    let newBeginDay;
-    let newEndDay;
-    switch (beginDay) {
-        case 'lundi': newBeginDay = beginDay.replace(beginDay,'monday');break;
-        case 'mardi': newBeginDay = beginDay.replace(beginDay,'tuesday');break;
-        case 'mercredi': newBeginDay = beginDay.replace(beginDay,'wednesday');break;
-        case 'jeudi': newBeginDay = beginDay.replace(beginDay,'thursday');break;
-        case 'vendredi': newBeginDay = beginDay.replace(beginDay,'friday');break;
-        case 'samedi': newBeginDay = beginDay.replace(beginDay,'saturday');break;
-        case 'dimanche': newBeginDay = beginDay.replace(beginDay,'sunday');break;
-    }
-    switch (endDay) {
-        case 'lundi': newEndDay = endDay.replace(endDay,'monday');break;
-        case 'mardi': newEndDay = endDay.replace(endDay,'tuesday');break;
-        case 'mercredi': newEndDay = endDay.replace(endDay,'wednesday');break;
-        case 'jeudi': newEndDay = endDay.replace(endDay,'thursday');break;
-        case 'vendredi': newEndDay = endDay.replace(endDay,'friday');break;
-        case 'samedi': newEndDay = endDay.replace(endDay,'saturday');break;
-        case 'dimanche': newEndDay = endDay.replace(endDay,'sunday');break;
-    }
-   Availability.find()
-       .then(availability => {
-           availability.forEach(e => {
-               if(!e.period.active && (e[newBeginDay].event.length || e[newEndDay].event.length)){
-                   allAvailability.push(e)
-               } else {
-                   let begin = moment(e.period.month_begin).subtract(1,'days');
-                   let end = moment(e.period.month_end).add(1,'days');
-                   const betweenBegin = moment(dateBegin).isBetween(begin,end);
-                   const betweenEnd = moment(dateEnd).isBetween(begin,end);
-                   if(betweenBegin && betweenEnd && (e[newBeginDay].event.length || e[newEndDay].event.length)){
-                       allAvailability.push(e);
-                   }
-               }
-           });
-           res.json(allAvailability)
-       })
-       .catch(err => console.error(err));
+router.post('/filterDate', (req, res) => {
+  const allAvailability = [];
+  console.log('Filter date received ' + JSON.stringify(req.body));
+  const dateBegin = req.body.begin;
+  const dateEnd = req.body.end;
+  const beginDay = req.body.beginDay;
+  const endDay = req.body.endDay;
+  let newBeginDay;
+  let newEndDay;
+  switch (beginDay) {
+    case 'lundi':
+      newBeginDay = beginDay.replace(beginDay, 'monday');
+      break;
+    case 'mardi':
+      newBeginDay = beginDay.replace(beginDay, 'tuesday');
+      break;
+    case 'mercredi':
+      newBeginDay = beginDay.replace(beginDay, 'wednesday');
+      break;
+    case 'jeudi':
+      newBeginDay = beginDay.replace(beginDay, 'thursday');
+      break;
+    case 'vendredi':
+      newBeginDay = beginDay.replace(beginDay, 'friday');
+      break;
+    case 'samedi':
+      newBeginDay = beginDay.replace(beginDay, 'saturday');
+      break;
+    case 'dimanche':
+      newBeginDay = beginDay.replace(beginDay, 'sunday');
+      break;
+  }
+  switch (endDay) {
+    case 'lundi':
+      newEndDay = endDay.replace(endDay, 'monday');
+      break;
+    case 'mardi':
+      newEndDay = endDay.replace(endDay, 'tuesday');
+      break;
+    case 'mercredi':
+      newEndDay = endDay.replace(endDay, 'wednesday');
+      break;
+    case 'jeudi':
+      newEndDay = endDay.replace(endDay, 'thursday');
+      break;
+    case 'vendredi':
+      newEndDay = endDay.replace(endDay, 'friday');
+      break;
+    case 'samedi':
+      newEndDay = endDay.replace(endDay, 'saturday');
+      break;
+    case 'dimanche':
+      newEndDay = endDay.replace(endDay, 'sunday');
+      break;
+  }
+  Availability.find()
+    .then(availability => {
+      availability.forEach(e => {
+        if (!e.period.active && (e[newBeginDay].event.length || e[newEndDay].event.length)) {
+          allAvailability.push(e);
+        } else {
+          let begin = moment(e.period.month_begin).subtract(1, 'days');
+          let end = moment(e.period.month_end).add(1, 'days');
+          const betweenBegin = moment(dateBegin).isBetween(begin, end);
+          const betweenEnd = moment(dateEnd).isBetween(begin, end);
+          if (betweenBegin && betweenEnd && (e[newBeginDay].event.length || e[newEndDay].event.length)) {
+            allAvailability.push(e);
+          }
+        }
+      });
+      res.json(allAvailability);
+    })
+    .catch(err => console.error(err));
 });
 
 // @Route POST /myAlfred/api/availability/home/date
 // Return availability for a date
-router.post('/home/date',(req,res)=>{
-    const allAvailability = [];
-    const dateBegin = req.body.begin;
-    const beginDay = req.body.beginDay;
-    let newBeginDay;
-    switch (beginDay) {
-        case 'lundi': newBeginDay = beginDay.replace(beginDay,'monday');break;
-        case 'mardi': newBeginDay = beginDay.replace(beginDay,'tuesday');break;
-        case 'mercredi': newBeginDay = beginDay.replace(beginDay,'wednesday');break;
-        case 'jeudi': newBeginDay = beginDay.replace(beginDay,'thursday');break;
-        case 'vendredi': newBeginDay = beginDay.replace(beginDay,'friday');break;
-        case 'samedi': newBeginDay = beginDay.replace(beginDay,'saturday');break;
-        case 'dimanche': newBeginDay = beginDay.replace(beginDay,'sunday');break;
-    }
-    Availability.find()
-        .then(availability => {
-            availability.forEach(e => {
-                if(!e.period.active && e[newBeginDay].event.length ){
-                    allAvailability.push(e)
-                } else {
-                    let begin = e.period.month_begin;
-                    let end = e.period.month_end;
-                    const betweenBegin = moment(dateBegin).isBetween(begin,end);
-                    if(betweenBegin  && e[newBeginDay].event.length){
-                        allAvailability.push(e);
-                    }
-                }
-            });
-            res.json(allAvailability)
-        })
-        .catch(err => console.error(err));
+router.post('/home/date', (req, res) => {
+  const allAvailability = [];
+  const dateBegin = req.body.begin;
+  const beginDay = req.body.beginDay;
+  let newBeginDay;
+  switch (beginDay) {
+    case 'lundi':
+      newBeginDay = beginDay.replace(beginDay, 'monday');
+      break;
+    case 'mardi':
+      newBeginDay = beginDay.replace(beginDay, 'tuesday');
+      break;
+    case 'mercredi':
+      newBeginDay = beginDay.replace(beginDay, 'wednesday');
+      break;
+    case 'jeudi':
+      newBeginDay = beginDay.replace(beginDay, 'thursday');
+      break;
+    case 'vendredi':
+      newBeginDay = beginDay.replace(beginDay, 'friday');
+      break;
+    case 'samedi':
+      newBeginDay = beginDay.replace(beginDay, 'saturday');
+      break;
+    case 'dimanche':
+      newBeginDay = beginDay.replace(beginDay, 'sunday');
+      break;
+  }
+  Availability.find()
+    .then(availability => {
+      availability.forEach(e => {
+        if (!e.period.active && e[newBeginDay].event.length) {
+          allAvailability.push(e);
+        } else {
+          let begin = e.period.month_begin;
+          let end = e.period.month_end;
+          const betweenBegin = moment(dateBegin).isBetween(begin, end);
+          if (betweenBegin && e[newBeginDay].event.length) {
+            allAvailability.push(e);
+          }
+        }
+      });
+      res.json(allAvailability);
+    })
+    .catch(err => console.error(err));
 });
 
 // @Route GET /myAlfred/api/availability/all
 // Get all availability for one user
-router.get('/all',(req,res)=> {
+router.get('/all', (req, res) => {
   Availability.find({})
     .then(availability => {
       res.json(availability);
     })
     .catch(err => {
       console.error(err);
-    })
+    });
 });
 
 // @Route GET /myAlfred/api/availability/:id
 // Get one availability
-router.get('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
+router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-    Availability.findById(req.params.id)
-        //.populate({path:'monday.event.services',populate:{path: 'value'}})
-        //.populate({path:'tuesday.event.services',populate:{path: 'value'}})
-        .then(availability => {
-            res.json(availability);
-        })
-        .catch(err => {
-            console.error(err);
-        })
+  Availability.findById(req.params.id)
+    //.populate({path:'monday.event.services',populate:{path: 'value'}})
+    //.populate({path:'tuesday.event.services',populate:{path: 'value'}})
+    .then(availability => {
+      res.json(availability);
+    })
+    .catch(err => {
+      console.error(err);
+    });
 
 
 });
@@ -287,55 +329,55 @@ router.get('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
 // @Route PUT /myAlfred/api/availability/:id
 // edit an availability
 // access private
-router.put('/:id',passport.authenticate('jwt',{session: false}),(req,res)=> {
+router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-    Availability.findById(req.params.id)
-        .then(fields => {
-            fields.monday.event = req.body.monday_event;
-            fields.tuesday.event = req.body.tuesday_event;
-            fields.wednesday.event = req.body.wednesday_event;
-            fields.thursday.event = req.body.thursday_event;
-            fields.friday.event = req.body.friday_event;
-            fields.saturday.event = req.body.saturday_event;
-            fields.sunday.event = req.body.sunday_event;
-            fields.period = {};
-            fields.period.active = req.body.active;
-            fields.period.month_begin = req.body.month_begin;
-            fields.period.month_end = req.body.month_end;
+  Availability.findById(req.params.id)
+    .then(fields => {
+      fields.monday.event = req.body.monday_event;
+      fields.tuesday.event = req.body.tuesday_event;
+      fields.wednesday.event = req.body.wednesday_event;
+      fields.thursday.event = req.body.thursday_event;
+      fields.friday.event = req.body.friday_event;
+      fields.saturday.event = req.body.saturday_event;
+      fields.sunday.event = req.body.sunday_event;
+      fields.period = {};
+      fields.period.active = req.body.active;
+      fields.period.month_begin = req.body.month_begin;
+      fields.period.month_end = req.body.month_end;
 
-            fields.save().then(availability => res.json(availability)).catch(err => console.error(err));
-        })
-        .catch(err => console.error(err));
+      fields.save().then(availability => res.json(availability)).catch(err => console.error(err));
+    })
+    .catch(err => console.error(err));
 
 });
 
 
 // @Route DELETE /myAlfred/api/availability/currentAlfred
 // Delete all availability for one user
-router.delete('/currentAlfred',passport.authenticate('jwt',{session:false}),(req,res)=> {
+router.delete('/currentAlfred', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-    Availability.deleteMany({user: req.user.id})
-        .then(() => {
-            res.json({success: true});
-        })
-        .catch(err => {
-            console.error(err);
-        })
+  Availability.deleteMany({user: req.user.id})
+    .then(() => {
+      res.json({success: true});
+    })
+    .catch(err => {
+      console.error(err);
+    });
 
 
 });
 
 // @Route DELETE /myAlfred/api/availability/:id
 // Delete one availability
-router.delete('/:id',passport.authenticate('jwt',{session:false}),(req,res)=> {
+router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-    Availability.findById(req.params.id)
-        .then(availability => {
-            availability.remove().then(() => res.json({msg: 'Ok'})).catch(error => console.log(error))
-        })
-        .catch(err => {
-            console.error(err);
-        })
+  Availability.findById(req.params.id)
+    .then(availability => {
+      availability.remove().then(() => res.json({msg: 'Ok'})).catch(error => console.log(error));
+    })
+    .catch(err => {
+      console.error(err);
+    });
 
 
 });

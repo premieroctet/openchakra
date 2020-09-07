@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#EAEAEA;}
 	.st1{fill:#8C8C8C;}
@@ -58,39 +58,39 @@
 	.st52{fill:none;stroke:#EAEAEA;stroke-width:2;stroke-miterlimit:10;}
 	.st53{fill:none;stroke:#8C8C8C;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<rect x="-1" class="st0" width="500" height="500"/>
-<g>
+    <rect class="st0" height="500" width="500" x="-1"/>
+    <g>
 	<g>
 		<path class="st1" d="M232.6,193c-2.4-2.6-5.7-4.1-9.2-4.1c-7-0.1-12.8,5.5-12.9,12.5c0,2.3,1.8,4.1,4,4.2c0,0,0,0,0.1,0
 			c2.2,0,4.1-1.8,4.1-4c0-2.5,2.1-4.5,4.6-4.5c1.3,0,2.4,0.5,3.3,1.5c1.5,1.7,4.1,1.8,5.8,0.3C234,197.3,234.1,194.7,232.6,193z"/>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<path class="st1" d="M254.4,206.3c-1.3-2.9-3.7-5.3-6.7-6.4c-6-2.2-12.8,0.9-15,6.9c-0.8,2.1,0.3,4.5,2.4,5.3
 			c0.5,0.2,1,0.3,1.4,0.3c1.7,0,3.2-1,3.8-2.7c0.7-1.8,2.7-2.7,4.5-2.1c0.9,0.3,1.6,1,2,1.9c0.9,2.1,3.3,3.1,5.4,2.2
 			C254.3,210.8,255.3,208.4,254.4,206.3z"/>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<path class="st1" d="M280.8,170.1c-1.6-1.6-4.2-1.6-5.8,0l-3.9,3.9c-1.6,1.6-1.6,4.2,0,5.8c0.8,0.8,1.8,1.2,2.9,1.2
 			c1,0,2.1-0.4,2.9-1.2l3.9-3.9C282.4,174.3,282.4,171.7,280.8,170.1z"/>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<path class="st1" d="M255.3,222.9h-5.5c-2.3,0-4.1,1.8-4.1,4.1s1.8,4.1,4.1,4.1h5.5c2.3,0,4.1-1.8,4.1-4.1
 			S257.6,222.9,255.3,222.9z"/>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<path class="st1" d="M297.1,222.9h-5.5c-2.3,0-4.1,1.8-4.1,4.1s1.8,4.1,4.1,4.1h5.5c2.3,0,4.1-1.8,4.1-4.1
 			S299.4,222.9,297.1,222.9z"/>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<path class="st1" d="M403.9,296.7l-1.1-5.8c-0.7-3.7-3.9-6.3-7.6-6.3c-0.5,0-0.9,0-1.4,0.1l-21.7,4l9.8-6.6
 			c2.6-1.7,3.9-4.8,3.3-7.9c-0.2-0.8-0.4-1.6-0.9-2.4l-3-5.3c-1-1.8-2.8-3.2-4.8-3.7c-1-0.3-2-0.3-3-0.2c1.1-6,1.7-12.2,1.7-18.5
@@ -128,8 +128,8 @@
 			l-5.5-29.8l30.8-18.2l2.6,4.5L351,293c-1.6,1.1-2.2,3.1-1.5,4.9c0.7,1.8,2.6,2.8,4.5,2.5l40.8-7.5l0.9,4.9L355,305.3z M307,211"/>
 	</g>
 </g>
-<g>
-	<rect y="365" class="st24" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 128.5825 403.5557)" class="st23 st35 st36">Ingrédients</text>
+    <g>
+	<rect class="st24" height="144" width="500" y="365"/>
+        <text class="st23 st35 st36" transform="matrix(1 0 0 1 128.5825 403.5557)">Ingrédients</text>
 </g>
 </svg>

@@ -5,7 +5,7 @@ export default theme => ({
 
   },
   paper: {
-    backgroundColor:'#f87280',
+    backgroundColor: '#f87280',
     color: 'white',
     padding: theme.spacing(1),
   },

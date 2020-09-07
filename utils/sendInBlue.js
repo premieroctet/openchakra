@@ -1,12 +1,11 @@
-
 const SibApiV3Sdk = require('sib-api-v3-sdk');
 
-const SIB_API_KEY_V2='SvfYtHq36XGknjwC';
-const SIB_API_KEY_V3='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';
+const SIB_API_KEY_V2 = 'SvfYtHq36XGknjwC';
+const SIB_API_KEY_V3 = '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';
 
-const SIB_VERSION=3;
+const SIB_VERSION = 3;
 
-const SmsTemplateId=38;
+const SmsTemplateId = 38;
 
 class SIB_V3 {
 
@@ -25,7 +24,7 @@ class SIB_V3 {
 
     var sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
-    sendSmtpEmail.to=[{email:email}];
+    sendSmtpEmail.to = [{email: email}];
     sendSmtpEmail.templateId = parseInt(index);
     sendSmtpEmail.params = {};
     Object.assign(sendSmtpEmail.params, data);
@@ -35,34 +34,34 @@ class SIB_V3 {
         console.log('SMTP called successfully. Returned data: ' + JSON.stringify(data, null, 2));
         return true;
       })
-      .catch ( err => {
+      .catch(err => {
         console.error(err);
         return false;
       });
-    }
+  }
 
-    sendSms(number, data) {
+  sendSms(number, data) {
 
-      console.log(`Sending SMS to ${number}, with data ${data}`);
+    console.log(`Sending SMS to ${number}, with data ${data}`);
 
-      const sendTransacSms = new SibApiV3Sdk.SendTransacSms();
-      sendTransacSms.sender     = 'MyAlfred';
-      sendTransacSms.recipient  = number;
-      sendTransacSms.content    = data;
-      sendTransacSms.type       = 'transactional';
+    const sendTransacSms = new SibApiV3Sdk.SendTransacSms();
+    sendTransacSms.sender = 'MyAlfred';
+    sendTransacSms.recipient = number;
+    sendTransacSms.content = data;
+    sendTransacSms.type = 'transactional';
 
-      this.smsInstance.sendTransacSms(sendTransacSms)
-        .then(data => {
-          console.log('SMS called successfully. Returned data: ' + JSON.stringify(data, null, 2));
-          return true;
-        })
-        .catch ( err => {
-          console.error(err);
-          return false;
-        });
-    }
+    this.smsInstance.sendTransacSms(sendTransacSms)
+      .then(data => {
+        console.log('SMS called successfully. Returned data: ' + JSON.stringify(data, null, 2));
+        return true;
+      })
+      .catch(err => {
+        console.error(err);
+        return false;
+      });
+  }
 }
 
-const SIB=new SIB_V3();
+const SIB = new SIB_V3();
 
-module.exports={SIB};
+module.exports = {SIB};

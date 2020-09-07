@@ -8,19 +8,19 @@ import Checkbox from '@material-ui/core/Checkbox';
 import axios from 'axios';
 import {toast} from 'react-toastify';
 
-const {frenchFormat}=require('../../utils/text')
+const {frenchFormat} = require('../../utils/text');
 
-class AlfredConditions extends React.Component{
-  constructor(props){
+class AlfredConditions extends React.Component {
+  constructor(props) {
     super(props);
     this.state = {
-      is_profilPicture:false,
+      is_profilPicture: false,
       is_idCard: false,
       is_conditionMyAlfred: false,
-      alfred:[],
+      alfred: [],
       stateEditButton: false,
       shop: undefined,
-      stateCheckbox: false
+      stateCheckbox: false,
     };
     this.stateButton = this.stateButton.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -30,21 +30,21 @@ class AlfredConditions extends React.Component{
   stateButton() {
     this.setState({
       stateEditButton: !this.state.stateEditButton,
-      stateCheckbox: !this.state.stateButton
-    })
+      stateCheckbox: !this.state.stateButton,
+    });
   }
 
   handleChange = e => {
     this.setState({[e.target.name]: e.target.checked});
   };
 
-  updateState(){
-      this.state.is_conditionMyAlfred = this.props.shop.my_alfred_conditions;
-      this.state.is_profilPicture = this.props.shop.profile_picture;
-      this.state.is_idCard = this.props.shop.identity_card;
+  updateState() {
+    this.state.is_conditionMyAlfred = this.props.shop.my_alfred_conditions;
+    this.state.is_profilPicture = this.props.shop.profile_picture;
+    this.state.is_idCard = this.props.shop.identity_card;
   }
 
-  onSubmit(){
+  onSubmit() {
     const my_alfred_conditions = this.state.is_conditionMyAlfred;
     const profile_picture = this.state.is_profilPicture;
     const identity_card = this.state.is_idCard;
@@ -53,23 +53,25 @@ class AlfredConditions extends React.Component{
     const no_booking_request = this.props.shop.no_booking_request;
     const recommandations = this.props.shop.recommandations;
     const welcome_message = this.props.shop.welcome_message;
-    const flexible_cancel =  this.props.shop.flexible_cancel;
+    const flexible_cancel = this.props.shop.flexible_cancel;
     const moderate_cancel = this.props.shop.moderate_cancel;
     const strict_cancel = this.props.shop.strict_cancel;
 
-    axios.put('/myAlfred/api/shop/editParameters',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card,
-      recommandations,welcome_message,flexible_cancel,moderate_cancel,strict_cancel})
+    axios.put('/myAlfred/api/shop/editParameters', {
+      booking_request, no_booking_request, my_alfred_conditions, profile_picture, identity_card,
+      recommandations, welcome_message, flexible_cancel, moderate_cancel, strict_cancel,
+    })
       .then(() => {
         toast.info('Paramètres modifiés');
         this.setState({stateEditButton: false});
         this.props.needRefresh();
       })
-      .catch(err => console.error(err))
+      .catch(err => console.error(err));
   };
 
-  render(){
+  render() {
     const {classes, alfred, shop, userState, isOwner} = this.props;
-    if(this.state.stateEditButton === false){
+    if (this.state.stateEditButton === false) {
       this.updateState();
     }
 
@@ -80,17 +82,17 @@ class AlfredConditions extends React.Component{
           <Grid className={classes.contentPosition}>
             <Grid className={classes.containerBooking}>
               <Grid className={classes.containerTitle}>
-                <h3>{ frenchFormat(`Les conditions de réservation de ${alfred.firstname}`)}</h3>
+                <h3>{frenchFormat(`Les conditions de réservation de ${alfred.firstname}`)}</h3>
               </Grid>
               {userState && isOwner ?
                 <Grid className={classes.editCancelButton}>
-                  { this.state.stateEditButton ?
+                  {this.state.stateEditButton ?
                     <Button color="primary" className={classes.button} onClick={this.onSubmit}>
                       Enregistrer
                     </Button> : null
                   }
                   <Button color="secondary" className={classes.button} onClick={this.stateButton}>
-                    {this.state.stateEditButton ? "Annuler" : "Modifier"}
+                    {this.state.stateEditButton ? 'Annuler' : 'Modifier'}
                   </Button>
                 </Grid>
                 : null
@@ -104,7 +106,7 @@ class AlfredConditions extends React.Component{
                       disabled={!(this.state.stateCheckbox && this.state.stateEditButton)}
                       checked={this.state.is_conditionMyAlfred}
                       onChange={(e) => this.handleChange(e)}
-                      name={"is_conditionMyAlfred"}
+                      name={'is_conditionMyAlfred'}
                       value={this.state.is_conditionMyAlfred}
                       color="primary"
                     />
@@ -122,7 +124,7 @@ class AlfredConditions extends React.Component{
                       checked={this.state.is_profilPicture}
                       value={this.state.is_profilPicture}
                       onChange={(e) => this.handleChange(e)}
-                      name={"is_profilPicture"}
+                      name={'is_profilPicture'}
                       color="primary"
                     />
                   </Grid>
@@ -139,20 +141,20 @@ class AlfredConditions extends React.Component{
                       checked={this.state.is_idCard}
                       value={this.state.is_idCard}
                       onChange={(e) => this.handleChange(e)}
-                      name={"is_idCard"}
+                      name={'is_idCard'}
                       color="primary"
                     />
                   </Grid>
                   <Grid>
                     <p>Pièce d'identité officielle.</p>
                   </Grid>
-                </Grid>: null
+                </Grid> : null
               }
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-    )
+    );
   }
 }
 
@@ -161,4 +163,4 @@ AlfredConditions.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default  withStyles(styles, { withTheme: true })(AlfredConditions);
+export default withStyles(styles, {withTheme: true})(AlfredConditions);

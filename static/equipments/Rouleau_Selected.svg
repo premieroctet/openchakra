@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#4FBDD7;}
 	.st1{fill:#EAEAEA;}
@@ -51,12 +51,12 @@
 	.st45{fill:none;stroke:#FFFFFF;stroke-width:9;stroke-miterlimit:10;}
 	.st46{fill:none;stroke:#4FBDD7;stroke-width:3;stroke-miterlimit:10;}
 </style>
-<rect x="-4" y="-20" class="st0" width="522" height="522"/>
-<g>
-	<rect x="-5" y="368" class="st37" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 158.0605 406.5557)" class="st2 st38 st39">Rouleau</text>
+    <rect class="st0" height="522" width="522" x="-4" y="-20"/>
+    <g>
+	<rect class="st37" height="144" width="500" x="-5" y="368"/>
+        <text class="st2 st38 st39" transform="matrix(1 0 0 1 158.0605 406.5557)">Rouleau</text>
 </g>
-<path class="st2" d="M365.8,200.1L347,189.2l6.5-11.3c3.6-6.2,1.5-14.3-4.8-17.9l-45.6-26.4c-2.1-1.2-4.7-0.5-6,1.6
+    <path class="st2" d="M365.8,200.1L347,189.2l6.5-11.3c3.6-6.2,1.5-14.3-4.8-17.9l-45.6-26.4c-2.1-1.2-4.7-0.5-6,1.6
 	c-1.2,2.1-0.5,4.7,1.6,6l45.6,26.4c2.1,1.2,2.8,3.9,1.6,6l-17.4,30.2c-1.2,2.1-3.9,2.8-6,1.6l-125.2-72.4c-2.1-1.2-2.8-3.9-1.6-6
 	l17.4-30.2c1.2-2.1,3.9-2.8,6-1.6l45.6,26.4c2.1,1.2,4.7,0.5,6-1.6c1.2-2.1,0.5-4.7-1.6-6l-45.6-26.4c-6.2-3.6-14.3-1.5-17.9,4.8
 	l-6.5,11.3c-1.6-0.8-3.2-1.6-4.8-2.4c-1.9-0.2-3.7,0.8-4.4,2.4c-0.9,1.9-0.2,4.5,1.9,5.8c1,0.6,1.9,1.2,2.9,1.8l-6.5,11.3
@@ -66,5 +66,6 @@
 	c2.1,1.2,4.7,0.5,6-1.6l26.2-45.3C368.6,203.9,367.9,201.3,365.8,200.1z M182.6,311.6l-7.5-4.4c-2.1-1.2-2.8-3.9-1.6-6l27.5-47.5
 	l15.1,8.7L188.6,310C187.4,312.1,184.7,312.8,182.6,311.6z M234.5,248l-4.4,7.5c-1.2,2.1-3.9,2.8-6,1.6L201.6,244
 	c-2.1-1.2-2.8-3.9-1.6-6l4.4-7.5c1.2-2.1,3.9-2.8,6-1.6l22.6,13.1C235,243.2,235.7,245.9,234.5,248z"/>
-<rect x="279.7" y="55.4" transform="matrix(-0.4985 0.8669 -0.8669 -0.4985 536.0264 -54.9943)" class="st19" width="8.4" height="144.3"/>
+    <rect class="st19" height="144.3" transform="matrix(-0.4985 0.8669 -0.8669 -0.4985 536.0264 -54.9943)" width="8.4"
+          x="279.7" y="55.4"/>
 </svg>

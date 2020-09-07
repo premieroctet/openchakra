@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#4FBDD7;}
 	.st1{fill:#EAEAEA;}
@@ -51,8 +51,8 @@
 	.st45{fill:none;stroke:#FFFFFF;stroke-width:9;stroke-miterlimit:10;}
 	.st46{fill:none;stroke:#4FBDD7;stroke-width:3;stroke-miterlimit:10;}
 </style>
-<rect x="-10" class="st0" width="512" height="505"/>
-<path class="st2" d="M326.2,154.9c0-12.4-5.3-24.3-14.5-32.6c-9.2-8.3-21.5-12.4-33.8-11.1c-0.1,0-0.1,0-0.2,0l-64.6,10
+    <rect class="st0" height="505" width="512" x="-10"/>
+    <path class="st2" d="M326.2,154.9c0-12.4-5.3-24.3-14.5-32.6c-9.2-8.3-21.5-12.4-33.8-11.1c-0.1,0-0.1,0-0.2,0l-64.6,10
 	c-1.7,0.3-2.9,1.9-2.7,3.6c0.3,1.7,1.9,2.9,3.6,2.7l64.5-10c10.5-1,21,2.4,28.9,9.5c7.9,7.1,12.4,17.3,12.4,27.8
 	c0,10.6-4.5,20.7-12.4,27.8c-7.8,7.1-18.3,10.6-28.9,9.5l-96.8-14.9v-44.9l19.7-3c1.7-0.3,2.9-1.9,2.7-3.6c-0.3-1.7-1.9-2.9-3.6-2.7
 	l-21.5,3.3l-25.4-10.2c-2.3-0.9-4.9-0.6-6.9,0.9c-1.8,1.3-2.9,3.5-2.9,5.7v35.5c0.2,0.5,1.1,2.3,3.2,3.2c1.2,0.5,2.3,0.5,2.9,0.5
@@ -66,22 +66,25 @@
 	l-13.7,58.9c-0.4,1.7,0.7,3.4,2.4,3.8c1.7,0.4,3.4-0.7,3.8-2.4l17.8-76.2C325.3,165.4,326.2,160.2,326.2,154.9z M283.3,304.4h-4.6
 	c-0.4,0-0.7-0.3-0.7-0.7v-9.6h5.9v9.6C283.9,304.1,283.6,304.4,283.3,304.4z M262.2,216.8c-0.5-0.8-0.7-1.7-0.4-2.6
 	c0.2-0.9,0.8-1.7,1.6-2.1l7.7-4.3c1.6,5.7,1.1,11.8-1.6,17.2l-1,2L262.2,216.8z"/>
-<rect x="144" y="122" class="st2" width="7" height="66"/>
-<rect x="299.6" y="212.1" transform="matrix(0.9737 0.2277 -0.2277 0.9737 63.7577 -62.5103)" class="st2" width="6.4" height="66"/>
-<rect x="212.7" y="89.3" transform="matrix(0.1532 0.9882 -0.9882 0.1532 305.2942 -108.2151)" class="st2" width="6.2" height="69.4"/>
-<path class="st15" d="M287.7,170.5c6.3-6.2,7.1-21.7,1.8-34.7"/>
-<path class="st15" d="M293.7,170.5c6.3-6.2,7.1-21.7,1.8-34.7"/>
-<path class="st15" d="M290.7,170.5c6.3-6.2,7.1-21.7,1.8-34.7"/>
-<path class="st15" d="M296.7,170.5c6.3-6.2,7.1-21.7,1.8-34.7"/>
-<path class="st15" d="M291.5,170.5c-6.3-6.2-7.1-21.7-1.8-34.7"/>
-<path class="st15" d="M285.5,170.5c-6.3-6.2-7.1-21.7-1.8-34.7"/>
-<path class="st15" d="M288.5,170.5c-6.3-6.2-7.1-21.7-1.8-34.7"/>
-<path class="st15" d="M282.5,170.5c-6.3-6.2-7.1-21.7-1.8-34.7"/>
-<rect x="280.1" y="135" class="st2" width="19" height="2.3"/>
-<rect x="281.6" y="169.7" class="st2" width="16.6" height="2.3"/>
-<rect x="273.2" y="152.2" transform="matrix(6.123234e-17 -1 1 6.123234e-17 136.5791 443.163)" class="st2" width="33.4" height="2.3"/>
-<g>
-	<rect x="-1" y="362" class="st20" width="520" height="158"/>
-	<text transform="matrix(1 0 0 1 98.5405 400.5557)" class="st2 st21 st22">Sèche cheveux</text>
+    <rect class="st2" height="66" width="7" x="144" y="122"/>
+    <rect class="st2" height="66" transform="matrix(0.9737 0.2277 -0.2277 0.9737 63.7577 -62.5103)" width="6.4" x="299.6"
+          y="212.1"/>
+    <rect class="st2" height="69.4" transform="matrix(0.1532 0.9882 -0.9882 0.1532 305.2942 -108.2151)" width="6.2" x="212.7"
+          y="89.3"/>
+    <path class="st15" d="M287.7,170.5c6.3-6.2,7.1-21.7,1.8-34.7"/>
+    <path class="st15" d="M293.7,170.5c6.3-6.2,7.1-21.7,1.8-34.7"/>
+    <path class="st15" d="M290.7,170.5c6.3-6.2,7.1-21.7,1.8-34.7"/>
+    <path class="st15" d="M296.7,170.5c6.3-6.2,7.1-21.7,1.8-34.7"/>
+    <path class="st15" d="M291.5,170.5c-6.3-6.2-7.1-21.7-1.8-34.7"/>
+    <path class="st15" d="M285.5,170.5c-6.3-6.2-7.1-21.7-1.8-34.7"/>
+    <path class="st15" d="M288.5,170.5c-6.3-6.2-7.1-21.7-1.8-34.7"/>
+    <path class="st15" d="M282.5,170.5c-6.3-6.2-7.1-21.7-1.8-34.7"/>
+    <rect class="st2" height="2.3" width="19" x="280.1" y="135"/>
+    <rect class="st2" height="2.3" width="16.6" x="281.6" y="169.7"/>
+    <rect class="st2" height="2.3" transform="matrix(6.123234e-17 -1 1 6.123234e-17 136.5791 443.163)" width="33.4"
+          x="273.2" y="152.2"/>
+    <g>
+	<rect class="st20" height="158" width="520" x="-1" y="362"/>
+        <text class="st2 st21 st22" transform="matrix(1 0 0 1 98.5405 400.5557)">Sèche cheveux</text>
 </g>
 </svg>

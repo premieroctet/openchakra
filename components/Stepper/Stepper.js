@@ -11,12 +11,12 @@ import styles from './StepperStyle';
 class Stepper extends React.Component {
   constructor(props) {
     super(props);
-    this.state={
-      steps: props.isType === "creaShop" ? this.getStepsCreaShop() : props.isType === "updateService" ? this.getStepsUpdateService(): this.getStepsAddService()
-    }
+    this.state = {
+      steps: props.isType === 'creaShop' ? this.getStepsCreaShop() : props.isType === 'updateService' ? this.getStepsUpdateService() : this.getStepsAddService(),
+    };
   }
 
-   getStepsCreaShop() {
+  getStepsCreaShop() {
     return [
       'Bienvenue',
       'Créez votre boutique de services',
@@ -27,7 +27,7 @@ class Stepper extends React.Component {
       'Indiquez vos disponibilités',
       'Vos conditions de réservation',
       'Paramétrez votre boutique',
-      'Présentez-vous !'
+      'Présentez-vous !',
 
     ];
   }
@@ -55,26 +55,26 @@ class Stepper extends React.Component {
   }
 
   handleReset = () => {
-    this.setState({setActiveStep : 0});
+    this.setState({setActiveStep: 0});
     this.setState({activeStep: 0});
   };
 
   render() {
     const {classes, activeStep} = this.props;
 
-    return(
+    return (
       <Grid className={classes.root}>
         <StepperMaterial activeStep={activeStep} alternativeLabel>
           {this.state.steps.map(label => (
             <Step key={label}>
               <StepLabel StepIconProps={{
-                classes: { root: classes.stepIcon }
+                classes: {root: classes.stepIcon},
               }}>{label}</StepLabel>
             </Step>
           ))}
         </StepperMaterial>
       </Grid>
-    )
+    );
   }
 }
 
@@ -83,4 +83,4 @@ Stepper.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default  withStyles(styles, { withTheme: true }) (Stepper);
+export default withStyles(styles, {withTheme: true})(Stepper);

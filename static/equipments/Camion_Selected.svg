@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#4FBDD7;}
 	.st1{fill:#EAEAEA;}
@@ -51,8 +51,8 @@
 	.st45{fill:none;stroke:#FFFFFF;stroke-width:9;stroke-miterlimit:10;}
 	.st46{fill:none;stroke:#4FBDD7;stroke-width:3;stroke-miterlimit:10;}
 </style>
-<rect x="-4" y="-1" class="st0" width="505" height="505"/>
-<g>
+    <rect class="st0" height="505" width="505" x="-4" y="-1"/>
+    <g>
 	<path class="st2" d="M122,107.8v141.4c0,1.4,0.2,2.6,0.6,3.7c0.4,1.1,1.1,1.9,2.2,2.6c1,0.6,1.9,1.2,2.6,1.6s2,0.7,3.8,0.8
 		c1.8,0.1,3,0.2,3.6,0.3c0.6,0,2,0,4.1,0c2.1,0,3.3-0.1,3.6-0.1c0,9.8,4,18.1,12,25c8,6.9,17.7,10.4,29,10.4c11.3,0,21-3.5,29-10.4
 		c8-6.9,12-15.2,12-25h61.6c0,9.8,4,18.1,12,25c8,6.9,17.7,10.4,29,10.4c11.3,0,21-3.5,29-10.4c8-6.9,12-15.2,12-25h10.3
@@ -66,8 +66,8 @@
 		 M163,258.1c0-4.8,2-8.9,6.1-12.4c4.1-3.5,8.9-5.2,14.4-5.2c5.6,0,10.4,1.8,14.4,5.2c4.1,3.5,6.1,7.6,6.1,12.4
 		c0,4.8-2,8.9-6.1,12.4c-4.1,3.5-8.9,5.3-14.4,5.3c-5.6,0-10.4-1.8-14.4-5.3C165.1,267.1,163,262.9,163,258.1z"/>
 </g>
-<g>
-	<rect x="-3" y="366" class="st31" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 166.1094 404.5557)" class="st2 st32 st33">Camion</text>
+    <g>
+	<rect class="st31" height="144" width="500" x="-3" y="366"/>
+        <text class="st2 st32 st33" transform="matrix(1 0 0 1 166.1094 404.5557)">Camion</text>
 </g>
 </svg>

@@ -4,11 +4,11 @@ import Router from 'next/router';
 class signup extends Component {
 
   componentDidMount() {
-      Router.push('/?signup=true')
+    Router.push('/?signup=true');
   }
 
   render() {
-    return null
+    return null;
   }
 }
 

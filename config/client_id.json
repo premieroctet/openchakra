@@ -1,1 +1,10 @@
-{"web":{"client_id":"262922879630-nclt6at6dha15i79aqglu5otun79tpjf.apps.googleusercontent.com","project_id":"my-alfred-mailing","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"gLBU7-3yLcR6LJv9v2NiTUVz"}}
+{
+  "web": {
+    "client_id": "262922879630-nclt6at6dha15i79aqglu5otun79tpjf.apps.googleusercontent.com",
+    "project_id": "my-alfred-mailing",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_secret": "gLBU7-3yLcR6LJv9v2NiTUVz"
+  }
+}

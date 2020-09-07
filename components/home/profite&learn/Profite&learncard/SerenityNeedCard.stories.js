@@ -4,4 +4,4 @@ import SerenityNeedCard from './SerenityNeedCard';
 
 import LandscapeImage from '../../../../static/bailey-zindel-396398-unsplash.jpg';
 
-storiesOf('SerenityNeedCard', module).add('to Storybook', () => <SerenityNeedCard img={LandscapeImage} />);
+storiesOf('SerenityNeedCard', module).add('to Storybook', () => <SerenityNeedCard img={LandscapeImage}/>);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#EAEAEA;}
 	.st1{fill:#8C8C8C;}
@@ -58,8 +58,8 @@
 	.st52{fill:none;stroke:#EAEAEA;stroke-width:2;stroke-miterlimit:10;}
 	.st53{fill:none;stroke:#8C8C8C;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<rect class="st0" width="500" height="500"/>
-<g>
+    <rect class="st0" height="500" width="500"/>
+    <g>
 	<g>
 		<path class="st1" d="M380.3,263.4h-5.7c-4,0-7.9,0.9-11.4,2.7c-5.2,2.6-11.2,2.6-16.4,0c-2.1-1-4.2-1.7-6.5-2.2l7-54.7h7.7
 			c2,0,3.6-1.6,3.6-3.6v-14.4c0-2-1.6-3.6-3.6-3.6h-14.4v-10.8c0-1-0.4-1.9-1.1-2.6l-17-17V146l5.5-4.4l9.3,18.7l6.5-3.2l-10-20.1
@@ -78,7 +78,7 @@
 			c7.2,3.6,15.7,3.6,22.9,0c2.5-1.3,5.3-1.9,8.2-1.9h5.7c8,0,14.4,6.5,14.4,14.4C394.8,293.1,388.3,299.5,380.3,299.5z"/>
 	</g>
 </g>
-<path class="st1" d="M194.3,243.7c8.4,14.9,16.9,29.8,25.3,44.8c-3.2-3.6-2.3-8.3,0.1-9.8c1.9-1.2,5-0.6,7.3,1.7
+    <path class="st1" d="M194.3,243.7c8.4,14.9,16.9,29.8,25.3,44.8c-3.2-3.6-2.3-8.3,0.1-9.8c1.9-1.2,5-0.6,7.3,1.7
 	c-8-14-15.9-28.1-23.9-42.1 M203.1,238.2c-5.1-9-10.2-17.9-15.3-26.9l16.9-9.5l54,95.5l-16.9,9.5l-15-26.6c-1.4-2.5-4.5-3.4-7-2
 	c-2.5,1.4-3.4,4.5-2,7l15.4,27.3c1.3,2.2,3.3,3.8,5.8,4.5c2.5,0.7,5,0.4,7.2-0.9l18.2-10.3c2.2-1.3,3.8-3.3,4.5-5.8
 	c0.7-2.5,0.4-5-0.9-7.2l-54.4-96.2l5.9-3.3c2.5-1.4,3.4-4.5,2-7L210,165.8c0.3-0.7,0.5-1.4,0.5-2.2l0.7-64.1c0-2-1.1-3.9-3-4.7
@@ -89,8 +89,8 @@
 	c2.5-1.4,3.4-4.5,1.9-7l-18.8-33.3c9.3-4.6,19.2-7,29.1-7.3c0,0.1,0,0.3,0,0.4l3.1,32.1c0.3,2.8,2.8,4.9,5.6,4.6
 	c2.8-0.3,4.9-2.8,4.6-5.6l-3-31C188.9,98.7,195,100.3,200.8,102.7z M210.1,186.9l-37.7,21.3l-8.6-15.3l18.8-10.7l18.8-10.7
 	L210.1,186.9z"/>
-<g>
-	<rect x="-1" y="366" class="st24" width="501" height="144"/>
-	<text transform="matrix(1 0 0 1 37.1211 404.5557)" class="st23 st25 st26">Produits d’entretien</text>
+    <g>
+	<rect class="st24" height="144" width="501" x="-1" y="366"/>
+        <text class="st23 st25 st26" transform="matrix(1 0 0 1 37.1211 404.5557)">Produits d’entretien</text>
 </g>
 </svg>

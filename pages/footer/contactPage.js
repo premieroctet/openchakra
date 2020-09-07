@@ -9,19 +9,19 @@ import {Typography} from '@material-ui/core';
 
 const styles = theme => ({
   fullContainer: {
-    display:'flex',
-    flexDirection:'row',
+    display: 'flex',
+    flexDirection: 'row',
     width: '100%',
-    marginBottom:'2%',
+    marginBottom: '2%',
     [theme.breakpoints.down('sm')]: {
-      height:'65vh',
+      height: '65vh',
     },
   },
   loginContainer: {
-    display:'flex',
-    flexDirection:'column',
-    alignItems:'center',
-    justifyContent:'center',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '50%',
   },
   card: {
@@ -29,42 +29,42 @@ const styles = theme => ({
     padding: '1.5rem 3rem',
     width: 400,
     [theme.breakpoints.down('xs')]: {
-      marginTop: 0
-    }
+      marginTop: 0,
+    },
   },
   cardContant: {
     flexDirection: 'column',
   },
-  [theme.breakpoints.between('sm','xl')]: {
+  [theme.breakpoints.between('sm', 'xl')]: {
     secondContainer: {
       width: '50%',
       heigh: '100vh',
       textAlign: 'center',
-    }
+    },
   },
   [theme.breakpoints.down('sm')]: {
     secondContainer: {
-      display:'none'
+      display: 'none',
     },
-    hrStyle:{
-      display:'none'
+    hrStyle: {
+      display: 'none',
     },
     fullContainer: {
-      flexDirection:'column',
-      height:'100%'
+      flexDirection: 'column',
+      height: '100%',
     },
-    loginContainer:{
-      width : 'inherit'
-    }
+    loginContainer: {
+      width: 'inherit',
+    },
   },
-  [theme.breakpoints.only('xs')]:{
-    loginContainer:{
-      marginTop:'2%'
-    }
+  [theme.breakpoints.only('xs')]: {
+    loginContainer: {
+      marginTop: '2%',
+    },
   },
-  hrStyle:{
+  hrStyle: {
     borderWidth: 0.5,
-    color:'lightgray'
+    color: 'lightgray',
   },
 });
 
@@ -74,16 +74,16 @@ class contactPage extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const {classes} = this.props;
 
     return (
       <Layout>
         <Grid className={classes.fullContainer}>
           <Grid container className={classes.loginContainer}>
             <Card className={classes.card}>
-              <Grid item style={{textAlign:'center'}}>
-                <Typography style={{ fontSize: 30 }}>Contact</Typography>
-                <img src={'../static/contact_alfred.png'} alt={'contact'} style={{width:100, height:100}}/>
+              <Grid item style={{textAlign: 'center'}}>
+                <Typography style={{fontSize: 30}}>Contact</Typography>
+                <img src={'../static/contact_alfred.png'} alt={'contact'} style={{width: 100, height: 100}}/>
               </Grid>
               <HubspotForm
                 portalId='5065724'
@@ -96,14 +96,14 @@ class contactPage extends React.Component {
           </Grid>
           <hr className={classes.hrStyle}/>
           <Grid className={classes.secondContainer}>
-            <img src={'../static/background/contactez_nous.svg'} style={{height:'100vh', width:'90%'}} alt={'test'}/>
+            <img src={'../static/background/contactez_nous.svg'} style={{height: '100vh', width: '90%'}} alt={'test'}/>
           </Grid>
         </Grid>
         {/* <Footer/>*/}
 
       </Layout>
 
-    )
+    );
   }
 }
 

@@ -16,9 +16,9 @@ import UserAvatar from '../../components/Avatar/UserAvatar';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
 import cookie from 'react-cookies';
 
-const _ = require("lodash");
+const _ = require('lodash');
 registerLocale('fr', fr);
-moment.locale("fr");
+moment.locale('fr');
 
 
 class Reserve extends React.Component {
@@ -45,95 +45,94 @@ class Reserve extends React.Component {
       checkedOption: false,
       optionPrice: null,
       languages: [],
-      alfredId: ''
+      alfredId: '',
     };
   }
 
-  static getInitialProps({ query: { id } }) {
-    return { booking_id: id };
+  static getInitialProps({query: {id}}) {
+    return {booking_id: id};
   }
 
   componentDidMount() {
     const booking_id = this.props.booking_id;
     this.setState({booking_id: booking_id});
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token')
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
 
-    axios.get("/myAlfred/api/users/current").then(res => {
-      this.setState({ currentUser: res.data });
+    axios.get('/myAlfred/api/users/current').then(res => {
+      this.setState({currentUser: res.data});
     });
 
     axios.get('/myAlfred/api/booking/' + booking_id)
-        .then(res => {
-          const bookingObj=res.data;
+      .then(res => {
+        const bookingObj = res.data;
 
-          this.setState({
-            emitter: localStorage.getItem("emitter"),
-            recipient: localStorage.getItem("recipient"),
-            prestations: bookingObj.prestations,
-            bookingObj: bookingObj,
-            city: bookingObj.address.city,
-            address: bookingObj.address.address,
-            zip_code: bookingObj.address.zip_code,
-            date: bookingObj.date_prestation,
-            hour: bookingObj.time_prestation,
-            travel_tax: bookingObj.travel_tax,
-            pick_tax: bookingObj.pick_tax,
-            fees: bookingObj.fees,
-            total: bookingObj.amount,
-            cesu_total: bookingObj.cesu_amount,
-            alfredId: bookingObj.alfred._id
-          });
+        this.setState({
+          emitter: localStorage.getItem('emitter'),
+          recipient: localStorage.getItem('recipient'),
+          prestations: bookingObj.prestations,
+          bookingObj: bookingObj,
+          city: bookingObj.address.city,
+          address: bookingObj.address.address,
+          zip_code: bookingObj.address.zip_code,
+          date: bookingObj.date_prestation,
+          hour: bookingObj.time_prestation,
+          travel_tax: bookingObj.travel_tax,
+          pick_tax: bookingObj.pick_tax,
+          fees: bookingObj.fees,
+          total: bookingObj.amount,
+          cesu_total: bookingObj.cesu_amount,
+          alfredId: bookingObj.alfred._id,
+        });
 
 
-          this.socket = io();
-          this.socket.on("connect", socket => {
-            this.socket.emit("booking", this.state.bookingObj._id)
-          })
-        })
+        this.socket = io();
+        this.socket.on('connect', socket => {
+          this.socket.emit('booking', this.state.bookingObj._id);
+        });
+      });
   }
 
   changeStatus() {
     const endDate = moment(this.state.date).format('DD/MM/YYYY');
     const endHour = moment(this.state.hour).format('HH:mm');
-    const dateObj = { end_date: endDate, end_time: endHour, status: 'Pré-approuvée' };
-
+    const dateObj = {end_date: endDate, end_time: endHour, status: 'Pré-approuvée'};
 
 
     axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)
-            .then(res => {
-              this.setState({bookingObj: res.data});
-              setTimeout(()=>this.socket.emit("changeStatus", res.data),100)
-            })
-            .catch()
+      .then(res => {
+        this.setState({bookingObj: res.data});
+        setTimeout(() => this.socket.emit('changeStatus', res.data), 100);
+      })
+      .catch();
   }
 
-  computePricedPrestations(){
-    var result={};
-    const count=this.state.count;
-    this.state.prestations.forEach( p => {
-      result[p.name]=p.price*p.value;
-    })
+  computePricedPrestations() {
+    var result = {};
+    const count = this.state.count;
+    this.state.prestations.forEach(p => {
+      result[p.name] = p.price * p.value;
+    });
     return result;
   }
 
-  computeCountPrestations(){
-    var result={};
-    this.state.prestations.forEach( p => {
-      result[p.name]=p.value;
-    })
+  computeCountPrestations() {
+    var result = {};
+    this.state.prestations.forEach(p => {
+      result[p.name] = p.value;
+    });
     return result;
   }
 
   render() {
-    const { classes } = this.props;
-    const { bookingObj, currentUser } = this.state;
-    console.log(bookingObj, 'booiking')
+    const {classes} = this.props;
+    const {bookingObj, currentUser} = this.state;
+    console.log(bookingObj, 'booiking');
 
-    const pricedPrestations=this.computePricedPrestations();
-    const countPrestations=this.computeCountPrestations();
+    const pricedPrestations = this.computePricedPrestations();
+    const countPrestations = this.computeCountPrestations();
 
-    console.log("")
+    console.log('');
     return (
       <Fragment>
         {this.state.bookingObj === null || this.state.currentUser === null ?
@@ -141,119 +140,132 @@ class Reserve extends React.Component {
           :
           <Grid>
             <Layout>
-            <Grid container className={classes.bigContainer}>
-              <Grid container>
-                <Grid item md={5} xs={12} className={classes.leftContainer}>
-                  <Grid container>
-                    <Grid item xs={12} className={classes.marginItemContainer}>
-                      <h2 className={classes.h2Style}>
-                        Détails de votre réservation{" "}
-                      </h2>
-                    </Grid>
-                  </Grid>
-                  <Grid container  className={classes.containerAboutAndAvatar}>
-                    <Grid item className={classes.marginContainerAvatar}>
-                      <div style={{ width:'100%' }}>
-                        <About alfred={bookingObj.alfred._id} profil={false}/>
-                      </div>
-                    </Grid>
-                    <Grid item className={classes.containerAvatar}>
-                      <Grid item>
-                        <UserAvatar classes={'avatarLetter'} user={bookingObj.alfred} className={classes.avatarLetter} />
-                        <Typography style={{marginTop:20}} className={classes.textAvatar}>{bookingObj.alfred.firstname}</Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-
-                  <div style={{ marginTop: "8%" }}>
-                    <hr></hr>
+              <Grid container className={classes.bigContainer}>
+                <Grid container>
+                  <Grid item md={5} xs={12} className={classes.leftContainer}>
                     <Grid container>
-                      <Grid item xs={12}>
-                        <h3 className={classes.h3Style}>
-                          Détail de la réservation
-                        </h3>
-                        <BookingDetail prestations={pricedPrestations} count={countPrestations} total={this.state.total} client_fee={this.state.fees} travel_tax={this.state.travel_tax} pick_tax={this.state.pick_tax} cesu_total={this.state.cesu_total}/>
+                      <Grid item xs={12} className={classes.marginItemContainer}>
+                        <h2 className={classes.h2Style}>
+                          Détails de votre réservation{' '}
+                        </h2>
                       </Grid>
+                    </Grid>
+                    <Grid container className={classes.containerAboutAndAvatar}>
+                      <Grid item className={classes.marginContainerAvatar}>
+                        <div style={{width: '100%'}}>
+                          <About alfred={bookingObj.alfred._id} profil={false}/>
+                        </div>
+                      </Grid>
+                      <Grid item className={classes.containerAvatar}>
+                        <Grid item>
+                          <UserAvatar classes={'avatarLetter'} user={bookingObj.alfred}
+                                      className={classes.avatarLetter}/>
+                          <Typography style={{marginTop: 20}}
+                                      className={classes.textAvatar}>{bookingObj.alfred.firstname}</Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+
+                    <div style={{marginTop: '8%'}}>
+                      <hr></hr>
                       <Grid container>
                         <Grid item xs={12}>
-                          <hr></hr>
-                          <Grid item xs={3} style={{ width: "25%", float: "left", paddingTop: 15 }} >
-                            <Grid item>
-                              <Grid>
-                                <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                          <Grid item xs={9} style={{ width: "70%" }}>
-                            <p>Adresse de la prestation:</p>{" "}
-                            <p>{bookingObj.address.address}, {bookingObj.address.city} {bookingObj.address.zip_code}</p>
-                          </Grid>
+                          <h3 className={classes.h3Style}>
+                            Détail de la réservation
+                          </h3>
+                          <BookingDetail prestations={pricedPrestations} count={countPrestations}
+                                         total={this.state.total} client_fee={this.state.fees}
+                                         travel_tax={this.state.travel_tax} pick_tax={this.state.pick_tax}
+                                         cesu_total={this.state.cesu_total}/>
                         </Grid>
-                        <Grid item xs={12} style={{}}>
-                          <Grid item xs={3} style={{ width: "25%", float: "left", paddingTop: 15 }} >
-                            <Grid item>
-                              <Grid>
-                                <img style={{width: 40, height : 40}} alt={"calendrier"} title={"calendrier"} src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
+                        <Grid container>
+                          <Grid item xs={12}>
+                            <hr></hr>
+                            <Grid item xs={3} style={{width: '25%', float: 'left', paddingTop: 15}}>
+                              <Grid item>
+                                <Grid>
+                                  <img style={{width: 40, height: 40}} alt={'adresse'} title={'adresse'}
+                                       src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
+                                </Grid>
                               </Grid>
                             </Grid>
+                            <Grid item xs={9} style={{width: '70%'}}>
+                              <p>Adresse de la prestation:</p>{' '}
+                              <p>{bookingObj.address.address}, {bookingObj.address.city} {bookingObj.address.zip_code}</p>
+                            </Grid>
                           </Grid>
-                          <Grid item xs={5} style={{ width: "50%", display: 'inline-block' }}>
-                            <p>Date de début:</p> <p>{bookingObj.date_prestation} - {moment(bookingObj.time_prestation).format('HH:mm')}</p>
+                          <Grid item xs={12} style={{}}>
+                            <Grid item xs={3} style={{width: '25%', float: 'left', paddingTop: 15}}>
+                              <Grid item>
+                                <Grid>
+                                  <img style={{width: 40, height: 40}} alt={'calendrier'} title={'calendrier'}
+                                       src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                            <Grid item xs={5} style={{width: '50%', display: 'inline-block'}}>
+                              <p>Date de début:</p>
+                              <p>{bookingObj.date_prestation} - {moment(bookingObj.time_prestation).format('HH:mm')}</p>
+                            </Grid>
+                            {typeof bookingObj.end_date !== 'undefined' && typeof bookingObj.end_time !== 'undefined' ?
+                              <Grid item xs={4} style={{width: '50%', display: 'inline-block'}}>
+                                <p>Date de fin:</p>
+                                <p>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_time}</p>
+                              </Grid> : null}
                           </Grid>
-                          {typeof bookingObj.end_date !== 'undefined' && typeof bookingObj.end_time !== 'undefined' ? <Grid item xs={4} style={{ width: "50%", display: 'inline-block' }}>
-                            <p>Date de fin:</p> <p>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_time}</p>
-                          </Grid> : null}
                         </Grid>
                       </Grid>
-                    </Grid>
-                  </div>
+                    </div>
 
-                  <Grid style={{ float: "right" }} item xs={12}>
-                    {" "}
-                    <Link href={{pathname: '/paymentChoice', query: { id: bookingObj._id, total: bookingObj.amount,fees: bookingObj.fees }}}>
-                      <Button
-                        color={"secondary"}
-                        variant={"contained"}
-                        onClick={() => this.changeStatus()}
-                        style={{
-                          color: "white",
-                          fontSize: "16px",
-                          width: "100%",
-                          paddingLeft: "20px",
-                          paddingRight: "20px",
-                          marginBottom: 50,
-                          marginRight: 20
-                        }}
-                      >
-                        Réserver
-                      </Button>
-                    </Link>
+                    <Grid style={{float: 'right'}} item xs={12}>
+                      {' '}
+                      <Link href={{
+                        pathname: '/paymentChoice',
+                        query: {id: bookingObj._id, total: bookingObj.amount, fees: bookingObj.fees},
+                      }}>
+                        <Button
+                          color={'secondary'}
+                          variant={'contained'}
+                          onClick={() => this.changeStatus()}
+                          style={{
+                            color: 'white',
+                            fontSize: '16px',
+                            width: '100%',
+                            paddingLeft: '20px',
+                            paddingRight: '20px',
+                            marginBottom: 50,
+                            marginRight: 20,
+                          }}
+                        >
+                          Réserver
+                        </Button>
+                      </Link>
+                    </Grid>
+
+                    {/*cadre avec couleur et checkbox*/}
                   </Grid>
 
-                  {/*cadre avec couleur et checkbox*/}
-                </Grid>
-
-                {/*Contenu à droite*/}
-                <Grid item xs={12} md={7} style={{ marginTop: "2%", marginBottom: "5%" }} >
-                  <Grid
-                    container
-                    style={{
-                      backgroundImage: `url('../../static/resa.svg')`,
-                      backgroundPosition: "cover",
-                      backgroundRepeat: "no-repeat",
-                      border: "thin solid transparent",
-                      maxWidth: "100%",
-                      height: "90vh",
-                      padding: "2%",
-                      position: "sticky",
-                      top: 100
-                    }}
-                  ></Grid>{" "}
-                </Grid>
-              </Grid>{" "}
-            </Grid>
-          </Layout>
-        </Grid>
+                  {/*Contenu à droite*/}
+                  <Grid item xs={12} md={7} style={{marginTop: '2%', marginBottom: '5%'}}>
+                    <Grid
+                      container
+                      style={{
+                        backgroundImage: `url('../../static/resa.svg')`,
+                        backgroundPosition: 'cover',
+                        backgroundRepeat: 'no-repeat',
+                        border: 'thin solid transparent',
+                        maxWidth: '100%',
+                        height: '90vh',
+                        padding: '2%',
+                        position: 'sticky',
+                        top: 100,
+                      }}
+                    ></Grid>{' '}
+                  </Grid>
+                </Grid>{' '}
+              </Grid>
+            </Layout>
+          </Grid>
         }
       </Fragment>
     );

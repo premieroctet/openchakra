@@ -11,14 +11,13 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Link from 'next/link';
 
-class CardAddService extends React.Component{
-  constructor(props){
+class CardAddService extends React.Component {
+  constructor(props) {
     super(props);
-    this.state = {
-
-    }
+    this.state = {};
   }
-  render(){
+
+  render() {
     const {classes} = this.props;
 
     return (
@@ -28,7 +27,7 @@ class CardAddService extends React.Component{
             <CardActionArea>
               <Grid className={classes.cardMedia}>
                 <Fab color="primary" aria-label="add" className={classes.fab}>
-                  <AddIcon style={{color:'white'}}/>
+                  <AddIcon style={{color: 'white'}}/>
                 </Fab>
               </Grid>
               <CardContent className={classes.textPosition}>
@@ -40,7 +39,7 @@ class CardAddService extends React.Component{
           </Card>
         </Link>
       </Grid>
-    )
+    );
   }
 }
 
@@ -49,4 +48,4 @@ CardAddService.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default  withStyles(styles, { withTheme: true })(CardAddService);
+export default withStyles(styles, {withTheme: true})(CardAddService);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#EAEAEA;}
 	.st1{fill:#8C8C8C;}
@@ -58,13 +58,13 @@
 	.st52{fill:none;stroke:#EAEAEA;stroke-width:2;stroke-miterlimit:10;}
 	.st53{fill:none;stroke:#8C8C8C;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<rect y="-1" class="st0" width="500" height="500"/>
-<g>
-	<rect x="1" y="362" class="st24" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 181.5576 400.5557)" class="st23 st41 st42">Masse</text>
+    <rect class="st0" height="500" width="500" y="-1"/>
+    <g>
+	<rect class="st24" height="144" width="500" x="1" y="362"/>
+        <text class="st23 st41 st42" transform="matrix(1 0 0 1 181.5576 400.5557)">Masse</text>
 </g>
-<path class="st1" d="M291.7,277.8l-57.6,34.9c-5.6,3.4-13.1,1.6-16.5-4.1l-16.5-27.2c-3.4-5.6-1.6-13.1,4.1-16.5l57.6-34.9
+    <path class="st1" d="M291.7,277.8l-57.6,34.9c-5.6,3.4-13.1,1.6-16.5-4.1l-16.5-27.2c-3.4-5.6-1.6-13.1,4.1-16.5l57.6-34.9
 	c5.6-3.4,13.1-1.6,16.5,4.1l16.5,27.2C299.2,266.9,297.4,274.4,291.7,277.8z"/>
-<path class="st1" d="M270.1,301.9l-4.3,2.6c-3.5,2.1-8,1-10.2-2.5L122,81c-2.1-3.5-1-8,2.5-10.2l4.3-2.6c3.5-2.1,8-1,10.2,2.5
+    <path class="st1" d="M270.1,301.9l-4.3,2.6c-3.5,2.1-8,1-10.2-2.5L122,81c-2.1-3.5-1-8,2.5-10.2l4.3-2.6c3.5-2.1,8-1,10.2,2.5
 	l133.7,221C274.7,295.2,273.6,299.8,270.1,301.9z"/>
 </svg>

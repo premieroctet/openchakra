@@ -1,6 +1,6 @@
 export default theme => ({
-  contentFiltre:{
-    display:'flex',
+  contentFiltre: {
+    display: 'flex',
     alignItems: 'flex-end',
     height: 50,
     [theme.breakpoints.down('sm')]: {
@@ -8,24 +8,24 @@ export default theme => ({
       height: 'auto',
       alignItems: 'flex-start',
       flexDirection: 'column',
-    }
+    },
   },
-  responsiveIOSswitch:{
+  responsiveIOSswitch: {
     display: 'flex',
     alignItems: 'center',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
-    }
+    },
   },
-  responsiveIOSswitchContent:{
-    display:'flex',
-    width:'50%',
+  responsiveIOSswitchContent: {
+    display: 'flex',
+    width: '50%',
     alignItems: 'flex-end',
-    justifyContent:'end',
+    justifyContent: 'end',
     [theme.breakpoints.down('sm')]: {
-      width:'100%',
-      justifyContent:'start',
-    }
+      width: '100%',
+      justifyContent: 'start',
+    },
   },
   textField: {
     width: '70px',

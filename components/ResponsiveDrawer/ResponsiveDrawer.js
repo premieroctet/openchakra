@@ -12,7 +12,7 @@ import styles from './ResponsiveDrawerStyle';
 import Grid from '@material-ui/core/Grid';
 import Link from 'next/link';
 
-class ResponsiveDrawer extends React.Component{
+class ResponsiveDrawer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,146 +21,159 @@ class ResponsiveDrawer extends React.Component{
         {
           text: 'Notifications',
           url: '/account/notifications',
-          isActivePics: 'NotificationsActive'
+          isActivePics: 'NotificationsActive',
         },
-       {
+        {
           text: 'Mode de paiement',
           url: '/account/paymentMethod',
-          isActivePics: 'Mode de paiement active'
+          isActivePics: 'Mode de paiement active',
         },
         {
           text: 'Préférence de versement',
           url: '/account/paymentPreference',
-          isActivePics: 'Préférence de versement active'
+          isActivePics: 'Préférence de versement active',
         },
-       {
+        {
           text: 'Historique des transactions',
           url: '/account/transactions',
-          isActivePics: 'Historique des transactions active'
+          isActivePics: 'Historique des transactions active',
         },
-       {
+        {
           text: 'Sécurité',
           url: '/account/security',
-          isActivePics: 'Sécurité active'
+          isActivePics: 'Sécurité active',
         },
-       {
+        {
           text: 'Paramètres',
           url: '/account/parameters',
-          isActivePics: 'Paramètres active'
+          isActivePics: 'Paramètres active',
         },
       ],
       itemsDrawerProfil: [
         {
           text: 'Modifier le profil',
           url: '/profile/editProfile',
-          isActivePics: 'Modifier le profil active'
+          isActivePics: 'Modifier le profil active',
         },
         {
           text: 'Mes adresses de prestations',
           url: '/profile/myAddresses',
-          isActivePics: 'Mes adresses de prestations active'
+          isActivePics: 'Mes adresses de prestations active',
         },
         {
           text: 'Photo',
           url: '/profile/editPicture',
-          isActivePics: 'Photo active'
+          isActivePics: 'Photo active',
         },
         {
           text: 'Confiance et vérification',
           url: '/profile/trustAndVerification',
-          isActivePics: 'Confiance et vérification active'
+          isActivePics: 'Confiance et vérification active',
         },
         {
           text: 'Commentaires',
           url: '/profile/reviews',
-          isActivePics: 'Commentaires active'
-        }
+          isActivePics: 'Commentaires active',
+        },
       ],
-      itemsDrawerReservations:[
+      itemsDrawerReservations: [
         {
           text: 'Toutes mes réservations',
           url: 'allReservations',
-          isActivePics: 'Toutes mes réservations active'
+          isActivePics: 'Toutes mes réservations active',
         },
         {
           text: 'Mes réservations à venir',
           url: 'comingReservations',
-          isActivePics: 'Mes réservations à venir active'
+          isActivePics: 'Mes réservations à venir active',
         },
         {
           text: 'Mes réservations terminées',
           url: 'finishedReservations',
-          isActivePics: 'Mes réservations terminées active'
-        }
+          isActivePics: 'Mes réservations terminées active',
+        },
       ],
-      itemsDrawerMessages:[
+      itemsDrawerMessages: [
         {
           text: 'Tous les messages',
-          url : '/reservations/messages',
-          isActivePics: 'Tous les messages active'
+          url: '/reservations/messages',
+          isActivePics: 'Tous les messages active',
         },
         {
           text: 'Messages non lus',
           url: '/reservations/newMessages',
-          isActivePics: 'Messages non lus active'
-        }
+          isActivePics: 'Messages non lus active',
+        },
       ],
-      itemsDrawerPerformances:[
+      itemsDrawerPerformances: [
         {
           text: 'Mes revenus',
           url: '/performances/revenus',
-          isActivePics: 'Mes revenus active'
+          isActivePics: 'Mes revenus active',
         },
         {
           text: 'Mes statistiques',
           url: '/performances/statistiques',
-          isActivePics: 'Mes statistiques active'
+          isActivePics: 'Mes statistiques active',
         },
         {
           text: 'Mes évaluations',
           url: '/performances/evaluations',
-          isActivePics: 'Mes évaluations active'
+          isActivePics: 'Mes évaluations active',
         },
         {
           text: 'Historique des versements',
-          url : '/performances/historique',
-          isActivePics: 'Historique des versements active'
-        }
-      ]
+          url: '/performances/historique',
+          isActivePics: 'Historique des versements active',
+        },
+      ],
 
-    }
+    };
   }
+
   handleDrawerToggle = () => {
     this.setState({mobileOpen: !this.state.mobileOpen});
   };
 
   theme = () => useTheme();
 
-  drawer(classes){
+  drawer(classes) {
     let itemsDrawer;
-      switch (this.props.itemsDrawers) {
-        case 'profil' : itemsDrawer = this.state.itemsDrawerProfil;break;
-        case 'reservation' : itemsDrawer = this.state.itemsDrawerReservations;break;
-        case 'account': itemsDrawer = this.state.itemsDrawerAccount;break;
-        case 'message': itemsDrawer = this.state.itemsDrawerMessages;break;
-        case 'performance': itemsDrawer = this.state.itemsDrawerPerformances;break;
-      }
+    switch (this.props.itemsDrawers) {
+      case 'profil' :
+        itemsDrawer = this.state.itemsDrawerProfil;
+        break;
+      case 'reservation' :
+        itemsDrawer = this.state.itemsDrawerReservations;
+        break;
+      case 'account':
+        itemsDrawer = this.state.itemsDrawerAccount;
+        break;
+      case 'message':
+        itemsDrawer = this.state.itemsDrawerMessages;
+        break;
+      case 'performance':
+        itemsDrawer = this.state.itemsDrawerPerformances;
+        break;
+    }
 
     return (
       <Grid>
-        <Grid className={classes.toolbar} />
+        <Grid className={classes.toolbar}/>
         <List>
           {
-            itemsDrawer.map( (res, index) =>  (
-            <Link href={res.url}>
-              <ListItem button key={res.text}>
-                <ListItemIcon>
-                  <img src={`../static/${index === this.props.isActiveIndex ? res.isActivePics : res.text}.svg`} alt={res.text} title={res.text} height={70} width={27} style={{marginRight: 10, marginLeft:10}}/>
-                </ListItemIcon>
-              <ListItemText primary={res.text} />
-              </ListItem>
-            </Link>
-          ))}
+            itemsDrawer.map((res, index) => (
+              <Link href={res.url}>
+                <ListItem button key={res.text}>
+                  <ListItemIcon>
+                    <img src={`../static/${index === this.props.isActiveIndex ? res.isActivePics : res.text}.svg`}
+                         alt={res.text} title={res.text} height={70} width={27}
+                         style={{marginRight: 10, marginLeft: 10}}/>
+                  </ListItemIcon>
+                  <ListItemText primary={res.text}/>
+                </ListItem>
+              </Link>
+            ))}
         </List>
       </Grid>
     );
@@ -168,13 +181,13 @@ class ResponsiveDrawer extends React.Component{
 
   render() {
 
-    const { classes, windows, needMargin }= this.props;
-    const { mobileOpen } = this.state;
+    const {classes, windows, needMargin} = this.props;
+    const {mobileOpen} = this.state;
     const container = windows !== undefined ? () => windows.document.body : undefined;
 
     return (
       <Grid className={classes.root}>
-        <CssBaseline />
+        <CssBaseline/>
         <nav className={classes.drawer} aria-label="mailbox folders">
           {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
           <Hidden smUp implementation="css">

@@ -1,10 +1,10 @@
 export default theme => ({
   bannerContainer: {
     height: '55vh',
-    backgroundPosition: "center",
-    backgroundSize:"cover",
-    backgroundRepeat:"no-repeat",
-    marginTop: 75
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    marginTop: 75,
   },
   darkOverlay: {
     height: '100%',
@@ -26,14 +26,14 @@ export default theme => ({
     margin: 'auto',
     display: 'block',
   },
-  avatarLetter:{
+  avatarLetter: {
     top: '15%',
     left: '0%',
     right: '0%',
     height: 150,
     width: 150,
     margin: 'auto',
-    fontSize: "xxx-large",
+    fontSize: 'xxx-large',
 
   },
   itemAvatar: {
@@ -73,11 +73,11 @@ export default theme => ({
     left: `50%`,
     transform: `translate(-50%, -50%)`,
   },
-  bannerPics:{
-    position:"absolute",
-    left:'3%',
-    top:'20%',
-    zIndex:502,
+  bannerPics: {
+    position: 'absolute',
+    left: '3%',
+    top: '20%',
+    zIndex: 502,
 
-  }
+  },
 })

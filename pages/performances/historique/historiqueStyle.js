@@ -6,43 +6,43 @@ export default theme => ({
       marginBottom: 100,
       marginTop: 0,
 
-    }
+    },
   },
   toggle: {
     zIndex: 0,
-    margin: 20
+    margin: 20,
   },
 
-  tabmobile:{
-    fontSize:'10px',
-    fontWeight:'300',
-    marginTop:'-100px',
-    height:60,
-    backgroundColor:'white',
-    position:'sticky',
-    top:55,
-    zIndex:20,
+  tabmobile: {
+    fontSize: '10px',
+    fontWeight: '300',
+    marginTop: '-100px',
+    height: 60,
+    backgroundColor: 'white',
+    position: 'sticky',
+    top: 55,
+    zIndex: 20,
     [theme.breakpoints.up('md')]: {
       display: 'none',
-    }},
+    },
+  },
 
-  trait:{
+  trait: {
     width: '100%',
     height: 4,
     backgroundColor: 'rgb(47, 188, 211)',
     borderColor: 'transparent',
-    [theme.breakpoints.down('sm')]: {
-    },
+    [theme.breakpoints.down('sm')]: {},
   },
 
-  trait1:{
+  trait1: {
     width: '100%',
     height: 4,
     backgroundColor: 'lightgray',
-    borderColor: 'transparent'
+    borderColor: 'transparent',
   },
 
-  trait2:{
+  trait2: {
     width: '100%',
     height: 4,
     backgroundColor: 'lightgray',
@@ -50,7 +50,7 @@ export default theme => ({
 
   },
 
-  trait3:{
+  trait3: {
     width: '100%',
     height: 4,
     backgroundColor: 'rgb(47, 188, 211)',
@@ -62,16 +62,16 @@ export default theme => ({
       marginTop: 50,
     },
   },
-  myHistorique:{
+  myHistorique: {
     paddingLeft: '20%',
     marginBottom: '20px',
     width: '90%',
     [theme.breakpoints.down('xs')]: {
       padding: 0,
       display: 'flex',
-      justifyContent : 'center',
-      flexDirection : 'column',
-      marginLeft: 20
-    }
-  }
+      justifyContent: 'center',
+      flexDirection: 'column',
+      marginLeft: 20,
+    },
+  },
 })

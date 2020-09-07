@@ -4,11 +4,11 @@ import Router from 'next/router';
 class login extends Component {
 
   componentDidMount() {
-      Router.push('/?login=true')
+    Router.push('/?login=true');
   }
 
   render() {
-    return null
+    return null;
   }
 }
 

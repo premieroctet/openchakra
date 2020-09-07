@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#EAEAEA;}
 	.st1{fill:#8C8C8C;}
@@ -58,10 +58,10 @@
 	.st52{fill:none;stroke:#EAEAEA;stroke-width:2;stroke-miterlimit:10;}
 	.st53{fill:none;stroke:#8C8C8C;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<rect class="st0" width="500" height="500"/>
-<path class="st1" d="M224.6,221.9c-7.8,0-14.2,6.3-14.2,14.2s6.3,14.2,14.2,14.2s14.1-6.3,14.1-14.2S232.4,221.9,224.6,221.9z
+    <rect class="st0" height="500" width="500"/>
+    <path class="st1" d="M224.6,221.9c-7.8,0-14.2,6.3-14.2,14.2s6.3,14.2,14.2,14.2s14.1-6.3,14.1-14.2S232.4,221.9,224.6,221.9z
 	 M224.6,240.9c-2.7,0-4.8-2.2-4.8-4.8s2.2-4.8,4.8-4.8s4.8,2.2,4.8,4.8S227.3,240.9,224.6,240.9z"/>
-<path class="st1" d="M357.7,137l-58.4-3.6l8.1-30.3c1-3.6,0.5-7.5-1.4-10.7c-1.9-3.3-4.9-5.6-8.6-6.6l-12.3-3.3
+    <path class="st1" d="M357.7,137l-58.4-3.6l8.1-30.3c1-3.6,0.5-7.5-1.4-10.7c-1.9-3.3-4.9-5.6-8.6-6.6l-12.3-3.3
 	c-2.5-0.7-5,0.8-5.7,3.3c-0.7,2.5,0.8,5,3.3,5.7l12.3,3.3c2.6,0.7,4.1,3.4,3.4,5.9l-9.6,35.8c0,0,0,0,0,0l-7.9,29.4l-9.4-2.5
 	l10.1-37.7c0.3-1.2,0.2-2.5-0.5-3.5c-0.6-1.1-1.6-1.8-2.8-2.2l-8.2-2.2c-0.5-7.3-6.7-13.1-14.1-13.1c-4.9,0-9.1,2.5-11.7,6.2
 	l-8.2-2.2c-2.5-0.7-5,0.8-5.7,3.3l-10.1,37.7l-9.4-2.5l17.5-65.2c0.3-1.2,1.1-2.3,2.3-2.9c1.1-0.7,2.4-0.8,3.7-0.5
@@ -81,10 +81,11 @@
 	c-0.7,2.5,0.8,5,3.3,5.7c0.4,0.1,0.8,0.2,1.2,0.2c2.1,0,3.9-1.4,4.5-3.4l1.1-4.2l4.7,1.3c1.2,0.3,2.5,0.5,3.7,0.5
 	c2.5,0,4.9-0.7,7.1-1.9c3.7,6.8,6,14.3,6.7,22L236.5,256.7z M367.7,164.4c0,1.3-1.1,2.5-2.5,2.5h-75l6.5-24.4l60.3,3.7
 	c6,0.4,10.6,4.8,10.6,10.3V164.4z"/>
-<path class="st1" d="M224.6,278.9c-2.6,0-4.7,2.1-4.7,4.7c0,2.6,2.1,4.7,4.7,4.7h0c2.6,0,4.7-2.1,4.7-4.7
+    <path class="st1" d="M224.6,278.9c-2.6,0-4.7,2.1-4.7,4.7c0,2.6,2.1,4.7,4.7,4.7h0c2.6,0,4.7-2.1,4.7-4.7
 	C229.3,281,227.2,278.9,224.6,278.9z"/>
-<g>
-	<rect y="362" class="st24" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 66.187 400.5557)"><tspan x="0" y="0" class="st23 st26 st27">Coupe carreaux / </tspan><tspan x="78.4" y="64.8" class="st23 st26 st27">Carrelette</tspan></text>
+    <g>
+	<rect class="st24" height="144" width="500" y="362"/>
+        <text transform="matrix(1 0 0 1 66.187 400.5557)"><tspan class="st23 st26 st27" x="0" y="0">Coupe carreaux / </tspan>
+            <tspan class="st23 st26 st27" x="78.4" y="64.8">Carrelette</tspan></text>
 </g>
 </svg>

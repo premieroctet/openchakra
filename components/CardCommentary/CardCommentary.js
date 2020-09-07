@@ -9,14 +9,13 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 
-class CardCommentary extends React.Component{
-  constructor(props){
+class CardCommentary extends React.Component {
+  constructor(props) {
     super(props);
-    this.state = {
-    }
+    this.state = {};
   }
 
-  render(){
+  render() {
     const {classes} = this.props;
 
     return (
@@ -41,7 +40,7 @@ class CardCommentary extends React.Component{
 
         </Card>
       </Grid>
-    )
+    );
   }
 }
 
@@ -51,4 +50,4 @@ CardCommentary.propTypes = {
 
 };
 
-export default  withStyles(styles, { withTheme: true })(CardCommentary);
+export default withStyles(styles, {withTheme: true})(CardCommentary);

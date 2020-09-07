@@ -1,60 +1,60 @@
 
-  .App-payment {
+.App-payment {
     padding: 30px;
-  }
+}
 
-  .form-actions {
+.form-actions {
     margin-top: 15px;
-  }
+}
 
-  .rccs__expiry__valid {
+.rccs__expiry__valid {
     display: none;
-  }
-  
-  .App-cards {
+}
+
+.App-cards {
     margin: 0 auto;
     max-width: 1280px;
     text-align: center;
-  }
-  
-  .App-cards-list {
+}
+
+.App-cards-list {
     display: flex;
     margin-top: 30px;
     flex-wrap: wrap;
     justify-content: space-between;
-  }
-  
-  .App-cards-list > * {
+}
+
+.App-cards-list > * {
     transform: scale(0.8);
     margin-bottom: 30px !important;
-  }
-  
-  .App-highlight {
+}
+
+.App-highlight {
     font-family: serif;
     margin: 15px auto 0;
     max-width: 300px;
-  }
-  
-  .App-highlight > div {
+}
+
+.App-highlight > div {
     padding-left: 40px;
-  }
-  
-  .App-badges {
+}
+
+.App-badges {
     align-items: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
-  }
-  
-  .App-badges a {
+}
+
+.App-badges a {
     display: block;
-  }
-  
-  .App-badges a + a {
+}
+
+.App-badges a + a {
     margin-top: 18px;
-  }
-  
-  .github__btn {
+}
+
+.github__btn {
     align-items: center;
     background-color: #ccc;
     border-radius: 4px;
@@ -62,41 +62,42 @@
     display: flex;
     line-height: 1;
     padding: 8px 12px;
-  }
-  
-  .github__btn:hover {
+}
+
+.github__btn:hover {
     color: #444;
     text-decoration: none;
-  }
-  
-  .github__btn img {
+}
+
+.github__btn img {
     display: inline-block;
     height: 28px;
     margin-right: 8px;
-  }
-  
-  .App-credits {
+}
+
+.App-credits {
     background-color: #000;
     color: #fff;
     line-height: 50px;
     text-align: center;
-  }
-  
-  .App-credits a {
+}
+
+.App-credits a {
     color: #fff;
     font-weight: bold;
-  }
-  .rccs__expiry__valid {
+}
+
+.rccs__expiry__valid {
     display: none;
-  }
-  
-  @media screen and (min-width: 600px) {
+}
+
+@media screen and (min-width: 600px) {
     .App-badges {
-      flex-direction: row;
+        flex-direction: row;
     }
-  
+
     .App-badges a + a {
-      margin-top: 0;
-      margin-left: 18px;
+        margin-top: 0;
+        margin-left: 18px;
     }
-  }
+}

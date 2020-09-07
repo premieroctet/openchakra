@@ -8,36 +8,37 @@ import Chip from '@material-ui/core/Chip';
 import Link from 'next/link';
 import '../../static/assets/police/signatra.css';
 
-const {frenchFormat}=require('../../utils/text')
+const {frenchFormat} = require('../../utils/text');
 
 
-class BannerReservation extends React.Component{
+class BannerReservation extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state ={
-    };
+    this.state = {};
   }
 
   render() {
-    const { classes, serviceUser, shop, user } = this.props;
+    const {classes, serviceUser, shop, user} = this.props;
 
     return (
       <Grid>
-        <Grid container className={classes.bannerContainer} style={{ backgroundImage:  'url("' + serviceUser.picture + '")'}}>
-          { shop.is_professional ?
+        <Grid container className={classes.bannerContainer}
+              style={{backgroundImage: 'url("' + serviceUser.picture + '")'}}>
+          {shop.is_professional ?
             <Grid className={classes.statusMedia}>
               <Chip label="PRO" className={classes.chipStyle}/>
             </Grid>
-            :null
+            : null
           }
           <Grid container className={classes.darkOverlay}>
             <Grid container className={classes.container}>
               <Grid>
-                <p class="customPolice" style={{fontSize:70, textAlign: 'center', color:"white"}}>{serviceUser.label}</p>
+                <p class="customPolice"
+                   style={{fontSize: 70, textAlign: 'center', color: 'white'}}>{serviceUser.label}</p>
               </Grid>
               <Grid>
-                <Link href={`/shop?id_alfred=${user._id}`} >
+                <Link href={`/shop?id_alfred=${user._id}`}>
                   <Fab
                     variant="extended"
                     color="primary"
@@ -61,4 +62,4 @@ BannerReservation.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default  withStyles(styles, { withTheme: true })(BannerReservation);
+export default withStyles(styles, {withTheme: true})(BannerReservation);

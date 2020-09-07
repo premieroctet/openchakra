@@ -1,18 +1,17 @@
 export default theme => ({
-  root:{
-  },
+  root: {},
   instructions: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
-  responsiveContent:{
+  responsiveContent: {
     [theme.breakpoints.down('md')]: {
       display: 'none',
     },
   },
-  stepIcon:{
-    "& .MuiStepIcon-text":{
-      fill: 'white'
-    }
+  stepIcon: {
+    '& .MuiStepIcon-text': {
+      fill: 'white',
+    },
   },
 })

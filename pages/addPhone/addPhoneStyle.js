@@ -1,26 +1,26 @@
 export default theme => ({
-  mainContainer:{
-    [theme.breakpoints.down("xs")]:{
+  mainContainer: {
+    [theme.breakpoints.down('xs')]: {
       display: 'flex',
       justifyContent: 'center',
 
-    }
+    },
   },
   signupContainer: {
     alignItems: 'center',
     flexDirection: 'column',
-    [theme.breakpoints.down('xs')]:{
-      marginBottom: 200
-    }
+    [theme.breakpoints.down('xs')]: {
+      marginBottom: 200,
+    },
 
   },
   card: {
     fontFamily: 'Helvetica',
     width: 800,
     marginTop: '100px',
-    [theme.breakpoints.down("xs")]:{
+    [theme.breakpoints.down('xs')]: {
       width: '90%',
-    }
+    },
   },
   banner: {
     marginBottom: 25,
@@ -29,9 +29,9 @@ export default theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    [theme.breakpoints.down("xs")]:{
-      textAlign: 'center'
-    }
+    [theme.breakpoints.down('xs')]: {
+      textAlign: 'center',
+    },
 
   },
   newContainer: {

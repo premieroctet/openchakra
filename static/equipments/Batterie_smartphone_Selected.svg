@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#4FBDD7;}
 	.st1{fill:#EAEAEA;}
@@ -51,15 +51,15 @@
 	.st45{fill:none;stroke:#FFFFFF;stroke-width:9;stroke-miterlimit:10;}
 	.st46{fill:none;stroke:#4FBDD7;stroke-width:3;stroke-miterlimit:10;}
 </style>
-<rect class="st0" width="504" height="500"/>
-<path class="st2" d="M320.9,75H185.2c-2.9,0-5.2,2.3-5.2,5.2v250.6c0,2.9,2.3,5.2,5.2,5.2h135.7c2.9,0,5.2-2.3,5.2-5.2V80.2
+    <rect class="st0" height="500" width="504"/>
+    <path class="st2" d="M320.9,75H185.2c-2.9,0-5.2,2.3-5.2,5.2v250.6c0,2.9,2.3,5.2,5.2,5.2h135.7c2.9,0,5.2-2.3,5.2-5.2V80.2
 	C326.2,77.3,323.8,75,320.9,75z M195,159.6l17.1-38.3c1.2-2.8,4-4.5,7-4.5h82.6c3.1,0,5.9,1.9,7.1,4.7s0.5,6.2-1.7,8.4l-25.2,25.2
 	h27.5c3.1,0,5.9,1.9,7.1,4.7c1.2,2.9,0.5,6.2-1.7,8.4l-84.3,84.3c-2.6,2.6-6.5,3-9.6,1c-3-2-4.3-5.8-3-9.2l19.1-51h-19.6
 	c-2.5,0-4.9-1.3-6.3-3.3c-1.4-2.1-1.7-4.7-0.8-7.1l4.9-12.6H202c-2.6,0-5-1.3-6.4-3.5C194.1,164.8,193.9,162,195,159.6z
 	 M234.8,161.3c1.3,1.9,1.6,4.3,0.7,6.5l-4.5,11.5h17.8c2.3,0,4.5,1.1,5.8,3c1.3,1.9,1.6,4.3,0.8,6.5l-9.7,25.8l42.3-42.3h-25.1
 	c-2.8,0-5.4-1.7-6.5-4.3c-1.1-2.6-0.5-5.6,1.5-7.6l23.1-23.1h-54l-9.4,21H229C231.3,158.2,233.5,159.4,234.8,161.3z"/>
-<g>
-	<rect x="-1" y="360" class="st20" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 164.5454 398.5557)" class="st2 st21 st22">Batterie</text>
+    <g>
+	<rect class="st20" height="144" width="500" x="-1" y="360"/>
+        <text class="st2 st21 st22" transform="matrix(1 0 0 1 164.5454 398.5557)">Batterie</text>
 </g>
 </svg>

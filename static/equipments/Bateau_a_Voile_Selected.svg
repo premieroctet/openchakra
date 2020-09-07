@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#4FBDD7;}
 	.st1{fill:#EAEAEA;}
@@ -51,12 +51,12 @@
 	.st45{fill:none;stroke:#FFFFFF;stroke-width:9;stroke-miterlimit:10;}
 	.st46{fill:none;stroke:#4FBDD7;stroke-width:3;stroke-miterlimit:10;}
 </style>
-<rect x="0" y="-2" class="st0" width="500" height="509"/>
-<g>
-	<rect y="359" class="st2" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 98.668 397.5557)" class="st3 st4 st5">Bateau à voile</text>
+    <rect class="st0" height="509" width="500" x="0" y="-2"/>
+    <g>
+	<rect class="st2" height="144" width="500" y="359"/>
+        <text class="st3 st4 st5" transform="matrix(1 0 0 1 98.668 397.5557)">Bateau à voile</text>
 </g>
-<g>
+    <g>
 	<path class="st3" d="M228.1,231.8l-20.4,0c-3.8,0-6.8,3.1-6.8,6.8l0,10l-21.4,13.8l-5.8,0c-3.8,0-6.8,3-6.8,6.8l0,13.6
 		c0,1.9,1.5,3.4,3.4,3.4l145.2-0.1c1.4,0,2.8-0.4,3.9-1.2l14.7-10.3c2.4-1.7,3.4-4.8,2.5-7.6c-0.9-2.8-3.5-4.7-6.4-4.7l-26.6,0
 		l9.8-6.8l36,0c1.4,0,2.8-0.4,3.9-1.2l15.1-10.6c0.2-0.1,0.3-0.2,0.5-0.4c1.9-1.9,2.5-4.9,1.5-7.4c-1.1-2.5-3.5-4.2-6.3-4.2

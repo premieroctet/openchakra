@@ -3,7 +3,7 @@ import styles from './BookingDetailStyle';
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
 
-class BookingDetail extends React.Component{
+class BookingDetail extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -14,8 +14,8 @@ class BookingDetail extends React.Component{
     return (
       <Grid>
         <Grid>
-          { Object.keys(prestations).map( k => {
-            return count[k] ===0 ? null: (
+          {Object.keys(prestations).map(k => {
+            return count[k] === 0 ? null : (
               <Grid className={classes.flexContent}>
                 <Grid className={classes.labelContent}>
                   <p>{k}</p>
@@ -24,10 +24,11 @@ class BookingDetail extends React.Component{
                   <p>{prestations[k].toFixed(2)}€</p>
                 </Grid>
               </Grid>
-            )})
+            );
+          })
           }
-          { /* Start travel tax */ }
-          { travel_tax ?
+          { /* Start travel tax */}
+          {travel_tax ?
             <Grid className={classes.flexContent}>
               <Grid className={classes.labelContent}>
                 <p>Frais de déplacement</p>
@@ -35,10 +36,10 @@ class BookingDetail extends React.Component{
               <Grid>
                 <p>{travel_tax.toFixed(2)}€</p>
               </Grid>
-            </Grid>:null}
-          { /* End pick tax */ }
-          { /* Start pick tax */ }
-          { pick_tax  ?
+            </Grid> : null}
+          { /* End pick tax */}
+          { /* Start pick tax */}
+          {pick_tax ?
             <Grid className={classes.flexContent}>
               <Grid className={classes.labelContent}>
                 <p>Frais de livraison/enlèvement</p>
@@ -46,9 +47,9 @@ class BookingDetail extends React.Component{
               <Grid>
                 <p>{pick_tax.toFixed(2)}€</p>
               </Grid>
-            </Grid>:null}
-          { /* End pick tax */ }
-          { /* Start commission */ }
+            </Grid> : null}
+          { /* End pick tax */}
+          { /* Start commission */}
           {client_fee && client_fee !== 0 ?
             <Grid className={classes.flexContent}>
               <Grid className={classes.labelContent}>
@@ -69,22 +70,22 @@ class BookingDetail extends React.Component{
               </Grid>
             </Grid> : null
           }
-          { /* End commission */ }
-          { /* Start total */ }
-          <Grid className={classes.flexContent} style={{ 'font-weight': 'bold' }}>
+          { /* End commission */}
+          { /* Start total */}
+          <Grid className={classes.flexContent} style={{'font-weight': 'bold'}}>
             <Grid>
-              <p>{client_fee !== 0 ? "Total" : "Total à percevoir"}</p>
+              <p>{client_fee !== 0 ? 'Total' : 'Total à percevoir'}</p>
             </Grid>
             <Grid>
               <p>{total.toFixed(2)}€</p>
             </Grid>
           </Grid>
-          { /* End total */ }
-          { /* Start CESU */ }
-          { client_fee && cesu_total ?
-            <Grid className={classes.flexContent} style={{ 'margin-left': '20px', 'font-weight': 'bold' }}>
+          { /* End total */}
+          { /* Start CESU */}
+          {client_fee && cesu_total ?
+            <Grid className={classes.flexContent} style={{'margin-left': '20px', 'font-weight': 'bold'}}>
               <Grid>
-                <p>{"dont CESU"}</p>
+                <p>{'dont CESU'}</p>
               </Grid>
               <Grid>
                 <p>{cesu_total.toFixed(2)}€</p>
@@ -93,7 +94,7 @@ class BookingDetail extends React.Component{
             :
             null
           }
-          { /* End CESU */ }
+          { /* End CESU */}
         </Grid>
 
       </Grid>
@@ -101,4 +102,4 @@ class BookingDetail extends React.Component{
   }
 }
 
-export default  withStyles(styles, { withTheme: true })(BookingDetail)
+export default withStyles(styles, {withTheme: true})(BookingDetail);

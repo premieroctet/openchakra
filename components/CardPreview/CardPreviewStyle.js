@@ -2,7 +2,7 @@ export default theme => ({
   card: {
     width: '100%',
     height: 'auto',
-},
+  },
   expand: {
     transform: 'rotate(0deg)',
     marginLeft: 'auto',
@@ -19,16 +19,16 @@ export default theme => ({
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
-    position: 'relative'
+    position: 'relative',
   },
   button: {
     margin: theme.spacing(1),
-    color: 'white'
+    color: 'white',
   },
-  boxRating:{
+  boxRating: {
     margin: 0,
   },
-  checkCircleIcon:{
+  checkCircleIcon: {
     marginLeft: 5,
     color: '#4fbdd7',
     width: 25,
@@ -36,36 +36,36 @@ export default theme => ({
     [theme.breakpoints.down('xs')]: {
       height: 20,
       width: 20,
-    }
+    },
   },
-  rating:{
+  rating: {
     marginLeft: -15,
     [theme.breakpoints.down('xs')]: {
-      fontSize: 'large'
-    }
+      fontSize: 'large',
+    },
   },
-  actionMediaEdit:{
+  actionMediaEdit: {
     position: 'absolute',
-    top : '5%',
+    top: '5%',
     right: '18%',
     [theme.breakpoints.down('sm')]: {
       right: '20%',
-    }
+    },
   },
-  actionMediaRemove:{
-    position: 'absolute',
-    top : '5%',
-    right: '5%',
-    [theme.breakpoints.down('sm')]: {
-      right: '5%'
-    }
-  },
-  statusMedia:{
+  actionMediaRemove: {
     position: 'absolute',
     top: '5%',
-    left: '5%'
+    right: '5%',
+    [theme.breakpoints.down('sm')]: {
+      right: '5%',
+    },
   },
-  iconButtonStyle:{
+  statusMedia: {
+    position: 'absolute',
+    top: '5%',
+    left: '5%',
+  },
+  iconButtonStyle: {
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     width: 40,
     height: 40,
@@ -73,53 +73,53 @@ export default theme => ({
       backgroundColor: 'white',
     },
     [theme.breakpoints.down('sm')]: {
-        height:50,
-        width:50,
-  },
+      height: 50,
+      width: 50,
+    },
     [theme.breakpoints.down('xs')]: {
-      height:40,
-      width:40,
-    }
+      height: 40,
+      width: 40,
+    },
   },
-  chipStyle:{
+  chipStyle: {
     backgroundColor: '#f87280',
-    color:'white',
+    color: 'white',
     fontWeight: 'bold',
-    border: '2px solid white'
+    border: '2px solid white',
   },
-  badge:{
-    color: "white",
+  badge: {
+    color: 'white',
   },
-  cardContent:{
-    display:'flex',
-    flexDirection:'row',
-    height: 85
+  cardContent: {
+    display: 'flex',
+    flexDirection: 'row',
+    height: 85,
   },
-  cardContentPosition:{
+  cardContentPosition: {
     width: '50%',
-    display:'flex',
-    flexDirection:'column'
+    display: 'flex',
+    flexDirection: 'column',
   },
-  cardContentHeader:{
-    display:'flex',
-    marginBottom: '2%'
+  cardContentHeader: {
+    display: 'flex',
+    marginBottom: '2%',
   },
-  cardContentRight:{
-    width:'50%',
-    display:'flex',
-    flexDirection:'column',
+  cardContentRight: {
+    width: '50%',
+    display: 'flex',
+    flexDirection: 'column',
     alignItems: 'flex-end',
 
   },
-  flexPosition:{
-    display:'flex',
-    alignItems : 'center'
+  flexPosition: {
+    display: 'flex',
+    alignItems: 'center',
   },
-  minWidth:{
-    minWidth:30
+  minWidth: {
+    minWidth: 30,
   },
-  noPadding:{
-    padding:0
+  noPadding: {
+    padding: 0,
 
   },
   imageStyle: {
@@ -128,7 +128,7 @@ export default theme => ({
     [theme.breakpoints.down('xs')]: {
       height: 20,
       width: 20,
-    }
+    },
   },
   sizeText: {
     fontSize: '0.85vw',
@@ -139,24 +139,24 @@ export default theme => ({
       fontSize: '3.5vw',
     },
   },
-  responsiveListContainer:{
+  responsiveListContainer: {
     marginTop: 10,
     [theme.breakpoints.down('xs')]: {
       margin: 0,
-      height:'auto'
+      height: 'auto',
     },
   },
-  avatar:{
+  avatar: {
     position: 'absolute',
     left: '50%',
     top: '50%',
     transform: 'translate(-50%, -50%)',
     display: 'flex',
     flexDirection: 'column',
-    alignItems : 'center',
-    width: '100%'
+    alignItems: 'center',
+    width: '100%',
   },
-  avatarLetter:{
+  avatarLetter: {
     height: 95,
     width: 95,
     margin: 'auto',
@@ -182,12 +182,12 @@ export default theme => ({
       width: 100,
     },
   },
-  contentDistanceUnderAvatar:{
+  contentDistanceUnderAvatar: {
     display: 'flex',
     textAlign: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
-  sizeTextUnderAvatar:{
+  sizeTextUnderAvatar: {
     fontWeight: 'bold',
     color: 'white',
     textShadow: 'black 0px 0px 3px',

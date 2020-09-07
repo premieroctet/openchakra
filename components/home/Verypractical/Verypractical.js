@@ -37,9 +37,9 @@ const styles = theme => ({
   },
   card: {
 
-    backgroundColor:'transparent',
-    textAlign:'center',
-    margin:10,
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+    margin: 10,
     boxShadow: `1px 3px 1px transparent`,
 
     // Full width for (xs, extra-small: 0px or larger) and (sm, small: 600px or larger)
@@ -53,7 +53,7 @@ const styles = theme => ({
       maxWidth: 350,
     },
     [theme.breakpoints.up('lg')]: {
-      maxWidth: 300
+      maxWidth: 300,
     },
 
   },
@@ -112,28 +112,28 @@ class Verypractical extends React.Component {
     super(props);
     this.state = {
       service: [],
-      tags:{},
-    }
+      tags: {},
+    };
   }
 
   componentDidMount() {
 
     axios.get('/myAlfred/api/tags/all')
-        .then(response => {
-              let data = response.data;
-              let random = data[Math.floor(Math.random() * data.length)];
-              this.setState({tags:random});
-              axios.get('/myAlfred/api/service/all/tags/' + random._id)
-                  .then(res => {
-                    let service = res.data;
+      .then(response => {
+          let data = response.data;
+          let random = data[Math.floor(Math.random() * data.length)];
+          this.setState({tags: random});
+          axios.get('/myAlfred/api/service/all/tags/' + random._id)
+            .then(res => {
+              let service = res.data;
 
-                    this.setState({service: service})
+              this.setState({service: service});
 
-                  })
-                  .catch()
-            }
-        )
-        .catch();
+            })
+            .catch();
+        },
+      )
+      .catch();
   }
 
   render() {
@@ -142,38 +142,38 @@ class Verypractical extends React.Component {
     const {tags} = this.state;
     const resdata = shuffleArray(service);
     const services = resdata.slice(0, 12).map(e => (
-        <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
-          <Card className={classes.card}>
-            <CardActionArea>
+      <Grid item xs={12} sm={6} md={2} lg={2} key={e._id}>
+        <Card className={classes.card}>
+          <CardActionArea>
 
-              <CardMedia
-                  className={classes.media2}
-                  image={e.picture}
-                  title="Paysage"
-              />
-              <CardContent>
+            <CardMedia
+              className={classes.media2}
+              image={e.picture}
+              title="Paysage"
+            />
+            <CardContent>
 
-                <Typography gutterBottom variant="h5" component="h2">
+              <Typography gutterBottom variant="h5" component="h2">
 
-                </Typography>
-                <Typography gutterBottom variant="p" component="p" style={{fontSize:16}}>
+              </Typography>
+              <Typography gutterBottom variant="p" component="p" style={{fontSize: 16}}>
                 {e.label}
-                </Typography>
-                <Typography component="p">
-                  {e.description}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
+              </Typography>
+              <Typography component="p">
+                {e.description}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+          <CardActions>
 
-            </CardActions>
-          </Card>
-        </Grid>
+          </CardActions>
+        </Card>
+      </Grid>
     ));
 
     return (
-        <Fragment>
-          <div className={classes.container1}>
+      <Fragment>
+        <div className={classes.container1}>
           <Grid container className={classes.container}>
             <Grid item xs={2}></Grid>
             <Grid item xs={8}>
@@ -183,7 +183,9 @@ class Verypractical extends React.Component {
                 </Typography>
                 <Grid container>
                   <Grid item xs={5}></Grid>
-                  <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
+                  <Grid item xs={2}>
+                    <hr className={classes.grosHR}/>
+                  </Grid>
                   <Grid item xs={5}></Grid>
                 </Grid>
                 <Typography className={classes.textBox}>
@@ -194,22 +196,21 @@ class Verypractical extends React.Component {
             <Grid item xs={2}></Grid>
 
             <div className="thewrap">
-            <section className="sectioncard">
+              <section className="sectioncard">
 
-              {services}
+                {services}
 
 
-
-            </section>
-          </div>
+              </section>
+            </div>
             <Grid container className="thewrap2">
 
 
-            {services}
+              {services}
             </Grid>
           </Grid>
-          </div>
-        </Fragment>
+        </div>
+      </Fragment>
     );
   }
 };

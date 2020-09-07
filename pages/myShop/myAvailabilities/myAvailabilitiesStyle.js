@@ -3,21 +3,21 @@ export default theme => ({
     marginTop: 100,
     [theme.breakpoints.down('xs')]: {
       margin: 0,
-    }
+    },
   },
-  containercalendar:{
+  containercalendar: {
     display: 'flex',
     marginBottom: 200,
     [theme.breakpoints.down('sm')]: {
-      width:'100%!important',
+      width: '100%!important',
     },
     [theme.breakpoints.down('xs')]: {
       marginBottom: '50%',
-      marginTop: 20
+      marginTop: 20,
     },
   },
   toggle: {
-    zIndex: 0
+    zIndex: 0,
   },
   menuButton: {
     marginLeft: theme.spacing(1),

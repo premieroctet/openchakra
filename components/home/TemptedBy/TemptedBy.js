@@ -83,7 +83,7 @@ const styles = theme => ({
       maxWidth: 350,
     },
     [theme.breakpoints.up('lg')]: {
-      maxWidth: 300
+      maxWidth: 300,
     },
   },
   cardAction: {
@@ -106,62 +106,64 @@ class TemptedBy extends React.Component {
     super(props);
     this.state = {
       prestation: [],
-    }
+    };
   }
 
   componentDidMount() {
     axios.get('/myAlfred/api/prestation/home')
-        .then(response => {
-          let prestation = response.data;
+      .then(response => {
+        let prestation = response.data;
 
-          this.setState({prestation: prestation})
-        })
+        this.setState({prestation: prestation});
+      });
   }
 
   render() {
     const {classes} = this.props;
-    const background = ["../../static/bleumarine.PNG","../../static/saumonrouge.PNG","../../static/bleuclair.PNG"
-                        ,"../../static/violetclair.PNG"];
+    const background = ['../../static/bleumarine.PNG', '../../static/saumonrouge.PNG', '../../static/bleuclair.PNG'
+      , '../../static/violetclair.PNG'];
 
 
     const {prestation} = this.state;
     const cards = prestation.map(e => (
-        <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
+      <Grid item xs={12} sm={6} md={3} lg={3} key={e._id}>
 
-          <Card className={classes.card}>
-            <CardActionArea className={classes.cardAction}>
-              <CardMedia component="div" alt="color" image={background[Math.floor(Math.random() * background.length)]} className={classes.cardMedia}>
-                <Grid container className={classes.container2}>
-                  <Grid container xs={12} className={classes.row}>
-                    <Grid item xs={1}>
-                      <Typography className={classes.textDown}></Typography>
-                    </Grid>
-                    <Grid item xs={9} className={classes.center}>
-                      <Typography className={classes.textDown}><span className={classes.leh3}>{e.label} ({e.filter_presentation.label})</span><br/>{e.price}€</Typography>
-                    </Grid>
-                    <Grid item xs={2}>
-                      <Typography className={classes.textDown}></Typography>
-                    </Grid>
+        <Card className={classes.card}>
+          <CardActionArea className={classes.cardAction}>
+            <CardMedia component="div" alt="color" image={background[Math.floor(Math.random() * background.length)]}
+                       className={classes.cardMedia}>
+              <Grid container className={classes.container2}>
+                <Grid container xs={12} className={classes.row}>
+                  <Grid item xs={1}>
+                    <Typography className={classes.textDown}></Typography>
+                  </Grid>
+                  <Grid item xs={9} className={classes.center}>
+                    <Typography className={classes.textDown}><span
+                      className={classes.leh3}>{e.label} ({e.filter_presentation.label})</span><br/>{e.price}€</Typography>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Typography className={classes.textDown}></Typography>
                   </Grid>
                 </Grid>
-              </CardMedia>
-            </CardActionArea>
-          </Card>
-        </Grid>
+              </Grid>
+            </CardMedia>
+          </CardActionArea>
+        </Card>
+      </Grid>
     ));
 
     return (
-        <Fragment>
-          <Grid container className={classes.container}>
-            <Typography variant="h5" className={classes.textBox}>
-              Vous serez peut-être tentés par...
-            </Typography>
-          </Grid>
-          <Grid container className={classes.container} spacing={24} wrap="wrap">
-            {cards}
+      <Fragment>
+        <Grid container className={classes.container}>
+          <Typography variant="h5" className={classes.textBox}>
+            Vous serez peut-être tentés par...
+          </Typography>
+        </Grid>
+        <Grid container className={classes.container} spacing={24} wrap="wrap">
+          {cards}
 
-          </Grid>
-        </Fragment>
+        </Grid>
+      </Fragment>
     );
   }
 }

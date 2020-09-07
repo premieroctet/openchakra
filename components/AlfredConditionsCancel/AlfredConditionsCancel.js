@@ -10,10 +10,10 @@ import styles from '../shop/componentStyle';
 import axios from 'axios';
 import {toast} from 'react-toastify';
 
-const {frenchFormat}=require('../../utils/text')
+const {frenchFormat} = require('../../utils/text');
 
-class AlfredConditionsCancel extends React.Component{
-  constructor(props){
+class AlfredConditionsCancel extends React.Component {
+  constructor(props) {
     super(props);
     this.state = {
       shop: [],
@@ -22,8 +22,8 @@ class AlfredConditionsCancel extends React.Component{
       stateCheckbox: false,
       flexible_cancel: false,
       moderate_cancel: false,
-      strict_cancel: false
-    }
+      strict_cancel: false,
+    };
     this.stateButton = this.stateButton.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -32,28 +32,28 @@ class AlfredConditionsCancel extends React.Component{
   stateButton() {
     this.setState({
       stateEditButton: !this.state.stateEditButton,
-      stateCheckbox: !this.state.stateButton
+      stateCheckbox: !this.state.stateButton,
     });
   }
 
   handleChange = e => {
-    if(e.target.name === "flexible_cancel"){
+    if (e.target.name === 'flexible_cancel') {
       this.setState({
         flexible_cancel: true,
         moderate_cancel: false,
-        strict_cancel: false
+        strict_cancel: false,
       });
-    }else if(e.target.name === "moderate_cancel"){
+    } else if (e.target.name === 'moderate_cancel') {
       this.setState({
         flexible_cancel: false,
         moderate_cancel: true,
-        strict_cancel: false
+        strict_cancel: false,
       });
-    }else{
+    } else {
       this.setState({
         flexible_cancel: false,
         moderate_cancel: false,
-        strict_cancel: true
+        strict_cancel: true,
       });
     }
   };
@@ -64,33 +64,36 @@ class AlfredConditionsCancel extends React.Component{
     this.state.strict_cancel = this.props.shop.strict_cancel;
 
   }
-    onSubmit(){
-      const flexible_cancel =  this.state.flexible_cancel;
-      const moderate_cancel = this.state.moderate_cancel;
-      const strict_cancel = this.state.strict_cancel;
 
-      const booking_request = this.props.shop.booking_request;
-      const no_booking_request = this.props.shop.no_booking_request;
-      const my_alfred_conditions = this.props.shop.my_alfred_conditions;
-      const profile_picture = this.props.shop.profile_picture;
-      const identity_card = this.props.shop.identity_card;
-      const recommandations = this.props.shop.recommandations;
-      const welcome_message = this.props.shop.welcome_message;
+  onSubmit() {
+    const flexible_cancel = this.state.flexible_cancel;
+    const moderate_cancel = this.state.moderate_cancel;
+    const strict_cancel = this.state.strict_cancel;
+
+    const booking_request = this.props.shop.booking_request;
+    const no_booking_request = this.props.shop.no_booking_request;
+    const my_alfred_conditions = this.props.shop.my_alfred_conditions;
+    const profile_picture = this.props.shop.profile_picture;
+    const identity_card = this.props.shop.identity_card;
+    const recommandations = this.props.shop.recommandations;
+    const welcome_message = this.props.shop.welcome_message;
 
 
-      axios.put('/myAlfred/api/shop/editParameters',{booking_request,no_booking_request,my_alfred_conditions,profile_picture,identity_card,
-        recommandations,welcome_message,flexible_cancel,moderate_cancel,strict_cancel})
-        .then(() => {
-          toast.info('Paramètres modifiés');
-          this.setState({stateEditButton: false});
-          this.props.needRefresh();
-        })
-        .catch(err => console.error(err))
-    };
+    axios.put('/myAlfred/api/shop/editParameters', {
+      booking_request, no_booking_request, my_alfred_conditions, profile_picture, identity_card,
+      recommandations, welcome_message, flexible_cancel, moderate_cancel, strict_cancel,
+    })
+      .then(() => {
+        toast.info('Paramètres modifiés');
+        this.setState({stateEditButton: false});
+        this.props.needRefresh();
+      })
+      .catch(err => console.error(err));
+  };
 
-  render(){
+  render() {
     const {classes, shop, alfred, userState, isOwner} = this.props;
-    if(this.state.stateEditButton === false){
+    if (this.state.stateEditButton === false) {
       this.updateState();
     }
 
@@ -102,24 +105,24 @@ class AlfredConditionsCancel extends React.Component{
             <Grid className={classes.contentPosition}>
               <Grid className={classes.containerBooking}>
                 <Grid className={classes.containerTitle}>
-                  <h3>{ frenchFormat(`Conditions d’annulation de ${alfred.firstname}`) }</h3>
+                  <h3>{frenchFormat(`Conditions d’annulation de ${alfred.firstname}`)}</h3>
                 </Grid>
                 {userState && isOwner ?
                   <Grid className={classes.editCancelButton}>
-                    { this.state.stateEditButton ?
+                    {this.state.stateEditButton ?
                       <Button color="primary" className={classes.button} onClick={this.onSubmit}>
                         Enregistrer
                       </Button> : null
                     }
                     <Button color="secondary" className={classes.button} onClick={this.stateButton}>
-                      {this.state.stateEditButton ? "Annuler" : "Modifier"}
+                      {this.state.stateEditButton ? 'Annuler' : 'Modifier'}
                     </Button>
                   </Grid>
                   : null
                 }
               </Grid>
               <Grid className={classes.containerAlfred}>
-                {shop.flexible_cancel  || this.state.stateEditButton ?
+                {shop.flexible_cancel || this.state.stateEditButton ?
                   <Grid className={classes.alignCheckbox}>
                     <Grid>
                       <Checkbox
@@ -127,13 +130,13 @@ class AlfredConditionsCancel extends React.Component{
                         checked={this.state.flexible_cancel}
                         value={this.state.flexible_cancel}
                         color="primary"
-                        name={"flexible_cancel"}
+                        name={'flexible_cancel'}
                         onChange={(e) => this.handleChange(e)}
                         inputProps={{
                           'aria-label': 'secondary checkbox',
                         }}
                         icon={<CircleUnchecked/>}
-                        checkedIcon={<RadioButtonCheckedIcon />}
+                        checkedIcon={<RadioButtonCheckedIcon/>}
                       />
                     </Grid>
                     <Grid>
@@ -144,7 +147,7 @@ class AlfredConditionsCancel extends React.Component{
                     </Grid>
                   </Grid> : null
                 }
-                { shop.moderate_cancel  || this.state.stateEditButton ?
+                {shop.moderate_cancel || this.state.stateEditButton ?
                   <Grid className={classes.alignCheckbox}>
                     <Grid>
                       <Checkbox
@@ -152,13 +155,13 @@ class AlfredConditionsCancel extends React.Component{
                         checked={this.state.moderate_cancel}
                         value={this.state.moderate_cancel}
                         color="primary"
-                        name={"moderate_cancel"}
+                        name={'moderate_cancel'}
                         onChange={(e) => this.handleChange(e)}
                         inputProps={{
                           'aria-label': 'secondary checkbox',
                         }}
                         icon={<CircleUnchecked/>}
-                        checkedIcon={<RadioButtonCheckedIcon />}
+                        checkedIcon={<RadioButtonCheckedIcon/>}
                       />
                     </Grid>
                     <Grid>
@@ -169,7 +172,7 @@ class AlfredConditionsCancel extends React.Component{
                     </Grid>
                   </Grid> : null
                 }
-                { shop.strict_cancel  || this.state.stateEditButton ?
+                {shop.strict_cancel || this.state.stateEditButton ?
                   <Grid className={classes.alignCheckbox}>
                     <Grid>
                       <Checkbox
@@ -177,13 +180,13 @@ class AlfredConditionsCancel extends React.Component{
                         checked={this.state.strict_cancel}
                         value={this.state.strict_cancel}
                         color="primary"
-                        name={"strict_cancel"}
+                        name={'strict_cancel'}
                         inputProps={{
                           'aria-label': 'secondary checkbox',
                         }}
                         onChange={(e) => this.handleChange(e)}
                         icon={<CircleUnchecked/>}
-                        checkedIcon={<RadioButtonCheckedIcon />}
+                        checkedIcon={<RadioButtonCheckedIcon/>}
                       />
                     </Grid>
                     <Grid>
@@ -200,7 +203,7 @@ class AlfredConditionsCancel extends React.Component{
           </Grid>
         </Grid>
       </Grid>
-    )
+    );
   }
 }
 
@@ -209,4 +212,4 @@ AlfredConditionsCancel.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default  withStyles(styles, { withTheme: true })(AlfredConditionsCancel);
+export default withStyles(styles, {withTheme: true})(AlfredConditionsCancel);

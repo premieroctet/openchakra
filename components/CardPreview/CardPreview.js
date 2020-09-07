@@ -30,33 +30,33 @@ import {toast} from 'react-toastify';
 import UserAvatar from '../Avatar/UserAvatar';
 import {computeAverageNotes} from '../../utils/functions';
 
-const {computeDistanceKm}=require('../../utils/functions');
+const {computeDistanceKm} = require('../../utils/functions');
 
-class CardPreview extends React.Component{
-  constructor(props){
+class CardPreview extends React.Component {
+  constructor(props) {
     super(props);
     this.state = {
-      cpData : {},
+      cpData: {},
       dense: true,
       score: null,
       service: null,
-      alfred:null,
-      shop:null,
+      alfred: null,
+      shop: null,
       open: false,
       id_service: '',
       page: false,
-      reviews:[],
-    }
+      reviews: [],
+    };
   }
 
   componentDidMount() {
     axios.get(`/myAlfred/api/serviceUser/cardPreview/${this.props.services}`)
-      .then (res => {
-        this.setState({cpData: res.data})
+      .then(res => {
+        this.setState({cpData: res.data});
       })
-      .catch (err => console.error(err))
+      .catch(err => console.error(err));
     /**
-    if(typeof this.props.services.user === 'string'){
+     if(typeof this.props.services.user === 'string'){
       axios.get('/myAlfred/api/shop/alfred/'+this.props.services.user)
         .then( res => {
           this.setState({alfred:res.data.alfred, score:res.data.alfred.score}, () =>
@@ -92,28 +92,28 @@ class CardPreview extends React.Component{
   }
 
   handleClickOpen(id) {
-    this.setState({id_service: id, open:true});
+    this.setState({id_service: id, open: true});
   }
 
   handleClose() {
-    this.setState({id_service:'', open:false});
+    this.setState({id_service: '', open: false});
   }
 
   deleteService(id) {
     axios.delete('/myAlfred/api/serviceUser/' + id)
       .then(() => {
         toast.error('Service supprimé');
-        this.setState({open:false,id_service:''});
+        this.setState({open: false, id_service: ''});
         this.props.needRefresh();
       })
-      .catch(err => console.error(err))
+      .catch(err => console.error(err));
   }
 
-  render(){
+  render() {
     const {classes, userState, isOwner, gps, needAvatar, isAdmin} = this.props;
-    const { cpData } = this.state;
+    const {cpData} = this.state;
 
-    var distance = gps ? computeDistanceKm(gps, cpData.gps) : null
+    var distance = gps ? computeDistanceKm(gps, cpData.gps) : null;
     distance = distance ? distance.toFixed(0) : '';
 
     const StyledRating = withStyles({
@@ -122,19 +122,19 @@ class CardPreview extends React.Component{
       },
     })(Rating);
 
-      const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {};
+    const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {};
 
     return (
       <Grid>
         <Card className={classes.card}>
-          <Grid className={classes.cardMedia} style={{ backgroundImage:  'url("' + cpData.picture + '")'}}>
-            { cpData.is_professional ?
+          <Grid className={classes.cardMedia} style={{backgroundImage: 'url("' + cpData.picture + '")'}}>
+            {cpData.is_professional ?
               <Grid className={classes.statusMedia}>
                 <Chip label="PRO" className={classes.chipStyle}/>
               </Grid>
-              :null
+              : null
             }
-            {userState && isOwner || isAdmin  ?
+            {userState && isOwner || isAdmin ?
               <Grid>
                 <Grid className={classes.actionMediaEdit}>
                   <Link href={'/myShop/services?id=' + cpData._id}>
@@ -145,30 +145,32 @@ class CardPreview extends React.Component{
                 </Grid>
                 <Grid className={classes.actionMediaRemove}>
                   <IconButton aria-label="remove" className={classes.iconButtonStyle}>
-                    <DeleteForeverIcon onClick={()=>this.handleClickOpen(cpData._id)} style={{color: '#f87280'}}/>
+                    <DeleteForeverIcon onClick={() => this.handleClickOpen(cpData._id)} style={{color: '#f87280'}}/>
                   </IconButton>
                 </Grid>
               </Grid>
               : null
             }
-            { needAvatar ?
+            {needAvatar ?
               <Grid className={classes.avatar}>
                 <Grid>
-                  <UserAvatar user={cpData.alfred} className={classes.avatarLetter} />
+                  <UserAvatar user={cpData.alfred} className={classes.avatarLetter}/>
                 </Grid>
                 <Grid style={{marginTop: 20}}>
-                  <Grid style={{display:'flex', flexDirection: 'column'}} className={classes.contentDistanceUnderAvatar}>
+                  <Grid style={{display: 'flex', flexDirection: 'column'}}
+                        className={classes.contentDistanceUnderAvatar}>
                     <Grid>
-                    { cpData.alfred ?
-                      <Typography component="p" className={classes.sizeTextUnderAvatar}>{cpData.alfred.firstname}</Typography>
-                      :
-                      null
-                    }
+                      {cpData.alfred ?
+                        <Typography component="p"
+                                    className={classes.sizeTextUnderAvatar}>{cpData.alfred.firstname}</Typography>
+                        :
+                        null
+                      }
                       <Typography component="p" className={classes.sizeTextUnderAvatar}>
                         {cpData.city}
                       </Typography>
                     </Grid>
-                    { distance ?
+                    {distance ?
                       <Grid style={{display: 'flex'}}>
                         <Grid>
                           <RoomIcon className={classes.checkCircleIcon}/>
@@ -185,16 +187,16 @@ class CardPreview extends React.Component{
                   </Grid>
                 </Grid>
               </Grid>
-               :
+              :
               null
             }
           </Grid>
           <CardContent>
-            <Grid  className={classes.cardContent}>
+            <Grid className={classes.cardContent}>
               <Grid className={classes.cardContentPosition}>
                 <Typography variant="body2" color="textSecondary" component="p" className={classes.sizeText}>
-                  { /** FIX get category */ }
-                  { /** service.category==undefined ? '':`${service.category.label}`*/ }
+                  { /** FIX get category */}
+                  { /** service.category==undefined ? '':`${service.category.label}`*/}
                 </Typography>
                 <Grid className={classes.cardContentHeader}>
                   <Typography component="p" className={classes.sizeText}>
@@ -202,8 +204,10 @@ class CardPreview extends React.Component{
                   </Typography>
                 </Grid>
                 <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                  <Badge badgeContent={notes.global ? notes.global.toFixed(2) : 0} color={'primary'} classes={{badge: classes.badge}}>
-                    <StyledRating name="read-only" value={notes.global} readOnly className={classes.rating} precision={0.5}/>
+                  <Badge badgeContent={notes.global ? notes.global.toFixed(2) : 0} color={'primary'}
+                         classes={{badge: classes.badge}}>
+                    <StyledRating name="read-only" value={notes.global} readOnly className={classes.rating}
+                                  precision={0.5}/>
                   </Badge>
                 </Box>
               </Grid>
@@ -212,13 +216,13 @@ class CardPreview extends React.Component{
                   needAvatar === false ?
                     <Grid className={classes.flexPosition}>
                       <Typography variant="body2" color="textSecondary" component="p" className={classes.sizeText}>
-                        { cpData.city }
+                        {cpData.city}
                       </Typography>
                       <RoomIcon className={classes.checkCircleIcon}/>
                     </Grid> : null
                 }
                 <Grid>
-                  <a href={'/userServicePreview?id=' + cpData._id} target="_blank" className={classes.noneLink} >
+                  <a href={'/userServicePreview?id=' + cpData._id} target="_blank" className={classes.noneLink}>
                     <Button variant="contained" color="primary" className={classes.button}>
                       Visualiser
                     </Button>
@@ -232,32 +236,38 @@ class CardPreview extends React.Component{
                   <Grid>
                     <ListItem className={classes.noPadding}>
                       <ListItemIcon className={classes.minWidth}>
-                        <img src={cpData.graduated ? '/static/assets/img/iconCardAlfred/graduated.svg' : '/static/assets/img/iconCardAlfred/no_graduated.svg'} alt={'Diplome'} title={'Diplome'} className={classes.imageStyle}/>
+                        <img
+                          src={cpData.graduated ? '/static/assets/img/iconCardAlfred/graduated.svg' : '/static/assets/img/iconCardAlfred/no_graduated.svg'}
+                          alt={'Diplome'} title={'Diplome'} className={classes.imageStyle}/>
                       </ListItemIcon>
                       <ListItemText
-                        classes={{primary:classes.sizeText}}
-                        primary={"Diplômé(e)"}
+                        classes={{primary: classes.sizeText}}
+                        primary={'Diplômé(e)'}
                       />
                     </ListItem>
                   </Grid>
                   <Grid>
-                    <ListItem className={classes.noPadding} style={{marginLeft : 5}}>
-                      <ListItemIcon  className={classes.minWidth}>
-                        <img src={cpData.is_certified  ? '/static/assets/img/iconCardAlfred/certificate.svg' : '/static/assets/img/iconCardAlfred/no_certificate.svg'} alt={'Certifié'} title={'Certifié'} className={classes.imageStyle}/>
+                    <ListItem className={classes.noPadding} style={{marginLeft: 5}}>
+                      <ListItemIcon className={classes.minWidth}>
+                        <img
+                          src={cpData.is_certified ? '/static/assets/img/iconCardAlfred/certificate.svg' : '/static/assets/img/iconCardAlfred/no_certificate.svg'}
+                          alt={'Certifié'} title={'Certifié'} className={classes.imageStyle}/>
                       </ListItemIcon>
                       <ListItemText
-                        classes={{primary:classes.sizeText}}
+                        classes={{primary: classes.sizeText}}
                         primary="Certifié(e)"
                       />
                     </ListItem>
                   </Grid>
                   <Grid>
-                    <ListItem className={classes.noPadding} style={{marginLeft : 5}}>
+                    <ListItem className={classes.noPadding} style={{marginLeft: 5}}>
                       <ListItemIcon className={classes.minWidth}>
-                        <img src={cpData.level ? '/static/assets/img/iconCardAlfred/experience.svg' : '/static/assets/img/iconCardAlfred/no_experience.svg'} alt={'Expérimenté'} title={'Expérimenté'} className={classes.imageStyle}/>
+                        <img
+                          src={cpData.level ? '/static/assets/img/iconCardAlfred/experience.svg' : '/static/assets/img/iconCardAlfred/no_experience.svg'}
+                          alt={'Expérimenté'} title={'Expérimenté'} className={classes.imageStyle}/>
                       </ListItemIcon>
                       <ListItemText
-                        classes={{primary:classes.sizeText}}
+                        classes={{primary: classes.sizeText}}
                         primary="Expérimenté(e)"
                       />
                     </ListItem>
@@ -269,28 +279,28 @@ class CardPreview extends React.Component{
         </Card>
         <Dialog
           open={this.state.open}
-          onClose={()=>this.handleClose()}
+          onClose={() => this.handleClose()}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">{"Supprimer un service"}</DialogTitle>
+          <DialogTitle id="alert-dialog-title">{'Supprimer un service'}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               Voulez-vous vraiment supprimer ce service de votre boutique ?
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={()=>this.handleClose2()} color="primary">
+            <Button onClick={() => this.handleClose2()} color="primary">
               Annuler
             </Button>
-            <Button onClick={()=>this.deleteService(this.state.id_service)} color="secondary" autoFocus>
+            <Button onClick={() => this.deleteService(this.state.id_service)} color="secondary" autoFocus>
               Supprimer
             </Button>
           </DialogActions>
         </Dialog>
       </Grid>
 
-    )
+    );
   }
 }
 
@@ -299,4 +309,4 @@ CardPreview.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default  withStyles(styles, { withTheme: true })(CardPreview);
+export default withStyles(styles, {withTheme: true})(CardPreview);

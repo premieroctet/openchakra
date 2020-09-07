@@ -6,13 +6,13 @@ export default theme => ({
   hidesm: {
     minWidth: '271px',
     [theme.breakpoints.down('sm')]: {
-      display:'none'
-    }
+      display: 'none',
+    },
   },
   hidelg: {
     [theme.breakpoints.up('md')]: {
-      display:'none',
-    }
+      display: 'none',
+    },
   },
   trigger: {
     [theme.breakpoints.down('sm')]: {
@@ -27,19 +27,19 @@ export default theme => ({
       '&:focus': {
         display: 'none',
         transition: 'display 0.7s',
-      }
-    }
+      },
+    },
   },
   toggle: {
-    [theme.breakpoints.down('sm')]:{
-      marginLeft:'-75px',
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: '-75px',
       transition: 'margin-left 0.7s',
       '&:hover': {
-        marginLeft:'0px',
+        marginLeft: '0px',
         transition: 'margin-left 0.7s',
         boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-      }
-    }
+      },
+    },
   },
   menuButton: {
     marginLeft: theme.spacing(1),
@@ -48,10 +48,10 @@ export default theme => ({
       display: 'none',
     },
   },
-  containerLeft:{
+  containerLeft: {
     paddingLeft: 55,
     [theme.breakpoints.down('xs')]: {
       paddingLeft: 'inherit',
     },
-  }
+  },
 })

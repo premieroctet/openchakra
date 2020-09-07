@@ -12,116 +12,116 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 
 const styles = theme => ({
-    signupContainer: {
-        alignItems: 'center',
-        height: '170vh',
-        justifyContent: 'top',
-        flexDirection: 'column',
+  signupContainer: {
+    alignItems: 'center',
+    height: '170vh',
+    justifyContent: 'top',
+    flexDirection: 'column',
 
-    },
-    card: {
-        padding: '1.5rem 3rem',
-        width: 400,
-        marginTop: '100px',
-    },
-    cardContant: {
-        flexDirection: 'column',
-    },
-    linkText: {
-        textDecoration: 'none',
-        color: 'black',
-        fontSize: 12,
-        lineHeight: 4.15,
-    },
+  },
+  card: {
+    padding: '1.5rem 3rem',
+    width: 400,
+    marginTop: '100px',
+  },
+  cardContant: {
+    flexDirection: 'column',
+  },
+  linkText: {
+    textDecoration: 'none',
+    color: 'black',
+    fontSize: 12,
+    lineHeight: 4.15,
+  },
 });
 
 class add extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            label: '',
-            errors: {}
+  constructor(props) {
+    super(props);
+    this.state = {
+      label: '',
+      errors: {},
 
-        };
-    }
-
-    componentDidMount() {
-        localStorage.setItem('path',Router.pathname);
-    }
-
-    onChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
     };
+  }
 
-    onSubmit = e => {
-        e.preventDefault();
+  componentDidMount() {
+    localStorage.setItem('path', Router.pathname);
+  }
 
-        const newBilling = {
-            label: this.state.label,
+  onChange = e => {
+    this.setState({[e.target.name]: e.target.value});
+  };
 
+  onSubmit = e => {
+    e.preventDefault();
 
-        };
-        axios.defaults.headers.common['Authorization'] = cookie.load('token')
-        axios
-            .post('/myAlfred/api/admin/calculating/all', newBilling)
-            .then(res => {
-                alert('Méthode de calcul ajoutée');
-                Router.push({pathname:'/dashboard/calculating/all'})
-            })
-            .catch(err => {
-                    console.error(err);
-                    this.setState({errors: err.response.data});
-                if(err.response.status === 401 || err.response.status === 403) {
-                    cookie.remove('token', { path: '/' })
-                    Router.push({pathname: '/login'})
-                }
-                }
-            );
+    const newBilling = {
+      label: this.state.label,
 
 
     };
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    axios
+      .post('/myAlfred/api/admin/calculating/all', newBilling)
+      .then(res => {
+        alert('Méthode de calcul ajoutée');
+        Router.push({pathname: '/dashboard/calculating/all'});
+      })
+      .catch(err => {
+          console.error(err);
+          this.setState({errors: err.response.data});
+          if (err.response.status === 401 || err.response.status === 403) {
+            cookie.remove('token', {path: '/'});
+            Router.push({pathname: '/login'});
+          }
+        },
+      );
 
-    render() {
-        const { classes } = this.props;
-        const {errors} = this.state;
+
+  };
+
+  render() {
+    const {classes} = this.props;
+    const {errors} = this.state;
 
 
-        return (
-            <Layout>
-                <Grid container className={classes.signupContainer}>
-                    <Card className={classes.card}>
-                        <Grid>
-                            <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Typography style={{ fontSize: 30 }}>Ajouter une méthode de facturation</Typography>
-                            </Grid>
-                            <form onSubmit={this.onSubmit}>
-                                <Grid item>
-                                    <TextField
-                                        id="standard-with-placeholder"
-                                        label="Label"
-                                        placeholder="Label"
-                                        margin="normal"
-                                        style={{ width: '100%' }}
-                                        type="text"
-                                        name="label"
-                                        value={this.state.label}
-                                        onChange={this.onChange}
-                                        error={errors.label}
-                                    />
-                                    <em>{errors.label}</em>
-                                </Grid>
-                                <Grid item style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                    <Button type="submit" variant="contained" color="primary" style={{ width: '100%' }}>
-                                        Ajouter
-                                    </Button>
-                                </Grid>
-                            </form>
-                        </Grid>
-                    </Card>
+    return (
+      <Layout>
+        <Grid container className={classes.signupContainer}>
+          <Card className={classes.card}>
+            <Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+                <Typography style={{fontSize: 30}}>Ajouter une méthode de facturation</Typography>
+              </Grid>
+              <form onSubmit={this.onSubmit}>
+                <Grid item>
+                  <TextField
+                    id="standard-with-placeholder"
+                    label="Label"
+                    placeholder="Label"
+                    margin="normal"
+                    style={{width: '100%'}}
+                    type="text"
+                    name="label"
+                    value={this.state.label}
+                    onChange={this.onChange}
+                    error={errors.label}
+                  />
+                  <em>{errors.label}</em>
                 </Grid>
-            </Layout>
-        );
-    };
+                <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
+                  <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
+                    Ajouter
+                  </Button>
+                </Grid>
+              </form>
+            </Grid>
+          </Card>
+        </Grid>
+      </Layout>
+    );
+  };
 }
 
 export default withStyles(styles)(add);

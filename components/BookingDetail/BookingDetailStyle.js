@@ -1,9 +1,9 @@
-export default theme =>({
-  flexContent:{
+export default theme => ({
+  flexContent: {
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
-  labelContent:{
-    width: 250
-  }
+  labelContent: {
+    width: 250,
+  },
 })

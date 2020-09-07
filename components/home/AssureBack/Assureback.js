@@ -26,7 +26,7 @@ const styles = theme => ({
   media: {
     height: 400,
     borderRadius: '20px',
-    margin: '1%'
+    margin: '1%',
 
   },
   card1: {
@@ -64,7 +64,7 @@ const styles = theme => ({
     },
     [theme.breakpoints.up('sm')]: { // medium: 960px or larger
       display: 'flex',
-      width: '100%'
+      width: '100%',
     },
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
       display: 'none',
@@ -111,11 +111,11 @@ const styles = theme => ({
     minWidth: '300px!important',
     marginRight: '10px!important',
     marginLeft: '10px!important',
-    boxShadow: '1px 3px 1px transparent'
+    boxShadow: '1px 3px 1px transparent',
   },
 });
 
-class Assureback extends React.Component{
+class Assureback extends React.Component {
 
   constructor(props) {
     super(props);
@@ -130,56 +130,56 @@ class Assureback extends React.Component{
     const {classes} = this.props;
 
     return (
-        <Fragment>
+      <Fragment>
 
-          {/*Nous assurons vos arrière*/}
-          <Grid container className={classes.container}>
-          </Grid>
-          <Grid container className={classes.container} style={{marginBottom:20}} wrap="wrap">
-            <Grid item xs={12}>
-              <Card  className={classes.card1}>
+        {/*Nous assurons vos arrière*/}
+        <Grid container className={classes.container}>
+        </Grid>
+        <Grid container className={classes.container} style={{marginBottom: 20}} wrap="wrap">
+          <Grid item xs={12}>
+            <Card className={classes.card1}>
               <CardMedia
-                    xs={12}
-                    className={classes.cover}
+                xs={12}
+                className={classes.cover}
+                image='../../static/assureback.jpg'
+                title="Proposeserviceimg"
+              />
+              <Grid item xs={12} className={classes.details}>
+                <CardContent className={classes.content}>
+                  <Typography component="h5" variant="h5" className={classes.padding}>
+                    Nous assurons vos arrières !
+                  </Typography>
+                  <Typography style={{width: '100%'}} variant="body1" color="textSecondary"
+                              className={classes.padding2}>
+                    Proposez vos services en toute sérénité, My-Alfred s’occupe de tout !
+                    Une assurance en responsabilité vous est offerte pour toute réalisation de service !
+                  </Typography>
+                </CardContent>
+              </Grid>
+            </Card>
+            <Card className={classes.card22}>
+              <Grid item xs={12} className={classes.details}>
+                <CardActionArea>
+                  <CardMedia
+                    className={classes.media}
                     image='../../static/assureback.jpg'
-                    title="Proposeserviceimg"
-                />
-                <Grid item xs={12} className={classes.details}>
-                  <CardContent className={classes.content}>
+                    title="proposeserviceimg"
+                  />
+                  <CardContent>
                     <Typography component="h5" variant="h5" className={classes.padding}>
-                        Nous assurons vos arrières !
+                      Nous assurons vos arrières !
                     </Typography>
-                    <Typography style={{width: '100%'}} variant="body1" color="textSecondary"
-                                className={classes.padding2}>
-                        Proposez vos services en toute sérénité, My-Alfred s’occupe de tout !
-                        Une assurance en responsabilité vous est offerte pour toute réalisation de service !
-                    </Typography>
-                  </CardContent>
-                </Grid>
-              </Card>
-              <Card className={classes.card22}>
-                <Grid item xs={12} className={classes.details}>
-                  <CardActionArea>
-                    <CardMedia
-                        className={classes.media}
-                        image='../../static/assureback.jpg'
-                        title="proposeserviceimg"
-                    />
-                    <CardContent>
-                      <Typography component="h5" variant="h5" className={classes.padding}>
-                        Nous assurons vos arrières !
-                      </Typography>
-                      <Typography variant="body1" color="textSecondary" className={classes.padding2}>
+                    <Typography variant="body1" color="textSecondary" className={classes.padding2}>
                       Proposez vos services en toute sérénité, My-Alfred s’occupe de tout !
                       Une assurance en responsabilité vous est offerte pour toute réalisation de service !
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Grid>
-              </Card>
-            </Grid>
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Grid>
+            </Card>
           </Grid>
-        </Fragment>
+        </Grid>
+      </Fragment>
     );
   }
 }

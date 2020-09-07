@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#4FBDD7;}
 	.st1{fill:#EAEAEA;}
@@ -51,20 +51,20 @@
 	.st45{fill:none;stroke:#FFFFFF;stroke-width:9;stroke-miterlimit:10;}
 	.st46{fill:none;stroke:#4FBDD7;stroke-width:3;stroke-miterlimit:10;}
 </style>
-<rect x="-1" class="st0" width="505" height="505"/>
-<g>
+    <rect class="st0" height="505" width="505" x="-1"/>
+    <g>
 	<g>
 		<path class="st16" d="M121,188.7V278h13.9c2-18.4,22-32.9,46.2-32.9s44.1,14.5,46.2,32.9h68.2c2-18.4,22-32.9,46.2-32.9
 			c24.2,0,44.1,14.5,46.2,32.9h13.9v-56.8l-36.1-56.1h-72.5l-17-13.2l20.1-15.6l-11.6-9l-51.8,40.3l11.6,9l20.1-15.6l17,13.2v42.1
 			H232l-21.9-27.6h-31.5v-11.4c0-14.1-14.7-25.6-32.9-25.6v37H121z"/>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<circle class="st17" cx="181.1" cy="293.1" r="29.9"/>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<g>
 			<path class="st0" d="M273.4,266.8c2.7-5.2,0.2-10.8,0.6-16.1c0.2-2.8,0.7-5.6,0.7-8.4c0-2.4,0-5.2-2.3-7.3
@@ -73,7 +73,7 @@
 		</g>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<g>
 			<path class="st0" d="M281.1,266.9c2.7-5.2,0.2-10.8,0.6-16.1c0.2-2.8,0.7-5.6,0.7-8.4c0-2.4,0-5.2-2.3-7.3
@@ -82,7 +82,7 @@
 		</g>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<g>
 			<path class="st0" d="M265.7,266.6c2.7-5.2,0.2-10.8,0.6-16.1c0.2-2.8,0.7-5.6,0.7-8.4c0-2.4,0-5.2-2.3-7.3
@@ -91,7 +91,7 @@
 		</g>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<g>
 			<path class="st0" d="M250.4,266.8c2.7-5.2,0.2-10.8,0.6-16.1c0.2-2.8,0.7-5.6,0.7-8.4c0-2.4,0-5.2-2.3-7.3
@@ -100,7 +100,7 @@
 		</g>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<g>
 			<path class="st0" d="M258.1,266.9c2.7-5.2,0.2-10.8,0.6-16.1c0.2-2.8,0.7-5.6,0.7-8.4c0-2.4,0-5.2-2.3-7.3
@@ -109,7 +109,7 @@
 		</g>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<g>
 			<path class="st0" d="M242.7,266.6c2.7-5.2,0.2-10.8,0.6-16.1c0.2-2.8,0.7-5.6,0.7-8.4c0-2.4,0-5.2-2.3-7.3
@@ -118,16 +118,16 @@
 		</g>
 	</g>
 </g>
-<g>
+    <g>
 	<path class="st0" d="M283,237v29h-46v-29H283 M286,234h-52v35h52V234L286,234z"/>
 </g>
-<g>
+    <g>
 	<g>
 		<circle class="st17" cx="340.1" cy="294.1" r="29.9"/>
 	</g>
 </g>
-<g>
-	<rect y="366" class="st20" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 54.6572 404.5557)" class="st2 st21 st22">Tracteur tondeuse</text>
+    <g>
+	<rect class="st20" height="144" width="500" y="366"/>
+        <text class="st2 st21 st22" transform="matrix(1 0 0 1 54.6572 404.5557)">Tracteur tondeuse</text>
 </g>
 </svg>

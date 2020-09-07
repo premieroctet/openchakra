@@ -27,7 +27,7 @@ const styles = theme => ({
   media: {
     height: 400,
     borderRadius: '20px',
-    margin: '1%'
+    margin: '1%',
 
   },
   card1: {
@@ -64,7 +64,7 @@ const styles = theme => ({
     },
     [theme.breakpoints.up('sm')]: { // medium: 960px or larger
       display: 'flex',
-      width: '100%'
+      width: '100%',
     },
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
       display: 'none',
@@ -112,11 +112,11 @@ const styles = theme => ({
     minWidth: '300px!important',
     marginRight: '10px!important',
     marginLeft: '10px!important',
-    boxShadow: '1px 3px 1px transparent'
+    boxShadow: '1px 3px 1px transparent',
   },
 });
 
-class Proposeservice extends React.Component{
+class Proposeservice extends React.Component {
 
   constructor(props) {
     super(props);
@@ -130,56 +130,56 @@ class Proposeservice extends React.Component{
   render() {
     const {classes} = this.props;
     return (
-        <Fragment>
-          <Grid container className={classes.container} wrap="wrap">
-            <Grid item xs={12}>
-              <Card className={classes.card1}>
-                <Grid item xs={12} className={classes.details}>
-                  <CardContent className={classes.content}>
+      <Fragment>
+        <Grid container className={classes.container} wrap="wrap">
+          <Grid item xs={12}>
+            <Card className={classes.card1}>
+              <Grid item xs={12} className={classes.details}>
+                <CardContent className={classes.content}>
+                  <Typography component="h5" variant="h5" className={classes.padding}>
+                    Proposez vos services sans faire face à des coûts initiaux
+                  </Typography>
+                  <Typography style={{width: '100%'}} variant="body1" color="textSecondary"
+                              className={classes.padding2}>
+                    My-Alfred vous permet de mettre à disposition votre boutique de services et
+                    vous offre une visibilité rapide sans avoir à engager le moindre coût initial !
+                    My-Alfred gère pour vous le traitement des paiements, l’assistance aux utilisateurs et
+                    vous offre une assurance responsabilité civile.
+                  </Typography>
+                </CardContent>
+              </Grid>
+              <CardMedia
+                xs={12}
+                className={classes.cover}
+                image='../../static/proposeservice.jpg'
+                title="Proposeserviceimg"
+              />
+            </Card>
+            <Card className={classes.card22}>
+              <Grid item xs={12} className={classes.details}>
+                <CardActionArea>
+                  <CardMedia
+                    className={classes.media}
+                    image='../../static/proposeservice.jpg'
+                    title="proposeserviceimg"
+                  />
+                  <CardContent>
                     <Typography component="h5" variant="h5" className={classes.padding}>
                       Proposez vos services sans faire face à des coûts initiaux
                     </Typography>
-                    <Typography style={{width: '100%'}} variant="body1" color="textSecondary"
-                                className={classes.padding2}>
-                        My-Alfred vous permet de mettre à disposition votre boutique de services et
-                        vous offre une visibilité rapide sans avoir à engager le moindre coût initial !
-                        My-Alfred gère pour vous le traitement des paiements, l’assistance aux utilisateurs et
-                        vous offre une assurance responsabilité civile.
+                    <Typography variant="body1" color="textSecondary" className={classes.padding2}>
+                      My-Alfred vous permet de mettre à disposition votre boutique de services et
+                      vous offre une visibilité rapide sans avoir à engager le moindre coût initial !
+                      My-Alfred gère pour vous le traitement des paiements, l’assistance aux utilisateurs et
+                      vous offre une assurance responsabilité civile.
                     </Typography>
                   </CardContent>
-                </Grid>
-                <CardMedia
-                    xs={12}
-                    className={classes.cover}
-                    image='../../static/proposeservice.jpg'
-                    title="Proposeserviceimg"
-                />
-              </Card>
-              <Card className={classes.card22}>
-                <Grid item xs={12} className={classes.details}>
-                  <CardActionArea>
-                    <CardMedia
-                        className={classes.media}
-                        image='../../static/proposeservice.jpg'
-                        title="proposeserviceimg"
-                    />
-                    <CardContent>
-                      <Typography component="h5" variant="h5" className={classes.padding}>
-                        Proposez vos services sans faire face à des coûts initiaux
-                      </Typography>
-                      <Typography variant="body1" color="textSecondary" className={classes.padding2}>
-                        My-Alfred vous permet de mettre à disposition votre boutique de services et
-                        vous offre une visibilité rapide sans avoir à engager le moindre coût initial !
-                        My-Alfred gère pour vous le traitement des paiements, l’assistance aux utilisateurs et
-                        vous offre une assurance responsabilité civile.
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Grid>
-              </Card>
-            </Grid>
+                </CardActionArea>
+              </Grid>
+            </Card>
           </Grid>
-        </Fragment>
+        </Grid>
+      </Fragment>
     );
   }
 }

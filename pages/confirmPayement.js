@@ -16,8 +16,8 @@ import cookie from 'react-cookies';
 
 const {booking_datetime_str} = require('../utils/dateutils');
 
-moment.locale("fr");
-const _ = require("lodash");
+moment.locale('fr');
+const _ = require('lodash');
 
 
 class ConfirmPayement extends React.Component {
@@ -44,28 +44,28 @@ class ConfirmPayement extends React.Component {
       date: null,
       hour: null,
       languages: [],
-      alfredId: ''
+      alfredId: '',
     };
   }
 
-  static getInitialProps({ query: { id } }) {
-    return { shop_id: id };
+  static getInitialProps({query: {id}}) {
+    return {shop_id: id};
   }
 
   componentDidMount() {
-    const token = cookie.load('token')
-    const bookingObj = JSON.parse(localStorage.getItem("bookingObj"));
+    const token = cookie.load('token');
+    const bookingObj = JSON.parse(localStorage.getItem('bookingObj'));
     this.setState({bookingObj: bookingObj});
 
-    axios.defaults.headers.common["Authorization"] = token
+    axios.defaults.headers.common['Authorization'] = token;
 
-    axios.get("/myAlfred/api/users/current").then(res => {
-      this.setState({ currentUser: res.data });
+    axios.get('/myAlfred/api/users/current').then(res => {
+      this.setState({currentUser: res.data});
     });
 
     this.setState({
-      emitter: localStorage.getItem("emitter"),
-      recipient: localStorage.getItem("recipient"),
+      emitter: localStorage.getItem('emitter'),
+      recipient: localStorage.getItem('recipient'),
       prestations: bookingObj.prestations,
       bookingObj: bookingObj,
       date: bookingObj.date_prestation,
@@ -75,58 +75,58 @@ class ConfirmPayement extends React.Component {
       fees: bookingObj.fees,
       grandTotal: bookingObj.amount,
       cesu_total: bookingObj.cesu_amount,
-      alfredId: bookingObj.alfred._id
-    })
+      alfredId: bookingObj.alfred._id,
+    });
 
     const id = this.props.shop_id;
-    localStorage.setItem("path", Router.pathname);
-    axios.defaults.headers.common["Authorization"] = token
+    localStorage.setItem('path', Router.pathname);
+    axios.defaults.headers.common['Authorization'] = token;
 
-    axios.get("/myAlfred/api/serviceUser/" + id).then(res => {
+    axios.get('/myAlfred/api/serviceUser/' + id).then(res => {
       this.setState({
         user: res.data.user,
-        languages: res.data.user.languages
+        languages: res.data.user.languages,
       });
     });
   }
 
   handlePay() {
-    localStorage.setItem("emitter", this.state.emitter);
-    localStorage.setItem("recipient", this.state.recipient);
+    localStorage.setItem('emitter', this.state.emitter);
+    localStorage.setItem('recipient', this.state.recipient);
     Router.push({
-      pathname: "/paymentChoiceCreate",
-      query: { total: this.state.grandTotal, fees: this.state.fees }
-    })
+      pathname: '/paymentChoiceCreate',
+      query: {total: this.state.grandTotal, fees: this.state.fees},
+    });
   }
 
-  computePricedPrestations(){
-    var result={};
-    const count=this.state.count;
-    this.state.prestations.forEach( p => {
-      result[p.name]=p.price*p.value;
-    })
+  computePricedPrestations() {
+    var result = {};
+    const count = this.state.count;
+    this.state.prestations.forEach(p => {
+      result[p.name] = p.price * p.value;
+    });
     return result;
   }
 
-  computeCountPrestations(){
-    var result={};
-    this.state.prestations.forEach( p => {
-      result[p.name]=p.value;
-    })
+  computeCountPrestations() {
+    var result = {};
+    this.state.prestations.forEach(p => {
+      result[p.name] = p.value;
+    });
     return result;
   }
 
   render() {
-    const { classes } = this.props;
-    const { currentUser, user, bookingObj } = this.state;
+    const {classes} = this.props;
+    const {currentUser, user, bookingObj} = this.state;
 
-    if(currentUser && bookingObj){
-      var checkAdd = currentUser.billing_address.address === bookingObj.address.address &&  currentUser.billing_address.zip_code === bookingObj.address.zip_code && currentUser.billing_address.city === bookingObj.address.city ;
+    if (currentUser && bookingObj) {
+      var checkAdd = currentUser.billing_address.address === bookingObj.address.address && currentUser.billing_address.zip_code === bookingObj.address.zip_code && currentUser.billing_address.city === bookingObj.address.city;
     }
 
 
-    const pricedPrestations=this.computePricedPrestations();
-    const countPrestations=this.computeCountPrestations();
+    const pricedPrestations = this.computePricedPrestations();
+    const countPrestations = this.computeCountPrestations();
 
     return (
       <Fragment>
@@ -145,48 +145,51 @@ class ConfirmPayement extends React.Component {
                     </Grid>
                     <Grid container className={classes.containerAboutAndAvatar}>
                       <Grid item className={classes.marginContainerAvatar}>
-                        <div style={{ width:'100%' }}>
+                        <div style={{width: '100%'}}>
                           <About alfred={user._id} profil={false}/>
                         </div>
                       </Grid>
                       <Grid item className={classes.containerAvatar}>
                         <Grid item>
-                          <UserAvatar classes={'avatarLetter'} user={user} className={classes.avatarLetter} />
-                          <Typography style={{marginTop:20}} className={classes.textAvatar}>{user.firstname}</Typography>
+                          <UserAvatar classes={'avatarLetter'} user={user} className={classes.avatarLetter}/>
+                          <Typography style={{marginTop: 20}}
+                                      className={classes.textAvatar}>{user.firstname}</Typography>
                         </Grid>
                       </Grid>
                     </Grid>
 
-                    <div style={{ paddingLeft: '3%' }}>
+                    <div style={{paddingLeft: '3%'}}>
                       <hr></hr>
                       <Grid container>
                         <h3 className={classes.h3Style}>
                           A propos de votre réservation
                         </h3>
-                        <Grid item xs={12} style={{display : 'flex', alignItems:'center'}}>
+                        <Grid item xs={12} style={{display: 'flex', alignItems: 'center'}}>
                           <Grid item>
                             <Grid>
-                              <img style={{width: 40, height : 40}} alt={"calendrier"} title={"calendrier"} src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
+                              <img style={{width: 40, height: 40}} alt={'calendrier'} title={'calendrier'}
+                                   src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
                             </Grid>
                           </Grid>
                           <Grid item xs={9} style={{marginLeft: 25}}>
-                            <p>Date et heure de la prestation:</p>{" "}
+                            <p>Date et heure de la prestation:</p>{' '}
                             <p>
                               {booking_datetime_str(this.state.bookingObj)}
                             </p>
                           </Grid>
                         </Grid>
-                        <Grid item xs={12} style={{display : 'flex', alignItems:'center'}}>
+                        <Grid item xs={12} style={{display: 'flex', alignItems: 'center'}}>
                           <Grid item>
                             <Grid>
-                              <img style={{width: 40, height : 40}} alt={"adresse"} title={"adresse"} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
+                              <img style={{width: 40, height: 40}} alt={'adresse'} title={'adresse'}
+                                   src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
                             </Grid>
                           </Grid>
                           <Grid item xs={9} style={{marginLeft: 25}}>
-                            <p>Adresse de la prestation:</p>{" "}
+                            <p>Adresse de la prestation:</p>{' '}
                             <p>
                               {bookingObj.address ?
-                                checkAdd ? "A mon adresse principale" : `Chez ${user.firstname}` : "En visio"
+                                checkAdd ? 'A mon adresse principale' : `Chez ${user.firstname}` : 'En visio'
                               }
                             </p>
                           </Grid>
@@ -198,12 +201,15 @@ class ConfirmPayement extends React.Component {
                             Paiement
                           </h3>
                           <Grid className={classes.widthLarge}>
-                            <BookingDetail prestations={pricedPrestations} count={countPrestations} total={this.state.grandTotal} client_fee={this.state.fees} travel_tax={this.state.travel_tax} pick_tax={this.state.pick_tax} cesu_total={this.state.cesu_total}/>
+                            <BookingDetail prestations={pricedPrestations} count={countPrestations}
+                                           total={this.state.grandTotal} client_fee={this.state.fees}
+                                           travel_tax={this.state.travel_tax} pick_tax={this.state.pick_tax}
+                                           cesu_total={this.state.cesu_total}/>
                             <Grid item className={classes.buttonContainerPiad}>
                               <Grid item>
                                 <Button
-                                  color={"secondary"}
-                                  variant={"contained"}
+                                  color={'secondary'}
+                                  variant={'contained'}
                                   className={classes.buttonPaid}
                                   onClick={() => {
                                     this.handlePay();
@@ -228,7 +234,7 @@ class ConfirmPayement extends React.Component {
                 </Grid>
               </Grid>
             </Layout>
-            <Footer />
+            <Footer/>
           </Grid>
         )}
       </Fragment>

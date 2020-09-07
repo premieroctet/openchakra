@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#EAEAEA;}
 	.st1{fill:#8C8C8C;}
@@ -58,8 +58,8 @@
 	.st52{fill:none;stroke:#EAEAEA;stroke-width:2;stroke-miterlimit:10;}
 	.st53{fill:none;stroke:#8C8C8C;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<rect class="st0" width="500" height="500"/>
-<g id="UIyuBT.tif">
+    <rect class="st0" height="500" width="500"/>
+    <g id="UIyuBT.tif">
 	<g>
 		<path class="st1" d="M323.9,299.6c-54,0-108.1,0-162.1,0c0-5.3,0-10.7-0.1-16c-0.3-24.4,0.3-48.7,3.7-72.9
 			c4.1-28.3,10.9-55.9,21.1-82.6c2.2-5.9,3.8-11.7,3.2-18c-0.2-2-0.1-4,0.2-5.9c0.7-3.8,3.5-5.8,7-7.1c34.7,0,69.3,0,104,0
@@ -75,14 +75,15 @@
 			C290,112.5,290,108,290,103.2z M293,274.3c-6.8,6.4-13.5,12.7-20.3,19.2c13.7,0,27,0,40.6,0C306.4,286.9,299.7,280.7,293,274.3z
 			 M301.8,117.2c0-3.9,0.1-7.8,0-11.6c-0.1-1.5-1.4-2.2-2.8-2.3c-1.4,0-2.7,0.8-2.8,2.3c-0.1,3.8,0,7.7,0,11.6
 			C298.1,117.2,299.9,117.2,301.8,117.2z"/>
-		<path class="st1" d="M290,103.2c0,4.8,0,9.3,0,14c-31.5,0-62.8,0-94.2,0c0-3.8-0.1-7.5,0.1-11.3c0.1-0.9,1.3-1.8,2.2-2.4
+        <path class="st1" d="M290,103.2c0,4.8,0,9.3,0,14c-31.5,0-62.8,0-94.2,0c0-3.8-0.1-7.5,0.1-11.3c0.1-0.9,1.3-1.8,2.2-2.4
 			c0.6-0.4,1.5-0.3,2.3-0.3c29.3,0,58.6,0,87.9,0C288.9,103.2,289.5,103.2,290,103.2z"/>
-		<path class="st1" d="M293,274.3c6.8,6.4,13.4,12.6,20.3,19.2c-13.7,0-26.9,0-40.6,0C279.5,287,286.1,280.7,293,274.3z"/>
-		<path class="st1" d="M305.3,241.3c-0.6-6.5-1.1-12.8-1.7-19.3c2-0.2,3.9-0.5,5.9-0.7c0.6,6.6,1.2,13,1.8,19.6
+        <path class="st1"
+              d="M293,274.3c6.8,6.4,13.4,12.6,20.3,19.2c-13.7,0-26.9,0-40.6,0C279.5,287,286.1,280.7,293,274.3z"/>
+        <path class="st1" d="M305.3,241.3c-0.6-6.5-1.1-12.8-1.7-19.3c2-0.2,3.9-0.5,5.9-0.7c0.6,6.6,1.2,13,1.8,19.6
 			C309.3,241.1,307.4,241.2,305.3,241.3z"/>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<path class="st1" d="M232.3,153.2c-0.5-0.1-1-0.1-1.3,0.2l-55.9,38.6c-0.4,0.3-0.6,0.7-0.7,1.2c0,0.5,0.2,0.9,0.5,1.3l25.6,23.2
 			c-1,1.6-1,3.8,0.1,5.5l2.5,3.6c1.6,2.3,4.7,2.9,7,1.3l16.2-11.1l8.6,17.1c1.1,2.3,3.2,3.9,5.6,4.5c2.4,0.6,5,0.2,7.1-1.3
@@ -94,9 +95,11 @@
 			l52.7-36.4L243.2,187.7z"/>
 	</g>
 </g>
-<rect x="173.5" y="176.1" transform="matrix(-0.823 0.568 -0.568 -0.823 476.7934 205.9429)" class="st1" width="65.6" height="2.3"/>
-<g>
-	<rect x="4" y="360" class="st24" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 90.6802 398.5557)"><tspan x="0" y="0" class="st23 st29 st30">Mortier adhésif</tspan><tspan x="73.4" y="64.8" class="st23 st29 st30"> / Enduit</tspan></text>
+    <rect class="st1" height="2.3" transform="matrix(-0.823 0.568 -0.568 -0.823 476.7934 205.9429)" width="65.6" x="173.5"
+          y="176.1"/>
+    <g>
+	<rect class="st24" height="144" width="500" x="4" y="360"/>
+        <text transform="matrix(1 0 0 1 90.6802 398.5557)"><tspan class="st23 st29 st30" x="0" y="0">Mortier adhésif</tspan>
+            <tspan class="st23 st29 st30" x="73.4" y="64.8"> / Enduit</tspan></text>
 </g>
 </svg>

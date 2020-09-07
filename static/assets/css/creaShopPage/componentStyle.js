@@ -8,101 +8,101 @@ export default theme => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width :'100%'
+    width: '100%',
   },
   mainContainer: {
-    width: '100%'
+    width: '100%',
   },
-  containerBooking:{
-    display:'flex',
+  containerBooking: {
+    display: 'flex',
     justifyContent: 'space-between',
     width: '95%',
-    alignItems: 'center'
+    alignItems: 'center',
   },
-  containerAlfred:{
+  containerAlfred: {
     display: 'flex',
     flexDirection: 'column',
-    marginLeft : 15,
+    marginLeft: 15,
     [theme.breakpoints.down('xs')]: {
       marginLeft: 0,
       marginRight: 0,
     },
 
   },
-  hrStyle:{
-    width : '90%'
+  hrStyle: {
+    width: '90%',
   },
-  containerPosition:{
+  containerPosition: {
     display: 'flex',
   },
-  contentPosition:{
-    display:'flex',
+  contentPosition: {
+    display: 'flex',
     flexDirection: 'column',
-    marginLeft : 'auto',
-    width :'95%'
+    marginLeft: 'auto',
+    width: '95%',
   },
-  contentWelcomePosition:{
-    display:'flex',
+  contentWelcomePosition: {
+    display: 'flex',
     flexDirection: 'row',
-    marginTop:'1%',
-    width:'50%',
+    marginTop: '1%',
+    width: '50%',
     alignItems: 'center',
     [theme.breakpoints.down('xs')]: {
-      width:'90%',
+      width: '90%',
     },
   },
-  texfieldContent:{
+  texfieldContent: {
     width: '100%',
     marginLeft: 30,
   },
-  imgFatCastor:{
-    width: 100
+  imgFatCastor: {
+    width: 100,
   },
-  alignCheckbox:{
+  alignCheckbox: {
     display: 'flex',
     alignItems: 'center',
     [theme.breakpoints.down('xs')]: {
-      width: '90%'
+      width: '90%',
     },
   },
-  containerPositionWelcome:{
+  containerPositionWelcome: {
     display: 'flex',
     marginLeft: 30,
     [theme.breakpoints.down('xs')]: {
       marginLeft: 0,
     },
   },
-  editCancelButton:{
-    display:'flex',
+  editCancelButton: {
+    display: 'flex',
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column-reverse',
     },
   },
-  containerTitle:{
+  containerTitle: {
     [theme.breakpoints.down('xs')]: {
       width: '60%',
     },
   },
-  texfieldContentWelcomedMessage:{
+  texfieldContentWelcomedMessage: {
     width: '100%',
     marginLeft: 30,
     [theme.breakpoints.down('xs')]: {
       marginLeft: 0,
     },
   },
-  responsiveContentWelcomePosition:{
-    display:'flex',
+  responsiveContentWelcomePosition: {
+    display: 'flex',
     flexDirection: 'column',
-    marginTop:'1%',
-    width:'50%',
+    marginTop: '1%',
+    width: '50%',
     alignItems: 'center',
     [theme.breakpoints.down('xs')]: {
-      width:'90%',
+      width: '90%',
     },
   },
-  responsiveImgContent:{
+  responsiveImgContent: {
     [theme.breakpoints.down('xs')]: {
-      display : 'none'
+      display: 'none',
     },
-  }
+  },
 });

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#4FBDD7;}
 	.st1{fill:#EAEAEA;}
@@ -51,8 +51,8 @@
 	.st45{fill:none;stroke:#FFFFFF;stroke-width:9;stroke-miterlimit:10;}
 	.st46{fill:none;stroke:#4FBDD7;stroke-width:3;stroke-miterlimit:10;}
 </style>
-<rect class="st0" width="500" height="500"/>
-<g>
+    <rect class="st0" height="500" width="500"/>
+    <g>
 	<path class="st2" d="M315.9,87.5c-6.3,0-11.9,3.2-15.2,8.1H285c-4.6-5.2-11.3-8.6-18.9-8.6h-39.8c-7.5,0-14.2,3.4-18.9,8.6h-15.7
 		c-3.2-5.2-8.9-8.6-15.5-8.6c-10.2,0-18.4,8.2-18.4,18.4v13.4c0,10.2,8.2,18.4,18.4,18.4c6.1,0,11.5-3,14.8-7.6h16.8
 		c4.6,5,11.1,8.1,18.5,8.1h10.9v67.6c-2.7-2.2-6.4-2.1-8.7,0c-2.7,2.4-2.8,6.9,0,9.8h8.7v9.5c-3.3,0-6.7,0-10,0
@@ -63,8 +63,8 @@
 		c2.8-2.8,2.7-7.4,0-9.8c-2.3-2.1-6.1-2.2-8.7,0v-9.5h10c2.8-2.8,2.7-7.4,0-9.8c-2.3-2.1-6.1-2.2-8.7,0v-6.7h5.1v-70.5h15
 		c7.3,0,13.8-3.1,18.5-8.1h16.2c3.3,4.9,8.9,8.1,15.2,8.1c10.1,0,18.4-8.2,18.4-18.4v-13.4C334.3,95.7,326.1,87.5,315.9,87.5z"/>
 </g>
-<g>
-	<rect x="5" y="362" class="st30" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 111.6582 400.5557)" class="st2 st31 st32">Tire-bouchon</text>
+    <g>
+	<rect class="st30" height="144" width="500" x="5" y="362"/>
+        <text class="st2 st31 st32" transform="matrix(1 0 0 1 111.6582 400.5557)">Tire-bouchon</text>
 </g>
 </svg>

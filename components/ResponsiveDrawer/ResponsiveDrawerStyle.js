@@ -27,7 +27,7 @@ export default theme => ({
   drawerPaper: {
     width: drawerWidth,
   },
-  drawerPaperMargin:{
+  drawerPaperMargin: {
     width: drawerWidth,
     marginTop: 100,
     [theme.breakpoints.down('xs')]: {

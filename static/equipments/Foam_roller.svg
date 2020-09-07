@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#EAEAEA;}
 	.st1{fill:#8C8C8C;}
@@ -58,12 +58,12 @@
 	.st52{fill:none;stroke:#EAEAEA;stroke-width:2;stroke-miterlimit:10;}
 	.st53{fill:none;stroke:#8C8C8C;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<rect x="1" y="-1" class="st0" width="500" height="500"/>
-<g>
-	<rect x="1" y="360" class="st5" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 129.2051 398.5557)" class="st6 st7 st8">Foam roller</text>
+    <rect class="st0" height="500" width="500" x="1" y="-1"/>
+    <g>
+	<rect class="st5" height="144" width="500" x="1" y="360"/>
+        <text class="st6 st7 st8" transform="matrix(1 0 0 1 129.2051 398.5557)">Foam roller</text>
 </g>
-<g>
+    <g>
 	<path class="st1" d="M387.2,172.5c-4.7,7.3-11.3,12.2-19.1,16.1c-24.8,12.5-49.4,25.1-74.1,37.8c-6,3.1-11.9,6.3-18,9.3
 		c-7.3,3.6-14.7,7-21.9,10.7c-10.8,5.5-21.4,11.1-32.1,16.6c-19.4,9.9-38.6,20.4-58.3,29.5c-18.2,8.4-35.2,7.1-50.8-7.9
 		c-10.8-10.4-14.1-28.7-8.9-42.8c4.9-13.1,14.9-20.7,26.7-26.7c9.4-4.8,18.9-9.4,28.3-14.1c12.5-6.3,25-12.6,37.5-19

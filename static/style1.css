@@ -1,27 +1,27 @@
 @media (min-width: 1250px) {
     .thewrap {
-        display: none!important;
+        display: none !important;
     }
 }
 
 @media (max-width: 1250px) {
     .thewrap2 {
-        display: none!important;
+        display: none !important;
     }
 
     .thewrap {
-        display: flex!important;
-        width: 100%!important;
-        height: 100%!important;
+        display: flex !important;
+        width: 100% !important;
+        height: 100% !important;
         margin: 0;
-        justify-content: center!important;
-        align-items: center!important;
+        justify-content: center !important;
+        align-items: center !important;
     }
 
     .sectioncard {
-        min-width: 100%!important;
-        display: flex!important;
-        overflow-x: auto!important;
+        min-width: 100% !important;
+        display: flex !important;
+        overflow-x: auto !important;
     }
 
     .sectioncard::-webkit-scrollbar {
@@ -29,7 +29,7 @@
     }
 
     .textField {
-        text-align: center!important;
+        text-align: center !important;
     }
 
 }

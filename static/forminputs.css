@@ -1,32 +1,32 @@
-.forminputs:hover{
-  cursor: pointer!important;
-  }
-  
-  .forminputs{
-      padding: 10px 5px 10px 5px;
-      color: #2FBCD3;
-      border-radius: 3px;
-      font-size: 13.5px;
-      text-transform: uppercase;
-      font-weight: bold;
-      letter-spacing: 1px;
-  }
-  
-  
-  *,
-  *:before,
-  *:after {
+.forminputs:hover {
+    cursor: pointer !important;
+}
+
+.forminputs {
+    padding: 10px 5px 10px 5px;
+    color: #2FBCD3;
+    border-radius: 3px;
+    font-size: 13.5px;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+
+*,
+*:before,
+*:after {
     box-sizing: border-box;
-  }
-  
-  .containerinputs {
+}
+
+.containerinputs {
     width: 80%;
     margin: 5% auto;
     background: #fff;
     padding: 5%;
-  }
-  
-  .file-placeholder {
+}
+
+.file-placeholder {
     position: relative;
     cursor: pointer;
     width: 400px;
@@ -35,8 +35,9 @@
     you can use the label to trigger the event    */
     /*
     or the input file. here I use both but you don't have to   */
-  }
-  .file-placeholder label {
+}
+
+.file-placeholder label {
     display: block;
     position: absolute;
     z-index: 2;
@@ -45,8 +46,9 @@
     width: 100%;
     max-width: 400px;
     height: 40px;
-  }
-  .file-placeholder label:before {
+}
+
+.file-placeholder label:before {
     content: "File";
     position: absolute;
     top: -15px;
@@ -54,8 +56,9 @@
     background-color: #c7c7c7;
     padding: 2px 5px;
     color: #fff;
-  }
-  .file-placeholder input[type="file"] {
+}
+
+.file-placeholder input[type="file"] {
     position: absolute;
     z-index: 3;
     top: 0;
@@ -64,13 +67,15 @@
     max-width: 400px;
     height: 40px;
     opacity: 0;
-  }
-  .file-placeholder .file-browse {
+}
+
+.file-placeholder .file-browse {
     width: 100%;
     height: 40px;
     border: 1px solid #ccc;
-  }
-  .file-placeholder .file-browse .file-browse-txt {
+}
+
+.file-placeholder .file-browse .file-browse-txt {
     display: block;
     float: left;
     line-height: 40px;
@@ -79,11 +84,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-  .file-placeholder .file-browse .file-browse-txt.hasValue {
+}
+
+.file-placeholder .file-browse .file-browse-txt.hasValue {
     background-color: #ededed;
-  }
-  .file-placeholder .file-browse .browse {
+}
+
+.file-placeholder .file-browse .browse {
     display: block;
     float: left;
     width: 20%;
@@ -92,4 +99,4 @@
     height: 40px;
     line-height: 40px;
     padding: 0 10px;
-  }
+}

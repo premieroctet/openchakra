@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#EAEAEA;}
 	.st1{fill:#8C8C8C;}
@@ -58,37 +58,37 @@
 	.st52{fill:none;stroke:#EAEAEA;stroke-width:2;stroke-miterlimit:10;}
 	.st53{fill:none;stroke:#8C8C8C;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<rect y="-1" class="st0" width="500" height="500"/>
-<g>
-	<rect x="7" y="362" class="st24" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 84.6338 400.5557)" class="st23 st41 st42">Verre de montre</text>
+    <rect class="st0" height="500" width="500" y="-1"/>
+    <g>
+	<rect class="st24" height="144" width="500" x="7" y="362"/>
+        <text class="st23 st41 st42" transform="matrix(1 0 0 1 84.6338 400.5557)">Verre de montre</text>
 </g>
-<g>
+    <g>
 	<g id="clock">
 		<circle class="st1" cx="189.6" cy="140.7" r="5.8"/>
-		<circle class="st1" cx="189.6" cy="210.7" r="5.8"/>
-		<circle class="st1" cx="154.6" cy="175.7" r="5.8"/>
-		<circle class="st1" cx="224.6" cy="175.7" r="5.8"/>
-		<circle class="st1" cx="164.9" cy="200.4" r="5.8"/>
-		<circle class="st1" cx="164.9" cy="151" r="5.8"/>
-		<circle class="st1" cx="214.4" cy="200.4" r="5.8"/>
-		<path class="st1" d="M247.9,164c-0.4,0-0.8,0.2-1.1,0.2c-2-10.2-6.8-19.3-13.4-26.8L225,91.9c-1-5.5-5.8-9.5-11.5-9.5h-46.6
+        <circle class="st1" cx="189.6" cy="210.7" r="5.8"/>
+        <circle class="st1" cx="154.6" cy="175.7" r="5.8"/>
+        <circle class="st1" cx="224.6" cy="175.7" r="5.8"/>
+        <circle class="st1" cx="164.9" cy="200.4" r="5.8"/>
+        <circle class="st1" cx="164.9" cy="151" r="5.8"/>
+        <circle class="st1" cx="214.4" cy="200.4" r="5.8"/>
+        <path class="st1" d="M247.9,164c-0.4,0-0.8,0.2-1.1,0.2c-2-10.2-6.8-19.3-13.4-26.8L225,91.9c-1-5.5-5.8-9.5-11.5-9.5h-46.6
 			c-5.6,0-10.4,4-11.5,9.5l-8.2,44c-9.8,10.4-16,24.3-16,39.7c0,15.1,5.9,28.6,15.3,38.9l8.2,44.8c1,5.5,5.8,9.5,11.5,9.5h46.6
 			c5.6,0,10.4-4,11.5-9.5l8.3-44.8c6.9-7.6,12-17,14.1-27.5c0.4,0.1,0.7,0.2,1.1,0.2c6.4,0,11.7-5.2,11.7-11.7
 			C259.6,169.3,254.4,164,247.9,164z M166.9,94.1h46.6l5.8,31.4c-8.6-5-18.5-8.1-29.2-8.1c-10.7,0-20.5,3.1-29.2,8.1L166.9,94.1z
 			 M212.9,257.3h-46.6l-5.8-31.4c8.6,5,18.5,8.1,29.2,8.1c10.7,0,20.5-3.1,29.2-8.1L212.9,257.3z M189.6,222.4
 			c-25.7,0-46.6-20.9-46.6-46.6c0-25.7,20.9-46.6,46.6-46.6s46.6,20.9,46.6,46.6C236.3,201.4,215.3,222.4,189.6,222.4z"/>
-		<line class="st43" x1="190.2" y1="174" x2="190.2" y2="140.7"/>
-		<line class="st43" x1="167.9" y1="198.5" x2="190.2" y2="172.8"/>
-		<circle class="st1" cx="214.4" cy="151" r="5.8"/>
+        <line class="st43" x1="190.2" x2="190.2" y1="174" y2="140.7"/>
+        <line class="st43" x1="167.9" x2="190.2" y1="198.5" y2="172.8"/>
+        <circle class="st1" cx="214.4" cy="151" r="5.8"/>
 	</g>
 </g>
-<g>
+    <g>
 	<path class="st19" d="M352.5,139.5c-9.8-9.8-22.9-15.2-36.8-15.2c-13.9,0-27,5.4-36.8,15.2c-9.8,9.8-15.2,22.9-15.2,36.8
 		c0,13.9,5.4,27,15.2,36.8c9.8,9.8,22.9,15.2,36.8,15.2c13.9,0,27-5.4,36.8-15.2c9.8-9.8,15.2-22.9,15.2-36.8
 		C367.7,162.4,362.3,149.3,352.5,139.5z M315.7,225c-26.8,0-48.7-21.8-48.7-48.7s21.8-48.7,48.7-48.7c26.8,0,48.7,21.8,48.7,48.7
 		S342.5,225,315.7,225z"/>
-	<path class="st1" d="M282.5,176.3c0-0.9-0.7-1.7-1.7-1.7s-1.7,0.7-1.7,1.7c0,20.1,16.4,36.5,36.5,36.5c0.9,0,1.7-0.7,1.7-1.7
+        <path class="st1" d="M282.5,176.3c0-0.9-0.7-1.7-1.7-1.7s-1.7,0.7-1.7,1.7c0,20.1,16.4,36.5,36.5,36.5c0.9,0,1.7-0.7,1.7-1.7
 		s-0.7-1.7-1.7-1.7C297.4,209.4,282.5,194.6,282.5,176.3z"/>
 </g>
 </svg>

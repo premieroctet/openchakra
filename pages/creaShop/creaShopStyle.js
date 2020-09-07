@@ -1,33 +1,32 @@
-
 export default theme => ({
-  spacer:{
+  spacer: {
     width: '100%',
-    height: 50
+    height: 50,
   },
-  mainContainer:{
-    display: "flex",
-    flexDirection: "row"
+  mainContainer: {
+    display: 'flex',
+    flexDirection: 'row',
   },
-  marginContainer:{
+  marginContainer: {
     position: 'relative',
     marginLeft: 200,
-    marginRight : 200,
+    marginRight: 200,
     top: 150,
     [theme.breakpoints.down('md')]: {
       top: 150,
     },
     [theme.breakpoints.down('xs')]: {
       marginLeft: 40,
-      marginRight : 40,
+      marginRight: 40,
     },
   },
-  mainHeader:{
-    width: "100%",
-    display: "flex",
+  mainHeader: {
+    width: '100%',
+    display: 'flex',
     position: 'fixed',
     zIndex: 1,
     alignItems: 'center',
-    backgroundColor:'white',
+    backgroundColor: 'white',
     [theme.breakpoints.down('md')]: {
       height: 150,
     },
@@ -35,7 +34,7 @@ export default theme => ({
       height: 150,
     },
   },
-  imageContentHeader:{
+  imageContentHeader: {
     width: '10%',
     margin: 'auto',
     [theme.breakpoints.down('md')]: {
@@ -45,35 +44,35 @@ export default theme => ({
       width: '50%',
     },
   },
-  contentStepper:{
+  contentStepper: {
     width: '90%',
     [theme.breakpoints.down('md')]: {
       display: 'none',
     },
   },
-  leftContentComponent:{
+  leftContentComponent: {
     width: '60%',
-    height : '100%',
+    height: '100%',
     display: 'flex',
-    flexDirection : 'column',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     [theme.breakpoints.down('md')]: {
       width: '100%',
     },
   },
-  mainContainerNoImg:{
+  mainContainerNoImg: {
     width: '100%',
-    height : '100%',
+    height: '100%',
     display: 'flex',
-    flexDirection : 'column',
+    flexDirection: 'column',
     justifyContent: 'space-between',
-    marginBottom: 250
+    marginBottom: 250,
   },
-  rightContentComponent:{
+  rightContentComponent: {
     width: '40%',
     position: 'relative',
     [theme.breakpoints.down('md')]: {
-      display: 'none'
+      display: 'none',
     },
   },
   contentRight: {
@@ -83,28 +82,28 @@ export default theme => ({
     backgroundRepeat: 'no-repeat',
 
   },
-  footerMainContainer:{
+  footerMainContainer: {
     width: '100%',
     backgroundColor: 'white',
     position: 'fixed',
     bottom: 0,
     [theme.breakpoints.down('xs')]: {
-      zIndex: 1
+      zIndex: 1,
     },
   },
-  footerContainer:{
+  footerContainer: {
     height: '100%',
     width: '100%',
   },
-  marginHr:{
+  marginHr: {
     marginLeft: 200,
     marginRight: 200,
     [theme.breakpoints.down('xs')]: {
       marginLeft: 0,
-      marginRight : 0,
+      marginRight: 0,
     },
   },
-  navButtonContent:{
+  navButtonContent: {
     display: 'flex',
     marginRight: 200,
     marginLeft: 200,
@@ -112,10 +111,10 @@ export default theme => ({
     marginBottom: 15,
     [theme.breakpoints.down('xs')]: {
       marginLeft: 40,
-      marginRight : 40,
+      marginRight: 40,
     },
   },
-  nextButton:{
-    color: 'white'
+  nextButton: {
+    color: 'white',
   },
 })

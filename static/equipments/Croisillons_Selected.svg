@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#4FBDD7;}
 	.st1{fill:#EAEAEA;}
@@ -51,14 +51,14 @@
 	.st45{fill:none;stroke:#FFFFFF;stroke-width:9;stroke-miterlimit:10;}
 	.st46{fill:none;stroke:#4FBDD7;stroke-width:3;stroke-miterlimit:10;}
 </style>
-<rect x="0" y="-6" class="st0" width="500" height="507"/>
-<g>
+    <rect class="st0" height="507" width="500" x="0" y="-6"/>
+    <g>
 	<path class="st31" d="M269.6,212l68.3,0.2c6.3,0,11.4-5.1,11.4-11.3c0-6.3-5.1-11.4-11.3-11.4l-68.3-0.2l0.2-68.3
 		c0-6.3-5.1-11.4-11.3-11.4c-6.3,0-11.4,5.1-11.4,11.3l-0.2,68.3l-68.3-0.2c-6.3,0-11.4,5.1-11.4,11.3c0,6.3,5.1,11.4,11.3,11.4
 		l68.3,0.2l-0.2,68.3c0,6.3,5.1,11.4,11.3,11.4c6.3,0,11.4-5.1,11.4-11.3L269.6,212z"/>
 </g>
-<g>
-	<rect y="362" class="st41" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 137.1968 400.5557)" class="st2 st42 st43">Croisillons</text>
+    <g>
+	<rect class="st41" height="144" width="500" y="362"/>
+        <text class="st2 st42 st43" transform="matrix(1 0 0 1 137.1968 400.5557)">Croisillons</text>
 </g>
 </svg>

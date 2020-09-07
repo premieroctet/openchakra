@@ -2,61 +2,61 @@ export default theme => ({
   bigContainer: {
     marginTop: 100,
     flexGrow: 1,
-    width: "100%",
+    width: '100%',
     minHeight: 520,
   },
   hidesm: {
     minWidth: '271px',
     [theme.breakpoints.down('sm')]: {
-      display:'none'
-    }
+      display: 'none',
+    },
   },
   hidelg: {
     [theme.breakpoints.up('md')]: {
-      display:'none',
-    }
+      display: 'none',
+    },
   },
-  trigger:{
+  trigger: {
     [theme.breakpoints.down('sm')]: {
       marginTop: -10,
       width: '100%',
-      marginLeft:'0px',
-      height:'30px',
-      backgroundColor:'#2FBCD3',
-      display:'block',
+      marginLeft: '0px',
+      height: '30px',
+      backgroundColor: '#2FBCD3',
+      display: 'block',
       transition: 'display 0.7s',
-      borderRadius:'5px',
+      borderRadius: '5px',
       '&:focus': {
-        display:'none',
+        display: 'none',
         transition: 'display 0.7s',
-      }
-    }
+      },
+    },
   },
   toggle: {
     [theme.breakpoints.down('sm')]: {
-      marginLeft:'-75px',
+      marginLeft: '-75px',
       transition: 'margin-left 0.7s',
       '&:hover': {
-        marginLeft:'0px',
+        marginLeft: '0px',
         transition: 'margin-left 0.7s',
         boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-      }
-    }
+      },
+    },
   },
   picsContainer: {
-    display:"flex",
-    justifyContent:"center",
-    width:'50%',
-    height:'auto',
+    display: 'flex',
+    justifyContent: 'center',
+    width: '50%',
+    height: 'auto',
     [theme.breakpoints.down('sm')]: {
-      display:'none'
+      display: 'none',
     },
     [theme.breakpoints.down('md')]: {
-      display:'none'
-    }
+      display: 'none',
+    },
   },
-  formClasse:{
-    width:'100%',
+  formClasse: {
+    width: '100%',
   },
   menuButton: {
     marginLeft: theme.spacing(1),
@@ -65,10 +65,10 @@ export default theme => ({
       display: 'none',
     },
   },
-  containerLeft:{
+  containerLeft: {
     paddingLeft: 55,
     [theme.breakpoints.down('xs')]: {
       paddingLeft: 'inherit',
     },
-  }
+  },
 })

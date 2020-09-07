@@ -33,7 +33,7 @@ const styles = theme => ({
     },
     [theme.breakpoints.up('sm')]: { // medium: 960px or larger
       display: 'flex',
-      width: '100%'
+      width: '100%',
     },
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
       display: 'none',
@@ -69,12 +69,12 @@ const styles = theme => ({
 });
 
 const becomeAlfredBanner = (props) => {
-  const { classes, img } = props;
+  const {classes, img} = props;
 
   return (
     <Fragment>
-    
-  </Fragment>
+
+    </Fragment>
   );
 };
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#4FBDD7;}
 	.st1{fill:#EAEAEA;}
@@ -51,13 +51,13 @@
 	.st45{fill:none;stroke:#FFFFFF;stroke-width:9;stroke-miterlimit:10;}
 	.st46{fill:none;stroke:#4FBDD7;stroke-width:3;stroke-miterlimit:10;}
 </style>
-<rect x="-6" y="-6" class="st0" width="507" height="513"/>
-<polygon class="st6" points="412,287.5 76.4,287.5 76.4,260.3 412,260.3 412,287.5 "/>
-<path class="st7" d="M412,255.6h-33.1v-28.3c0-26-21.1-47.1-47.1-47.1H156.6c-26,0-47.1,21.1-47.1,47.1v28.3H76.4v-58
+    <rect class="st0" height="513" width="507" x="-6" y="-6"/>
+    <polygon class="st6" points="412,287.5 76.4,287.5 76.4,260.3 412,260.3 412,287.5 "/>
+    <path class="st7" d="M412,255.6h-33.1v-28.3c0-26-21.1-47.1-47.1-47.1H156.6c-26,0-47.1,21.1-47.1,47.1v28.3H76.4v-58
 	c0-30.1,24.5-54.6,54.6-54.6h226.5c30.1,0,54.6,24.5,54.6,54.6V255.6z"/>
-<path class="st6" d="M129.7,251.1V223c0-13.2,10.8-23.9,24.2-23.9H330c13.3,0,24.2,10.7,24.2,23.9v28.1h0H129.7z"/>
-<g>
-	<rect y="366" class="st20" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 123.5605 404.5557)" class="st2 st21 st22">Lampe à UV</text>
+    <path class="st6" d="M129.7,251.1V223c0-13.2,10.8-23.9,24.2-23.9H330c13.3,0,24.2,10.7,24.2,23.9v28.1h0H129.7z"/>
+    <g>
+	<rect class="st20" height="144" width="500" y="366"/>
+        <text class="st2 st21 st22" transform="matrix(1 0 0 1 123.5605 404.5557)">Lampe à UV</text>
 </g>
 </svg>

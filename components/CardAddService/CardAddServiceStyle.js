@@ -3,26 +3,26 @@ export default theme => ({
     width: '100%',
     height: 450,
     [theme.breakpoints.down('lg')]: {
-      height: 400
+      height: 400,
     },
     [theme.breakpoints.down('md')]: {
-      height: 400
+      height: 400,
     },
     [theme.breakpoints.down('sm')]: {
-      height: 500
+      height: 500,
     },
     [theme.breakpoints.down('xs')]: {
-      height: 'auto'
-    }
+      height: 'auto',
+    },
   },
   cardMedia: {
     paddingTop: '56.25%', // 16:9
-    backgroundImage:  "url(" + "../../static/assets/img/skillsAlfred/bgCardAddService.svg" + ")",
+    backgroundImage: 'url(' + '../../static/assets/img/skillsAlfred/bgCardAddService.svg' + ')',
     display: 'block',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'right',
     position: 'relative',
-    height:300
+    height: 300,
   },
   fab: {
     position: 'absolute',
@@ -31,15 +31,15 @@ export default theme => ({
     transform: 'translate(-50%, -50%)',
     margin: theme.spacing(1),
   },
-  textPosition:{
+  textPosition: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     height: 150,
   },
-  textStyle:{
+  textStyle: {
     color: '#4fbdd7',
     fontWeight: 'bold',
-    fontSize: 'large'
-  }
+    fontSize: 'large',
+  },
 })

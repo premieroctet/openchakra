@@ -17,7 +17,7 @@ const styles = theme => ({
 });
 
 function Datenaissance(props) {
-  const { classes } = props;
+  const {classes} = props;
 
   return (
     <form className={classes.container} noValidate>

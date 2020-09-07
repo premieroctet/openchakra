@@ -6,96 +6,96 @@ export default theme => ({
   hidesm: {
     minWidth: '271px',
     [theme.breakpoints.down('sm')]: {
-      display:'none'
-    }
+      display: 'none',
+    },
   },
   hidelg: {
     [theme.breakpoints.up('md')]: {
-      display:'none',
-    }
+      display: 'none',
+    },
   },
-  trigger:{
+  trigger: {
     [theme.breakpoints.down('sm')]: {
       marginTop: -10,
       width: '100%',
-      marginLeft:'0px',
-      height:'30px',
-      backgroundColor:'#2FBCD3',
-      display:'block',
+      marginLeft: '0px',
+      height: '30px',
+      backgroundColor: '#2FBCD3',
+      display: 'block',
       transition: 'display 0.7s',
-      borderRadius:'5px',
+      borderRadius: '5px',
       '&:focus': {
-        display:'none',
+        display: 'none',
         transition: 'display 0.7s',
-      }
-    }
+      },
+    },
   },
-  respright:{
-    width:'50%',
+  respright: {
+    width: '50%',
     [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   },
   toggle: {
     [theme.breakpoints.down('sm')]: {
-      marginLeft:'-75px',
+      marginLeft: '-75px',
       transition: 'margin-left 0.7s',
       '&:hover': {
-        marginLeft:'0px',
+        marginLeft: '0px',
         transition: 'margin-left 0.7s',
         boxShadow: '11px 6px 23px -24px rgba(0,0,0,0.75)',
-      }
-    }
+      },
+    },
   },
-  containerLeft:{
+  containerLeft: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems:'center',
+    alignItems: 'center',
     justifyContent: 'center',
-    width:'50%',
+    width: '50%',
     [theme.breakpoints.down('xs')]: {
-      width:'100%',
-    }
+      width: '100%',
+    },
   },
-  paiementMethode:{
-    backgroundColor : 'grey',
-    color :'white'
+  paiementMethode: {
+    backgroundColor: 'grey',
+    color: 'white',
   },
-  isSelected:{
+  isSelected: {
     color: 'white',
     marginBottom: '30px',
-    backgroundColor: '#4fbdd7'
+    backgroundColor: '#4fbdd7',
   },
-  flexContainerCard:{
+  flexContainerCard: {
     display: 'flex',
-    width:'100%',
+    width: '100%',
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
-      alignItems:'center'
-    }
+      alignItems: 'center',
+    },
   },
-  mainContainerCardPaiment:{
+  mainContainerCardPaiment: {
 
     [theme.breakpoints.down('xs')]: {
-      display:'flex',
+      display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center'
-    }
+      justifyContent: 'center',
+    },
   },
-  containerTitle:{
+  containerTitle: {
     [theme.breakpoints.down('xs')]: {
-      display:'flex',
-      justifyContent: 'center'
-    }
+      display: 'flex',
+      justifyContent: 'center',
+    },
   },
-  titleStyle:{
+  titleStyle: {
     color: 'dimgray',
     fontWeight: '100',
     marginLeft: '1%',
     [theme.breakpoints.down('xs')]: {
-      margin: 0
-    }
+      margin: 0,
+    },
 
-  }
+  },
 
 })

@@ -1,4 +1,3 @@
-
 export default theme => ({
   headerimg: {
     [theme.breakpoints.up('lg')]: { // medium: 960px or larger
@@ -17,7 +16,7 @@ export default theme => ({
   },
   headerhomevid: {
     [theme.breakpoints.down('md')]: { // medium: 960px or larger
-      backgroundAttachment: "fixed",
+      backgroundAttachment: 'fixed',
       display: 'none',
     },
     /* Center and scale the image nicely */
@@ -27,7 +26,7 @@ export default theme => ({
   },
   headeroverlay: {
     [theme.breakpoints.up('lg')]: { // medium: 960px or larger
-      backgroundAttachment: "fixed",
+      backgroundAttachment: 'fixed',
       display: 'none',
     },
     position: 'absolute',
@@ -49,8 +48,8 @@ export default theme => ({
     marginLeft: '5%',
     borderRadius: '10px',
     boxShadow: '6px 6px 5px -6px black',
-    padding:'2%',
-    marginTop:-10,
+    padding: '2%',
+    marginTop: -10,
     [theme.breakpoints.down('xs')]: { // extra-large: 1920px or larger
       width: '88%',
       left: '45%',
@@ -95,7 +94,7 @@ export default theme => ({
       width: '50%',
       left: '50%',
       top: '25%',
-      display: 'none'
+      display: 'none',
     },
     [theme.breakpoints.up('md')]: { // medium: 960px or larger
       width: '45%',
@@ -116,7 +115,7 @@ export default theme => ({
   homeform: {
     color: '#505050!important',
     textAlign: 'left',
-    width:'100%',
+    width: '100%',
     fontSize: '28px!important',
     fontFamily: 'Helvetica',
     letterSpacing: '-1px',
@@ -124,20 +123,20 @@ export default theme => ({
     paddingLeft: '20px',
   },
   pickerhomelocation: {
-    width:'100%',
+    width: '100%',
   },
   button: {
-    width:'100%',
+    width: '100%',
     color: 'white',
-    padding:15,
-    borderRadius:10,
-    border:'0px solid transparent',
+    padding: 15,
+    borderRadius: 10,
+    border: '0px solid transparent',
     '&:hover': {
-      backgroundColor: 'darkgray'
-    }
+      backgroundColor: 'darkgray',
+    },
   },
   paper: {
-    zIndex:'99999',
+    zIndex: '99999',
     position: 'fixed',
     maxWidth: 390,
     backgroundColor: 'white',
@@ -146,6 +145,6 @@ export default theme => ({
     top: '45%',
     left: '0%',
     right: '0%',
-    margin:'auto',
+    margin: 'auto',
   },
 });

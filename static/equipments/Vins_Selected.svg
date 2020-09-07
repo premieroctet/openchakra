@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#4FBDD7;}
 	.st1{fill:#EAEAEA;}
@@ -51,17 +51,17 @@
 	.st45{fill:none;stroke:#FFFFFF;stroke-width:9;stroke-miterlimit:10;}
 	.st46{fill:none;stroke:#4FBDD7;stroke-width:3;stroke-miterlimit:10;}
 </style>
-<rect x="0" y="-8" class="st0" width="500" height="515"/>
-<path class="st2" d="M224.4,160.4c-1.8-0.5-3-2-3-3.9V91c0-2.2-1.8-4-4-4h-24.2c-2.2,0-4,1.8-4,4v65.5c0,1.8-1.3,3.4-3,3.9
+    <rect class="st0" height="515" width="500" x="0" y="-8"/>
+    <path class="st2" d="M224.4,160.4c-1.8-0.5-3-2-3-3.9V91c0-2.2-1.8-4-4-4h-24.2c-2.2,0-4,1.8-4,4v65.5c0,1.8-1.3,3.4-3,3.9
 	c-12.4,3.2-21.1,14.4-21.1,27.3v136.9c0,2.2,1.8,4,4,4h72.5c2.2,0,4-1.8,4-4V187.6C245.5,174.8,236.8,163.6,224.4,160.4z
 	 M197.2,95.1h16.1v8.1h-16.1V95.1z M173.1,320.5v-36.2h64.4v36.2H173.1z M237.5,211.8h-64.4v-24.2c0-9.2,6.2-17.2,15.1-19.5
 	c5.3-1.4,9.1-6.2,9.1-11.7v-45.3h16.1v45.3c0,5.5,3.7,10.3,9.1,11.7c8.9,2.3,15.1,10.3,15.1,19.5V211.8z"/>
-<path class="st2" d="M311,177c-6-9.6-9.2-20.7-9.2-32V91c0-2.2-1.8-4-4-4h-24.2c-2.2,0-4,1.8-4,4v54c0,11.3-3.2,22.4-9.2,32
+    <path class="st2" d="M311,177c-6-9.6-9.2-20.7-9.2-32V91c0-2.2-1.8-4-4-4h-24.2c-2.2,0-4,1.8-4,4v54c0,11.3-3.2,22.4-9.2,32
 	l-0.6,0.9c-6.8,10.9-10.4,23.4-10.4,36.3v110.3c0,2.2,1.8,4,4,4H318c2.2,0,4-1.8,4-4V214.2c0-12.8-3.6-25.4-10.4-36.3L311,177z
 	 M277.7,95.1h16.1v8.1h-16.1V95.1z M313.9,320.5h-56.4V214.2c0-11.3,3.2-22.4,9.2-32l0.6-0.9c6.8-10.9,10.4-23.4,10.4-36.3v-33.9
 	h16.1V145c0,12.8,3.6,25.4,10.4,36.3l0.5,0.9c6,9.6,9.2,20.7,9.2,32V320.5z"/>
-<g>
-	<rect x="-3" y="365" class="st30" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 201.0195 403.5557)" class="st2 st31 st32">Vins</text>
+    <g>
+	<rect class="st30" height="144" width="500" x="-3" y="365"/>
+        <text class="st2 st31 st32" transform="matrix(1 0 0 1 201.0195 403.5557)">Vins</text>
 </g>
 </svg>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#EAEAEA;}
 	.st1{fill:#8C8C8C;}
@@ -58,8 +58,8 @@
 	.st52{fill:none;stroke:#EAEAEA;stroke-width:2;stroke-miterlimit:10;}
 	.st53{fill:none;stroke:#8C8C8C;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<rect x="1" y="-1" class="st0" width="500" height="500"/>
-<path class="st1" d="M331.7,208.8c12.6-22.2,18-51.3,19.8-62.3c6-1.5,10.4-6.8,10.4-13.1c0-6.6-4.9-12.1-11.4-13.3
+    <rect class="st0" height="500" width="500" x="1" y="-1"/>
+    <path class="st1" d="M331.7,208.8c12.6-22.2,18-51.3,19.8-62.3c6-1.5,10.4-6.8,10.4-13.1c0-6.6-4.9-12.1-11.4-13.3
 	C340.1,98.7,317.8,85,293.3,85h-70.5c-24.6,0-46.8,13.7-57.3,35.1c-6.5,1.2-11.4,6.7-11.4,13.3c0,6.3,4.4,11.6,10.4,13.1
 	c0.6,6.1,2.7,20.9,8.8,38c9.4,26.6,24.6,47.5,44.1,60.8c-3.4,2.5-5.5,6.4-5.5,10.8c0,5.8,3.9,10.8,9.2,12.7
 	c-5.9,20.1-14.8,32.6-19.5,37.4c-6.9,0.8-12.3,6.5-12.3,13.4c0,7.4,6.2,13.5,13.9,13.5h109.9c7.7,0,13.9-6.1,13.9-13.5
@@ -70,12 +70,12 @@
 	 M319.4,319.5c0,3.4-2.9,6.2-6.4,6.2H203.1c-3.5,0-6.4-2.8-6.4-6.2s2.9-6.2,6.4-6.2h109.9h0C316.5,313.3,319.4,316.1,319.4,319.5z
 	 M290.3,262.3L290.3,262.3h-64.7c0,0,0,0,0,0c-3.5,0-6.4-2.8-6.4-6.2c0-3.4,2.9-6.2,6.4-6.2h64.7c3.5,0,6.4,2.8,6.4,6.2
 	S293.9,262.3,290.3,262.3z"/>
-<line class="st33" x1="206" y1="133" x2="235" y2="247"/>
-<line class="st33" x1="228.8" y1="130.1" x2="260.1" y2="253"/>
-<line class="st33" x1="312" y1="132" x2="283" y2="246"/>
-<line class="st33" x1="289.2" y1="129" x2="257.9" y2="251.9"/>
-<g>
-	<rect x="3" y="362" class="st24" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 172.0547 400.5557)" class="st23 st34 st35">Djembé</text>
+    <line class="st33" x1="206" x2="235" y1="133" y2="247"/>
+    <line class="st33" x1="228.8" x2="260.1" y1="130.1" y2="253"/>
+    <line class="st33" x1="312" x2="283" y1="132" y2="246"/>
+    <line class="st33" x1="289.2" x2="257.9" y1="129" y2="251.9"/>
+    <g>
+	<rect class="st24" height="144" width="500" x="3" y="362"/>
+        <text class="st23 st34 st35" transform="matrix(1 0 0 1 172.0547 400.5557)">Djembé</text>
 </g>
 </svg>

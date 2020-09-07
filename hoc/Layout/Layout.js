@@ -8,14 +8,14 @@ class Layout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user:"",
+      user: '',
     };
   }
 
   componentDidMount() {
-    const token = cookie.load('token')
+    const token = cookie.load('token');
     if (token) {
-      this.setState({ logged: true });
+      this.setState({logged: true});
       axios.defaults.headers.common['Authorization'] = token;
     }
     axios
@@ -23,8 +23,8 @@ class Layout extends React.Component {
       .then(res => {
         let user = res.data;
         this.setState({
-          user:user,
-        })
+          user: user,
+        });
         this.setState({
           address: user.billing_address,
           addressSelected: user.billing_address,
@@ -33,18 +33,18 @@ class Layout extends React.Component {
         });
       })
       .catch(err => {
-        console.error(err)
+        console.error(err);
       });
   }
 
 
   render() {
     const {gps, user, addressSelected} = this.state;
-    const { children } = this.props;
+    const {children} = this.props;
 
-    return(
+    return (
       <Fragment>
-          <NavBar gps={gps} user={user} addressSelected={addressSelected} searchCallback={this.props.searchCallback}/>
+        <NavBar gps={gps} user={user} addressSelected={addressSelected} searchCallback={this.props.searchCallback}/>
         {children}
       </Fragment>
     );

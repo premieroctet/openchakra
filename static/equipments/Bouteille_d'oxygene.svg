@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#EAEAEA;}
 	.st1{fill:#8C8C8C;}
@@ -58,23 +58,23 @@
 	.st52{fill:none;stroke:#EAEAEA;stroke-width:2;stroke-miterlimit:10;}
 	.st53{fill:none;stroke:#8C8C8C;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<rect x="2" y="3" class="st0" width="500" height="500"/>
-<path class="st1" d="M157.9,214.5c11.5,0,20.9-9.4,20.9-20.9c0-9.1-5.8-16.7-13.9-19.6v-22.2c0-11.5,9.4-20.9,20.9-20.9h13.9v-13.9
+    <rect class="st0" height="500" width="500" x="2" y="3"/>
+    <path class="st1" d="M157.9,214.5c11.5,0,20.9-9.4,20.9-20.9c0-9.1-5.8-16.7-13.9-19.6v-22.2c0-11.5,9.4-20.9,20.9-20.9h13.9v-13.9
 	h-13.9c-19.2,0-34.9,15.6-34.9,34.9v22.2c-8.1,2.9-13.9,10.6-13.9,19.6C137,205.1,146.4,214.5,157.9,214.5z"/>
-<path class="st1" d="M270.9,204.5H355v28.4h-84.1V204.5z"/>
-<path class="st1" d="M312.7,120.8c-23.1,0-41.8,18.7-41.8,41.8H355C355,139.5,335.8,120.8,312.7,120.8z"/>
-<path class="st1" d="M270.9,303H348c3.9,0,7-3.1,7-7v-21.4h-84.1V303z"/>
-<path class="st1" d="M172.8,176.6H355v13.9H172.8V176.6z"/>
-<path class="st1" d="M172.8,246.8H355v13.9H172.8V246.8z"/>
-<path class="st1" d="M172.8,296c0,3.9,3.1,7,7,7h77.2v-28.4h-84.1V296z"/>
-<path class="st1" d="M256.9,162.6c0-23.1-18.7-41.8-41.8-41.8s-42.3,18.7-42.3,41.8H256.9z"/>
-<path class="st1" d="M172.8,204.5h84.1v28.4h-84.1V204.5z"/>
-<path class="st1" d="M326.6,88.9c3.9,0,7-3.1,7-7s-3.1-7-7-7h-27.9c-3.9,0-7,3.1-7,7s3.1,7,7,7h7v13.9h-7c-3.9,0-7,3.1-7,7V121
+    <path class="st1" d="M270.9,204.5H355v28.4h-84.1V204.5z"/>
+    <path class="st1" d="M312.7,120.8c-23.1,0-41.8,18.7-41.8,41.8H355C355,139.5,335.8,120.8,312.7,120.8z"/>
+    <path class="st1" d="M270.9,303H348c3.9,0,7-3.1,7-7v-21.4h-84.1V303z"/>
+    <path class="st1" d="M172.8,176.6H355v13.9H172.8V176.6z"/>
+    <path class="st1" d="M172.8,246.8H355v13.9H172.8V246.8z"/>
+    <path class="st1" d="M172.8,296c0,3.9,3.1,7,7,7h77.2v-28.4h-84.1V296z"/>
+    <path class="st1" d="M256.9,162.6c0-23.1-18.7-41.8-41.8-41.8s-42.3,18.7-42.3,41.8H256.9z"/>
+    <path class="st1" d="M172.8,204.5h84.1v28.4h-84.1V204.5z"/>
+    <path class="st1" d="M326.6,88.9c3.9,0,7-3.1,7-7s-3.1-7-7-7h-27.9c-3.9,0-7,3.1-7,7s3.1,7,7,7h7v13.9h-7c-3.9,0-7,3.1-7,7V121
 	c6.5-2.6,13.5-4.1,20.9-4.1s14.4,1.5,20.9,4.1v-11.1c0-3.9-3.1-7-7-7h-7V88.9H326.6z"/>
-<path class="st1" d="M200.7,102.9c-3.9,0-7,3.1-7,7V121c6.5-2.6,14-4.1,21.4-4.1s14.4,1.5,20.9,4.1v-11.1c0-3.9-3.1-7-7-7h-7V88.9h7
+    <path class="st1" d="M200.7,102.9c-3.9,0-7,3.1-7,7V121c6.5-2.6,14-4.1,21.4-4.1s14.4,1.5,20.9,4.1v-11.1c0-3.9-3.1-7-7-7h-7V88.9h7
 	c3.9,0,7-3.1,7-7s-3.1-7-7-7h-27.9c-3.9,0-7,3.1-7,7s3.1,7,7,7h7v13.9H200.7z"/>
-<g>
-	<rect y="366" class="st24" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 39.6729 404.5557)" class="st23 st36 st37">Bouteille d’oxygène</text>
+    <g>
+	<rect class="st24" height="144" width="500" y="366"/>
+        <text class="st23 st36 st37" transform="matrix(1 0 0 1 39.6729 404.5557)">Bouteille d’oxygène</text>
 </g>
 </svg>

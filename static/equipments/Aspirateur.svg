@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#EAEAEA;}
 	.st1{fill:#8C8C8C;}
@@ -58,8 +58,8 @@
 	.st52{fill:none;stroke:#EAEAEA;stroke-width:2;stroke-miterlimit:10;}
 	.st53{fill:none;stroke:#8C8C8C;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<rect x="0" class="st0" width="498" height="501"/>
-<g>
+    <rect class="st0" height="501" width="498" x="0"/>
+    <g>
 	<g>
 		<path class="st1" d="M146.6,327.1c2.3,3,5.8,3.9,9.4,4.3c4.8,0.5,9.7,0.6,14.4,0.9c10.6,0.6,21.3,0.4,31.9,0.1
 			c10.2-0.2,20.5-0.2,30.7-1c6.2-0.4,17.2-0.1,17.9-8.3c0.7-7.7-4-15.5-10.1-19.8c-6.1-4.3-13.7-6.1-21-7.3
@@ -120,21 +120,21 @@
 			c-3.5,3.7-5.2,7.9-6.2,10.9c-2.9-0.1-5.7-0.3-8.6-0.6c-2.9-0.3-5.7-1.1-6.5-4.2C148.4,315.8,153.1,309.4,157.8,306.3z"/>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<path class="st1" d="M230.2,265.7c9.9,2.6,20.3-0.2,30.3,0.1c5.2,0.1,10.5,0.5,15.7,0.4c4.4-0.1,9.7-0.2,13.6-2.6
 			c1.5-0.9,0.9-3.4-0.9-3.4c-4.7,0-9.3,0.9-14.1,0.9c-4.8,0-9.5-0.3-14.3-0.5c-9.5-0.3-19.6,2.5-28.9,0
 			C228.3,259.8,227,264.8,230.2,265.7z"/>
 	</g>
 </g>
-<g>
+    <g>
 	<g>
 		<path class="st1" d="M231.2,275.4c9.9,2.6,20.3-0.2,30.3,0.1c5.2,0.1,10.5,0.5,15.7,0.4c4.4-0.1,9.7-0.2,13.6-2.6
 			c1.5-0.9,0.9-3.4-0.9-3.4c-4.7,0-9.3,0.9-14.1,0.9c-4.8,0-9.5-0.3-14.3-0.5c-9.5-0.3-19.6,2.5-28.9,0
 			C229.3,269.5,227.9,274.6,231.2,275.4z"/>
 	</g>
 </g>
-<ellipse class="st7" cx="260.6" cy="142.8" rx="17.9" ry="6.9"/>
-<rect x="2" y="366" class="st23" width="501" height="144"/>
-<text transform="matrix(1 0 0 1 140.5596 404.5557)" class="st24 st25 st26">Aspirateur</text>
+    <ellipse class="st7" cx="260.6" cy="142.8" rx="17.9" ry="6.9"/>
+    <rect class="st23" height="144" width="501" x="2" y="366"/>
+    <text class="st24 st25 st26" transform="matrix(1 0 0 1 140.5596 404.5557)">Aspirateur</text>
 </svg>

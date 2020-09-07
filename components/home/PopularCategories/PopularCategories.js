@@ -46,7 +46,7 @@ const styles = theme => ({
     textDecoration: 'none',
     '&:hover': {
       color: 'grey',
-    }
+    },
   },
   grosHR: {
     height: '10px',
@@ -74,23 +74,21 @@ class popularCategories extends React.Component {
       category: [],
 
 
-    }
+    };
   }
 
   componentDidMount() {
     axios.get('/myAlfred/api/category/all')
-        .then(response => {
-          let category = response.data;
+      .then(response => {
+        let category = response.data;
 
 
+        this.setState({
+          category: category,
 
 
-          this.setState({
-            category: category,
-
-
-          })
-        })
+        });
+      });
 
   }
 
@@ -101,40 +99,43 @@ class popularCategories extends React.Component {
 
     const resdata = shuffleArray(category);
     const categories = resdata.slice(0, 4).map(e => (
-        <Grid item xs={3}><Link href={`/service?category=${e._id}`}><a className={classes.link}><PopularCategoriesCard img={e.picture} categorie={e.label}
-        /></a></Link></Grid>
+      <Grid item xs={3}><Link href={`/service?category=${e._id}`}><a className={classes.link}><PopularCategoriesCard
+        img={e.picture} categorie={e.label}
+      /></a></Link></Grid>
     ));
 
     return (
-        <Fragment>
-          <div>
-            <Head>
-              <title>Home</title>
-            </Head>
-          </div>
-          <Grid container className={classes.container}>
-            <Grid item xs={3}></Grid>
-            <Grid item xs={6}>
-              <div>
-                <Typography variant="h4" className={classes.textBox}>
-                  Nous sommes tous des Alfred !
-                </Typography>
-                <Grid container>
-                  <Grid item xs={5}></Grid>
-                  <Grid item xs={2}><hr className={classes.grosHR}/></Grid>
-                  <Grid item xs={5}></Grid>
+      <Fragment>
+        <div>
+          <Head>
+            <title>Home</title>
+          </Head>
+        </div>
+        <Grid container className={classes.container}>
+          <Grid item xs={3}></Grid>
+          <Grid item xs={6}>
+            <div>
+              <Typography variant="h4" className={classes.textBox}>
+                Nous sommes tous des Alfred !
+              </Typography>
+              <Grid container>
+                <Grid item xs={5}></Grid>
+                <Grid item xs={2}>
+                  <hr className={classes.grosHR}/>
                 </Grid>
-                <Typography className={classes.textBox}>
+                <Grid item xs={5}></Grid>
+              </Grid>
+              <Typography className={classes.textBox}>
                   <span>Nous sommes tous des Alfred en puissance !!!<br/>
                   Une passion ? un savoir-faire ? ou simplement du temps, envie de partager…Devenez Alfred et
                   arrondissez vos fins de mois très simplement !</span>
-                </Typography>
-              </div>
-            </Grid>
-            <Grid item xs={3}></Grid>
-            {categories}
+              </Typography>
+            </div>
           </Grid>
-        </Fragment>
+          <Grid item xs={3}></Grid>
+          {categories}
+        </Grid>
+      </Fragment>
     );
   }
 };

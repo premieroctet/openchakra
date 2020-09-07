@@ -16,10 +16,10 @@ class SettingShop extends React.Component {
       cancel_mode: this.props.cancel_mode,
     };
 
-    this.cancel_buttons={};
-    Object.values(CANCEL_MODE).forEach( v => this.cancel_buttons[v]=React.createRef());
-    this.cancelModeChanged=this.cancelModeChanged.bind(this);
-    this.welcomeMessageChanged=this.welcomeMessageChanged.bind(this);
+    this.cancel_buttons = {};
+    Object.values(CANCEL_MODE).forEach(v => this.cancel_buttons[v] = React.createRef());
+    this.cancelModeChanged = this.cancelModeChanged.bind(this);
+    this.welcomeMessageChanged = this.welcomeMessageChanged.bind(this);
 
   }
 
@@ -29,9 +29,12 @@ class SettingShop extends React.Component {
   }
 
   cancelModeChanged(mode_id, checked) {
-    console.log("canceModeChanged:"+mode_id, checked);
+    console.log('canceModeChanged:' + mode_id, checked);
     this.setState({cancel_mode: mode_id}, () => this.props.onChange(this.state.welcome_message, mode_id));
-    Object.values(CANCEL_MODE).forEach( v=> {console.log(v); this.cancel_buttons[v].current.setState({checked: mode_id===v })});
+    Object.values(CANCEL_MODE).forEach(v => {
+      console.log(v);
+      this.cancel_buttons[v].current.setState({checked: mode_id === v});
+    });
   }
 
   render() {
@@ -47,7 +50,8 @@ class SettingShop extends React.Component {
               </Grid>
               <Grid>
                 <Grid>
-                  <h3  className={classes.policySizeSubtitle}>Les utilisateurs recevront votre message lorsque vous confirmerez leur réservation. </h3>
+                  <h3 className={classes.policySizeSubtitle}>Les utilisateurs recevront votre message lorsque vous
+                    confirmerez leur réservation. </h3>
                 </Grid>
               </Grid>
               <Grid>
@@ -68,24 +72,31 @@ class SettingShop extends React.Component {
                   />
                 </Grid>
               </Grid>
-              <Grid style={{marginBottom : 100}}>
+              <Grid style={{marginBottom: 100}}>
                 <Grid>
                   <Grid>
-                    <h3  className={classes.policySizeSubtitle}>Indiquez vos conditions d’annulation</h3>
+                    <h3 className={classes.policySizeSubtitle}>Indiquez vos conditions d’annulation</h3>
                   </Grid>
                   <Grid>
-                    <p className={classes.policySizeContent}>Choisissez vos conditions en cas d'annulation de la part des utilisateurs.</p>
+                    <p className={classes.policySizeContent}>Choisissez vos conditions en cas d'annulation de la part
+                      des utilisateurs.</p>
                   </Grid>
                 </Grid>
                 <Grid>
                   <Grid>
-                    <ButtonSwitch id={CANCEL_MODE.FLEXIBLE} checked={this.state.cancel_mode==CANCEL_MODE.FLEXIBLE} label={"Flexibles: Remboursement intégral jusqu'à 1 jour avant la prestation"} onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.FLEXIBLE]}/>
+                    <ButtonSwitch id={CANCEL_MODE.FLEXIBLE} checked={this.state.cancel_mode == CANCEL_MODE.FLEXIBLE}
+                                  label={'Flexibles: Remboursement intégral jusqu\'à 1 jour avant la prestation'}
+                                  onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.FLEXIBLE]}/>
                   </Grid>
                   <Grid>
-                    <ButtonSwitch id={CANCEL_MODE.MODERATE} checked={this.state.cancel_mode==CANCEL_MODE.MODERATE} label={"Modérées: Remboursement intégral jusqu'à 5 jours avant la prestation"} onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.MODERATE]}/>
+                    <ButtonSwitch id={CANCEL_MODE.MODERATE} checked={this.state.cancel_mode == CANCEL_MODE.MODERATE}
+                                  label={'Modérées: Remboursement intégral jusqu\'à 5 jours avant la prestation'}
+                                  onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.MODERATE]}/>
                   </Grid>
                   <Grid>
-                    <ButtonSwitch id={CANCEL_MODE.STRICT} checked={this.state.cancel_mode==CANCEL_MODE.STRICT} label={"Strictes: Remboursement intégral jusqu’à 10 jours avant la prestation"} onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.STRICT]} />
+                    <ButtonSwitch id={CANCEL_MODE.STRICT} checked={this.state.cancel_mode == CANCEL_MODE.STRICT}
+                                  label={'Strictes: Remboursement intégral jusqu’à 10 jours avant la prestation'}
+                                  onChange={this.cancelModeChanged} ref={this.cancel_buttons[CANCEL_MODE.STRICT]}/>
                   </Grid>
                 </Grid>
               </Grid>
@@ -102,4 +113,4 @@ SettingShop.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default  withStyles(styles, { withTheme: true }) (SettingShop);
+export default withStyles(styles, {withTheme: true})(SettingShop);

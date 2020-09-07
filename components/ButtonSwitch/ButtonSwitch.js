@@ -9,7 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 import styles from './ButtonSwitchStyle';
 
-const { inspect } = require('util')
+const {inspect} = require('util');
 
 
 const IOSSwitch = withStyles(theme => ({
@@ -47,7 +47,7 @@ const IOSSwitch = withStyles(theme => ({
   },
   checked: {},
   focusVisible: {},
-}))(({ classes, ...props }) => {
+}))(({classes, ...props}) => {
   return (
     <Switch
       focusVisibleClassName={classes.focusVisible}
@@ -79,7 +79,7 @@ class ButtonSwitch extends React.Component {
     this.state = {
       checked: this.props.checked,
       billing: props.billing ? props.billing._id : props.isOption ? this.props.billings[0]._id : null,
-      price:this.props.price,
+      price: this.props.price,
       label: this.props.label,
     };
 
@@ -93,23 +93,23 @@ class ButtonSwitch extends React.Component {
 
   fireChange(id, checked, price, billing, label) {
     if (this.props.onChange) {
-      this.props.onChange(this.props.id, this.state.checked, this.state.checked?this.state.price:null, this.state.billing, this.state.label);
+      this.props.onChange(this.props.id, this.state.checked, this.state.checked ? this.state.price : null, this.state.billing, this.state.label);
     }
   }
 
-  onToggle(value){
+  onToggle(value) {
     this.setState({checked: !this.state.checked}, () => this.fireChange());
   };
 
   onChangeBilling(event, index) {
-    console.log("Bill:"+event.target.value);
+    console.log('Bill:' + event.target.value);
     this.setState({billing: event.target.value}, () => this.fireChange());
   }
 
   onChangePrice(event) {
-    var price=parseInt(event.target.value)
+    var price = parseInt(event.target.value);
     if (isNaN(price)) {
-      price=null
+      price = null;
     }
     this.setState({price: price}, () => this.fireChange());
   }
@@ -122,9 +122,9 @@ class ButtonSwitch extends React.Component {
     const {classes, isEditable, isOption, isPrice, billings, priceDisabled} = this.props;
     var {label, checked} = this.state;
 
-    return(
+    return (
       <Grid className={classes.contentFiltre}>
-        <Grid className={classes.responsiveIOSswitch} style={{width : this.props.width}}>
+        <Grid className={classes.responsiveIOSswitch} style={{width: this.props.width}}>
           <Grid>
             <IOSSwitch
               color="primary"
@@ -136,23 +136,23 @@ class ButtonSwitch extends React.Component {
           <Grid>
             <span>
         {isEditable ?
-           <CssTextField
-           label={'Intitulé'}
+          <CssTextField
+            label={'Intitulé'}
             placeholder={'Saisissez un intitulé'}
             value={this.state.label}
             onChange={this.onChangeLabel}
             error={!this.state.label}
             helperText={this.state.label ? null : 'Obligatoire'}
-           />
-           :
-           label === undefined ? "label introuvable" : label}
+          />
+          :
+          label === undefined ? 'label introuvable' : label}
             </span>
           </Grid>
         </Grid>
-        { isPrice ?
+        {isPrice ?
           <Grid className={classes.responsiveIOSswitchContent}>
             {checked === true ?
-              <Grid style={{display:'flex'}}>
+              <Grid style={{display: 'flex'}}>
                 <CssTextField
                   value={this.state.price}
                   label={'Tarif'}
@@ -162,18 +162,18 @@ class ButtonSwitch extends React.Component {
                   onChange={this.onChangePrice}
                   InputProps={{
                     inputProps: {
-                      min: 0
+                      min: 0,
                     },
                     endAdornment: <InputAdornment position="start">€</InputAdornment>,
                   }}
                   error={!this.state.price}
                   helperText={this.state.price ? null : 'Obligatoire'}
                 />
-                { isOption ?
+                {isOption ?
                   <Select
                     style={{
                       width: '100px',
-                      fontSize: '0.8rem'
+                      fontSize: '0.8rem',
                     }}
                     disabled={!checked}
                     margin="none"
@@ -181,22 +181,22 @@ class ButtonSwitch extends React.Component {
                     value={this.state.billing}
                   >
                     {billings.map(bill => {
-                      return (
-                        <MenuItem value={bill._id.toString()}>{bill.label}</MenuItem>
-                      )
-                    }
+                        return (
+                          <MenuItem value={bill._id.toString()}>{bill.label}</MenuItem>
+                        );
+                      },
                     )
                     }
                   </Select> : null
                 }
               </Grid>
-              :null
+              : null
             }
           </Grid> : null
         }
 
       </Grid>
-    )
+    );
   }
 }
 
@@ -205,4 +205,4 @@ ButtonSwitch.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default  withStyles(styles, { withTheme: true }) (ButtonSwitch);
+export default withStyles(styles, {withTheme: true})(ButtonSwitch);

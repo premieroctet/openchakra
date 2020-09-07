@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-     viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<svg style="enable-background:new 0 0 500 500;" id="Calque_1" version="1.1" viewBox="0 0 500 500" x="0px"
+     xmlns="http://www.w3.org/2000/svg" y="0px" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#EAEAEA;}
 	.st1{fill:#8C8C8C;}
@@ -58,8 +58,8 @@
 	.st52{fill:none;stroke:#EAEAEA;stroke-width:2;stroke-miterlimit:10;}
 	.st53{fill:none;stroke:#8C8C8C;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<rect x="-1" y="-1" class="st0" width="500" height="500"/>
-<path class="st1" d="M291.7,189.4L248.2,146c0.1-1,0.2-2.1,0.3-3.1c0.1-0.5,0.1-1,0.2-1.5c0,0,0-0.1,0-0.1c0.1-0.5,0.2-1,0.3-1.5
+    <rect class="st0" height="500" width="500" x="-1" y="-1"/>
+    <path class="st1" d="M291.7,189.4L248.2,146c0.1-1,0.2-2.1,0.3-3.1c0.1-0.5,0.1-1,0.2-1.5c0,0,0-0.1,0-0.1c0.1-0.5,0.2-1,0.3-1.5
 	c0-0.1,0-0.1,0-0.2c0.1-0.5,0.2-1,0.3-1.4c0-0.1,0-0.1,0-0.2c0.1-0.5,0.3-1,0.4-1.4c0,0,0-0.1,0-0.1c0.6-2,1.4-3.9,2.3-5.8
 	c0.1-0.1,0.1-0.2,0.1-0.3c0.2-0.3,0.3-0.7,0.5-1c0.1-0.2,0.2-0.4,0.3-0.6c0.2-0.3,0.3-0.6,0.5-0.9c0.1-0.2,0.3-0.5,0.4-0.7
 	c0.2-0.3,0.3-0.5,0.5-0.8c0.2-0.2,0.3-0.5,0.5-0.7c0.2-0.2,0.3-0.5,0.5-0.7c0.2-0.3,0.4-0.5,0.6-0.8c0.2-0.2,0.3-0.5,0.5-0.7
@@ -75,9 +75,9 @@
 	c1.2,1.2,2.8,1.8,4.4,1.8c1.4,0,2.8-0.5,3.9-1.4l83.6-66.5c-0.1-0.1-0.2-0.2-0.3-0.3l-43.5-43.5c-0.1-0.1-0.2-0.3-0.4-0.4l-67,83.1
 	c-2,2.5-1.8,6.1,0.4,8.4l5.3,5.3l-15.9,15.9c-15.1,15.1-15.1,39.6,0,54.6l0.5,0.5c7.3,7.3,17,11.3,27.3,11.3s20-4,27.3-11.3
 	l59.7-59.7c4.9-4.9,11.5-7.6,18.4-7.6c7,0,13.5,2.7,18.4,7.6l16.6,16.6c2.4,2.4,6.4,2.4,8.9,0c2.5-2.5,2.5-6.4,0-8.9L322.5,253.6z"
-	/>
-<g>
-	<rect y="363" class="st24" width="500" height="144"/>
-	<text transform="matrix(1 0 0 1 189.0889 401.5557)" class="st23 st30 st31">Micro</text>
+    />
+    <g>
+	<rect class="st24" height="144" width="500" y="363"/>
+        <text class="st23 st30 st31" transform="matrix(1 0 0 1 189.0889 401.5557)">Micro</text>
 </g>
 </svg>

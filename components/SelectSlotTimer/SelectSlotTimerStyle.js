@@ -1,7 +1,7 @@
-export  default theme => ({
-    textFieldChips: {
-        color: 'white',
-        fontWeight: 'bold',
-        margin: 2
-    },
+export default theme => ({
+  textFieldChips: {
+    color: 'white',
+    fontWeight: 'bold',
+    margin: 2,
+  },
 })

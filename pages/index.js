@@ -31,66 +31,65 @@ import {Helmet} from 'react-helmet';
 import cookie from 'react-cookies';
 
 class Home extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-        }
-    }
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-    componentDidMount() {
-        localStorage.setItem('path',Router.pathname);
-        const token = cookie.load('token')
-        axios.get("/myAlfred/api/touch/");
-        if (token) {
-            Router.push('/search');
-        }
+  componentDidMount() {
+    localStorage.setItem('path', Router.pathname);
+    const token = cookie.load('token');
+    axios.get('/myAlfred/api/touch/');
+    if (token) {
+      Router.push('/search');
     }
+  }
 
-    logout() {
-        cookie.remove('token', { path: '/' })
-        // Remove auth header for future requests
-        setAuthToken(false);
-        window.location.reload();
-    };
+  logout() {
+    cookie.remove('token', {path: '/'});
+    // Remove auth header for future requests
+    setAuthToken(false);
+    window.location.reload();
+  };
 
-    render()  {
-        return (
-            <Fragment>
-              <Helmet>
-                  <title>Services rémunérés entre particuliers - My Alfred </title>
-                  <meta property="description" content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple" />
-                </Helmet>
-                <Layout/>
-                <Homeheader/>
-                <SerenityNeed/>
-                <BecomeAlfred />
-                <Section3/>
-                <NearbyYou/>
-                <Profiteandlearn/>
-                <Section6/>
-                <Wellbeing/>
-                <Section8/>
-                <FeelingGood/>
-                <Section10/>
-                <Proposeservice/>
-                <Section12/>
-                <NearbyYou/>
-                <Passions/>
-                <Section15/>
-                <Section16/>
-                <Facons/>
-                <Section18/>
-                <Section19/>
-                <Otter/>
-                <Section21/>
-                <Section22/>
-                <Assureback/>
-                <Footer  />
-            </Fragment>
-        )
-    }
+  render() {
+    return (
+      <Fragment>
+        <Helmet>
+          <title>Services rémunérés entre particuliers - My Alfred </title>
+          <meta property="description"
+                content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple"/>
+        </Helmet>
+        <Layout/>
+        <Homeheader/>
+        <SerenityNeed/>
+        <BecomeAlfred/>
+        <Section3/>
+        <NearbyYou/>
+        <Profiteandlearn/>
+        <Section6/>
+        <Wellbeing/>
+        <Section8/>
+        <FeelingGood/>
+        <Section10/>
+        <Proposeservice/>
+        <Section12/>
+        <NearbyYou/>
+        <Passions/>
+        <Section15/>
+        <Section16/>
+        <Facons/>
+        <Section18/>
+        <Section19/>
+        <Otter/>
+        <Section21/>
+        <Section22/>
+        <Assureback/>
+        <Footer/>
+      </Fragment>
+    );
+  }
 }
-
 
 
 export default Home;
