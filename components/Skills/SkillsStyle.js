@@ -12,7 +12,6 @@ export default theme=>({
     flexDirection: 'column',
     alignItems: 'center',
     width: 120,
-    margin: 10,
     [theme.breakpoints.down('xs')]: {
       width: '50%',
       margin: 0,

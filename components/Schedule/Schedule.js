@@ -13,6 +13,9 @@ moment.locale('fr');
 
 const localizer = momentLocalizer(moment);
 
+/***TODO nbSchedule size manage by parent not itself
+ ***/
+
 class Schedule extends React.Component {
   constructor(props) {
     super(props);
@@ -65,7 +68,7 @@ class Schedule extends React.Component {
 
   render() {
     const { classes, title, subtitle, selectable, height, nbSchedule, bookings} = this.props;
-    const { view } = this.state;
+    const { view, eventsSelected } = this.state;
 
     const half=Math.floor(nbSchedule/2);
 
@@ -84,7 +87,7 @@ class Schedule extends React.Component {
       }else{
         return(
           <Grid className={classes.containerLabelSelector} onClick={() => this.selectSlot}>
-            <Grid className={this.state.eventsSelected.has(newDate) ? classes.labelSelectorActive : classes.labelSelector} >
+            <Grid className={eventsSelected.has(newDate) ? classes.labelSelectorActive : classes.labelSelector} >
               <p style={{cursor:'pointer'}}>{event.label}</p>
             </Grid>
           </Grid>
@@ -154,7 +157,7 @@ class Schedule extends React.Component {
           </Grid>
           : null
         }
-        <Grid container spacing={2} style={{padding: '2%'}}>
+        <Grid container spacing={2} style={{padding: 5}}>
           {[...Array(nbSchedule)].map((x, i) =>{
             let date = new Date();
             date.setDate(1);
@@ -162,7 +165,7 @@ class Schedule extends React.Component {
             const monthStr=moment(date).format('M');
             const selEvents=events.filter( e => moment(e.start).format('M')==monthStr);
               return(
-                <Grid item xl={4} lg={4} md={6} sm={6} xs={12} style={{height: 400}} key={i}>
+                <Grid item xl={nbSchedule === 1 ? 11 : 4} lg={nbSchedule === 1 ? 11 :4} md={nbSchedule === 1 ? 11 :6} sm={nbSchedule === 1 ? 11 : 6} xs={12} style={{height: 400}} key={i}>
                   <Calendar
                       selectable={selectable}
                       popup={false}
