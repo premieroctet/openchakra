@@ -1,5 +1,4 @@
 import React, {Fragment} from 'react';
-import Link from 'next/link';
 import Layout from '../hoc/Layout/Layout';
 import axios from "axios";
 import moment from 'moment';
@@ -9,12 +8,6 @@ import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
 import Footer from '../hoc/Layout/Footer/Footer';
 import Cards from 'react-credit-cards';
-import {
-    formatCreditCardNumber,
-    formatCVC,
-    formatExpirationDate,
-    formatFormData,
-  } from '../components/utils';
 import '../static/creditcards.css';
 import styles from './paymentChoice/paymentChoiceStyle'
 import cookie from 'react-cookies'
@@ -101,7 +94,6 @@ class paymentChoice extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const {user} = this.state;
         const {cards} = this.state;
 
 
@@ -118,34 +110,6 @@ class paymentChoice extends React.Component {
                                 <Grid item xs={12} md={6} style={{display: "inline-block"}}>
                                         {cards.length ?
                                         <React.Fragment>
-
-                                                    {/*<Grid container style={{display: 'inline-block'}}>
-                                                        <Grid item md={4} sm={4} xs={8}>
-                                                    {cards.map((e,index) => (<Tooltip title={e.Alias} placement="right"><Grid container style={{width: '30%'}}><Grid item xs={3}><img style={{width: '17px', height: '17px', marginTop: '17px'}} src="../static/creditcard.svg" alt="creditcard"/></Grid><Grid item xs={9}><p key={index}> carte {index + 1}</p></Grid></Grid></Tooltip>))}
-                                                            <p>Autre</p>
-                                                        </Grid>
-                                                        <Grid item md={2} sm={2} xs={4}>
-                                                            <RadioGroup>
-                                                                {cards.map((e,index) => (<Radio
-                                                                    key={index}
-                                                                    checked={this.state.id_card === e.Id}
-                                                                    onChange={()=> this.setState({id_card:e.Id,cardSelected: !this.state.cardSelected})}
-                                                                    value={e.Id}
-                                                                    color={'primary'}
-                                                                    name="radio-button-demo"
-                                                                    inputProps={{'aria-label': 'A'}}
-                                                                    label="yes"
-                                                                />))}
-                                                                <Radio
-                                                                    onChange={()=> this.setState({cardSelected: false})}
-                                                                    color={'primary'}
-                                                                    value={"other"}
-                                                                    name="radio-button-demo1"
-                                                                    inputProps={{'aria-label': 'B'}}
-                                                                />
-                                                            </RadioGroup>
-                                                        </Grid>
-                                                    </Grid>*/}
                                                     {cards.map((e,index) => (
                                                         <React.Fragment>
                                                            {this.state.id_card === e.Id ?

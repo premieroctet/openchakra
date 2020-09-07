@@ -6,9 +6,7 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
 import Footer from '../hoc/Layout/Footer/Footer';
-import {toast} from 'react-toastify';
 import io from "socket.io-client";
 import cookie from 'react-cookies'
 
@@ -88,12 +86,12 @@ class paymentSuccess extends React.Component {
 
                         {/*Le Contenu */}
                         <Grid container>
-                            <br></br>
+                            <br/>
                             {/*Contenu à Gauche*/}
 
                             {/*Petite Description*/}
                             <Grid item md={5} xs={12} style={{textAlign: 'left',margin: '0 auto', float:'right', paddingLeft:'3%'}}>
-                                <div style={{margin: '20px 11%', marginTop: '5%',width: '90%'}}></div>
+                                <div style={{margin: '20px 11%', marginTop: '5%',width: '90%'}}/>
                                 <Grid container>
 
                                     <Grid item xs={12} style={{marginTop:50, marginBottom:30}}>
@@ -101,7 +99,7 @@ class paymentSuccess extends React.Component {
 
                                     </Grid>
                                 </Grid>
-                                <br></br>
+                                <br/>
 
 
 
@@ -117,7 +115,7 @@ class paymentSuccess extends React.Component {
                                             </Link>
 
 
-                                            <br></br>
+                                            <br/>
 
                                         </Grid>
 

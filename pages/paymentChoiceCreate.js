@@ -1,5 +1,4 @@
 import React, {Fragment} from 'react';
-import Link from 'next/link';
 import Layout from '../hoc/Layout/Layout';
 import axios from "axios";
 import moment from 'moment';

@@ -6,11 +6,9 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
 import { withStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
 import Footer from '../hoc/Layout/Footer/Footer';
 import io from "socket.io-client";
 import cookie from 'react-cookies'
-
 
 const styles = theme => ({
     bigContainer: {
@@ -84,12 +82,12 @@ class paymentDirectSuccess extends React.Component {
 
                         {/*Le Contenu */}
                         <Grid container>
-                            <br></br>
+                            <br/>
                             {/*Contenu à Gauche*/}
 
                             {/*Petite Description*/}
                             <Grid item md={5} xs={12} style={{textAlign: 'left',margin: '0 auto', float:'right', paddingLeft:'3%'}}>
-                                <div style={{margin: '20px 11%', marginTop: '5%',width: '90%'}}></div>
+                                <div style={{margin: '20px 11%', marginTop: '5%',width: '90%'}}/>
                                 <Grid container>
 
                                     <Grid item xs={12} style={{marginTop:50, marginBottom:30}}>
@@ -97,7 +95,7 @@ class paymentDirectSuccess extends React.Component {
 
                                     </Grid>
                                 </Grid>
-                                <br></br>
+                                <br/>
 
 
 
@@ -113,7 +111,7 @@ class paymentDirectSuccess extends React.Component {
                                             </Link>
 
 
-                                            <br></br>
+                                            <br/>
 
                                         </Grid>
 
@@ -134,10 +132,11 @@ class paymentDirectSuccess extends React.Component {
 
                             {/*Contenu à droite*/}
                             <Grid item xs={12} md={7} style={{marginTop: '2%', marginBottom: '5%'}}>
-                                <Grid container style={{ backgroundImage: `url('../../static/resa.svg')`,backgroundPosition: "cover", backgroundRepeat:'no-repeat', border: 'thin solid transparent',maxWidth: '100%', height:'90vh', padding:'2%', position: 'sticky', top: 100,}}>
+                                <Grid container style={{ backgroundImage: `url('../../static/resa.svg')`,backgroundPosition: "cover", backgroundRepeat:'no-repeat', border: 'thin solid transparent',maxWidth: '100%', height:'90vh', padding:'2%', position: 'sticky', top: 100,}}/>
 
-                                </Grid> </Grid>
-                        </Grid>    </Grid>
+                           </Grid>
+                        </Grid>
+                    </Grid>
                 </Layout>
                 <Footer/>
 

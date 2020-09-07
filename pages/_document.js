@@ -1,9 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Document, { Head, Main, NextScript } from 'next/document';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import flush from 'styled-jsx/server';
-import { ServerStyleSheet } from 'styled-components';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 
 class MyDocument extends Document {
@@ -12,7 +8,7 @@ class MyDocument extends Document {
     const { pageContext } = this.props;
 
     return (
-      <html lang="en" dir="ltr" xmlns:og="http://ogp.me/ns#">
+      <html lang="fr" dir="ltr" xmlns:og="http://ogp.me/ns#">
         <Head>
           <meta charSet="utf-8" />
           {/* Use minimum-scale=1 to enable GPU rasterization */}
