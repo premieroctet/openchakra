@@ -354,13 +354,29 @@ class NavBar extends Component {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <Link href={user && user.is_alfred ? `/shop?id_alfred=${user._id}` : '/creaShop/creaShop'}>
-          <MenuItem>
-            <Typography>
-              <a className={classes.navbarLinkMobile}>{user && user.is_alfred ? "Ma boutique" : user ? "Proposer mes services" : ""}</a>
-            </Typography>
-          </MenuItem>
-        </Link>
+        {
+          user && user.is_alfred ?
+            <Link href={`/shop?id_alfred=${user._id}`}>
+              <MenuItem>
+                <Typography>
+                  <a className={classes.navbarLinkMobile}>
+                    Ma boutique
+                  </a>
+                </Typography>
+              </MenuItem>
+            </Link>
+            :
+            <Link href={'/creaShop/creaShop'}>
+              <MenuItem>
+                <Typography>
+                  <a className={classes.navbarLinkMobile}>
+                    Proposer mes services
+                  </a>
+                </Typography>
+              </MenuItem>
+            </Link>
+
+        }
         {logged ?
           <Link href={'/reservations/allReservations'}>
             <MenuItem onClick={this.handleMobileMenuOpen}>

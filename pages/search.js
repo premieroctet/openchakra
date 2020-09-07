@@ -379,7 +379,7 @@ class SearchPage extends React.Component {
         }
 
         return (
-          <Fragment>
+          <Grid>
             <Layout searchCallback={this.searchCallback} >
               <Grid container className={classes.bigContainer}>
                 <Grid container className={classes.respfilter}>
@@ -571,10 +571,9 @@ class SearchPage extends React.Component {
                   <Assureback/>
                   </>
                 }
-
-                <Footer/>
               </Layout>
-            </Fragment>
+            <Footer/>
+          </Grid>
         )
     }
 }

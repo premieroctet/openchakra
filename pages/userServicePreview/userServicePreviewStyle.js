@@ -33,7 +33,6 @@ export default theme => ({
     }
   },
   responsiveListContainer:{
-    marginTop: 10,
     width: '80%',
     [theme.breakpoints.down('xs')]: {
       margin: 0,
@@ -181,9 +180,9 @@ export default theme => ({
     }
   },
   marginAvatarAndDescriptionContent:{
-    marginBottom: 30,
+    marginBottom: 10,
     [theme.breakpoints.down('xs')]: {
-      marginTop: 30,
+      marginTop: 10,
     }
   },
   itemListContainer:{

@@ -30,10 +30,8 @@ class Footer extends Component {
         const {classes} = this.props;
         return(
             <React.Fragment>
-
                 <Grid container style={{backgroundColor: '#747474'}}>
                     <Grid item md={3} sm={6} xs={12} style={{textAlign: 'center', margin: '2% 0px'}}>
-
                         {/*Responsive */}
                         <ExpansionPanel className={classes.responsive} style={{backgroundColor: '#747474',border: 'none', boxShadow: 'none'}}>
                             <ExpansionPanelSummary

@@ -108,14 +108,6 @@ const IOSSwitch = withStyles(theme => ({
   );
 });
 
-const CssTextField = withStyles({
-  root: {
-    '& label': {
-      fontSize: '0.8rem',
-    },
-  },
-})(TextField);
-
 class UserServicesPreview extends React.Component {
   constructor(props) {
     super(props);
@@ -130,13 +122,8 @@ class UserServicesPreview extends React.Component {
       flexible: false,
       moderate: false,
       strict: false,
-      haveOptions: false,
-      languages:[],
-      test:{},
       allEquipments: [],
       availabilities: [],
-      mobileOpen: false,
-      setMobileOpen: false,
       bottom: false,
       count:{},
       totalPrestations: 0,
@@ -587,7 +574,7 @@ class UserServicesPreview extends React.Component {
                 </Grid>
                 <Grid style={{width: '10%'}}>
                   {p.prestation.cesu_eligible && this.state.use_cesu ?
-                    <img src="/static/assets/img/cesu.svg" width="40px" title={`${p.prestation.label} est une prestation éligible au CESU`}/>
+                    <img src="/static/assets/img/cesu.svg" width="40px" alt={`${p.prestation.label} est une prestation éligible au CESU`} title={`${p.prestation.label} est une prestation éligible au CESU`}/>
                     :
                     <div style={{ width: '40px'}}/>
                   }
@@ -835,11 +822,6 @@ class UserServicesPreview extends React.Component {
             </Grid>
         </Grid>
       </Grid>
-        {/*<Grid>
-        <Grid>
-          <img alt={'castor_happy'} title={'castor_happy'} style={{height: 100}} src={'../../static/assets/img/userServicePreview/castor.svg'}/>
-        </Grid>
-      </Grid>*/}
     </Grid>
    );
 
@@ -1022,7 +1004,7 @@ class UserServicesPreview extends React.Component {
                   </Grid>
                   <Grid className={classes.priceBasketContent}>
                     <Grid>
-                      <img style={{width: 40, height : 40}} src={'../../static/assets/img/userServicePreview/shop.svg'}/>
+                      <img style={{width: 40, height : 40}}  title={'shop'} alt={'shop'} src={'../../static/assets/img/userServicePreview/shop.svg'}/>
                     </Grid>
                     <Grid style={{fontSize: 'x-large', marginLeft: 15}}>
                       {serviceUser.minimum_basket} €
@@ -1043,7 +1025,7 @@ class UserServicesPreview extends React.Component {
                   </Grid>
                   <Grid className={classes.delayPrevenanceContent}>
                     <Grid>
-                      <img style={{width: 40, height : 40}} src={'../../static/assets/img/userServicePreview/prevenance.svg'}/>
+                      <img style={{width: 40, height : 40}} title={'prevenance'} alt={'prevenance'} src={'../../static/assets/img/userServicePreview/prevenance.svg'}/>
                     </Grid>
                     <Grid style={{fontSize: 'x-large',  marginLeft: 15}}>
                       {
@@ -1065,7 +1047,7 @@ class UserServicesPreview extends React.Component {
                     </Grid>
                     <Grid style={{display: 'flex', alignItems:'center', marginBottom: 20}}>
                       <Grid>
-                        <img style={{width: 40, height : 40}} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
+                        <img style={{width: 40, height : 40}} title={'adresse'} alt={'adresse'} src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
                       </Grid>
                       <Grid style={{fontSize: 'x-large', marginLeft: 15}}>
                         {serviceUser.perimeter} km

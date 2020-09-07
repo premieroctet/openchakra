@@ -63,7 +63,8 @@ export default theme => ({
     }
   },
   Rightcontent: {
-    marginLeft: "4%"
+    marginLeft: "4%",
+    marginTop: 100
   },
   toggle: {
     zIndex: 0,

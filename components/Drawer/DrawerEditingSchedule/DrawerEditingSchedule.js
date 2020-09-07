@@ -13,6 +13,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import axios from "axios";
+import Typography from '@material-ui/core/Typography';
 
 class DrawerEditingSchedule extends React.Component{
 
