@@ -1,23 +1,24 @@
 import React, {Fragment} from 'react';
 import Layout from '../../hoc/Layout/Layout';
-import axios from "axios";
+import axios from 'axios';
 import moment from 'moment';
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Router from "next/router";
-import { withStyles } from '@material-ui/core/styles';
-import TextField from "@material-ui/core/TextField";
-import MenuItem from "@material-ui/core/MenuItem";
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Router from 'next/router';
+import {withStyles} from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 import Select2 from 'react-select';
-import DatePicker, {registerLocale} from "react-datepicker";
+import DatePicker, {registerLocale} from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 import {Helmet} from 'react-helmet';
-import styles from './editProfile/editProfileStyle'
+import styles from './editProfile/editProfileStyle';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
+
 const {isPhoneOk}=require('../../utils/sms');
 
 

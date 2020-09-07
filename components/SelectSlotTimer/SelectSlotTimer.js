@@ -1,10 +1,8 @@
 import Chip from '@material-ui/core/Chip';
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import styles from './SelectSlotTimerStyle'
+import styles from './SelectSlotTimerStyle';
 import withStyles from '@material-ui/core/styles/withStyles';
-import Avatar from '@material-ui/core/Avatar';
-
 
 
 class SelectSlotTimer extends React.Component {

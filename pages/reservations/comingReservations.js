@@ -1,12 +1,12 @@
-import React, { Fragment } from "react";
-import Link from "next/link";
-import Layout from "../../hoc/Layout/Layout";
-import Grid from "@material-ui/core/Grid";
-import { withStyles } from "@material-ui/core/styles";
-import axios from "axios";
+import React, {Fragment} from 'react';
+import Link from 'next/link';
+import Layout from '../../hoc/Layout/Layout';
+import Grid from '@material-ui/core/Grid';
+import {withStyles} from '@material-ui/core/styles';
+import axios from 'axios';
 import styles from './comingReservations/comingReservationsStyle';
-import Typography from "@material-ui/core/Typography";
-import moment from "moment";
+import Typography from '@material-ui/core/Typography';
+import moment from 'moment';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import UserAvatar from '../../components/Avatar/UserAvatar';
@@ -14,7 +14,8 @@ import Button from '@material-ui/core/Button';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
+
 moment.locale("fr");
 
 class ComingReservations extends React.Component {

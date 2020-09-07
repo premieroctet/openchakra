@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import Router from 'next/router'
-import {FacebookLoginButton, GoogleLoginButton} from "react-social-login-buttons";
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import Router from 'next/router';
+import {FacebookLoginButton, GoogleLoginButton} from 'react-social-login-buttons';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
-import styles from './OAuthStyle' ;
+import styles from './OAuthStyle';
 import Divider from '@material-ui/core/Divider';
 
 

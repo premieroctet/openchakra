@@ -1,8 +1,8 @@
-import React, { Fragment } from 'react';
+import React, {Fragment} from 'react';
 import Grid from '@material-ui/core/Grid';
-import styles from '../components/shop/shopPage'
+import styles from '../components/shop/shopPage';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import AlfredBanner from '../components/shop/AlfredBanner/AlfredBanner';
 import NavBarShop from '../components/NavBar/NavBarShop/NavBarShop';
 import About from '../components/About/About';
@@ -19,6 +19,7 @@ import AlfredWelcomedMessage from '../components/AlfredWelcomedMessage/AlfredWel
 import {Helmet} from 'react-helmet';
 import NavbarMobile from '../components/NavbarMobile/NavbarMobile';
 import Commentary from '../components/Commentary/Commentary';
+
 const {frenchFormat}=require('../utils/text')
 
 class shop extends React.Component {

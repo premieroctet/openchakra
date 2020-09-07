@@ -2,15 +2,11 @@ import React from 'react';
 import Schedule from '../../components/Schedule/Schedule';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
 import DrawerSchedule from '../../components/DrawerSchedule/DrawerSchedule';
-import Fab from '@material-ui/core/Fab';
 import styles from './style';
-import AddIcon from '@material-ui/icons/Add';
 import withStyles from '@material-ui/core/styles/withStyles';
-import EditIcon from '@material-ui/icons/Edit';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 
 
 class scheduleTest extends React.Component{

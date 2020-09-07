@@ -1,4 +1,5 @@
 import isEmpty from '../../server/validation/is-empty';
+
 const {CESU}=require('../consts')
 const {checkSocialSecurity}=require('../social_security')
 const creaShopPresentation = () => {

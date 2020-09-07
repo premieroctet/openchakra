@@ -1,24 +1,20 @@
 import React, {Fragment} from 'react';
 import Layout from '../../hoc/Layout/Layout';
-import axios from "axios";
+import axios from 'axios';
 import moment from 'moment';
-import Grid from "@material-ui/core/Grid";
-import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import {withStyles} from '@material-ui/core/styles';
 import Schedule from '../../components/Schedule/Schedule';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 import {Helmet} from 'react-helmet';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
-const {GID_LEN} = require('../../utils/consts');
-import styles from './myAvailabilities/myAvailabilitiesStyle'
+import styles from './myAvailabilities/myAvailabilitiesStyle';
 import Router from 'next/router';
 import cookie from 'react-cookies';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import DrawerSchedule from '../../components/DrawerSchedule/DrawerSchedule';
+
+const {GID_LEN} = require('../../utils/consts');
 const I18N = require('../../utils/i18n');
 moment.locale('fr');
 

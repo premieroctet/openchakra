@@ -1,9 +1,8 @@
-import React, { Fragment } from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import {withStyles} from '@material-ui/core/styles';
 import Layout from '../../hoc/Layout/Layout';
-import Grid from "@material-ui/core/Grid";
+import Grid from '@material-ui/core/Grid';
 import Link from 'next/link';
-import Footer from '../../hoc/Layout/Footer/Footer';
 
 const styles = theme => ({
     hideed:{

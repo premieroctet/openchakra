@@ -3,19 +3,18 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Search from '@material-ui/icons/Search';
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import styles from './SearchInputStyle'
+import {withStyles} from '@material-ui/core/styles';
+import styles from './SearchInputStyle';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
-import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
 import Router from 'next/router';
 import MenuItem from '@material-ui/core/MenuItem';
 import AlgoliaPlaces from 'algolia-places-react';
-import moment from 'moment';
 import Hidden from '@material-ui/core/Hidden';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
+
 var parse = require('url-parse');
 
 class SearchInput extends React.Component{

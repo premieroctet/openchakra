@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Layout from '../hoc/Layout/Layout';
 import {Helmet} from 'react-helmet';
-
 
 
 class BecomeAlfred extends Component {

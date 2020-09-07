@@ -1,18 +1,18 @@
-import React, { Fragment } from "react";
-import Link from "next/link";
-import Layout from "../hoc/Layout/Layout";
-import Grid from "@material-ui/core/Grid";
-import { withStyles } from "@material-ui/core/styles";
-import Footer from "../hoc/Layout/Footer/Footer";
-import Typography from "@material-ui/core/Typography";
-import axios from "axios";
-import moment from "moment";
+import React, {Fragment} from 'react';
+import Layout from '../hoc/Layout/Layout';
+import Grid from '@material-ui/core/Grid';
+import {withStyles} from '@material-ui/core/styles';
+import Footer from '../hoc/Layout/Footer/Footer';
+import Typography from '@material-ui/core/Typography';
+import axios from 'axios';
+import moment from 'moment';
 import Commentary from '../components/Commentary/Commentary';
-import styles from './viewProfile/viewProfileStyle'
+import styles from './viewProfile/viewProfileStyle';
 import UserAvatar from '../components/Avatar/UserAvatar';
 import About from '../components/About/About';
 import CardPreview from '../components/CardPreview/CardPreview';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
 const {frenchFormat}=require('../utils/text')
 
 

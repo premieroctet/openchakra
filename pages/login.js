@@ -1,5 +1,5 @@
 import {Component} from 'react';
-import Router from "next/router";
+import Router from 'next/router';
 
 class login extends Component {
 

@@ -1,17 +1,18 @@
-import React, { Fragment } from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import React, {Fragment} from 'react';
+import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Router from 'next/router';
-import DatePicker, {registerLocale} from "react-datepicker";
-import AlgoliaPlaces from "algolia-places-react";
+import DatePicker, {registerLocale} from 'react-datepicker';
+import AlgoliaPlaces from 'algolia-places-react';
 import fr from 'date-fns/locale/fr';
 import moment from 'moment';
 import isEmpty from '../../../server/validation/is-empty';
+import './Homeheader.css';
+
 registerLocale('fr', fr);
-import './Homeheader.css'
 
 const styles = theme => ({
   headerimg: {

@@ -1,6 +1,5 @@
 import React from 'react';
-import { storiesOf } from '@storybook/react';
-import TemptedByCard from './TemptedByCard';
+import {storiesOf} from '@storybook/react';
 
 import FoodImage from '../../../../static/bleuclair.PNG';
 

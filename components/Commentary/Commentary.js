@@ -1,7 +1,7 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import styles from './CommentaryStyle';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
@@ -14,7 +14,7 @@ import Notes from '../Notes/Notes';
 import {computeAverageNotes, computeSumSkills} from '../../utils/functions';
 import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
-import cookie from "react-cookies"
+import cookie from 'react-cookies';
 
 class Commentary extends React.Component{
   constructor(props){

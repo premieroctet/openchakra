@@ -1,17 +1,16 @@
-import React, { Fragment } from "react";
-import Link from "next/link";
-import Layout from "../../hoc/Layout/Layout";
-import axios from "axios";
-import moment from "moment";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import { withStyles } from "@material-ui/core/styles";
-import Footer from "../../hoc/Layout/Footer/Footer";
-import dynamic from "next/dynamic";
-import io from "socket.io-client";
-import Router from 'next/router';
-import Typography from "@material-ui/core/Typography";
-import cookie from 'react-cookies'
+import React, {Fragment} from 'react';
+import Link from 'next/link';
+import Layout from '../../hoc/Layout/Layout';
+import axios from 'axios';
+import moment from 'moment';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import {withStyles} from '@material-ui/core/styles';
+import dynamic from 'next/dynamic';
+import io from 'socket.io-client';
+import Typography from '@material-ui/core/Typography';
+import cookie from 'react-cookies';
+
 const _ = require("lodash");
 moment.locale("fr");
 

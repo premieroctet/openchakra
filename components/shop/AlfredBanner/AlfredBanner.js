@@ -1,14 +1,15 @@
-import React, { Fragment } from 'react';
+import React, {Fragment} from 'react';
 import Grid from '@material-ui/core/Grid';
-import { withStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import {withStyles} from '@material-ui/core/styles';
+import {Typography} from '@material-ui/core';
 import axios from 'axios';
 import styles from './AlfredBannerStyle';
 import UserAvatar from '../../Avatar/UserAvatar';
 import LocalSeeIcon from '@material-ui/icons/LocalSee';
-import { toast } from 'react-toastify';
-import { Carousel } from 'react-responsive-carousel';
+import {toast} from 'react-toastify';
+import {Carousel} from 'react-responsive-carousel';
 import Modal from '@material-ui/core/Modal';
+
 const {frenchFormat}=require('../../../utils/text')
 
 class alfredBanner extends React.Component{

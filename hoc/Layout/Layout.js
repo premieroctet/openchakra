@@ -1,6 +1,6 @@
-import React, { Fragment } from 'react';
+import React, {Fragment} from 'react';
 import NavBar from './NavBar/NavBar';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
 import axios from 'axios';
 
 

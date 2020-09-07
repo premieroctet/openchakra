@@ -1,5 +1,5 @@
 import React from 'react';
-import { storiesOf } from '@storybook/react';
+import {storiesOf} from '@storybook/react';
 import BecomeAlfredPersonsCard from './BecomeAlfredPersonsCard';
 
 import Avatar from '../../../../static/johndoe.jpg';

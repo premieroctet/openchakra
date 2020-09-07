@@ -1,5 +1,5 @@
 import React from 'react';
-import { storiesOf } from '@storybook/react';
+import {storiesOf} from '@storybook/react';
 import PopularCategoriesCard from './PopularCategoriesCard';
 
 import FoodImage from '../../../../static/monika-grabkowska-759473-unsplash.jpg';

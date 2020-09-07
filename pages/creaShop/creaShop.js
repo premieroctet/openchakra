@@ -1,10 +1,10 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import styles from './creaShopStyle'
+import styles from './creaShopStyle';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import CreaShopPresentation from '../../components/CreaShop/CreaShopPresentation/CreaShopPresentation';
-import Stepper from '../../components/Stepper/Stepper'
+import Stepper from '../../components/Stepper/Stepper';
 import SelectService from '../../components/CreaShop/SelectService/SelectService';
 import SelectPrestation from '../../components/CreaShop/SelectPrestation/SelectPrestation';
 import SettingService from '../../components/CreaShop/SettingService/SettingService';
@@ -18,11 +18,20 @@ import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import {ALF_CONDS, CANCEL_MODE, GID_LEN} from '../../utils/consts.js';
-import { toast } from 'react-toastify';
-import Router from "next/router";
-import {creaShopPresentation, selectService, selectPrestation, settingService, assetsService, settingShop, introduceYou} from '../../utils/validationSteps/validationSteps';
+import {toast} from 'react-toastify';
+import Router from 'next/router';
+import {
+  assetsService,
+  creaShopPresentation,
+  introduceYou,
+  selectPrestation,
+  selectService,
+  settingService,
+  settingShop,
+} from '../../utils/validationSteps/validationSteps';
+import cookie from 'react-cookies';
+
 const {createDefaultAvailability}=require('../../utils/dateutils');
-import cookie from 'react-cookies'
 const I18N = require('../../utils/i18n')
 
 class creaShop extends React.Component {

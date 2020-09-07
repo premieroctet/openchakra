@@ -1,26 +1,24 @@
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
-import { Typography } from '@material-ui/core';
+import {Typography} from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
 
 import Select2 from 'react-select';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
-import Router from "next/router";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import Chip from "@material-ui/core/Chip";
-import Link from "next/link";
-import cookie from 'react-cookies'
-import Checkbox from '@material-ui/core/Checkbox'
+import Router from 'next/router';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import Input from '@material-ui/core/Input';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Link from 'next/link';
+import cookie from 'react-cookies';
+import Checkbox from '@material-ui/core/Checkbox';
 
 const styles = {
     loginContainer: {

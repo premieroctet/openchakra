@@ -1,18 +1,18 @@
 import React, {Fragment} from 'react';
 import Layout from '../../hoc/Layout/Layout';
-import axios from "axios";
+import axios from 'axios';
 import moment from 'moment';
-import Grid from "@material-ui/core/Grid";
-import Router from "next/router";
-import { withStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Router from 'next/router';
+import {withStyles} from '@material-ui/core/styles';
+import {Typography} from '@material-ui/core';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import styles from './historique/historiqueStyle'
-import cookie from 'react-cookies'
+import styles from './historique/historiqueStyle';
+import cookie from 'react-cookies';
 
 moment.locale('fr');
 

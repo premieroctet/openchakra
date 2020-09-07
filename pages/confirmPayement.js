@@ -1,18 +1,19 @@
-import React, { Fragment } from "react";
-import Layout from "../hoc/Layout/Layout";
-import axios from "axios";
-import moment from "moment";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import Router from "next/router";
-import { withStyles } from "@material-ui/core/styles";
-import Footer from "../hoc/Layout/Footer/Footer";
+import React, {Fragment} from 'react';
+import Layout from '../hoc/Layout/Layout';
+import axios from 'axios';
+import moment from 'moment';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Router from 'next/router';
+import {withStyles} from '@material-ui/core/styles';
+import Footer from '../hoc/Layout/Footer/Footer';
 import About from '../components/About/About';
 import UserAvatar from '../components/Avatar/UserAvatar';
 import BookingDetail from '../components/BookingDetail/BookingDetail';
 import styles from './confirmPayement/confirmPayement';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
+
 const {booking_datetime_str} = require('../utils/dateutils');
 
 moment.locale("fr");

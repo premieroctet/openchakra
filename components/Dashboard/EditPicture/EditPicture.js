@@ -3,12 +3,12 @@ import Router from 'next/router';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
-import { Typography } from '@material-ui/core';
+import {Typography} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import styles from './EditPictureStyle'
-import cookie from 'react-cookies'
+import styles from './EditPictureStyle';
+import cookie from 'react-cookies';
 
 class EditPicture extends React.Component {
 

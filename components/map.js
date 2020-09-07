@@ -1,5 +1,6 @@
-import React from 'react'
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import {withStyles} from '@material-ui/core/styles';
+
 let Map, TileLayer,Marker, Popup, Circle
 
 //const position = [51.505, -0.09];

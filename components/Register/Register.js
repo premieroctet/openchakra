@@ -9,7 +9,7 @@ import AlgoliaPlaces from 'algolia-places-react';
 import {registerLocale} from 'react-datepicker';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
-import fr from "date-fns/locale/fr";
+import fr from 'date-fns/locale/fr';
 import styles from './RegisterStyle';
 import {withStyles} from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
@@ -31,7 +31,7 @@ import Dialog from '@material-ui/core/Dialog';
 import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined';
 import Router from 'next/router';
 import Link from 'next/link';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
 import OAuth from '../OAuth/OAuth';
 import Information from '../Information/Information';
 

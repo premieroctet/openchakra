@@ -1,18 +1,18 @@
-import React, { Fragment } from "react";
-import Link from "next/link";
-import Layout from "../../hoc/Layout/Layout";
-import Grid from "@material-ui/core/Grid";
-import { withStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import axios from "axios";
-import moment from "moment";
-import getDistance from "geolib/es/getDistance";
-import convertDistance from "geolib/es/convertDistance";
+import React, {Fragment} from 'react';
+import Link from 'next/link';
+import Layout from '../../hoc/Layout/Layout';
+import Grid from '@material-ui/core/Grid';
+import {withStyles} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import axios from 'axios';
+import moment from 'moment';
+import getDistance from 'geolib/es/getDistance';
+import convertDistance from 'geolib/es/convertDistance';
 import UserAvatar from '../../components/Avatar/UserAvatar';
-import io from "socket.io-client";
+import io from 'socket.io-client';
 import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
-import styles from './detailsReservation/detailsReservationStyle'
+import styles from './detailsReservation/detailsReservationStyle';
 import About from '../../components/About/About';
 import Button from '@material-ui/core/Button';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
@@ -21,7 +21,7 @@ import Router from 'next/router';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
 
 
 moment.locale("fr");

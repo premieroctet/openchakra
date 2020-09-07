@@ -2,16 +2,16 @@ import React from 'react';
 
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
-import { Typography } from '@material-ui/core';
+import {Typography} from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Router from 'next/router';
 import Layout from '../../../hoc/Layout/Layout';
-import axios from "axios";
-import FormControl from "@material-ui/core/FormControl";
+import axios from 'axios';
+import FormControl from '@material-ui/core/FormControl';
 import Select2 from 'react-select';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
 
 const styles = theme => ({
     signupContainer: {

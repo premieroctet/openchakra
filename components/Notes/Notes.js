@@ -1,10 +1,9 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import styles from './NotesStyle'
+import {withStyles} from '@material-ui/core/styles';
+import styles from './NotesStyle';
 import Typography from '@material-ui/core/Typography';
-import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
 

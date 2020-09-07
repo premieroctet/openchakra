@@ -1,23 +1,24 @@
-import React, { Fragment } from "react";
-import Link from "next/link";
-import Layout from "../../hoc/Layout/Layout";
+import React, {Fragment} from 'react';
+import Link from 'next/link';
+import Layout from '../../hoc/Layout/Layout';
 import Typography from '@material-ui/core/Typography';
-import axios from "axios";
-import moment from "moment";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import { withStyles } from "@material-ui/core/styles";
-import {registerLocale} from "react-datepicker";
+import axios from 'axios';
+import moment from 'moment';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import {withStyles} from '@material-ui/core/styles';
+import {registerLocale} from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
-import io from "socket.io-client";
-const _ = require("lodash");
-registerLocale('fr', fr);
-moment.locale("fr");
-import styles from '../reserve/reserveStyle'
+import io from 'socket.io-client';
+import styles from '../reserve/reserveStyle';
 import About from '../../components/About/About';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
+
+const _ = require("lodash");
+registerLocale('fr', fr);
+moment.locale("fr");
 
 
 class Reserve extends React.Component {

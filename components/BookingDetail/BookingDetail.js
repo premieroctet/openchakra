@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './BookingDetailStyle'
+import styles from './BookingDetailStyle';
 import Grid from '@material-ui/core/Grid';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 class BookingDetail extends React.Component{
   constructor(props) {

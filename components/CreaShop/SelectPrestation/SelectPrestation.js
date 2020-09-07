@@ -1,15 +1,16 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
-import { Typography } from '@material-ui/core';
+import {Typography} from '@material-ui/core';
 import axios from 'axios';
-import styles from '../componentStyle'
+import styles from '../componentStyle';
 import {CUSTOM_PRESTATIONS_FLTR, generate_id, GID_LEN} from '../../../utils/consts';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
+
 const jwt = require('jsonwebtoken');
 
 class SelectPrestation extends React.Component {

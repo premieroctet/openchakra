@@ -1,18 +1,17 @@
-import React from 'react'
+import React from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import styles from './LogInStyle';
 import Grid from '@material-ui/core/Grid';
-import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import setAuthToken from '../../utils/setAuthToken';
 import axios from 'axios';
-import Router from "next/router";
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
 import OAuth from '../OAuth/OAuth';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
+
 const {PROVIDERS}=require('../../utils/consts');
 const {ENABLE_GF_LOGIN}=require('../../config/config');
 

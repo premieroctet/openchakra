@@ -1,19 +1,19 @@
 import React, {Fragment} from 'react';
-import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
-import axios from "axios";
+import axios from 'axios';
 import moment from 'moment';
-import Grid from "@material-ui/core/Grid";
-import Router from "next/router";
-import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Router from 'next/router';
+import {withStyles} from '@material-ui/core/styles';
 import {Helmet} from 'react-helmet';
 import Commentary from '../../components/Commentary/Commentary';
-moment.locale('fr');
-import styles from './reviews/reviewsStyle'
+import styles from './reviews/reviewsStyle';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
+
+moment.locale('fr');
 
 class reviews extends React.Component {
     constructor(props) {

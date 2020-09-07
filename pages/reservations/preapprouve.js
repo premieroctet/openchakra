@@ -1,25 +1,24 @@
-import React, { Fragment } from "react";
-import Link from "next/link";
-import Layout from "../../hoc/Layout/Layout";
-import axios from "axios";
-import moment from "moment";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Router from "next/router";
-import { withStyles } from "@material-ui/core/styles";
-import Footer from "../../hoc/Layout/Footer/Footer";
-import DatePicker, {registerLocale} from "react-datepicker";
+import React, {Fragment} from 'react';
+import Link from 'next/link';
+import Layout from '../../hoc/Layout/Layout';
+import axios from 'axios';
+import moment from 'moment';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import {withStyles} from '@material-ui/core/styles';
+import DatePicker, {registerLocale} from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
-import io from "socket.io-client";
-registerLocale('fr', fr);
-moment.locale("fr");
-const _ = require("lodash");
-import styles from './preApprouve/preApprouveStyle'
+import io from 'socket.io-client';
+import styles from './preApprouve/preApprouveStyle';
 import About from '../../components/About/About';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import Typography from '@material-ui/core/Typography';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
+
+registerLocale('fr', fr);
+moment.locale("fr");
+const _ = require("lodash");
 const {frenchFormat}=require('../../utils/text')
 
 const Input2 = ({value,  onClick }) => (

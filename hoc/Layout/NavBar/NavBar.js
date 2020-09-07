@@ -1,25 +1,24 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import axios from "axios";
+import axios from 'axios';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { withStyles} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Link from 'next/link';
-import setAuthToken from "../../../utils/setAuthToken";
-import Router from "next/router";
+import setAuthToken from '../../../utils/setAuthToken';
+import Router from 'next/router';
 import UserAvatar from '../../../components/Avatar/UserAvatar';
 import SearchInput from '../../../components/SearchInput/SearchInput';
-import styles from './NavBarStyle'
+import styles from './NavBarStyle';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
-import cookie from 'react-cookies'
-const jwt = require('jsonwebtoken');
+import cookie from 'react-cookies';
 import LogIn from '../../../components/LogIn/LogIn';
 import Register from '../../../components/Register/Register';
 import Dialog from '@material-ui/core/Dialog';
@@ -27,6 +26,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Slide from '@material-ui/core/Slide';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
+
+const jwt = require('jsonwebtoken');
 
 var parse = require('url-parse');
 

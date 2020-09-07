@@ -1,12 +1,11 @@
-import './userServicePreview/userServicePreviewStyle.css'
-const isEmpty=require('../server/validation/is-empty');
+import './userServicePreview/userServicePreviewStyle.css';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Layout from '../hoc/Layout/Layout';
-import styles from './userServicePreview/userServicePreviewStyle'
+import styles from './userServicePreview/userServicePreviewStyle';
 import Grid from '@material-ui/core/Grid';
-import Router from "next/router";
+import Router from 'next/router';
 import axios from 'axios';
 import BannerReservation from '../components/BannerReservation/BannerReservation';
 import Badge from '@material-ui/core/Badge';
@@ -35,24 +34,26 @@ import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import MapComponent from '../components/map';
-const {computeBookingReference}=require('../utils/functions');
-const {COMM_CLIENT}=require('../utils/consts');
-const emptyPromise = require('../utils/promise');
-const {isMomentAvailable, getDeadLine} = require('../utils/dateutils');
-const {computeDistanceKm}=require('../utils/functions');
-import DatePicker, {registerLocale} from "react-datepicker";
+import DatePicker, {registerLocale} from 'react-datepicker';
 import Commentary from '../components/Commentary/Commentary';
 import fr from 'date-fns/locale/fr';
 import Switch from '@material-ui/core/Switch';
 import BookingDetail from '../components/BookingDetail/BookingDetail';
 import {Helmet} from 'react-helmet';
+import Link from 'next/link';
+import cookie from 'react-cookies';
+import Information from '../components/Information/Information';
+
+const isEmpty=require('../server/validation/is-empty');
+const {computeBookingReference}=require('../utils/functions');
+const {COMM_CLIENT}=require('../utils/consts');
+const emptyPromise = require('../utils/promise');
+const {isMomentAvailable, getDeadLine} = require('../utils/dateutils');
+const {computeDistanceKm}=require('../utils/functions');
 const moment = require('moment');
 moment.locale('fr');
 registerLocale('fr', fr);
-import Link from 'next/link';
-import cookie from 'react-cookies'
 const {frenchFormat}=require('../utils/text')
-import Information from '../components/Information/Information';
 const I18N=require('../utils/i18n')
 
 

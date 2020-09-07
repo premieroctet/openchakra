@@ -1,19 +1,17 @@
-import React, { Fragment } from "react";
-import Link from "next/link";
-import io from "socket.io-client";
-import axios from "axios";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import Layout from "../../hoc/Layout/Layout";
-import moment from "moment";
-import { withStyles } from "@material-ui/core/styles";
-import getDistance from "geolib/es/getDistance";
-import convertDistance from "geolib/es/convertDistance";
+import React, {Fragment} from 'react';
+import io from 'socket.io-client';
+import axios from 'axios';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import Layout from '../../hoc/Layout/Layout';
+import moment from 'moment';
+import {withStyles} from '@material-ui/core/styles';
+import getDistance from 'geolib/es/getDistance';
+import convertDistance from 'geolib/es/convertDistance';
 import UserAvatar from '../../components/Avatar/UserAvatar';
-import styles from './messagesDetails/messagesDetailsStyle'
-import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
-import cookie from 'react-cookies'
-import Router from "next/router";
+import styles from './messagesDetails/messagesDetailsStyle';
+import cookie from 'react-cookies';
+import Router from 'next/router';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';

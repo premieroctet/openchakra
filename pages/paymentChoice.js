@@ -1,16 +1,17 @@
 import React, {Fragment} from 'react';
 import Layout from '../hoc/Layout/Layout';
-import axios from "axios";
+import axios from 'axios';
 import moment from 'moment';
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Router from "next/router";
-import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Router from 'next/router';
+import {withStyles} from '@material-ui/core/styles';
 import Footer from '../hoc/Layout/Footer/Footer';
 import Cards from 'react-credit-cards';
 import '../static/creditcards.css';
-import styles from './paymentChoice/paymentChoiceStyle'
-import cookie from 'react-cookies'
+import styles from './paymentChoice/paymentChoiceStyle';
+import cookie from 'react-cookies';
+
 moment.locale('fr');
 
 class paymentChoice extends React.Component {

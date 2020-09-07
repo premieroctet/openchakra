@@ -6,13 +6,13 @@ import Divider from '@material-ui/core/Divider';
 import SelectSlotTimer from '../../SelectSlotTimer/SelectSlotTimer';
 import {Button} from '@material-ui/core';
 import React from 'react';
-import styles from './DrawerEditingScheduleStyle'
+import styles from './DrawerEditingScheduleStyle';
 import withStyles from '@material-ui/core/styles/withStyles';
 import FormControl from '@material-ui/core/FormControl';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
-import axios from "axios";
+import axios from 'axios';
 import Typography from '@material-ui/core/Typography';
 
 class DrawerEditingSchedule extends React.Component{

@@ -1,6 +1,6 @@
-import React, { Fragment } from 'react';
+import React, {Fragment} from 'react';
 import Layout from '../hoc/Layout/Layout';
-import { Carousel } from 'react-responsive-carousel';
+import {Carousel} from 'react-responsive-carousel';
 import axios from 'axios';
 
 class ShopBanner extends React.Component {

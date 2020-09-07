@@ -1,10 +1,9 @@
-import React, { Fragment } from 'react';
+import React, {Fragment} from 'react';
 import Grid from '@material-ui/core/Grid';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import FeelingGoodCard from './feelingGood/feelingGoodCard/feelingGoodCard';
 import axios from 'axios';
-import Link from 'next/link';
 
 const styles = theme => ({
     container: {

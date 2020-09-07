@@ -7,13 +7,14 @@ import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import Siret from '../../WizardForm/Siret';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import styles from '../componentStyle';
-const {CESU}=require('../../../utils/consts')
-import {Radio, RadioGroup } from '@material-ui/core';
-import TextField from "@material-ui/core/TextField";
+import {Radio, RadioGroup} from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
 import ButtonSwitch from '../../../components/ButtonSwitch/ButtonSwitch';
 import Information from '../../Information/Information';
+
+const {CESU}=require('../../../utils/consts')
 const I18N = require('../../../utils/i18n')
 
 class IntroduceYou extends React.Component {

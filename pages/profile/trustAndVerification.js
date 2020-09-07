@@ -1,45 +1,42 @@
 import React, {Fragment} from 'react';
-import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
-import axios from "axios";
+import axios from 'axios';
 import moment from 'moment';
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Router from "next/router";
-import { withStyles } from '@material-ui/core/styles';
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import MenuItem from "@material-ui/core/MenuItem";
-import { Document,Page } from 'react-pdf'
-import { pdfjs } from 'react-pdf';
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Router from 'next/router';
+import {withStyles} from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import MenuItem from '@material-ui/core/MenuItem';
+import {pdfjs} from 'react-pdf';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
-import styled from "styled-components";
-import Edit from '@material-ui/icons/EditOutlined';
-import Delete from '@material-ui/icons/DeleteOutlined';
-import { toast } from 'react-toastify';
+import styled from 'styled-components';
+import {toast} from 'react-toastify';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {Helmet} from 'react-helmet';
-import styles from './trustAndVerification/trustAndVerificationStyle'
+import styles from './trustAndVerification/trustAndVerificationStyle';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Siret from '../../components/WizardForm/Siret';
-const {CESU}=require('../../utils/consts')
-import {Radio, RadioGroup } from '@material-ui/core';
+import {Radio, RadioGroup} from '@material-ui/core';
 import ButtonSwitch from '../../components/ButtonSwitch/ButtonSwitch';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
 import Information from '../../components/Information/Information';
+import DocumentEditor from '../../components/DocumentEditor/DocumentEditor';
+
+const {CESU}=require('../../utils/consts')
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 const I18N = require('../../utils/i18n')
 const {checkSocialSecurity}=require('../../utils/social_security')
-import  DocumentEditor from '../../components/DocumentEditor/DocumentEditor'
 moment.locale('fr');
 
 const FilledButton = styled.div`

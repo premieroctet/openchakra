@@ -1,10 +1,10 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import styles from '../componentStyle'
-import { Typography } from '@material-ui/core';
-import '../../../static/assets/police/signatra.css'
+import {withStyles} from '@material-ui/core/styles';
+import styles from '../componentStyle';
+import {Typography} from '@material-ui/core';
+import '../../../static/assets/police/signatra.css';
 
 class CreaShopPresentation extends React.Component {
   constructor(props) {

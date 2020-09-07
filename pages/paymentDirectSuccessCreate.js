@@ -1,13 +1,13 @@
 import React, {Fragment} from 'react';
 import Link from 'next/link';
 import Layout from '../hoc/Layout/Layout';
-import axios from "axios";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Router from "next/router";
-import { withStyles } from '@material-ui/core/styles';
+import axios from 'axios';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Router from 'next/router';
+import {withStyles} from '@material-ui/core/styles';
 import Footer from '../hoc/Layout/Footer/Footer';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
 
 class PaymentDirectSuccessCreate extends React.Component {
     constructor(props) {

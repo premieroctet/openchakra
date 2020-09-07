@@ -1,18 +1,13 @@
 import React from 'react';
-
-import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
-import { Typography } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import { withStyles } from '@material-ui/core/styles';
+import {Typography} from '@material-ui/core';
+import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Router from 'next/router';
-import axios from "axios";
-import Link from "next/link";
-import { toast } from 'react-toastify';
+import axios from 'axios';
 import APIS from './apis_list';
 import Layout from '../../../hoc/Layout/Layout';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
 
 const jwt = require('jsonwebtoken');
 const styles = theme => ({

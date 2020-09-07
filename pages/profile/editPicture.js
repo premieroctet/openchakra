@@ -1,14 +1,14 @@
 import React, {Fragment} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Layout from '../../hoc/Layout/Layout';
-import axios from "axios";
+import axios from 'axios';
 import moment from 'moment';
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Router from "next/router";
-import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Router from 'next/router';
+import {withStyles} from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -16,11 +16,11 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {Helmet} from 'react-helmet';
 import {generate_avatar} from '../../utils/generateAvatar';
-import styles from './editPicture/editPictureStyle'
+import styles from './editPicture/editPictureStyle';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
 
 moment.locale('fr');
 

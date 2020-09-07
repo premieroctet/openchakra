@@ -1,23 +1,26 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import styles from '../creaShop/creaShopStyle'
+import styles from '../creaShop/creaShopStyle';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Stepper from '../../components/Stepper/Stepper'
+import {withStyles} from '@material-ui/core/styles';
+import Stepper from '../../components/Stepper/Stepper';
 import SelectService from '../../components/CreaShop/SelectService/SelectService';
 import SelectPrestation from '../../components/CreaShop/SelectPrestation/SelectPrestation';
 import SettingService from '../../components/CreaShop/SettingService/SettingService';
 import BookingPreference from '../../components/CreaShop/BookingPreference/BookingPreference';
 import AssetsService from '../../components/CreaShop/AssetsService/AssetsService';
-import Schedule from '../../components/Schedule/Schedule';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
-import {ALF_CONDS, CANCEL_MODE} from '../../utils/consts.js';
-import { toast } from 'react-toastify';
-import Router from "next/router";
-import {selectService, selectPrestation, settingService, assetsService} from '../../utils/validationSteps/validationSteps';
-import cookie from 'react-cookies'
+import {toast} from 'react-toastify';
+import Router from 'next/router';
+import {
+    assetsService,
+    selectPrestation,
+    selectService,
+    settingService,
+} from '../../utils/validationSteps/validationSteps';
+import cookie from 'react-cookies';
 
 
 class services extends React.Component {

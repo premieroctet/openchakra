@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import frLocale from "date-fns/locale/fr";
+import frLocale from 'date-fns/locale/fr';
 import Chip from '@material-ui/core/Chip';
 import {DAYS} from '../../../utils/converters';
 import SelectSlotTimer from '../../SelectSlotTimer/SelectSlotTimer';

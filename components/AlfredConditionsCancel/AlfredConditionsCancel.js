@@ -1,14 +1,15 @@
 import Grid from '@material-ui/core/Grid';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import Checkbox from '@material-ui/core/Checkbox';
-import styles from '../shop/componentStyle'
+import styles from '../shop/componentStyle';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
+
 const {frenchFormat}=require('../../utils/text')
 
 class AlfredConditionsCancel extends React.Component{

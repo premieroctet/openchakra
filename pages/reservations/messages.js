@@ -1,11 +1,11 @@
-import React, { Fragment } from "react";
-import Link from "next/link";
-import Layout from "../../hoc/Layout/Layout";
-import Grid from "@material-ui/core/Grid";
-import { withStyles } from "@material-ui/core/styles";
-import styles from "./messages/messagesStyle";
-import Typography from "@material-ui/core/Typography";
-import axios from "axios";
+import React, {Fragment} from 'react';
+import Link from 'next/link';
+import Layout from '../../hoc/Layout/Layout';
+import Grid from '@material-ui/core/Grid';
+import {withStyles} from '@material-ui/core/styles';
+import styles from './messages/messagesStyle';
+import Typography from '@material-ui/core/Typography';
+import axios from 'axios';
 import _ from 'lodash';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import moment from 'moment';
@@ -15,8 +15,8 @@ import Button from '@material-ui/core/Button';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import cookie from 'react-cookies'
-import Router from "next/router";
+import cookie from 'react-cookies';
+import Router from 'next/router';
 
 class Messages extends React.Component {
   constructor(props) {

@@ -2,8 +2,8 @@ import Grid from '@material-ui/core/Grid';
 import Link from 'next/link';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import styles from './NavBarShopStyle'
+import {withStyles} from '@material-ui/core/styles';
+import styles from './NavBarShopStyle';
 
 class NavBarShop extends React.Component{
   constructor(props){

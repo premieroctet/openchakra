@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormikConsumer } from 'formik';
+import {FormikConsumer} from 'formik';
 
 export const Debug = () => (
     <div

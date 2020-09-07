@@ -1,8 +1,7 @@
 import Grid from '@material-ui/core/Grid';
-import Link from 'next/link';
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import styles from './NavbarMobileStyle'
+import {withStyles} from '@material-ui/core/styles';
+import styles from './NavbarMobileStyle';
 import PropTypes from 'prop-types';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';

@@ -1,25 +1,25 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import Layout from '../hoc/Layout/Layout';
 import Footer from '../hoc/Layout/Footer/Footer';
-import Grid from "@material-ui/core/Grid";
-import { withStyles } from '@material-ui/core/styles';
-import axios from "axios";
-import Button from "@material-ui/core/Button";
+import Grid from '@material-ui/core/Grid';
+import {withStyles} from '@material-ui/core/styles';
+import axios from 'axios';
+import Button from '@material-ui/core/Button';
 import Link from 'next/link';
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 import 'react-dates/initialize';
-import { DateRangePicker } from 'react-dates';
-import moment from "moment";
+import {DateRangePicker} from 'react-dates';
+import moment from 'moment';
 import 'react-dates/lib/css/_datepicker.css';
 import CardPreview from '../components/CardPreview/CardPreview';
 import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
-import Profiteandlearn from '../components/home/profite&learn/profite&learn'
+import Profiteandlearn from '../components/home/profite&learn/profite&learn';
 import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
 import NearbyYou from '../components/home/NearbyYou/NearbyYou';
 import FeelingGood from '../components/home/feelingGood/feelingGood';
@@ -40,8 +40,8 @@ import Section18 from '../components/home/section18';
 import Section19 from '../components/home/section19';
 import Section21 from '../components/home/section21';
 import Section22 from '../components/home/section22';
-import styles from './search/searchStyle'
-import cookie from 'react-cookies'
+import styles from './search/searchStyle';
+import cookie from 'react-cookies';
 
 moment.locale('fr');
 

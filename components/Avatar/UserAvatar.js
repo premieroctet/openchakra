@@ -1,13 +1,13 @@
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Badge from '@material-ui/core/Badge';
 import Grid from '@material-ui/core/Grid';
 import Popover from '@material-ui/core/Popover';
-import Typography from '@material-ui/core/Typography';
-import axios from "axios";
-import styles from './UserAvatarStyle'
-import cookie from 'react-cookies'
+import axios from 'axios';
+import styles from './UserAvatarStyle';
+import cookie from 'react-cookies';
+
 const jwt = require('jsonwebtoken');
 
 class UserAvatar extends React.Component{

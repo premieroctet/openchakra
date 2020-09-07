@@ -1,16 +1,16 @@
 import React, {Fragment} from 'react';
 import Layout from '../hoc/Layout/Layout';
-import axios from "axios";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Router from "next/router";
-import { withStyles } from '@material-ui/core/styles';
+import axios from 'axios';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Router from 'next/router';
+import {withStyles} from '@material-ui/core/styles';
 import Footer from '../hoc/Layout/Footer/Footer';
 import StarRatings from 'react-star-ratings';
 import {toast} from 'react-toastify';
-import TextField from "@material-ui/core/TextField";
+import TextField from '@material-ui/core/TextField';
 import Skills from '../components/Skills/Skills';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
 
 const styles = theme => ({
     bigContainer: {

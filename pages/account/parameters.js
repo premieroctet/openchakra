@@ -1,25 +1,23 @@
 import React, {Fragment} from 'react';
-import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
-import axios from "axios";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Router from "next/router";
-import Footer from '../../hoc/Layout/Footer/Footer';
-import { withStyles } from '@material-ui/core/styles';
-import Switch from "@material-ui/core/Switch";
-import { toast } from 'react-toastify';
+import axios from 'axios';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Router from 'next/router';
+import {withStyles} from '@material-ui/core/styles';
+import Switch from '@material-ui/core/Switch';
+import {toast} from 'react-toastify';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {Helmet} from 'react-helmet';
-import styles from './parameters/parametersStyle'
+import styles from './parameters/parametersStyle';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import cookie from "react-cookies"
+import cookie from 'react-cookies';
 
 
 class parameters extends React.Component {

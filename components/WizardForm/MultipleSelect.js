@@ -1,6 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
-import { connect } from 'formik';
+import {connect} from 'formik';
 
 function MultipleSelect(props) {
 

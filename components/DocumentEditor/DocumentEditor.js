@@ -1,11 +1,10 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Edit from '@material-ui/icons/EditOutlined';
 import Delete from '@material-ui/icons/DeleteOutlined';
-import { Document,Page } from 'react-pdf'
-import styles from './DocumentEditorStyle'
-import axios from 'axios'
+import {Document, Page} from 'react-pdf';
+import styles from './DocumentEditorStyle';
 
 class DocumentEditor extends React.Component{
   constructor(props){

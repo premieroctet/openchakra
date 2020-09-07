@@ -1,14 +1,14 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import styles from '../componentStyle'
+import styles from '../componentStyle';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
 import axios from 'axios';
 import isEmpty from '../../../server/validation/is-empty';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
 
 class SettingService extends React.Component {
   constructor(props) {

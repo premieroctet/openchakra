@@ -1,11 +1,11 @@
-import React, { Fragment } from "react";
-import Link from "next/link";
-import Layout from "../../hoc/Layout/Layout";
-import Grid from "@material-ui/core/Grid";
-import { withStyles } from "@material-ui/core/styles";
-import styles from './newMessages/newMessagesStyle'
-import Typography from "@material-ui/core/Typography";
-import axios from "axios";
+import React, {Fragment} from 'react';
+import Link from 'next/link';
+import Layout from '../../hoc/Layout/Layout';
+import Grid from '@material-ui/core/Grid';
+import {withStyles} from '@material-ui/core/styles';
+import styles from './newMessages/newMessagesStyle';
+import Typography from '@material-ui/core/Typography';
+import axios from 'axios';
 import _ from 'lodash';
 import moment from 'moment';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
@@ -15,7 +15,7 @@ import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
 
 class NewMessages extends React.Component {
   constructor(props) {

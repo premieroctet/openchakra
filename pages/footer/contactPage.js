@@ -1,10 +1,10 @@
-import React, { Fragment } from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import {withStyles} from '@material-ui/core/styles';
 import Layout from '../../hoc/Layout/Layout';
-import Grid from "@material-ui/core/Grid";
-import HubspotForm from 'react-hubspot-form'
+import Grid from '@material-ui/core/Grid';
+import HubspotForm from 'react-hubspot-form';
 import Card from '@material-ui/core/Card';
-import { Typography } from '@material-ui/core';
+import {Typography} from '@material-ui/core';
 
 
 const styles = theme => ({

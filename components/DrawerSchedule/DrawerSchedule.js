@@ -11,7 +11,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import DrawerEditingSchedule from '../Drawer/DrawerEditingSchedule/DrawerEditingSchedule';
 import DrawerSettingSchedule from '../Drawer/DrawerSettingSchedule/DrawerSettingSchedule';
 import cookie from 'react-cookies';
-import axios from "axios";
+import axios from 'axios';
 
 class DrawerSchedule extends React.Component{
     constructor(props) {

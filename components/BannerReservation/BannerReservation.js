@@ -1,13 +1,13 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import { withStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
-import styles from './BannerReservationStyle'
+import {withStyles} from '@material-ui/core/styles';
+import styles from './BannerReservationStyle';
 import PropTypes from 'prop-types';
 import Fab from '@material-ui/core/Fab';
 import Chip from '@material-ui/core/Chip';
 import Link from 'next/link';
-import '../../static/assets/police/signatra.css'
+import '../../static/assets/police/signatra.css';
+
 const {frenchFormat}=require('../../utils/text')
 
 

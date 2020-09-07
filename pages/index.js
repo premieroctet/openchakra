@@ -1,9 +1,9 @@
 import axios from 'axios';
-import React, { Fragment } from 'react';
-import Layout from "../hoc/Layout/Layout";
-import Footer from "../hoc/Layout/Footer/Footer";
+import React, {Fragment} from 'react';
+import Layout from '../hoc/Layout/Layout';
+import Footer from '../hoc/Layout/Footer/Footer';
 import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
-import Profiteandlearn from '../components/home/profite&learn/profite&learn'
+import Profiteandlearn from '../components/home/profite&learn/profite&learn';
 import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
 import NearbyYou from '../components/home/NearbyYou/NearbyYou';
 import Homeheader from '../components/home/Homeheader/Homeheader';
@@ -26,9 +26,9 @@ import Section19 from '../components/home/section19';
 import Section21 from '../components/home/section21';
 import Section22 from '../components/home/section22';
 import setAuthToken from '../utils/setAuthToken';
-import Router from "next/router";
+import Router from 'next/router';
 import {Helmet} from 'react-helmet';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
 
 class Home extends React.Component {
     constructor(props) {

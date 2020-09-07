@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 579.6 563.9" style="enable-background:new 0 0 579.6 563.9;" xml:space="preserve">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+     viewBox="0 0 579.6 563.9" style="enable-background:new 0 0 579.6 563.9;" xml:space="preserve">
 <style type="text/css">
 	.st0{opacity:0.55;fill:#2BB9D2;}
 	.st1{fill:#EE717C;}
@@ -39,7 +39,7 @@
 	.st33{opacity:0.52;fill:#2BB9D2;}
 </style>
 <g id="dessin">
-	
+
 		<rect x="200.3" y="329" transform="matrix(0.6387 -0.7694 0.7694 0.6387 -231.4324 303.996)" class="st1" width="15.5" height="138.9"/>
 	<path class="st1" d="M227.4,391.7l-16.3-13.6l128.3-154.6l2.6,9.2c0.5,1.9,2.2,3.3,4.2,3.5l9.5,0.9L227.4,391.7z"/>
 	<polygon class="st0" points="385.6,227.7 354.4,224.7 345.7,194.5 432.9,101.4 461.1,124.8 	"/>

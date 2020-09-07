@@ -1,13 +1,14 @@
-import React from 'react'
-import { Calendar, Views, momentLocalizer } from 'react-big-calendar';
-import _ from 'lodash'
+import React from 'react';
+import {Calendar, momentLocalizer, Views} from 'react-big-calendar';
+import _ from 'lodash';
 import moment from 'moment';
 import Grid from '@material-ui/core/Grid';
 import withStyles from '@material-ui/core/styles/withStyles';
 import {bookings2events} from '../../utils/converters';
-import { Typography } from '@material-ui/core';
-import styles from './ScheduleStyle'
+import {Typography} from '@material-ui/core';
+import styles from './ScheduleStyle';
 import PropTypes from 'prop-types';
+
 const {isDateAvailable}=require('../../utils/dateutils');
 moment.locale('fr');
 

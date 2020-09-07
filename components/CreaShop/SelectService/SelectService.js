@@ -3,17 +3,17 @@ const AUTOCOMPLETE=false
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import styles from '../componentStyle'
+import {withStyles} from '@material-ui/core/styles';
+import styles from '../componentStyle';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
-const { inspect } = require('util');
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import useAutocomplete from '@material-ui/lab/useAutocomplete';
+import Select from 'react-dropdown-select';
+import cookie from 'react-cookies';
+
+const { inspect } = require('util');
 const {matches, normalize} = require('../../../utils/text')
-import Select from "react-dropdown-select";
-import cookie from "react-cookies"
 
 class SelectService extends React.Component {
   constructor(props) {
