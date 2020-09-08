@@ -8,6 +8,7 @@ import {bookings2events} from '../../utils/converters';
 import {Typography} from '@material-ui/core';
 import styles from './ScheduleStyle';
 import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
 
 const {isDateAvailable} = require('../../utils/dateutils');
 moment.locale('fr');
@@ -41,21 +42,53 @@ class Schedule extends React.Component {
 
   customToolbar = classes => (toolbar) => {
 
+    const goToBack = () => {
+      toolbar.date.setMonth(toolbar.date.getMonth() - 1);
+      toolbar.onNavigate('prev');
+    };
+
+    const goToNext = () => {
+      toolbar.date.setMonth(toolbar.date.getMonth() + 1);
+      toolbar.onNavigate('next');
+    };
+
+    /*const goToCurrent = () => {
+      const now = new Date();
+      toolbar.date.setMonth(now.getMonth());
+      toolbar.date.setYear(now.getFullYear());
+      toolbar.onNavigate('current');
+    };*/
+
+
     const label = () => {
       const date = moment(toolbar.date);
       return (
-        <span>
-            <span>{date.format('MMMM')}</span>
-            <span> {date.format('YYYY')}</span>
-          </span>
+        <Grid container
+              style={{alignItems: 'center', justifyContent: this.props.nbSchedule === 1 ? 'space-between' : 'center'}}>
+          {
+            this.props.nbSchedule === 1 ?
+              <Grid item>
+                <Button onClick={goToBack}>&#8249;</Button>
+              </Grid> : null
+          }
+          <Grid item>
+            <span>{date.format('MMMM') + ' ' + date.format('YYYY')}</span>
+          </Grid>
+          {
+            this.props.nbSchedule === 1 ?
+              <Grid item>
+                <Button onClick={goToNext}>&#8250;</Button>
+              </Grid> : null
+          }
+        </Grid>
       );
     };
 
     return (
       <Grid container>
         <Grid className={classes.customToolbarStyle}>
-          <Grid>
-            <p>{label()}</p>
+          <Grid style={{width: '100%'}}>
+            <Grid>{label()}</Grid>
           </Grid>
         </Grid>
       </Grid>

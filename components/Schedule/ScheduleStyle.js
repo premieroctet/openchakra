@@ -19,10 +19,9 @@ export default theme => ({
   },
   sizeSchedulle: {
     '& .rbc-month-view': {
-      borderRadius: 10,
+      borderRadius: 4,
     },
     '& .rbc-month-row': {
-      borderRadius: '0px 0px 10px 5px',
       display: 'flex',
       justifyContent: 'center',
     },
@@ -100,8 +99,7 @@ export default theme => ({
   customToolbarStyle: {
     display: 'flex',
     width: '100%',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    marginBottom: 5,
   },
   off_range_style: {
     width: '100%',
@@ -147,6 +145,7 @@ export default theme => ({
     borderLeft: '1px solid #DDD',
     cursor: 'pointer',
     backgroundColor: 'lightgrey',
+    background: 'repeating-linear-gradient(45deg, lightgrey 48%, #FFFFFF  50%,lightgrey 51%)'
   },
   myEventWrapperStyle: {
     borderTop: '25px solid pink',
@@ -158,5 +157,6 @@ export default theme => ({
     margin: 0,
     marginLeft: 1,
   },
+
 
 })
