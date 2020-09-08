@@ -19,10 +19,9 @@ export default theme => ({
   },
   sizeSchedulle: {
     '& .rbc-month-view': {
-      borderRadius: 10,
+      borderRadius: 4,
     },
     '& .rbc-month-row': {
-      borderRadius: '0px 0px 10px 5px',
       display: 'flex',
       justifyContent: 'center',
     },
