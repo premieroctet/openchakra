@@ -20,28 +20,23 @@ moment.locale('fr');
 
 class myAvailabilities extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.child = React.createRef();
-    this.state = {
-      user: {},
-      availabilities: [],
-      bookings: [],
-      alfred: [],
-      id: props.aboutId,
-      shop: [],
-      services: [],
-      userState: false,
-      userId: '',
-      isOwner: false,
-      have_picture: false,
-      banner: [],
-    };
-  }
-
-  static getInitialProps({query: {id_alfred}}) {
-    return {aboutId: id_alfred};
-  }
+    constructor(props) {
+        super(props);
+        this.child = React.createRef();
+        this.state = {
+            user: {},
+            availabilities: [],
+            bookings: [],
+            alfred:[],
+            id: props.aboutId,
+            shop:[],
+            services: [],
+            userState: false,
+            userId: '',
+            isOwner:false,
+            have_picture: false,
+        };
+    }
 
   componentDidMount() {
 
@@ -140,27 +135,15 @@ class myAvailabilities extends React.Component {
           })
           .catch(err => console.error(err));
       });
-  };
+    }
 
-  availabilityDelete = (avail) => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    sendToDrawer = (eventsSelected) => {
+      this.child.current.getEventsSelected(eventsSelected);
+    }
 
-    axios.delete('/myAlfred/api/availability/' + avail._id)
-      .then(res => {
-        toast.info('Disponibilité supprimée avec succès !');
-        let new_availabilities = [];
-        this.state.availabilities.forEach(a => {
-          if (a._id !== avail._id) {
-            new_availabilities.push(a);
-          }
-        });
-        this.setState({availabilities: new_availabilities});
-      })
-      .catch(err => {
-        error(err);
-        toast.error(err);
-      });
-  };
+    onAvailabilityChanged = () => {
+      this.loadAvailabilities()
+    }
 
   checkIfOwner() {
     Object.keys(this.state.services).map(result => {
@@ -198,7 +181,7 @@ class myAvailabilities extends React.Component {
           </Grid>
           <Grid className={classes.toggle}>
             <Grid>
-              <DrawerSchedule ref={this.child} onAvailabilitySaved={this.onAvailabilitySaved}/>
+              <DrawerSchedule ref={this.child} onAvailabilityChanged={this.onAvailabilityChanged}/>
             </Grid>
           </Grid>
           <Grid container className={classes.containercalendar} style={{width: ' 65%'}}>

@@ -167,23 +167,34 @@ const eventIncludesDate = (event, mmt) => {
 const availIncludesDate = (avail, mmt) => {
 
   if (avail.is_punctual) {
-    return avail.available && avail.punctuals.some(d => moment(d).isSame(mmt, 'day'));
-  } else {
-    var range = moment.range(avail.period.begin, avail.period.end);
+    return [avail.punctuals.some( d => moment(d).isSame(mmt, 'day')), avail.available]
+  }
+  else {
+    var range=moment.range(avail.period.begin, avail.period.end)
     if (!range.snapTo('day').contains(mmt)) {
-      return false;
+      return [false, false]
     }
-    return avail.days.includes(mmt.isoWeekday() - 1);
+    return [avail.period.days.includes(mmt.isoWeekday()-1), avail.available]
   }
 };
+
+// Sort availabilities : punctuals before recurrent, then by reverse id ( same order as creation date)
+const availabilitiesComparator = (a1, a2) => {
+  // Punctual vs recurrent : punctual first
+  if (a1.is_punctual != a2.is_punctual) {
+    return a1.is_punctual ? -1 : 1
+  }
+  return a2._id.toString().localeCompare(a1._id.toString())
+}
 
 /** Moment mmt's date is available for alfred_id => true/false */
 const isDateAvailable = (mmt, availabilities) => {
   if (!availabilities || availabilities.length == 0) {
     return true;
   }
-  return availabilities.some(avail => availIncludesDate(avail, mmt));
-};
+  const availability=availabilities.sort(availabilitiesComparator).find( avail => availIncludesDate(avail, mmt)[0])
+  return availability ? availability.available : false
+}
 
 /** Moment mmt's date contains at least one event for alfred_id => true/false */
 const hasAlfredDateBooking = (mmt, bookings) => {

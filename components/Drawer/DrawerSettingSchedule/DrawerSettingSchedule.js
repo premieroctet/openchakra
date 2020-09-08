@@ -18,38 +18,54 @@ import SelectSlotTimer from '../../SelectSlotTimer/SelectSlotTimer';
 import {Button} from '@material-ui/core';
 import withStyles from '@material-ui/core/styles/withStyles';
 import styles from './DrawerSettingScheduleStyle';
+import axios from "axios";
+const mongoose = require('mongoose');
 
-class DrawerSettingSchedule extends React.Component {
+class DrawerSettingSchedule extends React.Component{
   constructor(props) {
     super(props);
-    this.state = {
+    this.state={
       eventsSelected: new Set(),
-      availabilities: [{
-        starDate: null,
-        endDate: null,
-        recurrDays: new Set(),
-        timelapses: new Set(),
-      }],
-      showFirstPeriod: false,
-    };
-
+      availabilities: [],
+      errors:{}
+    }
   }
 
-  toggleRecurrDay = (item, availIdx) => {
-    this.state.availabilities[availIdx].recurrDays.has(item) ? this.removeRecurrDay(item, availIdx) : this.addRecurrDay(item, availIdx);
-  };
+  componentDidMount = () => {
+    this.loadAvailabilities()
+  }
 
+  loadAvailabilities = () => {
+    axios.get('/myAlfred/api/availability/currentAlfred')
+      .then ( response => {
+        const availabilities = response.data.filter( a => !a.is_punctual).map( a => {
+          return {
+            _id : a._id,
+            startDate: a.period.begin,
+            endDate: a.period.end,
+            recurrDays: new Set(a.period.days),
+            timelapses: new Set(a.timelapses),
+            as_text: a.as_text,
+          }
+        })
+        this.setState({availabilities: availabilities})
+      })
+  }
+
+  toggleRecurrDay = (dayIndex, availIdx) => {
+    console.log(`Toggling day ${dayIndex}`)
+    this.state.availabilities[availIdx].recurrDays.has(dayIndex) ? this.removeRecurrDay(dayIndex, availIdx) : this.addRecurrDay(dayIndex, availIdx);
+  };
 
   addRecurrDay = (day, availIdx) => {
     let availabilities = this.state.availabilities;
-    availabilities[availIdx].recurrDays = availabilities[availIdx].recurrDays.add(day);
+    availabilities[availIdx].recurrDays.add(day);
     this.setState({availabilities: availabilities});
   };
 
   removeRecurrDay = (day, availIdx) => {
     let availabilities = this.state.availabilities;
     availabilities[availIdx].recurrDays.delete(day);
-
     this.setState({availabilities: availabilities});
   };
 
@@ -57,237 +73,257 @@ class DrawerSettingSchedule extends React.Component {
     this.setState({eventsSelected: new Set(eventsSelected)});
   };
 
-  handleAvailabilities = () => {
-    let myNewAvailabilities = {
-      starDate: null,
-      endDate: null,
-      recurrDays: new Set(),
-      timelapses: new Set(),
+    addAvailability = () =>{
+      var availabilities=this.state.availabilities
+      let newAvailability = {
+        _id: null,
+        startDate:null,
+        endDate: null,
+        recurrDays: new Set(),
+        timelapses: new Set(),
+        as_text: '',
+      };
+      availabilities.push(newAvailability)
+      this.setState({availabilities: availabilities})
     };
-    this.setState({availabilities: [...this.state.availabilities, myNewAvailabilities]});
-  };
 
-  showFirstPeriod = () => {
-    this.setState({showFirstPeriod: true});
-  };
+    handleDateStart = index => (date) =>{
+      var availabilities = this.state.availabilities
+      availabilities[index].startDate=date
+      this.setState({
+        availabilities: availabilities,
+      });
+    };
 
-  handleDateStart = index => (date) => {
-    let newArray = [...this.state.availabilities];
-    newArray[index] = {...newArray[index], starDate: date};
-    this.setState({
-      availabilities: newArray,
-    });
-  };
+    handleDateEnd = index => (date) => {
+      var availabilities = this.state.availabilities
+      availabilities[index].endDate=date
+      this.setState({
+        availabilities: availabilities,
+      });
+    };
 
-  handleDateEnd = index => (date) => {
-    let newArray = [...this.state.availabilities];
-    newArray[index] = {...newArray[index], endDate: date};
-    this.setState({
-      availabilities: newArray,
-    });
-  };
+    removeAvailabilities = (index) =>{
+      const availability=this.state.availabilities[index]
+      if (availability._id) {
+        axios.delete(`/myAlfred/api/availability/${availability._id}`)
+      }
+      this.props.onAvailabilityChanged ? this.props.onAvailabilityChanged() : () => {}
+      this.loadAvailabilities()
+    };
 
-  removeAvailabilities = (index) => {
-    let newArray = this.state.availabilities;
-    newArray.splice(index, 1);
-
-    this.setState({
-      availabilities: newArray,
-    });
-  };
-
-  slotTimerChanged = availIdx => (slotIndex, add) => {
-    let availabilities = this.state.availabilities;
-    if (add) {
-      availabilities[availIdx].timelapses = availabilities[availIdx].timelapses.add(slotIndex);
-      this.setState({availabilities: availabilities});
-    } else {
-      let availabilities = this.state.availabilities;
-      availabilities[availIdx].timelapses.delete(slotIndex);
-      this.setState({availabilities: availabilities});
-    }
-  };
+    slotTimerChanged = availIdx => (slotIndex, add) => {
+        let availabilities = this.state.availabilities;
+        if (add) {
+            availabilities[availIdx].timelapses.add(slotIndex);
+        }
+        else {
+            availabilities[availIdx].timelapses.delete(slotIndex);
+        }
+        this.setState({availabilities: availabilities });
+    };
 
 
-  render() {
+    save = index => {
+      const availability = this.state.availabilities[index]
+      console.log-`Days count:${availability.recurrDays}`
+      axios.post('/myAlfred/api/availability/addRecurrent', {
+        _id: availability._id,
+        available: true,
+        startDate: availability.startDate,
+        endDate: availability.endDate,
+        days: [...availability.recurrDays],
+        timelapses: [...availability.timelapses],
+      })
+      .then ( res => {
+        var errors=this.state.errors
+        errors[index]={}
+        this.setState({errors: errors})
+        this.props.onAvailabilityChanged ? this.props.onAvailabilityChanged() : () => {}
+        this.loadAvailabilities()
+      })
+      .catch( err => {
+        console.log(err)
+        var errors=this.state.errors
+        errors[index]=err.response.data
+        this.setState({errors: errors})
+      })
+    };
 
-    const {classes} = this.props;
-    const {availabilities, showFirstPeriod} = this.state;
+    render(){
 
-    return (
-      <Grid>
-        <Grid style={{display: 'flex', alignItems: 'center'}}>
-          <Grid>
-            <Typography className={classes.policySizeTitle}>Paramètrez vos disponibilités</Typography>
-          </Grid>
-          <Hidden smUp implementation="css">
+        const {classes} = this.props;
+        const {availabilities, errors} = this.state;
+
+        if (availabilities.length>0) {
+          console.log(`Availabilities:${JSON.stringify(Array(...this.state.availabilities[0].recurrDays))}`)
+        }
+
+        // TODO : Disposer correctement les messages d'erreur date début et date de fin
+        return(
             <Grid>
-              <IconButton aria-label="CLOSE">
-                <CloseIcon color={'secondary'} onClick={this.props.handleDrawer}/>
-              </IconButton>
-            </Grid>
-          </Hidden>
-        </Grid>
-        <Divider/>
-        <Grid>
-          {
-            showFirstPeriod ?
-              availabilities.map((availResult, availIdx) => {
-                return (
-                  <Accordion>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon/>}
-                      aria-controls="panel1a-content"
-                      id="panel1a-header"
-                    >
-                      <Grid>
+                <Grid style={{display: 'flex', alignItems: 'center'}}>
+                    <Grid>
+                        <Typography className={classes.policySizeTitle}>Paramétrez vos disponibilités</Typography>
+                    </Grid>
+                    <Hidden smUp implementation="css">
                         <Grid>
                           <Typography>Période du 10/07/20 au 31/12/20</Typography>
                         </Grid>
-                        <Grid>
-                          <Typography>Vous êtes disponible tous les lundis, mardis, samedis de 5h à 12h et de 14h à
-                            18h</Typography>
-                        </Grid>
-                      </Grid>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Grid style={{width: '100%'}}>
-                        <Grid>
-                          <Grid>
-                            <h3>Période :</h3>
-                          </Grid>
-                          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
-                              <Grid style={{display: 'flex', alignItems: 'center'}}>
-                                <Grid>
-                                  <KeyboardDatePicker
-                                    disableToolbar
-                                    variant="inline"
-                                    format="dd/MM/yyyy"
-                                    id="date-picker-inline"
-                                    label="Date de début"
-                                    className={classes.formSchedule}
-                                    value={availResult.starDate}
-                                    onChange={this.handleDateStart(availIdx)}
-                                    KeyboardButtonProps={{
-                                      'aria-label': 'change date',
-                                    }}
-                                    autoOk={true}
-                                  />
-                                </Grid>
-                              </Grid>
-                              <Grid style={{display: 'flex', alignItems: 'center'}}>
-                                <Grid>
-                                  <KeyboardDatePicker
-                                    disableToolbar
-                                    variant="inline"
-                                    format="dd/MM/yyyy"
-                                    id="date-picker-inline"
-                                    label="Date de fin"
-                                    className={classes.formSchedule}
-                                    value={availResult.endDate}
-                                    onChange={this.handleDateEnd(availIdx)}
-                                    KeyboardButtonProps={{
-                                      'aria-label': 'change date',
-                                    }}
-                                    autoOk={true}
-                                  />
-                                </Grid>
-                              </Grid>
-                            </MuiPickersUtilsProvider>
-                          </Grid>
-                        </Grid>
-                        <Grid>
-                          <Grid>
-                            <h3>Jours travaillés :</h3>
-                          </Grid>
-                          <Grid container className={classes.panelFormDays}>
-                            {[0, 1, 2, 3, 4, 5, 6].map(index => {
-                              return (
-                                <Chip
-                                  key={index}
-                                  clickable
-                                  label={(DAYS[index]).charAt(0)}
-                                  style={{backgroundColor: availabilities[availIdx].recurrDays.has(DAYS[index]) ? '#4fbdd7' : '#c4c4c4'}}
-                                  className={classes.textFieldChips}
-                                  onClick={() => this.toggleRecurrDay(DAYS[index], availIdx)}
-                                />
-                              );
-                            })}
-                          </Grid>
-                        </Grid>
-                        <Grid>
-                          <Grid>
-                            <h3>Horaires travaillés :</h3>
-                          </Grid>
-                          <Grid container>
-                            <Grid item className={classes.containerSelectSlotTimer}>
+                    </Hidden>
+                </Grid>
+                <Divider />
+                <Grid>
+                {
+                  availabilities.map((availResult, availIdx) =>{
+                    const error = errors[availIdx] || {}
+                    return(
+                      <Accordion>
+                          <AccordionSummary
+                              expandIcon={<ExpandMoreIcon />}
+                              aria-controls="panel1a-content"
+                              id="panel1a-header"
+                          >
                               <Grid>
-                                <h4>Nuit</h4>
+                                  <Grid>
+                                      <Typography>{ availResult.as_text }</Typography>
+                                  </Grid>
                               </Grid>
-                              <Grid>
-                                <SelectSlotTimer arrayLength={6} index={0} slots={availabilities[availIdx].timelapses}
-                                                 onChange={this.slotTimerChanged(availIdx)}/>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                              <Grid style={{width: '100%'}}>
+                                  <Grid>
+                                      <Grid>
+                                          <h3>Période :</h3>
+                                      </Grid>
+                                      <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+                                          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
+                                              <Grid style={{display : 'flex', alignItems: 'center'}}>
+                                                  <Grid>
+                                                      <KeyboardDatePicker
+                                                          disableToolbar
+                                                          variant="inline"
+                                                          format="dd/MM/yyyy"
+                                                          id="date-picker-inline"
+                                                          label="Date de début"
+                                                          className={classes.formSchedule}
+                                                          value={availResult.startDate}
+                                                          onChange={this.handleDateStart(availIdx)}
+                                                          KeyboardButtonProps={{
+                                                              'aria-label': 'change date',
+                                                          }}
+                                                          autoOk={true}
+                                                      />
+                                                      <em style={{ color: 'red' }}>{ error.startDate}</em>
+                                                  </Grid>
+                                              </Grid>
+                                              <Grid style={{display : 'flex', alignItems: 'center'}}>
+                                                  <Grid>
+                                                      <KeyboardDatePicker
+                                                          disableToolbar
+                                                          variant="inline"
+                                                          format="dd/MM/yyyy"
+                                                          id="date-picker-inline"
+                                                          label="Date de fin"
+                                                          className={classes.formSchedule}
+                                                          value={availResult.endDate}
+                                                          onChange={this.handleDateEnd(availIdx)}
+                                                          KeyboardButtonProps={{
+                                                              'aria-label': 'change date',
+                                                          }}
+                                                          autoOk={true}
+                                                      />
+                                                      <em style={{ color: 'red' }}>{ error.endDate}</em>
+                                                  </Grid>
+                                              </Grid>
+                                          </MuiPickersUtilsProvider>
+                                      </Grid>
+                                  </Grid>
+                                  <Grid>
+                                      <Grid>
+                                          <h3>Jours travaillés :</h3>
+                                      </Grid>
+                                      <Grid container className={classes.panelFormDays}>
+                                        { /* TODO: Utiliser DAYS à la place du tableau [0,1,2,3,4,5,6] */ }
+                                          {[0,1,2,3,4,5,6].map( index => {
+                                              return (
+                                                  <Chip
+                                                      key={index}
+                                                      clickable
+                                                      label={(DAYS[index]).charAt(0)}
+                                                      style={{backgroundColor: availabilities[availIdx].recurrDays.has(index) ? '#4fbdd7' :  '#c4c4c4'}}
+                                                      className={classes.textFieldChips}
+                                                      onClick={() => this.toggleRecurrDay(index, availIdx)}
+                                                  />
+                                                  )
+                                          })}
+                                      </Grid>
+                                      <em style={{ color: 'red' }}>{ error.days}</em>
+                                  </Grid>
+                                  <Grid>
+                                      <Grid>
+                                          <h3>Horaires travaillés :</h3>
+                                          <em style={{ color: 'red' }}>{ error.timelapses}</em>
+                                      </Grid>
+                                      <Grid container>
+                                          <Grid item className={classes.containerSelectSlotTimer}>
+                                              <Grid>
+                                                  <h4>Nuit</h4>
+                                              </Grid>
+                                              <Grid>
+                                                  <SelectSlotTimer arrayLength={6} index={0} slots={availabilities[availIdx].timelapses} onChange={this.slotTimerChanged(availIdx)}/>
+                                              </Grid>
+                                          </Grid>
+                                          <Grid item className={classes.containerSelectSlotTimer}>
+                                              <Grid>
+                                                  <h4>Matin</h4>
+                                              </Grid>
+                                              <Grid>
+                                                  <SelectSlotTimer arrayLength={12} index={6} slots={availabilities[availIdx].timelapses} onChange={this.slotTimerChanged(availIdx)}/>
+                                              </Grid>
+                                          </Grid>
+                                      </Grid>
+                                      <Grid container>
+                                          <Grid item className={classes.containerSelectSlotTimer}>
+                                              <Grid>
+                                                  <h4>Après-midi</h4>
+                                              </Grid>
+                                              <Grid>
+                                                  <SelectSlotTimer arrayLength={18} index={12} slots={availabilities[availIdx].timelapses} onChange={this.slotTimerChanged(availIdx)}/>
+                                              </Grid>
+                                          </Grid>
+                                          <Grid item className={classes.containerSelectSlotTimer}>
+                                              <Grid>
+                                                  <h4>Soirée</h4>
+                                              </Grid>
+                                              <Grid>
+                                                  <SelectSlotTimer arrayLength={24} index={18} slots={availabilities[availIdx].timelapses} onChange={this.slotTimerChanged(availIdx)}/>
+                                              </Grid>
+                                          </Grid>
+                                      </Grid>
+                                  </Grid>
+                                  <Grid style={{marginTop: 30}}>
+                                      <Grid style={{display:'flex', flexDirection:'row-reverse'}}>
+                                          <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={ () => this.save(availIdx) }>Enregistrer</Button>
+                                          <Button color={'secondary'} style={{marginRight: 10}} onClick={()=>this.removeAvailabilities(availIdx)}>Supprimer</Button>
+                                      </Grid>
+                                  </Grid>
                               </Grid>
-                            </Grid>
-                            <Grid item className={classes.containerSelectSlotTimer}>
-                              <Grid>
-                                <h4>Matin</h4>
-                              </Grid>
-                              <Grid>
-                                <SelectSlotTimer arrayLength={12} index={6} slots={availabilities[availIdx].timelapses}
-                                                 onChange={this.slotTimerChanged(availIdx)}/>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                          <Grid container>
-                            <Grid item className={classes.containerSelectSlotTimer}>
-                              <Grid>
-                                <h4>Après-midi</h4>
-                              </Grid>
-                              <Grid>
-                                <SelectSlotTimer arrayLength={18} index={12} slots={availabilities[availIdx].timelapses}
-                                                 onChange={this.slotTimerChanged(availIdx)}/>
-                              </Grid>
-                            </Grid>
-                            <Grid item className={classes.containerSelectSlotTimer}>
-                              <Grid>
-                                <h4>Soirée</h4>
-                              </Grid>
-                              <Grid>
-                                <SelectSlotTimer arrayLength={24} index={18} slots={availabilities[availIdx].timelapses}
-                                                 onChange={this.slotTimerChanged(availIdx)}/>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                        <Grid style={{marginTop: 30}}>
-                          <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
-                            <Button variant={'contained'} color={'primary'}
-                                    style={{color: 'white'}}>Enregistrer</Button>
-                            <Button color={'secondary'} style={{marginRight: 10}}
-                                    onClick={() => this.removeAvailabilities(availIdx)}>Supprimer</Button>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </AccordionDetails>
-                  </Accordion>
-                );
-              })
-              : null
-          }
-        </Grid>
-        <Divider/>
-        <Grid style={{marginTop: 30, marginBottom: 110}}>
-          <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
-            <Button variant={'contained'} color={'primary'} style={{color: 'white'}}
-                    onClick={!showFirstPeriod ? this.showFirstPeriod : this.handleAvailabilities}>Ajouter une
-              période</Button>
-          </Grid>
-        </Grid>
-      </Grid>
-    );
-  }
+                          </AccordionDetails>
+                      </Accordion>
+                    )
+                  })
+                }
+                </Grid>
+                <Divider/>
+                <Grid style={{marginTop: 30, marginBottom: 110}}>
+                    <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
+                        <Button variant={'contained'} color={'primary'} style={{color:'white'}} onClick={ this.addAvailability}>Ajouter une période</Button>
+                    </Grid>
+                </Grid>
+            </Grid>
+        );
+    }
 }
 
 export default withStyles(styles, {withTheme: true})(DrawerSettingSchedule);
