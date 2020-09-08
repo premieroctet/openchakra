@@ -25,6 +25,7 @@ class DrawerEditingSchedule extends React.Component {
       selectedDateStart: null,
       selectedDateEnd: null,
       timelapses: new Set(),
+      errors: {},
     };
     this.getEventsSelected = this.getEventsSelected.bind(this);
   }
@@ -54,14 +55,13 @@ class DrawerEditingSchedule extends React.Component {
 
   save = () => {
     axios.post('/myAlfred/api/availability/addPunctual', {
-      dates: Array(...this.state.eventsSelected),
+      punctuals: [...this.state.eventsSelected],
       available: this.state.available,
-      timelapses: Array(...this.state.timelapses),
+      timelapses: [...this.state.timelapses],
     })
-      .then(res => {
-        this.props.onAvailabilitySaved ? this.props.onAvailabilitySaved() : () => {
-        };
-      });
+    .then(res => {
+      this.props.onAvailabilityChanged ? this.props.onAvailabilityChanged() : () => {};
+    });
   };
 
   saveEnabled = () => {
@@ -72,7 +72,7 @@ class DrawerEditingSchedule extends React.Component {
   render() {
 
     const {classes} = this.props;
-    const {availabilities} = this.state;
+        const {availabilities, errors} = this.state;
 
     return (
       <Grid>
@@ -95,6 +95,7 @@ class DrawerEditingSchedule extends React.Component {
             <Grid>
               <Grid>
                 <h3>Êtes-vous disponible ?</h3>
+                <em style={{ color: 'red'}}>{errors.available}</em>
               </Grid>
               <Grid container>
                 <FormControl component="fieldset">
@@ -112,6 +113,10 @@ class DrawerEditingSchedule extends React.Component {
             </Grid>
             {this.state.available ?
               <Grid>
+                <Grid>
+	          <h3>Vos horaires travaillés</h3>
+                  <em style={{ color: 'red'}}>{errors.timelapses}</em>
+                </Grid>
                 <Grid container>
                   <Grid item className={classes.containerSelectSlotTimer}>
                     <Grid>

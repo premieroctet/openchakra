@@ -8,52 +8,45 @@ const ServiceUser = require('../../models/ServiceUser');
 const {createDefaultAvailability} = require('../../../utils/dateutils');
 const mongoose = require('mongoose');
 const {isIntervalAvailable} = require('../../../utils/dateutils');
-
+const validateAvailability = require('../../validation/availability');
+const emptyPromise = require('../../../utils/promise')
 moment.locale('fr');
 router.get('/test', (req, res) => res.json({msg: 'Availability Works!'}));
-
-
-// @Route POST /myAlfred/api/availability/add
-// add an availability for current user
-// access private
-router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {
-
-  const newAvailability = new Availability({user: req.user.id, ...req.body});
-
-  newAvailability.save()
-    .then(availability => {
-      res.json(availability);
-      console.log(`After adding availability:${JSON.stringify(availability)}`);
-    })
-    .catch(err => console.error(err));
-});
 
 // @Route POST /myAlfred/api/availability/addRecurrent
 // add a recurrent availability for current user
 // access private
-router.post('/addRecurrent', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/addRecurrent',passport.authenticate('jwt',{session: false}),(req,res)=> {
 
-  const newAvailability = new Availability({
-    user: req.user.id,
-    period: {
-      begin: req.body.begin,
-      end: req.body.end,
-    },
-    punctuals: null,
-    available: req.body.available,
-    days: req.body.days,
-    timelapses: Array(...req.body.timelapses),
-  });
+  const { isValid, errors } = validateAvailability(req.body, true);
 
-  newAvailability.save()
-    .then(availability => {
-      res.json(availability);
-      console.log(`After adding recurrent availability:${JSON.stringify(availability)}`);
+  if (!isValid) {
+      return res.status(400).json(errors);
+  }
+
+  const promise = req.body._id ? Availability.findOne({_id : req.body._id}) : emptyPromise(new Availability())
+  promise
+    .then( avail => {
+      avail.user = req.user.id
+      avail.period = {
+        begin: req.body.startDate,
+        end: req.body.endDate,
+        days: req.body.days,
+      }
+      avail.punctuals= null
+      avail.available= req.body.available
+      avail.timelapses= req.body.timelapses
+
+      avail.save()
+        .then(availability => {
+          res.json(availability)
+        })
+        .catch(err => {
+          console.error(err)
+          res.status(400).json(err)
+        });
+
     })
-    .catch(err => {
-      console.error(err);
-      res.status(400).json(err);
-    });
 });
 
 // @Route POST /myAlfred/api/availability/addPunctual
@@ -61,21 +54,23 @@ router.post('/addRecurrent', passport.authenticate('jwt', {session: false}), (re
 // access private
 router.post('/addPunctual', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  console.log(`Add punctual : dates are ${JSON.stringify(req.body.dates)}`);
+  const { isValid, errors } = validateAvailability(req.body, false);
+
+  if (!isValid) {
+      return res.status(400).json(errors);
+  }
 
   const newAvailability = new Availability({
-    user: req.user.id,
-    period: null,
-    punctuals: Array(...req.body.dates),
+    user:req.user.id,
+    period: undefined,
+    punctuals: Array(...req.body.punctuals),
     available: req.body.available,
-    days: null,
     timelapses: req.body.available ? Array(...req.body.timelapses) : [],
   });
 
   newAvailability.save()
     .then(availability => {
-      res.json(availability);
-      console.log(`After adding punctual availability:${JSON.stringify(availability)}`);
+      res.json(availability)
     })
     .catch(err => {
       console.error(err);
@@ -167,85 +162,6 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (re
     .catch(err => {
       console.error(err);
     });
-
-
-});
-
-// @Route POST /myAlfred/api/availability/filterDate
-// Return availability between 2 dates
-router.post('/filterDate', (req, res) => {
-  const allAvailability = [];
-  console.log('Filter date received ' + JSON.stringify(req.body));
-  const dateBegin = req.body.begin;
-  const dateEnd = req.body.end;
-  const beginDay = req.body.beginDay;
-  const endDay = req.body.endDay;
-  let newBeginDay;
-  let newEndDay;
-  switch (beginDay) {
-    case 'lundi':
-      newBeginDay = beginDay.replace(beginDay, 'monday');
-      break;
-    case 'mardi':
-      newBeginDay = beginDay.replace(beginDay, 'tuesday');
-      break;
-    case 'mercredi':
-      newBeginDay = beginDay.replace(beginDay, 'wednesday');
-      break;
-    case 'jeudi':
-      newBeginDay = beginDay.replace(beginDay, 'thursday');
-      break;
-    case 'vendredi':
-      newBeginDay = beginDay.replace(beginDay, 'friday');
-      break;
-    case 'samedi':
-      newBeginDay = beginDay.replace(beginDay, 'saturday');
-      break;
-    case 'dimanche':
-      newBeginDay = beginDay.replace(beginDay, 'sunday');
-      break;
-  }
-  switch (endDay) {
-    case 'lundi':
-      newEndDay = endDay.replace(endDay, 'monday');
-      break;
-    case 'mardi':
-      newEndDay = endDay.replace(endDay, 'tuesday');
-      break;
-    case 'mercredi':
-      newEndDay = endDay.replace(endDay, 'wednesday');
-      break;
-    case 'jeudi':
-      newEndDay = endDay.replace(endDay, 'thursday');
-      break;
-    case 'vendredi':
-      newEndDay = endDay.replace(endDay, 'friday');
-      break;
-    case 'samedi':
-      newEndDay = endDay.replace(endDay, 'saturday');
-      break;
-    case 'dimanche':
-      newEndDay = endDay.replace(endDay, 'sunday');
-      break;
-  }
-  Availability.find()
-    .then(availability => {
-      availability.forEach(e => {
-        if (!e.period.active && (e[newBeginDay].event.length || e[newEndDay].event.length)) {
-          allAvailability.push(e);
-        } else {
-          let begin = moment(e.period.month_begin).subtract(1, 'days');
-          let end = moment(e.period.month_end).add(1, 'days');
-          const betweenBegin = moment(dateBegin).isBetween(begin, end);
-          const betweenEnd = moment(dateEnd).isBetween(begin, end);
-          if (betweenBegin && betweenEnd && (e[newBeginDay].event.length || e[newEndDay].event.length)) {
-            allAvailability.push(e);
-          }
-        }
-      });
-      res.json(allAvailability);
-    })
-    .catch(err => console.error(err));
 });
 
 // @Route POST /myAlfred/api/availability/home/date
@@ -373,13 +289,15 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
 
   Availability.findById(req.params.id)
     .then(availability => {
-      availability.remove().then(() => res.json({msg: 'Ok'})).catch(error => console.log(error));
+      availability.remove()
+        .then(() => res.json({msg: 'Ok'}))
+        .catch(error => {
+          res.status(400).json({error: error})
+        })
     })
     .catch(err => {
-      console.error(err);
-    });
-
-
+        console.error(err);
+    })
 });
 
 

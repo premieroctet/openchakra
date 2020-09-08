@@ -13,29 +13,29 @@ import DrawerSettingSchedule from '../Drawer/DrawerSettingSchedule/DrawerSetting
 import cookie from 'react-cookies';
 import axios from 'axios';
 
-class DrawerSchedule extends React.Component {
+class DrawerSchedule extends React.Component{
   constructor(props) {
     super(props);
     this.drawerEditing = React.createRef();
     this.drawerSetting = React.createRef();
-    this.state = {
+    this.state={
       mobileOpen: false,
       eventsSelected: new Set(),
       availabilities: [],
     };
     this.getEventsSelected = this.getEventsSelected.bind(this);
     this.stateDrawer = this.stateDrawer.bind(this);
-    this.onAvailabilitySaved = this.onAvailabilitySaved.bind(this);
+    this.onAvailabilityChanged = this.onAvailabilityChanged.bind(this)
   }
 
   componentDidMount = () => {
     const auth = cookie.load('token');
     axios.defaults.headers.common['Authorization'] = auth;
     axios.get('/myAlfred/api/availability/currentAlfred')
-      .then(res => {
-        this.setState({availabilities: res.data});
+      .then ( res => {
+        this.setState({availabilities: res.data})
       })
-      .catch(err => console.error(err));
+      .catch (err => console.error(err))
   };
 
   getEventsSelected = (eventsSelected) => {
@@ -50,13 +50,8 @@ class DrawerSchedule extends React.Component {
     }
   };
 
-  handleDrawerToggle = () => {
-    this.setState({mobileOpen: !this.state.mobileOpen});
-  };
-
-  onAvailabilitySaved = () => {
-    this.props.onAvailabilitySaved ? this.props.onAvailabilitySaved() : () => {
-    };
+  onAvailabilityChanged = () => {
+    this.props.onAvailabilityChanged ? this.props.onAvailabilityChanged() : () => {}
   };
 
   render() {
@@ -65,69 +60,65 @@ class DrawerSchedule extends React.Component {
 
     const container = windows !== undefined ? () => windows.document.body : undefined;
 
-    return (
-      <Grid>
-        <CssBaseline/>
-        <nav className={classes.drawer} aria-label="mailbox folders">
-          {/* Mobile version */}
-          <Hidden smUp implementation="css">
-            <Drawer
-              container={container}
-              variant="temporary"
-              anchor={'bottom'}
-              open={mobileOpen}
-              onClose={this.handleDrawerToggle}
-              classes={{
-                paper: classes.drawerPaper,
-              }}
-              ModalProps={{
-                keepMounted: true, // Better open performance on mobile.
-              }}
-            >
-              {
-                mobileOpen ?
-                  this.state.eventsSelected.size > 0 ?
-                    <DrawerEditingSchedule ref={this.drawerEditing} handleDrawer={this.handleDrawerToggle}
-                                           onAvailabilitySaved={this.onAvailabilitySaved}/>
-                    :
-                    <DrawerSettingSchedule ref={this.drawerSetting} handleDrawer={this.handleDrawerToggle}
-                                           onAvailabilitySaved={this.onAvailabilitySaved}/>
-                  : null
-              }
-            </Drawer>
-          </Hidden>
-          {/* Web version */}
-          <Hidden smDown implementation="css">
-            <Drawer
-              classes={{
-                paper: classes.drawerPaper,
-              }}
-              variant="permanent"
-              open
-            >
-              {
-                !mobileOpen ?
-                  this.state.eventsSelected.size > 0 ?
-                    <DrawerEditingSchedule ref={this.drawerEditing} handleDrawer={this.handleDrawerToggle}
-                                           onAvailabilitySaved={this.onAvailabilitySaved}/>
-                    :
-                    <DrawerSettingSchedule ref={this.drawerSetting} handleDrawer={this.handleDrawerToggle}
-                                           onAvailabilitySaved={this.onAvailabilitySaved}/>
-                  : null
-              }
-            </Drawer>
-          </Hidden>
-        </nav>
-        <Grid>
-          <Grid style={{position: 'fixed', bottom: '10%', zIndex: 6, right: 0}}>
-            <Fab color="primary" aria-label="add"
-                 onClick={this.handleDrawerToggle}
-                 className={classes.menuButton}>
-              <SettingsIcon style={{color: 'white'}}/>
-            </Fab>
-          </Grid>
-        </Grid>
-      </Grid>
+        return(
+            <Grid>
+                <CssBaseline />
+                <nav className={classes.drawer} aria-label="mailbox folders">
+                    {/* Mobile version */}
+                    <Hidden smUp implementation="css">
+                        <Drawer
+                            container={container}
+                            variant="temporary"
+                            anchor={'bottom'}
+                            open={mobileOpen}
+                            onClose={this.handleDrawerToggle}
+                            classes={{
+                                paper: classes.drawerPaper,
+                            }}
+                            ModalProps={{
+                                keepMounted: true, // Better open performance on mobile.
+                            }}
+                        >
+                            {
+                                mobileOpen ?
+                                    this.state.eventsSelected.size > 0 ?
+                                        <DrawerEditingSchedule ref={this.drawerEditing} handleDrawer={this.handleDrawerToggle} onAvailabilityChanged={this.onAvailabilityChanged} />
+                                        :
+                                        <DrawerSettingSchedule ref={this.drawerSetting} handleDrawer={this.handleDrawerToggle} onAvailabilityChanged={this.onAvailabilityChanged} />
+                                : null
+                            }
+                        </Drawer>
+                    </Hidden>
+                    {/* Web version */}
+                    <Hidden xsDown implementation="css">
+                        <Drawer
+                            classes={{
+                                paper: classes.drawerPaper,
+                            }}
+                            variant="permanent"
+                            open
+                        >
+                            {
+                                !mobileOpen ?
+                                    this.state.eventsSelected.size > 0 ?
+                                        <DrawerEditingSchedule ref={this.drawerEditing} handleDrawer={this.handleDrawerToggle} onAvailabilityChanged={this.onAvailabilityChanged}/>
+                                        :
+                                        <DrawerSettingSchedule ref={this.drawerSetting}  handleDrawer={this.handleDrawerToggle} onAvailabilityChanged={this.onAvailabilityChanged}/>
+                                : null
+                            }
+                        </Drawer>
+                    </Hidden>
+                </nav>
+                <Grid>
+                    <Grid style={{position: 'fixed', bottom: '10%', zIndex: 6, right: 0}}>
+                        <Fab color="primary" aria-label="add"
+                             onClick={this.handleDrawerToggle}
+                             className={classes.menuButton}>
+                            <SettingsIcon style={{color: 'white'}}/>
+                        </Fab>
+                    </Grid>
+                </Grid>
+            </Grid>
 
     );
   }
