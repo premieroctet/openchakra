@@ -190,7 +190,7 @@ const availabilitiesComparator = (a1, a2) => {
 /** Moment mmt's date is available for alfred_id => true/false */
 const isDateAvailable = (mmt, availabilities) => {
   if (!availabilities || availabilities.length == 0) {
-    return true;
+    return false;
   }
   const availability=availabilities.sort(availabilitiesComparator).find( avail => availIncludesDate(avail, mmt)[0])
   return availability ? availability.available : false
