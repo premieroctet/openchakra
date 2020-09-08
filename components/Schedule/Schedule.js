@@ -29,19 +29,14 @@ class Schedule extends React.Component {
     };
   }
 
-  selectSlot = ({start, end, action}) => {
+  toggleSelection = ({start, end, action}) => {
     let newDate = moment(start).format('YYYY-MM-DD');
-    if (this.state.eventsSelected.has(newDate)) {
-      this.setState(({eventsSelected}) => {
-        const newChecked = new Set(eventsSelected);
-        newChecked.delete(newDate);
-        return {
-          eventsSelected: newChecked,
-        };
-      }, () => this.props.handleSelection(this.state.eventsSelected));
-    } else {
-      this.setState(({eventsSelected}) => ({eventsSelected: new Set(eventsSelected).add(newDate)}), () => this.props.handleSelection(this.state.eventsSelected));
-    }
+    var eventsSelected=this.state.eventsSelected
+    if (!eventsSelected.delete(newDate)) { eventsSelected.add(newDate) }
+    this.setState(
+      { eventsSelected: eventsSelected},
+      () => this.props.handleSelection(this.state.eventsSelected)
+    )
   };
 
   customToolbar = classes => (toolbar) => {
@@ -84,17 +79,21 @@ class Schedule extends React.Component {
       let newDate = moment(event.date).format('YYYY-MM-DD');
 
       if (event.isOffRange) {
-        return null;
-      } else {
+        return null
+      }
+      else if (moment(event.date).isBefore(moment().startOf('day'))) {
+        return <p style={{ color: '#999999'}}>{event.label}</p>
+      }
+      else {
         return (
-          <Grid className={classes.containerLabelSelector} onClick={() => this.selectSlot}>
+          <Grid className={classes.containerLabelSelector}>
             <Grid className={eventsSelected.has(newDate) ? classes.labelSelectorActive : classes.labelSelector}>
               <p style={{cursor: 'pointer', fontWeight: 'initial'}}>{event.label}</p>
             </Grid>
           </Grid>
-        );
+        )
       }
-    };
+    }
 
     const MyDateCellWrapper = (event) => {
 
@@ -162,7 +161,8 @@ class Schedule extends React.Component {
               date.setDate(1);
               date.setMonth(date.getMonth() + (i - half));
               const monthStr = moment(date).format('M');
-              const selEvents = events.filter(e => moment(e.start).format('M') == monthStr);
+              // Select events for this month only
+              const monthEvents = events.filter(e => moment(e.start).format('M') == monthStr);
               return (
                 <Grid item xl={nbSchedule === 1 ? 11 : 4} lg={nbSchedule === 1 ? 11 : 4} md={nbSchedule === 1 ? 11 : 6}
                       sm={nbSchedule === 1 ? 11 : 6} xs={12} style={{height: 400}} key={i}>
@@ -171,10 +171,10 @@ class Schedule extends React.Component {
                     popup={false}
                     culture='fr-FR'
                     localizer={localizer}
-                    events={selEvents}
+                    events={monthEvents}
                     views={[this.state.view]}
                     defaultDate={date}
-                    onSelectSlot={this.selectSlot}
+                    onSelectSlot={this.toggleSelection}
                     dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
                     messages={{
                       'today': 'Aujourd\'hui',
