@@ -97,7 +97,7 @@ class DrawerSchedule extends React.Component {
             </Drawer>
           </Hidden>
           {/* Web version */}
-          <Hidden xsDown implementation="css">
+          <Hidden smDown implementation="css">
             <Drawer
               classes={{
                 paper: classes.drawerPaper,

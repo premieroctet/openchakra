@@ -156,7 +156,7 @@ class DrawerEditingSchedule extends React.Component {
               :
               null
             }
-            <Grid style={{marginTop: 30}}>
+            <Grid style={{marginTop: 30, marginBottom: 110}}>
               <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
                 <Button disabled={!this.saveEnabled()} variant={'contained'} color={'primary'} style={{color: 'white'}}
                         onClick={() => this.save()}>Enregistrer</Button>

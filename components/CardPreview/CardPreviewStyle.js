@@ -48,6 +48,7 @@ export default theme => ({
     position: 'absolute',
     top: '5%',
     right: '18%',
+    zIndex: 1,
     [theme.breakpoints.down('sm')]: {
       right: '20%',
     },
@@ -56,6 +57,7 @@ export default theme => ({
     position: 'absolute',
     top: '5%',
     right: '5%',
+    zIndex: 1,
     [theme.breakpoints.down('sm')]: {
       right: '5%',
     },
