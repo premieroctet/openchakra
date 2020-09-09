@@ -53,7 +53,6 @@ class DrawerSettingSchedule extends React.Component{
   }
 
   toggleRecurrDay = (dayIndex, availIdx) => {
-    console.log(`Toggling day ${dayIndex}`)
     this.state.availabilities[availIdx].recurrDays.has(dayIndex) ? this.removeRecurrDay(dayIndex, availIdx) : this.addRecurrDay(dayIndex, availIdx);
   };
 
@@ -74,7 +73,7 @@ class DrawerSettingSchedule extends React.Component{
   };
 
     addAvailability = () =>{
-      var availabilities=this.state.availabilities
+      var availabilities=this.state.availabilities;
       let newAvailability = {
         _id: null,
         startDate:null,
@@ -83,32 +82,32 @@ class DrawerSettingSchedule extends React.Component{
         timelapses: new Set(),
         as_text: '',
       };
-      availabilities.push(newAvailability)
+      availabilities.push(newAvailability);
       this.setState({availabilities: availabilities})
     };
 
     handleDateStart = index => (date) =>{
-      var availabilities = this.state.availabilities
-      availabilities[index].startDate=date
+      var availabilities = this.state.availabilities;
+      availabilities[index].startDate=date;
       this.setState({
         availabilities: availabilities,
       });
     };
 
     handleDateEnd = index => (date) => {
-      var availabilities = this.state.availabilities
-      availabilities[index].endDate=date
+      var availabilities = this.state.availabilities;
+      availabilities[index].endDate=date;
       this.setState({
         availabilities: availabilities,
       });
     };
 
     removeAvailabilities = (index) =>{
-      const availability=this.state.availabilities[index]
+      const availability=this.state.availabilities[index];
       if (availability._id) {
         axios.delete(`/myAlfred/api/availability/${availability._id}`)
       }
-      this.props.onAvailabilityChanged ? this.props.onAvailabilityChanged() : () => {}
+      this.props.onAvailabilityChanged ? this.props.onAvailabilityChanged() : () => {};
       this.loadAvailabilities()
     };
 
@@ -125,8 +124,7 @@ class DrawerSettingSchedule extends React.Component{
 
 
     save = index => {
-      const availability = this.state.availabilities[index]
-      console.log-`Days count:${availability.recurrDays}`
+      const availability = this.state.availabilities[index];
       axios.post('/myAlfred/api/availability/addRecurrent', {
         _id: availability._id,
         available: true,
@@ -136,16 +134,15 @@ class DrawerSettingSchedule extends React.Component{
         timelapses: [...availability.timelapses],
       })
       .then ( res => {
-        var errors=this.state.errors
-        errors[index]={}
-        this.setState({errors: errors})
-        this.props.onAvailabilityChanged ? this.props.onAvailabilityChanged() : () => {}
+        var errors=this.state.errors;
+        errors[index]={};
+        this.setState({errors: errors});
+        this.props.onAvailabilityChanged ? this.props.onAvailabilityChanged() : () => {};
         this.loadAvailabilities()
       })
       .catch( err => {
-        console.log(err)
-        var errors=this.state.errors
-        errors[index]=err.response.data
+        var errors=this.state.errors;
+        errors[index]=err.response.data;
         this.setState({errors: errors})
       })
     };
@@ -159,7 +156,6 @@ class DrawerSettingSchedule extends React.Component{
           console.log(`Availabilities:${JSON.stringify(Array(...this.state.availabilities[0].recurrDays))}`)
         }
 
-        // TODO : Disposer correctement les messages d'erreur date début et date de fin
         return(
             <Grid>
                 <Grid style={{display: 'flex', alignItems: 'center'}}>
@@ -167,16 +163,18 @@ class DrawerSettingSchedule extends React.Component{
                         <Typography className={classes.policySizeTitle}>Paramétrez vos disponibilités</Typography>
                     </Grid>
                     <Hidden smUp implementation="css">
-                        <Grid>
-                          <Typography>Période du 10/07/20 au 31/12/20</Typography>
-                        </Grid>
+                      <Grid>
+                        <IconButton aria-label="CLOSE">
+                          <CloseIcon color={'secondary'} onClick={this.props.handleDrawer}/>
+                        </IconButton>
+                      </Grid>
                     </Hidden>
                 </Grid>
                 <Divider />
                 <Grid>
                 {
                   availabilities.map((availResult, availIdx) =>{
-                    const error = errors[availIdx] || {}
+                    const error = errors[availIdx] || {};
                     return(
                       <Accordion>
                           <AccordionSummary
