@@ -23,7 +23,6 @@ class Schedule extends React.Component {
     super(props);
 
     this.state = {
-      title: '',
       eventsSelected: new Set(),
       dayLayoutAlgorithm: 'no-overlap',
       view: Views.MONTH,
@@ -47,63 +46,9 @@ class Schedule extends React.Component {
     )
   };
 
-  customToolbar = classes => (toolbar) => {
-
-    const goToBack = () => {
-      toolbar.date.setMonth(toolbar.date.getMonth() - 1);
-      toolbar.onNavigate('prev');
-    };
-
-    const goToNext = () => {
-      toolbar.date.setMonth(toolbar.date.getMonth() + 1);
-      toolbar.onNavigate('next');
-    };
-
-    /*const goToCurrent = () => {
-      const now = new Date();
-      toolbar.date.setMonth(now.getMonth());
-      toolbar.date.setYear(now.getFullYear());
-      toolbar.onNavigate('current');
-    };*/
-
-
-    const label = () => {
-      const date = moment(toolbar.date);
-      return (
-        <Grid container
-              style={{alignItems: 'center', justifyContent: this.props.nbSchedule === 1 ? 'space-between' : 'center'}}>
-          {
-            this.props.nbSchedule === 1 ?
-              <Grid item>
-                <Button onClick={goToBack}>&#8249;</Button>
-              </Grid> : null
-          }
-          <Grid item>
-            <span>{date.format('MMMM') + ' ' + date.format('YYYY')}</span>
-          </Grid>
-          {
-            this.props.nbSchedule === 1 ?
-              <Grid item>
-                <Button onClick={goToNext}>&#8250;</Button>
-              </Grid> : null
-          }
-        </Grid>
-      );
-    };
-
-    return (
-      <Grid container>
-        <Grid className={classes.customToolbarStyle}>
-          <Grid style={{width: '100%'}}>
-            <Grid>{label()}</Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    );
-  };
 
   render() {
-    const {classes, title, subtitle, selectable, height, nbSchedule, bookings} = this.props;
+    const {classes, title, subtitle, selectable, height, nbSchedule, bookings, mode} = this.props;
     const {view, eventsSelected} = this.state;
 
     const half = Math.floor(nbSchedule / 2);
@@ -114,8 +59,72 @@ class Schedule extends React.Component {
       events = _.uniqBy(events, e => e.start.format('DD/MM/YYYY'));
     }
 
+    const customToolbar = (toolbar) => {
 
-    const CustomMonthDateHeader = (event) => {
+      const goToBack = () => {
+        if(this.props.mode === 'month'){
+          toolbar.date.setMonth(toolbar.date.getMonth() - 1);
+          toolbar.onNavigate('prev');
+        }else{
+          toolbar.onNavigate('PREV');
+        }
+      };
+
+      const goToNext = () => {
+        if(this.props.mode === 'month'){
+          toolbar.date.setMonth(toolbar.date.getMonth() + 1);
+          toolbar.onNavigate('prev');
+        }else{
+          toolbar.onNavigate('NEXT');
+        }
+
+      };
+
+      /*const goToCurrent = () => {
+        const now = new Date();
+        toolbar.date.setMonth(now.getMonth());
+        toolbar.date.setYear(now.getFullYear());
+        toolbar.onNavigate('current');
+      };*/
+
+
+      const label = () => {
+        const date = moment(toolbar.date);
+        return (
+          <Grid container
+                style={{alignItems: 'center', justifyContent: this.props.nbSchedule === 1 ? 'space-between' : 'center'}}>
+            {
+              this.props.nbSchedule === 1 ?
+                <Grid item>
+                  <Button onClick={goToBack} style={{backgroundColor: 'grey'}}>&#8249;</Button>
+                </Grid> : null
+            }
+            <Grid item>
+              <span>{date.format('MMMM') + ' ' + date.format('YYYY')}</span>
+            </Grid>
+            {
+              this.props.nbSchedule === 1 ?
+                <Grid item>
+                  <Button onClick={goToNext}>&#8250;</Button>
+                </Grid> : null
+            }
+          </Grid>
+        );
+      };
+
+      return (
+        <Grid container>
+          <Grid className={classes.customToolbarStyle}>
+            <Grid style={{width: '100%'}}>
+              <Grid>{label()}</Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      );
+    };
+
+
+    const customMonthDateHeader = (event) => {
       let newDate = moment(event.date).format('YYYY-MM-DD');
 
       if (event.isOffRange) {
@@ -133,9 +142,9 @@ class Schedule extends React.Component {
           </Grid>
         )
       }
-    }
+    };
 
-    const MyDateCellWrapper = (event) => {
+    const customMonthDateCellWrapper = (event) => {
 
       let propsStyle = event.children.props['className'];
 
@@ -171,12 +180,71 @@ class Schedule extends React.Component {
       }
     };
 
-    const MyEventWrapper = () => {
+    const customMonthEventWrapper = () => {
 
       return (
         <Grid className={classes.myEventWrapperStyle}/>
       );
     };
+
+    const customWeekHeader = (header) => {
+
+      const label = () =>{
+        const date = moment(header.date);
+        return(
+          <Grid container>
+            <Grid item style={{width: '100%'}}>
+              <span>{date.format('DD') + ' ' + date.format('MMM') }</span>
+            </Grid>
+          </Grid>
+        )
+      };
+
+      return(
+        <Grid>
+          <Grid>{label()}</Grid>
+        </Grid>
+      )
+    };
+
+    const customWeekDateCellWrapper = (event) => {
+
+      let propsStyle = event.children.props['className'];
+      console.log(event)
+
+      const m = moment(event.value);
+      const isAvailable = isDateAvailable(m, this.props.availabilities);
+
+      if (propsStyle === 'rbc-day-bg rbc-off-range-bg') {
+        return (
+          <Grid className={classes.off_range_style}/>
+        );
+      } else {
+        if (isAvailable) {
+          return (
+            <Grid className={classes.day_style}/>
+          );
+        } else if (isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
+          return (
+            <Grid className={classes.today_style_avail}>
+              <Grid className={classes.today_style}/>
+            </Grid>
+          );
+        } else if (!isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
+          return (
+            <Grid className={classes.today_style_off}>
+              <Grid className={classes.today_style}/>
+            </Grid>
+          );
+        } else {
+          return (
+            <Grid className={classes.non_available_style}/>
+          );
+        }
+      }
+    };
+
+
 
     return (
       <Grid className={classes.heightContainer} style={{height: height, overflow: 'hidden'}}>
@@ -209,11 +277,12 @@ class Schedule extends React.Component {
                   <Calendar
                     selectable={selectable}
                     popup={false}
-                    culture='fr-FR'
+                    culture={'fr-FR'}
                     localizer={localizer}
                     events={monthEvents}
-                    views={[this.state.view]}
-                    defaultDate={date}
+                    views={[Views.MONTH, Views.WEEK]}
+                    defaultView={mode}
+                    defaultDate={mode === 'week' ? new Date() : date}
                     onSelectSlot={this.toggleSelection}
                     dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
                     messages={{
@@ -231,19 +300,24 @@ class Schedule extends React.Component {
                     }}
                     className={classes.sizeSchedulle}
                     components={{
-                      toolbar: this.customToolbar(classes),
                       //event: MyEvent, // used by each view (Month, Day, Week)
-                      eventWrapper: MyEventWrapper,
                       //eventContainerWrapper: MyEventContainerWrapper,
                       //dayWrapper: MyDayWrapper,
-                      dateCellWrapper: MyDateCellWrapper,
                       //timeSlotWrapper: MyTimeSlotWrapper,
                       //timeGutterHeader: MyTimeGutterWrapper,
                       month: {
-                        dateHeader: CustomMonthDateHeader,
+                        dateHeader: customMonthDateHeader,
+                        eventWrapper: customMonthEventWrapper,
+                        dateCellWrapper: customMonthDateCellWrapper,
+                        toolbar: customToolbar,
                         //header: MyMonthHeader,
                         //event: MyMonthEvent,
                       },
+                      week:{
+                        toolbar: customToolbar,
+                        header: customWeekHeader,
+                        dateCellWrapper: customWeekDateCellWrapper
+                      }
                     }}
                   />
                 </Grid>
@@ -251,7 +325,6 @@ class Schedule extends React.Component {
             },
           )}
         </Grid>
-
       </Grid>
     );
   }

@@ -1043,7 +1043,7 @@ class UserServicesPreview extends React.Component {
                     <Grid>
                       <Schedule availabilities={this.state.availabilities} bookings={[]} services={[]}
                                 selectable={true} height={400} nbSchedule={1} handleSelection={this.scheduleDateChanged}
-                                singleSelection={true}
+                                singleSelection={true} mode={'week'}
                       />
                     </Grid>
                   </Grid>

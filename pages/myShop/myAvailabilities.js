@@ -204,6 +204,7 @@ class myAvailabilities extends React.Component {
                 selectable={true}
                 nbSchedule={12}
                 handleSelection={this.sendToDrawer}
+                mode={'month'}
               />
             </Grid>
           </Grid>
