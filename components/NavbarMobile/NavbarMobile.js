@@ -56,15 +56,20 @@ class NavbarMobile extends React.Component {
         <BottomNavigation showLabels className={classes.bottombar} onChange={(event, value) => {
           this.switchUrl(value);
         }}>
-          <BottomNavigationAction className={classes.root} label="Boutique" value={'Shop'}
+          <BottomNavigationAction className={classes.root} classes={{root : classes.MuiBottomNavigationRoot}}
+                                  label="Boutique" value={'Shop'}
                                   icon={<ShoppingCartIcon color={'primary'}/>}/>
-          <BottomNavigationAction className={classes.root} label="Réservation " value={'Reservation'}
+          <BottomNavigationAction className={classes.root} classes={{root : classes.MuiBottomNavigationRoot}}
+                                  label="Réservation " value={'Reservation'}
                                   icon={<AssignmentIcon color={'primary'}/>}/>
-          <BottomNavigationAction className={classes.root} label="Messages" value={'Messages'}
+          <BottomNavigationAction className={classes.root} classes={{root : classes.MuiBottomNavigationRoot}}
+                                  label="Messages" value={'Messages'}
                                   icon={<ForumIcon color={'primary'}/>}/>
-          <BottomNavigationAction className={classes.root} label="Calendrier" value={'Calendrier'}
+          <BottomNavigationAction className={classes.root} classes={{root : classes.MuiBottomNavigationRoot}}
+                                  label="Calendrier" value={'Calendrier'}
                                   icon={<ScheduleIcon color={'primary'}/>}/>
-          <BottomNavigationAction className={classes.root} label="Performances" value={'Performances'}
+          <BottomNavigationAction className={classes.root} classes={{root : classes.MuiBottomNavigationRoot}}
+                                  label="Performances" value={'Performances'}
                                   icon={<AssessmentIcon color={'primary'}/>}/>
         </BottomNavigation>
       </Grid>

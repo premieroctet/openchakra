@@ -10,8 +10,12 @@ export default theme => ({
   root: {
     minWidth: 'inherit',
     '& .MuiBottomNavigationAction-label': {
-      fontSize: '0.70rem',
+      fontSize: '0.60rem',
     },
   },
+
+  MuiBottomNavigationRoot:{
+    padding: 0,
+  }
 
 })
