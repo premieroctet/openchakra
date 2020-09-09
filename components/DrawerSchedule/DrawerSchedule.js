@@ -50,6 +50,10 @@ class DrawerSchedule extends React.Component{
     }
   };
 
+  handleDrawerToggle = () => {
+    this.setState({mobileOpen: !this.state.mobileOpen});
+  };
+
   onAvailabilityChanged = () => {
     this.props.onAvailabilityChanged ? this.props.onAvailabilityChanged() : () => {}
   };

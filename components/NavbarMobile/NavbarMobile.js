@@ -18,7 +18,6 @@ class NavbarMobile extends React.Component {
   }
 
   switchUrl(stepIndex) {
-    console.log(stepIndex);
     switch (stepIndex) {
       case 'Shop':
         return Router.push({

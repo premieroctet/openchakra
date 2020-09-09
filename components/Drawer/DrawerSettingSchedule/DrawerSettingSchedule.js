@@ -200,40 +200,48 @@ class DrawerSettingSchedule extends React.Component{
                                           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
                                               <Grid style={{display : 'flex', alignItems: 'center'}}>
                                                   <Grid>
+                                                    <Grid>
                                                       <KeyboardDatePicker
-                                                          disableToolbar
-                                                          variant="inline"
-                                                          format="dd/MM/yyyy"
-                                                          id="date-picker-inline"
-                                                          label="Date de début"
-                                                          className={classes.formSchedule}
-                                                          value={availResult.startDate}
-                                                          onChange={this.handleDateStart(availIdx)}
-                                                          KeyboardButtonProps={{
-                                                              'aria-label': 'change date',
-                                                          }}
-                                                          autoOk={true}
+                                                        disableToolbar
+                                                        variant="inline"
+                                                        format="dd/MM/yyyy"
+                                                        id="date-picker-inline"
+                                                        label="Date de début"
+                                                        className={classes.formSchedule}
+                                                        value={availResult.startDate}
+                                                        onChange={this.handleDateStart(availIdx)}
+                                                        KeyboardButtonProps={{
+                                                          'aria-label': 'change date',
+                                                        }}
+                                                        autoOk={true}
                                                       />
+                                                    </Grid>
+                                                    <Grid>
                                                       <em style={{ color: 'red' }}>{ error.startDate}</em>
+                                                    </Grid>
                                                   </Grid>
                                               </Grid>
                                               <Grid style={{display : 'flex', alignItems: 'center'}}>
-                                                  <Grid>
+                                                  <Grid style={{display: 'flex', flexDirection: 'column'}}>
+                                                    <Grid>
                                                       <KeyboardDatePicker
-                                                          disableToolbar
-                                                          variant="inline"
-                                                          format="dd/MM/yyyy"
-                                                          id="date-picker-inline"
-                                                          label="Date de fin"
-                                                          className={classes.formSchedule}
-                                                          value={availResult.endDate}
-                                                          onChange={this.handleDateEnd(availIdx)}
-                                                          KeyboardButtonProps={{
-                                                              'aria-label': 'change date',
-                                                          }}
-                                                          autoOk={true}
+                                                        disableToolbar
+                                                        variant="inline"
+                                                        format="dd/MM/yyyy"
+                                                        id="date-picker-inline"
+                                                        label="Date de fin"
+                                                        className={classes.formSchedule}
+                                                        value={availResult.endDate}
+                                                        onChange={this.handleDateEnd(availIdx)}
+                                                        KeyboardButtonProps={{
+                                                          'aria-label': 'change date',
+                                                        }}
+                                                        autoOk={true}
                                                       />
+                                                    </Grid>
+                                                    <Grid>
                                                       <em style={{ color: 'red' }}>{ error.endDate}</em>
+                                                    </Grid>
                                                   </Grid>
                                               </Grid>
                                           </MuiPickersUtilsProvider>

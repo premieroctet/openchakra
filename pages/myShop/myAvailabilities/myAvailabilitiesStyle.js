@@ -26,4 +26,10 @@ export default theme => ({
       display: 'none',
     },
   },
+  navbarShopContainer: {
+    width: '100%',
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
+    },
+  },
 })

@@ -38,6 +38,10 @@ class myAvailabilities extends React.Component {
         };
     }
 
+  static getInitialProps({query: {id_alfred}}) {
+    return {aboutId: id_alfred};
+  }
+
   componentDidMount() {
 
     const auth = cookie.load('token');
@@ -175,7 +179,9 @@ class myAvailabilities extends React.Component {
         <Layout>
           <Grid className={classes.bigContainer} style={{width: '100%'}}>
             {isOwner ?
-              <NavBarShop userId={this.state.userId}/>
+              <Grid className={classes.navbarShopContainer}>
+                <NavBarShop userId={this.state.userId}/>
+              </Grid>
               : null
             }
           </Grid>
