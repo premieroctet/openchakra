@@ -42,7 +42,7 @@ class Schedule extends React.Component {
     }
     this.setState(
       { eventsSelected: eventsSelected},
-      () => this.props.handleSelection(this.state.eventsSelected)
+      () => this.props.handleSelection(this.state.eventsSelected, start, this.props.mode)
     )
   };
 
@@ -210,7 +210,6 @@ class Schedule extends React.Component {
     const customWeekDateCellWrapper = (event) => {
 
       let propsStyle = event.children.props['className'];
-      console.log(event)
 
       const m = moment(event.value);
       const isAvailable = isDateAvailable(m, this.props.availabilities);

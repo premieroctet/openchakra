@@ -630,9 +630,9 @@ class UserServicesPreview extends React.Component {
   };
 
   // TODO : force computing disponibility
-  scheduleDateChanged = dates => {
+  scheduleDateChanged = (dates, mmt, mode) => {
     const dt = new Date([...dates][0])
-    this.setState({date : dt}, () => this.checkBook())
+    this.setState({date : dt, time: mode=='week' ? mmt : undefined}, () => this.checkBook())
   }
 
   render() {
