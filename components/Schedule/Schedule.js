@@ -188,12 +188,14 @@ class Schedule extends React.Component {
 
     const customWeekHeader = (header) => {
 
-      const label = () =>{
-        const date = moment(header.date);
+      const headerContent = () =>{
+        const m = moment(header.date);
+        const isAvailable = isDateAvailable(m, this.props.availabilities);
+
         return(
-          <Grid container>
+          <Grid container className={!isAvailable ? classes.non_available_style : ''}>
             <Grid item style={{width: '100%'}}>
-              <span>{date.format('DD') + ' ' + date.format('MMM') }</span>
+              <span>{m.format('DD')}</span>
             </Grid>
           </Grid>
         )
@@ -201,46 +203,13 @@ class Schedule extends React.Component {
 
       return(
         <Grid>
-          <Grid>{label()}</Grid>
+          <Grid>
+            {headerContent()}
+          </Grid>
         </Grid>
       )
     };
 
-    const customWeekDateCellWrapper = (event) => {
-
-      let propsStyle = event.children.props['className'];
-
-      const m = moment(event.value);
-      const isAvailable = isDateAvailable(m, this.props.availabilities);
-
-      if (propsStyle === 'rbc-day-bg rbc-off-range-bg') {
-        return (
-          <Grid className={classes.off_range_style}/>
-        );
-      } else {
-        if (isAvailable) {
-          return (
-            <Grid className={classes.day_style}/>
-          );
-        } else if (isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
-          return (
-            <Grid className={classes.today_style_avail}>
-              <Grid className={classes.today_style}/>
-            </Grid>
-          );
-        } else if (!isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
-          return (
-            <Grid className={classes.today_style_off}>
-              <Grid className={classes.today_style}/>
-            </Grid>
-          );
-        } else {
-          return (
-            <Grid className={classes.non_available_style}/>
-          );
-        }
-      }
-    };
 
     const customMyTimeSlotWrapper = (event) => {
 
@@ -262,7 +231,6 @@ class Schedule extends React.Component {
           )
         }
       };
-
       return(
         <Grid style={{flex: '1 0 0'}}>
           {label()}
@@ -358,7 +326,6 @@ class Schedule extends React.Component {
                     week:{
                       toolbar: customToolbar,
                       header: customWeekHeader,
-                      dateCellWrapper: customWeekDateCellWrapper,
                       timeSlotWrapper: customMyTimeSlotWrapper,
                     }
                   }}

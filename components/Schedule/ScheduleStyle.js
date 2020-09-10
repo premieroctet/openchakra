@@ -58,6 +58,9 @@ export default theme => ({
     '& .rbc-row-segment': {
       padding: 0,
     },
+    '& .rbc-allday-cell':{
+      display : 'none'
+    }
   },
   heightContainer: {
     [theme.breakpoints.down('xs')]: {
