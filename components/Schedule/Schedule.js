@@ -216,15 +216,18 @@ class Schedule extends React.Component {
             )
           }
           else {
-            return null
+            return (
+              <Grid/>
+            )
           }
         }
         if (!isAvailable) {
           return(
-            <Grid className={classes.non_available_style}>&nbsp;</Grid>
+            <Grid className={classes.non_available_style}/>
           )
         }
       };
+
       return(
         <Grid style={{flex: '1 0 0'}}>
           {label()}
