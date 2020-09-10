@@ -242,7 +242,33 @@ class Schedule extends React.Component {
       }
     };
 
+    const customMyTimeSlotWrapper = (event) => {
 
+      const label = () => {
+        let date = moment(event.value);
+        let resource = event.resource;
+        const isAvailable = isDateAvailable(date, this.props.availabilities);
+
+        if(typeof resource === "undefined" && date.minutes() === 0){
+          return(
+            <Grid style={{textAlign: 'center'}}>
+              <span>{date.hours() + 'h' + date.format('mm')}</span>
+            </Grid>
+          )
+        }
+        if(typeof resource === "object" && !isAvailable){
+          return(
+            <Grid className={classes.non_available_style}/>
+          )
+        }
+      };
+
+      return(
+        <Grid style={{flex: '1 0 0'}}>
+          {label()}
+        </Grid>
+      )
+    };
 
     return (
       <Grid className={classes.heightContainer} style={{height: height, overflow: 'hidden'}}>
@@ -269,57 +295,76 @@ class Schedule extends React.Component {
               const monthStr = moment(date).format('M');
               // Select events for this month only
               const monthEvents = events.filter(e => moment(e.start).format('M') == monthStr);
-              return (
-                <Grid item xl={nbSchedule === 1 ? 11 : 4} lg={nbSchedule === 1 ? 11 : 4} md={nbSchedule === 1 ? 11 : 6}
-                      sm={nbSchedule === 1 ? 11 : 6} xs={12} style={{height: 400}} key={i}>
-                  <Calendar
-                    selectable={selectable}
-                    popup={false}
-                    culture={'fr-FR'}
-                    localizer={localizer}
-                    events={monthEvents}
-                    views={[Views.MONTH, Views.WEEK]}
-                    defaultView={mode}
-                    defaultDate={mode === 'week' ? new Date() : date}
-                    onSelectSlot={this.toggleSelection}
-                    dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
-                    messages={{
-                      'today': 'Aujourd\'hui',
-                      'previous': '<',
-                      'next': '>',
-                      'month': 'Mois',
-                      'week': 'Semaine',
-                      'day': 'Aujourd\'hui',
-                      'agenda': 'Agenda',
-                      'event': 'Evénement',
-                      'date': 'Date',
-                      'time': 'Horaires',
-                      'noEventsInRange': 'Aucun évènement dans cette période',
-                    }}
-                    className={classes.sizeSchedulle}
-                    components={{
-                      //event: MyEvent, // used by each view (Month, Day, Week)
-                      //eventContainerWrapper: MyEventContainerWrapper,
-                      //dayWrapper: MyDayWrapper,
-                      //timeSlotWrapper: MyTimeSlotWrapper,
-                      //timeGutterHeader: MyTimeGutterWrapper,
-                      month: {
-                        dateHeader: customMonthDateHeader,
-                        eventWrapper: customMonthEventWrapper,
-                        dateCellWrapper: customMonthDateCellWrapper,
-                        toolbar: customToolbar,
-                        //header: MyMonthHeader,
-                        //event: MyMonthEvent,
-                      },
-                      week:{
-                        toolbar: customToolbar,
-                        header: customWeekHeader,
-                        dateCellWrapper: customWeekDateCellWrapper
-                      }
-                    }}
-                  />
-                </Grid>
-              );
+            return (
+              <Grid item xl={nbSchedule === 1 ? 11 : 4} lg={nbSchedule === 1 ? 11 : 4} md={nbSchedule === 1 ? 11 : 6}
+                    sm={nbSchedule === 1 ? 11 : 6} xs={12} style={{height: 400}} key={i}>
+                <Calendar
+                  selectable={selectable}
+                  popup={false}
+                  culture={'fr-FR'}
+                  localizer={localizer}
+                  events={monthEvents}
+                  views={[Views.MONTH, Views.WEEK]}
+                  defaultView={mode}
+                  defaultDate={mode === 'week' ? new Date() : date}
+                  onSelectSlot={this.toggleSelection}
+                  dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
+                  messages={{
+                    'today': 'Aujourd\'hui',
+                    'previous': '<',
+                    'next': '>',
+                    'month': 'Mois',
+                    'week': 'Semaine',
+                    'day': 'Aujourd\'hui',
+                    'agenda': 'Agenda',
+                    'event': 'Evénement',
+                    'date': 'Date',
+                    'time': 'Horaires',
+                    'noEventsInRange': 'Aucun évènement dans cette période',
+                  }}
+                  className={classes.sizeSchedulle}
+                  components={{
+                    /* event: MyEvent, // used by each view (Month, Day, Week)
+                     *   eventWrapper: MyEventWrapper,
+                     *   eventContainerWrapper: MyEventContainerWrapper,
+                     *   dateCellWrapper: MyDateCellWrapper,
+                     *   timeSlotWrapper: MyTimeSlotWrapper,
+                     *   timeGutterHeader: MyTimeGutterWrapper,
+                     *   toolbar: MyToolbar,
+                     *   agenda: {
+                     *   	 event: MyAgendaEvent // with the agenda view use a different component to render events
+                     *     time: MyAgendaTime,
+                     *     date: MyAgendaDate,
+                     *   },
+                     *   day: {
+                     *     header: MyDayHeader,
+                     *     event: MyDayEvent,
+                     *   },
+                     *   week: {
+                     *     header: MyWeekHeader,
+                     *     event: MyWeekEvent,
+                     *   },
+                     *   month: {
+                     *     header: MyMonthHeader,
+                     *     dateHeader: MyMonthDateHeader,
+                     *     event: MyMonthEvent,
+                     *   }*/
+                    month: {
+                      dateHeader: customMonthDateHeader,
+                      eventWrapper: customMonthEventWrapper,
+                      dateCellWrapper: customMonthDateCellWrapper,
+                      toolbar: customToolbar,
+                    },
+                    week:{
+                      toolbar: customToolbar,
+                      header: customWeekHeader,
+                      dateCellWrapper: customWeekDateCellWrapper,
+                      timeSlotWrapper: customMyTimeSlotWrapper,
+                    }
+                  }}
+                />
+              </Grid>
+            );
             },
           )}
         </Grid>
