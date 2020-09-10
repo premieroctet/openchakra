@@ -70,7 +70,6 @@ class Schedule extends React.Component {
         }else{
           toolbar.onNavigate('NEXT');
         }
-
       };
 
       /*const goToCurrent = () => {
@@ -89,7 +88,7 @@ class Schedule extends React.Component {
             {
               this.props.nbSchedule === 1 ?
                 <Grid item>
-                  <Button onClick={goToBack} style={{backgroundColor: 'grey'}}>&#8249;</Button>
+                  <Button onClick={goToBack} variant={'contained'}>&#8249;</Button>
                 </Grid> : null
             }
             <Grid item>
@@ -98,7 +97,7 @@ class Schedule extends React.Component {
             {
               this.props.nbSchedule === 1 ?
                 <Grid item>
-                  <Button onClick={goToNext}>&#8250;</Button>
+                  <Button onClick={goToNext} variant={'contained'}>&#8250;</Button>
                 </Grid> : null
             }
           </Grid>
