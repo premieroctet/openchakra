@@ -31,11 +31,18 @@ class Schedule extends React.Component {
 
   toggleSelection = ({start, end, action}) => {
     let newDate = moment(start).format('YYYY-MM-DD');
-    var eventsSelected=this.state.eventsSelected;
-    if (!eventsSelected.delete(newDate)) { eventsSelected.add(newDate) }
+    var eventsSelected=this.state.eventsSelected
+    // Single selection : replace
+    if (this.props.singleSelection) {
+      eventsSelected = new Set([newDate])
+    }
+    // Multiple selection : toggle
+    else {
+      if (!eventsSelected.delete(newDate)) { eventsSelected.add(newDate) }
+    }
     this.setState(
       { eventsSelected: eventsSelected},
-      () => this.props.handleSelection(this.state.eventsSelected)
+      () => this.props.handleSelection(this.state.eventsSelected, start, this.props.mode)
     )
   };
 

@@ -71,13 +71,12 @@ const isMomentInAvail = (m, serviceId, avail) => {
 };
 
 const isMomentAvailable = (mom, serviceId, avails) => {
-  var res = false;
-  if (isEmpty(avails)) {
-    res = true;
-  } else {
-    res = avails.some(a => isMomentInAvail(mom, serviceId, a));
+  const availability=getAvailabilityForDate(mom, avails)
+  if (!availability || !availability.available) {
+    return false
   }
-  return res;
+  // Date is ok, check timelapses
+  return availability.timelapses.includes(mom.hour())
 };
 
 const isIntervalAvailable = (start, end, serviceId, avails) => {
@@ -90,7 +89,7 @@ const isIntervalAvailable = (start, end, serviceId, avails) => {
       return true;
     }
     ;
-    m.add(15, 'minutes');
+    m.add(30, 'minutes');
   }
   return false;
 };
@@ -187,12 +186,15 @@ const availabilitiesComparator = (a1, a2) => {
   return a2._id.toString().localeCompare(a1._id.toString())
 }
 
+const getAvailabilityForDate = (mmt, availabilities) => {
+  return availabilities.sort(availabilitiesComparator).find( avail => availIncludesDate(avail, mmt)[0])
+}
 /** Moment mmt's date is available for alfred_id => true/false */
 const isDateAvailable = (mmt, availabilities) => {
   if (!availabilities || availabilities.length == 0) {
     return false;
   }
-  const availability=availabilities.sort(availabilitiesComparator).find( avail => availIncludesDate(avail, mmt)[0])
+  const availability=getAvailabilityForDate(mmt, availabilities)
   return availability ? availability.available : false
 }
 

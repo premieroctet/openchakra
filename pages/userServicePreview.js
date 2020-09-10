@@ -629,6 +629,12 @@ class UserServicesPreview extends React.Component {
     return result;
   };
 
+  // TODO : force computing disponibility
+  scheduleDateChanged = (dates, mmt, mode) => {
+    const dt = new Date([...dates][0])
+    this.setState({date : dt, time: mode=='week' ? mmt : undefined}, () => this.checkBook())
+  }
+
   render() {
     const {classes} = this.props;
     const {date, time, location, serviceUser, shop, service, equipments, alfred, errors, isChecked} = this.state;
@@ -1036,7 +1042,9 @@ class UserServicesPreview extends React.Component {
                     </Grid>
                     <Grid>
                       <Schedule availabilities={this.state.availabilities} bookings={[]} services={[]}
-                                selectable={false} height={400} nbSchedule={1} mode={'week'}/>
+                                selectable={true} height={400} nbSchedule={1} handleSelection={this.scheduleDateChanged}
+                                singleSelection={true} mode={'week'}
+                      />
                     </Grid>
                   </Grid>
                   <Grid className={classes.basketMinimumContainer}>
