@@ -70,7 +70,7 @@ const isMomentInAvail = (m, serviceId, avail) => {
   return res;
 };
 
-const isMomentAvailable = (mom, serviceId, avails) => {
+const isMomentAvailable = (mom, avails) => {
   const availability=getAvailabilityForDate(mom, avails)
   if (!availability || !availability.available) {
     return false
@@ -85,7 +85,7 @@ const isIntervalAvailable = (start, end, serviceId, avails) => {
   }
   var m = start;
   while (start.isBefore(end)) {
-    if (isMomentAvailable(m, serviceId, avails)) {
+    if (isMomentAvailable(m, avails)) {
       return true;
     }
     ;
@@ -187,7 +187,11 @@ const availabilitiesComparator = (a1, a2) => {
 }
 
 const getAvailabilityForDate = (mmt, availabilities) => {
-  return availabilities.sort(availabilitiesComparator).find( avail => availIncludesDate(avail, mmt)[0])
+  if (!availabilities || availabilities.length==0) {
+    return null
+  }
+  const availability = availabilities.sort(availabilitiesComparator).find( avail => availIncludesDate(avail, mmt)[0])
+  return availability
 }
 /** Moment mmt's date is available for alfred_id => true/false */
 const isDateAvailable = (mmt, availabilities) => {

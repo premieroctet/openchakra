@@ -10,7 +10,7 @@ import styles from './ScheduleStyle';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 
-const {isDateAvailable} = require('../../utils/dateutils');
+const {isDateAvailable, isMomentAvailable} = require('../../utils/dateutils');
 moment.locale('fr');
 
 const localizer = momentLocalizer(moment);
@@ -202,20 +202,26 @@ class Schedule extends React.Component {
     const customMyTimeSlotWrapper = (event) => {
 
       const label = () => {
+
         let date = moment(event.value);
         let resource = event.resource;
-        const isAvailable = isDateAvailable(date, this.props.availabilities);
+        const isAvailable = isMomentAvailable(date, this.props.availabilities);
 
-        if(typeof resource === "undefined" && date.minutes() === 0){
-          return(
-            <Grid style={{textAlign: 'center'}}>
-              <span>{date.hours() + 'h' + date.format('mm')}</span>
-            </Grid>
-          )
+        if(typeof resource === "undefined") {
+          if (date.minutes() === 0){
+            return(
+              <Grid style={{textAlign: 'center'}}>
+                <span>{date.hours() + 'h' + date.format('mm')}</span>
+              </Grid>
+            )
+          }
+          else {
+            return null
+          }
         }
-        if(typeof resource === "object" && !isAvailable){
+        if (!isAvailable) {
           return(
-            <Grid className={classes.non_available_style}/>
+            <Grid className={classes.non_available_style}>&nbsp;</Grid>
           )
         }
       };
@@ -265,6 +271,7 @@ class Schedule extends React.Component {
                   defaultDate={mode === 'week' ? new Date() : date}
                   onSelectSlot={this.toggleSelection}
                   dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
+                  scrollToTime={moment()}
                   messages={{
                     'today': 'Aujourd\'hui',
                     'previous': '<',
