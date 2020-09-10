@@ -48,6 +48,7 @@ export default theme => ({
       display: 'none',
     },
     '& .rbc-header': {
+      padding:0,
       [theme.breakpoints.down('xs')]: {
         whiteSpace: 'inherit !important',
       },
@@ -58,6 +59,9 @@ export default theme => ({
     '& .rbc-row-segment': {
       padding: 0,
     },
+    '& .rbc-allday-cell':{
+      display : 'none'
+    }
   },
   heightContainer: {
     [theme.breakpoints.down('xs')]: {
