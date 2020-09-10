@@ -286,7 +286,7 @@ class UserServicesPreview extends React.Component {
     }
 
     const reservationDate = this.computeReservationDate();
-    if (!errors.datetime && reservationDate.isValid() && !isMomentAvailable(reservationDate, this.state.service._id, this.state.availabilities)) {
+    if (!errors.datetime && reservationDate.isValid() && !isMomentAvailable(reservationDate, this.state.availabilities)) {
       errors['datetime'] = this.state.alfred.firstname + ' n\'est pas disponible à cette date/heure';
     }
 
