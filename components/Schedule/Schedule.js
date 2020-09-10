@@ -193,9 +193,9 @@ class Schedule extends React.Component {
         const isAvailable = isDateAvailable(m, this.props.availabilities);
 
         return(
-          <Grid container className={!isAvailable ? classes.non_available_style : ''}>
+          <Grid container>
             <Grid item style={{width: '100%'}}>
-              <span>{m.format('DD')}</span>
+              <span style={{color: m.isBefore(moment().startOf('day')) ? '#999999' : 'black'}}>{m.format('DD')}</span>
             </Grid>
           </Grid>
         )

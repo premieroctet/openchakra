@@ -48,6 +48,7 @@ export default theme => ({
       display: 'none',
     },
     '& .rbc-header': {
+      padding:0,
       [theme.breakpoints.down('xs')]: {
         whiteSpace: 'inherit !important',
       },
