@@ -79,14 +79,6 @@ class Schedule extends React.Component {
         }
       };
 
-      /*const goToCurrent = () => {
-        const now = new Date();
-        toolbar.date.setMonth(now.getMonth());
-        toolbar.date.setYear(now.getFullYear());
-        toolbar.onNavigate('current');
-      };*/
-
-
       const label = () => {
         const date = moment(toolbar.date);
         return (
@@ -125,7 +117,6 @@ class Schedule extends React.Component {
 
     const customMonthDateHeader = (event) => {
       let newDate = moment(event.date).format('YYYY-MM-DD');
-
       if (event.isOffRange) {
         return null
       }
@@ -180,22 +171,19 @@ class Schedule extends React.Component {
     };
 
     const customMonthEventWrapper = () => {
-
       return (
         <Grid className={classes.myEventWrapperStyle}/>
       );
     };
 
     const customWeekHeader = (header) => {
-
       const headerContent = () =>{
         const m = moment(header.date);
-        const isAvailable = isDateAvailable(m, this.props.availabilities);
-
         return(
           <Grid container>
             <Grid item style={{width: '100%'}}>
-              <span style={{color: m.isBefore(moment().startOf('day')) ? '#999999' : 'black'}}>{m.format('DD')}</span>
+              <span style={{color: m.isBefore(moment().startOf('day')) ? '#999999' : 'black'}}>
+                {m.format('DD')}</span>
             </Grid>
           </Grid>
         )
