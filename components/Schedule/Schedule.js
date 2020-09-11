@@ -46,6 +46,10 @@ class Schedule extends React.Component {
     )
   };
 
+  removeEventsSelected = () => {
+    this.setState({eventsSelected: new Set()})
+  };
+
 
   render() {
     const {classes, title, subtitle, selectable, height, nbSchedule, bookings, mode} = this.props;
@@ -262,7 +266,7 @@ class Schedule extends React.Component {
               const monthEvents = events.filter(e => moment(e.start).format('M') == monthStr);
             return (
               <Grid item xl={nbSchedule === 1 ? 11 : 4} lg={nbSchedule === 1 ? 11 : 4} md={nbSchedule === 1 ? 11 : 6}
-                    sm={nbSchedule === 1 ? 11 : 6} xs={12} style={{height: 400}} key={i}>
+                    sm={nbSchedule === 1 ? 11 : 6} xs={12} style={{height: 350}} key={i}>
                 <Calendar
                   selectable={selectable}
                   popup={false}

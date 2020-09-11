@@ -1,5 +1,8 @@
 export default theme => ({
   formSchedule: {
+    '& .MuiPickersBasePicker-pickerView':{
+      backgroundColor: 'red',
+    },
     [theme.breakpoints.down('xs')]: {
       width: '100%',
       marginBottom: '5%',

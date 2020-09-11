@@ -136,9 +136,9 @@ class DrawerSettingSchedule extends React.Component{
       .then ( res => {
         var errors=this.state.errors;
         errors[index]={};
-        this.setState({errors: errors});
+        this.setState({errors: errors });
         this.props.onAvailabilityChanged ? this.props.onAvailabilityChanged() : () => {};
-        this.loadAvailabilities()
+        this.loadAvailabilities();
       })
       .catch( err => {
         var errors=this.state.errors;

@@ -58,6 +58,10 @@ class DrawerSchedule extends React.Component{
     this.props.onAvailabilityChanged ? this.props.onAvailabilityChanged() : () => {}
   };
 
+  removeEventsSelected = () => {
+    this.setState({eventsSelected : new Set()}, () => this.props.removeEventsSelected())
+  };
+
   render() {
     const {classes, windows} = this.props;
     const {mobileOpen} = this.state;
@@ -86,9 +90,16 @@ class DrawerSchedule extends React.Component{
                             {
                                 mobileOpen ?
                                     this.state.eventsSelected.size > 0 ?
-                                        <DrawerEditingSchedule ref={this.drawerEditing} handleDrawer={this.handleDrawerToggle} onAvailabilityChanged={this.onAvailabilityChanged} />
+                                        <DrawerEditingSchedule ref={this.drawerEditing}
+                                                               handleDrawer={this.handleDrawerToggle}
+                                                               onAvailabilityChanged={this.onAvailabilityChanged}
+                                                               removeEventsSelected={this.removeEventsSelected}
+                                        />
                                         :
-                                        <DrawerSettingSchedule ref={this.drawerSetting} handleDrawer={this.handleDrawerToggle} onAvailabilityChanged={this.onAvailabilityChanged} />
+                                        <DrawerSettingSchedule ref={this.drawerSetting}
+                                                               handleDrawer={this.handleDrawerToggle}
+                                                               onAvailabilityChanged={this.onAvailabilityChanged}
+                                        />
                                 : null
                             }
                         </Drawer>
@@ -105,9 +116,17 @@ class DrawerSchedule extends React.Component{
                             {
                                 !mobileOpen ?
                                     this.state.eventsSelected.size > 0 ?
-                                        <DrawerEditingSchedule ref={this.drawerEditing} handleDrawer={this.handleDrawerToggle} onAvailabilityChanged={this.onAvailabilityChanged}/>
+                                        <DrawerEditingSchedule ref={this.drawerEditing}
+                                                               handleDrawer={this.handleDrawerToggle}
+                                                               onAvailabilityChanged={this.onAvailabilityChanged}
+                                                               removeEventsSelected={this.removeEventsSelected}
+
+                                        />
                                         :
-                                        <DrawerSettingSchedule ref={this.drawerSetting}  handleDrawer={this.handleDrawerToggle} onAvailabilityChanged={this.onAvailabilityChanged}/>
+                                        <DrawerSettingSchedule ref={this.drawerSetting}
+                                                               handleDrawer={this.handleDrawerToggle}
+                                                               onAvailabilityChanged={this.onAvailabilityChanged}
+                                        />
                                 : null
                             }
                         </Drawer>

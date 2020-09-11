@@ -23,6 +23,7 @@ class myAvailabilities extends React.Component {
     constructor(props) {
         super(props);
         this.child = React.createRef();
+        this.schedule = React.createRef();
         this.state = {
             user: {},
             availabilities: [],
@@ -139,15 +140,15 @@ class myAvailabilities extends React.Component {
           })
           .catch(err => console.error(err));
       });
-    }
+    };
 
     sendToDrawer = (eventsSelected) => {
       this.child.current.getEventsSelected(eventsSelected);
-    }
+    };
 
     onAvailabilityChanged = () => {
       this.loadAvailabilities()
-    }
+    };
 
   checkIfOwner() {
     Object.keys(this.state.services).map(result => {
@@ -157,12 +158,8 @@ class myAvailabilities extends React.Component {
     });
   }
 
-  sendToDrawer = (eventsSelected) => {
-    this.child.current.getEventsSelected(eventsSelected);
-  };
-
-  onAvailabilitySaved = () => {
-    this.loadAvailabilities();
+  removeEventsSelected = () => {
+    this.schedule.current.removeEventsSelected()
   };
 
   render() {
@@ -187,12 +184,13 @@ class myAvailabilities extends React.Component {
           </Grid>
           <Grid className={classes.toggle}>
             <Grid>
-              <DrawerSchedule ref={this.child} onAvailabilityChanged={this.onAvailabilityChanged}/>
+              <DrawerSchedule ref={this.child} onAvailabilityChanged={this.onAvailabilityChanged} removeEventsSelected={this.removeEventsSelected}/>
             </Grid>
           </Grid>
           <Grid container className={classes.containercalendar} style={{width: ' 65%'}}>
             <Grid>
               <Schedule
+                ref={this.schedule}
                 availabilities={this.state.availabilities}
                 bookings={this.state.bookings}
                 title={I18N.SCHEDULE_TITLE}
