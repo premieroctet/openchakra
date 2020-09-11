@@ -59,8 +59,11 @@ export default theme => ({
     '& .rbc-row-segment': {
       padding: 0,
     },
-    '& .rbc-allday-cell':{
+    '& .rbc-allday-cell': {
       display : 'none'
+    },
+    '& .rbc-time-view': {
+      borderRadius: 5
     }
   },
   heightContainer: {
