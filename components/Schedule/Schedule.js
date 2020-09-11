@@ -229,7 +229,7 @@ class Schedule extends React.Component {
       };
 
       return(
-        <Grid style={{flex: '1 0 0'}}>
+        <Grid container style={{flex: '1 0 0'}}>
           {label()}
         </Grid>
       )

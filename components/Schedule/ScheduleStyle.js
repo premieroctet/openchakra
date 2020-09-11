@@ -148,7 +148,7 @@ export default theme => ({
   },
   non_available_style: {
     width: '100%',
-    height: '100%',
+    height: 'auto',
     borderLeft: '1px solid #DDD',
     cursor: 'pointer',
     backgroundColor: 'lightgrey',

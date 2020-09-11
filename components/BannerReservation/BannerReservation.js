@@ -33,9 +33,9 @@ class BannerReservation extends React.Component {
           }
           <Grid container className={classes.darkOverlay}>
             <Grid container className={classes.container}>
-              <Grid>
-                <p class="customPolice"
-                   style={{fontSize: 70, textAlign: 'center', color: 'white'}}>{serviceUser.label}</p>
+              <Grid container className={classes.container}>
+                <span class="customPolice"
+                   style={{fontSize: 70, textAlign: 'center', color: 'white'}}>{serviceUser.label}</span>
               </Grid>
               <Grid>
                 <Link href={`/shop?id_alfred=${user._id}`}>

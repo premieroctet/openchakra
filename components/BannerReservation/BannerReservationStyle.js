@@ -1,13 +1,12 @@
 export default theme => ({
   bannerContainer: {
-    height: '55vh',
     backgroundPosition: 'center',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     marginTop: 56,
   },
   darkOverlay: {
-    height: '100%',
+    height: 350,
     backgroundColor: 'rgba(0,0,0,0.5)',
     display: 'flex',
     flexDirection: 'row',
