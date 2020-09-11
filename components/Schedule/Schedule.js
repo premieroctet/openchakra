@@ -210,8 +210,8 @@ class Schedule extends React.Component {
         if(typeof resource === "undefined") {
           if (date.minutes() === 0){
             return(
-              <Grid style={{textAlign: 'center'}}>
-                <span>{date.hours() + 'h' + date.format('mm')}</span>
+              <Grid style={{textAlign: 'center', width : '100%'}}>
+                <span>{date.hours() + ':' + date.format('mm')}</span>
               </Grid>
             )
           }
