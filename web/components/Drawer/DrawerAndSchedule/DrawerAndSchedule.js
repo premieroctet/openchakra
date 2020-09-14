@@ -27,6 +27,14 @@ class DrawerAndSchedule extends React.Component{
     this.props.availabilityCreated(avail)
   };
 
+  onAvailabilityChanged = () => {
+    this.props.onAvailabilityChanged();
+  };
+
+  removeEventsSelected = () => {
+    this.schedule.current.removeEventsSelected()
+  };
+
   render(){
     const {classes, availabilities, selectable, title, subtitle} = this.props;
 

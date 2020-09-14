@@ -47,10 +47,10 @@ class DrawerSettingSchedule extends React.Component{
             timelapses: new Set(a.timelapses),
             as_text: a.as_text,
           }
-        })
+        });
         this.setState({availabilities: availabilities})
-      })
-  }
+      }).catch(err => console.error(err))
+  };
 
   toggleRecurrDay = (dayIndex, availIdx) => {
     this.state.availabilities[availIdx].recurrDays.has(dayIndex) ? this.removeRecurrDay(dayIndex, availIdx) : this.addRecurrDay(dayIndex, availIdx);

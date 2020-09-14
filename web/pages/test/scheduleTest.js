@@ -28,7 +28,7 @@ class scheduleTest extends React.Component {
       .then(res => {
         this.setState({availabilities: res.data});
       })
-      .catch(err => {console.log(err)});
+      .catch(err => console.error(err));
   };
 
   availabilityCreated = (avail) => {
@@ -66,6 +66,8 @@ class scheduleTest extends React.Component {
       });
   };
 
+
+
   render() {
     const {availabilities} = this.state;
     const {classes} = this.props;
@@ -79,6 +81,8 @@ class scheduleTest extends React.Component {
           title={I18N.SCHEDULE_TITLE}
           SUBTITLE={I18N.SCHEDULE_SUBTITLE}
           availabilities={availabilities}
+          onAvailabilityChanged={this.loadAvailabilities}
+          removeEventsSelected={this.removeEventsSelected}
         />
       </Grid>
     );

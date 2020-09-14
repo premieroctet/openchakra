@@ -30,6 +30,7 @@ class Schedule extends React.Component {
   }
 
   toggleSelection = ({start, end, action}) => {
+    console.log('bonjour')
     // Don't select dates before today
     if (moment(start).isBefore(moment().startOf('day'))) {
       return
@@ -61,12 +62,12 @@ class Schedule extends React.Component {
 
     const half = Math.floor(nbSchedule / 2);
 
-    let events = []
-    if (bookings!=undefined) {
+    let events = [];
+    if (bookings !== undefined) {
       events = bookings2events(bookings.filter(b => b.calendar_display));
     }
 
-    if (view == Views.MONTH) {
+    if (view === Views.MONTH) {
       events = _.uniqBy(events, e => e.start.format('DD/MM/YYYY'));
     }
 
