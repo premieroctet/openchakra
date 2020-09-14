@@ -197,7 +197,6 @@ class myAvailabilities extends React.Component {
                 subtitle={I18N.SCHEDULE_SUBTITLE}
                 services={this.state.services}
                 onCreateAvailability={this.availabilityCreated}
-                onDeleteAvailability={this.availabilityDelete}
                 onUpdateAvailability={this.availabilityUpdate}
                 selectable={true}
                 nbSchedule={12}

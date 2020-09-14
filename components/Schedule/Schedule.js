@@ -35,7 +35,7 @@ class Schedule extends React.Component {
       return
     }
     let newDate = moment(start).format('YYYY-MM-DD');
-    var eventsSelected=this.state.eventsSelected
+    var eventsSelected=this.state.eventsSelected;
     // Single selection : replace
     if (this.props.singleSelection) {
       eventsSelected = new Set([newDate])

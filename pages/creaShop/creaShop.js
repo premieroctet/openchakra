@@ -30,6 +30,7 @@ import {
   settingShop,
 } from '../../utils/validationSteps/validationSteps';
 import cookie from 'react-cookies';
+import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
 
 const {createDefaultAvailability} = require('../../utils/dateutils');
 const I18N = require('../../utils/i18n');
@@ -38,7 +39,7 @@ class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeStep: 0,
+      activeStep: 6,
       user_id: null,
       saving: false,
       shop: {
@@ -80,7 +81,6 @@ class creaShop extends React.Component {
     this.preferencesChanged = this.preferencesChanged.bind(this);
     this.assetsChanged = this.assetsChanged.bind(this);
     this.availabilityCreated = this.availabilityCreated.bind(this);
-    this.availabilityUpdated = this.availabilityUpdated.bind(this);
     this.availabilityDeleted = this.availabilityDeleted.bind(this);
     this.conditionsChanged = this.conditionsChanged.bind(this);
     this.shopSettingsChanged = this.shopSettingsChanged.bind(this);
@@ -139,26 +139,44 @@ class creaShop extends React.Component {
     return false;
   }
 
-  availabilityCreated(avail) {
-    let shop = this.state.shop;
-    shop.availabilities.push(avail);
-    this.setState({shop: shop});
-  }
-
   availabilityDeleted(avail) {
     let shop = this.state.shop;
     shop.availabilities = shop.availabilities.filter(av => av._id !== avail._id);
     this.setState({shop: shop});
   }
 
-  availabilityUpdated(avail) {
-    let shop = this.state.shop;
-    // Remove
-    shop.availabilities = shop.availabilities.filter(av => av._id !== avail._id);
-    // Add
-    shop.availabilities.push(avail);
-    this.setState({shop: shop});
-  }
+  availabilityCreated = (avail) => {
+
+    if (avail._id.length === GID_LEN) {
+      avail._id = null;
+    }
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    axios.post('/myAlfred/api/availability/add', avail)
+      .then(res => {
+        toast.info('Disponibilité ajoutée avec succès !');
+        axios.get('/myAlfred/api/availability/currentAlfred')
+          .then(res => {
+            this.setState({availabilities: res.data});
+          })
+          .catch(err => console.error(err));
+      })
+      .catch(err => {
+        console.error(err);
+        toast.error(err);
+      });
+  };
+
+  availabilityUpdate = (avail) => {
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    axios.post('/myAlfred/api/availability/update', avail)
+      .then(res => {
+        axios.get('/myAlfred/api/availability/currentAlfred')
+          .then(res => {
+            this.setState({availabilities: res.data});
+          })
+          .catch(err => console.error(err));
+      });
+  };
 
   handleNext = () => {
     if (this.state.activeStep < 9) {
@@ -168,7 +186,6 @@ class creaShop extends React.Component {
     else {
       this.setState({saving: true});
       let cloned_shop = _.cloneDeep(this.state.shop);
-      console.log('CreaShop:sending shop ' + JSON.stringify(cloned_shop, null, 2));
       Object.keys(cloned_shop.prestations).forEach(key => {
         if (key < 0) {
           cloned_shop.prestations[key]._id = null;
@@ -334,10 +351,10 @@ class creaShop extends React.Component {
       case 5:
         return <AssetsService data={shop} onChange={this.assetsChanged} type={'creaShop'}/>;
       case 6:
-        return <Schedule availabilities={shop.availabilities} services={[]}
-                         onCreateAvailability={this.availabilityCreated} onDeleteAvailability={this.availabilityDeleted}
-                         onUpdateAvailability={this.availabilityUpdated} title={I18N.SCHEDULE_TITLE}
-                         subtitle={I18N.SCHEDULE_SUBTITLE} selectable={true} height={700}/>;
+        return <DrawerAndSchedule availabilities={shop.availabilities}
+                                  title={I18N.SCHEDULE_TITLE}
+                                  SUBTITLE={I18N.SCHEDULE_SUBTITLE}
+                                  selectable={true}/>;
       case 7:
         return <BookingConditions conditions={shop.my_alfred_conditions} booking_request={shop.booking_request}
                                   onChange={this.conditionsChanged}/>;
