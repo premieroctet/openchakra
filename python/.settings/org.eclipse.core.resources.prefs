@@ -1,0 +1,4 @@
+eclipse.preferences.version=1
+encoding//src/alfred/stats/stats.py=utf-8
+encoding//test/export/export_test.py=utf-8
+encoding//test/stats/stats_test.py=utf-8
