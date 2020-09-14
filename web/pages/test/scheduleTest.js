@@ -83,6 +83,7 @@ class scheduleTest extends React.Component {
           availabilities={availabilities}
           onAvailabilityChanged={this.loadAvailabilities}
           removeEventsSelected={this.removeEventsSelected}
+          selectable={true}
         />
       </Grid>
     );
