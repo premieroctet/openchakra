@@ -15,10 +15,16 @@ class DrawerAndSchedule extends React.Component{
     }
   }
 
-
-
   sendToDrawer = (eventsSelected) => {
     this.child.current.getEventsSelected(eventsSelected);
+  };
+
+  availabilityUpdate = (avail) => {
+    this.props.availabilityUpdate(avail)
+  };
+
+  availabilityCreated = (avail) =>{
+    this.props.availabilityCreated(avail)
   };
 
   render(){

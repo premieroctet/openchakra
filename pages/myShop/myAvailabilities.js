@@ -142,13 +142,13 @@ class myAvailabilities extends React.Component {
       });
     };
 
-    sendToDrawer = (eventsSelected) => {
-      this.child.current.getEventsSelected(eventsSelected);
-    };
+  sendToDrawer = (eventsSelected) => {
+    this.child.current.getEventsSelected(eventsSelected);
+  };
 
-    onAvailabilityChanged = () => {
-      this.loadAvailabilities()
-    };
+  onAvailabilityChanged = () => {
+    this.loadAvailabilities()
+  };
 
   checkIfOwner() {
     Object.keys(this.state.services).map(result => {
