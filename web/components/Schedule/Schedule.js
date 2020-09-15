@@ -67,9 +67,6 @@ class Schedule extends React.Component {
     const {classes, title, subtitle, selectable, height, nbSchedule, bookings, mode} = this.props;
     const {view, eventsSelected, currentDate, half} = this.state;
 
-    console.log('nouveau render ?')
-    console.log(currentDate, 'currentdate')
-
     let events = [];
     if (bookings !== undefined) {
       events = bookings2events(bookings.filter(b => b.calendar_display));
@@ -281,16 +278,15 @@ class Schedule extends React.Component {
         </Grid>
         <Grid container spacing={2} style={{padding: 5}}>
           {[...Array(nbSchedule)].map((x, i) => {
-            console.log('denouveau')
             let date = new Date(currentDate);
-            console.log(date,'premiere')
+            console.log(date, 'date')
             date.setDate(1);
             date.setMonth(date.getMonth() + (i - half));
             const monthStr = moment(date).format('M');
             const monthEvents = events.filter(e => moment(e.start).format('M') == monthStr);
             return (
               <Grid item xl={nbSchedule === 1 ? 11 : 4} lg={nbSchedule === 1 ? 11 : 4} md={nbSchedule === 1 ? 11 : 6}
-                    sm={nbSchedule === 1 ? 11 : 6} xs={12} style={{height: 350}} key={i}>
+                    sm={nbSchedule === 1 ? 11 : 6} xs={12} style={{height: 325}} key={i}>
                 <Calendar
                   selectable={selectable}
                   popup={false}
@@ -299,7 +295,7 @@ class Schedule extends React.Component {
                   events={monthEvents}
                   views={[Views.MONTH, Views.WEEK]}
                   defaultView={mode}
-                  defaultDate={currentDate}
+                  defaultDate={date}
                   onSelectSlot={this.toggleSelection}
                   dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
                   scrollToTime={moment()}
