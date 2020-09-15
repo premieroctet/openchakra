@@ -26,11 +26,12 @@ class Schedule extends React.Component {
       eventsSelected: new Set(),
       dayLayoutAlgorithm: 'no-overlap',
       view: Views.MONTH,
+      currentDate: new Date(),
+      half: Math.floor(props.nbSchedule / 2),
     };
   }
 
   toggleSelection = ({start, end, action}) => {
-    console.log('bonjour')
     // Don't select dates before today
     if (moment(start).isBefore(moment().startOf('day'))) {
       return
@@ -55,12 +56,19 @@ class Schedule extends React.Component {
     this.setState({eventsSelected: new Set()})
   };
 
+  nextMonth = () => {
+      let date = new Date(this.state.currentDate);
+      date.setDate(1);
+      date.setMonth(date.getMonth() + 1);
+      this.setState({currentDate : date})
+  };
 
   render() {
     const {classes, title, subtitle, selectable, height, nbSchedule, bookings, mode} = this.props;
-    const {view, eventsSelected} = this.state;
+    const {view, eventsSelected, currentDate, half} = this.state;
 
-    const half = Math.floor(nbSchedule / 2);
+    console.log('nouveau render ?')
+    console.log(currentDate, 'currentdate')
 
     let events = [];
     if (bookings !== undefined) {
@@ -72,7 +80,6 @@ class Schedule extends React.Component {
     }
 
     const customToolbar = (toolbar) => {
-
       const goToBack = () => {
         if(this.props.mode === 'month'){
           toolbar.date.setMonth(toolbar.date.getMonth() - 1);
@@ -264,14 +271,23 @@ class Schedule extends React.Component {
           </Grid>
           : null
         }
+        <Grid container style={{justifyContent: 'space-between'}}>
+          <Grid>
+            <Button>Back</Button>
+          </Grid>
+          <Grid>
+            <Button  onClick={() => { this.nextMonth() }}>Suivant</Button>
+          </Grid>
+        </Grid>
         <Grid container spacing={2} style={{padding: 5}}>
           {[...Array(nbSchedule)].map((x, i) => {
-              let date = new Date();
-              date.setDate(1);
-              date.setMonth(date.getMonth() + (i - half));
-              const monthStr = moment(date).format('M');
-              // Select events for this month only
-              const monthEvents = events.filter(e => moment(e.start).format('M') == monthStr);
+            console.log('denouveau')
+            let date = new Date(currentDate);
+            console.log(date,'premiere')
+            date.setDate(1);
+            date.setMonth(date.getMonth() + (i - half));
+            const monthStr = moment(date).format('M');
+            const monthEvents = events.filter(e => moment(e.start).format('M') == monthStr);
             return (
               <Grid item xl={nbSchedule === 1 ? 11 : 4} lg={nbSchedule === 1 ? 11 : 4} md={nbSchedule === 1 ? 11 : 6}
                     sm={nbSchedule === 1 ? 11 : 6} xs={12} style={{height: 350}} key={i}>
@@ -283,7 +299,7 @@ class Schedule extends React.Component {
                   events={monthEvents}
                   views={[Views.MONTH, Views.WEEK]}
                   defaultView={mode}
-                  defaultDate={mode === 'week' ? new Date() : date}
+                  defaultDate={currentDate}
                   onSelectSlot={this.toggleSelection}
                   dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
                   scrollToTime={moment()}

@@ -24,7 +24,7 @@ export default theme => ({
     width: '100%',
     display: 'flex',
     position: 'fixed',
-    zIndex: 1,
+    zIndex: 5,
     alignItems: 'center',
     backgroundColor: 'white',
     [theme.breakpoints.down('md')]: {
@@ -87,9 +87,7 @@ export default theme => ({
     backgroundColor: 'white',
     position: 'fixed',
     bottom: 0,
-    [theme.breakpoints.down('xs')]: {
-      zIndex: 1,
-    },
+    zIndex: 4,
   },
   footerContainer: {
     height: '100%',

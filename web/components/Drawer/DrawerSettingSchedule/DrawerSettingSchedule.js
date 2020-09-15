@@ -19,7 +19,6 @@ import {Button} from '@material-ui/core';
 import withStyles from '@material-ui/core/styles/withStyles';
 import styles from './DrawerSettingScheduleStyle';
 import axios from "axios";
-const mongoose = require('mongoose');
 
 class DrawerSettingSchedule extends React.Component{
   constructor(props) {

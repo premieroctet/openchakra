@@ -4,6 +4,7 @@ import DrawerSchedule from '../../DrawerSchedule/DrawerSchedule';
 import Schedule from '../../Schedule/Schedule';
 import {withStyles} from '@material-ui/core/styles';
 import styles from './DrawerAndScheduleStyle';
+import Button from '@material-ui/core/Button';
 
 class DrawerAndSchedule extends React.Component{
   constructor(props) {
@@ -36,7 +37,7 @@ class DrawerAndSchedule extends React.Component{
   };
 
   render(){
-    const {classes, availabilities, selectable, title, subtitle} = this.props;
+    const {classes, availabilities, selectable, title, subtitle, booking, nbSchedule} = this.props;
 
     return(
       <Grid>
@@ -55,9 +56,10 @@ class DrawerAndSchedule extends React.Component{
               onCreateAvailability={this.availabilityCreated}
               onUpdateAvailability={this.availabilityUpdate}
               selectable={selectable}
-              nbSchedule={12}
+              nbSchedule={nbSchedule}
               handleSelection={this.sendToDrawer}
               mode={'month'}
+              booking={booking}
             />
           </Grid>
         </Grid>

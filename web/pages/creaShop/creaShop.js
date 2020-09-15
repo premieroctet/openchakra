@@ -42,6 +42,7 @@ class creaShop extends React.Component {
       activeStep: 6,
       user_id: null,
       saving: false,
+      availabilities: [],
       shop: {
         booking_request: true,     // true/false
         my_alfred_conditions: ALF_CONDS.BASIC, // BASIC/PICTURE/ID_CARD/RECOMMEND
@@ -69,7 +70,6 @@ class creaShop extends React.Component {
         level: '',
         service_address: null,
         perimeter: 10,
-        availabilities: [createDefaultAvailability()],
         cesu: null,
         cis: false,
         social_security: null,
@@ -109,6 +109,7 @@ class creaShop extends React.Component {
       .catch(error => {
         console.error(error);
       });
+    this.loadAvailabilities();
   }
 
   nextDisabled() {
@@ -176,6 +177,14 @@ class creaShop extends React.Component {
           })
           .catch(err => console.error(err));
       });
+  };
+
+  loadAvailabilities = () => {
+    axios.get('/myAlfred/api/availability/currentAlfred')
+      .then(res => {
+        this.setState({availabilities: res.data});
+      })
+      .catch(err => console.error(err));
   };
 
   handleNext = () => {
@@ -351,9 +360,14 @@ class creaShop extends React.Component {
       case 5:
         return <AssetsService data={shop} onChange={this.assetsChanged} type={'creaShop'}/>;
       case 6:
-        return <DrawerAndSchedule availabilities={shop.availabilities}
+        return <DrawerAndSchedule availabilities={this.state.availabilities}
                                   title={I18N.SCHEDULE_TITLE}
-                                  SUBTITLE={I18N.SCHEDULE_SUBTITLE}
+                                  subtitle={I18N.SCHEDULE_SUBTITLE}
+                                  nbSchedule={3}
+                                  availabilityUpdate={this.availabilityUpdate}
+                                  availabilityCreated={this.availabilityCreated}
+                                  onAvailabilityChanged={this.loadAvailabilities}
+                                  removeEventsSelected={this.removeEventsSelected}
                                   selectable={true}/>;
       case 7:
         return <BookingConditions conditions={shop.my_alfred_conditions} booking_request={shop.booking_request}
