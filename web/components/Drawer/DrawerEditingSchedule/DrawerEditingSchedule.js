@@ -31,7 +31,6 @@ class DrawerEditingSchedule extends React.Component {
   }
 
   getEventsSelected = (eventsSelected) => {
-    console.log(`DrawerEditingSchedule:Selected:${JSON.stringify(Array(...eventsSelected))}`);
     this.setState({eventsSelected: new Set(eventsSelected)});
   };
 
@@ -61,6 +60,8 @@ class DrawerEditingSchedule extends React.Component {
     })
     .then(res => {
       this.props.onAvailabilityChanged ? this.props.onAvailabilityChanged() : () => {};
+      this.setState({eventsSelected: new Set()}, () => this.props.removeEventsSelected());
+
     });
   };
 

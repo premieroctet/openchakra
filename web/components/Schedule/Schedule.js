@@ -30,12 +30,13 @@ class Schedule extends React.Component {
   }
 
   toggleSelection = ({start, end, action}) => {
+    console.log('bonjour')
     // Don't select dates before today
     if (moment(start).isBefore(moment().startOf('day'))) {
       return
     }
     let newDate = moment(start).format('YYYY-MM-DD');
-    var eventsSelected=this.state.eventsSelected
+    var eventsSelected=this.state.eventsSelected;
     // Single selection : replace
     if (this.props.singleSelection) {
       eventsSelected = new Set([newDate])
@@ -50,6 +51,10 @@ class Schedule extends React.Component {
     )
   };
 
+  removeEventsSelected = () => {
+    this.setState({eventsSelected: new Set()})
+  };
+
 
   render() {
     const {classes, title, subtitle, selectable, height, nbSchedule, bookings, mode} = this.props;
@@ -57,12 +62,12 @@ class Schedule extends React.Component {
 
     const half = Math.floor(nbSchedule / 2);
 
-    let events = []
-    if (bookings!=undefined) {
+    let events = [];
+    if (bookings !== undefined) {
       events = bookings2events(bookings.filter(b => b.calendar_display));
     }
 
-    if (view == Views.MONTH) {
+    if (view === Views.MONTH) {
       events = _.uniqBy(events, e => e.start.format('DD/MM/YYYY'));
     }
 
@@ -269,7 +274,7 @@ class Schedule extends React.Component {
               const monthEvents = events.filter(e => moment(e.start).format('M') == monthStr);
             return (
               <Grid item xl={nbSchedule === 1 ? 11 : 4} lg={nbSchedule === 1 ? 11 : 4} md={nbSchedule === 1 ? 11 : 6}
-                    sm={nbSchedule === 1 ? 11 : 6} xs={12} style={{height: 400}} key={i}>
+                    sm={nbSchedule === 1 ? 11 : 6} xs={12} style={{height: 350}} key={i}>
                 <Calendar
                   selectable={selectable}
                   popup={false}
