@@ -182,27 +182,29 @@ class myAvailabilities extends React.Component {
               : null
             }
           </Grid>
-          <Grid className={classes.toggle}>
-            <Grid>
-              <DrawerSchedule ref={this.child} onAvailabilityChanged={this.onAvailabilityChanged} removeEventsSelected={this.removeEventsSelected}/>
+          <Grid style={{display: 'flex', flexDirection: 'row-reverse', justifyContent: 'center', marginTop: 10}}>
+            <Grid className={classes.toggle}>
+              <Grid>
+                <DrawerSchedule ref={this.child} onAvailabilityChanged={this.onAvailabilityChanged} removeEventsSelected={this.removeEventsSelected} style={classes}/>
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid container className={classes.containercalendar} style={{width: ' 65%'}}>
-            <Grid>
-              <Schedule
-                ref={this.schedule}
-                availabilities={this.state.availabilities}
-                bookings={this.state.bookings}
-                title={I18N.SCHEDULE_TITLE}
-                subtitle={I18N.SCHEDULE_SUBTITLE}
-                services={this.state.services}
-                onCreateAvailability={this.availabilityCreated}
-                onUpdateAvailability={this.availabilityUpdate}
-                selectable={true}
-                nbSchedule={12}
-                handleSelection={this.sendToDrawer}
-                mode={'month'}
-              />
+            <Grid container className={classes.containercalendar}>
+              <Grid>
+                <Schedule
+                  ref={this.schedule}
+                  availabilities={this.state.availabilities}
+                  bookings={this.state.bookings}
+                  title={I18N.SCHEDULE_TITLE}
+                  subtitle={I18N.SCHEDULE_SUBTITLE}
+                  services={this.state.services}
+                  onCreateAvailability={this.availabilityCreated}
+                  onUpdateAvailability={this.availabilityUpdate}
+                  selectable={true}
+                  nbSchedule={3}
+                  handleSelection={this.sendToDrawer}
+                  mode={'month'}
+                />
+              </Grid>
             </Grid>
           </Grid>
         </Layout>

@@ -5,7 +5,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
-import styles from './DrawerScheduleStyle';
+//import styles from './DrawerScheduleStyle';
 import Fab from '@material-ui/core/Fab';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DrawerEditingSchedule from '../Drawer/DrawerEditingSchedule/DrawerEditingSchedule';
@@ -63,7 +63,7 @@ class DrawerSchedule extends React.Component{
   };
 
   render() {
-    const {classes, windows} = this.props;
+    const {classes, windows, style} = this.props;
     const {mobileOpen} = this.state;
 
     const container = windows !== undefined ? () => windows.document.body : undefined;
@@ -71,9 +71,9 @@ class DrawerSchedule extends React.Component{
         return(
             <Grid>
                 <CssBaseline />
-                <nav className={classes.drawer} aria-label="mailbox folders">
+                <nav className={style.drawerScheduleNav} aria-label="mailbox folders">
                     {/* Mobile version */}
-                    <Hidden smUp implementation="css">
+                    <Hidden mdUp implementation="css">
                         <Drawer
                             container={container}
                             variant="temporary"
@@ -81,7 +81,7 @@ class DrawerSchedule extends React.Component{
                             open={mobileOpen}
                             onClose={this.handleDrawerToggle}
                             classes={{
-                                paper: classes.drawerPaper,
+                                paper: style.drawerScheduleDrawerPaper,
                             }}
                             ModalProps={{
                                 keepMounted: true, // Better open performance on mobile.
@@ -105,10 +105,10 @@ class DrawerSchedule extends React.Component{
                         </Drawer>
                     </Hidden>
                     {/* Web version */}
-                    <Hidden xsDown implementation="css">
+                    <Hidden smDown implementation="css">
                         <Drawer
                             classes={{
-                                paper: classes.drawerPaper,
+                                paper: style.drawerScheduleDrawerPaper,
                             }}
                             variant="permanent"
                             open
@@ -136,7 +136,7 @@ class DrawerSchedule extends React.Component{
                     <Grid style={{position: 'fixed', bottom: '10%', zIndex: 6, right: 0}}>
                         <Fab color="primary" aria-label="add"
                              onClick={this.handleDrawerToggle}
-                             className={classes.menuButton}>
+                             className={style.drawerScheduleButton}>
                             <SettingsIcon style={{color: 'white'}}/>
                         </Fab>
                     </Grid>
@@ -151,4 +151,4 @@ DrawerSchedule.propTypes = {
   window: PropTypes.func,
 };
 
-export default withStyles(styles, {withTheme: true})(DrawerSchedule);
+export default withStyles({withTheme: true})(DrawerSchedule);

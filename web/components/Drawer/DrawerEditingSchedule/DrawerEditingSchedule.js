@@ -73,7 +73,7 @@ class DrawerEditingSchedule extends React.Component {
   render() {
 
     const {classes} = this.props;
-        const {availabilities, errors} = this.state;
+    const {availabilities, errors} = this.state;
 
     return (
       <Grid>

@@ -1,8 +1,4 @@
 export default theme => ({
-  spacer: {
-    width: '100%',
-    height: 50,
-  },
   mainContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -24,7 +20,7 @@ export default theme => ({
     width: '100%',
     display: 'flex',
     position: 'fixed',
-    zIndex: 1,
+    zIndex: 5,
     alignItems: 'center',
     backgroundColor: 'white',
     [theme.breakpoints.down('md')]: {
@@ -87,9 +83,7 @@ export default theme => ({
     backgroundColor: 'white',
     position: 'fixed',
     bottom: 0,
-    [theme.breakpoints.down('xs')]: {
-      zIndex: 1,
-    },
+    zIndex: 4,
   },
   footerContainer: {
     height: '100%',
@@ -116,5 +110,44 @@ export default theme => ({
   },
   nextButton: {
     color: 'white',
+  },
+  /***DrawerAndSchedule***/
+  drawerAndSchedule_mainContainer:{
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  drawerAndSchedule_scheduleContainer:{
+    width: '65%',
+  },
+  drawerAndSchedule_drawerScheduleContainer:{
+    width: '35%',
+  },
+  drawerScheduleDrawerPaper:{
+    top: 'inherit',
+    left: 'auto',
+    position: 'relative',
+    height: '100%',
+    borderRight: 'inherit',
+    zIndex: 1,
+  },
+  drawerAndSchedul: {
+    width: '35%',
+    right: 0,
+    left: 'inherit',
+    marginTop: 150,
+    padding: '1%',
+    [theme.breakpoints.down('xs')]: {
+      margin: 0,
+      width: '100%',
+      height: '100%',
+      padding: '5%',
+    },
+  },
+  drawer: {
+    [theme.breakpoints.up('sm')]: {
+      width: '35%',
+      flexShrink: 0,
+    },
   },
 })
