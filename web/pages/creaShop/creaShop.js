@@ -154,11 +154,7 @@ class creaShop extends React.Component {
     axios.post('/myAlfred/api/availability/add', avail)
       .then(res => {
         toast.info('Disponibilité ajoutée avec succès !');
-        axios.get('/myAlfred/api/availability/currentAlfred')
-          .then(res => {
-            this.setState({availabilities: res.data});
-          })
-          .catch(err => console.error(err));
+        this.loadAvailabilities()
       })
       .catch(err => {
         console.error(err);
@@ -170,11 +166,7 @@ class creaShop extends React.Component {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.post('/myAlfred/api/availability/update', avail)
       .then(res => {
-        axios.get('/myAlfred/api/availability/currentAlfred')
-          .then(res => {
-            this.setState({availabilities: res.data});
-          })
-          .catch(err => console.error(err));
+        this.loadAvailabilities()
       });
   };
 
