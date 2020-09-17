@@ -32,14 +32,13 @@ import {
 import cookie from 'react-cookies';
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
 
-const {createDefaultAvailability} = require('../../utils/dateutils');
 const I18N = require('../../utils/i18n');
 
 class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeStep: 6,
+      activeStep: 0,
       user_id: null,
       saving: false,
       availabilities: [],
@@ -202,11 +201,6 @@ class creaShop extends React.Component {
       });
       cloned_shop.prestations = JSON.stringify(cloned_shop.prestations);
       cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
-      cloned_shop.availabilities.forEach(a => {
-        if (a._id.length == GID_LEN) {
-          a._id = null;
-        }
-      });
 
       axios.defaults.headers.common['Authorization'] = cookie.load('token');
       axios.post('/myAlfred/api/shop/add', cloned_shop)

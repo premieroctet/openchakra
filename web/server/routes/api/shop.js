@@ -159,12 +159,6 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
                       shop.save();
                       res.json(shop);
                     });
-                  req.body.availabilities.forEach(availability => {
-                    console.log('Dispo:' + JSON.stringify(availability));
-                    let a = Availability(availability);
-                    a.user = req.user.id;
-                    a.save();
-                  });
                   User.findOneAndUpdate({_id: req.user.id}, {is_alfred: true}, {new: true})
                     .then(user => {
                       console.log('Updated alfred');
