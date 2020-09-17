@@ -30,6 +30,7 @@ import {
 } from '../../utils/validationSteps/validationSteps';
 import cookie from 'react-cookies';
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
+
 const I18N = require('../../utils/i18n');
 
 class creaShop extends React.Component {
@@ -152,11 +153,7 @@ class creaShop extends React.Component {
     axios.post('/myAlfred/api/availability/add', avail)
       .then(res => {
         toast.info('Disponibilité ajoutée avec succès !');
-        axios.get('/myAlfred/api/availability/currentAlfred')
-          .then(res => {
-            this.setState({availabilities: res.data});
-          })
-          .catch(err => console.error(err));
+        this.loadAvailabilities()
       })
       .catch(err => {
         console.error(err);
@@ -168,11 +165,7 @@ class creaShop extends React.Component {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.post('/myAlfred/api/availability/update', avail)
       .then(res => {
-        axios.get('/myAlfred/api/availability/currentAlfred')
-          .then(res => {
-            this.setState({availabilities: res.data});
-          })
-          .catch(err => console.error(err));
+        this.loadAvailabilities()
       });
   };
 
@@ -199,11 +192,6 @@ class creaShop extends React.Component {
       });
       cloned_shop.prestations = JSON.stringify(cloned_shop.prestations);
       cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
-      cloned_shop.availabilities.forEach(a => {
-        if (a._id.length == GID_LEN) {
-          a._id = null;
-        }
-      });
 
       axios.defaults.headers.common['Authorization'] = cookie.load('token');
       axios.post('/myAlfred/api/shop/add', cloned_shop)

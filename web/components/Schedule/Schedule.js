@@ -266,6 +266,7 @@ class Schedule extends React.Component {
           </Grid>
           : null
         }
+        { /** TODO : fix back/prev on multiple calendars
         <Grid container style={{justifyContent: 'space-between'}}>
           <Grid>
             <Button>Back</Button>
@@ -274,6 +275,7 @@ class Schedule extends React.Component {
             <Button onClick={() => {this.nextMonth()}}>Suivant</Button>
           </Grid>
         </Grid>
+        */ }
         <Grid container spacing={2} style={{padding: 5}}>
           {[...Array(nbSchedule)].map((x, i) => {
             let date = new Date(currentDate);

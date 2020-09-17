@@ -4,7 +4,6 @@ Created on 24 juin 2019
 @author: seb
 '''
 from os.path import dirname, abspath, join
-from functools import lru_cache
 import re
 
 def get_root_dir():

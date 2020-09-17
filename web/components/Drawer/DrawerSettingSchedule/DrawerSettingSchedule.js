@@ -179,7 +179,7 @@ class DrawerSettingSchedule extends React.Component{
                           <AccordionSummary
                               expandIcon={<ExpandMoreIcon />}
                               aria-controls="panel1a-content"
-                              id="panel1a-header"
+                              id="Math.random()"
                           >
                               <Grid>
                                   <Grid>
