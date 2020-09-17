@@ -10,7 +10,6 @@ import SelectPrestation from '../../components/CreaShop/SelectPrestation/SelectP
 import SettingService from '../../components/CreaShop/SettingService/SettingService';
 import BookingPreference from '../../components/CreaShop/BookingPreference/BookingPreference';
 import AssetsService from '../../components/CreaShop/AssetsService/AssetsService';
-import Schedule from '../../components/Schedule/Schedule';
 import BookingConditions from '../../components/CreaShop/BookingConditions/BookingConditions';
 import SettingShop from '../../components/CreaShop/SettingShop/SettingShop';
 import IntroduceYou from '../../components/CreaShop/IntroduceYou/IntroduceYou';
