@@ -18,7 +18,7 @@ export default theme => ({
     },
   },
   toggle: {
-    zIndex: 0,
+    zIndex: 5,
     width: '30%',
     [theme.breakpoints.down('md')]: {
       width: 0
@@ -44,6 +44,7 @@ export default theme => ({
     height: '100%',
     borderRight: 'inherit',
     zIndex: 1,
+    marginLeft:10,
     [theme.breakpoints.down('md')]: {
       margin: 0,
       width: '100%',

@@ -136,11 +136,13 @@ export default theme => ({
     height: '100%',
     borderRight: 'inherit',
     zIndex: 1,
+    marginLeft: 10,
     [theme.breakpoints.down('md')]: {
       margin: 0,
       width: '100%',
       height: '100%',
       padding: '5%',
+
     },
   },
   drawer: {
