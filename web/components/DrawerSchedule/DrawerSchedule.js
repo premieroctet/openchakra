@@ -71,9 +71,9 @@ class DrawerSchedule extends React.Component{
         return(
             <Grid>
                 <CssBaseline />
-                <nav /*className={classes.drawer}*/ aria-label="mailbox folders">
+                <nav className={style.drawerScheduleNav} aria-label="mailbox folders">
                     {/* Mobile version */}
-                    <Hidden smUp implementation="css">
+                    <Hidden mdUp implementation="css">
                         <Drawer
                             container={container}
                             variant="temporary"
@@ -81,7 +81,7 @@ class DrawerSchedule extends React.Component{
                             open={mobileOpen}
                             onClose={this.handleDrawerToggle}
                             classes={{
-                                paper: style.drawerAndSchedule_drawerSchedule_drawerPaper,
+                                paper: style.drawerScheduleDrawerPaper,
                             }}
                             ModalProps={{
                                 keepMounted: true, // Better open performance on mobile.
@@ -105,7 +105,7 @@ class DrawerSchedule extends React.Component{
                         </Drawer>
                     </Hidden>
                     {/* Web version */}
-                    <Hidden xsDown implementation="css">
+                    <Hidden smDown implementation="css">
                         <Drawer
                             classes={{
                                 paper: style.drawerScheduleDrawerPaper,
@@ -136,7 +136,7 @@ class DrawerSchedule extends React.Component{
                     <Grid style={{position: 'fixed', bottom: '10%', zIndex: 6, right: 0}}>
                         <Fab color="primary" aria-label="add"
                              onClick={this.handleDrawerToggle}
-                             className={classes.menuButton}>
+                             className={style.drawerScheduleButton}>
                             <SettingsIcon style={{color: 'white'}}/>
                         </Fab>
                     </Grid>

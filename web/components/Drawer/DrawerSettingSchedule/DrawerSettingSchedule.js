@@ -161,7 +161,7 @@ class DrawerSettingSchedule extends React.Component{
                     <Grid>
                         <Typography className={classes.policySizeTitle}>Paramétrez vos disponibilités</Typography>
                     </Grid>
-                    <Hidden smUp implementation="css">
+                    <Hidden mdUp implementation="css">
                       <Grid>
                         <IconButton aria-label="CLOSE">
                           <CloseIcon color={'secondary'} onClick={this.props.handleDrawer}/>

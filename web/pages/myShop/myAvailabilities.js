@@ -183,12 +183,12 @@ class myAvailabilities extends React.Component {
             }
           </Grid>
           <Grid style={{display: 'flex', flexDirection: 'row-reverse', justifyContent: 'center', marginTop: 10}}>
-            <Grid className={classes.toggle} style={{width: '30%'}}>
+            <Grid className={classes.toggle}>
               <Grid>
                 <DrawerSchedule ref={this.child} onAvailabilityChanged={this.onAvailabilityChanged} removeEventsSelected={this.removeEventsSelected} style={classes}/>
               </Grid>
             </Grid>
-            <Grid container className={classes.containercalendar} style={{width: ' 50%'}}>
+            <Grid container className={classes.containercalendar}>
               <Grid>
                 <Schedule
                   ref={this.schedule}
