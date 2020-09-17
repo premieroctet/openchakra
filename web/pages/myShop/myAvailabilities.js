@@ -203,6 +203,7 @@ class myAvailabilities extends React.Component {
                   nbSchedule={3}
                   handleSelection={this.sendToDrawer}
                   mode={'month'}
+                  style={classes}
                 />
               </Grid>
             </Grid>
