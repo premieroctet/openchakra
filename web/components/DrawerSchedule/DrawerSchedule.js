@@ -5,7 +5,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
-import styles from './DrawerScheduleStyle';
+//import styles from './DrawerScheduleStyle';
 import Fab from '@material-ui/core/Fab';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DrawerEditingSchedule from '../Drawer/DrawerEditingSchedule/DrawerEditingSchedule';
@@ -63,7 +63,7 @@ class DrawerSchedule extends React.Component{
   };
 
   render() {
-    const {classes, windows} = this.props;
+    const {classes, windows, style} = this.props;
     const {mobileOpen} = this.state;
 
     const container = windows !== undefined ? () => windows.document.body : undefined;
@@ -71,7 +71,7 @@ class DrawerSchedule extends React.Component{
         return(
             <Grid>
                 <CssBaseline />
-                <nav className={classes.drawer} aria-label="mailbox folders">
+                <nav /*className={classes.drawer}*/ aria-label="mailbox folders">
                     {/* Mobile version */}
                     <Hidden smUp implementation="css">
                         <Drawer
@@ -81,7 +81,7 @@ class DrawerSchedule extends React.Component{
                             open={mobileOpen}
                             onClose={this.handleDrawerToggle}
                             classes={{
-                                paper: classes.drawerPaper,
+                                paper: style.drawerAndSchedule_drawerSchedule_drawerPaper,
                             }}
                             ModalProps={{
                                 keepMounted: true, // Better open performance on mobile.
@@ -108,7 +108,7 @@ class DrawerSchedule extends React.Component{
                     <Hidden xsDown implementation="css">
                         <Drawer
                             classes={{
-                                paper: classes.drawerPaper,
+                                paper: style.drawerScheduleDrawerPaper,
                             }}
                             variant="permanent"
                             open
@@ -151,4 +151,4 @@ DrawerSchedule.propTypes = {
   window: PropTypes.func,
 };
 
-export default withStyles(styles, {withTheme: true})(DrawerSchedule);
+export default withStyles({withTheme: true})(DrawerSchedule);

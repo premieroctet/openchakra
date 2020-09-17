@@ -7,7 +7,6 @@ export default theme => ({
   },
   containercalendar: {
     display: 'flex',
-    marginBottom: 200,
     [theme.breakpoints.down('sm')]: {
       width: '100%!important',
     },
@@ -31,5 +30,13 @@ export default theme => ({
     [theme.breakpoints.down('xs')]: {
       display: 'none',
     },
+  },
+  drawerScheduleDrawerPaper:{
+    top: 'inherit',
+    left: 'auto',
+    position: 'relative',
+    height: '100%',
+    borderRight: 'inherit',
+    zIndex: 1,
   },
 })

@@ -368,6 +368,7 @@ class creaShop extends React.Component {
                                   availabilityCreated={this.availabilityCreated}
                                   onAvailabilityChanged={this.loadAvailabilities}
                                   removeEventsSelected={this.removeEventsSelected}
+                                  style={this.props.classes}
                                   selectable={true}/>;
       case 7:
         return <BookingConditions conditions={shop.my_alfred_conditions} booking_request={shop.booking_request}

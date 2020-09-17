@@ -254,7 +254,7 @@ class Schedule extends React.Component {
     return (
       <Grid className={classes.heightContainer} style={{height: height, overflow: 'hidden'}}>
         {title || subtitle ?
-          <Grid style={{padding: '1%'}}>
+          <Grid>
             {title ?
               <Grid>
                 <Typography className={classes.policySizeTitle}>{title}</Typography>
@@ -279,7 +279,6 @@ class Schedule extends React.Component {
         <Grid container spacing={2} style={{padding: 5}}>
           {[...Array(nbSchedule)].map((x, i) => {
             let date = new Date(currentDate);
-            console.log(date, 'date')
             date.setDate(1);
             date.setMonth(date.getMonth() + (i - half));
             const monthStr = moment(date).format('M');
