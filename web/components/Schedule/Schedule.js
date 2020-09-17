@@ -25,7 +25,6 @@ class Schedule extends React.Component {
       eventsSelected: new Set(),
       view: Views.MONTH,
       currentDate: new Date(),
-      half: Math.floor(props.nbSchedule / 2),
     };
   }
 
@@ -63,7 +62,7 @@ class Schedule extends React.Component {
 
   render() {
     const {title, subtitle, selectable, nbSchedule, bookings, mode, style} = this.props;
-    const {view, eventsSelected, currentDate, half} = this.state;
+    const {view, eventsSelected, currentDate} = this.state;
 
     let events = [];
     if (bookings !== undefined) {
@@ -280,7 +279,7 @@ class Schedule extends React.Component {
           {[...Array(nbSchedule)].map((x, i) => {
             let date = new Date(currentDate);
             date.setDate(1);
-            date.setMonth(date.getMonth() + (i - half));
+            date.setMonth(date.getMonth() + (i-1));
             const monthStr = moment(date).format('M');
             const monthEvents = events.filter(e => moment(e.start).format('M') === monthStr);
             return (
