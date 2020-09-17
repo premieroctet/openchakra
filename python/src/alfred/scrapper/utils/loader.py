@@ -10,6 +10,7 @@ from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 from selenium.webdriver.common.by import By
+from pprint import pprint
 
 class BasicLoader(object):
     headers = [
@@ -47,6 +48,8 @@ class ChromeLoader(object):
     driver = webdriver.Chrome(ChromeDriverManager().install())  
     driver.get("https://www.leboncoin.fr")
     input("Cliquez quand vous êtes sur la page de recherche")
+    elements=driver.find_elements_by_xpath('//*')
+    pprint(elements)
     fleche=driver.find_element('data-name', 'Calque 1')
     input("Cliquez quand vous êtes sur la page de recherche")
     fleche.click()
