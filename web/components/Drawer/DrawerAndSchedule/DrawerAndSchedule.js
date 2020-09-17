@@ -51,6 +51,7 @@ class DrawerAndSchedule extends React.Component{
             handleSelection={this.sendToDrawer}
             mode={'month'}
             booking={booking}
+            style={style}
           />
         </Grid>
         <Grid className={style.drawerAndSchedule_drawerScheduleContainer}>

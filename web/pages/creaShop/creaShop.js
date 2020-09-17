@@ -31,15 +31,13 @@ import {
 } from '../../utils/validationSteps/validationSteps';
 import cookie from 'react-cookies';
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
-
-const {createDefaultAvailability} = require('../../utils/dateutils');
 const I18N = require('../../utils/i18n');
 
 class creaShop extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeStep: 6,
+      activeStep: 0,
       user_id: null,
       saving: false,
       availabilities: [],
