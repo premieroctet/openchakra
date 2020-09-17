@@ -119,9 +119,15 @@ export default theme => ({
   },
   drawerAndSchedule_scheduleContainer:{
     width: '65%',
+    [theme.breakpoints.down('md')]: {
+      width: '100%'
+    },
   },
   drawerAndSchedule_drawerScheduleContainer:{
     width: '35%',
+    [theme.breakpoints.down('md')]: {
+      width: 0
+    },
   },
   drawerScheduleDrawerPaper:{
     top: 'inherit',
@@ -130,18 +136,13 @@ export default theme => ({
     height: '100%',
     borderRight: 'inherit',
     zIndex: 1,
-  },
-  drawerAndSchedul: {
-    width: '35%',
-    right: 0,
-    left: 'inherit',
-    marginTop: 150,
-    padding: '1%',
-    [theme.breakpoints.down('xs')]: {
+    marginLeft: 10,
+    [theme.breakpoints.down('md')]: {
       margin: 0,
       width: '100%',
       height: '100%',
       padding: '5%',
+
     },
   },
   drawer: {
@@ -150,4 +151,10 @@ export default theme => ({
       flexShrink: 0,
     },
   },
+  drawerScheduleButton:{
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+  }
 })
