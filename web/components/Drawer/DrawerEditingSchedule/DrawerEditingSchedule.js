@@ -73,7 +73,7 @@ class DrawerEditingSchedule extends React.Component {
   render() {
 
     const {classes} = this.props;
-    const {availabilities, errors} = this.state;
+    const {availabilities, errors, timelapses, available} = this.state;
 
     return (
       <Grid>
@@ -92,7 +92,6 @@ class DrawerEditingSchedule extends React.Component {
         <Divider/>
         <Grid>
           <Grid style={{width: '100%'}}>
-
             <Grid>
               <Grid>
                 <h3>Êtes-vous disponible ?</h3>
@@ -112,10 +111,10 @@ class DrawerEditingSchedule extends React.Component {
                 </FormControl>
               </Grid>
             </Grid>
-            {this.state.available ?
+            {available ?
               <Grid>
                 <Grid>
-	          <h3>Vos horaires travaillés</h3>
+	                <h3>Vos horaires travaillés</h3>
                   <em style={{ color: 'red'}}>{errors.timelapses}</em>
                 </Grid>
                 <Grid container>
@@ -124,7 +123,7 @@ class DrawerEditingSchedule extends React.Component {
                       <h4>Nuit</h4>
                     </Grid>
                     <Grid>
-                      <SelectSlotTimer arrayLength={6} index={0} slots={this.state.timelapses}
+                      <SelectSlotTimer arrayLength={6} index={0} slots={timelapses}
                                        onChange={this.slotTimerChanged}/>
                     </Grid>
                   </Grid>
@@ -133,7 +132,7 @@ class DrawerEditingSchedule extends React.Component {
                       <h4>Matin</h4>
                     </Grid>
                     <Grid>
-                      <SelectSlotTimer arrayLength={12} index={6} slots={this.state.timelapses}
+                      <SelectSlotTimer arrayLength={12} index={6} slots={timelapses}
                                        onChange={this.slotTimerChanged}/>
                     </Grid>
                   </Grid>
@@ -144,7 +143,7 @@ class DrawerEditingSchedule extends React.Component {
                       <h4>Après-midi</h4>
                     </Grid>
                     <Grid>
-                      <SelectSlotTimer arrayLength={18} index={12} slots={this.state.timelapses}
+                      <SelectSlotTimer arrayLength={18} index={12} slots={timelapses}
                                        onChange={this.slotTimerChanged}/>
                     </Grid>
                   </Grid>
@@ -153,7 +152,7 @@ class DrawerEditingSchedule extends React.Component {
                       <h4>Soirée</h4>
                     </Grid>
                     <Grid>
-                      <SelectSlotTimer arrayLength={24} index={18} slots={this.state.timelapses}
+                      <SelectSlotTimer arrayLength={24} index={18} slots={timelapses}
                                        onChange={this.slotTimerChanged}/>
                     </Grid>
                   </Grid>
