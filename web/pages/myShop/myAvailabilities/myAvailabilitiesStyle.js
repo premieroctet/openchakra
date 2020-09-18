@@ -180,6 +180,7 @@ export default theme => ({
     height: '100%',
     borderLeft: '1px solid #DDD',
     backgroundColor: 'lightgray',
+    background: 'repeating-linear-gradient(45deg, lightgrey 48%, #FFFFFF  50%,lightgrey 51%)',
     cursor: 'pointer',
     display: 'flex',
     justifyContent: 'center',

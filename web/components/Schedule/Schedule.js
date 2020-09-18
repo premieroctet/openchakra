@@ -159,22 +159,23 @@ class Schedule extends React.Component {
         return (
           <Grid className={style.schedule_off_range_style}/>
         );
-      } else {
+      } else if (isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
+        return (
+          <Grid className={style.schedule_today_style_avail}>
+            <Grid className={style.schedule_today_style}/>
+          </Grid>
+        );
+      } else if (!isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
+        return (
+          <Grid className={style.style_today_style_off}>
+            <Grid className={style.schedule_today_style}/>
+          </Grid>
+        );
+      }
+      else {
         if (isAvailable) {
           return (
             <Grid className={style.schedule_day_style}/>
-          );
-        } else if (isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
-          return (
-            <Grid className={style.schedule_today_style_avail}>
-              <Grid className={style.schedule_today_style}/>
-            </Grid>
-          );
-        } else if (!isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
-          return (
-            <Grid className={style.style_today_style_off}>
-              <Grid className={style.schedule_today_style}/>
-            </Grid>
           );
         } else {
           return (
@@ -191,13 +192,14 @@ class Schedule extends React.Component {
     };
 
     const customWeekHeader = (header) => {
+      let label = header.label.split(' ');
       const headerContent = () =>{
         const m = moment(header.date);
         return(
           <Grid container>
             <Grid item style={{width: '100%'}}>
               <span style={{color: m.isBefore(moment().startOf('day')) ? '#999999' : 'black'}}>
-                {m.format('DD')}</span>
+                {label[1] + ' ' + label[0]}</span>
             </Grid>
           </Grid>
         )
@@ -294,10 +296,10 @@ class Schedule extends React.Component {
                   events={monthEvents}
                   views={[Views.MONTH, Views.WEEK]}
                   defaultView={mode}
-                  defaultDate={date}
+                  defaultDate={mode === 'month' ? date : new Date()}
                   onSelectSlot={this.toggleSelection}
                   dayLayoutAlgorithm={'no-overlap'}
-                  scrollToTime={moment()}
+                  scrollToTime={moment(new Date(0, 0, 0, 9, 0, 0))}
                   className={style.schedule_scheduleMainStyle}
                   components={{
                     /* event: MyEvent, // used by each view (Month, Day, Week)

@@ -519,7 +519,7 @@ export default theme => ({
     cursor: 'pointer',
   },
   schedule_height:{
-    height: 325
+    height: 450
   },
   schedule_monthDateHeaderLabelOldDay:{
     color: '#999999'
