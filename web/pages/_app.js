@@ -21,8 +21,6 @@ import 'react-credit-cards/es/styles-compiled.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../static/style1.css';
 
-require('log-timestamp');
-
 toast.configure({
   position: 'top-center',
   autoClose: 2500,

@@ -37,6 +37,10 @@ const MANGOPAY_MESSAGES = {
   [KycDocumentStatus.Refused]: 'Pièce d\'identité refusée, merci d\'en fournir une valide',
 };
 
+const INFOBAR_MESSAGE = 'Renseignez-vous sur les restrictions COVID 19 avant de réserver.';
+
+const SHOWMORE = 'En savoir plus';
+
 const getMangopayMessage = msg_id => {
   if (!msg_id) {
     return null;
@@ -47,5 +51,5 @@ const getMangopayMessage = msg_id => {
 module.exports = {
   CESU_NOTICE, OUTSIDE_PERIMETER, SCHEDULE_TITLE, SCHEDULE_SUBTITLE,
   getMangopayMessage, SHOP_CREATION_SUCCESSFUL, ID_CARD_CONFIRM_DELETION,
-  REGISTRATION_PROOF_CONFIRM_DELETION,
+  REGISTRATION_PROOF_CONFIRM_DELETION, INFOBAR_MESSAGE, SHOWMORE
 };

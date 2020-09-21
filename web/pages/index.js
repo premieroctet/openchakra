@@ -29,6 +29,10 @@ import setAuthToken from '../utils/setAuthToken';
 import Router from 'next/router';
 import {Helmet} from 'react-helmet';
 import cookie from 'react-cookies';
+import Grid from '@material-ui/core/Grid';
+import InfoBar from '../components/InfoBar/InfoBar';
+import {withStyles} from '@material-ui/core/styles';
+import styles from '../static/css/homePage/index';
 
 class Home extends React.Component {
   constructor(props) {
@@ -53,43 +57,22 @@ class Home extends React.Component {
   };
 
   render() {
+    const { classes } = this.props;
     return (
-      <Fragment>
+      <React.Fragment>
         <Helmet>
           <title>Services rémunérés entre particuliers - My Alfred </title>
           <meta property="description"
                 content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple"/>
         </Helmet>
-        <Layout/>
-        <Homeheader/>
-        <SerenityNeed/>
-        <BecomeAlfred/>
-        <Section3/>
-        <NearbyYou/>
-        <Profiteandlearn/>
-        <Section6/>
-        <Wellbeing/>
-        <Section8/>
-        <FeelingGood/>
-        <Section10/>
-        <Proposeservice/>
-        <Section12/>
-        <NearbyYou/>
-        <Passions/>
-        <Section15/>
-        <Section16/>
-        <Facons/>
-        <Section18/>
-        <Section19/>
-        <Otter/>
-        <Section21/>
-        <Section22/>
-        <Assureback/>
-        <Footer/>
-      </Fragment>
+        <Grid>
+          <Grid>
+            <InfoBar style={classes}/>
+          </Grid>
+        </Grid>
+      </React.Fragment>
     );
   }
 }
 
-
-export default Home;
+export default withStyles(styles, {withTheme: true})(Home);

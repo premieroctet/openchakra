@@ -11,8 +11,19 @@ const theme = createMuiTheme({
     secondary: {
       main: '#F8727F',
     },
+    link: {
+      main: '#4C89C4'
+    },
+    text: {
+      main: '#262626'
+    },
+    backgroundGrey: {
+      main: '#EDEDED'
+    }
   },
   typography: {
+    fontSize: 14,
+    lineHeight: '20px',
     useNextVariants: true,
     fontFamily: 'Helvetica',
   },
