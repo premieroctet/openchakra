@@ -1,4 +1,3 @@
-import './userServicePreview/userServicePreviewStyle.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
@@ -144,7 +143,7 @@ class UserServicesPreview extends React.Component {
       isChecked: false,
       warningPerimeter: false,
       use_cesu: false,
-    },
+    }
       this.onQtyChanged = this.onQtyChanged.bind(this);
     this.checkBook = this.checkBook.bind(this);
   }
