@@ -41,6 +41,12 @@ const INFOBAR_MESSAGE = 'Renseignez-vous sur les restrictions COVID 19 avant de 
 
 const SHOWMORE = 'En savoir plus';
 
+const SEARCHBAR = {
+  what: 'Quel service ?',
+  where: 'Où ?',
+  when: 'Quand ?'
+};
+
 const getMangopayMessage = msg_id => {
   if (!msg_id) {
     return null;
@@ -51,5 +57,5 @@ const getMangopayMessage = msg_id => {
 module.exports = {
   CESU_NOTICE, OUTSIDE_PERIMETER, SCHEDULE_TITLE, SCHEDULE_SUBTITLE,
   getMangopayMessage, SHOP_CREATION_SUCCESSFUL, ID_CARD_CONFIRM_DELETION,
-  REGISTRATION_PROOF_CONFIRM_DELETION, INFOBAR_MESSAGE, SHOWMORE
+  REGISTRATION_PROOF_CONFIRM_DELETION, INFOBAR_MESSAGE, SHOWMORE, SEARCHBAR
 };

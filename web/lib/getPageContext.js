@@ -6,10 +6,10 @@ import {createGenerateClassName, createMuiTheme} from '@material-ui/core/styles'
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#2FBCD3',
+      main: '#F7C9C9',
     },
     secondary: {
-      main: '#F8727F',
+      main: '#B26879',
     },
     link: {
       main: '#4C89C4'
@@ -19,14 +19,26 @@ const theme = createMuiTheme({
     },
     backgroundGrey: {
       main: '#EDEDED'
-    }
+    },
+    white: {
+      main: '#FFFFFF'
+    },
+    yellow: {
+      main: '#E7C63B'
+    },
   },
   typography: {
     fontSize: 14,
     lineHeight: '20px',
     useNextVariants: true,
     fontFamily: 'Helvetica',
+    textTransform: 'none'
   },
+  border:{
+    button:{
+      borderRadius: 37
+    }
+  }
 });
 
 function createPageContext() {

@@ -33,6 +33,7 @@ import Grid from '@material-ui/core/Grid';
 import InfoBar from '../components/InfoBar/InfoBar';
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../static/css/homePage/index';
+import NavBar from '../hoc/Layout/NavBar/NavBar';
 
 class Home extends React.Component {
   constructor(props) {
@@ -65,9 +66,16 @@ class Home extends React.Component {
           <meta property="description"
                 content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple"/>
         </Helmet>
-        <Grid>
-          <Grid>
+        <Grid conainter>
+          <Grid item>
             <InfoBar style={classes}/>
+          </Grid>
+          <Grid container style={{justifyContent : 'center', height: '85vh'}}>
+            <Grid style={{backgroundColor: '#F7C9C9', width: '100%'}}>
+              <Grid style={{display: 'flex', marginTop: '2%', width: '100%', justifyContent: 'center'}}>
+                <NavBar style={classes}/>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </React.Fragment>
