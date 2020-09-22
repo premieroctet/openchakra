@@ -229,8 +229,14 @@ const combineTimelapses = availabilities => {
   return timelapses
 }
 
+// Converts [1,2,5] => [false, true, true, false, false, true, false...]
+const timelapsesSetToArray = timelapses => {
+  var result=Array.from({length:24}, (v, idx) => timelapses.includes(idx))
+  return result
+}
+
 module.exports = {
   isMomentAvailable, isIntervalAvailable, getDeadLine, booking_datetime_str,
   createDefaultAvailability, isDateAvailable, hasAlfredDateBooking, DAYS,
-  getAvailabilityForDate, combineTimelapses
+  getAvailabilityForDate, combineTimelapses, timelapsesSetToArray
 };

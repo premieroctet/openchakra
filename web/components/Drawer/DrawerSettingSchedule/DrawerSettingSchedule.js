@@ -19,6 +19,7 @@ import {Button} from '@material-ui/core';
 import withStyles from '@material-ui/core/styles/withStyles';
 import styles from './DrawerSettingScheduleStyle';
 import axios from "axios";
+const {timelapsesSetToArray} = require('../../../utils/dateutils')
 
 class DrawerSettingSchedule extends React.Component{
   constructor(props) {
@@ -43,7 +44,7 @@ class DrawerSettingSchedule extends React.Component{
             startDate: a.period.begin,
             endDate: a.period.end,
             recurrDays: new Set(a.period.days),
-            timelapses: new Set(a.timelapses),
+            timelapses: a.timelapses,
             as_text: a.as_text,
           }
         });
@@ -78,7 +79,7 @@ class DrawerSettingSchedule extends React.Component{
         startDate:null,
         endDate: null,
         recurrDays: new Set(),
-        timelapses: new Set(),
+        timelapses: [],
         as_text: '',
       };
       availabilities.push(newAvailability);
@@ -110,14 +111,16 @@ class DrawerSettingSchedule extends React.Component{
       this.loadAvailabilities()
     };
 
-    slotTimerChanged = availIdx => (slotIndex, add) => {
-        let availabilities = this.state.availabilities;
-        if (add) {
-            availabilities[availIdx].timelapses.add(slotIndex);
+    slotTimerChanged = availIdx => (slotIndex) => {
+        let availabilities = this.state.availabilities
+        let tlSet =new Set([...availabilities[availIdx].timelapses])
+        if (tlSet.has(slotIndex)) {
+          tlSet.delete(slotIndex);
         }
         else {
-            availabilities[availIdx].timelapses.delete(slotIndex);
+          tlSet.add(slotIndex);
         }
+        availabilities[availIdx].timelapses = [...tlSet]
         this.setState({availabilities: availabilities });
     };
 
@@ -271,40 +274,20 @@ class DrawerSettingSchedule extends React.Component{
                                           <em style={{ color: 'red' }}>{ error.timelapses}</em>
                                       </Grid>
                                       <Grid container>
-                                          <Grid item className={classes.containerSelectSlotTimer}>
+                                        { 'Nuit Matin Après-midi Soirée'.split(' ').map( (title, index) => {
+                                            return (
+                                            <Grid item className={classes.containerSelectSlotTimer}>
                                               <Grid>
-                                                  <h4>Nuit</h4>
+                                                <h4>{title}</h4>
                                               </Grid>
                                               <Grid>
-                                                  <SelectSlotTimer arrayLength={6} index={0} slots={availabilities[availIdx].timelapses} onChange={this.slotTimerChanged(availIdx)}/>
+                                                <SelectSlotTimer arrayLength={6} index={index*6} slots={timelapsesSetToArray(availabilities[availIdx].timelapses)}
+                                                                 bookings={{}} onChange={this.slotTimerChanged(availIdx)}/>
                                               </Grid>
-                                          </Grid>
-                                          <Grid item className={classes.containerSelectSlotTimer}>
-                                              <Grid>
-                                                  <h4>Matin</h4>
-                                              </Grid>
-                                              <Grid>
-                                                  <SelectSlotTimer arrayLength={12} index={6} slots={availabilities[availIdx].timelapses} onChange={this.slotTimerChanged(availIdx)}/>
-                                              </Grid>
-                                          </Grid>
-                                      </Grid>
-                                      <Grid container>
-                                          <Grid item className={classes.containerSelectSlotTimer}>
-                                              <Grid>
-                                                  <h4>Après-midi</h4>
-                                              </Grid>
-                                              <Grid>
-                                                  <SelectSlotTimer arrayLength={18} index={12} slots={availabilities[availIdx].timelapses} onChange={this.slotTimerChanged(availIdx)}/>
-                                              </Grid>
-                                          </Grid>
-                                          <Grid item className={classes.containerSelectSlotTimer}>
-                                              <Grid>
-                                                  <h4>Soirée</h4>
-                                              </Grid>
-                                              <Grid>
-                                                  <SelectSlotTimer arrayLength={24} index={18} slots={availabilities[availIdx].timelapses} onChange={this.slotTimerChanged(availIdx)}/>
-                                              </Grid>
-                                          </Grid>
+                                            </Grid>
+                                            )
+                                          })
+                                        }
                                       </Grid>
                                   </Grid>
                                   <Grid style={{marginTop: 30}}>

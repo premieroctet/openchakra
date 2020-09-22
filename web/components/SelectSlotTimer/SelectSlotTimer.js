@@ -16,9 +16,8 @@ class SelectSlotTimer extends React.Component {
     this.props.onChange(item);
   };
 
-  createRender = (arrayLength, index, classes) => {
+  createRender = (arrayLength, index, classes, bookings) => {
     var items = [];
-    const {bookings}=this.props
 
     for (let i = index; i < index+arrayLength; i++) {
       const color=this.props.slots[i]==true ? '#4fbdd7' : this.props.slots[i]==false ?'#c4c4c4' : ''
@@ -57,11 +56,11 @@ class SelectSlotTimer extends React.Component {
 
 
   render() {
-    const {classes, arrayLength, index} = this.props;
+    const {classes, arrayLength, index, bookings} = this.props;
 
     return (
       <Grid style={{textAlign: 'center'}}>
-        {this.createRender(arrayLength, index, classes)}
+        {this.createRender(arrayLength, index, classes, bookings)}
       </Grid>
     );
   }
