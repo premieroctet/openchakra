@@ -22,16 +22,26 @@ class DrawerEditingSchedule extends React.Component {
     this.state = {
       available: true,
       eventsSelected: new Set(),
-      selectedDateStart: null,
-      selectedDateEnd: null,
-      timelapses: new Set(),
+      timelapses: Array.from({length:24}, () => false),
+      orgTimelapses: Array.from({length:24}, () => false),
       errors: {},
     };
     this.getEventsSelected = this.getEventsSelected.bind(this);
   }
 
   getEventsSelected = (eventsSelected) => {
-    this.setState({eventsSelected: new Set(eventsSelected)});
+    this.setState({eventsSelected: new Set(eventsSelected)})
+    axios.post('/myAlfred/api/availability/dates', { dates: Array(...eventsSelected) })
+      .then( result => {
+        console.log(`Got result:${JSON.stringify(result.data)}`)
+        if (result.data) {
+          this.setState({
+            available: result.data.available,
+            timelapses: result.data.timelapses,
+            orgTimelapses: [...result.data.timelapses],
+          })
+        }
+      })
   };
 
   handleAvailabilities = (event) => {
@@ -42,13 +52,13 @@ class DrawerEditingSchedule extends React.Component {
     this.setState({available: !this.state.available});
   };
 
-  slotTimerChanged = (slotIndex, add) => {
+  // Enabled => Disabled ( => Undefined )
+  slotTimerChanged = (slotIndex) => {
     var timelapses = this.state.timelapses;
-    if (add) {
-      timelapses.add(slotIndex);
-    } else {
-      timelapses.delete(slotIndex);
-    }
+    const prev = timelapses[slotIndex]
+    const hasUndefined = this.state.orgTimelapses[slotIndex]==null
+    const next = prev==true ? false : prev==null ? true : hasUndefined ? null : true
+    timelapses[slotIndex]=next
     this.setState({timelapses: timelapses});
   };
 
@@ -66,7 +76,7 @@ class DrawerEditingSchedule extends React.Component {
   };
 
   saveEnabled = () => {
-    const enabled = !this.state.available || this.state.timelapses.size > 0;
+    const enabled = !this.state.available || this.state.timelapses.filter( v => v=!false).length > 0;
     return enabled;
   };
 

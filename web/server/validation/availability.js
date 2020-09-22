@@ -22,8 +22,8 @@ module.exports = function validateAvailability(data, recurrent) {
       }
     }
     else {
-      if (!data.punctuals || data.punctuals.length==0) {
-        errors.punctuals='Au moins une date de disponibilité est requise'
+      if (!data.punctuals) {
+        errors.punctuals='La date de disponibilité est requise'
       }
       if (data.available==undefined) {
         errors.available='La disponibilité/indisponibilité est requise'

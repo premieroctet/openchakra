@@ -9,7 +9,9 @@ const {createDefaultAvailability} = require('../../../utils/dateutils');
 const mongoose = require('mongoose');
 const {isIntervalAvailable} = require('../../../utils/dateutils');
 const validateAvailability = require('../../validation/availability');
+const parse = require('url-parse')
 const emptyPromise = require('../../../utils/promise')
+const {getAvailabilityForDate, combineTimelapses} = require('../../../utils/dateutils')
 moment.locale('fr');
 router.get('/test', (req, res) => res.json({msg: 'Availability Works!'}));
 
@@ -33,7 +35,7 @@ router.post('/addRecurrent',passport.authenticate('jwt',{session: false}),(req,r
         end: req.body.endDate,
         days: req.body.days,
       }
-      avail.punctuals= null
+      avail.punctual= null
       avail.available= req.body.available
       avail.timelapses= req.body.timelapses
 
@@ -54,28 +56,56 @@ router.post('/addRecurrent',passport.authenticate('jwt',{session: false}),(req,r
 // access private
 router.post('/addPunctual', passport.authenticate('jwt', {session: false}), (req, res) => {
 
+  //SAVE FROM TIMELAPSE [true, false, nul, true, true, false, false, false] => Set() union avec existant
+
+  console.log(`Adding punctual : ${JSON.stringify(req.body)}`)
   const { isValid, errors } = validateAvailability(req.body, false);
 
   if (!isValid) {
       return res.status(400).json(errors);
   }
 
-  const newAvailability = new Availability({
-    user:req.user.id,
-    period: undefined,
-    punctuals: Array(...req.body.punctuals),
-    available: req.body.available,
-    timelapses: req.body.available ? Array(...req.body.timelapses) : [],
-  });
+  Availability.find({ user: req.user.id, punctual: { "$ne": null} })
+    .then(availabilities => {
+      Array(...req.body.punctuals).forEach( punctual => {
+        var avail=getAvailabilityForDate(moment(punctual), availabilities)
+        if (!avail) {
+          avail = new Availability({
+            user:req.user.id,
+            period: undefined,
+            punctual: punctual,
+            available: false,
+            timelapses: []
+          });
+        }
+        avail.available = req.body.available
 
-  newAvailability.save()
-    .then(availability => {
-      res.json(availability)
+        if (avail.available) {
+          tl = new Set(avail.timelapses)
+          req.body.timelapses.forEach((value, idx) => {
+            if (value==true) {
+              tl.add(idx)
+            }
+            else if (value==false) {
+              tl.delete(idx)
+            }
+          });
+          avail.timelapses=[...tl]
+        }
+        else {
+            avail.timelapses=[]
+        }
+
+        avail.save()
+          .then(availability => {
+            console.log(`Saved punctual availability ${JSON.stringify(availability)}`)
+          })
+          .catch(err => {
+            console.error(err);
+          });
+      })
     })
-    .catch(err => {
-      console.error(err);
-      res.status(400).json(err);
-    });
+    res.json('Ok')
 });
 
 // @Route GET /myAlfred/api/availability/toEventUI
@@ -224,6 +254,29 @@ router.get('/all', (req, res) => {
       console.error(err);
     });
 });
+
+// @Route GET /myAlfred/api/availability/date?date=...&date=...
+// Delete one availability
+router.post('/dates', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  const dates=req.body.dates
+  Availability.find({ user: req.user.id, punctual: { "$ne": null} })
+    .then(availabilities => {
+      var result=dates.map( dt =>  getAvailabilityForDate(moment(dt), availabilities))
+      result=result.filter( e => e)
+      console.log(`Found ${result}`)
+      const timelapses=combineTimelapses(result)
+      const availability={
+        available: result.map(a => a.available).reduce( (acc, value) => acc || value, false),
+        timelapses: timelapses,
+      }
+      res.json(availability)
+    })
+    .catch(err => {
+      console.error(err);
+    })
+});
+
 
 // @Route GET /myAlfred/api/availability/:id
 // Get one availability
