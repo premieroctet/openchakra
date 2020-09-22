@@ -221,7 +221,7 @@ router.get('/myBooking', passport.authenticate('jwt', {session: false}), (req, r
 // @Access private
 router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (req, res) => {
   Booking.find({alfred: req.user.id})
-    .populate('alfred')
+    .populate('alfred', { path : 'picture'})
     .populate('user')
     .populate('prestation')
     .then(booking => {

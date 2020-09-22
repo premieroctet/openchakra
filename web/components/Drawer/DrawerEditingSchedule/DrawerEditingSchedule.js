@@ -14,6 +14,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import axios from 'axios';
 import Typography from '@material-ui/core/Typography';
+import moment from 'moment'
+import cookie from 'react-cookies'
 
 class DrawerEditingSchedule extends React.Component {
 
@@ -24,6 +26,7 @@ class DrawerEditingSchedule extends React.Component {
       eventsSelected: new Set(),
       timelapses: Array.from({length:24}, () => false),
       orgTimelapses: Array.from({length:24}, () => false),
+      bookings: {},
       errors: {},
     };
     this.getEventsSelected = this.getEventsSelected.bind(this);
@@ -31,9 +34,9 @@ class DrawerEditingSchedule extends React.Component {
 
   getEventsSelected = (eventsSelected) => {
     this.setState({eventsSelected: new Set(eventsSelected)})
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.post('/myAlfred/api/availability/dates', { dates: Array(...eventsSelected) })
       .then( result => {
-        console.log(`Got result:${JSON.stringify(result.data)}`)
         if (result.data) {
           this.setState({
             available: result.data.available,
@@ -42,6 +45,25 @@ class DrawerEditingSchedule extends React.Component {
           })
         }
       })
+    // If one date, get bookings
+    if (eventsSelected && eventsSelected.size==1) {
+      const dt=moment([...eventsSelected][0]).format('DD/MM/YYYY')
+      console.log(`Date:${dt}`)
+      axios.get('/myAlfred/api/booking/currentAlfred')
+        .then( result => {
+          var bookings = result.data.filter( b => moment(b.date_prestation, 'DD/MM/YYYY').format('DD/MM/YYYY')==dt)
+          console.log(`Found bookings #${bookings.length}`)
+          var bkgs={}
+          bookings.forEach( b => {
+            const hour=moment(b.time_prestation).hour()
+            bkgs[hour]=b.user.picture
+          })
+          this.setState({bookings : bkgs})
+        })
+    }
+    else {
+      this.setState({bookings : {}})
+    }
   };
 
   handleAvailabilities = (event) => {
@@ -83,8 +105,9 @@ class DrawerEditingSchedule extends React.Component {
   render() {
 
     const {classes} = this.props;
-    const {availabilities, errors, timelapses, available} = this.state;
+    const {availabilities, errors, timelapses, available, bookings} = this.state;
 
+    console.log(`Bookings:${JSON.stringify(bookings)}`)
     return (
       <Grid>
         <Grid style={{display: 'flex', alignItems: 'center'}}>
@@ -134,7 +157,7 @@ class DrawerEditingSchedule extends React.Component {
                     </Grid>
                     <Grid>
                       <SelectSlotTimer arrayLength={6} index={0} slots={timelapses}
-                                       onChange={this.slotTimerChanged}/>
+                                       bookings={bookings} onChange={this.slotTimerChanged}/>
                     </Grid>
                   </Grid>
                   <Grid item className={classes.containerSelectSlotTimer}>
@@ -143,7 +166,7 @@ class DrawerEditingSchedule extends React.Component {
                     </Grid>
                     <Grid>
                       <SelectSlotTimer arrayLength={12} index={6} slots={timelapses}
-                                       onChange={this.slotTimerChanged}/>
+                                       bookings={bookings} onChange={this.slotTimerChanged}/>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -154,7 +177,7 @@ class DrawerEditingSchedule extends React.Component {
                     </Grid>
                     <Grid>
                       <SelectSlotTimer arrayLength={18} index={12} slots={timelapses}
-                                       onChange={this.slotTimerChanged}/>
+                                       bookings={bookings} onChange={this.slotTimerChanged}/>
                     </Grid>
                   </Grid>
                   <Grid item className={classes.containerSelectSlotTimer}>
@@ -163,7 +186,7 @@ class DrawerEditingSchedule extends React.Component {
                     </Grid>
                     <Grid>
                       <SelectSlotTimer arrayLength={24} index={18} slots={timelapses}
-                                       onChange={this.slotTimerChanged}/>
+                                       bookings={bookings} onChange={this.slotTimerChanged}/>
                     </Grid>
                   </Grid>
                 </Grid>
