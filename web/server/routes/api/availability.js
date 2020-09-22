@@ -260,7 +260,7 @@ router.get('/all', (req, res) => {
 router.post('/dates', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   const dates=req.body.dates
-  Availability.find({ user: req.user.id, punctual: { "$ne": null} })
+  Availability.find({ user: req.user.id })
     .then(availabilities => {
       var result=dates.map( dt =>  getAvailabilityForDate(moment(dt), availabilities))
       result=result.filter( e => e)
