@@ -151,44 +151,20 @@ class DrawerEditingSchedule extends React.Component {
                   <em style={{ color: 'red'}}>{errors.timelapses}</em>
                 </Grid>
                 <Grid container>
-                  <Grid item className={classes.containerSelectSlotTimer}>
-                    <Grid>
-                      <h4>Nuit</h4>
-                    </Grid>
-                    <Grid>
-                      <SelectSlotTimer arrayLength={6} index={0} slots={timelapses}
-                                       bookings={bookings} onChange={this.slotTimerChanged}/>
-                    </Grid>
-                  </Grid>
-                  <Grid item className={classes.containerSelectSlotTimer}>
-                    <Grid>
-                      <h4>Matin</h4>
-                    </Grid>
-                    <Grid>
-                      <SelectSlotTimer arrayLength={12} index={6} slots={timelapses}
-                                       bookings={bookings} onChange={this.slotTimerChanged}/>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid container>
-                  <Grid item className={classes.containerSelectSlotTimer}>
-                    <Grid>
-                      <h4>Après-midi</h4>
-                    </Grid>
-                    <Grid>
-                      <SelectSlotTimer arrayLength={18} index={12} slots={timelapses}
-                                       bookings={bookings} onChange={this.slotTimerChanged}/>
-                    </Grid>
-                  </Grid>
-                  <Grid item className={classes.containerSelectSlotTimer}>
-                    <Grid>
-                      <h4>Soirée</h4>
-                    </Grid>
-                    <Grid>
-                      <SelectSlotTimer arrayLength={24} index={18} slots={timelapses}
-                                       bookings={bookings} onChange={this.slotTimerChanged}/>
-                    </Grid>
-                  </Grid>
+                  { 'Nuit Matin Après-midi Soirée'.split(' ').map( (title, index) => {
+                      return (
+                      <Grid item className={classes.containerSelectSlotTimer}>
+                        <Grid>
+                          <h4>{title}</h4>
+                        </Grid>
+                        <Grid>
+                          <SelectSlotTimer arrayLength={6} index={index*6} slots={timelapses}
+                                           bookings={bookings} onChange={this.slotTimerChanged}/>
+                        </Grid>
+                      </Grid>
+                      )
+                    })
+                  }
                 </Grid>
               </Grid>
               :

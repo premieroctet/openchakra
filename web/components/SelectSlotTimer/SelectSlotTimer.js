@@ -20,7 +20,7 @@ class SelectSlotTimer extends React.Component {
     var items = [];
     const {bookings}=this.props
 
-    for (let i = index; i < arrayLength; i++) {
+    for (let i = index; i < index+arrayLength; i++) {
       const color=this.props.slots[i]==true ? '#4fbdd7' : this.props.slots[i]==false ?'#c4c4c4' : ''
       const pattern = this.props.slots[i]==null ? 'repeating-linear-gradient(45deg, #4fbdd7 48%, #FFFFFF  50%, #4fbdd7 51%)' : ''
       const avatar=bookings[i] ? `/${bookings[i]}` : null
