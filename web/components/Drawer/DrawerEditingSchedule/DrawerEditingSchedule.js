@@ -98,7 +98,7 @@ class DrawerEditingSchedule extends React.Component {
   };
 
   saveEnabled = () => {
-    const enabled = !this.state.available || this.state.timelapses.filter( v => v=!false).length > 0;
+    const enabled = !this.state.available || this.state.timelapses.filter( v => v==true).length > 0;
     return enabled;
   };
 
