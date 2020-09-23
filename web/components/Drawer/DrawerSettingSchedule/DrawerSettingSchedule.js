@@ -41,8 +41,8 @@ class DrawerSettingSchedule extends React.Component{
         const availabilities = response.data.filter( a => !a.is_punctual).map( a => {
           return {
             _id : a._id,
-            startDate: a.period.begin,
-            endDate: a.period.end,
+            startDate: new Date(a.period.begin),
+            endDate: new Date(a.period.end),
             recurrDays: new Set(a.period.days),
             timelapses: a.timelapses,
             as_text: a.as_text,
@@ -147,6 +147,25 @@ class DrawerSettingSchedule extends React.Component{
         errors[index]=err.response.data;
         this.setState({errors: errors})
       })
+    };
+
+
+    saveEnabled = availIdx => {
+      const availability = this.state.availabilities[availIdx]
+      if (availability.recurrDays.size==0) {
+        return false
+      }
+      if (availability.timelapses.length==0) {
+        return false
+      }
+
+      if (!availability.startDate || isNaN(availability.startDate.valueOf())) {
+        return false
+      }
+      if (!availability.endDate || isNaN(availability.endDate.valueOf())) {
+        return false
+      }
+      return true
     };
 
     render(){
@@ -292,7 +311,7 @@ class DrawerSettingSchedule extends React.Component{
                                   </Grid>
                                   <Grid style={{marginTop: 30}}>
                                       <Grid style={{display:'flex', flexDirection:'row-reverse'}}>
-                                          <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={ () => this.save(availIdx) }>Enregistrer</Button>
+                                          <Button disabled={!this.saveEnabled(availIdx)} variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={ () => this.save(availIdx) }>Enregistrer</Button>
                                           <Button color={'secondary'} style={{marginRight: 10}} onClick={()=>this.removeAvailabilities(availIdx)}>Supprimer</Button>
                                       </Grid>
                                   </Grid>
