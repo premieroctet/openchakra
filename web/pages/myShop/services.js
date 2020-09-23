@@ -179,6 +179,7 @@ class services extends React.Component {
   }
 
   handleNext = () => {
+    const token=cookie.load('token')
     if (!token) {
       Router.push('/login');
     }
