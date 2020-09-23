@@ -4,7 +4,7 @@ import Layout from '../hoc/Layout/Layout';
 import Footer from '../hoc/Layout/Footer/Footer';
 import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
 import Profiteandlearn from '../components/home/profite&learn/profite&learn';
-import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
+import BecomeAlfred from '../components/HomePage/BecomeAlfred/BecomeAlfred';
 import NearbyYou from '../components/home/NearbyYou/NearbyYou';
 import Homeheader from '../components/home/Homeheader/Homeheader';
 import FeelingGood from '../components/home/feelingGood/feelingGood';
@@ -38,6 +38,9 @@ import BannerPresentation from '../components/HomePage/BannerPresentation/Banner
 import OurServices from '../components/HomePage/OurServices/OurServices';
 import OurDescription from '../components/HomePage/OurDescription/OurDescription';
 import Category from '../components/HomePage/Category/Category';
+import OurAlfred from "../components/HomePage/OurAlfred/OurAlfred";
+import HowItWorks from "../components/HomePage/HowItWorks/HowItWorks";
+import NewsLetter from "../components/HomePage/NewsLetter/NewsLetter";
 
 class Home extends React.Component {
   constructor(props) {
@@ -97,6 +100,31 @@ class Home extends React.Component {
           <Grid container style={{justifyContent: 'center', marginTop: '2%'}}>
             <Grid style={{width: '80%'}}>
               <Category/>
+            </Grid>
+          </Grid>
+          <Grid container style={{justifyContent: 'center', marginTop: '2%', backgroundColor: '#F8CF61'}}>
+            <Grid style={{width: '80%'}}>
+              <BecomeAlfred style={classes}/>
+            </Grid>
+          </Grid>
+          <Grid container style={{justifyContent: 'center', marginTop: '2%'}}>
+            <Grid style={{width: '80%'}}>
+              <OurAlfred style={classes}/>
+            </Grid>
+          </Grid>
+          <Grid container style={{justifyContent: 'center', marginTop: '2%', backgroundColor: '#4C89C4'}}>
+            <Grid style={{width: '80%'}}>
+              <HowItWorks style={classes}/>
+            </Grid>
+          </Grid>
+          <Grid container style={{justifyContent: 'center', marginTop: '2%'}}>
+            <Grid style={{width: '80%'}}>
+              <NewsLetter style={classes}/>
+            </Grid>
+          </Grid>
+          <Grid container style={{justifyContent: 'center', marginTop: '2%', backgroundColor: 'rgba(228, 228, 228, 8)'}}>
+            <Grid style={{width: '100%'}}>
+              <Footer style={classes}/>
             </Grid>
           </Grid>
         </Grid>

@@ -10,29 +10,15 @@ class OurDescription extends React.Component{
     return(
       <Grid style={{padding: '5%'}}>
         <Grid style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}}>
-          <Grid style={{width: '30%'}}>
-            <p>En quelques clics,
-              réserver le service et la
-              personne dont vous avez besoin.
-              #MyAlfred.</p>
-          </Grid>
           <Grid style={{display: 'flex', flexDirection: 'column', width: '30%'}}>
             <Grid>
-              En mettant en relation des gens talentueux, nous voulons
-              créez une communauté où l’on puisse profiter des qualités
-              de chacun (et puis surtout rencontrer des gens super sympas).
+              <q><cite>On était toujours à travailler dans le train ou au téléphone dans l’avion.
+              A l’époque, on aurait voulu un assistant qui s’occupe de tous les petits tracas du quotidien
+                qu’on n’avait pas le temps de gérer.</cite></q>
             </Grid>
             <Grid>
-              Que vous cherchiez votre nouveau naturopathe ou que vous
-              soyez là pour arrondir vos fins de mois, nous avons vraiment
-              hâte de vous rencontrer !
+              <p>Solène et Wilfrid - FONDATEUR de My Alfred!</p>
             </Grid>
-          </Grid>
-        </Grid>
-        <Grid style={{display: 'flex', justifyContent: 'space-around', width: '100%', marginTop: '3%'}}>
-          <Grid style={{width: '30%'}}/>
-          <Grid style={{width: '30%', display: 'flex', flexDirection: 'row-reverse'}}>
-            <a href={'#'}>En savoir plus</a>
           </Grid>
         </Grid>
       </Grid>
