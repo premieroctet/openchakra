@@ -16,7 +16,6 @@ module.exports = function validateAvailability(data, recurrent) {
         errors.endDate='Date de fin incorrecte'
       }
 
-      console.log(`Days:${data.days}`)
       if (!data.days || data.days.length==0) {
         errors.days='Les jours travaillés sont requis'
       }

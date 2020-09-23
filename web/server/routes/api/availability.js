@@ -264,7 +264,6 @@ router.post('/dates', passport.authenticate('jwt', {session: false}), (req, res)
     .then(availabilities => {
       var result=dates.map( dt =>  getAvailabilityForDate(moment(dt), availabilities))
       result=result.filter( e => e)
-      console.log(`Found ${result}`)
       const timelapses=combineTimelapses(result)
       const availability={
         available: result.map(a => a.available).reduce( (acc, value) => acc || value, false),
