@@ -34,6 +34,10 @@ import InfoBar from '../components/InfoBar/InfoBar';
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../static/css/homePage/index';
 import NavBar from '../hoc/Layout/NavBar/NavBar';
+import BannerPresentation from '../components/HomePage/BannerPresentation/BannerPresentation';
+import OurServices from '../components/HomePage/OurServices/OurServices';
+import OurDescription from '../components/HomePage/OurDescription/OurDescription';
+import Category from '../components/HomePage/Category/Category';
 
 class Home extends React.Component {
   constructor(props) {
@@ -71,10 +75,28 @@ class Home extends React.Component {
             <InfoBar style={classes}/>
           </Grid>
           <Grid container style={{justifyContent : 'center', height: '85vh'}}>
-            <Grid style={{backgroundColor: '#F7C9C9', width: '100%'}}>
-              <Grid style={{display: 'flex', marginTop: '2%', width: '100%', justifyContent: 'center'}}>
+            <Grid style={{backgroundColor: '#4C89C4', width: '100%'}}>
+              <Grid style={{display: 'flex', width: '100%', justifyContent: 'center'}}>
                 <NavBar style={classes}/>
               </Grid>
+              <Grid style={{marginTop: '5%'}}>
+                <BannerPresentation style={classes}/>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid container style={{justifyContent: 'center', marginTop: '2%'}}>
+            <Grid style={{width: '100%'}}>
+              <OurServices style={classes}/>
+            </Grid>
+          </Grid>
+          <Grid container style={{justifyContent: 'center', marginTop: '2%'}}>
+            <Grid style={{backgroundColor: '#F8CF61', width: '100%'}}>
+              <OurDescription style={classes}/>
+            </Grid>
+          </Grid>
+          <Grid container style={{justifyContent: 'center', marginTop: '2%'}}>
+            <Grid style={{width: '80%'}}>
+              <Category/>
             </Grid>
           </Grid>
         </Grid>

@@ -26,18 +26,46 @@ const theme = createMuiTheme({
     yellow: {
       main: '#E7C63B'
     },
+    dark: {
+      main: '#352C2A'
+    }
   },
   typography: {
     fontSize: 14,
     lineHeight: '20px',
     useNextVariants: true,
     fontFamily: 'Helvetica',
-    textTransform: 'none'
+    textTransform: 'none',
+    fontWeight: 'bold'
+  },
+  typographyTitle: {
+    fontFamily: 'Futura',
+    color: '#352C2A',
+    fontWeight: 'bold',
+    lineHeight: '67px',
+    letterSpacing: '4px'
+  },
+  typographyText: {
+    fontFamily: 'Helvetica',
+    color: '#352C2A',
+    fontWeight: 'bold',
+    letterSpacing: '4px',
+    fontSize: 14,
+    lineHeight: '20px',
+  },
+  typographyButton: {
+    fontWeight: 'bold',
+    textTransform: 'none',
+    color: '#FFFFFF',
   },
   border:{
     button:{
       borderRadius: 37
+    },
+    buttonDiscover:{
+      borderRadius: 24
     }
+
   }
 });
 
