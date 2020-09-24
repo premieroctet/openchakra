@@ -14,7 +14,7 @@ const is_production = () => {
 }
 
 const is_validation = () => {
-  return get_mode()==MODES.VALIDTION
+  return get_mode()==MODES.VALIDATION
 }
 
 const is_development = () => {
