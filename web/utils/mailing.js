@@ -3,7 +3,7 @@ const {SIB} = require('./sendInBlue');
 const {computeUrl, ENABLE_MAILING} = require('../config/config');
 const {booking_datetime_str} = require('./dateutils');
 const {fillSms} = require('./sms');
-const {getHost} = require('./infra');
+const {get_host_url} = require('../config/config');
 
 // Templates
 
@@ -163,7 +163,7 @@ const sendLeaveCommentForClient = booking => {
       client_firstname: booking.user.firstname,
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
-      link_reviewsclient: new URL(`/evaluateClient?booking=${booking._id}&id=${booking.serviceUserId}&client=${booking.user._id}`, getHost()),
+      link_reviewsclient: new URL(`/evaluateClient?booking=${booking._id}&id=${booking.serviceUserId}&client=${booking.user._id}`, get_host_url()),
     },
   );
 };
@@ -176,7 +176,7 @@ const sendLeaveCommentForAlfred = booking => {
       client_firstname: booking.user.firstname,
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
-      link_reviewsalfred: new URL(`/evaluate?booking=${booking._id}&id=${booking.serviceUserId}`, getHost()),
+      link_reviewsalfred: new URL(`/evaluate?booking=${booking._id}&id=${booking.serviceUserId}`, get_host_url()),
     },
   );
 };
@@ -213,7 +213,7 @@ const sendBookingExpiredToClient = booking => {
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
-      link_booknewalfred: new URL('/search', getHost()),
+      link_booknewalfred: new URL('/search', get_host_url()),
     },
   );
 };

@@ -305,8 +305,11 @@ const CESU = ['Mandatory', 'Optional', 'Disabled'];
 const GOOGLE_PROVIDER = 'google';
 const FACEBOOK_PROVIDER = 'facebook';
 
+const AMAZON_HOST='my-alfred.io'
+const LOCAL_HOST='lvh.me'
+
 module.exports = {
   ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR,
   generate_id, COMM_ALFRED, COMM_CLIENT, GID_LEN, ENTITES, CESU,
-  MODES, GOOGLE_PROVIDER, FACEBOOK_PROVIDER,
+  MODES, GOOGLE_PROVIDER, FACEBOOK_PROVIDER, AMAZON_HOST, LOCAL_HOST,
 };

@@ -3,26 +3,26 @@ const mongoose = require('mongoose');
 const User = mongoose.model('users');
 
 const keys = require('../config/keys');
-const {getHost} = require('../../utils/infra');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 
 const {ENABLE_GF_LOGIN} = require('../../config/config');
 
 if (ENABLE_GF_LOGIN) {
+  const {get_host_url} = require('../../config/config');
   const {OAuth2Strategy: GoogleStrategy} = require('passport-google-oauth');
   const {Strategy: FacebookStrategy} = require('passport-facebook');
 
   const google_opts = {
     clientID: keys.GOOGLE_TOKENS.CLIENT_ID,
     clientSecret: keys.GOOGLE_TOKENS.CLIENT_SECRET,
-    callbackURL: new URL('/myAlfred/api/authentication/google_hook', getHost()).toString(),
+    callbackURL: new URL('/myAlfred/api/authentication/google_hook', get_host_url()).toString(),
   };
 
   const facebook_opts = {
     clientID: keys.FACEBOOK_TOKENS.CLIENT_ID,
     clientSecret: keys.FACEBOOK_TOKENS.CLIENT_SECRET,
-    callbackURL: new URL('/myAlfred/api/authentication/facebook_hook', getHost()).toString(),
+    callbackURL: new URL('/myAlfred/api/authentication/facebook_hook', get_host_url()).toString(),
     profileFields: ['id', 'name', 'photos', 'emails'],
   };
 

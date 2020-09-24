@@ -1,4 +1,4 @@
-const {MODES, FACEBOOK_PROVIDER, GOOGLE_PROVIDER}=require('../utils/consts')
+const {MODES, FACEBOOK_PROVIDER, GOOGLE_PROVIDER, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
 const {MODE}=require('../mode')
 
 const get_mode = () => {
@@ -34,6 +34,14 @@ const SERVER_PROD = is_production() || is_development()
 const ENABLE_MAILING = is_production()
 
 const source = require('./client_id.json');
+
+const get_host_url = () => {
+  const protocol='https'
+  const hostname=is_development() ? LOCAL_HOST : AMAZON_HOST
+  const port=is_validation() ? ':3122' : ''
+  const host_url=`${protocol}://${hostname}${port}/`
+  return host_url
+}
 
 const completeConfig = {
 
@@ -86,6 +94,7 @@ console.log(`Configuration is:\n\
 \tDatabase:${databaseName}\n\
 \tServer prod:${SERVER_PROD}\n\
 \tServer port:${SERVER_PROD ? '80/443':'3122'}\n\
+\tHost URL:${get_host_url()}\n\
 \tSendInBlue actif:${ENABLE_MAILING}\
 `)
 // Public API
@@ -98,5 +107,6 @@ module.exports = {
   SIRET,
   ENABLE_GF_LOGIN,
   GOOGLE_PROVIDER, FACEBOOK_PROVIDER, PROVIDERS,
-  is_production, is_validation, is_development, SERVER_PROD
+  is_production, is_validation, is_development, SERVER_PROD,
+  get_host_url
 };

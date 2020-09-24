@@ -21,7 +21,6 @@ const User = require('../../models/User');
 const ResetToken = require('../../models/ResetToken');
 const crypto = require('crypto');
 const multer = require('multer');
-const {getHost} = require('../../../utils/infra');
 const {mangoApi} = require('../../../utils/mangopay');
 const fs = require('fs');
 const axios = require('axios');
@@ -1111,16 +1110,12 @@ router.get('/siren_proof/:siren', (req, res) => {
     });
 });
 
-/** Hook Mangopay */
-
-if (!is_development) {
-  install_hooks()
-}
-
+/** Hooks Mangopay */
 const install_hooks= () => {
+  const {get_host_url} = require('../../../config/config');
   const HOOK_TYPES = 'KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED'.split(' ');
   HOOK_TYPES.forEach(hookType => {
-    const hook_url = new URL('/myAlfred/api/users/mangopay_kyc', getHost());
+    const hook_url = new URL('/myAlfred/api/users/mangopay_kyc', get_host_url());
     console.log(`Setting hook ${hook_url} for ${hookType}`);
     mangoApi.Hooks.create({
       Tag: 'MyAlfred hook',
@@ -1157,6 +1152,10 @@ const install_hooks= () => {
         }
       });
   });
+}
+
+if (!is_development()) {
+  install_hooks()
 }
 
 // @Route GET /myAlfred/api/users/mangopay_kyc
