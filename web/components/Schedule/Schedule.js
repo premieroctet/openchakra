@@ -274,14 +274,18 @@ class Schedule extends React.Component {
           </Grid>
           : null
         }
-        <Grid container style={{justifyContent: 'space-between'}}>
-          <Grid>
-            <Button onClick={() => {this.previousMonth()}}>Précédent</Button>
+        { this.props.mode === 'month' ?
+          <Grid container style={{justifyContent: 'space-between'}}>
+            <Grid>
+              <Button onClick={() => {this.previousMonth()}}>Précédent</Button>
+            </Grid>
+            <Grid>
+              <Button onClick={() => {this.nextMonth()}}>Suivant</Button>
+            </Grid>
           </Grid>
-          <Grid>
-            <Button onClick={() => {this.nextMonth()}}>Suivant</Button>
-          </Grid>
-        </Grid>
+          :
+          null
+        }
         <Grid container spacing={2} style={{padding: 5}}>
           {[...Array(nbSchedule)].map((x, i) => {
             let date = new Date(currentDate);
