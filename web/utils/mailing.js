@@ -1,6 +1,6 @@
 const {SIB} = require('./sendInBlue');
 
-const {computeUrl} = require('../config/config');
+const {computeUrl, ENABLE_MAILING} = require('../config/config');
 const {booking_datetime_str} = require('./dateutils');
 const {fillSms} = require('./sms');
 const {getHost} = require('./infra');
@@ -54,7 +54,9 @@ const SMS_CONTENTS = {
 
 const sendNotification = (notif_index, destinee, params) => {
 
-  return true;
+  if (!ENABLE_MAILING) {
+    return true
+  }
 
   var resultMail = true, resultSms = true;
   // Send mail
