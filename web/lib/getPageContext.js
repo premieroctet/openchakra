@@ -80,6 +80,10 @@ const theme = createMuiTheme({
     },
     blackButton:{
       borderRadius: 39
+    },
+    whiteButton:{
+      borderRadius: 19,
+      border: '2px solid rgba(53,44,42,1)'
     }
   },
   padding:{
@@ -97,27 +101,6 @@ const theme = createMuiTheme({
       width: '80%'
     }
   },
-  typographyTitle: {
-    fontFamily: 'Futura',
-    color: '#352C2A',
-    fontWeight: 'bold',
-    lineHeight: '67px',
-    letterSpacing: '4px'
-  },
-  typographyText: {
-    fontFamily: 'Helvetica',
-    color: '#352C2A',
-    fontWeight: 'bold',
-    letterSpacing: '4px',
-    fontSize: 14,
-    lineHeight: '20px',
-  },
-  typographyButton: {
-    fontWeight: 'bold',
-    textTransform: 'none',
-    color: '#FFFFFF',
-  },
-
 });
 
 function createPageContext() {

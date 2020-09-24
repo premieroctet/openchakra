@@ -193,5 +193,9 @@ export default theme => ({
   ourDescriptionComponentContainer:{
     width: '100%',
     backgroundColor: theme.palette.yellow.main,
+  },
+  categoryButton:{
+    borderRadius: theme.border.whiteButton.borderRadius,
+    border: theme.border.whiteButton.border
   }
 })

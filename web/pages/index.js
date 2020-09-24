@@ -101,7 +101,7 @@ class Home extends React.Component {
           </Grid>
           <Grid container className={classes.mainContainerStyle}>
             <Grid className={classes.generalWidthContainer}>
-              <Category/>
+              <Category style={classes}/>
             </Grid>
           </Grid>
           <Grid container style={{justifyContent: 'center', marginTop: '2%', backgroundColor: '#F8CF61'}}>

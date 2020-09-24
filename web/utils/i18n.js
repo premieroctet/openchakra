@@ -66,6 +66,12 @@ const OUR_DESCRIPTION = {
   from: '- SOLÈNE ET WILFRID - FONDATEUR DE MY ALFRED'
 };
 
+const CATEGORY = {
+  title: 'Catégories',
+  text: 'Des milliers de services à découvrir',
+  button: 'Tout découvrir'
+};
+
 const getMangopayMessage = msg_id => {
   if (!msg_id) {
     return null;
@@ -77,5 +83,5 @@ module.exports = {
   CESU_NOTICE, OUTSIDE_PERIMETER, SCHEDULE_TITLE, SCHEDULE_SUBTITLE,
   getMangopayMessage, SHOP_CREATION_SUCCESSFUL, ID_CARD_CONFIRM_DELETION,
   REGISTRATION_PROOF_CONFIRM_DELETION, INFOBAR_MESSAGE, SHOWMORE, SEARCHBAR,BANNER_PRESENTATION,
-  OUR_SERVICES,OUR_DESCRIPTION
+  OUR_SERVICES,OUR_DESCRIPTION,CATEGORY
 };
