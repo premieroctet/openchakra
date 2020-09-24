@@ -12,21 +12,21 @@ class Category extends React.Component{
   render(){
     const {style} = this.props;
     return(
-      <Grid style={{display: 'flex', flexDirection: 'column'}}>
-        <Grid style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
-            <Grid style={{display: 'flex', flexDirection: 'row', alignItems:'center'}}>
+      <Grid className={style.categoryMainContainer}>
+        <Grid className={style.categoryContainer}>
+          <Grid className={style.categoryLeftContainer}>
+            <Grid>
+              <StarIcon/>
+            </Grid>
+            <Grid>
               <Grid>
-                <StarIcon/>
+                <p className={style.categoryTitle}>{CATEGORY.title}</p>
               </Grid>
               <Grid>
-                <Grid>
-                  <p>{CATEGORY.title}</p>
-                </Grid>
-                <Grid>
-                  <p>{CATEGORY.text}</p>
-                </Grid>
+                <p className={style.categoryText}>{CATEGORY.text}</p>
               </Grid>
             </Grid>
+          </Grid>
           <Grid>
             <Button variant={'outlined'} classes={{root : style.categoryButton}}>{CATEGORY.button}</Button>
           </Grid>

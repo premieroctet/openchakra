@@ -50,6 +50,13 @@ const theme = createMuiTheme({
       fontSize: '20px',
       margin: 0
     },
+    sectionTitle:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: 'bold',
+      fontSize: '18px',
+      margin: 0
+
+    },
     text:{
       fontFamily: 'Futura, sans-serif',
       fontWeight: '500',
@@ -59,6 +66,10 @@ const theme = createMuiTheme({
 
     },
     blackButton:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: 'bold',
+    },
+    whiteButton:{
       fontFamily: 'Futura, sans-serif',
       fontWeight: 'bold',
     },
@@ -82,13 +93,16 @@ const theme = createMuiTheme({
       borderRadius: 39
     },
     whiteButton:{
-      borderRadius: 19,
-      border: '2px solid rgba(53,44,42,1)'
+      borderRadius: 15,
+      border: '2px solid rgba(112,112,112,1)'
     }
   },
   padding:{
     blackButton:{
       padding: '12px 38px'
+    },
+    whiteButton:{
+      padding: '5px 30px'
     },
     homePage:{
       section:{
