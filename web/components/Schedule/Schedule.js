@@ -53,6 +53,13 @@ class Schedule extends React.Component {
     this.setState({eventsSelected: new Set()})
   };
 
+  previousMonth = () => {
+      let date = new Date(this.state.currentDate);
+      date.setDate(1);
+      date.setMonth(date.getMonth() - 1);
+      this.setState({currentDate : date})
+  };
+
   nextMonth = () => {
       let date = new Date(this.state.currentDate);
       date.setDate(1);
@@ -267,16 +274,14 @@ class Schedule extends React.Component {
           </Grid>
           : null
         }
-        { /** TODO : fix back/prev on multiple calendars
         <Grid container style={{justifyContent: 'space-between'}}>
           <Grid>
-            <Button>Back</Button>
+            <Button onClick={() => {this.previousMonth()}}>Précédent</Button>
           </Grid>
           <Grid>
             <Button onClick={() => {this.nextMonth()}}>Suivant</Button>
           </Grid>
         </Grid>
-        */ }
         <Grid container spacing={2} style={{padding: 5}}>
           {[...Array(nbSchedule)].map((x, i) => {
             let date = new Date(currentDate);
@@ -288,6 +293,7 @@ class Schedule extends React.Component {
               <Grid item xl={nbSchedule === 1 ? 11 : 4} lg={nbSchedule === 1 ? 11 : 4} md={nbSchedule === 1 ? 11 : 6}
                     sm={nbSchedule === 1 ? 11 : 6} xs={12} className={style.schedule_height} key={i}>
                 <Calendar
+                  key={date}
                   selectable={selectable}
                   popup={false}
                   culture={'fr-FR'}

@@ -206,7 +206,7 @@ class myAvailabilities extends React.Component {
                   onCreateAvailability={this.availabilityCreated}
                   onUpdateAvailability={this.availabilityUpdate}
                   selectable={true}
-                  nbSchedule={6}
+                  nbSchedule={3}
                   handleSelection={this.sendToDrawer}
                   mode={'month'}
                   style={classes}

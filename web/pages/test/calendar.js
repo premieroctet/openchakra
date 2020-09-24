@@ -46,19 +46,10 @@ class calendarTest extends React.Component {
       <Grid>
       <Button onClick={this.prevMonth}>Prev</Button>
       <Button onClick={this.nextMonth}>Next</Button>
-      <h1>Calendriers multiples avec map => NOK</h1>
-      {dates.map( dt => {
-        return <Calendar
-          events={[]}
-          localizer={localizer}
-          views={[Views.MONTH]}
-          defaultView={Views.MONTH}
-          defaultDate={new Date(dt)}
-          />
-        })}
-      <h1>Calendrier unique avec map => NOK</h1>
+      <h1>Calendrier unique avec map => OK</h1>
       {[date].map( dt => {
         return <Calendar
+          key={dt}
           events={[]}
           localizer={localizer}
           views={[Views.MONTH]}
@@ -66,6 +57,19 @@ class calendarTest extends React.Component {
           defaultDate={dt}
           />
         })}
+        <h1>Calendriers multiples avec map => NOK</h1>
+        { dates.map( dt => {
+          console.log(`Date${dt}`)
+          return <Calendar
+            id={dt}
+            key={dt} // => Ce qui manquait pour que les calendriers se rafraichissent
+            events={[]}
+            localizer={localizer}
+            views={[Views.MONTH]}
+            defaultView={Views.MONTH}
+            defaultDate={dt}
+            />
+          })}
       </Grid>
     );
   }
