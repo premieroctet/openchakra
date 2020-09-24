@@ -47,6 +47,25 @@ const SEARCHBAR = {
   when: 'Quand ?'
 };
 
+const BANNER_PRESENTATION = {
+  title: 'Et si vous pouviez réserver n\'importe quel service ?',
+  text: 'Avec des milliers de services disponibles, my Alfred va rendre votre vie plus simple.',
+  button: 'Découvrir'
+};
+
+const OUR_SERVICES = {
+  title: 'Stressez moins',
+  text: 'Trouver la personne dont vous avez besoin',
+  button: 'En savoir plus'
+};
+
+const OUR_DESCRIPTION = {
+  text: 'On était toujours à travailler dans le train ou au téléphone dans l’avion.\n' +
+    '              A l’époque, on aurait voulu un assistant qui s’occupe de tous les petits tracas du quotidien\n' +
+    '                qu’on n’avait pas le temps de gérer.',
+  from: '- SOLÈNE ET WILFRID - FONDATEUR DE MY ALFRED'
+};
+
 const getMangopayMessage = msg_id => {
   if (!msg_id) {
     return null;
@@ -57,5 +76,6 @@ const getMangopayMessage = msg_id => {
 module.exports = {
   CESU_NOTICE, OUTSIDE_PERIMETER, SCHEDULE_TITLE, SCHEDULE_SUBTITLE,
   getMangopayMessage, SHOP_CREATION_SUCCESSFUL, ID_CARD_CONFIRM_DELETION,
-  REGISTRATION_PROOF_CONFIRM_DELETION, INFOBAR_MESSAGE, SHOWMORE, SEARCHBAR
+  REGISTRATION_PROOF_CONFIRM_DELETION, INFOBAR_MESSAGE, SHOWMORE, SEARCHBAR,BANNER_PRESENTATION,
+  OUR_SERVICES,OUR_DESCRIPTION
 };

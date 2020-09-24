@@ -1,6 +1,7 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import {BANNER_PRESENTATION} from '../../../utils/i18n';
 
 class BannerPresentation extends React.Component{
   constructor(props) {
@@ -14,14 +15,13 @@ class BannerPresentation extends React.Component{
       <Grid className={style.bannerPresentationMainStyle}>
         <Grid className={style.bannerPresentationContainerDescription}>
           <Grid>
-            <h1 className={style.bannerPresentationTitle}>Et si vous pouviez réserver n'importe quel service ?</h1>
+            <p className={style.bannerPresentationTitle}>{BANNER_PRESENTATION.title}</p>
           </Grid>
           <Grid className={style.bannerPresentationContainerText}>
-            <p>Avec des milliers de services disponibles,
-              my Alfred va rendre votre vie plus simple.</p>
+            <p className={style.bannerPresentationText}>{BANNER_PRESENTATION.text}</p>
           </Grid>
           <Grid>
-            <Button variant="contained" classes={{root: style.bannerPresentationButton}}>Découvrir</Button>
+            <Button variant="contained" classes={{root: style.bannerPresentationButton}}>{BANNER_PRESENTATION.button}</Button>
           </Grid>
         </Grid>
         <Grid className={style.bannerPresentationContainerIllustration}>

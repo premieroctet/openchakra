@@ -212,17 +212,17 @@ class NavBar extends Component {
         <Grid className={style.navbarSearchContainer}>
           <Paper component="form" classes={{root: style.navbarSearch}}>
             <InputBase
-              className={style.input}
+              classes={{root: style.input}}
               placeholder={SEARCHBAR.what}
             />
             <Divider className={style.divider} orientation="vertical" />
             <InputBase
-              className={style.input}
+              classes={{root: style.input}}
               placeholder={SEARCHBAR.where}
             />
             <Divider className={style.divider} orientation="vertical" />
             <InputBase
-              className={style.input}
+              classes={{root: style.input}}
               placeholder={SEARCHBAR.when}
             />
             <IconButton type="submit" classes={{root: style.iconButton}} aria-label="search">
@@ -235,7 +235,7 @@ class NavBar extends Component {
             <Button className={style.navBarlogIn}>Connexion</Button>
           </Grid>
           <Grid>
-            <Button variant="contained" classes={{root: style.navbarSignIn}}>Inscription</Button>
+            <Button variant="outlined" classes={{root: style.navbarSignIn}}>Inscription</Button>
           </Grid>
         </Grid>
       </Grid>

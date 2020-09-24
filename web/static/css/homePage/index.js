@@ -1,28 +1,34 @@
 export default theme => ({
+  generalWidthContainer:{
+    width: '80%'
+  },
   infoBarMainStyle:{
     backgroundColor: theme.palette.backgroundGrey.main,
     justifyContent: 'center',
     alignItems: 'center',
   },
   infoBarColorText:{
-    color: theme.palette.text.main,
-    fontSize: theme.typography.fontSize,
-    lineHeight: theme.typography.lineHeight
+    color: theme.palette.lightBlack.main,
+    fontSize: theme.typography.infoBar.fontSize,
+    lineHeight: theme.typography.infoBar.lineHeight,
+    fontFamily: theme.typography.infoBar.fontFamily
   },
   showmoreContainer:{
     marginLeft: 5,
   },
   shomoreLink:{
     color: theme.palette.link.main,
-    fontSize: theme.typography.fontSize,
-    lineHeight: theme.typography.lineHeight
+    fontSize: theme.typography.infoBar.fontSize,
+    lineHeight: theme.typography.infoBar.lineHeight,
+    fontFamily: theme.typography.infoBar.fontFamily
+
   },
   navbarSignIn:{
-    backgroundColor: theme.palette.dark.main,
-    color: theme.palette.white.main,
     borderRadius: theme.border.button.borderRadius,
     textTransform: theme.typography.textTransform,
-    fontWeight: theme.typography.fontWeight
+    fontWeight: theme.typography.fontWeight,
+    border: '3px solid rgba(255, 255, 255, 1)',
+    color: theme.palette.white.main,
   },
   navBarlogIn:{
     textTransform: theme.typography.textTransform,
@@ -50,6 +56,7 @@ export default theme => ({
   input: {
     marginLeft: 20,
     flex: 1,
+
   },
   iconButton: {
     padding: 12,
@@ -68,10 +75,11 @@ export default theme => ({
     margin: 4,
   },
   bannerPresentationTitle:{
-    fontFamily: theme.typographyTitle.fontFamily,
-    fontWeight: theme.typographyTitle.fontWeight,
-    color: theme.typographyTitle.color,
-    letterSpacing: theme.typographyTitle.letterSpacing
+    fontFamily: theme.typography.title.fontFamily,
+    fontWeight: theme.typography.title.fontWeight,
+    color: theme.typography.title.color,
+    fontSize: theme.typography.title.fontSize,
+    margin: theme.typography.title.margin,
   },
   bannerPresentationMainStyle:{
     display: 'flex',
@@ -87,14 +95,103 @@ export default theme => ({
     width: '75%'
   },
   bannerPresentationButton:{
-    textTransform: theme.typography.textTransform,
-    color: theme.typographyButton.color,
-    fontWeight: theme.typographyButton.fontWeight,
-    backgroundColor: theme.palette.dark.main,
-    borderRadius: theme.border.buttonDiscover.borderRadius
+    color: theme.palette.white.main,
+    fontWeight: theme.typography.blackButton.fontWeight,
+    fontFamily: theme.typography.blackButton.fontFamily,
+    backgroundColor: theme.palette.black.main,
+    borderRadius: theme.border.blackButton.borderRadius,
+    padding: theme.padding.blackButton.padding,
   },
   bannerPresentationContainerIllustration:{
     display: 'flex',
     alignItems: 'center'
+  },
+  navbarAndBannerContainer:{
+    justifyContent : 'center',
+    height: '85vh'
+  },
+  navbarAndBannerBackground:{
+    backgroundColor: '#4C89C4',
+    width: '100%'
+  },
+  navbarComponentPosition:{
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'center'
+  },
+  bannerPresentationText:{
+    fontFamily: theme.typography.text.fontFamily,
+    color: theme.typography.text.color,
+    fontWeight: theme.typography.text.fontWeight,
+    fontSize: theme.typography.text.fontSize
+  },
+  bannerPresentationContainer:{
+    marginTop: '5%',
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  ourServicesTitle:{
+    fontFamily: theme.typography.subTitle.fontFamily,
+    fontWeight: theme.typography.subTitle.fontWeight,
+    fontSize: theme.typography.subTitle.fontSize,
+    margin: theme.typography.subTitle.margin,
+  },
+  ourServicesText:{
+    fontFamily: theme.typography.text.fontFamily,
+    color: theme.typography.text.color,
+    fontWeight: theme.typography.text.fontWeight,
+    fontSize: theme.typography.text.fontSize
+  },
+  ourServicesButton:{
+    color: theme.palette.white.main,
+    fontWeight: theme.typography.blackButton.fontWeight,
+    fontFamily: theme.typography.blackButton.fontFamily,
+    backgroundColor: theme.palette.black.main,
+    borderRadius: theme.border.blackButton.borderRadius,
+    padding: theme.padding.blackButton.padding,
+  },
+  ourServicesRightContainer:{
+    display: 'flex',
+    alignItems:'center',
+    flexDirection: 'column'
+  },
+  ourServicesMainStyle:{
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-around'
+  },
+  mainContainerStyle:{
+    justifyContent: 'center',
+    marginTop: '2%'
+  },
+  ourDescriptionMainStyle:{
+    padding: theme.padding.homePage.section.padding,
+  },
+  ourDescriptionMainContainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  ourDescriptionContainer:{
+    display: 'flex',
+    flexDirection: 'column',
+    width: '30%',
+  },
+  ourDescriptionContainerText:{
+    color: theme.palette.white.main,
+    fontSize: theme.typography.text.fontSize,
+    fontWeight: theme.typography.text.fontWeight,
+    fontFamily: theme.typography.text.fontFamily,
+  },
+  ourDescriptionContainerSubText:{
+    color: theme.palette.white.main,
+    fontSize: theme.typography.text.fontSize,
+    fontWeight: theme.typography.text.fontWeight,
+    fontFamily: theme.typography.text.fontFamily,
+    letterSpacing: theme.typography.letterSpacing
+  },
+  ourDescriptionComponentContainer:{
+    width: '100%',
+    backgroundColor: theme.palette.yellow.main,
   }
 })

@@ -73,57 +73,59 @@ class Home extends React.Component {
           <meta property="description"
                 content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple"/>
         </Helmet>
-        <Grid conainter>
-          <Grid item>
+        <Grid>
+          <Grid>
             <InfoBar style={classes}/>
           </Grid>
-          <Grid container style={{justifyContent : 'center', height: '85vh'}}>
-            <Grid style={{backgroundColor: '#4C89C4', width: '100%'}}>
-              <Grid style={{display: 'flex', width: '100%', justifyContent: 'center'}}>
+          <Grid container className={classes.navbarAndBannerContainer}>
+            <Grid className={classes.navbarAndBannerBackground}>
+              <Grid className={classes.navbarComponentPosition}>
                 <NavBar style={classes}/>
               </Grid>
-              <Grid style={{marginTop: '5%'}}>
-                <BannerPresentation style={classes}/>
+              <Grid className={classes.bannerPresentationContainer}>
+                <Grid className={classes.generalWidthContainer}>
+                  <BannerPresentation style={classes}/>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-          <Grid container style={{justifyContent: 'center', marginTop: '2%'}}>
+          <Grid container className={classes.mainContainerStyle}>
             <Grid style={{width: '100%'}}>
               <OurServices style={classes}/>
             </Grid>
           </Grid>
-          <Grid container style={{justifyContent: 'center', marginTop: '2%'}}>
-            <Grid style={{backgroundColor: '#F8CF61', width: '100%'}}>
+          <Grid container className={classes.mainContainerStyle}>
+            <Grid className={classes.ourDescriptionComponentContainer}>
               <OurDescription style={classes}/>
             </Grid>
           </Grid>
-          <Grid container style={{justifyContent: 'center', marginTop: '2%'}}>
-            <Grid style={{width: '80%'}}>
+          <Grid container className={classes.mainContainerStyle}>
+            <Grid className={classes.generalWidthContainer}>
               <Category/>
             </Grid>
           </Grid>
           <Grid container style={{justifyContent: 'center', marginTop: '2%', backgroundColor: '#F8CF61'}}>
-            <Grid style={{width: '80%'}}>
+            <Grid className={classes.generalWidthContainer}>
               <BecomeAlfred style={classes}/>
             </Grid>
           </Grid>
-          <Grid container style={{justifyContent: 'center', marginTop: '2%'}}>
-            <Grid style={{width: '80%'}}>
+          <Grid container className={classes.mainContainerStyle}>
+            <Grid className={classes.generalWidthContainer}>
               <OurAlfred style={classes}/>
             </Grid>
           </Grid>
           <Grid container style={{justifyContent: 'center', marginTop: '2%', backgroundColor: '#4C89C4'}}>
-            <Grid style={{width: '80%'}}>
+            <Grid className={classes.generalWidthContainer}>
               <HowItWorks style={classes}/>
             </Grid>
           </Grid>
-          <Grid container style={{justifyContent: 'center', marginTop: '2%'}}>
-            <Grid style={{width: '80%'}}>
+          <Grid container className={classes.mainContainerStyle}>
+            <Grid className={classes.generalWidthContainer}>
               <NewsLetter style={classes}/>
             </Grid>
           </Grid>
           <Grid container style={{justifyContent: 'center', marginTop: '2%', backgroundColor: 'rgba(228, 228, 228, 8)'}}>
-            <Grid style={{width: '100%'}}>
+            <Grid className={classes.generalWidthContainer}>
               <Footer style={classes}/>
             </Grid>
           </Grid>

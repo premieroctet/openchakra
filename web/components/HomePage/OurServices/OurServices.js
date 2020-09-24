@@ -1,5 +1,7 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import {OUR_SERVICES} from '../../../utils/i18n';
 
 class OurServices extends React.Component{
   constructor(props) {
@@ -7,15 +9,23 @@ class OurServices extends React.Component{
   }
 
   render(){
-    const {styles} = this.props;
+    const {style} = this.props;
     return(
       <Grid>
-        <Grid style={{width: '100%', display: 'flex', justifyContent: 'space-around'}}>
+        <Grid className={style.ourServicesMainStyle}>
           <Grid>
             <p>mon illu</p>
           </Grid>
-          <Grid>
-            <h1>Nos services</h1>
+          <Grid className={style.ourServicesRightContainer}>
+            <Grid>
+              <p className={style.ourServicesTitle}>{OUR_SERVICES.title}</p>
+            </Grid>
+            <Grid>
+              <p className={style.ourServicesText}>{OUR_SERVICES.text}</p>
+            </Grid>
+            <Grid>
+              <Button variant={'outlined'} className={style.ourServicesButton}>{OUR_SERVICES.button}</Button>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

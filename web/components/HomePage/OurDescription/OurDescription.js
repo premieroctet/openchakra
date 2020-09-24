@@ -1,5 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
+import {OUR_DESCRIPTION} from '../../../utils/i18n'
 
 class OurDescription extends React.Component{
   constructor(props) {
@@ -8,16 +9,14 @@ class OurDescription extends React.Component{
   render(){
     const {style} = this.props;
     return(
-      <Grid style={{padding: '5%'}}>
-        <Grid style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}}>
-          <Grid style={{display: 'flex', flexDirection: 'column', width: '30%'}}>
+      <Grid className={style.ourDescriptionMainStyle}>
+        <Grid className={style.ourDescriptionMainContainer}>
+          <Grid className={style.ourDescriptionContainer}>
             <Grid>
-              <q><cite>On était toujours à travailler dans le train ou au téléphone dans l’avion.
-              A l’époque, on aurait voulu un assistant qui s’occupe de tous les petits tracas du quotidien
-                qu’on n’avait pas le temps de gérer.</cite></q>
+              <q className={style.ourDescriptionContainerText}><cite>{OUR_DESCRIPTION.text}</cite></q>
             </Grid>
             <Grid>
-              <p>Solène et Wilfrid - FONDATEUR de My Alfred!</p>
+              <p className={style.ourDescriptionContainerSubText}>{OUR_DESCRIPTION.from}</p>
             </Grid>
           </Grid>
         </Grid>

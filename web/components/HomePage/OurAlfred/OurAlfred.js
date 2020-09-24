@@ -10,7 +10,7 @@ class OurAlfred extends React.Component{
   }
   render() {
     return(
-      <React.Fragment style={{display: 'flex', flexDirection: 'column'}}>
+      <Grid style={{display: 'flex', flexDirection: 'column'}}>
         <Grid style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
           <Grid style={{display: 'flex', flexDirection: 'row', alignItems:'center'}}>
             <Grid>
@@ -32,7 +32,7 @@ class OurAlfred extends React.Component{
         <Grid>
           <SlideShow/>
         </Grid>
-      </React.Fragment>
+      </Grid>
 
     );
   }

@@ -14,20 +14,20 @@ const theme = createMuiTheme({
     link: {
       main: '#4C89C4'
     },
-    text: {
-      main: '#262626'
-    },
     backgroundGrey: {
       main: '#EDEDED'
     },
     white: {
-      main: '#FFFFFF'
+      main: 'rgba(255,255,255,1)'
     },
     yellow: {
-      main: '#E7C63B'
+      main: 'rgba(248, 207, 97, 1)'
     },
-    dark: {
-      main: '#352C2A'
+    black: {
+      main: 'rgba(53,44,42,1)'
+    },
+    lightBlack:{
+      main: 'rgba(38,38,38,6)'
     }
   },
   typography: {
@@ -36,7 +36,66 @@ const theme = createMuiTheme({
     useNextVariants: true,
     fontFamily: 'Helvetica',
     textTransform: 'none',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    letterSpacing: '2px',
+    title:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: 'bold',
+      fontSize: '28px',
+      margin:0
+    },
+    subTitle:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: 'bold',
+      fontSize: '20px',
+      margin: 0
+    },
+    text:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: '500',
+      fontSize: '15px'
+    },
+    button:{
+
+    },
+    blackButton:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: 'bold',
+    },
+    containedButton:{
+
+    },
+    infoBar:{
+      fontFamily: 'Helvetica',
+      lineHeight: '23px',
+      fontSize: 14
+    }
+  },
+  border:{
+    button:{
+      borderRadius: 37
+    },
+    buttonDiscover:{
+      borderRadius: 24
+    },
+    blackButton:{
+      borderRadius: 39
+    }
+  },
+  padding:{
+    blackButton:{
+      padding: '12px 38px'
+    },
+    homePage:{
+      section:{
+        padding: '5%'
+      }
+    }
+  },
+  width:{
+    homePage:{
+      width: '80%'
+    }
   },
   typographyTitle: {
     fontFamily: 'Futura',
@@ -58,15 +117,7 @@ const theme = createMuiTheme({
     textTransform: 'none',
     color: '#FFFFFF',
   },
-  border:{
-    button:{
-      borderRadius: 37
-    },
-    buttonDiscover:{
-      borderRadius: 24
-    }
 
-  }
 });
 
 function createPageContext() {
