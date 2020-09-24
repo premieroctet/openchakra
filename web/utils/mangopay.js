@@ -2,26 +2,13 @@ const moment = require('moment');
 const path = require('path');
 const fs = require('fs');
 const emptyPromise = require('./promise');
+const {MANGOPAY_CONFIG} = require('../config/config')
 const mangopay = require('mangopay2-nodejs-sdk');
 const KycDocumentType = require('mangopay2-nodejs-sdk/lib/models/KycDocumentType');
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus');
 const PersonType = require('mangopay2-nodejs-sdk/lib/models/PersonType');
 
-// PROD !!!!!
-/**
- const mangoApi = new mangopay({
-  clientId: 'myalfredprod',
-  clientApiKey: 'j8R8fLZmUderNNp27siCqMAJ3y7Bv7BB82trfGuhqSKcYpEZ91',
-  baseUrl: 'https://api.mangopay.com',
-});
- */
-
-const mangoApi = new mangopay({
-  clientId: 'testmyalfredv2',
-  clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
-  logClass: () => {
-  },
-});
+const mangoApi = new mangopay(MANGOPAY_CONFIG)
 
 const createMangoClient = user => {
   var userData = {
