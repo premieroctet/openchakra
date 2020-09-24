@@ -53,6 +53,13 @@ class Schedule extends React.Component {
     this.setState({eventsSelected: new Set()})
   };
 
+  previousMonth = () => {
+      let date = new Date(this.state.currentDate);
+      date.setDate(1);
+      date.setMonth(date.getMonth() - 1);
+      this.setState({currentDate : date})
+  };
+
   nextMonth = () => {
       let date = new Date(this.state.currentDate);
       date.setDate(1);
@@ -158,22 +165,23 @@ class Schedule extends React.Component {
         return (
           <Grid className={style.schedule_off_range_style}/>
         );
-      } else {
+      } else if (isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
+        return (
+          <Grid className={style.schedule_today_style_avail}>
+            <Grid className={style.schedule_today_style}/>
+          </Grid>
+        );
+      } else if (!isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
+        return (
+          <Grid className={style.style_today_style_off}>
+            <Grid className={style.schedule_today_style}/>
+          </Grid>
+        );
+      }
+      else {
         if (isAvailable) {
           return (
             <Grid className={style.schedule_day_style}/>
-          );
-        } else if (isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
-          return (
-            <Grid className={style.schedule_today_style_avail}>
-              <Grid className={style.schedule_today_style}/>
-            </Grid>
-          );
-        } else if (!isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
-          return (
-            <Grid className={style.style_today_style_off}>
-              <Grid className={style.schedule_today_style}/>
-            </Grid>
           );
         } else {
           return (
@@ -190,13 +198,14 @@ class Schedule extends React.Component {
     };
 
     const customWeekHeader = (header) => {
+      let label = header.label.split(' ');
       const headerContent = () =>{
         const m = moment(header.date);
         return(
           <Grid container>
             <Grid item style={{width: '100%'}}>
               <span style={{color: m.isBefore(moment().startOf('day')) ? '#999999' : 'black'}}>
-                {m.format('DD')}</span>
+                {label[1] + ' ' + label[0]}</span>
             </Grid>
           </Grid>
         )
@@ -265,16 +274,18 @@ class Schedule extends React.Component {
           </Grid>
           : null
         }
-        { /** TODO : fix back/prev on multiple calendars
-        <Grid container style={{justifyContent: 'space-between'}}>
-          <Grid>
-            <Button>Back</Button>
+        { this.props.mode === 'month' ?
+          <Grid container style={{justifyContent: 'space-between'}}>
+            <Grid>
+              <Button onClick={() => {this.previousMonth()}}>Précédent</Button>
+            </Grid>
+            <Grid>
+              <Button onClick={() => {this.nextMonth()}}>Suivant</Button>
+            </Grid>
           </Grid>
-          <Grid>
-            <Button onClick={() => {this.nextMonth()}}>Suivant</Button>
-          </Grid>
-        </Grid>
-        */ }
+          :
+          null
+        }
         <Grid container spacing={2} style={{padding: 5}}>
           {[...Array(nbSchedule)].map((x, i) => {
             let date = new Date(currentDate);
@@ -286,6 +297,7 @@ class Schedule extends React.Component {
               <Grid item xl={nbSchedule === 1 ? 11 : 4} lg={nbSchedule === 1 ? 11 : 4} md={nbSchedule === 1 ? 11 : 6}
                     sm={nbSchedule === 1 ? 11 : 6} xs={12} className={style.schedule_height} key={i}>
                 <Calendar
+                  key={date}
                   selectable={selectable}
                   popup={false}
                   culture={'fr-FR'}
@@ -293,10 +305,10 @@ class Schedule extends React.Component {
                   events={monthEvents}
                   views={[Views.MONTH, Views.WEEK]}
                   defaultView={mode}
-                  defaultDate={date}
+                  defaultDate={mode === 'month' ? date : new Date()}
                   onSelectSlot={this.toggleSelection}
                   dayLayoutAlgorithm={'no-overlap'}
-                  scrollToTime={moment()}
+                  scrollToTime={moment(new Date(0, 0, 0, 9, 0, 0))}
                   className={style.schedule_scheduleMainStyle}
                   components={{
                     /* event: MyEvent, // used by each view (Month, Day, Week)

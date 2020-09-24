@@ -84,8 +84,7 @@ class myAvailabilities extends React.Component {
 
       })
       .catch(function (error) {
-        console.error();
-        (error);
+        console.error(error);
       });
 
     axios.get('/myAlfred/api/shopBanner/all')
@@ -109,7 +108,7 @@ class myAvailabilities extends React.Component {
 
   availabilityCreated = (avail) => {
 
-    if (avail._id.length == GID_LEN) {
+    if (avail._id.length === GID_LEN) {
       avail._id = null;
     }
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
@@ -164,6 +163,7 @@ class myAvailabilities extends React.Component {
 
   render() {
     const {classes} = this.props;
+    const {bookings, services, availabilities, userId} = this.state;
     let isOwner = this.state.idAlfred === this.state.userId;
 
     return (
@@ -177,7 +177,7 @@ class myAvailabilities extends React.Component {
           <Grid className={classes.bigContainer} style={{width: '100%'}}>
             {isOwner ?
               <Grid className={classes.navbarShopContainer}>
-                <NavBarShop userId={this.state.userId}/>
+                <NavBarShop userId={userId}/>
               </Grid>
               : null
             }
@@ -185,22 +185,28 @@ class myAvailabilities extends React.Component {
           <Grid style={{display: 'flex', flexDirection: 'row-reverse', justifyContent: 'center', marginTop: 10}}>
             <Grid className={classes.toggle}>
               <Grid>
-                <DrawerSchedule ref={this.child} onAvailabilityChanged={this.onAvailabilityChanged} removeEventsSelected={this.removeEventsSelected} style={classes}/>
+                <DrawerSchedule
+                  ref={this.child}
+                  onAvailabilityChanged={this.onAvailabilityChanged}
+                  removeEventsSelected={this.removeEventsSelected}
+                  bookings={bookings}
+                  style={classes}
+                />
               </Grid>
             </Grid>
             <Grid container className={classes.containercalendar}>
               <Grid>
                 <Schedule
                   ref={this.schedule}
-                  availabilities={this.state.availabilities}
-                  bookings={this.state.bookings}
+                  availabilities={availabilities}
+                  bookings={bookings}
                   title={I18N.SCHEDULE_TITLE}
                   subtitle={I18N.SCHEDULE_SUBTITLE}
-                  services={this.state.services}
+                  services={services}
                   onCreateAvailability={this.availabilityCreated}
                   onUpdateAvailability={this.availabilityUpdate}
                   selectable={true}
-                  nbSchedule={6}
+                  nbSchedule={3}
                   handleSelection={this.sendToDrawer}
                   mode={'month'}
                   style={classes}

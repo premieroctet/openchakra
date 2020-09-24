@@ -69,20 +69,28 @@ class AvailabilitiesUpdate(FixBase):
       
       for idx, a in enumerate(avails):
         print("{}/{}:{}".format(idx, len(avails), a._id))
-        new_avail=AttributeDict()
-        new_avail._id = a._id
-        new_avail.available = True
-        new_avail.user = a.user
         
-        new_avail.period = self.get_period(a)
-        new_avail.timelapses = self.get_timelapses(a)
-        new_avail.punctuals = self.get_punctuals(a)
+        punctuals=self.get_punctuals(a)
         
-        print(a)
-        print(new_avail)
+        nb= len(punctuals) if punctuals else 1
+        
+        for idx in range(nb):
+          print("Punctual:{} ({})".format(punctuals!=None, nb))
+          
+          new_avail=AttributeDict()
+          new_avail.available = True
+          new_avail.user = a.user
+          
+          new_avail.period = self.get_period(a)
+          new_avail.timelapses = self.get_timelapses(a)
+          new_avail.punctual = punctuals[idx] if punctuals else None
+          
+          print(a)
+          print(new_avail)
+        
+          self.db.insert_document("availabilities", new_avail)
         
         self.db.remove_document("availabilities", a._id)
-        self.db.insert_document("availabilities", new_avail)
     
 if __name__ == '__main__':
     a = AvailabilitiesUpdate(sys.argv[1])

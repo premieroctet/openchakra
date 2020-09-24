@@ -1,8 +1,47 @@
+const {MODES, FACEBOOK_PROVIDER, GOOGLE_PROVIDER, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
+const {MODE}=require('../mode')
+
+const get_mode = () => {
+  if (!Object.values(MODES).includes(MODE)) {
+    console.error(`Incorrect startup mode ${MODE}, expecting ${Object.values(MODES)}`)
+    process.exit(-1)
+  }
+  return MODE
+}
+
+const is_production = () => {
+  return get_mode()==MODES.PRODUCTION
+}
+
+const is_validation = () => {
+  return get_mode()==MODES.VALIDTION
+}
+
+const is_development = () => {
+  return get_mode()==MODES.DEVELOPMENT
+}
+
 const appName = 'myalfred';
-const databaseName = 'test-myAlfred-V2';
+
+const DATABASE_PRODUCTION='test-myAlfred'
+const DATABASE_TEST='test-myAlfred-V2'
+
+const databaseName = MODE==MODES.PRODUCTION ? DATABASE_PRODUCTION : DATABASE_TEST
 const serverPort = process.env.PORT || 3122;
 
+const SERVER_PROD = is_production() || is_development()
+
+const ENABLE_MAILING = is_production()
+
 const source = require('./client_id.json');
+
+const get_host_url = () => {
+  const protocol='https'
+  const hostname=is_development() ? LOCAL_HOST : AMAZON_HOST
+  const port=is_validation() ? ':3122' : ''
+  const host_url=`${protocol}://${hostname}${port}/`
+  return host_url
+}
 
 const completeConfig = {
 
@@ -48,6 +87,16 @@ const SIRET = {
 // Enable.disable Google & Facebook login
 const ENABLE_GF_LOGIN = false;
 
+const PROVIDERS = ENABLE_GF_LOGIN ? [GOOGLE_PROVIDER, FACEBOOK_PROVIDER] : [];
+
+console.log(`Configuration is:\n\
+\tMode:${get_mode()}\n\
+\tDatabase:${databaseName}\n\
+\tServer prod:${SERVER_PROD}\n\
+\tServer port:${SERVER_PROD ? '80/443':'3122'}\n\
+\tHost URL:${get_host_url()}\n\
+\tSendInBlue actif:${ENABLE_MAILING}\
+`)
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -57,4 +106,7 @@ module.exports = {
   computeUrl,
   SIRET,
   ENABLE_GF_LOGIN,
+  GOOGLE_PROVIDER, FACEBOOK_PROVIDER, PROVIDERS,
+  is_production, is_validation, is_development, SERVER_PROD,
+  get_host_url
 };

@@ -3,7 +3,7 @@ const passport = require('passport');
 const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
-const {getHost} = require('../../../utils/infra');
+const {get_host_url} = require('../../../config/config');
 
 const googleAuth = passport.authenticate('google', {session: false, scope: ['profile', 'email']});
 const facebookAuth = passport.authenticate('facebook', {session: false, scope: ['email']});
@@ -97,7 +97,7 @@ const redirectRegistration = (user, res) => {
     'picture': user.picture,
     'isLogin': false,
   });
-  res.status(200).redirect(new URL('?' + url.toString(), getHost()))
+  res.status(200).redirect(new URL('?' + url.toString(), get_host_url()))
 }
 
 module.exports = router;

@@ -1,16 +1,18 @@
+const {is_production, is_development}=require('../config/config')
+
 const express = require('express');
 const next = require('next');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const dev = process.env.NODE_DEV !== 'production'; //true false
 const prod = process.env.NODE_DEV === 'production'; //true false
-const nextApp = next({dev});
+const nextApp = is_production() ? next({prod}) : next({dev})
 const routes = require('./routes');
 const routerHandler = routes.getRequestHandler(nextApp);
 const passport = require('passport');
 const glob = require('glob');
 const cors = require('cors');
-const {config} = require('../config/config');
+const {config, SERVER_PROD} = require('../config/config');
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
@@ -49,11 +51,10 @@ const server = require('http').Server(app);
 const SocketIo = require('socket.io');
 
 // Avoid deprecation warning
-mongoose.set('useUnifiedTopology', true);
+mongoose.set('useUnifiedTopology', true)
+mongoose.set('useFindAndModify', false)
 
 nextApp.prepare().then(() => {
-
-  const SERVER_PROD = true;
 
 // Body parser middleware
   app.use(bodyParser.urlencoded({extended: false}));
@@ -144,9 +145,9 @@ nextApp.prepare().then(() => {
   const io = SocketIo(httpsServer);
 
   if (SERVER_PROD) {
-    httpsServer.listen(443, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`));
+    httpsServer.listen(443, () => console.log(`${config.appName} running on http://localhost:80/ and https://localhost:443/`));
   } else {
-    httpsServer.listen(3122, () => console.log(`${config.appName} running on http://localhost:${config.serverPort}/`));
+    httpsServer.listen(3122, () => console.log(`${config.appName} running on https://localhost:3122/`));
   }
 
   let roomName = '';

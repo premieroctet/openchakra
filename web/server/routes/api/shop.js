@@ -63,7 +63,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async (req, 
     return res.status(400).json(errors);
   }
 
-  console.log('Shop creation received ' + JSON.stringify(req.body, null, 2));
+  console.log(`Shop creation received ${JSON.stringify(req.body)}`);
   Shop.findOne({
     alfred: req.user.id,
   })

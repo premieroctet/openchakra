@@ -3,7 +3,8 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import styles from './SelectSlotTimerStyle';
 import withStyles from '@material-ui/core/styles/withStyles';
-
+import moment from 'moment'
+import Avatar from '@material-ui/core/Avatar'
 
 class SelectSlotTimer extends React.Component {
   constructor(props) {
@@ -12,24 +13,42 @@ class SelectSlotTimer extends React.Component {
   }
 
   toggleTimeSlot = item => {
-    this.props.onChange(item, !this.props.slots.has(item));
+    this.props.onChange(item);
   };
 
-  createRender = (arrayLength, index, classes) => {
-    const items = [];
+  createRender = (arrayLength, index, classes, bookings) => {
+    var items = [];
 
-    for (let i = index; i < arrayLength; i++) {
+    for (let i = index; i < index+arrayLength; i++) {
+      const color=this.props.slots[i]==true ? '#4fbdd7' : this.props.slots[i]==false ?'#c4c4c4' : ''
+      const pattern = this.props.slots[i]==null ? 'repeating-linear-gradient(45deg, #4fbdd7 48%, #FFFFFF  50%, #4fbdd7 51%)' : ''
+      const avatar=bookings[i] ? `/${bookings[i]}` : null
       items.push(
+        avatar ?
         <Chip
-          key={i}
           clickable
           label={('0' + i).slice(-2) + 'h00 - ' + ('0' + (i + 1)).slice(-2) + 'h00'}
-          style={{backgroundColor: this.props.slots ? this.props.slots.has(i) ? '#4fbdd7' : '#c4c4c4' : '#c4c4c4'}}
+          style={{backgroundColor: color, backgroundImage: pattern}}
           className={classes.textFieldChips}
+          avatar={ <Avatar src={avatar} />}
           onClick={() => {
             this.toggleTimeSlot(i);
           }}
+          selectable={false}
+        />
+        :
+        <Chip
+          clickable
+          label={('0' + i).slice(-2) + 'h00 - ' + ('0' + (i + 1)).slice(-2) + 'h00'}
+          style={{backgroundColor: color, backgroundImage: pattern}}
+          className={classes.textFieldChips}
+          avatar={ <div /> }
+          onClick={() => {
+            this.toggleTimeSlot(i);
+          }}
+          selectable={false}
         />,
+
       );
     }
     return items;
@@ -37,11 +56,11 @@ class SelectSlotTimer extends React.Component {
 
 
   render() {
-    const {classes, arrayLength, index} = this.props;
+    const {classes, arrayLength, index, bookings} = this.props;
 
     return (
       <Grid style={{textAlign: 'center'}}>
-        {this.createRender(arrayLength, index, classes)}
+        {this.createRender(arrayLength, index, classes, bookings)}
       </Grid>
     );
   }

@@ -166,7 +166,7 @@ const eventIncludesDate = (event, mmt) => {
 const availIncludesDate = (avail, mmt) => {
 
   if (avail.is_punctual) {
-    return [avail.punctuals.some( d => moment(d).isSame(mmt, 'day')), avail.available]
+    return [moment(avail.punctual).isSame(mmt, 'day'), avail.available]
   }
   else {
     var range=moment.range(avail.period.begin, avail.period.end)
@@ -207,7 +207,36 @@ const hasAlfredDateBooking = (mmt, bookings) => {
   return true;
 };
 
+/**
+ Returns a timelapse containing true/false/null depending on input availabilities.
+ For each timelapse, returns :
+  - true if all input are true
+  - false if all input are false
+  - null if inputs differ
+ */
+const combineTimelapses = availabilities => {
+  if (availabilities.length==0) {
+    return Array.from({length:24}, () => false)
+  }
+  var timelapses = Array.from(Array(24).keys()).map( idx => availabilities[0].timelapses.includes(idx))
+  availabilities.forEach( av => {
+    timelapses.forEach( (value, idx) => {
+      if (value!=av.timelapses.includes(idx)) {
+        timelapses[idx]=null
+      }
+    })
+  })
+  return timelapses
+}
+
+// Converts [1,2,5] => [false, true, true, false, false, true, false...]
+const timelapsesSetToArray = timelapses => {
+  var result=Array.from({length:24}, (v, idx) => timelapses.includes(idx))
+  return result
+}
+
 module.exports = {
   isMomentAvailable, isIntervalAvailable, getDeadLine, booking_datetime_str,
   createDefaultAvailability, isDateAvailable, hasAlfredDateBooking, DAYS,
+  getAvailabilityForDate, combineTimelapses, timelapsesSetToArray
 };

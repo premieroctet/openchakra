@@ -16,14 +16,13 @@ module.exports = function validateAvailability(data, recurrent) {
         errors.endDate='Date de fin incorrecte'
       }
 
-      console.log(`Days:${data.days}`)
       if (!data.days || data.days.length==0) {
         errors.days='Les jours travaillés sont requis'
       }
     }
     else {
-      if (!data.punctuals || data.punctuals.length==0) {
-        errors.punctuals='Au moins une date de disponibilité est requise'
+      if (!data.punctuals) {
+        errors.punctuals='La date de disponibilité est requise'
       }
       if (data.available==undefined) {
         errors.available='La disponibilité/indisponibilité est requise'
