@@ -38,7 +38,13 @@ class NewsLetter extends React.Component{
             </Grid>
             <Grid className={style.newsLetterContainer}>
               <Grid>
-                <TextField id="outlined-basic" label="Email" variant="outlined" classes={{root: style.newsLetterTextField, formControl:style.newsLetterTextField}}/>
+                <TextField
+                  id="outlined-basic"
+                  label="Email"
+                  variant="outlined"
+                  classes={{root: style.newsLetterTextField}}
+                  InputLabelProps={{ shrink: false }}
+                />
               </Grid>
             </Grid>
             <Grid className={style.newsLetterContainer}>

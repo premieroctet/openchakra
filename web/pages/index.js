@@ -73,7 +73,7 @@ class Home extends React.Component {
           <meta property="description"
                 content="Des milliers de services référencés ! Consultez les offres de service rémunérés de milliers de particuliers avec My Alfred, première application d’offres de services entre particuliers. Rendre service en étant rémunéré autour de chez soi n’a jamais été aussi simple"/>
         </Helmet>
-        <Grid>
+        <Grid style={{overflowX: 'hidden'}}>
           <Grid>
             <InfoBar style={classes}/>
           </Grid>
@@ -83,7 +83,7 @@ class Home extends React.Component {
                 <NavBar style={classes}/>
               </Grid>
               <Grid className={classes.bannerPresentationContainer}>
-                <Grid className={classes.generalWidthContainer}>
+                <Grid className={classes.bannerSize}>
                   <BannerPresentation style={classes}/>
                 </Grid>
               </Grid>
@@ -104,8 +104,8 @@ class Home extends React.Component {
               <Category style={classes}/>
             </Grid>
           </Grid>
-          <Grid container className={classes.becomeAlfredComponent}>
-            <Grid className={classes.generalWidthContainer}>
+          <Grid container className={classes.becomeAlfredComponent} style={{transform: 'rotate(-1deg)'}}>
+            <Grid className={classes.generalWidthContainer}  style={{transform: 'rotate(1deg)'}}>
               <BecomeAlfred style={classes}/>
             </Grid>
           </Grid>
@@ -125,7 +125,7 @@ class Home extends React.Component {
             </Grid>
           </Grid>
           <Grid container style={{justifyContent: 'center', marginTop: '2%', backgroundColor: 'rgba(228, 228, 228, 8)'}}>
-            <Grid className={classes.generalWidthContainer}>
+            <Grid className={classes.generalWidthFooter}>
               <Footer style={classes}/>
             </Grid>
           </Grid>

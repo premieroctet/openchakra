@@ -14,10 +14,10 @@ class OurAlfred extends React.Component{
       <Grid className={style.ourAlfredMainStyle}>
         <Grid className={style.ourAlfredMainContainer}>
           <Grid className={style.ourAlfredMainHeader}>
-            <Grid>
-              <StarIcon/>
+            <Grid className={style.ourAlfredImgContainer}>
+              <img src={'../../../static/assets/icon/star.png'} alt={'iconStar'} title={'iconStar'} width={'100%'} height={'50vh'}/>
             </Grid>
-            <Grid>
+            <Grid className={style.ourAlfredTextContainer}>
               <Grid>
                 <p className={style.ourAlfredTitle}>Nos Alfred</p>
               </Grid>

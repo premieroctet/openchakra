@@ -60,7 +60,8 @@ const theme = createMuiTheme({
     text:{
       fontFamily: 'Futura, sans-serif',
       fontWeight: '500',
-      fontSize: '15px'
+      fontSize: '15px',
+      margin: 0
     },
     button:{
 
@@ -109,7 +110,7 @@ const theme = createMuiTheme({
     },
     homePage:{
       section:{
-        padding: '5%'
+        padding: '8%'
       }
     }
   },

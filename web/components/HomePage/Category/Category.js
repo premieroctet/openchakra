@@ -2,7 +2,6 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import SlideShow from '../../SlideShow/SlideShow';
-import StarIcon from '@material-ui/icons/Star';
 import {CATEGORY} from '../../../utils/i18n';
 
 class Category extends React.Component{
@@ -15,10 +14,10 @@ class Category extends React.Component{
       <Grid className={style.categoryMainContainer}>
         <Grid className={style.categoryContainer}>
           <Grid className={style.categoryLeftContainer}>
-            <Grid>
-              <StarIcon/>
+            <Grid className={style.categoryImgContainer}>
+              <img src={'../../../static/assets/icon/star.png'} alt={'iconStar'} title={'iconStar'} width={'100%'} height={'50vh'}/>
             </Grid>
-            <Grid>
+            <Grid className={style.categoryTextContainer}>
               <Grid>
                 <p className={style.categoryTitle}>{CATEGORY.title}</p>
               </Grid>

@@ -20,11 +20,11 @@ class Footer extends React.Component {
   }
 
   render() {
-    const {classes} = this.props;
+    const {style} = this.props;
     return (
-      <Grid style={{display: 'flex', flexDirection: 'column'}}>
-        <Grid style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}}>
-          <Grid style={{display: 'flex', flexDirection: 'column'}}>
+      <Grid className={style.footerMainStyle}>
+        <Grid className={style.footerMainContainer}>
+          <Grid className={style.footerSection}>
             <Grid>
               <h2>À propos</h2>
             </Grid>
@@ -38,7 +38,7 @@ class Footer extends React.Component {
               <p>Nous contacter</p>
             </Grid>
           </Grid>
-          <Grid style={{display: 'flex', flexDirection: 'column'}}>
+          <Grid className={style.footerSection}>
             <Grid>
               <h2>Communauté</h2>
             </Grid>
@@ -49,7 +49,7 @@ class Footer extends React.Component {
               <p>Inviter un ami</p>
             </Grid>
           </Grid>
-          <Grid style={{display: 'flex', flexDirection: 'column'}}>
+          <Grid className={style.footerSection}>
             <Grid>
               <h2>Alfred</h2>
             </Grid>
@@ -60,7 +60,7 @@ class Footer extends React.Component {
               <p>Centre de ressources</p>
             </Grid>
           </Grid>
-          <Grid style={{display: 'flex', flexDirection: 'column'}}>
+          <Grid className={style.footerSection}>
             <Grid>
               <h2>Assistance</h2>
             </Grid>
@@ -75,7 +75,7 @@ class Footer extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        <Grid style={{display:'flex', flexDirection: 'row-reverse', width: '90%'}}>
+        <Grid className={style.footerSocialSection}>
           <Grid>
             <FacebookIcon/>
           </Grid>
@@ -89,15 +89,15 @@ class Footer extends React.Component {
             <TwitterIcon/>
           </Grid>
         </Grid>
-        <Grid style={{display: 'flex', justifyContent: 'center'}}>
-          <Divider style={{height: 2, width: '80%'}}/>
+        <Grid className={style.footerDividerContainer}>
+          <Divider className={style.footerDivider}/>
         </Grid>
-        <Grid style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-          <Grid style={{display: 'flex', justifyContent: 'space-around',width: '90%'}}>
+        <Grid className={style.footerBrandContainer}>
+          <Grid className={style.footerBrandStyle}>
             <Grid>
               <p>© 2020 MY ALFRED Corporation. Tous droits réservés</p>
             </Grid>
-            <Grid style={{display:'flex', flexDirection: 'row'}}>
+            <Grid className={style.footerRgpdButtons}>
               <Grid>
                 <p>Sécurité</p>
               </Grid>

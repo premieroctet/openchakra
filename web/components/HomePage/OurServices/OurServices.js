@@ -14,7 +14,7 @@ class OurServices extends React.Component{
       <Grid>
         <Grid className={style.ourServicesMainStyle}>
           <Grid>
-            <p>mon illu</p>
+            <img src={'../../../static/assets/img/homePage/illuSearch.png'} alt={'illuServices'} title={'illuServices'} width={'100%'} style={{height:'40vh'}}/>
           </Grid>
           <Grid className={style.ourServicesRightContainer}>
             <Grid>

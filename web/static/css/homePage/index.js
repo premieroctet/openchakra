@@ -2,6 +2,9 @@ export default theme => ({
   generalWidthContainer:{
     width: '60%'
   },
+  bannerSize:{
+    width: '80%'
+  },
   infoBarMainStyle:{
     backgroundColor: theme.palette.backgroundGrey.main,
     justifyContent: 'center',
@@ -84,12 +87,13 @@ export default theme => ({
   bannerPresentationMainStyle:{
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    alignItems: 'center'
   },
   bannerPresentationContainerDescription:{
     display: 'flex',
     flexDirection: 'column',
-    width: '25%'
+    width: '30%'
   },
   bannerPresentationContainerText:{
     width: '75%'
@@ -104,14 +108,15 @@ export default theme => ({
   },
   bannerPresentationContainerIllustration:{
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '60%'
   },
   navbarAndBannerContainer:{
     justifyContent : 'center',
     height: '85vh'
   },
   navbarAndBannerBackground:{
-    backgroundColor: '#4C89C4',
+    backgroundColor: 'rgba(207,223,252,1)',
     width: '100%'
   },
   navbarComponentPosition:{
@@ -126,7 +131,6 @@ export default theme => ({
     fontSize: theme.typography.text.fontSize
   },
   bannerPresentationContainer:{
-    marginTop: '5%',
     display: 'flex',
     justifyContent: 'center'
   },
@@ -158,7 +162,8 @@ export default theme => ({
   ourServicesMainStyle:{
     width: '100%',
     display: 'flex',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    alignItems: 'center'
   },
   mainContainerStyle:{
     justifyContent: 'center',
@@ -212,7 +217,8 @@ export default theme => ({
     fontFamily: theme.typography.text.fontFamily,
     color: theme.typography.text.color,
     fontWeight: theme.typography.text.fontWeight,
-    fontSize: theme.typography.text.fontSize
+    fontSize: theme.typography.text.fontSize,
+    margin: theme.typography.text.margin
   },
   categoryMainContainer:{
     display: 'flex',
@@ -288,7 +294,8 @@ export default theme => ({
     fontFamily: theme.typography.text.fontFamily,
     color: theme.typography.text.color,
     fontWeight: theme.typography.text.fontWeight,
-    fontSize: theme.typography.text.fontSize
+    fontSize: theme.typography.text.fontSize,
+    margin: theme.typography.text.margin,
   },
   ourAlfredButton:{
     borderRadius: theme.border.whiteButton.borderRadius,
@@ -387,11 +394,72 @@ export default theme => ({
   },
   newsLetterTextField:{
     width: '100%',
+    marginBottom: '8%',
     [`& fieldset`]: {
       borderRadius: theme.border.textField.borderRadius,
     },
   },
   newsLetterContainer:{
     width: '100%'
+  },
+  generalWidthFooter:{
+    width: '90%'
+  },
+  footerMainStyle:{
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  footerMainContainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+  },
+  footerSection:{
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  footerSocialSection:{
+    display:'flex',
+    flexDirection: 'row-reverse',
+    width: '90%',
+    marginTop: '3%'
+  },
+  footerDividerContainer:{
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  footerDivider:{
+    height: 1,
+    width: '80%'
+  },
+  footerBrandContainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  footerBrandStyle:{
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '80%'
+  },
+  footerRgpdButtons:{
+    display:'flex',
+    flexDirection: 'row'
+  },
+  categoryImgContainer:{
+    height: '100%',
+    marginTop: '-25px',
+    transform: 'rotate(-25deg)'
+  },
+  categoryTextContainer:{
+    marginLeft: 10,
+  },
+  ourAlfredImgContainer:{
+    height: '100%',
+    marginTop: '-25px',
+    transform: 'rotate(-25deg)'
+  },
+  ourAlfredTextContainer:{
+    marginLeft: 10,
   }
 })

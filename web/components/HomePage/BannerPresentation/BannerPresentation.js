@@ -26,7 +26,7 @@ class BannerPresentation extends React.Component{
         </Grid>
         <Grid className={style.bannerPresentationContainerIllustration}>
           <Grid>
-            <p>mon illu</p>
+            <img src={'../../../static/assets/img/homePage/illuHeader.png'} title={'illuBanner'} alt={'illuBanner'} width={'100%'} style={{height: '70vh'}}/>
           </Grid>
         </Grid>
       </Grid>
