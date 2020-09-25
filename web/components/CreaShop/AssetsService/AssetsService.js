@@ -6,10 +6,8 @@ import {withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+const { Accordion, AccordionSummary, AccordionDetails }=require('@material-ui/core')
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import isEmpty from '../../../server/validation/is-empty';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
@@ -126,11 +124,11 @@ class AssetsService extends React.Component {
                   </Grid>
                   <Grid item xs={12}>
                     <h3 className={classes.policySizeSubtitle}>Votre diplôme</h3>
-                    <ExpansionPanel defaultExpanded={true}>
-                      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+                    <Accordion defaultExpanded={true}>
+                      <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Ajouter / modifier votre diplôme</Typography>
-                      </ExpansionPanelSummary>
-                      <ExpansionPanelDetails>
+                      </AccordionSummary>
+                      <AccordionDetails>
                         <Grid container>
                           <Grid item xs={12}>
                             <TextField
@@ -186,16 +184,16 @@ class AssetsService extends React.Component {
                               auprès des utilisateurs mais il ne sera jamais visible par ces derniers</p>
                           </Grid>
                         </Grid>
-                      </ExpansionPanelDetails>
-                    </ExpansionPanel>
+                      </AccordionDetails>
+                    </Accordion>
                   </Grid>
                   <Grid item xs={12} style={{height: 500}}>
                     <h3 className={classes.policySizeSubtitle}>Votre certification</h3>
-                    <ExpansionPanel defaultExpanded={true}>
-                      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+                    <Accordion defaultExpanded={true}>
+                      <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Ajouter / modifier votre certification</Typography>
-                      </ExpansionPanelSummary>
-                      <ExpansionPanelDetails>
+                      </AccordionSummary>
+                      <AccordionDetails>
                         <Grid container>
                           <Grid item xs={12}>
                             <TextField value={this.state.certificationName} className={classes.inputDiplomaCertifResp}
@@ -241,8 +239,8 @@ class AssetsService extends React.Component {
                               derniers</p>
                           </Grid>
                         </Grid>
-                      </ExpansionPanelDetails>
-                    </ExpansionPanel>
+                      </AccordionDetails>
+                    </Accordion>
                   </Grid>
                 </Grid>
               </Grid>

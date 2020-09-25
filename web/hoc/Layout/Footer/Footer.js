@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import Grid from '@material-ui/core/Grid';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+const { Accordion, AccordionSummary, AccordionDetails }=require('@material-ui/core')
 import Typography from '@material-ui/core/Typography';
 import Link from 'next/link';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -33,16 +31,16 @@ class Footer extends Component {
         <Grid container style={{backgroundColor: '#747474'}}>
           <Grid item md={3} sm={6} xs={12} style={{textAlign: 'center', margin: '2% 0px'}}>
             {/*Responsive */}
-            <ExpansionPanel className={classes.responsive}
+            <Accordion className={classes.responsive}
                             style={{backgroundColor: '#747474', border: 'none', boxShadow: 'none'}}>
-              <ExpansionPanelSummary
+              <AccordionSummary
                 expandIcon={<ExpandMoreIcon style={{color: 'white'}}/>}
                 aria-controls="panel1bh-content"
                 id="panel1bh-header"
               >
                 <Typography style={{fontSize: '1rem', color: 'white', fontWeight: 'bold'}}>My-Alfred</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
+              </AccordionSummary>
+              <AccordionDetails>
                 <Grid container>
                   <Grid item xs={12} style={{textAlign: 'left'}}>
                     <Link href="/creaShop/creaShop"><a style={{textDecoration: 'none'}}><Typography
@@ -57,8 +55,8 @@ class Footer extends Component {
                       style={{color: 'white'}}>Nous contacter</Typography></a></Link>
                   </Grid>
                 </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
+              </AccordionDetails>
+            </Accordion>
 
             {/*Normal */}
             <Typography className={classes.normal}
@@ -82,9 +80,9 @@ class Footer extends Component {
           <Grid item md={3} sm={6} xs={12} style={{textAlign: 'center', margin: '2% 0px'}}>
 
             {/*Responsive */}
-            <ExpansionPanel className={classes.responsive}
+            <Accordion className={classes.responsive}
                             style={{backgroundColor: '#747474', border: 'none', boxShadow: 'none'}}>
-              <ExpansionPanelSummary
+              <AccordionSummary
                 style={{textAlign: 'center'}}
                 expandIcon={<ExpandMoreIcon style={{color: 'white'}}/>}
                 aria-controls="panel1bh-content"
@@ -92,8 +90,8 @@ class Footer extends Component {
               >
                 <Typography
                   style={{textAlign: 'center', fontSize: '1rem', color: 'white', fontWeight: 'bold'}}>Aide</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
+              </AccordionSummary>
+              <AccordionDetails>
                 <Grid container style={{marginTop: '4%'}}>
                   <Grid item xs={12} style={{textAlign: 'left'}}>
                     <Link href="/faq"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>FAQ
@@ -104,8 +102,8 @@ class Footer extends Component {
                       Alfred</Typography></a></Link>
                   </Grid>
                 </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
+              </AccordionDetails>
+            </Accordion>
 
             {/*Normal */}
             <Typography className={classes.normal}
@@ -125,9 +123,9 @@ class Footer extends Component {
           <Grid item md={3} sm={6} xs={12} style={{textAlign: 'center', margin: '2% 0px'}}>
 
             {/*Responsive */}
-            <ExpansionPanel className={classes.responsive}
+            <Accordion className={classes.responsive}
                             style={{backgroundColor: '#747474', border: 'none', boxShadow: 'none'}}>
-              <ExpansionPanelSummary
+              <AccordionSummary
                 style={{textAlign: 'center'}}
                 expandIcon={<ExpandMoreIcon style={{color: 'white'}}/>}
                 aria-controls="panel1bh-content"
@@ -139,8 +137,8 @@ class Footer extends Component {
                   color: 'white',
                   fontWeight: 'bold',
                 }}>Services</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
+              </AccordionSummary>
+              <AccordionDetails>
                 <Grid container style={{marginTop: '4%'}}>
                   <Grid item xs={12} style={{textAlign: 'left'}}>
                     <Link href="#"><a style={{textDecoration: 'none'}}><Typography style={{color: 'white'}}>Les
@@ -151,8 +149,8 @@ class Footer extends Component {
                       services</Typography></a></Link>
                   </Grid>
                 </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
+              </AccordionDetails>
+            </Accordion>
 
             {/*Normal */}
             <Typography className={classes.normal}
@@ -172,9 +170,9 @@ class Footer extends Component {
           <Grid item md={3} sm={6} xs={12} style={{textAlign: 'center', margin: '2% 0px'}}>
 
             {/*Responsive */}
-            <ExpansionPanel className={classes.responsive}
+            <Accordion className={classes.responsive}
                             style={{backgroundColor: '#747474', border: 'none', boxShadow: 'none'}}>
-              <ExpansionPanelSummary
+              <AccordionSummary
                 style={{textAlign: 'center'}}
                 expandIcon={<ExpandMoreIcon style={{color: 'white'}}/>}
                 aria-controls="panel1bh-content"
@@ -208,8 +206,8 @@ class Footer extends Component {
                     </svg>
                   </a></Link>
                 </Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
+              </AccordionSummary>
+              <AccordionDetails>
                 <Grid container style={{marginTop: '4%'}}>
                   <Grid item xs={12} style={{textAlign: 'left'}}>
                     <Link href="/footer/legalNotice"><a style={{textDecoration: 'none'}}><Typography
@@ -224,8 +222,8 @@ class Footer extends Component {
                       confidentialité</Typography></a></Link>
                   </Grid>
                 </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
+              </AccordionDetails>
+            </Accordion>
 
             {/*Normal */}
             <Typography className={classes.normal} style={{fontSize: '1rem', color: 'white', fontWeight: 'bold'}}><Link

@@ -22,9 +22,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import TextField from '@material-ui/core/TextField';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+const { Accordion, AccordionSummary, AccordionDetails }=require('@material-ui/core')
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ButtonSwitch from '../components/ButtonSwitch/ButtonSwitch';
 import Button from '@material-ui/core/Button';
@@ -543,19 +541,19 @@ class UserServicesPreview extends React.Component {
 
     return (
       <Grid style={{width: '100%'}}>
-        <ExpansionPanel defaultExpanded={index == 0}>
+        <Accordion defaultExpanded={index == 0}>
 
-          <ExpansionPanelSummary
+          <AccordionSummary
             expandIcon={<ExpandMoreIcon/>}
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
             <Typography className={classes.heading}>{fltr ? fltr : ''}</Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
+          </AccordionSummary>
+          <AccordionDetails>
             {this.contentPanel(prestations, classes)}
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
+          </AccordionDetails>
+        </Accordion>
       </Grid>
     );
   };
