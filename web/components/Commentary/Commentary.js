@@ -40,18 +40,20 @@ class Commentary extends React.Component {
         .catch(err => console.error(err));
     }
 
-    const req = alfred_mode ? 'customerReviewsCurrent' : 'alfredReviewsCurrent';
-    const url = `/myAlfred/api/reviews/profile/${req}/${this.props.user_id}`;
+    if (this.props.user_id) {
+      const req = alfred_mode ? 'customerReviewsCurrent' : 'alfredReviewsCurrent';
+      const url = `/myAlfred/api/reviews/profile/${req}/${this.props.user_id}`;
 
-    axios.get(url)
-      .then(res => {
-        var reviews = res.data;
-        if (service_id) {
-          reviews = reviews.filter(r => r.serviceUser._id === service_id);
-        }
-        this.setState({reviews: reviews});
-      })
-      .catch(err => console.error(err));
+      axios.get(url)
+        .then(res => {
+          var reviews = res.data;
+          if (service_id) {
+            reviews = reviews.filter(r => r.serviceUser._id === service_id);
+          }
+          this.setState({reviews: reviews});
+        })
+        .catch(err => console.error(err));
+    }
   }
 
   render() {
