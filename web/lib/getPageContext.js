@@ -95,6 +95,9 @@ const theme = createMuiTheme({
     whiteButton:{
       borderRadius: 15,
       border: '2px solid rgba(112,112,112,1)'
+    },
+    textField:{
+      borderRadius: 39
     }
   },
   padding:{
@@ -108,11 +111,6 @@ const theme = createMuiTheme({
       section:{
         padding: '5%'
       }
-    }
-  },
-  width:{
-    homePage:{
-      width: '80%'
     }
   },
 });

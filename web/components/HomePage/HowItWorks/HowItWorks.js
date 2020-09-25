@@ -1,5 +1,6 @@
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
+import {HOW_IT_WORKS} from '../../../utils/i18n'
 
 class HowItWorks extends React.Component{
   constructor(props) {
@@ -7,20 +8,18 @@ class HowItWorks extends React.Component{
   }
 
   render() {
+    const{style} = this.props;
     return (
-      <Grid style={{padding: '5%'}}>
-        <Grid style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}}>
-          <Grid style={{width: '30%'}}>
-            <p>En quelques clics,
-              réserver le service et la
-              personne dont vous avez besoin.
-              #MyAlfred.</p>
+      <Grid className={style.howItWorksMainStyle}>
+        <Grid className={style.howItWorksMainContainer}>
+          <Grid className={style.howItWorksLeftContainer}>
+            <p className={style.howItWorksLeftText}>{HOW_IT_WORKS.leftText}</p>
           </Grid>
-          <Grid style={{display: 'flex', flexDirection: 'column', width: '30%'}}>
+          <Grid className={style.howItWorksRightContainer}>
             <Grid>
-              Nous voulons créez une communauté où l’on puisse profiter des qualités de chacun.
-              Que vous cherchiez votre futur naturopathe ou que vous soyez là pour arrondir vos fins de mois,
-              nous avons hâte de vous rencontrer !
+              <p className={style.howItWorksRightText}>
+                {HOW_IT_WORKS.rightText}
+              </p>
             </Grid>
           </Grid>
         </Grid>

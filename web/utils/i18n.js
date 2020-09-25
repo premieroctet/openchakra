@@ -72,6 +72,33 @@ const CATEGORY = {
   button: 'Tout découvrir'
 };
 
+const BECOME_ALFRED = {
+  title: 'Devenir Alfred',
+  text: 'Créez votre compte et proposez vos services',
+  button: 'En savoir plus'
+};
+
+const HOW_IT_WORKS = {
+  leftText : 'En quelques clics,\n' +
+    'réserver le service et la\n' +
+    'personne dont vous avez besoin.\n' +
+    '#MyAlfred.',
+  rightText: 'Nous voulons créez une communauté où l’on puisse profiter des' +
+    ' qualités de chacun. Que vous cherchiez votre futur naturopathe ou que vous soyez là pour arrondir' +
+    ' vos fins de mois, nous avons hâte de vous rencontrer !\n'
+};
+
+const NEWS_LETTER = {
+  title: 'La Newsletter \n' +
+    'des supers Alfred',
+  text: 'Inscrivez-vous a notre super Newsletter pour recevoir\n' +
+    'les informations et les bons plans de la communauté.',
+  google: 'S\'inscrire avec Google',
+  where: 'ou',
+  email: 'Email',
+  button: 'Je m\'inscris !'
+};
+
 const getMangopayMessage = msg_id => {
   if (!msg_id) {
     return null;
@@ -83,5 +110,5 @@ module.exports = {
   CESU_NOTICE, OUTSIDE_PERIMETER, SCHEDULE_TITLE, SCHEDULE_SUBTITLE,
   getMangopayMessage, SHOP_CREATION_SUCCESSFUL, ID_CARD_CONFIRM_DELETION,
   REGISTRATION_PROOF_CONFIRM_DELETION, INFOBAR_MESSAGE, SHOWMORE, SEARCHBAR,BANNER_PRESENTATION,
-  OUR_SERVICES,OUR_DESCRIPTION,CATEGORY
+  OUR_SERVICES,OUR_DESCRIPTION,CATEGORY, BECOME_ALFRED, HOW_IT_WORKS, NEWS_LETTER
 };

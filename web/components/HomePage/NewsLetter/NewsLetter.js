@@ -2,6 +2,8 @@ import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import FacebookIcon from '@material-ui/icons/Facebook';
+import {NEWS_LETTER} from '../../../utils/i18n';
 
 class NewsLetter extends React.Component{
   constructor(props) {
@@ -9,32 +11,39 @@ class NewsLetter extends React.Component{
   }
 
   render() {
+    const {style} = this.props;
     return (
-      <Grid style={{padding: '5%'}}>
-        <Grid style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}}>
-          <Grid style={{display: 'flex', flexDirection: 'column', width: '30%'}}>
+      <Grid className={style.newsLetterMainStyle}>
+        <Grid className={style.newsLetterMainContainer}>
+          <Grid className={style.newsLetterLeftContainer}>
             <Grid>
-              <p>La Newsletter
-                des supers Alfred</p>
+              <p className={style.newsLetterTitle}>{NEWS_LETTER.title}</p>
             </Grid>
             <Grid>
-              <p>Inscrivez-vous a notre super Newsletter pour recevoir
-                les informations et les bons plans de la communauté.</p>
+              <p className={style.newsLetterSubTitle}>{NEWS_LETTER.text}</p>
             </Grid>
           </Grid>
-          <Grid style={{display: 'flex', flexDirection: 'column', width: '30%'}}>
-            <Grid>
-             <Button>google</Button>
+          <Grid className={style.newsLetterRightContainer}>
+            <Grid className={style.newsLetterContainer}>
+              <Button
+                variant="outlined"
+                classes={{root : style.newsLetterButtonGoogle}}
+                startIcon={<FacebookIcon />}
+              >
+                {NEWS_LETTER.google}
+              </Button>
             </Grid>
-            <Grid>
-              <p>ou</p>
+            <Grid >
+              <p className={style.newsLetterText}>{NEWS_LETTER.where}</p>
             </Grid>
-            <Grid>
+            <Grid className={style.newsLetterContainer}>
               <Grid>
-                <TextField id="outlined-basic" label="Email" variant="outlined" />
+                <TextField id="outlined-basic" label="Email" variant="outlined" classes={{root: style.newsLetterTextField, formControl:style.newsLetterTextField}}/>
               </Grid>
+            </Grid>
+            <Grid className={style.newsLetterContainer}>
               <Grid>
-                <Button>Je m'inscris !</Button>
+                <Button variant={'outlined'} classes={{root : style.newsLetterButton}}>{NEWS_LETTER.button}</Button>
               </Grid>
             </Grid>
           </Grid>

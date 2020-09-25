@@ -9,24 +9,25 @@ class OurAlfred extends React.Component{
     super(props);
   }
   render() {
+    const{style} = this.props;
     return(
-      <Grid style={{display: 'flex', flexDirection: 'column'}}>
-        <Grid style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
-          <Grid style={{display: 'flex', flexDirection: 'row', alignItems:'center'}}>
+      <Grid className={style.ourAlfredMainStyle}>
+        <Grid className={style.ourAlfredMainContainer}>
+          <Grid className={style.ourAlfredMainHeader}>
             <Grid>
               <StarIcon/>
             </Grid>
             <Grid>
               <Grid>
-                <p>Nos Alfred</p>
+                <p className={style.ourAlfredTitle}>Nos Alfred</p>
               </Grid>
               <Grid>
-                <p>Découvrez les profils de nos Alfred</p>
+                <p className={style.ourAlfredSubtitle}>Découvrez les profils de nos Alfred</p>
               </Grid>
             </Grid>
           </Grid>
           <Grid>
-            <Button>Tout Découvrir</Button>
+            <Button classes={{root: style.ourAlfredButton}}>Tout Découvrir</Button>
           </Grid>
         </Grid>
         <Grid>

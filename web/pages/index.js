@@ -104,7 +104,7 @@ class Home extends React.Component {
               <Category style={classes}/>
             </Grid>
           </Grid>
-          <Grid container style={{justifyContent: 'center', marginTop: '2%', backgroundColor: '#F8CF61'}}>
+          <Grid container className={classes.becomeAlfredComponent}>
             <Grid className={classes.generalWidthContainer}>
               <BecomeAlfred style={classes}/>
             </Grid>
@@ -114,7 +114,7 @@ class Home extends React.Component {
               <OurAlfred style={classes}/>
             </Grid>
           </Grid>
-          <Grid container style={{justifyContent: 'center', marginTop: '2%', backgroundColor: '#4C89C4'}}>
+          <Grid container className={classes.howItWorksComponent}>
             <Grid className={classes.generalWidthContainer}>
               <HowItWorks style={classes}/>
             </Grid>

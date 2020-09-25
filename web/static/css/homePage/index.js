@@ -1,6 +1,6 @@
 export default theme => ({
   generalWidthContainer:{
-    width: '80%'
+    width: '60%'
   },
   infoBarMainStyle:{
     backgroundColor: theme.palette.backgroundGrey.main,
@@ -228,5 +228,170 @@ export default theme => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems:'center'
+  },
+  becomeAlfredMainContainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    padding: theme.padding.homePage.section.padding
+  },
+  becomeAlfredContainer:{
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  becomeAlfredButton:{
+    color: theme.palette.white.main,
+    fontWeight: theme.typography.blackButton.fontWeight,
+    fontFamily: theme.typography.blackButton.fontFamily,
+    backgroundColor: theme.palette.black.main,
+    borderRadius: theme.border.blackButton.borderRadius,
+    padding: theme.padding.blackButton.padding,
+  },
+  becomeAlfredTitle:{
+    fontFamily: theme.typography.subTitle.fontFamily,
+    fontWeight: theme.typography.subTitle.fontWeight,
+    fontSize: theme.typography.subTitle.fontSize,
+    margin: theme.typography.subTitle.margin,
+  },
+  becomeAlfredText:{
+    fontFamily: theme.typography.text.fontFamily,
+    color: theme.typography.text.color,
+    fontWeight: theme.typography.text.fontWeight,
+    fontSize: theme.typography.text.fontSize
+  },
+  becomeAlfredComponent:{
+    justifyContent: 'center',
+    marginTop: '2%',
+    backgroundColor: '#F8CF61'
+  },
+  ourAlfredMainStyle:{
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  ourAlfredMainContainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%'
+  },
+  ourAlfredMainHeader:{
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems:'center'
+  },
+  ourAlfredTitle:{
+    fontFamily: theme.typography.sectionTitle.fontFamily,
+    fontWeight: theme.typography.sectionTitle.fontWeight,
+    fontSize: theme.typography.sectionTitle.fontSize,
+    margin: theme.typography.sectionTitle.margin
+  },
+  ourAlfredSubtitle:{
+    fontFamily: theme.typography.text.fontFamily,
+    color: theme.typography.text.color,
+    fontWeight: theme.typography.text.fontWeight,
+    fontSize: theme.typography.text.fontSize
+  },
+  ourAlfredButton:{
+    borderRadius: theme.border.whiteButton.borderRadius,
+    border: theme.border.whiteButton.border,
+    textTransform: theme.typography.textTransform,
+    padding: theme.padding.whiteButton.padding,
+    fontFamily: theme.typography.whiteButton.fontFamily,
+    fontWeight: theme.typography.whiteButton.fontWeight
+  },
+  howItWorksComponent:{
+    justifyContent: 'center',
+    marginTop: '2%',
+    backgroundColor: '#4C89C4'
+  },
+  howItWorksMainStyle:{
+    padding: theme.padding.homePage.section.padding
+  },
+  howItWorksMainContainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  howItWorksLeftContainer:{
+    width: '30%'
+  },
+  howItWorksRightContainer:{
+    display: 'flex',
+    flexDirection: 'column',
+    width: '30%'
+  },
+  howItWorksRightText:{
+    color: theme.palette.white.main,
+    fontSize: theme.typography.text.fontSize,
+    fontWeight: theme.typography.text.fontWeight,
+    fontFamily: theme.typography.text.fontFamily,
+  },
+  howItWorksLeftText:{
+    color: theme.palette.white.main,
+    fontSize: theme.typography.subTitle.fontSize,
+    fontWeight: theme.typography.subTitle.fontWeight,
+    fontFamily: theme.typography.subTitle.fontFamily,
+  },
+  newsLetterMainStyle:{
+    padding: theme.padding.homePage.section.padding
+  },
+  newsLetterMainContainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  newsLetterLeftContainer:{
+    display: 'flex',
+    flexDirection: 'column',
+    width: '30%'
+  },
+  newsLetterRightContainer:{
+    display: 'flex',
+    flexDirection: 'column',
+    width: '30%',
+    alignItems: 'center'
+  },
+  newsLetterButton:{
+    color: theme.palette.white.main,
+    fontWeight: theme.typography.blackButton.fontWeight,
+    fontFamily: theme.typography.blackButton.fontFamily,
+    backgroundColor: theme.palette.black.main,
+    borderRadius: theme.border.blackButton.borderRadius,
+    padding: theme.padding.blackButton.padding,
+    width: '100%'
+  },
+  newsLetterTitle:{
+    fontFamily: theme.typography.subTitle.fontFamily,
+    fontWeight: theme.typography.subTitle.fontWeight,
+    fontSize: theme.typography.subTitle.fontSize,
+    margin: theme.typography.subTitle.margin,
+  },
+  newsLetterSubTitle:{
+    fontFamily: theme.typography.text.fontFamily,
+    color: theme.typography.text.color,
+    fontWeight: theme.typography.text.fontWeight,
+    fontSize: theme.typography.text.fontSize
+  },
+  newsLetterButtonGoogle:{
+    fontWeight: theme.typography.blackButton.fontWeight,
+    fontFamily: theme.typography.blackButton.fontFamily,
+    borderRadius: theme.border.blackButton.borderRadius,
+    padding: theme.padding.blackButton.padding,
+    width: '100%'
+  },
+  newsLetterText:{
+    color: theme.palette.black.main,
+    fontSize: theme.typography.text.fontSize,
+    fontWeight: theme.typography.text.fontWeight,
+    fontFamily: theme.typography.text.fontFamily,
+  },
+  newsLetterTextField:{
+    width: '100%',
+    [`& fieldset`]: {
+      borderRadius: theme.border.textField.borderRadius,
+    },
+  },
+  newsLetterContainer:{
+    width: '100%'
   }
 })

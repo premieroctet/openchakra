@@ -1,6 +1,7 @@
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+import {BECOME_ALFRED} from '../../../utils/i18n';
 
 class BecomeAlfred extends React.Component{
 
@@ -9,17 +10,18 @@ class BecomeAlfred extends React.Component{
   }
 
   render() {
+    const {style} = this.props;
     return(
-      <Grid style={{display: 'flex', justifyContent: 'space-around', flexDirection: 'row', padding: '5%'}}>
-        <Grid style={{display: 'flex', flexDirection: 'column'}}>
+      <Grid className={style.becomeAlfredMainContainer}>
+        <Grid className={style.becomeAlfredContainer}>
           <Grid>
-            <h1>Devenir Alfred</h1>
+            <p className={style.becomeAlfredTitle}>{BECOME_ALFRED.title}</p>
           </Grid>
           <Grid>
-            <p>Créez votre compte et proposez vos services</p>
+            <p className={style.becomeAlfredText}>{BECOME_ALFRED.text}</p>
           </Grid>
           <Grid>
-            <Button variant={'contained'}>En savoir plus</Button>
+            <Button variant={'contained'} className={style.becomeAlfredButton}>{BECOME_ALFRED.button}</Button>
           </Grid>
         </Grid>
         <Grid/>
