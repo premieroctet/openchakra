@@ -10,7 +10,7 @@ import {CUSTOM_PRESTATIONS_FLTR, generate_id, GID_LEN} from '../../../utils/cons
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import cookie from 'react-cookies';
-
+import _ from 'lodash';
 const jwt = require('jsonwebtoken');
 
 class SelectPrestation extends React.Component {
@@ -49,7 +49,7 @@ class SelectPrestation extends React.Component {
         let service = res.data;
         this.setState({service_name: service.label});
       })
-      .catch(error => console.log(error.response));
+      .catch(error => console.error(error));
     axios.get(`/myAlfred/api/prestation/${this.props.service}`)
       .then(res => {
         var prestations = res.data;
@@ -65,7 +65,7 @@ class SelectPrestation extends React.Component {
         grouped = {[CUSTOM_PRESTATIONS_FLTR]: presta_templates, ...grouped};
         this.setState({grouped: grouped});
       }).catch(error => {
-      console.log(error.response);
+      console.error(error);
     });
   }
 
