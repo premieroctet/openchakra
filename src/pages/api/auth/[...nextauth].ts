@@ -13,10 +13,8 @@ export default authHandler
 const options = {
   providers: [
     Providers.GitHub({
-      //@ts-ignore
-      clientId: process.env.GITHUB_ID,
-      //@ts-ignore
-      clientSecret: process.env.GITHUB_SECRET,
+      clientId: process.env.GITHUB_ID as string,
+      clientSecret: process.env.GITHUB_SECRET as string,
     }),
   ],
   adaptor: Adapters.Prisma.Adapter({ prisma }),
