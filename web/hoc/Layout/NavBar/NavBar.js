@@ -244,10 +244,10 @@ class NavBar extends Component {
         </Grid>
         <Grid className={style.navbarButtonContainer}>
           <Grid>
-            <Button className={style.navBarlogIn}>Connexion</Button>
+            <Button className={style.navBarlogIn} onClick={this.handleOpenLogin}>Connexion</Button>
           </Grid>
           <Grid>
-            <Button variant="outlined" classes={{root: style.navbarSignIn}}>Inscription</Button>
+            <Button variant="outlined" classes={{root: style.navbarSignIn}} onClick={this.handleOpenRegister}>Inscription</Button>
           </Grid>
         </Grid>
       </Grid>
