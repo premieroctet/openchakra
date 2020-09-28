@@ -277,10 +277,10 @@ class Schedule extends React.Component {
         { this.props.mode === 'month' ?
           <Grid container style={{justifyContent: 'space-between'}}>
             <Grid>
-              <Button onClick={() => {this.previousMonth()}}>Précédent</Button>
+              <Button onClick={this.previousMonth} variant={'contained'}>&#8249;</Button>
             </Grid>
             <Grid>
-              <Button onClick={() => {this.nextMonth()}}>Suivant</Button>
+            <Button onClick={this.nextMonth} variant={'contained'}>&#8250;</Button>
             </Grid>
           </Grid>
           :
