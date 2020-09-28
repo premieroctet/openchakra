@@ -7,16 +7,19 @@ import { wrapper } from '~core/store'
 import { ErrorBoundary as BugsnagErrorBoundary } from '~utils/bugsnag'
 import AppErrorBoundary from '~components/errorBoundaries/AppErrorBoundary'
 import { AppProps } from 'next/app'
+import { Provider } from 'next-auth/client'
 
 const Main = ({ Component, pageProps }: AppProps) => (
-  <BugsnagErrorBoundary>
-    <ThemeProvider theme={theme}>
-      <AppErrorBoundary>
-        <CSSReset />
-        <Component {...pageProps} />
-      </AppErrorBoundary>
-    </ThemeProvider>
-  </BugsnagErrorBoundary>
+  <Provider session={pageProps.session}>
+    <BugsnagErrorBoundary>
+      <ThemeProvider theme={theme}>
+        <AppErrorBoundary>
+          <CSSReset />
+          <Component {...pageProps} />
+        </AppErrorBoundary>
+      </ThemeProvider>
+    </BugsnagErrorBoundary>
+  </Provider>
 )
 
 export default wrapper.withRedux(Main)

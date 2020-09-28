@@ -1,0 +1,12 @@
+version: '3.6'
+services:
+  db:
+    image: 'postgres:12'
+    ports:
+      - '54320:5432'
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=pierre
+      - POSTGRES_PASSWORD=chakra
+      - POSTGRES_DB=openchakra
