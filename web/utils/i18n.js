@@ -9,12 +9,11 @@ const OUTSIDE_PERIMETER = 'Ce service est hors de votre périmètre.';
 
 const SCHEDULE_TITLE = 'Précisez vos disponibilités si vous le souhaitez !';
 
-const SCHEDULE_SUBTITLE = 'Si vous modifiez ces disponibilités, seules les plages \
-horaires indiquées pourront être réservées. Vous pouvez appliquer une récurrence \
-à vos disponibilités afin de gagner du temps ! Par exemple, si vous êtes disponible\
-tous les lundis et mardis, vous pouvez cocher la case Récurrence, et cliquer\
-sur Lu et Ma afin de répéter votre disponibilité sur une durée que vous \
-pouvez définir.';
+const SCHEDULE_SUBTITLE = "Votre calendrier vous permet d'ajouter vos disponibilités.\
+ Lorsque vous ajoutez ou modifiez vos disponibilités, seules les plages horaires indiquées pourront être réservées.\
+ Vous pouvez très facilement ajouter une période de disponibilité en indiquant les dates de début et fin, les jours correspondants et des tranches horaires.\
+ Vous pouvez également sélectionner une date ou plusieurs, indiquer si vous êtes disponible et sélectionner les tranches horaires."
+
 
 const SHOP_CREATION_SUCCESSFUL = 'Vos services sont maintenant disponibles dans my Alfred';
 
