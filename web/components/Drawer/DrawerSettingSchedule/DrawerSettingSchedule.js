@@ -4,11 +4,9 @@ import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Divider from '@material-ui/core/Divider';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
+import {Accordion, AccordionDetails, AccordionSummary} from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import frLocale from 'date-fns/locale/fr';
@@ -27,6 +25,7 @@ class DrawerSettingSchedule extends React.Component{
     this.state={
       eventsSelected: new Set(),
       availabilities: [],
+      expanded: [],
       errors:{}
     }
   }
@@ -48,8 +47,10 @@ class DrawerSettingSchedule extends React.Component{
             as_text: a.as_text,
           }
         });
-        this.setState({availabilities: availabilities})
-      }).catch(err => console.error(err))
+        const expanded = Array.from({length:availabilities.length}, () => false)
+        this.setState({availabilities: availabilities, expanded: expanded})
+      })
+      .catch(err => console.error(err))
   };
 
   toggleRecurrDay = (dayIndex, availIdx) => {
@@ -83,7 +84,9 @@ class DrawerSettingSchedule extends React.Component{
         as_text: '',
       };
       availabilities.push(newAvailability);
-      this.setState({availabilities: availabilities})
+      const expanded = Array.from({length:this.state.expanded.length}, () => false)
+      expanded.push(true)
+      this.setState({availabilities: availabilities, expanded: expanded})
     };
 
     handleDateStart = index => (date) =>{
@@ -125,7 +128,7 @@ class DrawerSettingSchedule extends React.Component{
     };
 
 
-    save = index => {
+    save = (index, event) => {
       const availability = this.state.availabilities[index];
       axios.post('/myAlfred/api/availability/addRecurrent', {
         _id: availability._id,
@@ -168,14 +171,21 @@ class DrawerSettingSchedule extends React.Component{
       return true
     };
 
+    addPeriodEnabled = () => {
+      const unsaved = this.state.availabilities.some( a => !a._id)
+      return !unsaved
+    }
+
+    onAccordionChange = availIdx => (event, exp) => {
+      const expanded=this.state.expanded
+      expanded[availIdx]=exp
+      this.setState({expanded: expanded})
+    }
+
     render(){
 
         const {classes} = this.props;
-        const {availabilities, errors} = this.state;
-
-        if (availabilities.length>0) {
-          console.log(`Availabilities:${JSON.stringify(Array(...this.state.availabilities[0].recurrDays))}`)
-        }
+        const {availabilities, errors, expanded} = this.state;
 
         return(
             <Grid>
@@ -197,7 +207,7 @@ class DrawerSettingSchedule extends React.Component{
                   availabilities.map((availResult, availIdx) =>{
                     const error = errors[availIdx] || {};
                     return(
-                      <Accordion>
+                      <Accordion expanded={expanded[availIdx]} onChange={this.onAccordionChange(availIdx)}>
                           <AccordionSummary
                               expandIcon={<ExpandMoreIcon />}
                               aria-controls="panel1a-content"
@@ -309,9 +319,9 @@ class DrawerSettingSchedule extends React.Component{
                                         }
                                       </Grid>
                                   </Grid>
-                                  <Grid style={{marginTop: 30}}>
+                                  <Grid style={{marginTop: 20}}>
                                       <Grid style={{display:'flex', flexDirection:'row-reverse'}}>
-                                          <Button disabled={!this.saveEnabled(availIdx)} variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={ () => this.save(availIdx) }>Enregistrer</Button>
+                                          <Button disabled={!this.saveEnabled(availIdx)} variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={ ev => this.save(availIdx, ev) }>Enregistrer</Button>
                                           <Button color={'secondary'} style={{marginRight: 10}} onClick={()=>this.removeAvailabilities(availIdx)}>Supprimer</Button>
                                       </Grid>
                                   </Grid>
@@ -323,9 +333,9 @@ class DrawerSettingSchedule extends React.Component{
                 }
                 </Grid>
                 <Divider/>
-                <Grid style={{marginTop: 30, marginBottom: 110}}>
+                <Grid style={{marginTop: 10, marginBottom: 10}}>
                     <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
-                        <Button variant={'contained'} color={'primary'} style={{color:'white'}} onClick={ this.addAvailability}>Ajouter une période</Button>
+                        <Button disabled={!this.addPeriodEnabled()} variant={'contained'} color={'primary'} style={{color:'white'}} onClick={ this.addAvailability}>Ajouter une période</Button>
                     </Grid>
                 </Grid>
             </Grid>
