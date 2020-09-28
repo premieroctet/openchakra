@@ -26,52 +26,52 @@ class Footer extends React.Component {
         <Grid className={style.footerMainContainer}>
           <Grid className={style.footerSection}>
             <Grid>
-              <h2>À propos</h2>
+              <h3 className={style.footerTitileSection}>À propos</h3>
             </Grid>
             <Grid>
-              <p>Pourquoi My Alfred ?</p>
+              <p className={style.footerLink}>Pourquoi My Alfred ?</p>
             </Grid>
             <Grid>
-              <p>Notre histoire</p>
+              <p className={style.footerLink}>Notre histoire</p>
             </Grid>
             <Grid>
-              <p>Nous contacter</p>
-            </Grid>
-          </Grid>
-          <Grid className={style.footerSection}>
-            <Grid>
-              <h2>Communauté</h2>
-            </Grid>
-            <Grid>
-              <p>Notre communauté</p>
-            </Grid>
-            <Grid>
-              <p>Inviter un ami</p>
+              <p className={style.footerLink}>Nous contacter</p>
             </Grid>
           </Grid>
           <Grid className={style.footerSection}>
             <Grid>
-              <h2>Alfred</h2>
+              <h3 className={style.footerTitileSection}>Communauté</h3>
             </Grid>
             <Grid>
-              <p>Devenir Alfred</p>
+              <p className={style.footerLink}>Notre communauté</p>
             </Grid>
             <Grid>
-              <p>Centre de ressources</p>
+              <p className={style.footerLink}>Inviter un ami</p>
             </Grid>
           </Grid>
           <Grid className={style.footerSection}>
             <Grid>
-              <h2>Assistance</h2>
+              <h3 className={style.footerTitileSection}>Alfred</h3>
             </Grid>
             <Grid>
-              <p>Les bases</p>
+              <p className={style.footerLink}>Devenir Alfred</p>
             </Grid>
             <Grid>
-              <p>FAQ</p>
+              <p className={style.footerLink}>Centre de ressources</p>
+            </Grid>
+          </Grid>
+          <Grid className={style.footerSection}>
+            <Grid>
+              <h3 className={style.footerTitileSection}>Assistance</h3>
             </Grid>
             <Grid>
-              <p>Parler à un humain</p>
+              <p className={style.footerLink}>Les bases</p>
+            </Grid>
+            <Grid>
+              <p className={style.footerLink}>FAQ</p>
+            </Grid>
+            <Grid>
+              <p className={style.footerLink}>Parler à un humain</p>
             </Grid>
           </Grid>
         </Grid>
@@ -95,17 +95,17 @@ class Footer extends React.Component {
         <Grid className={style.footerBrandContainer}>
           <Grid className={style.footerBrandStyle}>
             <Grid>
-              <p>© 2020 MY ALFRED Corporation. Tous droits réservés</p>
+              <p className={style.footerText}>© 2020 MY ALFRED Corporation. Tous droits réservés</p>
             </Grid>
             <Grid className={style.footerRgpdButtons}>
               <Grid>
-                <p>Sécurité</p>
+                <p className={style.footerLink}>Sécurité</p>
               </Grid>
               <Grid>
-                <p>Informations légales</p>
+                <p className={style.footerLink}>Informations légales</p>
               </Grid>
               <Grid>
-                <p>Confidentialié</p>
+                <p className={style.footerLink}>Confidentialié</p>
               </Grid>
             </Grid>
           </Grid>

@@ -167,7 +167,8 @@ export default theme => ({
   },
   mainContainerStyle:{
     justifyContent: 'center',
-    marginTop: '2%'
+    marginTop: '4%',
+    marginBottom: '4%'
   },
   ourDescriptionMainStyle:{
     padding: theme.padding.homePage.section.padding,
@@ -444,7 +445,9 @@ export default theme => ({
   },
   footerRgpdButtons:{
     display:'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    width: '30%',
+    justifyContent : 'space-between'
   },
   categoryImgContainer:{
     height: '100%',
@@ -461,5 +464,14 @@ export default theme => ({
   },
   ourAlfredTextContainer:{
     marginLeft: 10,
+  },
+  footerTitileSection:{
+    fontFamily: theme.typography.sectionTitle.fontFamily
+  },
+  footerLink:{
+    fontFamily: theme.typography.text.fontFamily
+  },
+  footerText:{
+    fontFamily: theme.typography.text.fontFamily
   }
 })
