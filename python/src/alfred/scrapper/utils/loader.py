@@ -48,11 +48,12 @@ class ChromeLoader(object):
     driver = webdriver.Chrome(ChromeDriverManager().install())  
     driver.get("https://www.leboncoin.fr")
     input("Cliquez quand vous êtes sur la page de recherche")
-    elements=driver.find_elements_by_xpath('//*')
-    pprint(elements)
-    fleche=driver.find_element('data-name', 'Calque 1')
-    input("Cliquez quand vous êtes sur la page de recherche")
-    fleche.click()
-    input("Cliquez quand vous êtes sur la page de recherche")
-
+    # Elements inputs recherche
+    search_fields=[i for i in driver.find_elements_by_tag_name('input') if "Que rech" in i.get_attribute('placeholder')]
+    # Dans lequel saisir la recherche ?? Amène systématiquement à un "Je ne suis pas un robot"
+    search_field.enter_keys('Ma recherche')
+    # Cliquer sur le svg loupe ne fonctionne pas. Lequel choisir ?
+    loupes = [i for i in driver.find_elements_by_tag_name('svg')]
+    loup.click()
+    
     
