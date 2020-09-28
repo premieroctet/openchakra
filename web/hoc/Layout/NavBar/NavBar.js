@@ -204,6 +204,18 @@ class NavBar extends Component {
     const {mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged, user} = this.state;
     const {style} = this.props;
 
+    const modalLogin = () => {
+      return (
+        <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh}/>
+      );
+    };
+
+    const modalRegister = () => {
+      return (
+        <Register callLogin={this.handleOpenLogin} sendParentData={this.getData}/>
+      );
+    };
+
     return(
       <Grid className={style.navbarMainSytle}>
         <Grid className={style.navbarLogoContainer}>
