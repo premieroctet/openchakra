@@ -826,7 +826,7 @@ class Register extends React.Component {
 
 
   render() {
-    const {classes} = this.props;
+    const {classes, callLogin} = this.props;
     const {errors, activeStep, firstPageValidator, secondPageValidator} = this.state;
 
     return (
@@ -873,7 +873,7 @@ class Register extends React.Component {
                   </Grid>
                   <Grid container className={classes.bottomContainer}>
                     <Grid item>
-                      <a color={'primary'} onClick={this.props.callLogin} style={{color: '#2FBCD3', cursor: 'pointer'}}>Vous
+                      <a color={'primary'} onClick={callLogin} style={{color: '#2FBCD3', cursor: 'pointer'}}>Vous
                         avez déjà un compte My Alfred ?</a>
                     </Grid>
                   </Grid>

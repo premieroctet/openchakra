@@ -8,7 +8,7 @@ import NavBarShop from '../components/NavBar/NavBarShop/NavBarShop';
 import About from '../components/About/About';
 import Skills from '../components/Skills/Skills';
 import Typography from '@material-ui/core/Typography';
-import CardPreview from '../components/CardPreview/CardPreview';
+import CardPreview from '../components/Card/CardPreview/CardPreview';
 import CardAddService from '../components/CardAddService/CardAddService';
 import Layout from '../hoc/Layout/Layout';
 import AlfredConditions from '../components/AlfredConditions/AlfredConditions';

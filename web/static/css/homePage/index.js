@@ -167,8 +167,12 @@ export default theme => ({
   },
   mainContainerStyle:{
     justifyContent: 'center',
-    marginTop: '4%',
-    marginBottom: '4%'
+    marginTop: '6%',
+    marginBottom: '6%'
+  },
+  mainNewsLetterStyle:{
+    justifyContent: 'center',
+
   },
   ourDescriptionMainStyle:{
     padding: theme.padding.homePage.section.padding,
@@ -473,5 +477,102 @@ export default theme => ({
   },
   footerText:{
     fontFamily: theme.typography.text.fontFamily
+  },
+  navbarModal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    '& .MuiDialog-paper': {
+      margin: '0px !important',
+    },
+  },
+  navbarPaperWidth:{
+    width: 400,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
+  },
+  navbarWidthLoginContent:{
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  navbarMuidialogContent: {
+    padding: 0,
+  },
+  navbarPaper: {
+    backgroundColor: theme.palette.white.main,
+    borderRadius: 10,
+    margin: '0px !important',
+    padding: 0,
+    width: '100%',
+  },
+  navbarCloseButton:{
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+  },
+  mainContainerStyleFooter:{
+    justifyContent: 'center',
+    marginTop: '2%',
+    backgroundColor: 'rgba(228, 228, 228, 8)'
+  },
+  categoryCardRoot:{
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  categoryCardMedia:{
+    height: '20vh',
+    width: '10vw',
+    borderRadius: 50
+  },
+  categorySlideShowContainer:{
+    marginTop: '3%'
+  },
+  slideShowContainer:{
+    display: 'flex',
+    alignItems: 'center',
+    padding: '2%'
+  },
+  categoryCardBackground:{
+    width: '100%',
+    height: '100%',
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    borderRadius: 50
+  },
+  cardPreviewLarge: {
+    width: '90%',
+    height: '90%',
+  },
+  cardPreviewContainerAvatar:{
+    width: 100,
+    height:100,
+    position: 'relative',
+    backgroundColor: 'white',
+    top: 50,
+    borderRadius: '50%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    border: '2px solid rgba(112, 112, 112, 0.3)'
+  },
+  cardPreviewRatingBox:{
+    display: 'flex',
+    alignItems: 'center',
+    margin:0,
+    padding: 0
+  },
+  cardPreviewLabelService:{
+    fontFamily: theme.typography.textLabel.fontFamily,
+    fontWeight: theme.typography.textLabel.fontWeight,
+    fontSize: theme.typography.textLabel.fontSize,
+    margin: theme.typography.textLabel.margin
+  },
+  cardPreviewNameAlfred:{
+    fontFamily: theme.typography.textAlfredName.fontFamily,
+    fontWeight: theme.typography.textAlfredName.fontWeight,
+    fontSize: theme.typography.textAlfredName.fontSize,
+    margin: theme.typography.textAlfredName.margin
   }
 })

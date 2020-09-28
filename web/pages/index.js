@@ -119,12 +119,12 @@ class Home extends React.Component {
               <HowItWorks style={classes}/>
             </Grid>
           </Grid>
-          <Grid container className={classes.mainContainerStyle}>
+          <Grid container className={classes.mainNewsLetterStyle}>
             <Grid className={classes.generalWidthContainer}>
               <NewsLetter style={classes}/>
             </Grid>
           </Grid>
-          <Grid container style={{justifyContent: 'center', marginTop: '2%', backgroundColor: 'rgba(228, 228, 228, 8)'}}>
+          <Grid container className={classes.mainContainerStyleFooter}>
             <Grid className={classes.generalWidthFooter}>
               <Footer style={classes}/>
             </Grid>

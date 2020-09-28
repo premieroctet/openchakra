@@ -17,7 +17,7 @@ import 'react-dates/initialize';
 import {DateRangePicker} from 'react-dates';
 import moment from 'moment';
 import 'react-dates/lib/css/_datepicker.css';
-import CardPreview from '../components/CardPreview/CardPreview';
+import CardPreview from '../components/Card/CardPreview/CardPreview';
 import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
 import Profiteandlearn from '../components/home/profite&learn/profite&learn';
 import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';

@@ -25,7 +25,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Slide from '@material-ui/core/Slide';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
-
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
@@ -38,6 +37,13 @@ import {SEARCHBAR} from '../../../utils/i18n';
 const jwt = require('jsonwebtoken');
 
 var parse = require('url-parse');
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+
+
 
 class NavBar extends Component {
   constructor(props) {
@@ -152,12 +158,7 @@ class NavBar extends Component {
 
   handleOpenLogin = (e) => {
     this.handleMenuClose();
-    if (e.target.name === 'mobile') {
-      this.setState({setOpenMobileLogin: true, setOpenMobileRegister: false});
-    } else {
       this.setState({setOpenLogin: true, setOpenRegister: false});
-
-    }
   };
 
   handleCloseLogin = () => {
@@ -166,12 +167,7 @@ class NavBar extends Component {
 
   handleOpenRegister = (e) => {
     this.handleMenuClose();
-    if (e.target.name === 'mobile') {
-      this.setState({setOpenMobileRegister: true, setOpenMobileLogin: false});
-    } else {
       this.setState({setOpenRegister: true, setOpenLogin: false});
-
-    }
   };
 
   handleCloseRegister = () => {
@@ -201,7 +197,7 @@ class NavBar extends Component {
   };
 
   render() {
-    const {mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged, user} = this.state;
+    const {mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged, user, setOpenLogin, setOpenRegister} = this.state;
     const {style} = this.props;
 
     const modalLogin = () => {
@@ -213,6 +209,18 @@ class NavBar extends Component {
     const modalRegister = () => {
       return (
         <Register callLogin={this.handleOpenLogin} sendParentData={this.getData}/>
+      );
+    };
+
+    const DialogTitle = (props) => {
+      const {children, classes, onClose, ...other} = props;
+      return (
+        <MuiDialogTitle disableTypography {...other}>
+          <h6>{children}</h6>
+            <IconButton aria-label="close" className={style.navbarCloseButton} onClick={onClose}>
+              <CloseIcon color={'secondary'}/>
+            </IconButton>
+        </MuiDialogTitle>
       );
     };
 
@@ -245,9 +253,46 @@ class NavBar extends Component {
         <Grid className={style.navbarButtonContainer}>
           <Grid>
             <Button className={style.navBarlogIn} onClick={this.handleOpenLogin}>Connexion</Button>
+            <Dialog
+              scroll={'paper'}
+              aria-labelledby="scroll-dialog-title"
+              aria-describedby="scroll-dialog-description"
+              className={style.navbarModal}
+              open={setOpenLogin}
+              onClose={this.handleCloseLogin}
+              TransitionComponent={Transition}
+              classes={{paperWidthSm: style.navbarPaperWidth}}
+              disableBackdropClick={true}
+              disableEscapeKeyDown={true}
+            >
+              <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
+              <DialogContent classes={{root: style.navbarWidthLoginContent}}>
+                <div className={style.navbarPaper}>
+                  {modalLogin()}
+                </div>
+              </DialogContent>
+            </Dialog>
           </Grid>
           <Grid>
             <Button variant="outlined" classes={{root: style.navbarSignIn}} onClick={this.handleOpenRegister}>Inscription</Button>
+            <Dialog
+              scroll={'paper'}
+              aria-labelledby="scroll-dialog-title"
+              aria-describedby="scroll-dialog-description"
+              className={style.navbarModal}
+              open={setOpenRegister}
+              onClose={this.handleCloseRegister}
+              TransitionComponent={Transition}
+              disableBackdropClick={true}
+              disableEscapeKeyDown={true}
+            >
+              <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
+              <DialogContent dividers={false} className={style.navbarMuidialogContent}>
+                <div className={style.navbarPaper}>
+                  {modalRegister()}
+                </div>
+              </DialogContent>
+            </Dialog>
           </Grid>
         </Grid>
       </Grid>

@@ -30,8 +30,8 @@ class Category extends React.Component{
             <Button variant={'outlined'} classes={{root : style.categoryButton}}>{CATEGORY.button}</Button>
           </Grid>
         </Grid>
-        <Grid>
-          <SlideShow/>
+        <Grid className={style.categorySlideShowContainer}>
+          <SlideShow style={style}/>
         </Grid>
       </Grid>
     );

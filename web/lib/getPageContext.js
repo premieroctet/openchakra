@@ -63,6 +63,18 @@ const theme = createMuiTheme({
       fontSize: '15px',
       margin: 0
     },
+    textAlfredName:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: '800',
+      fontSize: '12px',
+      margin: 0
+    },
+    textLabel:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: '500',
+      fontSize: '10px',
+      margin: 0
+    },
     button:{
 
     },
@@ -99,6 +111,9 @@ const theme = createMuiTheme({
     },
     textField:{
       borderRadius: 39
+    },
+    categoryCard:{
+      borderRadius: 50
     }
   },
   padding:{

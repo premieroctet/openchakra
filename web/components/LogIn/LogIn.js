@@ -58,8 +58,8 @@ class LogIn extends React.Component {
   };
 
   render() {
-    const {classes} = this.props;
-    const {errors} = this.state;
+    const {classes, callRegister} = this.props;
+    const {errors, username, password} = this.state;
     return (
       <Grid className={classes.fullContainer}>
         <Grid style={{width: '100%'}}>
@@ -110,7 +110,7 @@ class LogIn extends React.Component {
                         style={{width: '100%'}}
                         type="email"
                         name="username"
-                        value={this.state.username}
+                        value={username}
                         onChange={this.onChange}
                         error={errors.username}
                       />
@@ -132,7 +132,7 @@ class LogIn extends React.Component {
                         style={{width: '100%'}}
                         type="password"
                         name="password"
-                        value={this.state.password}
+                        value={password}
                         onChange={this.onChange}
                         error={errors.password}
                       />
@@ -150,7 +150,7 @@ class LogIn extends React.Component {
             <Grid item style={{display: 'flex', flexDirection: 'column', marginBottom: '10%'}}>
               <Link href={'/forgotPassword'}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Mot
                 de passe oublié ?</a></Link>
-              <a color="primary" onClick={this.props.callRegister}
+              <a color="primary" onClick={callRegister}
                  style={{textDecoration: 'none', color: '#2FBCD3', cursor: 'pointer'}}>Pas encore inscrit ?
                 Inscrivez-vous !</a>
             </Grid>

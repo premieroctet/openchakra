@@ -30,8 +30,8 @@ class OurAlfred extends React.Component{
             <Button classes={{root: style.ourAlfredButton}}>Tout Découvrir</Button>
           </Grid>
         </Grid>
-        <Grid>
-          <SlideShow/>
+        <Grid className={style.categorySlideShowContainer}>
+          <SlideShow style={style} type={'alfred'}/>
         </Grid>
       </Grid>
 
