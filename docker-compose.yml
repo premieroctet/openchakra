@@ -7,6 +7,6 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=pierre
+      - POSTGRES_USER=openchakra
       - POSTGRES_PASSWORD=chakra
       - POSTGRES_DB=openchakra
