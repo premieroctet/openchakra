@@ -10,13 +10,13 @@ class SlideShow extends React.Component{
   constructor(props) {
     super(props);
     this.state={
-      autoplay: false
+      autoplay: false,
     }
   }
 
   render(){
     const{autoplay} = this.state;
-    const{style, type} = this.props;
+    const{style, type, category, alfred } = this.props;
 
     return(
       <Grid>
@@ -24,21 +24,21 @@ class SlideShow extends React.Component{
           <Grid container className={style.slideShowContainer}>
             <Grid container>
               <Grid className={style.slideShowSectionContainer}>
-                {type === 'alfred' ? <CardPreview style={style}/> : <CategoryCard style={style}/>}
+                {type === 'alfred' ? <CardPreview style={style} alfred={alfred} start={0} end={3}/> : <CategoryCard style={style} category={category} start={0} end={8}/>}
               </Grid>
             </Grid>
           </Grid>
           <Grid container className={style.slideShowContainer}>
             <Grid container>
               <Grid className={style.slideShowSectionContainer}>
-                {type === 'alfred' ? <CardPreview style={style}/> : <CategoryCard style={style}/>}
+                {type === 'alfred' ? <CardPreview style={style} alfred={alfred} start={3} end={6}/> : <CategoryCard style={style} category={category} start={8} end={16}/>}
               </Grid>
             </Grid>
           </Grid>
           <Grid container className={style.slideShowContainer}>
             <Grid container>
               <Grid className={style.slideShowSectionContainer}>
-                {type === 'alfred' ? <CardPreview style={style}/> : <CategoryCard style={style}/>}
+                {type === 'alfred' ? <CardPreview style={style} alfred={alfred} start={0} end={3}/> : <CategoryCard style={style} category={category} start={16} end={22}/>}
               </Grid>
             </Grid>
           </Grid>

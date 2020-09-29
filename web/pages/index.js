@@ -45,7 +45,10 @@ import NewsLetter from "../components/HomePage/NewsLetter/NewsLetter";
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      category:{},
+      alfred:{}
+    };
   }
 
   componentDidMount() {
@@ -55,6 +58,17 @@ class Home extends React.Component {
     if (token) {
       Router.push('/search');
     }
+    axios.get('/myAlfred/api/category/all')
+      .then(res => {
+        let category = res.data;
+        this.setState({category: category});
+      }).catch();
+
+    axios.get('/myAlfred/api/serviceUser/home')
+      .then(response => {
+        let alfred = response.data;
+        this.setState({alfred: alfred});
+      });
   }
 
   logout() {
@@ -66,6 +80,7 @@ class Home extends React.Component {
 
   render() {
     const { classes } = this.props;
+    const {category, alfred} = this.state;
     return (
       <React.Fragment>
         <Helmet>
@@ -101,7 +116,7 @@ class Home extends React.Component {
           </Grid>
           <Grid container className={classes.mainContainerStyle}>
             <Grid className={classes.generalWidthContainer}>
-              <Category style={classes}/>
+              <Category style={classes} category={category}/>
             </Grid>
           </Grid>
           <Grid container className={classes.becomeAlfredComponent}>
@@ -111,7 +126,7 @@ class Home extends React.Component {
           </Grid>
           <Grid container className={classes.mainContainerStyle}>
             <Grid className={classes.generalWidthContainer}>
-              <OurAlfred style={classes}/>
+              <OurAlfred style={classes} alfred={alfred}/>
             </Grid>
           </Grid>
           <Grid container className={classes.howItWorksComponent}>

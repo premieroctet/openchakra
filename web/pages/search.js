@@ -39,7 +39,7 @@ import Section18 from '../components/home/section18';
 import Section19 from '../components/home/section19';
 import Section21 from '../components/home/section21';
 import Section22 from '../components/home/section22';
-import styles from './search/searchStyle';
+import styles from '../static/css/searchPage/searchStyle';
 import cookie from 'react-cookies';
 import NavBar from "../hoc/Layout/NavBar/NavBar";
 import InfoBar from "../components/InfoBar/InfoBar";

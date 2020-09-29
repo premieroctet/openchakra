@@ -55,11 +55,7 @@ class CardPreview extends React.Component {
       })
       .catch(err => console.error(err));*/
 
-    axios.get('/myAlfred/api/serviceUser/home')
-      .then(response => {
-        let service = response.data;
-        this.setState({service: service});
-      });
+
   }
 
   handleClickOpen(id) {
@@ -81,7 +77,7 @@ class CardPreview extends React.Component {
   }
 
   render() {
-    const {style, userState, isOwner, gps, needAvatar, isAdmin} = this.props;
+    const {style, userState, isOwner, gps, needAvatar, isAdmin, alfred, start, end} = this.props;
     const {cpData, service} = this.state;
 
     var distance = gps ? computeDistanceKm(gps, cpData.gps) : null;
@@ -91,20 +87,20 @@ class CardPreview extends React.Component {
 
     return (
       <Grid container>
-        {service.slice(0, 3).map(e => {
+        {alfred ? Object.keys(alfred).slice(start, end).map(e => {
           return(
             <Grid item xl={4} lg={4} md={4} className={style.cardPreviewMainStyle}>
               <Grid className={style.cardPreviewContainerAvatar}>
-                <Avatar alt="Remy Sharp" src={e.user.picture} className={style.cardPreviewLarge} />
+                <Avatar alt="Remy Sharp" src={alfred[e].user.picture} className={style.cardPreviewLarge} />
               </Grid>
               <Grid className={style.cardPreviewBoxContentContainer}>
                 <Grid className={style.cardPreviewBoxContentPosition}>
                   <Grid className={style.cardPreviewContentIdentity}>
                     <Grid>
-                      <p className={style.cardPreviewNameAlfred}>{e.user.firstname}</p>
+                      <p className={style.cardPreviewNameAlfred}>{alfred[e].user.firstname}</p>
                     </Grid>
                     <Grid>
-                      <p className={style.cardPreviewLabelService}>{e.service.label}</p>
+                      <p className={style.cardPreviewLabelService}>{alfred[e].service.label}</p>
                     </Grid>
                   </Grid>
                   <Grid className={style.cardPreviewServiceContent}>
@@ -112,14 +108,14 @@ class CardPreview extends React.Component {
                       <p className={style.cardPreviewLabelService}>Lieux</p>
                     </Grid>
                     <Grid>
-                      <Box component="fieldset" mb={e.user.score} borderColor="transparent" classes={{root: style.cardPreviewRatingBox}}>
+                      <Box component="fieldset" mb={alfred[e].user.score} borderColor="transparent" classes={{root: style.cardPreviewRatingBox}}>
                         <Rating
                           name="simple-controlled"
-                          value={e.user.score}
+                          value={alfred[e].user.score}
                           max={1}
                           readOnly
                         />
-                        <p className={style.cardPreviewLabelService}>({e.user.score})</p>
+                        <p className={style.cardPreviewLabelService}>({alfred[e].user.score})</p>
                       </Box>
                     </Grid>
                   </Grid>
@@ -127,7 +123,7 @@ class CardPreview extends React.Component {
               </Grid>
             </Grid>
           )
-        })}
+        }) : null}
       </Grid>
 
     );

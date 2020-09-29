@@ -9,7 +9,7 @@ class Category extends React.Component{
     super(props);
   }
   render(){
-    const {style} = this.props;
+    const {style, category} = this.props;
     return(
       <Grid className={style.categoryMainContainer}>
         <Grid className={style.categoryContainer}>
@@ -31,7 +31,7 @@ class Category extends React.Component{
           </Grid>
         </Grid>
         <Grid className={style.categorySlideShowContainer}>
-          <SlideShow style={style}/>
+          <SlideShow style={style} category={category}/>
         </Grid>
       </Grid>
     );

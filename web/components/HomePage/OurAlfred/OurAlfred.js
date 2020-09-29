@@ -9,7 +9,7 @@ class OurAlfred extends React.Component{
     super(props);
   }
   render() {
-    const{style} = this.props;
+    const{style, alfred} = this.props;
     return(
       <Grid className={style.ourAlfredMainStyle}>
         <Grid className={style.ourAlfredMainContainer}>
@@ -31,7 +31,7 @@ class OurAlfred extends React.Component{
           </Grid>
         </Grid>
         <Grid className={style.categorySlideShowContainer}>
-          <SlideShow style={style} type={'alfred'}/>
+          <SlideShow style={style} type={'alfred'} alfred={alfred}/>
         </Grid>
       </Grid>
 
