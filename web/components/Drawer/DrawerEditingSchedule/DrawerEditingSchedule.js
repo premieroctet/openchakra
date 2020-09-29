@@ -28,11 +28,16 @@ class DrawerEditingSchedule extends React.Component {
       orgTimelapses: Array.from({length:24}, () => false),
       bookings: {},
       errors: {},
+      dirty: false,
     };
-    this.getEventsSelected = this.getEventsSelected.bind(this);
+    this.onDateSelectionChanged = this.onDateSelectionChanged.bind(this);
   }
 
-  getEventsSelected = (eventsSelected) => {
+  isDirty = () => {
+    return this.state.dirty
+  }
+
+  onDateSelectionChanged = (eventsSelected) => {
     this.setState({eventsSelected: new Set(eventsSelected)})
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.post('/myAlfred/api/availability/dates', { dates: Array(...eventsSelected) })
@@ -71,7 +76,7 @@ class DrawerEditingSchedule extends React.Component {
   };
 
   toggleAvailability = () => {
-    this.setState({available: !this.state.available});
+    this.setState({available: !this.state.available, dirty: true});
   };
 
   // Enabled => Disabled ( => Undefined )
@@ -81,7 +86,7 @@ class DrawerEditingSchedule extends React.Component {
     const hasUndefined = this.state.orgTimelapses[slotIndex]==null
     const next = prev==true ? false : prev==null ? true : hasUndefined ? null : true
     timelapses[slotIndex]=next
-    this.setState({timelapses: timelapses});
+    this.setState({timelapses: timelapses, dirty: true});
   };
 
   save = () => {
@@ -92,8 +97,7 @@ class DrawerEditingSchedule extends React.Component {
     })
     .then(res => {
       this.props.onAvailabilityChanged ? this.props.onAvailabilityChanged() : () => {};
-      this.setState({eventsSelected: new Set()}, () => this.props.removeEventsSelected());
-
+      this.setState({eventsSelected: new Set()}, () => this.props.onDateSelectionCleared());
     });
   };
 

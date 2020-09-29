@@ -81,8 +81,6 @@ class scheduleTest extends React.Component {
           title={I18N.SCHEDULE_TITLE}
           SUBTITLE={I18N.SCHEDULE_SUBTITLE}
           availabilities={availabilities}
-          onAvailabilityChanged={this.loadAvailabilities}
-          removeEventsSelected={this.removeEventsSelected}
           selectable={true}
         />
       </Grid>

@@ -49,7 +49,7 @@ class Schedule extends React.Component {
     )
   };
 
-  removeEventsSelected = () => {
+  onDateSelectionCleared = () => {
     this.setState({eventsSelected: new Set()})
   };
 

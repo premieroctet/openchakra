@@ -26,12 +26,19 @@ class DrawerSettingSchedule extends React.Component{
       eventsSelected: new Set(),
       availabilities: [],
       expanded: [],
+      dirty: false,
       errors:{}
     }
+    this.onDateSelectionChanged = this.onDateSelectionChanged.bind(this)
   }
 
   componentDidMount = () => {
     this.loadAvailabilities()
+  }
+
+  isDirty = () => {
+    const dirty = this.state.dirty
+    return dirty
   }
 
   loadAvailabilities = () => {
@@ -48,13 +55,14 @@ class DrawerSettingSchedule extends React.Component{
           }
         });
         const expanded = Array.from({length:availabilities.length}, () => false)
-        this.setState({availabilities: availabilities, expanded: expanded})
+        this.setState({availabilities: availabilities, expanded: expanded, dirty: false})
       })
       .catch(err => console.error(err))
   };
 
   toggleRecurrDay = (dayIndex, availIdx) => {
     this.state.availabilities[availIdx].recurrDays.has(dayIndex) ? this.removeRecurrDay(dayIndex, availIdx) : this.addRecurrDay(dayIndex, availIdx);
+    this.setState({dirty: true})
   };
 
   addRecurrDay = (day, availIdx) => {
@@ -69,7 +77,7 @@ class DrawerSettingSchedule extends React.Component{
     this.setState({availabilities: availabilities});
   };
 
-  getEventsSelected = (eventsSelected) => {
+  onDateSelectionChanged = (eventsSelected) => {
     this.setState({eventsSelected: new Set(eventsSelected)});
   };
 
@@ -86,7 +94,7 @@ class DrawerSettingSchedule extends React.Component{
       availabilities.push(newAvailability);
       const expanded = Array.from({length:this.state.expanded.length}, () => false)
       expanded.push(true)
-      this.setState({availabilities: availabilities, expanded: expanded})
+      this.setState({availabilities: availabilities, expanded: expanded, dirty: true})
     };
 
     handleDateStart = index => (date) =>{
@@ -94,6 +102,7 @@ class DrawerSettingSchedule extends React.Component{
       availabilities[index].startDate=date;
       this.setState({
         availabilities: availabilities,
+        dirty: true,
       });
     };
 
@@ -102,15 +111,18 @@ class DrawerSettingSchedule extends React.Component{
       availabilities[index].endDate=date;
       this.setState({
         availabilities: availabilities,
+        dirty: true,
       });
     };
 
-    removeAvailabilities = (index) =>{
+    removeAvailability = (index) =>{
       const availability=this.state.availabilities[index];
       if (availability._id) {
         axios.delete(`/myAlfred/api/availability/${availability._id}`)
+          .then( () => {
+            this.props.onAvailabilityChanged ? this.props.onAvailabilityChanged() : () => {}
+          })
       }
-      this.props.onAvailabilityChanged ? this.props.onAvailabilityChanged() : () => {};
       this.loadAvailabilities()
     };
 
@@ -124,7 +136,7 @@ class DrawerSettingSchedule extends React.Component{
           tlSet.add(slotIndex);
         }
         availabilities[availIdx].timelapses = [...tlSet]
-        this.setState({availabilities: availabilities });
+        this.setState({availabilities: availabilities, dirty: true });
     };
 
 
@@ -322,7 +334,7 @@ class DrawerSettingSchedule extends React.Component{
                                   <Grid style={{marginTop: 20}}>
                                       <Grid style={{display:'flex', flexDirection:'row-reverse'}}>
                                           <Button disabled={!this.saveEnabled(availIdx)} variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={ ev => this.save(availIdx, ev) }>Enregistrer</Button>
-                                          <Button color={'secondary'} style={{marginRight: 10}} onClick={()=>this.removeAvailabilities(availIdx)}>Supprimer</Button>
+                                          <Button color={'secondary'} style={{marginRight: 10}} onClick={()=>this.removeAvailability(availIdx)}>Supprimer</Button>
                                       </Grid>
                                   </Grid>
                               </Grid>

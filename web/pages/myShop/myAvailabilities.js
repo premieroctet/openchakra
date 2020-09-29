@@ -142,7 +142,7 @@ class myAvailabilities extends React.Component {
     };
 
   sendToDrawer = (eventsSelected) => {
-    this.child.current.getEventsSelected(eventsSelected);
+    this.child.current.onDateSelectionChanged(eventsSelected);
   };
 
   onAvailabilityChanged = () => {
@@ -157,8 +157,8 @@ class myAvailabilities extends React.Component {
     });
   }
 
-  removeEventsSelected = () => {
-    this.schedule.current.removeEventsSelected()
+  onDateSelectionCleared = () => {
+    this.schedule.current.onDateSelectionCleared()
   };
 
   render() {
@@ -188,7 +188,7 @@ class myAvailabilities extends React.Component {
                 <DrawerSchedule
                   ref={this.child}
                   onAvailabilityChanged={this.onAvailabilityChanged}
-                  removeEventsSelected={this.removeEventsSelected}
+                  onDateSelectionCleared={this.onDateSelectionCleared}
                   bookings={bookings}
                   style={classes}
                 />
