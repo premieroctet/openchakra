@@ -38,6 +38,7 @@ const CustomMenuButton: React.FC<
 
 const ExportMenuItem = dynamic(() => import('./ExportMenuItem'), { ssr: false })
 const ImportMenuItem = dynamic(() => import('./ImportMenuItem'), { ssr: false })
+const SaveMenuItem = dynamic(() => import('./SaveMenuItem'), { ssr: false })
 
 const HeaderMenu = () => {
   return (
@@ -53,6 +54,7 @@ const HeaderMenu = () => {
       </CustomMenuButton>
       <LightMode>
         <MenuList zIndex={100}>
+          <SaveMenuItem />
           <ExportMenuItem />
           <ImportMenuItem />
 

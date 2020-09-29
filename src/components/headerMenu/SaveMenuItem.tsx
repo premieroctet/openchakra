@@ -5,15 +5,15 @@ import { FaSave } from 'react-icons/fa'
 import { saveAsJSON } from '~utils/import'
 import { getComponents } from '~core/selectors/components'
 
-const ExportMenuItem = () => {
+const SaveMenuItem = () => {
   const components = useSelector(getComponents)
 
   return (
     <MenuItem onClick={() => saveAsJSON(components)}>
       <Box mr={2} as={FaSave} />
-      Export components
+      Save components
     </MenuItem>
   )
 }
 
-export default ExportMenuItem
+export default SaveMenuItem
