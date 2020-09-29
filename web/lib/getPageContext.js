@@ -28,7 +28,10 @@ const theme = createMuiTheme({
     },
     lightBlack:{
       main: 'rgba(38,38,38,6)'
-    }
+    },
+    placeHolder:{
+      main: 'rgba(0, 0, 0, 0.87)'
+    },
   },
   typography: {
     fontSize: 14,
@@ -55,7 +58,6 @@ const theme = createMuiTheme({
       fontWeight: 'bold',
       fontSize: '18px',
       margin: 0
-
     },
     text:{
       fontFamily: 'Futura, sans-serif',
@@ -93,7 +95,13 @@ const theme = createMuiTheme({
       fontFamily: 'Helvetica',
       lineHeight: '23px',
       fontSize: 14
-    }
+    },
+    placeHolder:{
+      fontFamily: 'Futura, sans-serif',
+      fontSize: '1rem',
+      fontWeight: '400',
+      lineHeight: '1.1876em',
+    },
   },
   border:{
     button:{

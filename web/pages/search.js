@@ -20,7 +20,6 @@ import 'react-dates/lib/css/_datepicker.css';
 import CardPreview from '../components/Card/CardPreview/CardPreview';
 import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
 import Profiteandlearn from '../components/home/profite&learn/profite&learn';
-import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
 import NearbyYou from '../components/home/NearbyYou/NearbyYou';
 import FeelingGood from '../components/home/feelingGood/feelingGood';
 import Wellbeing from '../components/home/Wellbeing/Wellbeing';
@@ -410,7 +409,6 @@ class SearchPage extends React.Component {
 
     return (
       <Grid>
-        <Layout searchCallback={this.searchCallback}>
           <Grid container className={classes.bigContainer}>
             <Grid container className={classes.respfilter}>
               <Grid item xs={12} style={{height: 50}}>
@@ -646,35 +644,6 @@ class SearchPage extends React.Component {
             </Grid>
             {resultMessage}
           </Grid>
-          {this.props.search || serviceUsers.length > 0 ? null :
-            <>
-              <SerenityNeed gps={gps}/>
-              <BecomeAlfred/>
-              <Section3 gps={gps}/>
-              <NearbyYou gps={gps}/>
-              <Profiteandlearn gps={gps}/>
-              <Section6 gps={gps}/>
-              <Wellbeing gps={gps}/>
-              <Section8 gps={gps}/>
-              <FeelingGood gps={gps}/>
-              <Section10 gps={gps}/>
-              <Proposeservice/>
-              <Section12 gps={gps}/>
-              <NearbyYou gps={gps}/>
-              <Passions/>
-              <Section15 gps={gps}/>
-              <Section16 gps={gps}/>
-              <Facons/>
-              <Section18 gps={gps}/>
-              <Section19 gps={gps}/>
-              <Otter/>
-              <Section21 gps={gps}/>
-              <Section22 gps={gps}/>
-              <Assureback/>
-            </>
-          }
-        </Layout>
-        <Footer/>
       </Grid>
     );
   }

@@ -90,16 +90,16 @@ class CardPreview extends React.Component {
     const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {};
 
     return (
-      <Grid container spacing={4}>
+      <Grid container>
         {service.slice(0, 3).map(e => {
           return(
-            <Grid item xl={4} lg={4} md={4} style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
+            <Grid item xl={4} lg={4} md={4} className={style.cardPreviewMainStyle}>
               <Grid className={style.cardPreviewContainerAvatar}>
                 <Avatar alt="Remy Sharp" src={e.user.picture} className={style.cardPreviewLarge} />
               </Grid>
-              <Grid style={{border: '2px solid rgba(112, 112, 112, 0.3)', width: '100%', borderRadius: 22, height: '15vh'}}>
-                <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: 'relative', top: '55px'}}>
-                  <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'column', width: '90%'}}>
+              <Grid className={style.cardPreviewBoxContentContainer}>
+                <Grid className={style.cardPreviewBoxContentPosition}>
+                  <Grid className={style.cardPreviewContentIdentity}>
                     <Grid>
                       <p className={style.cardPreviewNameAlfred}>{e.user.firstname}</p>
                     </Grid>
@@ -107,7 +107,7 @@ class CardPreview extends React.Component {
                       <p className={style.cardPreviewLabelService}>{e.service.label}</p>
                     </Grid>
                   </Grid>
-                  <Grid style={{display: 'flex', flexDirection: 'row', width: '90%', justifyContent: 'space-evenly', alignItems: 'center'}}>
+                  <Grid className={style.cardPreviewServiceContent}>
                     <Grid>
                       <p className={style.cardPreviewLabelService}>Lieux</p>
                     </Grid>

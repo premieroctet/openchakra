@@ -31,8 +31,14 @@ import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import DirectionsIcon from '@material-ui/icons/Directions';
+import AlgoliaPlaces from 'algolia-places-react';
+
 
 import {SEARCHBAR} from '../../../utils/i18n';
+import TextField from "@material-ui/core/TextField";
+import isEmpty from "../../../server/validation/is-empty";
+import moment from "moment";
+import DatePicker from "react-datepicker";
 
 const jwt = require('jsonwebtoken');
 
@@ -65,6 +71,11 @@ class NavBar extends Component {
       google_id: props.google_id,
       facebook_id: props.facebook_id,
       activeStep: 0,
+      keyword: null,
+      errors: {},
+      city: null,
+      gps: null,
+      dateSelected: null,
     };
 
   }
@@ -196,8 +207,52 @@ class NavBar extends Component {
     return false;
   };
 
+  onChange = e => {
+    let {name, value} = e.target;
+    this.setState({[name]: value});
+  };
+
+  search = () => {
+    let query = {search: 1};
+    if (this.state.keyword) {
+      query['keyword'] = this.state.keyword;
+    }
+
+    if (this.state.city) {
+      query['city'] = this.state.city;
+    }
+
+    if (this.state.gps) {
+      query['gps'] = JSON.stringify(this.state.gps);
+    }
+
+    if (this.state.dateSelected) {
+      query['date'] = moment(this.state.dateSelected).valueOf();
+    }
+    Router.push({
+      pathname: '/search',
+      query: query,
+    });
+  };
+
+  onChangeCity({suggestion}) {
+    this.setState({gps: suggestion.latlng, city: suggestion.name}, () => this.checkGPS());
+  };
+
+  checkGPS = () => {
+    let errors = {};
+    if (this.state.city && !this.state.gps) {
+      errors['city'] = 'Sélectionnez une ville dans la liste';
+    }
+    this.setState({errors: errors});
+  };
+
+  onSuggestions = ({query}) => {
+    this.setState({city: query}, () => this.checkGPS());
+  };
+
   render() {
-    const {mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged, user, setOpenLogin, setOpenRegister} = this.state;
+    const {mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged, user, setOpenLogin, setOpenRegister, keyword, errors, dateSelected} = this.state;
     const {style} = this.props;
 
     const modalLogin = () => {
@@ -232,20 +287,49 @@ class NavBar extends Component {
         <Grid className={style.navbarSearchContainer}>
           <Paper component="form" classes={{root: style.navbarSearch}}>
             <InputBase
-              classes={{root: style.input}}
+              classes={{root: style.navbarRoot, input: style.navbarInput}}
               placeholder={SEARCHBAR.what}
+              value={keyword}
+              onChange={this.onChange}
+              name={'keyword'}
             />
             <Divider className={style.divider} orientation="vertical" />
-            <InputBase
-              classes={{root: style.input}}
-              placeholder={SEARCHBAR.where}
-            />
+            <Grid className={style.navbarAlgoliaContent}>
+              <AlgoliaPlaces
+                placeholder={SEARCHBAR.where}
+                className={style.navbarAlgoliaPlace}
+                options={{
+                  appId: 'plKATRG826CP',
+                  apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                  language: 'fr',
+                  countries: ['fr'],
+                  type: 'city',
+                }}
+                onChange={(suggestion) => this.onChangeCity(suggestion)}
+                onClear={() => this.setState({city: '', gps: null}, () => this.checkGPS())}
+                onSuggestions={this.onSuggestions}
+                />
+              <em style={{color: 'red'}}>{errors['city']}</em>
+            </Grid>
             <Divider className={style.divider} orientation="vertical" />
-            <InputBase
-              classes={{root: style.input}}
-              placeholder={SEARCHBAR.when}
-            />
-            <IconButton type="submit" classes={{root: style.iconButton}} aria-label="search">
+            <Grid style={{flex: 1, marginLeft: 20}}>
+              <DatePicker
+                selected={dateSelected}
+                onChange={(date) => {
+                  this.setState({dateSelected: date});
+                  if (date === null) {
+                    this.setState({dateSelected: ''});
+                  }
+                }}
+                locale='fr'
+                showMonthDropdown
+                dateFormat="dd/MM/yyyy"
+                placeholderText={SEARCHBAR.when}
+                minDate={new Date()}
+                className={style.inputDatePicker}
+              />
+            </Grid>
+            <IconButton type="submit" classes={{root: style.iconButton}} aria-label="search" disabled={!isEmpty(errors)} onClick={() => this.search()}>
               <SearchIcon />
             </IconButton>
           </Paper>

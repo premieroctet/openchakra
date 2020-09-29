@@ -23,21 +23,21 @@ class SlideShow extends React.Component{
         <Slide easing="ease" autoplay={autoplay}>
           <Grid container className={style.slideShowContainer}>
             <Grid container>
-              <Grid style={{width: '100%'}}>
+              <Grid className={style.slideShowSectionContainer}>
                 {type === 'alfred' ? <CardPreview style={style}/> : <CategoryCard style={style}/>}
               </Grid>
             </Grid>
           </Grid>
           <Grid container className={style.slideShowContainer}>
             <Grid container>
-              <Grid style={{width: '100%'}}>
+              <Grid className={style.slideShowSectionContainer}>
                 {type === 'alfred' ? <CardPreview style={style}/> : <CategoryCard style={style}/>}
               </Grid>
             </Grid>
           </Grid>
           <Grid container className={style.slideShowContainer}>
             <Grid container>
-              <Grid style={{width: '100%'}}>
+              <Grid className={style.slideShowSectionContainer}>
                 {type === 'alfred' ? <CardPreview style={style}/> : <CategoryCard style={style}/>}
               </Grid>
             </Grid>

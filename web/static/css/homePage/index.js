@@ -56,10 +56,20 @@ export default theme => ({
     width: '100%',
     borderRadius: theme.border.button.borderRadius,
   },
-  input: {
+  navbarRoot: {
     marginLeft: 20,
     flex: 1,
-
+    fontFamily: theme.typography.text.fontFamily,
+    color: theme.palette.placeHolder.main,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
+  },
+  navbarInput:{
+    opacity: 'inherit',
+    '& .MuiInputBase-input::placeholder':{
+      opacity: 'inherit',
+    }
   },
   iconButton: {
     padding: 12,
@@ -574,5 +584,65 @@ export default theme => ({
     fontWeight: theme.typography.textAlfredName.fontWeight,
     fontSize: theme.typography.textAlfredName.fontSize,
     margin: theme.typography.textAlfredName.margin
+  },
+  slideShowSectionContainer:{
+    width: '100%'
+  },
+  cardPreviewMainStyle:{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column'
+  },
+  cardPreviewBoxContentContainer:{
+    border: '2px solid rgba(112, 112, 112, 0.3)',
+    width: '80%',
+    borderRadius: 22,
+    height: '15vh'
+  },
+  cardPreviewBoxContentPosition:{
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+    top: '55px'
+  },
+  cardPreviewContentIdentity:{
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
+    width: '90%'
+  },
+  cardPreviewServiceContent:{
+    display: 'flex',
+    flexDirection: 'row',
+    width: '90%',
+    justifyContent: 'space-evenly',
+    alignItems: 'center'
+  },
+  navbarAlgoliaPlace:{
+    border: 'inherit',
+    fontFamily: theme.typography.text.fontFamily,
+    color: theme.palette.placeHolder.main,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
+    padding: 0,
+  },
+  navbarAlgoliaContent:{
+    flex:1,
+    marginLeft: 20,
+    '& .ap-input-icon':{
+      display: 'none',
+    }
+  },
+  inputDatePicker:{
+    border: 'inherit',
+    fontFamily: theme.typography.text.fontFamily,
+    color: theme.palette.placeHolder.main,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
   }
 })
