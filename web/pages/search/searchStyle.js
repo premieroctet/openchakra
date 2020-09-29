@@ -82,4 +82,48 @@ export default theme => ({
       marginBottom: 20,
     },
   },
+  navbarSignIn:{
+    borderRadius: theme.border.button.borderRadius,
+    textTransform: theme.typography.textTransform,
+    fontWeight: theme.typography.fontWeight,
+    border: '3px solid rgba(255, 255, 255, 1)',
+    color: theme.palette.white.main,
+  },
+  navBarlogIn:{
+    textTransform: theme.typography.textTransform,
+    borderRadius: theme.border.button.borderRadius,
+    color: theme.palette.white.main,
+    fontWeight: theme.typography.fontWeight
+  },
+  navbarMainSytle:{
+    alignItems: 'center',
+    width: '80%',
+    display: 'flex',
+  },
+  navbarButtonContainer:{
+    display: 'flex',
+    flexDirection: 'row-reverse',
+    width: '25%'
+  },
+  navbarSearch: {
+    padding: '1%',
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    borderRadius: theme.border.button.borderRadius,
+  },
+  navbarRoot: {
+    marginLeft: 20,
+    flex: 1,
+    fontFamily: theme.typography.text.fontFamily,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
+  },
+  navbarInput:{
+    '&::placeholder':{
+      opacity: '0.55',
+      color: theme.palette.placeHolder.main,
+    }
+  },
 })

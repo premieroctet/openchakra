@@ -104,8 +104,8 @@ class Home extends React.Component {
               <Category style={classes}/>
             </Grid>
           </Grid>
-          <Grid container className={classes.becomeAlfredComponent} style={{transform: 'rotate(-1deg)'}}>
-            <Grid className={classes.generalWidthContainer}  style={{transform: 'rotate(1deg)'}}>
+          <Grid container className={classes.becomeAlfredComponent}>
+            <Grid className={classes.generalWidthContainer} style={{transform: 'rotate(1deg)'}}>
               <BecomeAlfred style={classes}/>
             </Grid>
           </Grid>

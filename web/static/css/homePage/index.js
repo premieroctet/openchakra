@@ -60,15 +60,14 @@ export default theme => ({
     marginLeft: 20,
     flex: 1,
     fontFamily: theme.typography.text.fontFamily,
-    color: theme.palette.placeHolder.main,
     fontSize: theme.typography.placeHolder.fontSize,
     fontWeight:  theme.typography.placeHolder.fontWeight,
     lineHeight:  theme.typography.placeHolder.lineHeight,
   },
   navbarInput:{
-    opacity: 'inherit',
-    '& .MuiInputBase-input::placeholder':{
-      opacity: 'inherit',
+    '&::placeholder':{
+      opacity: '0.55',
+      color: theme.palette.placeHolder.main,
     }
   },
   iconButton: {
@@ -282,7 +281,8 @@ export default theme => ({
   becomeAlfredComponent:{
     justifyContent: 'center',
     marginTop: '2%',
-    backgroundColor: '#F8CF61'
+    backgroundColor: '#F8CF61',
+    transform: 'rotate(-1deg)'
   },
   ourAlfredMainStyle:{
     display: 'flex',
@@ -644,5 +644,13 @@ export default theme => ({
     fontSize: theme.typography.placeHolder.fontSize,
     fontWeight:  theme.typography.placeHolder.fontWeight,
     lineHeight:  theme.typography.placeHolder.lineHeight,
+  },
+  navbarAppBar:{
+    backgroundColor:'transparent',
+    boxShadow: 'inherit'
+  },
+  navbarDatePickerContainer:{
+    flex: 1,
+    marginLeft: 20
   }
 })

@@ -41,6 +41,8 @@ import Section21 from '../components/home/section21';
 import Section22 from '../components/home/section22';
 import styles from './search/searchStyle';
 import cookie from 'react-cookies';
+import NavBar from "../hoc/Layout/NavBar/NavBar";
+import InfoBar from "../components/InfoBar/InfoBar";
 
 moment.locale('fr');
 
@@ -409,6 +411,12 @@ class SearchPage extends React.Component {
 
     return (
       <Grid>
+        <Grid>
+          <InfoBar style={classes}/>
+        </Grid>
+        <Grid>
+          <NavBar style={classes}/>
+        </Grid>
           <Grid container className={classes.bigContainer}>
             <Grid container className={classes.respfilter}>
               <Grid item xs={12} style={{height: 50}}>

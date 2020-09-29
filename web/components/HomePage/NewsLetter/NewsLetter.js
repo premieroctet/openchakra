@@ -24,7 +24,7 @@ class NewsLetter extends React.Component{
             </Grid>
           </Grid>
           <Grid className={style.newsLetterRightContainer}>
-            <Grid className={style.newsLetterContainer}>
+            {/****TODO when googleAuth avail <Grid className={style.newsLetterContainer}>
               <Button
                 variant="outlined"
                 classes={{root : style.newsLetterButtonGoogle}}
@@ -35,7 +35,7 @@ class NewsLetter extends React.Component{
             </Grid>
             <Grid >
               <p className={style.newsLetterText}>{NEWS_LETTER.where}</p>
-            </Grid>
+            </Grid>***/}
             <Grid className={style.newsLetterContainer}>
               <Grid>
                 <TextField

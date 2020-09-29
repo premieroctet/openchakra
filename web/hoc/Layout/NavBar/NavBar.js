@@ -3,20 +3,12 @@ import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import {withStyles} from '@material-ui/core/styles';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import Link from 'next/link';
 import setAuthToken from '../../../utils/setAuthToken';
 import Router from 'next/router';
-import UserAvatar from '../../../components/Avatar/UserAvatar';
-import SearchInput from '../../../components/SearchInput/SearchInput';
-import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
 import cookie from 'react-cookies';
 import LogIn from '../../../components/LogIn/LogIn';
 import Register from '../../../components/Register/Register';
@@ -30,13 +22,8 @@ import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import DirectionsIcon from '@material-ui/icons/Directions';
 import AlgoliaPlaces from 'algolia-places-react';
-
-
 import {SEARCHBAR} from '../../../utils/i18n';
-import TextField from "@material-ui/core/TextField";
-import isEmpty from "../../../server/validation/is-empty";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 
@@ -47,9 +34,6 @@ var parse = require('url-parse');
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-
-
-
 
 class NavBar extends Component {
   constructor(props) {
@@ -80,7 +64,6 @@ class NavBar extends Component {
 
   }
 
-
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps !== '') {
       this.state.user = this.props.user;
@@ -88,22 +71,6 @@ class NavBar extends Component {
   }
 
   componentDidMount() {
-    var query = parse(window.location.href, true).query;
-    if (query.google_id || query.facebook_id || query.error) {
-      this.setState({
-        setOpenRegister: true,
-        setOpenLogin: false,
-      });
-    }
-
-    if (query.signup === 'true') {
-      this.setState({
-        setOpenRegister: true,
-        setOpenLogin: false,
-      });
-    }
-    ;
-
     const token = cookie.load('token');
     if (token) {
       this.setState({logged: true});
@@ -120,18 +87,7 @@ class NavBar extends Component {
         isSearch: true,
       });
     }
-    document.addEventListener('scroll', () => {
-      const isTop = window.scrollY < 820;
-      if (isTop !== this.state.isTop) {
-        this.onScroll(isTop);
-      }
-    });
   }
-
-  onScroll(isTop) {
-    this.setState({isTop});
-  }
-
 
   logout2() {
     cookie.remove('token', {path: '/'});
@@ -149,10 +105,6 @@ class NavBar extends Component {
     this.setState({anchorEl: null});
     this.handleMobileMenuClose();
     this.handleAvatarMenuClose();
-  };
-
-  handleMobileMenuOpen = event => {
-    this.setState({mobileMoreAnchorEl: event.currentTarget});
   };
 
   handleAvatarMenuOpen = event => {
@@ -239,20 +191,22 @@ class NavBar extends Component {
     this.setState({gps: suggestion.latlng, city: suggestion.name}, () => this.checkGPS());
   };
 
-  checkGPS = () => {
-    let errors = {};
-    if (this.state.city && !this.state.gps) {
-      errors['city'] = 'Sélectionnez une ville dans la liste';
-    }
-    this.setState({errors: errors});
-  };
-
   onSuggestions = ({query}) => {
     this.setState({city: query}, () => this.checkGPS());
   };
 
+  handleOpenMenuItem = () => {
+    this.setState({anchorEl: true})
+  };
+
+  handleClosenMenuItem = () => {
+    this.setState({anchorEl: false})
+  };
+
+
+
   render() {
-    const {mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged, user, setOpenLogin, setOpenRegister, keyword, errors, dateSelected} = this.state;
+    const {mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged, user, setOpenLogin, setOpenRegister, keyword, errors, dateSelected, anchorEl} = this.state;
     const {style} = this.props;
 
     const modalLogin = () => {
@@ -281,104 +235,133 @@ class NavBar extends Component {
 
     return(
       <Grid className={style.navbarMainSytle}>
-        <Grid className={style.navbarLogoContainer}>
-          <p>Mon logo</p>
-        </Grid>
-        <Grid className={style.navbarSearchContainer}>
-          <Paper component="form" classes={{root: style.navbarSearch}}>
-            <InputBase
-              classes={{root: style.navbarRoot, input: style.navbarInput}}
-              placeholder={SEARCHBAR.what}
-              value={keyword}
-              onChange={this.onChange}
-              name={'keyword'}
-            />
-            <Divider className={style.divider} orientation="vertical" />
-            <Grid className={style.navbarAlgoliaContent}>
-              <AlgoliaPlaces
-                placeholder={SEARCHBAR.where}
-                className={style.navbarAlgoliaPlace}
-                options={{
-                  appId: 'plKATRG826CP',
-                  apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                  language: 'fr',
-                  countries: ['fr'],
-                  type: 'city',
-                }}
-                onChange={(suggestion) => this.onChangeCity(suggestion)}
-                onClear={() => this.setState({city: '', gps: null}, () => this.checkGPS())}
-                onSuggestions={this.onSuggestions}
+        <AppBar position={'static'} className={style.navbarAppBar}>
+          <Toolbar className={style.toolbar}>
+            <Grid className={style.navbarLogoContainer}>
+              <p>Mon logo</p>
+            </Grid>
+            <Grid className={style.navbarSearchContainer}>
+              <Paper component="form" classes={{root: style.navbarSearch}}>
+                <InputBase
+                  classes={{root: style.navbarRoot, input: style.navbarInput}}
+                  placeholder={SEARCHBAR.what}
+                  value={keyword}
+                  onChange={this.onChange}
+                  name={'keyword'}
                 />
-              <em style={{color: 'red'}}>{errors['city']}</em>
+                <Divider className={style.divider} orientation="vertical" />
+                <Grid className={style.navbarAlgoliaContent}>
+                  <AlgoliaPlaces
+                    placeholder={SEARCHBAR.where}
+                    className={style.navbarAlgoliaPlace}
+                    options={{
+                      appId: 'plKATRG826CP',
+                      apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                      language: 'fr',
+                      countries: ['fr'],
+                      type: 'city',
+                    }}
+                    onChange={(suggestion) => this.onChangeCity(suggestion)}
+                    onClear={() => this.setState({city: '', gps: null}, () => this.checkGPS())}
+                    onSuggestions={this.onSuggestions}
+                    />
+                </Grid>
+                <Divider className={style.divider} orientation="vertical" />
+                <Grid className={style.navbarDatePickerContainer}>
+                  <DatePicker
+                    selected={dateSelected}
+                    onChange={(date) => {
+                      this.setState({dateSelected: date});
+                      if (date === null) {
+                        this.setState({dateSelected: ''});
+                      }
+                    }}
+                    locale='fr'
+                    showMonthDropdown
+                    dateFormat="dd/MM/yyyy"
+                    placeholderText={SEARCHBAR.when}
+                    minDate={new Date()}
+                    className={style.inputDatePicker}
+                  />
+                </Grid>
+                <IconButton type="submit" classes={{root: style.iconButton}} aria-label="search" onClick={() => this.search()}>
+                  <SearchIcon />
+                </IconButton>
+              </Paper>
             </Grid>
-            <Divider className={style.divider} orientation="vertical" />
-            <Grid style={{flex: 1, marginLeft: 20}}>
-              <DatePicker
-                selected={dateSelected}
-                onChange={(date) => {
-                  this.setState({dateSelected: date});
-                  if (date === null) {
-                    this.setState({dateSelected: ''});
-                  }
-                }}
-                locale='fr'
-                showMonthDropdown
-                dateFormat="dd/MM/yyyy"
-                placeholderText={SEARCHBAR.when}
-                minDate={new Date()}
-                className={style.inputDatePicker}
-              />
-            </Grid>
-            <IconButton type="submit" classes={{root: style.iconButton}} aria-label="search" disabled={!isEmpty(errors)} onClick={() => this.search()}>
-              <SearchIcon />
-            </IconButton>
-          </Paper>
-        </Grid>
-        <Grid className={style.navbarButtonContainer}>
-          <Grid>
-            <Button className={style.navBarlogIn} onClick={this.handleOpenLogin}>Connexion</Button>
-            <Dialog
-              scroll={'paper'}
-              aria-labelledby="scroll-dialog-title"
-              aria-describedby="scroll-dialog-description"
-              className={style.navbarModal}
-              open={setOpenLogin}
-              onClose={this.handleCloseLogin}
-              TransitionComponent={Transition}
-              classes={{paperWidthSm: style.navbarPaperWidth}}
-              disableBackdropClick={true}
-              disableEscapeKeyDown={true}
-            >
-              <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
-              <DialogContent classes={{root: style.navbarWidthLoginContent}}>
-                <div className={style.navbarPaper}>
-                  {modalLogin()}
-                </div>
-              </DialogContent>
-            </Dialog>
-          </Grid>
-          <Grid>
-            <Button variant="outlined" classes={{root: style.navbarSignIn}} onClick={this.handleOpenRegister}>Inscription</Button>
-            <Dialog
-              scroll={'paper'}
-              aria-labelledby="scroll-dialog-title"
-              aria-describedby="scroll-dialog-description"
-              className={style.navbarModal}
-              open={setOpenRegister}
-              onClose={this.handleCloseRegister}
-              TransitionComponent={Transition}
-              disableBackdropClick={true}
-              disableEscapeKeyDown={true}
-            >
-              <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
-              <DialogContent dividers={false} className={style.navbarMuidialogContent}>
-                <div className={style.navbarPaper}>
-                  {modalRegister()}
-                </div>
-              </DialogContent>
-            </Dialog>
-          </Grid>
-        </Grid>
+            {
+              logged ?
+                <Grid>
+                  <IconButton
+                    edge="start"
+                    className={style.menuButton}
+                    color="inherit"
+                    aria-label="open drawer"
+                    onClick={this.handleOpenMenuItem}
+                  >
+                    <MenuIcon />
+                  </IconButton>
+                  <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={this.handleClosenMenuItem}
+                  >
+                    <MenuItem>Profile</MenuItem>
+                    <MenuItem>My account</MenuItem>
+                    <MenuItem onClick={() => this.logout2()}>Logout</MenuItem>
+                  </Menu>
+                </Grid>
+                :
+                <Grid className={style.navbarButtonContainer}>
+                  <Grid>
+                    <Button className={style.navBarlogIn} onClick={this.handleOpenLogin}>Connexion</Button>
+                    <Dialog
+                      scroll={'paper'}
+                      aria-labelledby="scroll-dialog-title"
+                      aria-describedby="scroll-dialog-description"
+                      className={style.navbarModal}
+                      open={setOpenLogin}
+                      onClose={this.handleCloseLogin}
+                      TransitionComponent={Transition}
+                      classes={{paperWidthSm: style.navbarPaperWidth}}
+                      disableBackdropClick={true}
+                      disableEscapeKeyDown={true}
+                    >
+                      <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
+                      <DialogContent classes={{root: style.navbarWidthLoginContent}}>
+                        <div className={style.navbarPaper}>
+                          {modalLogin()}
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </Grid>
+                  <Grid>
+                    <Button variant="outlined" classes={{root: style.navbarSignIn}} onClick={this.handleOpenRegister}>Inscription</Button>
+                    <Dialog
+                      scroll={'paper'}
+                      aria-labelledby="scroll-dialog-title"
+                      aria-describedby="scroll-dialog-description"
+                      className={style.navbarModal}
+                      open={setOpenRegister}
+                      onClose={this.handleCloseRegister}
+                      TransitionComponent={Transition}
+                      disableBackdropClick={true}
+                      disableEscapeKeyDown={true}
+                    >
+                      <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
+                      <DialogContent dividers={false} className={style.navbarMuidialogContent}>
+                        <div className={style.navbarPaper}>
+                          {modalRegister()}
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </Grid>
+                </Grid>
+            }
+          </Toolbar>
+        </AppBar>
       </Grid>
     )
 
