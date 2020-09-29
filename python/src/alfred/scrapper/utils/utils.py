@@ -38,8 +38,11 @@ HEADERS = {'User-Agent': '.',
 last_url = ""
 last_url_data = None
 
+DELAY = 1
+
 @lru_cache()
 def load_url(url):
     gcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
     data = urlopen(Request(url, headers=HEADERS), context=gcontext).read()
     return str(data, encoding="utf-8")
+
