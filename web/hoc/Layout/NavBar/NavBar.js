@@ -188,11 +188,11 @@ class NavBar extends Component {
   };
 
   onChangeCity({suggestion}) {
-    this.setState({gps: suggestion.latlng, city: suggestion.name}, () => this.checkGPS());
+    this.setState({gps: suggestion.latlng, city: suggestion.name});
   };
 
   onSuggestions = ({query}) => {
-    this.setState({city: query}, () => this.checkGPS());
+    this.setState({city: query});
   };
 
   handleOpenMenuItem = () => {
@@ -262,7 +262,7 @@ class NavBar extends Component {
                       type: 'city',
                     }}
                     onChange={(suggestion) => this.onChangeCity(suggestion)}
-                    onClear={() => this.setState({city: '', gps: null}, () => this.checkGPS())}
+                    onClear={() => this.setState({city: '', gps: null})}
                     onSuggestions={this.onSuggestions}
                     />
                 </Grid>
