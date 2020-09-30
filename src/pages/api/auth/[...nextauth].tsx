@@ -17,6 +17,13 @@ const options = {
       clientSecret: process.env.GITHUB_SECRET as string,
     }),
   ],
-  database: 'postgresql://openchakra:chakra@localhost:54320/openchakra',
-  adaptor: Adapters.Prisma.Adapter({ prisma }),
+  adapter: Adapters.Prisma.Adapter({
+    prisma,
+    modelMapping: {
+      User: 'user',
+      Account: 'account',
+      Session: 'session',
+      VerificationRequest: 'verificationRequest',
+    },
+  }),
 }

@@ -13,6 +13,7 @@ export const decodeShareUrl = (): IComponents | null => {
     const sharedData = searchParams.get('share')
 
     if (sharedData) {
+      /*@ts-ignore*/
       return JSON.parse(LZString.decompressFromEncodedURIComponent(sharedData))
     }
   } catch (e) {
