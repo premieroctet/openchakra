@@ -43,6 +43,7 @@ import styles from '../static/css/searchPage/searchStyle';
 import cookie from 'react-cookies';
 import NavBar from "../hoc/Layout/NavBar/NavBar";
 import InfoBar from "../components/InfoBar/InfoBar";
+import FilterMenu from "../components/FilterMenu/FilterMenu";
 
 moment.locale('fr');
 
@@ -386,8 +387,25 @@ class SearchPage extends React.Component {
 
   render() {
     const {classes, search} = this.props;
-    const {user, categories, gps, isAdmin, mounting, searching} = this.state;
-    const serviceUsers = this.state.serviceUsersDisplay;
+    const {user, categories, gps, isAdmin, mounting, searching ,
+      address,
+      selectedAddress,
+      city,
+      serviceUsers,
+      serviceUsersDisplay,
+      shops,
+      proAlfred, // Professional Alfred ids
+      keyword,
+      proSelected,
+      individualSelected,
+      startDate,
+      endDate,
+      focusedInput,
+      statusFilterVisible,
+      dateFilterVisible,
+      visibleCategories,
+      catCount,
+     } = this.state;
 
     const statusFilterBg = this.isStatusFilterSet() ? '#2FBCD3' : 'white';
     const dateFilterBg = this.isDateFilterSet() ? '#2FBCD3' : 'white';
@@ -411,247 +429,102 @@ class SearchPage extends React.Component {
 
     return (
       <Grid>
-        <Grid>
+        <Grid className={classes.searchNavbarComponentPosition}>
           <InfoBar style={classes}/>
         </Grid>
         <Grid>
           <NavBar style={classes}/>
         </Grid>
-          <Grid container className={classes.bigContainer}>
-            <Grid container className={classes.respfilter}>
-              <Grid item xs={12} style={{height: 50}}>
-                <Grid container>
-                  {this.state.statusFilterVisible ?
-                    <Grid item xs={5} md={3} style={{
-                      borderRadius: '15px',
-                      backgroundColor: '#2FBCD3',
-                      boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset',
-                      cursor: 'pointer',
-                      height: '45px',
-                      margin: 10,
-                    }}>
-                      <Typography onClick={() => this.statusFilterToggled()} style={{
-                        textAlign: 'center',
-                        color: 'white',
-                        fontSize: '0.8rem',
-                        paddingTop: 13,
-                        height: 43,
-                      }}>Statut</Typography>
-                      <Grid id="status" className={classes.filterStatus} item xs={12}>
-                        <Grid container>
-                          <Grid item xs={12} style={{textAlign: 'center', margin: 'auto'}} spacing={3}>
-                            {this.state.individualSelected ? <Grid item xs={3}/> :
-                              <Grid item xs={6} sm={4} md={3} style={{textAlign: 'center', margin: 'auto'}}>
-                                <FormControlLabel
-                                  control={
-                                    <Switch
-                                      checked={this.state.proSelected}
-                                      onChange={e => {
-                                        this.statusFilterChanged(e);
-                                        this.filter();
-                                      }}
-                                      value={this.state.proSelected}
-                                      color="primary"
-                                      name={'proSelected'}
-                                    />
-                                  }
-                                  label="Pro"
-                                />
-                              </Grid>
-                            }
-                          </Grid>
-                          <Grid item xs={12} style={{textAlign: 'center', margin: 'auto'}}>
-                            {this.state.proSelected ? null :
-                              <Grid item xs={6} sm={4} md={3} style={{textAlign: 'center', margin: 'auto'}}>
-                                <FormControlLabel
-                                  control={
-                                    <Switch
-                                      checked={this.state.individualSelected}
-                                      onChange={e => {
-                                        this.statusFilterChanged(e);
-                                        this.filter();
-                                      }}
-                                      value={this.state.individualSelected}
-                                      color="primary"
-                                      name={'individualSelected'}
-                                    />
-                                  }
-                                  label="Particulier"
-                                />
-                              </Grid>
-                            }
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    :
-                    <Grid key={moment()} item xs={5} md={3} onClick={() => this.statusFilterToggled()} style={{
-                      borderRadius: '15px',
-                      backgroundColor: `${statusFilterBg}`,
-                      boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px',
-                      cursor: 'pointer',
-                      height: '45px',
-                      margin: 10,
-                    }}>
-                      <Typography style={{
-                        textAlign: 'center',
-                        fontSize: '0.8rem',
-                        height: 43,
-                        paddingTop: 13,
-                      }}>Statut</Typography>
-                    </Grid>
-                  }
-                  {this.state.dateFilterVisible ?
-                    <Grid item xs={5} md={3} style={{
-                      borderRadius: '15px',
-                      backgroundColor: '#2FBCD3',
-                      boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset',
-                      cursor: 'pointer',
-                      height: '45px',
-                      margin: 10,
-                    }}>
-                      <Typography onClick={() => this.dateFilterToggled()} style={{
-                        textAlign: 'center',
-                        color: 'white',
-                        fontSize: '0.8rem',
-                        paddingTop: 13,
-                        height: 43,
-                      }}>Quelle(s) date(s) ?</Typography>
-                      <Grid id="thedate" item xs={12} style={{
-                        borderRadius: '15px',
-                        backgroundColor: 'white',
-                        boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px',
-                        height: 'auto',
-                        marginTop: 8,
-                        zIndex: 1,
-                        padding: 10,
-                      }}>
-                        <Grid container>
-                          <Grid item xs={12} style={{textAlign: 'center', margin: 'auto'}}>
-                            <DateRangePicker
-                              style={{width: '50px'}}
-                              startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-                              startDatePlaceholderText={'Début'}
-                              endDatePlaceholderText={'Fin'}
-                              startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                              endDate={this.state.endDate} // momentPropTypes.momentObj or null,
-                              endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                              onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
-                              focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                              onFocusChange={focusedInput => this.setState({focusedInput})} // PropTypes.func.isRequired,
-                              minimumNights={0}
-                              numberOfMonths={1}
-                            />
-                          </Grid>
-                          <Grid item xs={12} style={{textAlign: 'center', margin: 'auto'}}>
-                            <Grid container>
-                              <Grid item xs={6}>
-                                <Button style={{fontSize: '0.8rem'}}
-                                        onClick={() => this.cancelDateFilter()}>Annuler</Button>
-                              </Grid>
-                              <Grid item xs={6}>
-                                <Button style={{fontSize: '0.8rem'}}
-                                        onClick={() => this.validateDateFilter()}>Valider</Button>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    :
-                    <Grid item xs={5} md={3} onClick={() => this.dateFilterToggled()} style={{
-                      borderRadius: '15px',
-                      backgroundColor: `${dateFilterBg}`,
-                      boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px',
-                      cursor: 'pointer',
-                      height: '45px',
-                      margin: 10,
-                    }}>
-                      <Typography style={{textAlign: 'center', fontSize: '0.8rem', paddingTop: 13, height: 43}}>Quelle(s)
-                        date(s) ?</Typography>
-                    </Grid>
-                  }
-                </Grid>
+        <Grid className={classes.searchFilterMenuPosition}>
+          <Grid className={classes.searchFilterMenuContent}>
+            <FilterMenu style={classes}/>
+          </Grid>
+        </Grid>
+        <Grid container className={classes.bigContainer}>
+
+          { /* END FILTER PANEL */}
+          <Grid className={classes.containerTitle}>
+            <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Que
+              recherchez-vous {user ? user.firstname : ''} ?</h3>
+          </Grid>
+          <Grid container style={{overflowX: 'scroll', width: '100%', marginLeft: 1}} spacing={2} wrap={'nowrap'}>
+            {categories.map((cat, index) => (
+              <Grid item key={index}>
+                <Link href={'/search?search=1&category=' + cat._id + (gps ? '&gps=' + JSON.stringify(gps) : '')}>
+                  <Card style={{borderRadius: 35, width: '100%', margin: 10}}>
+                    <CardActionArea>
+                      <CardMedia
+                        style={{minHeight: 150, minWidth: 200}}
+                        image={cat.picture}
+                        title={cat.label}
+                      />
+                      <CardContent style={{minHeight: 50}}>
+                        <Typography style={{fontSize: '0.9rem', textAlign: 'center'}}>
+                          {cat.label}
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </Link>
               </Grid>
-            </Grid>
-            { /* END FILTER PANEL */}
-            <Grid className={classes.containerTitle}>
-              <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Que
-                recherchez-vous {user ? user.firstname : ''} ?</h3>
-            </Grid>
-            <Grid container style={{overflowX: 'scroll', width: '100%', marginLeft: 1}} spacing={2} wrap={'nowrap'}>
-              {categories.map((cat, index) => (
-                <Grid item key={index}>
-                  <Link href={'/search?search=1&category=' + cat._id + (gps ? '&gps=' + JSON.stringify(gps) : '')}>
-                    <Card style={{borderRadius: 35, width: '100%', margin: 10}}>
-                      <CardActionArea>
-                        <CardMedia
-                          style={{minHeight: 150, minWidth: 200}}
-                          image={cat.picture}
-                          title={cat.label}
-                        />
-                        <CardContent style={{minHeight: 50}}>
-                          <Typography style={{fontSize: '0.9rem', textAlign: 'center'}}>
-                            {cat.label}
-                          </Typography>
-                        </CardContent>
-                      </CardActionArea>
-                    </Card>
-                  </Link>
+            ))}
+          </Grid>
+          <Grid container>
+            {this.props.search && serviceUsers.length > 0 ?
+              <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Nos meilleurs Alfred ...</h3>
+              :
+              null}
+            {/* Adresse spécifique  */
+              categories.map(cat => (
+                <Grid container>
+                  {this.state.visibleCategories.includes(cat.label) ?
+                    <Grid item xs={12}>
+                      <h3 style={{marginLeft: 15}}>{cat.label}</h3>
+                    </Grid> : null
+                  }
+                  <Grid container spacing={1} className={classes.containerCardPreview}>
+                    {
+                      this.restrictServices(serviceUsers, cat).map(su => {
+                        return (
+                          <Grid item xs={12} sm={12} md={12} lg={3} xl={3} className={classes.paddingResponsive}>
+                            <CardPreview services={su._id} gps={user ? user.billing_address.gps : this.state.gps}
+                                         needAvatar={true} key={su._id} isAdmin={isAdmin}/>
+                          </Grid>
+                        );
+                      })
+                    }
+                  </Grid>
+                  {this.state.visibleCategories.includes(cat.label) ?
+                    <Grid style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      width: '100%',
+                      marginTop: 30,
+                      marginBottom: 30,
+                    }}>
+                      {this.hasMoreToDisplay(serviceUsers, cat) ?
+                        <Grid style={{marginLeft: 15}}>
+                          <Button color={'primary'} onClick={() => this.increaseCount(cat)}>Voir plus
+                            d'Alfred</Button>
+                        </Grid>
+                        : null
+                      }
+                      <Grid style={{textAlign: 'center'}}>
+                        <img alt={'séparateur'} src={'../../../static/separateur-bleu.svg'}
+                             className={classes.separatorBlue}/>
+                      </Grid>
+                    </Grid>
+                    : null}
                 </Grid>
               ))}
-            </Grid>
-            <Grid container>
-              {this.props.search && serviceUsers.length > 0 ?
-                <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Nos meilleurs Alfred ...</h3>
-                :
-                null}
-              {/* Adresse spécifique  */
-                categories.map(cat => (
-                  <Grid container>
-                    {this.state.visibleCategories.includes(cat.label) ?
-                      <Grid item xs={12}>
-                        <h3 style={{marginLeft: 15}}>{cat.label}</h3>
-                      </Grid> : null
-                    }
-                    <Grid container spacing={1} className={classes.containerCardPreview}>
-                      {
-                        this.restrictServices(serviceUsers, cat).map(su => {
-                          return (
-                            <Grid item xs={12} sm={12} md={12} lg={3} xl={3} className={classes.paddingResponsive}>
-                              <CardPreview services={su._id} gps={user ? user.billing_address.gps : this.state.gps}
-                                           needAvatar={true} key={su._id} isAdmin={isAdmin}/>
-                            </Grid>
-                          );
-                        })
-                      }
-                    </Grid>
-                    {this.state.visibleCategories.includes(cat.label) ?
-                      <Grid style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        width: '100%',
-                        marginTop: 30,
-                        marginBottom: 30,
-                      }}>
-                        {this.hasMoreToDisplay(serviceUsers, cat) ?
-                          <Grid style={{marginLeft: 15}}>
-                            <Button color={'primary'} onClick={() => this.increaseCount(cat)}>Voir plus
-                              d'Alfred</Button>
-                          </Grid>
-                          : null
-                        }
-                        <Grid style={{textAlign: 'center'}}>
-                          <img alt={'séparateur'} src={'../../../static/separateur-bleu.svg'}
-                               className={classes.separatorBlue}/>
-                        </Grid>
-                      </Grid>
-                      : null}
-                  </Grid>
-                ))}
-            </Grid>
-            {resultMessage}
           </Grid>
+          {resultMessage}
+          </Grid>
+        <Grid container className={classes.mainContainerStyleFooter}>
+          <Grid className={classes.generalWidthFooter}>
+            <Footer style={classes}/>
+          </Grid>
+        </Grid>
       </Grid>
     );
   }

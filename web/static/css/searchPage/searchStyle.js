@@ -1,57 +1,14 @@
 export default theme => ({
   bigContainer: {
-    marginTop: 80,
-    minHeight: 530,
     overflowX: 'hidden',
     overflowY: 'hidden',
-
   },
-
   media: {
     height: '250px!important',
     position: 'relative',
     objectFit: 'cover',
   },
-  respfilter: {
-    position: 'fixed',
-    top: 65,
-    zIndex: 10,
-    background: 'white',
-    height: 60,
-    [theme.breakpoints.down('sm')]: {
-      top: 65,
-    },
-    [theme.breakpoints.down('xs')]: {
-      top: 230,
-    },
-  },
-  mobilevoir: {
-    [theme.breakpoints.up('md')]: {
-      display: 'none!important',
-    },
-  },
-  webvoir: {
-    [theme.breakpoints.down('sm')]: {
-      display: 'none!important',
-    },
-  },
-  DateInput_input__focused: {
-    borderBottom: '1px solid #fb1515!important',
-  },
-  algol: {
-    fontFamily: 'Helvetica Neue, Helvetica,sans-serif',
-    '::placeholder': {
-      color: '#cfcfcf',
-    },
-    '&:hover': {
-      border: '1px solid black!important',
-      transition: 'border 0.5s',
-    },
-    '&:focus': {
-      border: '2px solid #2FBCD3!important',
-      transition: 'border 0.5s',
-    },
-  },
+
   separatorBlue: {
     width: '150px',
   },
@@ -61,18 +18,7 @@ export default theme => ({
       marginTop: 200,
     },
   },
-  filterStatus: {
-    borderRadius: '15px',
-    backgroundColor: 'white',
-    boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px',
-    height: '100px',
-    marginTop: 8,
-    padding: 10,
-    zIndex: 1,
-    [theme.breakpoints.down('xs')]: {
-      width: 200,
-    },
-  },
+
   containerCardPreview: {
     padding: 5,
   },
@@ -82,6 +28,16 @@ export default theme => ({
       marginBottom: 20,
     },
   },
+
+
+
+
+
+
+
+
+
+  /***** new css***/
   navbarSignIn:{
     borderRadius: theme.border.button.borderRadius,
     textTransform: theme.typography.textTransform,
@@ -97,7 +53,7 @@ export default theme => ({
   },
   navbarMainSytle:{
     alignItems: 'center',
-    width: '80%',
+    width: '100%',
     display: 'flex',
   },
   navbarButtonContainer:{
@@ -126,4 +82,129 @@ export default theme => ({
       color: theme.palette.placeHolder.main,
     }
   },
+  searchNavbarComponentPosition:{
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'center'
+  },
+  infoBarMainStyle:{
+    backgroundColor: theme.palette.backgroundGrey.main,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  toolbar:{
+    display: 'flex',
+    justifyContent: 'space-evenly'
+  },
+  divider: {
+    height: 28,
+    margin: 4,
+  },
+  navbarAppBar:{
+    boxShadow: 'inherit'
+  },
+  navbarAlgoliaContent:{
+    flex:1,
+    marginLeft: 20,
+    '& .ap-input-icon':{
+      display: 'none',
+    }
+  },
+  navbarAlgoliaPlace:{
+    border: 'inherit',
+    fontFamily: theme.typography.text.fontFamily,
+    color: theme.palette.placeHolder.main,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
+    padding: 0,
+  },
+  inputDatePicker:{
+    border: 'inherit',
+    fontFamily: theme.typography.text.fontFamily,
+    color: theme.palette.placeHolder.main,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
+  },
+  iconButton:{
+    padding: 12,
+    backgroundColor: theme.palette.yellow.main,
+    color: theme.palette.white.main,
+  },
+  mainContainerStyleFooter:{
+    justifyContent: 'center',
+    marginTop: '2%',
+    backgroundColor: 'rgba(228, 228, 228, 8)'
+  },
+  generalWidthFooter:{
+    width: '90%'
+  },
+  footerMainStyle:{
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  footerMainContainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+  },
+  footerSection:{
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  footerSocialSection:{
+    display:'flex',
+    flexDirection: 'row-reverse',
+    width: '90%',
+    marginTop: '3%'
+  },
+  footerDividerContainer:{
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  footerDivider:{
+    height: 1,
+    width: '80%'
+  },
+  footerBrandContainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  footerBrandStyle:{
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '80%'
+  },
+  footerRgpdButtons:{
+    display:'flex',
+    flexDirection: 'row',
+    width: '30%',
+    justifyContent : 'space-between'
+  },
+  footerTitileSection:{
+    fontFamily: theme.typography.sectionTitle.fontFamily
+  },
+  footerLink:{
+    fontFamily: theme.typography.text.fontFamily
+  },
+  footerText:{
+    fontFamily: theme.typography.text.fontFamily
+  },
+  searchFilterMenuPosition:{
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  searchFilterMenuContent:{
+    width: '90%'
+  },
+  scrollMenuRoot:{
+    flexGrow: 1,
+    backgroundColor: 'white',
+  },
+  scrollMenuTabs:{
+    borderRight: `1px solid black`,
+  }
 })

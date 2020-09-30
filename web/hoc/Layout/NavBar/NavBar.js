@@ -195,8 +195,8 @@ class NavBar extends Component {
     this.setState({city: query});
   };
 
-  handleOpenMenuItem = () => {
-    this.setState({anchorEl: true})
+  handleOpenMenuItem = (event) => {
+    this.setState({anchorEl: event.currentTarget})
   };
 
   handleClosenMenuItem = () => {
@@ -307,6 +307,10 @@ class NavBar extends Component {
                     keepMounted
                     open={Boolean(anchorEl)}
                     onClose={this.handleClosenMenuItem}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right',
+                    }}
                   >
                     <MenuItem>Profile</MenuItem>
                     <MenuItem>My account</MenuItem>

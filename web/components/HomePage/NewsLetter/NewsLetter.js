@@ -16,9 +16,16 @@ class NewsLetter extends React.Component{
   }
 
   sendSubscription = () =>{
+    const user = {
+      EMAIL: this.state.email,
+      locale: 'fr',
+      email_address_check: ''
+    };
     axios.post('https://cef7ace9.sibforms.com/serve/MUIEAMozm6936onrqiPaove-mb4-eZhjKq9N50iJ7FVKRVk4NFAVimF-eRdZmyw9XmVuQh9ItQdDfS1NJLu11EDcUGdHWDoNY13qixwVVhV1R_OjaeI5i5iVjN7Jl86BzlIwoqHgutCV84BudSu-zdJ1Jrq0dAHZBFarwabS9kqbbKhRu9hK2T5XHv6cw8K5NdVf1hkL_BMB3hy7',
-      {EMAIL: this.state.email})
-      .then( res => {console.log(res)}).catch( err => {console.log(err)})
+      user, {headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',"Accept": "*/*"
+        }})
+      .then( res => {console.log(res)}).catch((error) => console.log(error) );
   };
 
   handleOnchange = (event) =>{
