@@ -92,9 +92,10 @@ const theme = createMuiTheme({
 
     },
     infoBar:{
-      fontFamily: 'Helvetica',
+      fontFamily: 'Futura, sans-serif',
       lineHeight: '23px',
-      fontSize: 14
+      fontSize: 14,
+      fontWeight: 'bold'
     },
     placeHolder:{
       fontFamily: 'Futura, sans-serif',
@@ -135,6 +136,10 @@ const theme = createMuiTheme({
       section:{
         padding: '8%'
       }
+    },
+    infoBar: {
+      paddingTop: 20,
+      paddingBottom: 20
     }
   },
 });

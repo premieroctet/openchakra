@@ -14,17 +14,11 @@ export default theme => ({
     color: theme.palette.lightBlack.main,
     fontSize: theme.typography.infoBar.fontSize,
     lineHeight: theme.typography.infoBar.lineHeight,
-    fontFamily: theme.typography.infoBar.fontFamily
+    fontFamily: theme.typography.infoBar.fontFamily,
+    fontWeight: theme.typography.infoBar.fontWeight
   },
   showmoreContainer:{
     marginLeft: 5,
-  },
-  shomoreLink:{
-    color: theme.palette.link.main,
-    fontSize: theme.typography.infoBar.fontSize,
-    lineHeight: theme.typography.infoBar.lineHeight,
-    fontFamily: theme.typography.infoBar.fontFamily
-
   },
   navbarSignIn:{
     borderRadius: theme.border.button.borderRadius,
@@ -47,7 +41,11 @@ export default theme => ({
   navbarButtonContainer:{
     display: 'flex',
     flexDirection: 'row-reverse',
-    width: '25%'
+    width: '25%',
+    alignItems: 'center'
+  },
+  navbarRegisterContainer:{
+    marginRight: 5
   },
   navbarSearch: {
     padding: '1%',
@@ -55,6 +53,7 @@ export default theme => ({
     alignItems: 'center',
     width: '100%',
     borderRadius: theme.border.button.borderRadius,
+    boxShadow: 'rgba(0, 0, 0, 0.15) 0px 16px 32px, rgba(0, 0, 0, 0.1) 0px 3px 8px'
   },
   navbarRoot: {
     marginLeft: 20,
@@ -80,7 +79,7 @@ export default theme => ({
   },
   navbarSearchContainer:{
     width: '50%',
-    marginTop: 100,
+    marginTop: '3%',
   },
   divider: {
     height: 28,
@@ -102,7 +101,8 @@ export default theme => ({
   bannerPresentationContainerDescription:{
     display: 'flex',
     flexDirection: 'column',
-    width: '30%'
+    width: '30%',
+    marginBottom: '6%'
   },
   bannerPresentationContainerText:{
     width: '75%'
@@ -652,5 +652,16 @@ export default theme => ({
   navbarDatePickerContainer:{
     flex: 1,
     marginLeft: 20
+  },
+  infoBarLinkContainer:{
+    paddingTop: theme.padding.infoBar.paddingTop,
+    paddingBottom: theme.padding.infoBar.paddingBottom,
+    alignItems: 'center',
+    display: 'flex'
+  },
+  infoBarPicsContainer:{
+    width: 15,
+    height: 15,
+    marginRight: 5
   }
 })

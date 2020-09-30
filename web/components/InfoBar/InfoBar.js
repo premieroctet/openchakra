@@ -1,7 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import Link from 'next/link';
-import {INFOBAR_MESSAGE, SHOWMORE} from '../../utils/i18n';
+import {INFOBAR_MESSAGE} from '../../utils/i18n';
 
 class InfoBar extends React.Component{
   constructor(props) {
@@ -13,13 +12,13 @@ class InfoBar extends React.Component{
 
     return(
       <Grid container className={style.infoBarMainStyle}>
-        <Grid item>
-          <p className={style.infoBarColorText}>{INFOBAR_MESSAGE}</p>
-        </Grid>
-        <Grid item className={style.showmoreContainer}>
-          <Link href={"#"}>
-            <a href={"#"} className={style.shomoreLink}>{SHOWMORE}</a>
-          </Link>
+        <Grid item className={style.infoBarLinkContainer}>
+          <Grid className={style.infoBarPicsContainer}>
+            <img src={'../../static/assets/icon/warning.svg'} alt={'warning'} title={'warning'} width={'100%'} height={'100%'}/>
+          </Grid>
+          <Grid>
+            <a href={'#'} className={style.infoBarColorText}>{INFOBAR_MESSAGE}</a>
+          </Grid>
         </Grid>
       </Grid>
     );

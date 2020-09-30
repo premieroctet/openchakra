@@ -341,7 +341,7 @@ class NavBar extends Component {
                       </DialogContent>
                     </Dialog>
                   </Grid>
-                  <Grid>
+                  <Grid className={style.navbarRegisterContainer}>
                     <Button variant="outlined" classes={{root: style.navbarSignIn}} onClick={this.handleOpenRegister}>Inscription</Button>
                     <Dialog
                       scroll={'paper'}
