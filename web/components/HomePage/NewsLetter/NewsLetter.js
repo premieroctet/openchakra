@@ -4,11 +4,26 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FacebookIcon from '@material-ui/icons/Facebook';
 import {NEWS_LETTER} from '../../../utils/i18n';
+import axios from 'axios';
+
 
 class NewsLetter extends React.Component{
   constructor(props) {
     super(props);
+    this.state={
+      email: ''
+    }
   }
+
+  sendSubscription = () =>{
+    axios.post('https://cef7ace9.sibforms.com/serve/MUIEAMozm6936onrqiPaove-mb4-eZhjKq9N50iJ7FVKRVk4NFAVimF-eRdZmyw9XmVuQh9ItQdDfS1NJLu11EDcUGdHWDoNY13qixwVVhV1R_OjaeI5i5iVjN7Jl86BzlIwoqHgutCV84BudSu-zdJ1Jrq0dAHZBFarwabS9kqbbKhRu9hK2T5XHv6cw8K5NdVf1hkL_BMB3hy7',
+      {EMAIL: this.state.email})
+      .then( res => {console.log(res)}).catch( err => {console.log(err)})
+  };
+
+  handleOnchange = (event) =>{
+    this.setState({[event.target.name]: event.target.value})
+  };
 
   render() {
     const {style} = this.props;
@@ -40,16 +55,18 @@ class NewsLetter extends React.Component{
               <Grid>
                 <TextField
                   id="outlined-basic"
-                  label="Email"
+                  placeholder="Email"
                   variant="outlined"
+                  name="email"
                   classes={{root: style.newsLetterTextField}}
                   InputLabelProps={{ shrink: false }}
+                  onChange={this.handleOnchange}
                 />
               </Grid>
             </Grid>
             <Grid className={style.newsLetterContainer}>
               <Grid>
-                <Button variant={'outlined'} classes={{root : style.newsLetterButton}}>{NEWS_LETTER.button}</Button>
+                <Button variant={'outlined'} classes={{root : style.newsLetterButton}} onClick={this.sendSubscription}>{NEWS_LETTER.button}</Button>
               </Grid>
             </Grid>
           </Grid>
