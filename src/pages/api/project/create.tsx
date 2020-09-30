@@ -12,7 +12,6 @@ export default async function(req: NextApiRequest, res: NextApiResponse) {
         user: projectData.user,
       },
     })
-
     res.status(201)
     res.json({ project })
   } catch (e) {
