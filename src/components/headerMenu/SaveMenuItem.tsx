@@ -7,7 +7,6 @@ import { getComponents } from '~core/selectors/components'
 
 const SaveMenuItem = () => {
   const components = useSelector(getComponents)
-
   return (
     <MenuItem onClick={() => saveAsJSON(components)}>
       <Box mr={2} as={FaSave} />

@@ -3,10 +3,10 @@ import { signIn, signOut, useSession } from 'next-auth/client'
 
 const LoginPage = () => {
   const [session, loading] = useSession()
+
   if (loading) {
     return <div>Loading...</div>
   }
-
   if (session) {
     return (
       <>
