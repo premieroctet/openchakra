@@ -22,6 +22,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import PropTypes from 'prop-types';
 import HomeIcon from '@material-ui/icons/Home';
+import cookie from 'react-cookies'
 
 const moment = require('moment-timezone');
 moment.locale('fr');
@@ -121,7 +122,7 @@ class all extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
 
     axios.get('/myAlfred/api/admin/users/all')
       .then((response) => {
