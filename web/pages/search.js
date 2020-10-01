@@ -44,6 +44,12 @@ import cookie from 'react-cookies';
 import NavBar from "../hoc/Layout/NavBar/NavBar";
 import InfoBar from "../components/InfoBar/InfoBar";
 import FilterMenu from "../components/FilterMenu/FilterMenu";
+import Divider from "@material-ui/core/Divider";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import CardService from "../components/Card/CardService/CardService";
 
 moment.locale('fr');
 
@@ -76,6 +82,7 @@ class SearchPage extends React.Component {
       isAdmin: false,
       mounting: true,
       searching: false,
+      filters:['Plus proche de moi']
     };
     this.filter = this.filter.bind(this);
     this.searchCallback = this.searchCallback.bind(this);
@@ -385,6 +392,10 @@ class SearchPage extends React.Component {
     return this.isStatusFilterSet() || this.isDateFilterSet();
   }
 
+  handleChange = (event) => {
+    this.setState({filters: event.target.value})
+  };
+
   render() {
     const {classes, search} = this.props;
     const {user, categories, gps, isAdmin, mounting, searching ,
@@ -405,12 +416,13 @@ class SearchPage extends React.Component {
       dateFilterVisible,
       visibleCategories,
       catCount,
+      filters
      } = this.state;
 
     const statusFilterBg = this.isStatusFilterSet() ? '#2FBCD3' : 'white';
     const dateFilterBg = this.isDateFilterSet() ? '#2FBCD3' : 'white';
 
-    var resultMessage;
+    let resultMessage;
     const res = {mounting, searching, search};
 
     if (mounting || search != '1') {
@@ -437,90 +449,68 @@ class SearchPage extends React.Component {
         </Grid>
         <Grid className={classes.searchFilterMenuPosition}>
           <Grid className={classes.searchFilterMenuContent}>
-            <FilterMenu style={classes}/>
+            <FilterMenu style={classes} categories={categories} gps={gps}/>
           </Grid>
         </Grid>
-        <Grid container className={classes.bigContainer}>
-
-          { /* END FILTER PANEL */}
-          <Grid className={classes.containerTitle}>
-            <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Que
-              recherchez-vous {user ? user.firstname : ''} ?</h3>
-          </Grid>
-          <Grid container style={{overflowX: 'scroll', width: '100%', marginLeft: 1}} spacing={2} wrap={'nowrap'}>
-            {categories.map((cat, index) => (
-              <Grid item key={index}>
-                <Link href={'/search?search=1&category=' + cat._id + (gps ? '&gps=' + JSON.stringify(gps) : '')}>
-                  <Card style={{borderRadius: 35, width: '100%', margin: 10}}>
-                    <CardActionArea>
-                      <CardMedia
-                        style={{minHeight: 150, minWidth: 200}}
-                        image={cat.picture}
-                        title={cat.label}
-                      />
-                      <CardContent style={{minHeight: 50}}>
-                        <Typography style={{fontSize: '0.9rem', textAlign: 'center'}}>
-                          {cat.label}
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>
-                  </Card>
-                </Link>
+        <Grid className={classes.searchDivierContainer}>
+          <Divider className={classes.searchDividerStyle}/>
+        </Grid>
+        <Grid className={classes.searchMainConainer}>
+          <Grid className={classes.searchMainContainerHeader}>
+            <Grid className={classes.searchContainerHeader}>
+              <Grid>
+                <h2>Nos Alfreds</h2>
               </Grid>
-            ))}
-          </Grid>
-          <Grid container>
-            {this.props.search && serviceUsers.length > 0 ?
-              <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Nos meilleurs Alfred ...</h3>
-              :
-              null}
-            {/* Adresse spécifique  */
-              categories.map(cat => (
-                <Grid container>
-                  {this.state.visibleCategories.includes(cat.label) ?
-                    <Grid item xs={12}>
-                      <h3 style={{marginLeft: 15}}>{cat.label}</h3>
-                    </Grid> : null
-                  }
-                  <Grid container spacing={1} className={classes.containerCardPreview}>
-                    {
-                      this.restrictServices(serviceUsers, cat).map(su => {
-                        return (
-                          <Grid item xs={12} sm={12} md={12} lg={3} xl={3} className={classes.paddingResponsive}>
-                            <CardPreview services={su._id} gps={user ? user.billing_address.gps : this.state.gps}
-                                         needAvatar={true} key={su._id} isAdmin={isAdmin}/>
-                          </Grid>
-                        );
-                      })
-                    }
-                  </Grid>
-                  {this.state.visibleCategories.includes(cat.label) ?
-                    <Grid style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      width: '100%',
-                      marginTop: 30,
-                      marginBottom: 30,
-                    }}>
-                      {this.hasMoreToDisplay(serviceUsers, cat) ?
-                        <Grid style={{marginLeft: 15}}>
-                          <Button color={'primary'} onClick={() => this.increaseCount(cat)}>Voir plus
-                            d'Alfred</Button>
-                        </Grid>
-                        : null
-                      }
-                      <Grid style={{textAlign: 'center'}}>
-                        <img alt={'séparateur'} src={'../../../static/separateur-bleu.svg'}
-                             className={classes.separatorBlue}/>
-                      </Grid>
-                    </Grid>
-                    : null}
+              <Grid className={classes.searchSecondFilterContainer}>
+                <Grid className={classes.searchSecondFilterContainerLeft}>
+                  <p>{serviceUsers.length} Alfred</p>
                 </Grid>
-              ))}
+                <Grid>
+                  <FormControl variant="outlined" className={classes.formControl}>
+                    <InputLabel shrink id="simple-select-placeholder-label-label">
+                      Trier par :
+                    </InputLabel>
+                    <Select
+                      labelId="simple-select-placeholder-label-label"
+                      id="simple-select-placeholder-label"
+                      value={filters}
+                      onChange={this.handleChange}
+                      displayEmpty
+                      label={'Trier par :'}
+                    >
+                      {filters.map((res,index) =>{
+                        return(
+                          <MenuItem value={res}>{res}</MenuItem>
+                        )
+                      })}
+
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Grid>
           </Grid>
-          {resultMessage}
+          <Grid className={classes.searchMainContainerResult}>
+            <Grid className={classes.searchContainerDisplayResult}>
+              <Grid container spacing={3}>
+              {
+                categories.map(cat => (
+                  this.restrictServices(serviceUsers, cat).map(su => {
+                    return (
+                      <Grid item xl={3} lg={3} md={3}>
+                        <CardService style={classes} services={su._id} gps={user ? user.billing_address.gps : this.state.gps}/>
+                      </Grid>
+                    );
+                  })
+                ))}
+              </Grid>
+            </Grid>
           </Grid>
-        <Grid container className={classes.mainContainerStyleFooter}>
+          <Grid>
+            {resultMessage}
+          </Grid>
+        </Grid>
+        <Grid className={classes.mainContainerStyleFooter}>
           <Grid className={classes.generalWidthFooter}>
             <Footer style={classes}/>
           </Grid>

@@ -5,10 +5,11 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from 'prop-types';
+import Link from "@material-ui/core/Link";
 
 function a11yProps(index) {
   return {
-    id: `vertical-tab-${index}`,
+    id: `scrollable-force-tab-${index}`,
     'aria-controls': `vertical-tabpanel-${index}`,
   };
 }
@@ -26,9 +27,13 @@ class SrollMenu extends React.Component{
   };
 
   render() {
-    const{style} = this.props;
+    const{style, categories, gps} = this.props;
     const{value} = this.state;
-    return(
+
+    /**TODO {/**<Link href={'/search?search=1&category=' + res._id + (gps ? '&gps=' + JSON.stringify(gps) : '')}></Link>**/
+
+
+  return(
       <Grid>
         <Grid className={style.scrollMenuRoot}>
           <Tabs
@@ -36,20 +41,20 @@ class SrollMenu extends React.Component{
             variant="scrollable"
             value={value}
             onChange={this.handleChange}
-            aria-label="Vertical tabs example"
+            aria-label="scrollable force tabs"
+            indicatorColor="primary"
+            scrollButtons="on"
             className={style.scrollMenuTabs}
+            classes={{scrollButtons: style.scrollMenuButtons}}
           >
-            <Tab label="Item One" {...a11yProps(0)} />
-            <Tab label="Item Two" {...a11yProps(1)} />
-            <Tab label="Item Three" {...a11yProps(2)} />
-            <Tab label="Item Four" {...a11yProps(3)} />
-            <Tab label="Item Five" {...a11yProps(4)} />
-            <Tab label="Item Six" {...a11yProps(5)} />
-            <Tab label="Item Seven" {...a11yProps(6)} />
-            <Tab label="Item Seven" {...a11yProps(7)} />
-            <Tab label="Item Seven" {...a11yProps(8)} />
-            <Tab label="Item Seven" {...a11yProps(9)} />
-            <Tab label="Item Seven" {...a11yProps(10)} />
+            {
+              categories ?
+                categories.map((res, index) => {
+                  return(
+                      <Tab label={res.label} {...a11yProps(index)} />
+                  )
+                }) : null
+            }
           </Tabs>
         </Grid>
       </Grid>

@@ -9,13 +9,13 @@ class FilterMenu extends React.Component{
   }
 
   render() {
-    const{style} = this.props;
+    const{style, categories, gps} = this.props;
     return(
       <Grid>
-        <Grid>
+        <Grid className={style.filterMenuTitleContainer}>
           <h2>Titre de la categorie</h2>
         </Grid>
-        <Grid container>
+        <Grid container className={style.filterMenuChipContainer}>
           <Grid item>
             <Chip label="Statut" />
           </Grid>
@@ -23,8 +23,8 @@ class FilterMenu extends React.Component{
             <Chip label="Quelle(s) date(e)s ?" />
           </Grid>
         </Grid>
-        <Grid>
-          <ScrollMenu style={style}/>
+        <Grid className={style.filterMenuScrollMenuContainer}>
+          <ScrollMenu style={style} categories={categories} gps={gps}/>
         </Grid>
       </Grid>
     );
