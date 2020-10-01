@@ -14,8 +14,6 @@ const SaveMenuItem = () => {
       return <div>Loading...</div>
     }
     if (session) {
-      console.log('user is connect, can save project')
-      console.log(session)
       createProject()
     } else {
       signIn()
@@ -24,20 +22,20 @@ const SaveMenuItem = () => {
 
   const createProject = async () => {
     const markup = JSON.stringify(components)
+    let bodyData = {
+      project: {
+        markup: markup,
+      },
+    }
     const response = await fetch('api/project/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: {
-        //@ts-ignore
-        markup: markup,
-        session,
-      },
+      body: JSON.stringify(bodyData),
     })
     const data = await response.json()
     const { project } = data
-    console.log(project)
     return project
   }
 
