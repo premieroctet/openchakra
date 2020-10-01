@@ -59,8 +59,6 @@ class CardService extends React.Component{
     const {style, userState, isOwner, gps, needAvatar, isAdmin} = this.props;
     const {cpData, alfred} = this.state;
 
-    console.log(cpData);
-
     let distance = gps ? computeDistanceKm(gps, cpData.gps) : null;
     distance = distance ? distance.toFixed(0) : '';
 
@@ -89,8 +87,11 @@ class CardService extends React.Component{
                 <Grid className={style.cardServicePlaceLogo}>
                   <RoomIcon/>
                 </Grid>
-                <Grid>
-                  <p>{cpData.city}</p>
+                <Grid style={{whiteSpace: 'nowrap'}}>
+                  <p>{`À ${" "} ${distance} ${" "}km -`}</p>
+                </Grid>
+                <Grid className={style.stylecardServiceDistance}>
+                  <p  className={style.stylecardServiceDistance}>{cpData.city}</p>
                 </Grid>
               </Grid>
               <Grid className={style.cardServiceScoreAndButtonContainer}>

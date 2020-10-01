@@ -373,5 +373,10 @@ export default theme => ({
   cardServiceAvatar:{
     width: theme.spacing(7),
     height: theme.spacing(7),
+  },
+  stylecardServiceDistance:{
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   }
 })
