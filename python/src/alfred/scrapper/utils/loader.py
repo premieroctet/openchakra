@@ -42,7 +42,7 @@ class BasicLoader(object):
     
 class ChromeLoader(object):
   
-  def __init__(self):
+  def __init__(self, account, password):
     chrome_options = Options()  
     #chrome_options.add_argument("--headless")  
     chrome_options.binary_location = '/usr/bin/google-chrome-stable'
@@ -56,10 +56,10 @@ class ChromeLoader(object):
       button.click()
     login_button = driver.find_element_by_id('fcbx_email2')
     login_button.click()
-    driver.find_element_by_id('identification_eMail').send_keys("sebastien.auvray@my-alfred.io")
+    driver.find_element_by_id('identification_eMail').send_keys(account)
     driver.find_element_by_id('btnSubmitIdentificationCompte').click()
     time.sleep(0.5)
-    driver.find_element_by_id('popinAuthPassword').send_keys("600Bimota")
+    driver.find_element_by_id('popinAuthPassword').send_keys(password)
     time.sleep(0.5)
     driver.find_element_by_id('btnSubmitIdentificationCompte').click()
     

@@ -38,7 +38,7 @@ HEADERS = {'User-Agent': '.',
 last_url = ""
 last_url_data = None
 
-DELAY = 1
+DELAY = 2
 
 @lru_cache()
 def load_url(url):

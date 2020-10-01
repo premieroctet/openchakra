@@ -14,7 +14,7 @@ class DataExtractor(object):
     def __init__(self, generator, parser, output_path):
       super().__init__()
       #self.loader=BasicLoader()
-      self.loader=ChromeLoader()
+      self.loader=ChromeLoader('sebastien.auvray@free.fr', '600Bimota')
       self.gen=generator(self.loader)
       self.parser=parser
         

@@ -5,9 +5,9 @@ Created on 11 juil. 2012
 @author: sauvray
 '''
 from alfred.scrapper.base_parser import BaseParser
-from bs4 import BeautifulSoup
 import time
 from alfred.scrapper.utils.utils import DELAY
+from bs4 import BeautifulSoup
 
 class ParuVenduParser(BaseParser):
 
@@ -39,13 +39,14 @@ class ParuVenduParser(BaseParser):
 			return None
 
 	def get_page_data(self, driver):
-		bs = BeautifulSoup(driver.page_source, features="lxml")
-		divs = bs.find_all('div', class_='ergov3-annonce')
-		urls = [ a['href'] for a in (div.find(lambda d : 'javascript' not in d.get('href', None)) for div in divs)]
+		urls = [d.get_attribute('href') for d in driver.find_elements_by_xpath("//a[not(contains(@href, 'javascript')) and parent::div[contains(@class, 'ergov3-annonce')]]")]
 		index = 0
 		res=[]
+		print('{} annonces trouvées'.format(len(urls)))
 		for url in urls:
 			print("Sous-page:{}".format(index))
-			res.append(self.get_contact_info(url))
+			announce_infos = self.get_contact_info(url)
+			if announce_infos:
+				res.append(announce_infos)
 			index+=1	
 		return res
