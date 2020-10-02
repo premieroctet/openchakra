@@ -2531,7 +2531,7 @@ router.post('/prospect/add', passport.authenticate('jwt', {session: false}), (re
   uploadProspect.single('prospects')(req, res, err => {
     if (err) {
       console.error(err)
-      res.status(404).json({errors: err})
+      res.status(404).json({errors: err.message})
     }
     else {
       Prospect.find({}, 'phone')
