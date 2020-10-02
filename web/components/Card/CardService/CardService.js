@@ -75,9 +75,6 @@ class CardService extends React.Component{
               <Grid className={style.cardServiceChipName}>
                 <Chip label={alfred.firstname} className={style.cardServiceChip} />
               </Grid>
-              <Grid className={style.cardServiceAvatarContainer}>
-                <Avatar alt={alfred.firstname} src={alfred.picture} className={style.cardServiceAvatar}/>
-              </Grid>
             </Grid>
             <Grid>
               <Grid>

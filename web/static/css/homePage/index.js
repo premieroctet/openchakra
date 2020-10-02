@@ -663,5 +663,9 @@ export default theme => ({
     width: 15,
     height: 15,
     marginRight: 5
+  },
+  navbarDatePickerMain:{
+    display: 'flex',
+    alignItems: 'center'
   }
 })

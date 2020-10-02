@@ -26,6 +26,10 @@ import AlgoliaPlaces from 'algolia-places-react';
 import {SEARCHBAR} from '../../../utils/i18n';
 import moment from "moment";
 import DatePicker from "react-datepicker";
+import TextField from "@material-ui/core/TextField";
+import Select from "@material-ui/core/Select";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
 
 const jwt = require('jsonwebtoken');
 
@@ -43,15 +47,12 @@ class NavBar extends Component {
       mobileMoreAnchorEl: null,
       avatarMoreAnchorEl: null,
       logged: false,
-      hiddingPanel: true,
       isTop: true,
-      isIndex: false,
-      isSearch: false,
       setOpenLogin: false,
       setOpenMobileLogin: false,
       setOpenRegister: false,
       setOpenMobileRegister: false,
-      user: null,
+      user: {},
       google_id: props.google_id,
       facebook_id: props.facebook_id,
       activeStep: 0,
@@ -75,17 +76,6 @@ class NavBar extends Component {
     if (token) {
       this.setState({logged: true});
       axios.defaults.headers.common['Authorization'] = token;
-    }
-    if (Router.pathname === '/') {
-      this.setState({
-        hiddingPanel: false,
-        isIndex: true,
-      });
-    }
-    if (Router.pathname === '/search') {
-      this.setState({
-        isSearch: true,
-      });
     }
   }
 
@@ -162,37 +152,18 @@ class NavBar extends Component {
   onChange = e => {
     let {name, value} = e.target;
     this.setState({[name]: value});
-  };
-
-  search = () => {
-    let query = {search: 1};
-    if (this.state.keyword) {
-      query['keyword'] = this.state.keyword;
+    if (name === 'selectedAddress') {
+      if (value === 'addAddress') {
+        Router.push('/profile/myAddresses');
+      } else {
+        this.setState({
+          gps: value === 'all' ? null : value === 'main' ? this.state.allAddresses['main'].gps : {
+            lat: this.state.allAddresses[value].lat,
+            lng: this.state.allAddresses[value].lng,
+          },
+        });
+      }
     }
-
-    if (this.state.city) {
-      query['city'] = this.state.city;
-    }
-
-    if (this.state.gps) {
-      query['gps'] = JSON.stringify(this.state.gps);
-    }
-
-    if (this.state.dateSelected) {
-      query['date'] = moment(this.state.dateSelected).valueOf();
-    }
-    Router.push({
-      pathname: '/search',
-      query: query,
-    });
-  };
-
-  onChangeCity({suggestion}) {
-    this.setState({gps: suggestion.latlng, city: suggestion.name});
-  };
-
-  onSuggestions = ({query}) => {
-    this.setState({city: query});
   };
 
   handleOpenMenuItem = (event) => {
@@ -206,8 +177,8 @@ class NavBar extends Component {
 
 
   render() {
-    const {mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged, user, setOpenLogin, setOpenRegister, keyword, errors, dateSelected, anchorEl} = this.state;
-    const {style} = this.props;
+    const {mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged,  setOpenLogin, setOpenRegister, keyword, errors, dateSelected, anchorEl} = this.state;
+    const {style, user, selectedAddress} = this.props;
 
     const modalLogin = () => {
       return (
@@ -236,57 +207,108 @@ class NavBar extends Component {
     return(
       <Grid className={style.navbarMainSytle}>
         <AppBar position={'static'} className={style.navbarAppBar}>
-          <Toolbar className={style.toolbar}>
+          <Toolbar className={style.navBartoolbar}>
             <Grid className={style.navbarLogoContainer}>
               <p>Mon logo</p>
             </Grid>
             <Grid className={style.navbarSearchContainer}>
               <Paper component="form" classes={{root: style.navbarSearch}}>
-                <InputBase
-                  classes={{root: style.navbarRoot, input: style.navbarInput}}
-                  placeholder={SEARCHBAR.what}
-                  value={keyword}
-                  onChange={this.onChange}
-                  name={'keyword'}
-                />
-                <Divider className={style.divider} orientation="vertical" />
-                <Grid className={style.navbarAlgoliaContent}>
-                  <AlgoliaPlaces
-                    placeholder={SEARCHBAR.where}
-                    className={style.navbarAlgoliaPlace}
-                    options={{
-                      appId: 'plKATRG826CP',
-                      apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                      language: 'fr',
-                      countries: ['fr'],
-                      type: 'city',
+                <Grid style={{flex: 1}}>
+                  <InputBase
+                    classes={{root: style.navbarRoot, input: style.navbarInput}}
+                    placeholder={SEARCHBAR.what}
+                    value={keyword}
+                    onChange={this.onChange}
+                    name={'keyword'}
+                    onKeyPress={(e) => {
+                      e.key === 'Enter' && e.preventDefault();
                     }}
-                    onChange={(suggestion) => this.onChangeCity(suggestion)}
-                    onClear={() => this.setState({city: '', gps: null})}
-                    onSuggestions={this.onSuggestions}
-                    />
-                </Grid>
-                <Divider className={style.divider} orientation="vertical" />
-                <Grid className={style.navbarDatePickerContainer}>
-                  <DatePicker
-                    selected={dateSelected}
-                    onChange={(date) => {
-                      this.setState({dateSelected: date});
-                      if (date === null) {
-                        this.setState({dateSelected: ''});
-                      }
-                    }}
-                    locale='fr'
-                    showMonthDropdown
-                    dateFormat="dd/MM/yyyy"
-                    placeholderText={SEARCHBAR.when}
-                    minDate={new Date()}
-                    className={style.inputDatePicker}
                   />
                 </Grid>
-                <IconButton type="submit" classes={{root: style.iconButton}} aria-label="search" onClick={() => this.search()}>
-                  <SearchIcon />
-                </IconButton>
+                <Grid>
+                  <Divider className={style.divider} orientation="vertical" />
+                </Grid>
+                {user ?
+                  <Grid className={style.navbarAddressContainer}>
+                    <FormControl className={style.navbarFormControlAddress}>
+                      <Select
+                        disableUnderline
+                        classes={{root: style.navbarSelectAddress}}
+                        id="outlined-select-currency"
+                        value={selectedAddress}
+                        name={'selectedAddress'}
+                        onChange={(e) => {
+                          this.onChange(e);
+                        }}
+                      >
+                        <MenuItem value={'main'}>
+                          Adresse
+                          principale, {' ' + user.billing_address.address} {user.billing_address.zip_code},{user.billing_address.city}
+                        </MenuItem>
+                        {user.service_address.map(e => (
+                          <MenuItem value={e._id}>
+                            {e.label + ', '} {' ' + e.address},{e.zip_code} {e.city}
+                          </MenuItem>
+                        ))}
+                        <MenuItem value={'all'}>
+                          Partout, Rechercher des Alfred partout
+                        </MenuItem>
+                        <MenuItem value={'addAddress'}>
+                          <p style={{color: '#2FBCD3', cursor: 'pointer'}}>
+                            Ajouter une adresse
+                          </p>
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  :
+                  <Grid className={style.navbarAlgoliaContent}>
+                    <AlgoliaPlaces
+                      placeholder={SEARCHBAR.where}
+                      className={style.navbarAlgoliaPlace}
+                      options={{
+                        appId: 'plKATRG826CP',
+                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                        language: 'fr',
+                        countries: ['fr'],
+                        type: 'city',
+                      }}
+                      onChange={(suggestion) => this.onChangeCity(suggestion)}
+                      onClear={() => this.setState({city: '', gps: null})}
+                      onSuggestions={this.onSuggestions}
+                    />
+                  </Grid>
+                }
+                {
+                  !logged ?
+                    <Grid className={style.navbarDatePickerMain}>
+                      <Grid>
+                        <Divider className={style.divider} orientation="vertical" />
+                      </Grid>
+                      <Grid className={style.navbarDatePickerContainer}>
+                        <DatePicker
+                          selected={dateSelected}
+                          onChange={(date) => {
+                            this.setState({dateSelected: date});
+                            if (date === null) {
+                              this.setState({dateSelected: ''});
+                            }
+                          }}
+                          locale='fr'
+                          showMonthDropdown
+                          dateFormat="dd/MM/yyyy"
+                          placeholderText={SEARCHBAR.when}
+                          minDate={new Date()}
+                          className={style.inputDatePicker}
+                        />
+                      </Grid>
+                    </Grid> : null
+                }
+                <Grid>
+                  <IconButton type="submit" classes={{root: style.iconButton}} aria-label="search" onClick={() => this.findService()}>
+                    <SearchIcon />
+                  </IconButton>
+                </Grid>
               </Paper>
             </Grid>
             {
@@ -294,7 +316,6 @@ class NavBar extends Component {
                 <Grid>
                   <IconButton
                     edge="start"
-                    className={style.menuButton}
                     color="inherit"
                     aria-label="open drawer"
                     onClick={this.handleOpenMenuItem}

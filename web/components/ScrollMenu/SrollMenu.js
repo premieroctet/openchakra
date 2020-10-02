@@ -51,7 +51,7 @@ class SrollMenu extends React.Component{
               categories ?
                 categories.map((res, index) => {
                   return(
-                      <Tab label={res.label} {...a11yProps(index)} />
+                    <Tab label={res.label} {...a11yProps(index)} />
                   )
                 }) : null
             }

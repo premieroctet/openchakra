@@ -85,7 +85,6 @@ class SearchPage extends React.Component {
       filters:['Plus proche de moi']
     };
     this.filter = this.filter.bind(this);
-    this.searchCallback = this.searchCallback.bind(this);
   }
 
   static getInitialProps({query: {keyword, city, gps, selectedAddress, category, service, prestation, search, date}}) {
@@ -110,11 +109,11 @@ class SearchPage extends React.Component {
     if (startDate) {
       startDate.hour(0).minute(0).second(0).millisecond(0);
     }
-    ;
+
     if (endDate) {
       endDate.hour(23).minute(59).second(59).millisecond(999);
     }
-    ;
+
     this.setState({startDate: startDate, endDate: endDate});
   }
 
@@ -127,7 +126,7 @@ class SearchPage extends React.Component {
   componentDidMount() {
     // Mount components gets criterion from URL
     // If date in URL then force filter after search
-    var st = {
+    let st = {
       keyword: 'keyword' in this.props ? this.props.keyword : '',
       gps: 'gps' in this.props ? JSON.parse(this.props.gps) : null,
       city: this.props.city || '',
@@ -171,9 +170,11 @@ class SearchPage extends React.Component {
             axios.get('/myAlfred/api/users/current')
               .then(res => {
                 let user = res.data;
+
+
                 this.setState({isAdmin: user.is_admin});
                 st['user'] = user;
-                var allAddresses = {'main': user.billing_address.gps};
+                let allAddresses = {'main': user.billing_address.gps};
                 user.service_address.forEach(ad => allAddresses[ad._id] = {lat: ad.lat, lng: ad.lng});
                 st['allAddresses'] = allAddresses;
                 if ('selectedAddress' in this.props && this.props['selectedAddress'] !== 'all') {
@@ -442,10 +443,10 @@ class SearchPage extends React.Component {
     return (
       <Grid>
         <Grid className={classes.searchNavbarComponentPosition}>
-          <InfoBar style={classes}/>
+          <InfoBar style={classes} />
         </Grid>
         <Grid>
-          <NavBar style={classes}/>
+          <NavBar style={classes} user={user} selectedAddress={selectedAddress}/>
         </Grid>
         <Grid className={classes.searchFilterMenuPosition}>
           <Grid className={classes.searchFilterMenuContent}>

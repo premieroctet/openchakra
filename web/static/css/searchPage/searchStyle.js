@@ -92,7 +92,7 @@ export default theme => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  toolbar:{
+  navBartoolbar:{
     display: 'flex',
     justifyContent: 'space-evenly'
   },
@@ -364,19 +364,19 @@ export default theme => ({
   cardServiceChip:{
     backgroundColor: theme.palette.white.main,
   },
-  cardServiceAvatarContainer:{
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)'
-  },
-  cardServiceAvatar:{
-    width: theme.spacing(7),
-    height: theme.spacing(7),
-  },
   stylecardServiceDistance:{
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-  }
+  },
+  navbarAddressContainer:{
+    marginLeft: 20,
+    width: '50%'
+  },
+  navbarFormControlAddress:{
+    width: '100%'
+  },
+  navbarSearchContainer:{
+    width: '100%',
+  },
 })
