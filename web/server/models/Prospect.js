@@ -14,7 +14,7 @@ const ProspectSchema = new Schema({
   },
   name: {
     type: String,
-    required: true,
+    required: false,
   },
   title: {
     type: String,
@@ -28,20 +28,25 @@ const ProspectSchema = new Schema({
   },
   city: {
     type: String,
-    required: true,
+    required: false,
   },
   zip_code: {
     type: String,
-    required: true,
+    required: false,
   },
   creation: {
     type: Date,
+    default: Date.now(),
     required: true,
   },
   contacted: {
     type: Boolean,
     default: false,
   },
+  provider: {
+    type: String,
+    required: true,
+  }
 });
 
 Prospect = mongoose.model('prospects', ProspectSchema);

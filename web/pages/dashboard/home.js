@@ -110,10 +110,6 @@ class home extends React.Component {
                     :
                     null
                   }
-                  <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                    <Typography style={{fontSize: 30}}>Fonctions DEV</Typography>
-                  </Grid>
-                  <Link href="/dashboard/dev/api_calls"><a>Appels API</a></Link><br/>
                 </Grid>
                 :
                 <Grid item style={{display: 'flex', justifyContent: 'center'}}>

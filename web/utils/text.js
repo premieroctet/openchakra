@@ -63,6 +63,17 @@ const frenchFormat = str => {
   return result;
 };
 
+const normalizePhone = p => {
+  if (p) {
+    p=p.trim()
+    const not_number=/[^\d]/
+    while (p.match(not_number)) {
+      p = p.replace(not_number, '')
+    }
+  }
+  return p
+}
+
 module.exports = {
   normalize,
   createQuery,
@@ -73,4 +84,5 @@ module.exports = {
   createRegExpOR,
   createRegExpAND,
   frenchFormat,
+  normalizePhone
 };

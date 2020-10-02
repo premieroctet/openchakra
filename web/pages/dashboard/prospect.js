@@ -8,25 +8,15 @@ import Layout from '../../hoc/Layout/Layout';
 import axios from 'axios';
 import Link from 'next/link';
 import Router from 'next/router';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import {Table, TableBody, TableCell, TableHead, TableRow, TablePagination} from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
-import TablePagination from '@material-ui/core/TablePagination';
 import IconButton from '@material-ui/core/IconButton';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import {KeyboardArrowLeft, KeyboardArrowRight} from '@material-ui/icons';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import PropTypes from 'prop-types';
 import HomeIcon from '@material-ui/icons/Home';
 import cookie from 'react-cookies';
-
-const {CSVLink} = require('react-csv');
-
-const moment = require('moment');
 
 const styles = theme => ({
   signupContainer: {
@@ -115,10 +105,14 @@ class all extends React.Component {
       prospects: [],
       page: 0,
       rowsPerPage: 10,
+      selectedFile: null,
+      comments: null,
+      errors: null,
     };
     this.handleChangePage = this.handleChangePage.bind(this);
     this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
     this.load = this.load.bind(this);
+    this.fileRef = React.createRef()
   }
 
   componentDidMount() {
@@ -149,10 +143,31 @@ class all extends React.Component {
     this.setState({page: 0, rowsPerPage: event.target.value});
   }
 
+  onChangeHandler = event => {
+    this.setState({selectedFile: event.target.files[0]})
+  }
+
+  onClickHandler = () => {
+    this.setState({comments: null, errors:null})
+    const data = new FormData()
+    data.append('prospects', this.state.selectedFile)
+    axios.post('/myAlfred/api/admin/prospect/add', data)
+      .then( response => {
+        this.setState({comments: response.data})
+        this.load()
+      })
+      .catch( err => {
+        this.setState({errors: err.response.data.errors})
+        this.load()
+      })
+    // Clear input file to avoid ERR_UPLOAD_FILE_CHANGED
+    this.fileRef.current.value=''
+    this.setState({selectedFile:null})
+  }
 
   render() {
     const {classes} = this.props;
-    const {prospects, export_data} = this.state;
+    const {prospects, export_data, comments, errors} = this.state;
 
     return (
       <Layout>
@@ -165,9 +180,21 @@ class all extends React.Component {
           <Card className={classes.card}>
             <Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+                <Typography style={{fontSize: 30}}>Import listing</Typography>
+              </Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
+                <input ref={this.fileRef} type="file" name="file" id="file" onChange={this.onChangeHandler}/>
+              </Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
+                {comments}
+                <em style={{color: 'red'}}>{errors}</em>
+              </Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '10px'}}>
+                <button disabled={!this.state.selectedFile} type="button" class="btn btn-success btn-block" onClick={this.onClickHandler}>Importer</button>
+              </Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
                 <Typography style={{fontSize: 30}}>Prospection</Typography>
               </Grid>
-
               <Paper style={{width: '100%'}}>
                 <div>
                   <Table className={classes.table}>
