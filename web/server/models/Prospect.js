@@ -11,6 +11,8 @@ const ProspectSchema = new Schema({
   },
   keywords: {
     type: String,
+    default:'aucun',
+    required:true,
   },
   name: {
     type: String,
