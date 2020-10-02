@@ -30,8 +30,8 @@ const {addIdIfRequired} = require('../../../../utils/mangopay');
 const multer = require('multer')
 const path = require('path')
 const parse = require('csv-parse/lib/sync')
-const {normalizePhone} = require('../../../../utils/text')
-// BILLING
+const {normalizePhone, bufferToString} = require('../../../../utils/text')
+
 
 router.get('/billing/test', (req, res) => res.json({msg: 'Billing admin Works!'}));
 
@@ -2537,14 +2537,18 @@ router.post('/prospect/add', passport.authenticate('jwt', {session: false}), (re
       Prospect.find({}, 'phone')
         .then (phones => {
           phones = phones.map( p => p.phone)
-          const contents = req.file.buffer.toString('utf-8')
-          var records = parse(contents, { columns: true})
+          const contents = bufferToString(req.file.buffer)
+          var records = parse(contents, { columns: true, delimiter:';'})
 
-          const schema_fields = Object.keys(Prospect.schema.obj)
+          const schema_fields = Object.keys(Prospect.schema.obj).sort()
           const schema_required = schema_fields.filter(k => Prospect.schema.obj[k].required && !Prospect.schema.obj[k].default)
-          const data_fields = Object.keys(records[0])
+          const data_fields = Object.keys(records[0]).sort()
           const missing = schema_required.filter( att => !data_fields.includes(att))
           const extra = data_fields.filter( att => !schema_fields.includes(att))
+
+          console.log(`Schema required:${schema_required}, ${JSON.stringify(Buffer.from(schema_required.join(',')))}`)
+          console.log(`Data fields:${data_fields}, ${JSON.stringify(Buffer.from(data_fields.join(',')))}`)
+
           if (missing.length>0) {
             throw new Error(`Champ obligatoires manquants:${missing.join(',')}`)
           }

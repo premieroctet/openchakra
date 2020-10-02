@@ -1,3 +1,5 @@
+const stripBom = require('strip-bom')
+
 const ARTICLES = 'le la les un une de des d l à'.split(/ /g);
 
 const normalize = str => {
@@ -74,6 +76,13 @@ const normalizePhone = p => {
   return p
 }
 
+const bufferToString = buff => {
+  var text = buff.toString('utf-8')
+  // For MAC files
+  text = stripBom(text)
+  return text
+}
+
 module.exports = {
   normalize,
   createQuery,
@@ -84,5 +93,6 @@ module.exports = {
   createRegExpOR,
   createRegExpAND,
   frenchFormat,
-  normalizePhone
+  normalizePhone,
+  bufferToString,
 };

@@ -95,6 +95,7 @@
     "sib-api-v3-sdk": "^7.2.2",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
+    "strip-bom": "^4.0.0",
     "styled-components": "^4.2.0",
     "tough-cookie": "^4.0.0",
     "url-parse": "^1.4.7",

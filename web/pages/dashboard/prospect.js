@@ -182,6 +182,9 @@ class all extends React.Component {
               <Grid item style={{display: 'flex', justifyContent: 'center'}}>
                 <Typography style={{fontSize: 30}}>Import listing</Typography>
               </Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+              Sélectionnez un fichier .csv ou .txt, séparateur point-virgule
+              </Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
                 <input ref={this.fileRef} type="file" name="file" id="file" onChange={this.onChangeHandler}/>
               </Grid>
