@@ -25,7 +25,7 @@ class FixIllegal(FixBase):
     DOCUMENTS='serviceusers users prestations'.split()
     """
     FIELDS=['description']
-    DOCUMENTS=['users']
+    DOCUMENTS=['users', 'serviceusers']
     
     def fix(self):
       patts = [re.compile(p) for p in PHONE_MAIL_PATTERNS]
