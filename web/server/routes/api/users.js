@@ -31,25 +31,6 @@ const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentSt
 
 axios.defaults.withCredentials = true;
 
-// DEBUGGING AXIOS
-/**
- require('axios-debug-log')({
-  request: function (debug, config) {
-    debug('Request:' + JSON.stringify(config, null, 2))
-  },
-  response: function (debug, response) {
-    debug(
-      'Response with ' +JSON.stringify(response.headers),
-      'from ' + response.config.url
-    )
-  },
-  error: function (debug, error) {
-    // Read https://www.npmjs.com/package/axios#handling-errors for more info
-    debug('Boom', error)
-  }
-})
- */
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/profile/');

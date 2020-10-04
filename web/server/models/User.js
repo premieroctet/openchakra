@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const year = new Date().getFullYear() - 16;
 const {getMangopayMessage} = require('../../utils/i18n');
+const {hideIllegal} = require('../../utils/text')
 
 const UserSchema = new Schema({
   name: {
@@ -106,6 +107,7 @@ const UserSchema = new Schema({
   },
   description: {
     type: String,
+    set : text => hideIllegal(text)
   },
   id_card: {
     recto: {
