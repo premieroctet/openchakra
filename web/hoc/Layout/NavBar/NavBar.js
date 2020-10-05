@@ -18,27 +18,19 @@ import Slide from '@material-ui/core/Slide';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
 import Paper from '@material-ui/core/Paper';
-import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AlgoliaPlaces from 'algolia-places-react';
-import {SEARCHBAR} from '../../../utils/i18n';
-import moment from "moment";
+import {SEARCHBAR, NAVBAR_MENU} from '../../../utils/i18n';
 import DatePicker from "react-datepicker";
 import TextField from "@material-ui/core/TextField";
-import TextFieldCustom from "@material-ui/core/TextField";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import {withStyles} from "@material-ui/core/styles";
-import PropTypes from 'prop-types';
 
 const jwt = require('jsonwebtoken');
-
-var parse = require('url-parse');
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -49,33 +41,17 @@ class NavBar extends Component {
     super(props);
     this.state = {
       anchorEl: null,
-      mobileMoreAnchorEl: null,
-      avatarMoreAnchorEl: null,
       logged: false,
-      isTop: true,
       setOpenLogin: false,
-      setOpenMobileLogin: false,
       setOpenRegister: false,
-      setOpenMobileRegister: false,
       user: {},
-      google_id: props.google_id,
-      facebook_id: props.facebook_id,
       activeStep: 0,
       keyword: null,
-      errors: {},
       city: null,
       gps: null,
       dateSelected: null,
       indexTabBar: 0,
       ifHomePage: false
-    }
-
-
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps !== '') {
-      this.state.user = this.props.user;
     }
   }
 
@@ -93,31 +69,12 @@ class NavBar extends Component {
   logout2() {
     cookie.remove('token', {path: '/'});
     localStorage.removeItem('path');
-    // Remove auth header for future requests
     setAuthToken(false);
     Router.push('/?disconnect=1');
   };
 
-  handleProfileMenuOpen = event => {
-    this.setState({anchorEl: event.currentTarget});
-  };
-
   handleMenuClose = () => {
     this.setState({anchorEl: null});
-    this.handleMobileMenuClose();
-    this.handleAvatarMenuClose();
-  };
-
-  handleAvatarMenuOpen = event => {
-    this.setState({avatarMoreAnchorEl: event.currentTarget});
-  };
-
-  handleAvatarMenuClose = event => {
-    this.setState({avatarMoreAnchorEl: null});
-  };
-
-  handleMobileMenuClose = () => {
-    this.setState({mobileMoreAnchorEl: null});
   };
 
   handleOpenLogin = (e) => {
@@ -151,15 +108,6 @@ class NavBar extends Component {
     this.setState({activeStep: e});
   };
 
-  is_admin = () => {
-    var is_admin = false;
-    const coo = cookie.load('token');
-    if (coo) {
-      return jwt.decode(coo.split(' ')[1]).is_admin;
-    }
-    return false;
-  };
-
   onChange = e => {
     let {name, value} = e.target;
     this.setState({[name]: value});
@@ -185,17 +133,33 @@ class NavBar extends Component {
     this.setState({anchorEl: false})
   };
 
-  handleChangeTabBar = (event, newValue) => {
-    this.setState({indexTabBar: newValue})
+  findService() {
+    var queryParams = {search: 1};
+    if (this.state.keyword) {
+      queryParams['keyword'] = this.state.keyword;
+    }
+
+    if (this.state.city) {
+      queryParams['city'] = this.state.city;
+    }
+
+    if (this.state.gps) {
+      queryParams['gps'] = JSON.stringify(this.state.gps);
+    }
+
+    if (this.state.selectedAddress) {
+      queryParams['selectedAddress'] = this.state.selectedAddress;
+    }
+    Router.push({pathname: '/search', query: queryParams});
+  }
+
+  onChangeCity({suggestion}) {
+    this.setState({gps: suggestion.latlng, city: suggestion.name});
   };
 
-
-
   render() {
-    const {mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged,  setOpenLogin, setOpenRegister, keyword, errors, dateSelected, anchorEl, indexTabBar, ifHomePage} = this.state;
+    const {logged,  setOpenLogin, setOpenRegister, keyword, dateSelected, anchorEl, indexTabBar, ifHomePage, city} = this.state;
     const {style, user, selectedAddress} = this.props;
-
-
 
     const modalLogin = () => {
       return (
@@ -221,19 +185,18 @@ class NavBar extends Component {
       );
     };
 
-
     const SearchBarInput = () => {
       return(
         <Grid className={style.navbarSearchContainer}>
           <Paper component="form" classes={{root: style.navbarSearch}}>
             <Grid style={{flex: 1}}>
               <TextField
-                classes={{root: style.navbarRoot}}
+                classes={{root: style.navbarRootTextField}}
                 placeholder={SEARCHBAR.what}
                 value={keyword}
                 onChange={this.onChange}
                 name={'keyword'}
-                label={'Le service '}
+                label={SEARCHBAR.labelWhat}
                 onKeyPress={(e) => {
                   e.key === 'Enter' && e.preventDefault();
                 }}
@@ -281,16 +244,19 @@ class NavBar extends Component {
               :
               <Grid className={style.navbarAlgoliaContent}>
                 <TextField
-                  label={'L’adresse'}
+                  label={SEARCHBAR.labelWhere}
+                  classes={{root: style.navbarRootTextField}}
                   InputLabelProps={{
                     shrink: true,
                   }}
                   InputProps={{
-                    inputComponent:() => {
+                    inputComponent:(props) => {
                       return (
                         <AlgoliaPlaces
+                          {...props}
                           placeholder={SEARCHBAR.where}
                           className={style.navbarAlgoliaPlace}
+                          value={city}
                           options={{
                             appId: 'plKATRG826CP',
                             apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -300,7 +266,6 @@ class NavBar extends Component {
                           }}
                           onChange={(suggestion) => this.onChangeCity(suggestion)}
                           onClear={() => this.setState({city: '', gps: null})}
-                          onSuggestions={this.onSuggestions}
                         />)
                     },
                     disableUnderline: true
@@ -316,14 +281,16 @@ class NavBar extends Component {
                   </Grid>
                   <Grid className={style.navbarDatePickerContainer}>
                     <TextField
-                      label={'Les dates'}
+                      label={SEARCHBAR.labelWhen}
+                      classes={{root: style.navbarRootTextField}}
                       InputLabelProps={{
                         shrink: true,
                       }}
                       InputProps={{
-                        inputComponent:() => {
+                        inputComponent:(props) => {
                           return (
                             <DatePicker
+                              {...props}
                               selected={dateSelected}
                               onChange={(date) => {
                                 this.setState({dateSelected: date});
@@ -339,9 +306,9 @@ class NavBar extends Component {
                               className={style.inputDatePicker}
                             />)
                         },
+                        disableUnderline: true
                       }}
                     />
-
                   </Grid>
                 </Grid> : null
             }
@@ -366,10 +333,10 @@ class NavBar extends Component {
               {
                 ifHomePage ?
                   <Grid>
-                    <Tabs value={indexTabBar} indicatorColor={''} selectionFollowsFocus={false} onChange={this.handleChangeTabBar} aria-label="simple tabs example">
-                      <Tab classes={{root : style.navbarTabRoot}} label="Nos services" />
-                      <Tab classes={{root : style.navbarTabRoot}} label="Notre équipe" />
-                      <Tab classes={{root : style.navbarTabRoot}} label="Nous contacter"/>
+                    <Tabs value={indexTabBar} indicatorColor={''} selectionFollowsFocus={false} aria-label="simple tabs example">
+                      <Tab classes={{root : style.navbarTabRoot}} label={NAVBAR_MENU.ourServices} />
+                      <Tab classes={{root : style.navbarTabRoot}} label={NAVBAR_MENU.ourTeam} />
+                      <Tab classes={{root : style.navbarTabRoot}} label={NAVBAR_MENU.contactUs}/>
                     </Tabs>
                   </Grid> : SearchBarInput()
               }
@@ -403,7 +370,7 @@ class NavBar extends Component {
                   :
                   <Grid className={style.navbarButtonContainer}>
                     <Grid>
-                      <Button className={style.navBarlogIn} onClick={this.handleOpenLogin}>Connexion</Button>
+                      <Button className={style.navBarlogIn} onClick={this.handleOpenLogin}>{NAVBAR_MENU.logIn}</Button>
                       <Dialog
                         scroll={'paper'}
                         aria-labelledby="scroll-dialog-title"
@@ -425,7 +392,7 @@ class NavBar extends Component {
                       </Dialog>
                     </Grid>
                     <Grid className={style.navbarRegisterContainer}>
-                      <Button variant="outlined" classes={{root: style.navbarSignIn}} onClick={this.handleOpenRegister}>Inscription</Button>
+                      <Button variant="outlined" classes={{root: style.navbarSignIn}} onClick={this.handleOpenRegister}>{NAVBAR_MENU.signIn}</Button>
                       <Dialog
                         scroll={'paper'}
                         aria-labelledby="scroll-dialog-title"
@@ -451,12 +418,10 @@ class NavBar extends Component {
             {
               ifHomePage ? SearchBarInput() : null
             }
-
           </Toolbar>
         </AppBar>
       </Grid>
     )
-
   }
 }
 

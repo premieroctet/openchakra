@@ -15,7 +15,7 @@ class BecomeAlfred extends React.Component{
       <Grid className={style.becomeAlfredMainContainer}>
         <Grid className={style.becomeAlfredContainer}>
           <Grid>
-            <p className={style.becomeAlfredTitle}>{BECOME_ALFRED.title}</p>
+            <h2 className={style.becomeAlfredTitle}>{BECOME_ALFRED.title}</h2>
           </Grid>
           <Grid>
             <p className={style.becomeAlfredText}>{BECOME_ALFRED.text}</p>

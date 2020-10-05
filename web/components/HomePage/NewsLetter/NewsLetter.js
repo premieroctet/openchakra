@@ -5,7 +5,8 @@ import TextField from "@material-ui/core/TextField";
 import FacebookIcon from '@material-ui/icons/Facebook';
 import {NEWS_LETTER} from '../../../utils/i18n';
 import axios from 'axios';
-
+import EmailIcon from '@material-ui/icons/Email';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 class NewsLetter extends React.Component{
   constructor(props) {
@@ -39,7 +40,7 @@ class NewsLetter extends React.Component{
         <Grid className={style.newsLetterMainContainer}>
           <Grid className={style.newsLetterLeftContainer}>
             <Grid>
-              <p className={style.newsLetterTitle}>{NEWS_LETTER.title}</p>
+              <h2 className={style.newsLetterTitle}>{NEWS_LETTER.title}</h2>
             </Grid>
             <Grid>
               <p className={style.newsLetterSubTitle}>{NEWS_LETTER.text}</p>
@@ -68,6 +69,13 @@ class NewsLetter extends React.Component{
                   classes={{root: style.newsLetterTextField}}
                   InputLabelProps={{ shrink: false }}
                   onChange={this.handleOnchange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start" >
+                        <EmailIcon className={style.newsLetterEmailIcon}/>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
             </Grid>

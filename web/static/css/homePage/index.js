@@ -3,7 +3,7 @@ export default theme => ({
     width: '60%'
   },
   bannerSize:{
-    width: '80%'
+    width: '60%'
   },
   infoBarMainStyle:{
     backgroundColor: theme.palette.backgroundGrey.main,
@@ -55,13 +55,25 @@ export default theme => ({
     borderRadius: theme.border.button.borderRadius,
     boxShadow: 'rgba(0, 0, 0, 0.15) 0px 16px 32px, rgba(0, 0, 0, 0.1) 0px 3px 8px'
   },
-  navbarRoot: {
+  navbarRootTextField: {
     marginLeft: 20,
     flex: 1,
     fontFamily: theme.typography.text.fontFamily,
     fontSize: theme.typography.placeHolder.fontSize,
     fontWeight:  theme.typography.placeHolder.fontWeight,
     lineHeight:  theme.typography.placeHolder.lineHeight,
+    "& .MuiFormLabel-root": {
+      fontWeight: 'bold',
+      '&:focus':{
+        color: theme.palette.primary.main
+      }
+    },
+    '& .MuiFormLabel-root.Mui-focused':{
+      color: theme.palette.primary.main
+    },
+    '& .MuiInputBase-input::placeholder':{
+      opacity: '0.5'
+    }
   },
   navbarInput:{
     borderBottom: 'inherit',
@@ -89,32 +101,33 @@ export default theme => ({
   bannerPresentationTitle:{
     fontFamily: theme.typography.title.fontFamily,
     fontWeight: theme.typography.title.fontWeight,
-    color: theme.typography.title.color,
+    color: theme.palette.white.main,
     fontSize: theme.typography.title.fontSize,
     margin: theme.typography.title.margin,
   },
   bannerPresentationMainStyle:{
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-around',
     alignItems: 'center'
   },
   bannerPresentationContainerDescription:{
     display: 'flex',
     flexDirection: 'column',
-    width: '30%',
+    width: '50%',
     marginBottom: '6%'
   },
   bannerPresentationContainerText:{
     width: '75%'
   },
   bannerPresentationButton:{
-    color: theme.palette.white.main,
-    fontWeight: theme.typography.blackButton.fontWeight,
-    fontFamily: theme.typography.blackButton.fontFamily,
-    backgroundColor: theme.palette.black.main,
-    borderRadius: theme.border.blackButton.borderRadius,
-    padding: theme.padding.blackButton.padding,
+    color: theme.palette.primary.main,
+    backgroundColor: theme.palette.white.main,
+    fontWeight: theme.typography.whiteButtonContained.fontWeight,
+    fontFamily: theme.typography.whiteButtonContained.fontFamily,
+    borderRadius: theme.border.whiteButton.borderRadius,
+    textTransform: theme.typography.textTransform,
+    padding: theme.padding.whiteButtonContained.padding,
+    fontSize: theme.typography.whiteButtonContained.fontSize
   },
   bannerPresentationContainerIllustration:{
     display: 'flex',
@@ -123,11 +136,14 @@ export default theme => ({
   },
   navbarAndBannerContainer:{
     justifyContent : 'center',
-    height: '85vh'
+    height: '85vh',
+    backgroundImage: 'url(../../assets/img/homePage/illuHeader.png)',
+    backgroundColor: 'rgba(207,223,252,1)',
+    backgroundSize: 'contain',
+    backgroundPosition: 'center'
   },
   navbarAndBannerBackground:{
-    backgroundColor: 'rgba(207,223,252,1)',
-    width: '100%'
+    width: '100%',
   },
   navbarComponentPosition:{
     display: 'flex',
@@ -137,44 +153,13 @@ export default theme => ({
   },
   bannerPresentationText:{
     fontFamily: theme.typography.text.fontFamily,
-    color: theme.typography.text.color,
+    color: theme.palette.white.main,
     fontWeight: theme.typography.text.fontWeight,
-    fontSize: theme.typography.text.fontSize
   },
   bannerPresentationContainer:{
     display: 'flex',
-    justifyContent: 'center'
-  },
-  ourServicesTitle:{
-    fontFamily: theme.typography.subTitle.fontFamily,
-    fontWeight: theme.typography.subTitle.fontWeight,
-    fontSize: theme.typography.subTitle.fontSize,
-    margin: theme.typography.subTitle.margin,
-  },
-  ourServicesText:{
-    fontFamily: theme.typography.text.fontFamily,
-    color: theme.typography.text.color,
-    fontWeight: theme.typography.text.fontWeight,
-    fontSize: theme.typography.text.fontSize
-  },
-  ourServicesButton:{
-    color: theme.palette.white.main,
-    fontWeight: theme.typography.blackButton.fontWeight,
-    fontFamily: theme.typography.blackButton.fontFamily,
-    backgroundColor: theme.palette.black.main,
-    borderRadius: theme.border.blackButton.borderRadius,
-    padding: theme.padding.blackButton.padding,
-  },
-  ourServicesRightContainer:{
-    display: 'flex',
-    alignItems:'center',
-    flexDirection: 'column'
-  },
-  ourServicesMainStyle:{
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'space-around',
-    alignItems: 'center'
+    justifyContent: 'center',
+    marginTop: '8%'
   },
   mainContainerStyle:{
     justifyContent: 'center',
@@ -184,36 +169,6 @@ export default theme => ({
   mainNewsLetterStyle:{
     justifyContent: 'center',
 
-  },
-  ourDescriptionMainStyle:{
-    padding: theme.padding.homePage.section.padding,
-  },
-  ourDescriptionMainContainer:{
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-  ourDescriptionContainer:{
-    display: 'flex',
-    flexDirection: 'column',
-    width: '30%',
-  },
-  ourDescriptionContainerText:{
-    color: theme.palette.white.main,
-    fontSize: theme.typography.text.fontSize,
-    fontWeight: theme.typography.text.fontWeight,
-    fontFamily: theme.typography.text.fontFamily,
-  },
-  ourDescriptionContainerSubText:{
-    color: theme.palette.white.main,
-    fontSize: theme.typography.text.fontSize,
-    fontWeight: theme.typography.text.fontWeight,
-    fontFamily: theme.typography.text.fontFamily,
-    letterSpacing: theme.typography.letterSpacing
-  },
-  ourDescriptionComponentContainer:{
-    width: '100%',
-    backgroundColor: theme.palette.yellow.main,
   },
   categoryButton:{
     borderRadius: theme.border.whiteButton.borderRadius,
@@ -254,37 +209,38 @@ export default theme => ({
   becomeAlfredMainContainer:{
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'center',
     padding: theme.padding.homePage.section.padding
   },
   becomeAlfredContainer:{
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    alignItems: 'center'
   },
   becomeAlfredButton:{
-    color: theme.palette.white.main,
+    color: theme.palette.primary.main,
     fontWeight: theme.typography.blackButton.fontWeight,
     fontFamily: theme.typography.blackButton.fontFamily,
-    backgroundColor: theme.palette.black.main,
+    backgroundColor: theme.palette.white.main,
     borderRadius: theme.border.blackButton.borderRadius,
     padding: theme.padding.blackButton.padding,
   },
   becomeAlfredTitle:{
+    color: theme.palette.white.main,
     fontFamily: theme.typography.subTitle.fontFamily,
     fontWeight: theme.typography.subTitle.fontWeight,
-    fontSize: theme.typography.subTitle.fontSize,
     margin: theme.typography.subTitle.margin,
   },
   becomeAlfredText:{
     fontFamily: theme.typography.text.fontFamily,
-    color: theme.typography.text.color,
+    color: theme.palette.white.main,
     fontWeight: theme.typography.text.fontWeight,
     fontSize: theme.typography.text.fontSize
   },
   becomeAlfredComponent:{
     justifyContent: 'center',
     marginTop: '2%',
-    backgroundColor: '#F8CF61',
-    transform: 'rotate(-1deg)'
+    backgroundColor: theme.palette.primary.main,
   },
   ourAlfredMainStyle:{
     display: 'flex',
@@ -325,7 +281,7 @@ export default theme => ({
   howItWorksComponent:{
     justifyContent: 'center',
     marginTop: '2%',
-    backgroundColor: '#4C89C4'
+    backgroundColor: theme.palette.yellow.main
   },
   howItWorksMainStyle:{
     padding: theme.padding.homePage.section.padding
@@ -387,7 +343,6 @@ export default theme => ({
   newsLetterTitle:{
     fontFamily: theme.typography.subTitle.fontFamily,
     fontWeight: theme.typography.subTitle.fontWeight,
-    fontSize: theme.typography.subTitle.fontSize,
     margin: theme.typography.subTitle.margin,
   },
   newsLetterSubTitle:{
@@ -630,11 +585,11 @@ export default theme => ({
     fontSize: theme.typography.placeHolder.fontSize,
     fontWeight:  theme.typography.placeHolder.fontWeight,
     lineHeight:  theme.typography.placeHolder.lineHeight,
-    padding: 0,
+    padding: '6px 0 7px',
+    height: 'auto'
   },
   navbarAlgoliaContent:{
     flex:1,
-    marginLeft: 20,
     '& .ap-input-icon':{
       display: 'none',
     }
@@ -646,6 +601,7 @@ export default theme => ({
     fontSize: theme.typography.placeHolder.fontSize,
     fontWeight:  theme.typography.placeHolder.fontWeight,
     lineHeight:  theme.typography.placeHolder.lineHeight,
+    padding: '6px 0 7px',
   },
   navbarAppBar:{
     backgroundColor:'transparent',
@@ -653,7 +609,6 @@ export default theme => ({
   },
   navbarDatePickerContainer:{
     flex: 1,
-    marginLeft: 20
   },
   infoBarLinkContainer:{
     paddingTop: theme.padding.infoBar.paddingTop,
@@ -689,4 +644,7 @@ export default theme => ({
       borderBottom: '2px solid rgba(255,255,255,1)'
     }
   },
+  newsLetterEmailIcon:{
+    color: 'rgba(128,128,128,1)'
+  }
 })

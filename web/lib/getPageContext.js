@@ -44,7 +44,7 @@ const theme = createMuiTheme({
     title:{
       fontFamily: 'Futura, sans-serif',
       fontWeight: 'bold',
-      fontSize: '28px',
+      fontSize: '32px',
       margin:0
     },
     subTitle:{
@@ -62,7 +62,7 @@ const theme = createMuiTheme({
     text:{
       fontFamily: 'Futura, sans-serif',
       fontWeight: '500',
-      fontSize: '15px',
+      fontSize: '16px',
       margin: 0
     },
     textAlfredName:{
@@ -90,8 +90,10 @@ const theme = createMuiTheme({
       fontFamily: 'Futura, sans-serif',
       fontWeight: 'bold',
     },
-    containedButton:{
-
+    whiteButtonContained:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: 'bold',
+      fontSize: '18px'
     },
     infoBar:{
       fontFamily: 'Futura, sans-serif',
@@ -133,6 +135,9 @@ const theme = createMuiTheme({
     },
     whiteButton:{
       padding: '5px 30px'
+    },
+    whiteButtonContained:{
+      padding: '6px 38px'
     },
     homePage:{
       section:{

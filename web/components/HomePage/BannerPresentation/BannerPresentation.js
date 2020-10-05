@@ -15,18 +15,13 @@ class BannerPresentation extends React.Component{
       <Grid className={style.bannerPresentationMainStyle}>
         <Grid className={style.bannerPresentationContainerDescription}>
           <Grid>
-            <p className={style.bannerPresentationTitle}>{BANNER_PRESENTATION.title}</p>
+            <h1 className={style.bannerPresentationTitle}>{BANNER_PRESENTATION.title}</h1>
           </Grid>
           <Grid className={style.bannerPresentationContainerText}>
-            <p className={style.bannerPresentationText}>{BANNER_PRESENTATION.text}</p>
+            <h2 className={style.bannerPresentationText}>{BANNER_PRESENTATION.text}</h2>
           </Grid>
           <Grid>
             <Button variant="contained" classes={{root: style.bannerPresentationButton}}>{BANNER_PRESENTATION.button}</Button>
-          </Grid>
-        </Grid>
-        <Grid className={style.bannerPresentationContainerIllustration}>
-          <Grid>
-            <img src={'../../../static/assets/img/homePage/illuHeader.png'} title={'illuBanner'} alt={'illuBanner'} width={'100%'} style={{height: '70vh'}}/>
           </Grid>
         </Grid>
       </Grid>

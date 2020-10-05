@@ -44,26 +44,24 @@ const SHOWMORE = 'En savoir plus';
 const SEARCHBAR = {
   what: 'Quel service ?',
   where: 'Où ?',
-  when: 'Quand ?'
+  when: 'Quand ?',
+  labelWhere: 'L\'adresse',
+  labelWhat: 'Le service',
+  labelWhen: 'Les dates'
+};
+
+const NAVBAR_MENU = {
+  ourServices: 'Nos services',
+  ourTeam: 'Notre équipe',
+  contactUs: 'Nous contacter',
+  signIn: 'Inscription',
+  logIn: 'Connexion'
 };
 
 const BANNER_PRESENTATION = {
   title: 'Et si vous pouviez réserver n\'importe quel service ?',
-  text: 'Avec des milliers de services disponibles, my Alfred va rendre votre vie plus simple.',
+  text: 'Stressez moins. En quelques clics, trouver la personne et le service dont vous avez besoin.',
   button: 'Découvrir'
-};
-
-const OUR_SERVICES = {
-  title: 'Stressez moins',
-  text: 'Trouver la personne dont vous avez besoin',
-  button: 'En savoir plus'
-};
-
-const OUR_DESCRIPTION = {
-  text: 'On était toujours à travailler dans le train ou au téléphone dans l’avion.\n' +
-    '              A l’époque, on aurait voulu un assistant qui s’occupe de tous les petits tracas du quotidien\n' +
-    '                qu’on n’avait pas le temps de gérer.',
-  from: '- SOLÈNE ET WILFRID - FONDATEUR DE MY ALFRED'
 };
 
 const CATEGORY = {
@@ -83,16 +81,12 @@ const HOW_IT_WORKS = {
     'réserver le service et la\n' +
     'personne dont vous avez besoin.\n' +
     '#MyAlfred.',
-  rightText: 'Nous voulons créez une communauté où l’on puisse profiter des' +
-    ' qualités de chacun. Que vous cherchiez votre futur naturopathe ou que vous soyez là pour arrondir' +
-    ' vos fins de mois, nous avons hâte de vous rencontrer !\n'
+  rightText: 'Vous pouvez consulter des centaines de profils, choisir votre Alfred, réservez et payez en ligne votre service. Notre équipe vous accompagne à chaque étape !'
 };
 
 const NEWS_LETTER = {
-  title: 'La Newsletter \n' +
-    'des supers Alfred',
-  text: 'Inscrivez-vous a notre super Newsletter pour recevoir\n' +
-    'les informations et les bons plans de la communauté.',
+  title: 'Profitez des bon plans de la communauté avec la Newsletter des Alfred',
+  text: 'Inscrivez-vous gratuitement à notre super Newsletter pour recevoir les informations et les bons plans de la communauté.',
   google: 'S\'inscrire avec Google',
   where: 'ou',
   email: 'Email',
@@ -110,5 +104,5 @@ module.exports = {
   CESU_NOTICE, OUTSIDE_PERIMETER, SCHEDULE_TITLE, SCHEDULE_SUBTITLE,
   getMangopayMessage, SHOP_CREATION_SUCCESSFUL, ID_CARD_CONFIRM_DELETION,
   REGISTRATION_PROOF_CONFIRM_DELETION, INFOBAR_MESSAGE, SHOWMORE, SEARCHBAR,BANNER_PRESENTATION,
-  OUR_SERVICES,OUR_DESCRIPTION,CATEGORY, BECOME_ALFRED, HOW_IT_WORKS, NEWS_LETTER
+  CATEGORY, BECOME_ALFRED, HOW_IT_WORKS, NEWS_LETTER, NAVBAR_MENU
 };
