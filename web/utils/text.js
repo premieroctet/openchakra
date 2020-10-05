@@ -83,7 +83,7 @@ const bufferToString = buff => {
   return text
 }
 
-const ILLEGAL_REGEX = /0\s*[267][\d \.,-]+\d|\S+@\S+/
+const ILLEGAL_REGEX = /(O|0|\+33)[O\d \.,-]+\d|\S+@\S+|@\S+/
 
 const hideIllegal = text => {
   while (text.match(ILLEGAL_REGEX)) {
