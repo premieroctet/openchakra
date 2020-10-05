@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const {CESU} = require('../../utils/consts');
+const {hideIllegal} = require('../../utils/text')
 
 const ShopSchema = new Schema({
   booking_request: {
@@ -29,6 +30,7 @@ const ShopSchema = new Schema({
   },
   welcome_message: {
     type: String,
+    set : text => hideIllegal(text),
   },
   flexible_cancel: {
     type: Boolean,
