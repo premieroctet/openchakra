@@ -46,7 +46,7 @@ class FixIllegal(FixBase):
                     f=patt.sub('[Masqué]', f)
                     print(f)
                   item[field]=f
-                #self.db.update_document(doc_type, item)
+                self.db.update_document(doc_type, item)
                   
     
 if __name__ == '__main__':
