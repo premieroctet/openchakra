@@ -11,9 +11,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       id: Number(params!.id),
     },
   })
+  let projects = JSON.parse(JSON.stringify(project))
   return {
     props: {
-      project,
+      projects,
     },
   }
 }
@@ -31,8 +32,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
-export default ({ project }: any) => {
-  console.log(project)
+export default ({ projects }: any) => {
+  console.log(projects)
   return (
     <Box mt={8}>
       <Text color="grey.700" mb={4}></Text>
