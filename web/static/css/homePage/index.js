@@ -64,6 +64,7 @@ export default theme => ({
     lineHeight:  theme.typography.placeHolder.lineHeight,
   },
   navbarInput:{
+    borderBottom: 'inherit',
     '&::placeholder':{
       opacity: '0.55',
       color: theme.palette.placeHolder.main,
@@ -79,7 +80,7 @@ export default theme => ({
   },
   navbarSearchContainer:{
     width: '50%',
-    marginTop: '3%',
+    marginTop: '2%'
   },
   divider: {
     height: 28,
@@ -131,7 +132,8 @@ export default theme => ({
   navbarComponentPosition:{
     display: 'flex',
     width: '100%',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginTop: '2%'
   },
   bannerPresentationText:{
     fontFamily: theme.typography.text.fontFamily,
@@ -667,5 +669,24 @@ export default theme => ({
   navbarDatePickerMain:{
     display: 'flex',
     alignItems: 'center'
-  }
+  },
+  navBartoolbar:{
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  navbarTopContainer:{
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-evenly'
+  },
+  navbarTabRoot:{
+    textTransform: 'inherit',
+    opacity: 'inherit',
+    color: theme.palette.white.main,
+    fontWeight: theme.typography.buttonLink.fontWeight,
+    fontSize: theme.typography.buttonLink.fontSize,
+    '&:hover':{
+      borderBottom: '2px solid rgba(255,255,255,1)'
+    }
+  },
 })

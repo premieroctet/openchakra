@@ -37,7 +37,7 @@ const theme = createMuiTheme({
     fontSize: 14,
     lineHeight: '20px',
     useNextVariants: true,
-    fontFamily: 'Helvetica',
+    fontFamily: 'Futura, sans-serif',
     textTransform: 'none',
     fontWeight: 'bold',
     letterSpacing: '2px',
@@ -77,8 +77,10 @@ const theme = createMuiTheme({
       fontSize: '10px',
       margin: 0
     },
-    button:{
-
+    buttonLink:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: '500',
+      fontSize: '17px',
     },
     blackButton:{
       fontFamily: 'Futura, sans-serif',

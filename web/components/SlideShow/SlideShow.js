@@ -10,7 +10,7 @@ class SlideShow extends React.Component{
   constructor(props) {
     super(props);
     this.state={
-      autoplay: true,
+      autoplay: false,
     }
   }
 
