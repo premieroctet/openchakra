@@ -5,13 +5,12 @@ import { GetStaticProps, GetStaticPaths } from 'next'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prisma = new PrismaClient()
-  const project = await prisma.project.findMany({
+  const project = await prisma.project.findOne({
     include: { user: true },
     where: {
       id: Number(params!.id),
     },
   })
-  console.log(project)
   return {
     props: {
       project,
@@ -22,7 +21,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 export const getStaticPaths: GetStaticPaths = async () => {
   const prisma = new PrismaClient()
   const projects = await prisma.project.findMany()
-  console.log(projects)
   return {
     paths: projects.map(project => ({
       params: {
