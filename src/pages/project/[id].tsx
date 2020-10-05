@@ -1,7 +1,20 @@
 import * as React from 'react'
 import { PrismaClient } from '@prisma/client'
-import { Box, Text } from '@chakra-ui/core'
+import { Box, Flex } from '@chakra-ui/core'
 import { GetStaticProps, GetStaticPaths } from 'next'
+import { DndProvider } from 'react-dnd'
+import Backend from 'react-dnd-html5-backend'
+import { Global } from '@emotion/core'
+import { HotKeys } from 'react-hotkeys'
+import Metadata from '~components/Metadata'
+import useShortcuts, { keyMap } from '~hooks/useShortcuts'
+import Header from '~components/Header'
+import Sidebar from '~components/sidebar/Sidebar'
+import EditorErrorBoundary from '~components/errorBoundaries/EditorErrorBoundary'
+import Editor from '~components/editor/Editor'
+import { InspectorProvider } from '~contexts/inspector-context'
+import Inspector from '~components/inspector/Inspector'
+import useDispatch from '~hooks/useDispatch'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prisma = new PrismaClient()
@@ -33,10 +46,44 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export default ({ projects }: any) => {
-  console.log(projects)
+  const { handlers } = useShortcuts()
+  const dispatch = useDispatch()
+  dispatch.components.reset(JSON.parse(projects.markup))
   return (
-    <Box mt={8}>
-      <Text color="grey.700" mb={4}></Text>
-    </Box>
+    <HotKeys allowChanges handlers={handlers} keyMap={keyMap}>
+      <Global
+        styles={() => ({
+          html: { minWidth: '860px', backgroundColor: '#1a202c' },
+        })}
+      />
+
+      <Metadata />
+
+      <Header />
+      <DndProvider backend={Backend}>
+        <Flex h="calc(100vh - 3rem)">
+          <Sidebar />
+          {/*@ts-ignore*/}
+          <EditorErrorBoundary>
+            <Box bg="white" flex={1} zIndex={10} position="relative">
+              <Editor />
+            </Box>
+          </EditorErrorBoundary>
+
+          <Box
+            maxH="calc(100vh - 3rem)"
+            flex="0 0 15rem"
+            bg="#f7fafc"
+            overflowY="auto"
+            overflowX="visible"
+            borderLeft="1px solid #cad5de"
+          >
+            <InspectorProvider>
+              <Inspector />
+            </InspectorProvider>
+          </Box>
+        </Flex>
+      </DndProvider>
+    </HotKeys>
   )
 }
