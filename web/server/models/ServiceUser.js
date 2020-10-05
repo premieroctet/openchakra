@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const {hideIllegal} = require('../../utils/text')
+
 const ServiceUserSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
@@ -108,6 +110,7 @@ const ServiceUserSchema = new Schema({
   },
   description: {
     type: String,
+    set : text => hideIllegal(text)
   },
   level: {
     type: Number,

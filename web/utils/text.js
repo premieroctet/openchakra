@@ -83,6 +83,15 @@ const bufferToString = buff => {
   return text
 }
 
+const ILLEGAL_REGEX = /0\s*[267][\d \.,-]+\d|\S+@\S+/
+
+const hideIllegal = text => {
+  while (text.match(ILLEGAL_REGEX)) {
+    text = text.replace(ILLEGAL_REGEX, '[Masqué]')
+  }
+  return text
+}
+
 module.exports = {
   normalize,
   createQuery,
@@ -95,4 +104,5 @@ module.exports = {
   frenchFormat,
   normalizePhone,
   bufferToString,
+  hideIllegal,
 };

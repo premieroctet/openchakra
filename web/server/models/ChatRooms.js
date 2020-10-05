@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const {hideIllegal} = require('../../utils/text')
 
 const ChatRoomsSchema = new Schema({
   name: String,
@@ -13,7 +14,10 @@ const ChatRoomsSchema = new Schema({
   },
   messages: [{
     user: String,
-    content: String,
+    content: {
+      type : String,
+      set : text => hideIllegal(text),
+    },
     date: Date,
     thepicture: String,
     idsender: {
