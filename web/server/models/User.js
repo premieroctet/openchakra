@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const year = new Date().getFullYear() - 16;
 const {getMangopayMessage} = require('../../utils/i18n');
 const {hideIllegal} = require('../../utils/text')
+const moment = require('moment')
 
 const UserSchema = new Schema({
   name: {
@@ -318,5 +319,14 @@ UserSchema.virtual('avatar_letters').get(function () {
   const second_letter = this.name ? this.name.charAt(0) : '';
   return (first_letter + second_letter).toUpperCase();
 });
+
+UserSchema.virtual('age').get(function () {
+  if (!this.birthday) {
+    return null
+  }
+  const age = moment().diff(moment(this.birthday), 'years')
+  return age
+});
+
 
 module.exports = User = mongoose.model('users', UserSchema);
