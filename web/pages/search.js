@@ -85,7 +85,6 @@ class SearchPage extends React.Component {
       searching: false,
       filters:['Plus proche de moi']
     };
-    this.filter = this.filter.bind(this);
   }
 
   static getInitialProps({query: {keyword, city, gps, selectedAddress, category, service, prestation, search, date}}) {
@@ -106,17 +105,7 @@ class SearchPage extends React.Component {
     return init;
   }
 
-  onChangeInterval(startDate, endDate) {
-    if (startDate) {
-      startDate.hour(0).minute(0).second(0).millisecond(0);
-    }
 
-    if (endDate) {
-      endDate.hour(23).minute(59).second(59).millisecond(999);
-    }
-
-    this.setState({startDate: startDate, endDate: endDate});
-  }
 
   componentDidUpdate(prevProps) {
     if (this.props !== prevProps) {
@@ -224,9 +213,7 @@ class SearchPage extends React.Component {
     }
   };
 
-  statusFilterChanged = event => {
-    this.setState({[event.target.name]: event.target.checked, statusFilterVisible: false}, () => this.filter());
-  };
+
 
   resetFilter() {
     this.setState({
@@ -238,39 +225,7 @@ class SearchPage extends React.Component {
   }
 
   // Filter according to pro or particular && dates
-  filter() {
-    const serviceUsers = this.state.serviceUsers;
-    var serviceUsersDisplay = [];
-    if (this.state.proSelected || this.state.individualSelected) {
-      serviceUsers.forEach(su => {
-        var alfId = su.user._id;
-        const isPro = this.state.proAlfred.includes(alfId);
-        if (isPro && this.state.proSelected || !isPro && this.state.individualSelected) {
-          serviceUsersDisplay.push(su);
-        }
-      });
-    } else {
-      serviceUsersDisplay = serviceUsers;
-    }
 
-    const start = this.state.startDate;
-    const end = this.state.endDate;
-
-    if (start && end) {
-      axios.post('/myAlfred/api/availability/check', {
-        start: moment(start).unix(),
-        end: moment(end).unix(),
-        serviceUsers: serviceUsersDisplay.map(su => su._id),
-      })
-        .then(response => {
-          const filteredServiceUsers = response.data;
-          serviceUsersDisplay = serviceUsersDisplay.filter(su => filteredServiceUsers.includes(su._id.toString()));
-          this.setFilteredServiceUsers(serviceUsersDisplay);
-        });
-    } else {
-      this.setFilteredServiceUsers(serviceUsersDisplay);
-    }
-  }
 
   setFilteredServiceUsers = serviceUsers => {
     var visibleCategories = [];
@@ -349,21 +304,10 @@ class SearchPage extends React.Component {
       });
   }
 
-  statusFilterToggled() {
-    this.setState({statusFilterVisible: !this.state.statusFilterVisible});
-  }
 
-  dateFilterToggled() {
-    this.setState({dateFilterVisible: !this.state.dateFilterVisible});
-  }
 
-  cancelDateFilter() {
-    this.setState({startDate: null, endDate: null, dateFilterVisible: false}, () => this.filter());
-  }
 
-  validateDateFilter() {
-    this.setState({dateFilterVisible: false}, () => this.filter());
-  }
+
 
   restrictServices(serviceUsers, category) {
     const nbToDisplay = this.state.catCount[category._id];
@@ -382,13 +326,8 @@ class SearchPage extends React.Component {
     this.setState({catCount: counts});
   }
 
-  isStatusFilterSet() {
-    return this.state.proSelected || this.state.individualSelected;
-  }
 
-  isDateFilterSet() {
-    return this.state.startDate != null || this.state.endDate != null;
-  }
+
 
   isSubFilterSet() {
     return this.isStatusFilterSet() || this.isDateFilterSet();
@@ -421,8 +360,7 @@ class SearchPage extends React.Component {
       filters
      } = this.state;
 
-    const statusFilterBg = this.isStatusFilterSet() ? '#2FBCD3' : 'white';
-    const dateFilterBg = this.isDateFilterSet() ? '#2FBCD3' : 'white';
+
 
     let resultMessage;
     const res = {mounting, searching, search};
@@ -502,9 +440,9 @@ class SearchPage extends React.Component {
               <Grid container spacing={3}>
               {
                 categories.map(cat => (
-                  this.restrictServices(serviceUsers, cat).map(su => {
+                  this.restrictServices(serviceUsers, cat).map((su, index) => {
                     return (
-                      <Grid item xl={3} lg={3} md={3}>
+                      <Grid item xl={3} lg={3} md={3} key={index}>
                         <CardService style={classes} services={su._id} gps={user ? user.billing_address.gps : this.state.gps}/>
                       </Grid>
                     );

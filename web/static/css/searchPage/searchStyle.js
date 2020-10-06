@@ -423,5 +423,11 @@ export default theme => ({
   },
   searchSelectPadding:{
     paddingRight: '34px !important'
+  },
+  filterMenuTitle:{
+    fontFamily: theme.typography.subTitle.fontFamily
+  },
+  filterMenuDescription:{
+    fontFamily: theme.typography.fontFamily
   }
 })
