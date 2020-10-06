@@ -20,9 +20,9 @@ const App = (props: any) => {
 
   useEffect(() => {
     setTimeout(() => {
-      dispatch.components.reset(JSON.parse(props.projects.markup))
+      dispatch.components.reset(JSON.parse(props.projects))
     }, 200)
-  }, [dispatch.components, props.projects.markup])
+  }, [dispatch.components, props.projects])
 
   return (
     <HotKeys allowChanges handlers={handlers} keyMap={keyMap}>

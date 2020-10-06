@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { PrismaClient } from '@prisma/client'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import App from '~pages'
-import { useSession, signIn } from 'next-auth/client'
+import { getSession, signIn } from 'next-auth/client'
+import { useRouter } from 'next/router'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prisma = new PrismaClient()
@@ -17,6 +18,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   return {
     props: {
       projects,
+      id: Number(params!.id),
     },
   }
 }
@@ -34,9 +36,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
-export default async ({ projects }: any) => {
-  const [session] = useSession()
-  console.log(projects.markup)
+export default ({ projects, id }: any) => {
+  const router = useRouter()
+  let userCanEdit = false
+
+  useEffect(() => {
+    checkSession()
+  }, [checkSession])
+
   const checkUser = async (name: string) => {
     const response = await fetch('http://localhost:3000/api/project/check', {
       method: 'POST',
@@ -46,19 +53,31 @@ export default async ({ projects }: any) => {
       body: JSON.stringify(name),
     })
     const data = await response.json()
-    console.log(data)
+    return data
   }
 
-  if (session) {
-    console.log(session.user.name)
-    checkUser(session.user.name)
-    // if (typeof window !== 'undefined') {
-    //   router.push('/')
-    //   return
-    // }
-  } else {
-    signIn()
+  const checkSession = async () => {
+    const session = await getSession()
+    if (session) {
+      const userProject = await checkUser(session.user.name)
+      console.log(userProject.project)
+      userProject.project.map((e: any) => {
+        if (e.id === id) {
+          userCanEdit = true
+        }
+      })
+      if (userCanEdit) {
+        console.log(userCanEdit)
+      } else {
+        if (typeof window !== 'undefined') {
+          router.push('/')
+          return
+        }
+      }
+    } else {
+      signIn()
+    }
   }
 
-  return <App projects={projects} />
+  return <App projects={projects.markup} />
 }
