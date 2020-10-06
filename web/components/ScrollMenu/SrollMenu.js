@@ -42,16 +42,14 @@ class SrollMenu extends React.Component{
             value={value}
             onChange={this.handleChange}
             aria-label="scrollable force tabs"
-            indicatorColor="primary"
             scrollButtons="on"
-            className={style.scrollMenuTabs}
-            classes={{scrollButtons: style.scrollMenuButtons}}
+            classes={{indicator: style.scrollMenuIndicator}}
           >
             {
               categories ?
                 categories.map((res, index) => {
                   return(
-                    <Tab label={res.label} {...a11yProps(index)} />
+                    <Tab label={res.label} className={style.scrollMenuTab} {...a11yProps(index)} />
                   )
                 }) : null
             }

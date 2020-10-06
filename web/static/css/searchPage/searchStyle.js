@@ -94,7 +94,9 @@ export default theme => ({
   },
   navBartoolbar:{
     display: 'flex',
-    justifyContent: 'space-evenly'
+    justifyContent: 'center',
+    marginTop: '1%',
+    marginBottom: '1%'
   },
   divider: {
     height: 28,
@@ -223,38 +225,41 @@ export default theme => ({
     fontSize: theme.typography.infoBar.fontSize,
     lineHeight: theme.typography.infoBar.lineHeight,
     fontFamily: theme.typography.infoBar.fontFamily,
-    fontWeight: theme.typography.infoBar.fontWeight
+    margin: 0
   },
-  searchDivierContainer:{
+  filterMenuDivierContainer:{
     display: 'flex',
     justifyContent: 'center',
-    marginTop: '2%'
+    marginTop: '1%'
   },
-  searchDividerStyle:{
+  filterMenuDividerStyle:{
     height: 1,
     width: '100%'
   },
-  scrollMenuTabs:{
-    alignItems: 'center'
-  },
-  scrollMenuButtons:{
-
+  scrollMenuTab:{
+    textTransform: 'initial'
   },
   filterMenuTitleContainer:{
-    marginTop: '2%'
+    marginTop: '5%',
+    textAlign: 'center'
   },
   filterMenuChipContainer:{
     marginTop: '2%'
   },
-  filterMenuScrollMenuContainer:{
-    marginTop: '2%'
+  searchMenuScrollMenuContainer:{
+    marginTop: '1%',
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%'
+  },
+  searchScrollmenuContainer:{
+    width: '90%'
   },
   searchMainConainer:{
     marginTop: '2%'
   },
   searchContainerHeader:{
     display: 'flex',
-    justifyContent: 'space-between',
     width: '80%'
   },
   searchMainContainerHeader:{
@@ -264,7 +269,9 @@ export default theme => ({
   searchSecondFilterContainer:{
     display:'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%'
   },
   searchSecondFilterContainerLeft:{
     marginRight: 20
@@ -377,6 +384,44 @@ export default theme => ({
     width: '100%'
   },
   navbarSearchContainer:{
-    width: '100%',
+    width: '50%',
   },
+  shomoreLink:{
+    color: theme.palette.link.main,
+    fontSize: theme.typography.infoBar.fontSize,
+    lineHeight: theme.typography.infoBar.lineHeight,
+    fontFamily: theme.typography.infoBar.fontFamily,
+    fontWeight: theme.typography.infoBar.fontWeight
+  },
+  showmoreContainer:{
+    marginLeft: 5,
+  },
+  navbarTopContainer:{
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '90%',
+    alignItems: 'center'
+  },
+  navbarRootTextField: {
+    marginLeft: 20,
+    flex: 1,
+    fontFamily: theme.typography.text.fontFamily,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
+  },
+  scrollMenuIndicator:{
+    backgroundColor: theme.palette.yellow.main
+  },
+  searchFilterRightContainer:{
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  searchFilterRightLabel:{
+    marginRight: 10
+  },
+  searchSelectPadding:{
+    paddingRight: '34px !important'
+  }
 })

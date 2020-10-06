@@ -50,6 +50,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import CardService from "../components/Card/CardService/CardService";
+import ScrollMenu from "../components/ScrollMenu/SrollMenu";
 
 moment.locale('fr');
 
@@ -448,45 +449,50 @@ class SearchPage extends React.Component {
         <Grid>
           <NavBar style={classes} user={user} selectedAddress={selectedAddress}/>
         </Grid>
+        <Grid className={classes.searchMenuScrollMenuContainer}>
+          <Grid className={classes.searchScrollmenuContainer}>
+            <ScrollMenu style={classes} categories={categories} gps={gps}/>
+          </Grid>
+        </Grid>
+        <Grid className={classes.filterMenuDivierContainer}>
+          <Divider className={classes.filterMenuDividerStyle}/>
+        </Grid>
         <Grid className={classes.searchFilterMenuPosition}>
           <Grid className={classes.searchFilterMenuContent}>
             <FilterMenu style={classes} categories={categories} gps={gps}/>
           </Grid>
         </Grid>
-        <Grid className={classes.searchDivierContainer}>
-          <Divider className={classes.searchDividerStyle}/>
-        </Grid>
         <Grid className={classes.searchMainConainer}>
           <Grid className={classes.searchMainContainerHeader}>
             <Grid className={classes.searchContainerHeader}>
-              <Grid>
-                <h2>Nos Alfreds</h2>
-              </Grid>
               <Grid className={classes.searchSecondFilterContainer}>
                 <Grid className={classes.searchSecondFilterContainerLeft}>
-                  <p>{serviceUsers.length} Alfred</p>
+                  <p>{serviceUsers.length} Alfred disponibles</p>
                 </Grid>
-                <Grid>
-                  <FormControl variant="outlined" className={classes.formControl}>
-                    <InputLabel shrink id="simple-select-placeholder-label-label">
-                      Trier par :
-                    </InputLabel>
-                    <Select
-                      labelId="simple-select-placeholder-label-label"
-                      id="simple-select-placeholder-label"
-                      value={filters}
-                      onChange={this.handleChange}
-                      displayEmpty
-                      label={'Trier par :'}
-                    >
-                      {filters.map((res,index) =>{
-                        return(
-                          <MenuItem value={res}>{res}</MenuItem>
-                        )
-                      })}
+                <Grid className={classes.searchFilterRightContainer}>
+                  <Grid className={classes.searchFilterRightLabel}>
+                    <p>Trier par</p>
+                  </Grid>
+                  <Grid>
+                    <FormControl className={classes.formControl}>
+                      <Select
+                        labelId="simple-select-placeholder-label-label"
+                        id="simple-select-placeholder-label"
+                        value={filters}
+                        onChange={this.handleChange}
+                        displayEmpty
+                        disableUnderline
+                        classes={{select: classes.searchSelectPadding}}
+                      >
+                        {filters.map((res,index) =>{
+                          return(
+                            <MenuItem value={res}><strong>{res}</strong></MenuItem>
+                          )
+                        })}
 
-                    </Select>
-                  </FormControl>
+                      </Select>
+                    </FormControl>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>

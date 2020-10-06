@@ -15,7 +15,7 @@ export default theme => ({
     fontSize: theme.typography.infoBar.fontSize,
     lineHeight: theme.typography.infoBar.lineHeight,
     fontFamily: theme.typography.infoBar.fontFamily,
-    fontWeight: theme.typography.infoBar.fontWeight
+    margin: 0
   },
   showmoreContainer:{
     marginLeft: 5,
@@ -48,7 +48,7 @@ export default theme => ({
     marginRight: 5
   },
   navbarSearch: {
-    padding: '1%',
+    padding: 14,
     display: 'flex',
     alignItems: 'center',
     width: '100%',
@@ -646,5 +646,12 @@ export default theme => ({
   },
   newsLetterEmailIcon:{
     color: 'rgba(128,128,128,1)'
-  }
+  },
+  shomoreLink:{
+    color: theme.palette.link.main,
+    fontSize: theme.typography.infoBar.fontSize,
+    lineHeight: theme.typography.infoBar.lineHeight,
+    fontFamily: theme.typography.infoBar.fontFamily,
+    fontWeight: theme.typography.infoBar.fontWeight
+  },
 })

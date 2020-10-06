@@ -37,7 +37,10 @@ const MANGOPAY_MESSAGES = {
   [KycDocumentStatus.Refused]: 'Pièce d\'identité refusée, merci d\'en fournir une valide',
 };
 
-const INFOBAR_MESSAGE = 'Renseignez-vous sur les restrictions COVID 19 avant de réserver.';
+const INFOBAR_MESSAGE ={
+  message: 'Renseignez-vous sur les restrictions COVID 19 avant de réserver.',
+  showMore: 'En savoir plus'
+} ;
 
 const SHOWMORE = 'En savoir plus';
 

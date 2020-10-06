@@ -196,7 +196,7 @@ class NavBar extends Component {
                 value={keyword}
                 onChange={this.onChange}
                 name={'keyword'}
-                label={SEARCHBAR.labelWhat}
+                label={ifHomePage ? SEARCHBAR.labelWhat : false}
                 onKeyPress={(e) => {
                   e.key === 'Enter' && e.preventDefault();
                 }}
@@ -244,7 +244,7 @@ class NavBar extends Component {
               :
               <Grid className={style.navbarAlgoliaContent}>
                 <TextField
-                  label={SEARCHBAR.labelWhere}
+                  label={ifHomePage ? SEARCHBAR.labelWhere : false}
                   classes={{root: style.navbarRootTextField}}
                   InputLabelProps={{
                     shrink: true,
@@ -281,7 +281,7 @@ class NavBar extends Component {
                   </Grid>
                   <Grid className={style.navbarDatePickerContainer}>
                     <TextField
-                      label={SEARCHBAR.labelWhen}
+                      label={ifHomePage ? SEARCHBAR.labelWhen : false}
                       classes={{root: style.navbarRootTextField}}
                       InputLabelProps={{
                         shrink: true,
