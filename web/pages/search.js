@@ -224,22 +224,6 @@ class SearchPage extends React.Component {
     }, () => this.filter());
   }
 
-  // Filter according to pro or particular && dates
-
-
-  setFilteredServiceUsers = serviceUsers => {
-    var visibleCategories = [];
-    this.state.categories.forEach(e => {
-      serviceUsers.forEach(a => {
-        if (a.service.category._id === e._id) {
-          visibleCategories.push(e.label);
-        }
-      });
-    });
-
-    this.setState({serviceUsersDisplay: serviceUsers, visibleCategories: visibleCategories});
-  };
-
   search(forceFilter) {
 
     this.setState({searching: true});

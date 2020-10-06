@@ -27,6 +27,7 @@ class FilterMenu extends React.Component{
       startDate: null,
       endDate: null,
       focusedInput: null,
+      serviceUsers: []
     }
   }
 
@@ -35,7 +36,7 @@ class FilterMenu extends React.Component{
   };
 
   statusFilterChanged = event => {
-    this.setState({[event.target.name]: event.target.checked, statusFilterVisible: false}, () => this.filter());
+    this.setState({[event.target.name]: event.target.checked, statusFilterVisible: false},/* () => this.filter()*/);
   };
 
   filter = () => {
@@ -72,6 +73,17 @@ class FilterMenu extends React.Component{
     }
   };
 
+  setFilteredServiceUsers = serviceUsers => {
+    var visibleCategories = [];
+    this.state.categories.forEach(e => {
+      serviceUsers.forEach(a => {
+        if (a.service.category._id === e._id) {
+          visibleCategories.push(e.label);
+        }
+      });
+    });
+    this.setState({serviceUsersDisplay: serviceUsers, visibleCategories: visibleCategories});
+  };
 
   dateFilterToggled = () => {
     this.setState({dateFilterVisible: !this.state.dateFilterVisible});
@@ -132,43 +144,76 @@ class FilterMenu extends React.Component{
         </Grid>
         <Grid className={style.filterMenuChipContainer}>
           <Grid container style={{display: 'flex', flexDirection : 'row'}}>
-            <Grid item style={{width: '20%'}}>
-              <Accordion expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
-                <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
+            <Grid item>
+              <Accordion expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')} classes={{rounded: style.filterMenuAccordionContainer}}>
+                <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" classes={{content : style.filterMenuAccordionTitle}}>
                   <Typography>Statut</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                    sit amet blandit leo lobortis eget. Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
-                  </Typography>
+                  <Grid>
+                    <Grid>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={proSelected}
+                            onChange={e => {
+                              this.statusFilterChanged(e);
+                              /*this.filter();*/
+                            }}
+                            value={proSelected}
+                            color="primary"
+                            name={'proSelected'}
+                          />
+                        }
+                        label="Pro"
+                      />
+                    </Grid>
+                    <Grid>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={individualSelected}
+                            onChange={e => {
+                              this.statusFilterChanged(e);
+                              /*this.filter();*/
+                            }}
+                            value={individualSelected}
+                            color="primary"
+                            name={'individualSelected'}
+                          />
+                        }
+                        label="Particulier"
+                      />
+                    </Grid>
+                  </Grid>
                 </AccordionDetails>
-                <Divider />
-                <AccordionActions>
-                  <Button size="small">Cancel</Button>
-                  <Button size="small" color="primary">
-                    Save
-                  </Button>
-                </AccordionActions>
               </Accordion>
             </Grid>
-            <Grid item style={{width: '20%'}}>
-              <Accordion expanded={expanded === 'panel2'} onChange={this.handleChange('panel2')}>
-                <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
+            <Grid item style={{marginLeft: '3%'}}>
+              <Accordion expanded={expanded === 'panel2'} onChange={this.handleChange('panel2')} classes={{rounded: style.filterMenuAccordionContainer}}>
+                <AccordionSummary aria-controls="panel2d-content" id="panel2d-header" classes={{content : style.filterMenuAccordionTitle}}>
                   <Typography>Quelles dates ?</Typography>
                 </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                    sit amet blandit leo lobortis eget. Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
-                  </Typography>
+                <AccordionDetails style={{width: '100%'}}>
+                  <DateRangePicker
+                    style={{width: '50px'}}
+                    startDate={startDate} // momentPropTypes.momentObj or null,
+                    startDatePlaceholderText={'Début'}
+                    endDatePlaceholderText={'Fin'}
+                    startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+                    endDate={endDate} // momentPropTypes.momentObj or null,
+                    endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+                    onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
+                    focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                    onFocusChange={focusedInput => this.setState({focusedInput})} // PropTypes.func.isRequired,
+                    minimumNights={0}
+                    numberOfMonths={1}
+                  />
                 </AccordionDetails>
                 <Divider />
                 <AccordionActions>
-                  <Button size="small">Cancel</Button>
-                  <Button size="small" color="primary">
+                  <Button size="small" onClick={() => this.cancelDateFilter()}>Cancel</Button>
+                  <Button size="small" color="primary" onClick={() => this.validateDateFilter()}>
                     Save
                   </Button>
                 </AccordionActions>

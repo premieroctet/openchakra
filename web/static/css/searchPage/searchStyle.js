@@ -203,7 +203,7 @@ export default theme => ({
     justifyContent: 'center'
   },
   searchFilterMenuContent:{
-    width: '90%'
+    width: '80%'
   },
   scrollMenuRoot:{
     flexGrow: 1,
@@ -429,5 +429,12 @@ export default theme => ({
   },
   filterMenuDescription:{
     fontFamily: theme.typography.fontFamily
+  },
+  filterMenuAccordionTitle:{
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  filterMenuAccordionContainer:{
+    borderRadius: '32px !important'
   }
 })
