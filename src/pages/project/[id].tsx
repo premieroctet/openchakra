@@ -4,6 +4,7 @@ import { GetStaticProps, GetStaticPaths } from 'next'
 import App from '~pages'
 import { getSession, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
+import useDispatch from '~hooks/useDispatch'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prisma = new PrismaClient()
@@ -37,12 +38,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export default ({ projects, id }: any) => {
+  const dispatch = useDispatch()
   const router = useRouter()
   let userCanEdit = false
 
   useEffect(() => {
     checkSession()
-  }, [checkSession])
+  })
 
   const checkUser = async (name: string) => {
     const response = await fetch('http://localhost:3000/api/project/check', {
@@ -70,6 +72,7 @@ export default ({ projects, id }: any) => {
         console.log(userCanEdit)
       } else {
         if (typeof window !== 'undefined') {
+          dispatch.components.reset()
           router.push('/')
           return
         }
