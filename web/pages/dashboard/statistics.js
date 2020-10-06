@@ -1,25 +1,28 @@
 import React from 'react';
 
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import {Typography} from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
 import Router from 'next/router';
-import Layout from '../../hoc/Layout/Layout';
 import axios from 'axios';
 import Link from 'next/link';
-import Avatar from '@material-ui/core/Avatar';
 import HomeIcon from '@material-ui/icons/Home';
 import cookie from 'react-cookies';
-
-
 const jwt = require('jsonwebtoken');
+const moment = require('moment')
+import {Card, Grid, Typography, Checkbox, Avatar} from '@material-ui/core'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+const {XYPlot, XAxis, YAxis, VerticalGridLines, HorizontalGridLines, LineSeries, RadialChart}=require('react-vis')
+import Layout from '../../hoc/Layout/Layout';
+
 const styles = theme => ({
+
   signupContainer: {
+    width: '100%',
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'top',
-    flexDirection: 'column',
-
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginBottom: '2%',
   },
   card: {
     padding: '1.5rem 3rem',
@@ -53,7 +56,11 @@ const styles = theme => ({
 class statistics extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      registrations: null,
+      ages: null,
+      alfred_ages: false,
+    };
     this.getCounts = this.getCounts.bind(this);
   }
 
@@ -66,12 +73,22 @@ class statistics extends React.Component {
         this.setState(response.data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         if (error.response.status === 401 || error.response.status === 403) {
           cookie.remove('token', {path: '/'});
           Router.push({pathname: '/login'});
         }
       });
+    axios.get('/myAlfred/api/admin/registrations')
+      .then((response) => {
+        this.setState( {registrations: response.data} );
+      })
+      .catch(error => console.error(error))
+    axios.get(`/myAlfred/api/admin/ages?alfred=${this.state.alfred_ages}`)
+      .then((response) => {
+        this.setState( {ages: response.data} );
+      })
+      .catch(error => console.error(error))
   }
 
   componentDidMount() {
@@ -88,49 +105,81 @@ class statistics extends React.Component {
     setInterval(() => this.getCounts(), 30000);
   }
 
+  handleChange = event => {
+    this.setState({ alfred_ages : event.target.checked }, () => this.getCounts())
+  }
 
   render() {
     const {classes} = this.props;
+    const {alfred_ages} = this.state
     const list =
-      <Grid rows={[1, 2]}>
-        <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '0%'}}>
+    <>
+      <Grid container className={classes.signupContainer}>
+        <Grid item>
           <Typography style={{fontSize: 30}}>Inscrits</Typography>
-        </Grid>
-        <Grid item style={{display: 'flex', justifyContent: 'center'}}>
           <Avatar className={classes.mediumAvatar}>{this.state.users}</Avatar>
         </Grid>
-        <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '5%'}}>
+        <Grid item>
           <Typography style={{fontSize: 30}}>Alfred</Typography>
-        </Grid>
-        <Grid item style={{display: 'flex', justifyContent: 'center'}}>
           <Avatar className={classes.mediumAvatar}>{this.state.alfred}</Avatar>
         </Grid>
-        <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '5%'}}>
+        <Grid item>
           <Typography style={{fontSize: 30}}>Services</Typography>
-        </Grid>
-        <Grid item style={{display: 'flex', justifyContent: 'center'}}>
           <Avatar className={classes.mediumAvatar}>{this.state.services}</Avatar>
         </Grid>
-        <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '5%'}}>
+        <Grid item>
           <Typography style={{fontSize: 30}}>Prestations</Typography>
-        </Grid>
-        <Grid item style={{display: 'flex', justifyContent: 'center'}}>
           <Avatar className={classes.mediumAvatar}>{this.state.prestations}</Avatar>
         </Grid>
-      </Grid>;
+        </Grid>
+        <Grid container className={classes.signupContainer}>
+        { this.state.registrations ?
+          <Grid item>
+            <Typography style={{fontSize: 30}}>Inscriptions</Typography>
+            <XYPlot width={400} height={250} key={1} >
+              <VerticalGridLines />
+              <HorizontalGridLines />
+              <XAxis tickFormat={d => moment(d).format('MM/YY')} />
+              <YAxis />
+              <LineSeries data={this.state.registrations} />
+            </XYPlot>
+          </Grid>
+          :
+          null
+        }
+        { this.state.ages ?
+          <Grid item>
+            <Typography style={{fontSize: 30}}>Tranches d'âges</Typography>
+              <FormControlLabel
+                control={<Checkbox checked={alfred_ages} label='Alfred seulement' onChange={this.handleChange}/>}
+                label={'Alfred seulement'}
+              />
+            <RadialChart
+              width={400}
+              height={250}
+              key={2}
+              data={this.state.ages} showLabels={true}
+              labelsStyle={{ fontWeight: 'bold'}}
+              />
+          </Grid>
+          :
+          null
+        }
+      </Grid>
+    </>
     const refused = <Grid item style={{display: 'flex', justifyContent: 'center'}}>
       <Typography style={{fontSize: 30}}>Accès refusé</Typography>
     </Grid>;
 
     return (
       <Layout>
-        <Grid container style={{marginTop: 70}}>
+        <Grid container style={{marginTop: 20, width:'90%'}}>
           <Link href={'/dashboard/home'}>
             <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour</span></Typography>
           </Link>
         </Grid>
         <Grid container className={classes.signupContainer}>
-          <Card className={classes.card}>
+          <Card className={classes.card} style={{width:'80%'}}>
             {this.state.is_admin ? list : refused}
           </Card>
         </Grid>

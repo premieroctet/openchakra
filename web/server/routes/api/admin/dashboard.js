@@ -29,10 +29,9 @@ const validateServiceInput = require('../../../validation/service');
 const {addIdIfRequired} = require('../../../../utils/mangopay');
 const multer = require('multer')
 const path = require('path')
-const parse = require('csv-parse/lib/sync')
 const {normalizePhone, bufferToString} = require('../../../../utils/text')
-
-
+const {counterArray, counterObjects} = require('../../../../utils/converters')
+const parse = require('url-parse')
 router.get('/billing/test', (req, res) => res.json({msg: 'Billing admin Works!'}));
 
 // @Route POST /myAlfred/api/admin/billing/all
@@ -2420,6 +2419,47 @@ router.put('/options/all/:id', passport.authenticate('jwt', {session: false}), (
   }
 
 });
+
+// TODO: récupérer en sum/aggréation par mois
+router.get('/registrations', (req, res) => {
+  User.find({}, 'creation_date')
+    .sort( { creation_date: 1})
+    .then( users => {
+      const monthDates = users.map( user => new Date(user.creation_date.getFullYear(), user.creation_date.getMonth()).getTime())
+      const counts = counterArray(monthDates, 'x', 'y')
+      res.json(counts)
+    })
+})
+
+// TODO: récupérer en sum/aggréation par age
+router.get('/ages', (req, res) => {
+
+  const get_label = age => {
+    if (age<=25) { return '<25' }
+    else if (age>=55){ return '>55' }
+    else {
+      step=Math.floor((age-25)/10)
+      label = `${step*10+25}>${(step+1)*10+25}`
+      return label
+    }
+  }
+
+  const alfred = JSON.parse(parse(req.originalUrl, true).query.alfred)
+
+  const fltr = alfred ? {is_alfred: true} : {}
+  User.find(fltr, 'birthday')
+  .sort({'birthday': -1})
+  .then( users => {
+    const labels=users.filter( u => u.age<100).map( u => get_label(u.age))
+    var counts = counterArray(labels, "label", "angle")
+    const total=users.length
+    counts = counts.map(obj => {
+      acc = {label:`${obj.label} (${Math.floor(obj.angle/total*100)}%)`, angle:obj.angle}
+      return acc
+    })
+    res.json(counts)
+  })
+})
 
 // @Route GET /myAlfred/api/admin/statistics
 // Get satistics (users, shops, services)

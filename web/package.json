@@ -88,6 +88,7 @@
     "react-tabs": "^3.0.0",
     "react-tackle-box": "^2.1.0",
     "react-toastify": "^5.3.2",
+    "react-vis": "^1.11.7",
     "reactjs-pdf-reader": "^1.0.8",
     "request": "^2.88.0",
     "rrule": "^2.6.3",

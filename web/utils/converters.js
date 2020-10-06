@@ -158,8 +158,34 @@ const bookings2events = bookings => {
   return events;
 };
 
+const counterArray = (data, xlabel, ylabel) => {
+  const summed=Object.entries(data.reduce((acc, value) => {
+    if(value in acc) {
+      acc[value] = acc[value] + 1
+    } else {
+      acc[value] = 1
+    }
+    return acc
+  }, {})).map(([k, v]) => ({[xlabel]: k, [ylabel]: v}))
+  return summed
+}
+
+const counterObjects = (data, attribute) => {
+  const summed=Object.entries(data.reduce((acc, value) => {
+    const age=value[attribute]
+    if(age in acc) {
+      acc[age] = acc[age] + 1
+    } else {
+      acc[age] = 1
+    }
+    return acc
+  }, {})).map(([k, v]) => ({x: +k, y: v}))
+  return summed
+}
+
 module.exports = {
   availabilities2events, eventUI2availability, availability2eventUI,
   DAYS, LONG_DAYS,
-  bookings2events
+  bookings2events,
+  counterArray, counterObjects
 };
