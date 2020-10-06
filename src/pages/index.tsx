@@ -14,15 +14,15 @@ import { InspectorProvider } from '~contexts/inspector-context'
 import Inspector from '~components/inspector/Inspector'
 import useDispatch from '~hooks/useDispatch'
 
-const App = ({ projects }: any) => {
+const App = (props: any) => {
   const { handlers } = useShortcuts()
   const dispatch = useDispatch()
 
   useEffect(() => {
     setTimeout(() => {
-      dispatch.components.reset(projects)
+      dispatch.components.reset(JSON.parse(props.projects.markup))
     }, 200)
-  }, [dispatch.components, projects])
+  }, [dispatch.components, props.projects.markup])
 
   return (
     <HotKeys allowChanges handlers={handlers} keyMap={keyMap}>

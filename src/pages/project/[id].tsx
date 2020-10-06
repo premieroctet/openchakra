@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { PrismaClient } from '@prisma/client'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import App from '~pages'
-import { signIn, getSession } from 'next-auth/client'
+import { useSession, signIn } from 'next-auth/client'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prisma = new PrismaClient()
@@ -35,25 +35,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export default async ({ projects }: any) => {
-  const session = await getSession()
-
-  useEffect(() => {
-    checkProject()
-  }, [checkProject])
-
-  const checkProject = async () => {
-    if (session) {
-      console.log(session.user.name)
-      checkUser(session.user.name)
-      // if (typeof window !== 'undefined') {
-      //   router.push('/')
-      //   return
-      // }
-    } else {
-      signIn()
-    }
-  }
-
+  const [session] = useSession()
+  console.log(projects.markup)
   const checkUser = async (name: string) => {
     const response = await fetch('http://localhost:3000/api/project/check', {
       method: 'POST',
@@ -66,5 +49,16 @@ export default async ({ projects }: any) => {
     console.log(data)
   }
 
-  return <App projects={JSON.parse(projects.markup)} />
+  if (session) {
+    console.log(session.user.name)
+    checkUser(session.user.name)
+    // if (typeof window !== 'undefined') {
+    //   router.push('/')
+    //   return
+    // }
+  } else {
+    signIn()
+  }
+
+  return <App projects={projects} />
 }
