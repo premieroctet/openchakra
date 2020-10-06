@@ -436,5 +436,25 @@ export default theme => ({
   },
   filterMenuAccordionContainer:{
     borderRadius: '32px !important'
+  },
+  searchNeedHelpMainStyle:{
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: '3%',
+    marginBottom: '3%',
+  },
+  searchNeedHelpMainContainer:{
+    width: '80%'
+  },
+  searchSearchByHastagMainStyle:{
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: '3%',
+    marginBottom: '3%',
+  },
+  searchSearchByHastagContainer:{
+    width: '80%'
   }
 })

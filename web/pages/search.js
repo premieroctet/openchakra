@@ -51,6 +51,8 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import CardService from "../components/Card/CardService/CardService";
 import ScrollMenu from "../components/ScrollMenu/SrollMenu";
+import NeedHelp from "../components/NeedHelp/NeedHelp";
+import SearchByHashtag from "../components/SearchByHashtag/SearchByHashtag";
 
 moment.locale('fr');
 
@@ -421,7 +423,7 @@ class SearchPage extends React.Component {
           </Grid>
           <Grid className={classes.searchMainContainerResult}>
             <Grid className={classes.searchContainerDisplayResult}>
-              <Grid container spacing={3}>
+              <Grid container spacing={4}>
               {
                 categories.map(cat => (
                   this.restrictServices(serviceUsers, cat).map((su, index) => {
@@ -437,6 +439,22 @@ class SearchPage extends React.Component {
           </Grid>
           <Grid>
             {resultMessage}
+          </Grid>
+        </Grid>
+        <Grid className={classes.filterMenuDivierContainer}>
+          <Divider className={classes.filterMenuDividerStyle}/>
+        </Grid>
+        <Grid className={classes.searchSearchByHastagMainStyle}>
+          <Grid className={classes.searchSearchByHastagContainer}>
+            <SearchByHashtag style={classes}/>
+          </Grid>
+        </Grid>
+        <Grid className={classes.filterMenuDivierContainer}>
+          <Divider className={classes.filterMenuDividerStyle}/>
+        </Grid>
+        <Grid className={classes.searchNeedHelpMainStyle}>
+          <Grid className={classes.searchNeedHelpMainContainer}>
+            <NeedHelp style={classes}/>
           </Grid>
         </Grid>
         <Grid className={classes.mainContainerStyleFooter}>
