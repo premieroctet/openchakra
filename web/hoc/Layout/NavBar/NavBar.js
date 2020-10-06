@@ -367,7 +367,7 @@ class NavBar extends Component {
                 </Typography>
               </MenuItem>
             </Link>
-            :
+            : logged ?
             <Link href={'/creaShop/creaShop'}>
               <MenuItem>
                 <Typography>
@@ -376,7 +376,7 @@ class NavBar extends Component {
                   </a>
                 </Typography>
               </MenuItem>
-            </Link>
+            </Link> : null
 
         }
         {logged ?
