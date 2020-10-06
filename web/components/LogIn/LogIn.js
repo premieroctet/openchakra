@@ -11,6 +11,12 @@ import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
 import OAuth from '../OAuth/OAuth';
 import cookie from 'react-cookies';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+
 
 const {PROVIDERS} = require('../../utils/consts');
 const {ENABLE_GF_LOGIN} = require('../../config/config');
@@ -23,6 +29,7 @@ class LogIn extends React.Component {
       username: '',
       password: '',
       errors: {},
+      showPassword: false,
     };
   }
 
@@ -57,9 +64,17 @@ class LogIn extends React.Component {
       });
   };
 
+   handleClickShowPassword = () => {
+    this.setState({ showPassword: !this.state.showPassword });
+  };
+
+  handleMouseDownPassword = (event) =>{
+    event.preventDefault();
+  };
+
   render() {
-    const {classes} = this.props;
-    const {errors} = this.state;
+    const {classes, callRegister} = this.props;
+    const {errors, username, password, showPassword} = this.state;
     return (
       <Grid className={classes.fullContainer}>
         <Grid style={{width: '100%'}}>
@@ -103,14 +118,13 @@ class LogIn extends React.Component {
                       <MailOutlineIcon className={classes.colorIcon}/>
                     </Grid>
                     <Grid item className={classes.widthTextField}>
-                      <TextField
+                      <Input
                         label="Email"
                         placeholder="Email"
-                        margin="normal"
-                        style={{width: '100%'}}
+                        style={{width: '100%', marginTop: 16, marginBottom: 8}}
                         type="email"
                         name="username"
-                        value={this.state.username}
+                        value={username}
                         onChange={this.onChange}
                         error={errors.username}
                       />
@@ -124,17 +138,27 @@ class LogIn extends React.Component {
                       <LockOpenOutlinedIcon className={classes.colorIcon}/>
                     </Grid>
                     <Grid item className={classes.widthTextField}>
-                      <TextField
+                      <Input
                         id="standard-with-placeholder"
                         label="Mot de passe"
                         placeholder="Mot de passe"
-                        margin="normal"
-                        style={{width: '100%'}}
-                        type="password"
+                        style={{width: '100%', marginTop: 16, marginBottom: 8}}
+                        type={showPassword ? "text" : "password"}
                         name="password"
-                        value={this.state.password}
+                        value={password}
                         onChange={this.onChange}
                         error={errors.password}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={this.handleClickShowPassword}
+                              onMouseDown={this.handleMouseDownPassword}
+                            >
+                              {showPassword ? <Visibility /> : <VisibilityOff />}
+                            </IconButton>
+                          </InputAdornment>
+                        }
                       />
                       <em>{errors.password}</em>
                     </Grid>
@@ -150,7 +174,7 @@ class LogIn extends React.Component {
             <Grid item style={{display: 'flex', flexDirection: 'column', marginBottom: '10%'}}>
               <Link href={'/forgotPassword'}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Mot
                 de passe oublié ?</a></Link>
-              <a color="primary" onClick={this.props.callRegister}
+              <a color="primary" onClick={callRegister}
                  style={{textDecoration: 'none', color: '#2FBCD3', cursor: 'pointer'}}>Pas encore inscrit ?
                 Inscrivez-vous !</a>
             </Grid>

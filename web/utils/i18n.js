@@ -36,6 +36,65 @@ const MANGOPAY_MESSAGES = {
   [KycDocumentStatus.Refused]: 'Pièce d\'identité refusée, merci d\'en fournir une valide',
 };
 
+const INFOBAR_MESSAGE ={
+  message: 'Renseignez-vous sur les restrictions COVID 19 avant de réserver.',
+  showMore: 'En savoir plus'
+} ;
+
+const SHOWMORE = 'En savoir plus';
+
+const SEARCHBAR = {
+  what: 'Quel service ?',
+  where: 'Où ?',
+  when: 'Quand ?',
+  labelWhere: 'L\'adresse',
+  labelWhat: 'Le service',
+  labelWhen: 'Les dates'
+};
+
+const NAVBAR_MENU = {
+  ourServices: 'Nos services',
+  ourTeam: 'Notre équipe',
+  contactUs: 'Nous contacter',
+  signIn: 'Inscription',
+  logIn: 'Connexion'
+};
+
+const BANNER_PRESENTATION = {
+  title: 'Et si vous pouviez réserver n\'importe quel service ?',
+  text: 'Stressez moins. En quelques clics, trouver la personne et le service dont vous avez besoin.',
+  button: 'Découvrir'
+};
+
+const CATEGORY = {
+  title: 'Catégories',
+  text: 'Des milliers de services à découvrir',
+  button: 'Tout découvrir'
+};
+
+const BECOME_ALFRED = {
+  title: 'Devenir Alfred',
+  text: 'Créez votre compte et proposez vos services',
+  button: 'En savoir plus'
+};
+
+const HOW_IT_WORKS = {
+  leftText : 'En quelques clics,\n' +
+    'réserver le service et la\n' +
+    'personne dont vous avez besoin.\n' +
+    '#MyAlfred.',
+  rightText: 'Vous pouvez consulter des centaines de profils, choisir votre Alfred, réservez et payez en ligne votre service. Notre équipe vous accompagne à chaque étape !'
+};
+
+const NEWS_LETTER = {
+  title: 'Profitez des bon plans de la communauté avec la Newsletter des Alfred',
+  text: 'Inscrivez-vous gratuitement à notre super Newsletter pour recevoir les informations et les bons plans de la communauté.',
+  google: 'S\'inscrire avec Google',
+  where: 'ou',
+  email: 'Email',
+  button: 'Je m\'inscris !'
+};
+
 const getMangopayMessage = msg_id => {
   if (!msg_id) {
     return null;
@@ -46,5 +105,6 @@ const getMangopayMessage = msg_id => {
 module.exports = {
   CESU_NOTICE, OUTSIDE_PERIMETER, SCHEDULE_TITLE, SCHEDULE_SUBTITLE,
   getMangopayMessage, SHOP_CREATION_SUCCESSFUL, ID_CARD_CONFIRM_DELETION,
-  REGISTRATION_PROOF_CONFIRM_DELETION,
+  REGISTRATION_PROOF_CONFIRM_DELETION, INFOBAR_MESSAGE, SHOWMORE, SEARCHBAR,BANNER_PRESENTATION,
+  CATEGORY, BECOME_ALFRED, HOW_IT_WORKS, NEWS_LETTER, NAVBAR_MENU
 };

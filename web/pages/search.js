@@ -17,10 +17,9 @@ import 'react-dates/initialize';
 import {DateRangePicker} from 'react-dates';
 import moment from 'moment';
 import 'react-dates/lib/css/_datepicker.css';
-import CardPreview from '../components/CardPreview/CardPreview';
+import CardPreview from '../components/Card/CardPreview/CardPreview';
 import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
 import Profiteandlearn from '../components/home/profite&learn/profite&learn';
-import BecomeAlfred from '../components/home/BecomeAlfred/BecomeAlfred';
 import NearbyYou from '../components/home/NearbyYou/NearbyYou';
 import FeelingGood from '../components/home/feelingGood/feelingGood';
 import Wellbeing from '../components/home/Wellbeing/Wellbeing';
@@ -40,8 +39,18 @@ import Section18 from '../components/home/section18';
 import Section19 from '../components/home/section19';
 import Section21 from '../components/home/section21';
 import Section22 from '../components/home/section22';
-import styles from './search/searchStyle';
+import styles from '../static/css/searchPage/searchStyle';
 import cookie from 'react-cookies';
+import NavBar from "../hoc/Layout/NavBar/NavBar";
+import InfoBar from "../components/InfoBar/InfoBar";
+import FilterMenu from "../components/FilterMenu/FilterMenu";
+import Divider from "@material-ui/core/Divider";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import CardService from "../components/Card/CardService/CardService";
+import ScrollMenu from "../components/ScrollMenu/SrollMenu";
 
 moment.locale('fr');
 
@@ -74,9 +83,8 @@ class SearchPage extends React.Component {
       isAdmin: false,
       mounting: true,
       searching: false,
+      filters:['Plus proche de moi']
     };
-    this.filter = this.filter.bind(this);
-    this.searchCallback = this.searchCallback.bind(this);
   }
 
   static getInitialProps({query: {keyword, city, gps, selectedAddress, category, service, prestation, search, date}}) {
@@ -97,17 +105,7 @@ class SearchPage extends React.Component {
     return init;
   }
 
-  onChangeInterval(startDate, endDate) {
-    if (startDate) {
-      startDate.hour(0).minute(0).second(0).millisecond(0);
-    }
-    ;
-    if (endDate) {
-      endDate.hour(23).minute(59).second(59).millisecond(999);
-    }
-    ;
-    this.setState({startDate: startDate, endDate: endDate});
-  }
+
 
   componentDidUpdate(prevProps) {
     if (this.props !== prevProps) {
@@ -118,7 +116,7 @@ class SearchPage extends React.Component {
   componentDidMount() {
     // Mount components gets criterion from URL
     // If date in URL then force filter after search
-    var st = {
+    let st = {
       keyword: 'keyword' in this.props ? this.props.keyword : '',
       gps: 'gps' in this.props ? JSON.parse(this.props.gps) : null,
       city: this.props.city || '',
@@ -162,9 +160,11 @@ class SearchPage extends React.Component {
             axios.get('/myAlfred/api/users/current')
               .then(res => {
                 let user = res.data;
+
+
                 this.setState({isAdmin: user.is_admin});
                 st['user'] = user;
-                var allAddresses = {'main': user.billing_address.gps};
+                let allAddresses = {'main': user.billing_address.gps};
                 user.service_address.forEach(ad => allAddresses[ad._id] = {lat: ad.lat, lng: ad.lng});
                 st['allAddresses'] = allAddresses;
                 if ('selectedAddress' in this.props && this.props['selectedAddress'] !== 'all') {
@@ -213,9 +213,7 @@ class SearchPage extends React.Component {
     }
   };
 
-  statusFilterChanged = event => {
-    this.setState({[event.target.name]: event.target.checked, statusFilterVisible: false}, () => this.filter());
-  };
+
 
   resetFilter() {
     this.setState({
@@ -227,39 +225,7 @@ class SearchPage extends React.Component {
   }
 
   // Filter according to pro or particular && dates
-  filter() {
-    const serviceUsers = this.state.serviceUsers;
-    var serviceUsersDisplay = [];
-    if (this.state.proSelected || this.state.individualSelected) {
-      serviceUsers.forEach(su => {
-        var alfId = su.user._id;
-        const isPro = this.state.proAlfred.includes(alfId);
-        if (isPro && this.state.proSelected || !isPro && this.state.individualSelected) {
-          serviceUsersDisplay.push(su);
-        }
-      });
-    } else {
-      serviceUsersDisplay = serviceUsers;
-    }
 
-    const start = this.state.startDate;
-    const end = this.state.endDate;
-
-    if (start && end) {
-      axios.post('/myAlfred/api/availability/check', {
-        start: moment(start).unix(),
-        end: moment(end).unix(),
-        serviceUsers: serviceUsersDisplay.map(su => su._id),
-      })
-        .then(response => {
-          const filteredServiceUsers = response.data;
-          serviceUsersDisplay = serviceUsersDisplay.filter(su => filteredServiceUsers.includes(su._id.toString()));
-          this.setFilteredServiceUsers(serviceUsersDisplay);
-        });
-    } else {
-      this.setFilteredServiceUsers(serviceUsersDisplay);
-    }
-  }
 
   setFilteredServiceUsers = serviceUsers => {
     var visibleCategories = [];
@@ -338,21 +304,10 @@ class SearchPage extends React.Component {
       });
   }
 
-  statusFilterToggled() {
-    this.setState({statusFilterVisible: !this.state.statusFilterVisible});
-  }
 
-  dateFilterToggled() {
-    this.setState({dateFilterVisible: !this.state.dateFilterVisible});
-  }
 
-  cancelDateFilter() {
-    this.setState({startDate: null, endDate: null, dateFilterVisible: false}, () => this.filter());
-  }
 
-  validateDateFilter() {
-    this.setState({dateFilterVisible: false}, () => this.filter());
-  }
+
 
   restrictServices(serviceUsers, category) {
     const nbToDisplay = this.state.catCount[category._id];
@@ -371,27 +326,43 @@ class SearchPage extends React.Component {
     this.setState({catCount: counts});
   }
 
-  isStatusFilterSet() {
-    return this.state.proSelected || this.state.individualSelected;
-  }
 
-  isDateFilterSet() {
-    return this.state.startDate != null || this.state.endDate != null;
-  }
+
 
   isSubFilterSet() {
     return this.isStatusFilterSet() || this.isDateFilterSet();
   }
 
+  handleChange = (event) => {
+    this.setState({filters: event.target.value})
+  };
+
   render() {
     const {classes, search} = this.props;
-    const {user, categories, gps, isAdmin, mounting, searching} = this.state;
-    const serviceUsers = this.state.serviceUsersDisplay;
+    const {user, categories, gps, isAdmin, mounting, searching ,
+      address,
+      selectedAddress,
+      city,
+      serviceUsers,
+      serviceUsersDisplay,
+      shops,
+      proAlfred, // Professional Alfred ids
+      keyword,
+      proSelected,
+      individualSelected,
+      startDate,
+      endDate,
+      focusedInput,
+      statusFilterVisible,
+      dateFilterVisible,
+      visibleCategories,
+      catCount,
+      filters
+     } = this.state;
 
-    const statusFilterBg = this.isStatusFilterSet() ? '#2FBCD3' : 'white';
-    const dateFilterBg = this.isDateFilterSet() ? '#2FBCD3' : 'white';
 
-    var resultMessage;
+
+    let resultMessage;
     const res = {mounting, searching, search};
 
     if (mounting || search != '1') {
@@ -410,271 +381,85 @@ class SearchPage extends React.Component {
 
     return (
       <Grid>
-        <Layout searchCallback={this.searchCallback}>
-          <Grid container className={classes.bigContainer}>
-            <Grid container className={classes.respfilter}>
-              <Grid item xs={12} style={{height: 50}}>
-                <Grid container>
-                  {this.state.statusFilterVisible ?
-                    <Grid item xs={5} md={3} style={{
-                      borderRadius: '15px',
-                      backgroundColor: '#2FBCD3',
-                      boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset',
-                      cursor: 'pointer',
-                      height: '45px',
-                      margin: 10,
-                    }}>
-                      <Typography onClick={() => this.statusFilterToggled()} style={{
-                        textAlign: 'center',
-                        color: 'white',
-                        fontSize: '0.8rem',
-                        paddingTop: 13,
-                        height: 43,
-                      }}>Statut</Typography>
-                      <Grid id="status" className={classes.filterStatus} item xs={12}>
-                        <Grid container>
-                          <Grid item xs={12} style={{textAlign: 'center', margin: 'auto'}} spacing={3}>
-                            {this.state.individualSelected ? <Grid item xs={3}/> :
-                              <Grid item xs={6} sm={4} md={3} style={{textAlign: 'center', margin: 'auto'}}>
-                                <FormControlLabel
-                                  control={
-                                    <Switch
-                                      checked={this.state.proSelected}
-                                      onChange={e => {
-                                        this.statusFilterChanged(e);
-                                        this.filter();
-                                      }}
-                                      value={this.state.proSelected}
-                                      color="primary"
-                                      name={'proSelected'}
-                                    />
-                                  }
-                                  label="Pro"
-                                />
-                              </Grid>
-                            }
-                          </Grid>
-                          <Grid item xs={12} style={{textAlign: 'center', margin: 'auto'}}>
-                            {this.state.proSelected ? null :
-                              <Grid item xs={6} sm={4} md={3} style={{textAlign: 'center', margin: 'auto'}}>
-                                <FormControlLabel
-                                  control={
-                                    <Switch
-                                      checked={this.state.individualSelected}
-                                      onChange={e => {
-                                        this.statusFilterChanged(e);
-                                        this.filter();
-                                      }}
-                                      value={this.state.individualSelected}
-                                      color="primary"
-                                      name={'individualSelected'}
-                                    />
-                                  }
-                                  label="Particulier"
-                                />
-                              </Grid>
-                            }
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    :
-                    <Grid key={moment()} item xs={5} md={3} onClick={() => this.statusFilterToggled()} style={{
-                      borderRadius: '15px',
-                      backgroundColor: `${statusFilterBg}`,
-                      boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px',
-                      cursor: 'pointer',
-                      height: '45px',
-                      margin: 10,
-                    }}>
-                      <Typography style={{
-                        textAlign: 'center',
-                        fontSize: '0.8rem',
-                        height: 43,
-                        paddingTop: 13,
-                      }}>Statut</Typography>
-                    </Grid>
-                  }
-                  {this.state.dateFilterVisible ?
-                    <Grid item xs={5} md={3} style={{
-                      borderRadius: '15px',
-                      backgroundColor: '#2FBCD3',
-                      boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset',
-                      cursor: 'pointer',
-                      height: '45px',
-                      margin: 10,
-                    }}>
-                      <Typography onClick={() => this.dateFilterToggled()} style={{
-                        textAlign: 'center',
-                        color: 'white',
-                        fontSize: '0.8rem',
-                        paddingTop: 13,
-                        height: 43,
-                      }}>Quelle(s) date(s) ?</Typography>
-                      <Grid id="thedate" item xs={12} style={{
-                        borderRadius: '15px',
-                        backgroundColor: 'white',
-                        boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px',
-                        height: 'auto',
-                        marginTop: 8,
-                        zIndex: 1,
-                        padding: 10,
-                      }}>
-                        <Grid container>
-                          <Grid item xs={12} style={{textAlign: 'center', margin: 'auto'}}>
-                            <DateRangePicker
-                              style={{width: '50px'}}
-                              startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-                              startDatePlaceholderText={'Début'}
-                              endDatePlaceholderText={'Fin'}
-                              startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                              endDate={this.state.endDate} // momentPropTypes.momentObj or null,
-                              endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                              onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
-                              focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                              onFocusChange={focusedInput => this.setState({focusedInput})} // PropTypes.func.isRequired,
-                              minimumNights={0}
-                              numberOfMonths={1}
-                            />
-                          </Grid>
-                          <Grid item xs={12} style={{textAlign: 'center', margin: 'auto'}}>
-                            <Grid container>
-                              <Grid item xs={6}>
-                                <Button style={{fontSize: '0.8rem'}}
-                                        onClick={() => this.cancelDateFilter()}>Annuler</Button>
-                              </Grid>
-                              <Grid item xs={6}>
-                                <Button style={{fontSize: '0.8rem'}}
-                                        onClick={() => this.validateDateFilter()}>Valider</Button>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    :
-                    <Grid item xs={5} md={3} onClick={() => this.dateFilterToggled()} style={{
-                      borderRadius: '15px',
-                      backgroundColor: `${dateFilterBg}`,
-                      boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px',
-                      cursor: 'pointer',
-                      height: '45px',
-                      margin: 10,
-                    }}>
-                      <Typography style={{textAlign: 'center', fontSize: '0.8rem', paddingTop: 13, height: 43}}>Quelle(s)
-                        date(s) ?</Typography>
-                    </Grid>
-                  }
+        <Grid className={classes.searchNavbarComponentPosition}>
+          <InfoBar style={classes} />
+        </Grid>
+        <Grid>
+          <NavBar style={classes} user={user} selectedAddress={selectedAddress}/>
+        </Grid>
+        <Grid className={classes.searchMenuScrollMenuContainer}>
+          <Grid className={classes.searchScrollmenuContainer}>
+            <ScrollMenu style={classes} categories={categories} gps={gps}/>
+          </Grid>
+        </Grid>
+        <Grid className={classes.filterMenuDivierContainer}>
+          <Divider className={classes.filterMenuDividerStyle}/>
+        </Grid>
+        <Grid className={classes.searchFilterMenuPosition}>
+          <Grid className={classes.searchFilterMenuContent}>
+            <FilterMenu style={classes} categories={categories} gps={gps}/>
+          </Grid>
+        </Grid>
+        <Grid className={classes.searchMainConainer}>
+          <Grid className={classes.searchMainContainerHeader}>
+            <Grid className={classes.searchContainerHeader}>
+              <Grid className={classes.searchSecondFilterContainer}>
+                <Grid className={classes.searchSecondFilterContainerLeft}>
+                  <p>{serviceUsers.length} Alfred disponibles</p>
+                </Grid>
+                <Grid className={classes.searchFilterRightContainer}>
+                  <Grid className={classes.searchFilterRightLabel}>
+                    <p>Trier par</p>
+                  </Grid>
+                  <Grid>
+                    <FormControl className={classes.formControl}>
+                      <Select
+                        labelId="simple-select-placeholder-label-label"
+                        id="simple-select-placeholder-label"
+                        value={filters}
+                        onChange={this.handleChange}
+                        displayEmpty
+                        disableUnderline
+                        classes={{select: classes.searchSelectPadding}}
+                      >
+                        {filters.map((res,index) =>{
+                          return(
+                            <MenuItem value={res}><strong>{res}</strong></MenuItem>
+                          )
+                        })}
+
+                      </Select>
+                    </FormControl>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-            { /* END FILTER PANEL */}
-            <Grid className={classes.containerTitle}>
-              <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Que
-                recherchez-vous {user ? user.firstname : ''} ?</h3>
-            </Grid>
-            <Grid container style={{overflowX: 'scroll', width: '100%', marginLeft: 1}} spacing={2} wrap={'nowrap'}>
-              {categories.map((cat, index) => (
-                <Grid item key={index}>
-                  <Link href={'/search?search=1&category=' + cat._id + (gps ? '&gps=' + JSON.stringify(gps) : '')}>
-                    <Card style={{borderRadius: 35, width: '100%', margin: 10}}>
-                      <CardActionArea>
-                        <CardMedia
-                          style={{minHeight: 150, minWidth: 200}}
-                          image={cat.picture}
-                          title={cat.label}
-                        />
-                        <CardContent style={{minHeight: 50}}>
-                          <Typography style={{fontSize: '0.9rem', textAlign: 'center'}}>
-                            {cat.label}
-                          </Typography>
-                        </CardContent>
-                      </CardActionArea>
-                    </Card>
-                  </Link>
-                </Grid>
-              ))}
-            </Grid>
-            <Grid container>
-              {this.props.search && serviceUsers.length > 0 ?
-                <h3 style={{marginLeft: '15px', fontSize: '1.1rem', color: '#545659'}}>Nos meilleurs Alfred ...</h3>
-                :
-                null}
-              {/* Adresse spécifique  */
+          </Grid>
+          <Grid className={classes.searchMainContainerResult}>
+            <Grid className={classes.searchContainerDisplayResult}>
+              <Grid container spacing={3}>
+              {
                 categories.map(cat => (
-                  <Grid container>
-                    {this.state.visibleCategories.includes(cat.label) ?
-                      <Grid item xs={12}>
-                        <h3 style={{marginLeft: 15}}>{cat.label}</h3>
-                      </Grid> : null
-                    }
-                    <Grid container spacing={1} className={classes.containerCardPreview}>
-                      {
-                        this.restrictServices(serviceUsers, cat).map(su => {
-                          return (
-                            <Grid item xs={12} sm={12} md={12} lg={3} xl={3} className={classes.paddingResponsive}>
-                              <CardPreview services={su._id} gps={user ? user.billing_address.gps : this.state.gps}
-                                           needAvatar={true} key={su._id} isAdmin={isAdmin}/>
-                            </Grid>
-                          );
-                        })
-                      }
-                    </Grid>
-                    {this.state.visibleCategories.includes(cat.label) ?
-                      <Grid style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        width: '100%',
-                        marginTop: 30,
-                        marginBottom: 30,
-                      }}>
-                        {this.hasMoreToDisplay(serviceUsers, cat) ?
-                          <Grid style={{marginLeft: 15}}>
-                            <Button color={'primary'} onClick={() => this.increaseCount(cat)}>Voir plus
-                              d'Alfred</Button>
-                          </Grid>
-                          : null
-                        }
-                        <Grid style={{textAlign: 'center'}}>
-                          <img alt={'séparateur'} src={'../../../static/separateur-bleu.svg'}
-                               className={classes.separatorBlue}/>
-                        </Grid>
+                  this.restrictServices(serviceUsers, cat).map((su, index) => {
+                    return (
+                      <Grid item xl={3} lg={3} md={3} key={index}>
+                        <CardService style={classes} services={su._id} gps={user ? user.billing_address.gps : this.state.gps}/>
                       </Grid>
-                      : null}
-                  </Grid>
+                    );
+                  })
                 ))}
+              </Grid>
             </Grid>
+          </Grid>
+          <Grid>
             {resultMessage}
           </Grid>
-          {this.props.search || serviceUsers.length > 0 ? null :
-            <>
-              <SerenityNeed gps={gps}/>
-              <BecomeAlfred/>
-              <Section3 gps={gps}/>
-              <NearbyYou gps={gps}/>
-              <Profiteandlearn gps={gps}/>
-              <Section6 gps={gps}/>
-              <Wellbeing gps={gps}/>
-              <Section8 gps={gps}/>
-              <FeelingGood gps={gps}/>
-              <Section10 gps={gps}/>
-              <Proposeservice/>
-              <Section12 gps={gps}/>
-              <NearbyYou gps={gps}/>
-              <Passions/>
-              <Section15 gps={gps}/>
-              <Section16 gps={gps}/>
-              <Facons/>
-              <Section18 gps={gps}/>
-              <Section19 gps={gps}/>
-              <Otter/>
-              <Section21 gps={gps}/>
-              <Section22 gps={gps}/>
-              <Assureback/>
-            </>
-          }
-        </Layout>
-        <Footer/>
+        </Grid>
+        <Grid className={classes.mainContainerStyleFooter}>
+          <Grid className={classes.generalWidthFooter}>
+            <Footer style={classes}/>
+          </Grid>
+        </Grid>
       </Grid>
     );
   }

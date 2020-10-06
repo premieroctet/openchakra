@@ -5,7 +5,6 @@ import {MuiThemeProvider} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import JssProvider from 'react-jss/lib/JssProvider';
 import getPageContext from '../lib/getPageContext';
-import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-tabs/style/react-tabs.css';
 import 'react-input-range/lib/css/index.css';
@@ -20,13 +19,6 @@ import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import 'react-credit-cards/es/styles-compiled.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../static/style1.css';
-
-require('log-timestamp');
-
-toast.configure({
-  position: 'top-center',
-  autoClose: 2500,
-});
 
 class MyApp extends App {
   constructor() {
@@ -66,14 +58,11 @@ class MyApp extends App {
           <meta property="og:image:secure_url" content="https://my-alfred.io/static/presentation.jpg"/>
           <meta property="og:title" content="My Alfred - services autour de chez vous"/>
           <meta property="fb:app_id" content="512626602698236"/>
-          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
-                integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-                crossOrigin=""/>
           <link rel="shortcut icon" type="image/png" href="/static/favicon.png"/>
           <link rel="icon" type="image/png" href="/static/favicon.png"/>
-
-          <script src="https://www.googletagmanager.com/gtag/js?id=G-5ZTWZ756HY"></script>
+          <script src="https://www.googletagmanager.com/gtag/js?id=G-5ZTWZ756HY"/>
           <script src="/static/assets/ga.js"/>
+          <script src="https://sibforms.com/forms/end-form/build/main.js"/>
         </Head>
         {/* Wrap every page in Jss and Theme providers */}
 
@@ -85,7 +74,6 @@ class MyApp extends App {
               tree thanks to React context. */}
           <MuiThemeProvider
             theme={this.pageContext.theme}
-            sheetsManager={this.pageContext.sheetsManager}
           >
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline/>

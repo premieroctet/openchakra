@@ -3,21 +3,12 @@ import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import {withStyles} from '@material-ui/core/styles';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import Link from 'next/link';
 import setAuthToken from '../../../utils/setAuthToken';
 import Router from 'next/router';
-import UserAvatar from '../../../components/Avatar/UserAvatar';
-import SearchInput from '../../../components/SearchInput/SearchInput';
-import styles from './NavBarStyle';
-import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
 import cookie from 'react-cookies';
 import LogIn from '../../../components/LogIn/LogIn';
 import Register from '../../../components/Register/Register';
@@ -26,30 +17,23 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Slide from '@material-ui/core/Slide';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
+import Paper from '@material-ui/core/Paper';
+import Divider from '@material-ui/core/Divider';
+import MenuIcon from '@material-ui/icons/Menu';
+import SearchIcon from '@material-ui/icons/Search';
+import AlgoliaPlaces from 'algolia-places-react';
+import {SEARCHBAR, NAVBAR_MENU} from '../../../utils/i18n';
+import DatePicker from "react-datepicker";
+import TextField from "@material-ui/core/TextField";
+import Select from "@material-ui/core/Select";
+import FormControl from "@material-ui/core/FormControl";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 
 const jwt = require('jsonwebtoken');
 
-var parse = require('url-parse');
-
-
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const DialogTitle = withStyles(styles)((props) => {
-  const {children, classes, onClose, ...other} = props;
-  return (
-    <MuiDialogTitle disableTypography {...other}>
-      <Typography variant="h6">{children}</Typography>
-      {onClose ? (
-        <Link href={'/'}>
-          <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
-            <CloseIcon color={'secondary'}/>
-          </IconButton>
-        </Link>
-      ) : null}
-    </MuiDialogTitle>
-  );
 });
 
 class NavBar extends Component {
@@ -57,120 +41,45 @@ class NavBar extends Component {
     super(props);
     this.state = {
       anchorEl: null,
-      mobileMoreAnchorEl: null,
-      avatarMoreAnchorEl: null,
       logged: false,
-      hiddingPanel: true,
-      isTop: true,
-      isIndex: false,
-      isSearch: false,
       setOpenLogin: false,
-      setOpenMobileLogin: false,
       setOpenRegister: false,
-      setOpenMobileRegister: false,
-      user: null,
-      google_id: props.google_id,
-      facebook_id: props.facebook_id,
+      user: {},
       activeStep: 0,
-    };
-
-  }
-
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps !== '') {
-      this.state.user = this.props.user;
+      keyword: null,
+      city: null,
+      gps: null,
+      dateSelected: null,
+      indexTabBar: 0,
+      ifHomePage: false
     }
   }
 
   componentDidMount() {
-    var query = parse(window.location.href, true).query;
-    if (query.google_id || query.facebook_id || query.error) {
-      this.setState({
-        setOpenRegister: true,
-        setOpenLogin: false,
-      });
-    }
-
-    if (query.signup === 'true') {
-      this.setState({
-        setOpenRegister: true,
-        setOpenLogin: false,
-      });
-    }
-    ;
-
     const token = cookie.load('token');
     if (token) {
       this.setState({logged: true});
       axios.defaults.headers.common['Authorization'] = token;
     }
-    if (Router.pathname === '/') {
-      this.setState({
-        hiddingPanel: false,
-        isIndex: true,
-      });
+    if(Router.pathname === '/'){
+      this.setState({ifHomePage: true})
     }
-    if (Router.pathname === '/search') {
-      this.setState({
-        isSearch: true,
-      });
-    }
-    document.addEventListener('scroll', () => {
-      const isTop = window.scrollY < 820;
-      if (isTop !== this.state.isTop) {
-        this.onScroll(isTop);
-      }
-    });
   }
-
-  onScroll(isTop) {
-    this.setState({isTop});
-  }
-
 
   logout2() {
     cookie.remove('token', {path: '/'});
     localStorage.removeItem('path');
-    // Remove auth header for future requests
     setAuthToken(false);
     Router.push('/?disconnect=1');
   };
 
-  handleProfileMenuOpen = event => {
-    this.setState({anchorEl: event.currentTarget});
-  };
-
   handleMenuClose = () => {
     this.setState({anchorEl: null});
-    this.handleMobileMenuClose();
-    this.handleAvatarMenuClose();
-  };
-
-  handleMobileMenuOpen = event => {
-    this.setState({mobileMoreAnchorEl: event.currentTarget});
-  };
-
-  handleAvatarMenuOpen = event => {
-    this.setState({avatarMoreAnchorEl: event.currentTarget});
-  };
-
-  handleAvatarMenuClose = event => {
-    this.setState({avatarMoreAnchorEl: null});
-  };
-
-  handleMobileMenuClose = () => {
-    this.setState({mobileMoreAnchorEl: null});
   };
 
   handleOpenLogin = (e) => {
     this.handleMenuClose();
-    if (e.target.name === 'mobile') {
-      this.setState({setOpenMobileLogin: true, setOpenMobileRegister: false});
-    } else {
       this.setState({setOpenLogin: true, setOpenRegister: false});
-
-    }
   };
 
   handleCloseLogin = () => {
@@ -179,12 +88,7 @@ class NavBar extends Component {
 
   handleOpenRegister = (e) => {
     this.handleMenuClose();
-    if (e.target.name === 'mobile') {
-      this.setState({setOpenMobileRegister: true, setOpenMobileLogin: false});
-    } else {
       this.setState({setOpenRegister: true, setOpenLogin: false});
-
-    }
   };
 
   handleCloseRegister = () => {
@@ -204,18 +108,58 @@ class NavBar extends Component {
     this.setState({activeStep: e});
   };
 
-  is_admin = () => {
-    var is_admin = false;
-    const coo = cookie.load('token');
-    if (coo) {
-      return jwt.decode(coo.split(' ')[1]).is_admin;
+  onChange = e => {
+    let {name, value} = e.target;
+    this.setState({[name]: value});
+    if (name === 'selectedAddress') {
+      if (value === 'addAddress') {
+        Router.push('/profile/myAddresses');
+      } else {
+        this.setState({
+          gps: value === 'all' ? null : value === 'main' ? this.state.allAddresses['main'].gps : {
+            lat: this.state.allAddresses[value].lat,
+            lng: this.state.allAddresses[value].lng,
+          },
+        });
+      }
     }
-    return false;
+  };
+
+  handleOpenMenuItem = (event) => {
+    this.setState({anchorEl: event.currentTarget})
+  };
+
+  handleClosenMenuItem = () => {
+    this.setState({anchorEl: false})
+  };
+
+  findService() {
+    var queryParams = {search: 1};
+    if (this.state.keyword) {
+      queryParams['keyword'] = this.state.keyword;
+    }
+
+    if (this.state.city) {
+      queryParams['city'] = this.state.city;
+    }
+
+    if (this.state.gps) {
+      queryParams['gps'] = JSON.stringify(this.state.gps);
+    }
+
+    if (this.state.selectedAddress) {
+      queryParams['selectedAddress'] = this.state.selectedAddress;
+    }
+    Router.push({pathname: '/search', query: queryParams});
+  }
+
+  onChangeCity({suggestion}) {
+    this.setState({gps: suggestion.latlng, city: suggestion.name});
   };
 
   render() {
-    const {mobileMoreAnchorEl, avatarMoreAnchorEl, hiddingPanel, logged, user} = this.state;
-    const {classes} = this.props;
+    const {logged,  setOpenLogin, setOpenRegister, keyword, dateSelected, anchorEl, indexTabBar, ifHomePage, city} = this.state;
+    const {style, user, selectedAddress} = this.props;
 
     const modalLogin = () => {
       return (
@@ -229,365 +173,256 @@ class NavBar extends Component {
       );
     };
 
+    const DialogTitle = (props) => {
+      const {children, classes, onClose, ...other} = props;
+      return (
+        <MuiDialogTitle disableTypography {...other}>
+          <h6>{children}</h6>
+            <IconButton aria-label="close" className={style.navbarCloseButton} onClick={onClose}>
+              <CloseIcon color={'secondary'}/>
+            </IconButton>
+        </MuiDialogTitle>
+      );
+    };
 
-    var loggedMenu = [
-      <Link href={'/profile/editProfile'}>
+    const SearchBarInput = () => {
+      return(
+        <Grid className={style.navbarSearchContainer}>
+          <Paper component="form" classes={{root: style.navbarSearch}}>
+            <Grid style={{flex: 1}}>
+              <TextField
+                classes={{root: style.navbarRootTextField}}
+                placeholder={SEARCHBAR.what}
+                value={keyword}
+                onChange={this.onChange}
+                name={'keyword'}
+                label={ifHomePage ? SEARCHBAR.labelWhat : false}
+                onKeyPress={(e) => {
+                  e.key === 'Enter' && e.preventDefault();
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                InputProps={{disableUnderline: true}}
+              />
+            </Grid>
+            <Grid>
+              <Divider className={style.divider} orientation="vertical" />
+            </Grid>
+            {user ?
+              <Grid className={style.navbarAddressContainer}>
+                <FormControl className={style.navbarFormControlAddress}>
+                  <Select
+                    disableUnderline
+                    id="outlined-select-currency"
+                    value={selectedAddress}
+                    name={'selectedAddress'}
+                    onChange={(e) => {
+                      this.onChange(e);
+                    }}
+                  >
+                    <MenuItem value={'main'}>
+                      Adresse
+                      principale, {' ' + user.billing_address.address} {user.billing_address.zip_code},{user.billing_address.city}
+                    </MenuItem>
+                    {user.service_address.map(e => (
+                      <MenuItem value={e._id}>
+                        {e.label + ', '} {' ' + e.address},{e.zip_code} {e.city}
+                      </MenuItem>
+                    ))}
+                    <MenuItem value={'all'}>
+                      Partout, Rechercher des Alfred partout
+                    </MenuItem>
+                    <MenuItem value={'addAddress'}>
+                      <p style={{color: '#2FBCD3', cursor: 'pointer'}}>
+                        Ajouter une adresse
+                      </p>
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              :
+              <Grid className={style.navbarAlgoliaContent}>
+                <TextField
+                  label={ifHomePage ? SEARCHBAR.labelWhere : false}
+                  classes={{root: style.navbarRootTextField}}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  InputProps={{
+                    inputComponent:(props) => {
+                      return (
+                        <AlgoliaPlaces
+                          {...props}
+                          placeholder={SEARCHBAR.where}
+                          className={style.navbarAlgoliaPlace}
+                          value={city}
+                          options={{
+                            appId: 'plKATRG826CP',
+                            apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                            language: 'fr',
+                            countries: ['fr'],
+                            type: 'city',
+                          }}
+                          onChange={(suggestion) => this.onChangeCity(suggestion)}
+                          onClear={() => this.setState({city: '', gps: null})}
+                        />)
+                    },
+                    disableUnderline: true
+                  }}
+                />
+              </Grid>
+            }
+            {
+              !logged ?
+                <Grid className={style.navbarDatePickerMain}>
+                  <Grid>
+                    <Divider className={style.divider} orientation="vertical" />
+                  </Grid>
+                  <Grid className={style.navbarDatePickerContainer}>
+                    <TextField
+                      label={ifHomePage ? SEARCHBAR.labelWhen : false}
+                      classes={{root: style.navbarRootTextField}}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      InputProps={{
+                        inputComponent:(props) => {
+                          return (
+                            <DatePicker
+                              {...props}
+                              selected={dateSelected}
+                              onChange={(date) => {
+                                this.setState({dateSelected: date});
+                                if (date === null) {
+                                  this.setState({dateSelected: ''});
+                                }
+                              }}
+                              locale='fr'
+                              showMonthDropdown
+                              dateFormat="dd/MM/yyyy"
+                              placeholderText={SEARCHBAR.when}
+                              minDate={new Date()}
+                              className={style.inputDatePicker}
+                            />)
+                        },
+                        disableUnderline: true
+                      }}
+                    />
+                  </Grid>
+                </Grid> : null
+            }
+            <Grid>
+              <IconButton type="submit" classes={{root: style.iconButton}} aria-label="search" onClick={() => this.findService()}>
+                <SearchIcon />
+              </IconButton>
+            </Grid>
+          </Paper>
+        </Grid>
+      )
+    };
 
-        <MenuItem key={1}>
-          <Typography>
-            <a className={classes.navbarLinkMobile}>
-              Profil
-            </a>
-          </Typography>
-        </MenuItem>
-      </Link>
-      ,
-      <Link href={'/account/notifications'}>
-        <MenuItem key={2}>
-          <Typography>
-            <a className={classes.navbarLinkMobile}>
-              Mon compte
-            </a>
-          </Typography>
-        </MenuItem>
-      </Link>
-      ,
-      <MenuItem key={4} onClick={() => this.logout2()}>
-        <Typography>
-          <a style={{color: 'red'}} className={classes.navbarLinkMobile}>
-            Déconnexion
-          </a>
-        </Typography>
-      </MenuItem>];
-
-    if (this.is_admin()) {
-      const DASHBOARD_MENU = <Link href={'/dashboard/home'}>
-        <MenuItem key={3}>
-          <Typography>
-            <a className={classes.navbarLinkMobile}>
-              Dashboard
-            </a>
-          </Typography>
-        </MenuItem>
-      </Link>;
-
-      loggedMenu.splice(2, 0, DASHBOARD_MENU);
-    }
-
-    const doublemenuitem = [
-      <MenuItem key={1} onClick={this.handleOpenLogin}>
-        <Typography>
-          <a className={classes.navbarLinkMobile}>
-            Connexion
-          </a>
-        </Typography>
-        <Dialog
-          scroll={'paper'}
-          aria-labelledby="scroll-dialog-title"
-          aria-describedby="scroll-dialog-description"
-          className={classes.modal}
-          open={this.state.setOpenMobileLogin}
-          onClose={this.handleCloseLogin}
-          TransitionComponent={Transition}
-          name={'mobile'}
-          fullWidth={true}
-          fullScreen={true}
-          disableBackdropClick={true}
-          disableEscapeKeyDown={true}
-        >
-          <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
-          <DialogContent>
-            <div className={classes.paper}>
-              {modalLogin()}
-            </div>
-          </DialogContent>
-        </Dialog>
-      </MenuItem>
-      ,
-      <MenuItem key={2} onClick={this.handleOpenRegister}>
-        <Typography>
-          <a className={classes.navbarLinkMobile}>
-            Inscription
-          </a>
-        </Typography>
-        <Dialog
-          scroll={'paper'}
-          aria-labelledby="scroll-dialog-title"
-          aria-describedby="scroll-dialog-description"
-          className={classes.modal}
-          name={'mobile'}
-          open={this.state.setOpenMobileRegister}
-          onClose={this.handleCloseRegister}
-          TransitionComponent={Transition}
-          disableBackdropClick={true}
-          disableEscapeKeyDown={true}
-        >
-          <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
-          <DialogContent dividers={false} className={classes.dialogContentContainer}
-                         classes={{root: classes.muidialogContent}}>
-            <div className={classes.paper}>
-              {modalRegister()}
-            </div>
-          </DialogContent>
-        </Dialog>
-      </MenuItem>,
-    ];
-
-    const renderAvatarMenu = (
-      <Menu
-        anchorEl={avatarMoreAnchorEl}
-        anchorOrigin={{vertical: 'top', horizontal: 'right'}}
-        transformOrigin={{vertical: 'top', horizontal: 'right'}}
-        open={Boolean(avatarMoreAnchorEl)}
-        onClose={this.handleMenuClose}
-      >
-        {logged ? loggedMenu :
-          doublemenuitem}
-      </Menu>
-    );
-
-
-    const renderMobileMenu = (
-      <Menu
-        id="simple-menu"
-        anchorEl={mobileMoreAnchorEl}
-        open={Boolean(mobileMoreAnchorEl)}
-        onClose={this.handleMenuClose}
-        anchorOrigin={{vertical: 'top', horizontal: 'right'}}
-        transformOrigin={{vertical: 'top', horizontal: 'right'}}
-      >
-        {
-          user && user.is_alfred ?
-            <Link href={`/shop?id_alfred=${user._id}`}>
-              <MenuItem>
-                <Typography>
-                  <a className={classes.navbarLinkMobile}>
-                    Ma boutique
-                  </a>
-                </Typography>
-              </MenuItem>
-            </Link>
-            : logged ?
-            <Link href={'/creaShop/creaShop'}>
-              <MenuItem>
-                <Typography>
-                  <a className={classes.navbarLinkMobile}>
-                    Proposer mes services
-                  </a>
-                </Typography>
-              </MenuItem>
-            </Link> : null
-
-        }
-        {logged ?
-          <Link href={'/reservations/allReservations'}>
-            <MenuItem onClick={this.handleMobileMenuOpen}>
-              <Typography>
-                <a className={classes.navbarLinkMobile}>Mes réservations</a>
-              </Typography>
-            </MenuItem>
-          </Link>
-          : null}
-        {logged ?
-          <Link href={'/reservations/messages'}>
-            <MenuItem>
-              <Typography>
-                <a className={classes.navbarLinkMobile}>Messages</a>
-              </Typography>
-            </MenuItem>
-          </Link>
-          : null}
-        <Link href={'/faq'}>
-          <MenuItem>
-            <Typography>
-              <a className={classes.navbarLinkMobile}>Aide</a>
-            </Typography>
-          </MenuItem>
-        </Link>
-        {logged ? loggedMenu :
-          doublemenuitem}
-      </Menu>
-    );
-
-    return (
-      <Grid className={classes.root}>
-        <AppBar color="inherit"
-                className={this.state.isTop && this.state.isIndex ? classes.appBarTransparent : classes.appBar}
-                position="fixed">
-          <Toolbar>
-            <Grid className={classes.mainWrapper}>
-              <Grid className={classes.leftContainer}>
-                <Grid>
-                  <Link href={'/'}>
-                    <img
-                      src={this.state.isTop && this.state.isIndex ? '../../../static/assets/img/logo.png' : '../../../static/blueLogo.png'}
-                      className={classes.logoNavbar} alt={'Logo Bleu'}/>
-                  </Link>
-                </Grid>
-                <Hidden smUp>
-                  <Grid className={classes.sectionMobile}>
-                    <Grid style={{border: '1px solid #e8ebeb', borderRadius: 5}}>
-                      <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit"
-                                  aria-controls="simple-menu">
-                        <MoreIcon
-                          className={this.state.isTop && this.state.isIndex ? classes.iconWhite : classes.iconBlack}/>
-                        <Grid>
-                          <p
-                            className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.textBlack}>Menu</p>
-                        </Grid>
-                      </IconButton>
+    return(
+      <Grid className={style.navbarMainSytle}>
+        <AppBar position={'static'} className={style.navbarAppBar}>
+          <Toolbar className={style.navBartoolbar}>
+            <Grid className={style.navbarTopContainer}>
+              <Grid className={style.navbarLogoContainer}>
+                <p>Mon logo</p>
+              </Grid>
+              {
+                ifHomePage ?
+                  <Grid>
+                    <Tabs value={indexTabBar} indicatorColor={''} selectionFollowsFocus={false} aria-label="simple tabs example">
+                      <Tab classes={{root : style.navbarTabRoot}} label={NAVBAR_MENU.ourServices} />
+                      <Tab classes={{root : style.navbarTabRoot}} label={NAVBAR_MENU.ourTeam} />
+                      <Tab classes={{root : style.navbarTabRoot}} label={NAVBAR_MENU.contactUs}/>
+                    </Tabs>
+                  </Grid> : SearchBarInput()
+              }
+              {
+                logged ?
+                  <Grid>
+                    <IconButton
+                      edge="start"
+                      color="inherit"
+                      aria-label="open drawer"
+                      onClick={this.handleOpenMenuItem}
+                    >
+                      <MenuIcon />
+                    </IconButton>
+                    <Menu
+                      id="simple-menu"
+                      anchorEl={anchorEl}
+                      keepMounted
+                      open={Boolean(anchorEl)}
+                      onClose={this.handleClosenMenuItem}
+                      anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                      }}
+                    >
+                      <MenuItem>Profile</MenuItem>
+                      <MenuItem>My account</MenuItem>
+                      <MenuItem onClick={() => this.logout2()}>Logout</MenuItem>
+                    </Menu>
+                  </Grid>
+                  :
+                  <Grid className={style.navbarButtonContainer}>
+                    <Grid>
+                      <Button className={style.navBarlogIn} onClick={this.handleOpenLogin}>{NAVBAR_MENU.logIn}</Button>
+                      <Dialog
+                        scroll={'paper'}
+                        aria-labelledby="scroll-dialog-title"
+                        aria-describedby="scroll-dialog-description"
+                        className={style.navbarModal}
+                        open={setOpenLogin}
+                        onClose={this.handleCloseLogin}
+                        TransitionComponent={Transition}
+                        classes={{paperWidthSm: style.navbarPaperWidth}}
+                        disableBackdropClick={true}
+                        disableEscapeKeyDown={true}
+                      >
+                        <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
+                        <DialogContent classes={{root: style.navbarWidthLoginContent}}>
+                          <div className={style.navbarPaper}>
+                            {modalLogin()}
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </Grid>
+                    <Grid className={style.navbarRegisterContainer}>
+                      <Button variant="outlined" classes={{root: style.navbarSignIn}} onClick={this.handleOpenRegister}>{NAVBAR_MENU.signIn}</Button>
+                      <Dialog
+                        scroll={'paper'}
+                        aria-labelledby="scroll-dialog-title"
+                        aria-describedby="scroll-dialog-description"
+                        className={style.navbarModal}
+                        open={setOpenRegister}
+                        onClose={this.handleCloseRegister}
+                        TransitionComponent={Transition}
+                        disableBackdropClick={true}
+                        disableEscapeKeyDown={true}
+                      >
+                        <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
+                        <DialogContent dividers={false} className={style.navbarMuidialogContent}>
+                          <div className={style.navbarPaper}>
+                            {modalRegister()}
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </Grid>
                   </Grid>
-                </Hidden>
-              </Grid>
-              {hiddingPanel ?
-                <Grid className={this.state.isSearch ? classes.search : classes.searchHidden}>
-                  <SearchInput searchCallback={this.props.searchCallback}/>
-                </Grid> : null
               }
-              <Hidden xsDown>
-                <Grid className={classes.sectionMobile}>
-                  {logged ?
-                    <Grid style={{border: '1px solid #e8ebeb', borderRadius: 5}}>
-                      <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
-                        <MoreIcon/>
-                        <Grid>
-                          <p
-                            className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.textBlack}>Menu</p>
-                        </Grid>
-                      </IconButton>
-                    </Grid>
-                    :
-                    null
-                  }
-                </Grid>
-              </Hidden>
-              <Grid className={classes.rightContentNavBar}>
-                <Grid className={classes.sectionDesktop}>
-                  {user && user.is_alfred ?
-                    <Typography className={classes.navbarItem}>
-                      <Link href={`/shop?id_alfred=${user._id}`}>
-                        <a className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.navbarLink}>
-                          Ma boutique
-                        </a>
-                      </Link>
-                    </Typography>
-                    :
-                    <Typography className={classes.navbarItem}>
-                      <Link href={'/creaShop/creaShop'}>
-                        <a className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.navbarLink}>
-                          {user && user.is_alfred == false ? `Proposer mes services` : ''}
-                        </a>
-                      </Link>
-                    </Typography>}
-                  {logged ?
-                    <React.Fragment>
-                      <Typography className={classes.navbarItem}>
-                        <Link href={'/reservations/allReservations'}>
-                          <a
-                            className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.navbarLink}>
-                            Mes réservations
-                          </a>
-                        </Link>
-                      </Typography>
-                    </React.Fragment>
-                    : null
-                  }
-                  {logged ?
-                    <React.Fragment>
-                      <Typography className={classes.navbarItem}>
-                        <Link href={'/reservations/messages'}>
-                          <a
-                            className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.navbarLink}>
-                            Mes messages
-                          </a>
-                        </Link>
-                      </Typography>
-                    </React.Fragment>
-                    : null
-                  }
-                  <Typography className={classes.navbarItem}>
-                    <Link href={'/faq'}>
-                      <a className={this.state.isTop && this.state.isIndex ? classes.textWhite : classes.navbarLink}>
-                        Aide
-                      </a>
-                    </Link>
-                  </Typography>
-                  {logged ? null :
-                    <Grid container>
-                      <Grid style={{marginRight: 20}}>
-                        <Button color="primary" onClick={this.handleOpenLogin}>
-                          Connexion
-                        </Button>
-                        <Dialog
-                          scroll={'paper'}
-                          aria-labelledby="scroll-dialog-title"
-                          aria-describedby="scroll-dialog-description"
-                          className={classes.modal}
-                          open={this.state.setOpenLogin}
-                          onClose={this.handleCloseLogin}
-                          TransitionComponent={Transition}
-                          classes={{paperWidthSm: classes.widthSm}}
-                          disableBackdropClick={true}
-                          disableEscapeKeyDown={true}
-                        >
-                          <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
-                          <DialogContent classes={{root: classes.widthLoginContent}}>
-                            <div className={classes.paper}>
-                              {modalLogin()}
-                            </div>
-                          </DialogContent>
-                        </Dialog>
-                      </Grid>
-                      <Grid>
-                        <Button color="primary" variant={'contained'} onClick={this.handleOpenRegister}
-                                style={{color: 'white'}}>
-                          Inscription
-                        </Button>
-                        <Dialog
-                          scroll={'paper'}
-                          aria-labelledby="scroll-dialog-title"
-                          aria-describedby="scroll-dialog-description"
-                          className={classes.modal}
-                          open={this.state.setOpenRegister}
-                          onClose={this.handleCloseRegister}
-                          TransitionComponent={Transition}
-                          disableBackdropClick={true}
-                          disableEscapeKeyDown={true}
-                        >
-                          <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
-                          <DialogContent dividers={false} className={classes.muidialogContent}>
-                            <div className={classes.paper}>
-                              {modalRegister()}
-                            </div>
-                          </DialogContent>
-                        </Dialog>
-                      </Grid>
-                    </Grid>}
-                  {logged ?
-                    <React.Fragment>
-                      <React.Fragment>
-                        <IconButton aria-haspopup="true" onClick={this.handleAvatarMenuOpen} color="inherit">
-                          <UserAvatar user={user} className={classes.bigAvatar} warnings={true}/>
-                        </IconButton>
-                      </React.Fragment>
-                    </React.Fragment>
-                    : null
-                  }
-                </Grid>
-              </Grid>
             </Grid>
+            {
+              ifHomePage ? SearchBarInput() : null
+            }
           </Toolbar>
         </AppBar>
-        {renderMobileMenu}
-        {logged ? renderAvatarMenu : null}
       </Grid>
-    );
+    )
   }
 }
 
-NavBar.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(NavBar);
+export default NavBar;

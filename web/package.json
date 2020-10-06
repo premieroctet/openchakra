@@ -12,7 +12,7 @@
   "dependencies": {
     "@date-io/date-fns": "^1.3.6",
     "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^3.0.2",
+    "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.51",
     "@material-ui/pickers": "^3.0.0",
     "@zeit/next-css": "^1.0.1",
@@ -83,6 +83,7 @@
     "react-radio-group": "^3.0.3",
     "react-responsive-carousel": "^3.1.49",
     "react-select": "^3.0.8",
+    "react-slideshow-image": "^3.3.0",
     "react-social-login-buttons": "^3.1.0",
     "react-star-ratings": "^2.3.0",
     "react-tabs": "^3.0.0",

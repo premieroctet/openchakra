@@ -6,15 +6,148 @@ import {createGenerateClassName, createMuiTheme} from '@material-ui/core/styles'
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#2FBCD3',
+      main: 'rgba(178,204,251,1)',
     },
     secondary: {
-      main: '#F8727F',
+      main: '#B26879',
+    },
+    link: {
+      main: '#4C89C4'
+    },
+    backgroundGrey: {
+      main: '#EDEDED'
+    },
+    white: {
+      main: 'rgba(255,255,255,1)'
+    },
+    yellow: {
+      main: 'rgba(248, 207, 97, 1)'
+    },
+    black: {
+      main: 'rgba(53,44,42,1)'
+    },
+    lightBlack:{
+      main: 'rgba(38,38,38,6)'
+    },
+    placeHolder:{
+      main: 'rgba(0, 0, 0, 0.87)'
     },
   },
   typography: {
+    fontSize: 14,
+    lineHeight: '20px',
     useNextVariants: true,
-    fontFamily: 'Helvetica',
+    fontFamily: 'Futura, sans-serif',
+    textTransform: 'none',
+    fontWeight: 'bold',
+    letterSpacing: '2px',
+    title:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: 'bold',
+      fontSize: '32px',
+      margin:0
+    },
+    subTitle:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: 'bold',
+      fontSize: '20px',
+      margin: 0
+    },
+    sectionTitle:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: 'bold',
+      fontSize: '18px',
+      margin: 0
+    },
+    text:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: '500',
+      fontSize: '16px',
+      margin: 0
+    },
+    textAlfredName:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: '800',
+      fontSize: '12px',
+      margin: 0
+    },
+    textLabel:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: '500',
+      fontSize: '10px',
+      margin: 0
+    },
+    buttonLink:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: '500',
+      fontSize: '17px',
+    },
+    blackButton:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: 'bold',
+    },
+    whiteButton:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: 'bold',
+    },
+    whiteButtonContained:{
+      fontFamily: 'Futura, sans-serif',
+      fontWeight: 'bold',
+      fontSize: '18px'
+    },
+    infoBar:{
+      fontFamily: 'Futura, sans-serif',
+      lineHeight: '23px',
+      fontSize: 14,
+      fontWeight: 'bold'
+    },
+    placeHolder:{
+      fontFamily: 'Futura, sans-serif',
+      fontSize: '1rem',
+      fontWeight: '400',
+      lineHeight: '1.1876em',
+    },
+  },
+  border:{
+    button:{
+      borderRadius: 37
+    },
+    buttonDiscover:{
+      borderRadius: 24
+    },
+    blackButton:{
+      borderRadius: 39
+    },
+    whiteButton:{
+      borderRadius: 15,
+      border: '2px solid rgba(112,112,112,1)'
+    },
+    textField:{
+      borderRadius: 39
+    },
+    categoryCard:{
+      borderRadius: 50
+    }
+  },
+  padding:{
+    blackButton:{
+      padding: '12px 38px'
+    },
+    whiteButton:{
+      padding: '5px 30px'
+    },
+    whiteButtonContained:{
+      padding: '6px 38px'
+    },
+    homePage:{
+      section:{
+        padding: '8%'
+      }
+    },
+    infoBar: {
+      paddingTop: 20,
+      paddingBottom: 20
+    }
   },
 });
 
