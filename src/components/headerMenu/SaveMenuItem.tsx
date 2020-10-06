@@ -4,10 +4,12 @@ import { MenuItem, Box } from '@chakra-ui/core'
 import { FaSave } from 'react-icons/fa'
 import { getComponents } from '~core/selectors/components'
 import { signIn, useSession } from 'next-auth/client'
+import { useRouter } from 'next/router'
 
 const SaveMenuItem = () => {
   const components = useSelector(getComponents)
   const [session, loading] = useSession()
+  const router = useRouter()
 
   const saveProject = async () => {
     if (loading) {
@@ -15,6 +17,10 @@ const SaveMenuItem = () => {
     }
     if (session) {
       createProject()
+      // if (typeof window !== 'undefined') {
+      //   router.push('/')
+      //   return
+      // }
     } else {
       signIn()
     }
@@ -27,7 +33,7 @@ const SaveMenuItem = () => {
         markup: markup,
       },
     }
-    const response = await fetch('api/project/create', {
+    const response = await fetch('http://localhost:3000/api/project/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

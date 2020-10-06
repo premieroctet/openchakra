@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Flex, Box } from '@chakra-ui/core'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
@@ -12,9 +12,17 @@ import EditorErrorBoundary from '~components/errorBoundaries/EditorErrorBoundary
 import Editor from '~components/editor/Editor'
 import { InspectorProvider } from '~contexts/inspector-context'
 import Inspector from '~components/inspector/Inspector'
+import useDispatch from '~hooks/useDispatch'
 
-const App = () => {
+const App = ({ projects }: any) => {
   const { handlers } = useShortcuts()
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    setTimeout(() => {
+      dispatch.components.reset(projects)
+    }, 200)
+  }, [dispatch.components, projects])
 
   return (
     <HotKeys allowChanges handlers={handlers} keyMap={keyMap}>
@@ -30,7 +38,6 @@ const App = () => {
       <DndProvider backend={Backend}>
         <Flex h="calc(100vh - 3rem)">
           <Sidebar />
-          {/*@ts-ignore*/}
           <EditorErrorBoundary>
             <Box bg="white" flex={1} zIndex={10} position="relative">
               <Editor />
