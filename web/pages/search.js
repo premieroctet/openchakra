@@ -358,7 +358,7 @@ class SearchPage extends React.Component {
         </Grid>
         <Grid className={classes.searchFilterMenuPosition}>
           <Grid className={classes.searchFilterMenuContent}>
-            <FilterMenu style={classes} categories={categories} gps={gps}/>
+            <FilterMenu style={classes} categories={categories} gps={gps} visibleCategories={visibleCategories}/>
           </Grid>
         </Grid>
         <Grid className={classes.searchMainConainer}>

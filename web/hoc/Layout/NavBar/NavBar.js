@@ -208,7 +208,7 @@ class NavBar extends Component {
                   <Select
                     disableUnderline
                     id="outlined-select-currency"
-                    value={selectedAddress}
+                    value={selectedAddress ? selectedAddress : 'main'}
                     name={'selectedAddress'}
                     onChange={(e) => {
                       this.onChange(e);
@@ -325,7 +325,7 @@ class NavBar extends Component {
               </Grid>
               {
                 ifHomePage ?
-                  <Grid>
+                  <Grid className={style.navabarHomepageMenu}>
                     <Tabs value={false} aria-label="simple tabs example">
                       <Tab classes={{root : style.navbarTabRoot}} label={NAVBAR_MENU.ourServices} />
                       <Tab classes={{root : style.navbarTabRoot}} label={NAVBAR_MENU.ourTeam} />

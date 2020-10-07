@@ -123,25 +123,30 @@ class FilterMenu extends React.Component{
   };
 
   render() {
-    const{style, categories} = this.props;
+    const{style, categories, visibleCategories} = this.props;
     const {statusFilterVisible, individualSelected, proSelected, dateFilterVisible, startDate, endDate, focusedInput, expanded} = this.state;
-
-    const statusFilterBg = this.isStatusFilterSet() ? '#2FBCD3' : 'white';
-    const dateFilterBg = this.isDateFilterSet() ? '#2FBCD3' : 'white';
-
 
     return(
       <Grid>
-        <Grid className={style.filterMenuTitleContainer}>
-          <Grid>
-            <Grid>
-              <h2 className={style.filterMenuTitle}>Titre de la categorie</h2>
+        {
+          categories ?
+            <Grid className={style.filterMenuTitleContainer}>
+              <Grid>
+                {
+                  categories.map((cat, index) => (
+                    visibleCategories.includes(cat.label) ?
+                      <Grid key={index}>
+                        <h2 className={style.filterMenuTitle}>{ cat.label}</h2>
+                      </Grid> : null
+                  ))
+                }
+                <Grid>
+                  <p className={style.filterMenuDescription}>Description</p>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid>
-              <p className={style.filterMenuDescription}>Description</p>
-            </Grid>
-          </Grid>
-        </Grid>
+           : null
+        }
         <Grid className={style.filterMenuChipContainer}>
           <Grid container style={{display: 'flex', flexDirection : 'row'}}>
             <Grid item>
