@@ -1,44 +1,13 @@
 import React from 'react';
-import Layout from '../hoc/Layout/Layout';
 import Footer from '../hoc/Layout/Footer/Footer';
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
-import Link from 'next/link';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import 'react-dates/initialize';
-import {DateRangePicker} from 'react-dates';
 import moment from 'moment';
 import 'react-dates/lib/css/_datepicker.css';
-import CardPreview from '../components/Card/CardPreview/CardPreview';
-import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
-import Profiteandlearn from '../components/home/profite&learn/profite&learn';
-import NearbyYou from '../components/home/NearbyYou/NearbyYou';
-import FeelingGood from '../components/home/feelingGood/feelingGood';
-import Wellbeing from '../components/home/Wellbeing/Wellbeing';
-import Proposeservice from '../components/home/proposeservice/Proposeservice';
-import Assureback from '../components/home/AssureBack/Assureback';
-import Section3 from '../components/home/section3';
-import Section6 from '../components/home/section6';
-import Section8 from '../components/home/section8';
-import Passions from '../components/home/Passions/passions';
-import Facons from '../components/home/Facons/facons';
-import Otter from '../components/home/Otter/otter';
-import Section10 from '../components/home/section10';
-import Section12 from '../components/home/section12';
-import Section15 from '../components/home/section15';
-import Section16 from '../components/home/section16';
-import Section18 from '../components/home/section18';
-import Section19 from '../components/home/section19';
-import Section21 from '../components/home/section21';
-import Section22 from '../components/home/section22';
 import styles from '../static/css/searchPage/searchStyle';
 import cookie from 'react-cookies';
 import NavBar from "../hoc/Layout/NavBar/NavBar";
@@ -46,7 +15,6 @@ import InfoBar from "../components/InfoBar/InfoBar";
 import FilterMenu from "../components/FilterMenu/FilterMenu";
 import Divider from "@material-ui/core/Divider";
 import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import CardService from "../components/Card/CardService/CardService";
@@ -54,7 +22,6 @@ import ScrollMenu from "../components/ScrollMenu/SrollMenu";
 import NeedHelp from "../components/NeedHelp/NeedHelp";
 import SearchByHashtag from "../components/SearchByHashtag/SearchByHashtag";
 import CardServiceInfo from "../components/Card/CardServiceInfo/CardServiceInfo";
-import Pagination from "../components/Pagination/Pagination";
 
 moment.locale('fr');
 
@@ -66,7 +33,6 @@ class SearchPage extends React.Component {
     this.state = {
       user: null,
       address: {},
-      selectedAddress: {},
       city: '',
       gps: null,
       categories: [],
@@ -87,7 +53,8 @@ class SearchPage extends React.Component {
       isAdmin: false,
       mounting: true,
       searching: false,
-      filters:['Plus proche de moi']
+      filters:['Plus proche de moi'],
+      logged: false
     };
   }
 
@@ -119,6 +86,10 @@ class SearchPage extends React.Component {
   }
 
   componentDidMount() {
+    const token = cookie.load('token');
+    if (token) {
+      this.setState({logged: true});
+    }
     // Mount components gets criterion from URL
     // If date in URL then force filter after search
     let st = {
@@ -346,7 +317,8 @@ class SearchPage extends React.Component {
       dateFilterVisible,
       visibleCategories,
       catCount,
-      filters
+      filters,
+      logged
      } = this.state;
 
 
@@ -374,7 +346,7 @@ class SearchPage extends React.Component {
           <InfoBar style={classes} />
         </Grid>
         <Grid>
-          <NavBar style={classes} user={user} selectedAddress={selectedAddress}/>
+          <NavBar style={classes} user={user} selectedAddress={selectedAddress} logged={logged}/>
         </Grid>
         <Grid className={classes.searchMenuScrollMenuContainer}>
           <Grid className={classes.searchScrollmenuContainer}>
@@ -413,7 +385,7 @@ class SearchPage extends React.Component {
                       >
                         {filters.map((res,index) =>{
                           return(
-                            <MenuItem value={res}><strong>{res}</strong></MenuItem>
+                            <MenuItem key={index} value={res}><strong>{res}</strong></MenuItem>
                           )
                         })}
 

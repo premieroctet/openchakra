@@ -22,7 +22,7 @@ class SearchByHashtag extends React.Component{
         <Grid container>
           {
             hashtags.map((res, index) => (
-              <Grid item xl={2}>
+              <Grid item xl={2} key={index}>
                 <Button variant="contained">#{res}</Button>
               </Grid>
             ))

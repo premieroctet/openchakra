@@ -14,9 +14,9 @@ class CategoryCard extends React.Component{
 
     return(
       <Grid container>
-        {category ? Object.keys(category).slice(start,end).map( res => {
+        {category ? Object.keys(category).slice(start,end).map( (res, index) => {
           return(
-            <Grid item xl={3} lg={3} md={3} className={style.categoryCardRoot}>
+            <Grid item xl={3} lg={3} md={3} key={index} className={style.categoryCardRoot}>
               <Grid className={style.categoryCardMedia}>
                 <Grid
                   style={{backgroundImage: `url(${category[res].picture})`}}

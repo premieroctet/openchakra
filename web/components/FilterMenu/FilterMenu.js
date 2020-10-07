@@ -196,7 +196,6 @@ class FilterMenu extends React.Component{
                 </AccordionSummary>
                 <AccordionDetails style={{width: '100%'}}>
                   <DateRangePicker
-                    style={{width: '50px'}}
                     startDate={startDate} // momentPropTypes.momentObj or null,
                     startDatePlaceholderText={'Début'}
                     endDatePlaceholderText={'Fin'}

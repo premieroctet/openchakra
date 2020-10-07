@@ -45,6 +45,30 @@ export default theme => ({
     border: '3px solid rgba(255, 255, 255, 1)',
     color: theme.palette.white.main,
   },
+  navbarModal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    '& .MuiDialog-paper': {
+      margin: '0px !important',
+    },
+  },
+  navbarMuidialogContent: {
+    padding: 0,
+  },
+  navbarPaperWidth:{
+    width: 400,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
+  },
+  navbarWidthLoginContent:{
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  navbarRegisterContainer:{
+    marginRight: 5
+  },
   navBarlogIn:{
     textTransform: theme.typography.textTransform,
     borderRadius: theme.border.button.borderRadius,
@@ -59,7 +83,8 @@ export default theme => ({
   navbarButtonContainer:{
     display: 'flex',
     flexDirection: 'row-reverse',
-    width: '25%'
+    width: '25%',
+    alignItems: 'center'
   },
   navbarSearch: {
     padding: '1%',
