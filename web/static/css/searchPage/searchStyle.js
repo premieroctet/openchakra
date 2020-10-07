@@ -310,7 +310,8 @@ export default theme => ({
   cardServicePaper:{
     borderRadius: 20,
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    height: '40vh'
   },
   cardServiceScoreAndButtonContainer:{
     display: 'flex',
@@ -455,6 +456,26 @@ export default theme => ({
     marginBottom: '3%',
   },
   searchSearchByHastagContainer:{
+    width: '80%'
+  },
+  cardServiceInfoPaper:{
+    backgroundColor: theme.palette.primary.main,
+    borderRadius: 20,
+    display: 'flex',
+    justifyContent: 'center',
+    height: '40vh'
+  },
+  cardServiceInfoContent:{
+    display:'flex',
+    flexDirection: 'column',
+    justifyContent: 'center'
+  },
+  searchResultMessage:{
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%'
+  },
+  searchResultMessageContent:{
     width: '80%'
   }
 })

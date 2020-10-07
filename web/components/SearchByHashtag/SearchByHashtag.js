@@ -3,12 +3,14 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
 class SearchByHashtag extends React.Component{
+
   constructor(props) {
     super(props);
     this.state={
       hashtags:['webdesign', 'dogsitter', 'bricolage', 'babysitting', 'coach', 'naturopathie', 'mariage', 'catlover', 'maisonjardin', 'gardedanimaux', 'yoga', 'chefcuisto', 'coursdemathématiques', 'sport']
     }
   }
+
   render() {
     const{hashtags} = this.state;
     const { style } = this.props;
