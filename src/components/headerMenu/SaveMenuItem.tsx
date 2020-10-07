@@ -5,25 +5,33 @@ import { FaSave } from 'react-icons/fa'
 import { getComponents } from '~core/selectors/components'
 import { signIn, useSession } from 'next-auth/client'
 import { useRouter } from 'next/router'
+import useDispatch from '~hooks/useDispatch'
+import { checkUser } from '~utils/checkSession'
 
-const SaveMenuItem = () => {
+const SaveMenuItem = (props: any) => {
   const components = useSelector(getComponents)
-  const [session, loading] = useSession()
+  const [session] = useSession()
   const router = useRouter()
+  const dispatch = useDispatch()
 
-  const saveProject = async () => {
-    if (loading) {
-      return <div>Loading...</div>
+  const updateProject = async () => {
+    const markup = JSON.stringify(components)
+    let bodyData = {
+      project: {
+        markup: markup,
+        id: props.id,
+      },
     }
-    if (session) {
-      createProject()
-      // if (typeof window !== 'undefined') {
-      //   router.push('/')
-      //   return
-      // }
-    } else {
-      signIn()
-    }
+    const response = await fetch('http://localhost:3000/api/project/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bodyData),
+    })
+    const data = await response.json()
+    const { project } = data
+    return project
   }
 
   const createProject = async () => {
@@ -43,6 +51,35 @@ const SaveMenuItem = () => {
     const data = await response.json()
     const { project } = data
     return project
+  }
+
+  const saveProject = async () => {
+    if (session) {
+      if (props.id) {
+        let userCanEdit = false
+        const userProject = await checkUser(session.user.name)
+        userProject.project.map((e: any) => {
+          if (e.id === props.id) {
+            userCanEdit = true
+          }
+        })
+        if (userCanEdit == false) {
+          if (typeof window !== 'undefined') {
+            dispatch.components.reset()
+            router.push('/')
+            return
+          }
+        }
+        if (userCanEdit) {
+          await updateProject()
+        }
+      } else {
+        const newProject = await createProject()
+        router.push('/project/[id]', `/project/${newProject.id}`)
+      }
+    } else {
+      signIn()
+    }
   }
 
   return (

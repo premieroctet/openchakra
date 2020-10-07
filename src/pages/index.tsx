@@ -36,7 +36,7 @@ const App = (props: any) => {
 
       <Metadata />
 
-      <Header />
+      <Header id={props.id} />
       <DndProvider backend={Backend}>
         <Flex h="calc(100vh - 3rem)">
           <Sidebar />

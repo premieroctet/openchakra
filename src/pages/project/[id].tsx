@@ -5,6 +5,7 @@ import App from '~pages'
 import { getSession, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import useDispatch from '~hooks/useDispatch'
+import { checkUser } from '~utils/checkSession'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prisma = new PrismaClient()
@@ -14,7 +15,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       id: Number(params!.id),
     },
   })
-
   let projects = JSON.parse(JSON.stringify(project))
   return {
     props: {
@@ -44,33 +44,18 @@ export default ({ projects, id }: any) => {
 
   useEffect(() => {
     checkSession()
-  })
-
-  const checkUser = async (name: string) => {
-    const response = await fetch('http://localhost:3000/api/project/check', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(name),
-    })
-    const data = await response.json()
-    return data
-  }
+  }, [checkSession])
 
   const checkSession = async () => {
     const session = await getSession()
     if (session) {
       const userProject = await checkUser(session.user.name)
-      console.log(userProject.project)
       userProject.project.map((e: any) => {
         if (e.id === id) {
           userCanEdit = true
         }
       })
-      if (userCanEdit) {
-        console.log(userCanEdit)
-      } else {
+      if (userCanEdit === false) {
         if (typeof window !== 'undefined') {
           dispatch.components.reset()
           router.push('/')
@@ -82,5 +67,9 @@ export default ({ projects, id }: any) => {
     }
   }
 
-  return <App projects={projects.markup} />
+  return projects.markup ? (
+    <App projects={projects.markup} id={id} userCanEdit={userCanEdit} />
+  ) : (
+    <></>
+  )
 }
