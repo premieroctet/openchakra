@@ -16,11 +16,11 @@ class CardPreview extends React.Component {
   }
 
   render() {
-    const {style, alfred, start, end} = this.props;
+    const {style, alfred, start, length} = this.props;
 
     return (
       <Grid container>
-        {alfred ? Object.keys(alfred).slice(start, end).map(e => {
+        {alfred ? Object.keys(alfred).slice(start, start+length).map(e => {
           return(
             <Grid item xl={4} lg={4} md={4} className={style.cardPreviewMainStyle}>
               <Grid className={style.cardPreviewContainerAvatar}>

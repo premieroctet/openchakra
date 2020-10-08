@@ -15,7 +15,7 @@ class Category extends React.Component{
         <Grid className={style.categoryContainer}>
           <Grid className={style.categoryLeftContainer}>
             <Grid className={style.categoryImgContainer}>
-              <img src={'../../../static/assets/icon/star.png'} alt={'iconStar'} title={'iconStar'} width={'100%'} height={'50vh'}/>
+              <img src={'/static/assets/icon/star.png'} alt={'iconStar'} title={'iconStar'} width={'100%'} height={'50vh'}/>
             </Grid>
             <Grid className={style.categoryTextContainer}>
               <Grid>
