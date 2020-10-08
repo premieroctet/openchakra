@@ -19,7 +19,7 @@ class SlideShow extends React.Component{
   }
 
   render(){
-    const{style, type, category, alfred } = this.props
+    const{style, type, data } = this.props
     const {pageIndex} = this.state
 
     return(
@@ -28,7 +28,7 @@ class SlideShow extends React.Component{
           <Grid container className={style.slideShowContainer}>
             <Grid container>
               <Grid className={style.slideShowSectionContainer}>
-                {type === 'alfred' ? <CardPreview style={style} alfred={alfred} start={pageIndex*3} length={3}/> : <CategoryCard style={style} category={category} start={pageIndex*8} length={8}/>}
+                {type === 'alfred' ? <CardPreview style={style} data={data} start={pageIndex*3} length={3}/> : <CategoryCard style={style} data={data} start={pageIndex*8} length={8}/>}
               </Grid>
             </Grid>
           </Grid>

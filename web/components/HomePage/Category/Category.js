@@ -31,7 +31,7 @@ class Category extends React.Component{
           </Grid>
         </Grid>
         <Grid className={style.categorySlideShowContainer}>
-          <SlideShow style={style} category={category}/>
+          <SlideShow style={style} data={category}/>
         </Grid>
       </Grid>
     );

@@ -12,21 +12,23 @@ class CategoryCard extends React.Component{
 
 
   render() {
-    const {style, category, start, length} = this.props;
+    const {style, data, start, length} = this.props;
+
+    console.log(JSON.stringify(Object.keys(data)))
 
     return(
       <Grid container>
-        {category && category.length ? circular_get(Object.keys(category), start, length).map( res => {
+        {data && data.length ? circular_get(Object.keys(data), start, length).map( res => {
           return(
             <Grid item xl={3} lg={3} md={3} className={style.categoryCardRoot}>
               <Grid className={style.categoryCardMedia}>
                 <Grid
-                  style={{backgroundImage: `url('${category[res].picture}')`}}
+                  style={{backgroundImage: `url('${data[res].picture}')`}}
                   className={style.categoryCardBackground}
                 />
               </Grid>
               <Grid>
-                <h6>{category[res].label}</h6>
+                <h6>{data[res].label}</h6>
               </Grid>
             </Grid>
             )

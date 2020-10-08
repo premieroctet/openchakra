@@ -31,7 +31,7 @@ class OurAlfred extends React.Component{
           </Grid>
         </Grid>
         <Grid className={style.categorySlideShowContainer}>
-          <SlideShow style={style} type={'alfred'} alfred={alfred}/>
+          <SlideShow style={style} type={'alfred'} data={alfred}/>
         </Grid>
       </Grid>
 
