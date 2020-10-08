@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
 import Avatar from "@material-ui/core/Avatar";
-
+const {circular_get}=require('../../../utils/functions')
 
 class CardPreview extends React.Component {
   constructor(props) {
@@ -18,9 +18,13 @@ class CardPreview extends React.Component {
   render() {
     const {style, alfred, start, length} = this.props;
 
+    if (alfred && alfred.length>0) {
+      console.log(Object.keys(alfred))
+      console.log(circular_get(Object.keys(alfred), start, length))
+    }
     return (
       <Grid container>
-        {alfred ? Object.keys(alfred).slice(start, start+length).map(e => {
+        {alfred && alfred.length>0 ? circular_get(Object.keys(alfred), start, length).map(e => {
           return(
             <Grid item xl={4} lg={4} md={4} className={style.cardPreviewMainStyle}>
               <Grid className={style.cardPreviewContainerAvatar}>
