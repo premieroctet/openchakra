@@ -423,7 +423,6 @@ export default theme => ({
   categoryImgContainer:{
     height: '100%',
     marginTop: '-25px',
-    transform: 'rotate(-25deg)'
   },
   categoryTextContainer:{
     marginLeft: 10,
@@ -431,7 +430,6 @@ export default theme => ({
   ourAlfredImgContainer:{
     height: '100%',
     marginTop: '-25px',
-    transform: 'rotate(-25deg)'
   },
   ourAlfredTextContainer:{
     marginLeft: 10,
