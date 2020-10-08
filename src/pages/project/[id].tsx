@@ -5,7 +5,7 @@ import App from '~pages'
 import { getSession, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import useDispatch from '~hooks/useDispatch'
-import { checkUser } from '~utils/checkSession'
+import { checkUser } from '~utils/checkProject'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prisma = new PrismaClient()

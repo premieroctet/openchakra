@@ -6,7 +6,7 @@ import { getComponents } from '~core/selectors/components'
 import { signIn, useSession } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import useDispatch from '~hooks/useDispatch'
-import { checkUser } from '~utils/checkSession'
+import { checkUser, createProject } from '~utils/checkProject'
 
 const SaveMenuItem = (props: any) => {
   const components = useSelector(getComponents)
@@ -23,25 +23,6 @@ const SaveMenuItem = (props: any) => {
       },
     }
     const response = await fetch('http://localhost:3000/api/project/update', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(bodyData),
-    })
-    const data = await response.json()
-    const { project } = data
-    return project
-  }
-
-  const createProject = async () => {
-    const markup = JSON.stringify(components)
-    let bodyData = {
-      project: {
-        markup: markup,
-      },
-    }
-    const response = await fetch('http://localhost:3000/api/project/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -74,7 +55,8 @@ const SaveMenuItem = (props: any) => {
           await updateProject()
         }
       } else {
-        const newProject = await createProject()
+        const markup = JSON.stringify(components)
+        let newProject = await createProject(markup)
         router.push('/project/[id]', `/project/${newProject.id}`)
       }
     } else {

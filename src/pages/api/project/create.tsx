@@ -25,7 +25,6 @@ export default async function(req: NextApiRequest, res: NextApiResponse) {
     res.status(201)
     res.json({ project })
   } catch (e) {
-    console.error(e)
     res.status(500)
     res.json({ error: 'Sorry unable to save project to database' })
   } finally {
