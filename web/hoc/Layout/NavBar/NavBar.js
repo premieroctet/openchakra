@@ -152,7 +152,7 @@ class NavBar extends Component {
 
   render() {
     const {setOpenLogin, setOpenRegister, keyword, dateSelected, anchorEl, ifHomePage, city} = this.state;
-    const {style, user, selectedAddress, logged, inputRef, ...others} = this.props;
+    const {style, user, selectedAddress, logged} = this.props;
 
     const modalLogin = () => {
       return (
@@ -243,10 +243,10 @@ class NavBar extends Component {
                     shrink: true,
                   }}
                   InputProps={{
-                    inputComponent:() => {
+                    inputComponent:(props) => {
                       return (
                         <AlgoliaPlaces
-                          {...others}
+                          {...props}
                           placeholder={SEARCHBAR.where}
                           className={style.navbarAlgoliaPlace}
                           value={city}
@@ -280,10 +280,10 @@ class NavBar extends Component {
                         shrink: true,
                       }}
                       InputProps={{
-                        inputComponent:(props) => {
+                        inputComponent:(inputRef) => {
                           return (
                             <DatePicker
-                              {...props}
+                              {...inputRef}
                               selected={dateSelected}
                               onChange={(date) => {
                                 this.setState({dateSelected: date});
@@ -335,7 +335,7 @@ class NavBar extends Component {
               }
               {
                 logged === true ?
-                  <Grid>
+                  <Grid className={style.navbarMenuBurgerContainer}>
                     <IconButton
                       edge="start"
                       color="inherit"

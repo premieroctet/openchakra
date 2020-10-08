@@ -27,7 +27,6 @@ class FilterMenu extends React.Component{
       startDate: null,
       endDate: null,
       focusedInput: null,
-      serviceUsers: []
     }
   }
 
@@ -36,54 +35,10 @@ class FilterMenu extends React.Component{
   };
 
   statusFilterChanged = event => {
-    this.setState({[event.target.name]: event.target.checked, statusFilterVisible: false},/* () => this.filter()*/);
+    this.setState({[event.target.name]: event.target.checked, statusFilterVisible: false},() => this.props.filter());
   };
 
-  filter = () => {
-    const serviceUsers = this.state.serviceUsers;
-    var serviceUsersDisplay = [];
-    if (this.state.proSelected || this.state.individualSelected) {
-      serviceUsers.forEach(su => {
-        var alfId = su.user._id;
-        const isPro = this.state.proAlfred.includes(alfId);
-        if (isPro && this.state.proSelected || !isPro && this.state.individualSelected) {
-          serviceUsersDisplay.push(su);
-        }
-      });
-    } else {
-      serviceUsersDisplay = serviceUsers;
-    }
 
-    const start = this.state.startDate;
-    const end = this.state.endDate;
-
-    if (start && end) {
-      axios.post('/myAlfred/api/availability/check', {
-        start: moment(start).unix(),
-        end: moment(end).unix(),
-        serviceUsers: serviceUsersDisplay.map(su => su._id),
-      })
-        .then(response => {
-          const filteredServiceUsers = response.data;
-          serviceUsersDisplay = serviceUsersDisplay.filter(su => filteredServiceUsers.includes(su._id.toString()));
-          this.setFilteredServiceUsers(serviceUsersDisplay);
-        });
-    } else {
-      this.setFilteredServiceUsers(serviceUsersDisplay);
-    }
-  };
-
-  setFilteredServiceUsers = serviceUsers => {
-    var visibleCategories = [];
-    this.state.categories.forEach(e => {
-      serviceUsers.forEach(a => {
-        if (a.service.category._id === e._id) {
-          visibleCategories.push(e.label);
-        }
-      });
-    });
-    this.setState({serviceUsersDisplay: serviceUsers, visibleCategories: visibleCategories});
-  };
 
   dateFilterToggled = () => {
     this.setState({dateFilterVisible: !this.state.dateFilterVisible});
@@ -102,11 +57,11 @@ class FilterMenu extends React.Component{
   }
 
   cancelDateFilter = () => {
-    this.setState({startDate: null, endDate: null, dateFilterVisible: false}, () => this.filter());
+    this.setState({startDate: null, endDate: null, dateFilterVisible: false}, () => this.props.filter());
   };
 
   validateDateFilter = () => {
-    this.setState({dateFilterVisible: false}, () => this.filter());
+    this.setState({dateFilterVisible: false}, () => this.props.filter());
   };
 
   isStatusFilterSet = () => {
@@ -126,6 +81,9 @@ class FilterMenu extends React.Component{
     const{style, categories, visibleCategories} = this.props;
     const {statusFilterVisible, individualSelected, proSelected, dateFilterVisible, startDate, endDate, focusedInput, expanded} = this.state;
 
+    const statusFilterBg = this.isStatusFilterSet() ? '#2FBCD3' : 'white';
+    const dateFilterBg = this.isDateFilterSet() ? '#2FBCD3' : 'white';
+
     return(
       <Grid>
         {
@@ -140,91 +98,118 @@ class FilterMenu extends React.Component{
                       </Grid> : null
                   ))
                 }
-                <Grid>
-                  <p className={style.filterMenuDescription}>Description</p>
-                </Grid>
               </Grid>
             </Grid>
            : null
         }
-        <Grid className={style.filterMenuChipContainer}>
-          <Grid container style={{display: 'flex', flexDirection : 'row'}}>
-            <Grid item>
-              <Accordion expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')} classes={{rounded: style.filterMenuAccordionContainer}}>
-                <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" classes={{content : style.filterMenuAccordionTitle}}>
-                  <Typography>Statut</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Grid>
-                    <Grid>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={proSelected}
-                            onChange={e => {
-                              this.statusFilterChanged(e);
-                              /*this.filter();*/
-                            }}
-                            value={proSelected}
-                            color="primary"
-                            name={'proSelected'}
-                          />
-                        }
-                        label="Pro"
-                      />
-                    </Grid>
-                    <Grid>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={individualSelected}
-                            onChange={e => {
-                              this.statusFilterChanged(e);
-                              /*this.filter();*/
-                            }}
-                            value={individualSelected}
-                            color="primary"
-                            name={'individualSelected'}
-                          />
-                        }
-                        label="Particulier"
-                      />
+          <Grid className={style.filterMenuChipContainer}>
+            <Grid className={style.filTerMenuStatusMainStyleFilter}>
+              {statusFilterVisible ?
+                <Grid className={style.filterMenuContainerStatut}>
+                  <Grid className={style.filterMenuFocused} onClick={() => this.statusFilterToggled()}>
+                    <Typography className={style.filterMenuTextFocused}>Statut</Typography>
+                  </Grid>
+                  <Grid className={style.filterMenuContentMainStyle}>
+                    <Grid className={style.filTerMenuStatusMainStyleFilter}>
+                      <Grid>
+                        <Grid>
+                          {individualSelected ? null :
+                            <Grid>
+                              <FormControlLabel
+                                classes={{root: style.filterMenuControlLabel}}
+                                control={
+                                  <Switch
+                                    checked={proSelected}
+                                    onChange={e => {
+                                      this.statusFilterChanged(e);
+                                    }}
+                                    value={proSelected}
+                                    color="primary"
+                                    name={'proSelected'}
+                                  />
+                                }
+                                label="Pro"
+                              />
+                            </Grid>
+                          }
+                        </Grid>
+                        <Grid>
+                          {proSelected ? null :
+                            <Grid>
+                              <FormControlLabel
+                                classes={{root: style.filterMenuControlLabel}}
+                                control={
+                                  <Switch
+                                    checked={individualSelected}
+                                    onChange={e => {
+                                      this.statusFilterChanged(e);
+                                    }}
+                                    value={individualSelected}
+                                    color="primary"
+                                    name={'individualSelected'}
+                                  />
+                                }
+                                label="Particulier"
+                              />
+                            </Grid>
+                          }
+                        </Grid>
+                      </Grid>
                     </Grid>
                   </Grid>
-                </AccordionDetails>
-              </Accordion>
+                </Grid>
+                :
+                <Grid
+                  key={moment()}
+                  onClick={() => this.statusFilterToggled()}
+                  className={style.filterMenuStatusNotFocused}
+                  style={{backgroundColor: `${statusFilterBg}`}}>
+                    <Typography className={style.filterMenuTextNotFocused}>Statut</Typography>
+                </Grid>
+              }
             </Grid>
-            <Grid item style={{marginLeft: '3%'}}>
-              <Accordion expanded={expanded === 'panel2'} onChange={this.handleChange('panel2')} classes={{rounded: style.filterMenuAccordionContainer}}>
-                <AccordionSummary aria-controls="panel2d-content" id="panel2d-header" classes={{content : style.filterMenuAccordionTitle}}>
-                  <Typography>Quelles dates ?</Typography>
-                </AccordionSummary>
-                <AccordionDetails style={{width: '100%'}}>
-                  <DateRangePicker
-                    startDate={startDate} // momentPropTypes.momentObj or null,
-                    startDatePlaceholderText={'Début'}
-                    endDatePlaceholderText={'Fin'}
-                    startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                    endDate={endDate} // momentPropTypes.momentObj or null,
-                    endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                    onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
-                    focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                    onFocusChange={focusedInput => this.setState({focusedInput})} // PropTypes.func.isRequired,
-                    minimumNights={0}
-                    numberOfMonths={1}
-                  />
-                </AccordionDetails>
-                <Divider />
-                <AccordionActions>
-                  <Button size="small" onClick={() => this.cancelDateFilter()}>Cancel</Button>
-                  <Button size="small" color="primary" onClick={() => this.validateDateFilter()}>
-                    Save
-                  </Button>
-                </AccordionActions>
-              </Accordion>
+            <Grid className={style.filTerMenuStatusMainStyleFilterDate}>
+              {dateFilterVisible ?
+                <Grid className={style.filterMenuDateFocused}>
+                  <Grid className={style.filterMenuFocused} onClick={() => this.dateFilterToggled()}>
+                    <Typography >Quelle(s) date(s) ?</Typography>
+                  </Grid>
+                  <Grid className={style.filterMenuContentMainStyleDateFilter}>
+                    <Grid>
+                      <DateRangePicker
+                        startDate={startDate} // momentPropTypes.momentObj or null,
+                        startDatePlaceholderText={'Début'}
+                        endDatePlaceholderText={'Fin'}
+                        startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+                        endDate={endDate} // momentPropTypes.momentObj or null,
+                        endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+                        onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
+                        focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                        onFocusChange={focusedInput => this.setState({focusedInput})} // PropTypes.func.isRequired,
+                        minimumNights={0}
+                        numberOfMonths={1}
+                      />
+                    </Grid>
+                    <Grid className={style.filterMenuDateFilterButtonContainer}>
+                      <Grid>
+                        <Button onClick={() => this.cancelDateFilter()}>Annuler</Button>
+                      </Grid>
+                      <Grid>
+                        <Button onClick={() => this.validateDateFilter()}>Valider</Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                :
+                <Grid
+                  onClick={() => this.dateFilterToggled()}
+                  className={style.filterMenuStatusNotFocused}
+                  style={{backgroundColor: `${dateFilterBg}`}}>
+                  <Typography>Quelle(s) date(s) ?</Typography>
+                </Grid>
+              }
             </Grid>
           </Grid>
-        </Grid>
       </Grid>
     );
   }
