@@ -3,8 +3,6 @@ import Footer from '../hoc/Layout/Footer/Footer';
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
 import axios from 'axios';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import 'react-dates/initialize';
 import moment from 'moment';
 import 'react-dates/lib/css/_datepicker.css';
@@ -372,24 +370,6 @@ class SearchPage extends React.Component {
 
     const serviceUsers = this.state.serviceUsersDisplay;
 
-
-
-    let resultMessage;
-    const res = {mounting, searching, search};
-
-    if (mounting || search !== '1') {
-      resultMessage =
-        <Typography></Typography>;
-    } else if (searching) {
-      resultMessage = <Typography>Recherche en cours</Typography>;
-    } else if (serviceUsers.length === 0) {
-      resultMessage = this.isSubFilterSet() ?
-        <Typography><Button onClick={() => this.resetFilter()}>Aucun résultat, cliquez ici pour supprimer les filtres et
-          relancer la recherche</Button></Typography>
-        :
-        <Typography>Nous n'avons pas trouvé de résultat pour votre recherche</Typography>;
-    }
-
     return (
       <Grid>
         <Grid className={classes.searchNavbarComponentPosition}>
@@ -408,7 +388,20 @@ class SearchPage extends React.Component {
         </Grid>
         <Grid className={classes.searchFilterMenuPosition}>
           <Grid className={classes.searchFilterMenuContent}>
-            <FilterMenu ref={this.filterMenuComponent} style={classes} categories={categories} gps={gps} visibleCategories={visibleCategories} filter={this.filter} serviceUsers={serviceUsers}/>
+            <FilterMenu
+              ref={this.filterMenuComponent}
+              style={classes}
+              categories={categories}
+              gps={gps}
+              visibleCategories={visibleCategories}
+              filter={this.filter}
+              mounting={mounting}
+              search={search}
+              searching={searching}
+              serviceUsers={serviceUsers}
+              resetFilter={this.resetFilter}
+              isSubFilterSet={this.isSubFilterSet}
+            />
           </Grid>
         </Grid>
         <Grid className={classes.searchMainConainer}>
@@ -452,13 +445,12 @@ class SearchPage extends React.Component {
                 <Grid item xl={3} lg={3} md={3}>
                   <CardServiceInfo style={classes} />
                 </Grid>
-                {
-                searching ?
-                  <Grid item xl={3} lg={3} md={3}>
-                    <CircularProgress/>
-                  </Grid> : null
-                }
               {
+                categories.length === 0 || searching ?
+                  <Grid className={classes.searchLoadingContainer} item xl={3} lg={3} md={3}>
+                    <CircularProgress/>
+                  </Grid>
+                  :
                 categories.map(cat => (
                   this.restrictServices(serviceUsers, cat).map((su, index) => {
                     return (
@@ -480,11 +472,6 @@ class SearchPage extends React.Component {
             : null
             ))
           }*/}
-          <Grid className={classes.searchResultMessage}>
-            <Grid className={classes.searchResultMessageContent}>
-              {resultMessage}
-            </Grid>
-          </Grid>
         </Grid>
         <Grid className={classes.filterMenuDivierContainer}>
           <Divider className={classes.filterMenuDividerStyle}/>

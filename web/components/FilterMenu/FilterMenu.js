@@ -1,20 +1,11 @@
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
-import Chip from '@material-ui/core/Chip';
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import axios from "axios";
 import moment from "moment";
 import {DateRangePicker} from 'react-dates';
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import Divider from '@material-ui/core/Divider';
-import AccordionActions from '@material-ui/core/AccordionActions';
-
-
 
 class FilterMenu extends React.Component{
   constructor(props) {
@@ -37,8 +28,6 @@ class FilterMenu extends React.Component{
   statusFilterChanged = event => {
     this.setState({[event.target.name]: event.target.checked, statusFilterVisible: false},() => this.props.filter());
   };
-
-
 
   dateFilterToggled = () => {
     this.setState({dateFilterVisible: !this.state.dateFilterVisible});
@@ -73,16 +62,23 @@ class FilterMenu extends React.Component{
     return this.state.startDate != null || this.state.endDate != null;
   };
 
-  handleChange = (panel) => (event, newExpanded) => {
-    this.setState({expanded: newExpanded ? panel : false});
-  };
-
   render() {
-    const{style, categories, visibleCategories} = this.props;
-    const {statusFilterVisible, individualSelected, proSelected, dateFilterVisible, startDate, endDate, focusedInput, expanded} = this.state;
+    const{style, categories, visibleCategories, mounting, search, searching, serviceUsers} = this.props;
+    const {statusFilterVisible, individualSelected, proSelected, dateFilterVisible, startDate, endDate, focusedInput} = this.state;
 
     const statusFilterBg = this.isStatusFilterSet() ? '#2FBCD3' : 'white';
     const dateFilterBg = this.isDateFilterSet() ? '#2FBCD3' : 'white';
+
+    let resultMessage;
+
+    if (mounting) {
+      resultMessage = '';
+    } else if (searching) {
+      resultMessage = 'Recherche en cours';
+    } else if (serviceUsers.length === 0) {
+      resultMessage = "Nous n'avons pas trouvé de résultat pour votre recherche";
+    }
+
 
     return(
       <Grid>
@@ -98,6 +94,9 @@ class FilterMenu extends React.Component{
                       </Grid> : null
                   ))
                 }
+                <Grid>
+                  <p className={style.filterMenuDescription}>{resultMessage}</p>
+                </Grid>
               </Grid>
             </Grid>
            : null

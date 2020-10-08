@@ -609,5 +609,10 @@ export default theme => ({
     width: '100%',
     display: 'flex',
     flexDirection: 'row-reverse'
+  },
+  searchLoadingContainer:{
+    display: 'flex',
+    justifyContent : 'center',
+    alignItems: 'center'
   }
 })
