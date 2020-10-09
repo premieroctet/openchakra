@@ -610,7 +610,6 @@ class UserServicesPreview extends React.Component {
     if (!dl) {
       return dl;
     }
-    ;
     dl = dl.replace('jours', 'jour(s)').replace('semaines', 'semaine(s)').replace('heures', 'heure(s)');
     return dl;
   };
@@ -628,9 +627,9 @@ class UserServicesPreview extends React.Component {
 
   // TODO : force computing disponibility
   scheduleDateChanged = (dates, mmt, mode) => {
-    const dt = new Date([...dates][0])
+    const dt = new Date([...dates][0]);
     this.setState({date : dt, time: mode=='week' ? mmt : undefined}, () => this.checkBook())
-  }
+  };
 
   render() {
     const {classes} = this.props;
@@ -876,7 +875,7 @@ class UserServicesPreview extends React.Component {
           <meta property="og:url" content="https://my-alfred.io"/>
         </Helmet>
         <Grid>
-          <Layout>
+          <Layout style={classes} >
             <Information
               open={this.state.warningPerimeter}
               onClose={() => this.setState({warningPerimeter: false})}

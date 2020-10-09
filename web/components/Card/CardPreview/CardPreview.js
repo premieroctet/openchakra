@@ -22,7 +22,7 @@ class CardPreview extends React.Component {
       <Grid container>
         {data && data.length>0 ? circular_get(Object.keys(data), start, length).map(e => {
           return(
-            <Grid item xl={4} lg={4} md={4} className={style.cardPreviewMainStyle}>
+            <Grid item xl={4} lg={4} md={4} key={e} className={style.cardPreviewMainStyle}>
               <Grid className={style.cardPreviewContainerAvatar}>
                 <Avatar alt="Remy Sharp" src={data[e].user.picture} className={style.cardPreviewLarge} />
               </Grid>

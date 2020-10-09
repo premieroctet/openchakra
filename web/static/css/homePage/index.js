@@ -41,8 +41,11 @@ export default theme => ({
   navbarButtonContainer:{
     display: 'flex',
     flexDirection: 'row-reverse',
-    width: '25%',
+    width: '100%',
     alignItems: 'center'
+  },
+  navabarHomepageMenu:{
+    width: '100%'
   },
   navbarRegisterContainer:{
     marginRight: 5
@@ -88,7 +91,7 @@ export default theme => ({
     color: theme.palette.white.main,
   },
   navbarLogoContainer:{
-    width: '25%'
+    width: '100%'
   },
   navbarSearchContainer:{
     width: '50%',
@@ -423,6 +426,7 @@ export default theme => ({
   categoryImgContainer:{
     height: '100%',
     marginTop: '-25px',
+    transform: 'rotate(-25deg)'
   },
   categoryTextContainer:{
     marginLeft: 10,
@@ -430,6 +434,7 @@ export default theme => ({
   ourAlfredImgContainer:{
     height: '100%',
     marginTop: '-25px',
+    transform: 'rotate(-25deg)'
   },
   ourAlfredTextContainer:{
     marginLeft: 10,
@@ -630,7 +635,7 @@ export default theme => ({
   navbarTopContainer:{
     width: '100%',
     display: 'flex',
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-between'
   },
   navbarTabRoot:{
     textTransform: 'inherit',
