@@ -889,7 +889,7 @@ class UserServicesPreview extends React.Component {
               text={I18N.OUTSIDE_PERIMETER}
             />
             <Grid style={{width: '100%'}}>
-              <BannerReservation serviceUser={service} shop={shop} user={alfred}/>
+              <BannerReservation serviceUser={service} shop={shop} user={alfred} style={classes}/>
               <Grid className={classes.mainContainer}>
                 <Grid className={classes.leftContainer}>
                   <Grid className={classes.avatarAnDescription}>

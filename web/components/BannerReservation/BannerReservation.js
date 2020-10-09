@@ -19,21 +19,21 @@ class BannerReservation extends React.Component {
   }
 
   render() {
-    const {classes, serviceUser, shop, user} = this.props;
+    const {style, serviceUser, shop, user} = this.props;
 
     return (
       <Grid>
-        <Grid container className={classes.bannerContainer}
+        <Grid container className={style.bannerContainer}
               style={{backgroundImage: 'url("' + serviceUser.picture + '")'}}>
           {shop.is_professional ?
-            <Grid className={classes.statusMedia}>
-              <Chip label="PRO" className={classes.chipStyle}/>
+            <Grid className={style.statusMedia}>
+              <Chip label="PRO" className={style.chipStyle}/>
             </Grid>
             : null
           }
-          <Grid container className={classes.darkOverlay}>
-            <Grid container className={classes.container}>
-              <Grid container className={classes.container}>
+          <Grid container className={style.darkOverlay}>
+            <Grid container className={style.container}>
+              <Grid container className={style.container}>
                 <span class="customPolice"
                    style={{fontSize: 70, textAlign: 'center', color: 'white'}}>{serviceUser.label}</span>
               </Grid>
@@ -43,7 +43,7 @@ class BannerReservation extends React.Component {
                     variant="extended"
                     color="primary"
                     aria-label="add"
-                    className={classes.margin}
+                    className={style.margin}
                   >
                     <p style={{color: 'white'}}>{frenchFormat(`Les services de ${user.firstname}`)}</p>
                   </Fab>

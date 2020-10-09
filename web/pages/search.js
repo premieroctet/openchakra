@@ -366,12 +366,7 @@ class SearchPage extends React.Component {
 
     return (
       <Grid>
-      <Layout user={user} selectedAddress={selectedAddress}>
-        <Grid className={classes.searchMenuScrollMenuContainer}>
-          <Grid className={classes.searchScrollmenuContainer}>
-            <ScrollMenu style={classes} categories={categories} gps={gps} indexCat={indexCat}/>
-          </Grid>
-        </Grid>
+      <Layout user={user} selectedAddress={selectedAddress} gps={gps} indexCat={indexCat}>
         <Grid className={classes.filterMenuDivierContainer}>
           <Divider className={classes.filterMenuDividerStyle}/>
         </Grid>

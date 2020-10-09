@@ -493,7 +493,7 @@ export default theme => ({
   },
   categoryCardMedia:{
     height: '20vh',
-    width: '10vw',
+    width: '90%',
     borderRadius: 50
   },
   categorySlideShowContainer:{

@@ -23,7 +23,7 @@ export default theme => ({
   [theme.breakpoints.between('sm', 'xl')]: {
     secondContainer: {
       width: '60%',
-      heigh: '100vh',
+      height: '100vh',
       textAlign: 'center',
     },
   },
