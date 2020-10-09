@@ -41,32 +41,25 @@ class NavBar extends Component {
     super(props);
     this.state = {
       anchorEl: null,
-      logged: false,
       setOpenLogin: false,
       setOpenRegister: false,
       user: {},
       activeStep: 0,
-      keyword: null,
-      city: null,
-      gps: null,
-      dateSelected: null,
-      indexTabBar: 0,
-      ifHomePage: false
+      keyword: '',
+      city: undefined,
+      gps: '',
+      dateSelected: '',
+      ifHomePage: false,
     }
   }
 
   componentDidMount() {
-    const token = cookie.load('token');
-    if (token) {
-      this.setState({logged: true});
-      axios.defaults.headers.common['Authorization'] = token;
-    }
     if(Router.pathname === '/'){
       this.setState({ifHomePage: true})
     }
   }
 
-  logout2() {
+  logout2 = () => {
     cookie.remove('token', {path: '/'});
     localStorage.removeItem('path');
     setAuthToken(false);
@@ -133,7 +126,7 @@ class NavBar extends Component {
     this.setState({anchorEl: false})
   };
 
-  findService() {
+  findService = () => {
     var queryParams = {search: 1};
     if (this.state.keyword) {
       queryParams['keyword'] = this.state.keyword;
@@ -147,19 +140,19 @@ class NavBar extends Component {
       queryParams['gps'] = JSON.stringify(this.state.gps);
     }
 
-    if (this.state.selectedAddress) {
-      queryParams['selectedAddress'] = this.state.selectedAddress;
+    if (this.props.selectedAddress) {
+      queryParams['selectedAddress'] = this.props.selectedAddress;
     }
     Router.push({pathname: '/search', query: queryParams});
-  }
+  };
 
   onChangeCity({suggestion}) {
     this.setState({gps: suggestion.latlng, city: suggestion.name});
   };
 
   render() {
-    const {logged,  setOpenLogin, setOpenRegister, keyword, dateSelected, anchorEl, indexTabBar, ifHomePage, city} = this.state;
-    const {style, user, selectedAddress} = this.props;
+    const {setOpenLogin, setOpenRegister, keyword, dateSelected, anchorEl, ifHomePage, city} = this.state;
+    const {style, user, selectedAddress, logged} = this.props;
 
     const modalLogin = () => {
       return (
@@ -215,7 +208,7 @@ class NavBar extends Component {
                   <Select
                     disableUnderline
                     id="outlined-select-currency"
-                    value={selectedAddress}
+                    value={selectedAddress ? selectedAddress : 'main'}
                     name={'selectedAddress'}
                     onChange={(e) => {
                       this.onChange(e);
@@ -225,8 +218,8 @@ class NavBar extends Component {
                       Adresse
                       principale, {' ' + user.billing_address.address} {user.billing_address.zip_code},{user.billing_address.city}
                     </MenuItem>
-                    {user.service_address.map(e => (
-                      <MenuItem value={e._id}>
+                    {user.service_address.map((e, index) => (
+                      <MenuItem value={e._id} key={index}>
                         {e.label + ', '} {' ' + e.address},{e.zip_code} {e.city}
                       </MenuItem>
                     ))}
@@ -265,7 +258,7 @@ class NavBar extends Component {
                             type: 'city',
                           }}
                           onChange={(suggestion) => this.onChangeCity(suggestion)}
-                          onClear={() => this.setState({city: '', gps: null})}
+                          onClear={() => this.setState({city: '', gps: ''})}
                         />)
                     },
                     disableUnderline: true
@@ -274,7 +267,7 @@ class NavBar extends Component {
               </Grid>
             }
             {
-              !logged ?
+              logged === false ?
                 <Grid className={style.navbarDatePickerMain}>
                   <Grid>
                     <Divider className={style.divider} orientation="vertical" />
@@ -287,10 +280,10 @@ class NavBar extends Component {
                         shrink: true,
                       }}
                       InputProps={{
-                        inputComponent:(props) => {
+                        inputComponent:(inputRef) => {
                           return (
                             <DatePicker
-                              {...props}
+                              {...inputRef}
                               selected={dateSelected}
                               onChange={(date) => {
                                 this.setState({dateSelected: date});
@@ -332,8 +325,8 @@ class NavBar extends Component {
               </Grid>
               {
                 ifHomePage ?
-                  <Grid>
-                    <Tabs value={indexTabBar} indicatorColor={''} selectionFollowsFocus={false} aria-label="simple tabs example">
+                  <Grid className={style.navabarHomepageMenu}>
+                    <Tabs value={false} aria-label="simple tabs example">
                       <Tab classes={{root : style.navbarTabRoot}} label={NAVBAR_MENU.ourServices} />
                       <Tab classes={{root : style.navbarTabRoot}} label={NAVBAR_MENU.ourTeam} />
                       <Tab classes={{root : style.navbarTabRoot}} label={NAVBAR_MENU.contactUs}/>
@@ -341,8 +334,8 @@ class NavBar extends Component {
                   </Grid> : SearchBarInput()
               }
               {
-                logged ?
-                  <Grid>
+                logged === true ?
+                  <Grid className={style.navbarMenuBurgerContainer}>
                     <IconButton
                       edge="start"
                       color="inherit"

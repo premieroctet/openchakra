@@ -62,7 +62,6 @@ class MyApp extends App {
           <link rel="icon" type="image/png" href="/static/favicon.png"/>
           <script src="https://www.googletagmanager.com/gtag/js?id=G-5ZTWZ756HY"/>
           <script src="/static/assets/ga.js"/>
-          <script src="https://sibforms.com/forms/end-form/build/main.js"/>
         </Head>
         {/* Wrap every page in Jss and Theme providers */}
 

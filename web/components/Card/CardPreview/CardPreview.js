@@ -20,9 +20,9 @@ class CardPreview extends React.Component {
 
     return (
       <Grid container>
-        {alfred ? Object.keys(alfred).slice(start, end).map(e => {
+        {alfred ? Object.keys(alfred).slice(start, end).map((e, index) => {
           return(
-            <Grid item xl={4} lg={4} md={4} className={style.cardPreviewMainStyle}>
+            <Grid item xl={4} lg={4} md={4} key={index} className={style.cardPreviewMainStyle}>
               <Grid className={style.cardPreviewContainerAvatar}>
                 <Avatar alt="Remy Sharp" src={alfred[e].user.picture} className={style.cardPreviewLarge} />
               </Grid>

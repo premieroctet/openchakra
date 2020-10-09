@@ -1,44 +1,11 @@
 import React from 'react';
-import Layout from '../hoc/Layout/Layout';
 import Footer from '../hoc/Layout/Footer/Footer';
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
 import axios from 'axios';
-import Button from '@material-ui/core/Button';
-import Link from 'next/link';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import 'react-dates/initialize';
-import {DateRangePicker} from 'react-dates';
 import moment from 'moment';
 import 'react-dates/lib/css/_datepicker.css';
-import CardPreview from '../components/Card/CardPreview/CardPreview';
-import SerenityNeed from '../components/home/SerenityNeed/SerenityNeed';
-import Profiteandlearn from '../components/home/profite&learn/profite&learn';
-import NearbyYou from '../components/home/NearbyYou/NearbyYou';
-import FeelingGood from '../components/home/feelingGood/feelingGood';
-import Wellbeing from '../components/home/Wellbeing/Wellbeing';
-import Proposeservice from '../components/home/proposeservice/Proposeservice';
-import Assureback from '../components/home/AssureBack/Assureback';
-import Section3 from '../components/home/section3';
-import Section6 from '../components/home/section6';
-import Section8 from '../components/home/section8';
-import Passions from '../components/home/Passions/passions';
-import Facons from '../components/home/Facons/facons';
-import Otter from '../components/home/Otter/otter';
-import Section10 from '../components/home/section10';
-import Section12 from '../components/home/section12';
-import Section15 from '../components/home/section15';
-import Section16 from '../components/home/section16';
-import Section18 from '../components/home/section18';
-import Section19 from '../components/home/section19';
-import Section21 from '../components/home/section21';
-import Section22 from '../components/home/section22';
 import styles from '../static/css/searchPage/searchStyle';
 import cookie from 'react-cookies';
 import NavBar from "../hoc/Layout/NavBar/NavBar";
@@ -46,11 +13,14 @@ import InfoBar from "../components/InfoBar/InfoBar";
 import FilterMenu from "../components/FilterMenu/FilterMenu";
 import Divider from "@material-ui/core/Divider";
 import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import CardService from "../components/Card/CardService/CardService";
 import ScrollMenu from "../components/ScrollMenu/SrollMenu";
+import NeedHelp from "../components/NeedHelp/NeedHelp";
+import SearchByHashtag from "../components/SearchByHashtag/SearchByHashtag";
+import CardServiceInfo from "../components/Card/CardServiceInfo/CardServiceInfo";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 moment.locale('fr');
 
@@ -59,10 +29,10 @@ class SearchPage extends React.Component {
   // FIX : page blanche quand redirigée depuis home page non connectée
   constructor(props) {
     super(props);
+    this.filterMenuComponent = React.createRef();
     this.state = {
       user: null,
       address: {},
-      selectedAddress: {},
       city: '',
       gps: null,
       categories: [],
@@ -83,11 +53,12 @@ class SearchPage extends React.Component {
       isAdmin: false,
       mounting: true,
       searching: false,
-      filters:['Plus proche de moi']
+      filters:['Plus proche de moi'],
+      logged: false
     };
   }
 
-  static getInitialProps({query: {keyword, city, gps, selectedAddress, category, service, prestation, search, date}}) {
+  static getInitialProps({query: {keyword, city, gps, selectedAddress, category, service, prestation, search, date, indexCat}}) {
     // FIX : set city nin AlgoPlaces if provided
     var init = {
       keyword: keyword,
@@ -98,6 +69,7 @@ class SearchPage extends React.Component {
       prestation: prestation,
       search: search,
       date: date,
+      indexCat: indexCat
     };
     if (gps) {
       init['gps'] = gps;
@@ -114,6 +86,10 @@ class SearchPage extends React.Component {
   }
 
   componentDidMount() {
+    const token = cookie.load('token');
+    if (token) {
+      this.setState({logged: true});
+    }
     // Mount components gets criterion from URL
     // If date in URL then force filter after search
     let st = {
@@ -147,7 +123,7 @@ class SearchPage extends React.Component {
       })
       .then(res => {
         st['categories'] = res.data;
-        var catCount = {};
+        let catCount = {};
         res.data.forEach(c => catCount[c._id] = 8);
         st['catCount'] = catCount;
         axios.get('/myAlfred/api/shop/allStatus')
@@ -160,8 +136,6 @@ class SearchPage extends React.Component {
             axios.get('/myAlfred/api/users/current')
               .then(res => {
                 let user = res.data;
-
-
                 this.setState({isAdmin: user.is_admin});
                 st['user'] = user;
                 let allAddresses = {'main': user.billing_address.gps};
@@ -198,6 +172,53 @@ class SearchPage extends React.Component {
       q['gps'] = null;
     }
     this.setState(q, () => this.search());
+  };
+
+  filter = () => {
+    let filterComponentstate = this.filterMenuComponent.current.state;
+    const serviceUsers = this.state.serviceUsers;
+    let serviceUsersDisplay = [];
+    if (filterComponentstate.proSelected || filterComponentstate.individualSelected) {
+      serviceUsers.forEach(su => {
+        let alfId = su.user._id;
+        const isPro = this.state.proAlfred.includes(alfId);
+        if (isPro && filterComponentstate.proSelected || !isPro && filterComponentstate.individualSelected) {
+          serviceUsersDisplay.push(su);
+        }
+      });
+    } else {
+      serviceUsersDisplay = serviceUsers;
+    }
+
+    const start = filterComponentstate.startDate;
+    const end = filterComponentstate.endDate;
+
+    if (start && end) {
+      axios.post('/myAlfred/api/availability/check', {
+        start: moment(start).unix(),
+        end: moment(end).unix(),
+        serviceUsers: serviceUsersDisplay.map(su => su._id),
+      })
+        .then(response => {
+          const filteredServiceUsers = response.data;
+          serviceUsersDisplay = serviceUsersDisplay.filter(su => filteredServiceUsers.includes(su._id.toString()));
+          this.setFilteredServiceUsers(serviceUsersDisplay);
+        });
+    } else {
+      this.setFilteredServiceUsers(serviceUsersDisplay);
+    }
+  };
+
+  setFilteredServiceUsers = serviceUsers => {
+    let visibleCategories = [];
+    this.state.categories.forEach(e => {
+      serviceUsers.forEach(a => {
+        if (a.service.category._id === e._id) {
+          visibleCategories.push(e.label);
+        }
+      });
+    });
+    this.setState({serviceUsersDisplay: serviceUsers, visibleCategories: visibleCategories});
   };
 
   onChange = e => {
@@ -288,11 +309,6 @@ class SearchPage extends React.Component {
       });
   }
 
-
-
-
-
-
   restrictServices(serviceUsers, category) {
     const nbToDisplay = this.state.catCount[category._id];
     return serviceUsers.filter(s => s.service && s.service.category && s.service.category._id === category._id).slice(0, nbToDisplay);
@@ -310,24 +326,30 @@ class SearchPage extends React.Component {
     this.setState({catCount: counts});
   }
 
+  isStatusFilterSet = () => {
+    return this.state.proSelected || this.state.individualSelected;
+  };
 
+  isDateFilterSet = () => {
+    return this.state.startDate != null || this.state.endDate != null;
+  };
 
-
-  isSubFilterSet() {
+  isSubFilterSet = () => {
     return this.isStatusFilterSet() || this.isDateFilterSet();
-  }
+  };
 
   handleChange = (event) => {
     this.setState({filters: event.target.value})
   };
 
+
+
   render() {
-    const {classes, search} = this.props;
+    const {classes, search, indexCat} = this.props;
     const {user, categories, gps, isAdmin, mounting, searching ,
       address,
       selectedAddress,
       city,
-      serviceUsers,
       serviceUsersDisplay,
       shops,
       proAlfred, // Professional Alfred ids
@@ -341,27 +363,11 @@ class SearchPage extends React.Component {
       dateFilterVisible,
       visibleCategories,
       catCount,
-      filters
+      filters,
+      logged
      } = this.state;
 
-
-
-    let resultMessage;
-    const res = {mounting, searching, search};
-
-    if (mounting || search != '1') {
-      resultMessage =
-        <Typography></Typography>;
-    } else if (searching) {
-      resultMessage =
-        <Typography>Recherche en cours</Typography>;
-    } else if (serviceUsers.length == 0) {
-      resultMessage = this.isSubFilterSet() ?
-        <Typography><Button onClick={() => this.resetFilter()}>Aucun résultat, cliquez ici pour supprimer les filtres et
-          relancer la recherche</Button></Typography>
-        :
-        <Typography>Nous n'avons pas trouvé de résultat pour votre recherche</Typography>;
-    }
+    const serviceUsers = this.state.serviceUsersDisplay;
 
     return (
       <Grid>
@@ -369,11 +375,11 @@ class SearchPage extends React.Component {
           <InfoBar style={classes} />
         </Grid>
         <Grid>
-          <NavBar style={classes} user={user} selectedAddress={selectedAddress}/>
+          <NavBar style={classes} user={user} selectedAddress={selectedAddress} logged={logged}/>
         </Grid>
         <Grid className={classes.searchMenuScrollMenuContainer}>
           <Grid className={classes.searchScrollmenuContainer}>
-            <ScrollMenu style={classes} categories={categories} gps={gps}/>
+            <ScrollMenu style={classes} categories={categories} gps={gps} indexCat={indexCat}/>
           </Grid>
         </Grid>
         <Grid className={classes.filterMenuDivierContainer}>
@@ -381,7 +387,20 @@ class SearchPage extends React.Component {
         </Grid>
         <Grid className={classes.searchFilterMenuPosition}>
           <Grid className={classes.searchFilterMenuContent}>
-            <FilterMenu style={classes} categories={categories} gps={gps}/>
+            <FilterMenu
+              ref={this.filterMenuComponent}
+              style={classes}
+              categories={categories}
+              gps={gps}
+              visibleCategories={visibleCategories}
+              filter={this.filter}
+              mounting={mounting}
+              search={search}
+              searching={searching}
+              serviceUsers={serviceUsers}
+              resetFilter={this.resetFilter}
+              isSubFilterSet={this.isSubFilterSet}
+            />
           </Grid>
         </Grid>
         <Grid className={classes.searchMainConainer}>
@@ -408,7 +427,7 @@ class SearchPage extends React.Component {
                       >
                         {filters.map((res,index) =>{
                           return(
-                            <MenuItem value={res}><strong>{res}</strong></MenuItem>
+                            <MenuItem key={index} value={res}><strong>{res}</strong></MenuItem>
                           )
                         })}
 
@@ -421,8 +440,16 @@ class SearchPage extends React.Component {
           </Grid>
           <Grid className={classes.searchMainContainerResult}>
             <Grid className={classes.searchContainerDisplayResult}>
-              <Grid container spacing={3}>
+              <Grid container spacing={4}>
+                <Grid item xl={3} lg={3} md={3}>
+                  <CardServiceInfo style={classes} />
+                </Grid>
               {
+                categories.length === 0 || searching ?
+                  <Grid className={classes.searchLoadingContainer} item xl={3} lg={3} md={3}>
+                    <CircularProgress/>
+                  </Grid>
+                  :
                 categories.map(cat => (
                   this.restrictServices(serviceUsers, cat).map((su, index) => {
                     return (
@@ -435,8 +462,30 @@ class SearchPage extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid>
-            {resultMessage}
+          {/*{
+            categories.map(cat => (
+              this.hasMoreToDisplay(serviceUsers, cat) ?
+                <Grid>
+                  <Pagination style={classes} data={serviceUsers}/>
+                </Grid>
+            : null
+            ))
+          }*/}
+        </Grid>
+        <Grid className={classes.filterMenuDivierContainer}>
+          <Divider className={classes.filterMenuDividerStyle}/>
+        </Grid>
+        <Grid className={classes.searchSearchByHastagMainStyle}>
+          <Grid className={classes.searchSearchByHastagContainer}>
+            <SearchByHashtag style={classes}/>
+          </Grid>
+        </Grid>
+        <Grid className={classes.filterMenuDivierContainer}>
+          <Divider className={classes.filterMenuDividerStyle}/>
+        </Grid>
+        <Grid className={classes.searchNeedHelpMainStyle}>
+          <Grid className={classes.searchNeedHelpMainContainer}>
+            <NeedHelp style={classes}/>
           </Grid>
         </Grid>
         <Grid className={classes.mainContainerStyleFooter}>

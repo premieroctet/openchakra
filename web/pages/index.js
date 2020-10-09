@@ -22,7 +22,8 @@ class Home extends React.Component {
     super(props);
     this.state = {
       category:{},
-      alfred:{}
+      alfred:{},
+      logged: false
     };
   }
 
@@ -31,7 +32,7 @@ class Home extends React.Component {
     const token = cookie.load('token');
     axios.get('/myAlfred/api/touch/');
     if (token) {
-      Router.push('/search');
+      this.setState({logged: true})
     }
     axios.get('/myAlfred/api/category/all')
       .then(res => {
@@ -55,7 +56,7 @@ class Home extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const {category, alfred} = this.state;
+    const {category, alfred, logged} = this.state;
     return (
       <React.Fragment>
         <Helmet>
@@ -70,7 +71,7 @@ class Home extends React.Component {
           <Grid container className={classes.navbarAndBannerContainer}>
             <Grid className={classes.navbarAndBannerBackground}>
               <Grid className={classes.navbarComponentPosition}>
-                <NavBar style={classes}/>
+                <NavBar style={classes} logged={logged}/>
               </Grid>
               <Grid className={classes.bannerPresentationContainer}>
                 <Grid className={classes.bannerSize}>

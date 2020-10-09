@@ -45,6 +45,42 @@ export default theme => ({
     border: '3px solid rgba(255, 255, 255, 1)',
     color: theme.palette.white.main,
   },
+  navbarModal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    '& .MuiDialog-paper': {
+      margin: '0px !important',
+    },
+  },
+  navbarCloseButton:{
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+  },
+  navbarMuidialogContent: {
+    padding: 0,
+  },
+  navbarPaperWidth:{
+    width: 400,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
+  },
+  navbarPaper: {
+    backgroundColor: theme.palette.white.main,
+    borderRadius: 10,
+    margin: '0px !important',
+    padding: 0,
+    width: '100%',
+  },
+  navbarWidthLoginContent:{
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  navbarRegisterContainer:{
+    marginRight: 5
+  },
   navBarlogIn:{
     textTransform: theme.typography.textTransform,
     borderRadius: theme.border.button.borderRadius,
@@ -59,7 +95,8 @@ export default theme => ({
   navbarButtonContainer:{
     display: 'flex',
     flexDirection: 'row-reverse',
-    width: '25%'
+    width: '100%',
+    alignItems: 'center'
   },
   navbarSearch: {
     padding: '1%',
@@ -107,7 +144,6 @@ export default theme => ({
   },
   navbarAlgoliaContent:{
     flex:1,
-    marginLeft: 20,
     '& .ap-input-icon':{
       display: 'none',
     }
@@ -244,7 +280,9 @@ export default theme => ({
     textAlign: 'center'
   },
   filterMenuChipContainer:{
-    marginTop: '2%'
+    marginTop: '2%',
+    display: 'flex',
+
   },
   searchMenuScrollMenuContainer:{
     marginTop: '1%',
@@ -310,7 +348,8 @@ export default theme => ({
   cardServicePaper:{
     borderRadius: 20,
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    height: '40vh'
   },
   cardServiceScoreAndButtonContainer:{
     display: 'flex',
@@ -384,7 +423,14 @@ export default theme => ({
     width: '100%'
   },
   navbarSearchContainer:{
-    width: '50%',
+    width: '100%',
+  },
+  navbarLogoContainer:{
+    width: '100%'
+  },
+  navbarDatePickerMain:{
+    display: 'flex',
+    alignItems: 'center'
   },
   shomoreLink:{
     color: theme.palette.link.main,
@@ -409,6 +455,12 @@ export default theme => ({
     fontSize: theme.typography.placeHolder.fontSize,
     fontWeight:  theme.typography.placeHolder.fontWeight,
     lineHeight:  theme.typography.placeHolder.lineHeight,
+    "& .MuiFormLabel-root": {
+      fontWeight: 'bold',
+    },
+    '& .MuiInputBase-input::placeholder':{
+      opacity: '0.5'
+    }
   },
   scrollMenuIndicator:{
     backgroundColor: theme.palette.yellow.main
@@ -436,5 +488,139 @@ export default theme => ({
   },
   filterMenuAccordionContainer:{
     borderRadius: '32px !important'
+  },
+  searchNeedHelpMainStyle:{
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: '3%',
+    marginBottom: '3%',
+  },
+  searchNeedHelpMainContainer:{
+    width: '80%'
+  },
+  searchSearchByHastagMainStyle:{
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: '3%',
+    marginBottom: '3%',
+  },
+  searchSearchByHastagContainer:{
+    width: '80%'
+  },
+  cardServiceInfoPaper:{
+    backgroundColor: theme.palette.primary.main,
+    borderRadius: 20,
+    display: 'flex',
+    justifyContent: 'center',
+    height: '40vh'
+  },
+  cardServiceInfoContent:{
+    display:'flex',
+    flexDirection: 'column',
+    justifyContent: 'center'
+  },
+  searchResultMessage:{
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%'
+  },
+  searchResultMessageContent:{
+    width: '80%'
+  },
+
+
+
+
+  filterMenuContainerStatut:{
+    borderRadius: '15px',
+    backgroundColor: '#2FBCD3',
+    boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset',
+    cursor: 'pointer',
+    height: '45px',
+  },
+  filterMenuTextStatus:{
+    color: 'white',
+  },
+  filterMenuTextNotFocused:{
+  },
+  filterMenuContentMainStyle:{
+    borderRadius: '15px',
+    backgroundColor: 'white',
+    boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px',
+    height: 'auto',
+    zIndex: 1,
+    position: 'relative',
+  },
+  filterMenuContentMainStyleDateFilter:{
+    borderRadius: '15px',
+    backgroundColor: 'white',
+    boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px',
+    height: 'auto',
+    zIndex: 1,
+    position: 'relative',
+    padding: 10,
+    width: '140%'
+  },
+  filTerMenuStatusMainStyleFilterDate:{
+    width: '15%',
+    marginLeft: '2%'
+  },
+  filterMenuFocused:{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    color: theme.palette.white.main
+  },
+  filterMenuStatusNotFocused:{
+    boxShadow: 'rgba(164, 164, 164, 0.5) 0px 0px 5px 0px',
+    cursor: 'pointer',
+    height: 45,
+    borderRadius: '15px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  filterMenuDateFocused:{
+    borderRadius: '15px',
+    backgroundColor: '#2FBCD3',
+    boxShadow: 'rgba(125, 125, 125, 0.5) 0px 0px 10px 3px inset',
+    cursor: 'pointer',
+    height: 45,
+
+  },
+  filTerMenuStatusMainStyleFilter:{
+    width: '15%'
+  },
+  filterMenuTextFocused:{
+    color: theme.palette.white.main
+  },
+  filterMenuControlLabel:{
+    margin: 0,
+    verticalAlign: 'inherit'
+  },
+  filterMenuDateFilterButtonContainer:{
+    display: 'flex',
+    justifyContent: 'space-evenly'
+  },
+  navbarMenuBurgerContainer:{
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row-reverse'
+  },
+  searchLoadingContainer:{
+    display: 'flex',
+    justifyContent : 'center',
+    alignItems: 'center'
+  },
+  cardServiceInfoTitle:{
+    color: theme.palette.white.main,
+    fontFamily: theme.typography.fontFamily,
+  },
+  cardServiceInfoText:{
+    color: theme.palette.white.main,
+    fontFamily: theme.typography.fontFamily,
   }
 })
