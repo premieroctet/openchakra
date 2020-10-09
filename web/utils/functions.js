@@ -57,4 +57,17 @@ const computeSumSkills = skills => {
   return res;
 };
 
-module.exports = {computeDistanceKm, computeBookingReference, computeAverageNotes, computeSumSkills};
+const circular_get = (array, start, length) => {
+  var index = start%array.length
+  var res=[]
+  while (res.length<length) {
+    res.push(index)
+    index = (index+1)%array.length
+  }
+  return res
+}
+
+module.exports = {
+  computeDistanceKm, computeBookingReference, computeAverageNotes,
+  computeSumSkills, circular_get
+};

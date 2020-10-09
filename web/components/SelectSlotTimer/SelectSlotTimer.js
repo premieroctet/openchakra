@@ -19,41 +19,29 @@ class SelectSlotTimer extends React.Component {
   createRender = (arrayLength, index, classes, bookings) => {
     var items = [];
 
+    const anyAvatar = bookings ? Object.keys(bookings).length>0 : false
     for (let i = index; i < index+arrayLength; i++) {
       const color=this.props.slots[i]==true ? '#4fbdd7' : this.props.slots[i]==false ?'#c4c4c4' : ''
       const pattern = this.props.slots[i]==null ? 'repeating-linear-gradient(45deg, #4fbdd7 48%, #FFFFFF  50%, #4fbdd7 51%)' : ''
       const avatar=bookings[i] ? `/${bookings[i]}` : null
+      var avatarProp = avatar ? <Avatar src={avatar} /> : anyAvatar ? <div /> : null
       items.push(
-        avatar ?
         <Chip
           clickable
           label={('0' + i).slice(-2) + 'h00 - ' + ('0' + (i + 1)).slice(-2) + 'h00'}
           style={{backgroundColor: color, backgroundImage: pattern}}
           className={classes.textFieldChips}
-          avatar={ <Avatar src={avatar} />}
+          avatar={ avatarProp }
           onClick={() => {
             this.toggleTimeSlot(i);
           }}
           selectable={false}
         />
-        :
-        <Chip
-          clickable
-          label={('0' + i).slice(-2) + 'h00 - ' + ('0' + (i + 1)).slice(-2) + 'h00'}
-          style={{backgroundColor: color, backgroundImage: pattern}}
-          className={classes.textFieldChips}
-          avatar={ <div /> }
-          onClick={() => {
-            this.toggleTimeSlot(i);
-          }}
-          selectable={false}
-        />,
 
       );
     }
     return items;
   };
-
 
   render() {
     const {classes, arrayLength, index, bookings} = this.props;

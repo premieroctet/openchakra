@@ -14,7 +14,7 @@ const is_production = () => {
 }
 
 const is_validation = () => {
-  return get_mode()==MODES.VALIDTION
+  return get_mode()==MODES.VALIDATION
 }
 
 const is_development = () => {
@@ -42,6 +42,21 @@ const get_host_url = () => {
   const host_url=`${protocol}://${hostname}${port}/`
   return host_url
 }
+
+const MANGOPAY_CONFIG_PROD = {
+ clientId: 'myalfredprod',
+ clientApiKey: 'j8R8fLZmUderNNp27siCqMAJ3y7Bv7BB82trfGuhqSKcYpEZ91',
+ baseUrl: 'https://api.mangopay.com',
+}
+
+const MANGOPAY_CONFIG_TEST = {
+ clientId: 'testmyalfredv2',
+ clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
+ logClass: () => {
+ },
+}
+
+const MANGOPAY_CONFIG = is_production() ? MANGOPAY_CONFIG_PROD : MANGOPAY_CONFIG_TEST
 
 const completeConfig = {
 
@@ -89,14 +104,18 @@ const ENABLE_GF_LOGIN = false;
 
 const PROVIDERS = ENABLE_GF_LOGIN ? [GOOGLE_PROVIDER, FACEBOOK_PROVIDER] : [];
 
-console.log(`Configuration is:\n\
-\tMode:${get_mode()}\n\
-\tDatabase:${databaseName}\n\
-\tServer prod:${SERVER_PROD}\n\
-\tServer port:${SERVER_PROD ? '80/443':'3122'}\n\
-\tHost URL:${get_host_url()}\n\
-\tSendInBlue actif:${ENABLE_MAILING}\
-`)
+const displayConfig = () => {
+  console.log(`Configuration is:\n\
+  \tMode:${get_mode()}\n\
+  \tDatabase:${databaseName}\n\
+  \tServer prod:${SERVER_PROD}\n\
+  \tServer port:${SERVER_PROD ? '80/443':'3122'}\n\
+  \tHost URL:${get_host_url()}\n\
+  \tSendInBlue actif:${ENABLE_MAILING}\n\
+  \tMangopay clientId:${MANGOPAY_CONFIG.clientId}\
+  `)
+}
+
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -108,5 +127,5 @@ module.exports = {
   ENABLE_GF_LOGIN,
   GOOGLE_PROVIDER, FACEBOOK_PROVIDER, PROVIDERS,
   is_production, is_validation, is_development, SERVER_PROD,
-  get_host_url
+  get_host_url, MANGOPAY_CONFIG, displayConfig
 };

@@ -2,11 +2,9 @@ import React from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import Layout from '../hoc/Layout/Layout';
 import Grid from '@material-ui/core/Grid';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+const { Accordion, AccordionSummary, AccordionDetails }=require('@material-ui/core')
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Link from 'next/link';
 
 const styles = theme => ({
@@ -18,7 +16,7 @@ const styles = theme => ({
   bigContainer: {
     marginTop: 80,
   },
-  expansionPanelStyle: {
+  accordionStyle: {
     border: 'none',
     boxShadow: 'none',
     width: '70%',
@@ -46,10 +44,10 @@ class faq extends React.Component {
             <Grid container>
               <h3>Devenir Alfred</h3>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -58,8 +56,8 @@ class faq extends React.Component {
                       Qui peut devenir Alfred ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Nous sommes tous des Alfred ! Dès l’âge de 16 ans, vous pouvez devenir Alfred en créant votre
@@ -81,14 +79,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -97,8 +95,8 @@ class faq extends React.Component {
                       Comment creér sa boutique de service ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         My-Alfred vous permet de créer votre propre boutique de service(s) et de définir les services et
@@ -156,14 +154,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -172,8 +170,8 @@ class faq extends React.Component {
                       Que dois-je déclarer dans mes revenus ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         My-Alfred est une plateforme appartenant à l’économie collaborative permettant à tout un chacun
@@ -193,17 +191,17 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
             </Grid>
             <Grid container>
               <h3>Créer votre boutique de service</h3>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -212,8 +210,8 @@ class faq extends React.Component {
                       Comment ajouter un nouveau service dans ma boutique ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Vous pouvez à tout moment ajouter de nouveaux services dans votre boutique.
@@ -225,14 +223,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -241,8 +239,8 @@ class faq extends React.Component {
                       Comment fixer le prix de mes prestations ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Pour chaque service sélectionné, il vous est proposé une ou plusieurs prestations.
@@ -270,14 +268,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -286,8 +284,8 @@ class faq extends React.Component {
                       A quoi servent les options dans ma boutique de service ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Pour chaque service, vous avez la possibilité d’ajouter une option de facturation.
@@ -311,14 +309,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -327,8 +325,8 @@ class faq extends React.Component {
                       A quoi correspond le matériel fourni dans ma boutique de service ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Pour chaque service, vous pouvez sélectionner le matériel et les consommables qui seront
@@ -356,14 +354,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -372,8 +370,8 @@ class faq extends React.Component {
                       Comment définir un montant minimum pour mon service ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Le montant minimum de réservation correspond au panier minimum requis pour réserver ce service.
@@ -397,14 +395,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -413,8 +411,8 @@ class faq extends React.Component {
                       Comment définir mon périmètre d'intervention ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Votre périmètre d’intervention correspond à la zone dans laquelle vous souhaitez réaliser votre
@@ -445,14 +443,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -461,8 +459,8 @@ class faq extends React.Component {
                       A quoi correspond le délai de prévenance ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Le délai de prévenance correspond au délai nécessaire entre la réservation et la réalisation du
@@ -492,14 +490,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -508,8 +506,8 @@ class faq extends React.Component {
                       Pourquoi décrire brièvement mon expertise ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Pour chaque service sélectionné, vous pouvez brièvement décrire votre expertise.
@@ -535,14 +533,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -551,8 +549,8 @@ class faq extends React.Component {
                       Pourquoi dois-je ajouter mes années d’expérience, mes diplômes et certifications ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Pour chaque service sélectionné, vous pouvez indiquer une nombre d’année d’expérience pour ce
@@ -584,14 +582,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -600,8 +598,8 @@ class faq extends React.Component {
                       Comment indiquer mes disponibilités dans mon calendrier ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Il est indispensable d’indiquer vos disponibilités lors de la création de votre boutique afin
@@ -645,14 +643,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -661,8 +659,8 @@ class faq extends React.Component {
                       Comment les utilisateurs peuvent réserver ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Pour l’ensemble de vos services, vous devez préciser la façon dont vous souhaitez que vos
@@ -693,14 +691,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -709,8 +707,8 @@ class faq extends React.Component {
                       A quoi correspondent mes conditions de réservation ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Les conditions de réservation définissent les éléments que vous souhaitez vérifier à propos de
@@ -758,14 +756,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -774,8 +772,8 @@ class faq extends React.Component {
                       Comment gérer ma photo de profil ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         La photo de votre profil sera visible des utilisateurs du site et leur permettra de déjà vous
@@ -799,14 +797,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -815,8 +813,8 @@ class faq extends React.Component {
                       Comment définir mes conditions d'annulations ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Les conditions d’annulation définissent sous quelle condition vous acceptez l’annulation d’une
@@ -858,14 +856,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -874,8 +872,8 @@ class faq extends React.Component {
                       Comment gérer ma photo de couverture ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Votre photo de couverture est la photo positionnée en en-tête de votre boutique. Elle sera
@@ -902,18 +900,18 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
 
             </Grid>
             <Grid container>
               <h3>Identification et vérification</h3>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -922,8 +920,8 @@ class faq extends React.Component {
                       Fonctionnement ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Chez My-Alfred nous souhaitons que les membres puissent proposer et consommer des services en
@@ -941,14 +939,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -957,8 +955,8 @@ class faq extends React.Component {
                       A quel moment dois-je fournir une pièce d'identité ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Pour devenir Alfred, vous devez fournir une pièce d’identité en règle qui peut être soit une
@@ -989,14 +987,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1005,8 +1003,8 @@ class faq extends React.Component {
                       Quel type de pièce d'identité puis-je fournir ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p style={{width: '100%'}}>
                         Vous pouvez ajouter une des pièces d’identité officielle suivante sur la plateforme My-Alfred :
@@ -1029,14 +1027,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1045,8 +1043,8 @@ class faq extends React.Component {
                       Quelles sont les données partagées avec votre pièce d’identité ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p style={{width: '100%'}}>
                         Si vous acceptez de fournir une pièce d'identité officielle, les informations suivantes peuvent
@@ -1067,14 +1065,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1083,8 +1081,8 @@ class faq extends React.Component {
                       Comment est stockée ou supprimée la photo de ma pièce d'identité ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Le stockage de la photo de votre pièce d'identité officielle est régie par notre <Link
@@ -1113,17 +1111,17 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
             </Grid>
             <Grid container>
               <h3>Mes versements</h3>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1132,8 +1130,8 @@ class faq extends React.Component {
                       Comment toucher mon versement ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Une fois la réservation confirmée, l’utilisateur à l’origine de la réservation reçoit un code
@@ -1160,14 +1158,14 @@ class faq extends React.Component {
 
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1176,8 +1174,8 @@ class faq extends React.Component {
                       Pourquoi dois-je communiquer un IBAN ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Pour devenir Alfred, il est impératif qu’un mode de versement soit renseigné dans votre compte
@@ -1199,14 +1197,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1215,8 +1213,8 @@ class faq extends React.Component {
                       Quels sont les documents à fournir pour les versements ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Pour que nous puissions effectuer le versement de votre prestations, vous devez nous fournir les
@@ -1249,14 +1247,14 @@ class faq extends React.Component {
                       </ul>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1265,8 +1263,8 @@ class faq extends React.Component {
                       Comment puis-je retrouver mes informations de versements ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         En tant qu’Alfred, vous pouvez suivre l’ensemble de vos versements dans la rubrique performance
@@ -1289,17 +1287,17 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
             </Grid>
             <Grid container>
               <h3>Mes réservations</h3>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1308,8 +1306,8 @@ class faq extends React.Component {
                       Comment modifier une réservation confirmée en tant qu’Alfred ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         En tant qu’Alfred, vous pouvez modifier une réservation à la seule condition que votre
@@ -1343,14 +1341,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1359,8 +1357,8 @@ class faq extends React.Component {
                       Comment annuler une réservation en tant qu’Alfred ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         L’annulation d’une réservation entraîne du stress et est susceptible d’impacter votre client
@@ -1409,14 +1407,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1425,8 +1423,8 @@ class faq extends React.Component {
                       Quelles sont les pénalités si j’annule une réservation en tant qu’Alfred ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         En tant qu’Alfred, vous pouvez annuler une réservation mais vous vous exposez à une pénalité de
@@ -1449,14 +1447,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1465,8 +1463,8 @@ class faq extends React.Component {
                       Comment rembourser mon utilisateur ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         En cas d’annulation d’une réservation par un Alfred, le client utilisateur sera remboursé de la
@@ -1498,14 +1496,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1514,8 +1512,8 @@ class faq extends React.Component {
                       Puis-je modifier le prix d’une réservation en attente ou confirmée ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Chaque réservation peut-être modifiée quelque soit son statut. En revanche, votre client
@@ -1539,14 +1537,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1555,8 +1553,8 @@ class faq extends React.Component {
                       Puis-je planifier mon service sur plusieurs jours ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Dans le cadre de services susceptibles de se dérouler sur plusieurs journées ou plusieurs
@@ -1577,14 +1575,14 @@ class faq extends React.Component {
 
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1593,8 +1591,8 @@ class faq extends React.Component {
                       Puis-je échanger avec mon Alfred ou mon client ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Les utilisateurs sont en mesure de vous contacter afin d’obtenir des renseignements
@@ -1621,17 +1619,17 @@ class faq extends React.Component {
 
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
             </Grid>
             <Grid container>
               <h3>Mon compte</h3>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1640,8 +1638,8 @@ class faq extends React.Component {
                       Comment supprimer sa boutique ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         A tout moment, vous avez la possibilité de supprimer votre boutique de services My-Alfred.
@@ -1669,14 +1667,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1685,8 +1683,8 @@ class faq extends React.Component {
                       Comment supprimer son compte ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         A tout moment, vous avez la possibilité de supprimer votre compte My-Alfred. La suppression de
@@ -1721,14 +1719,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1737,8 +1735,8 @@ class faq extends React.Component {
                       Comment gérer mes notifications ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Vos notifications peuvent être paramétrées depuis votre compte. Cela vous permet de choisir le
@@ -1776,14 +1774,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1792,8 +1790,8 @@ class faq extends React.Component {
                       Comment gérer mes modes de paiement ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Depuis votre compte, vous pouvez gérer l’ensemble de vos modes de paiement.
@@ -1814,14 +1812,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1830,8 +1828,8 @@ class faq extends React.Component {
                       Comment gérer mes modes de versement ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Après chaque prestation réalisée par un Alfred, un versement du montant indiqué sur la fiche
@@ -1854,14 +1852,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1870,8 +1868,8 @@ class faq extends React.Component {
                       Comment suivre mes transactions ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         En tant qu’utilisateur de My-ALfred, vous pouvez suivre l’ensemble de vos transactions
@@ -1890,14 +1888,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1906,8 +1904,8 @@ class faq extends React.Component {
                       Comment changer mon mot de passe ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         A tout moment, vous pouvez changer votre mot de passe sur My-Alfred. Pour des raisons de
@@ -1935,14 +1933,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1951,8 +1949,8 @@ class faq extends React.Component {
                       Vous avez oublié votre mot de passe ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Si vous avez oublié votre mot de passe lorsque vous souhaitez vous connecter, cliquez
@@ -1968,14 +1966,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -1984,8 +1982,8 @@ class faq extends React.Component {
                       Puis-je connecter My-Alfred à mon compte Gmail ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Lors de l’inscription, vous pouvez choisir de vous connecter au travers de Gmail afin de gagner
@@ -2018,14 +2016,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -2034,8 +2032,8 @@ class faq extends React.Component {
                       Puis-je connecter My-Alfred à mon compte Facebook ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Lors de l’inscription, vous pouvez choisir de vous connecter au travers de Facebook afin de
@@ -2069,14 +2067,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -2085,8 +2083,8 @@ class faq extends React.Component {
                       Comment empêcher l’indexation de mon profil et ma boutique sur les moteurs de recherche ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         A tout moment et conformément à notre politique de confidentialité, vous pouvez choisir
@@ -2107,14 +2105,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -2123,19 +2121,19 @@ class faq extends React.Component {
                       Comment gérer mes parrainages ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -2144,8 +2142,8 @@ class faq extends React.Component {
                       A quoi sert le parrainage ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Le parrainage vous permet de gagner des crédits sur la plateforme My-Alfred en contribuant
@@ -2157,17 +2155,17 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
             </Grid>
             <Grid container>
               <h3>Mon profil</h3>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -2176,8 +2174,8 @@ class faq extends React.Component {
                       Comment modifier mon profil utilisateur ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Vous pouvez à tout moment modifier votre profil et mettre à jour vos informations personnelles
@@ -2203,14 +2201,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -2219,8 +2217,8 @@ class faq extends React.Component {
                       A quoi correspondent les adresses de prestations ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p style={{width: '100%'}}>
                         Lorsque vous souhaitez réserver un service, notre plateforme vous propose des Alfred en fonction
@@ -2239,14 +2237,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -2255,8 +2253,8 @@ class faq extends React.Component {
                       Puis-je avoir plusieurs adresses de prestation ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Vous pouvez choisir de renseigner plusieurs adresses de prestations dans le cadre de vos
@@ -2277,14 +2275,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -2293,8 +2291,8 @@ class faq extends React.Component {
                       Comment gérer ma photo de profil ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         La photo de votre profil sera visible des utilisateurs du site et leur permettra de déjà vous
@@ -2314,14 +2312,14 @@ class faq extends React.Component {
                       </p>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -2330,8 +2328,8 @@ class faq extends React.Component {
                       Comment vérifier mon email ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Lors de votre inscription, nous vous demanderons de renseigner votre adresse email.
@@ -2370,14 +2368,14 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
               <Grid item xs={12}>
-                <ExpansionPanel
-                  className={classes.expansionPanelStyle}
+                <Accordion
+                  className={classes.accordionStyle}
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{fontSize: 25}}/>}
                   >
                     <Typography
@@ -2386,8 +2384,8 @@ class faq extends React.Component {
                       Comment vérifier mon téléphone ?
                     </Typography>
 
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Grid container>
                       <p>
                         Lors de votre inscription, vous êtes invité(s) à renseigner et à vérifier votre numéro de
@@ -2425,8 +2423,8 @@ class faq extends React.Component {
                       </ol>
                     </Grid>
 
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
             </Grid>
 

@@ -27,10 +27,11 @@ const validateRegisterAdminInput = require('../../../validation/registerAdmin');
 const validateCategoryInput = require('../../../validation/category');
 const validateServiceInput = require('../../../validation/service');
 const {addIdIfRequired} = require('../../../../utils/mangopay');
-const multer = require('multer');
-
-// BILLING
-
+const multer = require('multer')
+const path = require('path')
+const {normalizePhone, bufferToString} = require('../../../../utils/text')
+const {counterArray, counterObjects} = require('../../../../utils/converters')
+const parse = require('url-parse')
 router.get('/billing/test', (req, res) => res.json({msg: 'Billing admin Works!'}));
 
 // @Route POST /myAlfred/api/admin/billing/all
@@ -1393,6 +1394,19 @@ const storageCat = multer.diskStorage({
 });
 const uploadCat = multer({storage: storageCat});
 
+const storageProspect = multer.memoryStorage()
+
+const uploadProspect = multer({
+  storage: storageProspect,
+  fileFilter: function (req, file, callback) {
+    var ext = path.extname(file.originalname).toLowerCase()
+    if(ext !== '.csv' && ext !== '.txt') {
+      return callback(new Error('Fichier csv attendu (.csv ou .txt)'))
+    }
+    callback(null, true)
+  },
+})
+
 // @Route POST /myAlfred/api/admin/category/all
 // Add category for prestation
 // @Access private
@@ -2406,6 +2420,47 @@ router.put('/options/all/:id', passport.authenticate('jwt', {session: false}), (
 
 });
 
+// TODO: récupérer en sum/aggréation par mois
+router.get('/registrations', (req, res) => {
+  User.find({}, 'creation_date')
+    .sort( { creation_date: 1})
+    .then( users => {
+      const monthDates = users.map( user => new Date(user.creation_date.getFullYear(), user.creation_date.getMonth()).getTime())
+      const counts = counterArray(monthDates, 'x', 'y')
+      res.json(counts)
+    })
+})
+
+// TODO: récupérer en sum/aggréation par age
+router.get('/ages', (req, res) => {
+
+  const get_label = age => {
+    if (age<=25) { return '<25' }
+    else if (age>=55){ return '>55' }
+    else {
+      step=Math.floor((age-25)/10)
+      label = `${step*10+25}>${(step+1)*10+25}`
+      return label
+    }
+  }
+
+  const alfred = JSON.parse(parse(req.originalUrl, true).query.alfred)
+
+  const fltr = alfred ? {is_alfred: true} : {}
+  User.find(fltr, 'birthday')
+  .sort({'birthday': -1})
+  .then( users => {
+    const labels=users.filter( u => u.age<100).map( u => get_label(u.age))
+    var counts = counterArray(labels, "label", "angle")
+    const total=users.length
+    counts = counts.map(obj => {
+      acc = {label:`${obj.label} (${Math.floor(obj.angle/total*100)}%)`, angle:obj.angle}
+      return acc
+    })
+    res.json(counts)
+  })
+})
+
 // @Route GET /myAlfred/api/admin/statistics
 // Get satistics (users, shops, services)
 // @Access private
@@ -2508,6 +2563,61 @@ router.get('/prospect/all', passport.authenticate('jwt', {session: false}), (req
     res.status(403).json({prospects: 'Access denied'});
   }
 });
+
+// @Route GET /myAlfred/api/admin/prospect/all
+// Get all prospect
+// @Access private
+router.post('/prospect/add', passport.authenticate('jwt', {session: false}), (req, res) => {
+  uploadProspect.single('prospects')(req, res, err => {
+    if (err) {
+      console.error(err)
+      res.status(404).json({errors: err.message})
+    }
+    else {
+      Prospect.find({}, 'phone')
+        .then (phones => {
+          phones = phones.map( p => p.phone)
+          const contents = bufferToString(req.file.buffer)
+          var records = parse(contents, { columns: true, delimiter:';'})
+
+          const schema_fields = Object.keys(Prospect.schema.obj).sort()
+          const schema_required = schema_fields.filter(k => Prospect.schema.obj[k].required && !Prospect.schema.obj[k].default)
+          const data_fields = Object.keys(records[0]).sort()
+          const missing = schema_required.filter( att => !data_fields.includes(att))
+          const extra = data_fields.filter( att => !schema_fields.includes(att))
+
+          console.log(`Schema required:${schema_required}, ${JSON.stringify(Buffer.from(schema_required.join(',')))}`)
+          console.log(`Data fields:${data_fields}, ${JSON.stringify(Buffer.from(data_fields.join(',')))}`)
+
+          if (missing.length>0) {
+            throw new Error(`Champ obligatoires manquants:${missing.join(',')}`)
+          }
+          if (extra.length>0) {
+            throw new Error(`Champs inconnus:${extra.join(',')}`)
+          }
+
+          const before = records.length
+          records = records
+            .map( r => { r.phone=normalizePhone(r.phone); return r })
+            .filter( r => !phones.includes(r.phone))
+          const counts=records.reduce((json,prospect)=>({...json, [prospect.phone]:(json[prospect.phone] | 0) + 1}),{})
+          const duplicates = Object.keys(counts).filter( k => counts[k]>1)
+          if (duplicates.length>0) {
+            throw new Error(`Pas d'import, numéros dupliqués dans le fichier:${duplicates.join('\n')}`)
+          }
+
+          const after = records.length
+          const delta=before-after
+          Prospect.insertMany(records, { silent: true})
+            .then(() => res.json(`${after}/${before} prospects importés après suppression des ${delta} doublons`))
+        })
+        .catch (err => {
+          res.status(404).json({errors: err.message})
+        })
+    }
+  })
+})
+
 
 // @Route POST /myAlfred/api/admin/kyc_validate/:alfred_id
 // Get all prospect

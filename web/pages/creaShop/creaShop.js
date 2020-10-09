@@ -30,6 +30,7 @@ import {
 } from '../../utils/validationSteps/validationSteps';
 import cookie from 'react-cookies';
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
+import util from 'util'
 
 const I18N = require('../../utils/i18n');
 
@@ -84,6 +85,9 @@ class creaShop extends React.Component {
     this.shopSettingsChanged = this.shopSettingsChanged.bind(this);
     this.introduceChanged = this.introduceChanged.bind(this);
     this.nextDisabled = this.nextDisabled.bind(this);
+
+    this.scheduleDrawer = React.createRef()
+    this.intervalId = null
   }
 
   componentDidMount() {
@@ -108,6 +112,13 @@ class creaShop extends React.Component {
         console.error(error);
       });
     this.loadAvailabilities();
+
+    this.intervalId = setInterval( () => {if (this.state.activeStep==6) this.forceUpdate()}, 200)
+
+  }
+
+  componentWillUnmount = () => {
+    clearInterval(this.intervalId)
   }
 
   nextDisabled() {
@@ -129,6 +140,9 @@ class creaShop extends React.Component {
     if (pageIndex === 5) {
       return assetsService(shop);
     }
+    if (pageIndex === 6) {
+      return this.scheduleDrawer.current && this.scheduleDrawer.current.isDirty()
+    }
     if (pageIndex === 8) {
       return settingShop(shop);
     }
@@ -145,7 +159,6 @@ class creaShop extends React.Component {
   }
 
   availabilityCreated = (avail) => {
-
     if (avail._id.length === GID_LEN) {
       avail._id = null;
     }
@@ -352,9 +365,11 @@ class creaShop extends React.Component {
                                   availabilityUpdate={this.availabilityUpdate}
                                   availabilityCreated={this.availabilityCreated}
                                   onAvailabilityChanged={this.loadAvailabilities}
-                                  removeEventsSelected={this.removeEventsSelected}
+                                  onDateSelectionCleared={this.onDateSelectionCleared}
                                   style={this.props.classes}
-                                  selectable={true}/>;
+                                  selectable={true}
+                                  ref={this.scheduleDrawer}
+                                  />;
       case 7:
         return <BookingConditions conditions={shop.my_alfred_conditions} booking_request={shop.booking_request}
                                   onChange={this.conditionsChanged}/>;

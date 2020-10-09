@@ -16,15 +16,15 @@ import axios from 'axios';
 class DrawerSchedule extends React.Component{
   constructor(props) {
     super(props);
-    this.drawerEditing = React.createRef();
-    this.drawerSetting = React.createRef();
+    this.drawer = React.createRef();
     this.state={
       mobileOpen: false,
       eventsSelected: new Set(),
       availabilities: [],
+      dirty: false,
     };
-    this.getEventsSelected = this.getEventsSelected.bind(this);
-    this.stateDrawer = this.stateDrawer.bind(this);
+    this.onDateSelectionChanged = this.onDateSelectionChanged.bind(this);
+    this.updateDrawerState = this.updateDrawerState.bind(this);
     this.onAvailabilityChanged = this.onAvailabilityChanged.bind(this)
   }
 
@@ -38,16 +38,16 @@ class DrawerSchedule extends React.Component{
       .catch (err => console.error(err))
   };
 
-  getEventsSelected = (eventsSelected) => {
-    this.setState({eventsSelected: new Set(eventsSelected)}, () => this.stateDrawer());
+  isDirty = () => {
+    return this.drawer.current && this.drawer.current.isDirty()
+  }
+
+  onDateSelectionChanged = (eventsSelected) => {
+    this.setState({eventsSelected: new Set(eventsSelected)}, () => this.updateDrawerState());
   };
 
-  stateDrawer = () => {
-    if (this.state.eventsSelected.size === 0) {
-      this.drawerSetting.current.getEventsSelected(this.state.eventsSelected);
-    } else {
-      this.drawerEditing.current.getEventsSelected(this.state.eventsSelected);
-    }
+  updateDrawerState = () => {
+    this.drawer.current.onDateSelectionChanged(this.state.eventsSelected);
   };
 
   handleDrawerToggle = () => {
@@ -58,8 +58,8 @@ class DrawerSchedule extends React.Component{
     this.props.onAvailabilityChanged ? this.props.onAvailabilityChanged() : () => {}
   };
 
-  removeEventsSelected = () => {
-    this.setState({eventsSelected : new Set()}, () => this.props.removeEventsSelected())
+  onDateSelectionCleared = () => {
+    this.setState({eventsSelected : new Set()}, () => this.props.onDateSelectionCleared())
   };
 
   render() {
@@ -90,13 +90,13 @@ class DrawerSchedule extends React.Component{
                             {
                                 mobileOpen ?
                                     this.state.eventsSelected.size > 0 ?
-                                        <DrawerEditingSchedule ref={this.drawerEditing}
+                                        <DrawerEditingSchedule ref={this.drawer}
                                                                handleDrawer={this.handleDrawerToggle}
                                                                onAvailabilityChanged={this.onAvailabilityChanged}
-                                                               removeEventsSelected={this.removeEventsSelected}
+                                                               onDateSelectionCleared={this.onDateSelectionCleared}
                                         />
                                         :
-                                        <DrawerSettingSchedule ref={this.drawerSetting}
+                                        <DrawerSettingSchedule ref={this.drawer}
                                                                handleDrawer={this.handleDrawerToggle}
                                                                onAvailabilityChanged={this.onAvailabilityChanged}
                                         />
@@ -116,14 +116,14 @@ class DrawerSchedule extends React.Component{
                             {
                                 !mobileOpen ?
                                     this.state.eventsSelected.size > 0 ?
-                                        <DrawerEditingSchedule ref={this.drawerEditing}
+                                        <DrawerEditingSchedule ref={this.drawer}
                                                                handleDrawer={this.handleDrawerToggle}
                                                                onAvailabilityChanged={this.onAvailabilityChanged}
-                                                               removeEventsSelected={this.removeEventsSelected}
+                                                               onDateSelectionCleared={this.onDateSelectionCleared}
 
                                         />
                                         :
-                                        <DrawerSettingSchedule ref={this.drawerSetting}
+                                        <DrawerSettingSchedule ref={this.drawer}
                                                                handleDrawer={this.handleDrawerToggle}
                                                                onAvailabilityChanged={this.onAvailabilityChanged}
                                         />

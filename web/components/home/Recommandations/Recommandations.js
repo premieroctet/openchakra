@@ -60,22 +60,22 @@ const recommandations = (props) => {
       </Grid>
       <Grid container className={classes.container} spacing={24} wrap="wrap">
         <Grid item xs={12} sm={6} md={4} lg={4}>
-          <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg"/>
+          <RecommandationsCard img="/static/bailey-zindel-396398-unsplash.jpg"/>
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={4}>
-          <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg"/>
+          <RecommandationsCard img="/static/bailey-zindel-396398-unsplash.jpg"/>
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={4}>
-          <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg"/>
+          <RecommandationsCard img="/static/bailey-zindel-396398-unsplash.jpg"/>
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={4}>
-          <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg"/>
+          <RecommandationsCard img="/static/bailey-zindel-396398-unsplash.jpg"/>
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={4}>
-          <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg"/>
+          <RecommandationsCard img="/static/bailey-zindel-396398-unsplash.jpg"/>
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={4}>
-          <RecommandationsCard img="../../../static/bailey-zindel-396398-unsplash.jpg"/>
+          <RecommandationsCard img="/static/bailey-zindel-396398-unsplash.jpg"/>
         </Grid>
       </Grid>
     </Fragment>

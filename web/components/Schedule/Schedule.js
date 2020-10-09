@@ -49,7 +49,7 @@ class Schedule extends React.Component {
     )
   };
 
-  removeEventsSelected = () => {
+  onDateSelectionCleared = () => {
     this.setState({eventsSelected: new Set()})
   };
 
@@ -277,10 +277,10 @@ class Schedule extends React.Component {
         { this.props.mode === 'month' ?
           <Grid container style={{justifyContent: 'space-between'}}>
             <Grid>
-              <Button onClick={() => {this.previousMonth()}}>Précédent</Button>
+              <Button onClick={this.previousMonth} variant={'contained'}>&#8249;</Button>
             </Grid>
             <Grid>
-              <Button onClick={() => {this.nextMonth()}}>Suivant</Button>
+            <Button onClick={this.nextMonth} variant={'contained'}>&#8250;</Button>
             </Grid>
           </Grid>
           :
@@ -308,7 +308,7 @@ class Schedule extends React.Component {
                   defaultDate={mode === 'month' ? date : new Date()}
                   onSelectSlot={this.toggleSelection}
                   dayLayoutAlgorithm={'no-overlap'}
-                  scrollToTime={moment(new Date(0, 0, 0, 9, 0, 0))}
+                  scrollToTime={date}
                   className={style.schedule_scheduleMainStyle}
                   components={{
                     /* event: MyEvent, // used by each view (Month, Day, Week)

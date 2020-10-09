@@ -1,3 +1,5 @@
+const stripBom = require('strip-bom')
+
 const ARTICLES = 'le la les un une de des d l à'.split(/ /g);
 
 const normalize = str => {
@@ -63,6 +65,33 @@ const frenchFormat = str => {
   return result;
 };
 
+const normalizePhone = p => {
+  if (p) {
+    p=p.trim()
+    const not_number=/[^\d]/
+    while (p.match(not_number)) {
+      p = p.replace(not_number, '')
+    }
+  }
+  return p
+}
+
+const bufferToString = buff => {
+  var text = buff.toString('utf-8')
+  // For MAC files
+  text = stripBom(text)
+  return text
+}
+
+const ILLEGAL_REGEX = /(O|0|\+33)[O\d \.,-]+\d|\S+@\S+|@\S+/
+
+const hideIllegal = text => {
+  while (text.match(ILLEGAL_REGEX)) {
+    text = text.replace(ILLEGAL_REGEX, '[Masqué]')
+  }
+  return text
+}
+
 module.exports = {
   normalize,
   createQuery,
@@ -73,4 +102,7 @@ module.exports = {
   createRegExpOR,
   createRegExpAND,
   frenchFormat,
+  normalizePhone,
+  bufferToString,
+  hideIllegal,
 };

@@ -1,4 +1,4 @@
-const {is_production, is_development}=require('../config/config')
+const {is_production, is_validation, is_development, displayConfig}=require('../config/config')
 
 const express = require('express');
 const next = require('next');
@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const dev = process.env.NODE_DEV !== 'production'; //true false
 const prod = process.env.NODE_DEV === 'production'; //true false
-const nextApp = is_production() ? next({prod}) : next({dev})
+const nextApp = is_production() || is_validation() ? next({prod}) : next({dev})
 const routes = require('./routes');
 const routerHandler = routes.getRequestHandler(nextApp);
 const passport = require('passport');
@@ -144,6 +144,7 @@ nextApp.prepare().then(() => {
     app);
   const io = SocketIo(httpsServer);
 
+  displayConfig()
   if (SERVER_PROD) {
     httpsServer.listen(443, () => console.log(`${config.appName} running on http://localhost:80/ and https://localhost:443/`));
   } else {

@@ -4,7 +4,7 @@ Created on 24 juin 2019
 @author: seb
 '''
 from os.path import dirname, abspath, join
-from alfred.misc.consts import PATTERNS
+from alfred.misc.consts import PATTERN
 
 def get_root_dir():
     return dirname(dirname(dirname(dirname(abspath(__file__))))) 
@@ -33,7 +33,7 @@ def get_item(collec, _id, key='_id'):
 def has_illegal_pattern(txt):
   if not txt:
     return False
-  return any(p.search(txt) for p in PATTERNS)
+  return PATTERN.search(txt)
 
 DAYS='monday tuesday wednesday thursday friday saturday sunday'.split()
 

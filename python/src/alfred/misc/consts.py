@@ -30,8 +30,8 @@ def get_item(collec, _id, key='_id'):
     raise Exception('{} items instead of 1 for {}={}'.format(len(items), key, _id))
   return items[0]
 
-PHONE_MAIL_PATTERNS = ['\S+@\S+', '06', '07']
-PATTERNS = [re.compile(p) for p in PHONE_MAIL_PATTERNS]
+PHONE_MAIL_PATTERN = '(O|0|\+33)[O\d \.,-]+\d|\S+@\S+|@\S+'
+PATTERN = re.compile(PHONE_MAIL_PATTERN)
 
 if __name__ == '__main__':
 	print(get_root_dir())

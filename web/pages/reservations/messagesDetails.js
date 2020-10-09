@@ -15,6 +15,7 @@ import Router from 'next/router';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+const {hideIllegal} = require('../../utils/text')
 
 moment.locale('fr');
 
@@ -114,7 +115,7 @@ class MessagesDetails extends React.Component {
       const messObj = {
         user: this.state.userData.firstname,
         idsender: this.state.userData._id,
-        content: this.state.message,
+        content: hideIllegal(this.state.message),
         date: Date.now(),
         thepicture: this.state.recipientpic,
         //lusender: this.state.lusender,

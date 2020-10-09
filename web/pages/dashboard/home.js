@@ -56,9 +56,12 @@ class home extends React.Component {
       this.setState({is_admin: decode.is_admin});
     }
     axios.defaults.headers.common['Authorization'] = auth;
+    /**
+    TODO : générer boutiques si nécessaire seulement
     axios.get('/myAlfred/api/admin/shops/extract')
       .then(res => this.setState({shopsData: res.data}))
       .catch(err => console.error(err));
+    */
   }
 
   render() {
@@ -101,12 +104,12 @@ class home extends React.Component {
                   <Link href="/dashboard/users/all"><a>Utilisateurs</a></Link><br/>
                   <Link href="/dashboard/alfred/all"><a>Alfred</a></Link><br/>
                   <Link href="/dashboard/admin/all"><a>Administrateurs</a></Link><br/>
-                  <CSVLink asyncOnClick={true} data={this.state.shopsData} filename="shops.csv" separator={';'}
-                           target="_blank">Export boutiques</CSVLink>
-                  <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                    <Typography style={{fontSize: 30}}>Fonctions DEV</Typography>
-                  </Grid>
-                  <Link href="/dashboard/dev/api_calls"><a>Appels API</a></Link><br/>
+                  { false ? // Générer boutiques si nécessaire seulement
+                    <CSVLink asyncOnClick={true} data={this.state.shopsData} filename="shops.csv" separator={';'}
+                             target="_blank">Export boutiques</CSVLink>
+                    :
+                    null
+                  }
                 </Grid>
                 :
                 <Grid item style={{display: 'flex', justifyContent: 'center'}}>

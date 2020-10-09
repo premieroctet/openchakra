@@ -159,12 +159,12 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-!static
-static/*
-static/assets/
-!static/service
-static/category/*
+!static/assets
+!static/category
 !static/prestation
+!static/service
+!static/equipments
+static/
 
 ios
 
