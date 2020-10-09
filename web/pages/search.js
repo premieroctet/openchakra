@@ -123,7 +123,7 @@ class SearchPage extends React.Component {
       })
       .then(res => {
         st['categories'] = res.data;
-        var catCount = {};
+        let catCount = {};
         res.data.forEach(c => catCount[c._id] = 8);
         st['catCount'] = catCount;
         axios.get('/myAlfred/api/shop/allStatus')
@@ -177,7 +177,6 @@ class SearchPage extends React.Component {
   filter = () => {
     let filterComponentstate = this.filterMenuComponent.current.state;
     const serviceUsers = this.state.serviceUsers;
-    console.log(serviceUsers, 'service')
     let serviceUsersDisplay = [];
     if (filterComponentstate.proSelected || filterComponentstate.individualSelected) {
       serviceUsers.forEach(su => {

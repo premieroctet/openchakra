@@ -614,5 +614,13 @@ export default theme => ({
     display: 'flex',
     justifyContent : 'center',
     alignItems: 'center'
+  },
+  cardServiceInfoTitle:{
+    color: theme.palette.white.main,
+    fontFamily: theme.typography.fontFamily,
+  },
+  cardServiceInfoText:{
+    color: theme.palette.white.main,
+    fontFamily: theme.typography.fontFamily,
   }
 })

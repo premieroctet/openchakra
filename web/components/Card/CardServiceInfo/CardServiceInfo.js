@@ -14,10 +14,10 @@ export default class CardServiceInfo extends React.Component{
         <Paper elevation={1} className={style.cardServiceInfoPaper}>
           <Grid className={style.cardServiceInfoContent}>
             <Grid>
-              <h2>Besoin d'aide ?</h2>
+              <h2 className={style.cardServiceInfoTitle}>Besoin d'aide ?</h2>
             </Grid>
             <Grid>
-              <p>Utiliser notre chat en direct !</p>
+              <p className={style.cardServiceInfoText}>Utiliser notre chat en direct !</p>
             </Grid>
           </Grid>
         </Paper>
