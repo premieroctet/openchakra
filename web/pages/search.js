@@ -1,5 +1,4 @@
 import React from 'react';
-import Footer from '../hoc/Layout/Footer/Footer';
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
 import axios from 'axios';
@@ -8,8 +7,6 @@ import moment from 'moment';
 import 'react-dates/lib/css/_datepicker.css';
 import styles from '../static/css/searchPage/searchStyle';
 import cookie from 'react-cookies';
-import NavBar from "../hoc/Layout/NavBar/NavBar";
-import InfoBar from "../components/InfoBar/InfoBar";
 import FilterMenu from "../components/FilterMenu/FilterMenu";
 import Divider from "@material-ui/core/Divider";
 import FormControl from "@material-ui/core/FormControl";
@@ -21,6 +18,7 @@ import NeedHelp from "../components/NeedHelp/NeedHelp";
 import SearchByHashtag from "../components/SearchByHashtag/SearchByHashtag";
 import CardServiceInfo from "../components/Card/CardServiceInfo/CardServiceInfo";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Layout from "../hoc/Layout/Layout";
 
 moment.locale('fr');
 
@@ -76,8 +74,6 @@ class SearchPage extends React.Component {
     }
     return init;
   }
-
-
 
   componentDidUpdate(prevProps) {
     if (this.props !== prevProps) {
@@ -249,7 +245,6 @@ class SearchPage extends React.Component {
 
     this.setState({searching: true});
 
-    const address = this.state.selectedAddress;
     var filters = {};
 
     // GPS
@@ -371,12 +366,7 @@ class SearchPage extends React.Component {
 
     return (
       <Grid>
-        <Grid className={classes.searchNavbarComponentPosition}>
-          <InfoBar style={classes} />
-        </Grid>
-        <Grid>
-          <NavBar style={classes} user={user} selectedAddress={selectedAddress} logged={logged}/>
-        </Grid>
+      <Layout user={user} selectedAddress={selectedAddress}>
         <Grid className={classes.searchMenuScrollMenuContainer}>
           <Grid className={classes.searchScrollmenuContainer}>
             <ScrollMenu style={classes} categories={categories} gps={gps} indexCat={indexCat}/>
@@ -488,11 +478,7 @@ class SearchPage extends React.Component {
             <NeedHelp style={classes}/>
           </Grid>
         </Grid>
-        <Grid className={classes.mainContainerStyleFooter}>
-          <Grid className={classes.generalWidthFooter}>
-            <Footer style={classes}/>
-          </Grid>
-        </Grid>
+       </Layout>
       </Grid>
     );
   }
