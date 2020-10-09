@@ -180,7 +180,7 @@ class NavBar extends Component {
     const SearchBarInput = () => {
       return(
         <Grid className={style.navbarSearchContainer}>
-          <Paper component="form" classes={{root: style.navbarSearch}}>
+          <Paper classes={{root: style.navbarSearch}}>
             <Grid style={{flex: 1}}>
               <TextField
                 classes={{root: style.navbarRootTextField}}
