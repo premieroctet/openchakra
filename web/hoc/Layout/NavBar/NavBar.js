@@ -3,7 +3,6 @@ import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import axios from 'axios';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import setAuthToken from '../../../utils/setAuthToken';
@@ -306,7 +305,7 @@ class NavBar extends Component {
                 </Grid> : null
             }
             <Grid>
-              <IconButton type="submit" classes={{root: style.iconButton}} aria-label="search" onClick={() => this.findService()}>
+              <IconButton classes={{root: style.iconButton}} aria-label="search" onClick={() => this.findService()}>
                 <SearchIcon />
               </IconButton>
             </Grid>
