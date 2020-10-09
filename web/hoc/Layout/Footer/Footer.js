@@ -23,89 +23,91 @@ class Footer extends React.Component {
     const {style} = this.props;
     return (
       <Grid className={style.footerMainStyle}>
-        <Grid className={style.footerMainContainer}>
-          <Grid className={style.footerSection}>
-            <Grid>
-              <h3 className={style.footerTitileSection}>À propos</h3>
-            </Grid>
-            <Grid>
-              <p className={style.footerLink}>Pourquoi My Alfred ?</p>
-            </Grid>
-            <Grid>
-              <p className={style.footerLink}>Notre histoire</p>
-            </Grid>
-            <Grid>
-              <p className={style.footerLink}>Nous contacter</p>
-            </Grid>
-          </Grid>
-          <Grid className={style.footerSection}>
-            <Grid>
-              <h3 className={style.footerTitileSection}>Communauté</h3>
-            </Grid>
-            <Grid>
-              <p className={style.footerLink}>Notre communauté</p>
-            </Grid>
-            <Grid>
-              <p className={style.footerLink}>Inviter un ami</p>
-            </Grid>
-          </Grid>
-          <Grid className={style.footerSection}>
-            <Grid>
-              <h3 className={style.footerTitileSection}>Alfred</h3>
-            </Grid>
-            <Grid>
-              <p className={style.footerLink}>Devenir Alfred</p>
-            </Grid>
-            <Grid>
-              <p className={style.footerLink}>Centre de ressources</p>
-            </Grid>
-          </Grid>
-          <Grid className={style.footerSection}>
-            <Grid>
-              <h3 className={style.footerTitileSection}>Assistance</h3>
-            </Grid>
-            <Grid>
-              <p className={style.footerLink}>Les bases</p>
-            </Grid>
-            <Grid>
-              <p className={style.footerLink}>FAQ</p>
-            </Grid>
-            <Grid>
-              <p className={style.footerLink}>Parler à un humain</p>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid className={style.footerSocialSection}>
-          <Grid>
-            <FacebookIcon/>
-          </Grid>
-          <Grid>
-            <InstagramIcon/>
-          </Grid>
-          <Grid>
-            <LinkedInIcon/>
-          </Grid>
-          <Grid>
-            <TwitterIcon/>
-          </Grid>
-        </Grid>
-        <Grid className={style.footerDividerContainer}>
-          <Divider className={style.footerDivider}/>
-        </Grid>
-        <Grid className={style.footerBrandContainer}>
-          <Grid className={style.footerBrandStyle}>
-            <Grid>
-              <p className={style.footerText}>© 2020 MY ALFRED Corporation. Tous droits réservés</p>
-            </Grid>
-            <Grid className={style.footerRgpdButtons}>
+        <Grid>
+          <Grid className={style.footerMainContainer}>
+            <Grid className={style.footerSection}>
               <Grid>
-                <p className={style.footerLink}>Sécurité</p>
+                <h3 className={style.footerTitileSection}>À propos</h3>
               </Grid>
               <Grid>
-                <p className={style.footerLink}>Informations légales</p>
+                <p className={style.footerLink}>Pourquoi My Alfred ?</p>
               </Grid>
               <Grid>
-                <p className={style.footerLink}>Confidentialié</p>
+                <p className={style.footerLink}>Notre histoire</p>
+              </Grid>
+              <Grid>
+                <p className={style.footerLink}>Nous contacter</p>
+              </Grid>
+            </Grid>
+            <Grid className={style.footerSection}>
+              <Grid>
+                <h3 className={style.footerTitileSection}>Communauté</h3>
+              </Grid>
+              <Grid>
+                <p className={style.footerLink}>Notre communauté</p>
+              </Grid>
+              <Grid>
+                <p className={style.footerLink}>Inviter un ami</p>
+              </Grid>
+            </Grid>
+            <Grid className={style.footerSection}>
+              <Grid>
+                <h3 className={style.footerTitileSection}>Alfred</h3>
+              </Grid>
+              <Grid>
+                <p className={style.footerLink}>Devenir Alfred</p>
+              </Grid>
+              <Grid>
+                <p className={style.footerLink}>Centre de ressources</p>
+              </Grid>
+            </Grid>
+            <Grid className={style.footerSection}>
+              <Grid>
+                <h3 className={style.footerTitileSection}>Assistance</h3>
+              </Grid>
+              <Grid>
+                <p className={style.footerLink}>Les bases</p>
+              </Grid>
+              <Grid>
+                <p className={style.footerLink}>FAQ</p>
+              </Grid>
+              <Grid>
+                <p className={style.footerLink}>Parler à un humain</p>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid className={style.footerSocialSection}>
+            <Grid>
+              <FacebookIcon/>
+            </Grid>
+            <Grid>
+              <InstagramIcon/>
+            </Grid>
+            <Grid>
+              <LinkedInIcon/>
+            </Grid>
+            <Grid>
+              <TwitterIcon/>
+            </Grid>
+          </Grid>
+          <Grid className={style.footerDividerContainer}>
+            <Divider className={style.footerDivider}/>
+          </Grid>
+          <Grid className={style.footerBrandContainer}>
+            <Grid className={style.footerBrandStyle}>
+              <Grid>
+                <p className={style.footerText}>© 2020 MY ALFRED Corporation. Tous droits réservés</p>
+              </Grid>
+              <Grid className={style.footerRgpdButtons}>
+                <Grid>
+                  <p className={style.footerLink}>Sécurité</p>
+                </Grid>
+                <Grid>
+                  <p className={style.footerLink}>Informations légales</p>
+                </Grid>
+                <Grid>
+                  <p className={style.footerLink}>Confidentialié</p>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>

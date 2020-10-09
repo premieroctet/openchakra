@@ -527,4 +527,5 @@ export default theme => ({
   schedule_containerToolbar:{
     alignItems: 'center',
   }
+
 })

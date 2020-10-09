@@ -21,6 +21,7 @@ import NeedHelp from "../components/NeedHelp/NeedHelp";
 import SearchByHashtag from "../components/SearchByHashtag/SearchByHashtag";
 import CardServiceInfo from "../components/Card/CardServiceInfo/CardServiceInfo";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Layout from "../hoc/Layout/Layout";
 
 moment.locale('fr');
 
@@ -371,12 +372,7 @@ class SearchPage extends React.Component {
 
     return (
       <Grid>
-        <Grid className={classes.searchNavbarComponentPosition}>
-          <InfoBar style={classes} />
-        </Grid>
-        <Grid>
-          <NavBar style={classes} user={user} selectedAddress={selectedAddress} logged={logged}/>
-        </Grid>
+       <Layout user={user} selectedAddress={selectedAddress}>
         <Grid className={classes.searchMenuScrollMenuContainer}>
           <Grid className={classes.searchScrollmenuContainer}>
             <ScrollMenu style={classes} categories={categories} gps={gps} indexCat={indexCat}/>
@@ -488,11 +484,12 @@ class SearchPage extends React.Component {
             <NeedHelp style={classes}/>
           </Grid>
         </Grid>
-        <Grid className={classes.mainContainerStyleFooter}>
+         {/*<Grid className={classes.mainContainerStyleFooter}>
           <Grid className={classes.generalWidthFooter}>
             <Footer style={classes}/>
           </Grid>
-        </Grid>
+        </Grid>*/}
+       </Layout>
       </Grid>
     );
   }

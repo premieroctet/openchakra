@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import Layout from '../hoc/Layout/Layout';
-import styles from './userServicePreview/userServicePreviewStyle';
+import styles from '../static/css/userServicePreviewPage/userServicePreviewStyle';
 import Grid from '@material-ui/core/Grid';
 import Router from 'next/router';
 import axios from 'axios';
@@ -153,6 +153,10 @@ class UserServicesPreview extends React.Component {
   }
 
   componentDidMount() {
+    const token = cookie.load('token');
+    if (token) {
+      this.setState({logged: true});
+    }
     let bookingObj = JSON.parse(localStorage.getItem('bookingObj'));
 
     const id = this.props.service_id;
@@ -635,7 +639,7 @@ class UserServicesPreview extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {date, time, location, serviceUser, shop, service, equipments, alfred, errors, isChecked} = this.state;
+    const {date, time, location, serviceUser, shop, service, equipments, alfred, errors, isChecked, user} = this.state;
 
     const filters = this.extractFilters();
 
@@ -877,7 +881,7 @@ class UserServicesPreview extends React.Component {
           <meta property="og:url" content="https://my-alfred.io"/>
         </Helmet>
         <Grid>
-          <Layout style={classes} >
+          <Layout user={user}>
             <Information
               open={this.state.warningPerimeter}
               onClose={() => this.setState({warningPerimeter: false})}
