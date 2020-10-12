@@ -1,24 +1,28 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 
+
 class InfoWithPics extends React.Component{
   constructor(props) {
     super(props);
   }
 
   render() {
-    const{style, data} = this.props;
+    const{data} = this.props;
+
     return(
       <Grid>
-        <Grid>
-          <p>my pics</p>
-        </Grid>
-        <Grid>
+        <Grid style={{display: 'flex', alignItems: 'center'}}>
           <Grid>
-            <h4>{data}</h4>
+            {data.IconName}
           </Grid>
           <Grid>
-            <h5>Béatrice a besoin de 24H pour préparer son service</h5>
+            <Grid>
+              <h4>{data.title}</h4>
+            </Grid>
+            <Grid>
+              <p>{data.summary}</p>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

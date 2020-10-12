@@ -14,7 +14,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import UserAvatar from '../components/Avatar/UserAvatar';
-import Skills from '../components/Skills/Skills';
 import Typography from '@material-ui/core/Typography';
 import Schedule from '../components/Schedule/Schedule';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -41,6 +40,9 @@ import cookie from 'react-cookies';
 import Information from '../components/Information/Information';
 import WithTopic from "../hoc/Topic/Topic";
 import ListAlfredConditions from "../components/ListAlfredConditions/ListAlfredConditions";
+import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
 const isEmpty = require('../server/validation/is-empty');
 const {computeBookingReference} = require('../utils/functions');
@@ -55,6 +57,7 @@ const {frenchFormat} = require('../utils/text');
 const I18N = require('../utils/i18n');
 
 const DescriptionTopic = WithTopic(ListAlfredConditions);
+const ScheduleTopic = WithTopic(Schedule);
 
 
 const IOSSwitch = withStyles(theme => ({
@@ -902,7 +905,7 @@ class UserServicesPreview extends React.Component {
                         {
                           serviceAddress ?
                             <Grid>
-                              <Typography>{serviceAddress.city}, {serviceAddress.country} - {serviceAddress.address + ' ' +serviceAddress.zip_code}</Typography>
+                              <Typography>{serviceAddress.city}, {serviceAddress.country} - {serviceUser.perimeter}km autour de {serviceAddress.city}</Typography>
                             </Grid> : null
 
                         }
@@ -931,63 +934,45 @@ class UserServicesPreview extends React.Component {
                   </Grid>
                   <Grid>
                     <DescriptionTopic
-                      title={'Description'}
-                      summary={serviceUser.description ? serviceUser.description : 'Cet utilisateur n\'a pas encore de description.'}
+                      titleTopic={'Description'}
+                      titleSummary={serviceUser.description ? serviceUser.description : 'Cet utilisateur n\'a pas encore de description.'}
                       wrapperComponentProps={
-                        [{title: 'Délai de prévenance', summary: `${alfred.firstname}`}, 'Conditions d\'annulation', 'Panier minimum']
+                        [
+                          {
+                            title: alfred.firstname ? 'Délai de prévenance' : '',
+                            summary: alfred.firstname ? `${alfred.firstname} a besoin de ${this.formatDeadline(serviceUser.deadline_before_booking)} pour préparer son service` : '',
+                            IconName: alfred.firstname ? <InsertEmoticonIcon fontSize="large"/> : ''
+                          },
+                          {
+                            title:  alfred.firstname ? 'Conditions d’annulation' : '',
+                            summary: alfred.firstname ? `${alfred.firstname} vous permet d’annuler votre réservation jusqu’à ${this.state.flexible ? '1 jour' : this.state.moderate ? '5 jours' : '10 jours'} avant la date prévue` : '',
+                            IconName:  alfred.firstname ? <CalendarTodayIcon fontSize="large"/> : ''
+                          },
+                          {
+                            title:  alfred.firstname ? 'Panier minimum' : '',
+                            summary: alfred.firstname ? `Le panier minimum de ${alfred.firstname} est de ${serviceUser.minimum_basket}€` : '',
+                            IconName:  alfred.firstname ? <ShoppingCartIcon fontSize="large"/> : ''
+                          },
+                          ]
                       }
 
                     />
                   </Grid>
-                  <Grid className={classes.responsiveListContainer}>
-                    <List dense={this.state.dense} className={classes.flexPosition}>
-                      <Grid className={classes.itemListContainer}>
-                        <Grid className={classes.marginRight}>
-                          <ListItem className={classes.noPadding}>
-                            <ListItemIcon className={classes.minWidth}>
-                              <img
-                                src={serviceUser.graduated && serviceUser.graduated !== '' && serviceUser.graduated !== null && serviceUser.graduated !== undefined ? '../../static/assets/img/iconCardAlfred/graduated.svg' : '../../static/assets/img/iconCardAlfred/no_graduated.svg'}
-                                alt={'Diplome'} title={'Diplome'} className={classes.imageStyle}/>
-                            </ListItemIcon>
-                            <ListItemText
-                              classes={{primary: classes.sizeText}}
-                              primary={'Diplômé(e)'}
-                            />
-                          </ListItem>
-                        </Grid>
-                        <Grid className={classes.marginRight}>
-                          <ListItem className={classes.noPadding} style={{marginLeft: 5}}>
-                            <ListItemIcon className={classes.minWidth}>
-                              <img
-                                src={serviceUser.is_certified && serviceUser.is_certified !== '' && serviceUser.is_certified !== null && serviceUser.is_certified !== undefined ? '../../static/assets/img/iconCardAlfred/certificate.svg' : '../../static/assets/img/iconCardAlfred/no_certificate.svg'}
-                                alt={'Certifié'} title={'Certifié'} className={classes.imageStyle}/>
-                            </ListItemIcon>
-                            <ListItemText
-                              classes={{primary: classes.sizeText}}
-                              primary="Certifié(e)"
-                            />
-                          </ListItem>
-                        </Grid>
-                        <Grid>
-                          <ListItem className={classes.noPadding} style={{marginLeft: 5}}>
-                            <ListItemIcon className={classes.minWidth}>
-                              <img
-                                src={serviceUser.level > 0 ? '/static/assets/img/iconCardAlfred/experience.svg' : '/static/assets/img/iconCardAlfred/no_experience.svg'}
-                                alt={'Expérimenté'} title={'Expérimenté'} className={classes.imageStyle}/>
-                            </ListItemIcon>
-                            <ListItemText
-                              classes={{primary: classes.sizeText}}
-                              primary="Expérimenté(e)"
-                            />
-                          </ListItem>
-                        </Grid>
-                      </Grid>
-                    </List>
-                  </Grid>
-                  <Grid style={{marginTop: 30}}>
-                    <Grid className={classes.skillsContentContainer}>
-                      <Skills alfred={alfred} widthHr={500} skills={this.state.skills}/>
-                    </Grid>
+                  <Grid className={classes.scheduleContainer}>
+                    <ScheduleTopic
+                      titleTopic={'Sélectionnez vos dates'}
+                      titleSummary={alfred.firstname ? `Choisissez vos dates selon les disponibilités de ${alfred.firstname}` : ''}
+                      availabilities={this.state.availabilities}
+                      bookings={[]}
+                      services={[]}
+                      selectable={true}
+                      height={400}
+                      nbSchedule={1}
+                      handleSelection={this.scheduleDateChanged}
+                      singleSelection={true}
+                      mode={'week'}
+                      style={classes}
+                    />
                   </Grid>
                   {equipments.length !== 0 ?
                     <Grid className={classes.equipmentsContainer}>
@@ -1018,73 +1003,6 @@ class UserServicesPreview extends React.Component {
                       </Grid>
                     </Grid> : null
                   }
-                  <Grid className={classes.scheduleContainer}>
-                    <Grid className={classes.scheduleContainerTitle}>
-                      <Grid>
-                        <Typography
-                          variant="h6">{frenchFormat(`Les disponibilités de ${alfred.firstname}`)}</Typography>
-                      </Grid>
-                      <Grid className={classes.hrStyle}>
-                        <hr style={{color: 'rgb(80, 80, 80, 0.2)'}}/>
-                      </Grid>
-                    </Grid>
-                    <Grid>
-                      <Schedule availabilities={this.state.availabilities} bookings={[]} services={[]}
-                                selectable={true} height={400} nbSchedule={1} handleSelection={this.scheduleDateChanged}
-                                singleSelection={true} mode={'week'} style={classes}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid className={classes.basketMinimumContainer}>
-                    <Grid>
-                      <Typography variant="h6">Panier minimum de réservation</Typography>
-                    </Grid>
-                    <Grid className={classes.hrStyle}>
-                      <hr style={{color: 'rgb(80, 80, 80, 0.2)'}}/>
-                    </Grid>
-                    <Grid>
-                      <Grid className={classes.textContentBasket}>
-                        <p>Le montant minimum de réservation correspond au panier minimum requis pour réserver ce
-                          service. Si votre Alfred indique un montant de 10€, vous ne pourrez pas réserver ce service si
-                          la somme des prestations n’atteint pas ce montant.</p>
-                      </Grid>
-                    </Grid>
-                    <Grid className={classes.priceBasketContent}>
-                      <Grid>
-                        <img style={{width: 40, height: 40}} title={'shop'} alt={'shop'}
-                             src={'../../static/assets/img/userServicePreview/shop.svg'}/>
-                      </Grid>
-                      <Grid style={{fontSize: 'x-large', marginLeft: 15}}>
-                        {serviceUser.minimum_basket} €
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid className={classes.delayPrevenance}>
-                    <Grid>
-                      <Typography variant="h6">{frenchFormat(`Délai de prévenance de ${alfred.firstname}`)}</Typography>
-                    </Grid>
-                    <Grid className={classes.hrStyle}>
-                      <hr style={{color: 'rgb(80, 80, 80, 0.2)'}}/>
-                    </Grid>
-                    <Grid>
-                      <Grid className={classes.textContentDelay}>
-                        <p>Le délai de prévenance correspond au délai nécessaire entre la réservation et la réalisation
-                          du service. Par exemple, si votre Alfred impose un délai de 24 heures, vous pourrez réserver
-                          votre service au minimum 24 heures avant son intervention. </p>
-                      </Grid>
-                    </Grid>
-                    <Grid className={classes.delayPrevenanceContent}>
-                      <Grid>
-                        <img style={{width: 40, height: 40}} title={'prevenance'} alt={'prevenance'}
-                             src={'../../static/assets/img/userServicePreview/prevenance.svg'}/>
-                      </Grid>
-                      <Grid style={{fontSize: 'x-large', marginLeft: 15}}>
-                        {
-                          this.formatDeadline(serviceUser.deadline_before_booking)
-                        }
-                      </Grid>
-                    </Grid>
-                  </Grid>
                   <Grid className={classes.perimeterContent}>
                     <Grid>
                       <Typography
@@ -1094,20 +1012,6 @@ class UserServicesPreview extends React.Component {
                       <hr style={{color: 'rgb(80, 80, 80, 0.2)'}}/>
                     </Grid>
                     <Grid>
-                      <Grid className={classes.textContentPerimeter}>
-                        <p>Le périmètre d’intervention de votre Alfred est la zone dans laquelle votre Alfred accepte de
-                          se déplacer pour réaliser ses services. Par mesure de sécurité et conformément à notre
-                          politique de confidentialité, l’adresse de votre Alfred n’est pas communiquée. </p>
-                      </Grid>
-                      <Grid style={{display: 'flex', alignItems: 'center', marginBottom: 20}}>
-                        <Grid>
-                          <img style={{width: 40, height: 40}} title={'adresse'} alt={'adresse'}
-                               src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
-                        </Grid>
-                        <Grid style={{fontSize: 'x-large', marginLeft: 15}}>
-                          {serviceUser.perimeter} km
-                        </Grid>
-                      </Grid>
                       <Grid style={{width: '100%', height: 300}}>
                         {serviceUser && serviceUser.service_address ?
                           <MapComponent
@@ -1116,80 +1020,6 @@ class UserServicesPreview extends React.Component {
                           :
                           <p>Emplacement de l'Alfred</p>
                         }
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid className={classes.bookingConditionContent}>
-                    <Grid className={classes.bookingConditionContentTitle}>
-                      <Typography
-                        variant="h6">{frenchFormat(`Les conditions d’annulation de ${alfred.firstname}`)}</Typography>
-                    </Grid>
-                    <Grid className={classes.hrStyle}>
-                      <hr style={{color: 'rgb(80, 80, 80, 0.2)'}}/>
-                    </Grid>
-                    <Grid className={classes.listContent}>
-                      <Grid className={classes.listStyle}>
-                        <Grid>
-                          <Checkbox
-                            disabled={true}
-                            checked={this.state.flexible}
-                            value={this.state.flexible}
-                            color="primary"
-                            name={'strict_cancel'}
-                            inputProps={{
-                              'aria-label': 'secondary checkbox',
-                            }}
-                            icon={<CircleUnchecked/>}
-                            checkedIcon={<RadioButtonCheckedIcon/>}
-                          />
-                        </Grid>
-                        <Grid>
-                          <p>
-                            Flexibles - Remboursement intégral jusqu’à un jour avant la prestation
-                          </p>
-                        </Grid>
-                      </Grid>
-                      <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
-                        <Grid>
-                          <Checkbox
-                            disabled={true}
-                            checked={this.state.moderate}
-                            value={this.state.moderate}
-                            color="primary"
-                            name={'strict_cancel'}
-                            inputProps={{
-                              'aria-label': 'secondary checkbox',
-                            }}
-                            icon={<CircleUnchecked/>}
-                            checkedIcon={<RadioButtonCheckedIcon/>}
-                          />
-                        </Grid>
-                        <Grid>
-                          <p>
-                            Modérées - Remboursement intégral jusqu’à 5 jours avant la prestation
-                          </p>
-                        </Grid>
-                      </Grid>
-                      <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
-                        <Grid>
-                          <Checkbox
-                            disabled={true}
-                            checked={this.state.strict}
-                            value={this.state.strict}
-                            color="primary"
-                            name={'strict_cancel'}
-                            inputProps={{
-                              'aria-label': 'secondary checkbox',
-                            }}
-                            icon={<CircleUnchecked/>}
-                            checkedIcon={<RadioButtonCheckedIcon/>}
-                          />
-                        </Grid>
-                        <Grid>
-                          <p>
-                            Strictes - Remboursement intégral jusqu’à 10 jours avant la prestation
-                          </p>
-                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>

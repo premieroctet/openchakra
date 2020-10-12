@@ -8,15 +8,15 @@ function WithTopic(WrappedComponent) {
     }
 
     render() {
-      const{title, summary, style} = this.props;
+      const{titleTopic, titleSummary, style} = this.props;
 
       return(
         <Grid>
           <Grid>
-            <h3>{title}</h3>
+            <h3>{titleTopic}</h3>
           </Grid>
           <Grid>
-            <h4>{summary}</h4>
+            <p>{titleSummary}</p>
           </Grid>
           <Grid>
             <WrappedComponent {...this.props}/>

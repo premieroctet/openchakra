@@ -8,12 +8,11 @@ export default class ListAlfredConditions extends React.Component{
 
   }
   render() {
-    const {style} = this.props;
     return(
       <Grid>
         {
-          this.props.wrapperComponentProps.map(res => (
-            <InfoWithPics {...this.props} data={res}/>
+          Object.keys(this.props.wrapperComponentProps).map(res => (
+            <InfoWithPics {...this.props} data={this.props.wrapperComponentProps[res]}/>
           ))
         }
       </Grid>
