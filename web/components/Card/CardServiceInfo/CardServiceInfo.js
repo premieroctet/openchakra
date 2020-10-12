@@ -17,7 +17,7 @@ export default class CardServiceInfo extends React.Component{
               <h2 className={style.cardServiceInfoTitle}>Besoin d'aide ?</h2>
             </Grid>
             <Grid>
-              <p className={style.cardServiceInfoText}>Utiliser notre chat en direct !</p>
+              <p className={style.cardServiceInfoText}>Utilisez notre chat en direct !</p>
             </Grid>
           </Grid>
         </Paper>

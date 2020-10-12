@@ -19,6 +19,10 @@ import SearchByHashtag from "../components/SearchByHashtag/SearchByHashtag";
 import CardServiceInfo from "../components/Card/CardServiceInfo/CardServiceInfo";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Layout from "../hoc/Layout/Layout";
+import withSlide from '../hoc/Slide/SlideShow'
+import withGrid from '../hoc/Grid/GridCard'
+
+const SearchResults=withSlide(withGrid(CardService))
 
 moment.locale('fr');
 
@@ -447,15 +451,6 @@ class SearchPage extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          {/*{
-            categories.map(cat => (
-              this.hasMoreToDisplay(serviceUsers, cat) ?
-                <Grid>
-                  <Pagination style={classes} data={serviceUsers}/>
-                </Grid>
-            : null
-            ))
-          }*/}
         </Grid>
         <Grid className={classes.filterMenuDivierContainer}>
           <Divider className={classes.filterMenuDividerStyle}/>
