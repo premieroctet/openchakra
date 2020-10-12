@@ -3,9 +3,10 @@ import Grid from "@material-ui/core/Grid";
 import StarIcon from "@material-ui/icons/Star";
 import Button from "@material-ui/core/Button";
 import withSlide from '../../../hoc/Slide/SlideShow';
+import withGrid from '../../../hoc/Grid/GridCard'
 import CardPreview from "../../Card/CardPreview/CardPreview";
 
-const AlfredSlide=withSlide(CardPreview)
+const AlfredSlide=withSlide(withGrid(CardPreview))
 
 class OurAlfred extends React.Component{
   constructor(props) {
@@ -34,7 +35,7 @@ class OurAlfred extends React.Component{
           </Grid>
         </Grid>
         <Grid className={style.categorySlideShowContainer}>
-          <AlfredSlide style={style} data={alfred} length={3}/>
+          <AlfredSlide style={style} data={alfred} columns={3} rows={1}/>
         </Grid>
       </Grid>
 
