@@ -6,7 +6,6 @@ import styles from '../static/css/userServicePreviewPage/userServicePreviewStyle
 import Grid from '@material-ui/core/Grid';
 import Router from 'next/router';
 import axios from 'axios';
-import BannerReservation from '../components/BannerReservation/BannerReservation';
 import Badge from '@material-ui/core/Badge';
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
@@ -22,7 +21,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import TextField from '@material-ui/core/TextField';
-const { Accordion, AccordionSummary, AccordionDetails }=require('@material-ui/core')
+const { Accordion, AccordionSummary, AccordionDetails }=require('@material-ui/core');
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ButtonSwitch from '../components/ButtonSwitch/ButtonSwitch';
 import Button from '@material-ui/core/Button';
@@ -40,6 +39,8 @@ import {Helmet} from 'react-helmet';
 import Link from 'next/link';
 import cookie from 'react-cookies';
 import Information from '../components/Information/Information';
+import WithTopic from "../hoc/Topic/Topic";
+import ListAlfredConditions from "../components/ListAlfredConditions/ListAlfredConditions";
 
 const isEmpty = require('../server/validation/is-empty');
 const {computeBookingReference} = require('../utils/functions');
@@ -52,6 +53,8 @@ moment.locale('fr');
 registerLocale('fr', fr);
 const {frenchFormat} = require('../utils/text');
 const I18N = require('../utils/i18n');
+
+const DescriptionTopic = WithTopic(ListAlfredConditions);
 
 
 const IOSSwitch = withStyles(theme => ({
@@ -252,7 +255,7 @@ class UserServicesPreview extends React.Component {
   setDefaultLocation = () => {
     const serviceUser = this.state.serviceUser;
     const user = this.state.user;
-    var location = serviceUser.location.client && (!user || this.isInPerimeter()) ? 'client' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
+    let location = serviceUser.location.client && (!user || this.isInPerimeter()) ? 'client' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
     if (location == null && user) {
       this.setState({warningPerimeter: true});
     }
@@ -637,17 +640,13 @@ class UserServicesPreview extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {date, time, location, serviceUser, shop, service, equipments, alfred, errors, isChecked, user} = this.state;
+    const {date, time, location, serviceUser, service, equipments, alfred, errors, isChecked, user} = this.state;
+
+    const serviceAddress = serviceUser.service_address;
 
     const filters = this.extractFilters();
 
     const pricedPrestations = this.computePricedPrestations();
-
-    const StyledRating = withStyles({
-      iconFilled: {
-        color: '#4fbdd7',
-      },
-    })(Rating);
 
     const drawer = side => (
       <Grid className={classes.borderContentRight}>
@@ -869,7 +868,7 @@ class UserServicesPreview extends React.Component {
     );
 
     return (
-      <>
+      <React.Fragment>
         <Helmet>
           <meta property="og:image" content={`/${service.picture}`}/>
           <meta property="og:image:secure_url" content={`/${service.picture}`}/>
@@ -887,24 +886,28 @@ class UserServicesPreview extends React.Component {
               text={I18N.OUTSIDE_PERIMETER}
             />
             <Grid style={{width: '100%'}}>
-              <BannerReservation serviceUser={service} shop={shop} user={alfred} style={classes}/>
               <Grid className={classes.mainContainer}>
                 <Grid className={classes.leftContainer}>
                   <Grid className={classes.avatarAnDescription}>
+                    <Grid className={classes.avatarContainer}>
+                      <Grid item className={classes.itemAvatar}>
+                        <UserAvatar classes={'avatarLetter'} user={alfred} className={classes.avatarLetter}/>
+                      </Grid>
+                    </Grid>
                     <Grid className={classes.flexContentAvatarAndDescription}>
                       <Grid className={classes.marginAvatarAndDescriptionContent}>
                         <Grid>
-                          <Typography variant="h6">{service.label} par {alfred.firstname}</Typography>
+                          <Typography variant="h6">{alfred.firstname} - {service.label}</Typography>
                         </Grid>
+                        {
+                          serviceAddress ?
+                            <Grid>
+                              <Typography>{serviceAddress.city}, {serviceAddress.country} - {serviceAddress.address + ' ' +serviceAddress.zip_code}</Typography>
+                            </Grid> : null
+
+                        }
                       </Grid>
                       <Grid style={{display: 'flex', alignItems: 'center'}}>
-                        <Grid>
-                          <Box component="fieldset" mb={3} borderColor="transparent" className={classes.boxRating}>
-                            <Badge badgeContent={alfred.score} color={'primary'} classes={{badge: classes.badge}}>
-                              <StyledRating name="read-only" value={alfred.score} readOnly className={classes.rating}/>
-                            </Badge>
-                          </Box>
-                        </Grid>
                         {
                           alfred.score < 0 ?
                             <Grid>
@@ -912,44 +915,29 @@ class UserServicesPreview extends React.Component {
                             </Grid> : null
                         }
                       </Grid>
-                      <Grid className={classes.middleHr}>
-                        <Grid>
-                          <hr style={{color: 'rgb(80, 80, 80, 0.2)'}}/>
-                        </Grid>
-                      </Grid>
                       <Grid>
                         <Grid>
-                          {
-                            serviceUser.description !== '' ? <p>{serviceUser.description}</p> :
-                              <p>Cet utilisateur n'a pas encore de description.</p>
-                          }
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid className={classes.avatarContainer}>
-                      <Grid item className={classes.itemAvatar}>
-                        <UserAvatar classes={'avatarLetter'} user={alfred} className={classes.avatarLetter}/>
-                        <Typography style={{marginTop: 20}}
-                                    className={classes.textAvatar}>{alfred.firstname}</Typography>
-                        <Grid style={{textAlign: 'center'}}>
                           <Link
                             href={{
                               pathname: '/viewProfile',
                               query: {id: this.state.alfred._id},
                             }}
                           >
-                            <Typography
-                              style={{
-                                color: 'rgb(47, 188, 211)',
-                                cursor: 'pointer',
-                              }}
-                            >
-                              Voir le profil
-                            </Typography>
+                            <Button variant={'outlined'} className={classes.userServicePreviewButtonProfil}>Voir le profil</Button>
                           </Link>
                         </Grid>
                       </Grid>
                     </Grid>
+                  </Grid>
+                  <Grid>
+                    <DescriptionTopic
+                      title={'Description'}
+                      summary={serviceUser.description ? serviceUser.description : 'Cet utilisateur n\'a pas encore de description.'}
+                      wrapperComponentProps={
+                        [{title: 'Délai de prévenance', summary: `${alfred.firstname}`}, 'Conditions d\'annulation', 'Panier minimum']
+                      }
+
+                    />
                   </Grid>
                   <Grid className={classes.responsiveListContainer}>
                     <List dense={this.state.dense} className={classes.flexPosition}>
@@ -1212,10 +1200,10 @@ class UserServicesPreview extends React.Component {
                     <Grid className={classes.hrStyle}>
                       <hr style={{color: 'rgb(80, 80, 80, 0.2)'}}/>
                     </Grid>
-                    <Grid>
+                    {/*<Grid>
                       <Commentary alfred_mode={true} user_id={alfred._id} service_id={this.props.service_id}
                                   key={moment()}/>
-                    </Grid>
+                    </Grid>*/}
                   </Grid>
                   <Hidden mdUp implementation="css">
                     <Grid className={classes.showReservation}>
@@ -1248,7 +1236,7 @@ class UserServicesPreview extends React.Component {
             </Grid>
           </Layout>
         </Grid>
-      </>
+      </React.Fragment>
     );
   }
 }
