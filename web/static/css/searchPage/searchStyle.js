@@ -66,10 +66,7 @@ export default theme => ({
   searchFilterMenuContent:{
     width: '80%'
   },
-  scrollMenuRoot:{
-    flexGrow: 1,
-    backgroundColor: 'white',
-  },
+
 
 
   filterMenuDivierContainer:{
@@ -81,9 +78,7 @@ export default theme => ({
     height: 1,
     width: '100%'
   },
-  scrollMenuTab:{
-    textTransform: 'initial'
-  },
+
   filterMenuTitleContainer:{
     marginTop: '5%',
     textAlign: 'center'
@@ -93,15 +88,7 @@ export default theme => ({
     display: 'flex',
 
   },
-  searchMenuScrollMenuContainer:{
-    marginTop: '1%',
-    display: 'flex',
-    justifyContent: 'center',
-    width: '100%'
-  },
-  searchScrollmenuContainer:{
-    width: '90%'
-  },
+
   searchMainConainer:{
     marginTop: '2%'
   },
@@ -224,9 +211,7 @@ export default theme => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
-  scrollMenuIndicator:{
-    backgroundColor: theme.palette.yellow.main
-  },
+
   searchFilterRightContainer:{
     display: 'flex',
     alignItems: 'center',

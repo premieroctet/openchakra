@@ -59,8 +59,7 @@ export default theme => ({
     boxShadow: 'rgba(0, 0, 0, 0.15) 0px 16px 32px, rgba(0, 0, 0, 0.1) 0px 3px 8px'
   },
   navbarRootTextField: {
-    marginLeft: 20,
-    flex: 1,
+    width: '100%',
     fontFamily: theme.typography.text.fontFamily,
     fontSize: theme.typography.placeHolder.fontSize,
     fontWeight:  theme.typography.placeHolder.fontWeight,
@@ -76,6 +75,9 @@ export default theme => ({
     },
     '& .MuiInputBase-input::placeholder':{
       opacity: '0.5'
+    },
+    '& div':{
+      width:'100%'
     }
   },
   navbarInput:{
@@ -493,7 +495,7 @@ export default theme => ({
   },
   categoryCardMedia:{
     height: '20vh',
-    width: '10vw',
+    width: '90%',
     borderRadius: 50
   },
   categorySlideShowContainer:{
@@ -593,6 +595,7 @@ export default theme => ({
   },
   navbarAlgoliaContent:{
     flex:1,
+    marginLeft: 20,
     '& .ap-input-icon':{
       display: 'none',
     }

@@ -271,4 +271,26 @@ export default theme => ({
   footerText:{
     fontFamily: theme.typography.text.fontFamily
   },
+
+  /**FilterMenu**/
+
+  scrollMenuRoot:{
+    flexGrow: 1,
+    backgroundColor: 'white',
+  },
+  scrollMenuIndicator:{
+    backgroundColor: theme.palette.yellow.main
+  },
+  scrollMenuTab:{
+    textTransform: 'initial'
+  },
+  searchMenuScrollMenuContainer:{
+    marginTop: '1%',
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%'
+  },
+  searchScrollmenuContainer:{
+    width: '90%'
+  },
 })

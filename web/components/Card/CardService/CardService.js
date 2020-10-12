@@ -96,16 +96,16 @@ class CardService extends React.Component{
                   <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: style.cardPreviewRatingBox}}>
                     <Rating
                       name="simple-controlled"
-                      value={1}
+                      value={notes.global}
                       max={1}
                       readOnly
                     />
                     <Grid className={style.cardServiceBoxRatingDisplay}>
                       <Grid className={style.cardServiceRating}>
-                        <p className={style.cardServiceLabelService}>3.5</p>
+                        <p className={style.cardServiceLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</p>
                       </Grid>
                       <Grid>
-                        <p className={style.cardServiceLabelService}>(60)</p>
+                        <p className={style.cardServiceLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</p>
                       </Grid>
                     </Grid>
                   </Box>

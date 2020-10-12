@@ -88,6 +88,8 @@ export default theme => ({
     display: 'flex',
     flexDirection: 'column',
     marginLeft: 100,
+    position: 'sticky',
+    top: 0
   },
   avatarContainer: {
     width: '20%',
@@ -338,6 +340,13 @@ export default theme => ({
     height: 30,
     boxShadow: '1px 1px 1px 1px gainsboro',
   },
+  userServicePreviewButtonProfil:{
+    fontWeight: theme.typography.blackButton.fontWeight,
+    fontFamily: theme.typography.blackButton.fontFamily,
+    borderRadius: theme.border.blackButton.borderRadius,
+    textTransform: 'none',
+    padding: '6px 24px'
+  },
 
   /***Schedule**/
 
@@ -526,6 +535,39 @@ export default theme => ({
   },
   schedule_containerToolbar:{
     alignItems: 'center',
-  }
+  },
+
+
+  /**BannerReservation**/
+  bannerContainer: {
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+  },
+  darkOverlay: {
+    height: 350,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+  },
+  statusMedia: {
+    position: 'absolute',
+    top: '10%',
+    right: '5%',
+  },
+  chipStyle: {
+    backgroundColor: '#f87280',
+    color: 'white',
+    fontWeight: 'bold',
+    border: '2px solid white',
+  },
+  margin: {
+    height: 'auto',
+  },
 
 })
