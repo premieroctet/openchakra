@@ -11,14 +11,14 @@ function WithTopic(WrappedComponent) {
       const{titleTopic, titleSummary, style} = this.props;
 
       return(
-        <Grid>
+        <Grid style={{height: '100%'}}>
           <Grid>
             <h3>{titleTopic}</h3>
           </Grid>
           <Grid>
             <p>{titleSummary}</p>
           </Grid>
-          <Grid>
+          <Grid style={{height: '100%'}}>
             <WrappedComponent {...this.props}/>
           </Grid>
         </Grid>

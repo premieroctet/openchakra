@@ -9,7 +9,7 @@ class InfoWithPics extends React.Component{
 
   render() {
     const{data} = this.props;
-    
+
     return(
       <Grid>
         <Grid style={{display: 'flex', alignItems: 'center'}}>

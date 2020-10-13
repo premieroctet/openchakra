@@ -43,6 +43,7 @@ import ListAlfredConditions from "../components/ListAlfredConditions/ListAlfredC
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import GallerySlidePics from "../components/GallerySlidePics/GallerySlidePics";
 
 const isEmpty = require('../server/validation/is-empty');
 const {computeBookingReference} = require('../utils/functions');
@@ -59,6 +60,9 @@ const I18N = require('../utils/i18n');
 const DescriptionTopic = WithTopic(ListAlfredConditions);
 const ScheduleTopic = WithTopic(Schedule);
 const EquipementTopic = WithTopic(ListAlfredConditions);
+const MapTopic = WithTopic(MapComponent);
+const PhotoTopic = WithTopic(GallerySlidePics);
+const CommentaryTopic = WithTopic(Commentary);
 
 
 const IOSSwitch = withStyles(theme => ({
@@ -981,41 +985,21 @@ class UserServicesPreview extends React.Component {
                         titleTopic={'Matériel'}
                         titleSummary={alfred.firstname ? `Le matériel de ${alfred.firstname}` : ''}
                         wrapperComponentProps={equipments}
-                        image={true}
                       />
                     </Grid> : null
                   }
                   <Grid className={classes.perimeterContent}>
-                    <Grid>
-                      <Typography
-                        variant="h6">{frenchFormat(`Périmètre d'intervention de ${alfred.firstname}`)}</Typography>
-                    </Grid>
-                    <Grid className={classes.hrStyle}>
-                      <hr style={{color: 'rgb(80, 80, 80, 0.2)'}}/>
-                    </Grid>
-                    <Grid>
-                      <Grid style={{width: '100%', height: 300}}>
-                        {serviceUser && serviceUser.service_address ?
-                          <MapComponent
+                    {
+                      serviceUser && serviceUser.service_address ?
+                        <Grid style={{width: '100%', height: 300}}>
+                          <MapTopic
+                            titleTopic={'Lieu de la prestation'}
+                            titleSummary={alfred.firstname ? `La zone dans laquelle ${alfred.firstname} peut intervenir` : ''}
                             position={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]}
-                            perimeter={serviceUser.perimeter * 1000} alfred={alfred.firstname}/>
-                          :
-                          <p>Emplacement de l'Alfred</p>
-                        }
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid className={classes.commentaryContent}>
-                    <Grid className={classes.bookingConditionContentTitle}>
-                      <Typography variant="h6">{frenchFormat(`Les évaluations de ${alfred.firstname}`)}</Typography>
-                    </Grid>
-                    <Grid className={classes.hrStyle}>
-                      <hr style={{color: 'rgb(80, 80, 80, 0.2)'}}/>
-                    </Grid>
-                    {/*<Grid>
-                      <Commentary alfred_mode={true} user_id={alfred._id} service_id={this.props.service_id}
-                                  key={moment()}/>
-                    </Grid>*/}
+                            perimeter={serviceUser.perimeter * 1000}
+                          />
+                        </Grid> : ''
+                    }
                   </Grid>
                   <Hidden mdUp implementation="css">
                     <Grid className={classes.showReservation}>
@@ -1044,6 +1028,24 @@ class UserServicesPreview extends React.Component {
                     {drawer()}
                   </Grid>
                 </Hidden>
+
+              </Grid>
+              <Grid className={classes.userServicePreviewLargeContainer}>
+                <Grid>
+                  <PhotoTopic
+                    titleTopic={alfred.firstname ? `Les photos de ${alfred.firstname}` : ''}
+                    titleSummary={alfred.firstname ? `Un aperçu du travail de ${alfred.firstname}` : ''}
+                  />
+                </Grid>
+                <Grid>
+                  <CommentaryTopic
+                    titleTopic={'Commentaires'}
+                    titleSummary={alfred.firstname ? `Ici, vous pouvez laisser des commentaires à ${alfred.firstname} !` : ''}
+                    alfred_mode={true}
+                    user_id={alfred._id}
+                    service_id={this.props.service_id}
+                  />
+                </Grid>
               </Grid>
             </Grid>
           </Layout>

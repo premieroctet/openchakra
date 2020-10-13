@@ -348,6 +348,11 @@ export default theme => ({
     padding: '6px 24px'
   },
 
+  userServicePreviewLargeContainer:{
+    marginLeft: 200,
+    marginRight: 200,
+  },
+
   /***Schedule**/
 
   schedule_scheduleMainStyle: {
