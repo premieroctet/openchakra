@@ -11,7 +11,31 @@ const {computeDistanceKm} = require('../../../utils/functions');
 import RoomIcon from '@material-ui/icons/Room';
 import Chip from "@material-ui/core/Chip";
 import Avatar from "@material-ui/core/Avatar";
-import CardServiceInfo from "../CardServiceInfo/CardServiceInfo";
+
+class CardServiceInfo extends React.Component{
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    const{style} = this.props;
+
+    return (
+      <Grid>
+        <Paper elevation={1} className={style.cardServiceInfoPaper}>
+          <Grid className={style.cardServiceInfoContent}>
+            <Grid>
+              <h2 className={style.cardServiceInfoTitle}>Besoin d'aide ?</h2>
+            </Grid>
+            <Grid>
+              <p className={style.cardServiceInfoText}>Utilisez notre chat en direct !</p>
+            </Grid>
+          </Grid>
+        </Paper>
+      </Grid>
+
+    );
+  }
+}
 
 class CardService extends React.Component{
   constructor(props) {
