@@ -310,7 +310,7 @@ class SearchPage extends React.Component {
 
   restrictServices(serviceUsers, category) {
     const nbToDisplay = this.state.catCount[category._id];
-    return serviceUsers.filter(s => s.service && s.service.category && s.service.category._id === category._id).slice(0, nbToDisplay);
+    return serviceUsers
   }
 
   hasMoreToDisplay(serviceUsers, category) {
@@ -439,15 +439,15 @@ class SearchPage extends React.Component {
                     <CircularProgress/>
                   </Grid>
                   :
-                categories.map(cat => (
-                  this.restrictServices(serviceUsers, cat).map((su, index) => {
+                /**categories.map(cat => (
+                  this.restrictServices(serviceUsers, cat).slice(1, 8).map((su, index) => {*/
+                  serviceUsers.slice(1, 8).map( (su, index) => {
                     return (
                       <Grid item xl={3} lg={3} md={3} key={index}>
                         <CardService style={classes} services={su._id} gps={user ? user.billing_address.gps : this.state.gps}/>
                       </Grid>
-                    );
-                  })
-                ))}
+                    )})
+              }
               </Grid>
             </Grid>
           </Grid>
