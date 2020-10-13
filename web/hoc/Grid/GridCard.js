@@ -11,18 +11,18 @@ function withGrid(WrappedComponent) {
     }
 
     render(){
-      const {style, data, columns, rows, start} = this.props
+      const {style, data, columns, rows, page} = this.props
 
       const size=12/columns
       const dataLength=columns*rows
 
       return(
-        <Grid container>
+        <Grid container spacing={2}>
           {data && data.length>0 ?
-            circular_get(Object.keys(data), start, dataLength).map( res => {
+            circular_get(Object.keys(data), page, dataLength).map( (res, idx) => {
               return(
-                <Grid item xl={size} lg={size} md={size} key={res} className={style.categoryCardRoot}>
-                  <WrappedComponent {...this.props} item={data[res]}/>
+                <Grid item xl={size} lg={size} md={size} className={style.categoryCardRoot}>
+                  <WrappedComponent {...this.props} key={page*dataLength+res} item={data[res]} index={idx}/>
                 </Grid>
               )
             })

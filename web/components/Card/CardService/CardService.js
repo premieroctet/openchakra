@@ -11,6 +11,7 @@ const {computeDistanceKm} = require('../../../utils/functions');
 import RoomIcon from '@material-ui/icons/Room';
 import Chip from "@material-ui/core/Chip";
 import Avatar from "@material-ui/core/Avatar";
+import CardServiceInfo from "../CardServiceInfo/CardServiceInfo";
 
 class CardService extends React.Component{
   constructor(props) {
@@ -30,7 +31,7 @@ class CardService extends React.Component{
   }
 
   componentDidMount() {
-    axios.get(`/myAlfred/api/serviceUser/cardPreview/${this.props.services}`)
+    axios.get(`/myAlfred/api/serviceUser/cardPreview/${this.props.item}`)
       .then(res => {
         this.setState({cpData: res.data, alfred: res.data.alfred});
       })
@@ -56,7 +57,7 @@ class CardService extends React.Component{
   }
 
   render() {
-    const {style, userState, isOwner, gps, needAvatar, isAdmin} = this.props;
+    const {style, userState, isOwner, gps, needAvatar, isAdmin, page, index} = this.props;
     const {cpData, alfred} = this.state;
 
     let distance = gps ? computeDistanceKm(gps, cpData.gps) : null;
@@ -64,13 +65,19 @@ class CardService extends React.Component{
 
     const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {};
 
+    const resa_link =  `/userServicePreview?id=${cpData._id}`
+    if (index==0) {
+      return (
+        <CardServiceInfo style={style} />
+      )
+    }
     return(
       <Grid>
-        <Paper elevation={1} className={style.cardServicePaper}>
+        <Paper elevation={1} className={style.cardServicePaper} onClick={() => window.open(resa_link, '_blank')}>
           <Grid className={style.cardServiceMainStyle}>
             <Grid className={style.cardServiceFlexContainer}>
               <Grid className={style.cardServicePicsContainer}>
-                <Grid style={{backgroundImage: 'url("' + cpData.picture + '")'}} className={style.cardServiceBackgroundPics}/>
+                <Grid style={{backgroundImage: 'url("/' + cpData.picture + '")'}} className={style.cardServiceBackgroundPics}/>
               </Grid>
               <Grid className={style.cardServiceChipName}>
                 <Chip label={alfred.firstname} className={style.cardServiceChip} />
@@ -109,13 +116,6 @@ class CardService extends React.Component{
                       </Grid>
                     </Grid>
                   </Box>
-                </Grid>
-                <Grid className={style.cardServiceButtonContainer}>
-                  <Grid>
-                    <a href={'/userServicePreview?id=' + cpData._id} target="_blank">
-                      <Button variant={'contained'} className={style.cardServiceButton}>Voir</Button>
-                    </a>
-                  </Grid>
                 </Grid>
               </Grid>
             </Grid>

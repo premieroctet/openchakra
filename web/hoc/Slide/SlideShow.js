@@ -28,7 +28,7 @@ function withSlide(WrappedComponent) {
             <Grid container className={style.slideShowContainer}>
               <Grid container>
                 <Grid className={style.slideShowSectionContainer}>
-                  <WrappedComponent {...this.props} start={pageIndex}/>
+                  <WrappedComponent {...this.props} page={pageIndex}/>
                 </Grid>
               </Grid>
             </Grid>
