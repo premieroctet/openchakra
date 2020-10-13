@@ -18,16 +18,17 @@ function withSlide(WrappedComponent) {
     }
 
     render(){
-      const{style, type, data, length } = this.props
       const {pageIndex} = this.state
+      const {style} = this.props
 
       return(
         <Grid>
           <Carousel easing="ease" autoPlay={false} onChange={this.onCarouselIndexChange} animation={"slide"} navButtonsAlwaysVisible={true}>
+            { /** TODO importer les styles directement */ }
             <Grid container className={style.slideShowContainer}>
               <Grid container>
                 <Grid className={style.slideShowSectionContainer}>
-                  <WrappedComponent {...this.props} style={style} data={data} start={pageIndex} length={length} />
+                  <WrappedComponent {...this.props} page={pageIndex}/>
                 </Grid>
               </Grid>
             </Grid>

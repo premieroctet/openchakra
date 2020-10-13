@@ -271,16 +271,17 @@ class Register extends React.Component {
           .then(this.onSubmitPhone).catch();
       })
       .catch(err => {
-        let error = Object.values(err.response.data);
+        const errors=err.response.data
+        const errKeys = Object.keys(errors)
         this.setState({errors: err.response.data});
-        if (error.includes('L\'email existe déjà')) {
+        if (errKeys.includes('email')) {
           this.setState({activeStep: 0});
         }
-        if (error.includes('Veuillez saisir une adresse')) {
-          this.setState({cityError: 'Adresse invalide', activeStep: 1});
+        if (errKeys.includes('address')) {
+          this.setState({cityError: errors.address, activeStep: 1});
         }
-        if (error.includes('Date de naissance invalide')) {
-          this.setState({birthdayError: 'Date de naissance invalide', activeStep: 1});
+        if (errKeys.includes('birthday')) {
+          this.setState({birthdayError: errors.birthday, activeStep: 1});
         }
       });
   };

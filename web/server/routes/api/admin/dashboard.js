@@ -31,7 +31,7 @@ const multer = require('multer')
 const path = require('path')
 const {normalizePhone, bufferToString} = require('../../../../utils/text')
 const {counterArray, counterObjects} = require('../../../../utils/converters')
-const parse = require('url-parse')
+const parse = require('csv-parse/lib/sync')
 router.get('/billing/test', (req, res) => res.json({msg: 'Billing admin Works!'}));
 
 // @Route POST /myAlfred/api/admin/billing/all

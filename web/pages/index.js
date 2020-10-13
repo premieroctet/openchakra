@@ -12,7 +12,7 @@ import {withStyles} from '@material-ui/core/styles';
 import styles from '../static/css/homePage/index';
 import NavBar from '../hoc/Layout/NavBar/NavBar';
 import BannerPresentation from '../components/HomePage/BannerPresentation/BannerPresentation';
-import Category from '../components/HomePage/Category/Category';
+import CategoryTopic from '../components/HomePage/Category/CategoryTopic';
 import OurAlfred from "../components/HomePage/OurAlfred/OurAlfred";
 import HowItWorks from "../components/HomePage/HowItWorks/HowItWorks";
 import NewsLetter from "../components/HomePage/NewsLetter/NewsLetter";
@@ -82,7 +82,7 @@ class Home extends React.Component {
           </Grid>
           <Grid container className={classes.mainContainerStyle}>
             <Grid className={classes.generalWidthContainer}>
-              <Category style={classes} category={category}/>
+              <CategoryTopic style={classes} category={category}/>
             </Grid>
           </Grid>
           <Grid container className={classes.howItWorksComponent}>

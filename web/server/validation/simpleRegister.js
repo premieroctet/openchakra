@@ -1,8 +1,6 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
 const moment = require('moment');
-const year = new Date().getFullYear() - 16;
-const currentYear = new Date().getFullYear();
 moment.locale('fr');
 
 module.exports = function validateSimpleRegisterInput(data) {
@@ -73,8 +71,8 @@ module.exports = function validateSimpleRegisterInput(data) {
     errors.country = 'Veuillez choisir un pays';
   }
 
-  if (!moment(data.birthday).isValid() || moment(data.birthday).isAfter(moment().subtract(16, 'year'))) {
-    errors.birthday = 'Date de naissance invalide';
+  if (!moment(data.birthday).isValid() || moment(data.birthday).isAfter(moment().subtract(16, 'years'))) {
+    errors.birthday = 'Date de naissance invalide, vous devez avoir 16 ans au minimum';
   }
 
 

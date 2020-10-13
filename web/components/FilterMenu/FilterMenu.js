@@ -63,7 +63,7 @@ class FilterMenu extends React.Component{
   };
 
   render() {
-    const{style, categories, visibleCategories, mounting, search, searching, serviceUsers} = this.props;
+    const{style, mounting, search, searching, serviceUsers} = this.props;
     const {statusFilterVisible, individualSelected, proSelected, dateFilterVisible, startDate, endDate, focusedInput} = this.state;
 
     const statusFilterBg = this.isStatusFilterSet() ? '#2FBCD3' : 'white';
@@ -82,25 +82,11 @@ class FilterMenu extends React.Component{
 
     return(
       <Grid>
-        {
-          categories ?
-            <Grid className={style.filterMenuTitleContainer}>
-              <Grid>
-                {
-                  categories.map((cat, index) => (
-                    visibleCategories.includes(cat.label) ?
-                      <Grid key={index}>
-                        <h2 className={style.filterMenuTitle}>{ cat.label}</h2>
-                      </Grid> : null
-                  ))
-                }
-                <Grid>
-                  <p className={style.filterMenuDescription}>{resultMessage}</p>
-                </Grid>
-              </Grid>
+          <Grid className={style.filterMenuTitleContainer}>
+            <Grid>
+              <p className={style.filterMenuDescription}>{resultMessage}</p>
             </Grid>
-           : null
-        }
+          </Grid>
           <Grid className={style.filterMenuChipContainer}>
             <Grid className={style.filTerMenuStatusMainStyleFilter}>
               {statusFilterVisible ?

@@ -20,7 +20,7 @@ const ProspectSchema = new Schema({
   },
   title: {
     type: String,
-    required: true,
+    required: false,
   },
   phone: {
     type: String,

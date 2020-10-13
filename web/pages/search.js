@@ -16,9 +16,12 @@ import CardService from "../components/Card/CardService/CardService";
 import ScrollMenu from "../components/ScrollMenu/SrollMenu";
 import NeedHelp from "../components/NeedHelp/NeedHelp";
 import SearchByHashtag from "../components/SearchByHashtag/SearchByHashtag";
-import CardServiceInfo from "../components/Card/CardServiceInfo/CardServiceInfo";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Layout from "../hoc/Layout/Layout";
+import withSlide from '../hoc/Slide/SlideShow'
+import withGrid from '../hoc/Grid/GridCard'
+
+const SearchResults=withSlide(withGrid(CardService))
 
 moment.locale('fr');
 
@@ -46,7 +49,6 @@ class SearchPage extends React.Component {
       focusedInput: null,
       statusFilterVisible: false,
       dateFilterVisible: false,
-      visibleCategories: [],
       catCount: {}, // cat id => # of items to display
       isAdmin: false,
       mounting: true,
@@ -206,15 +208,7 @@ class SearchPage extends React.Component {
   };
 
   setFilteredServiceUsers = serviceUsers => {
-    let visibleCategories = [];
-    this.state.categories.forEach(e => {
-      serviceUsers.forEach(a => {
-        if (a.service.category._id === e._id) {
-          visibleCategories.push(e.label);
-        }
-      });
-    });
-    this.setState({serviceUsersDisplay: serviceUsers, visibleCategories: visibleCategories});
+    this.setState({serviceUsersDisplay: serviceUsers});
   };
 
   onChange = e => {
@@ -281,16 +275,8 @@ class SearchPage extends React.Component {
         let serviceUsers = res.data;
         this.setState({serviceUsers: serviceUsers, serviceUsersDisplay: serviceUsers});
         const categories = this.state.categories;
-        var visibleCategories = [];
-        categories.forEach(e => {
-          serviceUsers.forEach(a => {
-            if (a.service.category._id === e._id) {
-              visibleCategories.push(e.label);
-            }
-          });
-        });
         var proAlfred = this.state.shops.filter(s => s.is_professional).map(s => s.alfred._id);
-        this.setState({visibleCategories: visibleCategories, categories: categories, proAlfred: proAlfred},
+        this.setState({categories: categories, proAlfred: proAlfred},
           () => {
             if (forceFilter) {
               this.filter();
@@ -302,23 +288,6 @@ class SearchPage extends React.Component {
         console.error(err);
         this.setState({searching: false});
       });
-  }
-
-  restrictServices(serviceUsers, category) {
-    const nbToDisplay = this.state.catCount[category._id];
-    return serviceUsers.filter(s => s.service && s.service.category && s.service.category._id === category._id).slice(0, nbToDisplay);
-  }
-
-  hasMoreToDisplay(serviceUsers, category) {
-    const nbToDisplay = this.state.catCount[category._id];
-    const nbTotal = serviceUsers.filter(s => s.service.category._id === category._id).length;
-    return nbTotal > nbToDisplay;
-  }
-
-  increaseCount(category) {
-    var counts = this.state.catCount;
-    counts[category._id] = counts[category._id] + 8;
-    this.setState({catCount: counts});
   }
 
   isStatusFilterSet = () => {
@@ -356,7 +325,6 @@ class SearchPage extends React.Component {
       focusedInput,
       statusFilterVisible,
       dateFilterVisible,
-      visibleCategories,
       catCount,
       filters,
       logged
@@ -377,7 +345,6 @@ class SearchPage extends React.Component {
               style={classes}
               categories={categories}
               gps={gps}
-              visibleCategories={visibleCategories}
               filter={this.filter}
               mounting={mounting}
               search={search}
@@ -426,36 +393,20 @@ class SearchPage extends React.Component {
           <Grid className={classes.searchMainContainerResult}>
             <Grid className={classes.searchContainerDisplayResult}>
               <Grid container spacing={4}>
-                <Grid item xl={3} lg={3} md={3}>
-                  <CardServiceInfo style={classes} />
-                </Grid>
               {
-                categories.length === 0 || searching ?
+                searching ?
                   <Grid className={classes.searchLoadingContainer} item xl={3} lg={3} md={3}>
                     <CircularProgress/>
                   </Grid>
                   :
-                categories.map(cat => (
-                  this.restrictServices(serviceUsers, cat).map((su, index) => {
-                    return (
-                      <Grid item xl={3} lg={3} md={3} key={index}>
-                        <CardService style={classes} services={su._id} gps={user ? user.billing_address.gps : this.state.gps}/>
-                      </Grid>
-                    );
-                  })
-                ))}
+                  <SearchResults columns={4} rows={2} style={classes}
+                    data={serviceUsers.slice(1, 6).map(su=>su._id)}
+                    gps={user ? user.billing_address.gps : this.state.gps}
+                  />
+              }
               </Grid>
             </Grid>
           </Grid>
-          {/*{
-            categories.map(cat => (
-              this.hasMoreToDisplay(serviceUsers, cat) ?
-                <Grid>
-                  <Pagination style={classes} data={serviceUsers}/>
-                </Grid>
-            : null
-            ))
-          }*/}
         </Grid>
         <Grid className={classes.filterMenuDivierContainer}>
           <Divider className={classes.filterMenuDividerStyle}/>

@@ -2,12 +2,13 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import {CATEGORY} from '../../../utils/i18n';
-import withSlide from '../../../hoc/Slide/SlideShow';
+import withSlide from '../../../hoc/Slide/SlideShow'
+import withGrid from '../../../hoc/Grid/GridCard'
 import CategoryCard from "../../Card/CategoryCard/CategoryCard";
 
-const CategorySlide=withSlide(CategoryCard)
+const CategorySlide=withSlide(withGrid(CategoryCard))
 
-class Category extends React.Component{
+class CategoryTopic extends React.Component{
   constructor(props) {
     super(props);
   }
@@ -34,11 +35,11 @@ class Category extends React.Component{
           </Grid>
         </Grid>
         <Grid className={style.categorySlideShowContainer}>
-          <CategorySlide style={style} data={category} length={8}/>
+          <CategorySlide style={style} data={category} columns={4} rows={2}/>
         </Grid>
       </Grid>
     );
   }
 }
 
-export default Category
+export default CategoryTopic

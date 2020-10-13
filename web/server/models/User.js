@@ -5,6 +5,8 @@ const {getMangopayMessage} = require('../../utils/i18n');
 const {hideIllegal} = require('../../utils/text')
 const moment = require('moment')
 
+const maxBirth=new Date(moment().add(-16, 'years'))
+
 const UserSchema = new Schema({
   name: {
     type: String,
@@ -27,7 +29,7 @@ const UserSchema = new Schema({
   },
   birthday: {
     type: Date,
-    max: `${year}-01-01`,
+    max: maxBirth,
     required: true,
   },
   phone: {
