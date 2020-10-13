@@ -1,11 +1,11 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
+import Router from 'next/router';
 import Button from '@material-ui/core/Button';
 import {CATEGORY} from '../../../utils/i18n';
 import withSlide from '../../../hoc/Slide/SlideShow'
 import withGrid from '../../../hoc/Grid/GridCard'
 import CategoryCard from "../../Card/CategoryCard/CategoryCard";
-
 const CategorySlide=withSlide(withGrid(CategoryCard))
 
 class CategoryTopic extends React.Component{
@@ -31,7 +31,9 @@ class CategoryTopic extends React.Component{
             </Grid>
           </Grid>
           <Grid>
-            <Button variant={'outlined'} classes={{root : style.categoryButton}}>{CATEGORY.button}</Button>
+            <Button variant={'outlined'} classes={{root : style.categoryButton}} onClick={() => Router.push('/search?search=1')}>
+              {CATEGORY.button}
+            </Button>
           </Grid>
         </Grid>
         <Grid className={style.categorySlideShowContainer}>

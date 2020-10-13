@@ -1,6 +1,7 @@
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import StarIcon from "@material-ui/icons/Star";
+import Router from 'next/router'
 import Button from "@material-ui/core/Button";
 import withSlide from '../../../hoc/Slide/SlideShow';
 import withGrid from '../../../hoc/Grid/GridCard'
@@ -31,7 +32,7 @@ class OurAlfred extends React.Component{
             </Grid>
           </Grid>
           <Grid>
-            <Button classes={{root: style.ourAlfredButton}}>Tout Découvrir</Button>
+            <Button classes={{root: style.ourAlfredButton}} onClick={() => Router.push('/search?search=1')}>Tout découvrir</Button>
           </Grid>
         </Grid>
         <Grid className={style.categorySlideShowContainer}>
