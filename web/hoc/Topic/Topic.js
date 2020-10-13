@@ -18,9 +18,9 @@ function WithTopic(WrappedComponent) {
           <Grid>
             <p>{titleSummary}</p>
           </Grid>
-          <Grid style={{height: '100%'}}>
+          <div>
             <WrappedComponent {...this.props}/>
-          </Grid>
+          </div>
         </Grid>
       )
     }

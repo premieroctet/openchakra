@@ -33,8 +33,8 @@ class MapComponent extends React.Component {
     circles = circles || [];
     if (Map) {
       return (
-        <Grid id={'map-container'} style={{height: '100%', width: '100%'}}>
-          <Map center={position} zoom={zoom} style={{height: '100%', width: '100%'}}>
+        <Grid id={'map-container'} style={{height: 300}}>
+          <Map center={position} zoom={zoom} style={{height: '100%'}}>
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"

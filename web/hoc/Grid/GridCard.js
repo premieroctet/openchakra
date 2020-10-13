@@ -11,10 +11,10 @@ function withGrid(WrappedComponent) {
     }
 
     render(){
-      const {style, data, columns, rows, page} = this.props
+      const {style, data, columns, rows, page} = this.props;
 
-      const size=12/columns
-      const dataLength=columns*rows
+      const size=12/columns;
+      const dataLength=columns*rows;
 
       return(
         <Grid container spacing={2}>

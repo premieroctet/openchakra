@@ -15,11 +15,11 @@ function withSlide(WrappedComponent) {
     onCarouselIndexChange = (index, active) => {
       console.log(`Index:${index}, active:${active}`)
       this.setState({pageIndex: index})
-    }
+    };
 
     render(){
-      const {pageIndex} = this.state
-      const {style} = this.props
+      const {pageIndex} = this.state;
+      const {style} = this.props;
 
       return(
         <Grid>

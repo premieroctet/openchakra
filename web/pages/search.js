@@ -399,7 +399,7 @@ class SearchPage extends React.Component {
                     <CircularProgress/>
                   </Grid>
                   :
-                  <SearchResults columns={4} rows={2} style={classes}
+                  <SearchResults columns={4} rows={3} style={classes}
                     data={serviceUsers.slice(1, 6).map(su=>su._id)}
                     gps={user ? user.billing_address.gps : this.state.gps}
                   />

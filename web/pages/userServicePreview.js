@@ -991,7 +991,7 @@ class UserServicesPreview extends React.Component {
                   <Grid className={classes.perimeterContent}>
                     {
                       serviceUser && serviceUser.service_address ?
-                        <Grid style={{width: '100%', height: 300}}>
+                        <Grid style={{width: '100%'}}>
                           <MapTopic
                             titleTopic={'Lieu de la prestation'}
                             titleSummary={alfred.firstname ? `La zone dans laquelle ${alfred.firstname} peut intervenir` : ''}
