@@ -2,6 +2,8 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import {BANNER_PRESENTATION} from '../../../utils/i18n';
+import Link from 'next/link';
+
 
 class BannerPresentation extends React.Component{
   constructor(props) {
@@ -21,7 +23,9 @@ class BannerPresentation extends React.Component{
             <h2 className={style.bannerPresentationText}>{BANNER_PRESENTATION.text}</h2>
           </Grid>
           <Grid>
-            <Button variant="contained" classes={{root: style.bannerPresentationButton}}>{BANNER_PRESENTATION.button}</Button>
+            <Link href={'/search'}>
+              <Button variant="contained" classes={{root: style.bannerPresentationButton}}>{BANNER_PRESENTATION.button}</Button>
+            </Link>
           </Grid>
         </Grid>
       </Grid>

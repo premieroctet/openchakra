@@ -58,6 +58,7 @@ const I18N = require('../utils/i18n');
 
 const DescriptionTopic = WithTopic(ListAlfredConditions);
 const ScheduleTopic = WithTopic(Schedule);
+const EquipementTopic = WithTopic(ListAlfredConditions);
 
 
 const IOSSwitch = withStyles(theme => ({
@@ -939,17 +940,17 @@ class UserServicesPreview extends React.Component {
                       wrapperComponentProps={
                         [
                           {
-                            title: alfred.firstname ? 'Délai de prévenance' : '',
+                            label: alfred.firstname ? 'Délai de prévenance' : '',
                             summary: alfred.firstname ? `${alfred.firstname} a besoin de ${this.formatDeadline(serviceUser.deadline_before_booking)} pour préparer son service` : '',
                             IconName: alfred.firstname ? <InsertEmoticonIcon fontSize="large"/> : ''
                           },
                           {
-                            title:  alfred.firstname ? 'Conditions d’annulation' : '',
+                            label:  alfred.firstname ? 'Conditions d’annulation' : '',
                             summary: alfred.firstname ? `${alfred.firstname} vous permet d’annuler votre réservation jusqu’à ${this.state.flexible ? '1 jour' : this.state.moderate ? '5 jours' : '10 jours'} avant la date prévue` : '',
                             IconName:  alfred.firstname ? <CalendarTodayIcon fontSize="large"/> : ''
                           },
                           {
-                            title:  alfred.firstname ? 'Panier minimum' : '',
+                            label:  alfred.firstname ? 'Panier minimum' : '',
                             summary: alfred.firstname ? `Le panier minimum de ${alfred.firstname} est de ${serviceUser.minimum_basket}€` : '',
                             IconName:  alfred.firstname ? <ShoppingCartIcon fontSize="large"/> : ''
                           },
@@ -976,31 +977,12 @@ class UserServicesPreview extends React.Component {
                   </Grid>
                   {equipments.length !== 0 ?
                     <Grid className={classes.equipmentsContainer}>
-                      <Grid>
-                        <Typography variant="h6">{alfred.firstname} fournit :</Typography>
-                      </Grid>
-                      <Grid className={classes.hrStyle}>
-                        <hr style={{color: 'rgb(80, 80, 80, 0.2)'}}/>
-                      </Grid>
-                      <Grid>
-                        <Grid className={classes.textEquipments}>
-                          <p>Dans le cadre de son service, votre Alfred peut fournir du matériel et des produits en
-                            fonction des prestations. Ces produits & matériels sont fournis sans surcoût. </p>
-                        </Grid>
-                      </Grid>
-                      <Grid>
-                        <Grid container spacing={1} style={{marginRight: 10, marginLeft: 10}}>
-                          {equipments.map((result) => {
-                            return (
-                              <Grid key={result.id} item xl={2} lg={3} md={4} sm={4} xs={4}>
-                                <img src={`../../static/equipments/${result.logo.slice(0, -4)}_Selected.svg`}
-                                     height={100} width={100} alt={`${result.name_logo.slice(0, -4)}_Selected.svg`}/>
-                              </Grid>
-                            );
-                          })
-                          }
-                        </Grid>
-                      </Grid>
+                      <EquipementTopic
+                        titleTopic={'Matériel'}
+                        titleSummary={alfred.firstname ? `Le matériel de ${alfred.firstname}` : ''}
+                        wrapperComponentProps={equipments}
+                        image={true}
+                      />
                     </Grid> : null
                   }
                   <Grid className={classes.perimeterContent}>

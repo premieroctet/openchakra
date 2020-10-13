@@ -181,7 +181,7 @@ class NavBar extends Component {
       return(
         <Grid className={style.navbarSearchContainer}>
           <Paper classes={{root: style.navbarSearch}}>
-            <Grid style={{flex: 1}}>
+            <Grid className={style.navbarTextFieldService}>
               <TextField
                 classes={{root: style.navbarRootTextField}}
                 placeholder={SEARCHBAR.what}
