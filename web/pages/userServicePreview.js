@@ -44,6 +44,7 @@ import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import GallerySlidePics from "../components/GallerySlidePics/GallerySlidePics";
+import SummaryCommentary from "../components/SummaryCommentary/SummaryCommentary"
 
 const isEmpty = require('../server/validation/is-empty');
 const {computeBookingReference} = require('../utils/functions');
@@ -62,7 +63,7 @@ const ScheduleTopic = WithTopic(Schedule);
 const EquipementTopic = WithTopic(ListAlfredConditions);
 const MapTopic = WithTopic(MapComponent);
 const PhotoTopic = WithTopic(GallerySlidePics);
-const CommentaryTopic = WithTopic(Commentary);
+const CommentaryTopic = WithTopic(SummaryCommentary);
 
 
 const IOSSwitch = withStyles(theme => ({

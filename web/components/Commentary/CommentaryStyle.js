@@ -96,4 +96,8 @@ export default theme => ({
       justifyContent: 'center',
     },
   },
+
+
+  /** new **/
+
 })

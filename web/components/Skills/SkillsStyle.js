@@ -42,4 +42,13 @@ export default theme => ({
     letterSpacing: -1,
     fontWeight: 'bold',
   },
+  shape: {
+    backgroundColor: theme.palette.primary.main,
+    width: 40,
+    height: 40,
+    borderRadius: '50%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
 })
