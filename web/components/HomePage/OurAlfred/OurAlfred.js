@@ -36,7 +36,7 @@ class OurAlfred extends React.Component{
           </Grid>
         </Grid>
         <Grid className={style.categorySlideShowContainer}>
-          <AlfredSlide style={style} data={alfred} columns={3} rows={1}/>
+          <AlfredSlide infinite={true} style={style} data={alfred} columns={3} rows={1}/>
         </Grid>
       </Grid>
 

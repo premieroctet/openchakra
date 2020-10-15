@@ -92,7 +92,7 @@ class CardService extends React.Component{
     const resa_link =  `/userServicePreview?id=${cpData._id}`
     if (index==0) {
       return (
-        <CardServiceInfo style={style} />
+        <CardServiceInfo style={style}/>
       )
     }
     return(

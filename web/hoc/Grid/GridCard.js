@@ -10,6 +10,12 @@ function withGrid(WrappedComponent) {
       super(props);
     }
 
+    get_data = (data, start, length) => {
+      return this.props.infinite ?
+        circular_get(Object.keys(data), start, length)
+        :
+        Object.keys(data.slice(start, start+length))
+    }
     render(){
       const {style, data, columns, rows, page} = this.props
 
@@ -22,7 +28,7 @@ function withGrid(WrappedComponent) {
       return(
         <Grid container spacing={2}>
           {data && data.length>0 ?
-            circular_get(Object.keys(data), page, dataLength).map( (res, idx) => {
+            this.get_data(data, page*dataLength, dataLength).map( (res, idx) => {
               return(
                 <Grid item xl={size} lg={size} md={size} className={style.categoryCardRoot}>
                   <WrappedComponent {...this.props} key={page*dataLength+res} item={data[res]} index={idx}/>

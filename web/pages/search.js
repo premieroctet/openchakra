@@ -400,7 +400,7 @@ class SearchPage extends React.Component {
                   </Grid>
                   :
                   <SearchResults columns={4} rows={2} style={classes}
-                    pageCount={serviceUsers.length/7}
+                    pageCount={Math.ceil(serviceUsers.length/7)}
                     data={serviceUsers.map(su=>su._id)}
                     gps={user ? user.billing_address.gps : this.state.gps}
                   />

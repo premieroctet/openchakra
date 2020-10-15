@@ -37,7 +37,7 @@ class CategoryTopic extends React.Component{
           </Grid>
         </Grid>
         <Grid className={style.categorySlideShowContainer}>
-          <CategorySlide style={style} data={category} columns={4} rows={2}/>
+          <CategorySlide infinite={true} style={style} data={category} columns={4} rows={2}/>
         </Grid>
       </Grid>
     );
