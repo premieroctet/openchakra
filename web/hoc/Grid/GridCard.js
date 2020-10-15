@@ -1,6 +1,7 @@
 import React from 'react';
 import Carousel from 'react-material-ui-carousel'
 import Grid from '@material-ui/core/Grid';
+import moment from 'moment'
 const {circular_get}=require('../../utils/functions')
 
 function withGrid(WrappedComponent) {
@@ -10,33 +11,23 @@ function withGrid(WrappedComponent) {
       super(props);
     }
 
-    get_data = (data, start, length) => {
-      return this.props.infinite ?
-        circular_get(Object.keys(data), start, length)
-        :
-        Object.keys(data.slice(start, start+length))
-    }
     render(){
-      const {style, data, columns, rows, page} = this.props
+      const {style, model, page} = this.props
 
-      if (12%columns>0 || 12%rows>0) {
-        throw new Error('columns/rows must be 1,2,3,4 or 6')
-      }
-      const size=12/columns
-      const dataLength=columns*rows
+      const colSize=12/model.getColumns()
 
+      const indexes=[...Array(model.getRows()*model.getColumns())].map((v, idx) => idx)
       return(
         <Grid container spacing={2}>
-          {data && data.length>0 ?
-            this.get_data(data, page*dataLength, dataLength).map( (res, idx) => {
-              return(
-                <Grid item xl={size} lg={size} md={size} className={style.categoryCardRoot}>
-                  <WrappedComponent {...this.props} key={page*dataLength+res} item={data[res]} index={idx}/>
-                </Grid>
-              )
+          { indexes.map(idx => {
+            const row=Math.floor(idx/model.getColumns())
+            const col=idx%model.getColumns()
+            return(
+              <Grid item xl={colSize} lg={colSize} md={colSize} className={style.categoryCardRoot}>
+                <WrappedComponent {...this.props} item={model.getData(page, col, row)} key={[page, col, row]}/>
+              </Grid>
+            )
             })
-          :
-            null
           }
         </Grid>
       )

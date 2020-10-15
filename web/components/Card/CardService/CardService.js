@@ -48,7 +48,6 @@ class CardService extends React.Component{
       shop: null,
       open: false,
       id_service: '',
-      page: false,
       reviews: [],
       alfred: {}
     }
@@ -81,7 +80,7 @@ class CardService extends React.Component{
   }
 
   render() {
-    const {style, userState, isOwner, gps, needAvatar, isAdmin, page, index} = this.props;
+    const {style, userState, isOwner, gps, needAvatar, isAdmin} = this.props;
     const {cpData, alfred} = this.state;
 
     let distance = gps ? computeDistanceKm(gps, cpData.gps) : null;
@@ -90,9 +89,9 @@ class CardService extends React.Component{
     const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {};
 
     const resa_link =  `/userServicePreview?id=${cpData._id}`
-    if (index==0) {
+    if (this.props.item==null) {
       return (
-        <CardServiceInfo style={style}/>
+        <CardServiceInfo style={style} />
       )
     }
     return(

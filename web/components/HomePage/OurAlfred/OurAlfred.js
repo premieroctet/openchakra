@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import withSlide from '../../../hoc/Slide/SlideShow';
 import withGrid from '../../../hoc/Grid/GridCard'
 import CardPreview from "../../Card/CardPreview/CardPreview";
+const {SlideGridDataModel}=require('../../../utils/models/SlideGridDataModel')
 
 const AlfredSlide=withSlide(withGrid(CardPreview))
 
@@ -36,7 +37,7 @@ class OurAlfred extends React.Component{
           </Grid>
         </Grid>
         <Grid className={style.categorySlideShowContainer}>
-          <AlfredSlide infinite={true} style={style} data={alfred} columns={3} rows={1}/>
+          <AlfredSlide model={new SlideGridDataModel(alfred, 3, 1, true)} style={style} />
         </Grid>
       </Grid>
 

@@ -12,6 +12,9 @@ class CategoryCard extends React.Component{
   render() {
     const {style, item} = this.props;
 
+    if (!item) {
+      return null
+    }
     return(
       <>
         <Grid className={style.categoryCardMedia}>

@@ -20,6 +20,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Layout from "../hoc/Layout/Layout";
 import withSlide from '../hoc/Slide/SlideShow'
 import withGrid from '../hoc/Grid/GridCard'
+const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
 
 const SearchResults=withSlide(withGrid(CardService))
 
@@ -399,9 +400,8 @@ class SearchPage extends React.Component {
                     <CircularProgress/>
                   </Grid>
                   :
-                  <SearchResults columns={4} rows={2} style={classes}
-                    pageCount={Math.ceil(serviceUsers.length/8)}
-                    data={serviceUsers.map(su=>su._id)}
+                  <SearchResults model={new SlideGridDataModel(serviceUsers.map(su => su._id), 4, 2, false)}
+                    style={classes}
                     gps={user ? user.billing_address.gps : this.state.gps}
                   />
               }
