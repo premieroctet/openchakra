@@ -20,6 +20,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 
 class Commentary extends React.Component {
   constructor(props) {
@@ -70,32 +71,38 @@ class Commentary extends React.Component {
       const skills = computeSumSkills(reviews.map(r => alfred_mode ? r.note_alfred : r.note_client));
 
       return (
-        <Grid style={{width: '100%', display: 'flex', flexDirection: 'row'}}>
-          <Grid style={{display: 'flex', flexDirection: 'column'}}>
+        <Grid container style={{width: '100%', display: 'flex', flexDirection: 'row'}}>
+          <Grid item xl={3} style={{display: 'flex', flexDirection: 'column'}}>
             <Grid>
-              <p>illona</p>
+              <Typography><strong>illona</strong></Typography>
             </Grid>
             <Grid>
-              <p>17/09/20</p>
+              <Typography><strong>17/09/20</strong></Typography>
             </Grid>
             <Grid>
-              <p>garde chien</p>
+              <Typography>garde chien</Typography>
             </Grid>
           </Grid>
-          <Grid>
+          <Grid xl={4} item>
             <Grid>
               <Rating name="half-rating-read" defaultValue={5} precision={0.5} readOnly />
             </Grid>
             <Grid>
-              <p>le rating</p>
+              <Typography><strong>Vraiment, parfait !</strong></Typography>
             </Grid>
-            <Grid>
-              <p>la description</p>
+            <Grid style={{marginTop: '2%'}}>
+              <Typography>J’ai réellement apprécier la prestation d’Ilona.
+                Mon chien à l’air d’avoir passer un super moment.
+                Tout était parfait :)</Typography>
             </Grid>
-            <Grid>
-              <Button>je recommande illona</Button>
-            </Grid>
-            <Grid style={{display: 'flex', flexDirection: 'row'}}>
+            {
+              false ?
+                <Grid>
+                  <Button classes={{root: classes.buttonRecommendation}} startIcon={<ThumbUpIcon />}>je recommande illona</Button>
+                </Grid> : true
+            }
+
+            <Grid style={{display: 'flex', flexDirection: 'row', marginTop: '3%'}}>
               {
                 [...Array(3)].map( (res, index) => (
                   <Grid key={index}>

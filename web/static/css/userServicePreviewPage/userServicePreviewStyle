@@ -1,24 +1,8 @@
 export default theme => ({
   mainContainer: {
     marginTop: 100,
-    marginLeft: 200,
-    marginRight: 200,
     display: 'flex',
     flexDirection: 'row',
-    [theme.breakpoints.down('lg')]: {
-      justifyContent: 'center',
-      marginLeft: 100,
-      marginRight: 100,
-    },
-    [theme.breakpoints.down('md')]: {
-      justifyContent: 'center',
-      marginLeft: 100,
-      marginRight: 100,
-    },
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: 0,
-      marginRight: 0,
-    },
   },
   badge: {
     color: 'white',
@@ -89,7 +73,7 @@ export default theme => ({
     flexDirection: 'column',
     marginLeft: 100,
     position: 'sticky',
-    top: 0
+    top: 50
   },
   avatarContainer: {
     width: '20%',
@@ -203,7 +187,7 @@ export default theme => ({
     },
   },
   scheduleContainer: {
-    marginTop: 30,
+    marginTop: '15%',
   },
   scheduleContainerTitle: {
     [theme.breakpoints.down('xs')]: {
@@ -260,7 +244,7 @@ export default theme => ({
     },
   },
   perimeterContent: {
-    marginTop: 30,
+    marginTop: '15%',
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
       justifyContent: 'center',
@@ -312,7 +296,7 @@ export default theme => ({
     },
   },
   equipmentsContainer: {
-    marginTop: 30,
+    marginTop: '15%',
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
       justifyContent: 'center',
@@ -346,11 +330,6 @@ export default theme => ({
     borderRadius: theme.border.blackButton.borderRadius,
     textTransform: 'none',
     padding: '6px 24px'
-  },
-
-  userServicePreviewLargeContainer:{
-    marginLeft: 200,
-    marginRight: 200,
   },
 
   /***Schedule**/

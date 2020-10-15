@@ -99,5 +99,7 @@ export default theme => ({
 
 
   /** new **/
-
+  buttonRecommendation:{
+    fontWeight: 'bold'
+  }
 })

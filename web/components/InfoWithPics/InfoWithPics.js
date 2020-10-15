@@ -1,5 +1,6 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 
 
 class InfoWithPics extends React.Component{
@@ -12,15 +13,15 @@ class InfoWithPics extends React.Component{
 
     return(
       <Grid>
-        <Grid style={{display: 'flex', alignItems: 'center'}}>
+        <Grid style={{display: 'flex', alignItems: 'center', padding: '5%'}}>
           {
             data.IconName ?
-              <Grid>
+              <Grid style={{marginRight: '5%'}}>
                 {data.IconName}
               </Grid> :
               data.name_logo && data.logo  ?
-              <Grid>
-                <img src={`../../../static/equipments/${data.logo.slice(0, -4)}_Selected.svg`} height={100} width={100} alt={`${data.name_logo.slice(0, -4)}_Selected.svg`}/>
+              <Grid style={{marginRight: 30}}>
+                <img src={`../../../static/equipments/${data.logo.slice(0, -4)}.svg`} height={100} width={100} alt={`${data.name_logo.slice(0, -4)}_Selected.svg`}/>
               </Grid> : null
           }
           {
@@ -29,13 +30,13 @@ class InfoWithPics extends React.Component{
                 {
                   data.label ?
                     <Grid>
-                      <h4>{data.label}</h4>
+                      <h4 style={{margin: 0}}>{data.label}</h4>
                     </Grid> : null
                 }
                 {
                   data.summary ?
                     <Grid>
-                      <p>{data.summary}</p>
+                      <Typography style={{color:'rgba(39,37,37,35%)'}}>{data.summary}</Typography>
                     </Grid> : null
                 }
               </Grid> : null

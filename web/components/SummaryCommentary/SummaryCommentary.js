@@ -34,54 +34,56 @@ class SummaryCommentary extends React.Component{
 
     return(
       <Grid>
-        <Grid style={{display: 'flex', flexDirection: 'row', width: '100%'}}>
-          <Grid style={{display: 'flex', flexDirection: 'column', width: '20%'}}>
+        <Grid container style={{display: 'flex', flexDirection: 'row', width: '100%'}}>
+          <Grid item xl={3} style={{display: 'flex', flexDirection: 'column'}}>
             <Grid>
-              <p>22</p>
+              <Typography><strong>22</strong></Typography>
             </Grid>
-            <Grid>
-              commentaires
+            <Grid style={{marginTop: '2%'}}>
+              <Typography>commentaires</Typography>
             </Grid>
-            <Grid>
-              <FormControl variant="outlined" className={classes.formControl} style={{width: '50%'}}>
-                <InputLabel id="demo-simple-select-outlined-label">Filtrer par:</InputLabel>
-                <Select
-                  labelId="demo-simple-select-outlined-label"
-                  id="demo-simple-select-outlined"
-                  value={filter}
-                  onChange={this.handleChange}
-                  label="Filtrer par:"
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-              </FormControl>
+            <Grid container style={{marginTop: '5%'}}>
+              <Grid item xl={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">Filtrer par:</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={filter}
+                    onChange={this.handleChange}
+                    label="Filtrer par:"
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={10}>Ten</MenuItem>
+                    <MenuItem value={20}>Twenty</MenuItem>
+                    <MenuItem value={30}>Thirty</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
             </Grid>
           </Grid>
-          <Grid style={{display: 'flex', flexDirection: 'column', width:'15%'}}>
+          <Grid item xl={4} style={{display: 'flex', flexDirection: 'column'}}>
             <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid>
-                <p>4.2</p>
+                <Typography><strong>4.2</strong></Typography>
               </Grid>
-              <Grid>
+              <Grid style={{marginLeft: '3%'}}>
                 <Rating name="half-rating-read" defaultValue={5} precision={0.5} readOnly />
               </Grid>
             </Grid>
             <Grid>
               <Typography>notes general</Typography>
             </Grid>
-            <Grid style={{height: 56, display:'flex', flexDirection: 'column', justifyContent: 'center', alignItems:'center'}}>
+            <Grid style={{height: 56, display:'flex', alignItems:'center', marginTop: '4%'}}>
               <Button variant={'contained'} onClick={this.handleShowCommentary} classes={{root: classes.buttonShowMore}}>Voir les commentaires</Button>
             </Grid>
           </Grid>
         </Grid>
         {
           showCommentary ?
-            <Grid>
+            <Grid style={{marginTop: '5%'}}>
               <Commentary/>
             </Grid> : null
         }

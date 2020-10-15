@@ -210,14 +210,14 @@ export default theme => ({
 
   mainContainerStyleFooter:{
     justifyContent: 'center',
-    marginTop: '2%',
     backgroundColor: 'rgba(228, 228, 228, 8)',
     position: 'relative',
     bottom: 0,
-    display: 'flex'
+    display: 'flex',
+    marginTop: '1%'
   },
   generalWidthFooter:{
-    width: '80%'
+    width: '90%'
   },
   footerMainStyle:{
     display: 'flex',

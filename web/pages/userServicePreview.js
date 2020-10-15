@@ -894,158 +894,165 @@ class UserServicesPreview extends React.Component {
               type='warning'
               text={I18N.OUTSIDE_PERIMETER}
             />
-            <Grid style={{width: '100%'}}>
-              <Grid className={classes.mainContainer}>
-                <Grid className={classes.leftContainer}>
-                  <Grid className={classes.avatarAnDescription}>
-                    <Grid className={classes.avatarContainer}>
-                      <Grid item className={classes.itemAvatar}>
-                        <UserAvatar classes={'avatarLetter'} user={alfred} className={classes.avatarLetter}/>
-                      </Grid>
-                    </Grid>
-                    <Grid className={classes.flexContentAvatarAndDescription}>
-                      <Grid className={classes.marginAvatarAndDescriptionContent}>
-                        <Grid>
-                          <Typography variant="h6">{alfred.firstname} - {service.label}</Typography>
+            <Grid style={{width: '100%', display: 'flex', justifyConent: 'center', flexDirection: 'row', justifyContent: 'center'}}>
+              <Grid style={{width: '70%'}}>
+                <Grid className={classes.mainContainer}>
+                  <Grid className={classes.leftContainer}>
+                    <Grid className={classes.avatarAnDescription}>
+                      <Grid className={classes.avatarContainer}>
+                        <Grid item className={classes.itemAvatar}>
+                          <UserAvatar classes={'avatarLetter'} user={alfred} className={classes.avatarLetter}/>
                         </Grid>
-                        {
-                          serviceAddress ?
-                            <Grid>
-                              <Typography>{serviceAddress.city}, {serviceAddress.country} - {serviceUser.perimeter}km autour de {serviceAddress.city}</Typography>
-                            </Grid> : null
+                      </Grid>
+                      <Grid className={classes.flexContentAvatarAndDescription}>
+                        <Grid className={classes.marginAvatarAndDescriptionContent}>
+                          <Grid>
+                            <Typography variant="h6">{alfred.firstname} - {service.label}</Typography>
+                          </Grid>
+                          {
+                            serviceAddress ?
+                              <Grid>
+                                <Typography style={{color:'rgba(39,37,37,35%)'}}>{serviceAddress.city}, {serviceAddress.country} - {serviceUser.perimeter}km autour de {serviceAddress.city}</Typography>
+                              </Grid> : null
 
-                        }
-                      </Grid>
-                      <Grid style={{display: 'flex', alignItems: 'center'}}>
-                        {
-                          alfred.score < 0 ?
-                            <Grid>
-                              <a href={'#'}>Voir plus de commentaires</a>
-                            </Grid> : null
-                        }
-                      </Grid>
-                      <Grid>
+                          }
+                        </Grid>
+                        <Grid style={{display: 'flex', alignItems: 'center'}}>
+                          {
+                            alfred.score < 0 ?
+                              <Grid>
+                                <a href={'#'}>Voir plus de commentaires</a>
+                              </Grid> : null
+                          }
+                        </Grid>
                         <Grid>
-                          <Link
-                            href={{
-                              pathname: '/viewProfile',
-                              query: {id: this.state.alfred._id},
-                            }}
-                          >
-                            <Button variant={'outlined'} className={classes.userServicePreviewButtonProfil}>Voir le profil</Button>
-                          </Link>
+                          <Grid>
+                            <Link
+                              href={{
+                                pathname: '/viewProfile',
+                                query: {id: this.state.alfred._id},
+                              }}
+                            >
+                              <Button variant={'outlined'} className={classes.userServicePreviewButtonProfil}>Voir le profil</Button>
+                            </Link>
+                          </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid>
-                    <DescriptionTopic
-                      titleTopic={'Description'}
-                      titleSummary={serviceUser.description ? serviceUser.description : 'Cet utilisateur n\'a pas encore de description.'}
-                      wrapperComponentProps={
-                        [
-                          {
-                            label: alfred.firstname ? 'Délai de prévenance' : '',
-                            summary: alfred.firstname ? `${alfred.firstname} a besoin de ${this.formatDeadline(serviceUser.deadline_before_booking)} pour préparer son service` : '',
-                            IconName: alfred.firstname ? <InsertEmoticonIcon fontSize="large"/> : ''
-                          },
-                          {
-                            label:  alfred.firstname ? 'Conditions d’annulation' : '',
-                            summary: alfred.firstname ? `${alfred.firstname} vous permet d’annuler votre réservation jusqu’à ${this.state.flexible ? '1 jour' : this.state.moderate ? '5 jours' : '10 jours'} avant la date prévue` : '',
-                            IconName:  alfred.firstname ? <CalendarTodayIcon fontSize="large"/> : ''
-                          },
-                          {
-                            label:  alfred.firstname ? 'Panier minimum' : '',
-                            summary: alfred.firstname ? `Le panier minimum de ${alfred.firstname} est de ${serviceUser.minimum_basket}€` : '',
-                            IconName:  alfred.firstname ? <ShoppingCartIcon fontSize="large"/> : ''
-                          },
+                    <Grid style={{marginTop: '10%'}}>
+                      <DescriptionTopic
+                        titleTopic={'Description'}
+                        titleSummary={serviceUser.description ? serviceUser.description : 'Cet utilisateur n\'a pas encore de description.'}
+                        needBackground={true}
+                        columnsXl={12}
+                        wrapperComponentProps={
+                          [
+                            {
+                              label: alfred.firstname ? 'Délai de prévenance' : '',
+                              summary: alfred.firstname ? `${alfred.firstname} a besoin de ${this.formatDeadline(serviceUser.deadline_before_booking)} pour préparer son service` : '',
+                              IconName: alfred.firstname ? <InsertEmoticonIcon fontSize="large"/> : ''
+                            },
+                            {
+                              label:  alfred.firstname ? 'Conditions d’annulation' : '',
+                              summary: alfred.firstname ? `${alfred.firstname} vous permet d’annuler votre réservation jusqu’à ${this.state.flexible ? '1 jour' : this.state.moderate ? '5 jours' : '10 jours'} avant la date prévue` : '',
+                              IconName:  alfred.firstname ? <CalendarTodayIcon fontSize="large"/> : ''
+                            },
+                            {
+                              label:  alfred.firstname ? 'Panier minimum' : '',
+                              summary: alfred.firstname ? `Le panier minimum de ${alfred.firstname} est de ${serviceUser.minimum_basket}€` : '',
+                              IconName:  alfred.firstname ? <ShoppingCartIcon fontSize="large"/> : ''
+                            },
                           ]
-                      }
+                        }
 
-                    />
-                  </Grid>
-                  <Grid className={classes.scheduleContainer}>
-                    <ScheduleTopic
-                      titleTopic={'Sélectionnez vos dates'}
-                      titleSummary={alfred.firstname ? `Choisissez vos dates selon les disponibilités de ${alfred.firstname}` : ''}
-                      availabilities={this.state.availabilities}
-                      bookings={[]}
-                      services={[]}
-                      selectable={true}
-                      height={400}
-                      nbSchedule={1}
-                      handleSelection={this.scheduleDateChanged}
-                      singleSelection={true}
-                      mode={'week'}
-                      style={classes}
-                    />
-                  </Grid>
-                  {equipments.length !== 0 ?
-                    <Grid className={classes.equipmentsContainer}>
-                      <EquipementTopic
-                        titleTopic={'Matériel'}
-                        titleSummary={alfred.firstname ? `Le matériel de ${alfred.firstname}` : ''}
-                        wrapperComponentProps={equipments}
                       />
-                    </Grid> : null
-                  }
-                  <Grid className={classes.perimeterContent}>
-                    {
-                      serviceUser && serviceUser.service_address ?
-                        <Grid style={{width: '100%'}}>
-                          <MapTopic
-                            titleTopic={'Lieu de la prestation'}
-                            titleSummary={alfred.firstname ? `La zone dans laquelle ${alfred.firstname} peut intervenir` : ''}
-                            position={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]}
-                            perimeter={serviceUser.perimeter * 1000}
-                          />
-                        </Grid> : ''
-                    }
-                  </Grid>
-                  <Hidden mdUp implementation="css">
-                    <Grid className={classes.showReservation}>
-                      <Button
-                        style={{color: 'white'}}
-                        variant="contained"
-                        size="medium"
-                        color="secondary"
-                        aria-label="add"
-                        className={classes.buttonReservation}
-                        onClick={this.toggleDrawer('bottom', true)}
-                      >
-                        Réserver
-                      </Button>
                     </Grid>
-                    <Drawer anchor="bottom" open={this.state.bottom} onClose={this.toggleDrawer('bottom', false)}>
-                      <Grid className={classes.drawerContent}>
-                        {drawer('bottom')}
+                    <Grid className={classes.scheduleContainer}>
+                      <ScheduleTopic
+                        titleTopic={'Sélectionnez vos dates'}
+                        titleSummary={alfred.firstname ? `Choisissez vos dates selon les disponibilités de ${alfred.firstname}` : ''}
+                        availabilities={this.state.availabilities}
+                        bookings={[]}
+                        services={[]}
+                        selectable={true}
+                        height={400}
+                        nbSchedule={1}
+                        handleSelection={this.scheduleDateChanged}
+                        singleSelection={true}
+                        mode={'week'}
+                        style={classes}
+                      />
+                    </Grid>
+                    {equipments.length !== 0 ?
+                      <Grid className={classes.equipmentsContainer}>
+                        <EquipementTopic
+                          titleTopic={'Matériel'}
+                          columnsXl={6}
+                          needBackground={true}
+                          titleSummary={alfred.firstname ? `Le matériel de ${alfred.firstname}` : ''}
+                          wrapperComponentProps={equipments}
+                        />
+                      </Grid> : null
+                    }
+                    <Grid className={classes.perimeterContent}>
+                      {
+                        serviceUser && serviceUser.service_address ?
+                          <Grid style={{width: '100%'}}>
+                            <MapTopic
+                              titleTopic={'Lieu de la prestation'}
+                              titleSummary={alfred.firstname ? `La zone dans laquelle ${alfred.firstname} peut intervenir` : ''}
+                              position={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]}
+                              perimeter={serviceUser.perimeter * 1000}
+                            />
+                          </Grid> : ''
+                      }
+                    </Grid>
+                    <Hidden mdUp implementation="css">
+                      <Grid className={classes.showReservation}>
+                        <Button
+                          style={{color: 'white'}}
+                          variant="contained"
+                          size="medium"
+                          color="secondary"
+                          aria-label="add"
+                          className={classes.buttonReservation}
+                          onClick={this.toggleDrawer('bottom', true)}
+                        >
+                          Réserver
+                        </Button>
                       </Grid>
-                    </Drawer>
-                  </Hidden>
-                </Grid>
-                {/* ------------------------------------------------------- ici content right ---------------------------------------------------*/}
-                <Hidden mdDown implementation="css">
-                  <Grid className={classes.contentRight}>
-                    {drawer()}
+                      <Drawer anchor="bottom" open={this.state.bottom} onClose={this.toggleDrawer('bottom', false)}>
+                        <Grid className={classes.drawerContent}>
+                          {drawer('bottom')}
+                        </Grid>
+                      </Drawer>
+                    </Hidden>
                   </Grid>
-                </Hidden>
+                  {/* ------------------------------------------------------- ici content right ---------------------------------------------------*/}
+                  <Hidden mdDown implementation="css">
+                    <Grid className={classes.contentRight}>
+                      {drawer()}
+                    </Grid>
+                  </Hidden>
 
-              </Grid>
-              <Grid className={classes.userServicePreviewLargeContainer}>
-                <Grid>
-                  <PhotoTopic
-                    titleTopic={alfred.firstname ? `Les photos de ${alfred.firstname}` : ''}
-                    titleSummary={alfred.firstname ? `Un aperçu du travail de ${alfred.firstname}` : ''}
-                  />
                 </Grid>
-                <Grid>
-                  <CommentaryTopic
-                    titleTopic={'Commentaires'}
-                    titleSummary={alfred.firstname ? `Ici, vous pouvez laisser des commentaires à ${alfred.firstname} !` : ''}
-                    alfred_mode={true}
-                    user_id={alfred._id}
-                    service_id={this.props.service_id}
-                  />
+                <Grid className={classes.userServicePreviewLargeContainer}>
+                  <Grid style={{marginTop: '10%'}}>
+                    <PhotoTopic
+                      titleTopic={alfred.firstname ? `Les photos de ${alfred.firstname}` : ''}
+                      titleSummary={alfred.firstname ? `Un aperçu du travail de ${alfred.firstname}` : ''}
+                      needBackground={true}
+                    />
+                  </Grid>
+                  <Grid style={{marginTop: '10%'}}>
+                    <CommentaryTopic
+                      titleTopic={'Commentaires'}
+                      titleSummary={alfred.firstname ? `Ici, vous pouvez laisser des commentaires à ${alfred.firstname} !` : ''}
+                      alfred_mode={true}
+                      user_id={alfred._id}
+                      service_id={this.props.service_id}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
