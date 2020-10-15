@@ -1,6 +1,8 @@
 import React from 'react';
 import Carousel from 'react-material-ui-carousel'
 import Grid from '@material-ui/core/Grid';
+import ReactPaginate from 'react-paginate'
+import './SlideShow.css';
 
 function withSlide(WrappedComponent) {
 
@@ -17,9 +19,12 @@ function withSlide(WrappedComponent) {
       this.setState({pageIndex: index})
     }
 
+    onPageChange = event => {
+      this.setState({pageIndex: event.selected})
+    }
     render(){
       const {pageIndex} = this.state
-      const {style} = this.props
+      const {style, pageCount} = this.props
 
       return(
         <Grid>
@@ -33,6 +38,10 @@ function withSlide(WrappedComponent) {
               </Grid>
             </Grid>
           </Carousel>
+          <ReactPaginate pageCount={pageCount} onPageChange={this.onPageChange}
+          containerClassName={'react-paginate'}
+          subContainerClassName={'react-paginate'}
+          />
         </Grid>
       )
     }

@@ -13,6 +13,9 @@ function withGrid(WrappedComponent) {
     render(){
       const {style, data, columns, rows, page} = this.props
 
+      if (12%columns>0 || 12%rows>0) {
+        throw new Error('columns/rows must be 1,2,3,4 or 6')
+      }
       const size=12/columns
       const dataLength=columns*rows
 
