@@ -898,13 +898,13 @@ class UserServicesPreview extends React.Component {
               <Grid style={{width: '70%'}}>
                 <Grid className={classes.mainContainer}>
                   <Grid className={classes.leftContainer}>
-                    <Grid className={classes.avatarAnDescription}>
-                      <Grid className={classes.avatarContainer}>
+                    <Grid container className={classes.avatarAnDescription}>
+                      <Grid item xl={3} sm={3} className={classes.avatarContainer}>
                         <Grid item className={classes.itemAvatar}>
                           <UserAvatar classes={'avatarLetter'} user={alfred} className={classes.avatarLetter}/>
                         </Grid>
                       </Grid>
-                      <Grid className={classes.flexContentAvatarAndDescription}>
+                      <Grid item xl={9} sm={9} className={classes.flexContentAvatarAndDescription}>
                         <Grid className={classes.marginAvatarAndDescriptionContent}>
                           <Grid>
                             <Typography variant="h6">{alfred.firstname} - {service.label}</Typography>
@@ -988,6 +988,10 @@ class UserServicesPreview extends React.Component {
                         <EquipementTopic
                           titleTopic={'Matériel'}
                           columnsXl={6}
+                          columnsLG={6}
+                          columnsMD={6}
+                          columnsSM={6}
+                          columnsXS={6}
                           needBackground={true}
                           titleSummary={alfred.firstname ? `Le matériel de ${alfred.firstname}` : ''}
                           wrapperComponentProps={equipments}
