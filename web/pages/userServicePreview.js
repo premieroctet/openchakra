@@ -6,19 +6,9 @@ import styles from '../static/css/userServicePreviewPage/userServicePreviewStyle
 import Grid from '@material-ui/core/Grid';
 import Router from 'next/router';
 import axios from 'axios';
-import Badge from '@material-ui/core/Badge';
-import Box from '@material-ui/core/Box';
-import Rating from '@material-ui/lab/Rating';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import UserAvatar from '../components/Avatar/UserAvatar';
 import Typography from '@material-ui/core/Typography';
 import Schedule from '../components/Schedule/Schedule';
-import Checkbox from '@material-ui/core/Checkbox';
-import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
-import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import TextField from '@material-ui/core/TextField';
 const { Accordion, AccordionSummary, AccordionDetails }=require('@material-ui/core');
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -30,14 +20,12 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import MapComponent from '../components/map';
 import DatePicker, {registerLocale} from 'react-datepicker';
-import Commentary from '../components/Commentary/Commentary';
 import fr from 'date-fns/locale/fr';
 import Switch from '@material-ui/core/Switch';
 import BookingDetail from '../components/BookingDetail/BookingDetail';
 import {Helmet} from 'react-helmet';
 import Link from 'next/link';
 import cookie from 'react-cookies';
-import Information from '../components/Information/Information';
 import WithTopic from "../hoc/Topic/Topic";
 import ListAlfredConditions from "../components/ListAlfredConditions/ListAlfredConditions";
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
@@ -46,8 +34,6 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import GallerySlidePics from "../components/GallerySlidePics/GallerySlidePics";
 import SummaryCommentary from "../components/SummaryCommentary/SummaryCommentary"
 import CancelIcon from '@material-ui/icons/Cancel';
-import {SEARCHBAR} from "../utils/i18n";
-import Paper from "@material-ui/core/Paper";
 import Divider from '@material-ui/core/Divider';
 
 
@@ -60,8 +46,6 @@ const {computeDistanceKm} = require('../utils/functions');
 const moment = require('moment');
 moment.locale('fr');
 registerLocale('fr', fr);
-const {frenchFormat} = require('../utils/text');
-const I18N = require('../utils/i18n');
 
 const DescriptionTopic = WithTopic(ListAlfredConditions);
 const ScheduleTopic = WithTopic(Schedule);
@@ -569,7 +553,7 @@ class UserServicesPreview extends React.Component {
 
     return (
       <Grid style={{width: '100%'}}>
-        <Accordion defaultExpanded={index == 0}>
+        <Accordion defaultExpanded={index === 0}>
 
           <AccordionSummary
             expandIcon={<ExpandMoreIcon/>}
@@ -589,9 +573,9 @@ class UserServicesPreview extends React.Component {
   contentPanel(prestations, classes) {
     return (
       <Grid style={{width: '100%'}}>
-        {prestations.map((p) => {
+        {prestations.map((p, index) => {
           return (
-            <Grid style={{display: 'flex', alignItems: 'center', width: '100%'}}>
+            <Grid style={{display: 'flex', alignItems: 'center', width: '100%'}} key={index}>
               <Grid style={{zIndex:0}}>
                 <TextField
                   id="outlined-number"
@@ -683,7 +667,7 @@ class UserServicesPreview extends React.Component {
             </Grid> : null
         }
         <Grid className={classes.borderContentRight}>
-          <Grid style={{width: '80%'}}>
+          <Grid style={{width: '80%', paddingTop: '5%', paddingBottom: '5%'}}>
             <Grid style={{marginBottom: 30}}>
               <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
                 <Grid>
@@ -767,7 +751,7 @@ class UserServicesPreview extends React.Component {
                   var fltr = key;
                   var prestations = filters[key];
                   return (
-                    <Grid style={{zIndex: 0}}>
+                    <Grid style={{zIndex: 0}} key={index}>
                       {fltr === '' ?
                         this.contentPanel(prestations, classes) :
                         this.needPanel(prestations, fltr, classes, index)
@@ -781,37 +765,46 @@ class UserServicesPreview extends React.Component {
               </Grid>
             </Grid>
             <Grid style={{marginBottom: 30}}>
-              <Grid>
-                <Typography variant={'h6'} style={{color: '#505050', fontWeight: 'bold'}}>Lieu de la prestation</Typography>
-                <em style={{color: '#f87280'}}>{errors['location']}</em>
-              </Grid>
-              <Grid>
-                {serviceUser.location && serviceUser.location.client && this.isInPerimeter() ?
-                  <Grid>
-                    <ButtonSwitch key={moment()} id='client' label={'A mon adresse principale'} isEditable={false}
-                                  isPrice={false} isOption={false} checked={location === 'client'}
-                                  onChange={this.onLocationChanged}/>
-                  </Grid>
-                  : null
-                }
-                {
-                  serviceUser.location && serviceUser.location.alfred && alfred.firstname !== undefined ?
+              <Accordion classes={{root: classes.rootAccordion}}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography style={{color: '#505050'}}>Lieu de la prestation</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  {serviceUser.location && serviceUser.location.client && this.isInPerimeter() ?
                     <Grid>
-                      <ButtonSwitch key={moment()} id='alfred' label={'Chez ' + alfred.firstname} isEditable={false}
-                                    isPrice={false} isOption={false} checked={location === 'alfred'}
+                      <ButtonSwitch key={moment()} id='client' label={'A mon adresse principale'} isEditable={false}
+                                    isPrice={false} isOption={false} checked={location === 'client'}
                                     onChange={this.onLocationChanged}/>
                     </Grid>
                     : null
-                }
-                {
-                  serviceUser.location && serviceUser.location.visio ?
-                    <Grid>
-                      <ButtonSwitch key={moment()} id='visio' label={'En visio'} isEditable={false} isPrice={false}
-                                    isOption={false} checked={location === 'visio'} onChange={this.onLocationChanged}/>
-                    </Grid>
-                    : null
-                }
-              </Grid>
+                  }
+                  {
+                    serviceUser.location && serviceUser.location.alfred && alfred.firstname !== undefined ?
+                      <Grid>
+                        <ButtonSwitch key={moment()} id='alfred' label={'Chez ' + alfred.firstname} isEditable={false}
+                                      isPrice={false} isOption={false} checked={location === 'alfred'}
+                                      onChange={this.onLocationChanged}/>
+                      </Grid>
+                      : null
+                  }
+                  {
+                    serviceUser.location && serviceUser.location.visio ?
+                      <Grid>
+                        <ButtonSwitch key={moment()} id='visio' label={'En visio'} isEditable={false} isPrice={false}
+                                      isOption={false} checked={location === 'visio'} onChange={this.onLocationChanged}/>
+                      </Grid>
+                      : null
+                  }
+                  <Grid>
+                    <em style={{color: '#f87280'}}>{errors['location']}</em>
+                  </Grid>
+                </AccordionDetails>
+              </Accordion>
+
             </Grid>
             {serviceUser.pick_tax || this.computeTravelTax() ?
               <Grid style={{marginBottom: 30}}>
@@ -950,7 +943,7 @@ class UserServicesPreview extends React.Component {
                       <Grid container className={classes.avatarAnDescription}>
                         <Grid item xl={3} sm={3} className={classes.avatarContainer}>
                           <Grid item className={classes.itemAvatar}>
-                            <UserAvatar classes={'avatarLetter'} user={alfred} className={classes.avatarLetter}/>
+                            <UserAvatar user={alfred} className={classes.avatarLetter}/>
                           </Grid>
                         </Grid>
                         <Grid item xl={9} sm={9} className={classes.flexContentAvatarAndDescription}>
