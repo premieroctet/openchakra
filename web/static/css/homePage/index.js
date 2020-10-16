@@ -615,6 +615,11 @@ export default theme => ({
   },
   navbarDatePickerContainer:{
     flex: 1,
+    marginLeft: 20
+  },
+  navbarTextFieldService:{
+    flex: 1,
+    marginLeft: 20
   },
   infoBarLinkContainer:{
     paddingTop: theme.padding.infoBar.paddingTop,

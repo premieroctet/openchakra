@@ -8,6 +8,9 @@ import Grid from "@material-ui/core/Grid";
 import InfoBar from "../../components/InfoBar/InfoBar";
 import ScrollMenu from '../../components/ScrollMenu/SrollMenu'
 import axios from "axios";
+import TrustAndSecurity from "./TrustAndSecurity/TrustAndSecurity";
+import Divider from "@material-ui/core/Divider";
+
 
 class Layout extends React.Component {
   constructor(props) {
@@ -45,9 +48,17 @@ class Layout extends React.Component {
           </Grid>
         </Grid>
         {children}
+        <Grid style={{marginTop: '5%'}}>
+          <Divider style={{height: 2, width: '100%'}}/>
+        </Grid>
+        <Grid style={{width: '100%', display: 'flex', justifyContent: 'center', marginTop: '1%'}}>
+          <Grid style={{width: '90%'}}>
+            <TrustAndSecurity/>
+          </Grid>
+        </Grid>
         <Grid className={classes.mainContainerStyleFooter}>
           <Grid className={classes.generalWidthFooter}>
-        <Footer style={classes}/>
+            <Footer style={classes}/>
           </Grid>
         </Grid>
       </Fragment>

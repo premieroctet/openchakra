@@ -96,4 +96,10 @@ export default theme => ({
       justifyContent: 'center',
     },
   },
+
+
+  /** new **/
+  buttonRecommendation:{
+    fontWeight: 'bold'
+  }
 })

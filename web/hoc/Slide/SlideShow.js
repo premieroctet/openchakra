@@ -16,7 +16,7 @@ function withSlide(WrappedComponent) {
 
     onCarouselIndexChange = (index, active) => {
       this.setState({pageIndex: index})
-    }
+    };
 
     onPageChange = (event, pageIndex) => {
       this.setState({pageIndex: pageIndex-1})

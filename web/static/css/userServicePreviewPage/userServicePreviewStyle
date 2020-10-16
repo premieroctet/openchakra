@@ -1,24 +1,9 @@
 export default theme => ({
   mainContainer: {
     marginTop: 100,
-    marginLeft: 200,
-    marginRight: 200,
     display: 'flex',
     flexDirection: 'row',
-    [theme.breakpoints.down('lg')]: {
-      justifyContent: 'center',
-      marginLeft: 100,
-      marginRight: 100,
-    },
-    [theme.breakpoints.down('md')]: {
-      justifyContent: 'center',
-      marginLeft: 100,
-      marginRight: 100,
-    },
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: 0,
-      marginRight: 0,
-    },
+    justifyContent: 'center'
   },
   badge: {
     color: 'white',
@@ -78,18 +63,13 @@ export default theme => ({
     },
   },
   leftContainer: {
-    width: '50%',
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
   },
   contentRight: {
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    marginLeft: 100,
     position: 'sticky',
-    top: 0
+    top: 50
   },
   avatarContainer: {
     width: '20%',
@@ -105,22 +85,8 @@ export default theme => ({
   borderContentRight: {
     border: '2px solid #d2d2d2',
     borderRadius: 30,
-    marginRight: 100,
-    marginLeft: 100,
-    padding: '3%',
-    [theme.breakpoints.down('lg')]: {
-      justifyContent: 'center',
-      marginLeft: 50,
-      marginRight: 50,
-    },
-    [theme.breakpoints.down('md')]: {
-      marginRight: 50,
-      marginLeft: 50,
-      marginBottom: 20,
-    },
-    [theme.breakpoints.down('xs')]: {
-      margin: 0,
-    },
+    display: 'flex',
+    justifyContent: 'center'
   },
   hrStyle: {
     width: 500,
@@ -203,7 +169,7 @@ export default theme => ({
     },
   },
   scheduleContainer: {
-    marginTop: 30,
+    marginTop: '15%',
   },
   scheduleContainerTitle: {
     [theme.breakpoints.down('xs')]: {
@@ -260,7 +226,7 @@ export default theme => ({
     },
   },
   perimeterContent: {
-    marginTop: 30,
+    marginTop: '15%',
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
       justifyContent: 'center',
@@ -312,7 +278,7 @@ export default theme => ({
     },
   },
   equipmentsContainer: {
-    marginTop: 30,
+    marginTop: '15%',
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
       justifyContent: 'center',
@@ -335,10 +301,9 @@ export default theme => ({
     width: 70,
   },
   datePickerStyle: {
-    borderRadius: 5,
-    border: '2px solid #d2d2d2',
-    height: 30,
-    boxShadow: '1px 1px 1px 1px gainsboro',
+    border: 'none',
+    width: '100%'
+
   },
   userServicePreviewButtonProfil:{
     fontWeight: theme.typography.blackButton.fontWeight,
@@ -346,6 +311,15 @@ export default theme => ({
     borderRadius: theme.border.blackButton.borderRadius,
     textTransform: 'none',
     padding: '6px 24px'
+  },
+
+  navbarRootTextField:{
+    flex: 1,
+    width: '100%',
+    '& .react-datepicker-wrapper':{
+      width: '100%'
+    }
+
   },
 
   /***Schedule**/
@@ -568,6 +542,23 @@ export default theme => ({
   },
   margin: {
     height: 'auto',
+  },
+  userServicePreviewWarningContainer:{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+
+  root: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'center',
+    width: 400,
+  },
+  divider: {
+    height: 28,
+    margin: 4,
   },
 
 })
