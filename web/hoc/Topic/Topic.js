@@ -10,7 +10,7 @@ function WithTopic(WrappedComponent) {
     }
 
     render() {
-      const{titleTopic, titleSummary, style, needBackground, classes} = this.props;
+      const{titleTopic, titleSummary, needBackground} = this.props;
 
       return(
         <Grid style={{height: '100%'}}>

@@ -128,6 +128,7 @@ class UserServicesPreview extends React.Component {
       alfred: {},
       service: {},
       equipments: [],
+      allDetailEquipments: [],
       prestations: [],
       flexible: false,
       moderate: false,
@@ -250,10 +251,16 @@ class UserServicesPreview extends React.Component {
                 this.setDefaultLocation();
               }
             });
+            this.state.allEquipments.map( res => {
+              axios.get(`/myAlfred/api/equipment/${res}`).then( res => {let data = res.data ; this.setState({allDetailEquipments: [...this.state.allDetailEquipments, data]})}).catch( err => {console.error(err)});
+            });
+
 
           });
       })
       .catch(err => console.error(err));
+
+
 
     localStorage.removeItem('bookingObj');
     setTimeout(() => {
@@ -649,7 +656,7 @@ class UserServicesPreview extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {date, time, location, serviceUser, service, equipments, alfred, errors, isChecked, user} = this.state;
+    const {date, time, location, serviceUser, service, equipments, alfred, errors, isChecked, user, allDetailEquipments} = this.state;
 
     const serviceAddress = serviceUser.service_address;
 
@@ -994,7 +1001,8 @@ class UserServicesPreview extends React.Component {
                           columnsXS={6}
                           needBackground={true}
                           titleSummary={alfred.firstname ? `Le matériel de ${alfred.firstname}` : ''}
-                          wrapperComponentProps={equipments}
+                          wrapperComponentProps={allDetailEquipments}
+                          equipmentsSelected={equipments}
                         />
                       </Grid> : null
                     }
@@ -1041,14 +1049,14 @@ class UserServicesPreview extends React.Component {
 
                 </Grid>
                 <Grid className={classes.userServicePreviewLargeContainer}>
-                  <Grid style={{marginTop: '10%'}}>
+                  <Grid style={{marginTop: '5%'}}>
                     <PhotoTopic
                       titleTopic={alfred.firstname ? `Les photos de ${alfred.firstname}` : ''}
                       titleSummary={alfred.firstname ? `Un aperçu du travail de ${alfred.firstname}` : ''}
                       needBackground={true}
                     />
                   </Grid>
-                  <Grid style={{marginTop: '10%'}}>
+                  <Grid style={{marginTop: '5%'}}>
                     <CommentaryTopic
                       titleTopic={'Commentaires'}
                       titleSummary={alfred.firstname ? `Ici, vous pouvez laisser des commentaires à ${alfred.firstname} !` : ''}

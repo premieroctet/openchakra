@@ -1,6 +1,8 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import styles from '../../static/css/components/InfoWithPics/InfoWithPics'
+import withStyles from "@material-ui/core/styles/withStyles";
 
 
 class InfoWithPics extends React.Component{
@@ -9,42 +11,65 @@ class InfoWithPics extends React.Component{
   }
 
   render() {
-    const{data} = this.props;
+    const{data, equipmentsSelected, classes} = this.props;
+
+    let result = [];
+    if(equipmentsSelected){
+      Object.keys(equipmentsSelected).map(res =>{
+        result.push(equipmentsSelected[res]._id)
+      })
+    }
 
     return(
       <Grid>
-        <Grid style={{display: 'flex', alignItems: 'center', padding: '5%'}}>
-          {
-            data.IconName ?
-              <Grid style={{marginRight: '5%'}}>
-                {data.IconName}
-              </Grid> :
-              data.name_logo && data.logo  ?
-              <Grid style={{marginRight: 30}}>
-                <img src={`../../../static/equipments/${data.logo.slice(0, -4)}.svg`} height={100} width={100} alt={`${data.name_logo.slice(0, -4)}_Selected.svg`}/>
-              </Grid> : null
-          }
-          {
-            data.label || data.summary ?
-              <Grid>
-                {
-                  data.label ?
-                    <Grid>
-                      <h4 style={{margin: 0}}>{data.label}</h4>
+        {
+          data ?
+            <Grid className={classes.infoWithPicsMainContainer}>
+              {
+                data.IconName ?
+                  <Grid className={classes.infoWithPicsMarginRight}>
+                    {data.IconName}
+                  </Grid> :
+                  data.name_logo && data.logo  ?
+                    <Grid className={classes.infoWithPicsMarginRight}>
+                      <img
+                        style={{
+                          opacity: equipmentsSelected ? !result.includes(data._id) ? 0.2 : 1 : 1
+                        }}
+                        src={`../../../static/equipments/${data.logo.slice(0, -4)}.svg`} height={80} width={80} alt={`${data.name_logo.slice(0, -4)}.svg`}/>
                     </Grid> : null
-                }
-                {
-                  data.summary ?
-                    <Grid>
-                      <Typography style={{color:'rgba(39,37,37,35%)'}}>{data.summary}</Typography>
-                    </Grid> : null
-                }
-              </Grid> : null
-          }
-        </Grid>
+              }
+              {
+                data.label || data.summary ?
+                  <Grid>
+                    {
+                      data.label ?
+                        <Grid>
+                          <h4
+                            style={{
+                              margin: 0,
+                              textDecoration: equipmentsSelected ? !result.includes(data._id) ? 'line-through' : 'none' : 'none',
+                              opacity: equipmentsSelected ? !result.includes(data._id) ? 0.2 : 1 : 1
+                            }}
+                          >
+                            {data.label}
+                          </h4>
+                        </Grid> : null
+                    }
+                    {
+                      data.summary ?
+                        <Grid>
+                          <Typography className={classes.infoWithPicsColorText}>{data.summary}</Typography>
+                        </Grid> : null
+                    }
+                  </Grid> : null
+              }
+            </Grid> : null
+        }
+
       </Grid>
     );
   }
 }
 
-export default InfoWithPics
+export default withStyles (styles)(InfoWithPics)
