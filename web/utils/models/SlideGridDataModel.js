@@ -28,10 +28,7 @@ class SlideGridDataModel {
     // First card is always serviceinfo
     const grid_index = row*this.columns+col
 
-    if (grid_index==0) {
-      return null
-    }
-    var arrayIndex=page*(this.gridSize)+grid_index-1
+    var arrayIndex=page*(this.gridSize)+grid_index
 
     arrayIndex = this.infinite ? arrayIndex%this.data.length : arrayIndex
     const d= this.data[arrayIndex]
