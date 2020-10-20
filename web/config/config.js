@@ -127,5 +127,6 @@ module.exports = {
   ENABLE_GF_LOGIN,
   GOOGLE_PROVIDER, FACEBOOK_PROVIDER, PROVIDERS,
   is_production, is_validation, is_development, SERVER_PROD,
-  get_host_url, MANGOPAY_CONFIG, displayConfig
+  get_host_url, MANGOPAY_CONFIG, displayConfig,
+  ENABLE_MAILING,
 };
