@@ -2627,10 +2627,16 @@ router.post('/prospect/add', passport.authenticate('jwt', {session: false}), (re
 
           const after = records.length
           const delta=before-after
+
           Prospect.insertMany(records, { silent: true})
             .then(() => res.json(`${after}/${before} prospects importés après suppression des ${delta} doublons ou lignes vides`))
+            .catch (err => {
+              console.log('error')
+              throw err
+            })
         })
         .catch (err => {
+          console.error(err)
           res.status(404).json({errors: err.message})
         })
     }
