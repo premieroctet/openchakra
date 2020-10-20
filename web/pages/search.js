@@ -26,6 +26,36 @@ const SearchResults=withSlide(withGrid(CardService))
 
 moment.locale('fr');
 
+class SearchDataModel extends SlideGridDataModel {
+
+  /** Dans chaque grille, la première card est nulle (i.e. CardSrviceInfo)
+   => un item de moins par page
+  */
+  getPageCount() {
+    return Math.floor(this.data.length*1.0/(this.getGridSize()-1))
+  }
+
+  /** un item blanc par page => descendre d'un index par page
+  */
+  getDataIndex(page, col, row) {
+    var index = super.getDataIndex(page, col, row)
+    index = index - page - 1
+    return index
+  }
+
+  /**
+    Première cellule : null => affichage CardServiceInfo
+  */
+  getData(page, col, row) {
+    //return super.getData(page, col, row)
+    if (col==0 && row==0) {
+      return null
+    }
+    return super.getData(page, col, row)
+  }
+
+}
+
 class SearchPage extends React.Component {
 
   // FIX : page blanche quand redirigée depuis home page non connectée
@@ -400,7 +430,7 @@ class SearchPage extends React.Component {
                     <CircularProgress/>
                   </Grid>
                   :
-                  <SearchResults model={new SlideGridDataModel(serviceUsers.map(su => su._id), 4, 2, false)}
+                  <SearchResults model={new SearchDataModel(serviceUsers.map(su => su._id), 4, 2, false)}
                     style={classes}
                     gps={user ? user.billing_address.gps : this.state.gps}
                   />

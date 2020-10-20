@@ -4,33 +4,39 @@ class SlideGridDataModel {
     this.columns = columns
     this.rows = rows
     this.infinite = infinite
-    this.gridSize = rows*columns-1
+    this.gridSize = rows*columns
   }
 
-  isInfinite = () => {
+  isInfinite() {
     return this.infinite
   }
 
-
-  getPageCount = () => {
-    return Math.ceil(this.data.length*1.0/this.gridSize)
+  getGridSize() {
+    return this.columns*this.rows
   }
 
-  getRows = () => {
+  getPageCount() {
+    return Math.ceil(this.data.length*1.0/this.getGridSize())
+  }
+
+  getRows() {
     return this.rows
   }
 
-  getColumns = () => {
+  getColumns() {
     return this.columns
   }
 
-  getData = (page, col, row) => {
-    // First card is always serviceinfo
-    const grid_index = row*this.columns+col
-
-    var arrayIndex=page*(this.gridSize)+grid_index
-
+  getDataIndex(page, col, row) {
+    const grid_index = row*this.getColumns()+col
+    var arrayIndex=page*(this.getGridSize())+grid_index
     arrayIndex = this.infinite ? arrayIndex%this.data.length : arrayIndex
+    return arrayIndex
+  }
+
+  getData(page, col, row) {
+    // First card is always serviceinfo
+    const arrayIndex = this.getDataIndex(page, col, row)
     const d= this.data[arrayIndex]
     return d
   }
