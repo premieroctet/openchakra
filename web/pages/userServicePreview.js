@@ -366,16 +366,21 @@ class UserServicesPreview extends React.Component {
     this.onChange({target: {name: 'location', value: checked ? id : null}});
   };
 
-  onQtyChanged = state => (event) => {
-    var {name, value} = event.target;
+  onQtyChanged = (state, id) => (event) => {
+    let value = this.state.count[id];
     if (!value) {
       value = null;
     }
     value = parseInt(value);
     value = !isNaN(value) && value >= 0 ? value : null;
-    var count = this.state.count;
-    count[name] = value;
-    this.setState({count: count}, () => this.computeTotal());
+    let count = this.state.count;
+    if(state=== 'add'){
+      count[id] = value + 1;
+
+    }else{
+      count[id] = value - 1;
+    }
+      this.setState({count: count}, () => this.computeTotal());
   };
 
   computeTravelTax = () => {
@@ -699,7 +704,7 @@ class UserServicesPreview extends React.Component {
                             >
                               <Typography>{fltr ? fltr : ''}</Typography>
                             </AccordionSummary>
-                            <AccordionDetails>
+                            <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
                               {prestations.map((p, index) => {
                                 return (
                                   <Grid container style={{display: 'flex', alignItems: 'center', width: '100%'}} key={index}>
@@ -723,34 +728,20 @@ class UserServicesPreview extends React.Component {
                                           }
                                         </Grid>
                                       </Grid>
-                                      {/*<Grid>
-                                              <TextField
-                                                id="outlined-number"
-                                                label="Quantité"
-                                                type="number"
-                                                InputLabelProps={{shrink: true}}
-                                                margin="dense"
-                                                variant="outlined"
-                                                name={p._id}
-                                                value={this.state.count[p._id]}
-                                                onChange={this.onQtyChanged}
-                                              />
-                                            </Grid>*/}
-
                                     </Grid>
-                                    <Grid item xl={6} style={{display: 'flex', justifyContent: 'center'}}>
+                                    <Grid item xl={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
                                       <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                                         <Grid>
-                                          <IconButton aria-label="delete" name={p._id} onClick={this.onQtyChanged('remove')}>
-                                            <RemoveIcon />
+                                          <IconButton>
+                                            <RemoveIcon onClick={this.onQtyChanged('remove', p._id)}/>
                                           </IconButton>
                                         </Grid>
                                         <Grid>
-                                          <Typography>{count[p._id]}</Typography>
+                                          <Typography>{count[p._id] ? count[p._id] : 0}</Typography>
                                         </Grid>
                                         <Grid>
-                                          <IconButton aria-label="delete" name={p._id} onClick={this.onQtyChanged('add')}>
-                                            <AddIcon />
+                                          <IconButton>
+                                            <AddIcon onClick={this.onQtyChanged('add', p._id)}/>
                                           </IconButton>
                                         </Grid>
 
