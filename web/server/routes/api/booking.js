@@ -9,6 +9,7 @@ const axios = require('axios');
 const Booking = require('../../models/Booking');
 const User = require('../../models/User');
 const CronJob = require('cron').CronJob;
+const {is_production}=require('../../../config/config')
 const mangopay = require('mangopay2-nodejs-sdk');
 const {
   sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfos,
@@ -382,70 +383,75 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
     .catch(err => console.error(err));
 });
 
-// Handle confirmated and after en date => to terminate
-new CronJob('0 */5 * * * *', function () {
-  console.log('Checking bookings to terminate');
-  const date = moment(new Date(), 'DD-MM-YYYY').startOf('day');
-  Booking.find({status: 'Confirmée', paid: false})
-    .populate('user')
-    .populate('alfred')
-    .catch(err => console.error(err))
-    .then(booking => {
-      booking.forEach(b => {
-        const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day');
-        console.log(`End date:${end_date}`);
-        if (moment(date).isSameOrAfter(end_date)) {
-          console.log('Resa terminé:' + b._id);
-          b.status = 'Terminée';
-          b.save()
-            .then(b => {
-              sendLeaveCommentForAlfred(b);
-              sendLeaveCommentForClient(b);
-            })
-            .catch(err => console.error(err));
-        }
+// Handle confirmated and after end date => to terminate
+// Production mode only
+if (is_production()) {
+  new CronJob('0 */5 * * * *', function () {
+    console.log('Checking bookings to terminate');
+    const date = moment(new Date(), 'DD-MM-YYYY').startOf('day');
+    Booking.find({status: 'Confirmée', paid: false})
+      .populate('user')
+      .populate('alfred')
+      .catch(err => console.error(err))
+      .then(booking => {
+        booking.forEach(b => {
+          const end_date = moment(b.end_date, 'DD-MM-YYYY').add(1, 'days').startOf('day');
+          console.log(`End date:${end_date}`);
+          if (moment(date).isSameOrAfter(end_date)) {
+            console.log('Resa terminé:' + b._id);
+            b.status = 'Terminée';
+            b.save()
+              .then(b => {
+                sendLeaveCommentForAlfred(b);
+                sendLeaveCommentForClient(b);
+              })
+              .catch(err => console.error(err));
+          }
+        });
       });
-    });
-}, null, true, 'Europe/Paris');
+  }, null, true, 'Europe/Paris');
+}
 
 // Handle terminated but not paid bookings
-new CronJob('0 */5 * * * *', function () {
-  const date = moment(new Date(), 'DD-MM-YYYY').startOf('day');
-  Booking.find({status: 'Terminée', paid: false})
-    .populate('user')
-    .populate('alfred')
-    .then(bookings => {
-      bookings.forEach(booking => {
-        payAlfred(booking);
+if (is_production()) {
+  new CronJob('0 */5 * * * *', function () {
+    const date = moment(new Date(), 'DD-MM-YYYY').startOf('day');
+    Booking.find({status: 'Terminée', paid: false})
+      .populate('user')
+      .populate('alfred')
+      .then(bookings => {
+        bookings.forEach(booking => {
+          payAlfred(booking);
+        });
       });
-    });
-}, null, true, 'Europe/Paris');
+  }, null, true, 'Europe/Paris');
+}
 
-new CronJob('0 0 6 * * *', function () {
-  const currentDate = moment(new Date(), 'DD-MM-YYYY').startOf('day');
-  Booking.find({status: 'En attente de confirmation'})
-    .populate('user')
-    .populate('alfred')
-    .then(booking => {
-      booking.forEach(b => {
-        console.log('Checking' + b.date);
-        const date = moment(b.date).add(2, 'days');
-        const newDate = moment(date, 'DD-MM-YYYY').startOf('day');
-        if (moment(currentDate).isSameOrAfter(newDate)) {
-          console.log('Expired');
-          b.status = 'Expirée';
-          b.save()
-            .then(b => {
-              sendBookingExpiredToAlfred(b);
-              sendBookingExpiredToClient(b);
-            })
-            .catch();
-        }
+if (is_production()) {
+  new CronJob('0 0 6 * * *', function () {
+    const currentDate = moment(new Date(), 'DD-MM-YYYY').startOf('day');
+    Booking.find({status: 'En attente de confirmation'})
+      .populate('user')
+      .populate('alfred')
+      .then(booking => {
+        booking.forEach(b => {
+          console.log('Checking' + b.date);
+          const date = moment(b.date).add(2, 'days');
+          const newDate = moment(date, 'DD-MM-YYYY').startOf('day');
+          if (moment(currentDate).isSameOrAfter(newDate)) {
+            console.log('Expired');
+            b.status = 'Expirée';
+            b.save()
+              .then(b => {
+                sendBookingExpiredToAlfred(b);
+                sendBookingExpiredToClient(b);
+              })
+              .catch();
+          }
+        });
       });
-    });
-
-}, null, true, 'Europe/Paris');
-
+  }, null, true, 'Europe/Paris');
+}
 
 // pattern reference
 // premiere lettre nom user +  premiere lettre prenom user + premiere lettre nom alfred +  premiere lettre prenom alfred + date + 5 random
