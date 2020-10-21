@@ -37,7 +37,6 @@ class Layout extends React.Component {
     const {children, user, selectedAddress, classes, gps, indexCat} = this.props;
     const {logged, categories} = this.state;
 
-
     return (
       <Fragment>
         <InfoBar style={classes} />

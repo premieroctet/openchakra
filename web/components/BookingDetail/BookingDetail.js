@@ -72,14 +72,18 @@ class BookingDetail extends React.Component {
           }
           { /* End commission */}
           { /* Start total */}
-          <Grid className={classes.flexContent} style={{fontWeight: 'bold'}}>
-            <Grid>
-              <p>{client_fee !== 0 ? 'Total' : 'Total à percevoir'}</p>
-            </Grid>
-            <Grid>
-              <p>{total.toFixed(2)}€</p>
-            </Grid>
-          </Grid>
+          {
+            total ?
+              <Grid className={classes.flexContent} style={{fontWeight: 'bold'}}>
+                <Grid>
+                  <p>{client_fee !== 0 ? 'Total' : 'Total à percevoir'}</p>
+                </Grid>
+                <Grid>
+                  <p>{total.toFixed(2)}€</p>
+                </Grid>
+              </Grid> : null
+          }
+
           { /* End total */}
           { /* Start CESU */}
           {client_fee && cesu_total ?
