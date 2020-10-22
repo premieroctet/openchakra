@@ -26,10 +26,20 @@ class DrawerBooking extends React.Component{
 
   constructor(props) {
     super(props);
+    this.state={
+      expanded: false
+    }
   }
 
+  handleChange = panel => (event, isExpanded) => {
+
+    this.setState({expanded: isExpanded ? panel : false})
+
+  };
+
   render() {
-    const {warningPerimeter, side, classes, service, alfred, date, time, errors, count, serviceUser, isChecked, location, pick_tax, total, commission, cesu_total, filters, pricedPrestations} = this.props;
+    const {expanded} = this.state;
+    const {warningPerimeter, side, classes, service, alfred, date, time, errors, count, serviceUser, isChecked, location, pick_tax, total, commission, cesu_total, filters, pricedPrestations, use_cesu} = this.props;
 
     return(
       <Grid>
@@ -121,7 +131,7 @@ class DrawerBooking extends React.Component{
               </Grid>
             </Grid>
             <Grid style={{marginBottom: 30}}>
-              <Accordion classes={{root: classes.rootAccordion}}>
+              <Accordion classes={{root: classes.rootAccordion}} expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon/>}
                   aria-controls="panel1a-content"
@@ -163,7 +173,7 @@ class DrawerBooking extends React.Component{
                                           <Grid>
                                             <Typography style={{color:'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : '?'}</Typography>
                                           </Grid>
-                                          {p.prestation.cesu_eligible && this.state.use_cesu ?
+                                          {p.prestation.cesu_eligible && use_cesu ?
                                             <Grid>
                                               <Typography><em>Eligible au <a href={'#'}>CESU</a></em></Typography>
                                             </Grid>
@@ -206,7 +216,7 @@ class DrawerBooking extends React.Component{
               </Grid>
             </Grid>
             <Grid style={{marginBottom: 30}}>
-              <Accordion classes={{root: classes.rootAccordion}}>
+              <Accordion classes={{root: classes.rootAccordion}} expanded={expanded === 'panel2'} onChange={this.handleChange('panel2')}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1a-content"
@@ -214,7 +224,7 @@ class DrawerBooking extends React.Component{
                 >
                   <Typography style={{color: '#505050'}}>Lieu de la prestation</Typography>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
                   { serviceUser.location && serviceUser.location.client && this.props.isInPerimeter() ?
                     <Grid>
                       <ButtonSwitch
@@ -266,53 +276,55 @@ class DrawerBooking extends React.Component{
               </Accordion>
             </Grid>
             {serviceUser.pick_tax || this.props.computeTravelTax() ?
-              <Accordion>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography>Option(s) de la prestation</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  {serviceUser.travel_tax && location === 'client' ?
-                    <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-                      <Grid>
-                        Frais de déplacement
-                      </Grid>
-                      <Grid>
-                        {serviceUser.travel_tax.toFixed(2)}€
-                      </Grid>
-                    </Grid>
-                    : null
-                  }
-                  {serviceUser.pick_tax && location === 'alfred' ?
-                    <Grid>
-                      <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                        <Grid style={{display: 'flex', alignItems: 'center'}}>
-                          <Grid>
-
-                          </Grid>
-                          <Grid>
-                            <label>Retrait & livraison</label>
-                          </Grid>
+              <Grid style={{marginBottom: 30}}>
+                <Accordion classes={{root: classes.rootAccordion}} expanded={expanded === 'panel3'} onChange={this.handleChange('panel3')}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Typography>Option(s) de la prestation</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
+                    {serviceUser.travel_tax && location === 'client' ?
+                      <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
+                        <Grid>
+                          Frais de déplacement
                         </Grid>
-                        {
-                          isChecked ?
-                            <Grid>
-                              {serviceUser.pick_tax.toFixed(2)}€
-                            </Grid> : null
-                        }
+                        <Grid>
+                          {serviceUser.travel_tax.toFixed(2)}€
+                        </Grid>
                       </Grid>
-                    </Grid>
-                    : null
-                  }
-                </AccordionDetails>
-              </Accordion>
-              : null
-            }
+                      : null
+                    }
+                    {serviceUser.pick_tax && location === 'alfred' ?
+                      <Grid>
+                        <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                          <Grid style={{display: 'flex', alignItems: 'center'}}>
+                            <Grid>
+
+                            </Grid>
+                            <Grid>
+                              <label>Retrait & livraison</label>
+                            </Grid>
+                          </Grid>
+                          {
+                            isChecked ?
+                              <Grid>
+                                {serviceUser.pick_tax.toFixed(2)}€
+                              </Grid> : null
+                          }
+                        </Grid>
+                      </Grid>
+                      : null
+                    }
+                  </AccordionDetails>
+                </Accordion>
+              </Grid>
+            : null
+          }
             <Grid style={{marginBottom: 30}}>
-              <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
+              <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}} expanded={expanded === 'panel4'} onChange={this.handleChange('panel4')}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1a-content"
@@ -320,20 +332,20 @@ class DrawerBooking extends React.Component{
                 >
                   <Typography>Afficher les détails</Typography>
                 </AccordionSummary>
-                <AccordionDetails>
-                  <Grid style={{marginTop: 20, marginLeft: 10}}>
+                <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
+                  <Grid>
                     <Grid style={{display: 'flex', alignItems: 'center', marginBottom: 20}}>
-                      <Grid style={{marginLeft: 10}}>
+                      <Grid>
                         <Typography>{this.props.getLocationLabel()}</Typography>
                       </Grid>
                     </Grid>
                     <Grid style={{display: 'flex', alignItems: 'center'}}>
-                      <Grid style={{marginLeft: 10}}>
+                      <Grid>
                         <Typography>Le {date ? moment(date).format('DD/MM/YYYY') : ''} à {time ? moment(time).format('HH:mm') : ''}</Typography>
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid style={{display: 'flex', flexDirection: 'column', marginLeft: 15, marginRight: 15, marginBottom: 30}}>
+                  <Grid style={{display: 'flex', flexDirection: 'column'}}>
                     <BookingDetail
                       prestations={pricedPrestations}
                       count={count}
