@@ -19,8 +19,8 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import RemoveIcon from "@material-ui/icons/Remove";
 import AddIcon from "@material-ui/icons/Add";
 const isEmpty = require('../../../server/validation/is-empty');
-import Switch from '@material-ui/core/Switch';
-import withStyles from "@material-ui/core/styles/withStyles";
+const moment = require('moment');
+moment.locale('fr');
 
 class DrawerBooking extends React.Component{
 
@@ -28,54 +28,8 @@ class DrawerBooking extends React.Component{
     super(props);
   }
 
-  extractFilters = () => {
-    let result = {};
-    if(this.props.prestations){
-      if (this.props.prestations.length === 0) {
-        return result;
-      }
-      this.props.prestations.forEach(p => {
-        if (p.prestation == null) {
-          // FIX : réaffecter les prestations persos
-          console.error(`Error:${p.id} has a null prestation`);
-        } else {
-          let filter = p.prestation.filter_presentation;
-          let key = !filter || filter.label === 'Aucun' ? '' : filter.label;
-          if (key in result) {
-            result[key].push(p);
-          } else {
-            result[key] = [p];
-          }
-        }
-      });
-      return result;
-    }
-    return result;
-    // Set "no filter" to first position
-  };
-
-
-  computePricedPrestations = () => {
-    const count = this.props.count;
-    var result = {};
-    if(this.props.prestations){
-      this.props.prestations.forEach(p => {
-        if (count[p._id]) {
-          result[p.prestation.label] = count[p._id] * p.price;
-        }
-      });
-      return result;
-    }
-    return result;
-  };
-
   render() {
-    const {warningPerimeter, side, classes, service, alfred, date, time, errors, count, serviceUser, isChecked, location, pick_tax, total, commission, cesu_total} = this.props;
-
-    const filters = this.extractFilters();
-
-    const pricedPrestations = this.computePricedPrestations();
-
+    const {warningPerimeter, side, classes, service, alfred, date, time, errors, count, serviceUser, isChecked, location, pick_tax, total, commission, cesu_total, filters, pricedPrestations} = this.props;
 
     return(
       <Grid>
@@ -95,7 +49,7 @@ class DrawerBooking extends React.Component{
             <Grid style={{marginBottom: 30}}>
               <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
                 <Grid>
-                  <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>{service ? service.label : ''} - {alfred ? alfred.firstname : ''}</Typography>
+                  <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>{service.label} - {alfred.firstname}</Typography>
                 </Grid>
                 <Hidden lgUp>
                   <Grid>
@@ -119,7 +73,7 @@ class DrawerBooking extends React.Component{
                             <DatePicker
                               selected={date}
                               dateFormat="dd/MM/yyyy"
-                              onChange={this.props.onChangeDate()}
+                              onChange={this.props.onChangeDate}
                               placeholderText="Date"
                               locale='fr'
                               minDate={new Date()}
@@ -143,7 +97,7 @@ class DrawerBooking extends React.Component{
                           return (
                             <DatePicker
                               selected={time}
-                              onChange={this.props.onChangeTime()}
+                              onChange={this.props.onChangeTime}
                               showTimeSelect
                               showTimeSelectOnly
                               timeIntervals={30}
@@ -163,7 +117,7 @@ class DrawerBooking extends React.Component{
                 </Grid>
               </Grid>
               <Grid>
-                <em style={{color: '#f87280'}}>{errors ? errors['datetime']: ''}</em>
+                <em style={{color: '#f87280'}}>{errors['datetime']}</em>
               </Grid>
             </Grid>
             <Grid style={{marginBottom: 30}}>
@@ -177,91 +131,78 @@ class DrawerBooking extends React.Component{
                 </AccordionSummary>
                 <AccordionDetails classes={{root: classes.userServicePreviewAccordionDetails}}>
                   {
-                    filters ?
-                      Object.keys(filters).sort().map((key, index) => {
-                        let fltr = key;
-                        let prestations = filters[key];
-                        return (
-                          <Grid style={{zIndex: 0}} key={index}>
-                            <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
-                              <AccordionSummary
-                                expandIcon={<ExpandMoreIcon/>}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                              >
-                                <Typography>{fltr ? fltr : ''}</Typography>
-                              </AccordionSummary>
-                              <AccordionDetails>
-                                {prestations.map((p, index) => {
-                                  return (
-                                    <Grid container style={{display: 'flex', alignItems: 'center', width: '100%'}} key={index}>
-                                      <Grid item xl={6}>
-                                        <Grid style={{display: 'flex', flexDirection: 'column'}}>
-                                          <Grid>
-                                            <Typography>{p.prestation.label}</Typography>
-                                          </Grid>
-                                          <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                                            <Grid>
-                                              <Typography>{p.price ? p.price.toFixed(2) : '?'}€</Typography>
-                                            </Grid>
-                                            <Grid>
-                                              <Typography>{p.billing ? p.billing.label : '?'}</Typography>
-                                            </Grid>
-                                            {p.prestation.cesu_eligible && this.state.use_cesu ?
-                                              <Grid>
-                                                <Typography>Eligible au <a href={'#'}>CESU</a></Typography>
-                                              </Grid>
-                                              : null
-                                            }
-                                          </Grid>
+                    Object.keys(filters).sort().map((key, index) => {
+                      let fltr = key;
+                      let prestations = filters[key];
+                      return (
+                        <Grid style={{zIndex: 0}} key={index}>
+                          <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
+                            <AccordionSummary
+                              expandIcon={<ExpandMoreIcon/>}
+                              aria-controls="panel1a-content"
+                              id="panel1a-header"
+                            >
+                              <Typography>{fltr ? fltr : ''}</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
+                              {prestations.map((p, index) => {
+                                return (
+                                  <Grid container style={{display: 'flex', alignItems: 'center', width: '100%', marginBottom: '5%'}} key={index}>
+                                    <Grid item xl={6}>
+                                      <Grid style={{display: 'flex', flexDirection: 'column'}}>
+                                        <Grid>
+                                          <Typography>{p.prestation.label}</Typography>
                                         </Grid>
-                                        {/*<Grid>
-                                                <TextField
-                                                  id="outlined-number"
-                                                  label="Quantité"
-                                                  type="number"
-                                                  InputLabelProps={{shrink: true}}
-                                                  margin="dense"
-                                                  variant="outlined"
-                                                  name={p._id}
-                                                  value={this.state.count[p._id]}
-                                                  onChange={this.onQtyChanged}
-                                                />
-                                              </Grid>*/}
-
-                                      </Grid>
-                                      <Grid item xl={6} style={{display: 'flex', justifyContent: 'center'}}>
                                         <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                                           <Grid>
-                                            <IconButton aria-label="delete" name={p._id} onClick={this.props.onQtyChanged('remove')}>
-                                              <RemoveIcon />
-                                            </IconButton>
+                                            <Typography style={{color:'rgba(39,37,37,35%)'}}>{p.price ? p.price.toFixed(2) : '?'}€</Typography>
+                                          </Grid>
+                                          <Grid style={{marginLeft : '5%', marginRight: '5%'}}>
+                                            <Typography style={{color:'rgba(39,37,37,35%)'}}>/</Typography>
                                           </Grid>
                                           <Grid>
-                                            <Typography>{count[p._id]}</Typography>
+                                            <Typography style={{color:'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : '?'}</Typography>
                                           </Grid>
-                                          <Grid>
-                                            <IconButton aria-label="delete" name={p._id} onClick={this.props.onQtyChanged('add')}>
-                                              <AddIcon />
-                                            </IconButton>
-                                          </Grid>
-
+                                          {p.prestation.cesu_eligible && this.state.use_cesu ?
+                                            <Grid>
+                                              <Typography><em>Eligible au <a href={'#'}>CESU</a></em></Typography>
+                                            </Grid>
+                                            : null
+                                          }
                                         </Grid>
                                       </Grid>
                                     </Grid>
-                                  );
-                                })}
-                              </AccordionDetails>
-                            </Accordion>
-                          </Grid>
-                        );
-                      })
-                      : null
+                                    <Grid item xl={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
+                                      <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                                        <Grid>
+                                          <IconButton onClick={this.props.onQtyChanged('remove', p._id)}>
+                                            <RemoveIcon/>
+                                          </IconButton>
+                                        </Grid>
+                                        <Grid style={{marginLeft: '4%', marginRight: '4%'}}>
+                                          <Typography>{count[p._id] ? count[p._id] : 0}</Typography>
+                                        </Grid>
+                                        <Grid>
+                                          <IconButton onClick={this.props.onQtyChanged('add', p._id)}>
+                                            <AddIcon/>
+                                          </IconButton>
+                                        </Grid>
+
+                                      </Grid>
+                                    </Grid>
+                                  </Grid>
+                                );
+                              })}
+                            </AccordionDetails>
+                          </Accordion>
+                        </Grid>
+                      );
+                    })
                   }
                 </AccordionDetails>
               </Accordion>
               <Grid>
-                <em style={{color: '#f87280'}}>{errors ? errors['prestations'] : ''}</em>
+                <em style={{color: '#f87280'}}>{errors['prestations']}</em>
               </Grid>
             </Grid>
             <Grid style={{marginBottom: 30}}>
@@ -274,7 +215,7 @@ class DrawerBooking extends React.Component{
                   <Typography style={{color: '#505050'}}>Lieu de la prestation</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  { serviceUser ? serviceUser.location && serviceUser.location.client && this.props.isInPerimeter() ?
+                  { serviceUser.location && serviceUser.location.client && this.props.isInPerimeter() ?
                     <Grid>
                       <ButtonSwitch
                         key={moment()}
@@ -284,12 +225,12 @@ class DrawerBooking extends React.Component{
                         isPrice={false}
                         isOption={false}
                         checked={location === 'client'}
-                        onChange={this.props.onLocationChanged()}/>
+                        onChange={this.props.onLocationChanged}/>
                     </Grid>
-                    : null : null
+                    : null
                   }
                   {
-                    serviceUser ? serviceUser.location && serviceUser.location.alfred && alfred.firstname !== undefined ?
+                    serviceUser.location && serviceUser.location.alfred && alfred.firstname !== undefined ?
                       <Grid>
                         <ButtonSwitch
                           key={moment()}
@@ -299,12 +240,12 @@ class DrawerBooking extends React.Component{
                           isPrice={false}
                           isOption={false}
                           checked={location === 'alfred'}
-                          onChange={this.props.onLocationChanged()}/>
+                          onChange={this.props.onLocationChanged}/>
                       </Grid>
-                      : null : null
+                      : null
                   }
                   {
-                   serviceUser ? serviceUser.location && serviceUser.location.visio ?
+                    serviceUser.location && serviceUser.location.visio ?
                       <Grid>
                         <ButtonSwitch
                           key={moment()}
@@ -314,17 +255,17 @@ class DrawerBooking extends React.Component{
                           isPrice={false}
                           isOption={false}
                           checked={location === 'visio'}
-                          onChange={this.props.onLocationChanged()}/>
+                          onChange={this.props.onLocationChanged}/>
                       </Grid>
-                      : null : null
+                      : null
                   }
                   <Grid>
-                    <em style={{color: '#f87280'}}>{errors ? errors['location']: ''}</em>
+                    <em style={{color: '#f87280'}}>{errors['location']}</em>
                   </Grid>
                 </AccordionDetails>
               </Accordion>
             </Grid>
-            {serviceUser && location ? serviceUser.pick_tax || this.props.computeTravelTax() ?
+            {serviceUser.pick_tax || this.props.computeTravelTax() ?
               <Accordion>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
@@ -368,7 +309,7 @@ class DrawerBooking extends React.Component{
                   }
                 </AccordionDetails>
               </Accordion>
-              : null : null
+              : null
             }
             <Grid style={{marginBottom: 30}}>
               <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
@@ -382,21 +323,13 @@ class DrawerBooking extends React.Component{
                 <AccordionDetails>
                   <Grid style={{marginTop: 20, marginLeft: 10}}>
                     <Grid style={{display: 'flex', alignItems: 'center', marginBottom: 20}}>
-                      <Grid>
-                        <img style={{width: 40, height: 40}} alt={'adresse'} title={'adresse'}
-                             src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
-                      </Grid>
                       <Grid style={{marginLeft: 10}}>
-                        <label></label>
+                        <Typography>{this.props.getLocationLabel()}</Typography>
                       </Grid>
                     </Grid>
                     <Grid style={{display: 'flex', alignItems: 'center'}}>
-                      <Grid>
-                        <img style={{width: 40, height: 40}} alt={'calendrier'} title={'calendrier'}
-                             src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
-                      </Grid>
                       <Grid style={{marginLeft: 10}}>
-                        <label>Le {date ? moment(date).format('DD/MM/YYYY') : ''} à {time ? moment(time).format('HH:mm') : ''}</label>
+                        <Typography>Le {date ? moment(date).format('DD/MM/YYYY') : ''} à {time ? moment(time).format('HH:mm') : ''}</Typography>
                       </Grid>
                     </Grid>
                   </Grid>

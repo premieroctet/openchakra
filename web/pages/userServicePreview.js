@@ -9,20 +9,13 @@ import axios from 'axios';
 import UserAvatar from '../components/Avatar/UserAvatar';
 import Typography from '@material-ui/core/Typography';
 import Schedule from '../components/Schedule/Schedule';
-import TextField from '@material-ui/core/TextField';
-const { Accordion, AccordionSummary, AccordionDetails }=require('@material-ui/core');
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ButtonSwitch from '../components/ButtonSwitch/ButtonSwitch';
 import Button from '@material-ui/core/Button';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import MapComponent from '../components/map';
-import DatePicker, {registerLocale} from 'react-datepicker';
+import {registerLocale} from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
 import Switch from '@material-ui/core/Switch';
-import BookingDetail from '../components/BookingDetail/BookingDetail';
 import {Helmet} from 'react-helmet';
 import Link from 'next/link';
 import cookie from 'react-cookies';
@@ -33,11 +26,7 @@ import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import GallerySlidePics from "../components/GallerySlidePics/GallerySlidePics";
 import SummaryCommentary from "../components/SummaryCommentary/SummaryCommentary"
-import CancelIcon from '@material-ui/icons/Cancel';
-import Divider from '@material-ui/core/Divider';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
+import DrawerBooking from "../components/Drawer/DrawerBooking/DrawerBooking";
 
 
 const isEmpty = require('../server/validation/is-empty');
@@ -56,59 +45,6 @@ const EquipementTopic = WithTopic(ListAlfredConditions);
 const MapTopic = WithTopic(MapComponent);
 const PhotoTopic = WithTopic(GallerySlidePics);
 const CommentaryTopic = WithTopic(SummaryCommentary);
-
-
-const IOSSwitch = withStyles(theme => ({
-  root: {
-    width: 42,
-    height: 26,
-    padding: 0,
-    margin: theme.spacing(1),
-  },
-  switchBase: {
-    padding: 1,
-    '&$checked': {
-      transform: 'translateX(16px)',
-      color: '#47bdd7',
-      '& + $track': {
-        backgroundColor: 'white',
-
-      },
-    },
-    '&$focusVisible $thumb': {
-      color: 'white',
-      border: '6px solid #fff',
-    },
-  },
-  thumb: {
-    width: 24,
-    height: 24,
-  },
-  track: {
-    borderRadius: 26 / 2,
-    border: `1px solid ${theme.palette.grey[400]}`,
-    backgroundColor: theme.palette.grey[50],
-    opacity: 1,
-    transition: theme.transitions.create(['background-color', 'border']),
-  },
-  checked: {},
-  focusVisible: {},
-}))(({classes, ...props}) => {
-  return (
-    <Switch
-      focusVisibleClassName={classes.focusVisible}
-      disableRipple
-      classes={{
-        root: classes.root,
-        switchBase: classes.switchBase,
-        thumb: classes.thumb,
-        track: classes.track,
-        checked: classes.checked,
-      }}
-      {...props}
-    />
-  );
-});
 
 class UserServicesPreview extends React.Component {
   constructor(props) {
@@ -189,7 +125,7 @@ class UserServicesPreview extends React.Component {
             if (bookingObj) {
               serviceUser.prestations.forEach(p => {
                 const bookP = bookingObj.prestations.find(bp => {
-                  return bp.name == p.prestation.label;
+                  return bp.name === p.prestation.label;
                 });
                 if (bookP) {
                   count[p._id] = parseInt(bookP.value);
@@ -219,7 +155,7 @@ class UserServicesPreview extends React.Component {
                   flexible: shop.flexible_cancel,
                   moderate: shop.moderate_cancel,
                   strict: shop.strict_cancel,
-                  use_cesu: shop.cesu != 'Disabled',
+                  use_cesu: shop.cesu !== 'Disabled',
                 });
               })
               .catch(err => console.error(err));
@@ -250,8 +186,6 @@ class UserServicesPreview extends React.Component {
           });
       })
       .catch(err => console.error(err));
-
-
 
     localStorage.removeItem('bookingObj');
     setTimeout(() => {
@@ -317,7 +251,7 @@ class UserServicesPreview extends React.Component {
   };
 
   extractFilters = () => {
-    var result = {};
+    let result = {};
     if (this.state.prestations.length === 0) {
       return result;
     }
@@ -384,18 +318,17 @@ class UserServicesPreview extends React.Component {
   };
 
   computeTravelTax = () => {
-    return this.state.serviceUser.travel_tax && this.state.location == 'client' ? this.state.serviceUser.travel_tax : 0;
+    return this.state.serviceUser.travel_tax && this.state.location === 'client' ? this.state.serviceUser.travel_tax : 0;
   };
 
   computePickTax = () => {
-    return this.state.isChecked && this.state.location == 'alfred' ? this.state.serviceUser.pick_tax : 0;
+    return this.state.isChecked && this.state.location === 'alfred' ? this.state.serviceUser.pick_tax : 0;
   };
 
   computeTotal = () => {
-    var totalPrestations = 0;
-    var totalCesu = 0;
-    var count = this.state.count;
-    var su = this.state.serviceUser;
+    let totalPrestations = 0;
+    let totalCesu = 0;
+    let count = this.state.count;
     this.state.prestations.forEach(p => {
       if (count[p._id] > 0) {
         totalPrestations += count[p._id] * p.price;
@@ -416,8 +349,8 @@ class UserServicesPreview extends React.Component {
       totalCesu += pickTax ? parseFloat(pickTax) : 0;
     }
 
-    var commission = totalPrestations * COMM_CLIENT;
-    var total = totalPrestations;
+    let commission = totalPrestations * COMM_CLIENT;
+    let total = totalPrestations;
     total += commission;
     this.setState({
       totalPrestations: totalPrestations,
@@ -460,7 +393,7 @@ class UserServicesPreview extends React.Component {
 
     const count = this.state.count;
     const user = this.state.user;
-    var prestations = [];
+    let prestations = [];
     this.state.prestations.forEach(p => {
       if (this.state.count[p._id]) {
         prestations.push({price: p.price, value: count[p._id], name: p.prestation.label});
@@ -480,7 +413,7 @@ class UserServicesPreview extends React.Component {
     }
 
 
-    var chatPromise = (actual || !user) ? emptyPromise({res: null}) : axios.post('/myAlfred/api/chatRooms/addAndConnect', {
+    let chatPromise = (actual || !user) ? emptyPromise({res: null}) : axios.post('/myAlfred/api/chatRooms/addAndConnect', {
       emitter: this.state.user._id,
       recipient: this.state.serviceUser.user._id,
     });
@@ -578,368 +511,18 @@ class UserServicesPreview extends React.Component {
   // TODO : force computing disponibility
   scheduleDateChanged = (dates, mmt, mode) => {
     const dt = new Date([...dates][0]);
-    this.setState({date : dt, time: mode=='week' ? mmt : undefined}, () => this.checkBook())
+    this.setState({date : dt, time: mode==='week' ? mmt : undefined}, () => this.checkBook())
   };
 
   render() {
     const {classes} = this.props;
-    const {date, time, location, serviceUser, service, equipments, alfred, errors, isChecked, user, allDetailEquipments, warningPerimeter, count} = this.state;
+    const {serviceUser, service, equipments, alfred, user, allDetailEquipments} = this.state;
 
     const serviceAddress = serviceUser.service_address;
 
     const filters = this.extractFilters();
 
     const pricedPrestations = this.computePricedPrestations();
-
-    const drawer = side => (
-      <Grid>
-        {
-          !warningPerimeter ?
-            <Grid className={classes.userServicePreviewWarningContainer}>
-              <Grid>
-                <CancelIcon color={'secondary'}/>
-              </Grid>
-              <Grid>
-                <Typography>Attention, cet Alfred se trouve loin de chez vous !</Typography>
-              </Grid>
-            </Grid> : null
-        }
-        <Grid className={classes.borderContentRight}>
-          <Grid style={{width: '80%', paddingTop: '5%', paddingBottom: '5%'}}>
-            <Grid style={{marginBottom: 30}}>
-              <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-                <Grid>
-                  <Typography variant="h6" style={{color: '#505050', fontWeight: 'bold'}}>{service.label} - {alfred.firstname}</Typography>
-                </Grid>
-                <Hidden lgUp>
-                  <Grid>
-                    <IconButton aria-label="Edit" className={classes.iconButtonStyle}>
-                      <CloseIcon color={'secondary'} onClick={this.toggleDrawer(side, false)}/>
-                    </IconButton>
-                  </Grid>
-                </Hidden>
-              </Grid>
-              <Grid style={{marginTop: '5%'}}>
-                <Grid style={{padding: '10px 16px', display: 'flex', alignItems: 'center', border: '1px solid rgba(112,112,112,0.5)', borderRadius: 14, width: '100%'}}>
-                  <Grid style={{width: '50%'}}>
-                    <TextField
-                      classes={{root: classes.navbarRootTextField}}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      InputProps={{
-                        inputComponent:(inputRef) => {
-                          return (
-                            <DatePicker
-                              selected={date}
-                              dateFormat="dd/MM/yyyy"
-                              onChange={this.onChangeDate}
-                              placeholderText="Date"
-                              locale='fr'
-                              minDate={new Date()}
-                              className={classes.datePickerStyle}
-                            />
-                          )
-                        },
-                        disableUnderline: true
-                      }}
-                    />
-                  </Grid>
-                  <Divider style={{height: 28, margin: 4}} orientation="vertical" />
-                  <Grid style={{width: '50%', marginLeft: '3%'}}>
-                    <TextField
-                      classes={{root: classes.navbarRootTextField}}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      InputProps={{
-                        inputComponent:(inputRef) => {
-                          return (
-                            <DatePicker
-                              selected={time}
-                              onChange={this.onChangeTime}
-                              showTimeSelect
-                              showTimeSelectOnly
-                              timeIntervals={30}
-                              timeCaption="Heure"
-                              placeholderText="Heure"
-                              dateFormat="HH:mm"
-                              locale='fr'
-                              minDate={new Date()}
-                              className={classes.datePickerStyle}
-                            />
-                          )
-                        },
-                        disableUnderline: true
-                      }}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid>
-                <em style={{color: '#f87280'}}>{errors['datetime']}</em>
-              </Grid>
-            </Grid>
-            <Grid style={{marginBottom: 30}}>
-              <Accordion classes={{root: classes.rootAccordion}}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon/>}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography>Choix de la presta</Typography>
-                </AccordionSummary>
-                <AccordionDetails classes={{root: classes.userServicePreviewAccordionDetails}}>
-                  {
-                    Object.keys(filters).sort().map((key, index) => {
-                      let fltr = key;
-                      let prestations = filters[key];
-                      return (
-                        <Grid style={{zIndex: 0}} key={index}>
-                          <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
-                            <AccordionSummary
-                              expandIcon={<ExpandMoreIcon/>}
-                              aria-controls="panel1a-content"
-                              id="panel1a-header"
-                            >
-                              <Typography>{fltr ? fltr : ''}</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-                              {prestations.map((p, index) => {
-                                return (
-                                  <Grid container style={{display: 'flex', alignItems: 'center', width: '100%', marginBottom: '5%'}} key={index}>
-                                    <Grid item xl={6}>
-                                      <Grid style={{display: 'flex', flexDirection: 'column'}}>
-                                        <Grid>
-                                          <Typography>{p.prestation.label}</Typography>
-                                        </Grid>
-                                        <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                                          <Grid>
-                                            <Typography style={{color:'rgba(39,37,37,35%)'}}>{p.price ? p.price.toFixed(2) : '?'}€</Typography>
-                                          </Grid>
-                                          <Grid style={{marginLeft : '5%', marginRight: '5%'}}>
-                                            <Typography style={{color:'rgba(39,37,37,35%)'}}>/</Typography>
-                                          </Grid>
-                                          <Grid>
-                                            <Typography style={{color:'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : '?'}</Typography>
-                                          </Grid>
-                                          {p.prestation.cesu_eligible && this.state.use_cesu ?
-                                            <Grid>
-                                              <Typography><em>Eligible au <a href={'#'}>CESU</a></em></Typography>
-                                            </Grid>
-                                            : null
-                                          }
-                                        </Grid>
-                                      </Grid>
-                                    </Grid>
-                                    <Grid item xl={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
-                                      <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                                        <Grid>
-                                          <IconButton onClick={this.onQtyChanged('remove', p._id)}>
-                                            <RemoveIcon/>
-                                          </IconButton>
-                                        </Grid>
-                                        <Grid style={{marginLeft: '4%', marginRight: '4%'}}>
-                                          <Typography>{count[p._id] ? count[p._id] : 0}</Typography>
-                                        </Grid>
-                                        <Grid>
-                                          <IconButton onClick={this.onQtyChanged('add', p._id)}>
-                                            <AddIcon/>
-                                          </IconButton>
-                                        </Grid>
-
-                                      </Grid>
-                                    </Grid>
-                                  </Grid>
-                                );
-                              })}
-                            </AccordionDetails>
-                          </Accordion>
-                        </Grid>
-                      );
-                    })
-                  }
-                </AccordionDetails>
-              </Accordion>
-              <Grid>
-                <em style={{color: '#f87280'}}>{errors['prestations']}</em>
-              </Grid>
-            </Grid>
-            <Grid style={{marginBottom: 30}}>
-              <Accordion classes={{root: classes.rootAccordion}}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography style={{color: '#505050'}}>Lieu de la prestation</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  { serviceUser.location && serviceUser.location.client && this.isInPerimeter() ?
-                    <Grid>
-                      <ButtonSwitch
-                        key={moment()}
-                        id='client'
-                        label={'A mon adresse principale'}
-                        isEditable={false}
-                        isPrice={false}
-                        isOption={false}
-                        checked={location === 'client'}
-                        onChange={this.onLocationChanged}/>
-                    </Grid>
-                    : null
-                  }
-                  {
-                    serviceUser.location && serviceUser.location.alfred && alfred.firstname !== undefined ?
-                      <Grid>
-                        <ButtonSwitch
-                          key={moment()}
-                          id='alfred'
-                          label={'Chez ' + alfred.firstname}
-                          isEditable={false}
-                          isPrice={false}
-                          isOption={false}
-                          checked={location === 'alfred'}
-                          onChange={this.onLocationChanged}/>
-                      </Grid>
-                      : null
-                  }
-                  {
-                    serviceUser.location && serviceUser.location.visio ?
-                      <Grid>
-                        <ButtonSwitch
-                          key={moment()}
-                          id='visio'
-                          label={'En visio'}
-                          isEditable={false}
-                          isPrice={false}
-                          isOption={false}
-                          checked={location === 'visio'}
-                          onChange={this.onLocationChanged}/>
-                      </Grid>
-                      : null
-                  }
-                  <Grid>
-                    <em style={{color: '#f87280'}}>{errors['location']}</em>
-                  </Grid>
-                </AccordionDetails>
-              </Accordion>
-            </Grid>
-            {serviceUser.pick_tax || this.computeTravelTax() ?
-              <Accordion>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography>Option(s) de la prestation</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  {serviceUser.travel_tax && location === 'client' ?
-                    <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-                      <Grid>
-                        Frais de déplacement
-                      </Grid>
-                      <Grid>
-                        {serviceUser.travel_tax.toFixed(2)}€
-                      </Grid>
-                    </Grid>
-                    : null
-                  }
-                  {serviceUser.pick_tax && location === 'alfred' ?
-                    <Grid>
-                      <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                        <Grid style={{display: 'flex', alignItems: 'center'}}>
-                          <Grid>
-
-                          </Grid>
-                          <Grid>
-                            <label>Retrait & livraison</label>
-                          </Grid>
-                        </Grid>
-                        {
-                          isChecked ?
-                            <Grid>
-                              {serviceUser.pick_tax.toFixed(2)}€
-                            </Grid> : null
-                        }
-                      </Grid>
-                    </Grid>
-                    : null
-                  }
-                </AccordionDetails>
-              </Accordion>
-              : null
-            }
-            <Grid style={{marginBottom: 30}}>
-              <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography>Afficher les détails</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Grid style={{marginTop: 20, marginLeft: 10}}>
-                    <Grid style={{display: 'flex', alignItems: 'center', marginBottom: 20}}>
-                      <Grid style={{marginLeft: 10}}>
-                        <Typography>{this.getLocationLabel()}</Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid style={{display: 'flex', alignItems: 'center'}}>
-                      <Grid style={{marginLeft: 10}}>
-                        <Typography>Le {date ? moment(date).format('DD/MM/YYYY') : ''} à {time ? moment(time).format('HH:mm') : ''}</Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid style={{display: 'flex', flexDirection: 'column', marginLeft: 15, marginRight: 15, marginBottom: 30}}>
-                    <BookingDetail
-                      prestations={pricedPrestations}
-                      count={this.state.count}
-                      travel_tax={this.computeTravelTax()}
-                      pick_tax={this.state.pick_tax}
-                      total={this.state.total}
-                      client_fee={this.state.commission}
-                      cesu_total={this.state.cesu_total}
-                    />
-                  </Grid>
-                </AccordionDetails>
-              </Accordion>
-            </Grid>
-            <Grid>
-              <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                <Grid style={{width: '100%'}}>
-                  <Button
-                    classes={{root: classes.userServicePButtonResa}}
-                    variant="contained"
-                    color="primary"
-                    aria-label="add"
-                    disabled={!isEmpty(errors)}
-                    onClick={() => this.book(true)}
-                  >
-                    <Typography>Réserver</Typography>
-                  </Button>
-                </Grid>
-                <Grid>
-                  <Typography style={{color: 'rgba(39, 37, 37, 0.35)'}}>Choix du paiement à l’étape suivante</Typography>
-                </Grid>
-                <Grid>
-                  <Button
-                    startIcon={<HelpOutlineIcon />}
-                    disabled={!isEmpty(errors)}
-                    onClick={() => this.book(false)}
-                  >
-                    <Typography style={{textDecoration: 'underline', textTransform: 'initial'}}>Demande d’informations</Typography>
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    );
-
 
     return (
       <React.Fragment>
@@ -974,7 +557,6 @@ class UserServicesPreview extends React.Component {
                                 <Grid>
                                   <Typography style={{color:'rgba(39,37,37,35%)'}}>{serviceAddress.city}, {serviceAddress.country} - {serviceUser.perimeter}km autour de {serviceAddress.city}</Typography>
                                 </Grid> : null
-
                             }
                           </Grid>
                           <Grid style={{display: 'flex', alignItems: 'center'}}>
@@ -1024,7 +606,6 @@ class UserServicesPreview extends React.Component {
                               },
                             ]
                           }
-
                         />
                       </Grid>
                       <Grid className={classes.scheduleContainer}>
@@ -1088,7 +669,23 @@ class UserServicesPreview extends React.Component {
                         </Grid>
                         <Drawer anchor="bottom" open={this.state.bottom} onClose={this.toggleDrawer('bottom', false)}>
                           <Grid className={classes.drawerContent}>
-                            {drawer('bottom')}
+                            <DrawerBooking
+                              side={'bottom'}
+                              classes={classes}
+                              filters={filters}
+                              pricedPrestations={pricedPrestations}
+                              toggleDrawer={this.toggleDrawer}
+                              onChangeDate={this.onChangeDate}
+                              onChangeTime={this.onChangeTime}
+                              isInPerimeter={this.isInPerimeter}
+                              onQtyChanged={this.onQtyChanged}
+                              onLocationChanged={this.onLocationChanged}
+                              computeTravelTax={this.computeTravelTax}
+                              getLocationLabel={this.getLocationLabel}
+                              book={this.book}
+
+                              {...this.state}
+                            />
                           </Grid>
                         </Drawer>
                       </Hidden>
@@ -1097,7 +694,21 @@ class UserServicesPreview extends React.Component {
                     <Grid item xl={6} style={{paddingLeft: '5%', paddingRight: '5%'}}>
                       <Hidden mdDown implementation="css" className={classes.contentRight}>
                         <Grid>
-                          {drawer()}
+                          <DrawerBooking
+                            filters={filters}
+                            pricedPrestations={pricedPrestations}
+                            classes={classes}
+                            toggleDrawer={this.toggleDrawer}
+                            onChangeDate={this.onChangeDate}
+                            onChangeTime={this.onChangeTime}
+                            onQtyChanged={this.onQtyChanged}
+                            isInPerimeter={this.isInPerimeter}
+                            onLocationChanged={this.onLocationChanged}
+                            computeTravelTax={this.computeTravelTax}
+                            getLocationLabel={this.getLocationLabel}
+                            book={this.book}
+                            {...this.state}
+                          />
                         </Grid>
                       </Hidden>
                     </Grid>
@@ -1131,11 +742,5 @@ class UserServicesPreview extends React.Component {
     );
   }
 }
-
-UserServicesPreview.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-  container: PropTypes.instanceOf(typeof Element === 'undefined' ? Object : Element),
-};
 
 export default withStyles(styles, {withTheme: true})(UserServicesPreview);
