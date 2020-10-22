@@ -62,8 +62,6 @@ export default theme => ({
       alignItems: 'center',
     },
   },
-  leftContainer: {
-  },
   contentRight: {
     width: '100%',
     display: 'flex',

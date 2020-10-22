@@ -281,7 +281,7 @@ class UserServicesPreview extends React.Component {
 
   checkBook = () => {
     var errors = {};
-    if (Object.values(this.state.count).every(v => v == 0 || v == null)) {
+    if (Object.values(this.state.count).every(v => v === 0 || v == null)) {
       errors['prestations'] = 'Sélectionnez au moins une prestation';
     }
     if (this.state.totalPrestations < this.state.serviceUser.minimum_basket) {
@@ -337,7 +337,7 @@ class UserServicesPreview extends React.Component {
     });
     // Set "no filter" to first position
     return result;
-  }
+  };
 
   toggleDrawer = (side, open) => event => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -357,7 +357,7 @@ class UserServicesPreview extends React.Component {
   onChange = event => {
     const {name, value} = event.target;
     this.setState({[name]: value}, () => this.computeTotal());
-    if (name == 'location' && value != 'alfred') {
+    if (name === 'location' && value !== 'alfred') {
       this.setState({pick_tax: null, isChecked: false});
     }
   };
@@ -735,16 +735,16 @@ class UserServicesPreview extends React.Component {
                                     <Grid item xl={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
                                       <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                                         <Grid>
-                                          <IconButton>
-                                            <RemoveIcon onClick={this.onQtyChanged('remove', p._id)}/>
+                                          <IconButton onClick={this.onQtyChanged('remove', p._id)}>
+                                            <RemoveIcon/>
                                           </IconButton>
                                         </Grid>
                                         <Grid style={{marginLeft: '4%', marginRight: '4%'}}>
                                           <Typography>{count[p._id] ? count[p._id] : 0}</Typography>
                                         </Grid>
                                         <Grid>
-                                          <IconButton>
-                                            <AddIcon onClick={this.onQtyChanged('add', p._id)}/>
+                                          <IconButton onClick={this.onQtyChanged('add', p._id)}>
+                                            <AddIcon/>
                                           </IconButton>
                                         </Grid>
 
@@ -953,7 +953,7 @@ class UserServicesPreview extends React.Component {
         </Helmet>
         <Grid>
           <Layout user={user}>
-            <Grid style={{width: '100%', display: 'flex', justifyConent: 'center', flexDirection: 'column', justifyContent: 'center'}}>
+            <Grid style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
               <Grid>
                 <Grid className={classes.mainContainer}>
                   <Grid container style={{width: '80%'}}>

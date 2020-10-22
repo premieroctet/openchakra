@@ -14,9 +14,9 @@ class BookingDetail extends React.Component {
     return (
       <Grid>
         <Grid>
-          {Object.keys(prestations).map(k => {
+          {Object.keys(prestations).map((k, index) => {
             return count[k] === 0 ? null : (
-              <Grid className={classes.flexContent}>
+              <Grid className={classes.flexContent} key={index}>
                 <Grid className={classes.labelContent}>
                   <p>{k}</p>
                 </Grid>
