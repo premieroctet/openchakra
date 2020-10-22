@@ -130,7 +130,7 @@ class shop extends React.Component {
     const {classes} = this.props;
     const {isAdmin} = this.state;
     let isOwner = this.state.idAlfred === this.state.userId;
-    
+
     return (
       <Fragment>
         <Layout>

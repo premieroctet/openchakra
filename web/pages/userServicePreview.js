@@ -586,6 +586,7 @@ class UserServicesPreview extends React.Component {
                           titleTopic={'Description'}
                           titleSummary={serviceUser.description ? serviceUser.description : 'Cet utilisateur n\'a pas encore de description.'}
                           needBackground={true}
+                          underline={true}
                           columnsXl={12}
                           wrapperComponentProps={
                             [
@@ -621,6 +622,7 @@ class UserServicesPreview extends React.Component {
                           handleSelection={this.scheduleDateChanged}
                           singleSelection={true}
                           mode={'week'}
+                          underline={true}
                           style={classes}
                         />
                       </Grid>
@@ -634,6 +636,7 @@ class UserServicesPreview extends React.Component {
                             columnsSM={6}
                             columnsXS={6}
                             needBackground={true}
+                            underline={true}
                             titleSummary={alfred.firstname ? `Le matériel de ${alfred.firstname}` : ''}
                             wrapperComponentProps={allDetailEquipments}
                             equipmentsSelected={equipments}
@@ -645,6 +648,7 @@ class UserServicesPreview extends React.Component {
                           serviceUser && serviceUser.service_address ?
                             <Grid style={{width: '100%'}}>
                               <MapTopic
+                                underline={true}
                                 titleTopic={'Lieu de la prestation'}
                                 titleSummary={alfred.firstname ? `La zone dans laquelle ${alfred.firstname} peut intervenir` : ''}
                                 position={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]}
@@ -718,6 +722,7 @@ class UserServicesPreview extends React.Component {
                   <Grid style={{width: '80%', paddingLeft: '5%', paddingRight: '5%'}}>
                     <Grid style={{marginTop: '5%'}}>
                       <PhotoTopic
+                        underline={true}
                         titleTopic={alfred.firstname ? `Les photos de ${alfred.firstname}` : ''}
                         titleSummary={alfred.firstname ? `Un aperçu du travail de ${alfred.firstname}` : ''}
                         needBackground={true}
@@ -725,6 +730,7 @@ class UserServicesPreview extends React.Component {
                     </Grid>
                     <Grid style={{marginTop: '5%'}}>
                       <CommentaryTopic
+                        underline={true}
                         titleTopic={'Commentaires'}
                         titleSummary={alfred.firstname ? `Ici, vous pouvez laisser des commentaires à ${alfred.firstname} !` : ''}
                         alfred_mode={true}

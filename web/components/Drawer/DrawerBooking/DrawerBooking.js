@@ -333,16 +333,12 @@ class DrawerBooking extends React.Component{
                   <Typography>Afficher les détails</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-                  <Grid>
-                    <Grid style={{display: 'flex', alignItems: 'center', marginBottom: 20}}>
-                      <Grid>
+                  <Grid style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20}}>
+                    <Grid >
                         <Typography>{this.props.getLocationLabel()}</Typography>
-                      </Grid>
                     </Grid>
                     <Grid style={{display: 'flex', alignItems: 'center'}}>
-                      <Grid>
                         <Typography>Le {date ? moment(date).format('DD/MM/YYYY') : ''} à {time ? moment(time).format('HH:mm') : ''}</Typography>
-                      </Grid>
                     </Grid>
                   </Grid>
                   <Grid style={{display: 'flex', flexDirection: 'column'}}>
@@ -373,7 +369,7 @@ class DrawerBooking extends React.Component{
                     <Typography>Réserver</Typography>
                   </Button>
                 </Grid>
-                <Grid>
+                <Grid style={{marginTop:15,  marginBottom: 15}}>
                   <Typography style={{color: 'rgba(39, 37, 37, 0.35)'}}>Choix du paiement à l’étape suivante</Typography>
                 </Grid>
                 <Grid>

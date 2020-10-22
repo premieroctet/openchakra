@@ -14,4 +14,7 @@ export default theme => ({
       fill: 'white',
     },
   },
+  stepperRoot:{
+    backgroundColor: 'transparent'
+  }
 })

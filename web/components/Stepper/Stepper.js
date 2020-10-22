@@ -12,7 +12,7 @@ class Stepper extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      steps: props.isType === 'creaShop' ? this.getStepsCreaShop() : props.isType === 'updateService' ? this.getStepsUpdateService() : this.getStepsAddService(),
+      steps: props.isType === 'creaShop' ? this.getStepsCreaShop() : props.isType === 'updateService' ? this.getStepsUpdateService() : props.isType === 'confirmPaiement' ? this.getStepsPayement() :  this.getStepsAddService(),
     };
   }
 
@@ -54,6 +54,13 @@ class Stepper extends React.Component {
     ];
   }
 
+  getStepsPayement() {
+    return [
+      'ADRESSE & FACTURATION',
+      'PAIEMENT'
+    ]
+  }
+
   handleReset = () => {
     this.setState({setActiveStep: 0});
     this.setState({activeStep: 0});
@@ -64,9 +71,9 @@ class Stepper extends React.Component {
 
     return (
       <Grid className={classes.root}>
-        <StepperMaterial activeStep={activeStep} alternativeLabel>
+        <StepperMaterial activeStep={activeStep} alternativeLabel classes={{root : classes.stepperRoot}}>
           {this.state.steps.map(label => (
-            <Step key={label}>
+            <Step key={label} >
               <StepLabel StepIconProps={{
                 classes: {root: classes.stepIcon},
               }}>{label}</StepLabel>

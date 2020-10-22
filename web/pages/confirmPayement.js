@@ -11,10 +11,25 @@ import Footer from '../hoc/Layout/Footer/Footer';
 import About from '../components/About/About';
 import UserAvatar from '../components/Avatar/UserAvatar';
 import BookingDetail from '../components/BookingDetail/BookingDetail';
-import styles from './confirmPayement/confirmPayement';
+import styles from '../static/css/confirmPayement/confirmPayement';
 import cookie from 'react-cookies';
+import Stepper from "../components/Stepper/Stepper";
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
+import AddressService from "../components/AddressService/AddressService";
+import Profile from "../components/Profile/Profile";
+import ListAlfredConditions from "../components/ListAlfredConditions/ListAlfredConditions";
+
 
 const {booking_datetime_str} = require('../utils/dateutils');
+import WithTopic from "../hoc/Topic/Topic";
+import Divider from '@material-ui/core/Divider';
+
+
+const AddressComponent = WithTopic(AddressService);
+const ProfilComponent = WithTopic(Profile);
+const EquipementTopic = WithTopic(ListAlfredConditions);
+
 
 moment.locale('fr');
 const _ = require('lodash');
@@ -45,6 +60,7 @@ class ConfirmPayement extends React.Component {
       hour: null,
       languages: [],
       alfredId: '',
+      activeStep: 0
     };
   }
 
@@ -118,7 +134,7 @@ class ConfirmPayement extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {currentUser, user, bookingObj} = this.state;
+    const {currentUser, user, bookingObj, activeStep, equipments} = this.state;
 
     if (currentUser && bookingObj) {
       var checkAdd = currentUser.billing_address.address === bookingObj.address.address && currentUser.billing_address.zip_code === bookingObj.address.zip_code && currentUser.billing_address.city === bookingObj.address.city;
@@ -132,109 +148,64 @@ class ConfirmPayement extends React.Component {
       <Fragment>
         {user === null || currentUser === null ? null : (
           <Grid>
-            <Layout>
-              <Grid container className={classes.bigContainer}>
-                <Grid container>
-                  <Grid item md={5} xs={12} className={classes.leftContainer}>
-                    <Grid container>
-                      <Grid item xs={12} className={classes.marginItemContainer}>
-                        <h2 className={classes.h2Style}>
-                          Détail de votre réservation
-                        </h2>
-                      </Grid>
-                    </Grid>
-                    <Grid container className={classes.containerAboutAndAvatar}>
-                      <Grid item className={classes.marginContainerAvatar}>
-                        <div style={{width: '100%'}}>
-                          <About alfred={user._id} profil={false}/>
-                        </div>
-                      </Grid>
-                      <Grid item className={classes.containerAvatar}>
-                        <Grid item>
-                          <UserAvatar classes={'avatarLetter'} user={user} className={classes.avatarLetter}/>
-                          <Typography style={{marginTop: 20}}
-                                      className={classes.textAvatar}>{user.firstname}</Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-
-                    <div style={{paddingLeft: '3%'}}>
-                      <hr></hr>
-                      <Grid container>
-                        <h3 className={classes.h3Style}>
-                          A propos de votre réservation
-                        </h3>
-                        <Grid item xs={12} style={{display: 'flex', alignItems: 'center'}}>
-                          <Grid item>
-                            <Grid>
-                              <img style={{width: 40, height: 40}} alt={'calendrier'} title={'calendrier'}
-                                   src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
-                            </Grid>
-                          </Grid>
-                          <Grid item xs={9} style={{marginLeft: 25}}>
-                            <p>Date et heure de la prestation:</p>{' '}
-                            <p>
-                              {booking_datetime_str(this.state.bookingObj)}
-                            </p>
-                          </Grid>
-                        </Grid>
-                        <Grid item xs={12} style={{display: 'flex', alignItems: 'center'}}>
-                          <Grid item>
-                            <Grid>
-                              <img style={{width: 40, height: 40}} alt={'adresse'} title={'adresse'}
-                                   src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
-                            </Grid>
-                          </Grid>
-                          <Grid item xs={9} style={{marginLeft: 25}}>
-                            <p>Adresse de la prestation:</p>{' '}
-                            <p>
-                              {bookingObj.address ?
-                                checkAdd ? 'A mon adresse principale' : `Chez ${user.firstname}` : 'En visio'
-                              }
-                            </p>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      <Grid container className={classes.widthLarge}>
-                        <Grid item className={classes.widthLarge}>
-                          <h3 className={classes.h3Style}>
-                            Paiement
-                          </h3>
-                          <Grid className={classes.widthLarge}>
-                            <BookingDetail prestations={pricedPrestations} count={countPrestations}
-                                           total={this.state.grandTotal} client_fee={this.state.fees}
-                                           travel_tax={this.state.travel_tax} pick_tax={this.state.pick_tax}
-                                           cesu_total={this.state.cesu_total}/>
-                            <Grid item className={classes.buttonContainerPiad}>
-                              <Grid item>
-                                <Button
-                                  color={'secondary'}
-                                  variant={'contained'}
-                                  className={classes.buttonPaid}
-                                  onClick={() => {
-                                    this.handlePay();
-                                  }}
-                                >
-                                  Payer
-                                </Button>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </div>
-
-                    {/*cadre avec couleur et checkbox*/}
+            <Grid style={{height: '2vh', backgroundColor: 'rgba(178,204,251,1)'}}/>
+            <Grid style={{display: 'flex', justifyContent: 'center', backgroundColor: 'white', height: '8vh'}}>
+              <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'end', width: '90%'}}>
+                <Grid>
+                  <VerifiedUserIcon/>
+                </Grid>
+                <Grid style={{display: 'flex', flexDirection:'column'}}>
+                  <Grid>
+                    <Typography>Paiement</Typography>
                   </Grid>
-
-                  {/*Contenu à droite*/}
-                  <Grid item xs={12} md={7} className={classes.rightContainer}>
-                    <Grid className={classes.backgroundRightContainer} container/>
+                  <Grid>
+                    <Typography>100% sécurisé</Typography>
                   </Grid>
                 </Grid>
               </Grid>
-            </Layout>
-            <Footer/>
+            </Grid>
+            <Grid className={classes.contentStepper}>
+              <Stepper activeStep={activeStep} isType={'confirmPaiement'}/>
+            </Grid>
+            <Grid  className={classes.mainContainer}>
+              <Grid container style={{width: '90%'}}>
+                <Grid item xl={6}>
+                  <Grid style={{display: 'flex', flexDirection: 'column'}}>
+                    <Grid style={{backgroundColor: 'white', borderRadius: 27}}>
+                      <AddressComponent
+                        titleTopic={'Adresse du service'}
+                        titleSummary={'Votre adresse'}
+                        underline={false}
+                      />
+                    </Grid>
+                    <Grid style={{backgroundColor: 'white', borderRadius: 27}}>
+                      <ProfilComponent
+                        titleTopic={'A propos de Béatrice'}
+                        titleSummary={false}
+                        underline={false}
+                      />
+                      <Grid>
+                        <Divider style={{height: 2, borderRadius: 10, width: '100%'}}/>
+                      </Grid>
+                      <EquipementTopic
+                        titleTopic={'Material fourni'}
+                        titleSummary={equipments ? 'Aucun matériel fourni' : false}
+                        underline={false}
+                        wrapperComponentProps={equipments}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xl={6}>
+
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid style={{width: '100%', display: 'flex', justifyContent: 'center', marginTop: '1%', position: 'absolute', bottom: 0, backgroundColor: 'white'}}>
+              <Grid style={{width: '90%'}}>
+                <TrustAndSecurity/>
+              </Grid>
+            </Grid>
           </Grid>
         )}
       </Fragment>

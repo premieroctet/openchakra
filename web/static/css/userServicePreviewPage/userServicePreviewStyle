@@ -67,7 +67,7 @@ export default theme => ({
     display: 'flex',
     flexDirection: 'column',
     position: 'sticky',
-    top: '10%'
+    top: '8%'
   },
   avatarContainer: {
     width: '20%',
