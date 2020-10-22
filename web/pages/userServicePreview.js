@@ -707,7 +707,7 @@ class UserServicesPreview extends React.Component {
                             <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
                               {prestations.map((p, index) => {
                                 return (
-                                  <Grid container style={{display: 'flex', alignItems: 'center', width: '100%'}} key={index}>
+                                  <Grid container style={{display: 'flex', alignItems: 'center', width: '100%', marginBottom: '5%'}} key={index}>
                                     <Grid item xl={6}>
                                       <Grid style={{display: 'flex', flexDirection: 'column'}}>
                                         <Grid>
@@ -715,14 +715,17 @@ class UserServicesPreview extends React.Component {
                                         </Grid>
                                         <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                                           <Grid>
-                                            <Typography>{p.price ? p.price.toFixed(2) : '?'}€</Typography>
+                                            <Typography style={{color:'rgba(39,37,37,35%)'}}>{p.price ? p.price.toFixed(2) : '?'}€</Typography>
+                                          </Grid>
+                                          <Grid style={{marginLeft : '5%', marginRight: '5%'}}>
+                                            <Typography style={{color:'rgba(39,37,37,35%)'}}>/</Typography>
                                           </Grid>
                                           <Grid>
-                                            <Typography>{p.billing ? p.billing.label : '?'}</Typography>
+                                            <Typography style={{color:'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : '?'}</Typography>
                                           </Grid>
                                           {p.prestation.cesu_eligible && this.state.use_cesu ?
                                             <Grid>
-                                              <Typography>Eligible au <a href={'#'}>CESU</a></Typography>
+                                              <Typography><em>Eligible au <a href={'#'}>CESU</a></em></Typography>
                                             </Grid>
                                             : null
                                           }
@@ -736,7 +739,7 @@ class UserServicesPreview extends React.Component {
                                             <RemoveIcon onClick={this.onQtyChanged('remove', p._id)}/>
                                           </IconButton>
                                         </Grid>
-                                        <Grid>
+                                        <Grid style={{marginLeft: '4%', marginRight: '4%'}}>
                                           <Typography>{count[p._id] ? count[p._id] : 0}</Typography>
                                         </Grid>
                                         <Grid>
@@ -880,21 +883,13 @@ class UserServicesPreview extends React.Component {
                 <AccordionDetails>
                   <Grid style={{marginTop: 20, marginLeft: 10}}>
                     <Grid style={{display: 'flex', alignItems: 'center', marginBottom: 20}}>
-                      <Grid>
-                        <img style={{width: 40, height: 40}} alt={'adresse'} title={'adresse'}
-                             src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
-                      </Grid>
                       <Grid style={{marginLeft: 10}}>
-                        <label></label>
+                        <Typography>{this.getLocationLabel()}</Typography>
                       </Grid>
                     </Grid>
                     <Grid style={{display: 'flex', alignItems: 'center'}}>
-                      <Grid>
-                        <img style={{width: 40, height: 40}} alt={'calendrier'} title={'calendrier'}
-                             src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
-                      </Grid>
                       <Grid style={{marginLeft: 10}}>
-                        <label>Le {moment(date).format('DD/MM/YYYY')} à {moment(time).format('HH:mm')}</label>
+                        <Typography>Le {date ? moment(date).format('DD/MM/YYYY') : ''} à {time ? moment(time).format('HH:mm') : ''}</Typography>
                       </Grid>
                     </Grid>
                   </Grid>
