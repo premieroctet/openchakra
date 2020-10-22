@@ -10,6 +10,7 @@ function WithTopic(WrappedComponent) {
     }
 
     render() {
+      console.log(`Topic props:${Object.keys(this.props)}`)
       const{titleTopic, titleSummary, needBackground} = this.props;
 
       return(
@@ -23,7 +24,7 @@ function WithTopic(WrappedComponent) {
           <Grid style={{marginTop: '2%'}}>
             <Divider style={{height: 6, backgroundColor:'rgba(178, 204, 251, 100%)', borderRadius: 27, width: '3vw'}}/>
           </Grid>
-          <Grid style={{marginTop: '10%', backgroundColor: needBackground ? 'rgba(229,229,229,1)' : 'white', borderRadius: 27}}>
+          <Grid style={{marginTop: '10px', backgroundColor: needBackground ? 'rgba(229,229,229,1)' : 'white', borderRadius: 27}}>
             <WrappedComponent {...this.props}/>
           </Grid>
         </Grid>

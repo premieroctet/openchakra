@@ -1,5 +1,5 @@
 export default theme => ({
-  mainContainer: {
+  skillsContainer: {
     display: 'flex',
     flexDirection: 'row',
     [theme.breakpoints.down('xs')]: {
@@ -7,40 +7,28 @@ export default theme => ({
       justifyContent: 'center',
     },
   },
-  cardSkills: {
+  skillCard: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: 120,
+    width: 105,
     [theme.breakpoints.down('xs')]: {
       width: '50%',
       margin: 0,
     },
   },
   avatarSize: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
   },
-  chipStyle: {
-    margin: 15,
-  },
-  bigWidth: {
-    width: 500,
-    [theme.breakpoints.down('xs')]: {
-      width: 'auto',
-    },
-  },
-  middleWidth: {
-    width: 400,
-    [theme.breakpoints.down('xs')]: {
-      width: 'auto',
-    },
-  },
-  titleSkills: {
-    fontSize: '1.6rem',
+  skillTitle: {
+    fontSize: '0.8rem',
     color: 'rgba(84,89,95,0.95)',
-    letterSpacing: -1,
     fontWeight: 'bold',
+  },
+  skillValue: {
+    fontSize: '0.7rem',
+    color: 'rgba(84,89,95,0.95)',
   },
   shape: {
     backgroundColor: theme.palette.primary.main,
