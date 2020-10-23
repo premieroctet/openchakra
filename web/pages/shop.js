@@ -131,6 +131,8 @@ class shop extends React.Component {
     const {isAdmin} = this.state;
     let isOwner = this.state.idAlfred === this.state.userId;
 
+    console.log(this.state.services)
+
     return (
       <Fragment>
         <Layout>

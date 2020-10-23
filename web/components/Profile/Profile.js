@@ -2,7 +2,6 @@ import React from 'react'
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import UserAvatar from "../Avatar/UserAvatar";
-import Avatar from "@material-ui/core/Avatar";
 
 class Profile extends React.Component {
   constructor(props){
@@ -10,10 +9,11 @@ class Profile extends React.Component {
   }
 
   render(){
+    const {user, classes} = this.props;
     return(
       <Grid style={{display: 'flex', flexDirection: 'row'}}>
         <Grid>
-          <Avatar alt="Remy Sharp">CL</Avatar>
+          <UserAvatar classes={'avatarLetter'} user={user}/>
         </Grid>
         <Grid style={{display: 'flex', flexDirection: 'column'}}>
           <Grid>

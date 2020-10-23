@@ -24,6 +24,7 @@ import ListAlfredConditions from "../components/ListAlfredConditions/ListAlfredC
 const {booking_datetime_str} = require('../utils/dateutils');
 import WithTopic from "../hoc/Topic/Topic";
 import Divider from '@material-ui/core/Divider';
+import DrawerBookingRecap from "../components/Drawer/DrawerBookingRecap/DrawerBookingRecap";
 
 
 const AddressComponent = WithTopic(AddressService);
@@ -60,7 +61,8 @@ class ConfirmPayement extends React.Component {
       hour: null,
       languages: [],
       alfredId: '',
-      activeStep: 0
+      activeStep: 0,
+      equipments: []
     };
   }
 
@@ -92,6 +94,7 @@ class ConfirmPayement extends React.Component {
       grandTotal: bookingObj.amount,
       cesu_total: bookingObj.cesu_amount,
       alfredId: bookingObj.alfred._id,
+      equipments: bookingObj.equipments
     });
 
     const id = this.props.shop_id;
@@ -183,13 +186,14 @@ class ConfirmPayement extends React.Component {
                         titleTopic={'A propos de Béatrice'}
                         titleSummary={false}
                         underline={false}
+                        {...this.state}
                       />
                       <Grid>
                         <Divider style={{height: 2, borderRadius: 10, width: '100%'}}/>
                       </Grid>
                       <EquipementTopic
                         titleTopic={'Material fourni'}
-                        titleSummary={equipments ? 'Aucun matériel fourni' : false}
+                        titleSummary={equipments.length === 0 ? 'Aucun matériel fourni' : false}
                         underline={false}
                         wrapperComponentProps={equipments}
                       />
@@ -197,6 +201,16 @@ class ConfirmPayement extends React.Component {
                   </Grid>
                 </Grid>
                 <Grid item xl={6}>
+                  <Grid>
+                    <DrawerBookingRecap
+                      {...this.state}
+                      pricedPrestations={pricedPrestations}
+                      countPrestations={countPrestations}
+                    />
+                  </Grid>
+                  <Grid>
+
+                  </Grid>
 
                 </Grid>
               </Grid>
