@@ -64,6 +64,46 @@ export default theme => ({
     },
     '& .MuiInputBase-input::placeholder':{
       opacity: '0.5'
+    },
+    '& div':{
+      width:'100%'
+    }
+  },
+  navbarRootTextFieldWhere:{
+    flex: 1,
+    marginLeft: 20,
+    fontFamily: theme.typography.text.fontFamily,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
+    "& .MuiFormLabel-root": {
+      fontWeight: 'bold',
+    },
+    '& .MuiInputBase-input::placeholder':{
+      opacity: '0.5'
+    },
+    '& div':{
+      width:'100%'
+    }
+  },
+  navbarRootTextFieldWhen:{
+    width: '100%',
+    marginLeft: 20,
+    fontFamily: theme.typography.text.fontFamily,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
+    "& .MuiFormLabel-root": {
+      fontWeight: 'bold',
+      '&:focus':{
+        color: theme.palette.primary.main
+      }
+    },
+    '& .MuiFormLabel-root.Mui-focused':{
+      color: theme.palette.primary.main
+    },
+    '& .MuiInputBase-input::placeholder':{
+      opacity: '0.5'
     }
   },
   divider: {
@@ -90,7 +130,8 @@ export default theme => ({
     fontSize: theme.typography.placeHolder.fontSize,
     fontWeight:  theme.typography.placeHolder.fontWeight,
     lineHeight:  theme.typography.placeHolder.lineHeight,
-    padding: 0,
+    padding: '6px 0 7px',
+    height: 'auto'
   },
   navbarDatePickerMain:{
     display: 'flex',

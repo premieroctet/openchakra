@@ -311,15 +311,6 @@ export default theme => ({
     padding: '6px 24px'
   },
 
-  navbarRootTextField:{
-    flex: 1,
-    width: '100%',
-    '& .react-datepicker-wrapper':{
-      width: '100%'
-    }
-
-  },
-
   /***Schedule**/
 
   schedule_scheduleMainStyle: {

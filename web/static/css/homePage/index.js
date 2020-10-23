@@ -80,6 +80,47 @@ export default theme => ({
       width:'100%'
     }
   },
+  navbarRootTextFieldWhere:{
+    width: '100%',
+    fontFamily: theme.typography.text.fontFamily,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
+    "& .MuiFormLabel-root": {
+      fontWeight: 'bold',
+      '&:focus':{
+        color: theme.palette.primary.main
+      }
+    },
+    '& .MuiFormLabel-root.Mui-focused':{
+      color: theme.palette.primary.main
+    },
+    '& .MuiInputBase-input::placeholder':{
+      opacity: '0.5'
+    },
+    '& div':{
+      width:'100%'
+    }
+  },
+  navbarRootTextFieldWhen:{
+    width: '100%',
+    fontFamily: theme.typography.text.fontFamily,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
+    "& .MuiFormLabel-root": {
+      fontWeight: 'bold',
+      '&:focus':{
+        color: theme.palette.primary.main
+      }
+    },
+    '& .MuiFormLabel-root.Mui-focused':{
+      color: theme.palette.primary.main
+    },
+    '& .MuiInputBase-input::placeholder':{
+      opacity: '0.5'
+    }
+  },
   navbarInput:{
     borderBottom: 'inherit',
     '&::placeholder':{
@@ -592,6 +633,11 @@ export default theme => ({
     lineHeight:  theme.typography.placeHolder.lineHeight,
     padding: '6px 0 7px',
     height: 'auto'
+  },
+  navbarMenuBurgerContainer:{
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row-reverse'
   },
   navbarAlgoliaContent:{
     flex:1,

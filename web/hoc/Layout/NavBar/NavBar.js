@@ -101,6 +101,10 @@ class NavBar extends Component {
     this.setState({activeStep: e});
   };
 
+  onSuggestions = ({query}) => {
+    this.setState({city: query});
+  };
+
   onChange = e => {
     let {name, value} = e.target;
     this.setState({[name]: value});
@@ -238,18 +242,17 @@ class NavBar extends Component {
               <Grid className={style.navbarAlgoliaContent}>
                 <TextField
                   label={ifHomePage ? SEARCHBAR.labelWhere : false}
-                  classes={{root: style.navbarRootTextField}}
+                  classes={{root: style.navbarRootTextFieldWhere}}
                   InputLabelProps={{
                     shrink: true,
                   }}
                   InputProps={{
-                    inputComponent:(props) => {
+                    inputComponent:(inputRef) => {
                       return (
                         <AlgoliaPlaces
-                          {...props}
+                          {...inputRef}
                           placeholder={SEARCHBAR.where}
                           className={style.navbarAlgoliaPlace}
-                          value={city}
                           options={{
                             appId: 'plKATRG826CP',
                             apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -275,7 +278,7 @@ class NavBar extends Component {
                   <Grid className={style.navbarDatePickerContainer}>
                     <TextField
                       label={ifHomePage ? SEARCHBAR.labelWhen : false}
-                      classes={{root: style.navbarRootTextField}}
+                      classes={{root: style.navbarRootTextFieldWhen}}
                       InputLabelProps={{
                         shrink: true,
                       }}

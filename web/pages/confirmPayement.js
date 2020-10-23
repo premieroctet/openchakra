@@ -25,6 +25,7 @@ const {booking_datetime_str} = require('../utils/dateutils');
 import WithTopic from "../hoc/Topic/Topic";
 import Divider from '@material-ui/core/Divider';
 import DrawerBookingRecap from "../components/Drawer/DrawerBookingRecap/DrawerBookingRecap";
+import PaymentPics from "../components/PaymentPics/PaymentPics";
 
 
 const AddressComponent = WithTopic(AddressService);
@@ -173,15 +174,15 @@ class ConfirmPayement extends React.Component {
             <Grid  className={classes.mainContainer}>
               <Grid container style={{width: '90%'}}>
                 <Grid item xl={6}>
-                  <Grid style={{display: 'flex', flexDirection: 'column'}}>
-                    <Grid style={{backgroundColor: 'white', borderRadius: 27}}>
+                  <Grid style={{display: 'flex', flexDirection: 'column', paddingRight: '5%', paddingLeft: '5%'}}>
+                    <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '2px solid #d2d2d2',}}>
                       <AddressComponent
                         titleTopic={'Adresse du service'}
                         titleSummary={'Votre adresse'}
                         underline={false}
                       />
                     </Grid>
-                    <Grid style={{backgroundColor: 'white', borderRadius: 27}}>
+                    <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '2px solid #d2d2d2',}}>
                       <ProfilComponent
                         titleTopic={'A propos de Béatrice'}
                         titleSummary={false}
@@ -201,17 +202,27 @@ class ConfirmPayement extends React.Component {
                   </Grid>
                 </Grid>
                 <Grid item xl={6}>
-                  <Grid>
-                    <DrawerBookingRecap
-                      {...this.state}
-                      pricedPrestations={pricedPrestations}
-                      countPrestations={countPrestations}
-                    />
+                  <Grid style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    paddingRight: '5%',
+                    paddingLeft: '5%',
+                    border: '2px solid #d2d2d2',
+                    borderRadius: 30,
+                    justifyContent: 'center',
+                    backgroundColor: 'white'
+                  }}>
+                    <Grid>
+                      <DrawerBookingRecap
+                        {...this.state}
+                        pricedPrestations={pricedPrestations}
+                        countPrestations={countPrestations}
+                      />
+                    </Grid>
                   </Grid>
                   <Grid>
-
+                    <PaymentPics/>
                   </Grid>
-
                 </Grid>
               </Grid>
             </Grid>
