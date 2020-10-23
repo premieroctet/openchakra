@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const axiosCookieJarSupport = require('axios-cookiejar-support').default;
 const tough = require('tough-cookie');
-
+const {is_production}=require('../../../config/config')
 const CronJob = require('cron').CronJob;
 
 const validateRegisterInput = require('../../validation/register');
@@ -1173,18 +1173,19 @@ router.get('/mangopay_kyc', (req, res) => {
 
 
 // Create mango client account for all user with no id_mangopay
-new CronJob('0 */5 * * * *', function () {
-  console.log("Customers who need mango account");
-  User.find({id_mangopay: null, active: true})
-    .limit(100)
-    .then(usrs => {
-      usrs.forEach(user => {
-        console.log(`Found customer ${user.name}`)
-        createMangoClient(user)
+if (is_production()) {
+  new CronJob('0 */5 * * * *', function () {
+    console.log("Customers who need mango account");
+    User.find({id_mangopay: null, active: true})
+      .limit(100)
+      .then(usrs => {
+        usrs.forEach(user => {
+          console.log(`Found customer ${user.name}`)
+          createMangoClient(user)
+        })
       })
-    })
-    .catch(err => console.error(err))
-}, null, true, 'Europe/Paris');
-
+      .catch(err => console.error(err))
+  }, null, true, 'Europe/Paris');
+}
 
 module.exports = router;

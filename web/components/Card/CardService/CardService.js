@@ -11,7 +11,31 @@ const {computeDistanceKm} = require('../../../utils/functions');
 import RoomIcon from '@material-ui/icons/Room';
 import Chip from "@material-ui/core/Chip";
 import Avatar from "@material-ui/core/Avatar";
-import CardServiceInfo from "../CardServiceInfo/CardServiceInfo";
+
+class CardServiceInfo extends React.Component{
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    const{style} = this.props;
+
+    return (
+      <Grid>
+        <Paper elevation={1} className={style.cardServiceInfoPaper}>
+          <Grid className={style.cardServiceInfoContent}>
+            <Grid>
+              <h2 className={style.cardServiceInfoTitle}>Besoin d'aide ?</h2>
+            </Grid>
+            <Grid>
+              <p className={style.cardServiceInfoText}>Utilisez notre chat en direct !</p>
+            </Grid>
+          </Grid>
+        </Paper>
+      </Grid>
+
+    );
+  }
+}
 
 class CardService extends React.Component{
   constructor(props) {
@@ -24,7 +48,6 @@ class CardService extends React.Component{
       shop: null,
       open: false,
       id_service: '',
-      page: false,
       reviews: [],
       alfred: {}
     }
@@ -57,7 +80,7 @@ class CardService extends React.Component{
   }
 
   render() {
-    const {style, userState, isOwner, gps, needAvatar, isAdmin, page, index} = this.props;
+    const {style, userState, isOwner, gps, needAvatar, isAdmin} = this.props;
     const {cpData, alfred} = this.state;
 
     let distance = gps ? computeDistanceKm(gps, cpData.gps) : null;
@@ -66,7 +89,7 @@ class CardService extends React.Component{
     const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {};
 
     const resa_link =  `/userServicePreview?id=${cpData._id}`
-    if (index==0) {
+    if (this.props.item==null) {
       return (
         <CardServiceInfo style={style} />
       )

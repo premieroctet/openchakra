@@ -1,6 +1,7 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
+import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
 import styles from './SkillsStyle';
 import Avatar from '@material-ui/core/Avatar';
@@ -9,53 +10,67 @@ import Chip from '@material-ui/core/Chip';
 import clsx from 'clsx';
 import Badge from '@material-ui/core/Badge';
 import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
+import cookie from 'react-cookies';
+const {SKILLS}=require('../../utils/consts')
+import WithTopic from "../../hoc/Topic/Topic"
 
 class Skills extends React.Component {
   constructor(props) {
     super(props);
+    const skill_values =  Object.keys(SKILLS).reduce( (acc, curr) => ({...acc, [curr]:0}), {})
     this.state = {
       alfred: [],
       dense: false,
       secondary: false,
       valueRating: 3,
       isChecked: false,
-      skills: {
-        careful: {
-          label: 'Travail soigneux',
-          picsLabel: 'careful_work',
-        },
-        punctual: {
-          label: 'Ponctualité',
-          picsLabel: 'punctuality',
-        },
-        flexible: {
-          label: 'Flexibilité',
-          picsLabel: 'flexibility',
-        },
-        reactive: {
-          label: 'Réactivité',
-          picsLabel: 'reactivity',
-        },
-      },
-    };
+      skill_values: skill_values,
+    }
+  }
+
+  componentDidMount = () => {
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    axios.get(`/myAlfred/api/reviews/${this.props.alfred}`)
+      .then( res => {
+        var skill_values = this.state.skill_values
+        const skills = res.data
+        Object.keys(skills).forEach( key => {
+          if (Object.keys(SKILLS).includes(key)) {
+            skill_values[key]+=skills[key]
+          }
+        });
+        this.setState({ skill_values:skill_values})
+      })
   }
 
   render() {
     const {classes, hideCount, onClick, needTitle, alfred, widthHr} = this.props;
-
+    const {skill_values}=this.state
     return (
-      <Grid>
-        <Grid className={classes.shape}>
-          <EmojiEmotionsIcon/>
-        </Grid>
-      </Grid>
+      //<div className={classes.skillsContainer} style={{ display:'flex', flexDirection: 'row'}}>
+      <div className={classes.skillsContainer}>
+          { Object.keys(SKILLS).map(skill => {
+            const count=skill_values[skill]
+              const pic=`/static/assets/img/skillsAlfred/${SKILLS[skill].picture}${count?'':'_disabled'}.svg`
+              return (
+                //<div style={{ display:'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <div className={classes.skillCard} >
+                  <div><img src={pic} className={classes.avatarSize}/></div>
+                  <div className={classes.skillTitle}>{SKILLS[skill].label}</div>
+                  <div className={classes.skillValue}>{`(${skill_values[skill]})`}</div>
+                </div>
+              )
+            })
+          }
+      </div>
     );
   }
 }
 
-Skills.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
+class SkillsComponent extends WithTopic(Skills) {}
 
-export default withStyles(styles, {withTheme: true})(Skills);
+SkillsComponent.defaultProps= {
+  titleTopic: 'Compliments',
+}
+
+export default withStyles(styles, {withTheme: true})(SkillsComponent)

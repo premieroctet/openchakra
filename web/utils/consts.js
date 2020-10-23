@@ -308,8 +308,28 @@ const FACEBOOK_PROVIDER = 'facebook';
 const AMAZON_HOST='my-alfred.io'
 const LOCAL_HOST='lvh.me'
 
+const SKILLS={
+  careful: {
+    label: 'Travail soigneux',
+    picture: 'careful_work',
+  },
+  punctual: {
+    label: 'Ponctualité',
+    picture: 'punctuality',
+  },
+  flexible: {
+    label: 'Flexibilité',
+    picture: 'flexibility',
+  },
+  reactive: {
+    label: 'Réactivité',
+    picture: 'reactivity',
+  },
+}
+
 module.exports = {
   ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR,
   generate_id, COMM_ALFRED, COMM_CLIENT, GID_LEN, ENTITES, CESU,
   MODES, GOOGLE_PROVIDER, FACEBOOK_PROVIDER, AMAZON_HOST, LOCAL_HOST,
+  SKILLS,
 };

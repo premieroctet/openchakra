@@ -2564,6 +2564,12 @@ router.get('/prospect/all', passport.authenticate('jwt', {session: false}), (req
   }
 });
 
+router.get('/prospect/fields', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const schema_fields = Object.keys(Prospect.schema.obj).sort()
+  const schema_required = schema_fields.filter(k => Prospect.schema.obj[k].required && !Prospect.schema.obj[k].default)
+  res.json({mandatory: schema_required, fields: schema_fields})
+})
+
 // @Route GET /myAlfred/api/admin/prospect/all
 // Get all prospect
 // @Access private
@@ -2576,7 +2582,6 @@ router.post('/prospect/add', passport.authenticate('jwt', {session: false}), (re
     else {
       Prospect.find({}, 'phone')
         .then (phones => {
-          phones = phones.map( p => p.phone)
           const contents = bufferToString(req.file.buffer)
           var records = parse(contents, { columns: true, delimiter:';'})
 
@@ -2597,9 +2602,23 @@ router.post('/prospect/add', passport.authenticate('jwt', {session: false}), (re
           }
 
           const before = records.length
-          records = records
-            .map( r => { r.phone=normalizePhone(r.phone); return r })
-            .filter( r => !phones.includes(r.phone))
+          // Normalize phones
+          records = records.map( r => { r.phone=normalizePhone(r.phone); return r })
+          // Remove duplicates
+          var phones = phones.map( p => p.phone)
+          records = records.filter( r => {
+            const known = phones.includes(r.phone)
+            phones.push(r.phone)
+            return !known
+          })
+          // Remove empty lines
+          records = records.filter (r => Object.values(r).some(v => v))
+          // Check records with empty mandatory data_fields
+          const invalid_records = records.filter( r => schema_required.some( field => !r[field]))
+          if (invalid_records.length>0) {
+            throw new Error(`Champs obligatoires vides dans ${JSON.stringify(invalid_records)}`)
+          }
+
           const counts=records.reduce((json,prospect)=>({...json, [prospect.phone]:(json[prospect.phone] | 0) + 1}),{})
           const duplicates = Object.keys(counts).filter( k => counts[k]>1)
           if (duplicates.length>0) {
@@ -2608,10 +2627,16 @@ router.post('/prospect/add', passport.authenticate('jwt', {session: false}), (re
 
           const after = records.length
           const delta=before-after
+
           Prospect.insertMany(records, { silent: true})
-            .then(() => res.json(`${after}/${before} prospects importés après suppression des ${delta} doublons`))
+            .then(() => res.json(`${after}/${before} prospects importés après suppression des ${delta} doublons ou lignes vides`))
+            .catch (err => {
+              console.log('error')
+              throw err
+            })
         })
         .catch (err => {
+          console.error(err)
           res.status(404).json({errors: err.message})
         })
     }

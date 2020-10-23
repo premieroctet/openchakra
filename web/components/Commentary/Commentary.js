@@ -102,14 +102,8 @@ class Commentary extends React.Component {
                 </Grid> : true
             }
 
-            <Grid style={{display: 'flex', flexDirection: 'row', marginTop: '3%'}}>
-              {
-                [...Array(3)].map( (res, index) => (
-                  <Grid key={index}>
-                    <Skills/>
-                  </Grid>
-                ))
-              }
+            <Grid style={{ marginTop: '3%'}}>
+              <Skills alfred={this.props.user_id}/>
             </Grid>
           </Grid>
         </Grid>

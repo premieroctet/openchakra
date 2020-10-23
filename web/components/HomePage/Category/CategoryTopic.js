@@ -6,6 +6,8 @@ import {CATEGORY} from '../../../utils/i18n';
 import withSlide from '../../../hoc/Slide/SlideShow'
 import withGrid from '../../../hoc/Grid/GridCard'
 import CategoryCard from "../../Card/CategoryCard/CategoryCard";
+const {SlideGridDataModel}=require('../../../utils/models/SlideGridDataModel')
+
 const CategorySlide=withSlide(withGrid(CategoryCard))
 
 class CategoryTopic extends React.Component{
@@ -14,6 +16,7 @@ class CategoryTopic extends React.Component{
   }
   render(){
     const {style, category} = this.props;
+
     return(
       <Grid className={style.categoryMainContainer}>
         <Grid className={style.categoryContainer}>
@@ -37,7 +40,7 @@ class CategoryTopic extends React.Component{
           </Grid>
         </Grid>
         <Grid className={style.categorySlideShowContainer}>
-          <CategorySlide style={style} data={category} columns={4} rows={2}/>
+          <CategorySlide model={new SlideGridDataModel(category, 4, 2, true)} style={style}/>
         </Grid>
       </Grid>
     );

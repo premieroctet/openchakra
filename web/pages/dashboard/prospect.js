@@ -108,6 +108,8 @@ class all extends React.Component {
       selectedFile: null,
       comments: null,
       errors: null,
+      fields: [],
+      mandatory: [],
     };
     this.handleChangePage = this.handleChangePage.bind(this);
     this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -118,7 +120,14 @@ class all extends React.Component {
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
-
+    axios.get('/myAlfred/api/admin/prospect/fields')
+      .then( response => {
+        const fields=response.data
+        this.setState(fields)
+      })
+      .catch (err => {
+        console.error(err)
+      })
     this.load();
   }
 
@@ -184,6 +193,12 @@ class all extends React.Component {
               </Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center'}}>
               Sélectionnez un fichier .csv ou .txt, séparateur point-virgule
+              </Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+              <ul>
+                <li>Colonnes possibles : {this.state.fields.join(',')}</li>
+                <li>Colonnes obligatoires : {this.state.mandatory.join(',')}</li>
+              </ul>
               </Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
                 <input ref={this.fileRef} type="file" name="file" id="file" onChange={this.onChangeHandler}/>
