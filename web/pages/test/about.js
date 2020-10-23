@@ -5,11 +5,11 @@ import cookie from 'react-cookies';
 
 
 import Select from 'react-dropdown-select';
-import Introduction from '../../components/Introduction/Introduction'
+import About from '../../components/About/About'
 import Layout from '../../hoc/Layout/Layout'
 import Input from '@material-ui/core/Input';
 
-class IntroTest extends React.Component{
+class AboutTest extends React.Component{
 
   constructor(props) {
     super(props);
@@ -61,11 +61,11 @@ class IntroTest extends React.Component{
         multi={false}
       >
       </Select>
-      <Introduction key={this.state.user} user={this.state.user} />
+      <About key={this.state.user} user={this.state.user} />
       </>
     );
   }
 
 }
 
-export default IntroTest
+export default AboutTest

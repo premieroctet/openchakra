@@ -1,41 +1,42 @@
 export default theme => ({
-  root: {
-    flexGrow: 1,
-    maxWidth: 752,
-  },
-  link: {
-    color: '#4fbdd7',
-  },
-  title: {
-    margin: theme.spacing(4, 0, 2),
-  },
-  listStyle: {
-    padding: 'inherit',
-  },
-  raiting: {
-    marginBottom: 0,
-    padding: 0,
-  },
-  iconStar: {
-    color: '#4fbdd7',
-  },
-  titleAbout: {
-    fontSize: '1.6rem',
-    color: 'rgba(84,89,95,0.95)',
-    letterSpacing: -1,
-    fontWeight: 'bold',
-  },
-  titleContainer: {
+  skillsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
     [theme.breakpoints.down('xs')]: {
-      display: 'flex',
-      marginBottom: 30,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   },
-  badge: {
-    color: 'white',
+  skillCard: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: 105,
+    [theme.breakpoints.down('xs')]: {
+      width: '50%',
+      margin: 0,
+    },
   },
-  boxRating: {
-    padding: 0,
-    margin: 0,
+  avatarSize: {
+    width: 60,
+    height: 60,
   },
-});
+  skillTitle: {
+    fontSize: '0.8rem',
+    color: 'rgba(84,89,95,0.95)',
+    fontWeight: 'bold',
+  },
+  skillValue: {
+    fontSize: '0.7rem',
+    color: 'rgba(84,89,95,0.95)',
+  },
+  shape: {
+    backgroundColor: theme.palette.primary.main,
+    width: 40,
+    height: 40,
+    borderRadius: '50%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+})
