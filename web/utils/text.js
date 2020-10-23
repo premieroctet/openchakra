@@ -60,7 +60,7 @@ const maskIban = iban => {
 };
 
 const frenchFormat = str => {
-  const reg = /de ([aeiou])/i;
+  const reg = /de ([éèêàaeiou])/i;
   const result = str.replace(reg, 'd\'$1');
   return result;
 };

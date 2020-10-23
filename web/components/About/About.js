@@ -16,6 +16,11 @@ import ListAlfredConditions from "../ListAlfredConditions/ListAlfredConditions";
 import RoomIcon from '@material-ui/icons/Room';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import ChatBubbleOutlineOutlinedIcon from '@material-ui/icons/ChatBubbleOutlineOutlined';
+import PersonIcon from '@material-ui/icons/Person';
+import UserAvatar from '../Avatar/UserAvatar'
+const {frenchFormat} = require('../../utils/text')
+const moment=require('moment')
+moment.locale('fr')
 
 class About extends React.Component {
 
@@ -37,19 +42,23 @@ class About extends React.Component {
 
   render() {
 
+    const {displayTitlePicture} = this.props
     const {user} = this.state
     var places= user ?`${user.billing_address.city}, ${user.billing_address.country}` : ''
-    /**
     if (user) {
       user.service_address.forEach( sa => {
         places+=`;${sa.city}, France`
         }
       )
     }
-    */
 
     const wrapperComponentProps= user ?
       [
+        {
+          label: 'Membre depuis',
+          summary: moment(user.creation_date).format("MMMM YYYY"),
+          IconName: user.firstname ? <PersonIcon fontSize="large"/> : ''
+        },
         {
           label: 'Lieux',
           summary: places,
@@ -70,7 +79,13 @@ class About extends React.Component {
       null
 
     return (
-      <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} />
+      <div style={{display: 'flex', flexDirection:'column'}}>
+        <h3>{frenchFormat(`A propos de ${user ? user.firstname : ''}`)}</h3>
+        <div style={{display: 'flex', flexDirection:'row'}}>
+          <div style={{ marginLeft: '1%', marginRight: '1%'}}><UserAvatar user={user} /></div>
+          <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} />
+        </div>
+      </div>
     )
   }
 
