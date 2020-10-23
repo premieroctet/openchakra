@@ -80,9 +80,9 @@ class About extends React.Component {
 
     return (
       <div style={{display: 'flex', flexDirection:'column'}}>
-        <h3>{frenchFormat(`A propos de ${user ? user.firstname : ''}`)}</h3>
+        { displayTitlePicture ? <h3>{frenchFormat(`A propos de ${user ? user.firstname : ''}`)}</h3> : null }
         <div style={{display: 'flex', flexDirection:'row'}}>
-          <div style={{ marginLeft: '1%', marginRight: '1%'}}><UserAvatar user={user} /></div>
+          { displayTitlePicture ? <div style={{ marginLeft: '1%', marginRight: '1%'}}><UserAvatar user={user} /></div> : null }
           <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} />
         </div>
       </div>

@@ -61,7 +61,10 @@ class AboutTest extends React.Component{
         multi={false}
       >
       </Select>
+      <div>Sans titre ni photo</div>
       <About key={this.state.user} user={this.state.user} />
+      <div>Avec titre et photo</div>
+      <About key={this.state.user} user={this.state.user} displayTitlePicture={true}/>
       </>
     );
   }
