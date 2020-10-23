@@ -20,10 +20,10 @@ class AddressService extends React.Component {
           <Grid>
             <Typography>76000 Rouen - france</Typography>
           </Grid>
-          <Grid style={{marginTop: 30}}>
+          <Grid style={{marginTop: '2vh'}}>
             <Typography>L'adresse de facturation est identique</Typography>
           </Grid>
-          <Grid style={{marginTop: 30}}>
+          <Grid style={{marginTop: '2vh'}}>
             <Button>Modifier</Button>
           </Grid>
         </Grid>

@@ -5,7 +5,7 @@ import axios from 'axios';
 import 'react-dates/initialize';
 import moment from 'moment';
 import 'react-dates/lib/css/_datepicker.css';
-import styles from '../static/css/searchPage/searchStyle';
+import styles from '../static/css/pages/searchPage/searchStyle';
 import cookie from 'react-cookies';
 import FilterMenu from "../components/FilterMenu/FilterMenu";
 import Divider from "@material-ui/core/Divider";

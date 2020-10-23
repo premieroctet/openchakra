@@ -2,7 +2,7 @@ import React, {Fragment} from 'react';
 import NavBar from './NavBar/NavBar';
 import Footer from './Footer/Footer';
 import cookie from "react-cookies";
-import styles from '../../static/css/layout/layoutStyle'
+import styles from '../../static/css/pages/layout/layoutStyle'
 import {withStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import InfoBar from "../../components/InfoBar/InfoBar";

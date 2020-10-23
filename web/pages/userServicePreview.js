@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import Layout from '../hoc/Layout/Layout';
-import styles from '../static/css/userServicePreviewPage/userServicePreviewStyle';
+import styles from '../static/css/pages/userServicePreviewPage/userServicePreviewStyle';
 import Grid from '@material-ui/core/Grid';
 import Router from 'next/router';
 import axios from 'axios';
@@ -559,55 +559,47 @@ class UserServicesPreview extends React.Component {
                                 </Grid> : null
                             }
                           </Grid>
-                          <Grid style={{display: 'flex', alignItems: 'center'}}>
-                            {
-                              alfred.score < 0 ?
-                                <Grid>
-                                  <a href={'#'}>Voir plus de commentaires</a>
-                                </Grid> : null
-                            }
-                          </Grid>
                           <Grid>
-                            <Grid>
-                              <Link
-                                href={{
-                                  pathname: '/viewProfile',
-                                  query: {id: this.state.alfred._id},
-                                }}
-                              >
-                                <Button variant={'outlined'} className={classes.userServicePreviewButtonProfil}>Voir le profil</Button>
-                              </Link>
-                            </Grid>
+                            <Link
+                              href={{
+                                pathname: '/viewProfile',
+                                query: {id: this.state.alfred._id},
+                              }}
+                            >
+                              <Button variant={'outlined'} className={classes.userServicePreviewButtonProfil}>Voir le profil</Button>
+                            </Link>
                           </Grid>
                         </Grid>
                       </Grid>
                       <Grid style={{marginTop: '10%'}}>
-                        <DescriptionTopic
-                          titleTopic={'Description'}
-                          titleSummary={serviceUser.description ? serviceUser.description : 'Cet utilisateur n\'a pas encore de description.'}
-                          needBackground={true}
-                          underline={true}
-                          columnsXl={12}
-                          wrapperComponentProps={
-                            [
-                              {
-                                label: alfred.firstname ? 'Délai de prévenance' : '',
-                                summary: alfred.firstname ? `${alfred.firstname} a besoin de ${this.formatDeadline(serviceUser.deadline_before_booking)} pour préparer son service` : '',
-                                IconName: alfred.firstname ? <InsertEmoticonIcon fontSize="large"/> : ''
-                              },
-                              {
-                                label:  alfred.firstname ? 'Conditions d’annulation' : '',
-                                summary: alfred.firstname ? `${alfred.firstname} vous permet d’annuler votre réservation jusqu’à ${this.state.flexible ? '1 jour' : this.state.moderate ? '5 jours' : '10 jours'} avant la date prévue` : '',
-                                IconName:  alfred.firstname ? <CalendarTodayIcon fontSize="large"/> : ''
-                              },
-                              {
-                                label:  alfred.firstname ? 'Panier minimum' : '',
-                                summary: alfred.firstname ? `Le panier minimum de ${alfred.firstname} est de ${serviceUser.minimum_basket}€` : '',
-                                IconName:  alfred.firstname ? <ShoppingCartIcon fontSize="large"/> : ''
-                              },
-                            ]
-                          }
-                        />
+                        <Grid className={classes.overrideCssChild}>
+                          <DescriptionTopic
+                            titleTopic={'Description'}
+                            titleSummary={serviceUser.description ? serviceUser.description : 'Cet utilisateur n\'a pas encore de description.'}
+                            needBackground={true}
+                            underline={true}
+                            columnsXl={12}
+                            wrapperComponentProps={
+                              [
+                                {
+                                  label: alfred.firstname ? 'Délai de prévenance' : '',
+                                  summary: alfred.firstname ? `${alfred.firstname} a besoin de ${this.formatDeadline(serviceUser.deadline_before_booking)} pour préparer son service` : '',
+                                  IconName: alfred.firstname ? <InsertEmoticonIcon fontSize="large"/> : ''
+                                },
+                                {
+                                  label:  alfred.firstname ? 'Conditions d’annulation' : '',
+                                  summary: alfred.firstname ? `${alfred.firstname} vous permet d’annuler votre réservation jusqu’à ${this.state.flexible ? '1 jour' : this.state.moderate ? '5 jours' : '10 jours'} avant la date prévue` : '',
+                                  IconName:  alfred.firstname ? <CalendarTodayIcon fontSize="large"/> : ''
+                                },
+                                {
+                                  label:  alfred.firstname ? 'Panier minimum' : '',
+                                  summary: alfred.firstname ? `Le panier minimum de ${alfred.firstname} est de ${serviceUser.minimum_basket}€` : '',
+                                  IconName:  alfred.firstname ? <ShoppingCartIcon fontSize="large"/> : ''
+                                },
+                              ]
+                            }
+                          />
+                        </Grid>
                       </Grid>
                       <Grid className={classes.scheduleContainer}>
                         <ScheduleTopic

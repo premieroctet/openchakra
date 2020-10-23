@@ -9,7 +9,7 @@ import cookie from 'react-cookies';
 import Grid from '@material-ui/core/Grid';
 import InfoBar from '../components/InfoBar/InfoBar';
 import {withStyles} from '@material-ui/core/styles';
-import styles from '../static/css/homePage/index';
+import styles from '../static/css/pages/homePage/index';
 import NavBar from '../hoc/Layout/NavBar/NavBar';
 import BannerPresentation from '../components/HomePage/BannerPresentation/BannerPresentation';
 import CategoryTopic from '../components/HomePage/Category/CategoryTopic';

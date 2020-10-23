@@ -1,6 +1,6 @@
 import React from 'react'
 import withSlide from '../../hoc/Slide/SlideShow';
-import styles from '../../static/css/homePage/index';
+import styles from '../../static/css/pages/homePage/index';
 import withStyles from '@material-ui/core/styles/withStyles';
 
 class TestDiv extends React.Component {
