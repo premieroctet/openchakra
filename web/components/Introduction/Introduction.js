@@ -12,8 +12,13 @@ import Badge from '@material-ui/core/Badge';
 import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
 import cookie from 'react-cookies';
 import WithTopic from "../../hoc/Topic/Topic"
+import ListAlfredConditions from "../ListAlfredConditions/ListAlfredConditions";
+import RoomIcon from '@material-ui/icons/Room';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import ChatBubbleOutlineOutlinedIcon from '@material-ui/icons/ChatBubbleOutlineOutlined';
 
 class Introduction extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -31,14 +36,45 @@ class Introduction extends React.Component {
   }
 
   render() {
-    const {classes} = this.props;
+
+    const {user} = this.state
+    var places= user ?`${user.billing_address.city}, ${user.billing_address.country}` : ''
+    /**
+    if (user) {
+      user.service_address.forEach( sa => {
+        places+=`;${sa.city}, France`
+        }
+      )
+    }
+    */
+
+    const wrapperComponentProps= user ?
+      [
+        {
+          label: 'Lieux',
+          summary: places,
+          IconName: user.firstname ? <RoomIcon fontSize="large"/> : ''
+        },
+        {
+          label: 'Langues',
+          summary: user.languages.join(',') || 'Français',
+          IconName:  user.firstname ? <ChatBubbleOutlineOutlinedIcon fontSize="large"/> : ''
+        },
+        {
+          label:  'Vérification',
+          summary: user.id_card_status_text,
+          IconName:  user.firstname ? <CheckCircleOutlineIcon fontSize="large"/> : ''
+        },
+      ]
+      :
+      null
 
     return (
-      <div className={classes.skillsContainer}>
-        { JSON.stringify(this.state.user)}
-      </div>
-    );
+      <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} />
+    )
   }
+
+
 }
 
 export default withStyles(styles, {withTheme: true})(Introduction)

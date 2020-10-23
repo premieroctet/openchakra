@@ -10,7 +10,7 @@ export default class ListAlfredConditions extends React.Component{
   render() {
     const{columnsXl, columnsLG, columnsMD, columnsSM, columnsXS, wrapperComponentProps} = this.props;
     return(
-      <Grid container style={{padding: '5%'}}>
+      <Grid container style={{padding: '5%', display:'flex', flexDirection: 'column'}}>
         {
           wrapperComponentProps ?
           Object.keys(wrapperComponentProps).map((res, index) => (

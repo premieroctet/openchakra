@@ -15,6 +15,8 @@ class IntroTest extends React.Component{
     super(props);
     this.state={
       users:[],
+      //user: '5ec3df2a701b6d48c05b46bd', // Sabrina
+      user: '5e2f30effc91743a94411e83', // PLusieurs adresses
     }
   }
 
@@ -47,6 +49,7 @@ class IntroTest extends React.Component{
     const{classes} = this.props;
     const {users, user} = this.state
 
+    console.log(`User:${user}`)
     return(
       <>
       <Select
@@ -58,8 +61,7 @@ class IntroTest extends React.Component{
         multi={false}
       >
       </Select>
-
-      <Introduction key={this.state.user} user={this.state.user}/>
+      <Introduction key={this.state.user} user={this.state.user} />
       </>
     );
   }
