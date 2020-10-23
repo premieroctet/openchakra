@@ -14,9 +14,9 @@ class BookingDetail extends React.Component {
     return (
       <Grid>
         <Grid>
-          {Object.keys(prestations).map(k => {
+          {Object.keys(prestations).map((k, index) => {
             return count[k] === 0 ? null : (
-              <Grid className={classes.flexContent}>
+              <Grid className={classes.flexContent} key={index}>
                 <Grid className={classes.labelContent}>
                   <p>{k}</p>
                 </Grid>
@@ -72,18 +72,22 @@ class BookingDetail extends React.Component {
           }
           { /* End commission */}
           { /* Start total */}
-          <Grid className={classes.flexContent} style={{'font-weight': 'bold'}}>
-            <Grid>
-              <p>{client_fee !== 0 ? 'Total' : 'Total à percevoir'}</p>
-            </Grid>
-            <Grid>
-              <p>{total.toFixed(2)}€</p>
-            </Grid>
-          </Grid>
+          {
+            total ?
+              <Grid className={classes.flexContent} style={{fontWeight: 'bold'}}>
+                <Grid>
+                  <p>{client_fee !== 0 ? 'Total' : 'Total à percevoir'}</p>
+                </Grid>
+                <Grid>
+                  <p>{total.toFixed(2)}€</p>
+                </Grid>
+              </Grid> : null
+          }
+
           { /* End total */}
           { /* Start CESU */}
           {client_fee && cesu_total ?
-            <Grid className={classes.flexContent} style={{'margin-left': '20px', 'font-weight': 'bold'}}>
+            <Grid className={classes.flexContent} style={{marginleft: 20, fontWeight: 'bold'}}>
               <Grid>
                 <p>{'dont CESU'}</p>
               </Grid>

@@ -29,12 +29,12 @@
 }
 
 .tab {
-    background-color: 'lightgrey';
-    color: 'white';
-    font-size: '20px';
-    border: '1px solid white';
+    background-color: lightgrey;
+    color: white;
+    font-size: 20px;
+    border: 1px solid white;
     border-top-right-radius: 20px;
-    margin-right: '-40px';
+    margin-right: -40px;
     position: relative;
 }
 

@@ -40,8 +40,8 @@ class TrustAndSecurity extends React.Component{
     return(
       <Grid container style={{justifyContent: 'space-between'}}>
         {
-          items.map(res => (
-            <Grid style={{display: 'flex'}} alignItems="center" direction="row">
+          items.map((res, index) => (
+            <Grid key={index} style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid>
                 {res.icon}
               </Grid>

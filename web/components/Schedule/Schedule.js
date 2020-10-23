@@ -6,8 +6,6 @@ import Grid from '@material-ui/core/Grid';
 import {bookings2events} from '../../utils/converters';
 import {Typography} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import withStyles from '@material-ui/core/styles/withStyles';
-import PropTypes from 'prop-types';
 
 const {isDateAvailable, isMomentAvailable} = require('../../utils/dateutils');
 moment.locale('fr');
@@ -359,9 +357,4 @@ class Schedule extends React.Component {
   }
 }
 
-Schedule.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles({withTheme: true})(Schedule);
+export default Schedule;

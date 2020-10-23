@@ -28,6 +28,7 @@ import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import Link from 'next/link';
 
 const jwt = require('jsonwebtoken');
 
@@ -356,6 +357,11 @@ class NavBar extends Component {
                     >
                       <MenuItem>Profile</MenuItem>
                       <MenuItem>My account</MenuItem>
+                      {user && user.is_alfred ?
+                        <Link href={`/shop?id_alfred=${user._id}`}>
+                          <MenuItem>Ma boutique</MenuItem>
+                        </Link> : null
+                      }
                       <MenuItem onClick={() => this.logout2()}>Logout</MenuItem>
                     </Menu>
                   </Grid>

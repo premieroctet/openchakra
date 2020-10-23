@@ -103,7 +103,7 @@ class CardService extends React.Component{
                 <Grid style={{backgroundImage: 'url("/' + cpData.picture + '")'}} className={style.cardServiceBackgroundPics}/>
               </Grid>
               <Grid className={style.cardServiceChipName}>
-                <Chip label={alfred.firstname} avatar={cpData.is_professional ? <Avatar src="/static/assets/icon/pro_icon.svg"/> : null}className={style.cardServiceChip} />
+                <Chip label={alfred.firstname} avatar={cpData.is_professional ? <Avatar src="/static/assets/icon/pro_icon.svg"/> : null} className={style.cardServiceChip} />
               </Grid>
             </Grid>
             <Grid>

@@ -62,14 +62,12 @@ export default theme => ({
       alignItems: 'center',
     },
   },
-  leftContainer: {
-  },
   contentRight: {
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
     position: 'sticky',
-    top: 50
+    top: '8%'
   },
   avatarContainer: {
     width: '20%',
@@ -550,15 +548,31 @@ export default theme => ({
   },
 
 
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'center',
-    width: 400,
-  },
   divider: {
     height: 28,
     margin: 4,
   },
+
+  rootAccordion:{
+    boxShadow: 'inherit',
+    padding: '4px 6px',
+    border: '1px solid rgba(112,112,112,0.5)',
+    borderRadius: '14px !important',
+    width: '100%'
+  },
+  userServicePreviewAccordionDetails:{
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  userServicePreviewAccordionNoShadow:{
+    boxShadow: 'none'
+  },
+  userServicePButtonResa:{
+    color: 'white !important',
+    borderRadius: 14,
+    textTransform: 'initial',
+    padding: '5%',
+    width: '100%'
+  }
 
 })

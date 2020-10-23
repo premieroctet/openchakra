@@ -13,7 +13,6 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import CardService from "../components/Card/CardService/CardService";
-import ScrollMenu from "../components/ScrollMenu/SrollMenu";
 import NeedHelp from "../components/NeedHelp/NeedHelp";
 import SearchByHashtag from "../components/SearchByHashtag/SearchByHashtag";
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -22,7 +21,7 @@ import withSlide from '../hoc/Slide/SlideShow'
 import withGrid from '../hoc/Grid/GridCard'
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
 
-const SearchResults=withSlide(withGrid(CardService))
+const SearchResults=withSlide(withGrid(CardService));
 
 moment.locale('fr');
 

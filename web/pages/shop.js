@@ -19,6 +19,7 @@ import AlfredWelcomedMessage from '../components/AlfredWelcomedMessage/AlfredWel
 import {Helmet} from 'react-helmet';
 import NavbarMobile from '../components/NavbarMobile/NavbarMobile';
 import Commentary from '../components/Commentary/Commentary';
+import CardService from "../components/Card/CardService/CardService";
 
 const {frenchFormat} = require('../utils/text');
 
@@ -130,6 +131,8 @@ class shop extends React.Component {
     const {isAdmin} = this.state;
     let isOwner = this.state.idAlfred === this.state.userId;
 
+    console.log(this.state.services)
+
     return (
       <Fragment>
         <Layout>
@@ -163,12 +166,13 @@ class shop extends React.Component {
                 {Object.keys(this.state.services).map(result => {
                   return (
                     <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
-                      <CardPreview
+                      <CardService
+                        style={classes}
                         isOwner={isOwner}
                         needAvatar={false}
                         userState={this.state.userState}
                         alfred={this.state.alfred}
-                        services={this.state.services[result]._id}
+                        data={this.state.services}
                         needRefresh={this.needRefresh}
                         isAdmin={isAdmin}
                       />
@@ -234,7 +238,6 @@ class shop extends React.Component {
           </Grid>
         </Layout>
         <NavbarMobile userId={this.state.userId}/>
-
       </Fragment>
     );
   };

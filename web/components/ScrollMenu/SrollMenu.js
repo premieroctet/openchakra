@@ -44,7 +44,7 @@ class SrollMenu extends React.Component{
                 categories.map((res, index) =>
                   (
                     <Link href={'/search?search=1&category=' + res._id + (gps ? '&gps=' + JSON.stringify(gps) : '') + '&indexCat=' + index} key={index}>
-                      <Tab label={res.label} className={style.scrollMenuTab} {...a11yProps(index)} />
+                      <Tab label={res.label} className={style.scrollMenuTab} {...a11yProps(index)}/>
                     </Link>
                   )
                 ) : null
