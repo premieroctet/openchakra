@@ -8,6 +8,15 @@ import StepLabel from '@material-ui/core/StepLabel';
 
 import styles from './StepperStyle';
 
+
+const ColorlibConnector = () =>{
+  return(
+    <Grid>
+      <span> > </span>
+    </Grid>
+  )
+};
+
 class Stepper extends React.Component {
   constructor(props) {
     super(props);
@@ -71,7 +80,7 @@ class Stepper extends React.Component {
 
     return (
       <Grid className={classes.root}>
-        <StepperMaterial activeStep={activeStep} alternativeLabel classes={{root : classes.stepperRoot}}>
+        <StepperMaterial activeStep={activeStep} nonLinear classes={{root : classes.stepperRoot}} connector={<ColorlibConnector />}>
           {this.state.steps.map(label => (
             <Step key={label} >
               <StepLabel StepIconProps={{

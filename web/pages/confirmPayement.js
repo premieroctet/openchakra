@@ -1,36 +1,20 @@
 import React, {Fragment} from 'react';
-import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import moment from 'moment';
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
-import Footer from '../hoc/Layout/Footer/Footer';
-import About from '../components/About/About';
-import UserAvatar from '../components/Avatar/UserAvatar';
-import BookingDetail from '../components/BookingDetail/BookingDetail';
 import styles from '../static/css/pages/confirmPayement/confirmPayement';
 import cookie from 'react-cookies';
 import Stepper from "../components/Stepper/Stepper";
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
-import AddressService from "../components/AddressService/AddressService";
-import Profile from "../components/Profile/Profile";
-import ListAlfredConditions from "../components/ListAlfredConditions/ListAlfredConditions";
+
+import AddressAndFacturation from "../components/Payement/AddressAndFacturation/AddressAndFacturation";
+import PaymentChoiceCreate from "../components/Payement/PaymentChoiceCreate/PaymentChoiceCreate";
 
 
-const {booking_datetime_str} = require('../utils/dateutils');
-import WithTopic from "../hoc/Topic/Topic";
-import Divider from '@material-ui/core/Divider';
-import DrawerBookingRecap from "../components/Drawer/DrawerBookingRecap/DrawerBookingRecap";
-import PaymentPics from "../components/PaymentPics/PaymentPics";
-
-
-const AddressComponent = WithTopic(AddressService);
-const ProfilComponent = WithTopic(Profile);
-const EquipementTopic = WithTopic(ListAlfredConditions);
 
 
 moment.locale('fr');
@@ -63,7 +47,11 @@ class ConfirmPayement extends React.Component {
       languages: [],
       alfredId: '',
       activeStep: 0,
-      equipments: []
+      equipments: [],
+      cards: [],
+      id_card: '',
+      cardSelected: false,
+      valueother: 'other',
     };
   }
 
@@ -80,7 +68,21 @@ class ConfirmPayement extends React.Component {
 
     axios.get('/myAlfred/api/users/current').then(res => {
       this.setState({currentUser: res.data});
+    }).catch(err => {
+      if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+        cookie.remove('token', {path: '/'});
+        Router.push({pathname: '/login'});
+      }
     });
+
+    axios.get('/myAlfred/api/payment/cardsActive')
+      .then(response => {
+        let cards = response.data;
+        this.setState({cards: cards});
+      })
+      .catch(err => {
+        console.error(err);
+      });
 
     this.setState({
       emitter: localStorage.getItem('emitter'),
@@ -110,18 +112,46 @@ class ConfirmPayement extends React.Component {
     });
   }
 
-  handlePay() {
+  handlePay = () => {
     localStorage.setItem('emitter', this.state.emitter);
     localStorage.setItem('recipient', this.state.recipient);
-    Router.push({
-      pathname: '/paymentChoiceCreate',
-      query: {total: this.state.grandTotal, fees: this.state.fees},
-    });
+    this.setState({activeStep: this.state.activeStep + 1});
+  };
+
+  payDirect() {
+    const total = parseFloat(this.state.total);
+    const fees = parseFloat(this.state.fees);
+    const data = {
+      id_card: this.state.id_card,
+      amount: total,
+      fees: fees,
+    };
+    axios.post('/myAlfred/api/payment/payInDirect', data)
+      .then(() => {
+        Router.push('/paymentDirectSuccess?id=' + this.state.booking_id);
+      })
+      .catch( err => { console.error(err)});
   }
 
+  pay() {
+    const total = parseFloat(this.state.total);
+    const fees = parseFloat(this.state.fees);
+    const data = {amount: total, fees: fees};
+
+    axios.post('/myAlfred/api/payment/payIn', data)
+      .then(res => {
+        localStorage.setItem('booking_id', this.state.booking_id);
+        let payIn = res.data;
+        Router.push(payIn.RedirectURL);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
+
+
   computePricedPrestations() {
-    var result = {};
-    const count = this.state.count;
+    let result = {};
     this.state.prestations.forEach(p => {
       result[p.name] = p.price * p.value;
     });
@@ -129,11 +159,42 @@ class ConfirmPayement extends React.Component {
   }
 
   computeCountPrestations() {
-    var result = {};
+    let result = {};
     this.state.prestations.forEach(p => {
       result[p.name] = p.value;
     });
     return result;
+  }
+
+  handleCardSelected = (e) =>{
+    if ( e === 'other'){
+      this.setState({id_card: e, cardSelected: false});
+    }else{
+      this.setState({id_card: e.Id, cardSelected: true});
+    }
+  };
+
+
+
+  renderSwitch(stepIndex) {
+    switch (stepIndex) {
+      case 0:
+        return <AddressAndFacturation
+          {...this.state}
+          handlePay={this.handlePay}
+          pricedPrestations={this.computePricedPrestations}
+          countPrestations={this.computeCountPrestations}/>;
+      case 1:
+        return <PaymentChoiceCreate
+          {...this.state}
+          pricedPrestations={this.computePricedPrestations}
+          countPrestations={this.computeCountPrestations}
+          handlePay={this.handlePay}
+          pay={this.pay}
+          payDirect={this.payDirect}
+          handleCardSelected={this.handleCardSelected}
+        />;
+    }
   }
 
   render() {
@@ -143,10 +204,6 @@ class ConfirmPayement extends React.Component {
     if (currentUser && bookingObj) {
       var checkAdd = currentUser.billing_address.address === bookingObj.address.address && currentUser.billing_address.zip_code === bookingObj.address.zip_code && currentUser.billing_address.city === bookingObj.address.city;
     }
-
-
-    const pricedPrestations = this.computePricedPrestations();
-    const countPrestations = this.computeCountPrestations();
 
     return (
       <Fragment>
@@ -172,62 +229,7 @@ class ConfirmPayement extends React.Component {
               <Stepper activeStep={activeStep} isType={'confirmPaiement'}/>
             </Grid>
             <Grid  className={classes.mainContainer}>
-              <Grid container style={{width: '90%', marginBottom: '5vh'}}>
-                <Grid item xl={6}>
-                  <Grid style={{display: 'flex', flexDirection: 'column', paddingRight: '5%', paddingLeft: '5%'}}>
-                    <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%'}}>
-                      <AddressComponent
-                        titleTopic={'Adresse du service'}
-                        titleSummary={'Votre adresse'}
-                        underline={false}
-                      />
-                    </Grid>
-                    <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)',paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', marginTop: '2vh'}}>
-                      <ProfilComponent
-                        titleTopic={'A propos de Béatrice'}
-                        titleSummary={false}
-                        underline={false}
-                        {...this.state}
-                      />
-                      <Grid style={{marginTop: 30, marginBottom: 30}}>
-                        <Divider style={{height: 2, borderRadius: 10, width: '50%', backgroundColor: 'rgba(210, 210, 210, 0.5)'}}/>
-                      </Grid>
-                      <EquipementTopic
-                        titleTopic={'Material fourni'}
-                        titleSummary={equipments.length === 0 ? 'Aucun matériel fourni' : false}
-                        underline={false}
-                        wrapperComponentProps={equipments}
-                        columnsXl={6}
-                        columnsLG={6}
-                        columnsMD={6}
-                        columnsSM={6}
-                        columnsXS={6}
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item xl={6}>
-                  <Grid style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    border: '1px solid rgba(210, 210, 210, 0.5)',
-                    borderRadius: 30,
-                    justifyContent: 'center',
-                    backgroundColor: 'white'
-                  }}>
-                    <Grid style={{paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', paddingRight: '10%'}}>
-                      <DrawerBookingRecap
-                        {...this.state}
-                        pricedPrestations={pricedPrestations}
-                        countPrestations={countPrestations}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid style={{display: 'flex', justifyContent: 'center'}}>
-                    <PaymentPics/>
-                  </Grid>
-                </Grid>
-              </Grid>
+              {this.renderSwitch(activeStep)}
             </Grid>
             <Grid style={{width: '100%', display: 'flex', justifyContent: 'center', marginTop: '1%', position: 'relative', bottom: 0, backgroundColor: 'white'}}>
               <Grid style={{width: '90%'}}>

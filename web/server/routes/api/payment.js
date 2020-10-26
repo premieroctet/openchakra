@@ -74,7 +74,10 @@ router.post('/createCard', passport.authenticate('jwt', {session: false}), (req,
           }, options);
 
         });
-    });
+    }).catch(error => {
+    console.error(error);
+    res.status(404).json({error: error});
+  });
 });
 
 // POST /myAlfred/api/payment/payIn

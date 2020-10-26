@@ -679,7 +679,6 @@ class UserServicesPreview extends React.Component {
                               computeTravelTax={this.computeTravelTax}
                               getLocationLabel={this.getLocationLabel}
                               book={this.book}
-
                               {...this.state}
                             />
                           </Grid>

@@ -358,8 +358,12 @@ class NavBar extends Component {
                         horizontal: 'right',
                       }}
                     >
-                      <MenuItem>Profile</MenuItem>
-                      <MenuItem>My account</MenuItem>
+                      <Link href={'/profile/editProfile'}>
+                        <MenuItem>Profile</MenuItem>
+                      </Link>
+                      <Link href={'/account/notifications'}>
+                        <MenuItem>My account</MenuItem>
+                      </Link>
                       {user && user.is_alfred ?
                         <Link href={`/shop?id_alfred=${user._id}`}>
                           <MenuItem>Ma boutique</MenuItem>
