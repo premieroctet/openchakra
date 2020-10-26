@@ -51,12 +51,10 @@ export default ({ projects, id }: any) => {
           userCanEdit = true
         }
       })
-      if (userProject.project) {
-        if (userCanEdit === false) {
-          if (typeof window !== 'undefined') {
-            dispatch.components.reset()
-            router.push('/')
-          }
+      if (userCanEdit === false) {
+        if (typeof window !== 'undefined') {
+          dispatch.components.reset()
+          router.push('/')
         }
       }
     } else {

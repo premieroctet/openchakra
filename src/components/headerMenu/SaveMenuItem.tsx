@@ -43,8 +43,9 @@ const SaveMenuItem = (props: any) => {
           if (e.id === props.id) {
             userCanEdit = true
           }
+          return
         })
-        if (userCanEdit == false) {
+        if (userCanEdit === false) {
           if (typeof window !== 'undefined') {
             dispatch.components.reset()
             router.push('/')
@@ -57,7 +58,7 @@ const SaveMenuItem = (props: any) => {
       } else {
         const markup = JSON.stringify(components)
         let newProject = await createProject(markup)
-        router.push('/project/[id]', `/project/${newProject.id}`)
+        window.location.href = `project/${newProject.id}`
       }
     } else {
       signIn()
