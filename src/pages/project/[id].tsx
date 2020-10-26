@@ -51,15 +51,19 @@ export default ({ projects, id }: any) => {
           userCanEdit = true
         }
       })
-      if (userCanEdit === false) {
-        if (typeof window !== 'undefined') {
-          dispatch.components.reset()
-          router.push('/')
-          return
+      if (userProject.project) {
+        if (userCanEdit === false) {
+          if (typeof window !== 'undefined') {
+            dispatch.components.reset()
+            router.push('/')
+          }
         }
       }
     } else {
       signIn()
+    }
+    if (projects.markup) {
+      dispatch.components.reset(JSON.parse(projects.markup))
     }
   }
 
@@ -67,9 +71,5 @@ export default ({ projects, id }: any) => {
     checkSession()
   }, [checkSession])
 
-  return projects.markup ? (
-    <App projects={projects.markup} id={id} userCanEdit={userCanEdit} />
-  ) : (
-    <></>
-  )
+  return projects.markup ? <App id={id} /> : <></>
 }
