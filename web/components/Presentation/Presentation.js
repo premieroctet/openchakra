@@ -32,7 +32,6 @@ class Presentation extends React.Component {
   }
 
   render() {
-
     const {user} = this.state
 
     const title=frenchFormat(`À propos de ${user ? user.firstname : ''}`)

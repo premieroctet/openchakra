@@ -1,4 +1,5 @@
 import React from 'react'
+import Grid from "@material-ui/core/Grid";
 import ProfileLayout from '../../components/Profile/ProfileLayout'
 import About from '../../components/About/About'
 import Presentation from '../../components/Presentation/Presentation'
@@ -19,16 +20,20 @@ class ProfileAbout extends React.Component {
 
     return (
       <ProfileLayout>
-        <div style={{ display: 'flex', flexDirection: 'column'}}>
-          <div style={{ display: 'flex', flexDirection: 'row'}}>
+        <Grid container>
+          <Grid item xs={4}>
             <About user={user} />
+          </Grid>
+          <Grid item xs={8}>
             <Presentation user={user} />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'row'}}>
+          </Grid>
+          <Grid item xs={6}>
             <Skills user={user} />
+          </Grid>
+          <Grid item xs={6}>
             <Badges user={user} />
-          </div>
-        </div>
+          </Grid>
+        </Grid>
       </ProfileLayout>
     )
   }

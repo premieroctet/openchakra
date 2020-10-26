@@ -8,7 +8,7 @@ class ProfileHeader extends React.Component {
 
   render() {
     return (
-      <div>Je suis l'en-tête du profil</div>
+      <div style={{display: 'flex', justifyContent: 'center'}}>Je suis l'en-tête du profil</div>
     )
   }
 }
