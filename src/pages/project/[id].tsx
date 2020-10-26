@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 import { PrismaClient } from '@prisma/client'
 import { GetStaticProps, GetStaticPaths } from 'next'
-import App from '~pages'
 import { getSession, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import useDispatch from '~hooks/useDispatch'
 import { checkUser } from '~utils/checkProject'
+import App from '~pages'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prisma = new PrismaClient()
@@ -42,10 +42,6 @@ export default ({ projects, id }: any) => {
   const router = useRouter()
   let userCanEdit = false
 
-  useEffect(() => {
-    checkSession()
-  }, [checkSession])
-
   const checkSession = async () => {
     const session = await getSession()
     if (session) {
@@ -66,6 +62,10 @@ export default ({ projects, id }: any) => {
       signIn()
     }
   }
+
+  useEffect(() => {
+    checkSession()
+  }, [checkSession])
 
   return projects.markup ? (
     <App projects={projects.markup} id={id} userCanEdit={userCanEdit} />
