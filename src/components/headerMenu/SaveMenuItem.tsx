@@ -4,8 +4,6 @@ import { MenuItem, Box } from '@chakra-ui/core'
 import { FaSave } from 'react-icons/fa'
 import { getComponents } from '~core/selectors/components'
 import { signIn, useSession } from 'next-auth/client'
-import { useRouter } from 'next/router'
-import useDispatch from '~hooks/useDispatch'
 import { checkUser, createProject } from '~utils/checkProject'
 
 interface Props {
@@ -23,8 +21,6 @@ interface Project {
 const SaveMenuItem = (props: Props) => {
   const components = useSelector(getComponents)
   const [session] = useSession()
-  const router = useRouter()
-  const dispatch = useDispatch()
 
   const updateProject = async () => {
     const markup = JSON.stringify(components)
@@ -58,11 +54,9 @@ const SaveMenuItem = (props: Props) => {
           return
         })
         if (userCanEdit === false) {
-          if (typeof window !== 'undefined') {
-            dispatch.components.reset()
-            router.push('/')
-            return
-          }
+          const markup = JSON.stringify(components)
+          let newProject = await createProject(markup)
+          window.location.href = `/project/${newProject.id}`
         }
         if (userCanEdit) {
           await updateProject()

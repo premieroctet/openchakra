@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import { getSession, signIn } from 'next-auth/client'
 import useDispatch from '~hooks/useDispatch'
-import { checkUser } from '~utils/checkProject'
 import App from '~pages'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
@@ -52,28 +51,13 @@ interface Props {
 export default ({ projects, id }: Props) => {
   const [loading, setLoading] = useState(true)
   const dispatch = useDispatch()
-  let userCanEdit = false
 
   const checkSession = async () => {
     const session = await getSession()
     if (session) {
-      const userProject = await checkUser(session.user.name)
-      userProject.project.map((e: Project) => {
-        if (e.id === id) {
-          userCanEdit = true
-        }
-      })
-      if (userCanEdit === false) {
-        if (typeof window !== 'undefined') {
-          dispatch.components.reset()
-          setLoading(false)
-          window.location.href = `/`
-        }
-      } else {
-        if (projects.markup) {
-          dispatch.components.reset(JSON.parse(projects.markup))
-          setLoading(false)
-        }
+      if (projects.markup) {
+        dispatch.components.reset(JSON.parse(projects.markup))
+        setLoading(false)
       }
     } else {
       signIn()
