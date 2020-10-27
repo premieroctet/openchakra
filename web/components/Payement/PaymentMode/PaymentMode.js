@@ -11,18 +11,15 @@ import HttpsIcon from '@material-ui/icons/Https';
 class PaymentMode extends React.Component{
   constructor(props) {
     super(props);
-    this.state={
-      valueRadio: ''
-    }
   }
 
-  handleChange = (event) => {
-    this.setState({valueRadio: event.target.value});
+  handleCardSelected = (e) => {
+    this.props.handleCardSelected(e.target.value)
   };
 
   render() {
-    const {valueRadio} = this.state;
-    const {cards, name} = this.props;
+    const {cards, currentUser, id_card} = this.props;
+
 
     return(
       <Grid>
@@ -39,28 +36,27 @@ class PaymentMode extends React.Component{
             <PaymentPics/>
           </Grid>
         </Grid>
-        <Grid>
+        <Grid style={{marginTop: '3vh', marginBottom: '3vh'}}>
           <FormControl component="fieldset" style={{width: '100%'}}>
-            <RadioGroup value={valueRadio} onChange={this.handleChange}>
+            <RadioGroup value={id_card ? id_card : ''} onChange={this.handleCardSelected}>
               {
                 cards.map((e, index) => {
                   let experiationDate = e.ExpirationDate.slice(0,2) + "/20" + e.ExpirationDate.slice(2);
                   let cb = e.CardProvider === 'MASTERCARD' ? e.Product === 'MCC'  ? e.CardProvider : 'MSI' : e.CardProvider === 'AMEX' ? 'AMEX' :  e.CardProvider === 'CB' ? e.CardProvider : 'visa' ;
                   return(
-                    <Grid key={index} style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                      <Grid>
+                    <Grid container key={index} style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                      <Grid item xl={3}>
                         <FormControlLabel value={e.Id} control={<Radio/>} label={e.Alias.replace(/X/g, '*')} />
                       </Grid>
-                      <Grid>
+                      <Grid item xl={3} style={{display:'flex', justifyContent: 'center'}}>
                         <img src={`../../static/assets/icon/payementIcones/${cb}.png`} height={20} alt={e.CardProvider} title={e.CardProvider}/>
                       </Grid>
-                      <Grid>
-                        <Typography>{name}</Typography>
+                      <Grid item xl={3} style={{display:'flex', justifyContent: 'center'}}>
+                        <Typography>{currentUser.firstname + " " + currentUser.name}</Typography>
                       </Grid>
-                      <Grid>
+                      <Grid item xl={3} style={{display:'flex', justifyContent: 'center'}}>
                         <Typography>{experiationDate}</Typography>
                       </Grid>
-
                     </Grid>
                   )})
               }

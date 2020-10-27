@@ -13,6 +13,7 @@ import IconButton from "@material-ui/core/IconButton";
 import RemoveIcon from "@material-ui/icons/Remove";
 import AddIcon from "@material-ui/icons/Add";
 import moment from 'moment';
+import Divider from "@material-ui/core/Divider";
 moment.locale('fr');
 
 
@@ -30,7 +31,7 @@ class DrawerBookingRecap extends React.Component{
 
   render() {
 
-    const{pricedPrestations, countPrestations, grandTotal, fees, travel_tax, classes, pick_tax, cesu_total, mode, prestations, bookingObj, user} = this.props;
+    const{pricedPrestations, countPrestations, grandTotal, fees, travel_tax, classes, pick_tax, cesu_total, mode, prestations, bookingObj, user, id_card, activeStep} = this.props;
 
     return(
       <Grid>
@@ -48,12 +49,21 @@ class DrawerBookingRecap extends React.Component{
           </Grid>
         </Grid>
         {
-          mode === 'short' ? null :
+          mode ?
             <Grid style={{marginTop: '3vh'}}>
+              <Grid>
+                <Divider style={{height: 2}} />
+              </Grid>
+            </Grid> : null
+        }
+
+        <Grid style={{marginTop: '3vh'}}>
+          {
+            mode === 'short' ? null :
               <Grid>
                 <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
                   <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={<ExpandMoreIcon/>}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                     style={{padding: 0}}
@@ -61,9 +71,20 @@ class DrawerBookingRecap extends React.Component{
                     <Typography>Afficher le détail</Typography>
                   </AccordionSummary>
                   <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-                    <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginBottom: 20}}>
-                      {prestations.map( (prestation, index) =>(
-                        <Grid container style={{display: 'flex', alignItems: 'center', width: '100%', marginBottom: '5%', justifyContent: 'space-between'}} key={index}>
+                    <Grid style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      marginBottom: 20
+                    }}>
+                      {prestations.map((prestation, index) => (
+                        <Grid container style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          width: '100%',
+                          marginBottom: '5%',
+                          justifyContent: 'space-between'
+                        }} key={index}>
                           <Grid>
                             <Grid>
                               <Typography>{prestation.value}</Typography>
@@ -85,36 +106,38 @@ class DrawerBookingRecap extends React.Component{
                   </AccordionDetails>
                 </Accordion>
                 {/*TODO CODE PROMO
-                <Grid>
-                  <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1a-content"
-                      id="panel1a-header"
-                      style={{padding: 0}}
-                    >
-                      <Typography>Utiliser un code promo</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-                      <Typography>MY CONTENT</Typography>
-                    </AccordionDetails>
-                  </Accordion>
-                </Grid>
-                */}
-              </Grid>
-              <Grid style={{marginTop: '3vh'}}>
-                <BookingDetail
-                  prestations={pricedPrestations}
-                  count={countPrestations}
-                  total={grandTotal}
-                  client_fee={fees}
-                  travel_tax={travel_tax}
-                  pick_tax={pick_tax}
-                  cesu_total={cesu_total}
-                />
-              </Grid>
+            <Grid>
+              <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                  style={{padding: 0}}
+                >
+                  <Typography>Utiliser un code promo</Typography>
+                </AccordionSummary>
+                <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
+                  <Typography>MY CONTENT</Typography>
+                </AccordionDetails>
+              </Accordion>
             </Grid>
-        }
+            */}
+              </Grid>
+          }
+          <Grid style={{marginTop: '3vh'}}>
+            <BookingDetail
+              prestations={pricedPrestations}
+              count={countPrestations}
+              total={grandTotal}
+              client_fee={fees}
+              travel_tax={travel_tax}
+              pick_tax={pick_tax}
+              cesu_total={cesu_total}
+              mode={mode}
+            />
+          </Grid>
+          </Grid>
+
         <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '3vh'}}>
           <Grid style={{width: '100%'}}>
             <Button
@@ -123,8 +146,9 @@ class DrawerBookingRecap extends React.Component{
               color="primary"
               aria-label="add"
               onClick={() => this.props.handlePay()}
+              disabled={activeStep === 1 ? id_card === '' : false}
             >
-              <Typography style={{fontWeight: 'bold'}}>{mode === 'short' ? 'Payer' : 'Valider'}</Typography>
+              <Typography style={{fontWeight: 'bold'}} >{mode === 'short' ? 'Payer' : 'Valider'}</Typography>
             </Button>
           </Grid>
         </Grid>

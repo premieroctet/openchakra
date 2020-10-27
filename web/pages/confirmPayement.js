@@ -113,12 +113,17 @@ class ConfirmPayement extends React.Component {
   }
 
   handlePay = () => {
-    localStorage.setItem('emitter', this.state.emitter);
-    localStorage.setItem('recipient', this.state.recipient);
-    this.setState({activeStep: this.state.activeStep + 1});
+    if(this.state.activeStep === 0) {
+      this.setState({activeStep: this.state.activeStep + 1});
+      localStorage.setItem('emitter', this.state.emitter);
+      localStorage.setItem('recipient', this.state.recipient);
+    }else{
+     this.pay()
+    }
   };
 
   payDirect() {
+
     const total = parseFloat(this.state.total);
     const fees = parseFloat(this.state.fees);
     const data = {
@@ -167,11 +172,7 @@ class ConfirmPayement extends React.Component {
   }
 
   handleCardSelected = (e) =>{
-    if ( e === 'other'){
-      this.setState({id_card: e, cardSelected: false});
-    }else{
-      this.setState({id_card: e.Id, cardSelected: true});
-    }
+      this.setState({id_card: e});
   };
 
 
@@ -190,7 +191,6 @@ class ConfirmPayement extends React.Component {
           pricedPrestations={this.computePricedPrestations}
           countPrestations={this.computeCountPrestations}
           handlePay={this.handlePay}
-          pay={this.pay}
           payDirect={this.payDirect}
           handleCardSelected={this.handleCardSelected}
         />;
@@ -200,11 +200,11 @@ class ConfirmPayement extends React.Component {
   render() {
     const {classes} = this.props;
     const {currentUser, user, bookingObj, activeStep, equipments} = this.state;
-    
+
     return (
       <React.Fragment>
         {user === null || currentUser === null ? null : (
-          <Grid style={{position: 'relative', height : '100vh'}}>
+          <Grid>
             <Grid style={{height: '2vh', backgroundColor: 'rgba(178,204,251,1)'}}/>
             <Grid style={{display: 'flex', justifyContent: 'center', backgroundColor: 'white', height: '8vh'}}>
               <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'end', width: '90%'}}>
@@ -227,7 +227,7 @@ class ConfirmPayement extends React.Component {
             <Grid  className={classes.mainContainer}>
               {this.renderSwitch(activeStep)}
             </Grid>
-            <Grid style={{width: '100%', display: 'flex', justifyContent: 'center', position: 'absolute', bottom: 0, backgroundColor: 'white'}}>
+            <Grid style={{width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', bottom: 0, backgroundColor: 'white'}}>
               <Grid style={{width: '90%'}}>
                 <TrustAndSecurity/>
               </Grid>

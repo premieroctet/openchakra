@@ -21,14 +21,19 @@ class PaymentChoice extends React.Component{
     this.props.handlePay()
   };
 
+  callHandlepayDirect = () =>{
+    this.props.payDirect()
+  };
 
-
+  handleCardSelected = (e) =>{
+    this.props.handleCardSelected(e)
+  };
 
   render() {
     const{cards, id_card, valueother, cardSelected, pricedPrestations, countPrestations, focus, name} = this.props;
 
     return(
-      <Grid container style={{width: '90%'}}>
+      <Grid container style={{width: '90%',  marginBottom: '10vh'}}>
         <Grid item xl={6}>
           <Grid style={{display: 'flex', flexDirection: 'column', paddingRight: '5%', paddingLeft: '5%'}} >
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingRight: '10%', paddingTop: '5%', paddingBottom: '5%', position: 'relative'}}>
@@ -36,9 +41,10 @@ class PaymentChoice extends React.Component{
                 titleTopic={'Mode de paiment'}
                 titleSummary={false}
                 underline={false}
+                handleCardSelected={this.handleCardSelected}
                 {...this.props}
                 />
-              <Grid style={{position: 'absolute', bottom: '5%', right:  '10%'}}>
+              <Grid style={{position: 'absolute', bottom: '5%', right:  '10%'}} onClick={this.callHandlepay}>
                 <a href={'#'}>Payer avec une autre carte</a>
               </Grid>
             </Grid>
@@ -49,7 +55,6 @@ class PaymentChoice extends React.Component{
                 underline={false}
                 {...this.props}
               />
-
             </Grid>
           </Grid>
         </Grid>
@@ -67,12 +72,12 @@ class PaymentChoice extends React.Component{
                 {...this.props}
                 pricedPrestations={pricedPrestations}
                 countPrestations={countPrestations}
-                handlePay={this.callHandlepay}
+                handlePayDirect={this.callHandlepayDirect}
                 mode={'short'}
               />
             </Grid>
           </Grid>
-          <Grid>
+          <Grid style={{ paddingRight: '5%', paddingLeft: '5%'}}>
             <Grid style={{display: 'flex', justifyContent: 'center'}}>
               <Typography>En validant votre paiement, vous acceptez nos <strong>CGV</strong> ainsi que notre <strong>politique de protection des données personnelles</strong>.</Typography>
             </Grid>
