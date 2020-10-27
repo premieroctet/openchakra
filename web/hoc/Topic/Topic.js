@@ -12,7 +12,6 @@ function WithTopic(WrappedComponent) {
 
     render() {
       const{titleTopic, titleSummary, needBackground, underline} = this.props;
-      console.log(`Topic props:${Object.keys(this.props)}`);
 
       return(
         <Grid style={{height: '100%'}}>

@@ -42,14 +42,12 @@ class AboutTest extends React.Component{
 
   onUserChanged = e => {
     this.setState({user: e[0].key});
-    console.log(e[0].key)
   };
 
   render() {
     const{classes} = this.props;
     const {users, user} = this.state
 
-    console.log(`User:${user}`)
     return(
       <>
       <Select

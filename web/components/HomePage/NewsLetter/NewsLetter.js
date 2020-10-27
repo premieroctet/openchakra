@@ -81,7 +81,7 @@ class NewsLetter extends React.Component{
             </Grid>
             <Grid className={style.newsLetterContainer}>
               <Grid>
-                <Button variant={'outlined'} classes={{root : style.newsLetterButton}} onClick={this.sendSubscription}>{NEWS_LETTER.button}</Button>
+                <Button style={{ width: '100%'}} variant={'outlined'} classes={{root : style.newsLetterButton}} onClick={this.sendSubscription}>{NEWS_LETTER.button}</Button>
               </Grid>
             </Grid>
           </Grid>

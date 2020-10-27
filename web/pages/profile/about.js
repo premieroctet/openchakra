@@ -5,21 +5,25 @@ import About from '../../components/About/About'
 import Presentation from '../../components/Presentation/Presentation'
 import Skills from '../../components/Skills/Skills'
 import Badges from '../../components/Badges/Badges'
+import Hashtags from '../../components/Hashtags/Hashtags'
 
 class ProfileAbout extends React.Component {
 
   constructor(props) {
     super(props)
     this.state={
-      user: '5ec3df2a701b6d48c05b46bd', // Sabrina
     }
   }
 
+  static getInitialProps({query: {user}}) {
+    return {user: user};
+  }
+
   render() {
-    const {user}=this.state
+    const {user}=this.props
 
     return (
-      <ProfileLayout>
+      <ProfileLayout user={user}>
         <Grid container>
           <Grid item xs={4}>
             <About user={user} />
@@ -32,6 +36,9 @@ class ProfileAbout extends React.Component {
           </Grid>
           <Grid item xs={6}>
             <Badges user={user} />
+          </Grid>
+          <Grid item xs={12}>
+            <Hashtags user={user} />
           </Grid>
         </Grid>
       </ProfileLayout>

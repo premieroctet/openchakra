@@ -1,6 +1,7 @@
 import getDistance from 'geolib/es/getDistance';
 import convertDistance from 'geolib/es/convertDistance';
-
+import cookie from 'react-cookies'
+const jwt = require('jsonwebtoken')
 const isEmpty = require('../server/validation/is-empty');
 const moment = require('moment');
 
@@ -67,7 +68,15 @@ const circular_get = (array, start, length) => {
   return res
 }
 
+const getLoggedUser = () => {
+  const token = cookie.load('token')
+  if (!token) { return null}
+  const decoded = jwt.decode(token);
+  console.log(JSON.stringify(decoded))
+  return null
+}
+
 module.exports = {
   computeDistanceKm, computeBookingReference, computeAverageNotes,
-  computeSumSkills, circular_get
+  computeSumSkills, circular_get, getLoggedUser
 };

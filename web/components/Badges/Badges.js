@@ -3,6 +3,9 @@ import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
 import styles from './BadgesStyle';
 import cookie from 'react-cookies';
+import WithTopic from "../../hoc/Topic/Topic"
+
+class InnerBadges extends WithTopic(null) {}
 
 class Badges extends React.Component {
   constructor(props) {
@@ -17,7 +20,7 @@ class Badges extends React.Component {
 
     return (
       <div>
-        <h1>ICI LES BADGES</h1>
+        <InnerBadges titleTopic={'Badges'}/>
       </div>
     )
   }
