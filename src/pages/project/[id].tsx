@@ -69,13 +69,14 @@ export default ({ projects, id }: Props) => {
           setLoading(false)
           window.location.href = `/`
         }
+      } else {
+        if (projects.markup) {
+          dispatch.components.reset(JSON.parse(projects.markup))
+          setLoading(false)
+        }
       }
     } else {
       signIn()
-    }
-    if (projects.markup) {
-      dispatch.components.reset(JSON.parse(projects.markup))
-      setLoading(false)
     }
   }
 
