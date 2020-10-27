@@ -10,16 +10,20 @@ class PaymentPics extends React.Component{
           urlName: 'cb'
         },
         {
-          urlName: 'visa'
+          urlName: 'visa',
+          name: 'visa'
         },
         {
-          urlName: 'master'
+          urlName: 'MASTERCARD',
+          name: 'mastercard'
         },
         {
-          urlName: 'aexpress'
+          urlName: 'AMEX',
+          name: 'AmericanExpress'
         },
         {
-          urlName: 'maestro'
+          urlName: 'msi',
+          name: 'maestro'
         }
       ]
     }

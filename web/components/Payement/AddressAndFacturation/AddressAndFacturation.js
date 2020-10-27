@@ -27,7 +27,7 @@ class AddressAndFacturation extends React.Component{
     const{equipments, pricedPrestations, countPrestations, user} = this.props;
 
     return(
-      <Grid container style={{width: '90%', marginBottom: '5vh'}}>
+      <Grid container style={{width: '90%'}}>
         <Grid item xl={6}>
           <Grid style={{display: 'flex', flexDirection: 'column', paddingRight: '5%', paddingLeft: '5%'}}>
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%'}}>

@@ -12,7 +12,7 @@ import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
 
 import AddressAndFacturation from "../components/Payement/AddressAndFacturation/AddressAndFacturation";
-import PaymentChoiceCreate from "../components/Payement/PaymentChoiceCreate/PaymentChoiceCreate";
+import PaymentChoice from "../components/Payement/PaymentChoice/PaymentChoice";
 
 
 
@@ -185,7 +185,7 @@ class ConfirmPayement extends React.Component {
           pricedPrestations={this.computePricedPrestations}
           countPrestations={this.computeCountPrestations}/>;
       case 1:
-        return <PaymentChoiceCreate
+        return <PaymentChoice
           {...this.state}
           pricedPrestations={this.computePricedPrestations}
           countPrestations={this.computeCountPrestations}
@@ -200,15 +200,11 @@ class ConfirmPayement extends React.Component {
   render() {
     const {classes} = this.props;
     const {currentUser, user, bookingObj, activeStep, equipments} = this.state;
-
-    if (currentUser && bookingObj) {
-      var checkAdd = currentUser.billing_address.address === bookingObj.address.address && currentUser.billing_address.zip_code === bookingObj.address.zip_code && currentUser.billing_address.city === bookingObj.address.city;
-    }
-
+    
     return (
-      <Fragment>
+      <React.Fragment>
         {user === null || currentUser === null ? null : (
-          <Grid>
+          <Grid style={{position: 'relative', height : '100vh'}}>
             <Grid style={{height: '2vh', backgroundColor: 'rgba(178,204,251,1)'}}/>
             <Grid style={{display: 'flex', justifyContent: 'center', backgroundColor: 'white', height: '8vh'}}>
               <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'end', width: '90%'}}>
@@ -231,14 +227,14 @@ class ConfirmPayement extends React.Component {
             <Grid  className={classes.mainContainer}>
               {this.renderSwitch(activeStep)}
             </Grid>
-            <Grid style={{width: '100%', display: 'flex', justifyContent: 'center', marginTop: '1%', position: 'relative', bottom: 0, backgroundColor: 'white'}}>
+            <Grid style={{width: '100%', display: 'flex', justifyContent: 'center', position: 'absolute', bottom: 0, backgroundColor: 'white'}}>
               <Grid style={{width: '90%'}}>
                 <TrustAndSecurity/>
               </Grid>
             </Grid>
           </Grid>
         )}
-      </Fragment>
+      </React.Fragment>
     );
   }
 }
