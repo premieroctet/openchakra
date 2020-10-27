@@ -65,7 +65,11 @@ const CodeSandboxButton = () => {
   )
 }
 
-const Header = ({ id }: any) => {
+interface Props {
+  id: number
+}
+
+const Header = (props: Props) => {
   const showLayout = useSelector(getShowLayout)
   const showCode = useSelector(getShowCode)
   const dispatch = useDispatch()
@@ -97,7 +101,7 @@ const Header = ({ id }: any) => {
         <Flex flexGrow={1} justifyContent="space-between" alignItems="center">
           <Stack isInline spacing={4} justify="center" align="center">
             <Box>
-              <HeaderMenu id={id} />
+              <HeaderMenu id={props.id} />
             </Box>
             <FormControl>
               <Tooltip

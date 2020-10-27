@@ -8,7 +8,19 @@ import { useRouter } from 'next/router'
 import useDispatch from '~hooks/useDispatch'
 import { checkUser, createProject } from '~utils/checkProject'
 
-const SaveMenuItem = (props: any) => {
+interface Props {
+  id: number
+}
+
+interface Project {
+  createdAt: string
+  updatedAt: string
+  userId: number
+  id: number
+  markup: string
+}
+
+const SaveMenuItem = (props: Props) => {
   const components = useSelector(getComponents)
   const [session] = useSession()
   const router = useRouter()
@@ -22,7 +34,7 @@ const SaveMenuItem = (props: any) => {
         id: props.id,
       },
     }
-    const response = await fetch('http://localhost:3000/api/project/update', {
+    const response = await fetch('/api/project/update', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -39,7 +51,7 @@ const SaveMenuItem = (props: any) => {
       if (props.id) {
         let userCanEdit = false
         const userProject = await checkUser(session.user.name)
-        userProject.project.map((e: any) => {
+        userProject.project.map((e: Project) => {
           if (e.id === props.id) {
             userCanEdit = true
           }

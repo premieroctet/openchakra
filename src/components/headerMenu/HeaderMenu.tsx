@@ -40,7 +40,11 @@ const ExportMenuItem = dynamic(() => import('./ExportMenuItem'), { ssr: false })
 const ImportMenuItem = dynamic(() => import('./ImportMenuItem'), { ssr: false })
 const SaveMenuItem = dynamic(() => import('./SaveMenuItem'), { ssr: false })
 
-const HeaderMenu = (props: any) => {
+interface Props {
+  id: number
+}
+
+const HeaderMenu = (props: Props) => {
   return (
     <Menu>
       <CustomMenuButton

@@ -13,7 +13,11 @@ import Editor from '~components/editor/Editor'
 import { InspectorProvider } from '~contexts/inspector-context'
 import Inspector from '~components/inspector/Inspector'
 
-const App = ({ id }: any) => {
+interface Props {
+  id: number
+}
+
+const App = (props: Props) => {
   const { handlers } = useShortcuts()
   return (
     <HotKeys allowChanges handlers={handlers} keyMap={keyMap}>
@@ -25,7 +29,7 @@ const App = ({ id }: any) => {
 
       <Metadata />
 
-      <Header id={id} />
+      <Header id={props?.id} />
 
       <DndProvider backend={Backend}>
         <Flex h="calc(100vh - 3rem)">

@@ -1,5 +1,5 @@
 export const checkUser = async (name: string) => {
-  const response = await fetch('http://localhost:3000/api/project/check', {
+  const response = await fetch('/api/project/check', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ export const createProject = async (markup: string) => {
       markup: markup,
     },
   }
-  const response = await fetch('http://localhost:3000/api/project/create', {
+  const response = await fetch('/api/project/create', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { PrismaClient } from '@prisma/client'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import { getSession, signIn } from 'next-auth/client'
-import { useRouter } from 'next/router'
 import useDispatch from '~hooks/useDispatch'
 import { checkUser } from '~utils/checkProject'
 import App from '~pages'
@@ -37,16 +36,28 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
-export default ({ projects, id }: any) => {
+interface Project {
+  createdAt: string
+  updatedAt: string
+  userId: number
+  id: number
+  markup: string
+}
+
+interface Props {
+  projects: Project
+  id: number
+}
+
+export default ({ projects, id }: Props) => {
   const dispatch = useDispatch()
-  const router = useRouter()
   let userCanEdit = false
 
   const checkSession = async () => {
     const session = await getSession()
     if (session) {
       const userProject = await checkUser(session.user.name)
-      userProject.project.map((e: any) => {
+      userProject.project.map((e: Project) => {
         if (e.id === id) {
           userCanEdit = true
         }
@@ -54,7 +65,7 @@ export default ({ projects, id }: any) => {
       if (userCanEdit === false) {
         if (typeof window !== 'undefined') {
           dispatch.components.reset()
-          router.push('/')
+          window.location.href = `/`
         }
       }
     } else {

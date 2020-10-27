@@ -3,21 +3,22 @@ import { PrismaClient } from '@prisma/client'
 import { getSession } from 'next-auth/client'
 
 export default async function(req: NextApiRequest, res: NextApiResponse) {
-  const prisma = new PrismaClient({ log: ['query'] })
+  const prisma = new PrismaClient()
   const session = await getSession({ req })
   try {
     const { project: projectData } = req.body
-    const actualUser = await prisma.user.findMany({
+    const actualUser = await prisma.session.findMany({
       where: {
-        name: session!.user.name,
+        accessToken: session!.accessToken,
       },
     })
+    console.log(actualUser)
     const project = await prisma.project.create({
       data: {
         markup: projectData.markup,
         user: {
           connect: {
-            id: actualUser[0].id,
+            id: actualUser[0].userId,
           },
         },
       },
