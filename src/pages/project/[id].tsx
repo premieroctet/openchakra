@@ -82,7 +82,8 @@ export default ({ projects, id }: Props) => {
 
   useEffect(() => {
     checkSession()
-  }, [checkSession])
+    // eslint-disable-next-line
+  }, [])
 
   return projects.markup ? <App id={id} loading={loading} /> : <></>
 }
