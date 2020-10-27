@@ -12,7 +12,6 @@ export default async function(req: NextApiRequest, res: NextApiResponse) {
         accessToken: session!.accessToken,
       },
     })
-    console.log(actualUser)
     const project = await prisma.project.create({
       data: {
         markup: projectData.markup,

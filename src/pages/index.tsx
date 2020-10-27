@@ -1,5 +1,5 @@
-import React from 'react'
-import { Flex, Box } from '@chakra-ui/core'
+import React, { useState } from 'react'
+import { Flex, Box, Spinner } from '@chakra-ui/core'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
 import { Global } from '@emotion/core'
@@ -15,6 +15,7 @@ import Inspector from '~components/inspector/Inspector'
 
 interface Props {
   id: number
+  loading: boolean
 }
 
 const App = (props: Props) => {
@@ -33,25 +34,31 @@ const App = (props: Props) => {
 
       <DndProvider backend={Backend}>
         <Flex h="calc(100vh - 3rem)">
-          <Sidebar />
-          <EditorErrorBoundary>
-            <Box bg="white" flex={1} zIndex={10} position="relative">
-              <Editor />
-            </Box>
-          </EditorErrorBoundary>
+          {props?.loading ? (
+            <Spinner m="0 auto" color="white" size="xl" mt="3rem" />
+          ) : (
+            <>
+              <Sidebar />
+              <EditorErrorBoundary>
+                <Box bg="white" flex={1} zIndex={10} position="relative">
+                  <Editor />
+                </Box>
+              </EditorErrorBoundary>
 
-          <Box
-            maxH="calc(100vh - 3rem)"
-            flex="0 0 15rem"
-            bg="#f7fafc"
-            overflowY="auto"
-            overflowX="visible"
-            borderLeft="1px solid #cad5de"
-          >
-            <InspectorProvider>
-              <Inspector />
-            </InspectorProvider>
-          </Box>
+              <Box
+                maxH="calc(100vh - 3rem)"
+                flex="0 0 15rem"
+                bg="#f7fafc"
+                overflowY="auto"
+                overflowX="visible"
+                borderLeft="1px solid #cad5de"
+              >
+                <InspectorProvider>
+                  <Inspector />
+                </InspectorProvider>
+              </Box>
+            </>
+          )}
         </Flex>
       </DndProvider>
     </HotKeys>

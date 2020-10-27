@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { PrismaClient } from '@prisma/client'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import { getSession, signIn } from 'next-auth/client'
@@ -50,6 +50,7 @@ interface Props {
 }
 
 export default ({ projects, id }: Props) => {
+  const [loading, setLoading] = useState(true)
   const dispatch = useDispatch()
   let userCanEdit = false
 
@@ -65,6 +66,7 @@ export default ({ projects, id }: Props) => {
       if (userCanEdit === false) {
         if (typeof window !== 'undefined') {
           dispatch.components.reset()
+          setLoading(false)
           window.location.href = `/`
         }
       }
@@ -73,6 +75,7 @@ export default ({ projects, id }: Props) => {
     }
     if (projects.markup) {
       dispatch.components.reset(JSON.parse(projects.markup))
+      setLoading(false)
     }
   }
 
@@ -80,5 +83,5 @@ export default ({ projects, id }: Props) => {
     checkSession()
   }, [checkSession])
 
-  return projects.markup ? <App id={id} /> : <></>
+  return projects.markup ? <App id={id} loading={loading} /> : <></>
 }
