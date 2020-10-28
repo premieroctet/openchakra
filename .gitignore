@@ -164,6 +164,7 @@ $RECYCLE.BIN/
 !static/prestation
 !static/service
 !static/equipments
+!static/css/*
 static/
 
 ios

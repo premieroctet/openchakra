@@ -1,25 +1,17 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../static/css/pages/confirmPayement/confirmPayement';
 import cookie from 'react-cookies';
 import Stepper from "../components/Stepper/Stepper";
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
-import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
-
 import AddressAndFacturation from "../components/Payement/AddressAndFacturation/AddressAndFacturation";
 import PaymentChoice from "../components/Payement/PaymentChoice/PaymentChoice";
-
-
-
+import LayoutPayment from "../hoc/Layout/LayoutPayment";
 
 moment.locale('fr');
-const _ = require('lodash');
-
 
 class ConfirmPayement extends React.Component {
   constructor(props) {
@@ -71,7 +63,7 @@ class ConfirmPayement extends React.Component {
     }).catch(err => {
       if (err.response && (err.response.status === 401 || err.response.status === 403)) {
         cookie.remove('token', {path: '/'});
-        Router.push({pathname: '/login'});
+        Router.push({pathname: '/'});
       }
     });
 
@@ -112,18 +104,13 @@ class ConfirmPayement extends React.Component {
     });
   }
 
-  handlePay = () => {
-    if(this.state.activeStep === 0) {
+  handleStep = () => {
       this.setState({activeStep: this.state.activeStep + 1});
       localStorage.setItem('emitter', this.state.emitter);
       localStorage.setItem('recipient', this.state.recipient);
-    }else{
-     this.pay()
-    }
   };
 
-  payDirect() {
-
+  payDirect = () => {
     const total = parseFloat(this.state.total);
     const fees = parseFloat(this.state.fees);
     const data = {
@@ -133,12 +120,12 @@ class ConfirmPayement extends React.Component {
     };
     axios.post('/myAlfred/api/payment/payInDirect', data)
       .then(() => {
-        Router.push('/paymentDirectSuccess?id=' + this.state.booking_id);
+        Router.push('/paymentSuccess?id=' + this.state.booking_id);
       })
       .catch( err => { console.error(err)});
-  }
+  };
 
-  pay() {
+  pay = () => {
     const total = parseFloat(this.state.total);
     const fees = parseFloat(this.state.fees);
     const data = {amount: total, fees: fees};
@@ -152,8 +139,7 @@ class ConfirmPayement extends React.Component {
       .catch(err => {
         console.error(err);
       });
-  }
-
+  };
 
   computePricedPrestations() {
     let result = {};
@@ -175,14 +161,12 @@ class ConfirmPayement extends React.Component {
       this.setState({id_card: e});
   };
 
-
-
   renderSwitch(stepIndex) {
     switch (stepIndex) {
       case 0:
         return <AddressAndFacturation
           {...this.state}
-          handlePay={this.handlePay}
+          handleStep={this.handleStep}
           pricedPrestations={this.computePricedPrestations}
           countPrestations={this.computeCountPrestations}/>;
       case 1:
@@ -190,8 +174,8 @@ class ConfirmPayement extends React.Component {
           {...this.state}
           pricedPrestations={this.computePricedPrestations}
           countPrestations={this.computeCountPrestations}
-          handlePay={this.handlePay}
           payDirect={this.payDirect}
+          pay={this.pay}
           handleCardSelected={this.handleCardSelected}
         />;
     }
@@ -199,39 +183,20 @@ class ConfirmPayement extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {currentUser, user, bookingObj, activeStep, equipments} = this.state;
+    const {currentUser, user, activeStep} = this.state;
 
     return (
       <React.Fragment>
         {user === null || currentUser === null ? null : (
-          <Grid>
-            <Grid style={{height: '2vh', backgroundColor: 'rgba(178,204,251,1)'}}/>
-            <Grid style={{display: 'flex', justifyContent: 'center', backgroundColor: 'white', height: '8vh'}}>
-              <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'end', width: '90%'}}>
-                <Grid>
-                  <VerifiedUserIcon/>
-                </Grid>
-                <Grid style={{display: 'flex', flexDirection:'column'}}>
-                  <Grid>
-                    <Typography>Paiement</Typography>
-                  </Grid>
-                  <Grid>
-                    <Typography>100% sécurisé</Typography>
-                  </Grid>
-                </Grid>
+          <Grid style={{position: 'relative'}}>
+            <LayoutPayment>
+              <Grid className={classes.contentStepper}>
+                <Stepper activeStep={activeStep} isType={'confirmPaiement'}/>
               </Grid>
-            </Grid>
-            <Grid className={classes.contentStepper}>
-              <Stepper activeStep={activeStep} isType={'confirmPaiement'}/>
-            </Grid>
-            <Grid  className={classes.mainContainer}>
-              {this.renderSwitch(activeStep)}
-            </Grid>
-            <Grid style={{width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', bottom: 0, backgroundColor: 'white'}}>
-              <Grid style={{width: '90%'}}>
-                <TrustAndSecurity/>
+              <Grid  className={classes.mainContainer}>
+                {this.renderSwitch(activeStep)}
               </Grid>
-            </Grid>
+            </LayoutPayment>
           </Grid>
         )}
       </React.Fragment>

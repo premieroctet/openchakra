@@ -9,17 +9,11 @@ import Accordion from "@material-ui/core/Accordion";
 import Button from "@material-ui/core/Button";
 import styles from '../../../static/css/components/DrawerBookingRecap/DrawerBookingRecap';
 import withStyles from "@material-ui/core/styles/withStyles";
-import IconButton from "@material-ui/core/IconButton";
-import RemoveIcon from "@material-ui/icons/Remove";
-import AddIcon from "@material-ui/icons/Add";
 import moment from 'moment';
 import Divider from "@material-ui/core/Divider";
 moment.locale('fr');
 
-
 const {booking_datetime_str} = require('../../../utils/dateutils');
-
-
 
 class DrawerBookingRecap extends React.Component{
   constructor(props) {
@@ -145,7 +139,7 @@ class DrawerBookingRecap extends React.Component{
               variant="contained"
               color="primary"
               aria-label="add"
-              onClick={() => this.props.handlePay()}
+              onClick={() => activeStep === 0 ? this.props.handleStep() : this.props.handlePayDirect()}
               disabled={activeStep === 1 ? id_card === '' : false}
             >
               <Typography style={{fontWeight: 'bold'}} >{mode === 'short' ? 'Payer' : 'Valider'}</Typography>

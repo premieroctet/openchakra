@@ -2,7 +2,6 @@ import React from 'react';
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import DrawerBookingRecap from "../../Drawer/DrawerBookingRecap/DrawerBookingRecap";
-import '../../../static/creditcards.css';
 import WithTopic from "../../../hoc/Topic/Topic";
 import AddressService from "../../AddressService/AddressService";
 import PaymentMode from "../PaymentMode/PaymentMode";
@@ -14,11 +13,10 @@ const PaymentModeComponent = WithTopic(PaymentMode);
 class PaymentChoice extends React.Component{
   constructor(props) {
     super(props);
-
   }
 
-  callHandlepay = () =>{
-    this.props.handlePay()
+  callPay = () =>{
+    this.props.pay()
   };
 
   callHandlepayDirect = () =>{
@@ -30,7 +28,12 @@ class PaymentChoice extends React.Component{
   };
 
   render() {
-    const{cards, id_card, valueother, cardSelected, pricedPrestations, countPrestations, focus, name} = this.props;
+    const{pricedPrestations, countPrestations, bookingObj, user, currentUser} = this.props;
+
+    if (currentUser && bookingObj) {
+      var checkAdd = currentUser.billing_address.address === bookingObj.address.address && currentUser.billing_address.zip_code === bookingObj.address.zip_code && currentUser.billing_address.city === bookingObj.address.city;
+    }
+
 
     return(
       <Grid container style={{width: '90%',  marginBottom: '10vh'}}>
@@ -44,14 +47,14 @@ class PaymentChoice extends React.Component{
                 handleCardSelected={this.handleCardSelected}
                 {...this.props}
                 />
-              <Grid style={{position: 'absolute', bottom: '5%', right:  '10%'}} onClick={this.callHandlepay}>
+              <Grid style={{position: 'absolute', bottom: '5%', right:  '10%'}} onClick={this.callPay}>
                 <a href={'#'}>Payer avec une autre carte</a>
               </Grid>
             </Grid>
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)',paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', marginTop: '2vh'}}>
               <AddressComponent
                 titleTopic={'Adresse du service'}
-                titleSummary={'Votre adresse'}
+                titleSummary={`Le service sera effectué ${bookingObj.address ?  checkAdd ? 'à votre domicile' : 'Chez' + user.firstname : 'En visio'}`}
                 underline={false}
                 {...this.props}
               />

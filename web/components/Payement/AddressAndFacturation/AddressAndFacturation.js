@@ -8,7 +8,6 @@ import AddressService from "../../AddressService/AddressService";
 import Profile from "../../Profile/Profile";
 import ListAlfredConditions from "../../ListAlfredConditions/ListAlfredConditions";
 
-
 const AddressComponent = WithTopic(AddressService);
 const ProfilComponent = WithTopic(Profile);
 const EquipementTopic = WithTopic(ListAlfredConditions);
@@ -19,8 +18,8 @@ class AddressAndFacturation extends React.Component{
     super(props);
   }
 
-  callHandlepay = () =>{
-    this.props.handlePay()
+  callHandleStep = () =>{
+    this.props.handleStep()
   };
 
   render() {
@@ -76,7 +75,7 @@ class AddressAndFacturation extends React.Component{
                 {...this.props}
                 pricedPrestations={pricedPrestations}
                 countPrestations={countPrestations}
-                handlePay={this.callHandlepay}
+                handleStep={this.callHandleStep}
               />
             </Grid>
           </Grid>
