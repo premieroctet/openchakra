@@ -10,10 +10,11 @@ export const checkUser = async (name: string) => {
   return data
 }
 
-export const createProject = async (markup: string) => {
+export const createProject = async (markup: string, projectName: string) => {
   let bodyData = {
     project: {
       markup: markup,
+      projectName: projectName.replace(/\s/g, ''),
     },
   }
   const response = await fetch('/api/project/create', {

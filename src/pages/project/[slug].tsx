@@ -7,17 +7,21 @@ import App from '~pages'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prisma = new PrismaClient()
+  let projectId = (params!.slug as string).split('-')[0]
+  let projectName = (params!.slug as string).split('-')[1]
+
   const project = await prisma.project.findOne({
     include: { user: true },
     where: {
-      id: Number(params!.id),
+      id: Number(projectId),
     },
   })
   let projects = JSON.parse(JSON.stringify(project))
   return {
     props: {
       projects,
-      id: Number(params!.id),
+      id: Number(projectId),
+      projectName: projectName,
     },
   }
 }
@@ -28,10 +32,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: projects.map(project => ({
       params: {
-        id: project.id.toString(),
+        slug: `${project.id.toString()}-${project.projectName.toString()}`,
       },
     })),
-    fallback: false,
+    fallback: true,
   }
 }
 

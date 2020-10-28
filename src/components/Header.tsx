@@ -66,7 +66,7 @@ const CodeSandboxButton = () => {
 }
 
 interface Props {
-  id: number
+  saveProject: () => void
 }
 
 const Header = (props: Props) => {
@@ -101,7 +101,7 @@ const Header = (props: Props) => {
         <Flex flexGrow={1} justifyContent="space-between" alignItems="center">
           <Stack isInline spacing={4} justify="center" align="center">
             <Box>
-              <HeaderMenu id={props.id} />
+              <HeaderMenu saveProject={props.saveProject} />
             </Box>
             <FormControl>
               <Tooltip
