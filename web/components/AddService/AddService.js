@@ -5,7 +5,6 @@ import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
 import styles from './AddServiceStyle';
 import cookie from 'react-cookies';
-import WithTopic from "../../hoc/Topic/Topic"
 import {Button} from '@material-ui/core'
 import {SHOP} from '../../utils/i18n'
 import Box from '../Box/Box'

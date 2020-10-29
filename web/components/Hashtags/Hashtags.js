@@ -11,7 +11,7 @@ import clsx from 'clsx';
 import Badge from '@material-ui/core/Badge';
 import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
 import cookie from 'react-cookies';
-import WithTopic from "../../hoc/Topic/Topic"
+import Topic from "../../hoc/Topic/Topic"
 import ListAlfredConditions from "../ListAlfredConditions/ListAlfredConditions";
 import RoomIcon from '@material-ui/icons/Room';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
@@ -23,32 +23,11 @@ const {frenchFormat} = require('../../utils/text')
 const moment=require('moment')
 moment.locale('fr')
 
-class InnerHashtags extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    const {user} = this.props
-
-    return (
-      <div style={{display: 'flex', flexDirection:'column'}}>
-        HASHTAGS
-        jjkl
-      </div>
-    )
-  }
-
-}
-
-const OuterHastags=WithTopic(InnerHashtags)
-
 class Hashtags extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
+    this.state= {
       user: null
     }
   }
@@ -62,11 +41,16 @@ class Hashtags extends React.Component {
       .catch (err => console.error(err))
   }
 
+
   render() {
-    const {user} = this.state
+    const {user} = this.props
+
     return (
       <Box>
-        <OuterHastags user={user} titleTopic={`Les tags de ${user ? user.firstname:''}`} />
+        <Topic titleTopic={`Les tags de ${user ? user.firstname:''}`}>
+        HASHTAGS
+        jjkl
+        </Topic>
       </Box>
     )
   }

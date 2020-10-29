@@ -3,16 +3,9 @@ import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
 import styles from './PresentationStyle';
 import cookie from 'react-cookies';
-import WithTopic from "../../hoc/Topic/Topic"
+import Topic from "../../hoc/Topic/Topic"
 import Box from '../Box/Box'
 const {frenchFormat} = require('../../utils/text')
-
-class InnerPresentation extends WithTopic(null) {
-
-  constructor(props) {
-    super(props)
-  }
-}
 
 class Presentation extends React.Component {
 
@@ -41,7 +34,7 @@ class Presentation extends React.Component {
     const title=frenchFormat(`À propos de ${user ? user.firstname : ''}`)
     return (
       <Box>
-        <InnerPresentation titleTopic={title} titleSummary={user ? user.description : ''} />
+        <Topic titleTopic={title} titleSummary={user ? user.description : ''} />
       </Box>
     )
   }

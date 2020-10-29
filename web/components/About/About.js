@@ -11,7 +11,6 @@ import clsx from 'clsx';
 import Badge from '@material-ui/core/Badge';
 import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
 import cookie from 'react-cookies';
-import WithTopic from "../../hoc/Topic/Topic"
 import ListAlfredConditions from "../ListAlfredConditions/ListAlfredConditions";
 import RoomIcon from '@material-ui/icons/Room';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';

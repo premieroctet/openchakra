@@ -12,7 +12,7 @@ import Badge from '@material-ui/core/Badge';
 import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
 import cookie from 'react-cookies';
 const {SKILLS}=require('../../utils/consts')
-import WithTopic from "../../hoc/Topic/Topic"
+import Topic from "../../hoc/Topic/Topic"
 import Box from '../Box/Box'
 
 class Skills extends React.Component {
@@ -48,7 +48,8 @@ class Skills extends React.Component {
     const {classes, hideCount, onClick, needTitle, alfred, widthHr} = this.props;
     const {skill_values}=this.state
     return (
-      //<div className={classes.skillsContainer} style={{ display:'flex', flexDirection: 'row'}}>
+      <Box titleTopic={'Compliments'}>
+      <Topic>
       <div className={classes.skillsContainer}>
           { Object.keys(SKILLS).map(skill => {
             const count=skill_values[skill]
@@ -64,23 +65,10 @@ class Skills extends React.Component {
             })
           }
       </div>
+      </Topic>
+      </Box>
     );
   }
 }
 
-class SkillsComponent extends WithTopic(Skills) {
-  render() {
-    return (
-      <Box>
-        {super.render()}
-      </Box>
-
-    )
-  }
-}
-
-SkillsComponent.defaultProps= {
-  titleTopic: 'Compliments',
-}
-
-export default withStyles(styles, {withTheme: true})(SkillsComponent)
+export default withStyles(styles, {withTheme: true})(Skills)

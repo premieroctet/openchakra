@@ -3,7 +3,6 @@ import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
 import styles from './ServicesStyle';
 import cookie from 'react-cookies';
-import WithTopic from "../../hoc/Topic/Topic"
 import withGrid from "../../hoc/Grid/GridCard"
 import withSlide from "../../hoc/Slide/SlideShow"
 import CardService from '../Card/CardService/CardService'
