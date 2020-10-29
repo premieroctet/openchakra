@@ -20,11 +20,12 @@ function withSlide(WrappedComponent) {
 
     onPageChange = (event, pageIndex) => {
       this.setState({pageIndex: pageIndex-1})
-    }
+    };
 
     render(){
-      const {pageIndex} = this.state
-      var {style, pageCount, model} = this.props
+      const {pageIndex} = this.state;
+      const {style,model} = this.props;
+      var pageCount = this.props;
 
       if (model) {
         pageCount=model.getPageCount()
@@ -45,7 +46,7 @@ function withSlide(WrappedComponent) {
           </Carousel>
           { !model.isInfinite() ?
             <Grid style={{ display:'flex', justifyContent:'center'}}>
-              <Pagination count={pageCount} page={pageIndex+1} onChange={this.onPageChange} />
+              <Pagination count={pageCount} page={pageIndex+1} onChange={this.onPageChange} classes={{root: style.paginationRoot}}/>
             </Grid>
             :
             null
