@@ -92,6 +92,13 @@ export const menuItems: MenuItems = {
   SimpleGrid: {},
   Spinner: {},
   Select: {},
+  Slider: {
+    children: {
+      SliderTrack: {},
+      SliderFilledTrack: {},
+      SliderThumb: {},
+    },
+  },
   Stack: {},
   Switch: {},
   Tag: {},
