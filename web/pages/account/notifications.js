@@ -12,8 +12,9 @@ import {Helmet} from 'react-helmet';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import styles from './notifications/notificationsStyle';
+import styles from '../../static/css/pages/account/notifications/notifications';
 import cookie from 'react-cookies';
+import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 
 moment.locale('fr');
 
@@ -125,30 +126,17 @@ class notifications extends React.Component {
     const {classes} = this.props;
 
     return (
-      <Fragment>
+      <React.Fragment>
         <Helmet>
-          <title>compte - Notifications - My Alfred </title>
+          <title>Mon compte - Notifications - My Alfred </title>
           <meta property="description"
                 content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. "/>
         </Helmet>
         <Layout>
+          <Grid style={{display : 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <LayoutAccount/>
+          </Grid>
           <Grid container className={classes.bigContainer}>
-            <Grid style={{zIndex: 0}}>
-              <ResponsiveDrawer ref={this.child} isActiveIndex={0} itemsDrawers={'account'}/>
-            </Grid>
-            <Grid>
-              <Grid>
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  edge="start"
-                  onClick={this.callDrawer}
-                  className={classes.menuButton}
-                >
-                  <MenuIcon/>
-                </IconButton>
-              </Grid>
-            </Grid>
             <Grid item xs={9} className={classes.containerLeft}>
               <Grid container>
                 <Grid container>
@@ -492,7 +480,7 @@ class notifications extends React.Component {
             <Grid item xs={4}/>
           </Grid>
         </Layout>
-      </Fragment>
+      </React.Fragment>
     );
   };
 }
