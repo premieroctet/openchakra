@@ -2,15 +2,27 @@ import Grid from "@material-ui/core/Grid";
 import React from 'react';
 import Typography from "@material-ui/core/Typography";
 import {Divider} from "@material-ui/core";
+import Router from 'next/router';
+
 
 function WithTopic(WrappedComponent) {
 
   return class extends React.Component {
     constructor(props) {
       super(props);
+      this.state={
+        subTitleColor: 'rgba(39,37,37,35%)'
+      }
+    }
+
+    componentDidMount() {
+      if(Router.pathname === '/confirmPayement'){
+        this.setState({subTitleColor: 'rgba(248, 207, 97, 1)'})
+      }
     }
 
     render() {
+      const{subTitleColor} = this.state;
       const{titleTopic, titleSummary, needBackground, underline} = this.props;
 
       return(
@@ -21,7 +33,7 @@ function WithTopic(WrappedComponent) {
           {
             titleSummary ?
               <Grid>
-                <Typography style={{color:'rgba(39,37,37,35%)'}}>{titleSummary}</Typography>
+                <Typography style={{color: subTitleColor}}>{titleSummary}</Typography>
               </Grid> : null
           }
           {

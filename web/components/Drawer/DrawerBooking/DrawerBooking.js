@@ -83,7 +83,7 @@ class DrawerBooking extends React.Component{
      ))
   );
 
-  accodrion = (prestations,fltr, classes) => {
+  accordion = (prestations,fltr, classes) => {
     return(
       <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
         <AccordionSummary
@@ -102,7 +102,7 @@ class DrawerBooking extends React.Component{
 
   render() {
     const {expanded} = this.state;
-    const {warningPerimeter, side, classes, service, alfred, date, time, errors, count, serviceUser, isChecked, location, pick_tax, total, commission, cesu_total, filters, pricedPrestations, use_cesu} = this.props;
+    const {warningPerimeter, side, classes, service, alfred, date, time, errors, count, serviceUser, isChecked, location, pick_tax, total, commission, cesu_total, filters, pricedPrestations} = this.props;
 
     return(
       <Grid>
@@ -203,22 +203,21 @@ class DrawerBooking extends React.Component{
                   <Typography>Choix de la presta</Typography>
                 </AccordionSummary>
                 <AccordionDetails classes={{root: classes.userServicePreviewAccordionDetails}}>
-
-                {
-                Object.keys(filters).sort().map((key, index) => {
-                  let fltr = key;
-                  let prestations = filters[key];
-                  return (
-                    <Grid style={{zIndex: 0}} key={index}>
-                      {
-                        fltr === '' ?
-                          this.selectedPresta(prestations, classes) :
-                          this.accodrion(prestations,fltr, classes)
-                      }
-                    </Grid>
-                  );
-                })
-              }
+                  {
+                  Object.keys(filters).sort().map((key, index) => {
+                    let fltr = key;
+                    let prestations = filters[key];
+                    return (
+                      <Grid style={{zIndex: 0}} key={index}>
+                        {
+                          fltr === '' ?
+                            this.selectedPresta(prestations, classes) :
+                            this.accordion(prestations,fltr, classes)
+                        }
+                      </Grid>
+                    );
+                  })
+                }
                 </AccordionDetails>
               </Accordion>
               <Grid>

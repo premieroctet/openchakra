@@ -37,7 +37,7 @@ class PaymentChoice extends React.Component{
 
     return(
       <Grid container style={{width: '90%',  marginBottom: '10vh'}}>
-        <Grid item xl={6}>
+        <Grid item xl={7}>
           <Grid style={{display: 'flex', flexDirection: 'column', paddingRight: '5%', paddingLeft: '5%'}} >
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingRight: '10%', paddingTop: '5%', paddingBottom: '5%', position: 'relative'}}>
               <PaymentModeComponent
@@ -61,7 +61,7 @@ class PaymentChoice extends React.Component{
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xl={6}>
+        <Grid item xl={5}>
           <Grid  style={{
             display: 'flex',
             flexDirection: 'column',
