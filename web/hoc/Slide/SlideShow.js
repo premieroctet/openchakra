@@ -33,8 +33,14 @@ function withSlide(WrappedComponent) {
 
       return(
         <Grid>
-          <Carousel easing="ease" autoPlay={false} onChange={this.onCarouselIndexChange} animation={"slide"} navButtonsAlwaysVisible={this.props.infinite}
-          navButtonsAlwaysInvisible={!model.isInfinite()}>
+          <Carousel
+            easing="ease"
+            autoPlay={false}
+            onChange={this.onCarouselIndexChange}
+            animation={"slide"}
+            navButtonsAlwaysVisible={this.props.infinite}
+            navButtonsAlwaysInvisible={!model.isInfinite()}
+          >
             { /** TODO importer les styles directement */ }
             <Grid container className={style.slideShowContainer}>
               <Grid container>
@@ -45,7 +51,7 @@ function withSlide(WrappedComponent) {
             </Grid>
           </Carousel>
           { !model.isInfinite() ?
-            <Grid style={{ display:'flex', justifyContent:'center'}}>
+            <Grid style={{ display:'flex', justifyContent:'center', marginTop : '5vh'}}>
               <Pagination count={pageCount} page={pageIndex+1} onChange={this.onPageChange} classes={{root: style.paginationRoot}}/>
             </Grid>
             :

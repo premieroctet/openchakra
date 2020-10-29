@@ -406,7 +406,7 @@ class SearchPage extends React.Component {
           </Grid>
           <Grid className={classes.searchMainContainerResult}>
             <Grid className={classes.searchContainerDisplayResult}>
-              <Grid container spacing={4}>
+              <Grid container>
               {
                 searching ?
                   <Grid className={classes.searchLoadingContainer} item xl={3} lg={3} md={3}>
@@ -414,7 +414,7 @@ class SearchPage extends React.Component {
                   </Grid>
                   :
                   <SearchResults
-                    model={new SearchDataModel(serviceUsers.map(su => su._id), 4, 2, false)}
+                    model={new SearchDataModel(serviceUsers.map(su => su._id), 4, 3, false)}
                     style={classes}
                     gps={user ? user.billing_address.gps : this.state.gps}
                   />
