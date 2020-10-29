@@ -52,6 +52,7 @@ class UserServicesPreview extends React.Component {
     this.state = {
       user: null,
       shop: {},
+      reviews:[],
       serviceUser: {},
       alfred: {},
       service: {},
@@ -156,6 +157,16 @@ class UserServicesPreview extends React.Component {
                   strict: shop.strict_cancel,
                   use_cesu: shop.cesu !== 'Disabled',
                 });
+              })
+              .catch(err => console.error(err));
+
+            axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${serviceUser.user._id}`)
+              .then(res => {
+                var reviews = res.data;
+                if (id) {
+                  reviews = reviews.filter(r => r.serviceUser._id === id);
+                }
+                this.setState({reviews: reviews});
               })
               .catch(err => console.error(err));
 
@@ -513,7 +524,7 @@ class UserServicesPreview extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {serviceUser, service, equipments, alfred, user, allDetailEquipments} = this.state;
+    const {serviceUser, service, equipments, alfred, user, allDetailEquipments, reviews} = this.state;
 
     const serviceAddress = serviceUser.service_address;
 
@@ -716,16 +727,19 @@ class UserServicesPreview extends React.Component {
                         needBackground={true}
                       />
                     </Grid>
-                    <Grid style={{marginTop: '5%'}}>
-                      <CommentaryTopic
-                        underline={true}
-                        titleTopic={'Commentaires'}
-                        titleSummary={alfred.firstname ? `Ici, vous pouvez laisser des commentaires à ${alfred.firstname} !` : ''}
-                        alfred_mode={true}
-                        user_id={alfred._id}
-                        service_id={this.props.service_id}
-                      />
-                    </Grid>
+                    {
+                      reviews.length === 0 ? null :
+                        <Grid style={{marginTop: '5%'}}>
+                          <CommentaryTopic
+                            underline={true}
+                            titleTopic={'Commentaires'}
+                            titleSummary={alfred.firstname ? `Ici, vous pouvez laisser des commentaires à ${alfred.firstname} !` : ''}
+                            alfred_mode={true}
+                            user_id={alfred._id}
+                            service_id={this.props.service_id}
+                          />
+                        </Grid>
+                    }
                   </Grid>
                 </Grid>
               </Grid>
