@@ -94,15 +94,19 @@ export const menuItems: MenuItems = {
   Select: {},
   Stack: {},
   Switch: {},
+  Tabs: {
+    children: {
+      Tab: {},
+      Tabs: {},
+      TabPanel: {},
+      TabList: {},
+      TabPanels: {},
+    },
+  },
   Tag: {},
   Text: {},
   Textarea: {},
   Menu: { soon: true },
-  Tab: { soon: true },
-  /*"Tabs",
-  "TabList",
-  "TabPanel",
-  "TabPanels"*/
 }
 
 export const componentsList: ComponentType[] = [
