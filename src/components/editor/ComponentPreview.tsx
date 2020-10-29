@@ -1,23 +1,27 @@
 import React, { memo } from 'react'
 import { useSelector } from 'react-redux'
 
-import AlertPreview from '~components/editor/previews/AlertPreview'
+import AlertPreview from '../../components/editor/previews/AlertPreview'
 import AvatarPreview, {
   AvatarBadgePreview,
   AvatarGroupPreview,
-} from '~components/editor/previews/AvatarPreview'
+} from '../../components/editor/previews/AvatarPreview'
 import AccordionPreview, {
   AccordionHeaderPreview,
   AccordionItemPreview,
   AccordionPanelPreview,
-} from '~components/editor/previews/AccordionPreview'
+} from '../../components/editor/previews/AccordionPreview'
 import * as Chakra from '@chakra-ui/core'
-import { getComponentBy } from '~core/selectors/components'
-import { InputRightElementPreview } from '~components/editor/previews/InputRightElement'
-import { InputLeftElementPreview } from '~components/editor/previews/InputLeftElement'
-import AspectRatioBoxPreview from '~components/editor/previews/AspectRatioBoxPreview'
-import PreviewContainer from '~components/editor/PreviewContainer'
-import WithChildrenPreviewContainer from '~components/editor/WithChildrenPreviewContainer'
+import { getComponentBy } from '../../core/selectors/components'
+import { InputRightElementPreview } from '../../components/editor/previews/InputRightElement'
+import { InputLeftElementPreview } from '../../components/editor/previews/InputLeftElement'
+import AspectRatioBoxPreview from '../../components/editor/previews/AspectRatioBoxPreview'
+import PreviewContainer from '../../components/editor/PreviewContainer'
+import WithChildrenPreviewContainer from '../../components/editor/WithChildrenPreviewContainer'
+import MenuPreview, {
+  MenuButtonPreview,
+  MenuListPreview,
+} from './previews/MenuPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
