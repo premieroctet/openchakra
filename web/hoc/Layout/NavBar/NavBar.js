@@ -154,6 +154,7 @@ class NavBar extends Component {
     const {setOpenLogin, setOpenRegister, keyword, dateSelected, anchorEl, ifHomePage, city} = this.state;
     const {style, user, selectedAddress, logged} = this.props;
 
+    console.log(`NavBar user:${user}`)
     const modalLogin = () => {
       return (
         <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh}/>
@@ -355,11 +356,22 @@ class NavBar extends Component {
                         horizontal: 'right',
                       }}
                     >
-                      <MenuItem>Profile</MenuItem>
-                      <MenuItem>My account</MenuItem>
+                    { user ?
+                      <Link href={`/profile/about?user=${user._id}`}>
+                        <MenuItem>Mon profil</MenuItem>
+                      </Link>
+                      :
+                      null
+                    }
+                      <MenuItem>Mon compte</MenuItem>
                       {user && user.is_alfred ?
                         <Link href={`/shop?id_alfred=${user._id}`}>
                           <MenuItem>Ma boutique</MenuItem>
+                        </Link> : null
+                      }
+                      {user && user.is_admin ?
+                        <Link href={`/dashboard/home`}>
+                          <MenuItem>Dashboard</MenuItem>
                         </Link> : null
                       }
                       <MenuItem onClick={() => this.logout2()}>Logout</MenuItem>

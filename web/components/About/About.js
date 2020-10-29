@@ -32,6 +32,7 @@ class About extends React.Component {
   }
 
   componentDidMount = () => {
+    console.log(this.props.user)
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then( res => {

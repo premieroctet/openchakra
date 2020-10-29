@@ -11,7 +11,7 @@ import Footer from '../hoc/Layout/Footer/Footer';
 import About from '../components/About/About';
 import UserAvatar from '../components/Avatar/UserAvatar';
 import BookingDetail from '../components/BookingDetail/BookingDetail';
-import styles from '../static/css/confirmPayement/confirmPayement';
+import styles from '../static/css/pages/confirmPayement/confirmPayement';
 import cookie from 'react-cookies';
 import Stepper from "../components/Stepper/Stepper";
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';

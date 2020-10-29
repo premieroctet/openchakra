@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import Layout from '../hoc/Layout/Layout';
-import styles from '../static/css/userServicePreviewPage/userServicePreviewStyle';
+import styles from '../static/css/pages/userServicePreviewPage/userServicePreviewStyle';
 import Grid from '@material-ui/core/Grid';
 import Router from 'next/router';
 import axios from 'axios';

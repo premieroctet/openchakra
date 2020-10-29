@@ -7,25 +7,15 @@ class ProfileHeader extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state= {
-      user: null,
-    }
-  }
-
-  componentDidMount = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
-    axios.get(`/myAlfred/api/users/users/${this.props.user}`)
-      .then( res => {
-        this.setState( { user: res.data})
-      })
-      .catch (err => {
-        console.error(err)
-      })
+    this.state= {}
   }
 
   render() {
-    const {user}=this.state
+    const {user}=this.props
 
+    if (!user) {
+      return null
+    }
     return (
       <>
       <div style={{display: 'flex', justifyContent: 'center'}}>
@@ -33,12 +23,12 @@ class ProfileHeader extends React.Component {
       </div>
       <div style={{display: 'flex', justifyContent: 'center'}}>
         <ul style={{display: 'inline'}}>
-          <li style={{display: 'inline', margin: '5px'}} ><Link href={`/profile/about`} >A propos</Link></li>
-          <li style={{display: 'inline', margin: '5px'}} ><Link href={`/profile/services`} >Mes services</Link></li>
-          <li style={{display: 'inline', margin: '5px'}} ><Link href={`/profile/pictures`} >Mes photos</Link></li>
-          <li style={{display: 'inline', margin: '5px'}} ><Link href={`/profile/reviews`} >Mes avis</Link></li>
-          <li style={{display: 'inline', margin: '5px'}} ><Link href={`/profile/calendar`} >Mon calendrier</Link></li>
-          <li style={{display: 'inline', margin: '5px'}} ><Link href={`/profile/statistics`} >Mes statistiques</Link></li>
+          <li style={{display: 'inline', margin: '5px'}} ><Link href={`/profile/about?user=${user._id}`} >A propos</Link></li>
+          <li style={{display: 'inline', margin: '5px'}} ><Link href={`/profile/services?user=${user._id}`} >Mes services</Link></li>
+          <li style={{display: 'inline', margin: '5px'}} ><Link href={`/profile/pictures?user=${user._id}`} >Mes photos</Link></li>
+          <li style={{display: 'inline', margin: '5px'}} ><Link href={`/profile/reviews?user=${user._id}`} >Mes avis</Link></li>
+          <li style={{display: 'inline', margin: '5px'}} ><Link href={`/profile/calendar?user=${user._id}`} >Mon calendrier</Link></li>
+          <li style={{display: 'inline', margin: '5px'}} ><Link href={`/profile/statistics?user=${user._id}`} >Mes statistiques</Link></li>
         </ul>
       </div>
       </>

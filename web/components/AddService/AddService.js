@@ -19,7 +19,7 @@ class AddService extends React.Component {
   }
 
   addService() {
-    Router.push('/myShop/services')
+    Router.push(`/myShop/services?user={this.props.user}`)
   }
 
   render() {

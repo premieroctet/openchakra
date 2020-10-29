@@ -4,8 +4,7 @@ import ProfileLayout from '../../components/Profile/ProfileLayout'
 import AddService from '../../components/AddService/AddService'
 import Services from '../../components/Services/Services'
 import {withStyles} from '@material-ui/core/styles';
-import styles from '../../static/css/homePage/index';
-const {getLoggedUser}=require('../../utils/functions')
+import styles from '../../static/css/pages/homePage/index';
 
 class ProfileServices extends React.Component {
 
@@ -21,8 +20,7 @@ class ProfileServices extends React.Component {
 
   render() {
     const {classes, user}=this.props
-    getLoggedUser()
-    console.log(this.props)
+
     return (
       <ProfileLayout user={user}>
         <Grid container>

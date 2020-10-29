@@ -15,9 +15,12 @@ class AboutTest extends React.Component{
     super(props);
     this.state={
       users:[],
-      //user: '5ec3df2a701b6d48c05b46bd', // Sabrina
-      user: '5e2f30effc91743a94411e83', // PLusieurs adresses
+      user: null,
     }
+  }
+
+  static getInitialProps ({ query: { user } }) {
+    return { user : user }
   }
 
   componentDidMount() {

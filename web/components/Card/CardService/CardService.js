@@ -11,7 +11,7 @@ const {computeDistanceKm} = require('../../../utils/functions');
 import RoomIcon from '@material-ui/icons/Room';
 import Chip from "@material-ui/core/Chip";
 import Avatar from "@material-ui/core/Avatar";
-import styles from '../../../static/css/searchPage/searchStyle'
+import styles from '../../../static/css/pages/searchPage/searchStyle'
 import {withStyles} from '@material-ui/core/styles'
 
 class CardServiceInfo extends React.Component{
@@ -84,8 +84,6 @@ class CardService extends React.Component{
   render() {
     const {classes, userState, isOwner, gps, needAvatar, isAdmin, profileMode} = this.props;
     const {cpData, alfred} = this.state;
-
-    console.log(`CardService with ${JSON.stringify(cpData, null, 2)}`)
 
     let distance = gps ? computeDistanceKm(gps, cpData.gps) : null;
     distance = distance ? distance.toFixed(0) : '';

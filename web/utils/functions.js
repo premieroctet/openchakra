@@ -70,10 +70,25 @@ const circular_get = (array, start, length) => {
 
 const getLoggedUser = () => {
   const token = cookie.load('token')
-  if (!token) { return null}
-  const decoded = jwt.decode(token);
+  if (!token) {
+    console.log('Pas de cookie')
+    return null
+  }
+  const data=token.split(' ')[1]
+  console.log(`Data:${data}`)
+  const decoded = jwt.decode(data);
   console.log(JSON.stringify(decoded))
-  return null
+  return decoded
+}
+
+const getLoggedUserId = () => {
+  const logged=getLoggedUser()
+  return logged && logged.id
+}
+
+const getLoggedUserAdmin = () => {
+  const logged=getLoggedUser()
+  return logged && logged.is_admin
 }
 
 module.exports = {

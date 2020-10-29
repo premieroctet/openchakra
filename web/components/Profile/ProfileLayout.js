@@ -14,6 +14,10 @@ class ProfileLayout extends React.Component {
     }
   }
 
+  static getInitialProps ({ query: { user } }) {
+    return { user : user }
+  }
+
   componentDidMount = () => {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
@@ -26,12 +30,16 @@ class ProfileLayout extends React.Component {
   render() {
     const {user}=this.state
 
+    if (!user) {
+      return null
+    }
+
     return (
       <Layout user={user}>
       <div style={{margin:'0 25%', display:'flex', justifyContent:'center'}}>
           <Grid container style={{justifyContent:'center'}}>
             <Grid item xs={12}>
-              <ProfileHeader key={user} user={user ? user._id : null}/>
+              <ProfileHeader key={user} user={user}/>
             </Grid>
             {this.props.children}
           </Grid>

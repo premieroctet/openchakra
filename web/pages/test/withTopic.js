@@ -3,7 +3,7 @@ import withTopic from '../../hoc/Topic/Topic';
 import Schedule from "../../components/Schedule/Schedule";
 import Grid from "@material-ui/core/Grid";
 import axios from "axios";
-import styles from '../../static/css/userServicePreviewPage/userServicePreviewStyle';
+import styles from '../../static/css/pages/userServicePreviewPage/userServicePreviewStyle';
 import withStyles from "@material-ui/core/styles/withStyles";
 
 const ScheduleTopic = withTopic(Schedule);
