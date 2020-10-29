@@ -417,6 +417,7 @@ class SearchPage extends React.Component {
                     model={new SearchDataModel(serviceUsers.map(su => su._id), 4, 3, false)}
                     style={classes}
                     gps={user ? user.billing_address.gps : this.state.gps}
+                    user={user}
                   />
               }
               </Grid>

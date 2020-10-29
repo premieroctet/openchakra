@@ -95,6 +95,7 @@ class UserServicesPreview extends React.Component {
     if (token) {
       this.setState({logged: true});
     }
+    axios.defaults.headers.common['Authorization'] = token;
     let bookingObj = JSON.parse(localStorage.getItem('bookingObj'));
 
     const id = this.props.service_id;
@@ -106,10 +107,8 @@ class UserServicesPreview extends React.Component {
       }
     }
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get(`/myAlfred/api/serviceUser/${id}`)
       .then(res => {
-
         axios.get('/myAlfred/api/users/current')
           .then(res => {
             let user = res.data;
@@ -181,8 +180,6 @@ class UserServicesPreview extends React.Component {
             this.state.allEquipments.map( res => {
               axios.get(`/myAlfred/api/equipment/${res}`).then( res => {let data = res.data ; this.setState({allDetailEquipments: [...this.state.allDetailEquipments, data]})}).catch( err => {console.error(err)});
             });
-
-
           });
       })
       .catch(err => console.error(err));
