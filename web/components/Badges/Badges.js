@@ -4,6 +4,7 @@ import {withStyles} from '@material-ui/core/styles';
 import styles from './BadgesStyle';
 import cookie from 'react-cookies';
 import WithTopic from "../../hoc/Topic/Topic"
+import Box from '../Box/Box'
 
 class InnerBadges extends WithTopic(null) {}
 
@@ -19,9 +20,9 @@ class Badges extends React.Component {
   render() {
 
     return (
-      <div>
+      <Box>
         <InnerBadges titleTopic={'Badges'}/>
-      </div>
+      </Box>
     )
   }
 }

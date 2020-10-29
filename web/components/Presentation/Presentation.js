@@ -4,6 +4,7 @@ import {withStyles} from '@material-ui/core/styles';
 import styles from './PresentationStyle';
 import cookie from 'react-cookies';
 import WithTopic from "../../hoc/Topic/Topic"
+import Box from '../Box/Box'
 const {frenchFormat} = require('../../utils/text')
 
 class InnerPresentation extends WithTopic(null) {
@@ -32,11 +33,16 @@ class Presentation extends React.Component {
   }
 
   render() {
+    const {classes, style}=this.props
     const {user} = this.state
+
+    console.log(`Classes:${Object.keys(classes)}`)
 
     const title=frenchFormat(`À propos de ${user ? user.firstname : ''}`)
     return (
-      <InnerPresentation titleTopic={title} titleSummary={user ? user.description : ''} />
+      <Box>
+        <InnerPresentation titleTopic={title} titleSummary={user ? user.description : ''} />
+      </Box>
     )
   }
 

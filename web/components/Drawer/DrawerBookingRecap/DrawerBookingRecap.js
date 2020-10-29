@@ -9,91 +9,151 @@ import Accordion from "@material-ui/core/Accordion";
 import Button from "@material-ui/core/Button";
 import styles from '../../../static/css/components/DrawerBookingRecap/DrawerBookingRecap';
 import withStyles from "@material-ui/core/styles/withStyles";
+import moment from 'moment';
+import Divider from "@material-ui/core/Divider";
+moment.locale('fr');
+
+const {booking_datetime_str} = require('../../../utils/dateutils');
 
 class DrawerBookingRecap extends React.Component{
   constructor(props) {
     super(props);
   }
+  handlePay = () =>{
+    this.props.handlePay()
+  };
+
   render() {
 
-    const{pricedPrestations, countPrestations, grandTotal, fees, travel_tax, classes, pick_tax, cesu_total} = this.props;
+    const{pricedPrestations, countPrestations, grandTotal, fees, travel_tax, classes, pick_tax, cesu_total, mode, prestations, bookingObj, user, id_card, activeStep} = this.props;
 
     return(
       <Grid>
         <Grid>
           <Grid>
-            <Typography>Récapitulatif</Typography>
+            <h3>Récapitulatif</h3>
           </Grid>
           <Grid>
             <Grid>
-              <Typography>Garde de chien avec Béatrice</Typography>
+              <Typography>{bookingObj.service} avec {user.firstname}</Typography>
             </Grid>
             <Grid>
-              <Typography>Le 07 octobre 2020 à 10h30</Typography>
+              <Typography><strong>{booking_datetime_str(bookingObj)}</strong></Typography>
             </Grid>
           </Grid>
         </Grid>
-        <Grid>
-          <Grid>
-            <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>Afficher les détails</Typography>
-              </AccordionSummary>
-              <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-                <Typography>MY CONTENT</Typography>
-              </AccordionDetails>
-            </Accordion>
+        {
+          mode ?
+            <Grid style={{marginTop: '3vh'}}>
+              <Grid>
+                <Divider style={{height: 2}} />
+              </Grid>
+            </Grid> : null
+        }
+
+        <Grid style={{marginTop: '3vh'}}>
+          {
+            mode === 'short' ? null :
+              <Grid>
+                <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon/>}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                    style={{padding: 0}}
+                  >
+                    <Typography>Afficher le détail</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
+                    <Grid style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      marginBottom: 20
+                    }}>
+                      {prestations.map((prestation, index) => (
+                        <Grid container style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          width: '100%',
+                          marginBottom: '5%',
+                          justifyContent: 'space-between'
+                        }} key={index}>
+                          <Grid>
+                            <Grid>
+                              <Typography>{prestation.value}</Typography>
+                            </Grid>
+                          </Grid>
+                          <Grid>
+                            <Grid>
+                              <Typography>{prestation.name}</Typography>
+                            </Grid>
+                          </Grid>
+                          <Grid>
+                            <Grid>
+                              <Typography><strong>{prestation.price ? prestation.price.toFixed(2) : '?'}€</strong></Typography>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </AccordionDetails>
+                </Accordion>
+                {/*TODO CODE PROMO
+            <Grid>
+              <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                  style={{padding: 0}}
+                >
+                  <Typography>Utiliser un code promo</Typography>
+                </AccordionSummary>
+                <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
+                  <Typography>MY CONTENT</Typography>
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
+            */}
+              </Grid>
+          }
+          <Grid style={{marginTop: '3vh'}}>
+            <BookingDetail
+              prestations={pricedPrestations}
+              count={countPrestations}
+              total={grandTotal}
+              client_fee={fees}
+              travel_tax={travel_tax}
+              pick_tax={pick_tax}
+              cesu_total={cesu_total}
+              mode={mode}
+            />
           </Grid>
-          <Grid>
-            <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>Utiliser un code promo</Typography>
-              </AccordionSummary>
-              <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-                <Typography>MY CONTENT</Typography>
-              </AccordionDetails>
-            </Accordion>
           </Grid>
-        </Grid>
-        <Grid>
-          <BookingDetail
-            prestations={pricedPrestations}
-            count={countPrestations}
-            total={grandTotal}
-            client_fee={fees}
-            travel_tax={travel_tax}
-            pick_tax={pick_tax}
-            cesu_total={cesu_total}
-          />
-        </Grid>
-        <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+
+        <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '3vh'}}>
           <Grid style={{width: '100%'}}>
             <Button
               classes={{root: classes.userServicePButtonResa}}
               variant="contained"
               color="primary"
               aria-label="add"
-              onClick={() => {
-                this.handlePay();
-              }}
+              onClick={() => activeStep === 0 ? this.props.handleStep() : this.props.handlePayDirect()}
+              disabled={activeStep === 1 ? id_card === '' : false}
             >
-              <Typography>Payer</Typography>
+              <Typography style={{fontWeight: 'bold'}} >{mode === 'short' ? 'Payer' : 'Valider'}</Typography>
             </Button>
           </Grid>
         </Grid>
-        <Grid>
-          <Grid>
-            <Typography>Choix du mode de paiement l'étape suivante</Typography>
-          </Grid>
-        </Grid>
+        {
+          mode === 'short' ? null :
+            <Grid style={{display: 'flex', justifyContent: 'center', marginTop: '2vh'}}>
+              <Grid>
+                <Typography style={{color:'rgba(39,37,37,35%)'}}>Choix du mode de paiement l'étape suivante</Typography>
+              </Grid>
+            </Grid>
+        }
       </Grid>
     );
   }

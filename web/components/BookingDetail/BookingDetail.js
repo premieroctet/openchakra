@@ -9,26 +9,29 @@ class BookingDetail extends React.Component {
   }
 
   render() {
-    const {classes, prestations, count, travel_tax, pick_tax, total, alfred_fee, client_fee, cesu_total} = this.props;
+    const {classes, prestations, count, travel_tax, pick_tax, total, alfred_fee, client_fee, cesu_total, mode} = this.props;
 
     return (
       <Grid>
         <Grid>
-          {Object.keys(prestations).map((k, index) => {
-            return count[k] === 0 ? null : (
-              <Grid className={classes.flexContent} key={index}>
-                <Grid className={classes.labelContent}>
-                  <p>{k}</p>
-                </Grid>
-                <Grid>
-                  <p>{prestations[k].toFixed(2)}€</p>
-                </Grid>
-              </Grid>
-            );
-          })
+          {
+            !mode ?
+              Object.keys(prestations).map((k, index) => {
+                  return count[k] === 0 ? null : (
+                    <Grid className={classes.flexContent} key={index}>
+                      <Grid className={classes.labelContent}>
+                        <p>{k}</p>
+                      </Grid>
+                      <Grid>
+                        <p>{prestations[k].toFixed(2)}€</p>
+                      </Grid>
+                    </Grid>
+                  );
+                })
+               : null
           }
           { /* Start travel tax */}
-          {travel_tax ?
+          {travel_tax &&  !mode ?
             <Grid className={classes.flexContent}>
               <Grid className={classes.labelContent}>
                 <p>Frais de déplacement</p>
@@ -39,7 +42,7 @@ class BookingDetail extends React.Component {
             </Grid> : null}
           { /* End pick tax */}
           { /* Start pick tax */}
-          {pick_tax ?
+          {pick_tax && !mode ?
             <Grid className={classes.flexContent}>
               <Grid className={classes.labelContent}>
                 <p>Frais de livraison/enlèvement</p>
@@ -50,7 +53,7 @@ class BookingDetail extends React.Component {
             </Grid> : null}
           { /* End pick tax */}
           { /* Start commission */}
-          {client_fee && client_fee !== 0 ?
+          {client_fee && client_fee !== 0 &&  !mode ?
             <Grid className={classes.flexContent}>
               <Grid className={classes.labelContent}>
                 <p>Frais de service</p>
@@ -60,7 +63,7 @@ class BookingDetail extends React.Component {
               </Grid>
             </Grid> : null
           }
-          {alfred_fee ?
+          {alfred_fee &&  !mode ?
             <Grid className={classes.flexContent}>
               <Grid className={classes.labelContent}>
                 <p>Frais de service</p>
@@ -86,7 +89,7 @@ class BookingDetail extends React.Component {
 
           { /* End total */}
           { /* Start CESU */}
-          {client_fee && cesu_total ?
+          {client_fee && cesu_total &&  !mode ?
             <Grid className={classes.flexContent} style={{marginleft: 20, fontWeight: 'bold'}}>
               <Grid>
                 <p>{'dont CESU'}</p>

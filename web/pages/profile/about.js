@@ -8,6 +8,8 @@ import Presentation from '../../components/Presentation/Presentation'
 import Skills from '../../components/Skills/Skills'
 import Badges from '../../components/Badges/Badges'
 import Hashtags from '../../components/Hashtags/Hashtags'
+import {withStyles} from '@material-ui/core/styles';
+import styles from '../../static/css/pages/homePage/index';
 
 class ProfileAbout extends React.Component {
 
@@ -23,6 +25,7 @@ class ProfileAbout extends React.Component {
   render() {
     const {user}=this.props
 
+    console.log(`User:${user}`)
     if (!user) {
       return null
     }
@@ -51,4 +54,4 @@ class ProfileAbout extends React.Component {
 
 }
 
-export default ProfileAbout
+export default withStyles(styles)(ProfileAbout)

@@ -13,13 +13,12 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import CardService from "../components/Card/CardService/CardService";
-import NeedHelp from "../components/NeedHelp/NeedHelp";
 import SearchByHashtag from "../components/SearchByHashtag/SearchByHashtag";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Layout from "../hoc/Layout/Layout";
 import withSlide from '../hoc/Slide/SlideShow'
 import withGrid from '../hoc/Grid/GridCard'
-const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
+const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
 
 const SearchResults=withSlide(withGrid(CardService));
 
@@ -37,8 +36,8 @@ class SearchDataModel extends SlideGridDataModel {
   /** un item blanc par page => descendre d'un index par page
   */
   getDataIndex(page, col, row) {
-    var index = super.getDataIndex(page, col, row)
-    index = index - page - 1
+    var index = super.getDataIndex(page, col, row);
+    index = index - page - 1;
     return index
   }
 
@@ -47,7 +46,7 @@ class SearchDataModel extends SlideGridDataModel {
   */
   getData(page, col, row) {
     //return super.getData(page, col, row)
-    if (col==0 && row==0) {
+    if (col===0 && row===0) {
       return null
     }
     return super.getData(page, col, row)
@@ -340,24 +339,9 @@ class SearchPage extends React.Component {
 
   render() {
     const {classes, search, indexCat} = this.props;
-    const {user, categories, gps, isAdmin, mounting, searching ,
-      address,
+    const {user, categories, gps, mounting, searching ,
       selectedAddress,
-      city,
-      serviceUsersDisplay,
-      shops,
-      proAlfred, // Professional Alfred ids
-      keyword,
-      proSelected,
-      individualSelected,
-      startDate,
-      endDate,
-      focusedInput,
-      statusFilterVisible,
-      dateFilterVisible,
-      catCount,
       filters,
-      logged
      } = this.state;
 
     const serviceUsers = this.state.serviceUsersDisplay;
@@ -422,14 +406,15 @@ class SearchPage extends React.Component {
           </Grid>
           <Grid className={classes.searchMainContainerResult}>
             <Grid className={classes.searchContainerDisplayResult}>
-              <Grid container spacing={4}>
+              <Grid container>
               {
                 searching ?
                   <Grid className={classes.searchLoadingContainer} item xl={3} lg={3} md={3}>
                     <CircularProgress/>
                   </Grid>
                   :
-                  <SearchResults model={new SearchDataModel(serviceUsers.map(su => su._id), 4, 2, false)}
+                  <SearchResults
+                    model={new SearchDataModel(serviceUsers.map(su => su._id), 4, 3, false)}
                     style={classes}
                     gps={user ? user.billing_address.gps : this.state.gps}
                   />
@@ -438,6 +423,7 @@ class SearchPage extends React.Component {
             </Grid>
           </Grid>
         </Grid>
+        {/*TODO HASTAG
         <Grid className={classes.filterMenuDivierContainer}>
           <Divider className={classes.filterMenuDividerStyle}/>
         </Grid>
@@ -446,14 +432,7 @@ class SearchPage extends React.Component {
             <SearchByHashtag style={classes}/>
           </Grid>
         </Grid>
-        <Grid className={classes.filterMenuDivierContainer}>
-          <Divider className={classes.filterMenuDividerStyle}/>
-        </Grid>
-        <Grid className={classes.searchNeedHelpMainStyle}>
-          <Grid className={classes.searchNeedHelpMainContainer}>
-            <NeedHelp style={classes}/>
-          </Grid>
-        </Grid>
+        */}
        </Layout>
       </Grid>
     );

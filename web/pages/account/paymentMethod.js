@@ -133,7 +133,8 @@ class paymentMethod extends React.Component {
     this.setState({[target.name]: target.value});
   };
 
-  addCard() {
+  addCard = () => {
+    console.log('bonjour')
     const card_number = this.state.card_number.replace(/\s/g, '');
     const expiration_date = this.state.expiration_date.split('/');
     const finaldate = expiration_date[0] + expiration_date[1];
@@ -152,8 +153,8 @@ class paymentMethod extends React.Component {
             let cards = response.data;
             this.setState({cards: cards});
           });
-      });
-  }
+      }).catch(err => console.error(err));
+  };
 
   deleteCard(id) {
     const obj = {id_card: id};
@@ -220,7 +221,7 @@ class paymentMethod extends React.Component {
                             cvc={'XXX'}
                           />
                           <button className={classes.buttondelt}
-                                  onClick={() => this.setState({deletedial: true, Idtempo: e.Id})} type="submit"
+                                  onClick={() => this.setState({deletedial: true, Idtempo: e.Id})}
                                   variant="contained" style={{lineHeight: 1}} color="secondary">
                             x
                           </button>

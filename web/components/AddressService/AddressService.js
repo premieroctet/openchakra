@@ -1,6 +1,5 @@
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
-import {Button} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 
 class AddressService extends React.Component {
@@ -8,24 +7,32 @@ class AddressService extends React.Component {
     super(props);
   }
   render() {
+    const {bookingObj, currentUser, user} = this.props;
+
+    if (currentUser && bookingObj) {
+      var checkAdd = currentUser.billing_address.address === bookingObj.address.address && currentUser.billing_address.zip_code === bookingObj.address.zip_code && currentUser.billing_address.city === bookingObj.address.city;
+    }
+
     return(
       <Grid>
         <Grid style={{display: 'flex', flexDirection: 'column'}}>
           <Grid>
-            <Typography>Madame Caroline Lienard</Typography>
+            <Typography>{bookingObj.address ? checkAdd ? currentUser.firstname + " " +  currentUser.name : user.firstname + " " + user.name : 'En visio' }</Typography>
           </Grid>
           <Grid>
-            <Typography>38 mail andrée putman</Typography>
+            <Typography>{bookingObj.address.address}</Typography>
           </Grid>
           <Grid>
-            <Typography>76000 Rouen - france</Typography>
+            <Typography>{bookingObj.address.zip_code} {bookingObj.address.city} - {bookingObj.address.country}</Typography>
           </Grid>
-          <Grid style={{marginTop: 30}}>
-            <Typography>L'adresse de facturation est identique</Typography>
+          {/*TODO UPDATE ADDRESS + CHECK ADDRESS FACTURE
+          <Grid style={{marginTop: '2vh'}}>
+            <Typography style={{color:'rgba(39,37,37,35%)'}}>L'adresse de facturation est identique</Typography>
           </Grid>
-          <Grid style={{marginTop: 30}}>
+          <Grid style={{marginTop: '2vh'}}>
             <Button>Modifier</Button>
           </Grid>
+          */}
         </Grid>
       </Grid>
     );

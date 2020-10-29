@@ -20,11 +20,12 @@ function withSlide(WrappedComponent) {
 
     onPageChange = (event, pageIndex) => {
       this.setState({pageIndex: pageIndex-1})
-    }
+    };
 
     render(){
-      const {pageIndex} = this.state
-      var {style, pageCount, model} = this.props
+      const {pageIndex} = this.state;
+      const {style,model} = this.props;
+      var pageCount = this.props;
 
       if (model) {
         pageCount=model.getPageCount()
@@ -32,8 +33,14 @@ function withSlide(WrappedComponent) {
 
       return(
         <Grid>
-          <Carousel easing="ease" autoPlay={false} onChange={this.onCarouselIndexChange} animation={"slide"} navButtonsAlwaysVisible={this.props.infinite}
-          navButtonsAlwaysInvisible={!model.isInfinite()}>
+          <Carousel
+            easing="ease"
+            autoPlay={false}
+            onChange={this.onCarouselIndexChange}
+            animation={"slide"}
+            navButtonsAlwaysVisible={this.props.infinite}
+            navButtonsAlwaysInvisible={!model.isInfinite()}
+          >
             { /** TODO importer les styles directement */ }
             <Grid container className={style.slideShowContainer}>
               <Grid container>
@@ -44,8 +51,8 @@ function withSlide(WrappedComponent) {
             </Grid>
           </Carousel>
           { !model.isInfinite() ?
-            <Grid style={{ display:'flex', justifyContent:'center'}}>
-              <Pagination count={pageCount} page={pageIndex+1} onChange={this.onPageChange} />
+            <Grid style={{ display:'flex', justifyContent:'center', marginTop : '5vh'}}>
+              <Pagination count={pageCount} page={pageIndex+1} onChange={this.onPageChange} classes={{root: style.paginationRoot}}/>
             </Grid>
             :
             null

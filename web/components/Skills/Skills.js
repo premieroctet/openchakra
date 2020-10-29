@@ -13,6 +13,7 @@ import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
 import cookie from 'react-cookies';
 const {SKILLS}=require('../../utils/consts')
 import WithTopic from "../../hoc/Topic/Topic"
+import Box from '../Box/Box'
 
 class Skills extends React.Component {
   constructor(props) {
@@ -67,7 +68,16 @@ class Skills extends React.Component {
   }
 }
 
-class SkillsComponent extends WithTopic(Skills) {}
+class SkillsComponent extends WithTopic(Skills) {
+  render() {
+    return (
+      <Box>
+        {super.render()}
+      </Box>
+
+    )
+  }
+}
 
 SkillsComponent.defaultProps= {
   titleTopic: 'Compliments',

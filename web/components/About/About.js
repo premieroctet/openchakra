@@ -18,6 +18,7 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import ChatBubbleOutlineOutlinedIcon from '@material-ui/icons/ChatBubbleOutlineOutlined';
 import PersonIcon from '@material-ui/icons/Person';
 import UserAvatar from '../Avatar/UserAvatar'
+import Box from '../Box/Box'
 const {frenchFormat} = require('../../utils/text')
 const moment=require('moment')
 moment.locale('fr')
@@ -80,13 +81,15 @@ class About extends React.Component {
       null
 
     return (
-      <div style={{display: 'flex', flexDirection:'column'}}>
-        { displayTitlePicture ? <h3>{frenchFormat(`A propos de ${user ? user.firstname : ''}`)}</h3> : null }
-        <div style={{display: 'flex', flexDirection:'row'}}>
-          { displayTitlePicture ? <div style={{ marginLeft: '1%', marginRight: '1%'}}><UserAvatar user={user} /></div> : null }
-          <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} />
+      <Box>
+        <div style={{display: 'flex', flexDirection:'column'}}>
+          { displayTitlePicture ? <h3>{frenchFormat(`A propos de ${user ? user.firstname : ''}`)}</h3> : null }
+          <div style={{display: 'flex', flexDirection:'row'}}>
+            { displayTitlePicture ? <div style={{ marginLeft: '1%', marginRight: '1%'}}><UserAvatar user={user} /></div> : null }
+            <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} />
+          </div>
         </div>
-      </div>
+      </Box>
     )
   }
 

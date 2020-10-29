@@ -18,6 +18,7 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import ChatBubbleOutlineOutlinedIcon from '@material-ui/icons/ChatBubbleOutlineOutlined';
 import PersonIcon from '@material-ui/icons/Person';
 import UserAvatar from '../Avatar/UserAvatar'
+import Box from '../Box/Box'
 const {frenchFormat} = require('../../utils/text')
 const moment=require('moment')
 moment.locale('fr')
@@ -34,6 +35,7 @@ class InnerHashtags extends React.Component {
     return (
       <div style={{display: 'flex', flexDirection:'column'}}>
         HASHTAGS
+        jjkl
       </div>
     )
   }
@@ -63,7 +65,9 @@ class Hashtags extends React.Component {
   render() {
     const {user} = this.state
     return (
-      <OuterHastags user={user} titleTopic={`Les tags de ${user ? user.firstname:''}`} />
+      <Box>
+        <OuterHastags user={user} titleTopic={`Les tags de ${user ? user.firstname:''}`} />
+      </Box>
     )
   }
 
