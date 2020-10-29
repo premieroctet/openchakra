@@ -11,23 +11,25 @@ const {computeDistanceKm} = require('../../../utils/functions');
 import RoomIcon from '@material-ui/icons/Room';
 import Chip from "@material-ui/core/Chip";
 import Avatar from "@material-ui/core/Avatar";
+import styles from '../../../static/css/searchPage/searchStyle'
+import {withStyles} from '@material-ui/core/styles'
 
 class CardServiceInfo extends React.Component{
   constructor(props) {
     super(props);
   }
   render() {
-    const{style} = this.props;
+    const{classes} = this.props;
 
     return (
       <Grid>
-        <Paper elevation={1} className={style.cardServiceInfoPaper}>
-          <Grid className={style.cardServiceInfoContent}>
+        <Paper elevation={1} className={classes.cardServiceInfoPaper}>
+          <Grid className={classes.cardServiceInfoContent}>
             <Grid>
-              <h2 className={style.cardServiceInfoTitle}>Besoin d'aide ?</h2>
+              <h2 className={classes.cardServiceInfoTitle}>Besoin d'aide ?</h2>
             </Grid>
             <Grid>
-              <p className={style.cardServiceInfoText}>Utilisez notre chat en direct !</p>
+              <p className={classes.cardServiceInfoText}>Utilisez notre chat en direct !</p>
             </Grid>
           </Grid>
         </Paper>
@@ -80,8 +82,10 @@ class CardService extends React.Component{
   }
 
   render() {
-    const {style, userState, isOwner, gps, needAvatar, isAdmin} = this.props;
+    const {classes, userState, isOwner, gps, needAvatar, isAdmin, profileMode} = this.props;
     const {cpData, alfred} = this.state;
+
+    console.log(`CardService with ${JSON.stringify(cpData, null, 2)}`)
 
     let distance = gps ? computeDistanceKm(gps, cpData.gps) : null;
     distance = distance ? distance.toFixed(0) : '';
@@ -89,53 +93,62 @@ class CardService extends React.Component{
     const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {};
 
     const resa_link =  `/userServicePreview?id=${cpData._id}`
-    if (this.props.item==null) {
+    if (this.props.item===null) {
       return (
-        <CardServiceInfo style={style} />
+        <CardServiceInfo classes={classes} />
       )
     }
+
+    if (this.props.item===undefined) {
+      return null
+    }
+
     return(
       <Grid>
-        <Paper elevation={1} className={style.cardServicePaper} onClick={() => window.open(resa_link, '_blank')}>
-          <Grid className={style.cardServiceMainStyle}>
-            <Grid className={style.cardServiceFlexContainer}>
-              <Grid className={style.cardServicePicsContainer}>
-                <Grid style={{backgroundImage: 'url("/' + cpData.picture + '")'}} className={style.cardServiceBackgroundPics}/>
+        <Paper elevation={1} className={classes.cardServicePaper} onClick={() => window.open(resa_link, '_blank')}>
+          <Grid className={classes.cardServiceMainStyle}>
+            { profileMode ? null :
+              <Grid className={classes.cardServiceFlexContainer}>
+                <Grid className={classes.cardServicePicsContainer}>
+                  <Grid style={{backgroundImage: 'url("/' + cpData.picture + '")'}} className={classes.cardServiceBackgroundPics}/>
+                </Grid>
+                <Grid className={classes.cardServiceChipName}>
+                  <Chip label={alfred.firstname} avatar={cpData.is_professional ? <Avatar src="/static/assets/icon/pro_icon.svg"/> : null} className={classes.cardServiceChip} />
+                </Grid>
               </Grid>
-              <Grid className={style.cardServiceChipName}>
-                <Chip label={alfred.firstname} avatar={cpData.is_professional ? <Avatar src="/static/assets/icon/pro_icon.svg"/> : null} className={style.cardServiceChip} />
-              </Grid>
-            </Grid>
+            }
             <Grid>
               <Grid>
                 <p>{cpData.label}</p>
               </Grid>
-              <Grid className={style.cardServicePlaceContainer}>
-                <Grid className={style.cardServicePlaceLogo}>
-                  <RoomIcon/>
+              { profileMode ? null :
+                <Grid className={classes.cardServicePlaceContainer}>
+                  <Grid className={classes.cardServicePlaceLogo}>
+                    <RoomIcon/>
+                  </Grid>
+                  <Grid style={{whiteSpace: 'nowrap'}}>
+                    <p>{`À ${" "} ${distance} ${" "}km -`}</p>
+                  </Grid>
+                  <Grid className={classes.stylecardServiceDistance}>
+                    <p  className={classes.stylecardServiceDistance}>{cpData.city}</p>
+                  </Grid>
                 </Grid>
-                <Grid style={{whiteSpace: 'nowrap'}}>
-                  <p>{`À ${" "} ${distance} ${" "}km -`}</p>
-                </Grid>
-                <Grid className={style.stylecardServiceDistance}>
-                  <p  className={style.stylecardServiceDistance}>{cpData.city}</p>
-                </Grid>
-              </Grid>
-              <Grid className={style.cardServiceScoreAndButtonContainer}>
-                <Grid className={style.cardServiceRatingContainer}>
-                  <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: style.cardPreviewRatingBox}}>
+              }
+              <Grid className={classes.cardServiceScoreAndButtonContainer}>
+                <Grid className={classes.cardServiceRatingContainer}>
+                  <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
                     <Rating
                       name="simple-controlled"
                       value={notes.global}
                       max={1}
                       readOnly
                     />
-                    <Grid className={style.cardServiceBoxRatingDisplay}>
-                      <Grid className={style.cardServiceRating}>
-                        <p className={style.cardServiceLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</p>
+                    <Grid className={classes.cardServiceBoxRatingDisplay}>
+                      <Grid className={classes.cardServiceRating}>
+                        <p className={classes.cardServiceLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</p>
                       </Grid>
                       <Grid>
-                        <p className={style.cardServiceLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</p>
+                        <p className={classes.cardServiceLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</p>
                       </Grid>
                     </Grid>
                   </Box>
@@ -149,4 +162,4 @@ class CardService extends React.Component{
   }
 }
 
-export default CardService;
+export default withStyles(styles)(CardService)

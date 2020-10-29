@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import {Divider} from "@material-ui/core";
 
 function WithTopic(WrappedComponent) {
+
   return class extends React.Component {
     constructor(props) {
       super(props);
@@ -29,9 +30,13 @@ function WithTopic(WrappedComponent) {
                 <Divider style={{height: 6, backgroundColor:'rgba(178, 204, 251, 100%)', borderRadius: 27, width: '3vw'}}/>
               </Grid> : null
           }
-          <Grid style={{marginTop: '3vh', backgroundColor: needBackground ? 'rgba(229,229,229,1)' : 'white', borderRadius: 27}}>
-            <WrappedComponent {...this.props}/>
-          </Grid>
+          {WrappedComponent ?
+            <Grid style={{marginTop: '3vh', backgroundColor: needBackground ? 'rgba(229,229,229,1)' : 'white', borderRadius: 27}}>
+              <WrappedComponent {...this.props}/>
+            </Grid>
+            :
+            null
+          }
         </Grid>
       )
     }

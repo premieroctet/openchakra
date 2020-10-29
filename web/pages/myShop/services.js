@@ -14,6 +14,7 @@ import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import {toast} from 'react-toastify';
 import Router from 'next/router';
+import {Helmet} from 'react-helmet';
 import {
   assetsService,
   selectPrestation,
