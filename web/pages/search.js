@@ -36,8 +36,8 @@ class SearchDataModel extends SlideGridDataModel {
   /** un item blanc par page => descendre d'un index par page
   */
   getDataIndex(page, col, row) {
-    var index = super.getDataIndex(page, col, row)
-    index = index - page - 1
+    var index = super.getDataIndex(page, col, row);
+    index = index - page - 1;
     return index
   }
 
@@ -46,7 +46,7 @@ class SearchDataModel extends SlideGridDataModel {
   */
   getData(page, col, row) {
     //return super.getData(page, col, row)
-    if (col==0 && row==0) {
+    if (col===0 && row===0) {
       return null
     }
     return super.getData(page, col, row)

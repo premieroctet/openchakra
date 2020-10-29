@@ -82,17 +82,15 @@ class CardService extends React.Component{
   }
 
   render() {
-    const {classes, userState, isOwner, gps, needAvatar, isAdmin, profileMode} = this.props;
+    const {classes, isOwner, gps,profileMode} = this.props;
     const {cpData, alfred} = this.state;
-
-    console.log(`CardService with ${JSON.stringify(cpData, null, 2)}`)
 
     let distance = gps ? computeDistanceKm(gps, cpData.gps) : null;
     distance = distance ? distance.toFixed(0) : '';
 
     const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {};
 
-    const resa_link =  `/userServicePreview?id=${cpData._id}`
+    const resa_link =  `/userServicePreview?id=${cpData._id}`;
     if (this.props.item===null) {
       return (
         <CardServiceInfo classes={classes} />
