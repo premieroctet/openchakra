@@ -33,6 +33,7 @@ import { checkUser, createProject } from '~utils/checkProject'
 import { useSelector } from 'react-redux'
 import { signIn, useSession } from 'next-auth/client'
 import { getComponents } from '~core/selectors/components'
+import { useRouter } from 'next/router'
 
 interface Props {
   id: number
@@ -54,6 +55,7 @@ const App = (props: Props) => {
   const [projectName, setProjectName] = useState('')
   const components = useSelector(getComponents)
   const [session] = useSession()
+  const router = useRouter()
   const toast = useToast()
 
   const updateProject = async () => {
@@ -87,7 +89,8 @@ const App = (props: Props) => {
           duration: 9000,
           isClosable: true,
         })
-        window.location.href = `/project/${newProject.id}-${newProject.projectName}`
+        const href = `/project/${newProject.id}-${newProject.projectName}`
+        router.push(href, href, { shallow: true })
       } else {
         toast({
           title: 'Error when created project',
