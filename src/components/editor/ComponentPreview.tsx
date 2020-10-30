@@ -142,7 +142,7 @@ const ComponentPreview: React.FC<{
     case 'AspectRatioBox':
       return <AspectRatioBoxPreview component={component} />
     case 'Tabs':
-      return <TabsPreview component={component} {...forwardedProps} />
+      return <TabsPreview component={component} />
     case 'TabList':
       return <TabListPreview component={component} />
     case 'TabPanels':

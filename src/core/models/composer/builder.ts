@@ -56,7 +56,10 @@ export const buildTabs = (parent: string): ComposedComponent => {
     parent,
   })
 
-  const listId = composer.addNode({ type: 'TabList', parent: nodeId })
+  const listId = composer.addNode({
+    type: 'TabList',
+    parent: nodeId,
+  })
   composer.addNode({
     type: 'Tab',
     parent: listId,

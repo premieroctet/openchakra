@@ -46,6 +46,7 @@ import {
   FormLabel,
   TabList,
   TabPanels,
+  TabsProps,
 } from '@chakra-ui/core'
 import { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
 
@@ -93,7 +94,7 @@ type PreviewDefaultProps = {
   TabPanel?: TabPanelProps
   TabPanels?: TabPanelsProps
   Tab?: any
-  Tabs?: any
+  Tabs?: TabsProps
   Select?: SelectProps
   Input?: InputProps
   InputGroup?: InputGroupProps
@@ -175,7 +176,13 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   TabPanel: { ...TabPanel.defaultProps, children: '' },
   TabPanels: { ...TabPanels.defaultProps, children: '' },
   Tab: { ...Tab.defaultProps },
-  Tabs: { ...Tabs.defaultProps, defaultIndex: 0, size: 'md' },
+  Tabs: {
+    ...Tabs.defaultProps,
+    size: 'md',
+    children: '',
+    defaultIndex: 0,
+    index: 0,
+  },
   TabList: { ...TabList.defaultProps, children: '' },
   FormLabel: { ...FormLabel.defaultProps, children: 'Label' },
   FormHelperText: {
