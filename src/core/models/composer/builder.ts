@@ -87,17 +87,16 @@ export const buildMenu = (parent: string): ComposedComponent => {
     props: { leftIcon: 'chevron-down' },
   })
   const listId = composer.addNode({ type: 'MenuList', parent: nodeId })
-  const menuItemOne = composer.addNode({ type: 'MenuItem', parent: listId })
   composer.addNode({
-    type: 'Text',
-    parent: menuItemOne,
-    rootParentType: 'Text',
+    type: 'MenuItem',
+    parent: listId,
+    props: { children: 'Text' },
   })
-  const menuItemTwo = composer.addNode({ type: 'MenuItem', parent: listId })
+
   composer.addNode({
-    type: 'Text',
-    parent: menuItemTwo,
-    rootParentType: 'Text',
+    type: 'MenuItem',
+    parent: listId,
+    props: { children: 'Text' },
   })
 
   const components = composer.getComponents()

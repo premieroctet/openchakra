@@ -81,6 +81,7 @@ const ComponentPreview: React.FC<{
     case 'Tag':
     case 'MenuDivider':
     case 'MenuItemOption':
+    case 'MenuItem':
       return (
         <PreviewContainer
           component={component}
@@ -112,7 +113,6 @@ const ComponentPreview: React.FC<{
     case 'Breadcrumb':
     case 'InputGroup':
     case 'BreadcrumbItem':
-    case 'MenuItem':
     case 'MenuGroup':
     case 'MenuOptionGroup':
       return (
