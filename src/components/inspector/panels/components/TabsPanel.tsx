@@ -12,11 +12,25 @@ const TabsPanel = () => {
   const variant = usePropsSelector('variant')
   const orientation = usePropsSelector('orientation')
   const size = usePropsSelector('size')
+  const index = usePropsSelector('index')
 
   return (
     <>
       <SwitchControl label="Manual" name="isManual" />
       <SwitchControl label="Fitted" name="isFitted" />
+
+      <FormControl label="Index" htmlFor="index">
+        <Select
+          name="index"
+          id="index"
+          size="sm"
+          value={index || 0}
+          onChange={setValueFromEvent}
+        >
+          <option>0</option>
+          <option>1</option>
+        </Select>
+      </FormControl>
 
       <FormControl label="Variant" htmlFor="variant">
         <Select

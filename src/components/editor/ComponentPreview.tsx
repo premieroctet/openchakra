@@ -79,6 +79,8 @@ const ComponentPreview: React.FC<{
     case 'InputRightAddon':
     case 'InputLeftAddon':
     case 'Tag':
+    case 'TabPanel':
+    case 'Tab':
       return (
         <PreviewContainer
           component={component}
@@ -143,12 +145,9 @@ const ComponentPreview: React.FC<{
       return <TabsPreview component={component} {...forwardedProps} />
     case 'TabList':
       return <TabListPreview component={component} />
-    case 'TabPanel':
-      return <TabPanelPreview component={component} />
     case 'TabPanels':
       return <TabPanelsPreview component={component} />
-    case 'Tab':
-      return <TabPreview component={component} />
+
     default:
       return null
   }
