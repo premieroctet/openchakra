@@ -20,6 +20,7 @@ import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import cookie from 'react-cookies';
+import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 
 moment.locale('fr');
 
@@ -27,7 +28,6 @@ moment.locale('fr');
 class myAddresses extends React.Component {
   constructor(props) {
     super(props);
-    this.child = React.createRef();
     this.state = {
       user: {},
       address: '',
@@ -65,7 +65,11 @@ class myAddresses extends React.Component {
     };
     this.onChangeAlgolia = this.onChangeAlgolia.bind(this);
     this.onChangeAlgolia2 = this.onChangeAlgolia2.bind(this);
-    this.callDrawer = this.callDrawer.bind(this);
+
+  }
+
+  static getInitialProps({query: {indexAccount}}) {
+    return {index: indexAccount};
 
   }
 
@@ -228,13 +232,8 @@ class myAddresses extends React.Component {
       .catch();
   };
 
-  callDrawer() {
-    this.child.current.handleDrawerToggle();
-  }
-
-
   render() {
-    const {classes} = this.props;
+    const {classes, index} = this.props;
     const {clickAdd, clickEdit, service_address, address_selected} = this.state;
 
     return (
@@ -244,24 +243,8 @@ class myAddresses extends React.Component {
           <meta property="description"
                 content="Renseignez vos adresses de prestation et recherchez des Alfred là où vous le souhaitez ! Des services entre particuliers dans toute la France. Réservez dès maintenant votre Alfred mécanicien, plombier, électricien, coiffeur, coach sportif…"/>
         </Helmet>
-        <Layout>
+        <LayoutAccount index={index}>
           <Grid container className={classes.bigContainer}>
-            <Grid style={{zIndex: 0}}>
-              <ResponsiveDrawer ref={this.child} isActiveIndex={1} itemsDrawers={'profil'}/>
-            </Grid>
-            <Grid>
-              <Grid>
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  edge="start"
-                  onClick={this.callDrawer}
-                  className={classes.menuButton}
-                >
-                  <MenuIcon/>
-                </IconButton>
-              </Grid>
-            </Grid>
             <Grid item xs={9} className={classes.containerLeft}>
               <Grid container style={{marginBottom: 20}}>
                 <h1 style={{color: 'dimgray', fontWeight: '100'}}>Mes adresses de prestations</h1>
@@ -633,9 +616,7 @@ class myAddresses extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-        </Layout>
-        {/* <Footer/>*/}
-
+        </LayoutAccount>
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}

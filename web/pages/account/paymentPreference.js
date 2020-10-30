@@ -20,6 +20,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import {formatIban} from '../../utils/text';
 import cookie from 'react-cookies';
+import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 
 
 moment.locale('fr');
@@ -28,7 +29,6 @@ moment.locale('fr');
 class paymentPreference extends React.Component {
   constructor(props) {
     super(props);
-    this.child = React.createRef();
     this.state = {
       user: {},
       clickAdd: false,
@@ -39,7 +39,10 @@ class paymentPreference extends React.Component {
       iban: '',
       errors: {},
     };
-    this.callDrawer = this.callDrawer.bind(this);
+  }
+
+  static getInitialProps({query: {indexAccount}}) {
+    return {index: indexAccount};
 
   }
 
@@ -83,11 +86,6 @@ class paymentPreference extends React.Component {
   onChange = e => {
     this.setState({[e.target.name]: e.target.value});
   };
-
-  callDrawer() {
-    this.child.current.handleDrawerToggle();
-  }
-
 
   onSubmit = e => {
     e.preventDefault();
@@ -147,13 +145,8 @@ class paymentPreference extends React.Component {
       });
   }
 
-  callDrawer() {
-    this.child.current.handleDrawerToggle();
-  }
-
-
   render() {
-    const {classes} = this.props;
+    const {classes, index} = this.props;
     const {accounts, clickAdd, clickDelete, haveAccount, errors} = this.state;
 
     console.log(JSON.stringify(errors, null, 2));
@@ -164,24 +157,8 @@ class paymentPreference extends React.Component {
           <meta property="description"
                 content="My Alfred, des services entre particuliers et auto-entrepreneurs rémunérés ! Choisissez vos méthodes de versement de vos rémunérations pour chacun des services réalisés. Versement 72h après la prestation."/>
         </Helmet>
-        <Layout>
+        <LayoutAccount index={index}>
           <Grid container className={classes.bigContainer}>
-            <Grid style={{zIndex: 0}}>
-              <ResponsiveDrawer ref={this.child} isActiveIndex={2} itemsDrawers={'account'}/>
-            </Grid>
-            <Grid>
-              <Grid>
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  edge="start"
-                  onClick={this.callDrawer}
-                  className={classes.menuButton}
-                >
-                  <MenuIcon/>
-                </IconButton>
-              </Grid>
-            </Grid>
             <Grid item xs={9} className={classes.containerLeft}>
               <Grid container>
                 <h1 style={{color: 'dimgray', fontWeight: '100'}}>Préférence de versement</h1>
@@ -276,7 +253,7 @@ class paymentPreference extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-        </Layout>
+        </LayoutAccount>
       </Fragment>
     );
   }

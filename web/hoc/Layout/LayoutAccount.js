@@ -1,45 +1,77 @@
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import ScrollMenu from '../../components/ScrollMenu/SrollMenu';
+import Layout from "./Layout";
+import axios from 'axios'
+import cookie from 'react-cookies';
+
 
 class LayoutAccount extends React.Component{
   constructor(props) {
     super(props);
     this.state= {
+      user: null,
       items: [
         {
-          label: 'Notifications'
+          label: 'Notifications',
+          url: '/notifications'
         },
         {
-          label: 'Mode de paiement'
+          label: 'Mode de paiement',
+          url: '/paymentMethod'
         },
         {
-          label: 'Mon RIB'
+          label: 'Mon RIB',
+          url: '/paymentPreference'
         },
         {
-          label: 'Mes adresses'
+          label: 'Mes adresses',
+          url: '/myAddresses'
         },
         {
-          label: 'Vérification'
+          label: 'Vérification',
+          url: '/trustAndVerification'
         },
         {
-          label: 'Sécurité'
+          label: 'Sécurité',
+          url: '/security'
         }
       ]
     }
   }
 
+
+
+  componentDidMount = () => {
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    axios.get(`/myAlfred/api/users/users/${this.props.user}`)
+      .then( res => {
+        this.setState( { user: res.data})
+      })
+      .catch (err => console.error(err))
+  };
+
   render() {
-    const{items}= this.state;
+    const{items, user}= this.state;
+    const{children, index} = this.props;
     return(
-      <Grid>
-        <Grid style={{display: 'flex', justifyContent: 'center'}}>
-          <h2>Mon Compte</h2>
+      <Layout user={user}>
+        <Grid style={{display:'flex', justifyContent:'center'}}>
+          <Grid style={{display: 'flex', justifyContent:'center', flexDirection: 'column', alignItems:'center', width: '100%'}}>
+            <Grid style={{display: 'flex', justifyContent: 'center'}}>
+              <h2>Mon Compte</h2>
+            </Grid>
+            <Grid>
+              <ScrollMenu categories={items} mode={'account'} indexCat={index}/>
+            </Grid>
+            <Grid style={{backgroundColor: 'rgba(249,249,249, 1)', width: '100%'}}>
+              <Grid style={{margin:'0 15%', display:'flex', justifyContent:'center', backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', padding: '5% 10%', marginTop : '5vh', marginBottom: '5vh'}}>
+                {children}
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid>
-          <ScrollMenu categories={items}/>
-        </Grid>
-      </Grid>
+      </Layout>
     );
   }
 }

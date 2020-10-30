@@ -1,5 +1,4 @@
-import React, {Fragment} from 'react';
-import Layout from '../../hoc/Layout/Layout';
+import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import Button from '@material-ui/core/Button';
@@ -9,19 +8,70 @@ import {withStyles} from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
 import {toast} from 'react-toastify';
 import {Helmet} from 'react-helmet';
-import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import styles from '../../static/css/pages/account/notifications/notifications';
 import cookie from 'react-cookies';
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
 
 moment.locale('fr');
+
+const IOSSwitch = withStyles((theme) => ({
+  root: {
+    width: 72,
+    height: 26,
+    padding: 0,
+    margin: theme.spacing(1),
+  },
+  switchBase: {
+    padding: 2,
+    '&$checked': {
+      transform: 'translateX(46px)',
+      color: 'rgba(248,207,97,1)',
+      '& + $track': {
+        backgroundColor: 'white',
+        opacity: 1,
+        border: `1px solid ${theme.palette.grey[400]}`,
+      },
+    },
+    '&$focusVisible $thumb': {
+      color: 'rgba(248,207,97,1)',
+      border: '6px solid #fff',
+    },
+  },
+  thumb: {
+    width: 20,
+    height: 20,
+  },
+  track: {
+    borderRadius: 26 / 2,
+    border: `1px solid ${theme.palette.grey[400]}`,
+    backgroundColor: theme.palette.grey[50],
+    opacity: 1,
+    transition: theme.transitions.create(['background-color', 'border']),
+  },
+  checked: {},
+  focusVisible: {},
+}))(({ classes, ...props }) => {
+  return (
+    <Switch
+      focusVisibleClassName={classes.focusVisible}
+      disableRipple
+      classes={{
+        root: classes.root,
+        switchBase: classes.switchBase,
+        thumb: classes.thumb,
+        track: classes.track,
+        checked: classes.checked,
+      }}
+      {...props}
+    />
+  );
+});
 
 class notifications extends React.Component {
   constructor(props) {
     super(props);
-    this.child = React.createRef();
     this.state = {
       user: {},
       messages_email: false,
@@ -41,7 +91,11 @@ class notifications extends React.Component {
       assistance_push: false,
       assistance_sms: false,
     };
-    this.callDrawer = this.callDrawer.bind(this);
+  }
+
+  static getInitialProps({query: {indexAccount}}) {
+    return {index: indexAccount};
+
   }
 
   componentDidMount() {
@@ -118,12 +172,8 @@ class notifications extends React.Component {
       .catch();
   };
 
-  callDrawer() {
-    this.child.current.handleDrawerToggle();
-  }
-
   render() {
-    const {classes} = this.props;
+    const {classes, index} = this.props;
 
     return (
       <React.Fragment>
@@ -132,45 +182,46 @@ class notifications extends React.Component {
           <meta property="description"
                 content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. "/>
         </Helmet>
-        <Layout>
-          <Grid style={{display : 'flex', flexDirection: 'column', alignItems: 'center'}}>
-            <LayoutAccount/>
-          </Grid>
-          <Grid container className={classes.bigContainer}>
-            <Grid item xs={9} className={classes.containerLeft}>
-              <Grid container>
-                <Grid container>
-                  <h1 style={{color: 'dimgray', fontWeight: '100'}}>Notifications</h1>
+        <LayoutAccount index={index}>
+          <Grid>
+            <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+              <Grid>
+                <h2>Notifications</h2>
+              </Grid>
+              <Grid>
+                <Typography>Choisissez les notifications que vous souhaitez recevoir </Typography>
+              </Grid>
+            </Grid>
+            <Grid>
+              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+            </Grid>
+            <Grid>
+              <Grid>
+                <Grid>
+                  <h2>Messages</h2>
                 </Grid>
-                <Grid item xs={12}>
-                  <h2 style={{fontWeight: '100', marginBotto: 0}}>Messages</h2>
+                <Grid>
+                  <Typography style={{color:'rgba(39,37,37,35%)'}}>Recevez des messages de la part des Alfred et des utilisateurs y compris les demandes de réservations.</Typography>
                 </Grid>
-                <Grid item xs={12} md={6}>
-                  <p style={{marginTop: 0}}>Recevez des messages de la part des Alfred et des utilisateurs y compris les
-                    demandes de réservations.
-
-                  </p>
-                </Grid>
-                <Grid container className={classes.item}>
-                  <Grid item xs={6} md={3}>
+                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
+                  <Grid item xl={3}>
                     <p>Email</p>
                   </Grid>
-                  <Grid item xs={6} md={9}>
-                    <Switch
+                  <Grid item xl={3}>
+                    <IOSSwitch
                       checked={this.state.messages_email}
                       onChange={this.handleChange('messages_email')}
                       value={'messages_email'}
-                      color="primary"
                       inputProps={{'aria-label': 'primary checkbox'}}
                     />
                   </Grid>
                 </Grid>
-                <Grid container className={classes.item}>
-                  <Grid item xs={6} md={3}>
+                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+                  <Grid item xl={3}>
                     <p>Notification push</p>
                   </Grid>
-                  <Grid item xs={6} md={9}>
-                    <Switch
+                  <Grid item xl={3}>
+                    <IOSSwitch
                       checked={this.state.messages_push}
                       onChange={this.handleChange('messages_push')}
                       value={'messages_push'}
@@ -179,12 +230,12 @@ class notifications extends React.Component {
                     />
                   </Grid>
                 </Grid>
-                <Grid container className={classes.item}>
-                  <Grid item xs={6} md={3}>
+                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+                  <Grid item xl={3}>
                     <p>SMS</p>
                   </Grid>
-                  <Grid item xs={6} md={9}>
-                    <Switch
+                  <Grid item xl={3}>
+                    <IOSSwitch
                       checked={this.state.messages_sms}
                       onChange={this.handleChange('messages_sms')}
                       value={'messages_sms'}
@@ -193,28 +244,26 @@ class notifications extends React.Component {
                     />
                   </Grid>
                 </Grid>
-                <Grid container>
-                  <Grid item xs={6}>
-                    <hr/>
-                  </Grid>
-                </Grid>
               </Grid>
-              <Grid container>
-                <Grid item xs={12}>
-                  <h2 style={{fontWeight: '100', marginBotto: 0}}>Rappel</h2>
+              <Grid>
+                <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+              </Grid>
+              <Grid>
+                <Grid>
+                  <h2>Rappel</h2>
                 </Grid>
-                <Grid item xs={12} md={6}>
-                  <p style={{marginTop: 0}}>
+                <Grid>
+                  <Typography>
                     Recevez des rappels de réservation, des demandes d’évaluation, des informations sur les tarifs et
                     d’autres rappels relatifs à vos activités sur My-Alfred.
-                  </p>
+                  </Typography>
                 </Grid>
-                <Grid container className={classes.item}>
-                  <Grid item xs={6} md={3}>
+                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
+                  <Grid item xl={3}>
                     <p>Email</p>
                   </Grid>
-                  <Grid item xs={6} md={9}>
-                    <Switch
+                  <Grid item xl={3}>
+                    <IOSSwitch
                       checked={this.state.rappel_email}
                       onChange={this.handleChange('rappel_email')}
                       value={'rappel_email'}
@@ -223,12 +272,12 @@ class notifications extends React.Component {
                     />
                   </Grid>
                 </Grid>
-                <Grid container className={classes.item}>
-                  <Grid item xs={6} md={3}>
+                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+                  <Grid item xl={3}>
                     <p>Notification push</p>
                   </Grid>
-                  <Grid item xs={6} md={9}>
-                    <Switch
+                  <Grid item xl={3}>
+                    <IOSSwitch
                       checked={this.state.rappel_push}
                       onChange={this.handleChange('rappel_push')}
                       value={'rappel_push'}
@@ -237,12 +286,12 @@ class notifications extends React.Component {
                     />
                   </Grid>
                 </Grid>
-                <Grid container className={classes.item}>
-                  <Grid item xs={6} md={3}>
+                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+                  <Grid item xl={3}>
                     <p>SMS</p>
                   </Grid>
-                  <Grid item xs={6} md={9}>
-                    <Switch
+                  <Grid item xl={3}>
+                    <IOSSwitch
                       checked={this.state.rappel_sms}
                       onChange={this.handleChange('rappel_sms')}
                       value={'rappel_sms'}
@@ -251,30 +300,27 @@ class notifications extends React.Component {
                     />
                   </Grid>
                 </Grid>
-                <Grid container>
-                  <Grid item xs={6}>
-                    <hr/>
-                  </Grid>
-                </Grid>
               </Grid>
-
-              <Grid container>
-                <Grid item xs={12}>
-                  <h2 style={{fontWeight: '100', marginBotto: 0}}>Promotions & Astuces</h2>
+              <Grid>
+                <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+              </Grid>
+              <Grid>
+                <Grid>
+                  <h2>Promotions & Astuces</h2>
                 </Grid>
-                <Grid item xs={12} md={6}>
-                  <p style={{marginTop: 0}}>
+                <Grid>
+                  <Typography>
                     Recevez des coupons, des informations promotionnelles, des enquêtes, et des informations de la part
                     de My-Alfred
                     et de ses partenaires.
-                  </p>
+                  </Typography>
                 </Grid>
-                <Grid container className={classes.item}>
-                  <Grid item xs={6} md={3}>
+                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
+                  <Grid item xl={3}>
                     <p>Email</p>
                   </Grid>
-                  <Grid item xs={6} md={9}>
-                    <Switch
+                  <Grid item xl={3}>
+                    <IOSSwitch
                       checked={this.state.promotions_email}
                       onChange={this.handleChange('promotions_email')}
                       value={'promotions_email'}
@@ -283,12 +329,12 @@ class notifications extends React.Component {
                     />
                   </Grid>
                 </Grid>
-                <Grid container className={classes.item}>
-                  <Grid item xs={6} md={3}>
+                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+                  <Grid item xl={3}>
                     <p>Notification push</p>
                   </Grid>
-                  <Grid item xs={6} md={9}>
-                    <Switch
+                  <Grid item xl={3}>
+                    <IOSSwitch
                       checked={this.state.promotions_push}
                       onChange={this.handleChange('promotions_push')}
                       value={'promotions_push'}
@@ -297,12 +343,12 @@ class notifications extends React.Component {
                     />
                   </Grid>
                 </Grid>
-                <Grid container className={classes.item}>
-                  <Grid item xs={6} md={3}>
+                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+                  <Grid item xl={3}>
                     <p>SMS</p>
                   </Grid>
-                  <Grid item xs={6} md={9}>
-                    <Switch
+                  <Grid item xl={3}>
+                    <IOSSwitch
                       checked={this.state.promotions_sms}
                       onChange={this.handleChange('promotions_sms')}
                       value={'promotions_sms'}
@@ -311,12 +357,12 @@ class notifications extends React.Component {
                     />
                   </Grid>
                 </Grid>
-                <Grid container className={classes.item}>
-                  <Grid item xs={6} md={3}>
+                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+                  <Grid item xl={3}>
                     <p>Appel téléphonique</p>
                   </Grid>
-                  <Grid item xs={6} md={9}>
-                    <Switch
+                  <Grid item xl={3}>
+                    <IOSSwitch
                       checked={this.state.promotions_phone}
                       onChange={this.handleChange('promotions_phone')}
                       value={'promotions_phone'}
@@ -325,27 +371,25 @@ class notifications extends React.Component {
                     />
                   </Grid>
                 </Grid>
-                <Grid container>
-                  <Grid item xs={6}>
-                    <hr/>
-                  </Grid>
-                </Grid>
               </Grid>
-              <Grid container>
-                <Grid item xs={12}>
-                  <h2 style={{fontWeight: '100', marginBotto: 0}}>Politique & communauté </h2>
+              <Grid>
+                <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+              </Grid>
+              <Grid>
+                <Grid>
+                  <h2>Politique & communauté </h2>
                 </Grid>
-                <Grid item xs={12} md={6}>
-                  <p style={{marginTop: 0}}>
+                <Grid>
+                  <Typography>
                     Recevez des nouvelles sur les réglementations liées aux prestations de services
-                  </p>
+                  </Typography>
                 </Grid>
-                <Grid container className={classes.item}>
-                  <Grid item xs={6} md={3}>
+                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
+                  <Grid item xl={3}>
                     <p>Email</p>
                   </Grid>
-                  <Grid item xs={6} md={9}>
-                    <Switch
+                  <Grid item xl={3}>
+                    <IOSSwitch
                       checked={this.state.community_email}
                       onChange={this.handleChange('community_email')}
                       value={'community_email'}
@@ -354,12 +398,12 @@ class notifications extends React.Component {
                     />
                   </Grid>
                 </Grid>
-                <Grid container className={classes.item}>
-                  <Grid item xs={6} md={3}>
+                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+                  <Grid item xl={3}>
                     <p>Notification push</p>
                   </Grid>
-                  <Grid item xs={6} md={9}>
-                    <Switch
+                  <Grid item xl={3}>
+                    <IOSSwitch
                       checked={this.state.community_push}
                       onChange={this.handleChange('community_push')}
                       value={'community_push'}
@@ -368,12 +412,12 @@ class notifications extends React.Component {
                     />
                   </Grid>
                 </Grid>
-                <Grid container className={classes.item}>
-                  <Grid item xs={6} md={3}>
+                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+                  <Grid item xl={3}>
                     <p>SMS</p>
                   </Grid>
-                  <Grid item xs={6} md={9}>
-                    <Switch
+                  <Grid item xl={3}>
+                    <IOSSwitch
                       checked={this.state.community_sms}
                       onChange={this.handleChange('community_sms')}
                       value={'community_sms'}
@@ -382,18 +426,16 @@ class notifications extends React.Component {
                     />
                   </Grid>
                 </Grid>
-                <Grid container>
-                  <Grid item xs={6}>
-                    <hr/>
-                  </Grid>
-                </Grid>
               </Grid>
-              <Grid container>
-                <Grid item xs={12}>
-                  <h2 style={{fontWeight: '100', marginBotto: 0}}>Assistance du compte </h2>
+              <Grid>
+                <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+              </Grid>
+              <Grid>
+                <Grid>
+                  <h2>Assistance du compte </h2>
                 </Grid>
-                <Grid item xs={12} md={6}>
-                  <p style={{marginTop: 0}}>
+                <Grid>
+                  <Typography>
                     Nous devrons peut-être vous envoyer des messages concernant votre compte. Vos réservations de
                     services,
                     des informations légales,
@@ -403,14 +445,14 @@ class notifications extends React.Component {
                     Pour votre sécurité, vous ne pouvez pas désactiver les notifications par email et nous pourrions
                     vous
                     contacter par téléphone ou d’autres moyens si besoin.
-                  </p>
+                  </Typography>
                 </Grid>
-                <Grid container className={classes.item}>
-                  <Grid item xs={6} md={3}>
+                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
+                  <Grid item xl={3}>
                     <p>Email</p>
                   </Grid>
-                  <Grid item xs={6} md={9}>
-                    <Switch
+                  <Grid item xl={3}>
+                    <IOSSwitch
                       checked={this.state.assistance_email}
                       onChange={this.handleChange('assistance_email')}
                       value={'assistance_email'}
@@ -419,12 +461,12 @@ class notifications extends React.Component {
                     />
                   </Grid>
                 </Grid>
-                <Grid container className={classes.item}>
-                  <Grid item xs={6} md={3}>
+                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+                  <Grid item xl={3}>
                     <p>Notification push</p>
                   </Grid>
-                  <Grid item xs={6} md={9}>
-                    <Switch
+                  <Grid item xl={3}>
+                    <IOSSwitch
                       checked={this.state.assistance_push}
                       onChange={this.handleChange('assistance_push')}
                       value={'assistance_push'}
@@ -433,12 +475,12 @@ class notifications extends React.Component {
                     />
                   </Grid>
                 </Grid>
-                <Grid container className={classes.item}>
-                  <Grid item xs={6} md={3}>
+                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+                  <Grid item xl={3}>
                     <p>SMS</p>
                   </Grid>
-                  <Grid item xs={6} md={9}>
-                    <Switch
+                  <Grid item xl={3}>
+                    <IOSSwitch
                       checked={this.state.assistance_sms}
                       onChange={this.handleChange('assistance_sms')}
                       value={'assistance_sms'}
@@ -447,40 +489,34 @@ class notifications extends React.Component {
                     />
                   </Grid>
                 </Grid>
-                <Grid container>
-                  <Grid item xs={6}>
-                    <hr/>
-                  </Grid>
-                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-          <Grid container style={{marginBottom: 20}}>
-            <Grid item xs={8}>
-              <div style={{
+            <Grid>
+              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+            </Grid>
+            <Grid>
+              <Grid style={{
                 display: 'flex',
                 justifyContent: 'flex-end',
-                marginBottom: '-1.95%',
                 width: '100%',
                 bottom: 0,
                 alignItems: 'center',
-                height: 60,
               }}>
                 <Button
-                  size={'medium'}
+                  classes={{root: classes.buttonSave}}
                   type={'button'}
                   onClick={this.onSubmit}
                   variant="contained"
-                  color="secondary"
-                  style={{color: 'white', maxHeight: 40, marginRight: 40}}>
+                  color="primary"
+                  >
                   Enregistrer
                 </Button>
-              </div>
+              </Grid>
             </Grid>
-            <Grid item xs={4}/>
-          </Grid>
-        </Layout>
-      </React.Fragment>
+          <Grid/>
+        </Grid>
+      </LayoutAccount>
+    </React.Fragment>
     );
   };
 }

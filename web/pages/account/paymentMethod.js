@@ -22,6 +22,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import styles from './paymentMethod/paymentMethodStyle';
 import cookie from 'react-cookies';
+import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 
 
 moment.locale('fr');
@@ -45,6 +46,11 @@ class paymentMethod extends React.Component {
       Idtempo: '',
     };
     this.callDrawer = this.callDrawer.bind(this);
+  }
+
+  static getInitialProps({query: {indexAccount}}) {
+    return {index: indexAccount};
+
   }
 
   componentDidMount() {
@@ -173,36 +179,20 @@ class paymentMethod extends React.Component {
   }
 
   render() {
-    const {classes} = this.props;
+    const {classes, index} = this.props;
     const {cards, deletedial} = this.state;
 
     return (
-      <Fragment>
+      <React.Fragment>
         <Helmet>
           <title>compte - Mode de paiement - My Alfred </title>
           <meta property="description"
                 content="Accédez à votre compte My Alfred, première application d'offres de services entre particuliers. La création de votre compte est gratuite et sécurisée. Créez votre compte sur My Alfred en quelques clics pour trouvez ou offrir vos services !"/>
         </Helmet>
-        <Layout>
-          <Grid container className={classes.bigContainer}>
-            <Grid style={{zIndex: 0}}>
-              <ResponsiveDrawer ref={this.child} isActiveIndex={1} itemsDrawers={'account'}/>
-            </Grid>
+        <LayoutAccount index={index}>
+          <Grid>
             <Grid>
               <Grid>
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  edge="start"
-                  onClick={this.callDrawer}
-                  className={classes.menuButton}
-                >
-                  <MenuIcon/>
-                </IconButton>
-              </Grid>
-            </Grid>
-            <Grid item xs={9} className={classes.containerLeft}>
-              <Grid container>
                 <h1 style={{color: 'dimgray', fontWeight: '100'}}>Mode de paiement</h1>
               </Grid>
               <Grid container>
@@ -232,7 +222,7 @@ class paymentMethod extends React.Component {
                   <p>Aucun mode de paiement enregistré</p>
                 }
               </Grid>
-              <Grid container style={{
+              <Grid style={{
                 position: 'relative',
                 margin: '70px 0px',
                 maxWidth: '100%',
@@ -240,7 +230,7 @@ class paymentMethod extends React.Component {
                 boxShadow: '0px 0px 6px lightgray',
                 borderRadius: '10px',
               }}>
-                <Grid item style={{margin: 'auto', marginTop: '-25px'}}>
+                <Grid style={{margin: 'auto', marginTop: '-25px'}}>
                   <div style={{margin: 'auto'}} id="PaymentForm">
                     <Cards
                       style={{}}
@@ -254,20 +244,20 @@ class paymentMethod extends React.Component {
                     />
                   </div>
                 </Grid>
-                <Grid item xs={12} style={{margin: '15px'}}>
+                <Grid style={{margin: '15px'}}>
                   <NumberFormat onClick={this.handleBadSide} customInput={TextField} variant={'outlined'}
                                 label="Numéro de carte" name={'card_number'} onChange={this.onChange}
                                 value={this.state.card_number} style={{margin: 'auto', width: '94%'}}
                                 format="#### #### #### ####" placeholder="Votre carte de crédit"/>
                 </Grid>
                 <Grid container>
-                  <Grid item xs={7} style={{margin: '15px'}}>
+                  <Grid style={{margin: '15px'}}>
                     <NumberFormat onClick={this.handleBadSide} customInput={TextField} variant={'outlined'}
                                   label="Date d'expiration" name={'expiration_date'} onChange={this.onChange}
                                   value={this.state.expiration_date} style={{margin: 'auto', width: '90%'}}
                                   format="##/##" placeholder="MM/YY"/>
                   </Grid>
-                  <Grid item xs={3} style={{margin: '15px'}}>
+                  <Grid style={{margin: '15px'}}>
                     <TextField
                       label="CVV"
                       style={{width: '85%'}}
@@ -281,7 +271,7 @@ class paymentMethod extends React.Component {
                     />
                   </Grid>
                 </Grid>
-                <Grid item xs={12} style={{textAlign: 'center', margin: '15px'}}>
+                <Grid style={{textAlign: 'center', margin: '15px'}}>
                   <Button onClick={(e) => {
                     this.addCard(e);
                     this.refreshCards(e);
@@ -323,9 +313,8 @@ class paymentMethod extends React.Component {
               </DialogActions>
             </Dialog>
             : null}
-        </Layout>
-        {/* <Footer/>*/}
-      </Fragment>
+        </LayoutAccount>
+      </React.Fragment>
     );
   };
 }

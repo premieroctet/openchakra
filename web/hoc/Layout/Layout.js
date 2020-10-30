@@ -38,7 +38,7 @@ class Layout extends React.Component {
     const {logged, categories} = this.state;
 
     return (
-      <Fragment>
+      <React.Fragment style={{position: 'relative'}}>
         <InfoBar style={classes} />
         <NavBar style={classes} user={user} selectedAddress={selectedAddress} logged={logged} />
         <Grid className={classes.searchMenuScrollMenuContainer}>
@@ -47,20 +47,18 @@ class Layout extends React.Component {
           </Grid>
         </Grid>
         {children}
-        <Grid style={{marginTop: '5%'}}>
-          <Divider style={{height: 2, width: '100%'}}/>
-        </Grid>
-        <Grid style={{width: '100%', display: 'flex', justifyContent: 'center', marginTop: '1%'}}>
+        <Grid className={classes.mainContainerStyleFooter}>
+          <Divider style={{height: 2, width: '100%', marginBottom: '3vh'}}/>
           <Grid style={{width: '90%'}}>
             <TrustAndSecurity/>
           </Grid>
-        </Grid>
-        <Grid className={classes.mainContainerStyleFooter}>
-          <Grid className={classes.generalWidthFooter}>
-            <Footer style={classes}/>
+          <Grid className={classes.generalWidthFooter} >
+            <Grid style={{width: '85%'}}>
+              <Footer style={classes}/>
+            </Grid>
           </Grid>
         </Grid>
-      </Fragment>
+      </React.Fragment>
     );
   }
 }

@@ -21,10 +21,10 @@ class ProfileLayout extends React.Component {
         this.setState( { user: res.data})
       })
       .catch (err => console.error(err))
-  }
+  };
 
   render() {
-    const {user}=this.state
+    const {user}=this.state;
 
     return (
       <Layout user={user}>
