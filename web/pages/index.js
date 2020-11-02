@@ -30,7 +30,6 @@ class Home extends React.Component {
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     const token = cookie.load('token');
-    axios.get('/myAlfred/api/touch/');
     if (token) {
       this.setState({logged: true})
     }
