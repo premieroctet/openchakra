@@ -1,4 +1,4 @@
-const {is_production, is_validation, is_development, displayConfig}=require('../config/config')
+const {is_production, is_validation, is_development, is_development_nossl, displayConfig}=require('../config/config')
 
 const express = require('express');
 const next = require('next');
@@ -122,13 +122,16 @@ nextApp.prepare().then(() => {
     }
   });
   app.use(express.static('static'));
-  app.use(function (req, res, next) {
-    if (!req.secure) {
-      console.log('Redirecting to' + JSON.stringify(req.originalUrl));
-      res.redirect(301, 'https://' + req.hostname + req.originalUrl);
-    }
-    next();
-  });
+
+  if (!is_development_nossl()) {
+    app.use(function (req, res, next) {
+      if (!req.secure) {
+        console.log('Redirecting to' + JSON.stringify(req.originalUrl));
+        res.redirect(302, 'https://' + req.hostname + req.originalUrl);
+      }
+      next();
+    });
+  }
   app.get('*', routerHandler);
 
   if (SERVER_PROD) {
