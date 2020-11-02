@@ -18,7 +18,11 @@ const is_validation = () => {
 }
 
 const is_development = () => {
-  return get_mode()==MODES.DEVELOPMENT
+  return get_mode()==MODES.DEVELOPMENT || get_mode()==MODES.DEVELOPMENT_NOSSL
+}
+
+const is_development_nossl = () => {
+  return get_mode()==MODES.DEVELOPMENT_NOSSL
 }
 
 const appName = 'myalfred';
@@ -126,7 +130,7 @@ module.exports = {
   SIRET,
   ENABLE_GF_LOGIN,
   GOOGLE_PROVIDER, FACEBOOK_PROVIDER, PROVIDERS,
-  is_production, is_validation, is_development, SERVER_PROD,
+  is_production, is_validation, is_development, is_development_nossl, SERVER_PROD,
   get_host_url, MANGOPAY_CONFIG, displayConfig,
   ENABLE_MAILING,
 };

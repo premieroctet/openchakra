@@ -5,6 +5,7 @@ const MODES={
   PRODUCTION:'production',
   VALIDATION:'validation',
   DEVELOPMENT:'development',
+  DEVELOPMENT_NOSSL:'development_nossl',
 }
 
 const ALF_CONDS = { // my alfred condiitons
