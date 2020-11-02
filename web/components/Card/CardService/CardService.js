@@ -102,7 +102,7 @@ class CardService extends React.Component{
     }
 
     return(
-      <Grid>
+      <Grid style={{ width: '100%'}}>
         <Paper elevation={1} className={classes.cardServicePaper} onClick={() => window.open(resa_link, '_blank')}>
           <Grid className={classes.cardServiceMainStyle}>
             { profileMode ? null :
