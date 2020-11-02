@@ -365,13 +365,21 @@ class paymentMethod extends React.Component {
                 <h2>Mode de paiement</h2>
               </Grid>
               <Grid>
-                <Typography>N'hésitez pas à enregistrer un mode de paiement pour aller plus vite lors de vos réservations.</Typography>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>N'hésitez pas à enregistrer un mode de paiement pour aller plus vite lors de vos réservations.</Typography>
               </Grid>
             </Grid>
             <Grid>
               <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
             </Grid>
             <Grid>
+              <Grid>
+                <h3>Cartes enregistrées</h3>
+              </Grid>
+              <Grid>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Payez encore plus rapidement sans communiquer vos informations financières.</Typography>
+              </Grid>
+            </Grid>
+            <Grid style={{marginTop: '5vh'}}>
               <PaymentCard cards={cards} userName={userName} editable={true} deleteCard={this.callDialogDeletedCard}/>
             </Grid>
             <Grid>

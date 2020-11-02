@@ -56,7 +56,7 @@ class PaymentCard extends React.Component{
                 }
               </Grid>
             )}) :
-          <p>Aucun mode de paiement enregistré</p>
+          <Typography>Aucun mode de paiement enregistré</Typography>
         }
       </Grid>
     );
