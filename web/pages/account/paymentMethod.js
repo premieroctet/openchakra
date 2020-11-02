@@ -9,7 +9,6 @@ import {withStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import NumberFormat from 'react-number-format';
 import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -20,12 +19,34 @@ import {Helmet} from 'react-helmet';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import styles from './paymentMethod/paymentMethodStyle';
+import styles from '../../static/css/pages/paymentMethod/paymentMethod';
 import cookie from 'react-cookies';
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
-
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Radio from "@material-ui/core/Radio";
+import PaymentCard from "../../components/Payement/PaymentCard/PaymentCard";
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import CloseIcon from '@material-ui/icons/Close';
+import SecurityIcon from '@material-ui/icons/Security';
 
 moment.locale('fr');
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography {...other} className={classes.root}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
 
 
 class paymentMethod extends React.Component {
@@ -44,6 +65,7 @@ class paymentMethod extends React.Component {
       goodside: false,
       deletedial: false,
       Idtempo: '',
+      addCreditCard: false
     };
     this.callDrawer = this.callDrawer.bind(this);
   }
@@ -140,7 +162,6 @@ class paymentMethod extends React.Component {
   };
 
   addCard = () => {
-    console.log('bonjour')
     const card_number = this.state.card_number.replace(/\s/g, '');
     const expiration_date = this.state.expiration_date.split('/');
     const finaldate = expiration_date[0] + expiration_date[1];
@@ -162,7 +183,7 @@ class paymentMethod extends React.Component {
       }).catch(err => console.error(err));
   };
 
-  deleteCard(id) {
+  deleteCard = (id) => {
     const obj = {id_card: id};
     axios.put('/myAlfred/api/payment/cards', obj)
       .then(() => {
@@ -172,15 +193,163 @@ class paymentMethod extends React.Component {
             this.setState({cards: cards});
           });
       });
-  }
+  };
+
+  handleCloseCreditCard = () =>{
+    this.setState({addCreditCard: false});
+  };
+
+  callAddCreditCard = () =>{
+    this.setState({addCreditCard: true});
+
+  };
 
   callDrawer() {
     this.child.current.handleDrawerToggle();
   }
 
+  callDialogDeletedCard = (e) =>{
+    this.setState({deletedial: true, Idtempo: e})
+  };
+
+  modalAddCreditCard = (classes) =>{
+    return(
+      <Dialog
+        open={this.state.addCreditCard}
+        onClose={() => this.handleCloseCreditCard()}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="customized-dialog-title" onClose={this.handleCloseCreditCard}>
+          <Grid style={{display: 'flex', flexDirection: 'column', alignItems : 'center'}}>
+            <Grid>
+              <h4>Enregistrer une carte</h4>
+            </Grid>
+            <Grid>
+              <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ajouter une carte en toute sécurité</Typography>
+            </Grid>
+          </Grid>
+        </DialogTitle>
+        <DialogContent>
+          <Grid id="PaymentForm" style={{marginTop : '5vh', marginBottom: '5vh'}}>
+            <Cards
+              cvc={this.state.csv}
+              expiry={this.state.expiration_date}
+              focused={this.state.focus}
+              name={this.state.name}
+              number={this.state.card_number}
+              callback={this.handleCallback}
+            />
+          </Grid>
+          <Grid style={{display: 'flex', flexDirection: 'column'}}>
+            <Grid style={{margin: '15px'}}>
+              <NumberFormat
+                onClick={this.handleBadSide}
+                customInput={TextField}
+                variant={'outlined'}
+                label="Numéro de carte"
+                name={'card_number'}
+                onChange={this.onChange}
+                value={this.state.card_number}
+                format="#### #### #### ####"
+                placeholder="Votre carte de crédit"
+                style={{width:'100%'}}
+              />
+            </Grid>
+            <Grid style={{margin: '15px'}}>
+              <NumberFormat
+                onClick={this.handleBadSide}
+                customInput={TextField}
+                variant={'outlined'}
+                label="Date d'expiration"
+                name={'expiration_date'}
+                onChange={this.onChange}
+                value={this.state.expiration_date}
+                format="##/##"
+                placeholder="MM/YY"
+                style={{width:'100%'}}
+              />
+            </Grid>
+            <Grid style={{margin: '15px'}}>
+              <TextField
+                label="CVV"
+                variant="outlined"
+                value={this.state.csv}
+                onChange={this.onChange}
+                name={'csv'}
+                onClick={this.handleInputFocus}
+                type="number"
+                pattern="\d{3,4}"
+                style={{width:'100%'}}
+              />
+            </Grid>
+          </Grid>
+          <Grid style={{textAlign: 'center', marginLeft: 15, marginRight: 15, marginTop: '3vh', marginBottom: '3vh'}}>
+            <Button
+              onClick={(e) => {
+                this.addCard(e);
+                this.refreshCards(e);
+                }}
+              variant="contained"
+              classes={{root: classes.buttonSave}}
+            >
+              Enregistrer la carte
+            </Button>
+          </Grid>
+          <Grid style={{display: 'flex', alignItems: 'center'}}>
+            <Grid>
+              <Grid>
+                <SecurityIcon style={{color: 'rgba(39,37,37,35%)'}}/>
+              </Grid>
+            </Grid>
+            <Grid>
+              <Grid>
+                <Typography style={{color:'rgba(39,37,37,35%)'}}>Toutes les données de paeiment sur My Alfred sont cryptées.</Typography>
+              </Grid>
+              <Grid>
+                <Typography style={{color:'rgba(39,37,37,35%)'}}>Elles sont gérées par mangopay notre partenaire de confiance.</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </DialogContent>
+      </Dialog>
+    )
+  };
+
+  modalDeleteCreditCard = () => {
+    return(
+      <Dialog
+        open={this.state.deletedial}
+        onClose={() => this.handleCloseDial()}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle
+          id="alert-dialog-title">{'Voulez-vous vraiment supprimer votre carte bancaire ?'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Si vous supprimez votre carte bancaire vous ne pourrez plus l'utiliser par la suite avec ce compte.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.handleCloseDial()} color="primary">
+            Annuler
+          </Button>
+          <Button onClick={(e) => {
+            this.deleteCard(this.state.Idtempo);
+            this.refreshCards(e);
+            this.handleCloseDial(e);
+          }} color="secondary" autoFocus>
+            Supprimer
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  };
+
   render() {
     const {classes, index} = this.props;
-    const {cards, deletedial} = this.state;
+    const {cards, deletedial, userName, addCreditCard} = this.state;
 
     return (
       <React.Fragment>
@@ -190,129 +359,54 @@ class paymentMethod extends React.Component {
                 content="Accédez à votre compte My Alfred, première application d'offres de services entre particuliers. La création de votre compte est gratuite et sécurisée. Créez votre compte sur My Alfred en quelques clics pour trouvez ou offrir vos services !"/>
         </Helmet>
         <LayoutAccount index={index}>
-          <Grid>
-            <Grid>
+          <Grid style={{display: 'flex', flexDirection: 'column'}}>
+            <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
               <Grid>
-                <h1 style={{color: 'dimgray', fontWeight: '100'}}>Mode de paiement</h1>
+                <h2>Mode de paiement</h2>
               </Grid>
-              <Grid container>
-                {cards.length ?
-                  cards.map((e, index) => (
-                    <React.Fragment key={index}>
-                      {e.Active.toString() === 'true' ?
-                        <Grid item style={{position: 'relative', margin: '20px'}}>
-                          <Cards
-                            expiry={e.ExpirationDate}
-                            focused={this.state.focus}
-                            name={this.state.name}
-                            number={e.Alias.replace(/X/g, '*')}
-                            callback={this.handleCallback}
-                            preview
-                            cvc={'XXX'}
-                          />
-                          <button className={classes.buttondelt}
-                                  onClick={() => this.setState({deletedial: true, Idtempo: e.Id})}
-                                  variant="contained" style={{lineHeight: 1}} color="secondary">
-                            x
-                          </button>
-                        </Grid>
-                        : null}
-                    </React.Fragment>
-                  )) :
-                  <p>Aucun mode de paiement enregistré</p>
-                }
+              <Grid>
+                <Typography>N'hésitez pas à enregistrer un mode de paiement pour aller plus vite lors de vos réservations.</Typography>
               </Grid>
-              <Grid style={{
-                position: 'relative',
-                margin: '70px 0px',
-                maxWidth: '100%',
-                width: '400px',
-                boxShadow: '0px 0px 6px lightgray',
-                borderRadius: '10px',
-              }}>
-                <Grid style={{margin: 'auto', marginTop: '-25px'}}>
-                  <div style={{margin: 'auto'}} id="PaymentForm">
-                    <Cards
-                      style={{}}
-                      cvc={this.state.csv}
-                      expiry={this.state.expiration_date}
-                      focused={this.state.focus}
-                      name={this.state.name}
-                      number={this.state.card_number}
-                      callback={this.handleCallback}
-
-                    />
-                  </div>
+            </Grid>
+            <Grid>
+              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+            </Grid>
+            <Grid>
+              <PaymentCard cards={cards} userName={userName} editable={true} deleteCard={this.callDialogDeletedCard}/>
+            </Grid>
+            <Grid>
+              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+            </Grid>
+            <Grid>
+              <Grid style={{display :'flex', alignItems: 'center'}}>
+                <Grid>
+                  <IconButton aria-label="add" onClick={this.callAddCreditCard}>
+                    <AddCircleIcon />
+                  </IconButton>
                 </Grid>
-                <Grid style={{margin: '15px'}}>
-                  <NumberFormat onClick={this.handleBadSide} customInput={TextField} variant={'outlined'}
-                                label="Numéro de carte" name={'card_number'} onChange={this.onChange}
-                                value={this.state.card_number} style={{margin: 'auto', width: '94%'}}
-                                format="#### #### #### ####" placeholder="Votre carte de crédit"/>
+                <Grid>
+                  <Typography>Enregistrer une carte bancaire</Typography>
                 </Grid>
-                <Grid container>
-                  <Grid style={{margin: '15px'}}>
-                    <NumberFormat onClick={this.handleBadSide} customInput={TextField} variant={'outlined'}
-                                  label="Date d'expiration" name={'expiration_date'} onChange={this.onChange}
-                                  value={this.state.expiration_date} style={{margin: 'auto', width: '90%'}}
-                                  format="##/##" placeholder="MM/YY"/>
-                  </Grid>
-                  <Grid style={{margin: '15px'}}>
-                    <TextField
-                      label="CVV"
-                      style={{width: '85%'}}
-                      variant="outlined"
-                      value={this.state.csv}
-                      onChange={this.onChange}
-                      name={'csv'}
-                      onClick={this.handleInputFocus}
-                      type="number"
-                      pattern="\d{3,4}"
-                    />
-                  </Grid>
+              </Grid>
+            </Grid>
+            <Grid style={{marginTop: '10vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+              <Grid style={{marginRight: '2vh'}}>
+                <Grid>
+                  <SecurityIcon style={{color: 'rgba(39,37,37,35%)'}}/>
                 </Grid>
-                <Grid style={{textAlign: 'center', margin: '15px'}}>
-                  <Button onClick={(e) => {
-                    this.addCard(e);
-                    this.refreshCards(e);
-                  }} type="submit" variant="contained" style={{color: 'white', margin: 'auto', width: '40%'}}
-                          color="primary">
-                    Ajouter
-                  </Button>
+              </Grid>
+              <Grid>
+                <Grid>
+                  <Typography style={{color:'rgba(39,37,37,35%)'}}>Toutes les données de paeiment sur My Alfred sont cryptées.</Typography>
                 </Grid>
-
-
+                <Grid>
+                  <Typography style={{color:'rgba(39,37,37,35%)'}}>Elles sont gérées par mangopay notre partenaire de confiance.</Typography>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-          {deletedial ?
-            <Dialog
-              open={this.state.deletedial}
-              onClose={() => this.handleCloseDial()}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle
-                id="alert-dialog-title">{'Voulez-vous vraiment supprimer votre carte bancaire ?'}</DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  Si vous supprimez votre carte bancaire vous ne pourrez plus l'utiliser par la suite avec ce compte.
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={() => this.handleCloseDial()} color="primary">
-                  Annuler
-                </Button>
-                <Button onClick={(e) => {
-                  this.deleteCard(this.state.Idtempo);
-                  this.refreshCards(e);
-                  this.handleCloseDial(e);
-                }} color="secondary" autoFocus>
-                  Supprimer
-                </Button>
-              </DialogActions>
-            </Dialog>
-            : null}
+          {addCreditCard ? this.modalAddCreditCard(classes) : null}
+          {deletedial ? this.modalDeleteCreditCard(classes) : null}
         </LayoutAccount>
       </React.Fragment>
     );
