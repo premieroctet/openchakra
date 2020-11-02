@@ -16,6 +16,9 @@ import {
   FormLabel,
   Input,
   useToast,
+  Alert,
+  AlertIcon,
+  Link,
 } from '@chakra-ui/core'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
@@ -35,11 +38,6 @@ import { signIn, useSession } from 'next-auth/client'
 import { getComponents } from '~core/selectors/components'
 import { useRouter } from 'next/router'
 
-interface Props {
-  id: number
-  loading: boolean
-}
-
 interface Project {
   createdAt: string
   updatedAt: string
@@ -47,6 +45,12 @@ interface Project {
   id: number
   markup: string
   projectName: string
+}
+
+interface Props {
+  id: number
+  projectExist: boolean
+  loading: boolean
 }
 
 const App = (props: Props) => {
@@ -114,14 +118,10 @@ const App = (props: Props) => {
   const saveProject = async () => {
     if (session) {
       if (props.id) {
-        let userCanEdit = false
         const userProject = await checkUser(session.user.name)
-        userProject.project.map((e: Project) => {
-          if (e.id === props.id) {
-            userCanEdit = true
-          }
-          return
-        })
+        const userCanEdit = userProject.project.some(
+          (e: Project) => e.id === props.id,
+        )
         if (userCanEdit === false) {
           onOpen()
         }
@@ -149,7 +149,7 @@ const App = (props: Props) => {
         onOpen()
       }
     } else {
-      signIn()
+      signIn('github')
     }
   }
 
@@ -167,12 +167,86 @@ const App = (props: Props) => {
 
       <Metadata />
 
-      <Header saveProject={saveProject} />
+      <Header saveProject={saveProject} session={session} />
 
       <DndProvider backend={Backend}>
         <Flex h="calc(100vh - 3rem)">
-          {props?.loading ? (
-            <Spinner m="0 auto" color="white" size="xl" mt="3rem" />
+          {props?.id ? (
+            props?.projectExist ? (
+              props?.loading ? (
+                <Spinner m="0 auto" color="white" size="xl" mt="3rem" />
+              ) : (
+                <>
+                  <Sidebar />
+                  <EditorErrorBoundary>
+                    <Box bg="white" flex={1} zIndex={10} position="relative">
+                      <Editor />
+                    </Box>
+                  </EditorErrorBoundary>
+
+                  <Modal isOpen={isOpen} onClose={onClose}>
+                    <ModalOverlay />
+                    <ModalContent borderRadius="md">
+                      <ModalHeader>Create new project</ModalHeader>
+                      <ModalCloseButton />
+                      <ModalBody>
+                        <FormControl isRequired>
+                          <FormLabel htmlFor="fname">Project name</FormLabel>
+                          <Input
+                            id="fname"
+                            placeholder="Project name"
+                            mt="0.5rem"
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>,
+                            ) => handleChange(e)}
+                          />
+                        </FormControl>
+                      </ModalBody>
+
+                      <ModalFooter>
+                        <Button
+                          variantColor="ghost"
+                          color="grey"
+                          mr={3}
+                          onClick={onClose}
+                        >
+                          Close
+                        </Button>
+                        <Button
+                          variantColor="blue"
+                          onClick={() => initProject()}
+                        >
+                          Create
+                        </Button>
+                      </ModalFooter>
+                    </ModalContent>
+                  </Modal>
+
+                  <Box
+                    maxH="calc(100vh - 3rem)"
+                    flex="0 0 15rem"
+                    bg="#f7fafc"
+                    overflowY="auto"
+                    overflowX="visible"
+                    borderLeft="1px solid #cad5de"
+                  >
+                    <InspectorProvider>
+                      <Inspector />
+                    </InspectorProvider>
+                  </Box>
+                </>
+              )
+            ) : (
+              <Box m="0 auto" textAlign="center" pt={20}>
+                <Alert status="error" mb={20}>
+                  <AlertIcon />
+                  The project does not exist
+                </Alert>
+                <Link href="/" color="white">
+                  Return to home
+                </Link>
+              </Box>
+            )
           ) : (
             <>
               <Sidebar />

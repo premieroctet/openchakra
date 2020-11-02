@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { PrismaClient } from '@prisma/client'
-import { GetStaticProps, GetStaticPaths } from 'next'
+import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next'
 import { getSession, signIn } from 'next-auth/client'
 import useDispatch from '~hooks/useDispatch'
 import App from '~pages'
@@ -52,16 +52,26 @@ interface Props {
   id: number
 }
 
-export default ({ projects, id }: Props) => {
+const ProjectSlug = ({
+  projects,
+  id,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [loading, setLoading] = useState(true)
+  const [projectExist, setProjectExist] = useState(true)
+
   const dispatch = useDispatch()
 
   const checkSession = async () => {
     const session = await getSession()
     if (session) {
-      if (projects.markup) {
-        dispatch.components.reset(JSON.parse(projects.markup))
-        setLoading(false)
+      if (projects) {
+        setProjectExist(true)
+        if (projects.markup) {
+          dispatch.components.reset(JSON.parse(projects.markup))
+          setLoading(false)
+        }
+      } else {
+        setProjectExist(false)
       }
     } else {
       signIn()
@@ -73,5 +83,7 @@ export default ({ projects, id }: Props) => {
     // eslint-disable-next-line
   }, [])
 
-  return projects.markup ? <App id={id} loading={loading} /> : <></>
+  return <App id={id} loading={loading} projectExist={projectExist} />
 }
+
+export default ProjectSlug
