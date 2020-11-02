@@ -127,7 +127,7 @@ nextApp.prepare().then(() => {
     app.use(function (req, res, next) {
       if (!req.secure) {
         console.log('Redirecting to' + JSON.stringify(req.originalUrl));
-        res.redirect(301, 'https://' + req.hostname + req.originalUrl);
+        res.redirect(302, 'https://' + req.hostname + req.originalUrl);
       }
       next();
     });
