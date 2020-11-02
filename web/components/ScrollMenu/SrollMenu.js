@@ -26,7 +26,7 @@ class SrollMenu extends React.Component{
   };
 
   render() {
-    const{classes, categories, gps, account} = this.props;
+    const{classes, categories, gps, mode} = this.props;
     const{value} = this.state;
 
   return(
@@ -45,7 +45,7 @@ class SrollMenu extends React.Component{
               categories ?
                 categories.map((res, index) =>
                 {
-                  let url = account === 'account' ? '/search?search=1&category=' + res._id + (gps ? '&gps=' + JSON.stringify(gps) : '') + '&indexCat=' + index : '/account' + res.url  + '?indexAccount=' + index;
+                  let url = mode === 'account' ? '/account' + res.url  + '?indexAccount=' + index  : '/search?search=1&category=' + res._id + (gps ? '&gps=' + JSON.stringify(gps) : '') + '&indexCat=' + index;
                   return(
                     <Link href={url} key={index}>
                       <Tab label={res.label} className={classes.scrollMenuTab} {...a11yProps(index)}/>

@@ -43,7 +43,7 @@ class Layout extends React.Component {
         <NavBar style={classes} user={user} selectedAddress={selectedAddress} logged={logged} />
         <Grid className={classes.searchMenuScrollMenuContainer}>
           <Grid className={classes.searchScrollmenuContainer}>
-            <ScrollMenu style={classes} categories={categories} gps={gps} indexCat={indexCat}/>
+            <ScrollMenu style={classes} categories={categories} gps={gps} indexCat={indexCat} mode={false}/>
           </Grid>
         </Grid>
         {children}

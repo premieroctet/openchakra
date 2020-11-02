@@ -22,12 +22,14 @@ class PaymentCard extends React.Component{
             return(
               <Grid container key={index} style={{display: 'flex', alignItems: 'center', margin:20}}>
                 {!editable ?
-                  <Grid item xl={4}>
-                    <FormControlLabel value={e.Id} control={<Radio/>} label={e.Alias.replace(/X/g, '*')} style={{margin: 0}}/>
+                  <Grid item xl={1}>
+                    <Radio value={e.Id}>
+                      <img src={`../../static/assets/icon/payementIcones/${cb}.png`} height={20} alt={e.CardProvider} title={e.CardProvider}/>
+                    </Radio>
                   </Grid> : null
                 }
-                <Grid item xl={4} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                  <Grid item xl={6} style={{display: 'flex', justifyContent: 'center'}}>
+                <Grid item xl={7} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                  <Grid item xl={6} style={{display: 'flex'}}>
                     <img src={`../../static/assets/icon/payementIcones/${cb}.png`} height={20} alt={e.CardProvider} title={e.CardProvider}/>
                   </Grid>
                   <Grid item xl={6} style={{display: 'flex', flexDirection:'column'}}>
@@ -46,7 +48,7 @@ class PaymentCard extends React.Component{
                 </Grid>
                 {
                   editable ?
-                    <Grid item xl={4} style={{display: 'flex', justifyContent: 'center'}}>
+                    <Grid item xl={1} style={{display: 'flex', justifyContent: 'center'}}>
                       <IconButton aria-label="delete" onClick={()=>this.props.deleteCard(e.Id)}>
                         <DeleteForeverIcon/>
                       </IconButton>
