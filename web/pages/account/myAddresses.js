@@ -15,12 +15,16 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {Helmet} from 'react-helmet';
-import styles from './myAddresses/myAddressesStyle';
+import styles from '../../static/css/pages/myAddresses/myAddresses';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import cookie from 'react-cookies';
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import EditIcon from '@material-ui/icons/Edit';
 
 moment.locale('fr');
 
@@ -105,11 +109,11 @@ class myAddresses extends React.Component {
       );
   }
 
-  handleClickOpen(id) {
+  handleClickOpen = (id) => {
     this.setState({id_address: id, open: true});
   }
 
-  handleClose() {
+  handleClose = () => {
     this.setState({id_address: '', open: false});
   }
 
@@ -149,8 +153,6 @@ class myAddresses extends React.Component {
           edit_address: result.address,
           edit_zip_code: result.zip_code,
           edit_city: result.city,
-          edit_note: result.note,
-          edit_phone: result.phone_address,
           edit_lat: result.lat,
           edit_lng: result.lng,
         });
@@ -172,7 +174,7 @@ class myAddresses extends React.Component {
       .put('/myAlfred/api/users/profile/billingAddress', address)
       .then(res => {
         toast.info('Adresse principale modifiée');
-        Router.push({pathname: '/profile/myAddresses'});
+        Router.push({pathname: '/account/myAddresses'});
       })
       .catch();
   };
@@ -186,8 +188,6 @@ class myAddresses extends React.Component {
       lat: this.state.lat,
       lng: this.state.lng,
       label: this.state.label_address,
-      note: this.state.note,
-      phone: this.state.phone,
     };
     axios.put('/myAlfred/api/users/profile/serviceAddress', newAddress)
       .then(() => {
@@ -208,8 +208,6 @@ class myAddresses extends React.Component {
       lat: this.state.edit_lat,
       lng: this.state.edit_lng,
       label: this.state.edit_label,
-      note: this.state.edit_note,
-      phone: this.state.edit_phone,
     };
 
     axios.put('/myAlfred/api/users/profile/address/' + id, editAddress)
@@ -232,6 +230,32 @@ class myAddresses extends React.Component {
       .catch();
   };
 
+  modalDeleteAddress = () =>{
+    return(
+      <Dialog
+        open={this.state.open}
+        onClose={this.handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{'Supprimer cette adresse ?'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Voulez-vous vraiment supprimer cette adresse ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.handleClose()} color="primary">
+            Annuler
+          </Button>
+          <Button onClick={() => this.deleteAddress(this.state.id_address)} color="secondary" autoFocus>
+            Supprimer
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  };
+
   render() {
     const {classes, index} = this.props;
     const {clickAdd, clickEdit, service_address, address_selected} = this.state;
@@ -244,31 +268,43 @@ class myAddresses extends React.Component {
                 content="Renseignez vos adresses de prestation et recherchez des Alfred là où vous le souhaitez ! Des services entre particuliers dans toute la France. Réservez dès maintenant votre Alfred mécanicien, plombier, électricien, coiffeur, coach sportif…"/>
         </Helmet>
         <LayoutAccount index={index}>
-          <Grid container className={classes.bigContainer}>
-            <Grid item xs={9} className={classes.containerLeft}>
-              <Grid container style={{marginBottom: 20}}>
-                <h1 style={{color: 'dimgray', fontWeight: '100'}}>Mes adresses de prestations</h1>
-                <Grid container>
-                  <Grid item>
-                    <h2 style={{fontWeight: '100'}}>Mon adresse principale</h2>
-                    <Grid container>
-                      <Grid item xs={10}>
-                        <AlgoliaPlaces
-                          placeholder='Recherchez votre adresse'
-                          options={{
-                            appId: 'plKATRG826CP',
-                            apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                            language: 'fr',
-                            countries: ['fr'],
-                            type: 'address',
-                          }}
-                          onChange={(suggestion) => this.onChangeAlgolia3(suggestion)}
-                        />
-                      </Grid>
+          <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+            <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+              <Grid>
+                <h2>Mes adresses</h2>
+              </Grid>
+              <Grid>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ici, vous pouvez gérer vos adresses.</Typography>
+              </Grid>
+            </Grid>
+            <Grid>
+              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+            </Grid>
+            <Grid>
+              <Grid>
+                <h3>Mon adresse principale</h3>
+              </Grid>
+            </Grid>
+            <Grid style={{marginTop: '5vh'}}>
+              <Grid>
+                <Grid>
+                  <Grid>
+                    <Grid>
+                      <AlgoliaPlaces
+                        placeholder='Recherchez votre adresse'
+                        options={{
+                          appId: 'plKATRG826CP',
+                          apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                          language: 'fr',
+                          countries: ['fr'],
+                          type: 'address',
+                        }}
+                        onChange={(suggestion) => this.onChangeAlgolia3(suggestion)}
+                      />
                     </Grid>
                     <form onSubmit={this.onSubmit}>
-                      <Grid container className={classes.responsiveContainer}>
-                        <Grid item xs={7}>
+                      <Grid>
+                        <Grid>
                           <TextField
                             inputProps={{
                               readOnly: true,
@@ -284,8 +320,8 @@ class myAddresses extends React.Component {
                             label={'Rue'}
                           />
                         </Grid>
-                        <Grid container>
-                          <Grid item xs={7} lg={4}>
+                        <Grid container spacing={3}>
+                          <Grid item xl={6}>
                             <TextField
                               inputProps={{
                                 readOnly: true,
@@ -302,7 +338,7 @@ class myAddresses extends React.Component {
                               label={'Code postal'}
                             />
                           </Grid>
-                          <Grid item xs={7} lg={4} className={classes.containerRightOfCity}>
+                          <Grid item xl={6}>
                             <TextField
                               inputProps={{
                                 readOnly: true,
@@ -320,7 +356,7 @@ class myAddresses extends React.Component {
                             />
                           </Grid>
                         </Grid>
-                        <Grid item xs={7} md={7}>
+                        <Grid>
                           <TextField
                             inputProps={{
                               readOnly: true,
@@ -340,44 +376,73 @@ class myAddresses extends React.Component {
                             name={'currentCountry'}
                             label={'Pays'}
                           />
-
                         </Grid>
                       </Grid>
-                      <Button size={'large'} type={'submit'} variant="contained" color="secondary"
-                              style={{color: 'white', marginTop: 15}}>
-                        Enregistrer
-                      </Button>
+                      <Grid style={{marginTop: '5vh'}}>
+                        <Button size={'large'} type={'submit'} variant="contained" className={classes.buttonSave}>
+                          Valider
+                        </Button>
+                      </Grid>
                     </form>
                   </Grid>
                 </Grid>
-                <Grid container style={{marginTop: 20}}>
+                <Grid>
+                  <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+                </Grid>
+                <Grid>
+                  <Grid>
+                    <h3>Mon carnet d’adresse</h3>
+                  </Grid>
+                  <Grid>
+                    <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ajoutez plusieurs adresses et gagnez du temps.</Typography>
+                  </Grid>
+                </Grid>
+                <Grid container style={{marginTop: '5vh'}}>
                   {service_address.map((e, index) => (
-                    <React.Fragment key={index}> <Grid item xs={6} style={{marginLeft: -55}}>
-                      <hr style={{borderColor: '#fefefe', width: '125%'}}/>
-                      <h4 style={{paddingLeft: 40}}>{e.label}</h4>
-                      <p style={{paddingLeft: 40, marginBottom: 0}}>{e.address}</p>
-                      <p style={{paddingLeft: 40, marginTop: 0, marginBottom: 0}}>{e.zip_code} {e.city}</p>
-                      <p style={{paddingLeft: 40, marginTop: 0}}>France</p>
-                      <hr style={{borderColor: '#fefefe', width: '125%'}}/>
-                    </Grid>
-                      <Grid item xs={2}>
-                        <p style={{marginTop: 20, color: '#F8727F', cursor: 'pointer'}}
-                           onClick={() => this.handleClick(e._id)}>Modifier</p>
+                    <Grid key={index} style={{width: '100%'}}>
+                      <Grid>
+                        <Grid container style={{display: 'flex', alignItems: 'center' }}>
+                          <Grid item xl={3}>
+                            <h4>{e.label}</h4>
+                          </Grid>
+                          <Grid item xl={2} style={{display : 'flex'}}>
+                            <Grid>
+                              <IconButton aria-label="update" onClick={() => this.handleClick(e._id)}>
+                                <EditIcon/>
+                              </IconButton>
+                            </Grid>
+                            <Grid>
+                              <IconButton aria-label="delete" onClick={() => this.handleClickOpen(address_selected._id)}>
+                                <DeleteForeverIcon />
+                              </IconButton>
+                            </Grid>
+                          </Grid>
+                        </Grid>
                       </Grid>
-                    </React.Fragment>
+                      <Grid>
+
+                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>{e.address}</Typography>
+                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>{e.zip_code} {e.city}</Typography>
+                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>France</Typography>
+                      </Grid>
+                    </Grid>
                   ))}
                 </Grid>
                 <Grid container style={{marginTop: 20}}>
-                  <Button size={'large'} type={'submit'} variant="contained"
-                          className={classes.buttonAddaddress}
-                          onClick={() => this.setState({clickAdd: !clickAdd, clickEdit: false})}>
+                  <Button
+                    size={'large'}
+                    type={'submit'}
+                    variant="contained"
+                    className={classes.buttonSave}
+                    onClick={() => this.setState({clickAdd: !clickAdd, clickEdit: false})}
+                  >
                     Ajouter une adresse
                   </Button>
                 </Grid>
                 {clickAdd ?
                   <form onSubmit={this.onSubmit2}>
-                    <Grid container>
-                      <Grid item xs={10} lg={6} sm={12} md={6}>
+                    <Grid>
+                      <Grid>
                         <TextField
                           id="standard-name"
                           style={{marginTop: 30, width: '100%'}}
@@ -390,8 +455,8 @@ class myAddresses extends React.Component {
                           label={'Nom de l\'adresse'}
                         />
                       </Grid>
-                      <Grid container>
-                        <Grid item xs={10} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                      <Grid>
+                        <Grid style={{marginTop: 20}}>
                           <AlgoliaPlaces
                             placeholder='Recherchez votre adresse'
                             options={{
@@ -405,7 +470,7 @@ class myAddresses extends React.Component {
                           />
                         </Grid>
                       </Grid>
-                      <Grid item xs={10} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                      <Grid style={{marginTop: 20}}>
                         <TextField
                           style={{marginTop: 15, width: '100%'}}
                           value={this.state.new_address}
@@ -420,8 +485,8 @@ class myAddresses extends React.Component {
                           label={'Rue'}
                         />
                       </Grid>
-                      <Grid container>
-                        <Grid item xs={10} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                      <Grid>
+                        <Grid style={{marginTop: 20}}>
                           <TextField
                             style={{marginTop: 15, width: '100%'}}
                             value={this.state.new_zip_code}
@@ -437,7 +502,7 @@ class myAddresses extends React.Component {
                           />
                         </Grid>
                       </Grid>
-                      <Grid item xs={10} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                      <Grid style={{marginTop: 20}}>
                         <TextField
                           style={{marginTop: 15, width: '100%'}}
                           value={this.state.new_city}
@@ -452,53 +517,16 @@ class myAddresses extends React.Component {
                           label={'Ville'}
                         />
                       </Grid>
-                      <Grid container>
-                        <Grid item xs={10} lg={6} sm={12} md={6} style={{marginTop: 20}}>
-                          <TextField
-                            style={{marginTop: 15, width: '100%'}}
-                            value={this.state.note}
-                            multiline
-                            rows={3}
-                            onChange={this.onChange}
-                            margin="normal"
-                            name={'note'}
-                            placeholder={'Ecrire ici'}
-                            variant={'outlined'}
-                            label={'Note (Optionnel)'}
-                          />
-                        </Grid>
-                      </Grid>
-
                     </Grid>
-                    <p style={{color: '#F8727F', marginTop: 25}}>OPTION DE CONTACT</p>
-                    <Grid item xs={10} lg={6} sm={12} md={6}>
-                      <p style={{marginBottom: 0}}>Vous pouvez indiquer un numéro de téléphone de contact spécifique à
-                        cette adresse et permettre à votre Alfred de contacter cette personne de confiance si vous le
-                        souhaitez</p>
-                    </Grid>
-                    <Grid item xs={10} lg={6} sm={12} md={6} style={{marginTop: 20}}>
-                      <TextField
-                        style={{marginTop: 15, width: '100%'}}
-                        value={this.state.phone}
-                        onChange={this.onChange}
-                        margin="normal"
-                        name={'phone'}
-                        type={'number'}
-                        placeholder={'Ecrire ici'}
-                        variant={'outlined'}
-                        label={'Téléphone'}
-                      />
-                    </Grid>
-                    <Button size={'large'} type={'submit'} variant="contained" color="secondary"
-                            style={{color: 'white', marginTop: 15}}>
+                    <Button size={'large'} type={'submit'} variant="contained" className={classes.buttonSave}>
                       Enregistrer
                     </Button>
                   </form>
                   : null}
                 {clickEdit ?
                   <form onSubmit={(event) => this.onSubmit3(event, address_selected._id)}>
-                    <Grid container>
-                      <Grid item xs={8} lg={6} sm={12} md={6}>
+                    <Grid>
+                      <Grid>
                         <TextField
                           id="standard-name"
                           style={{marginTop: 30, width: '100%'}}
@@ -511,8 +539,8 @@ class myAddresses extends React.Component {
                           label={'Nom de l\'adresse'}
                         />
                       </Grid>
-                      <Grid container>
-                        <Grid item xs={8} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                      <Grid >
+                        <Grid style={{marginTop: 20}}>
                           <AlgoliaPlaces
                             placeholder='Recherchez votre adresse'
                             options={{
@@ -527,7 +555,7 @@ class myAddresses extends React.Component {
                           />
                         </Grid>
                       </Grid>
-                      <Grid item xs={8} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                      <Grid style={{marginTop: 20}}>
                         <TextField
                           style={{marginTop: 15, width: '100%'}}
                           value={this.state.edit_address}
@@ -539,8 +567,8 @@ class myAddresses extends React.Component {
                           label={'Rue'}
                         />
                       </Grid>
-                      <Grid container>
-                        <Grid item xs={8} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                      <Grid>
+                        <Grid style={{marginTop: 20}}>
                           <TextField
                             style={{marginTop: 15, width: '100%'}}
                             value={this.state.edit_zip_code}
@@ -553,7 +581,7 @@ class myAddresses extends React.Component {
                           />
                         </Grid>
                       </Grid>
-                      <Grid item xs={8} lg={6} sm={12} md={6} style={{marginTop: 20}}>
+                      <Grid style={{marginTop: 20}}>
                         <TextField
                           style={{marginTop: 15, width: '100%'}}
                           value={this.state.edit_city}
@@ -565,79 +593,17 @@ class myAddresses extends React.Component {
                           label={'Ville'}
                         />
                       </Grid>
-                      <Grid container>
-                        <Grid item xs={8} lg={6} sm={12} md={6} style={{marginTop: 20}}>
-                          <TextField
-                            style={{marginTop: 15, width: '100%'}}
-                            value={this.state.edit_note}
-                            multiline
-                            rows={3}
-                            onChange={this.onChange}
-                            margin="normal"
-                            name={'edit_note'}
-                            placeholder={'Ecrire ici'}
-                            variant={'outlined'}
-                            label={'Note (optionnel)'}
-                          />
-
-                        </Grid>
-                      </Grid>
                     </Grid>
-                    <p style={{color: '#F8727F', marginTop: 25}}>OPTION DE CONTACT</p>
-                    <Grid item xs={12} lg={6} sm={12} md={6}>
-                      <p style={{marginBottom: 0}}>Vous pouvez indiquer un numéro de téléphone de contact spécifique à
-                        cette adresse et permettre à votre Alfred de contacter cette personne de confiance si vous le
-                        souhaitez</p>
-                    </Grid>
-                    <Grid item xs={8} lg={6} sm={12} md={6} style={{marginTop: 20}}>
-                      <TextField
-                        style={{marginTop: 15, width: '100%'}}
-                        value={this.state.edit_phone}
-                        onChange={this.onChange}
-                        margin="normal"
-                        name={'edit_phone'}
-                        type={'number'}
-                        placeholder={'Ecrire ici'}
-                        variant={'outlined'}
-                        label={'Téléphone'}
-                      />
-                    </Grid>
-                    <Button size={'large'} type={'submit'} variant="contained" color="primary"
-                            style={{color: 'white', marginTop: 15}}>
+                    <Button size={'large'} type={'submit'} variant="contained" className={classes.buttonSave}>
                       Enregistrer
-                    </Button>
-                    <Button size={'large'} onClick={() => this.handleClickOpen(address_selected._id)} type={'button'}
-                            variant="contained" color="secondary"
-                            style={{color: 'white', marginTop: 15, marginLeft: 15}}>
-                      Supprimer
                     </Button>
                   </form>
                   : null}
               </Grid>
             </Grid>
           </Grid>
+          {this.state.open ? this.modalDeleteAddress() : null}
         </LayoutAccount>
-        <Dialog
-          open={this.state.open}
-          onClose={this.handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{'Supprimer cette adresse ?'}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Voulez-vous vraiment supprimer cette adresse ?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => this.handleClose()} color="primary">
-              Annuler
-            </Button>
-            <Button onClick={() => this.deleteAddress(this.state.id_address)} color="secondary" autoFocus>
-              Supprimer
-            </Button>
-          </DialogActions>
-        </Dialog>
       </Fragment>
     );
   };
