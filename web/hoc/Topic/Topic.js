@@ -20,7 +20,7 @@ class Topic extends React.Component {
       }
     }
 
-  render() {
+    render() {
       const{subTitleColor} = this.state;
       const{titleTopic, titleSummary, needBackground, underline} = this.props;
 
@@ -29,27 +29,27 @@ class Topic extends React.Component {
           <Grid>
             <h3>{titleTopic}</h3>
           </Grid>
-        {
-          titleSummary ?
-            <Grid>
-              <Typography style={{color:'rgba(39,37,37,35%)'}}>{titleSummary}</Typography>
-            </Grid> : null
-        }
-        {
-          underline ?
-            <Grid style={{marginTop: '2%'}}>
-              <Divider style={{height: 6, backgroundColor:'rgba(178, 204, 251, 100%)', borderRadius: 27, width: '3vw'}}/>
-            </Grid> : null
-        }
-        {this.props.children ?
-          <Grid style={{marginTop: '3vh', backgroundColor: needBackground ? 'rgba(229,229,229,1)' : 'white', borderRadius: 27}}>
-            {this.props.children}
-          </Grid>
-          :
-          null
-        }
-      </Grid>
-    )
+          {
+            titleSummary ?
+              <Grid>
+                <Typography style={{color: subTitleColor}}>{titleSummary}</Typography>
+              </Grid> : null
+          }
+          {
+            underline ?
+              <Grid style={{marginTop: '2%'}}>
+                <Divider style={{height: 6, backgroundColor:'rgba(178, 204, 251, 100%)', borderRadius: 27, width: '3vw'}}/>
+              </Grid> : null
+          }
+          {this.props.children ?
+            <Grid style={{marginTop: '3vh', backgroundColor: needBackground ? 'rgba(229,229,229,1)' : 'white', borderRadius: 27}}>
+              { this.props.children }
+            </Grid>
+            :
+            null
+          }
+        </Grid>
+      )
   }
 
 }

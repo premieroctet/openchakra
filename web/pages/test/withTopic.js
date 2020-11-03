@@ -1,12 +1,10 @@
 import React from 'react'
-import withTopic from '../../hoc/Topic/Topic';
+import Topic from '../../hoc/Topic/Topic';
 import Schedule from "../../components/Schedule/Schedule";
 import Grid from "@material-ui/core/Grid";
 import axios from "axios";
 import styles from '../../static/css/pages/userServicePreviewPage/userServicePreviewStyle';
 import withStyles from "@material-ui/core/styles/withStyles";
-
-const ScheduleTopic = withTopic(Schedule);
 
 class testwithTopic extends React.Component{
   constructor(props) {
@@ -30,9 +28,8 @@ class testwithTopic extends React.Component{
 
     return(
       <Grid>
-        <ScheduleTopic
-          mytitle={'mytitle'}
-          mySubtitle={'mysubtitle'}
+      <Topic titleTopic={'mytitle'} titleSummary={'mysubtitle'} underline={true} >
+        <Schedule
           availabilities={this.state.availabilities}
           bookings={[]}
           services={[]}
@@ -44,6 +41,7 @@ class testwithTopic extends React.Component{
           mode={'week'}
           style={classes}
         />
+      </Topic>
       </Grid>
     );
   }
