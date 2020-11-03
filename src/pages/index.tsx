@@ -19,6 +19,8 @@ import {
   Alert,
   AlertIcon,
   Link,
+  List,
+  ListItem,
 } from '@chakra-ui/core'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
@@ -47,16 +49,16 @@ interface Project {
   projectName: string
 }
 
-interface Props {
+const App = (props: {
   id: number
   projectExist: boolean
   loading: boolean
-}
-
-const App = (props: Props) => {
+}) => {
   const { handlers } = useShortcuts()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [projectName, setProjectName] = useState('')
+  const [newProject, setNewProject] = useState(false)
+  const [userProjectList, setUserProjectList] = useState([])
   const components = useSelector(getComponents)
   const [session] = useSession()
   const router = useRouter()
@@ -115,6 +117,17 @@ const App = (props: Props) => {
     }
   }
 
+  const showUserProjectList = async () => {
+    if (session) {
+      const userProject = await checkUser(session.user.name)
+      setUserProjectList(userProject.project)
+      setNewProject(false)
+      onOpen()
+    } else {
+      signIn('github')
+    }
+  }
+
   const saveProject = async () => {
     if (session) {
       if (props.id) {
@@ -123,6 +136,7 @@ const App = (props: Props) => {
           (e: Project) => e.id === props.id,
         )
         if (userCanEdit === false) {
+          setNewProject(true)
           onOpen()
         }
         if (userCanEdit) {
@@ -146,6 +160,7 @@ const App = (props: Props) => {
           }
         }
       } else {
+        setNewProject(true)
         onOpen()
       }
     } else {
@@ -167,7 +182,12 @@ const App = (props: Props) => {
 
       <Metadata />
 
-      <Header saveProject={saveProject} session={session} />
+      <Header
+        saveProject={saveProject}
+        session={session}
+        onOpen={onOpen}
+        showUserProjectList={showUserProjectList}
+      />
 
       <DndProvider backend={Backend}>
         <Flex h="calc(100vh - 3rem)">
@@ -186,39 +206,88 @@ const App = (props: Props) => {
 
                   <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay />
-                    <ModalContent borderRadius="md">
-                      <ModalHeader>Create new project</ModalHeader>
+                    <ModalContent borderRadius="md" height="400px">
+                      <ModalHeader>
+                        {newProject ? 'Create new project' : 'Project list'}
+                      </ModalHeader>
                       <ModalCloseButton />
-                      <ModalBody>
-                        <FormControl isRequired>
-                          <FormLabel htmlFor="fname">Project name</FormLabel>
-                          <Input
-                            id="fname"
-                            placeholder="Project name"
-                            mt="0.5rem"
-                            onChange={(
-                              e: React.ChangeEvent<HTMLInputElement>,
-                            ) => handleChange(e)}
-                          />
-                        </FormControl>
+                      <ModalBody overflowY="scroll">
+                        {newProject ? (
+                          <FormControl isRequired>
+                            <FormLabel htmlFor="fname">Project name</FormLabel>
+                            <Input
+                              id="fname"
+                              placeholder="Project name"
+                              mt="0.5rem"
+                              onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>,
+                              ) => handleChange(e)}
+                            />
+                          </FormControl>
+                        ) : userProjectList.length > 0 ? (
+                          <List spacing={3}>
+                            {userProjectList.map((e: Project, i: number) => {
+                              return (
+                                <ListItem
+                                  textAlign="center"
+                                  onClick={() => {
+                                    const href = `/project/${e.id}-${e.projectName}`
+                                    router.push(href, href, { shallow: true })
+                                  }}
+                                  backgroundColor="gray.100"
+                                  borderRadius={5}
+                                  p="0.5rem"
+                                  cursor="pointer"
+                                  _hover={{ backgroundColor: 'gray.200' }}
+                                  fontWeight={600}
+                                  fontSize="md"
+                                >
+                                  {e.id}-{e.projectName}
+                                </ListItem>
+                              )
+                            })}
+                          </List>
+                        ) : (
+                          <Box textAlign="center">
+                            <Spinner
+                              m="0 auto"
+                              color="#319795"
+                              size="xl"
+                              mt="3rem"
+                            />
+                          </Box>
+                        )}
                       </ModalBody>
 
-                      <ModalFooter>
-                        <Button
-                          variantColor="ghost"
-                          color="grey"
-                          mr={3}
-                          onClick={onClose}
-                        >
-                          Close
-                        </Button>
-                        <Button
-                          variantColor="blue"
-                          onClick={() => initProject()}
-                        >
-                          Create
-                        </Button>
-                      </ModalFooter>
+                      {newProject ? (
+                        <ModalFooter>
+                          <Button
+                            variantColor="ghost"
+                            color="grey"
+                            mr={3}
+                            onClick={() => onClose()}
+                          >
+                            Close
+                          </Button>
+                          <Button
+                            variantColor="blue"
+                            onClick={() => initProject()}
+                          >
+                            Create
+                          </Button>
+                        </ModalFooter>
+                      ) : (
+                        <ModalFooter>
+                          <Button
+                            variantColor="ghost"
+                            color="grey"
+                            mr={3}
+                            onClick={() => onClose()}
+                          >
+                            Close
+                          </Button>
+                        </ModalFooter>
+                      )}
                     </ModalContent>
                   </Modal>
 
@@ -258,36 +327,85 @@ const App = (props: Props) => {
 
               <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
-                <ModalContent borderRadius="md">
-                  <ModalHeader>Create new project</ModalHeader>
+                <ModalContent borderRadius="md" height="400px">
+                  <ModalHeader>
+                    {newProject ? 'Create new project' : 'Project list'}
+                  </ModalHeader>
                   <ModalCloseButton />
-                  <ModalBody>
-                    <FormControl isRequired>
-                      <FormLabel htmlFor="fname">Project name</FormLabel>
-                      <Input
-                        id="fname"
-                        placeholder="Project name"
-                        mt="0.5rem"
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          handleChange(e)
-                        }
-                      />
-                    </FormControl>
+                  <ModalBody overflowY="scroll">
+                    {newProject ? (
+                      <FormControl isRequired>
+                        <FormLabel htmlFor="fname">Project name</FormLabel>
+                        <Input
+                          id="fname"
+                          placeholder="Project name"
+                          mt="0.5rem"
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            handleChange(e)
+                          }
+                        />
+                      </FormControl>
+                    ) : userProjectList.length > 0 ? (
+                      <List spacing={3}>
+                        {userProjectList.map((e: Project, i: number) => {
+                          return (
+                            <ListItem
+                              textAlign="center"
+                              onClick={() => {
+                                const href = `/project/${e.id}-${e.projectName}`
+                                router.push(href, href, { shallow: true })
+                              }}
+                              backgroundColor="gray.100"
+                              borderRadius={5}
+                              p="0.5rem"
+                              cursor="pointer"
+                              _hover={{ backgroundColor: 'gray.200' }}
+                              fontWeight={600}
+                              fontSize="md"
+                            >
+                              {e.id}-{e.projectName}
+                            </ListItem>
+                          )
+                        })}
+                      </List>
+                    ) : (
+                      <Box textAlign="center">
+                        <Spinner
+                          m="0 auto"
+                          color="#319795"
+                          size="xl"
+                          mt="3rem"
+                        />
+                      </Box>
+                    )}
                   </ModalBody>
 
-                  <ModalFooter>
-                    <Button
-                      variantColor="ghost"
-                      color="grey"
-                      mr={3}
-                      onClick={onClose}
-                    >
-                      Close
-                    </Button>
-                    <Button variantColor="blue" onClick={() => initProject()}>
-                      Create
-                    </Button>
-                  </ModalFooter>
+                  {newProject ? (
+                    <ModalFooter>
+                      <Button
+                        variantColor="ghost"
+                        color="grey"
+                        mr={3}
+                        onClick={() => onClose()}
+                      >
+                        Close
+                      </Button>
+                      <Button variantColor="blue" onClick={() => initProject()}>
+                        Create
+                      </Button>
+                    </ModalFooter>
+                  ) : (
+                    <ModalFooter>
+                      <Button
+                        variantColor="ghost"
+                        color="grey"
+                        mr={3}
+                        onClick={() => onClose()}
+                      >
+                        Close
+                      </Button>
+                    </ModalFooter>
+                  )}
                 </ModalContent>
               </Modal>
 

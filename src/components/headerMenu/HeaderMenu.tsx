@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/core'
 import { FaBomb } from 'react-icons/fa'
 import { GoRepo } from 'react-icons/go'
+import { Session } from 'next-auth/client'
 
 type MenuItemLinkProps = MenuItemProps | LinkProps
 
@@ -39,9 +40,13 @@ const CustomMenuButton: React.FC<
 const ExportMenuItem = dynamic(() => import('./ExportMenuItem'), { ssr: false })
 const ImportMenuItem = dynamic(() => import('./ImportMenuItem'), { ssr: false })
 const SaveMenuItem = dynamic(() => import('./SaveMenuItem'), { ssr: false })
+const UserProjects = dynamic(() => import('./UserProjects'), { ssr: false })
 
 interface Props {
   saveProject: () => void
+  session: Session | null | undefined
+  onOpen: () => void
+  showUserProjectList: () => void
 }
 
 const HeaderMenu = (props: Props) => {
@@ -61,6 +66,12 @@ const HeaderMenu = (props: Props) => {
           <SaveMenuItem saveProject={props.saveProject} />
           <ExportMenuItem />
           <ImportMenuItem />
+          {props.session && (
+            <UserProjects
+              onOpen={props.onOpen}
+              showUserProjectList={props.showUserProjectList}
+            />
+          )}
           <MenuDivider />
           <MenuItemLink isExternal href="https://chakra-ui.com/getting-started">
             <Box mr={2} as={GoRepo} />
