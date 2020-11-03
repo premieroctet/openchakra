@@ -22,17 +22,22 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {Helmet} from 'react-helmet';
-import styles from './trustAndVerification/trustAndVerificationStyle';
+import styles from '../../static/css/pages/trustAndVerification/trustAndVerification';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import Siret from '../../components/WizardForm/Siret';
+import Siret from '../../components/Siret/Siret';
 import {Radio, RadioGroup} from '@material-ui/core';
 import ButtonSwitch from '../../components/ButtonSwitch/ButtonSwitch';
 import cookie from 'react-cookies';
 import Information from '../../components/Information/Information';
 import DocumentEditor from '../../components/DocumentEditor/DocumentEditor';
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const {CESU} = require('../../utils/consts');
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -305,7 +310,7 @@ class trustAndVerification extends React.Component {
       .then(() => {
         toast.info('Email envoyé');
       })
-      .catch();
+      .catch( err => {toast.error('Impossible d\'envoyer un email')});
   };
 
   sendSms = () => {
@@ -415,7 +420,7 @@ class trustAndVerification extends React.Component {
     const ss_id = this.state.social_security;
     console.log(`${particular},${JSON.stringify(cesu)},${ss_id}`);
     if (particular) {
-      if (cesu == CESU[0] || cesu == CESU[1]) {
+      if (cesu === CESU[0] || cesu === CESU[1]) {
         return checkSocialSecurity(ss_id) != null;
       }
     }
@@ -438,194 +443,203 @@ class trustAndVerification extends React.Component {
                 content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. "/>
         </Helmet>
         <LayoutAccount index={index}>
-          <Grid container className={classes.bigContainer}>
-            <Grid item xs={9} className={classes.containerLeft}>
-              <Grid container>
-                <h1 style={{color: 'dimgray', fontWeight: '100'}}>Confiance et vérification</h1>
+          <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+            <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+              <Grid>
+                <h2>Vérification</h2>
               </Grid>
-              <Grid container>
-                <Grid item xs={12} style={{marginTop: 20}}>
-                  <InputLabel style={{color: 'black'}}>Email</InputLabel>
+              <Grid>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Vérifiez votre email, votre numéro de téléphone et votre identité.</Typography>
+              </Grid>
+            </Grid>
+            <Grid>
+              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+            </Grid>
+            <Grid>
+              <Grid>
+                <h3>Pièce d'identité</h3>
+              </Grid>
+              <Grid>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ajoutez ou modifiez vos documents d'identité.</Typography>
+              </Grid>
+            </Grid>
+
+            <Grid>
+
+              <Grid className={classes.searchFilterRightContainer}>
+                <Grid className={classes.searchFilterRightLabel}>
+                  <h3>Type de document</h3>
                 </Grid>
-                <Grid container>
-                  <Grid item xs={12} style={{display: 'contents', justifyContent: 'center'}}>
+                <Grid>
+                  <FormControl>
+                    <Select
+                      labelId="simple-select-placeholder-label-label"
+                      id="simple-select-placeholder-label"
+                      value={this.state.type}
+                      name={'type'}
+                      onChange={(event) => {
+                        this.onChange(event);
+                        this.setState({selected: true});
+                      }}
+                      displayEmpty
+                      disableUnderline
+                      classes={{select: classes.searchSelectPadding}}
+                    >
+                      <MenuItem value={'passeport'}>
+                        Passeport
+                      </MenuItem>
+                      <MenuItem value={'identite'}>
+                        Carte d'identité
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+
+
+
+              <form onSubmit={this.onSubmit}>
+                {type ?
+                  <DocumentEditor
+                    confirmed={user.id_confirmed}
+                    ext={this.state.ext}
+                    db_document={this.state.card.recto}
+                    uploaded_file={this.state.recto_file}
+                    onChange={this.onRectoChange}
+                    onDelete={() => this.deleteRecto(false)}
+                    disabled={!type}
+                    title={'Télécharger recto'}
+                  />
+                  :
+                  null
+                }
+                {
+                  type === 'identite' ?
+                    <DocumentEditor
+                      confirmed={user.id_confirmed}
+                      ext={this.state.extVerso}
+                      db_document={this.state.card.verso}
+                      uploaded_file={this.state.verso_file}
+                      onChange={this.onVersoChange}
+                      onDelete={() => this.deleteRecto(false)}
+                      disabled={type !== 'identite'}
+                      title={'Télécharger verso'}
+                    />
+                    :
+                    null
+                }
+                {this.state.id_recto === null && this.state.id_verso !== null ?
+                  <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
+                    <Button onClick={() => this.addVerso()} size={'large'} type={'submit'} variant="contained" className={classes.buttonSave}>
+                      Enregistrer verso
+                    </Button>
+                  </Grid>
+                  :
+                  <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
+                    <Button size={'large'} type={'submit'} variant="contained" className={classes.buttonSave}>
+                      Enregistrer
+                    </Button>
+                  </Grid>
+                }
+              </form>
+            </Grid>
+
+            <Grid>
+              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+            </Grid>
+
+            <Grid>
+              <Grid>
+                  <h3>Email & Téléphone</h3>
+              </Grid>
+              <Grid style={{marginTop: '10vh'}}>
+                <Grid>
+                  <Grid>
                     <TextField
-                      id="standard-name"
-                      className={classes.textField}
-                      value={user.email || ''}
-                      margin="normal"
+                      value={user.email || 'Votre email'}
                       name={'email'}
                       variant={'outlined'}
                       disabled={true}
+                      helperText="Vous recevrez un email de verification"
+                      classes={{root: classes.textfield}}
                     />
-                    {user.is_confirmed ?
-                      <img src={'../static/Confiance et vérification active.svg'} height={80} alt={'check'} width={28}
-                           style={{marginLeft: 5}}/>
-                      :
-                      <img src={'../static/Confiance et vérification.svg'} alt={'check'} height={80} width={28}
-                           style={{marginLeft: 5}}/>
-                    }
+                    {user.is_confirmed ? <CheckCircleIcon/> : null }
                   </Grid>
                 </Grid>
-                {user.is_confirmed ?
-                  null
-                  :
-                  <Grid container>
-                    <Grid item className={classes.buttonSend}>
-                      <Button className={classes.buttresp} type="submit" onClick={() => this.sendEmail()}
-                              variant="contained" color="primary" style={{color: 'white', marginTop: 15}}>
-                        Envoyer email de vérification
-                      </Button></Grid></Grid>}
-                <Grid item xs={12} style={{marginTop: 20}}>
-                  <InputLabel style={{color: 'black'}}>Téléphone</InputLabel>
-                </Grid>
-                <Grid container>
-                  <Grid item xs={12} style={{display: 'flex'}}>
+                {user.is_confirmed ? null :
+                  <Grid style={{marginTop: '5vh'}}>
+                    <Button variant="contained" className={classes.buttonSave} onClick={() => this.sendEmail()}>
+                      Vérifier
+                    </Button>
+                  </Grid>
+                }
+                <Grid style={{marginTop: '10vh'}}>
+                  <Grid>
                     <TextField
-                      className={classes.textField}
-                      value={user.phone || ''}
-                      margin="normal"
+                      classes={{root: classes.textfield}}
+                      value={user.phone || 'Votre numéro de téléphone'}
                       name={'phone'}
                       variant={'outlined'}
                       disabled={true}
+                      helperText="Vous recevrez un SMS de verification"
                     />
-                    {user.phone_confirmed ?
-                      <img src={'../static/Confiance et vérification active.svg'} alt={'check'} height={80} width={28}
-                           style={{marginLeft: 5}}/> :
-                      <img src={'../static/Confiance et vérification.svg'} alt={'check'} height={80} width={28}
-                           style={{marginLeft: 5}}/>
-                    }
+                    {user.phone_confirmed  ? <CheckCircleIcon/> : null }
                   </Grid>
                 </Grid>
                 {user.phone_confirmed ?
                   null
                   :
-                  <Grid container>
-                    <Grid item className={classes.buttonSendSMS}>
-                      <Button className={classes.buttresp2} type="submit" onClick={() => this.sendSms()}
-                              variant="contained" color="primary" style={{color: 'white', marginTop: 15}}>
-                        Envoyer sms de vérification
-                      </Button>
-                    </Grid>
-                  </Grid>}
-                <Grid item>
-                  <h2 style={{fontWeight: '100'}}>Pièce d'identité</h2>
-                  <p style={{color: '#2FBCD3'}}>Vous pouvez ajouter ou modifier une pièce d’identité en sélectionnant le
-                    type de pièce et télécharger le document.<br/>Un recto pour le passeport et le recto/verso pour la
-                    pièce d’identité</p>
-                  <em>{this.state.id_card_status}</em><br/>
-                  <em style={{color: 'red'}}>{this.state.id_card_error}</em><br/>
-                  <TextField
-                    select
-                    className={classes.typeFile}
-                    value={this.state.type}
-                    name={'type'}
-                    onChange={(event) => {
-                      this.onChange(event);
-                      this.setState({selected: true});
-                    }}
-                    InputProps={{
-                      startAdornment: <InputAdornment position="start">Type</InputAdornment>,
-                    }}
-                  >
-                    <MenuItem value={'passeport'}>
-                      Passeport
-                    </MenuItem>
-                    <MenuItem value={'identite'}>
-                      Carte d'identité
-                    </MenuItem>
-                  </TextField>
-                  <form className={classes.formresp} onSubmit={this.onSubmit}>
-                    {type ?
-                      <DocumentEditor
-                        confirmed={user.id_confirmed}
-                        ext={this.state.ext}
-                        db_document={this.state.card.recto}
-                        uploaded_file={this.state.recto_file}
-                        onChange={this.onRectoChange}
-                        onDelete={() => this.deleteRecto(false)}
-                        disabled={!type}
-                        title={'Télécharger recto'}
-                      />
-                      :
-                      null
-                    }
-                    {
-                      type == 'identite' ?
-                        <DocumentEditor
-                          confirmed={user.id_confirmed}
-                          ext={this.state.extVerso}
-                          db_document={this.state.card.verso}
-                          uploaded_file={this.state.verso_file}
-                          onChange={this.onVersoChange}
-                          onDelete={() => this.deleteRecto(false)}
-                          disabled={type != 'identite'}
-                          title={'Télécharger verso'}
-                        />
-                        :
-                        null
-                    }
-                    {this.state.id_recto === null && this.state.id_verso !== null ?
-                      <Grid item xs={9} className={classes.respenr}
-                            style={{marginTop: 20, display: 'flex', justifyContent: 'flex-start'}}>
-                        <Button onClick={() => this.addVerso()} color={'primary'} variant={'contained'}
-                                style={{color: 'white'}}>Enregistrer verso</Button>
-                      </Grid>
-                      :
-                      <Grid item xs={9} className={classes.respenr}
-                            style={{marginTop: 20, display: 'flex', justifyContent: 'flex-start'}}>
-                        <Button type={'submit'} color={'secondary'} variant={'contained'}
-                                style={{color: 'white'}}>Enregistrer</Button>
-                      </Grid>
-                    }
-                  </form>
-                </Grid>
-
+                  <Grid style={{marginTop: '5vh'}}>
+                    <Button variant="contained" className={classes.buttonSave} onClick={() => this.sendSms()}>
+                      Envoyer sms de vérification
+                    </Button>
+                  </Grid>
+                }
               </Grid>
+
+              <Grid>
+                <Divider style={{height : 2, width: '100%', margin :'10vh 0px'}}/>
+              </Grid>
+
+
               {alfred ?
-                <React.Fragment><Grid container>
-                  <h2 style={{fontWeight: '100'}}>Votre statut</h2>
-                  &nbsp;
-                  <img src="/static/assets/img/info.svg" width={16} onClick={() => this.setState({notice: true})}/>
-                  <Information
-                    open={this.state.notice}
-                    onClose={() => this.setState({notice: false})}
-                    text={I18N.CESU_NOTICE}
-                  />
+              <Grid>
+                <Grid>
+                  <h3>Votre statut</h3>
                 </Grid>
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={this.state.particular}
-                            onChange={(e) => {
-                              this.onChangePartPro(e);
-                              this.handleChecked2();
-                            }}
-                            value={this.state.particular}
-                            name="particular"
-                            color="primary"
-                            icon={<CircleUnchecked style={{fontSize: 30}}/>}
-                            checkedIcon={<FilledButton/>}
-                          />
-                        }
-                        label="Je suis un particulier"
-                      />
-                    </Grid>
+                <Grid>
+                  <Grid>
+                    <FormControlLabel
+                      control={
+                        <Radio
+                          checked={this.state.particular}
+                          onChange={(e) => {
+                            this.onChangePartPro(e);
+                            this.handleChecked2();
+                          }}
+                          value={this.state.particular}
+                          name="particular"
+                          color="primary"
+                        />
+                      }
+                      label="Je suis un particulier"
+                    />
+                  </Grid>
                     {this.state.particular ?
                       <Grid style={{marginLeft: 40}}>
                         <RadioGroup name={'cesu'} value={cesu} onChange={this.onChange}>
-                          <div><Radio color="primary" value={CESU[0]}/>Je veux être déclaré(e) en CESU</div>
-                          {cesu == CESU[0] ?
-                            <Grid style={{display: 'flex', marginLeft: 40}}>
-                              <div>N° sécurité sociale</div>
-                              &nbsp;
+                          <div>
+                            <Radio color="primary" value={CESU[0]}/>Je veux être déclaré(e) en CESU
+                          </div>
+                          {cesu === CESU[0] ?
+                            <Grid style={{marginTop: '3vh', marginBottom: '3vh', marginLeft: '3vh'}}>
                               <TextField
                                 id="ss1"
                                 type="number"
+                                variant={'outlined'}
                                 name='social_security'
-                                placeholder="N° SS (13+2 chiffres)"
+                                label={'N° sécurité sociale'}
+                                helperText={'N° SS (13+2 chiffres)'}
                                 value={this.state.social_security}
                                 onChange={this.onChange}
                                 errors={this.state.social_security}
@@ -633,16 +647,19 @@ class trustAndVerification extends React.Component {
                             </Grid>
                             :
                             null}
-                          <div><Radio color="primary" value={CESU[1]}/>J'accepte d'être déclaré en CESU</div>
-                          {cesu == CESU[1] ?
-                            <Grid style={{display: 'flex', marginLeft: 40}}>
-                              <div>N° sécurité sociale</div>
-                              &nbsp;
+                          <Grid>
+                            <Radio color="primary" value={CESU[1]}/>
+                            J'accepte d'être déclaré en CESU
+                          </Grid>
+                          {cesu === CESU[1] ?
+                            <Grid style={{marginTop: '3vh', marginBottom: '3vh', marginLeft: '3vh'}}>
                               <TextField
                                 id="ss2"
                                 type="number"
+                                variant={'outlined'}
                                 name='social_security'
-                                placeholder="N° SS (13+2 chiffres)"
+                                label={'N° sécurité sociale'}
+                                helperText={'N° SS (13+2 chiffres)'}
                                 value={this.state.social_security}
                                 onChange={this.onChange}
                                 errors={this.state.social_security}
@@ -655,10 +672,10 @@ class trustAndVerification extends React.Component {
                       </Grid>
                       : null
                     }
-                    <Grid item xs={12}>
+                    <Grid>
                       <FormControlLabel
                         control={
-                          <Checkbox
+                          <Radio
                             checked={this.state.professional}
                             onChange={(e) => {
                               this.onChangePartPro(e);
@@ -667,8 +684,6 @@ class trustAndVerification extends React.Component {
                             value={this.state.professional}
                             name="professional"
                             color="primary"
-                            icon={<CircleUnchecked style={{fontSize: 30}}/>}
-                            checkedIcon={<FilledButton/>}
                           />
                         }
                         label="Je suis un professionnel"
@@ -676,19 +691,32 @@ class trustAndVerification extends React.Component {
                     </Grid>
                   </Grid>
                   {professional ?
-                    <>
-                      <ButtonSwitch label="Je suis éligible au Crédit Impôt Service" onChange={this.onCISChange}
-                                    checked={this.state.cis}/>
-                      <Siret onChange={this.onSiretChange} company={this.state}/>
-                      <h2 style={{fontWeight: '100'}}>Document d'immatriculation</h2>
-                      <p style={{color: '#2FBCD3'}}>
-                        Insérez ici le document d'immatriculation de votre entreprise (extrait de K-Bis, document
-                        d'immatriculation de micro-entreprise).<br/>
-                        Vous pouvez télécharger ce document en version PDF&nbsp;
-                        <a color={'primary'} href='https://avis-situation-sirene.insee.fr/' target='_blank'
-                           style={{textDecoration: 'none', color: '#2FBCD3', cursor: 'pointer'}}>sur le site de l'INSEE
-                          (lien)</a>
-                      </p>
+                    <Grid style={{marginTop: '5vh'}}>
+                      <Grid>
+                        <ButtonSwitch
+                          label="Je suis éligible au Crédit Impôt Service"
+                          onChange={this.onCISChange}
+                          checked={this.state.cis}
+                        />
+                      </Grid>
+                      <Grid style={{marginTop: '5vh'}}>
+                        <Siret
+                          onChange={this.onSiretChange}
+                          company={this.state}
+                        />
+                      </Grid>
+                      <Grid style={{marginTop: '10vh'}}>
+                        <h3>Document d'immatriculation</h3>
+                      </Grid>
+                      <Grid>
+                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>
+                          Insérez ici le document d'immatriculation de votre entreprise (extrait de K-Bis, document
+                          d'immatriculation de micro-entreprise).<br/>
+                          Vous pouvez télécharger ce document en version PDF&nbsp;
+                          <a color={'primary'} href='https://avis-situation-sirene.insee.fr/' target='_blank'
+                          >sur le site de l'INSEE</a>
+                        </Typography>
+                      </Grid>
                       <DocumentEditor
                         ext={this.state.extRegistrationProof}
                         db_document={this.state.registration_proof}
@@ -697,17 +725,16 @@ class trustAndVerification extends React.Component {
                         onDelete={() => this.deleteRegistrationProof(false)}
                         title={'Télécharger document d\'immatriculation'}
                       />
-                    </>
+                    </Grid>
                     :
                     null
                   }
-                  <Grid item xs={5}>
-                    <Button disabled={this.statusSaveDisabled()} className={classes.respenr2} onClick={this.editSiret}
-                            type="submit" variant="contained" color="primary" style={{color: 'white', marginTop: 15}}>
+                  <Grid style={{marginTop: '10vh'}}>
+                    <Button disabled={this.statusSaveDisabled()} variant="contained" className={classes.buttonSave} onClick={this.editSiret}>
                       Enregistrer
                     </Button>
                   </Grid>
-                </React.Fragment>
+                </Grid>
                 : null
               }
             </Grid>
