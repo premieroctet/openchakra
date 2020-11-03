@@ -2,13 +2,9 @@ import React from 'react';
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import DrawerBookingRecap from "../../Drawer/DrawerBookingRecap/DrawerBookingRecap";
-import WithTopic from "../../../hoc/Topic/Topic";
+import Topic from "../../../hoc/Topic/Topic";
 import AddressService from "../../AddressService/AddressService";
 import PaymentMode from "../PaymentMode/PaymentMode";
-
-const AddressComponent = WithTopic(AddressService);
-const PaymentModeComponent = WithTopic(PaymentMode);
-
 
 class PaymentChoice extends React.Component{
   constructor(props) {
@@ -37,31 +33,37 @@ class PaymentChoice extends React.Component{
 
     return(
       <Grid container style={{width: '90%',  marginBottom: '10vh'}}>
-        <Grid item xl={6}>
+        <Grid item xl={7}>
           <Grid style={{display: 'flex', flexDirection: 'column', paddingRight: '5%', paddingLeft: '5%'}} >
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingRight: '10%', paddingTop: '5%', paddingBottom: '5%', position: 'relative'}}>
-              <PaymentModeComponent
+              <Topic
                 titleTopic={'Mode de paiment'}
                 titleSummary={false}
                 underline={false}
-                handleCardSelected={this.handleCardSelected}
-                {...this.props}
+              >
+                <PaymentMode
+                  handleCardSelected={this.handleCardSelected}
+                  {...this.props}
                 />
+              </Topic>
               <Grid style={{position: 'absolute', bottom: '5%', right:  '10%'}} onClick={this.callPay}>
                 <a href={'#'}>Payer avec une autre carte</a>
               </Grid>
             </Grid>
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)',paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', marginTop: '2vh'}}>
-              <AddressComponent
+              <Topic
                 titleTopic={'Adresse du service'}
                 titleSummary={`Le service sera effectué ${bookingObj.address ?  checkAdd ? 'à votre domicile' : 'Chez' + user.firstname : 'En visio'}`}
                 underline={false}
-                {...this.props}
-              />
+              >
+                <AddressService
+                  {...this.props}
+                />
+              </Topic>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xl={6}>
+        <Grid item xl={5}>
           <Grid  style={{
             display: 'flex',
             flexDirection: 'column',

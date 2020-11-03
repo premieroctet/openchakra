@@ -345,7 +345,7 @@ class NavBar extends Component {
                       aria-label="open drawer"
                       onClick={this.handleOpenMenuItem}
                     >
-                      <MenuIcon />
+                      <MenuIcon style={{color:'white'}}/>
                     </IconButton>
                     <Menu
                       id="simple-menu"

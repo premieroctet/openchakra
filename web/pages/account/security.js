@@ -15,6 +15,8 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import {checkPass1, checkPass2} from '../../utils/passwords';
 import cookie from 'react-cookies';
+import LayoutAccount from "../../hoc/Layout/LayoutAccount";
+
 
 moment.locale('fr');
 
@@ -22,7 +24,6 @@ moment.locale('fr');
 class security extends React.Component {
   constructor(props) {
     super(props);
-    this.child = React.createRef();
     this.state = {
       user: {},
       password: '',
@@ -34,7 +35,11 @@ class security extends React.Component {
       wrongPassword: false,
       last_login: [],
     };
-    this.callDrawer = this.callDrawer.bind(this);
+  }
+
+  static getInitialProps({query: {indexAccount}}) {
+    return {index: indexAccount};
+
   }
 
   componentDidMount() {
@@ -99,7 +104,7 @@ class security extends React.Component {
   }
 
   render() {
-    const {classes} = this.props;
+    const {classes, index} = this.props;
     const checkButtonValidate = this.state.check && this.state.check1 && this.state.check2;
     const {last_login} = this.state;
 
@@ -110,24 +115,8 @@ class security extends React.Component {
           <meta property="description"
                 content="Modifiez votre mot de passe et gérer la sécurité de votre compte My Alfred. Des milliers de particuliers et auto-entrepreneurs proches de chez vous prêts à vous rendre service ! Paiement sécurisé. Inscription 100% gratuite !"/>
         </Helmet>
-        <Layout>
-          <Grid container className={classes.bigContainer}>
-            <Grid style={{zIndex: 0}}>
-              <ResponsiveDrawer ref={this.child} isActiveIndex={4} itemsDrawers={'account'}/>
-            </Grid>
-            <Grid>
-              <Grid>
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  edge="start"
-                  onClick={this.callDrawer}
-                  className={classes.menuButton}
-                >
-                  <MenuIcon/>
-                </IconButton>
-              </Grid>
-            </Grid>
+        <LayoutAccount index={index}>
+          <Grid container >
             <Grid item xs={9} className={classes.containerLeft}>
               <h1 style={{color: 'dimgray', fontWeight: '100'}}>Securité</h1>
               <Grid>
@@ -227,7 +216,7 @@ class security extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-        </Layout>
+        </LayoutAccount>
         {/* <Footer/>*/}
 
       </Fragment>

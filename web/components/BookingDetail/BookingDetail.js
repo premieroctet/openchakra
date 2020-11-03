@@ -31,7 +31,7 @@ class BookingDetail extends React.Component {
                : null
           }
           { /* Start travel tax */}
-          {travel_tax &&  !mode ?
+          {/*{travel_tax &&  mode ?
             <Grid className={classes.flexContent}>
               <Grid className={classes.labelContent}>
                 <p>Frais de déplacement</p>
@@ -39,7 +39,8 @@ class BookingDetail extends React.Component {
               <Grid>
                 <p>{travel_tax.toFixed(2)}€</p>
               </Grid>
-            </Grid> : null}
+            </Grid> : null}*/}
+
           { /* End pick tax */}
           { /* Start pick tax */}
           {pick_tax && !mode ?

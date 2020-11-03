@@ -32,6 +32,7 @@ import ButtonSwitch from '../../components/ButtonSwitch/ButtonSwitch';
 import cookie from 'react-cookies';
 import Information from '../../components/Information/Information';
 import DocumentEditor from '../../components/DocumentEditor/DocumentEditor';
+import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 
 const {CESU} = require('../../utils/consts');
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -101,6 +102,11 @@ class trustAndVerification extends React.Component {
     this.deleteRegistrationProof = this.deleteRegistrationProof.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleClose = this.handleClose.bind(this);
+  }
+
+  static getInitialProps({query: {indexAccount}}) {
+    return {index: indexAccount};
+
   }
 
   componentDidMount() {
@@ -421,7 +427,7 @@ class trustAndVerification extends React.Component {
   };
 
   render() {
-    const {classes} = this.props;
+    const {classes, index} = this.props;
     const {user, ext, ext2, professional, alfred, cesu, type} = this.state;
 
     return (
@@ -431,24 +437,8 @@ class trustAndVerification extends React.Component {
           <meta property="description"
                 content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. "/>
         </Helmet>
-        <Layout>
+        <LayoutAccount index={index}>
           <Grid container className={classes.bigContainer}>
-            <Grid style={{zIndex: 0}}>
-              <ResponsiveDrawer ref={this.child} isActiveIndex={3} itemsDrawers={'profil'}/>
-            </Grid>
-            <Grid>
-              <Grid>
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  edge="start"
-                  onClick={this.callDrawer}
-                  className={classes.menuButton}
-                >
-                  <MenuIcon/>
-                </IconButton>
-              </Grid>
-            </Grid>
             <Grid item xs={9} className={classes.containerLeft}>
               <Grid container>
                 <h1 style={{color: 'dimgray', fontWeight: '100'}}>Confiance et vérification</h1>
@@ -722,7 +712,7 @@ class trustAndVerification extends React.Component {
               }
             </Grid>
           </Grid>
-        </Layout>
+        </LayoutAccount>
         {/* <Footer/>*/}
 
         <Dialog

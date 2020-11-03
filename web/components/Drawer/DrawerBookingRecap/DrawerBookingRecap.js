@@ -35,7 +35,7 @@ class DrawerBookingRecap extends React.Component{
           </Grid>
           <Grid>
             <Grid>
-              <Typography>{bookingObj.service} avec {user.firstname}</Typography>
+              <Typography>{bookingObj.service} par {user.firstname}</Typography>
             </Grid>
             <Grid>
               <Typography><strong>{booking_datetime_str(bookingObj)}</strong></Typography>
@@ -62,9 +62,9 @@ class DrawerBookingRecap extends React.Component{
                     id="panel1a-header"
                     style={{padding: 0}}
                   >
-                    <Typography>Afficher le détail</Typography>
+                    <Typography>{bookingObj.service}</Typography>
                   </AccordionSummary>
-                  <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
+                  <AccordionDetails style={{display: 'flex', flexDirection: 'column', paddingRight: 0, paddingLeft: 0}}>
                     <Grid style={{
                       display: 'flex',
                       flexDirection: 'column',
@@ -81,11 +81,6 @@ class DrawerBookingRecap extends React.Component{
                         }} key={index}>
                           <Grid>
                             <Grid>
-                              <Typography>{prestation.value}</Typography>
-                            </Grid>
-                          </Grid>
-                          <Grid>
-                            <Grid>
                               <Typography>{prestation.name}</Typography>
                             </Grid>
                           </Grid>
@@ -96,6 +91,23 @@ class DrawerBookingRecap extends React.Component{
                           </Grid>
                         </Grid>
                       ))}
+                      {travel_tax?
+                        <Grid style={{ display: 'flex',
+                          alignItems: 'center',
+                          width: '100%',
+                          marginBottom: '5%',
+                          justifyContent: 'space-between'}}>
+                          <Grid>
+                            <Grid>
+                              <Typography>Frais de déplacement</Typography>
+                            </Grid>
+                          </Grid>
+                          <Grid>
+                            <Grid>
+                              <Typography>{travel_tax.toFixed(2)}€</Typography>
+                            </Grid>
+                          </Grid>
+                        </Grid> : null}
                     </Grid>
                   </AccordionDetails>
                 </Accordion>

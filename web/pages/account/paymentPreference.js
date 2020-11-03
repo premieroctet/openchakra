@@ -1,5 +1,4 @@
 import React, {Fragment} from 'react';
-import Layout from '../../hoc/Layout/Layout';
 import axios from 'axios';
 import moment from 'moment';
 import Button from '@material-ui/core/Button';
@@ -8,27 +7,45 @@ import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import {toast} from 'react-toastify';
-import styles from './paymentPreference/paymentPreferenceStyle';
+import styles from '../../static/css/pages/paymentPreference/paymentPreference';
 import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import {Helmet} from 'react-helmet';
-import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import {formatIban} from '../../utils/text';
 import cookie from 'react-cookies';
+import LayoutAccount from "../../hoc/Layout/LayoutAccount";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import SecurityIcon from "@material-ui/icons/Security";
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import CloseIcon from '@material-ui/icons/Close';
 
 
 moment.locale('fr');
 
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography {...other} className={classes.root}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
 
 class paymentPreference extends React.Component {
   constructor(props) {
     super(props);
-    this.child = React.createRef();
     this.state = {
       user: {},
       clickAdd: false,
@@ -39,7 +56,10 @@ class paymentPreference extends React.Component {
       iban: '',
       errors: {},
     };
-    this.callDrawer = this.callDrawer.bind(this);
+  }
+
+  static getInitialProps({query: {indexAccount}}) {
+    return {index: indexAccount};
 
   }
 
@@ -83,11 +103,6 @@ class paymentPreference extends React.Component {
   onChange = e => {
     this.setState({[e.target.name]: e.target.value});
   };
-
-  callDrawer() {
-    this.child.current.handleDrawerToggle();
-  }
-
 
   onSubmit = e => {
     e.preventDefault();
@@ -147,16 +162,117 @@ class paymentPreference extends React.Component {
       });
   }
 
-  callDrawer() {
-    this.child.current.handleDrawerToggle();
-  }
+  handleCloseModalAddRib = () =>{
+    this.setState({clickAdd: false})
+  };
 
+  modalAddRib = (errors, classes) =>{
+    return(
+      <Dialog
+        open={this.state.clickAdd}
+        onClose={() => this.handleCloseModalAddRib()}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="customized-dialog-title" onClose={this.handleCloseModalAddRib}>
+          <Grid style={{display: 'flex', flexDirection: 'column', alignItems : 'center'}}>
+            <Grid>
+              <h4>Ajouter un RIB</h4>
+            </Grid>
+            <Grid>
+              <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ajouter un RIB en toute sécurité</Typography>
+            </Grid>
+          </Grid>
+        </DialogTitle>
+        <DialogContent>
+          <Grid style={{margin: '15px'}}>
+            <TextField
+              id="outlined-name"
+              style={{width: '100%'}}
+              value={this.state.iban}
+              name={'iban'}
+              onChange={this.onChange}
+              margin="normal"
+              variant="outlined"
+              placeholder={'IBAN'}
+              label={'IBAN'}
+              error={errors.iban}
+              helperText={errors.iban}
+            />
+          </Grid>
+            <Grid style={{margin: '15px'}}>
+              <TextField
+                style={{width: '100%'}}
+                value={this.state.bic}
+                name={'bic'}
+                onChange={this.onChange}
+                margin="normal"
+                variant="outlined"
+                placeholder={'Code SWIFT / BIC'}
+                label={'Code SWIFT / BIC'}
+                error={errors.bic}
+                helperText={errors.bic}
+              />
+            </Grid>
+            <Grid style={{textAlign: 'center', marginLeft: 15, marginRight: 15, marginTop: '3vh', marginBottom: '3vh'}}>
+              <Button
+                onClick={this.onSubmit}
+                variant="contained"
+                classes={{root: classes.buttonSave}}
+              >
+                Enregistrer le RIB
+              </Button>
+            </Grid>
+            <Grid style={{display: 'flex', alignItems: 'center'}}>
+              <Grid>
+                <Grid>
+                  <SecurityIcon style={{color: 'rgba(39,37,37,35%)'}}/>
+                </Grid>
+              </Grid>
+              <Grid>
+                <Grid>
+                  <Typography style={{color:'rgba(39,37,37,35%)'}}>Toutes les données de paeiment sur My Alfred sont cryptées.</Typography>
+                </Grid>
+                <Grid>
+                  <Typography style={{color:'rgba(39,37,37,35%)'}}>Elles sont gérées par mangopay notre partenaire de confiance.</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+        </DialogContent>
+      </Dialog>
+    )
+  };
+
+  modalDeleteRib = (id) =>{
+    return(
+      <Dialog
+        open={this.state.clickDelete}
+        onClose={() => this.handleClose()}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{'Voulez-vous vraiment supprimer votre RIB ?'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Si vous supprimez votre RIB vous ne pourrez plus l'utiliser par la suite avec ce compte.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.handleClose()} color="primary">
+            Annuler
+          </Button>
+          <Button onClick={() => this.deleteAccount(id)} color="secondary" autoFocus>
+            Supprimer
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  };
 
   render() {
-    const {classes} = this.props;
+    const {classes, index} = this.props;
     const {accounts, clickAdd, clickDelete, haveAccount, errors} = this.state;
 
-    console.log(JSON.stringify(errors, null, 2));
     return (
       <Fragment>
         <Helmet>
@@ -164,124 +280,87 @@ class paymentPreference extends React.Component {
           <meta property="description"
                 content="My Alfred, des services entre particuliers et auto-entrepreneurs rémunérés ! Choisissez vos méthodes de versement de vos rémunérations pour chacun des services réalisés. Versement 72h après la prestation."/>
         </Helmet>
-        <Layout>
-          <Grid container className={classes.bigContainer}>
-            <Grid style={{zIndex: 0}}>
-              <ResponsiveDrawer ref={this.child} isActiveIndex={2} itemsDrawers={'account'}/>
+        <LayoutAccount index={index}>
+          <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+            <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+              <Grid>
+                <h2>Relevé d’identité bancaire</h2>
+              </Grid>
+              <Grid>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Vous pouvez faire le choix d’ajouter un RIB pour vos versements.</Typography>
+              </Grid>
+            </Grid>
+            <Grid>
+              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
             </Grid>
             <Grid>
               <Grid>
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  edge="start"
-                  onClick={this.callDrawer}
-                  className={classes.menuButton}
-                >
-                  <MenuIcon/>
-                </IconButton>
+                <h3>RIB enregistrés</h3>
+              </Grid>
+              <Grid>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Choisissez le versement directement sur votre compte bancaire.</Typography>
               </Grid>
             </Grid>
-            <Grid item xs={9} className={classes.containerLeft}>
-              <Grid container>
-                <h1 style={{color: 'dimgray', fontWeight: '100'}}>Préférence de versement</h1>
-              </Grid>
-              <Grid container>
-                <Grid item xs={12}>
-                  <h2 style={{color: 'dimgray', fontWeight: '100'}}>RIB</h2>
-                </Grid>
-                <Grid item className={classes.containerBank}>
-                  <p>Compte bancaire (par défaut)</p>
-                  {haveAccount ?
-                    <p>{accounts[0].OwnerName}, {formatIban(accounts[0].IBAN)}</p>
-                    :
-                    <p>Aucun rib</p>
-                  }
-                </Grid>
-              </Grid>
-              <Grid container>
-                <Grid item>
-                  {haveAccount ?
-                    <h2 className={classes.h2Style} onClick={() => this.handleClick2()}>Supprimer le RIB</h2>
-                    :
-                    <h2 className={classes.h2Style} onClick={this.handleClick}>Ajouter un RIB</h2>
-                  }
-                </Grid>
-                {clickAdd ?
-                  <Grid container>
-                    <Grid item style={{marginBottom: '25%'}}>
-                      <form onSubmit={this.onSubmit}>
-                        <Grid item>
-                          <TextField
-                            id="outlined-name"
-                            style={{width: '100%'}}
-                            value={this.state.iban}
-                            name={'iban'}
-                            onChange={this.onChange}
-                            margin="normal"
-                            variant="outlined"
-                            placeholder={'IBAN'}
-                            label={'IBAN'}
-                            error={errors.iban}
-                            helperText={errors.iban}
-                          />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <TextField
-                            style={{width: '100%'}}
-                            value={this.state.bic}
-                            name={'bic'}
-                            onChange={this.onChange}
-                            margin="normal"
-                            variant="outlined"
-                            placeholder={'Code SWIFT / BIC'}
-                            label={'Code SWIFT / BIC'}
-                            error={errors.bic}
-                            helperText={errors.bic}
-                          />
-                        </Grid>
-                        <Grid item xs={12} style={{display: 'flex', justifyContent: 'flex-end'}}>
-                          <Button size={'large'} type={'submit'} variant="contained" color="primary"
-                                  style={{color: 'white', marginTop: 15}}>
-                            Ajouter le rib
-                          </Button>
-                        </Grid>
-                      </form>
+            {haveAccount ?
+              <Grid container style={{marginTop: '10vh', display: 'flex', alignItems: 'center'}}>
+                <Grid item xl={7} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                  <Grid item xl={2} style={{display: 'flex'}}>
+                    <AccountBalanceIcon/>
+                  </Grid>
+                  <Grid item xl={6} style={{display: 'flex', flexDirection:'column'}}>
+                    <Grid>
+                      <Grid>
+                        <Typography>{accounts[0].OwnerName}</Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid>
+                      <Typography style={{color:'rgba(39,37,37,35%)'}}>{formatIban(accounts[0].IBAN)}</Typography>
                     </Grid>
                   </Grid>
-                  : null}
-                {clickDelete ?
-                  <Dialog
-                    open={this.state.clickDelete}
-                    onClose={() => this.handleClose()}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                  >
-                    <DialogTitle id="alert-dialog-title">{'Voulez-vous vraiment supprimer votre RIB ?'}</DialogTitle>
-                    <DialogContent>
-                      <DialogContentText id="alert-dialog-description">
-                        Si vous supprimez votre RIB vous ne pourrez plus l'utiliser par la suite avec ce compte.
-                      </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button onClick={() => this.handleClose()} color="primary">
-                        Annuler
-                      </Button>
-                      <Button onClick={() => this.deleteAccount(accounts[0].Id)} color="secondary" autoFocus>
-                        Supprimer
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                  : null}
+                </Grid>
+                <Grid item xl={5} style={{display: 'flex', justifyContent: 'center'}}>
+                  <IconButton aria-label="delete" onClick={()=>this.handleClick2()}>
+                    <DeleteForeverIcon/>
+                  </IconButton>
+                </Grid>
+              </Grid>
+              :
+              null
+            }
+            <Grid style={{marginTop: '10vh'}}>
+              <Grid style={{display :'flex', alignItems: 'center'}}>
+                <Grid>
+                  <IconButton aria-label="add" onClick={this.handleClick}>
+                    <AddCircleIcon />
+                  </IconButton>
+                </Grid>
+                <Grid>
+                  <Typography>Ajouter un rib</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid style={{marginTop: '10vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+              <Grid style={{marginRight: '2vh'}}>
+                <Grid>
+                  <SecurityIcon style={{color: 'rgba(39,37,37,35%)'}}/>
+                </Grid>
+              </Grid>
+              <Grid>
+                <Grid>
+                  <Typography style={{color:'rgba(39,37,37,35%)'}}>Toutes les données de paeiment sur My Alfred sont cryptées.</Typography>
+                </Grid>
+                <Grid>
+                  <Typography style={{color:'rgba(39,37,37,35%)'}}>Elles sont gérées par mangopay notre partenaire de confiance.</Typography>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Layout>
+          {clickAdd ? this.modalAddRib(errors,classes) : null}
+          {clickDelete ? this.modalDeleteRib(accounts[0].Id) : null}
+        </LayoutAccount>
       </Fragment>
     );
   }
-
-
 }
 
 

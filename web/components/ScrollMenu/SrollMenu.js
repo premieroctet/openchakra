@@ -3,6 +3,8 @@ import Grid from "@material-ui/core/Grid";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Link from 'next/link';
+import styles from '../../static/css/components/ScrollMenu/ScrollMenu';
+import withStyles from "@material-ui/core/styles/withStyles";
 
 function a11yProps(index, res) {
   return {
@@ -24,12 +26,12 @@ class SrollMenu extends React.Component{
   };
 
   render() {
-    const{style, categories, gps} = this.props;
+    const{classes, categories, gps, mode} = this.props;
     const{value} = this.state;
 
   return(
       <Grid>
-        <Grid className={style.scrollMenuRoot}>
+        <Grid className={classes.scrollMenuRoot}>
           <Tabs
             orientation="horizontal"
             variant="scrollable"
@@ -37,16 +39,19 @@ class SrollMenu extends React.Component{
             onChange={this.handleChange}
             aria-label="scrollable force tabs"
             scrollButtons="on"
-            classes={{indicator: style.scrollMenuIndicator}}
+            classes={{indicator: classes.scrollMenuIndicator}}
           >
             {
               categories ?
                 categories.map((res, index) =>
-                  (
-                    <Link href={'/search?search=1&category=' + res._id + (gps ? '&gps=' + JSON.stringify(gps) : '') + '&indexCat=' + index} key={index}>
-                      <Tab label={res.label} className={style.scrollMenuTab} {...a11yProps(index)}/>
+                {
+                  let url = mode === 'account' ? '/account' + res.url  + '?indexAccount=' + index  : '/search?search=1&category=' + res._id + (gps ? '&gps=' + JSON.stringify(gps) : '') + '&indexCat=' + index;
+                  return(
+                    <Link href={url} key={index}>
+                      <Tab label={res.label} className={classes.scrollMenuTab} {...a11yProps(index)}/>
                     </Link>
                   )
+                }
                 ) : null
             }
           </Tabs>
@@ -56,4 +61,4 @@ class SrollMenu extends React.Component{
   }
 }
 
-export default SrollMenu;
+export default withStyles(styles)(SrollMenu);

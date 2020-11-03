@@ -32,14 +32,77 @@ class DrawerBooking extends React.Component{
   }
 
   handleChange = panel => (event, isExpanded) => {
-
     this.setState({expanded: isExpanded ? panel : false})
+  };
 
+  selectedPresta = (prestations, classes) => (
+     prestations.map((p, index) => (
+        <Grid container style={{display: 'flex', alignItems: 'center', width: '100%', marginBottom: '5%'}} key={index}>
+          <Grid item xl={6}>
+            <Grid style={{display: 'flex', flexDirection: 'column'}}>
+              <Grid>
+                <Typography>{p.prestation.label}</Typography>
+              </Grid>
+              <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                <Grid>
+                  <Typography style={{color:'rgba(39,37,37,35%)'}}>{p.price ? p.price.toFixed(2) : '?'}€</Typography>
+                </Grid>
+                <Grid style={{marginLeft : '5%', marginRight: '5%'}}>
+                  <Typography style={{color:'rgba(39,37,37,35%)'}}>/</Typography>
+                </Grid>
+                <Grid>
+                  <Typography style={{color:'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : '?'}</Typography>
+                </Grid>
+                {p.prestation.cesu_eligible && this.props.use_cesu ?
+                  <Grid>
+                    <Typography><em>Eligible au <a href={'#'}>CESU</a></em></Typography>
+                  </Grid>
+                  : null
+                }
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xl={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
+            <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+              <Grid>
+                <IconButton onClick={this.props.onQtyChanged('remove', p._id)}>
+                  <RemoveIcon/>
+                </IconButton>
+              </Grid>
+              <Grid style={{marginLeft: '4%', marginRight: '4%'}}>
+                <Typography>{this.props.count[p._id] ? this.props.count[p._id] : 0}</Typography>
+              </Grid>
+              <Grid>
+                <IconButton onClick={this.props.onQtyChanged('add', p._id)}>
+                  <AddIcon/>
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+     ))
+  );
+
+  accordion = (prestations,fltr, classes) => {
+    return(
+      <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon/>}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography>{fltr ? fltr : ''}</Typography>
+        </AccordionSummary>
+        <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
+          {this.selectedPresta(prestations, classes)}
+        </AccordionDetails>
+      </Accordion>
+    )
   };
 
   render() {
     const {expanded} = this.state;
-    const {warningPerimeter, side, classes, service, alfred, date, time, errors, count, serviceUser, isChecked, location, pick_tax, total, commission, cesu_total, filters, pricedPrestations, use_cesu} = this.props;
+    const {warningPerimeter, side, classes, service, alfred, date, time, errors, count, serviceUser, isChecked, location, pick_tax, total, commission, cesu_total, filters, pricedPrestations} = this.props;
 
     return(
       <Grid>
@@ -131,7 +194,7 @@ class DrawerBooking extends React.Component{
               </Grid>
             </Grid>
             <Grid style={{marginBottom: 30}}>
-              <Accordion classes={{root: classes.rootAccordion}} expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
+              <Accordion classes={{root: classes.rootAccordion}} expanded={this.state.expanded === 'panel1'} onChange={this.handleChange('panel1')}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon/>}
                   aria-controls="panel1a-content"
@@ -141,74 +204,20 @@ class DrawerBooking extends React.Component{
                 </AccordionSummary>
                 <AccordionDetails classes={{root: classes.userServicePreviewAccordionDetails}}>
                   {
-                    Object.keys(filters).sort().map((key, index) => {
-                      let fltr = key;
-                      let prestations = filters[key];
-                      return (
-                        <Grid style={{zIndex: 0}} key={index}>
-                          <Accordion classes={{root: classes.userServicePreviewAccordionNoShadow}}>
-                            <AccordionSummary
-                              expandIcon={<ExpandMoreIcon/>}
-                              aria-controls="panel1a-content"
-                              id="panel1a-header"
-                            >
-                              <Typography>{fltr ? fltr : ''}</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-                              {prestations.map((p, index) => {
-                                return (
-                                  <Grid container style={{display: 'flex', alignItems: 'center', width: '100%', marginBottom: '5%'}} key={index}>
-                                    <Grid item xl={6}>
-                                      <Grid style={{display: 'flex', flexDirection: 'column'}}>
-                                        <Grid>
-                                          <Typography>{p.prestation.label}</Typography>
-                                        </Grid>
-                                        <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                                          <Grid>
-                                            <Typography style={{color:'rgba(39,37,37,35%)'}}>{p.price ? p.price.toFixed(2) : '?'}€</Typography>
-                                          </Grid>
-                                          <Grid style={{marginLeft : '5%', marginRight: '5%'}}>
-                                            <Typography style={{color:'rgba(39,37,37,35%)'}}>/</Typography>
-                                          </Grid>
-                                          <Grid>
-                                            <Typography style={{color:'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : '?'}</Typography>
-                                          </Grid>
-                                          {p.prestation.cesu_eligible && use_cesu ?
-                                            <Grid>
-                                              <Typography><em>Eligible au <a href={'#'}>CESU</a></em></Typography>
-                                            </Grid>
-                                            : null
-                                          }
-                                        </Grid>
-                                      </Grid>
-                                    </Grid>
-                                    <Grid item xl={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
-                                      <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                                        <Grid>
-                                          <IconButton onClick={this.props.onQtyChanged('remove', p._id)}>
-                                            <RemoveIcon/>
-                                          </IconButton>
-                                        </Grid>
-                                        <Grid style={{marginLeft: '4%', marginRight: '4%'}}>
-                                          <Typography>{count[p._id] ? count[p._id] : 0}</Typography>
-                                        </Grid>
-                                        <Grid>
-                                          <IconButton onClick={this.props.onQtyChanged('add', p._id)}>
-                                            <AddIcon/>
-                                          </IconButton>
-                                        </Grid>
-
-                                      </Grid>
-                                    </Grid>
-                                  </Grid>
-                                );
-                              })}
-                            </AccordionDetails>
-                          </Accordion>
-                        </Grid>
-                      );
-                    })
-                  }
+                  Object.keys(filters).sort().map((key, index) => {
+                    let fltr = key;
+                    let prestations = filters[key];
+                    return (
+                      <Grid style={{zIndex: 0}} key={index}>
+                        {
+                          fltr === '' ?
+                            this.selectedPresta(prestations, classes) :
+                            this.accordion(prestations,fltr, classes)
+                        }
+                      </Grid>
+                    );
+                  })
+                }
                 </AccordionDetails>
               </Accordion>
               <Grid>

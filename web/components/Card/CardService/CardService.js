@@ -13,6 +13,7 @@ import Chip from "@material-ui/core/Chip";
 import Avatar from "@material-ui/core/Avatar";
 import styles from '../../../static/css/pages/searchPage/searchStyle'
 import {withStyles} from '@material-ui/core/styles'
+import Typography from "@material-ui/core/Typography";
 
 class CardServiceInfo extends React.Component{
   constructor(props) {
@@ -82,7 +83,7 @@ class CardService extends React.Component{
   }
 
   render() {
-    const {classes, isOwner, gps,profileMode} = this.props;
+    const {classes, isOwner, gps,profileMode, user} = this.props;
     const {cpData, alfred} = this.state;
 
     let distance = gps ? computeDistanceKm(gps, cpData.gps) : null;
@@ -115,9 +116,9 @@ class CardService extends React.Component{
                 </Grid>
               </Grid>
             }
-            <Grid>
+            <Grid style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginTop: '3vh'}}>
               <Grid>
-                <p>{cpData.label}</p>
+                <Typography>{cpData.label}</Typography>
               </Grid>
               { profileMode ? null :
                 <Grid className={classes.cardServicePlaceContainer}>
@@ -125,13 +126,22 @@ class CardService extends React.Component{
                     <RoomIcon/>
                   </Grid>
                   <Grid style={{whiteSpace: 'nowrap'}}>
-                    <p>{`À ${" "} ${distance} ${" "}km -`}</p>
+                    <Typography>{`À ${" "} ${distance} ${" "}km -`}</Typography>
                   </Grid>
                   <Grid className={classes.stylecardServiceDistance}>
-                    <p  className={classes.stylecardServiceDistance}>{cpData.city}</p>
+                    <Typography  className={classes.stylecardServiceDistance}>{cpData.city}</Typography>
                   </Grid>
                 </Grid>
               }
+              {
+                /*TODO API POUR USER DESCRIPTION
+              <Grid>
+                <Grid>
+                  <Typography>{user.description ? user.description : 'aucune descrption'}</Typography>
+                </Grid>
+              </Grid>*/
+              }
+
               <Grid className={classes.cardServiceScoreAndButtonContainer}>
                 <Grid className={classes.cardServiceRatingContainer}>
                   <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
@@ -143,10 +153,10 @@ class CardService extends React.Component{
                     />
                     <Grid className={classes.cardServiceBoxRatingDisplay}>
                       <Grid className={classes.cardServiceRating}>
-                        <p className={classes.cardServiceLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</p>
+                        <Typography className={classes.cardServiceLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</Typography>
                       </Grid>
                       <Grid>
-                        <p className={classes.cardServiceLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</p>
+                        <Typography className={classes.cardServiceLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</Typography>
                       </Grid>
                     </Grid>
                   </Box>
