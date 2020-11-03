@@ -3,24 +3,11 @@ import {
   Flex,
   Box,
   Spinner,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   useDisclosure,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
   useToast,
   Alert,
   AlertIcon,
   Link,
-  List,
-  ListItem,
 } from '@chakra-ui/core'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
@@ -39,6 +26,7 @@ import { useSelector } from 'react-redux'
 import { signIn, useSession } from 'next-auth/client'
 import { getComponents } from '~core/selectors/components'
 import { useRouter } from 'next/router'
+import ModalComponent from '~components/ModalComponent'
 
 interface Project {
   createdAt: string
@@ -204,92 +192,14 @@ const App = (props: {
                     </Box>
                   </EditorErrorBoundary>
 
-                  <Modal isOpen={isOpen} onClose={onClose}>
-                    <ModalOverlay />
-                    <ModalContent borderRadius="md" height="400px">
-                      <ModalHeader>
-                        {newProject ? 'Create new project' : 'Project list'}
-                      </ModalHeader>
-                      <ModalCloseButton />
-                      <ModalBody overflowY="scroll">
-                        {newProject ? (
-                          <FormControl isRequired>
-                            <FormLabel htmlFor="fname">Project name</FormLabel>
-                            <Input
-                              id="fname"
-                              placeholder="Project name"
-                              mt="0.5rem"
-                              onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>,
-                              ) => handleChange(e)}
-                            />
-                          </FormControl>
-                        ) : userProjectList.length > 0 ? (
-                          <List spacing={3}>
-                            {userProjectList.map((e: Project, i: number) => {
-                              return (
-                                <ListItem
-                                  textAlign="center"
-                                  onClick={() => {
-                                    const href = `/project/${e.id}-${e.projectName}`
-                                    router.push(href, href, { shallow: true })
-                                  }}
-                                  backgroundColor="gray.100"
-                                  borderRadius={5}
-                                  p="0.5rem"
-                                  cursor="pointer"
-                                  _hover={{ backgroundColor: 'gray.200' }}
-                                  fontWeight={600}
-                                  fontSize="md"
-                                >
-                                  {e.id}-{e.projectName}
-                                </ListItem>
-                              )
-                            })}
-                          </List>
-                        ) : (
-                          <Box textAlign="center">
-                            <Spinner
-                              m="0 auto"
-                              color="#319795"
-                              size="xl"
-                              mt="3rem"
-                            />
-                          </Box>
-                        )}
-                      </ModalBody>
-
-                      {newProject ? (
-                        <ModalFooter>
-                          <Button
-                            variantColor="ghost"
-                            color="grey"
-                            mr={3}
-                            onClick={() => onClose()}
-                          >
-                            Close
-                          </Button>
-                          <Button
-                            variantColor="blue"
-                            onClick={() => initProject()}
-                          >
-                            Create
-                          </Button>
-                        </ModalFooter>
-                      ) : (
-                        <ModalFooter>
-                          <Button
-                            variantColor="ghost"
-                            color="grey"
-                            mr={3}
-                            onClick={() => onClose()}
-                          >
-                            Close
-                          </Button>
-                        </ModalFooter>
-                      )}
-                    </ModalContent>
-                  </Modal>
+                  <ModalComponent
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    newProject={newProject}
+                    handleChange={handleChange}
+                    userProjectList={userProjectList}
+                    initProject={initProject}
+                  />
 
                   <Box
                     maxH="calc(100vh - 3rem)"
@@ -325,89 +235,14 @@ const App = (props: {
                 </Box>
               </EditorErrorBoundary>
 
-              <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent borderRadius="md" height="400px">
-                  <ModalHeader>
-                    {newProject ? 'Create new project' : 'Project list'}
-                  </ModalHeader>
-                  <ModalCloseButton />
-                  <ModalBody overflowY="scroll">
-                    {newProject ? (
-                      <FormControl isRequired>
-                        <FormLabel htmlFor="fname">Project name</FormLabel>
-                        <Input
-                          id="fname"
-                          placeholder="Project name"
-                          mt="0.5rem"
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            handleChange(e)
-                          }
-                        />
-                      </FormControl>
-                    ) : userProjectList.length > 0 ? (
-                      <List spacing={3}>
-                        {userProjectList.map((e: Project, i: number) => {
-                          return (
-                            <ListItem
-                              textAlign="center"
-                              onClick={() => {
-                                const href = `/project/${e.id}-${e.projectName}`
-                                router.push(href, href, { shallow: true })
-                              }}
-                              backgroundColor="gray.100"
-                              borderRadius={5}
-                              p="0.5rem"
-                              cursor="pointer"
-                              _hover={{ backgroundColor: 'gray.200' }}
-                              fontWeight={600}
-                              fontSize="md"
-                            >
-                              {e.id}-{e.projectName}
-                            </ListItem>
-                          )
-                        })}
-                      </List>
-                    ) : (
-                      <Box textAlign="center">
-                        <Spinner
-                          m="0 auto"
-                          color="#319795"
-                          size="xl"
-                          mt="3rem"
-                        />
-                      </Box>
-                    )}
-                  </ModalBody>
-
-                  {newProject ? (
-                    <ModalFooter>
-                      <Button
-                        variantColor="ghost"
-                        color="grey"
-                        mr={3}
-                        onClick={() => onClose()}
-                      >
-                        Close
-                      </Button>
-                      <Button variantColor="blue" onClick={() => initProject()}>
-                        Create
-                      </Button>
-                    </ModalFooter>
-                  ) : (
-                    <ModalFooter>
-                      <Button
-                        variantColor="ghost"
-                        color="grey"
-                        mr={3}
-                        onClick={() => onClose()}
-                      >
-                        Close
-                      </Button>
-                    </ModalFooter>
-                  )}
-                </ModalContent>
-              </Modal>
+              <ModalComponent
+                isOpen={isOpen}
+                onClose={onClose}
+                newProject={newProject}
+                handleChange={handleChange}
+                userProjectList={userProjectList}
+                initProject={initProject}
+              />
 
               <Box
                 maxH="calc(100vh - 3rem)"
