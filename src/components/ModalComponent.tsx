@@ -15,8 +15,10 @@ import {
   Spinner,
   ModalFooter,
   Button,
+  ListIcon,
 } from '@chakra-ui/core'
 import { useRouter } from 'next/router'
+import { AiFillProject } from 'react-icons/ai'
 
 interface Project {
   createdAt: string
@@ -42,7 +44,10 @@ const ModalComponent = (props: Props) => {
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
       <ModalOverlay />
-      <ModalContent borderRadius="md" height="400px">
+      <ModalContent
+        borderRadius="md"
+        height={props.newProject ? 'unset' : '400px'}
+      >
         <ModalHeader>
           {props.newProject ? 'Create new project' : 'Project list'}
         </ModalHeader>
@@ -70,15 +75,17 @@ const ModalComponent = (props: Props) => {
                       const href = `/project/${e.id}-${e.projectName}`
                       router.push(href, href, { shallow: true })
                     }}
-                    backgroundColor="gray.100"
+                    backgroundColor="#2E3748"
+                    color="white"
                     borderRadius={5}
                     p="0.5rem"
                     cursor="pointer"
-                    _hover={{ backgroundColor: 'gray.200' }}
+                    _hover={{ backgroundColor: 'teal.400' }}
                     fontWeight={600}
                     fontSize="md"
                   >
-                    {e.id}-{e.projectName}
+                    <ListIcon icon={AiFillProject} color="white" />
+                    {e.id} - {e.projectName}
                   </ListItem>
                 )
               })}
@@ -107,7 +114,7 @@ const ModalComponent = (props: Props) => {
         ) : (
           <ModalFooter>
             <Button
-              variantColor="ghost"
+              variantColor="white"
               color="grey"
               mr={3}
               onClick={() => props.onClose()}
