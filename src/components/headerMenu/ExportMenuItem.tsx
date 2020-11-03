@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { MenuItem, Box } from '@chakra-ui/core'
-import { FaSave } from 'react-icons/fa'
+import { FaDownload } from 'react-icons/fa'
 import { saveAsJSON } from '~utils/import'
 import { getComponents } from '~core/selectors/components'
 
@@ -10,7 +10,7 @@ const ExportMenuItem = () => {
 
   return (
     <MenuItem onClick={() => saveAsJSON(components)}>
-      <Box mr={2} as={FaSave} />
+      <Box mr={2} as={FaDownload} />
       Export components
     </MenuItem>
   )

@@ -40,7 +40,11 @@ const ExportMenuItem = dynamic(() => import('./ExportMenuItem'), { ssr: false })
 const ImportMenuItem = dynamic(() => import('./ImportMenuItem'), { ssr: false })
 const SaveMenuItem = dynamic(() => import('./SaveMenuItem'), { ssr: false })
 
-const HeaderMenu = () => {
+interface Props {
+  saveProject: () => void
+}
+
+const HeaderMenu = (props: Props) => {
   return (
     <Menu>
       <CustomMenuButton
@@ -54,12 +58,10 @@ const HeaderMenu = () => {
       </CustomMenuButton>
       <LightMode>
         <MenuList zIndex={100}>
-          <SaveMenuItem />
+          <SaveMenuItem saveProject={props.saveProject} />
           <ExportMenuItem />
           <ImportMenuItem />
-
           <MenuDivider />
-
           <MenuItemLink isExternal href="https://chakra-ui.com/getting-started">
             <Box mr={2} as={GoRepo} />
             Chakra UI Docs

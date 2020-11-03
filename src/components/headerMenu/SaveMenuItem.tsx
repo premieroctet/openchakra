@@ -1,15 +1,14 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { MenuItem, Box } from '@chakra-ui/core'
 import { FaSave } from 'react-icons/fa'
-import { saveAsJSON } from '~utils/import'
-import { getComponents } from '~core/selectors/components'
 
-const SaveMenuItem = () => {
-  const components = useSelector(getComponents)
+interface Props {
+  saveProject: () => void
+}
 
+const SaveMenuItem = (props: Props) => {
   return (
-    <MenuItem onClick={() => saveAsJSON(components)}>
+    <MenuItem onClick={() => props.saveProject()}>
       <Box mr={2} as={FaSave} />
       Save components
     </MenuItem>

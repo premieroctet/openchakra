@@ -19,9 +19,14 @@ import {
   LightMode,
   PopoverFooter,
   Tooltip,
+  Avatar,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from '@chakra-ui/core'
 import { DiGithubBadge } from 'react-icons/di'
-import { AiFillThunderbolt } from 'react-icons/ai'
+import { AiFillThunderbolt, AiOutlineLogin } from 'react-icons/ai'
 import { buildParameters } from '~utils/codesandbox'
 import { generateCode } from '~utils/code'
 import useDispatch from '~hooks/useDispatch'
@@ -29,6 +34,7 @@ import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
 import { getShowLayout, getShowCode } from '~core/selectors/app'
 import HeaderMenu from '~components/headerMenu/HeaderMenu'
+import { Session, signIn, signOut } from 'next-auth/client'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
@@ -65,7 +71,12 @@ const CodeSandboxButton = () => {
   )
 }
 
-const Header = () => {
+interface Props {
+  saveProject: () => void
+  session: Session | null | undefined
+}
+
+const Header = (props: Props) => {
   const showLayout = useSelector(getShowLayout)
   const showCode = useSelector(getShowCode)
   const dispatch = useDispatch()
@@ -97,7 +108,7 @@ const Header = () => {
         <Flex flexGrow={1} justifyContent="space-between" alignItems="center">
           <Stack isInline spacing={4} justify="center" align="center">
             <Box>
-              <HeaderMenu />
+              <HeaderMenu saveProject={props.saveProject} />
             </Box>
             <FormControl>
               <Tooltip
@@ -195,6 +206,36 @@ const Header = () => {
           isInline
           spacing="2"
         >
+          {props.session ? (
+            <Box zIndex={100000}>
+              <Menu>
+                <LightMode>
+                  <MenuButton>
+                    <Avatar
+                      size="xs"
+                      name={props.session.user.name}
+                      src={props.session.user.image}
+                    />
+                  </MenuButton>
+                  <MenuList backgroundColor="white">
+                    <MenuItem onClick={() => signOut()}>
+                      <Box mr={2} as={AiOutlineLogin} />
+                      Logout
+                    </MenuItem>
+                  </MenuList>
+                </LightMode>
+              </Menu>
+            </Box>
+          ) : (
+            <Button
+              onClick={() => signIn('github')}
+              variantColor="teal"
+              variant="outline"
+              size="xs"
+            >
+              Login
+            </Button>
+          )}
           <Link isExternal href="https://github.com/premieroctet/openchakra">
             <Box as={DiGithubBadge} size="8" color="gray.200" />
           </Link>
