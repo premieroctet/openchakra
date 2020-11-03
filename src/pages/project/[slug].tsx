@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import { PrismaClient } from '@prisma/client'
-import { GetStaticProps, GetStaticPaths } from 'next'
+import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next'
 import { getSession, signIn } from 'next-auth/client'
 import useDispatch from '~hooks/useDispatch'
-import { checkUser } from '~utils/checkProject'
 import App from '~pages'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prisma = new PrismaClient()
+  let projectId = (params!.slug as string).split('-')[0]
+  let projectName = (params!.slug as string).split('-')[1]
+
   const project = await prisma.project.findOne({
     include: { user: true },
     where: {
-      id: Number(params!.id),
+      id: Number(projectId),
     },
   })
   let projects = JSON.parse(JSON.stringify(project))
   return {
     props: {
       projects,
-      id: Number(params!.id),
+      id: Number(projectId),
+      projectName: projectName,
     },
   }
 }
@@ -29,10 +32,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: projects.map(project => ({
       params: {
-        id: project.id.toString(),
+        slug: `${project.id.toString()}-${project.projectName.toString()}`,
       },
     })),
-    fallback: false,
+    fallback: true,
   }
 }
 
@@ -49,31 +52,26 @@ interface Props {
   id: number
 }
 
-export default ({ projects, id }: Props) => {
+const ProjectSlug = ({
+  projects,
+  id,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [loading, setLoading] = useState(true)
+  const [projectExist, setProjectExist] = useState(true)
+
   const dispatch = useDispatch()
-  let userCanEdit = false
 
   const checkSession = async () => {
     const session = await getSession()
     if (session) {
-      const userProject = await checkUser(session.user.name)
-      userProject.project.map((e: Project) => {
-        if (e.id === id) {
-          userCanEdit = true
-        }
-      })
-      if (userCanEdit === false) {
-        if (typeof window !== 'undefined') {
-          dispatch.components.reset()
-          setLoading(false)
-          window.location.href = `/`
-        }
-      } else {
+      if (projects) {
+        setProjectExist(true)
         if (projects.markup) {
           dispatch.components.reset(JSON.parse(projects.markup))
           setLoading(false)
         }
+      } else {
+        setProjectExist(false)
       }
     } else {
       signIn()
@@ -85,5 +83,7 @@ export default ({ projects, id }: Props) => {
     // eslint-disable-next-line
   }, [])
 
-  return projects.markup ? <App id={id} loading={loading} /> : <></>
+  return <App id={id} loading={loading} projectExist={projectExist} />
 }
+
+export default ProjectSlug

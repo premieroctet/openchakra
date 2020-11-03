@@ -41,7 +41,7 @@ const ImportMenuItem = dynamic(() => import('./ImportMenuItem'), { ssr: false })
 const SaveMenuItem = dynamic(() => import('./SaveMenuItem'), { ssr: false })
 
 interface Props {
-  id: number
+  saveProject: () => void
 }
 
 const HeaderMenu = (props: Props) => {
@@ -58,7 +58,7 @@ const HeaderMenu = (props: Props) => {
       </CustomMenuButton>
       <LightMode>
         <MenuList zIndex={100}>
-          <SaveMenuItem id={props.id} />
+          <SaveMenuItem saveProject={props.saveProject} />
           <ExportMenuItem />
           <ImportMenuItem />
           <MenuDivider />

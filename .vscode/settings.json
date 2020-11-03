@@ -1,0 +1,4 @@
+{
+  "prisma.plugin.nextjs.addTypesOnSave": true,
+  "prisma.plugin.nextjs.hasPrompted": true
+}

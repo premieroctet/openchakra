@@ -15,6 +15,7 @@ export default async function(req: NextApiRequest, res: NextApiResponse) {
     const project = await prisma.project.create({
       data: {
         markup: projectData.markup,
+        projectName: projectData.projectName,
         user: {
           connect: {
             id: actualUser[0].userId,
