@@ -1,5 +1,4 @@
 import React, {Fragment} from 'react';
-import Layout from '../../hoc/Layout/Layout';
 import axios from 'axios';
 import moment from 'moment';
 import Button from '@material-ui/core/Button';
@@ -7,13 +6,9 @@ import Grid from '@material-ui/core/Grid';
 import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import MenuItem from '@material-ui/core/MenuItem';
 import {pdfjs} from 'react-pdf';
-import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import styled from 'styled-components';
 import {toast} from 'react-toastify';
 import Dialog from '@material-ui/core/Dialog';
@@ -23,14 +18,10 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {Helmet} from 'react-helmet';
 import styles from '../../static/css/pages/trustAndVerification/trustAndVerification';
-import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import Siret from '../../components/Siret/Siret';
 import {Radio, RadioGroup} from '@material-ui/core';
 import ButtonSwitch from '../../components/ButtonSwitch/ButtonSwitch';
 import cookie from 'react-cookies';
-import Information from '../../components/Information/Information';
 import DocumentEditor from '../../components/DocumentEditor/DocumentEditor';
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
@@ -44,17 +35,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 const I18N = require('../../utils/i18n');
 const {checkSocialSecurity} = require('../../utils/social_security');
 moment.locale('fr');
-
-const FilledButton = styled.div`
-    display: inline-block;
-    height: 25px;
-    width: 25px;
-    border-radius: 50%;
-    background-color: #2FBCD3;
-    margin-right: 5px;
-    margin-top: 3px;
-    margin-left: 3px;
-`;
 
 class trustAndVerification extends React.Component {
   constructor(props) {
@@ -172,7 +152,7 @@ class trustAndVerification extends React.Component {
         console.error(err);
         if (err.response.status === 401 || err.response.status === 403) {
           cookie.remove('token', {path: '/'});
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/'});
         }
       });
   }
@@ -792,7 +772,7 @@ class trustAndVerification extends React.Component {
               Annuler
             </Button>
             <Button
-              disabled={this.state.smsCode.length != 4}
+              disabled={this.state.smsCode.length !== 4}
               onClick={() => this.checkSmsCode()}
               color="primary">
               Confirmer
