@@ -14,5 +14,6 @@ export default theme => ({
     fontWeight: 'bold',
     color: 'white',
     backgroundColor:'black'
-  }
+  },
+
 })

@@ -31,6 +31,8 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
 import SecurityIcon from '@material-ui/icons/Security';
+import Hidden from "@material-ui/core/Hidden";
+import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 
 moment.locale('fr');
 
@@ -347,6 +349,66 @@ class paymentMethod extends React.Component {
     )
   };
 
+  content = (classes) => {
+    return(
+      <Grid style={{display: 'flex', flexDirection: 'column'}}>
+        <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+          <Grid>
+            <h2>Mode de paiement</h2>
+          </Grid>
+          <Grid>
+            <Typography style={{color: 'rgba(39,37,37,35%)'}}>N'hésitez pas à enregistrer un mode de paiement pour aller plus vite lors de vos réservations.</Typography>
+          </Grid>
+        </Grid>
+        <Grid>
+          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+        </Grid>
+        <Grid>
+          <Grid>
+            <h3>Cartes enregistrées</h3>
+          </Grid>
+          <Grid>
+            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Payez encore plus rapidement sans communiquer vos informations financières.</Typography>
+          </Grid>
+        </Grid>
+        <Grid style={{marginTop: '5vh'}}>
+          <PaymentCard cards={this.state.cards} userName={this.state.userName} editable={true} deleteCard={this.callDialogDeletedCard}/>
+        </Grid>
+        <Grid>
+          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+        </Grid>
+        <Grid>
+          <Grid style={{display :'flex', alignItems: 'center'}}>
+            <Grid>
+              <IconButton aria-label="add" onClick={this.callAddCreditCard}>
+                <AddCircleIcon />
+              </IconButton>
+            </Grid>
+            <Grid>
+              <Typography>Enregistrer une carte bancaire</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid style={{marginTop: '10vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <Grid style={{marginRight: '2vh'}}>
+            <Grid>
+              <SecurityIcon style={{color: 'rgba(39,37,37,35%)'}}/>
+            </Grid>
+          </Grid>
+          <Grid>
+            <Grid>
+              <Typography style={{color:'rgba(39,37,37,35%)'}}>Toutes les données de paeiment sur My Alfred sont cryptées.</Typography>
+            </Grid>
+            <Grid>
+              <Typography style={{color:'rgba(39,37,37,35%)'}}>Elles sont gérées par mangopay notre partenaire de confiance.</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+
+    )
+  };
+
   render() {
     const {classes, index} = this.props;
     const {cards, deletedial, userName, addCreditCard} = this.state;
@@ -358,64 +420,18 @@ class paymentMethod extends React.Component {
           <meta property="description"
                 content="Accédez à votre compte My Alfred, première application d'offres de services entre particuliers. La création de votre compte est gratuite et sécurisée. Créez votre compte sur My Alfred en quelques clics pour trouvez ou offrir vos services !"/>
         </Helmet>
-        <LayoutAccount index={index}>
-          <Grid style={{display: 'flex', flexDirection: 'column'}}>
-            <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
-              <Grid>
-                <h2>Mode de paiement</h2>
-              </Grid>
-              <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>N'hésitez pas à enregistrer un mode de paiement pour aller plus vite lors de vos réservations.</Typography>
-              </Grid>
-            </Grid>
-            <Grid>
-              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
-            </Grid>
-            <Grid>
-              <Grid>
-                <h3>Cartes enregistrées</h3>
-              </Grid>
-              <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Payez encore plus rapidement sans communiquer vos informations financières.</Typography>
-              </Grid>
-            </Grid>
-            <Grid style={{marginTop: '5vh'}}>
-              <PaymentCard cards={cards} userName={userName} editable={true} deleteCard={this.callDialogDeletedCard}/>
-            </Grid>
-            <Grid>
-              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
-            </Grid>
-            <Grid>
-              <Grid style={{display :'flex', alignItems: 'center'}}>
-                <Grid>
-                  <IconButton aria-label="add" onClick={this.callAddCreditCard}>
-                    <AddCircleIcon />
-                  </IconButton>
-                </Grid>
-                <Grid>
-                  <Typography>Enregistrer une carte bancaire</Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid style={{marginTop: '10vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-              <Grid style={{marginRight: '2vh'}}>
-                <Grid>
-                  <SecurityIcon style={{color: 'rgba(39,37,37,35%)'}}/>
-                </Grid>
-              </Grid>
-              <Grid>
-                <Grid>
-                  <Typography style={{color:'rgba(39,37,37,35%)'}}>Toutes les données de paeiment sur My Alfred sont cryptées.</Typography>
-                </Grid>
-                <Grid>
-                  <Typography style={{color:'rgba(39,37,37,35%)'}}>Elles sont gérées par mangopay notre partenaire de confiance.</Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-          {addCreditCard ? this.modalAddCreditCard(classes) : null}
-          {deletedial ? this.modalDeleteCreditCard(classes) : null}
-        </LayoutAccount>
+        <Hidden only={['xs', 'sm', 'md']}>
+          <LayoutAccount index={index}>
+            {this.content(classes)}
+          </LayoutAccount>
+        </Hidden>
+        <Hidden only={['lg', 'xl']}>
+          <LayoutMobile>
+            {this.content(classes)}
+          </LayoutMobile>
+        </Hidden>
+        {addCreditCard ? this.modalAddCreditCard(classes) : null}
+        {deletedial ? this.modalDeleteCreditCard(classes) : null}
       </React.Fragment>
     );
   };

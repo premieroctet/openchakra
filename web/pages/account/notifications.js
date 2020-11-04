@@ -13,6 +13,9 @@ import cookie from 'react-cookies';
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
+import Hidden from "@material-ui/core/Hidden";
+import LayoutMobile from "../../hoc/Layout/LayoutMobile";
+
 
 moment.locale('fr');
 
@@ -172,6 +175,339 @@ class notifications extends React.Component {
       .catch();
   };
 
+  content = (classes) =>{
+    return(
+      <Grid>
+        <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+          <Grid>
+            <h2>Mes notifications</h2>
+          </Grid>
+          <Grid>
+            <Typography>Choisissez les notifications que vous souhaitez recevoir </Typography>
+          </Grid>
+        </Grid>
+        <Grid>
+          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+        </Grid>
+        <Grid>
+          <Grid>
+            <Grid>
+              <h2>Messages</h2>
+            </Grid>
+            <Grid>
+              <Typography style={{color:'rgba(39,37,37,35%)'}}>Recevez des messages de la part des Alfred et des utilisateurs y compris les demandes de réservations.</Typography>
+            </Grid>
+            <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
+              <Grid item xl={3}  xs={6}>
+                <p>Email</p>
+              </Grid>
+              <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
+                <IOSSwitch
+                  checked={this.state.messages_email}
+                  onChange={this.handleChange('messages_email')}
+                  value={'messages_email'}
+                  inputProps={{'aria-label': 'primary checkbox'}}
+                />
+              </Grid>
+            </Grid>
+            <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+              <Grid item xl={3}  xs={6}>
+                <p>Notification push</p>
+              </Grid>
+              <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
+                <IOSSwitch
+                  checked={this.state.messages_push}
+                  onChange={this.handleChange('messages_push')}
+                  value={'messages_push'}
+                  color="primary"
+                  inputProps={{'aria-label': 'primary checkbox'}}
+                />
+              </Grid>
+            </Grid>
+            <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+              <Grid item xl={3}  xs={6}>
+                <p>SMS</p>
+              </Grid>
+              <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
+                <IOSSwitch
+                  checked={this.state.messages_sms}
+                  onChange={this.handleChange('messages_sms')}
+                  value={'messages_sms'}
+                  color="primary"
+                  inputProps={{'aria-label': 'primary checkbox'}}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid>
+            <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+          </Grid>
+          <Grid>
+            <Grid>
+              <h2>Rappel</h2>
+            </Grid>
+            <Grid>
+              <Typography>
+                Recevez des rappels de réservation, des demandes d’évaluation, des informations sur les tarifs et
+                d’autres rappels relatifs à vos activités sur My-Alfred.
+              </Typography>
+            </Grid>
+            <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
+              <Grid item xl={3}  xs={6}>
+                <p>Email</p>
+              </Grid>
+              <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
+                <IOSSwitch
+                  checked={this.state.rappel_email}
+                  onChange={this.handleChange('rappel_email')}
+                  value={'rappel_email'}
+                  color="primary"
+                  inputProps={{'aria-label': 'primary checkbox'}}
+                />
+              </Grid>
+            </Grid>
+            <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+              <Grid item xl={3}  xs={6}>
+                <p>Notification push</p>
+              </Grid>
+              <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
+                <IOSSwitch
+                  checked={this.state.rappel_push}
+                  onChange={this.handleChange('rappel_push')}
+                  value={'rappel_push'}
+                  color="primary"
+                  inputProps={{'aria-label': 'primary checkbox'}}
+                />
+              </Grid>
+            </Grid>
+            <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+              <Grid item xl={3}  xs={6}>
+                <p>SMS</p>
+              </Grid>
+              <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
+                <IOSSwitch
+                  checked={this.state.rappel_sms}
+                  onChange={this.handleChange('rappel_sms')}
+                  value={'rappel_sms'}
+                  color="primary"
+                  inputProps={{'aria-label': 'primary checkbox'}}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid>
+            <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+          </Grid>
+          <Grid>
+            <Grid>
+              <h2>Promotions & Astuces</h2>
+            </Grid>
+            <Grid>
+              <Typography>
+                Recevez des coupons, des informations promotionnelles, des enquêtes, et des informations de la part
+                de My-Alfred
+                et de ses partenaires.
+              </Typography>
+            </Grid>
+            <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
+              <Grid item xl={3}  xs={6}>
+                <p>Email</p>
+              </Grid>
+              <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
+                <IOSSwitch
+                  checked={this.state.promotions_email}
+                  onChange={this.handleChange('promotions_email')}
+                  value={'promotions_email'}
+                  color="primary"
+                  inputProps={{'aria-label': 'primary checkbox'}}
+                />
+              </Grid>
+            </Grid>
+            <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+              <Grid item xl={3}  xs={6}>
+                <p>Notification push</p>
+              </Grid>
+              <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
+                <IOSSwitch
+                  checked={this.state.promotions_push}
+                  onChange={this.handleChange('promotions_push')}
+                  value={'promotions_push'}
+                  color="primary"
+                  inputProps={{'aria-label': 'primary checkbox'}}
+                />
+              </Grid>
+            </Grid>
+            <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+              <Grid item xl={3}  xs={6}>
+                <p>SMS</p>
+              </Grid>
+              <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
+                <IOSSwitch
+                  checked={this.state.promotions_sms}
+                  onChange={this.handleChange('promotions_sms')}
+                  value={'promotions_sms'}
+                  color="primary"
+                  inputProps={{'aria-label': 'primary checkbox'}}
+                />
+              </Grid>
+            </Grid>
+            <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+              <Grid item xl={3}  xs={6}>
+                <p>Appel téléphonique</p>
+              </Grid>
+              <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
+                <IOSSwitch
+                  checked={this.state.promotions_phone}
+                  onChange={this.handleChange('promotions_phone')}
+                  value={'promotions_phone'}
+                  color="primary"
+                  inputProps={{'aria-label': 'primary checkbox'}}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid>
+            <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+          </Grid>
+          <Grid>
+            <Grid>
+              <h2>Politique & communauté </h2>
+            </Grid>
+            <Grid>
+              <Typography>
+                Recevez des nouvelles sur les réglementations liées aux prestations de services
+              </Typography>
+            </Grid>
+            <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
+              <Grid item xl={3}  xs={6}>
+                <p>Email</p>
+              </Grid>
+              <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
+                <IOSSwitch
+                  checked={this.state.community_email}
+                  onChange={this.handleChange('community_email')}
+                  value={'community_email'}
+                  color="primary"
+                  inputProps={{'aria-label': 'primary checkbox'}}
+                />
+              </Grid>
+            </Grid>
+            <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+              <Grid item xl={3}  xs={6}>
+                <p>Notification push</p>
+              </Grid>
+              <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
+                <IOSSwitch
+                  checked={this.state.community_push}
+                  onChange={this.handleChange('community_push')}
+                  value={'community_push'}
+                  color="primary"
+                  inputProps={{'aria-label': 'primary checkbox'}}
+                />
+              </Grid>
+            </Grid>
+            <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+              <Grid item xl={3}  xs={6}>
+                <p>SMS</p>
+              </Grid>
+              <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
+                <IOSSwitch
+                  checked={this.state.community_sms}
+                  onChange={this.handleChange('community_sms')}
+                  value={'community_sms'}
+                  color="primary"
+                  inputProps={{'aria-label': 'primary checkbox'}}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid>
+            <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+          </Grid>
+          <Grid>
+            <Grid>
+              <h2>Assistance du compte </h2>
+            </Grid>
+            <Grid>
+              <Typography>
+                Vos réservations,
+                des informations légales,
+                des questions de sécurité et de confidentialité.
+                Pour votre sécurité, vous ne pouvez pas désactiver les notifications par email.
+              </Typography>
+            </Grid>
+            <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
+              <Grid item xl={3}  xs={6}>
+                <p>Email</p>
+              </Grid>
+              <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
+                <IOSSwitch
+                  checked={this.state.assistance_email}
+                  onChange={this.handleChange('assistance_email')}
+                  value={'assistance_email'}
+                  color="primary"
+                  inputProps={{'aria-label': 'primary checkbox'}}
+                />
+              </Grid>
+            </Grid>
+            <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+              <Grid item xl={3}  xs={6}>
+                <p>Notification push</p>
+              </Grid>
+              <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
+                <IOSSwitch
+                  checked={this.state.assistance_push}
+                  onChange={this.handleChange('assistance_push')}
+                  value={'assistance_push'}
+                  color="primary"
+                  inputProps={{'aria-label': 'primary checkbox'}}
+                />
+              </Grid>
+            </Grid>
+            <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
+              <Grid item xl={3}  xs={6}>
+                <p>SMS</p>
+              </Grid>
+              <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
+                <IOSSwitch
+                  checked={this.state.assistance_sms}
+                  onChange={this.handleChange('assistance_sms')}
+                  value={'assistance_sms'}
+                  color="primary"
+                  inputProps={{'aria-label': 'primary checkbox'}}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid>
+          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+        </Grid>
+        <Grid className={classes.containerButtonSave}>
+          <Grid style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            width: '100%',
+            bottom: 0,
+            alignItems: 'center',
+          }}>
+            <Button
+              classes={{root: classes.buttonSave}}
+              type={'button'}
+              onClick={this.onSubmit}
+              variant="contained"
+              color="primary"
+            >
+              Enregistrer
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid/>
+      </Grid>
+
+    )
+  };
+
   render() {
     const {classes, index} = this.props;
 
@@ -182,340 +518,17 @@ class notifications extends React.Component {
           <meta property="description"
                 content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. "/>
         </Helmet>
-        <LayoutAccount index={index}>
-          <Grid>
-            <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
-              <Grid>
-                <h2>Notifications</h2>
-              </Grid>
-              <Grid>
-                <Typography>Choisissez les notifications que vous souhaitez recevoir </Typography>
-              </Grid>
-            </Grid>
-            <Grid>
-              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
-            </Grid>
-            <Grid>
-              <Grid>
-                <Grid>
-                  <h2>Messages</h2>
-                </Grid>
-                <Grid>
-                  <Typography style={{color:'rgba(39,37,37,35%)'}}>Recevez des messages de la part des Alfred et des utilisateurs y compris les demandes de réservations.</Typography>
-                </Grid>
-                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
-                  <Grid item xl={3}>
-                    <p>Email</p>
-                  </Grid>
-                  <Grid item xl={3}>
-                    <IOSSwitch
-                      checked={this.state.messages_email}
-                      onChange={this.handleChange('messages_email')}
-                      value={'messages_email'}
-                      inputProps={{'aria-label': 'primary checkbox'}}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
-                  <Grid item xl={3}>
-                    <p>Notification push</p>
-                  </Grid>
-                  <Grid item xl={3}>
-                    <IOSSwitch
-                      checked={this.state.messages_push}
-                      onChange={this.handleChange('messages_push')}
-                      value={'messages_push'}
-                      color="primary"
-                      inputProps={{'aria-label': 'primary checkbox'}}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
-                  <Grid item xl={3}>
-                    <p>SMS</p>
-                  </Grid>
-                  <Grid item xl={3}>
-                    <IOSSwitch
-                      checked={this.state.messages_sms}
-                      onChange={this.handleChange('messages_sms')}
-                      value={'messages_sms'}
-                      color="primary"
-                      inputProps={{'aria-label': 'primary checkbox'}}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid>
-                <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
-              </Grid>
-              <Grid>
-                <Grid>
-                  <h2>Rappel</h2>
-                </Grid>
-                <Grid>
-                  <Typography>
-                    Recevez des rappels de réservation, des demandes d’évaluation, des informations sur les tarifs et
-                    d’autres rappels relatifs à vos activités sur My-Alfred.
-                  </Typography>
-                </Grid>
-                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
-                  <Grid item xl={3}>
-                    <p>Email</p>
-                  </Grid>
-                  <Grid item xl={3}>
-                    <IOSSwitch
-                      checked={this.state.rappel_email}
-                      onChange={this.handleChange('rappel_email')}
-                      value={'rappel_email'}
-                      color="primary"
-                      inputProps={{'aria-label': 'primary checkbox'}}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
-                  <Grid item xl={3}>
-                    <p>Notification push</p>
-                  </Grid>
-                  <Grid item xl={3}>
-                    <IOSSwitch
-                      checked={this.state.rappel_push}
-                      onChange={this.handleChange('rappel_push')}
-                      value={'rappel_push'}
-                      color="primary"
-                      inputProps={{'aria-label': 'primary checkbox'}}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
-                  <Grid item xl={3}>
-                    <p>SMS</p>
-                  </Grid>
-                  <Grid item xl={3}>
-                    <IOSSwitch
-                      checked={this.state.rappel_sms}
-                      onChange={this.handleChange('rappel_sms')}
-                      value={'rappel_sms'}
-                      color="primary"
-                      inputProps={{'aria-label': 'primary checkbox'}}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid>
-                <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
-              </Grid>
-              <Grid>
-                <Grid>
-                  <h2>Promotions & Astuces</h2>
-                </Grid>
-                <Grid>
-                  <Typography>
-                    Recevez des coupons, des informations promotionnelles, des enquêtes, et des informations de la part
-                    de My-Alfred
-                    et de ses partenaires.
-                  </Typography>
-                </Grid>
-                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
-                  <Grid item xl={3}>
-                    <p>Email</p>
-                  </Grid>
-                  <Grid item xl={3}>
-                    <IOSSwitch
-                      checked={this.state.promotions_email}
-                      onChange={this.handleChange('promotions_email')}
-                      value={'promotions_email'}
-                      color="primary"
-                      inputProps={{'aria-label': 'primary checkbox'}}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
-                  <Grid item xl={3}>
-                    <p>Notification push</p>
-                  </Grid>
-                  <Grid item xl={3}>
-                    <IOSSwitch
-                      checked={this.state.promotions_push}
-                      onChange={this.handleChange('promotions_push')}
-                      value={'promotions_push'}
-                      color="primary"
-                      inputProps={{'aria-label': 'primary checkbox'}}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
-                  <Grid item xl={3}>
-                    <p>SMS</p>
-                  </Grid>
-                  <Grid item xl={3}>
-                    <IOSSwitch
-                      checked={this.state.promotions_sms}
-                      onChange={this.handleChange('promotions_sms')}
-                      value={'promotions_sms'}
-                      color="primary"
-                      inputProps={{'aria-label': 'primary checkbox'}}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
-                  <Grid item xl={3}>
-                    <p>Appel téléphonique</p>
-                  </Grid>
-                  <Grid item xl={3}>
-                    <IOSSwitch
-                      checked={this.state.promotions_phone}
-                      onChange={this.handleChange('promotions_phone')}
-                      value={'promotions_phone'}
-                      color="primary"
-                      inputProps={{'aria-label': 'primary checkbox'}}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid>
-                <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
-              </Grid>
-              <Grid>
-                <Grid>
-                  <h2>Politique & communauté </h2>
-                </Grid>
-                <Grid>
-                  <Typography>
-                    Recevez des nouvelles sur les réglementations liées aux prestations de services
-                  </Typography>
-                </Grid>
-                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
-                  <Grid item xl={3}>
-                    <p>Email</p>
-                  </Grid>
-                  <Grid item xl={3}>
-                    <IOSSwitch
-                      checked={this.state.community_email}
-                      onChange={this.handleChange('community_email')}
-                      value={'community_email'}
-                      color="primary"
-                      inputProps={{'aria-label': 'primary checkbox'}}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
-                  <Grid item xl={3}>
-                    <p>Notification push</p>
-                  </Grid>
-                  <Grid item xl={3}>
-                    <IOSSwitch
-                      checked={this.state.community_push}
-                      onChange={this.handleChange('community_push')}
-                      value={'community_push'}
-                      color="primary"
-                      inputProps={{'aria-label': 'primary checkbox'}}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
-                  <Grid item xl={3}>
-                    <p>SMS</p>
-                  </Grid>
-                  <Grid item xl={3}>
-                    <IOSSwitch
-                      checked={this.state.community_sms}
-                      onChange={this.handleChange('community_sms')}
-                      value={'community_sms'}
-                      color="primary"
-                      inputProps={{'aria-label': 'primary checkbox'}}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid>
-                <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
-              </Grid>
-              <Grid>
-                <Grid>
-                  <h2>Assistance du compte </h2>
-                </Grid>
-                <Grid>
-                  <Typography>
-                    Nous devrons peut-être vous envoyer des messages concernant votre compte. Vos réservations de
-                    services,
-                    des informations légales,
-                    des questions de sécurité et de confidentialité, et pour répondre à vos demandes adressées à notre
-                    assistance
-                    utilisateur.
-                    Pour votre sécurité, vous ne pouvez pas désactiver les notifications par email et nous pourrions
-                    vous
-                    contacter par téléphone ou d’autres moyens si besoin.
-                  </Typography>
-                </Grid>
-                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
-                  <Grid item xl={3}>
-                    <p>Email</p>
-                  </Grid>
-                  <Grid item xl={3}>
-                    <IOSSwitch
-                      checked={this.state.assistance_email}
-                      onChange={this.handleChange('assistance_email')}
-                      value={'assistance_email'}
-                      color="primary"
-                      inputProps={{'aria-label': 'primary checkbox'}}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
-                  <Grid item xl={3}>
-                    <p>Notification push</p>
-                  </Grid>
-                  <Grid item xl={3}>
-                    <IOSSwitch
-                      checked={this.state.assistance_push}
-                      onChange={this.handleChange('assistance_push')}
-                      value={'assistance_push'}
-                      color="primary"
-                      inputProps={{'aria-label': 'primary checkbox'}}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
-                  <Grid item xl={3}>
-                    <p>SMS</p>
-                  </Grid>
-                  <Grid item xl={3}>
-                    <IOSSwitch
-                      checked={this.state.assistance_sms}
-                      onChange={this.handleChange('assistance_sms')}
-                      value={'assistance_sms'}
-                      color="primary"
-                      inputProps={{'aria-label': 'primary checkbox'}}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid>
-              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
-            </Grid>
-            <Grid>
-              <Grid style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                width: '100%',
-                bottom: 0,
-                alignItems: 'center',
-              }}>
-                <Button
-                  classes={{root: classes.buttonSave}}
-                  type={'button'}
-                  onClick={this.onSubmit}
-                  variant="contained"
-                  color="primary"
-                  >
-                  Enregistrer
-                </Button>
-              </Grid>
-            </Grid>
-          <Grid/>
-        </Grid>
-      </LayoutAccount>
+        <Hidden only={['xs', 'sm', 'md']}>
+          <LayoutAccount index={index}>
+            {this.content(classes)}
+          </LayoutAccount>
+        </Hidden>
+        <Hidden only={['lg', 'xl']}>
+          <LayoutMobile>
+            {this.content(classes)}
+          </LayoutMobile>
+        </Hidden>
+
     </React.Fragment>
     );
   };

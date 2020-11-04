@@ -11,6 +11,8 @@
     display: none;
 }
 
+
+
 .App-cards {
     margin: 0 auto;
     max-width: 1280px;
@@ -91,6 +93,7 @@
     display: none;
 }
 
+
 @media screen and (min-width: 600px) {
     .App-badges {
         flex-direction: row;
@@ -99,5 +102,17 @@
     .App-badges a + a {
         margin-top: 0;
         margin-left: 18px;
+    }
+
+
+}
+
+@media screen and (max-width: 600px){
+    .rccs{
+        width: 100%
+    }
+
+    .rccs__card{
+        width: 100%
     }
 }
