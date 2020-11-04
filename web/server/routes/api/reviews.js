@@ -203,10 +203,10 @@ router.get('/alfredReviewsCurrent', passport.authenticate('jwt', {session: false
 router.get('/profile/customerReviewsCurrent/:id', (req, res) => {
   const userId = mongoose.Types.ObjectId(req.params.id);
   Reviews.find({alfred: userId, note_client: undefined})
-    .populate('alfred', '-id_card')
-    .populate('user', '-id_card')
-    .populate('serviceUser')
-    .populate({path: 'serviceUser', populate: {path: 'service'}})
+    .populate('alfred', 'firstname name email')
+    .populate('user', 'firstname name email')
+    .populate('serviceUser', 'service')
+    .populate({path: 'serviceUser', select: 'service', populate: {path: 'service', select: 'label'}})
     .then(review => {
       res.status(200).json(review);
     })
@@ -216,10 +216,10 @@ router.get('/profile/customerReviewsCurrent/:id', (req, res) => {
 router.get('/profile/alfredReviewsCurrent/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   const userId = mongoose.Types.ObjectId(req.params.id);
   Reviews.find({user: userId, note_alfred: undefined})
-    .populate('alfred', '-id_card')
-    .populate('user', '-id_card')
+    .populate('alfred', 'firstname name email')
+    .populate('user', 'firstname name email')
     .populate('serviceUser')
-    .populate({path: 'serviceUser', populate: {path: 'service'}})
+    .populate({path: 'serviceUser', select: 'service', populate: {path: 'service', select: 'label'}})
     .then(review => {
       res.status(200).json(review);
     })
@@ -245,10 +245,11 @@ router.get('/alfred/:id', (req, res) => {
 // @Route GET /myAlfred/api/reviews/:id
 // View one review
 // @Access private
-router.get('/:id', (req, res) => {
+router.get('/review/:id', (req, res) => {
   Reviews.findById(req.params.id)
     .populate('alfred')
     .populate('user')
+    .populate({path: 'serviceUser', populate: {path: 'service', select: 'label'}})
     .then(reviews => {
       if (Object.keys(reviews).length === 0 && reviews.constructor === Object) {
         return res.status(400).json({msg: 'No reviews found'});

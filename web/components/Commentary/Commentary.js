@@ -33,67 +33,46 @@ class Commentary extends React.Component {
   }
 
   componentDidMount() {
-    const user_id = this.props.user_id;
-    const service_id = this.props.service_id;
-    const alfred_mode = this.props.alfred_mode;
+    const review_id = this.props.review
 
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
-    if (user_id) {
-      axios.get('/myAlfred/api/users/users/' + user_id)
-        .then(res => {
-          this.setState({owner: res.data});
-        })
-        .catch(err => console.error(err));
-    }
-
-    if (this.props.user_id) {
-      const req = alfred_mode ? 'customerReviewsCurrent' : 'alfredReviewsCurrent';
-      const url = `/myAlfred/api/reviews/profile/${req}/${this.props.user_id}`;
-
-      axios.get(url)
-        .then(res => {
-          var reviews = res.data;
-          if (service_id) {
-            reviews = reviews.filter(r => r.serviceUser._id === service_id);
-          }
-          this.setState({reviews: reviews});
-        })
-        .catch(err => console.error(err));
-    }
+    axios.get(`/myAlfred/api/reviews/review/${review_id}`)
+      .then(res => {
+        this.setState({review: res.data});
+      })
+      .catch(err => console.error(err));
   }
 
 
   render() {
-    const {owner, reviews, filter} = this.state;
-    const {classes, alfred_mode, styleComponent} = this.props;
+    const {review, filter} = this.state;
+    const {user, classes, styleComponent} = this.props;
 
-      const notes = computeAverageNotes(reviews.map(r => alfred_mode ? r.note_alfred : r.note_client));
-      const skills = computeSumSkills(reviews.map(r => alfred_mode ? r.note_alfred : r.note_client));
-
+    if (!review) {
+      return null
+    }
+    console.log(`review:${JSON.stringify(review, null, 2)}, user:${user}`)
+    const globalNote = (review.note_alfred ? review.note_alfred : review.note_client).global
+    const name = (review.alfred.id==user ? review.user : review.alfred).firstname
       return (
         <Grid container style={{width: '100%', display: 'flex', flexDirection: 'row'}}>
           <Grid item xl={3} style={{display: 'flex', flexDirection: 'column'}}>
             <Grid>
-              <Typography><strong>illona</strong></Typography>
+              <Typography><strong>{name}</strong></Typography>
             </Grid>
             <Grid>
-              <Typography><strong>17/09/20</strong></Typography>
+              <Typography><strong>{moment(review.date).format('L')}</strong></Typography>
             </Grid>
             <Grid>
-              <Typography>garde chien</Typography>
+              <Typography>{review.serviceUser.service.label}</Typography>
             </Grid>
           </Grid>
           <Grid xl={4} item>
             <Grid>
-              <Rating name="half-rating-read" defaultValue={5} precision={0.5} readOnly />
-            </Grid>
-            <Grid>
-              <Typography><strong>Vraiment, parfait !</strong></Typography>
+              <Rating name="half-rating-read" value={globalNote} precision={0.5} readOnly />
             </Grid>
             <Grid style={{marginTop: '2%'}}>
-              <Typography>J’ai réellement apprécier la prestation d’Ilona.
-                Mon chien à l’air d’avoir passer un super moment.
-                Tout était parfait :)</Typography>
+              <Typography>{review.content}</Typography>
             </Grid>
             {
               false ?

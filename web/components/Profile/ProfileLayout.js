@@ -4,6 +4,7 @@ import ProfileHeader from '../../components/Profile/ProfileHeader'
 import Grid from "@material-ui/core/Grid";
 import cookie from 'react-cookies';
 import axios from 'axios'
+const {getLoggedUserId}=require('../../utils/functions')
 
 class ProfileLayout extends React.Component {
 

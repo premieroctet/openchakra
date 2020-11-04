@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 import Grid from "@material-ui/core/Grid";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -15,12 +16,31 @@ class SummaryCommentary extends React.Component{
   constructor(props) {
     super(props);
     this.state={
+      customerReviews: [],
+      alfredReviews: [],
       filter:'',
       showCommentary: false
     }
   }
 
-  handleChange = (event) => {
+  componentDidMount() {
+    const userId = this.props.user
+    if (!userId) {
+      return
+    }
+    console.log(userId)
+    axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${userId}`)
+      .then( res => {
+        console.log(`Got ${res.data.length} customer reviews`)
+        this.setState( { customerReviews: res.data})
+      })
+    axios.get(`/myAlfred/api/reviews/profile/alfredReviewsCurrent/${userId}`)
+      .then( res => {
+        this.setState( { alfredReviews: res.data})
+      })
+  }
+
+  filterChange = (event) => {
     this.setState({filter : event.target.value});
   };
 
@@ -29,15 +49,19 @@ class SummaryCommentary extends React.Component{
   };
 
   render() {
-    const{filter, showCommentary} = this.state;
+    const{filter, showCommentary, alfredReviews, customerReviews} = this.state;
     const {classes} = this.props;
+
+    const commentsCount=alfredReviews.length + customerReviews.length
+    const allComments=alfredReviews.concat(customerReviews)
+    var average = allComments.length ? allComments.map( r => r.note_alfred ? r.note_alfred.global : r.note_client.global ).reduce ((a,b) => a+b)/allComments.length : 0
 
     return(
       <Grid>
         <Grid container style={{display: 'flex', flexDirection: 'row', width: '100%'}}>
           <Grid item xl={3} style={{display: 'flex', flexDirection: 'column'}}>
             <Grid>
-              <Typography><strong>22</strong></Typography>
+              <Typography><strong>{commentsCount}</strong></Typography>
             </Grid>
             <Grid style={{marginTop: '2%'}}>
               <Typography>commentaires</Typography>
@@ -50,7 +74,7 @@ class SummaryCommentary extends React.Component{
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
                     value={filter}
-                    onChange={this.handleChange}
+                    onChange={this.filterChange}
                     label="Filtrer par:"
                   >
                     <MenuItem value="">
@@ -67,14 +91,14 @@ class SummaryCommentary extends React.Component{
           <Grid item xl={4} style={{display: 'flex', flexDirection: 'column'}}>
             <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid>
-                <Typography><strong>4.2</strong></Typography>
+                <Typography><strong>{average.toFixed(1)}</strong></Typography>
               </Grid>
               <Grid style={{marginLeft: '3%'}}>
-                <Rating name="half-rating-read" defaultValue={5} precision={0.5} readOnly />
+                <Rating name="half-rating-read" value={Math.floor(average)} precision={0.5} readOnly />
               </Grid>
             </Grid>
             <Grid>
-              <Typography>notes general</Typography>
+              <Typography>NOTE GENERALE</Typography>
             </Grid>
             <Grid style={{height: 56, display:'flex', alignItems:'center', marginTop: '4%'}}>
               <Button variant={'contained'} onClick={this.handleShowCommentary} classes={{root: classes.buttonShowMore}}>Voir les commentaires</Button>
@@ -83,9 +107,13 @@ class SummaryCommentary extends React.Component{
         </Grid>
         {
           showCommentary ?
-            <Grid style={{marginTop: '5%'}}>
-              <Commentary/>
-            </Grid> : null
+            allComments.map (r => (
+              <Grid style={{marginTop: '5%'}}>
+                <Commentary key={r._id} review={r._id} user={this.props.user}/>
+              </Grid>
+            ))
+            :
+            null
         }
       </Grid>
     );

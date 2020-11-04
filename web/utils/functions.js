@@ -93,5 +93,5 @@ const getLoggedUserAdmin = () => {
 
 module.exports = {
   computeDistanceKm, computeBookingReference, computeAverageNotes,
-  computeSumSkills, circular_get, getLoggedUser
+  computeSumSkills, circular_get, getLoggedUser, getLoggedUserId, getLoggedUserAdmin,
 };
