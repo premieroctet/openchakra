@@ -124,7 +124,7 @@ router.post('/add/client', passport.authenticate('jwt', {session: false}), (req,
 // @Route GET /myAlfred/api/reviews/:user_id
 // get skills for user, returns 4 skills cumulated
 // @Access private
-router.get('/:user_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/:user_id', (req, res) => {
   const userId = mongoose.Types.ObjectId(req.params.user_id);
   var result = {careful: 0, punctual: 0, flexible: 0, reactive: 0};
   Reviews.find({alfred: userId})
@@ -213,7 +213,7 @@ router.get('/profile/customerReviewsCurrent/:id', (req, res) => {
     .catch(err => res.status(404).json(err));
 });
 
-router.get('/profile/alfredReviewsCurrent/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/profile/alfredReviewsCurrent/:id', (req, res) => {
   const userId = mongoose.Types.ObjectId(req.params.id);
   Reviews.find({user: userId, note_alfred: undefined})
     .populate('alfred', 'firstname name email')

@@ -131,8 +131,6 @@ class shop extends React.Component {
     const {isAdmin} = this.state;
     let isOwner = this.state.idAlfred === this.state.userId;
 
-    console.log(this.state.services)
-
     return (
       <Fragment>
         <Layout>
@@ -153,7 +151,7 @@ class shop extends React.Component {
                 <About alfred={this.props.aboutId} profil={true}/>
               </Grid>
               <Grid className={classes.skillsContentContainer}>
-                <Skills alfred={this.state.alfred} widthHr={'100%'} skills={this.state.skills} needTitle={true}/>
+                <Skills key={this.state.idAlfred} alfred={this.state.idAlfred} widthHr={'100%'} needTitle={true}/>
               </Grid>
             </Grid>
             <Grid className={classes.servicesContainer}>

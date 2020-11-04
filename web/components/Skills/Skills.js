@@ -31,22 +31,39 @@ class Skills extends React.Component {
 
   componentDidMount = () => {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
-    axios.get(`/myAlfred/api/reviews/${this.props.alfred}`)
-      .then( res => {
-        var skill_values = this.state.skill_values
-        const skills = res.data
-        Object.keys(skills).forEach( key => {
-          if (Object.keys(SKILLS).includes(key)) {
-            skill_values[key]+=skills[key]
-          }
-        });
-        this.setState({ skill_values:skill_values})
-      })
+
+    if (this.props.alfred) {
+      axios.get(`/myAlfred/api/reviews/${this.props.alfred}`)
+        .then( res => {
+          var skill_values = this.state.skill_values
+          const skills = res.data
+          Object.keys(skills).forEach( key => {
+            if (Object.keys(SKILLS).includes(key)) {
+              skill_values[key]+=skills[key]
+            }
+          });
+          this.setState({ skill_values:skill_values})
+        })
+    }
+    if (this.props.review) {
+      axios.get(`/myAlfred/api/reviews/review/${this.props.review}`)
+        .then( res => {
+          var skill_values = this.state.skill_values
+          const skills = res.data.note_alfred
+          Object.keys(skills).forEach( key => {
+            if (Object.keys(SKILLS).includes(key)) {
+              skill_values[key]+=skills[key]
+            }
+          });
+          this.setState({ skill_values:skill_values})
+        })
+    }
   }
 
   render() {
     const {classes, hideCount, onClick, needTitle, alfred, widthHr} = this.props;
     const {skill_values}=this.state
+
     return (
       <Box titleTopic={'Compliments'}>
       <Topic>
@@ -59,7 +76,9 @@ class Skills extends React.Component {
                 <div className={classes.skillCard} >
                   <div><img src={pic} className={classes.avatarSize}/></div>
                   <div className={classes.skillTitle}>{SKILLS[skill].label}</div>
-                  <div className={classes.skillValue}>{`(${skill_values[skill]})`}</div>
+                  { hideCount ? null:
+                    <div className={classes.skillValue}>{`(${skill_values[skill]})`}</div>
+                  }
                 </div>
               )
             })

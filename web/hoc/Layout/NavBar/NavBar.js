@@ -371,7 +371,7 @@ class NavBar extends Component {
                       null
                     }
                       <Link href={'/account/notifications'}>
-                        <MenuItem>My account</MenuItem>
+                        <MenuItem>Mon compte</MenuItem>
                       </Link>
                       {user && user.is_alfred ?
                         <Link href={`/shop?id_alfred=${user._id}`}>

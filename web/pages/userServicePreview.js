@@ -563,8 +563,8 @@ class UserServicesPreview extends React.Component {
                           <Grid>
                             <Link
                               href={{
-                                pathname: '/viewProfile',
-                                query: {id: this.state.alfred._id},
+                                pathname: '/profile/about',
+                                query: {user: this.state.alfred._id},
                               }}
                             >
                               <Button variant={'outlined'} className={classes.userServicePreviewButtonProfil}>Voir le profil</Button>
@@ -744,7 +744,7 @@ class UserServicesPreview extends React.Component {
                             titleTopic={'Commentaires'}
                             titleSummary={alfred.firstname ? `Ici, vous pouvez laisser des commentaires à ${alfred.firstname} !` : ''}
                           >
-                            <SummaryCommentary user={alfred._id}  service_id={this.props.service_id}/>
+                            <SummaryCommentary user={alfred._id}  serviceUser={this.props.service_id}/>
                           </Topic>
 
                         </Grid>

@@ -3,46 +3,59 @@ import axios from 'axios'
 import cookie from 'react-cookies';
 import Grid from "@material-ui/core/Grid";
 import ProfileLayout from '../../components/Profile/ProfileLayout'
-import About from '../../components/About/About'
-import Presentation from '../../components/Presentation/Presentation'
-import Skills from '../../components/Skills/Skills'
-import Badges from '../../components/Badges/Badges'
-import Hashtags from '../../components/Hashtags/Hashtags'
+import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule'
+import {withStyles} from '@material-ui/core/styles';
+import styles from '../../static/css/pages/homePage/index';
+const I18N=require('../../utils/i18n')
+import {getLoggedUserId} from '../../utils/functions'
 
-class ProfileAbout extends React.Component {
+class ProfileCalendar extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state={}
+    this.state={
+      availabilities:[]
+    }
   }
 
   static getInitialProps({query: {user}}) {
     return {user: user};
   }
 
+  loadAvailabilities = () => {
+    axios.get(`/myAlfred/api/availability/userAvailabilities/${this.props.user}`)
+      .then(res => {
+        this.setState({availabilities: res.data});
+      })
+      .catch(err => console.error(err));
+  };
+
+  componentDidMount() {
+    this.loadAvailabilities()
+  }
+
   render() {
     const {user}=this.props
-
+    const readOnly=this.props.user!=getLoggedUserId()
     if (!user) {
       return null
     }
     return (
       <ProfileLayout user={user}>
         <Grid container>
-          <Grid item xs={4}>
-            <About user={user} />
-          </Grid>
-          <Grid item xs={8}>
-            <Presentation user={user} />
-          </Grid>
-          <Grid item xs={6}>
-            <Skills user={user} />
-          </Grid>
-          <Grid item xs={6}>
-            <Badges user={user} />
-          </Grid>
           <Grid item xs={12}>
-            <Hashtags user={user} />
+            <DrawerAndSchedule
+            availabilities={this.state.availabilities}
+                                     title={I18N.SCHEDULE_TITLE}
+                                     subtitle={I18N.SCHEDULE_SUBTITLE}
+                                     nbSchedule={3}
+                                     availabilityUpdate={this.loadAvailabilities}
+                                     availabilityCreated={this.loadAvailabilities}
+                                     onAvailabilityChanged={this.loadAvailabilities}
+                                     style={this.props.classes}
+                                     selectable={!readOnly}
+                                     ref={this.scheduleDrawer}
+                                     readOnly={readOnly}/>
           </Grid>
         </Grid>
       </ProfileLayout>
@@ -51,4 +64,4 @@ class ProfileAbout extends React.Component {
 
 }
 
-export default ProfileAbout
+export default withStyles(styles)(ProfileCalendar)

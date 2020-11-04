@@ -51,7 +51,7 @@ class Commentary extends React.Component {
     if (!review) {
       return null
     }
-    console.log(`review:${JSON.stringify(review, null, 2)}, user:${user}`)
+
     const globalNote = (review.note_alfred ? review.note_alfred : review.note_client).global
     const name = (review.alfred.id==user ? review.user : review.alfred).firstname
       return (
@@ -82,7 +82,7 @@ class Commentary extends React.Component {
             }
 
             <Grid style={{ marginTop: '3%'}}>
-              <Skills alfred={this.props.user_id}/>
+              <Skills review={review._id} hideCount={true}/>
             </Grid>
           </Grid>
         </Grid>

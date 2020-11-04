@@ -25,18 +25,26 @@ class SummaryCommentary extends React.Component{
 
   componentDidMount() {
     const userId = this.props.user
+    const serviceUser=this.props.serviceUser
     if (!userId) {
       return
     }
-    console.log(userId)
+
     axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${userId}`)
       .then( res => {
+        var reviews=res.data
         console.log(`Got ${res.data.length} customer reviews`)
-        this.setState( { customerReviews: res.data})
+        if (serviceUser) {
+          console.log(reviews[0].serviceUser._id,)
+          console.log(serviceUser)
+          reviews=reviews.filter( r => r.serviceUser._id==serviceUser)
+        }
+        this.setState( { customerReviews: reviews})
       })
     axios.get(`/myAlfred/api/reviews/profile/alfredReviewsCurrent/${userId}`)
       .then( res => {
-        this.setState( { alfredReviews: res.data})
+        var reviews=res.data
+        this.setState( { alfredReviews: reviews})
       })
   }
 
@@ -59,14 +67,15 @@ class SummaryCommentary extends React.Component{
     return(
       <Grid>
         <Grid container style={{display: 'flex', flexDirection: 'row', width: '100%'}}>
-          <Grid item xl={3} style={{display: 'flex', flexDirection: 'column'}}>
+          <Grid item xs={3} xl={3} style={{display: 'flex', flexDirection: 'column'}}>
             <Grid>
               <Typography><strong>{commentsCount}</strong></Typography>
             </Grid>
             <Grid style={{marginTop: '2%'}}>
-              <Typography>commentaires</Typography>
+              <Typography>COMMENTAIRES</Typography>
             </Grid>
             <Grid container style={{marginTop: '5%'}}>
+              { false ?
               <Grid item xl={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">Filtrer par:</InputLabel>
@@ -86,6 +95,9 @@ class SummaryCommentary extends React.Component{
                   </Select>
                 </FormControl>
               </Grid>
+              :
+              null
+            }
             </Grid>
           </Grid>
           <Grid item xl={4} style={{display: 'flex', flexDirection: 'column'}}>
