@@ -233,16 +233,6 @@ class paymentMethod extends React.Component {
           </Grid>
         </DialogTitle>
         <DialogContent>
-          <Grid id="PaymentForm" style={{marginTop : '5vh', marginBottom: '5vh'}}>
-            <Cards
-              cvc={this.state.csv}
-              expiry={this.state.expiration_date}
-              focused={this.state.focus}
-              name={this.state.name}
-              number={this.state.card_number}
-              callback={this.handleCallback}
-            />
-          </Grid>
           <Grid style={{display: 'flex', flexDirection: 'column'}}>
             <Grid style={{margin: '15px'}}>
               <NumberFormat

@@ -9,20 +9,37 @@ class LayoutMobile extends React.Component{
 
   constructor(props) {
     super(props);
+    this.state={
+      currentUrlIndex : ''
+    }
+
   }
 
   componentDidMount(){
     let currentUrl = Router.pathname;
-    console.log(currentUrl)
+    let firstParamUrl= currentUrl.split('/')[1].split('/')[0];
 
-    let word = currentUrl.split('/').pop().split('/')[0];
-    console.log(word)
+    switch (firstParamUrl) {
+      case 'account':
+        this.setState({currentUrlIndex: 4});
+        break;
+      case '/':
+        this.setState({currentUrlIndex: 1});
+        break;
+      case 'Search':
+        this.setState({currentUrlIndex: 2});
+        break;
+      default:
+        this.setState({currentUrlIndex: ''});
+    }
   };
 
   render() {
     const{children} = this.props;
+    const{currentUrlIndex} = this.state;
+
     return(
-      <React.Fragment style={{position: 'relative'}}>
+      <React.Fragment>
         <Grid style={{padding: '10%'}}>
           <Grid>
             <IconButton aria-label="ArrowBackIosIcon" onClick={() => Router.back()}>
@@ -33,7 +50,7 @@ class LayoutMobile extends React.Component{
         </Grid>
         <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%'}}>
           <Grid style={{width: '90%'}}>
-            <MobileNavbar/>
+            <MobileNavbar currentUrlIndex={currentUrlIndex}/>
           </Grid>
         </Grid>
       </React.Fragment>

@@ -13,7 +13,6 @@ class MobileNavbar extends React.Component{
   constructor(props) {
     super(props);
     this.state={
-      value: 0,
       labels:[
         {
           icon: <HomeIcon/>
@@ -35,12 +34,12 @@ class MobileNavbar extends React.Component{
   }
 
   render() {
-    const{value, labels} = this.state;
-    const{classes} = this.props;
+    const{labels} = this.state;
+    const{classes, currentUrlIndex} = this.props;
 
     return(
       <BottomNavigation
-        value={value}
+        value={currentUrlIndex}
         onChange={(event, newValue) => {
           this.setState({value: newValue});
         }}
@@ -49,7 +48,7 @@ class MobileNavbar extends React.Component{
         {
           labels.map((res, index) =>{
             return(
-              <BottomNavigationAction classes={{root: classes.navigationActionRoot}} value={index} icon={res.icon} />
+              <BottomNavigationAction key={index} classes={{root: classes.navigationActionRoot}} value={index} icon={res.icon} />
             )
           })
         }
