@@ -3,18 +3,7 @@ import {
   Flex,
   Box,
   Spinner,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   useDisclosure,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
   useToast,
   Alert,
   AlertIcon,
@@ -37,6 +26,7 @@ import { useSelector } from 'react-redux'
 import { signIn, useSession } from 'next-auth/client'
 import { getComponents } from '~core/selectors/components'
 import { useRouter } from 'next/router'
+import ModalComponent from '~components/ModalComponent'
 
 interface Project {
   createdAt: string
@@ -47,16 +37,16 @@ interface Project {
   projectName: string
 }
 
-interface Props {
+const App = (props: {
   id: number
   projectExist: boolean
   loading: boolean
-}
-
-const App = (props: Props) => {
+}) => {
   const { handlers } = useShortcuts()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [projectName, setProjectName] = useState('')
+  const [newProject, setNewProject] = useState(false)
+  const [userProjectList, setUserProjectList] = useState([])
   const components = useSelector(getComponents)
   const [session] = useSession()
   const router = useRouter()
@@ -115,6 +105,17 @@ const App = (props: Props) => {
     }
   }
 
+  const showUserProjectList = async () => {
+    if (session) {
+      const userProject = await checkUser(session.user.name)
+      setUserProjectList(userProject.project)
+      setNewProject(false)
+      onOpen()
+    } else {
+      signIn('github')
+    }
+  }
+
   const saveProject = async () => {
     if (session) {
       if (props.id) {
@@ -123,6 +124,7 @@ const App = (props: Props) => {
           (e: Project) => e.id === props.id,
         )
         if (userCanEdit === false) {
+          setNewProject(true)
           onOpen()
         }
         if (userCanEdit) {
@@ -146,6 +148,7 @@ const App = (props: Props) => {
           }
         }
       } else {
+        setNewProject(true)
         onOpen()
       }
     } else {
@@ -167,7 +170,12 @@ const App = (props: Props) => {
 
       <Metadata />
 
-      <Header saveProject={saveProject} session={session} />
+      <Header
+        saveProject={saveProject}
+        session={session}
+        onOpen={onOpen}
+        showUserProjectList={showUserProjectList}
+      />
 
       <DndProvider backend={Backend}>
         <Flex h="calc(100vh - 3rem)">
@@ -184,43 +192,14 @@ const App = (props: Props) => {
                     </Box>
                   </EditorErrorBoundary>
 
-                  <Modal isOpen={isOpen} onClose={onClose}>
-                    <ModalOverlay />
-                    <ModalContent borderRadius="md">
-                      <ModalHeader>Create new project</ModalHeader>
-                      <ModalCloseButton />
-                      <ModalBody>
-                        <FormControl isRequired>
-                          <FormLabel htmlFor="fname">Project name</FormLabel>
-                          <Input
-                            id="fname"
-                            placeholder="Project name"
-                            mt="0.5rem"
-                            onChange={(
-                              e: React.ChangeEvent<HTMLInputElement>,
-                            ) => handleChange(e)}
-                          />
-                        </FormControl>
-                      </ModalBody>
-
-                      <ModalFooter>
-                        <Button
-                          variantColor="ghost"
-                          color="grey"
-                          mr={3}
-                          onClick={onClose}
-                        >
-                          Close
-                        </Button>
-                        <Button
-                          variantColor="blue"
-                          onClick={() => initProject()}
-                        >
-                          Create
-                        </Button>
-                      </ModalFooter>
-                    </ModalContent>
-                  </Modal>
+                  <ModalComponent
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    newProject={newProject}
+                    handleChange={handleChange}
+                    userProjectList={userProjectList}
+                    initProject={initProject}
+                  />
 
                   <Box
                     maxH="calc(100vh - 3rem)"
@@ -256,40 +235,14 @@ const App = (props: Props) => {
                 </Box>
               </EditorErrorBoundary>
 
-              <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent borderRadius="md">
-                  <ModalHeader>Create new project</ModalHeader>
-                  <ModalCloseButton />
-                  <ModalBody>
-                    <FormControl isRequired>
-                      <FormLabel htmlFor="fname">Project name</FormLabel>
-                      <Input
-                        id="fname"
-                        placeholder="Project name"
-                        mt="0.5rem"
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          handleChange(e)
-                        }
-                      />
-                    </FormControl>
-                  </ModalBody>
-
-                  <ModalFooter>
-                    <Button
-                      variantColor="ghost"
-                      color="grey"
-                      mr={3}
-                      onClick={onClose}
-                    >
-                      Close
-                    </Button>
-                    <Button variantColor="blue" onClick={() => initProject()}>
-                      Create
-                    </Button>
-                  </ModalFooter>
-                </ModalContent>
-              </Modal>
+              <ModalComponent
+                isOpen={isOpen}
+                onClose={onClose}
+                newProject={newProject}
+                handleChange={handleChange}
+                userProjectList={userProjectList}
+                initProject={initProject}
+              />
 
               <Box
                 maxH="calc(100vh - 3rem)"
