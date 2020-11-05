@@ -35,7 +35,6 @@ import { getComponents } from '~core/selectors/components'
 import { getShowLayout, getShowCode } from '~core/selectors/app'
 import HeaderMenu from '~components/headerMenu/HeaderMenu'
 import { Session, signIn, signOut } from 'next-auth/client'
-import { useRouter } from 'next/router'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
@@ -84,7 +83,6 @@ const Header = (props: Props) => {
   const showLayout = useSelector(getShowLayout)
   const showCode = useSelector(getShowCode)
   const dispatch = useDispatch()
-  const router = useRouter()
 
   const initProject = async () => {
     if (props.projectPage) {

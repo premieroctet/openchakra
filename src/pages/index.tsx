@@ -46,6 +46,7 @@ const App = (props: {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [projectName, setProjectName] = useState('')
   const [newProject, setNewProject] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [userProjectList, setUserProjectList] = useState([])
   const components = useSelector(getComponents)
   const [session] = useSession()
@@ -106,12 +107,15 @@ const App = (props: {
   }
 
   const showUserProjectList = async () => {
+    setLoading(true)
     if (session) {
       const userProject = await checkUser(session.user.name)
       setUserProjectList(userProject.project)
+      setLoading(false)
       setNewProject(false)
       onOpen()
     } else {
+      setLoading(false)
       signIn('github')
     }
   }
@@ -200,6 +204,7 @@ const App = (props: {
                     handleChange={handleChange}
                     userProjectList={userProjectList}
                     initProject={initProject}
+                    loading={loading}
                   />
 
                   <Box
@@ -243,6 +248,7 @@ const App = (props: {
                 handleChange={handleChange}
                 userProjectList={userProjectList}
                 initProject={initProject}
+                loading={loading}
               />
 
               <Box

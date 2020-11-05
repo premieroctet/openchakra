@@ -18,6 +18,7 @@ import {
   ListIcon,
   Switch,
   useToast,
+  Text,
 } from '@chakra-ui/core'
 import { useRouter } from 'next/router'
 import { AiFillProject } from 'react-icons/ai'
@@ -40,6 +41,7 @@ interface Props {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   userProjectList: Project[]
   initProject: () => void
+  loading: boolean
 }
 
 interface UpdateProject {
@@ -114,6 +116,8 @@ const ModalComponent = (props: Props) => {
                 }
               />
             </FormControl>
+          ) : props.loading ? (
+            <Spinner m="0 auto" color="#319795" size="xl" mt="3rem" />
           ) : props.userProjectList.length > 0 ? (
             <List spacing={3}>
               {props.userProjectList.map((e: Project, i: number) => {
@@ -156,7 +160,9 @@ const ModalComponent = (props: Props) => {
             </List>
           ) : (
             <Box textAlign="center">
-              <Spinner m="0 auto" color="#319795" size="xl" mt="3rem" />
+              <Text m="0 auto">
+                Project list is empty, save a project to display it here
+              </Text>
             </Box>
           )}
         </ModalBody>
