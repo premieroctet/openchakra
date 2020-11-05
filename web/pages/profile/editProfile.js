@@ -1,5 +1,4 @@
 import React, {Fragment} from 'react';
-import Layout from '../../hoc/Layout/Layout';
 import axios from 'axios';
 import moment from 'moment';
 import Button from '@material-ui/core/Button';
@@ -8,19 +7,19 @@ import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import Select2 from 'react-select';
+import MultipleSelect from 'react-select';
 import DatePicker, {registerLocale} from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
 import {toast} from 'react-toastify';
 import {Helmet} from 'react-helmet';
-import styles from './editProfile/editProfileStyle';
-import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import styles from '../../static/css/pages/profile/editProfile/editProfile';
 import cookie from 'react-cookies';
+import Hidden from "@material-ui/core/Hidden";
+import LayoutAccount from "../../hoc/Layout/LayoutAccount";
+import LayoutMobile from "../../hoc/Layout/LayoutMobile";
+import Divider from "@material-ui/core/Divider";
 
 const {isPhoneOk} = require('../../utils/sms');
-
 
 registerLocale('fr', fr);
 moment.locale('fr');
@@ -42,7 +41,6 @@ const momentDateFormat = 'dd/MM/yyyy';
 class editProfile extends React.Component {
   constructor(props) {
     super(props);
-    this.child = React.createRef();
     this.state = {
       user: {},
       phone: '',
@@ -53,7 +51,6 @@ class editProfile extends React.Component {
       ipDate: moment().format(momentDateFormat),
     };
     this.handleChangeLanguages = this.handleChangeLanguages.bind(this);
-    this.callDrawer = this.callDrawer.bind(this);
   }
 
   componentDidMount() {
@@ -129,14 +126,238 @@ class editProfile extends React.Component {
       .catch();
   };
 
-  callDrawer() {
-    this.child.current.handleDrawerToggle();
-  }
+  content = (classes) =>{
+    return(
+      <Grid>
+        <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+          <Grid>
+            <h2>Modifier votre profil</h2>
+          </Grid>
+        </Grid>
+        <Grid style={{}}>
+          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+        </Grid>
+        <Grid container spacing={3} style={{marginTop: '5vh'}}>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
+            <TextField
+              classes={{root: classes.textField}}
+              value={this.state.user.firstname || ''}
+              onChange={this.onChange}
+              name={'firstname'}
+              placeholder={'Prénom'}
+              variant={'outlined'}
+              label={'Prénom'}
+            />
+          </Grid>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
+            <TextField
+              classes={{root: classes.textField}}
+              value={this.state.user.name || ''}
+              onChange={this.onChange}
+              name={'name'}
+              placeholder={'Nom'}
+              variant={'outlined'}
+              label={'Nom'}
+            />
+          </Grid>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
+            <TextField
+              classes={{root: classes.textField}}
+              value={this.state.user.description || ''}
+              multiline
+              rows={5}
+              variant={'outlined'}
+              onChange={this.onChange}
+              name={'description'}
+              label={'A propos de moi'}
+            />
+          </Grid>
+        </Grid>
+        <Grid>
+          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+        </Grid>
+        <Grid>
+          <Grid>
+            <h2 style={{whiteSpace: 'nowrap'}}>Informations personnelles</h2>
+          </Grid>
+          <Grid container spacing={3} style={{marginTop: '10vh'}}>
+            <Grid item lg={2} xs={12} sm={5} md={3}>
+              <TextField
+                classes={{root: classes.textField}}
+                value={this.state.user.gender || ''}
+                select
+                variant={'outlined'}
+                onChange={this.onChange}
+                name={'gender'}
+                placeholder={'Sexe'}
+                label={'Sexe'}
+              >
+                <MenuItem value={'Homme'}>
+                  Homme
+                </MenuItem>
+                <MenuItem value={'Femme'}>
+                  Femme
+                </MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item lg={3} xs={12} sm={6} md={3}>
+              <TextField
+                classes={{root: classes.textFieldDatePicker}}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                InputProps={{
+                  inputComponent:(inputRef) => {
+                    return (
+                      <DatePicker
+                        selected={Date.parse(this.state.birthday)}
+                        onChange={(date) => this.onChangeBirthday(date)}
+                        locale='fr'
+                        placeholderText="Date de naissance"
+                        showYearDropdown
+                        showMonthDropdown
+                        className={classes.datePicker}
+                        dateFormat="dd/MM/yyyy"
+                        maxDate={new Date()}
+                      />
+                    )
+                  },
+                  disableUnderline: true
+                }}
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={3}>
+            <Grid item xs={12} lg={6} md={6} sm={6}>
+              <TextField
+                classes={{root: classes.textField}}
+                value={this.state.user.email || ''}
+                onChange={this.onChange}
+                margin="normal"
+                name={'email'}
+                placeholder={'Email'}
+                variant={'outlined'}
+                label={'Adresse email'}
+              />
+            </Grid>
+          </Grid>
+          <Grid item xs={12} lg={6} md={6} sm={6}>
+            <TextField
+              classes={{root: classes.textField}}
+              value={this.state.user.phone || ''}
+              type={'number'}
+              onChange={this.onChange}
+              margin="normal"
+              name={'phone'}
+              placeholder={'Téléphone'}
+              variant={'outlined'}
+              label={'Téléphone'}
+            />
+          </Grid>
+          <Grid item xs={12} lg={6} md={6} sm={6}>
+            <TextField
+              classes={{root: classes.textField}}
+              value={this.state.user.emergency_phone || ''}
+              type={'number'}
+              onChange={this.onChange}
+              margin="normal"
+              name={'emergency_phone'}
+              placeholder={'Numéro d\'urgence'}
+              variant={'outlined'}
+              label={'Numéro d\'urgence'}
+            />
+          </Grid>
+        </Grid>
+        <Grid>
+          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+        </Grid>
+        <Grid>
+          <Grid>
+            <h2>Informations facultatives</h2>
+          </Grid>
+          <Grid container style={{marginTop: '10vh'}}>
+            <Grid item xs={12} lg={6} md={6} sm={6}>
+              <TextField
+                classes={{root: classes.textField}}
+                value={this.state.user.diplomes || ''}
+                onChange={this.onChange}
+                name={'diplomes'}
+                placeholder={'Diplomes'}
+                variant={'outlined'}
+                label={'Diplômes'}
+              />
+            </Grid>
+            <Grid item xs={12} lg={6} md={6} sm={6}>
+              <TextField
+                classes={{root: classes.textField}}
+                value={this.state.user.school || ''}
+                onChange={this.onChange}
+                margin="normal"
+                name={'school'}
+                placeholder={'Ecoles'}
+                variant={'outlined'}
+                label={'Ecoles'}
+              />
+            </Grid>
+            <Grid item xs={12} lg={6} md={6} sm={6}>
+              <TextField
+                classes={{root: classes.textField}}
+                value={this.state.user.job || ''}
+                onChange={this.onChange}
+                margin="normal"
+                name={'job'}
+                placeholder={'Emploi'}
+                variant={'outlined'}
+                label={'Emploi'}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid>
+          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+        </Grid>
+        <Grid>
+          <Grid>
+            <h2>Langues</h2>
+          </Grid>
+          <Grid container style={{marginTop: '10vh'}}>
+            <Grid item xs={12}>
+              <MultipleSelect
+                value={this.state.selectedLanguages}
+                onChange={this.handleChangeLanguages}
+                options={options}
+                styles={{
+                  menu: provided => ({...provided, zIndex: 2}),
+                }}
+                isMulti
+                isSearchable
+                closeMenuOnSelect={false}
+                placeholder={'Sélectionnez vos langues'}
+                noOptionsMessage={() => 'Plus d\'options disponibles'}
+
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid style={{marginBottom: '12vh'}}>
+          <Grid style={{display: 'flex', justifyContent: 'flex-end', marginTop: '5vh'}}>
+            <Button
+              onClick={this.onSubmit}
+              variant="contained"
+              color="primary"
+              classes={{root: classes.button}}
+            >
+              Enregistrer
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
+    )
+  };
 
 
   render() {
     const {classes} = this.props;
-    const {user, birthday} = this.state;
 
     return (
       <Fragment>
@@ -145,256 +366,16 @@ class editProfile extends React.Component {
           <meta property="description"
                 content="Plateforme d’échange de services entre particuliers. Services rémunérés à des prix justes ! Profitez des talents de nos Alfred et trouvez un Alfred bricoleur, petsitter, pâtissier, décorateur, près de chez vous dans toute la france ! Des milliers de services proposés, trouvez le vôtre !"/>
         </Helmet>
-        <Layout>
-          <Grid container className={classes.bigContainer}>
-            <Grid style={{zIndex: 0}}>
-              <ResponsiveDrawer ref={this.child} isActiveIndex={0} itemsDrawers={'profil'}/>
-            </Grid>
-            <Grid>
-              <Grid>
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  edge="start"
-                  onClick={this.callDrawer}
-                  className={classes.menuButton}
-                >
-                  <MenuIcon/>
-                </IconButton>
-              </Grid>
-            </Grid>
-            <Grid item xs={9} className={classes.containerLeft}>
-              <h1 style={{color: 'dimgray', fontWeight: '100'}}>Modifier votre profil</h1>
-              <form>
-
-                <Grid container className={classes.responsiveContainer}>
-                  <Grid container>
-                    <Grid item lg={6} md={6} sm={6} style={{marginTop: 20}}>
-                      <TextField
-                        id="standard-name"
-                        style={{marginTop: 15, width: '100%'}}
-                        value={user.firstname || ''}
-                        onChange={this.onChange}
-                        margin="normal"
-                        name={'firstname'}
-                        placeholder={'Prénom'}
-                        variant={'outlined'}
-                        label={'Prénom'}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid container>
-                    <Grid item lg={6} md={6} sm={6} style={{marginTop: 20}}>
-                      <TextField
-                        id="standard-name"
-                        style={{marginTop: 15, width: '100%'}}
-                        value={user.name || ''}
-                        onChange={this.onChange}
-                        margin="normal"
-                        name={'name'}
-                        placeholder={'Nom'}
-                        variant={'outlined'}
-                        label={'Nom'}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid item lg={6} md={6} sm={6} style={{marginTop: 20}}>
-                    <TextField
-                      id="standard-name"
-                      style={{marginTop: 15, width: '100%'}}
-                      value={user.description || ''}
-                      multiline
-                      rows={5}
-                      variant={'outlined'}
-                      onChange={this.onChange}
-                      margin="normal"
-                      name={'description'}
-                      label={'A propos de moi'}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container className={classes.responsiveContainer}>
-                  <Grid item xs={12}>
-                    <h2 style={{fontWeight: '100'}}>Informations personnelles</h2>
-                  </Grid>
-                  <Grid container style={{marginTop: 10}}>
-                    <Grid item lg={2} xs={6} sm={5} md={3}>
-                      <TextField
-                        id="standard-name"
-                        style={{width: '100%'}}
-                        value={user.gender || ''}
-                        select
-                        variant={'outlined'}
-                        onChange={this.onChange}
-                        margin="normal"
-                        name={'gender'}
-                        placeholder={'Sexe'}
-                        label={'Sexe'}
-                      >
-                        <MenuItem value={'Homme'}>
-                          Homme
-                        </MenuItem>
-                        <MenuItem value={'Femme'}>
-                          Femme
-                        </MenuItem>
-                      </TextField>
-                    </Grid>
-                    <Grid item xs={1}/>
-                    <Grid item lg={3} xs={6} sm={6} md={3} style={{marginTop: 15}}>
-                      <DatePicker
-                        selected={Date.parse(birthday)}
-                        onChange={(date) => this.onChangeBirthday(date)}
-                        locale='fr'
-                        placeholderText="Date de naissance"
-                        showYearDropdown
-                        showMonthDropdown
-                        className={classes.birthday2}
-                        dateFormat="dd/MM/yyyy"
-                        maxDate={new Date()}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid container>
-                    <Grid item xs={6} lg={6} md={6} sm={6} style={{marginTop: 10}}>
-                      <TextField
-                        id="standard-name"
-                        style={{width: '100%'}}
-                        value={user.email || ''}
-                        onChange={this.onChange}
-                        margin="normal"
-                        name={'email'}
-                        placeholder={'Email'}
-                        variant={'outlined'}
-                        label={'Adresse email'}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={6} lg={6} md={6} sm={6} style={{marginTop: 10}}>
-                    <TextField
-
-                      id="standard-name"
-                      style={{width: '100%'}}
-                      value={user.phone || ''}
-                      type={'number'}
-                      onChange={this.onChange}
-                      margin="normal"
-                      name={'phone'}
-                      placeholder={'Téléphone'}
-                      variant={'outlined'}
-                      label={'Téléphone'}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container className={classes.responsiveContainer}>
-                  <Grid item xs={12}>
-                    <h2 style={{fontWeight: '100'}}>Informations facultatives</h2>
-                  </Grid>
-                  <Grid item xs={6} lg={6} md={6} sm={6} style={{marginTop: 10}}>
-
-                    <TextField
-                      id="standard-name"
-                      style={{width: '100%'}}
-                      value={user.diplomes || ''}
-                      onChange={this.onChange}
-                      margin="normal"
-                      name={'diplomes'}
-                      placeholder={'Diplomes'}
-                      variant={'outlined'}
-                      label={'Diplômes'}
-
-                    />
-
-                  </Grid>
-                  <Grid container>
-                    <Grid item xs={6} lg={6} md={6} sm={6} style={{marginTop: 10}}>
-                      <TextField
-                        id="standard-name"
-                        style={{width: '100%'}}
-                        value={user.school || ''}
-                        onChange={this.onChange}
-                        margin="normal"
-                        name={'school'}
-                        placeholder={'Ecoles'}
-                        variant={'outlined'}
-                        label={'Ecoles'}
-
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid container>
-                    <Grid item xs={6} lg={6} md={6} sm={6} style={{marginTop: 10}}>
-                      <TextField
-                        id="standard-name"
-                        style={{width: '100%'}}
-                        value={user.job || ''}
-                        onChange={this.onChange}
-                        margin="normal"
-                        name={'job'}
-                        placeholder={'Emploi'}
-                        variant={'outlined'}
-                        label={'Emploi'}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12} style={{marginTop: 10}}>
-                    <Grid container>
-                      <Grid item xs={6} lg={6} md={6} sm={6}>
-                        <Grid item xs={2} style={{lineHeight: '1px'}}>
-                          <p>Langues</p>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Select2
-                            value={this.state.selectedLanguages}
-                            onChange={this.handleChangeLanguages}
-                            options={options}
-                            styles={{
-                              menu: provided => ({...provided, zIndex: 9999}),
-                            }}
-                            isMulti
-                            isSearchable
-                            closeMenuOnSelect={false}
-                            placeholder={'Sélectionnez vos langues'}
-                            noOptionsMessage={() => 'Plus d\'options disponibles'}
-
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={6} lg={6} md={6} sm={6} style={{marginTop: 10}}>
-
-                    <TextField
-                      id="standard-name"
-                      style={{width: '100%'}}
-                      value={user.emergency_phone || ''}
-                      type={'number'}
-                      onChange={this.onChange}
-                      margin="normal"
-                      name={'emergency_phone'}
-                      placeholder={'Numéro d\'urgence'}
-                      variant={'outlined'}
-                      label={'Numéro d\'urgence'}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container style={{marginBottom: 20}}>
-                  <Grid item xs={6} style={{display: 'flex', justifyContent: 'flex-end'}}>
-                    <Button size={'medium'} type={'button'} onClick={this.onSubmit} variant="contained"
-                            color="secondary"
-                            style={{color: 'white', maxHeight: 40}}>
-                      Enregistrer
-                    </Button>
-                  </Grid>
-                </Grid>
-              </form>
-            </Grid>
-
-          </Grid>
-
-        </Layout>
-        {/* <Footer/>*/}
-
-
+        <Hidden only={['xs', 'sm', 'md']}>
+          <LayoutAccount>
+            {this.content(classes)}
+          </LayoutAccount>
+        </Hidden>
+        <Hidden only={['lg', 'xl']}>
+          <LayoutMobile>
+            {this.content(classes)}
+          </LayoutMobile>
+        </Hidden>
       </Fragment>
     );
   };

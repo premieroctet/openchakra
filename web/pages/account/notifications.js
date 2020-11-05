@@ -199,7 +199,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
               <Grid item xl={3}  xs={6}>
-                <p>Email</p>
+                <Typography>Email</Typography>
               </Grid>
               <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
                 <IOSSwitch
@@ -212,7 +212,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
               <Grid item xl={3}  xs={6}>
-                <p>Notification push</p>
+                <Typography>Notification push</Typography>
               </Grid>
               <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
                 <IOSSwitch
@@ -226,7 +226,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
               <Grid item xl={3}  xs={6}>
-                <p>SMS</p>
+                <Typography>SMS</Typography>
               </Grid>
               <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
                 <IOSSwitch
@@ -254,7 +254,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
               <Grid item xl={3}  xs={6}>
-                <p>Email</p>
+                <Typography>Email</Typography>
               </Grid>
               <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
                 <IOSSwitch
@@ -268,7 +268,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
               <Grid item xl={3}  xs={6}>
-                <p>Notification push</p>
+                <Typography>Notification push</Typography>
               </Grid>
               <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
                 <IOSSwitch
@@ -282,7 +282,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
               <Grid item xl={3}  xs={6}>
-                <p>SMS</p>
+                <Typography>SMS</Typography>
               </Grid>
               <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
                 <IOSSwitch
@@ -311,7 +311,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
               <Grid item xl={3}  xs={6}>
-                <p>Email</p>
+                <Typography>Email</Typography>
               </Grid>
               <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
                 <IOSSwitch
@@ -325,7 +325,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
               <Grid item xl={3}  xs={6}>
-                <p>Notification push</p>
+                <Typography>Notification push</Typography>
               </Grid>
               <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
                 <IOSSwitch
@@ -339,7 +339,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
               <Grid item xl={3}  xs={6}>
-                <p>SMS</p>
+                <Typography>SMS</Typography>
               </Grid>
               <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
                 <IOSSwitch
@@ -353,7 +353,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
               <Grid item xl={3}  xs={6}>
-                <p>Appel téléphonique</p>
+                <Typography>Appel téléphonique</Typography>
               </Grid>
               <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
                 <IOSSwitch
@@ -380,7 +380,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
               <Grid item xl={3}  xs={6}>
-                <p>Email</p>
+                <Typography>Email</Typography>
               </Grid>
               <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
                 <IOSSwitch
@@ -394,7 +394,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
               <Grid item xl={3}  xs={6}>
-                <p>Notification push</p>
+                <Typography>Notification push</Typography>
               </Grid>
               <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
                 <IOSSwitch
@@ -408,7 +408,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
               <Grid item xl={3}  xs={6}>
-                <p>SMS</p>
+                <Typography>SMS</Typography>
               </Grid>
               <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
                 <IOSSwitch
@@ -438,7 +438,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row', marginTop: '5vh'}}>
               <Grid item xl={3}  xs={6}>
-                <p>Email</p>
+                <Typography>Email</Typography>
               </Grid>
               <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
                 <IOSSwitch
@@ -452,7 +452,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
               <Grid item xl={3}  xs={6}>
-                <p>Notification push</p>
+                <Typography>Notification push</Typography>
               </Grid>
               <Grid item xl={3}  xs={6} className={classes.iosSwitchContainer}>
                 <IOSSwitch
@@ -466,7 +466,7 @@ class notifications extends React.Component {
             </Grid>
             <Grid container style={{display: 'flex', alignItems: 'center', flexDirection : 'row'}}>
               <Grid item xl={3}  xs={6}>
-                <p>SMS</p>
+                <Typography>SMS</Typography>
               </Grid>
               <Grid item xl={3} xs={6} className={classes.iosSwitchContainer}>
                 <IOSSwitch
@@ -502,7 +502,6 @@ class notifications extends React.Component {
             </Button>
           </Grid>
         </Grid>
-        <Grid/>
       </Grid>
 
     )
