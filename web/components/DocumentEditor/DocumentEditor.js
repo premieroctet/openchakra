@@ -5,6 +5,9 @@ import Edit from '@material-ui/icons/EditOutlined';
 import Delete from '@material-ui/icons/DeleteOutlined';
 import {Document, Page} from 'react-pdf';
 import styles from './DocumentEditorStyle';
+import IconButton from "@material-ui/core/IconButton";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 class DocumentEditor extends React.Component {
   constructor(props) {
@@ -21,11 +24,6 @@ class DocumentEditor extends React.Component {
 
     const {db_document, uploaded_file, onChange, onDelete, classes, disabled, ext, confirmed, title} = this.props;
 
-    if (uploaded_file) {
-      console.log(uploaded_file);
-    }
-
-    console.log(`extension : ${ext}`);
     return (
       uploaded_file ?
         <Grid container style={{marginTop: 20, alignItems: 'center'}}>
@@ -38,15 +36,21 @@ class DocumentEditor extends React.Component {
             }}
           />
           <Grid item xs={3}>
-            <label style={{display: 'inline-block', marginTop: 15, textAlign: 'center'}} className="forminputs">
-              <Edit style={{cursor: 'pointer'}}/>
-              <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR"
-                     type="file"
-                     onChange={onChange}
-                     className="form-control" accept=".jpg,.jpeg,.png,.pdf"
-              />
+            <input
+              id="icon-button-file"
+              style={{display: 'none'}}
+              name="myCardR"
+              type="file"
+              accept=".jpg,.jpeg,.png,.pdf"
+            />
+            <label htmlFor="icon-button-file">
+              <IconButton aria-label="update" component="span">
+                <EditIcon/>
+              </IconButton>
             </label>
-            <Delete style={{cursor: 'pointer'}} color={'secondary'} onClick={onDelete}/>
+            <IconButton aria-label="delete" onClick={onDelete}>
+              <DeleteForeverIcon />
+            </IconButton>
           </Grid>
         </Grid>
         :
@@ -70,15 +74,22 @@ class DocumentEditor extends React.Component {
                     }
                   </Grid>
                   <Grid item className={classes.contentIcones}>
-                    <label className={classes.forminputs}>
-                      <Edit color={'primary'} style={{cursor: 'pointer'}}/>
-                      <input id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}} name="myCardR"
-                             type="file"
-                             onChange={onChange}
-                             className="form-control" accept=".jpg,.jpeg,.png,.pdf"
-                      />
+                    <input
+                      id="icon-button-file"
+                      style={{display: 'none'}}
+                      name="myCardR"
+                      type="file"
+                      onChange={onChange}
+                      accept=".jpg,.jpeg,.png,.pdf"
+                    />
+                    <label htmlFor="icon-button-file">
+                      <IconButton aria-label="update" component="span">
+                        <EditIcon/>
+                      </IconButton>
                     </label>
-                    <Delete style={{cursor: 'pointer'}} color={'secondary'} onClick={onDelete}/>
+                    <IconButton aria-label="delete" onClick={onDelete}>
+                      <DeleteForeverIcon />
+                    </IconButton>
                   </Grid>
                 </Grid>
               </Grid>

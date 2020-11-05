@@ -4,7 +4,7 @@ import {Typography} from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import {withStyles} from '@material-ui/core/styles';
 import axios from 'axios';
-import styles from '.././Siret/SiretStyle';
+import styles from '../../static/css/components/Siret/Siret';
 
 const moment = require('moment');
 const {SIRET} = require('../../config/config');
@@ -50,7 +50,7 @@ class siret extends React.Component {
     this.setState({[name]: value},
       () => {
         this.props.onChange(this.state);
-        if (name == 'siret') {
+        if (name === 'siret') {
           this.onSubmit();
         }
       });
@@ -109,10 +109,10 @@ class siret extends React.Component {
   render() {
     const {classes} = this.props;
 
-    const coupureToday = DATE_COUPURE_INSEE.format('DD/MM/YY') == moment().format('DD/MM/YY');
+    const coupureToday = DATE_COUPURE_INSEE.format('DD/MM/YY') === moment().format('DD/MM/YY');
 
     return (
-      <>
+      <Grid>
         {coupureToday ?
           <Typography style={{color: 'red'}}>
             En raison de l'arrêt des serveurs de l'INSEE ce {`${DATE_COUPURE_INSEE.format('DD/MM/YY')}`},
@@ -122,85 +122,82 @@ class siret extends React.Component {
           :
           null
         }
-        <Grid container>
-          <Grid item style={{display: 'flex'}}>
-            <Grid>
-              <Typography>SIRET/SIREN</Typography>
+        <Grid>
+          <Grid container spacing={3}>
+            <Grid item xl={12}>
               <TextField
                 id="filled-with-placeholder"
-                placeholder="Siret/Siren"
-                margin="normal"
+                label="Siret/Siren"
                 variant="outlined"
-                type="text"
                 name={'siret'}
                 value={this.state.siret}
                 onChange={this.onChange}
-                className={classes.textFieldSiret}
+                classes={{root: classes.textField}}
               />
             </Grid>
-            <Grid>
+            <Grid container>
+              <Grid item xl={6}>
+                <em style={{color: 'red'}}>{this.state.errors}</em>
+              </Grid>
             </Grid>
           </Grid>
-          <Grid container>
-            <Grid item xs={12} sm={12} md={6}>
-              <em style={{color: 'red'}}>{this.state.errors}</em>
-            </Grid>
-          </Grid>
-          <Grid container>
-            <Grid item xs={12} sm={12} md={6}>
-              <Typography>Date de création</Typography>
+          <Grid container spacing={3}>
+            <Grid item xl={6}>
               <TextField
                 id="filled-with-placeholder"
-                margin="normal"
                 variant="outlined"
                 type="date"
                 name={'creation_date'}
                 value={moment(this.state.creation_date, 'DD/mm/YYYY').format('YYYY-mm-DD')}
                 onChange={this.onChange}
+                classes={{root: classes.textField}}
+
               />
             </Grid>
-            <Grid item xs={12} sm={12} md={6}>
-              <Typography>Nom entreprise</Typography>
+            <Grid item xl={6}>
               <TextField
                 id="filled-with-placeholder"
-                placeholder="Nom"
-                margin="normal"
+                label="Nom"
                 variant="outlined"
                 type="text"
                 name={'name'}
                 value={this.state.name}
                 onChange={this.onChange}
+                classes={{root: classes.textField}}
+
               />
             </Grid>
-            <Grid item xs={12} sm={12} md={6}>
-              <Typography>Code NAF/APE</Typography>
+          </Grid>
+
+          <Grid container spacing={3}>
+            <Grid item xl={6}>
               <TextField
                 id="filled-with-placeholder"
-                placeholder="Code NAF/APE"
-                margin="normal"
+                label="Code NAF/APE"
                 variant="outlined"
                 type="text"
                 name={'naf_ape'}
                 value={this.state.naf_ape}
                 onChange={this.onChange}
+                classes={{root: classes.textField}}
+
               />
             </Grid>
-            <Grid item xs={12} sm={12} md={6}>
-              <Typography>Statut juridique</Typography>
+            <Grid item xl={6}>
               <TextField
                 id="filled-with-placeholder"
-                placeholder="Statut juridique"
-                margin="normal"
+                label="Statut juridique"
                 variant="outlined"
                 type="text"
                 name={'status'}
                 value={this.state.status}
                 onChange={this.onChange}
+                classes={{root: classes.textField}}
               />
             </Grid>
           </Grid>
         </Grid>
-      </>
+      </Grid>
     );
   };
 }

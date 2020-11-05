@@ -420,7 +420,6 @@ class myAddresses extends React.Component {
                         </Grid>
                       </Grid>
                       <Grid>
-
                         <Typography style={{color: 'rgba(39,37,37,35%)'}}>{e.address}</Typography>
                         <Typography style={{color: 'rgba(39,37,37,35%)'}}>{e.zip_code} {e.city}</Typography>
                         <Typography style={{color: 'rgba(39,37,37,35%)'}}>France</Typography>

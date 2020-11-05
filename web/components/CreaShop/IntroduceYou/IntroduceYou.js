@@ -5,7 +5,7 @@ import CircleUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
-import Siret from '../../WizardForm/Siret';
+import Siret from '../../Siret/Siret';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../componentStyle';
