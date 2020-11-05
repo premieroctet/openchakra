@@ -12,6 +12,7 @@ export default async function(req: NextApiRequest, res: NextApiResponse) {
       },
       data: {
         markup: projectData.markup,
+        public: projectData.public,
         updatedAt: ts.toISOString(),
       },
     })

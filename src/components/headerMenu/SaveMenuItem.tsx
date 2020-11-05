@@ -3,7 +3,7 @@ import { MenuItem, Box } from '@chakra-ui/core'
 import { FaSave } from 'react-icons/fa'
 
 interface Props {
-  saveProject: () => void
+  saveProject?: () => void
 }
 
 const SaveMenuItem = (props: Props) => {

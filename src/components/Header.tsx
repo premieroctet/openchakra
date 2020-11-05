@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useState, useEffect } from 'react'
 import {
   Box,
   Switch,
@@ -35,6 +35,7 @@ import { getComponents } from '~core/selectors/components'
 import { getShowLayout, getShowCode } from '~core/selectors/app'
 import HeaderMenu from '~components/headerMenu/HeaderMenu'
 import { Session, signIn, signOut } from 'next-auth/client'
+import { useRouter } from 'next/router'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
@@ -72,16 +73,30 @@ const CodeSandboxButton = () => {
 }
 
 interface Props {
-  saveProject: () => void
-  session: Session | null | undefined
-  onOpen: () => void
-  showUserProjectList: () => void
+  saveProject?: () => void
+  session?: Session | null | undefined
+  onOpen?: () => void
+  showUserProjectList?: () => void
+  projectPage?: boolean
 }
 
 const Header = (props: Props) => {
   const showLayout = useSelector(getShowLayout)
   const showCode = useSelector(getShowCode)
   const dispatch = useDispatch()
+  const router = useRouter()
+
+  const initProject = async () => {
+    if (props.projectPage) {
+      await dispatch.app.toggleCodePanel()
+      await dispatch.app.toggleBuilderMode()
+    }
+  }
+
+  useEffect(() => {
+    initProject()
+    // eslint-disable-next-line
+  }, [])
 
   return (
     <DarkMode>
@@ -92,119 +107,130 @@ const Header = (props: Props) => {
         height="3rem"
         px="1rem"
       >
-        <Flex
-          width="14rem"
-          height="100%"
-          backgroundColor="#1a202c"
-          color="white"
-          as="a"
-          fontSize="xl"
-          flexDirection="row"
-          alignItems="center"
-          aria-label="Chakra UI, Back to homepage"
-        >
-          <Box fontSize="2xl" as={AiFillThunderbolt} mr={1} color="teal.100" />{' '}
-          <Box fontWeight="bold">open</Box>chakra
-        </Flex>
+        <Link href="/">
+          <Flex
+            width="14rem"
+            height="100%"
+            backgroundColor="#1a202c"
+            color="white"
+            as="a"
+            fontSize="xl"
+            flexDirection="row"
+            alignItems="center"
+            aria-label="Chakra UI, Back to homepage"
+          >
+            <Box
+              fontSize="2xl"
+              as={AiFillThunderbolt}
+              mr={1}
+              color="teal.100"
+            />
+            <Box fontWeight="bold">open</Box>chakra
+          </Flex>
+        </Link>
 
-        <Flex flexGrow={1} justifyContent="space-between" alignItems="center">
-          <Stack isInline spacing={4} justify="center" align="center">
-            <Box>
-              <HeaderMenu
-                saveProject={props.saveProject}
-                session={props.session}
-                onOpen={props.onOpen}
-                showUserProjectList={props.showUserProjectList}
-              />
-            </Box>
-            <FormControl>
-              <Tooltip
-                zIndex={100}
-                hasArrow
-                bg="yellow.100"
-                aria-label="Builder mode help"
-                label="Builder mode adds extra padding/borders"
-              >
-                <FormLabel
-                  cursor="help"
-                  color="gray.200"
-                  fontSize="xs"
-                  htmlFor="preview"
-                  pb={0}
+        {props.projectPage ? (
+          <></>
+        ) : (
+          <Flex flexGrow={1} justifyContent="space-between" alignItems="center">
+            <Stack isInline spacing={4} justify="center" align="center">
+              <Box>
+                <HeaderMenu
+                  saveProject={props.saveProject}
+                  session={props.session}
+                  onOpen={props.onOpen}
+                  showUserProjectList={props.showUserProjectList}
+                />
+              </Box>
+              <FormControl>
+                <Tooltip
+                  zIndex={100}
+                  hasArrow
+                  bg="yellow.100"
+                  aria-label="Builder mode help"
+                  label="Builder mode adds extra padding/borders"
                 >
-                  Builder mode
+                  <FormLabel
+                    cursor="help"
+                    color="gray.200"
+                    fontSize="xs"
+                    htmlFor="preview"
+                    pb={0}
+                  >
+                    Builder mode
+                  </FormLabel>
+                </Tooltip>
+                <Switch
+                  isChecked={showLayout}
+                  color="teal"
+                  size="sm"
+                  onChange={() => dispatch.app.toggleBuilderMode()}
+                  id="preview"
+                />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel color="gray.200" fontSize="xs" htmlFor="code" pb={0}>
+                  Code panel
                 </FormLabel>
-              </Tooltip>
-              <Switch
-                isChecked={showLayout}
-                color="teal"
-                size="sm"
-                onChange={() => dispatch.app.toggleBuilderMode()}
-                id="preview"
-              />
-            </FormControl>
+                <Switch
+                  isChecked={showCode}
+                  id="code"
+                  color="teal"
+                  onChange={() => dispatch.app.toggleCodePanel()}
+                  size="sm"
+                />
+              </FormControl>
+            </Stack>
 
-            <FormControl>
-              <FormLabel color="gray.200" fontSize="xs" htmlFor="code" pb={0}>
-                Code panel
-              </FormLabel>
-              <Switch
-                isChecked={showCode}
-                id="code"
-                color="teal"
-                onChange={() => dispatch.app.toggleCodePanel()}
-                size="sm"
-              />
-            </FormControl>
-          </Stack>
-
-          <Stack isInline>
-            <CodeSandboxButton />
-            <Popover>
-              {({ onClose }) => (
-                <>
-                  <PopoverTrigger>
-                    <Button
-                      ml={4}
-                      rightIcon="small-close"
-                      size="xs"
-                      variant="ghost"
-                    >
-                      Clear
-                    </Button>
-                  </PopoverTrigger>
-                  <LightMode>
-                    <PopoverContent zIndex={100}>
-                      <PopoverArrow />
-                      <PopoverCloseButton />
-                      <PopoverHeader>Are you sure?</PopoverHeader>
-                      <PopoverBody fontSize="sm">
-                        Do you really want to remove all components on the
-                        editor?
-                      </PopoverBody>
-                      <PopoverFooter display="flex" justifyContent="flex-end">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          variantColor="red"
-                          rightIcon="check"
-                          onClick={() => {
-                            dispatch.components.reset()
-                            if (onClose) {
-                              onClose()
-                            }
-                          }}
-                        >
-                          Yes, clear
-                        </Button>
-                      </PopoverFooter>
-                    </PopoverContent>
-                  </LightMode>
-                </>
-              )}
-            </Popover>
-          </Stack>
-        </Flex>
+            <Stack isInline>
+              <CodeSandboxButton />
+              <Popover>
+                {({ onClose }) => (
+                  <>
+                    <PopoverTrigger>
+                      <Button
+                        ml={4}
+                        rightIcon="small-close"
+                        size="xs"
+                        variant="ghost"
+                      >
+                        Clear
+                      </Button>
+                    </PopoverTrigger>
+                    <LightMode>
+                      <PopoverContent zIndex={100}>
+                        <PopoverArrow />
+                        <PopoverCloseButton />
+                        <PopoverHeader>Are you sure?</PopoverHeader>
+                        <PopoverBody fontSize="sm">
+                          Do you really want to remove all components on the
+                          editor?
+                        </PopoverBody>
+                        <PopoverFooter display="flex" justifyContent="flex-end">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            variantColor="red"
+                            rightIcon="check"
+                            onClick={() => {
+                              dispatch.components.reset()
+                              if (onClose) {
+                                onClose()
+                              }
+                            }}
+                          >
+                            Yes, clear
+                          </Button>
+                        </PopoverFooter>
+                      </PopoverContent>
+                    </LightMode>
+                  </>
+                )}
+              </Popover>
+            </Stack>
+          </Flex>
+        )}
 
         <Stack
           justifyContent="flex-end"

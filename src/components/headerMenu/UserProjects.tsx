@@ -3,13 +3,17 @@ import { MenuItem, Box } from '@chakra-ui/core'
 import { GoProject } from 'react-icons/go'
 
 interface Props {
-  onOpen: () => void
-  showUserProjectList: () => void
+  onOpen?: () => void
+  showUserProjectList?: () => void
 }
 
 const UserProjects = (props: Props) => {
   return (
-    <MenuItem onClick={() => props.showUserProjectList()}>
+    <MenuItem
+      onClick={() => {
+        if (props.showUserProjectList) return props.showUserProjectList()
+      }}
+    >
       <Box mr={2} as={GoProject} />
       My projects
     </MenuItem>

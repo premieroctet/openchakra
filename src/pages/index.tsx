@@ -175,6 +175,7 @@ const App = (props: {
         session={session}
         onOpen={onOpen}
         showUserProjectList={showUserProjectList}
+        projectPage={false}
       />
 
       <DndProvider backend={Backend}>

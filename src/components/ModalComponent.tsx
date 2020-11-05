@@ -16,6 +16,8 @@ import {
   ModalFooter,
   Button,
   ListIcon,
+  Switch,
+  useToast,
 } from '@chakra-ui/core'
 import { useRouter } from 'next/router'
 import { AiFillProject } from 'react-icons/ai'
@@ -27,6 +29,8 @@ interface Project {
   id: number
   markup: string
   projectName: string
+  public: boolean
+  validated: boolean
 }
 
 interface Props {
@@ -38,8 +42,53 @@ interface Props {
   initProject: () => void
 }
 
+interface UpdateProject {
+  id: number
+  public: boolean
+}
+
 const ModalComponent = (props: Props) => {
   const router = useRouter()
+  const toast = useToast()
+
+  const updateProject = async (props: UpdateProject) => {
+    let bodyData = {
+      project: {
+        id: props.id,
+        public: !props.public,
+      },
+    }
+    const response = await fetch('/api/project/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bodyData),
+    })
+    const data = await response.json()
+    return data
+  }
+
+  const publishPublicProject = async (props: UpdateProject) => {
+    const projectUpdated = await updateProject(props)
+    if (projectUpdated) {
+      toast({
+        title: 'The project visibility has been updated',
+        description: 'The project has been updated successfully',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: 'Error when updated project',
+        description: 'An error occured, try again later',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    }
+  }
 
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -69,24 +118,39 @@ const ModalComponent = (props: Props) => {
             <List spacing={3}>
               {props.userProjectList.map((e: Project, i: number) => {
                 return (
-                  <ListItem
-                    textAlign="center"
-                    onClick={() => {
-                      const href = `/project/${e.id}-${e.projectName}`
-                      router.push(href, href, { shallow: true })
-                    }}
-                    backgroundColor="#2E3748"
-                    color="white"
-                    borderRadius={5}
-                    p="0.5rem"
-                    cursor="pointer"
-                    _hover={{ backgroundColor: 'teal.400' }}
-                    fontWeight={600}
-                    fontSize="md"
-                  >
-                    <ListIcon icon={AiFillProject} color="white" />
-                    {e.id} - {e.projectName}
-                  </ListItem>
+                  <>
+                    <ListItem
+                      textAlign="center"
+                      backgroundColor="#2E3748"
+                      color="white"
+                      borderRadius={5}
+                      p="0.5rem"
+                      cursor="pointer"
+                      _hover={{ backgroundColor: 'teal.400' }}
+                      fontWeight={600}
+                      fontSize="md"
+                      mt={3}
+                      key={i}
+                    >
+                      <Box
+                        onClick={() => {
+                          const href = `/project/${e.id}-${e.projectName}`
+                          router.push(href, href, { shallow: true })
+                        }}
+                        w="80%"
+                        display="inline-block"
+                      >
+                        <ListIcon icon={AiFillProject} color="white" />
+                        {e.id} - {e.projectName}
+                      </Box>
+                      <Switch
+                        color="teal"
+                        size="md"
+                        defaultIsChecked={e.public}
+                        onChange={() => publishPublicProject(e)}
+                      />
+                    </ListItem>
+                  </>
                 )
               })}
             </List>
