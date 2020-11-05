@@ -25,6 +25,8 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import SecurityIcon from "@material-ui/icons/Security";
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
+import Hidden from "@material-ui/core/Hidden";
+import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 
 
 moment.locale('fr');
@@ -75,7 +77,7 @@ class paymentPreference extends React.Component {
       .catch(err => {
           if (err.response.status === 401 || err.response.status === 403) {
             cookie.remove('token', {path: '/'});
-            Router.push({pathname: '/login'});
+            Router.push({pathname: '/'});
           }
         },
       );
@@ -269,6 +271,86 @@ class paymentPreference extends React.Component {
     )
   };
 
+  content = () => {
+    return(
+      <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+        <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+          <Grid>
+            <h2>Relevé d’identité bancaire</h2>
+          </Grid>
+          <Grid>
+            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Vous pouvez faire le choix d’ajouter un RIB pour vos versements.</Typography>
+          </Grid>
+        </Grid>
+        <Grid>
+          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+        </Grid>
+        <Grid>
+          <Grid>
+            <h3>RIB enregistrés</h3>
+          </Grid>
+          <Grid>
+            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Choisissez le versement directement sur votre compte bancaire.</Typography>
+          </Grid>
+        </Grid>
+        {this.state.haveAccount ?
+          <Grid container style={{marginTop: '10vh', display: 'flex', alignItems: 'center'}}>
+            <Grid item xl={7} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+              <Grid item xl={2} style={{display: 'flex'}}>
+                <AccountBalanceIcon/>
+              </Grid>
+              <Grid item xl={6} style={{display: 'flex', flexDirection:'column'}}>
+                <Grid>
+                  <Grid>
+                    <Typography>{this.state.accounts[0].OwnerName}</Typography>
+                  </Grid>
+                </Grid>
+                <Grid>
+                  <Typography style={{color:'rgba(39,37,37,35%)'}}>{formatIban(this.state.accounts[0].IBAN)}</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xl={5} style={{display: 'flex', justifyContent: 'center'}}>
+              <IconButton aria-label="delete" onClick={()=>this.handleClick2()}>
+                <DeleteForeverIcon/>
+              </IconButton>
+            </Grid>
+          </Grid>
+          :
+          null
+        }
+        <Grid style={{marginTop: '10vh'}}>
+          <Grid style={{display :'flex', alignItems: 'center'}}>
+            <Grid>
+              <IconButton aria-label="add" onClick={this.handleClick}>
+                <AddCircleIcon />
+              </IconButton>
+            </Grid>
+            <Grid>
+              <Typography>Ajouter un rib</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid style={{marginTop: '10vh', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12vh'}}>
+          <Grid style={{marginRight: '2vh'}}>
+            <Grid>
+              <SecurityIcon style={{color: 'rgba(39,37,37,35%)'}}/>
+            </Grid>
+          </Grid>
+          <Grid>
+            <Grid>
+              <Typography style={{color:'rgba(39,37,37,35%)'}}>Toutes les données de paeiment sur My Alfred sont cryptées.</Typography>
+            </Grid>
+            <Grid>
+              <Typography style={{color:'rgba(39,37,37,35%)'}}>Elles sont gérées par mangopay notre partenaire de confiance.</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+
+    )
+  };
+
   render() {
     const {classes, index} = this.props;
     const {accounts, clickAdd, clickDelete, haveAccount, errors} = this.state;
@@ -280,84 +362,18 @@ class paymentPreference extends React.Component {
           <meta property="description"
                 content="My Alfred, des services entre particuliers et auto-entrepreneurs rémunérés ! Choisissez vos méthodes de versement de vos rémunérations pour chacun des services réalisés. Versement 72h après la prestation."/>
         </Helmet>
-        <LayoutAccount index={index}>
-          <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
-            <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
-              <Grid>
-                <h2>Relevé d’identité bancaire</h2>
-              </Grid>
-              <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Vous pouvez faire le choix d’ajouter un RIB pour vos versements.</Typography>
-              </Grid>
-            </Grid>
-            <Grid>
-              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
-            </Grid>
-            <Grid>
-              <Grid>
-                <h3>RIB enregistrés</h3>
-              </Grid>
-              <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Choisissez le versement directement sur votre compte bancaire.</Typography>
-              </Grid>
-            </Grid>
-            {haveAccount ?
-              <Grid container style={{marginTop: '10vh', display: 'flex', alignItems: 'center'}}>
-                <Grid item xl={7} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                  <Grid item xl={2} style={{display: 'flex'}}>
-                    <AccountBalanceIcon/>
-                  </Grid>
-                  <Grid item xl={6} style={{display: 'flex', flexDirection:'column'}}>
-                    <Grid>
-                      <Grid>
-                        <Typography>{accounts[0].OwnerName}</Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid>
-                      <Typography style={{color:'rgba(39,37,37,35%)'}}>{formatIban(accounts[0].IBAN)}</Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item xl={5} style={{display: 'flex', justifyContent: 'center'}}>
-                  <IconButton aria-label="delete" onClick={()=>this.handleClick2()}>
-                    <DeleteForeverIcon/>
-                  </IconButton>
-                </Grid>
-              </Grid>
-              :
-              null
-            }
-            <Grid style={{marginTop: '10vh'}}>
-              <Grid style={{display :'flex', alignItems: 'center'}}>
-                <Grid>
-                  <IconButton aria-label="add" onClick={this.handleClick}>
-                    <AddCircleIcon />
-                  </IconButton>
-                </Grid>
-                <Grid>
-                  <Typography>Ajouter un rib</Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid style={{marginTop: '10vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-              <Grid style={{marginRight: '2vh'}}>
-                <Grid>
-                  <SecurityIcon style={{color: 'rgba(39,37,37,35%)'}}/>
-                </Grid>
-              </Grid>
-              <Grid>
-                <Grid>
-                  <Typography style={{color:'rgba(39,37,37,35%)'}}>Toutes les données de paeiment sur My Alfred sont cryptées.</Typography>
-                </Grid>
-                <Grid>
-                  <Typography style={{color:'rgba(39,37,37,35%)'}}>Elles sont gérées par mangopay notre partenaire de confiance.</Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
+        <Hidden only={['xs', 'sm', 'md']}>
+          <LayoutAccount index={index}>
+            {this.content(classes)}
+          </LayoutAccount>
+        </Hidden>
+        <Hidden only={['lg', 'xl']}>
+          <LayoutMobile>
+            {this.content(classes)}
+          </LayoutMobile>
+        </Hidden>
           {clickAdd ? this.modalAddRib(errors,classes) : null}
           {clickDelete ? this.modalDeleteRib(accounts[0].Id) : null}
-        </LayoutAccount>
       </Fragment>
     );
   }

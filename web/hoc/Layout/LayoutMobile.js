@@ -10,7 +10,8 @@ class LayoutMobile extends React.Component{
   constructor(props) {
     super(props);
     this.state={
-      currentUrlIndex : ''
+      currentUrlIndex : '',
+      myProfilUrl: false
     }
 
   }
@@ -18,6 +19,9 @@ class LayoutMobile extends React.Component{
   componentDidMount(){
     let currentUrl = Router.pathname;
     let firstParamUrl= currentUrl.split('/')[1].split('/')[0];
+    if(currentUrl === '/account/myProfile'){
+      this.setState({myProfilUrl: true})
+    }
 
     switch (firstParamUrl) {
       case 'account':
@@ -36,19 +40,23 @@ class LayoutMobile extends React.Component{
 
   render() {
     const{children} = this.props;
-    const{currentUrlIndex} = this.state;
+    const{currentUrlIndex, myProfilUrl} = this.state;
+
+
 
     return(
       <React.Fragment>
         <Grid style={{padding: '10%'}}>
-          <Grid>
-            <IconButton aria-label="ArrowBackIosIcon" onClick={() => Router.back()}>
-              <ArrowBackIosIcon />
-            </IconButton>
-          </Grid>
+          {!myProfilUrl ?
+            <Grid>
+              <IconButton aria-label="ArrowBackIosIcon" onClick={() => Router.back()}>
+                <ArrowBackIosIcon />
+              </IconButton>
+            </Grid> : null
+          }
           {children}
         </Grid>
-        <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%'}}>
+        <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 1}}>
           <Grid style={{width: '90%'}}>
             <MobileNavbar currentUrlIndex={currentUrlIndex}/>
           </Grid>

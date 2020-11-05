@@ -24,6 +24,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import Dialog from "@material-ui/core/Dialog";
+import Hidden from "@material-ui/core/Hidden";
+import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 
 
 moment.locale('fr');
@@ -305,6 +307,161 @@ class security extends React.Component {
     )
   };
 
+  content = (classes) => {
+    return(
+      <Grid  style={{display: 'flex', flexDirection: 'column', width: '100%'}} >
+        <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+          <Grid>
+            <h2>Sécurité</h2>
+          </Grid>
+          <Grid>
+            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Modifier votre mot de passe et gérer votre compte.</Typography>
+          </Grid>
+        </Grid>
+        <Grid>
+          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+        </Grid>
+        <Grid>
+          <Grid>
+            <h3>Mot de passe</h3>
+          </Grid>
+          <Grid>
+            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Modifier votre mot de passe.</Typography>
+          </Grid>
+        </Grid>
+        <Grid style={{marginTop: '10vh'}}>
+          <Grid>
+            <Grid style={{display: 'flex'}}>
+              <form onSubmit={this.onSubmit}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={4} xl={12}>
+                    <TextField
+                      label={'Mot de passe actuel'}
+                      type="password"
+                      name="password"
+                      value={this.state.password}
+                      onChange={this.onChangePassword}
+                      variant={'outlined'}
+                      error={this.state.wrongPassword}
+                      helperText={this.state.wrongPassword ? 'Mot de passe erroné' : ''}
+                      classes={{root: classes.textfield}}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={4}  xl={12}>
+                    <TextField
+                      id="standard-with-placeholder"
+                      label={'Nouveau mot de passe'}
+                      type="password"
+                      name="newPassword"
+                      value={this.state.newPassword}
+                      onChange={this.onChange}
+                      variant={'outlined'}
+                      onKeyUp={this.onClick1}
+                      error={checkPass1(this.state.newPassword).error}
+                      helperText={checkPass1(this.state.newPassword).error}
+                      classes={{root: classes.textfield}}
+
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={4}  xl={12}>
+                    <TextField
+                      id="standard-with-placeholder"
+                      label={'Répéter le mot de passe'}
+                      type="password"
+                      name="newPassword2"
+                      value={this.state.newPassword2}
+                      onChange={this.onChange}
+                      variant={'outlined'}
+                      onKeyUp={this.onClick1}
+                      error={checkPass2(this.state.newPassword, this.state.newPassword2).error}
+                      helperText={checkPass2(this.state.newPassword, this.state.newPassword2).error}
+                      classes={{root: classes.textfield}}
+
+                    />
+                  </Grid>
+                </Grid>
+                <Grid item style={{display: 'flex', justifyContent: 'left', marginTop: 30}}>
+                  <Button disabled={!this.state.checkButtonValidate} type="submit" className={classes.buttonSave} variant="contained">
+                    Valider
+                  </Button>
+                </Grid>
+              </form>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid>
+          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+        </Grid>
+        <Grid>
+          <Grid>
+            <h3>Mon compte</h3>
+          </Grid>
+          <Grid>
+            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Gérez votre compte.</Typography>
+          </Grid>
+        </Grid>
+        <Grid style={{marginTop: '10vh'}}>
+          <Grid container style={{alignItems: 'center'}} spacing={3}>
+            <Grid item xl={8} xs={6}>
+              <h4>Je souhaite que mon compte apparaisse dans les résultats des moteurs de recherche</h4>
+            </Grid>
+            <Grid item xl={4} xs={6} style={{flexDirection: 'row-reverse', display: 'flex'}}>
+              <IOSSwitch
+                checked={this.state.index_google}
+                onChange={this.handleChange('index_google')}
+                value={'index_google'}
+                color="primary"
+                inputProps={{'aria-label': 'primary checkbox'}}
+              />
+            </Grid>
+          </Grid>
+          <Grid>
+            {this.state.user.is_alfred ?
+              <Grid container spacing={3} style={{alignItems: 'center'}}>
+                <Grid item xl={8}>
+                  <h4>Je souhaite supprimer ma boutique de services.</h4>
+                </Grid>
+                <Grid item  xl={4} style={{flexDirection: 'row-reverse', display: 'flex'}}>
+                  <Button
+                    onClick={() => this.handleClickOpen()}
+                    variant="contained"
+                    classes={{root: classes.buttonSave}}
+                  >
+                    Supprimer
+                  </Button>
+                </Grid>
+              </Grid>
+              : null
+            }
+          </Grid>
+          <Grid style={{marginBottom: '12vh'}}>
+            <Grid container style={{alignItems: 'center'}} spacing={3}>
+              <Grid item xl={8} style={{display: 'flex', flexDirection: 'column'}}>
+                <Grid>
+                  <h4>Je souhaite désactiver mon compte.</h4>
+                </Grid>
+                <Grid>
+                  <Typography style={{color: 'rgba(39,37,37,35%)'}}>
+                    Attention, cette action est irréversible !
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid item xl={4} style={{flexDirection: 'row-reverse', display: 'flex'}}>
+                <Button
+                  onClick={() => this.handleClickOpen2()}
+                  variant="contained"
+                  classes={{root: classes.buttonSave}}
+                >
+                  Désactiver
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    )
+  };
+
 
   render() {
     const {classes, index} = this.props;
@@ -318,160 +475,18 @@ class security extends React.Component {
           <meta property="description"
                 content="Modifiez votre mot de passe et gérer la sécurité de votre compte My Alfred. Des milliers de particuliers et auto-entrepreneurs proches de chez vous prêts à vous rendre service ! Paiement sécurisé. Inscription 100% gratuite !"/>
         </Helmet>
-        <LayoutAccount index={index}>
-          <Grid  style={{display: 'flex', flexDirection: 'column', width: '100%'}} >
-            <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
-              <Grid>
-                <h2>Sécurité</h2>
-              </Grid>
-              <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Modifier votre mot de passe et gérer votre compte.</Typography>
-              </Grid>
-            </Grid>
-            <Grid>
-              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
-            </Grid>
-            <Grid>
-              <Grid>
-                <h3>Mot de passe</h3>
-              </Grid>
-              <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Modifier votre mot de passe.</Typography>
-              </Grid>
-            </Grid>
-            <Grid style={{marginTop: '10vh'}}>
-              <Grid>
-                <Grid style={{display: 'flex'}}>
-                  <form onSubmit={this.onSubmit}>
-                    <Grid container spacing={3}>
-                      <Grid item xs={12} md={4} xl={12}>
-                        <TextField
-                          label={'Mot de passe actuel'}
-                          type="password"
-                          name="password"
-                          value={this.state.password}
-                          onChange={this.onChangePassword}
-                          variant={'outlined'}
-                          error={this.state.wrongPassword}
-                          helperText={this.state.wrongPassword ? 'Mot de passe erroné' : ''}
-                          classes={{root: classes.textfield}}
-                        />
-                      </Grid>
-                      <Grid item xs={12} md={4}  xl={12}>
-                        <TextField
-                          id="standard-with-placeholder"
-                          label={'Nouveau mot de passe'}
-                          type="password"
-                          name="newPassword"
-                          value={this.state.newPassword}
-                          onChange={this.onChange}
-                          variant={'outlined'}
-                          onKeyUp={this.onClick1}
-                          error={checkPass1(this.state.newPassword).error}
-                          helperText={checkPass1(this.state.newPassword).error}
-                          classes={{root: classes.textfield}}
-
-                        />
-                      </Grid>
-                      <Grid item xs={12} md={4}  xl={12}>
-                        <TextField
-                          id="standard-with-placeholder"
-                          label={'Répéter le mot de passe'}
-                          type="password"
-                          name="newPassword2"
-                          value={this.state.newPassword2}
-                          onChange={this.onChange}
-                          variant={'outlined'}
-                          onKeyUp={this.onClick1}
-                          error={checkPass2(this.state.newPassword, this.state.newPassword2).error}
-                          helperText={checkPass2(this.state.newPassword, this.state.newPassword2).error}
-                          classes={{root: classes.textfield}}
-
-                        />
-                      </Grid>
-                    </Grid>
-                    <Grid item style={{display: 'flex', justifyContent: 'left', marginTop: 30}}>
-                      <Button disabled={!checkButtonValidate} type="submit" className={classes.buttonSave} variant="contained">
-                        Valider
-                      </Button>
-                    </Grid>
-                  </form>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid>
-              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
-            </Grid>
-            <Grid>
-              <Grid>
-                <h3>Mon compte</h3>
-              </Grid>
-              <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Gérez votre compte.</Typography>
-              </Grid>
-            </Grid>
-            <Grid style={{marginTop: '10vh'}}>
-              <Grid container style={{alignItems: 'center'}} spacing={3}>
-                <Grid item xl={8}>
-                  <h4>Je souhaite que mon compte apparaisse dans les résultats des moteurs de recherche</h4>
-                </Grid>
-                <Grid item xl={4} style={{flexDirection: 'row-reverse', display: 'flex'}}>
-                  <IOSSwitch
-                    checked={this.state.index_google}
-                    onChange={this.handleChange('index_google')}
-                    value={'index_google'}
-                    color="primary"
-                    inputProps={{'aria-label': 'primary checkbox'}}
-                  />
-                </Grid>
-              </Grid>
-              <Grid>
-                {user.is_alfred ?
-                  <Grid container spacing={3} style={{alignItems: 'center'}}>
-                    <Grid item xl={8}>
-                      <h4>Je souhaite supprimer ma boutique de services.</h4>
-                    </Grid>
-                    <Grid item  xl={4} style={{flexDirection: 'row-reverse', display: 'flex'}}>
-                      <Button
-                        onClick={() => this.handleClickOpen()}
-                        variant="contained"
-                        classes={{root: classes.buttonSave}}
-                      >
-                        Supprimer
-                      </Button>
-                    </Grid>
-                  </Grid>
-                  : null
-                }
-              </Grid>
-              <Grid>
-                <Grid container style={{alignItems: 'center'}} spacing={3}>
-                  <Grid item xl={8} style={{display: 'flex', flexDirection: 'column'}}>
-                    <Grid>
-                      <h4>Je souhaite désactiver mon compte.</h4>
-                    </Grid>
-                    <Grid>
-                      <Typography style={{color: 'rgba(39,37,37,35%)'}}>
-                        Attention, cette action est irréversible !
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Grid item xl={4} style={{flexDirection: 'row-reverse', display: 'flex'}}>
-                    <Button
-                      onClick={() => this.handleClickOpen2()}
-                      variant="contained"
-                      classes={{root: classes.buttonSave}}
-                      >
-                      Désactiver
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
+        <Hidden only={['xs', 'sm', 'md']}>
+          <LayoutAccount index={index}>
+            {this.content(classes)}
+          </LayoutAccount>
+        </Hidden>
+        <Hidden only={['lg', 'xl']}>
+          <LayoutMobile>
+            {this.content(classes)}
+          </LayoutMobile>
+        </Hidden>
           {open ? this.modalDeleteShop : null}
           {open2 ? this.modalDeleteAccount : null}
-        </LayoutAccount>
       </Fragment>
     );
   };

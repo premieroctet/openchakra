@@ -29,14 +29,14 @@ class PaymentResponsive extends React.Component{
             <List component="nav" aria-label="main mailbox folders">
               <ListItem button onClick={() => Router.push('/account/paymentMethod')}>
                 <ListItemText primary="Mes cartes de crédit" secondary={'Ajoutez vos cartes de crédit'}/>
-                <ListItemIcon>
+                <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>
               </ListItem>
               <Divider />
               <ListItem button onClick={() => Router.push('/account/paymentPreference')}>
                 <ListItemText primary="Mon RIB" secondary={'Choisissez un mode de versement'}/>
-                <ListItemIcon>
+                <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>
               </ListItem>

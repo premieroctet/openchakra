@@ -1,6 +1,9 @@
 export default theme => ({
   textfield:{
-    width: '50%'
+    width: '50%',
+    [theme.breakpoints.down('lg')]:{
+      width: '100%'
+    }
   },
   buttonSave:{
     textTransform: 'initial',

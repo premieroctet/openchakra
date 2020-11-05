@@ -379,7 +379,7 @@ class paymentMethod extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        <Grid style={{marginTop: '10vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+        <Grid style={{marginTop: '10vh', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12vh'}}>
           <Grid style={{marginRight: '2vh'}}>
             <Grid>
               <SecurityIcon style={{color: 'rgba(39,37,37,35%)'}}/>
