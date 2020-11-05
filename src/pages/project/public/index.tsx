@@ -78,9 +78,9 @@ const ProjectList = ({
             Public project
           </Text>
 
-          <SimpleGrid columns={3} spacing={10} mt={10}>
-            {projects.length > 0 ? (
-              projects.map((e: ProjectProps, i: number) => (
+          {projects.length > 0 ? (
+            <SimpleGrid columns={3} spacing={10} mt={10}>
+              {projects.map((e: ProjectProps, i: number) => (
                 <PseudoBox
                   bg="#1A202C"
                   color="white"
@@ -104,11 +104,13 @@ const ProjectList = ({
                     By {e.user.name}
                   </Text>
                 </PseudoBox>
-              ))
-            ) : (
-              <Text>There is no projets</Text>
-            )}
-          </SimpleGrid>
+              ))}
+            </SimpleGrid>
+          ) : (
+            <Box textAlign="center" mt={30}>
+              <Text color="white">There is no projects</Text>
+            </Box>
+          )}
         </Box>
       </Flex>
     </HotKeys>

@@ -19,6 +19,7 @@ import {
   Switch,
   useToast,
   Text,
+  Flex,
 } from '@chakra-ui/core'
 import { useRouter } from 'next/router'
 import { AiFillProject } from 'react-icons/ai'
@@ -136,23 +137,27 @@ const ModalComponent = (props: Props) => {
                       mt={3}
                       key={i}
                     >
-                      <Box
-                        onClick={() => {
-                          const href = `/project/${e.id}-${e.projectName}`
-                          router.push(href, href, { shallow: true })
-                        }}
-                        w="80%"
-                        display="inline-block"
-                      >
-                        <ListIcon icon={AiFillProject} color="white" />
-                        {e.id} - {e.projectName}
-                      </Box>
-                      <Switch
-                        color="teal"
-                        size="md"
-                        defaultIsChecked={e.public}
-                        onChange={() => publishPublicProject(e)}
-                      />
+                      <Flex justify="center" align="center">
+                        <Box
+                          onClick={() => {
+                            const href = `/project/${e.id}-${e.projectName}`
+                            router.push(href, href, { shallow: true })
+                          }}
+                          w="80%"
+                          display="inline-block"
+                        >
+                          <ListIcon icon={AiFillProject} color="white" />
+                          {e.id} - {e.projectName}
+                        </Box>
+                        <FormLabel htmlFor="projectPublic">isPublic</FormLabel>
+                        <Switch
+                          color="teal"
+                          id="projectPublic"
+                          size="md"
+                          defaultIsChecked={e.public}
+                          onChange={() => publishPublicProject(e)}
+                        />
+                      </Flex>
                     </ListItem>
                   </>
                 )
