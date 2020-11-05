@@ -25,6 +25,8 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
+import Hidden from "@material-ui/core/Hidden";
+import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 
 moment.locale('fr');
 
@@ -256,25 +258,124 @@ class myAddresses extends React.Component {
     )
   };
 
-  render() {
-    const {classes, index} = this.props;
-    const {clickAdd, clickEdit, service_address, address_selected} = this.state;
-
-    return (
-      <Fragment>
-        <Helmet>
-          <title> Profil - Mes adresses de prestation - My Alfred </title>
-          <meta property="description"
-                content="Renseignez vos adresses de prestation et recherchez des Alfred là où vous le souhaitez ! Des services entre particuliers dans toute la France. Réservez dès maintenant votre Alfred mécanicien, plombier, électricien, coiffeur, coach sportif…"/>
-        </Helmet>
-        <LayoutAccount index={index}>
-          <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
-            <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+  content = (classes) => {
+    return(
+      <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+        <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+          <Grid>
+            <h2>Mes adresses</h2>
+          </Grid>
+          <Grid>
+            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ici, vous pouvez gérer vos adresses.</Typography>
+          </Grid>
+        </Grid>
+        <Grid>
+          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+        </Grid>
+        <Grid>
+          <Grid>
+            <h3>Mon adresse principale</h3>
+          </Grid>
+        </Grid>
+        <Grid style={{marginTop: '5vh'}}>
+          <Grid>
+            <Grid>
               <Grid>
-                <h2>Mes adresses</h2>
-              </Grid>
-              <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ici, vous pouvez gérer vos adresses.</Typography>
+                <Grid>
+                  <AlgoliaPlaces
+                    placeholder='Recherchez votre adresse'
+                    options={{
+                      appId: 'plKATRG826CP',
+                      apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                      language: 'fr',
+                      countries: ['fr'],
+                      type: 'address',
+                    }}
+                    onChange={(suggestion) => this.onChangeAlgolia3(suggestion)}
+                  />
+                </Grid>
+                <form onSubmit={this.onSubmit}>
+                  <Grid>
+                    <Grid>
+                      <TextField
+                        inputProps={{
+                          readOnly: true,
+                          style: {cursor: 'default'},
+                        }}
+                        style={{width: '100%'}}
+                        value={this.state.currentAddress}
+                        name={'currentAddress'}
+                        onChange={this.onChange}
+                        margin="normal"
+                        variant="outlined"
+                        placeholder={'Adresse'}
+                        label={'Rue'}
+                      />
+                    </Grid>
+                    <Grid container spacing={3}>
+                      <Grid item xl={6}>
+                        <TextField
+                          inputProps={{
+                            readOnly: true,
+                            style: {cursor: 'default'},
+                          }}
+                          className={classes.textField}
+                          style={{width: '100%'}}
+                          value={this.state.currentZip_code}
+                          name={'currentZip_code'}
+                          onChange={this.onChange}
+                          margin="normal"
+                          variant="outlined"
+                          placeholder={'Code postal'}
+                          label={'Code postal'}
+                        />
+                      </Grid>
+                      <Grid item xl={6}>
+                        <TextField
+                          inputProps={{
+                            readOnly: true,
+                            style: {cursor: 'default'},
+                          }}
+                          id="outlined-name"
+                          style={{width: '100%'}}
+                          value={this.state.currentCity}
+                          name={'currentCity'}
+                          onChange={this.onChange}
+                          margin="normal"
+                          variant="outlined"
+                          placeholder={'Ville'}
+                          label={'Ville'}
+                        />
+                      </Grid>
+                    </Grid>
+                    <Grid>
+                      <TextField
+                        inputProps={{
+                          readOnly: true,
+                          style: {cursor: 'default'},
+                        }}
+                        id="outlined-select-currency"
+                        style={{width: '100%'}}
+                        value={this.state.currentCountry}
+                        onChange={this.onChange}
+                        SelectProps={{
+                          MenuProps: {
+                            className: classes.menu,
+                          },
+                        }}
+                        margin="normal"
+                        variant="outlined"
+                        name={'currentCountry'}
+                        label={'Pays'}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid style={{marginTop: '5vh'}}>
+                    <Button size={'large'} type={'submit'} variant="contained" className={classes.buttonSave}>
+                      Valider
+                    </Button>
+                  </Grid>
+                </form>
               </Grid>
             </Grid>
             <Grid>
@@ -282,14 +383,71 @@ class myAddresses extends React.Component {
             </Grid>
             <Grid>
               <Grid>
-                <h3>Mon adresse principale</h3>
+                <h3>Mon carnet d’adresse</h3>
+              </Grid>
+              <Grid>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ajoutez plusieurs adresses et gagnez du temps.</Typography>
               </Grid>
             </Grid>
-            <Grid style={{marginTop: '5vh'}}>
-              <Grid>
+            <Grid container style={{marginTop: '5vh'}}>
+              {this.state.service_address.map((e, index) => (
+                <Grid key={index} style={{width: '100%'}}>
+                  <Grid>
+                    <Grid container style={{display: 'flex', alignItems: 'center' }}>
+                      <Grid item xl={3}>
+                        <h4>{e.label}</h4>
+                      </Grid>
+                      <Grid item xl={2} style={{display : 'flex'}}>
+                        <Grid>
+                          <IconButton aria-label="update" onClick={() => this.handleClick(e._id)}>
+                            <EditIcon/>
+                          </IconButton>
+                        </Grid>
+                        <Grid>
+                          <IconButton aria-label="delete" onClick={() => this.handleClickOpen(this.state.address_selected._id)}>
+                            <DeleteForeverIcon />
+                          </IconButton>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid>
+                    <Typography style={{color: 'rgba(39,37,37,35%)'}}>{e.address}</Typography>
+                    <Typography style={{color: 'rgba(39,37,37,35%)'}}>{e.zip_code} {e.city}</Typography>
+                    <Typography style={{color: 'rgba(39,37,37,35%)'}}>France</Typography>
+                  </Grid>
+                </Grid>
+              ))}
+            </Grid>
+            <Grid container style={{marginTop: 20}}>
+              <Button
+                size={'large'}
+                type={'submit'}
+                variant="contained"
+                className={classes.buttonSave}
+                onClick={() => this.setState({clickAdd: !this.state.clickAdd, clickEdit: false})}
+              >
+                Ajouter une adresse
+              </Button>
+            </Grid>
+            {this.state.clickAdd ?
+              <form onSubmit={this.onSubmit2}>
                 <Grid>
                   <Grid>
-                    <Grid>
+                    <TextField
+                      id="standard-name"
+                      style={{marginTop: 30, width: '100%'}}
+                      value={this.state.label_address}
+                      onChange={this.onChange}
+                      margin="normal"
+                      name={'label_address'}
+                      placeholder={'Ecrire ici'}
+                      variant={'outlined'}
+                      label={'Nom de l\'adresse'}
+                    />
+                  </Grid>
+                  <Grid>
+                    <Grid style={{marginTop: 20}}>
                       <AlgoliaPlaces
                         placeholder='Recherchez votre adresse'
                         options={{
@@ -299,311 +457,169 @@ class myAddresses extends React.Component {
                           countries: ['fr'],
                           type: 'address',
                         }}
-                        onChange={(suggestion) => this.onChangeAlgolia3(suggestion)}
+                        onChange={(suggestion) => this.onChangeAlgolia(suggestion)}
                       />
                     </Grid>
-                    <form onSubmit={this.onSubmit}>
-                      <Grid>
-                        <Grid>
-                          <TextField
-                            inputProps={{
-                              readOnly: true,
-                              style: {cursor: 'default'},
-                            }}
-                            style={{width: '100%'}}
-                            value={this.state.currentAddress}
-                            name={'currentAddress'}
-                            onChange={this.onChange}
-                            margin="normal"
-                            variant="outlined"
-                            placeholder={'Adresse'}
-                            label={'Rue'}
-                          />
-                        </Grid>
-                        <Grid container spacing={3}>
-                          <Grid item xl={6}>
-                            <TextField
-                              inputProps={{
-                                readOnly: true,
-                                style: {cursor: 'default'},
-                              }}
-                              className={classes.textField}
-                              style={{width: '100%'}}
-                              value={this.state.currentZip_code}
-                              name={'currentZip_code'}
-                              onChange={this.onChange}
-                              margin="normal"
-                              variant="outlined"
-                              placeholder={'Code postal'}
-                              label={'Code postal'}
-                            />
-                          </Grid>
-                          <Grid item xl={6}>
-                            <TextField
-                              inputProps={{
-                                readOnly: true,
-                                style: {cursor: 'default'},
-                              }}
-                              id="outlined-name"
-                              style={{width: '100%'}}
-                              value={this.state.currentCity}
-                              name={'currentCity'}
-                              onChange={this.onChange}
-                              margin="normal"
-                              variant="outlined"
-                              placeholder={'Ville'}
-                              label={'Ville'}
-                            />
-                          </Grid>
-                        </Grid>
-                        <Grid>
-                          <TextField
-                            inputProps={{
-                              readOnly: true,
-                              style: {cursor: 'default'},
-                            }}
-                            id="outlined-select-currency"
-                            style={{width: '100%'}}
-                            value={this.state.currentCountry}
-                            onChange={this.onChange}
-                            SelectProps={{
-                              MenuProps: {
-                                className: classes.menu,
-                              },
-                            }}
-                            margin="normal"
-                            variant="outlined"
-                            name={'currentCountry'}
-                            label={'Pays'}
-                          />
-                        </Grid>
-                      </Grid>
-                      <Grid style={{marginTop: '5vh'}}>
-                        <Button size={'large'} type={'submit'} variant="contained" className={classes.buttonSave}>
-                          Valider
-                        </Button>
-                      </Grid>
-                    </form>
                   </Grid>
-                </Grid>
-                <Grid>
-                  <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
-                </Grid>
-                <Grid>
-                  <Grid>
-                    <h3>Mon carnet d’adresse</h3>
+                  <Grid style={{marginTop: 20}}>
+                    <TextField
+                      style={{marginTop: 15, width: '100%'}}
+                      value={this.state.new_address}
+                      onChange={this.onChange}
+                      inputProps={{
+                        readOnly: true,
+                        style: {cursor: 'default'},
+                      }}
+                      margin="normal"
+                      name={'new_address'}
+                      variant={'outlined'}
+                      label={'Rue'}
+                    />
                   </Grid>
                   <Grid>
-                    <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ajoutez plusieurs adresses et gagnez du temps.</Typography>
+                    <Grid style={{marginTop: 20}}>
+                      <TextField
+                        style={{marginTop: 15, width: '100%'}}
+                        value={this.state.new_zip_code}
+                        onChange={this.onChange}
+                        inputProps={{
+                          readOnly: true,
+                          style: {cursor: 'default'},
+                        }}
+                        margin="normal"
+                        name={'new_zip_code'}
+                        variant={'outlined'}
+                        label={'Code postal'}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid style={{marginTop: 20}}>
+                    <TextField
+                      style={{marginTop: 15, width: '100%'}}
+                      value={this.state.new_city}
+                      onChange={this.onChange}
+                      inputProps={{
+                        readOnly: true,
+                        style: {cursor: 'default'},
+                      }}
+                      margin="normal"
+                      name={'new_city'}
+                      variant={'outlined'}
+                      label={'Ville'}
+                    />
                   </Grid>
                 </Grid>
-                <Grid container style={{marginTop: '5vh'}}>
-                  {service_address.map((e, index) => (
-                    <Grid key={index} style={{width: '100%'}}>
-                      <Grid>
-                        <Grid container style={{display: 'flex', alignItems: 'center' }}>
-                          <Grid item xl={3}>
-                            <h4>{e.label}</h4>
-                          </Grid>
-                          <Grid item xl={2} style={{display : 'flex'}}>
-                            <Grid>
-                              <IconButton aria-label="update" onClick={() => this.handleClick(e._id)}>
-                                <EditIcon/>
-                              </IconButton>
-                            </Grid>
-                            <Grid>
-                              <IconButton aria-label="delete" onClick={() => this.handleClickOpen(address_selected._id)}>
-                                <DeleteForeverIcon />
-                              </IconButton>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      <Grid>
-                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>{e.address}</Typography>
-                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>{e.zip_code} {e.city}</Typography>
-                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>France</Typography>
-                      </Grid>
-                    </Grid>
-                  ))}
-                </Grid>
-                <Grid container style={{marginTop: 20}}>
-                  <Button
-                    size={'large'}
-                    type={'submit'}
-                    variant="contained"
-                    className={classes.buttonSave}
-                    onClick={() => this.setState({clickAdd: !clickAdd, clickEdit: false})}
-                  >
-                    Ajouter une adresse
-                  </Button>
-                </Grid>
-                {clickAdd ?
-                  <form onSubmit={this.onSubmit2}>
-                    <Grid>
-                      <Grid>
-                        <TextField
-                          id="standard-name"
-                          style={{marginTop: 30, width: '100%'}}
-                          value={this.state.label_address}
-                          onChange={this.onChange}
-                          margin="normal"
-                          name={'label_address'}
-                          placeholder={'Ecrire ici'}
-                          variant={'outlined'}
-                          label={'Nom de l\'adresse'}
-                        />
-                      </Grid>
-                      <Grid>
-                        <Grid style={{marginTop: 20}}>
-                          <AlgoliaPlaces
-                            placeholder='Recherchez votre adresse'
-                            options={{
-                              appId: 'plKATRG826CP',
-                              apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                              language: 'fr',
-                              countries: ['fr'],
-                              type: 'address',
-                            }}
-                            onChange={(suggestion) => this.onChangeAlgolia(suggestion)}
-                          />
-                        </Grid>
-                      </Grid>
-                      <Grid style={{marginTop: 20}}>
-                        <TextField
-                          style={{marginTop: 15, width: '100%'}}
-                          value={this.state.new_address}
-                          onChange={this.onChange}
-                          inputProps={{
-                            readOnly: true,
-                            style: {cursor: 'default'},
-                          }}
-                          margin="normal"
-                          name={'new_address'}
-                          variant={'outlined'}
-                          label={'Rue'}
-                        />
-                      </Grid>
-                      <Grid>
-                        <Grid style={{marginTop: 20}}>
-                          <TextField
-                            style={{marginTop: 15, width: '100%'}}
-                            value={this.state.new_zip_code}
-                            onChange={this.onChange}
-                            inputProps={{
-                              readOnly: true,
-                              style: {cursor: 'default'},
-                            }}
-                            margin="normal"
-                            name={'new_zip_code'}
-                            variant={'outlined'}
-                            label={'Code postal'}
-                          />
-                        </Grid>
-                      </Grid>
-                      <Grid style={{marginTop: 20}}>
-                        <TextField
-                          style={{marginTop: 15, width: '100%'}}
-                          value={this.state.new_city}
-                          onChange={this.onChange}
-                          inputProps={{
-                            readOnly: true,
-                            style: {cursor: 'default'},
-                          }}
-                          margin="normal"
-                          name={'new_city'}
-                          variant={'outlined'}
-                          label={'Ville'}
-                        />
-                      </Grid>
-                    </Grid>
-                    <Button size={'large'} type={'submit'} variant="contained" className={classes.buttonSave}>
-                      Enregistrer
-                    </Button>
-                  </form>
-                  : null}
-                {clickEdit ?
-                  <form onSubmit={(event) => this.onSubmit3(event, address_selected._id)}>
-                    <Grid>
-                      <Grid>
-                        <TextField
-                          id="standard-name"
-                          style={{marginTop: 30, width: '100%'}}
-                          value={this.state.edit_label}
-                          onChange={this.onChange}
-                          margin="normal"
-                          name={'edit_label'}
-                          placeholder={'Ecrire ici'}
-                          variant={'outlined'}
-                          label={'Nom de l\'adresse'}
-                        />
-                      </Grid>
-                      <Grid >
-                        <Grid style={{marginTop: 20}}>
-                          <AlgoliaPlaces
-                            placeholder='Recherchez votre adresse'
-                            options={{
-                              appId: 'plKATRG826CP',
-                              apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                              language: 'fr',
-                              countries: ['fr'],
-                              type: 'address',
+                <Button size={'large'} type={'submit'} variant="contained" className={classes.buttonSave}>
+                  Enregistrer
+                </Button>
+              </form>
+              : null}
+            {this.state.clickEdit ?
+              <form onSubmit={(event) => this.onSubmit3(event, this.state.address_selected._id)}>
+                <Grid>
+                  <Grid>
+                    <TextField
+                      id="standard-name"
+                      style={{marginTop: 30, width: '100%'}}
+                      value={this.state.edit_label}
+                      onChange={this.onChange}
+                      margin="normal"
+                      name={'edit_label'}
+                      placeholder={'Ecrire ici'}
+                      variant={'outlined'}
+                      label={'Nom de l\'adresse'}
+                    />
+                  </Grid>
+                  <Grid >
+                    <Grid style={{marginTop: 20}}>
+                      <AlgoliaPlaces
+                        placeholder='Recherchez votre adresse'
+                        options={{
+                          appId: 'plKATRG826CP',
+                          apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                          language: 'fr',
+                          countries: ['fr'],
+                          type: 'address',
 
-                            }}
-                            onChange={(suggestion) => this.onChangeAlgolia2(suggestion)}
-                          />
-                        </Grid>
-                      </Grid>
-                      <Grid style={{marginTop: 20}}>
-                        <TextField
-                          style={{marginTop: 15, width: '100%'}}
-                          value={this.state.edit_address}
-                          onChange={this.onChange}
-                          margin="normal"
-                          name={'edit_address'}
-                          placeholder={'Ecrire ici'}
-                          variant={'outlined'}
-                          label={'Rue'}
-                        />
-                      </Grid>
-                      <Grid>
-                        <Grid style={{marginTop: 20}}>
-                          <TextField
-                            style={{marginTop: 15, width: '100%'}}
-                            value={this.state.edit_zip_code}
-                            onChange={this.onChange}
-                            margin="normal"
-                            name={'edit_zip_code'}
-                            placeholder={'Ecrire ici'}
-                            variant={'outlined'}
-                            label={'Code postal'}
-                          />
-                        </Grid>
-                      </Grid>
-                      <Grid style={{marginTop: 20}}>
-                        <TextField
-                          style={{marginTop: 15, width: '100%'}}
-                          value={this.state.edit_city}
-                          onChange={this.onChange}
-                          margin="normal"
-                          name={'edit_city'}
-                          placeholder={'Ecrire ici'}
-                          variant={'outlined'}
-                          label={'Ville'}
-                        />
-                      </Grid>
+                        }}
+                        onChange={(suggestion) => this.onChangeAlgolia2(suggestion)}
+                      />
                     </Grid>
-                    <Button size={'large'} type={'submit'} variant="contained" className={classes.buttonSave}>
-                      Enregistrer
-                    </Button>
-                  </form>
-                  : null}
-              </Grid>
-            </Grid>
+                  </Grid>
+                  <Grid style={{marginTop: 20}}>
+                    <TextField
+                      style={{marginTop: 15, width: '100%'}}
+                      value={this.state.edit_address}
+                      onChange={this.onChange}
+                      margin="normal"
+                      name={'edit_address'}
+                      placeholder={'Ecrire ici'}
+                      variant={'outlined'}
+                      label={'Rue'}
+                    />
+                  </Grid>
+                  <Grid>
+                    <Grid style={{marginTop: 20}}>
+                      <TextField
+                        style={{marginTop: 15, width: '100%'}}
+                        value={this.state.edit_zip_code}
+                        onChange={this.onChange}
+                        margin="normal"
+                        name={'edit_zip_code'}
+                        placeholder={'Ecrire ici'}
+                        variant={'outlined'}
+                        label={'Code postal'}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid style={{marginTop: 20}}>
+                    <TextField
+                      style={{marginTop: 15, width: '100%'}}
+                      value={this.state.edit_city}
+                      onChange={this.onChange}
+                      margin="normal"
+                      name={'edit_city'}
+                      placeholder={'Ecrire ici'}
+                      variant={'outlined'}
+                      label={'Ville'}
+                    />
+                  </Grid>
+                </Grid>
+                <Button size={'large'} type={'submit'} variant="contained" className={classes.buttonSave}>
+                  Enregistrer
+                </Button>
+              </form>
+              : null}
           </Grid>
+        </Grid>
+      </Grid>
+
+    )
+  };
+
+  render() {
+    const {classes, index} = this.props;
+    const {clickAdd, clickEdit, service_address, address_selected} = this.state;
+
+    return (
+      <React.Fragment>
+        <Helmet>
+          <title> Profil - Mes adresses de prestation - My Alfred </title>
+          <meta property="description"
+                content="Renseignez vos adresses de prestation et recherchez des Alfred là où vous le souhaitez ! Des services entre particuliers dans toute la France. Réservez dès maintenant votre Alfred mécanicien, plombier, électricien, coiffeur, coach sportif…"/>
+        </Helmet>
+        <Hidden only={['xs', 'sm', 'md']}>
+          <LayoutAccount index={index}>
+            {this.content(classes)}
+          </LayoutAccount>
+        </Hidden>
+        <Hidden only={['lg', 'xl']}>
+          <LayoutMobile>
+            {this.content(classes)}
+          </LayoutMobile>
+        </Hidden>
           {this.state.open ? this.modalDeleteAddress() : null}
-        </LayoutAccount>
-      </Fragment>
+      </React.Fragment>
     );
   };
 }
