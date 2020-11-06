@@ -75,9 +75,7 @@ const getLoggedUser = () => {
     return null
   }
   const data=token.split(' ')[1]
-  console.log(`Data:${data}`)
   const decoded = jwt.decode(data);
-  console.log(JSON.stringify(decoded))
   return decoded
 }
 
@@ -91,7 +89,13 @@ const getLoggedUserAdmin = () => {
   return logged && logged.is_admin
 }
 
+// Returns true if user is the currently logged user
+const isEditableUser = user => {
+  return getLoggedUserId()==user
+}
+
 module.exports = {
   computeDistanceKm, computeBookingReference, computeAverageNotes,
-  computeSumSkills, circular_get, getLoggedUser, getLoggedUserId, getLoggedUserAdmin,
+  computeSumSkills, circular_get, getLoggedUser, getLoggedUserId,
+  getLoggedUserAdmin, isEditableUser
 };

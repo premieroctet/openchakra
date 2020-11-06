@@ -18,6 +18,7 @@ const validateLoginInput = require('../../validation/login');
 const {sendResetPassword, sendVerificationMail, sendVerificationSMS} = require('../../../utils/mailing');
 
 const User = require('../../models/User');
+const Album = require('../../models/Albums');
 const ResetToken = require('../../models/ResetToken');
 const crypto = require('crypto');
 const multer = require('multer');
@@ -31,7 +32,7 @@ const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentSt
 
 axios.defaults.withCredentials = true;
 
-const storage = multer.diskStorage({
+const storageIdPicture = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/profile/');
   },
@@ -41,8 +42,8 @@ const storage = multer.diskStorage({
     cb(null, datetimestamp + '_' + key + '_' + file.originalname);
   },
 });
-const upload = multer({
-  storage: storage,
+const uploadIdPicture = multer({
+  storage: storageIdPicture,
   fileFilter: function (req, file, callback) {
     let ext = path.extname(file.originalname);
     if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg' && ext !== '.PNG' && ext !== '.JPG' && ext !== '.JPEG' && ext !== '.PDF') {
@@ -52,7 +53,7 @@ const upload = multer({
   },
 });
 
-const storage2 = multer.diskStorage({
+const storageIdCard = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/profile/idCard/');
   },
@@ -64,8 +65,9 @@ const storage2 = multer.diskStorage({
 
   },
 });
-const upload2 = multer({
-  storage: storage2, fileFilter: function (req, file, callback) {
+const uploadIdCard = multer({
+  storage: storageIdCard,
+  fileFilter: function (req, file, callback) {
     let ext = path.extname(file.originalname);
     if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg' && ext !== '.PNG' && ext !== '.JPG' && ext !== '.JPEG' && ext !== '.PDF') {
       return callback(new Error('Error extension'));
@@ -75,7 +77,7 @@ const upload2 = multer({
 });
 
 // Registration proof storage
-const storage3 = multer.diskStorage({
+const storageRegProof = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/profile/registrationProof/');
   },
@@ -87,8 +89,33 @@ const storage3 = multer.diskStorage({
 
   },
 });
-const upload3 = multer({
-  storage: storage3, fileFilter: function (req, file, callback) {
+const uploadRegProof = multer({
+  storage: storageRegProof,
+  fileFilter: function (req, file, callback) {
+    let ext = path.extname(file.originalname);
+    if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg' && ext !== '.PNG' && ext !== '.JPG' && ext !== '.JPEG' && ext !== '.PDF') {
+      return callback(new Error('Error extension'));
+    }
+    callback(null, true);
+  },
+});
+
+// Album picture storage
+const storageAlbumPicture = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'static/profile/album/');
+  },
+  filename: function (req, file, cb) {
+    let datetimestamp = Date.now();
+    let key = crypto.randomBytes(5).toString('hex');
+    let key2 = crypto.randomBytes(10).toString('hex');
+    cb(null, datetimestamp + '_' + key + '_' + key2 + path.extname(file.originalname));
+
+  },
+});
+const uploadAlbumPicture = multer({
+  storage: storageAlbumPicture,
+  fileFilter: function (req, file, callback) {
     let ext = path.extname(file.originalname);
     if (ext !== '.png' && ext !== '.jpg' && ext !== '.pdf' && ext !== '.jpeg' && ext !== '.PNG' && ext !== '.JPG' && ext !== '.JPEG' && ext !== '.PDF') {
       return callback(new Error('Error extension'));
@@ -386,7 +413,7 @@ router.put('/profile/job', passport.authenticate('jwt', {session: false}), (req,
 // @Route PUT /myAlfred/api/users/profile/picture
 // Add a picture profile
 // @Access private
-router.post('/profile/picture', upload.single('myImage'), passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/profile/picture', uploadIdPicture.single('myImage'), passport.authenticate('jwt', {session: false}), (req, res) => {
   User.findByIdAndUpdate(req.user.id, {
     picture: req.file ? req.file.path : '',
   }, {new: true})
@@ -412,7 +439,7 @@ router.put('/profile/pictureLater', passport.authenticate('jwt', {session: false
 // @Route POST /myAlfred/api/users/profile/idCard
 // Add an identity card
 // @Access private
-router.post('/profile/idCard', upload2.fields([{name: 'myCardR', maxCount: 1}, {
+router.post('/profile/idCard', uploadIdCard.fields([{name: 'myCardR', maxCount: 1}, {
   name: 'myCardV',
   maxCount: 1,
 }]), passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -441,7 +468,7 @@ router.post('/profile/idCard', upload2.fields([{name: 'myCardR', maxCount: 1}, {
 // @Route PUT /myAlfred/api/users/profile/idCard/addVerso
 // Add an identity card
 // @Access private
-router.post('/profile/idCard/addVerso', upload2.single('myCardV'), passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/profile/idCard/addVerso', uploadIdCard.single('myCardV'), passport.authenticate('jwt', {session: false}), (req, res) => {
   User.findById(req.user.id)
     .then(user => {
       user.id_card.verso = req.file.path;
@@ -457,7 +484,7 @@ router.post('/profile/idCard/addVerso', upload2.single('myCardV'), passport.auth
 // @Route POST /myAlfred/api/users/profile/registrationProof/add
 // Add a registration proof
 // @Access private
-router.post('/profile/registrationProof/add', upload3.single('registrationProof'), passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/profile/registrationProof/add', uploadRegProof.single('registrationProof'), passport.authenticate('jwt', {session: false}), (req, res) => {
   User.findById(req.user.id)
     .then(user => {
       user.registration_proof = req.file.path;
@@ -1091,6 +1118,71 @@ router.get('/siren_proof/:siren', (req, res) => {
     });
 });
 
+/******** ALBUMS *********/
+// @Route POST /myAlfred/api/users/profile/album/add
+// Add an album
+// @Access private
+router.post('/profile/album/add', uploadAlbumPicture.single('myImage'), passport.authenticate('jwt', {session: false}), (req, res) => {
+  const album=new Album({
+    label : req.body.label,
+    picture: req.file.path,
+    user  : req.user.id,
+  })
+  album.save()
+    .then( album => {
+      res.json(album)
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({error: err})
+    });
+});
+
+// @Route GET /myAlfred/api/users/profile/albums
+// Gets albums
+// @Access private
+router.get('/profile/albums/:user_id', (req, res) => {
+  Album.find({user : req.params.user_id})
+    .then( albums => {
+      res.json(albums)
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({error: err})
+    });
+});
+
+// @Route POST /myAlfred/api/users/profile/album/picture/add
+// Add a picture to an album
+// @Access private
+router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), passport.authenticate('jwt', {session: false}), (req, res) => {
+  Album.findById(req.body.album)
+    .then(album => {
+      album.pictures.push({path: req.file.path})
+      album.save()
+      res.status(200);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({error: err})
+    });
+});
+
+// @Route GET /myAlfred/api/users/profile/albums
+// Gets albums
+// @Access private
+router.get('/profile/albums/pictures/:album_id', (req, res) => {
+  Album.find({_id : req.params.album_id})
+    .then( album => {
+      res.json(album.pictures)
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({error: err})
+    });
+});
+
+
 /** Hooks Mangopay */
 const install_hooks= () => {
   const {get_host_url} = require('../../../config/config');
@@ -1170,6 +1262,7 @@ router.get('/mangopay_kyc', (req, res) => {
       res.status(200).json()
     })
 });
+
 
 
 // Create mango client account for all user with no id_mangopay
