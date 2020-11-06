@@ -18,6 +18,9 @@ export default theme => ({
     backgroundColor:'black'
   },
   textfield:{
-    width: '50%'
+    width: '50%',
+    [theme.breakpoints.down('lg')]:{
+      width: '100%'
+    }
   }
 })

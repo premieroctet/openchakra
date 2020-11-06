@@ -29,6 +29,8 @@ import Divider from "@material-ui/core/Divider";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import Hidden from "@material-ui/core/Hidden";
+import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 
 const {CESU} = require('../../utils/consts');
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -175,7 +177,7 @@ class trustAndVerification extends React.Component {
     const {name, value} = e.target;
     this.setState({[e.target.name]: e.target.value},
       () => {
-        if (name == 'siret') {
+        if (name === 'siret') {
           this.handleSiret();
         }
       });
@@ -411,375 +413,395 @@ class trustAndVerification extends React.Component {
     toast.error('test');
   };
 
+  modalDeleteConfirmMessage = () =>{
+    return(
+      <Dialog
+        open={this.state.open}
+        onClose={this.handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{'Confirmation'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {this.state.deleteConfirmMessage}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.handleClose} color="primary">
+            Annuler
+          </Button>
+          <Button onClick={this.handleDelete} color="secondary" autoFocus>
+            Supprimer
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  };
+
+  modalConfirmPhone = () =>{
+    return(
+      <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Confirmation du numéro de téléphone</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Saisissez le code reçu par SMS
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Code"
+            type="number"
+            placeholder="0000"
+            maxLength="4"
+            value={this.state.smsCode}
+            onChange={e => {
+              console.log(e.target.value);
+              this.setState({smsCode: e.target.value});
+            }}
+            fullWidth
+            errors={this.state.smsError}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.setState({smsCodeOpen: false})} color="primary">
+            Annuler
+          </Button>
+          <Button
+            disabled={this.state.smsCode.length !== 4}
+            onClick={() => this.checkSmsCode()}
+            color="primary">
+            Confirmer
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  };
+
+  content = (classes) => {
+    return(
+      <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+        <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+          <Grid>
+            <h2>Vérification</h2>
+          </Grid>
+          <Grid>
+            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Vérifiez votre email, votre numéro de téléphone et votre identité.</Typography>
+          </Grid>
+        </Grid>
+        <Grid>
+          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+        </Grid>
+        <Grid>
+          <Grid>
+            <h3>Pièce d'identité</h3>
+          </Grid>
+          <Grid>
+            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ajoutez ou modifiez vos documents d'identité.</Typography>
+          </Grid>
+        </Grid>
+
+        <Grid>
+
+          <Grid className={classes.searchFilterRightContainer}>
+            <Grid className={classes.searchFilterRightLabel}>
+              <h3>Type de document</h3>
+            </Grid>
+            <Grid>
+              <FormControl>
+                <Select
+                  labelId="simple-select-placeholder-label-label"
+                  id="simple-select-placeholder-label"
+                  value={this.state.type}
+                  name={'type'}
+                  onChange={(event) => {
+                    this.onChange(event);
+                    this.setState({selected: true});
+                  }}
+                  displayEmpty
+                  disableUnderline
+                  classes={{select: classes.searchSelectPadding}}
+                >
+                  <MenuItem value={'passeport'}>
+                    Passeport
+                  </MenuItem>
+                  <MenuItem value={'identite'}>
+                    Carte d'identité
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Grid>
+            {this.state.type ?
+              <DocumentEditor
+                confirmed={this.state.user.id_confirmed}
+                ext={this.state.ext}
+                db_document={this.state.card.recto}
+                uploaded_file={this.state.recto_file}
+                onChange={this.onRectoChange}
+                onDelete={() => this.deleteRecto(false)}
+                disabled={!this.state.type}
+                title={'Télécharger recto'}
+              />
+              :
+              null
+            }
+            {
+              this.state.type === 'identite' ?
+                <DocumentEditor
+                  confirmed={this.state.user.id_confirmed}
+                  ext={this.state.extVerso}
+                  db_document={this.state.card.verso}
+                  uploaded_file={this.state.verso_file}
+                  onChange={this.onVersoChange}
+                  onDelete={() => this.deleteRecto(false)}
+                  disabled={this.state.type !== 'identite'}
+                  title={'Télécharger verso'}
+                />
+                :
+                null
+            }
+            {this.state.id_recto === null && this.state.id_verso !== null ?
+              <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
+                <Button onClick={() => this.addVerso()} variant="contained" className={classes.buttonSave}>
+                  Enregistrer verso
+                </Button>
+              </Grid>
+              :
+              <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
+                <Button onClick={() => this.onSubmit} variant="contained" className={classes.buttonSave}>
+                  Enregistrer
+                </Button>
+              </Grid>
+            }
+          </Grid>
+        </Grid>
+        <Grid>
+          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+        </Grid>
+        <Grid>
+          <Grid>
+            <h3>Email & Téléphone</h3>
+          </Grid>
+          <Grid style={{marginTop: '10vh'}}>
+            <Grid container>
+              <Grid item xs={12}>
+                <TextField
+                  value={this.state.user.email || 'Votre email'}
+                  name={'email'}
+                  variant={'outlined'}
+                  disabled={true}
+                  helperText="Vous recevrez un email de verification"
+                  classes={{root: classes.textfield}}
+                />
+                {this.state.user.is_confirmed ? <CheckCircleIcon/> : null }
+              </Grid>
+            </Grid>
+            {this.state.user.is_confirmed ? null :
+              <Grid style={{marginTop: '5vh'}}>
+                <Button variant="contained" className={classes.buttonSave} onClick={() => this.sendEmail()}>
+                  Vérifier
+                </Button>
+              </Grid>
+            }
+            <Grid style={{marginTop: '10vh'}}>
+              <Grid>
+                <TextField
+                  classes={{root: classes.textfield}}
+                  value={this.state.user.phone || 'Votre numéro de téléphone'}
+                  name={'phone'}
+                  variant={'outlined'}
+                  disabled={true}
+                  helperText="Vous recevrez un SMS de verification"
+                />
+                {this.state.user.phone_confirmed  ? <CheckCircleIcon/> : null }
+              </Grid>
+            </Grid>
+            {this.state.user.phone_confirmed ?
+              null
+              :
+              <Grid style={{marginTop: '5vh'}}>
+                <Button variant="contained" className={classes.buttonSave} onClick={() => this.sendSms()}>
+                  Envoyer sms de vérification
+                </Button>
+              </Grid>
+            }
+          </Grid>
+
+          <Grid>
+            <Divider style={{height : 2, width: '100%', margin :'10vh 0px'}}/>
+          </Grid>
+
+
+          {this.state.alfred ?
+            <Grid style={{marginBottom: '12vh'}}>
+              <Grid>
+                <h3>Votre statut</h3>
+              </Grid>
+              <Grid>
+                <Grid>
+                  <FormControlLabel
+                    control={
+                      <Radio
+                        checked={this.state.particular}
+                        onChange={(e) => {
+                          this.onChangePartPro(e);
+                          this.handleChecked2();
+                        }}
+                        value={this.state.particular}
+                        name="particular"
+                        color="primary"
+                      />
+                    }
+                    label="Je suis un particulier"
+                  />
+                </Grid>
+                {this.state.particular ?
+                  <Grid>
+                    <RadioGroup name={'cesu'} value={this.state.cesu} onChange={this.onChange}>
+                      <Grid style={{display: 'flex', alignItems:'center'}}>
+                        <Radio color="primary" value={CESU[0]}/>
+                        <Typography>Je veux être déclaré(e) en CESU</Typography>
+                      </Grid>
+                      {this.state.cesu === CESU[0] ?
+                        <Grid style={{marginTop: '3vh', marginBottom: '3vh', marginLeft: '3vh'}}>
+                          <TextField
+                            id="ss1"
+                            type="number"
+                            variant={'outlined'}
+                            name='social_security'
+                            label={'N° sécurité sociale'}
+                            helperText={'N° SS (13+2 chiffres)'}
+                            value={this.state.social_security}
+                            onChange={this.onChange}
+                            errors={this.state.social_security}
+                          />
+                        </Grid>
+                        :
+                        null}
+                      <Grid style={{display: 'flex', alignItems:'center'}}>
+                        <Radio color="primary" value={CESU[1]}/>
+                        <Typography> J'accepte d'être déclaré en CES </Typography>
+                      </Grid>
+                      {this.state.cesu === CESU[1] ?
+                        <Grid style={{marginTop: '3vh', marginBottom: '3vh', marginLeft: '3vh'}}>
+                          <TextField
+                            id="ss2"
+                            type="number"
+                            variant={'outlined'}
+                            name='social_security'
+                            label={'N° sécurité sociale'}
+                            helperText={'N° SS (13+2 chiffres)'}
+                            value={this.state.social_security}
+                            onChange={this.onChange}
+                            errors={this.state.social_security}
+                          />
+                        </Grid>
+                        :
+                        null}
+                      <Grid style={{display: 'flex', alignItems:'center'}}>
+                        <Radio color="primary" value={CESU[2]}/>
+                        <Typography>Je n'accepte pas d'être déclaré(e) en CESU</Typography>
+                      </Grid>
+                    </RadioGroup>
+                  </Grid>
+                  : null
+                }
+                <Grid>
+                  <FormControlLabel
+                    control={
+                      <Radio
+                        checked={this.state.professional}
+                        onChange={(e) => {
+                          this.onChangePartPro(e);
+                          this.handleChecked();
+                        }}
+                        value={this.state.professional}
+                        name="professional"
+                        color="primary"
+                      />
+                    }
+                    label="Je suis un professionnel"
+                  />
+                </Grid>
+              </Grid>
+              {this.state.professional ?
+                <Grid container style={{marginTop: '5vh'}}>
+                  <Grid item xs={12}>
+                    <ButtonSwitch
+                      label="Je suis éligible au Crédit Impôt Service"
+                      onChange={this.onCISChange}
+                      checked={this.state.cis}
+                    />
+                  </Grid>
+                  <Grid style={{marginTop: '5vh'}}>
+                    <Siret
+                      onChange={this.onSiretChange}
+                      company={this.state}
+                    />
+                  </Grid>
+                  <Grid style={{marginTop: '10vh'}}>
+                    <h3>Document d'immatriculation</h3>
+                  </Grid>
+                  <Grid>
+                    <Typography style={{color: 'rgba(39,37,37,35%)'}}>
+                      Insérez ici le document d'immatriculation de votre entreprise (extrait de K-Bis, document
+                      d'immatriculation de micro-entreprise).<br/>
+                      Vous pouvez télécharger ce document en version PDF&nbsp;
+                      <a color={'primary'} href='https://avis-situation-sirene.insee.fr/' target='_blank'
+                      >sur le site de l'INSEE</a>
+                    </Typography>
+                  </Grid>
+                  <DocumentEditor
+                    ext={this.state.extRegistrationProof}
+                    db_document={this.state.registration_proof}
+                    uploaded_file={this.state.registration_proof_file}
+                    onChange={this.onRegistrationProofChanged}
+                    onDelete={() => this.deleteRegistrationProof(false)}
+                    title={'Télécharger document d\'immatriculation'}
+                  />
+                </Grid>
+                :
+                null
+              }
+              <Grid style={{marginTop: '10vh'}}>
+                <Button disabled={this.statusSaveDisabled()} variant="contained" className={classes.buttonSave} onClick={this.editSiret}>
+                  Enregistrer
+                </Button>
+              </Grid>
+            </Grid>
+            : null
+          }
+        </Grid>
+      </Grid>
+    )
+  };
+
   render() {
     const {classes, index} = this.props;
-    const {user, ext, ext2, professional, alfred, cesu, type} = this.state;
 
     return (
-      <Fragment>
+      <React.Fragment>
         <Helmet>
           <title> Profil - Confiance et vérification - My Alfred </title>
           <meta property="description"
                 content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. "/>
         </Helmet>
-        <LayoutAccount index={index}>
-          <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
-            <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
-              <Grid>
-                <h2>Vérification</h2>
-              </Grid>
-              <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Vérifiez votre email, votre numéro de téléphone et votre identité.</Typography>
-              </Grid>
-            </Grid>
-            <Grid>
-              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
-            </Grid>
-            <Grid>
-              <Grid>
-                <h3>Pièce d'identité</h3>
-              </Grid>
-              <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ajoutez ou modifiez vos documents d'identité.</Typography>
-              </Grid>
-            </Grid>
-
-            <Grid>
-
-              <Grid className={classes.searchFilterRightContainer}>
-                <Grid className={classes.searchFilterRightLabel}>
-                  <h3>Type de document</h3>
-                </Grid>
-                <Grid>
-                  <FormControl>
-                    <Select
-                      labelId="simple-select-placeholder-label-label"
-                      id="simple-select-placeholder-label"
-                      value={this.state.type}
-                      name={'type'}
-                      onChange={(event) => {
-                        this.onChange(event);
-                        this.setState({selected: true});
-                      }}
-                      displayEmpty
-                      disableUnderline
-                      classes={{select: classes.searchSelectPadding}}
-                    >
-                      <MenuItem value={'passeport'}>
-                        Passeport
-                      </MenuItem>
-                      <MenuItem value={'identite'}>
-                        Carte d'identité
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-
-
-
-              <form onSubmit={this.onSubmit}>
-                {type ?
-                  <DocumentEditor
-                    confirmed={user.id_confirmed}
-                    ext={this.state.ext}
-                    db_document={this.state.card.recto}
-                    uploaded_file={this.state.recto_file}
-                    onChange={this.onRectoChange}
-                    onDelete={() => this.deleteRecto(false)}
-                    disabled={!type}
-                    title={'Télécharger recto'}
-                  />
-                  :
-                  null
-                }
-                {
-                  type === 'identite' ?
-                    <DocumentEditor
-                      confirmed={user.id_confirmed}
-                      ext={this.state.extVerso}
-                      db_document={this.state.card.verso}
-                      uploaded_file={this.state.verso_file}
-                      onChange={this.onVersoChange}
-                      onDelete={() => this.deleteRecto(false)}
-                      disabled={type !== 'identite'}
-                      title={'Télécharger verso'}
-                    />
-                    :
-                    null
-                }
-                {this.state.id_recto === null && this.state.id_verso !== null ?
-                  <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
-                    <Button onClick={() => this.addVerso()} size={'large'} type={'submit'} variant="contained" className={classes.buttonSave}>
-                      Enregistrer verso
-                    </Button>
-                  </Grid>
-                  :
-                  <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
-                    <Button size={'large'} type={'submit'} variant="contained" className={classes.buttonSave}>
-                      Enregistrer
-                    </Button>
-                  </Grid>
-                }
-              </form>
-            </Grid>
-
-            <Grid>
-              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
-            </Grid>
-
-            <Grid>
-              <Grid>
-                  <h3>Email & Téléphone</h3>
-              </Grid>
-              <Grid style={{marginTop: '10vh'}}>
-                <Grid>
-                  <Grid>
-                    <TextField
-                      value={user.email || 'Votre email'}
-                      name={'email'}
-                      variant={'outlined'}
-                      disabled={true}
-                      helperText="Vous recevrez un email de verification"
-                      classes={{root: classes.textfield}}
-                    />
-                    {user.is_confirmed ? <CheckCircleIcon/> : null }
-                  </Grid>
-                </Grid>
-                {user.is_confirmed ? null :
-                  <Grid style={{marginTop: '5vh'}}>
-                    <Button variant="contained" className={classes.buttonSave} onClick={() => this.sendEmail()}>
-                      Vérifier
-                    </Button>
-                  </Grid>
-                }
-                <Grid style={{marginTop: '10vh'}}>
-                  <Grid>
-                    <TextField
-                      classes={{root: classes.textfield}}
-                      value={user.phone || 'Votre numéro de téléphone'}
-                      name={'phone'}
-                      variant={'outlined'}
-                      disabled={true}
-                      helperText="Vous recevrez un SMS de verification"
-                    />
-                    {user.phone_confirmed  ? <CheckCircleIcon/> : null }
-                  </Grid>
-                </Grid>
-                {user.phone_confirmed ?
-                  null
-                  :
-                  <Grid style={{marginTop: '5vh'}}>
-                    <Button variant="contained" className={classes.buttonSave} onClick={() => this.sendSms()}>
-                      Envoyer sms de vérification
-                    </Button>
-                  </Grid>
-                }
-              </Grid>
-
-              <Grid>
-                <Divider style={{height : 2, width: '100%', margin :'10vh 0px'}}/>
-              </Grid>
-
-
-              {alfred ?
-              <Grid>
-                <Grid>
-                  <h3>Votre statut</h3>
-                </Grid>
-                <Grid>
-                  <Grid>
-                    <FormControlLabel
-                      control={
-                        <Radio
-                          checked={this.state.particular}
-                          onChange={(e) => {
-                            this.onChangePartPro(e);
-                            this.handleChecked2();
-                          }}
-                          value={this.state.particular}
-                          name="particular"
-                          color="primary"
-                        />
-                      }
-                      label="Je suis un particulier"
-                    />
-                  </Grid>
-                    {this.state.particular ?
-                      <Grid style={{marginLeft: 40}}>
-                        <RadioGroup name={'cesu'} value={cesu} onChange={this.onChange}>
-                          <div>
-                            <Radio color="primary" value={CESU[0]}/>Je veux être déclaré(e) en CESU
-                          </div>
-                          {cesu === CESU[0] ?
-                            <Grid style={{marginTop: '3vh', marginBottom: '3vh', marginLeft: '3vh'}}>
-                              <TextField
-                                id="ss1"
-                                type="number"
-                                variant={'outlined'}
-                                name='social_security'
-                                label={'N° sécurité sociale'}
-                                helperText={'N° SS (13+2 chiffres)'}
-                                value={this.state.social_security}
-                                onChange={this.onChange}
-                                errors={this.state.social_security}
-                              />
-                            </Grid>
-                            :
-                            null}
-                          <Grid>
-                            <Radio color="primary" value={CESU[1]}/>
-                            J'accepte d'être déclaré en CESU
-                          </Grid>
-                          {cesu === CESU[1] ?
-                            <Grid style={{marginTop: '3vh', marginBottom: '3vh', marginLeft: '3vh'}}>
-                              <TextField
-                                id="ss2"
-                                type="number"
-                                variant={'outlined'}
-                                name='social_security'
-                                label={'N° sécurité sociale'}
-                                helperText={'N° SS (13+2 chiffres)'}
-                                value={this.state.social_security}
-                                onChange={this.onChange}
-                                errors={this.state.social_security}
-                              />
-                            </Grid>
-                            :
-                            null}
-                          <div><Radio color="primary" value={CESU[2]}/>Je n'accepte pas d'être déclaré(e) en CESU</div>
-                        </RadioGroup>
-                      </Grid>
-                      : null
-                    }
-                    <Grid>
-                      <FormControlLabel
-                        control={
-                          <Radio
-                            checked={this.state.professional}
-                            onChange={(e) => {
-                              this.onChangePartPro(e);
-                              this.handleChecked();
-                            }}
-                            value={this.state.professional}
-                            name="professional"
-                            color="primary"
-                          />
-                        }
-                        label="Je suis un professionnel"
-                      />
-                    </Grid>
-                  </Grid>
-                  {professional ?
-                    <Grid style={{marginTop: '5vh'}}>
-                      <Grid>
-                        <ButtonSwitch
-                          label="Je suis éligible au Crédit Impôt Service"
-                          onChange={this.onCISChange}
-                          checked={this.state.cis}
-                        />
-                      </Grid>
-                      <Grid style={{marginTop: '5vh'}}>
-                        <Siret
-                          onChange={this.onSiretChange}
-                          company={this.state}
-                        />
-                      </Grid>
-                      <Grid style={{marginTop: '10vh'}}>
-                        <h3>Document d'immatriculation</h3>
-                      </Grid>
-                      <Grid>
-                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>
-                          Insérez ici le document d'immatriculation de votre entreprise (extrait de K-Bis, document
-                          d'immatriculation de micro-entreprise).<br/>
-                          Vous pouvez télécharger ce document en version PDF&nbsp;
-                          <a color={'primary'} href='https://avis-situation-sirene.insee.fr/' target='_blank'
-                          >sur le site de l'INSEE</a>
-                        </Typography>
-                      </Grid>
-                      <DocumentEditor
-                        ext={this.state.extRegistrationProof}
-                        db_document={this.state.registration_proof}
-                        uploaded_file={this.state.registration_proof_file}
-                        onChange={this.onRegistrationProofChanged}
-                        onDelete={() => this.deleteRegistrationProof(false)}
-                        title={'Télécharger document d\'immatriculation'}
-                      />
-                    </Grid>
-                    :
-                    null
-                  }
-                  <Grid style={{marginTop: '10vh'}}>
-                    <Button disabled={this.statusSaveDisabled()} variant="contained" className={classes.buttonSave} onClick={this.editSiret}>
-                      Enregistrer
-                    </Button>
-                  </Grid>
-                </Grid>
-                : null
-              }
-            </Grid>
-          </Grid>
-        </LayoutAccount>
-        {/* <Footer/>*/}
-
-        <Dialog
-          open={this.state.open}
-          onClose={this.handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{'Confirmation'}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              {this.state.deleteConfirmMessage}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
-              Annuler
-            </Button>
-            <Button onClick={this.handleDelete} color="secondary" autoFocus>
-              Supprimer
-            </Button>
-          </DialogActions>
-        </Dialog>
-
-        <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
-          <DialogTitle id="form-dialog-title">Confirmation du numéro de téléphone</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Saisissez le code reçu par SMS
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Code"
-              type="number"
-              placeholder="0000"
-              maxLength="4"
-              value={this.state.smsCode}
-              onChange={e => {
-                console.log(e.target.value);
-                this.setState({smsCode: e.target.value});
-              }}
-              fullWidth
-              errors={this.state.smsError}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => this.setState({smsCodeOpen: false})} color="primary">
-              Annuler
-            </Button>
-            <Button
-              disabled={this.state.smsCode.length !== 4}
-              onClick={() => this.checkSmsCode()}
-              color="primary">
-              Confirmer
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Fragment>
+        <Hidden only={['xs', 'sm', 'md']}>
+          <LayoutAccount index={index}>
+            {this.content(classes)}
+          </LayoutAccount>
+        </Hidden>
+        <Hidden only={['lg', 'xl']}>
+          <LayoutMobile>
+            {this.content(classes)}
+          </LayoutMobile>
+        </Hidden>
+        {this.state.open ? this.modalDeleteConfirmMessage() : null}
+        {this.state.smsCodeOpen ? this.modalDeleteConfirmMessage() : null}
+      </React.Fragment>
     );
   };
 }

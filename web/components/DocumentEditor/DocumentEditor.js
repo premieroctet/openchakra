@@ -28,14 +28,14 @@ class DocumentEditor extends React.Component {
       uploaded_file ?
         <Grid container style={{marginTop: 20, alignItems: 'center'}}>
           <Grid
-            item xs={6}
+            item xs={12}
             style={{
               height: 115, border: '0.2px solid lightgrey', display: 'flex', justifyContent: 'center',
               backgroundImage: `url('${uploaded_file}')`,
               backgroundPosition: 'center', backgroundSize: 'cover',
             }}
           />
-          <Grid item xs={3}>
+          <Grid item xs={12}>
             <input
               id="icon-button-file"
               style={{display: 'none'}}
@@ -104,7 +104,7 @@ class DocumentEditor extends React.Component {
             </Grid>
           </Grid>
           :
-          <Grid item xs={6} className={classes.containerRecto}>
+          <Grid item xs={12} className={classes.containerRecto}>
             <label style={{display: 'inline-block', marginTop: 15, textAlign: 'center'}} className="forminputs">
               <p style={{cursor: 'pointer', color: 'darkgrey', fontSize: '0.9rem'}}>{title}</p>
               <input disabled={disabled} id="file" style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}}

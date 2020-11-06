@@ -124,7 +124,7 @@ class siret extends React.Component {
         }
         <Grid>
           <Grid container spacing={3}>
-            <Grid item xl={12}>
+            <Grid item xl={12} xs={12}>
               <TextField
                 id="filled-with-placeholder"
                 label="Siret/Siren"
@@ -142,7 +142,7 @@ class siret extends React.Component {
             </Grid>
           </Grid>
           <Grid container spacing={3}>
-            <Grid item xl={6}>
+            <Grid item xl={6} xs={12}>
               <TextField
                 id="filled-with-placeholder"
                 variant="outlined"
@@ -154,7 +154,7 @@ class siret extends React.Component {
 
               />
             </Grid>
-            <Grid item xl={6}>
+            <Grid item xl={6} xs={12}>
               <TextField
                 id="filled-with-placeholder"
                 label="Nom"
@@ -170,7 +170,7 @@ class siret extends React.Component {
           </Grid>
 
           <Grid container spacing={3}>
-            <Grid item xl={6}>
+            <Grid item xl={6} xs={12}>
               <TextField
                 id="filled-with-placeholder"
                 label="Code NAF/APE"
@@ -183,7 +183,7 @@ class siret extends React.Component {
 
               />
             </Grid>
-            <Grid item xl={6}>
+            <Grid item xl={6} xs={12}>
               <TextField
                 id="filled-with-placeholder"
                 label="Statut juridique"
