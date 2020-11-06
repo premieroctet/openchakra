@@ -30,6 +30,7 @@ class ProfileLayout extends React.Component {
 
   render() {
     const {user}=this.state;
+    const {children}=this.props;
 
     if (!user) {
       return null
@@ -37,14 +38,18 @@ class ProfileLayout extends React.Component {
 
     return (
       <Layout user={user}>
-      <div style={{margin:'0 25%', display:'flex', justifyContent:'center'}}>
-          <Grid container style={{justifyContent:'center'}}>
-            <Grid item xs={12}>
-              <ProfileHeader key={user} user={user}/>
-            </Grid>
-            {this.props.children}
+      <Grid style={{display:'flex', justifyContent:'center'}}>
+        <Grid style={{display: 'flex', justifyContent:'center', flexDirection: 'column', alignItems:'center', width: '100%'}}>
+          <Grid>
+            <ProfileHeader key={user} user={user}/>
           </Grid>
-        </div>
+          <Grid style={{backgroundColor: 'rgba(249,249,249, 1)', width: '100%'}}>
+            <Grid style={{margin:'0 15%', display:'flex', justifyContent:'center', marginTop : '5vh', marginBottom: '5vh'}}>
+              {children}
+            </Grid>
+          </Grid>
+        </Grid>
+        </Grid>
       </Layout>
     )
   }

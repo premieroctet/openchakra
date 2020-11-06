@@ -1,16 +1,17 @@
 import React from 'react'
 import styles from './BoxStyle';
 import withStyles from "@material-ui/core/styles/withStyles";
+import Grid from "@material-ui/core/Grid";
 
 class Box extends React.Component {
 
   render() {
-    const {classes}=this.props
+    const {classes, children}=this.props;
 
     return (
-      <div className={classes.borderBox} >
-        {this.props.children}
-      </div>
+      <Grid className={classes.borderBox}>
+        {children}
+      </Grid>
     )
   }
 }

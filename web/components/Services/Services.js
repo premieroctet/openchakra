@@ -6,6 +6,8 @@ import cookie from 'react-cookies';
 import withGrid from "../../hoc/Grid/GridCard"
 import withSlide from "../../hoc/Slide/SlideShow"
 import CardService from '../Card/CardService/CardService'
+import Box from "../Box/Box";
+import Grid from "@material-ui/core/Grid";
 const {frenchFormat} = require('../../utils/text')
 const {SlideGridDataModel} = require('../../utils/models/SlideGridDataModel')
 
@@ -31,20 +33,22 @@ class Services extends React.Component {
   }
 
   render() {
-    const {classes}=this.props
-    const {shop}=this.state
+    const {classes}=this.props;
+    const {shop}=this.state;
     if (!shop) {
       return null
     }
 
     const model=new SlideGridDataModel(shop.services.map(s => s._id), 4, 2, false)
+
     return (
-      <div style={{ padding: '8%'}}>
-      <InnerServices model={model} style={classes} page={0} profileMode={true}/>
-      </div>
+      <Box>
+        <InnerServices model={model} style={classes} colSizeXl={4} colSizeLg={4} colSizeMd={4} page={0} profileMode={true}/>
+      </Box>
+
     )
   }
 
 }
 
-module.exports=Services
+export default Services;

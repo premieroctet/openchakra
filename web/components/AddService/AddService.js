@@ -8,6 +8,7 @@ import cookie from 'react-cookies';
 import {Button} from '@material-ui/core'
 import {SHOP} from '../../utils/i18n'
 import Box from '../Box/Box'
+import Typography from "@material-ui/core/Typography";
 
 class AddService extends React.Component {
   constructor(props) {
@@ -16,27 +17,27 @@ class AddService extends React.Component {
 
   componentDidMount = () => {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
-  }
+  };
 
   addService() {
     Router.push(`/myShop/services?user={this.props.user}`)
   }
 
   render() {
-    const {classes}=this.props
+    const {classes}=this.props;
 
     return (
       <Box>
-      <div style={{ display: 'flex', flexDirection:'column', alignItems:'center', padding:'7%'}}>
-        <h3>Mes services</h3>
-        <div>Ajoutez un service dans votre boutique</div>
-        <Button variant={'outlined'} classes={{root : classes.newsLetterButton}} onClick={this.addService}>
-          {SHOP.addService}
-        </Button>
-      </div>
+        <Grid style={{ display: 'flex', flexDirection:'column', alignItems:'center'}}>
+          <h3>Mes services</h3>
+          <Typography>Ajoutez un service dans votre boutique</Typography>
+          <Button variant={'outlined'} classes={{root : classes.newsLetterButton}} onClick={this.addService}>
+            {SHOP.addService}
+          </Button>
+        </Grid>
       </Box>
     )
   }
 }
 
-export default withStyles(styles, {withTheme: true})(AddService)
+export default withStyles(styles)(AddService)

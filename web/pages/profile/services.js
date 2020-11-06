@@ -9,7 +9,7 @@ import styles from '../../static/css/pages/homePage/index';
 class ProfileServices extends React.Component {
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state={
     }
   }
@@ -19,15 +19,15 @@ class ProfileServices extends React.Component {
   }
 
   render() {
-    const {classes, user}=this.props
+    const {classes, user}=this.props;
 
     return (
       <ProfileLayout user={user}>
-        <Grid container>
+        <Grid container spacing={3}>
           <Grid item xs={12}>
             <AddService user={user} classes={classes} />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} xl={12}>
             <Services user={user} classes={classes}/>
           </Grid>
         </Grid>

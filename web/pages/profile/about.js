@@ -1,6 +1,4 @@
 import React from 'react'
-import axios from 'axios'
-import cookie from 'react-cookies';
 import Grid from "@material-ui/core/Grid";
 import ProfileLayout from '../../components/Profile/ProfileLayout'
 import About from '../../components/About/About'
@@ -10,11 +8,13 @@ import Badges from '../../components/Badges/Badges'
 import Hashtags from '../../components/Hashtags/Hashtags'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/homePage/index';
+import Hidden from "@material-ui/core/Hidden";
+import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 
 class ProfileAbout extends React.Component {
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state={}
   }
 
@@ -22,36 +22,51 @@ class ProfileAbout extends React.Component {
     return {user: user};
   }
 
+  content = (classes, user) =>{
+    return(
+      <Grid container spacing={3}>
+        <Grid item xl={5} lg={5}>
+          <About user={user} />
+        </Grid>
+        <Grid  item xl={7} lg={7}>
+          <Presentation user={user} />
+        </Grid>
+        <Grid item xl={8} lg={8}>
+          <Skills alfred={user} />
+        </Grid>
+        <Grid  item xl={4} lg={4}>
+          <Badges user={user} />
+        </Grid>
+        <Grid item xl={12} lg={12}>
+          <Hashtags user={user} />
+        </Grid>
+      </Grid>
+    )
+  };
+
   render() {
-    const {user}=this.props
+    const {user, classes}=this.props;
 
     console.log(`User:${user}`)
     if (!user) {
       return null
     }
+
     return (
-      <ProfileLayout user={user}>
-        <Grid container>
-          <Grid item xs={4}>
-            <About user={user} />
-          </Grid>
-          <Grid item xs={8}>
-            <Presentation user={user} />
-          </Grid>
-          <Grid item xs={6}>
-            <Skills alfred={user} />
-          </Grid>
-          <Grid item xs={6}>
-            <Badges user={user} />
-          </Grid>
-          <Grid item xs={12}>
-            <Hashtags user={user} />
-          </Grid>
-        </Grid>
-      </ProfileLayout>
+      <React.Fragment>
+        <Hidden only={['xs', 'sm', 'md']}>
+          <ProfileLayout user={user}>
+            {this.content(classes, user)}
+          </ProfileLayout>
+        </Hidden>
+        <Hidden only={['lg', 'xl']}>
+          <LayoutMobile>
+            {this.content(classes)}
+          </LayoutMobile>
+        </Hidden>
+      </React.Fragment>
     )
   }
-
 }
 
 export default withStyles(styles)(ProfileAbout)

@@ -384,7 +384,6 @@ export default theme => ({
     backgroundColor: theme.palette.black.main,
     borderRadius: theme.border.blackButton.borderRadius,
     padding: theme.padding.blackButton.padding,
-    width: '100%'
   },
   newsLetterTitle:{
     fontFamily: theme.typography.subTitle.fontFamily,

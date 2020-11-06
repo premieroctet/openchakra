@@ -5,7 +5,7 @@ import styles from './PresentationStyle';
 import cookie from 'react-cookies';
 import Topic from "../../hoc/Topic/Topic"
 import Box from '../Box/Box'
-const {frenchFormat} = require('../../utils/text')
+const {frenchFormat} = require('../../utils/text');
 
 class Presentation extends React.Component {
 
@@ -23,17 +23,18 @@ class Presentation extends React.Component {
         this.setState( { user: res.data})
       })
       .catch (err => console.error(err))
-  }
+  };
 
   render() {
-    const {classes, style}=this.props
-    const {user} = this.state
+    const {classes, style}=this.props;
+    const {user} = this.state;
 
-    console.log(`Classes:${Object.keys(classes)}`)
+    console.log(`Classes:${Object.keys(classes)}`);
 
-    const title=frenchFormat(`À propos de ${user ? user.firstname : ''}`)
+    const title=frenchFormat(`À propos de ${user ? user.firstname : ''}`);
+
     return (
-      <Box>
+      <Box style={{backgroundColor: 'white'}}>
         <Topic titleTopic={title} titleSummary={user ? user.description : ''} />
       </Box>
     )

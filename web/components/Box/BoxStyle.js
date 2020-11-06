@@ -7,6 +7,6 @@ export default theme => ({
     paddingBottom: '5%',
     paddingRight: '10%',
     height: '100%',
-    margin: '5%',
+    backgroundColor: 'white'
   }
 })
