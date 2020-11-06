@@ -4,5 +4,14 @@ export default theme => ({
     fontWeight: 'bold',
     color: 'white',
     backgroundColor:'black'
+  },
+  textField:{
+    width: '100%'
+  },
+  editContainer:{
+    display : 'flex',
+    [theme.breakpoints.down('lg')]:{
+      justifyContent: 'end'
+    }
   }
 })
