@@ -39,7 +39,7 @@ class ProfileAbout extends React.Component {
             <Presentation user={user} />
           </Grid>
           <Grid item xs={6}>
-            <Skills user={user} />
+            <Skills alfred={user} />
           </Grid>
           <Grid item xs={6}>
             <Badges user={user} />

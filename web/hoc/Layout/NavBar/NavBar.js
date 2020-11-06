@@ -29,6 +29,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Link from 'next/link';
+import axios from 'axios'
 
 const jwt = require('jsonwebtoken');
 
@@ -43,7 +44,7 @@ class NavBar extends Component {
       anchorEl: null,
       setOpenLogin: false,
       setOpenRegister: false,
-      user: {},
+      user: null,
       activeStep: 0,
       keyword: '',
       city: undefined,
@@ -57,6 +58,10 @@ class NavBar extends Component {
     if(Router.pathname === '/'){
       this.setState({ifHomePage: true})
     }
+    axios.get('/myAlfred/api/users/current')
+      .then(res => {
+        this.setState({ user : res.data})
+      })
   }
 
   logout2 = () => {
@@ -155,8 +160,8 @@ class NavBar extends Component {
   };
 
   render() {
-    const {setOpenLogin, setOpenRegister, keyword, dateSelected, anchorEl, ifHomePage, city} = this.state;
-    const {style, user, selectedAddress, logged} = this.props;
+    const {user, setOpenLogin, setOpenRegister, keyword, dateSelected, anchorEl, ifHomePage, city} = this.state;
+    const {style, selectedAddress, logged} = this.props;
 
     const modalLogin = () => {
       return (
@@ -366,7 +371,7 @@ class NavBar extends Component {
                       null
                     }
                       <Link href={'/account/notifications'}>
-                        <MenuItem>My account</MenuItem>
+                        <MenuItem>Mon compte</MenuItem>
                       </Link>
                       {user && user.is_alfred ?
                         <Link href={`/shop?id_alfred=${user._id}`}>

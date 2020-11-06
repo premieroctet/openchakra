@@ -147,7 +147,7 @@ class CardService extends React.Component{
                   <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
                     <Rating
                       name="simple-controlled"
-                      value={notes.global}
+                      value={cpData.reviews && cpData.reviews.length>0 ? 1:0}
                       max={1}
                       readOnly
                     />

@@ -19,7 +19,7 @@ import Switch from '@material-ui/core/Switch';
 import {Helmet} from 'react-helmet';
 import Link from 'next/link';
 import cookie from 'react-cookies';
-import WithTopic from "../hoc/Topic/Topic";
+import Topic from "../hoc/Topic/Topic";
 import ListAlfredConditions from "../components/ListAlfredConditions/ListAlfredConditions";
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
@@ -38,13 +38,6 @@ const {computeDistanceKm} = require('../utils/functions');
 const moment = require('moment');
 moment.locale('fr');
 registerLocale('fr', fr);
-
-const DescriptionTopic = WithTopic(ListAlfredConditions);
-const ScheduleTopic = WithTopic(Schedule);
-const EquipementTopic = WithTopic(ListAlfredConditions);
-const MapTopic = WithTopic(MapComponent);
-const PhotoTopic = WithTopic(GallerySlidePics);
-const CommentaryTopic = WithTopic(SummaryCommentary);
 
 class UserServicesPreview extends React.Component {
   constructor(props) {
@@ -570,8 +563,8 @@ class UserServicesPreview extends React.Component {
                           <Grid>
                             <Link
                               href={{
-                                pathname: '/viewProfile',
-                                query: {id: this.state.alfred._id},
+                                pathname: '/profile/about',
+                                query: {user: this.state.alfred._id},
                               }}
                             >
                               <Button variant={'outlined'} className={classes.userServicePreviewButtonProfil}>Voir le profil</Button>
@@ -581,11 +574,13 @@ class UserServicesPreview extends React.Component {
                       </Grid>
                       <Grid style={{marginTop: '10%'}}>
                         <Grid className={classes.overrideCssChild}>
-                          <DescriptionTopic
+                          <Topic
                             titleTopic={'Description'}
                             titleSummary={serviceUser.description ? serviceUser.description : 'Cet utilisateur n\'a pas encore de description.'}
                             needBackground={true}
                             underline={true}
+                          >
+                          <ListAlfredConditions
                             columnsXl={12}
                             wrapperComponentProps={
                               [
@@ -607,12 +602,17 @@ class UserServicesPreview extends React.Component {
                               ]
                             }
                           />
+                          </Topic>
                         </Grid>
                       </Grid>
                       <Grid className={classes.scheduleContainer}>
-                        <ScheduleTopic
+                        <Topic
+                          underline={true}
+                          style={classes}
                           titleTopic={'Sélectionnez vos dates'}
                           titleSummary={alfred.firstname ? `Choisissez vos dates selon les disponibilités de ${alfred.firstname}` : ''}
+                        >
+                        <Schedule
                           availabilities={this.state.availabilities}
                           bookings={[]}
                           services={[]}
@@ -625,35 +625,42 @@ class UserServicesPreview extends React.Component {
                           underline={true}
                           style={classes}
                         />
+                        </Topic>
                       </Grid>
                       {equipments.length !== 0 ?
                         <Grid className={classes.equipmentsContainer}>
-                          <EquipementTopic
+                          <Topic
                             titleTopic={'Matériel'}
+                            needBackground={true}
+                            underline={true}
+                            titleSummary={alfred.firstname ? `Le matériel de ${alfred.firstname}` : ''}
+                          >
+                          <ListAlfredConditions
                             columnsXl={6}
                             columnsLG={6}
                             columnsMD={6}
                             columnsSM={6}
                             columnsXS={6}
-                            needBackground={true}
-                            underline={true}
-                            titleSummary={alfred.firstname ? `Le matériel de ${alfred.firstname}` : ''}
                             wrapperComponentProps={allDetailEquipments}
                             equipmentsSelected={equipments}
                           />
+                          </Topic>
                         </Grid> : null
                       }
                       <Grid className={classes.perimeterContent}>
                         {
                           serviceUser && serviceUser.service_address ?
                             <Grid style={{width: '100%'}}>
-                              <MapTopic
-                                underline={true}
-                                titleTopic={'Lieu de la prestation'}
-                                titleSummary={alfred.firstname ? `La zone dans laquelle ${alfred.firstname} peut intervenir` : ''}
+                            <Topic
+                              underline={true}
+                              titleTopic={'Lieu de la prestation'}
+                              titleSummary={alfred.firstname ? `La zone dans laquelle ${alfred.firstname} peut intervenir` : ''}
+                            >
+                              <MapComponent
                                 position={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]}
                                 perimeter={serviceUser.perimeter * 1000}
                               />
+                            </Topic>
                             </Grid> : ''
                         }
                       </Grid>
@@ -720,24 +727,26 @@ class UserServicesPreview extends React.Component {
                 <Grid style={{display: 'flex', justifyContent: 'center'}}>
                   <Grid style={{width: '80%', paddingLeft: '5%', paddingRight: '5%'}}>
                     <Grid style={{marginTop: '5%'}}>
-                      <PhotoTopic
+                      <Topic
                         underline={true}
                         titleTopic={alfred.firstname ? `Les photos de ${alfred.firstname}` : ''}
                         titleSummary={alfred.firstname ? `Un aperçu du travail de ${alfred.firstname}` : ''}
                         needBackground={true}
-                      />
+                      >
+                        <GallerySlidePics />
+                      </Topic>
                     </Grid>
                     {
                       reviews.length === 0 ? null :
                         <Grid style={{marginTop: '5%'}}>
-                          <CommentaryTopic
+                          <Topic
                             underline={true}
                             titleTopic={'Commentaires'}
                             titleSummary={alfred.firstname ? `Ici, vous pouvez laisser des commentaires à ${alfred.firstname} !` : ''}
-                            alfred_mode={true}
-                            user_id={alfred._id}
-                            service_id={this.props.service_id}
-                          />
+                          >
+                            <SummaryCommentary user={alfred._id}  serviceUser={this.props.service_id}/>
+                          </Topic>
+
                         </Grid>
                     }
                   </Grid>

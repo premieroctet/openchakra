@@ -2,6 +2,8 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import DrawerSchedule from '../../DrawerSchedule/DrawerSchedule';
 import Schedule from '../../Schedule/Schedule';
+import {withStyles} from '@material-ui/core/styles'
+import styles from './DrawerAndScheduleStyle'
 
 class DrawerAndSchedule extends React.Component{
   constructor(props) {
@@ -38,11 +40,11 @@ class DrawerAndSchedule extends React.Component{
   }
 
   render(){
-    const {availabilities, selectable, title, subtitle, booking, nbSchedule, style} = this.props;
+    const {availabilities, selectable, title, subtitle, booking, nbSchedule, readOnly, classes} = this.props;
 
     return(
-      <Grid className={style.drawerAndSchedule_mainContainer}>
-        <Grid className={style.drawerAndSchedule_scheduleContainer}>
+      <Grid className={classes.drawerAndSchedule_mainContainer}>
+        <Grid className={readOnly ? classes.drawerAndSchedule_mainContainer : classes.drawerAndSchedule_scheduleContainer}>
           <Schedule
             ref={this.schedule}
             availabilities={availabilities}
@@ -55,15 +57,17 @@ class DrawerAndSchedule extends React.Component{
             handleSelection={this.onDateSelectionChanged}
             mode={'month'}
             booking={booking}
-            style={style}
+            style={classes}
           />
         </Grid>
-        <Grid className={style.drawerAndSchedule_drawerScheduleContainer}>
-          <DrawerSchedule ref={this.drawer} onAvailabilityChanged={this.onAvailabilityChanged} onDateSelectionCleared={this.onDateSelectionCleared} style={style}/>
-        </Grid>
+        {readOnly ? null:
+          <Grid className={classes.drawerAndSchedule_drawerScheduleContainer}>
+            <DrawerSchedule ref={this.drawer} onAvailabilityChanged={this.onAvailabilityChanged} onDateSelectionCleared={this.onDateSelectionCleared} style={classes}/>
+          </Grid>
+        }
       </Grid>
     );
   }
 }
 
-export default DrawerAndSchedule;
+export default withStyles(styles)(DrawerAndSchedule)
