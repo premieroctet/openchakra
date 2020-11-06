@@ -33,6 +33,7 @@ interface Project {
   projectName: string
   public: boolean
   validated: boolean
+  tag: string
 }
 
 interface Props {

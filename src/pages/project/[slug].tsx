@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client'
 import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next'
 import { getSession, signIn } from 'next-auth/client'
 import useDispatch from '~hooks/useDispatch'
-import App from '~pages'
+import EditorPage from '~pages/editor'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prisma = new PrismaClient()
@@ -47,11 +47,6 @@ interface Project {
   markup: string
 }
 
-interface Props {
-  projects: Project
-  id: number
-}
-
 const ProjectSlug = ({
   projects,
   id,
@@ -83,7 +78,7 @@ const ProjectSlug = ({
     // eslint-disable-next-line
   }, [])
 
-  return <App id={id} loading={loading} projectExist={projectExist} />
+  return <EditorPage id={id} loading={loading} projectExist={projectExist} />
 }
 
 export default ProjectSlug
