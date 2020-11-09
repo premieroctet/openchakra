@@ -201,20 +201,18 @@ class DrawerSettingSchedule extends React.Component{
 
         return(
             <Grid>
-                <Grid style={{display: 'flex', alignItems: 'center'}}>
+                <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                     <Grid>
                         <Typography className={classes.policySizeTitle}>Paramétrez vos disponibilités</Typography>
                     </Grid>
-                    <Hidden mdUp implementation="css">
-                      <Grid>
-                        <IconButton aria-label="CLOSE">
-                          <CloseIcon color={'secondary'} onClick={this.props.handleDrawer}/>
-                        </IconButton>
-                      </Grid>
-                    </Hidden>
+                    <Grid>
+                      <IconButton aria-label="CLOSE">
+                        <CloseIcon color={'secondary'} onClick={this.props.handleDrawer}/>
+                      </IconButton>
+                    </Grid>
                 </Grid>
                 <Divider />
-                <Grid>
+                <Grid style={{marginTop: '5vh'}}>
                 {
                   availabilities.map((availResult, availIdx) =>{
                     const error = errors[availIdx] || {};

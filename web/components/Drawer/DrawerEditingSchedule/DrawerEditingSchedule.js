@@ -114,20 +114,18 @@ class DrawerEditingSchedule extends React.Component {
     console.log(`Bookings:${JSON.stringify(bookings)}`)
     return (
       <Grid>
-        <Grid style={{display: 'flex', alignItems: 'center'}}>
+        <Grid style={{display: 'flex', alignItems: 'center',justifyContent: 'space-between'}}>
           <Grid>
             <Typography className={classes.policySizeTitle}>Modifier vos disponibilités</Typography>
           </Grid>
-          <Hidden smUp implementation="css">
-            <Grid>
-              <IconButton aria-label="CLOSE">
-                <CloseIcon color={'secondary'} onClick={this.props.handleDrawer}/>
-              </IconButton>
-            </Grid>
-          </Hidden>
+          <Grid>
+            <IconButton aria-label="CLOSE">
+              <CloseIcon color={'secondary'} onClick={this.props.handleDrawer}/>
+            </IconButton>
+          </Grid>
         </Grid>
         <Divider/>
-        <Grid>
+        <Grid style={{marginTop: '5vh'}}>
           <Grid style={{width: '100%'}}>
             <Grid>
               <Grid>

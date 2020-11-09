@@ -13,6 +13,8 @@ import DrawerSettingSchedule from '../Drawer/DrawerSettingSchedule/DrawerSetting
 import cookie from 'react-cookies';
 import axios from 'axios';
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import Button from "@material-ui/core/Button";
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 
 class DrawerSchedule extends React.Component{
   constructor(props) {
@@ -102,15 +104,30 @@ class DrawerSchedule extends React.Component{
             }
           </SwipeableDrawer>
           <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
-            <Grid>
-              <Fab
-                color="primary"
-                aria-label="add"
-                onClick={this.handleDrawerToggle}
-                className={style.drawerScheduleButton}>
-                <SettingsIcon style={{color: 'white'}}/>
-              </Fab>
-            </Grid>
+            <Hidden only={['md', 'sm', 'xs']}>
+              <Grid style={{marginTop: '5vh'}}>
+                <Button
+                  startIcon={this.state.eventsSelected.size > 0 ? <SettingsIcon /> : <AddCircleOutlineIcon />}
+                  onClick={this.handleDrawerToggle}
+                  color={'primary'}
+                >
+                  { this.state.eventsSelected.size > 0 ? 'Modifier vos disponibilités' : 'Paramétrez vos disponibilités'}
+                </Button>
+              </Grid>
+            </Hidden>
+            <Hidden only={['lg', 'xl']}>
+              <Grid style={{position: 'fixed', bottom: '15vh', zIndex: 6, right: 0}}>
+                <Fab
+                  color="primary"
+                  aria-label="add"
+                  onClick={this.handleDrawerToggle}
+                  className={style.drawerScheduleButton}>
+                  <SettingsIcon style={{color: 'white'}}/>
+                </Fab>
+              </Grid>
+            </Hidden>
+
+
           </Grid>
         </Grid>
 

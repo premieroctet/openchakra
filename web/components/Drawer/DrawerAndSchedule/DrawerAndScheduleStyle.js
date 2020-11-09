@@ -20,9 +20,6 @@ export default theme => ({
   },
   drawerScheduleButton:{
     marginRight: theme.spacing(2),
-    [theme.breakpoints.down('lg')]: {
-      position: 'fixed'
-    },
   },
   drawerPaperAnchorBottom:{
     left: '10vh',
