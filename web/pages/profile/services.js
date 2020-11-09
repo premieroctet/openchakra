@@ -5,6 +5,7 @@ import AddService from '../../components/AddService/AddService'
 import Services from '../../components/Services/Services'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/homePage/index';
+import AskQuestion from "../../components/AskQuestion/AskQuestion";
 
 class ProfileServices extends React.Component {
 
@@ -29,6 +30,11 @@ class ProfileServices extends React.Component {
           </Grid>
           <Grid item xs={12} xl={12}>
             <Services user={user} classes={classes}/>
+          </Grid>
+          <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+            <Grid style={{width: '70%'}}>
+              <AskQuestion user={user}/>
+            </Grid>
           </Grid>
         </Grid>
       </ProfileLayout>

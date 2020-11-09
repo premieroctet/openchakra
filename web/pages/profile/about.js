@@ -10,6 +10,8 @@ import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/homePage/index';
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
+import AskQuestion from "../../components/AskQuestion/AskQuestion";
+
 
 class ProfileAbout extends React.Component {
 
@@ -40,6 +42,11 @@ class ProfileAbout extends React.Component {
         <Grid item xl={12} lg={12}>
           <Hashtags user={user} />
         </Grid>
+        <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+          <Grid style={{width: '70%'}}>
+            <AskQuestion user={user}/>
+          </Grid>
+        </Grid>
       </Grid>
     )
   };
@@ -47,7 +54,6 @@ class ProfileAbout extends React.Component {
   render() {
     const {user, classes}=this.props;
 
-    console.log(`User:${user}`)
     if (!user) {
       return null
     }

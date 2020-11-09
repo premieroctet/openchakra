@@ -10,7 +10,7 @@ class Topic extends React.Component {
   constructor(props) {
     super(props);
       this.state={
-        subTitleColor: 'rgba(39,37,37,35)'
+        subTitleColor: 'rgba(39,37,37,35%)'
       }
     }
 

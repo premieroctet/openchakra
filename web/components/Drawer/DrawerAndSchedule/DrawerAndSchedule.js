@@ -37,7 +37,7 @@ class DrawerAndSchedule extends React.Component{
 
   isDirty = () => {
     return this.drawer.current && this.drawer.current.isDirty()
-  }
+  };
 
   render(){
     const {availabilities, selectable, title, subtitle, booking, nbSchedule, readOnly, classes} = this.props;
@@ -61,7 +61,7 @@ class DrawerAndSchedule extends React.Component{
           />
         </Grid>
         {readOnly ? null:
-          <Grid className={classes.drawerAndSchedule_drawerScheduleContainer}>
+          <Grid>
             <DrawerSchedule ref={this.drawer} onAvailabilityChanged={this.onAvailabilityChanged} onDateSelectionCleared={this.onDateSelectionCleared} style={classes}/>
           </Grid>
         }

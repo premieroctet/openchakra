@@ -1,16 +1,17 @@
 import React from 'react'
-import axios from 'axios'
-import cookie from 'react-cookies';
 import Grid from "@material-ui/core/Grid";
 import ProfileLayout from '../../components/Profile/ProfileLayout'
 import SummaryCommentary from '../../components/SummaryCommentary/SummaryCommentary'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/homePage/index';
+import Hidden from "@material-ui/core/Hidden";
+import LayoutMobile from "../../hoc/Layout/LayoutMobile";
+import AskQuestion from "../../components/AskQuestion/AskQuestion";
 
 class ProfileReviews extends React.Component {
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state={}
   }
 
@@ -18,21 +19,40 @@ class ProfileReviews extends React.Component {
     return {user: user};
   }
 
-  render() {
-    const {user}=this.props
+  content = (classes, user) => {
+    return(
+      <Grid container>
+        <Grid item xs={12}>
+          <SummaryCommentary user={user} />
+        </Grid>
+        <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+          <Grid style={{width: '70%'}}>
+            <AskQuestion user={user}/>
+          </Grid>
+        </Grid>
+      </Grid>
+    )
+  };
 
-    console.log(`User:${user}`)
+  render() {
+    const {user, classes}=this.props;
+
     if (!user) {
       return null
     }
     return (
-      <ProfileLayout user={user}>
-        <Grid container>
-          <Grid item xs={12}>
-            <SummaryCommentary user={user} />
-          </Grid>
-        </Grid>
-      </ProfileLayout>
+      <React.Fragment>
+        <Hidden only={['xs', 'sm', 'md']}>
+          <ProfileLayout user={user}>
+            {this.content(classes, user)}
+          </ProfileLayout>
+        </Hidden>
+        <Hidden only={['lg', 'xl']}>
+          <LayoutMobile>
+            {this.content(classes)}
+          </LayoutMobile>
+        </Hidden>
+      </React.Fragment>
     )
   }
 

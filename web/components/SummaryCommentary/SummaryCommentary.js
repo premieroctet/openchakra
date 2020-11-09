@@ -11,6 +11,9 @@ import styles from '../../static/css/components/SummaryCommentary';
 import WithStyles from "@material-ui/core/styles/withStyles";
 import Rating from "@material-ui/lab/Rating";
 import Typography from "@material-ui/core/Typography";
+import Box from '../Box/Box'
+import Divider from '@material-ui/core/Divider';
+
 
 class SummaryCommentary extends React.Component{
   constructor(props) {
@@ -19,7 +22,8 @@ class SummaryCommentary extends React.Component{
       customerReviews: [],
       alfredReviews: [],
       filter:'',
-      showCommentary: false
+      showCommentary: false,
+      userServicesPreview: false
     }
   }
 
@@ -57,22 +61,39 @@ class SummaryCommentary extends React.Component{
   };
 
   render() {
-    const{filter, showCommentary, alfredReviews, customerReviews} = this.state;
+    const{filter, showCommentary, alfredReviews, customerReviews, userServicesPreview} = this.state;
     const {classes} = this.props;
 
-    const commentsCount=alfredReviews.length + customerReviews.length
-    const allComments=alfredReviews.concat(customerReviews)
-    var average = allComments.length ? allComments.map( r => r.note_alfred ? r.note_alfred.global : r.note_client.global ).reduce ((a,b) => a+b)/allComments.length : 0
+    const commentsCount=alfredReviews.length + customerReviews.length;
+    const allComments=alfredReviews.concat(customerReviews);
+    var average = allComments.length ? allComments.map( r => r.note_alfred ? r.note_alfred.global : r.note_client.global ).reduce ((a,b) => a+b)/allComments.length : 0;
 
     return(
-      <Grid>
-        <Grid container style={{display: 'flex', flexDirection: 'row', width: '100%'}}>
-          <Grid item xs={3} xl={3} style={{display: 'flex', flexDirection: 'column'}}>
+      <Box>
+        <Grid container style={{display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between'}}>
+          <Grid style={{display: 'flex', flexDirection: 'column'}}>
+            <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
+              <Grid>
+                <Typography>
+                  <strong>{average.toFixed(1)}</strong>
+                </Typography>
+              </Grid>
+              <Grid style={{marginLeft: '3%'}}>
+                <Rating name="half-rating-read" value={Math.floor(average)} precision={0.5} readOnly />
+              </Grid>
+            </Grid>
             <Grid>
-              <Typography><strong>{commentsCount}</strong></Typography>
+              <Typography style={{color:'rgba(39,37,37,35%)', fontWeight: 'bold'}}>NOTE GENERALE</Typography>
+            </Grid>
+          </Grid>
+          <Grid style={{display: 'flex', flexDirection: 'column'}}>
+            <Grid>
+              <Typography>
+                <strong>{commentsCount}</strong>
+              </Typography>
             </Grid>
             <Grid style={{marginTop: '2%'}}>
-              <Typography>COMMENTAIRES</Typography>
+              <Typography style={{color:'rgba(39,37,37,35%)', fontWeight: 'bold'}}>COMMENTAIRES</Typography>
             </Grid>
             <Grid container style={{marginTop: '5%'}}>
               { false ?
@@ -100,22 +121,24 @@ class SummaryCommentary extends React.Component{
             }
             </Grid>
           </Grid>
-          <Grid item xl={4} style={{display: 'flex', flexDirection: 'column'}}>
-            <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
-              <Grid>
-                <Typography><strong>{average.toFixed(1)}</strong></Typography>
-              </Grid>
-              <Grid style={{marginLeft: '3%'}}>
-                <Rating name="half-rating-read" value={Math.floor(average)} precision={0.5} readOnly />
-              </Grid>
+          <Grid>
+            <Grid>
+              <Typography>4</Typography>
             </Grid>
             <Grid>
-              <Typography>NOTE GENERALE</Typography>
-            </Grid>
-            <Grid style={{height: 56, display:'flex', alignItems:'center', marginTop: '4%'}}>
-              <Button variant={'contained'} onClick={this.handleShowCommentary} classes={{root: classes.buttonShowMore}}>Voir les commentaires</Button>
+              <Typography style={{color:'rgba(39,37,37,35%)', fontWeight: 'bold'}}>COMPLIMENTS</Typography>
             </Grid>
           </Grid>
+        </Grid>
+        {userServicesPreview ?
+          <Grid>
+            <Grid style={{display:'flex', alignItems:'center', marginTop: '5vh'}}>
+              <Button variant={'contained'} onClick={this.handleShowCommentary} classes={{root: classes.buttonShowMore}}>Voir les commentaires</Button>
+            </Grid>
+          </Grid> : null
+        }
+        <Grid>
+          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
         </Grid>
         {
           showCommentary ?
@@ -127,7 +150,7 @@ class SummaryCommentary extends React.Component{
             :
             null
         }
-      </Grid>
+      </Box>
     );
   }
 }

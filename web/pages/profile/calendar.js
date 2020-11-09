@@ -1,18 +1,22 @@
 import React from 'react'
 import axios from 'axios'
-import cookie from 'react-cookies';
 import Grid from "@material-ui/core/Grid";
 import ProfileLayout from '../../components/Profile/ProfileLayout'
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/homePage/index';
-const I18N=require('../../utils/i18n')
+const I18N=require('../../utils/i18n');
 import {getLoggedUserId} from '../../utils/functions'
+import Hidden from "@material-ui/core/Hidden";
+import LayoutMobile from "../../hoc/Layout/LayoutMobile";
+import Topic from "../../hoc/Topic/Topic";
+import Box from "../../components/Box/Box";
+
 
 class ProfileCalendar extends React.Component {
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state={
       availabilities:[]
     }
@@ -34,31 +38,55 @@ class ProfileCalendar extends React.Component {
     this.loadAvailabilities()
   }
 
+  content = (classes, user, readOnly) =>{
+    return(
+      <Grid container>
+        <Grid item xs={12} xl={12}>
+          <Box>
+            <Topic
+              titleTopic={'Ajoutez vos disponiblités '}
+              titleSummary={'Votre calendrier vous permet d’ajouter vos disponibilités en précisant les tranches horaires. '}
+              needBackground={false}
+              underline={true}
+            >
+              <DrawerAndSchedule
+                availabilities={this.state.availabilities}
+                nbSchedule={3}
+                availabilityUpdate={this.loadAvailabilities}
+                availabilityCreated={this.loadAvailabilities}
+                onAvailabilityChanged={this.loadAvailabilities}
+                style={classes}
+                selectable={!readOnly}
+                ref={this.scheduleDrawer}
+                readOnly={readOnly}/>
+            </Topic>
+          </Box>
+        </Grid>
+      </Grid>
+    )
+  };
+
   render() {
-    const {user}=this.props
-    const readOnly=this.props.user!=getLoggedUserId()
+    const {user, classes}=this.props;
+    const readOnly = this.props.user!==getLoggedUserId();
+
     if (!user) {
       return null
     }
+
     return (
-      <ProfileLayout user={user}>
-        <Grid container>
-          <Grid item xs={12}>
-            <DrawerAndSchedule
-            availabilities={this.state.availabilities}
-                                     title={I18N.SCHEDULE_TITLE}
-                                     subtitle={I18N.SCHEDULE_SUBTITLE}
-                                     nbSchedule={3}
-                                     availabilityUpdate={this.loadAvailabilities}
-                                     availabilityCreated={this.loadAvailabilities}
-                                     onAvailabilityChanged={this.loadAvailabilities}
-                                     style={this.props.classes}
-                                     selectable={!readOnly}
-                                     ref={this.scheduleDrawer}
-                                     readOnly={readOnly}/>
-          </Grid>
-        </Grid>
-      </ProfileLayout>
+      <React.Fragment>
+        <Hidden only={['xs', 'sm', 'md']}>
+          <ProfileLayout user={user}>
+            {this.content(classes, user, readOnly)}
+          </ProfileLayout>
+        </Hidden>
+        <Hidden only={['lg', 'xl']}>
+          <LayoutMobile>
+            {this.content(classes)}
+          </LayoutMobile>
+        </Hidden>
+      </React.Fragment>
     )
   }
 

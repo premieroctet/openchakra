@@ -2,35 +2,15 @@ export default theme => ({
   drawerAndSchedule_mainContainer:{
     width: '100%',
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'column'
   },
   drawerAndSchedule_scheduleContainer:{
-    width: '65%',
-    [theme.breakpoints.down('md')]: {
-      width: '100%'
-    },
-  },
-  drawerAndSchedule_drawerScheduleContainer:{
-    width: '35%',
-    [theme.breakpoints.down('md')]: {
-      width: 0
-    },
+    width: '100%'
   },
   drawerScheduleDrawerPaper:{
-    top: 'inherit',
-    left: 'auto',
-    position: 'relative',
-    height: '100%',
-    borderRight: 'inherit',
-    zIndex: 1,
-    marginLeft: 10,
-    [theme.breakpoints.down('md')]: {
-      margin: 0,
-      width: '100%',
-      height: '100%',
-      padding: '5%',
-
-    },
+    width: '90%',
+    borderRadius: 17,
+    padding: '5%'
   },
   drawer: {
     [theme.breakpoints.up('sm')]: {
@@ -40,9 +20,12 @@ export default theme => ({
   },
   drawerScheduleButton:{
     marginRight: theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
+    [theme.breakpoints.down('lg')]: {
+      position: 'fixed'
     },
+  },
+  drawerPaperAnchorBottom:{
+    left: '10vh',
   },
 
   /***Schedule**/

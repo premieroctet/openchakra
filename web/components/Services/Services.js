@@ -8,15 +8,15 @@ import withSlide from "../../hoc/Slide/SlideShow"
 import CardService from '../Card/CardService/CardService'
 import Box from "../Box/Box";
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 const {frenchFormat} = require('../../utils/text')
 const {SlideGridDataModel} = require('../../utils/models/SlideGridDataModel')
 
-const InnerServices=withGrid(CardService)
 
 class Services extends React.Component {
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state= {
       shop:null
     }
@@ -39,11 +39,20 @@ class Services extends React.Component {
       return null
     }
 
-    const model=new SlideGridDataModel(shop.services.map(s => s._id), 4, 2, false)
-
     return (
       <Box>
-        <InnerServices model={model} style={classes} colSizeXl={4} colSizeLg={4} colSizeMd={4} page={0} profileMode={true}/>
+        <Grid>
+          <Typography>Services ({shop.services.length})</Typography>
+        </Grid>
+        <Grid container spacing={3} style={{marginTop: '5vh'}}>
+        {
+          shop.services.map(s => (
+            <Grid item xl={3}>
+              <CardService item={s._id} page={0} profileMode={true}/>
+            </Grid>
+          ))
+        }
+        </Grid>
       </Box>
 
     )
