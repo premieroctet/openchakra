@@ -48,6 +48,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     include: { user: true },
     where: {
       public: true,
+      validated: true,
     },
   })
   let projects = JSON.parse(JSON.stringify(project))
