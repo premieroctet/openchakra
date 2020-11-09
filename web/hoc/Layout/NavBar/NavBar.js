@@ -58,6 +58,7 @@ class NavBar extends Component {
     if(Router.pathname === '/'){
       this.setState({ifHomePage: true})
     }
+    axios.defaults.headers.common['Authorization'] = cookie.load('token')
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         this.setState({ user : res.data})
@@ -67,8 +68,8 @@ class NavBar extends Component {
   logout2 = () => {
     cookie.remove('token', {path: '/'});
     localStorage.removeItem('path');
-    setAuthToken(false);
-    Router.push('/?disconnect=1');
+    setAuthToken(null);
+    Router.push('/');
   };
 
   handleMenuClose = () => {
@@ -364,26 +365,28 @@ class NavBar extends Component {
                       }}
                     >
                     { user ?
-                      <Link href={`/profile/about?user=${user._id}`}>
-                        <MenuItem>Mon profil</MenuItem>
-                      </Link>
+                      <>
+                        <Link href={`/profile/about?user=${user._id}`}>
+                          <MenuItem>Mon profil</MenuItem>
+                        </Link>
+                        <Link href={'/account/notifications'}>
+                          <MenuItem>Mon compte</MenuItem>
+                        </Link>
+                        {user.is_alfred ?
+                          <Link href={`/shop?id_alfred=${user._id}`}>
+                            <MenuItem>Ma boutique</MenuItem>
+                          </Link> : null
+                        }
+                        {user.is_admin ?
+                          <Link href={`/dashboard/home`}>
+                            <MenuItem>Dashboard</MenuItem>
+                          </Link> : null
+                        }
+                        <MenuItem onClick={() => this.logout2()}>Logout</MenuItem>
+                      </>
                       :
                       null
                     }
-                      <Link href={'/account/notifications'}>
-                        <MenuItem>Mon compte</MenuItem>
-                      </Link>
-                      {user && user.is_alfred ?
-                        <Link href={`/shop?id_alfred=${user._id}`}>
-                          <MenuItem>Ma boutique</MenuItem>
-                        </Link> : null
-                      }
-                      {user && user.is_admin ?
-                        <Link href={`/dashboard/home`}>
-                          <MenuItem>Dashboard</MenuItem>
-                        </Link> : null
-                      }
-                      <MenuItem onClick={() => this.logout2()}>Logout</MenuItem>
                     </Menu>
                   </Grid>
                   :
