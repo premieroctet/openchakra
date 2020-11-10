@@ -33,10 +33,10 @@ class Footer extends React.Component {
                 <p className={style.footerLink}>Pourquoi My Alfred ?</p>
               </Grid>
               <Grid>
-                <p className={style.footerLink}>Notre histoire</p>
+                <Link href={'/footer/apropos'}><p className={style.footerLink}>Notre histoire</p></Link>
               </Grid>
               <Grid>
-                <p className={style.footerLink}>Nous contacter</p>
+                <Link href={'/footer/contact'}><p className={style.footerLink}>Nous contacter</p></Link>
               </Grid>
             </Grid>
             <Grid className={style.footerSection}>
@@ -44,7 +44,7 @@ class Footer extends React.Component {
                 <h3 className={style.footerTitileSection}>Communauté</h3>
               </Grid>
               <Grid>
-                <p className={style.footerLink}>Notre communauté</p>
+                <Link href={'/footer/ourcommunauty'}><p className={style.footerLink}>Notre communauté</p></Link>
               </Grid>
               <Grid>
                 <p className={style.footerLink}>Inviter un ami</p>
