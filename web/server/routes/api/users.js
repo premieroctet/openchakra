@@ -1156,32 +1156,20 @@ router.get('/profile/albums/:user_id', (req, res) => {
 // Add a picture to an album
 // @Access private
 router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), passport.authenticate('jwt', {session: false}), (req, res) => {
+  console.log('Adding picture')
   Album.findById(req.body.album)
     .then(album => {
+      console.log('Album found')
       album.pictures.push({path: req.file.path})
       album.save()
-      res.status(200);
+      console.log('Album saved')
+      res.status(200).json({})
     })
     .catch(err => {
       console.error(err);
       res.status(500).json({error: err})
     });
 });
-
-// @Route GET /myAlfred/api/users/profile/albums
-// Gets albums
-// @Access private
-router.get('/profile/albums/pictures/:album_id', (req, res) => {
-  Album.find({_id : req.params.album_id})
-    .then( album => {
-      res.json(album.pictures)
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({error: err})
-    });
-});
-
 
 /** Hooks Mangopay */
 const install_hooks= () => {
