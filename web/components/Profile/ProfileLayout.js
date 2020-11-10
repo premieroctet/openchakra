@@ -41,7 +41,7 @@ class ProfileLayout extends React.Component {
       <Grid style={{display:'flex', justifyContent:'center'}}>
         <Grid style={{display: 'flex', justifyContent:'center', flexDirection: 'column', alignItems:'center', width: '100%'}}>
           <Grid>
-            <ProfileHeader key={user} user={user ? user._id : null}/>
+            <ProfileHeader key={user} user={user}/>
           </Grid>
           <Grid style={{backgroundColor: 'rgba(249,249,249, 1)', width: '100%'}}>
             <Grid style={{margin:'0 15%', display:'flex', justifyContent:'center', marginTop : '5vh', marginBottom: '5vh'}}>
