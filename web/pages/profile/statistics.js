@@ -19,36 +19,41 @@ import Link from 'next/link';
 
 const MONTHS=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
 
+const CHART_OPTIONS= {
+  chart: {
+    toolbar: {
+      show: false
+    }
+  },
+  theme: {
+    monochrome: {
+      enabled: true,
+      color: '#2FBCD3',
+      shadeIntensity: 0.65,
+    },
+  },
+  xaxis: {
+    categories: MONTHS,
+  },
+}
+
 class ProfileStatistics extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      totalIncomes: 0,
-      totalPrestations: 0,
-      totalViewsServices: 0,
-      totalReviews: 0,
+      monthIncomes: 0,
+      monthPrestations: 0,
+      monthViewsServices: 0,
+      monthReviews: 0,
+      yearIncomes: 0,
+      yearPrestations: 0,
+      yearViewsServices: 0,
+      yearReviews: 0,
       serviceUser: [],
       totalYear: 0,
       totalPaid: 0,
       totalComing: 0,
-      options: {
-        chart: {
-          toolbar: {
-            show: false
-          }
-        },
-        theme: {
-          monochrome: {
-            enabled: true,
-            color: '#2FBCD3',
-            shadeIntensity: 0.65,
-          },
-        },
-        xaxis: {
-          categories: MONTHS,
-        },
-      },
       revenus: [
         {
           name: 'revenus',
@@ -65,41 +70,6 @@ class ProfileStatistics extends React.Component {
     return {user: user};
   }
 
-  handleChange = e => {
-    this.setYear(e.target.value);
-  };
-
-  setYear(year) {
-    this.setState({year: year}, () => {
-      axios.get('/myAlfred/api/performances/incomes/' + year)
-        .then(resIncome => {
-          let bookings = resIncome.data;
-          axios.get('/myAlfred/api/performances/incomes/totalComing/' + year)
-            .then(resIncomeTotal => {
-              const totalComing = parseInt(resIncomeTotal.data);
-              /** Compute alfred's total for each month */
-              const month_incomes = bookings.map((b, index) => {
-                const month_total = b.reduce((total, booking) => total + booking.alfred_amount, 0);
-                return month_total;
-              });
-
-              const annual_income = month_incomes.reduce((total, month_income) => total + month_income, 0);
-
-              this.setState({
-                revenus: [{data: month_incomes, name: 'revenus'}],
-                totalPaid: annual_income,
-                totalComing: totalComing,
-                totalYear: totalComing + annual_income,
-              });
-            })
-
-        })
-        .catch(err => {
-          console.error(err);
-        });
-    });
-  }
-
   componentDidMount() {
 
     localStorage.setItem('path', Router.pathname);
@@ -112,57 +82,78 @@ class ProfileStatistics extends React.Component {
 
       });
     });
-    const newRevenus = [];
+
+    this.loadHistoYear()
+    this.loadMonthStatistics()
+    this.loadYearStatistics()
+  }
+
+  histoYearChanged = e => {
+    this.setState({year: e.target.value}, () => loadHistoYear());
+  };
+
+
+  statisticMonthChanged= event => {
+    this.setState({statisticsMonth: event.target.value}, () => this.loadMonthStatistics())
+  }
+
+  statisticYearChanged= event => {
+    this.setState({statisticsYear: event.target.value}, () => this.loadYearStatistics())
+  }
+
+
+  loadHistoYear() {
+    const year = this.state.year
+    axios.get('/myAlfred/api/performances/incomes/' + year)
+      .then(resIncome => {
+        let bookings = resIncome.data;
+        axios.get('/myAlfred/api/performances/incomes/totalComing/' + year)
+          .then(resIncomeTotal => {
+            const totalComing = parseInt(resIncomeTotal.data);
+            const annualIncome = bookings.reduce((total, amount) => total + amount, 0);
+
+            this.setState({
+              revenus: [{data: bookings, name: 'revenus'}],
+              totalPaid: annualIncome,
+              totalComing: totalComing,
+              totalYear: totalComing + annualIncome
+            });
+          })
+
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
+
+  loadMonthStatistics() {
     const year = new Date().getFullYear();
-    this.setYear(year);
-
-    axios.get('/myAlfred/api/performances/statistics/totalBookings')
+    const month=this.state.statisticsMonth
+    axios.get(`/myAlfred/api/performances/statistics/${year}/${month}`)
       .then(res => {
-        this.setState({totalIncomes: res.data.incomes, totalPrestations: res.data.prestations});
-      })
-      .catch(err => console.error(err));
-
-    axios.get('/myAlfred/api/performances/statistics/totalViewsServices')
-      .then(res => {
-        this.setState({totalViewsServices: res.data});
-      })
-      .catch(err => console.error(err));
-
-    axios.get('/myAlfred/api/performances/statistics/totalReviews')
-      .then(res => {
-        this.setState({totalReviews: res.data});
-      })
-      .catch(err => console.error(err));
-
-    axios.get('/myAlfred/api/serviceUser/currentAlfred')
-      .then(res => {
-        let service = res.data;
-        console.log(`Got serviceuser:${JSON.stringify(service)}`)
-        this.setState({serviceUser: service});
-        let arrayCategory = [];
-        service.forEach(s => {
-          arrayCategory.push(s.service.category);
-        });
-        service.forEach(s => {
-          const obj = {label: s.service.label};
-          axios.post('/myAlfred/api/performances/statistics/bookings/service', obj)
-            .then(response => {
-              this.setState({
-                [s.service.label + 'Incomes']: response.data.incomes,
-                [s.service.label + 'Prestations']: response.data.prestations,
-              });
-            })
-            .catch(error => console.log(error));
-
-          axios.get('/myAlfred/api/performances/statistics/reviews/' + s._id)
-            .then(result => {
-              this.setState({[s.service.label + 'Reviews']: result.data});
-            })
-            .catch(errors => console.log(errors));
+        this.setState({
+          monthIncomes: res.data.incomes,
+          monthPrestations: res.data.prestations,
+          monthViewsServices: res.data.totalViews,
+          monthReviews: res.data.totalReviews,
         });
       })
       .catch(err => console.error(err));
+  }
 
+  loadYearStatistics() {
+    const year = this.state.statisticsYear
+
+    axios.get(`/myAlfred/api/performances/statistics/${year}`)
+      .then(res => {
+        this.setState({
+          yearIncomes: res.data.incomes,
+          yearPrestations: res.data.prestations,
+          yearViewsServices: res.data.totalViews,
+          yearReviews: res.data.totalReviews,
+        });
+      })
+      .catch(err => console.error(err));
   }
 
   render() {
@@ -182,18 +173,21 @@ class ProfileStatistics extends React.Component {
                 select
                 label="Année"
                 value={this.state.year}
-                onChange={this.handleChange}
+                onChange={this.histoYearChanged}
                 margin="normal"
                 variant="outlined"
               >
-                <MenuItem value={'2019'}>2019</MenuItem>
-                <MenuItem value={'2020'}>2020</MenuItem>
-                <MenuItem value={'2021'}>2021</MenuItem>
+              {[2019, 2020, 2021].map((year, idx) => {
+                  return (
+                    <MenuItem value={year}>{year}</MenuItem>
+                  )
+                })
+              }
               </TextField>
             </Grid>
 
               <Chart className={classes.thechart}
-                     options={this.state.options}
+                     options={CHART_OPTIONS}
                      series={this.state.revenus}
                      type="bar"
                      style={{width: '100%'}}
@@ -220,13 +214,12 @@ class ProfileStatistics extends React.Component {
           <Grid item className={classes.myStat} style={{width: '100%'}}>
             <Grid container className={classes.mainContainer} style={{width: '100%'}}>
               <Grid container className={classes.containerStatistique} style={{width: '100%'}}>
-              <Grid container>
               <TextField
                 id="outlined-select-currency"
                 select
                 label="Mois"
                 value={this.state.statisticsMonth}
-                onChange={this.handleChange}
+                onChange={this.statisticMonthChanged}
                 margin="normal"
                 variant="outlined"
               >
@@ -237,7 +230,6 @@ class ProfileStatistics extends React.Component {
                 })
               }
               </TextField>
-              </Grid>
                 <Grid item className={classes.webview} style={{width: '100%'}}/>
 
                 <Grid className={classes.therevenus} container style={{
@@ -249,19 +241,65 @@ class ProfileStatistics extends React.Component {
                 }}>
                   <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
                     <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Revenu total</Typography>
-                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.totalIncomes.toFixed(2)}€</Typography>
+                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.monthIncomes.toFixed(2)}€</Typography>
                   </Grid>
                   <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
-                    <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Prestation réalisées</Typography>
-                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.totalPrestations}</Typography>
+                    <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Prestations réalisées</Typography>
+                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.monthPrestations}</Typography>
                   </Grid>
                   <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
                     <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Vues du profil</Typography>
-                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.totalViewsServices}</Typography>
+                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.monthViewsServices}</Typography>
                   </Grid>
                   <Grid item xs={3} style={{padding: '40px 0px', margin: '20px 0px'}}>
                     <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Commentaires</Typography>
-                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.totalReviews}</Typography>
+                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.monthReviews}</Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container className={classes.mainContainer} style={{width: '100%'}}>
+              <Grid container className={classes.containerStatistique} style={{width: '100%'}}>
+              <TextField
+                id="outlined-select-currency"
+                select
+                label="Année"
+                value={this.state.statisticsYear}
+                onChange={this.statisticYearChanged}
+                margin="normal"
+                variant="outlined"
+              >
+              { [2019, 2020, 2021].map((year, idx) => {
+                  return (
+                    <MenuItem value={year}>{year}</MenuItem>
+                  )
+                })
+              }
+              </TextField>
+                <Grid item className={classes.webview} style={{width: '100%'}}/>
+
+                <Grid className={classes.therevenus} container style={{
+                  textAlign: 'center',
+                  marginTop: '50px',
+                  borderTop: 'dimgray solid 1px',
+                  borderBottom: 'dimgray solid 1px',
+                  marginBottom: '30px',
+                }}>
+                  <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
+                    <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Revenu total</Typography>
+                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.yearIncomes.toFixed(2)}€</Typography>
+                  </Grid>
+                  <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
+                    <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Prestations réalisées</Typography>
+                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.yearPrestations}</Typography>
+                  </Grid>
+                  <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
+                    <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Vues du profil</Typography>
+                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.yearViewsServices}</Typography>
+                  </Grid>
+                  <Grid item xs={3} style={{padding: '40px 0px', margin: '20px 0px'}}>
+                    <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Commentaires</Typography>
+                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.yearReviews}</Typography>
                   </Grid>
                 </Grid>
               </Grid>

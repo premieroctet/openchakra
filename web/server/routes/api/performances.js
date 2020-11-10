@@ -20,15 +20,10 @@ router.get('/test', (req, res) => res.json({msg: 'Performances Works!'}));
 router.get('/incomes/totalComing/:year', passport.authenticate('jwt', {session: false}), (req, res) => {
   const year = req.params.year;
   let total = 0;
-  Booking.find({alfred: req.user.id, status: 'Confirmée', date_prestation: /year+1$/i})
+  Booking.find({alfred: req.user.id, status: 'Confirmée', date_prestation: /year$/i})
     .then(booking => {
-
       booking.forEach(b => {
-        const date = b.date_prestation.slice(6, 10);
-        if (date === year) {
-          total += b.amount;
-        }
-
+        total += b.amount;
       });
       res.json(total);
 
@@ -37,24 +32,20 @@ router.get('/incomes/totalComing/:year', passport.authenticate('jwt', {session: 
 });
 
 // @Route GET /myAlfred/performances/incomes/:year
-// Get booking per year
+// Get booking per month
 // @Access private
 router.get('/incomes/:year?/:month?', passport.authenticate('jwt', {session: false}), (req, res) => {
   const year = req.params.year;
   const month= req.params.month
 
   const bookings = new Array(12).fill(0)
-  Object.keys(bookings).forEach( idx => bookings[idx]=[])
 
   const re=new RegExp(`${month==undefined ? '':month}/${year}$`)
   Booking.find({alfred: req.user.id, status: 'Terminée', date_prestation: re})
     .then(booking => {
       booking.forEach(b => {
-        const date = b.date_prestation.slice(6, 10);
-        if (date === year) {
-          const month = b.date_prestation.slice(3, 5);
-          bookings[parseInt(month)].push(b)
-        }
+        const b_month = b.date_prestation.slice(3, 5)
+        bookings[parseInt(b_month-1)]=bookings[parseInt(b_month-1)]+b.alfred_amount
       });
       res.json(bookings);
     })
@@ -63,6 +54,50 @@ router.get('/incomes/:year?/:month?', passport.authenticate('jwt', {session: fal
     });
 });
 
+
+// @Route GET /myAlfred/performances/statistics/totalBookings
+// Get all bookings for an alfred
+// @Access private
+router.get('/statistics/:year/:month?', passport.authenticate('jwt', {session: false}), (req, res) => {
+  let totalIncomes = 0;
+  let totalPrestations = 0;
+  let totalViews = 0;
+  let totalReviews = 0;
+
+  const year = parseInt(req.params.year)
+  const month = req.params.month
+
+  const re=new RegExp(`${month==undefined ? '':month}/${year}$`)
+
+  Booking.find({alfred: req.user.id, status: 'Terminée', date_prestation: re})
+    .then(booking => {
+      booking.forEach(b => {
+        totalIncomes += b.alfred_amount;
+        totalPrestations += b.prestations.length;
+      })
+      ServiceUser.find({user: req.user.id})
+        .then(service => {
+          service.forEach(s => {
+            totalViews += s.number_of_views;
+          })
+          Reviews.find({alfred: req.user.id, note_client: undefined})
+            .then(reviews => {
+              reviews = reviews.filter( r => {
+                return r.date.getFullYear()==year && (month==undefined || parseInt(month)==r.date.getMonth())
+              })
+              totalReviews = reviews.length;
+              res.json({
+                incomes: totalIncomes,
+                prestations: totalPrestations,
+                totalViews: totalViews,
+                totalReviews: totalReviews
+              })
+            })
+
+        })
+      })
+      .catch(err => res.status(404).json({booking: 'No booking found'}))
+})
 
 // @Route GET /myAlfred/performances/statistics/totalBookings
 // Get all bookings for an alfred
@@ -115,27 +150,6 @@ router.get('/statistics/totalReviews', passport.authenticate('jwt', {session: fa
 
     })
     .catch(err => res.status(404).json({services: 'No services found'}));
-});
-
-// @Route POST /myAlfred/performances/statistics/bookings/service
-// Get all incomes and prestations per service for an alfred
-// @Access private
-router.post('/statistics/bookings/service', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const service = req.body.label;
-  let totalIncomes = 0;
-  let totalPrestations = 0;
-  Booking.find({alfred: req.user.id, status: 'Terminée', service: service})
-    .then(booking => {
-
-      booking.forEach(b => {
-        totalIncomes += b.amount - b.fees;
-        totalPrestations += b.prestations.length;
-
-      });
-      res.json({incomes: totalIncomes.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0], prestations: totalPrestations});
-
-    })
-    .catch(err => res.status(404).json({booking: 'No booking found'}));
 });
 
 // @Route GET /myAlfred/performances/statistics/reviews/:service
