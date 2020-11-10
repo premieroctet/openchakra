@@ -115,9 +115,10 @@ class Album extends React.Component {
       newLabel: null,
       newPicture: null,
       selectedAlbum: null,
-      pictures:[],
     }
     this.closeAddDialog = this.closeAddDialog.bind(this)
+    this.loadAlbums=this.loadAlbums.bind(this)
+    this.addAlbum = this.addAlbum.bind(this)
   }
 
   componentDidMount = () => {
@@ -126,6 +127,7 @@ class Album extends React.Component {
   }
 
   loadAlbums = () => {
+    console.log(`Chargement des albums`)
     axios.get(`/myAlfred/api/users/profile/albums/${this.props.user}`)
       .then( res => {
         this.setState({ albums: res.data})
@@ -133,17 +135,18 @@ class Album extends React.Component {
       .catch (err => console.error(err))
   }
 
-  loadPictures = () => {
-    axios.get(`/myAlfred/api/users/profile/albums/pictures/${this.state.selectedAlbum}`)
-      .then( res => {
-        this.setState({ pictures: res.data})
-      })
-      .catch (err => console.error(err))
+  getAlbum(id) {
+    return this.state.albums.find( a => a._id==id)
   }
 
   getAlbumTitle(id) {
-    const album=this.state.albums.find( a => a._id==id)
+    const album=this.getAlbum(id)
     return album ? album.label : null
+  }
+
+  getAlbumPictures() {
+    const album=this.getAlbum(this.state.selectedAlbum)
+    return album ? album.pictures : []
   }
 
   onChange = e => {
@@ -254,7 +257,7 @@ class Album extends React.Component {
     const url=this.state.showAddPicture ? '/myAlfred/api/users/profile/album/picture/add' : '/myAlfred/api/users/profile/album/add'
     axios.post(url, formData, config)
       .then(response => {
-        this.state.showAddPicture ? this.loadPictures() : this.loadAlbums()
+        this.state.showAddPicture ? this.loadAlbums() : this.loadAlbums()
         // TODO: boite de dialogue ne se ferme pas à l'ajout d'une photo
         this.closeAddDialog()
       })
@@ -263,13 +266,18 @@ class Album extends React.Component {
   }
 
   selectAlbum = (id) => {
-    this.setState({selectedAlbum: id}, () => this.loadPictures())
+    this.setState({selectedAlbum: id})
+    const album=this.getAlbum(id)
+    if (album) {
+      this.setState({pictures: album.pictures})
+    }
   }
 
   render() {
-    const {albums, showAddAlbum, showAddPicture, selectedAlbum, pictures } = this.state
+    const {albums, showAddAlbum, showAddPicture, selectedAlbum } = this.state
     const {user, classes} = this.props
 
+    const pictures = this.getAlbumPictures()
     return (
       <Box>
           <Grid style={{display :'flex', alignItems: 'center', flexDirection: 'column'}}>
@@ -285,7 +293,7 @@ class Album extends React.Component {
             }
             <Grid>
               {albums.length==0 ? null :
-                <ImageSlide model={new SlideGridDataModel(albums, 4, 1, true)} style={classes} onClick={ id => this.selectAlbum(id)}/>
+                <ImageSlide model={new SlideGridDataModel(albums, 4, 1, false)} style={classes} onClick={ id => this.selectAlbum(id)}/>
               }
             </Grid>
             {isEditableUser(user) && selectedAlbum ?
@@ -298,7 +306,7 @@ class Album extends React.Component {
               </Grid>
               <Grid>
                 {pictures.length==0 ? null :
-                  <ImageSlide model={new SlideGridDataModel(pictures, 4, 1, true)} style={classes} onClick={ id => this.selectAlbum(id)}/>
+                  <ImageSlide model={new SlideGridDataModel(pictures, 4, 1, false)} style={classes}/>
                 }
               </Grid>
               </>

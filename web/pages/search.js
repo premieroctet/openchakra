@@ -413,12 +413,13 @@ class SearchPage extends React.Component {
                     <CircularProgress/>
                   </Grid>
                   :
-                  <SearchResults
-                    model={new SearchDataModel(serviceUsers.map(su => su._id), 4, 3, false)}
-                    style={classes}
-                    gps={user ? user.billing_address.gps : this.state.gps}
-                    user={user}
-                  />
+                  serviceUsers.length==0 ? null :
+                    <SearchResults
+                      model={new SearchDataModel(serviceUsers.map(su => su._id), 4, 3, false)}
+                      style={classes}
+                      gps={user ? user.billing_address.gps : this.state.gps}
+                      user={user}
+                    />
               }
               </Grid>
             </Grid>
