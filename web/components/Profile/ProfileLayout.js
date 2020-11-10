@@ -8,47 +8,39 @@ const {getLoggedUserId}=require('../../utils/functions')
 
 class ProfileLayout extends React.Component {
 
-  constructor(props) {
-    super(props)
-    this.state= {
-      user: null
-    }
-  }
-
-  static getInitialProps ({ query: { user } }) {
-    return { user : user }
-  }
-
-  componentDidMount = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
-    axios.get(`/myAlfred/api/users/users/${this.props.user}`)
-      .then( res => {
-        this.setState( { user: res.data})
-      })
-      .catch (err => console.error(err))
-  };
-
-  render() {
-    const {user}=this.state;
-
-    if (!user) {
-      return null
+    constructor(props) {
+        super(props)
+        this.state = {
+            user: null
+        }
     }
 
-    return (
-      <Layout user={user}>
-      <div style={{margin:'0 25%', display:'flex', justifyContent:'center'}}>
-          <Grid container style={{justifyContent:'center'}}>
-            <Grid item xs={12}>
-              <ProfileHeader key={user} user={user}/>
-            </Grid>
-            {this.props.children}
-          </Grid>
-        </div>
-      </Layout>
-    )
-  }
+    componentDidMount = () => {
+        axios.defaults.headers.common['Authorization'] = cookie.load('token');
+        axios.get(`/myAlfred/api/users/users/${this.props.user}`)
+            .then(res => {
+                this.setState({user: res.data})
+            })
+            .catch(err => console.error(err))
+    }
+
+    render() {
+        const {user} = this.state
+
+        return (
+            <Layout user={user}>
+                <div style={{margin: '0 25%', display: 'flex', justifyContent: 'center'}}>
+                    <Grid contaipaener style={{justifyContent: 'center'}}>
+                        <Grid item xs={12}>
+                            <ProfileHeader key={user} user={user ? user._id : null}/>
+                        </Grid>
+                        {this.props.children}
+                    </Grid>
+                </div>
+            </Layout>
+        )
+    }
 
 }
 
-module.exports=ProfileLayout
+module.exports = ProfileLayout
