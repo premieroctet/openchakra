@@ -20,6 +20,8 @@ import withGrid from '../../hoc/Grid/GridCard'
 const {SlideGridDataModel}=require('../../utils/models/SlideGridDataModel');
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import Hidden from "@material-ui/core/Hidden";
+import EditIcon from "@material-ui/icons/Edit";
+import Thumb from "../Thumb/Thumb";
 
 
 const ImageSlide=withSlide(withGrid(CardAlbum));
@@ -38,47 +40,6 @@ const DialogTitle = withStyles(styles)((props) => {
   );
 });
 
-class Thumb extends React.Component {
-  state = {
-    loading: false,
-    thumb: undefined,
-  };
-
-  componentWillReceiveProps(nextProps) {
-    if (!nextProps.file) {
-      return;
-    }
-
-    this.setState({loading: true}, () => {
-      let reader = new FileReader();
-
-      reader.onloadend = () => {
-        this.setState({loading: false, thumb: reader.result});
-      };
-
-      reader.readAsDataURL(nextProps.file);
-    });
-  }
-
-  render() {
-    const {file} = this.props;
-    const {loading, thumb} = this.state;
-
-    if (!file) {
-      return null;
-    }
-
-    if (loading) {
-      return <p>loading...</p>;
-    }
-
-    return (<img src={thumb}
-                 alt={file.name}
-                 width={150}
-            />);
-  }
-}
-
 class Album extends React.Component {
 
   constructor(props) {
@@ -87,7 +48,7 @@ class Album extends React.Component {
       albums: [],
       showAddAlbum : false,
       showAddPicture : false,
-      newLabel: null,
+      newLabel: '',
       newPicture: null,
       selectedAlbum: null,
       pictures:[],
@@ -100,6 +61,13 @@ class Album extends React.Component {
 
   componentDidMount = () => {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    axios.get(`/myAlfred/api/shop/alfred/${this.props.user}`)
+      .then(response => {
+        let shop = response.data;
+        this.setState({
+          alfred: shop.alfred,
+        })
+      }).catch(err => console.error(err));
     this.loadAlbums()
   };
 
@@ -151,9 +119,7 @@ class Album extends React.Component {
       >
         <DialogTitle id="customized-dialog-title" onClose={this.closeAddDialog}>
           <Grid style={{display: 'flex', flexDirection: 'column', alignItems : 'center'}}>
-            <Grid>
-              <h4>{addAlbum ? 'Ajouter un album' : 'Ajouter une image'}</h4>
-            </Grid>
+            <h4>{addAlbum ? 'Ajouter un album' : 'Ajouter une image'}</h4>
           </Grid>
         </DialogTitle>
         <DialogContent>
@@ -161,7 +127,6 @@ class Album extends React.Component {
             {addAlbum ?
             <Grid style={{margin: '3vh'}}>
               <TextField
-                customInput={TextField}
                 variant={'outlined'}
                 label="Nom de l'album"
                 name={'newLabel'}
@@ -176,13 +141,25 @@ class Album extends React.Component {
           }
           </Grid>
           <Grid container>
-            <Thumb file={this.state.newPicture}/>
+            <Grid style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
+              <Thumb file={this.state.newPicture}/>
+            </Grid>
             <Grid item xs={12} lg={12} style={{textAlign: 'center'}}>
-              <Button color={'primary'}>Téléchargez une photo</Button>
-              <input id="file" style={{display: 'none'}} name="myImage" type="file"
-                     onChange={this.onChange}
-                     className="form-control" accept={'image/*'}
-              />
+              <label
+                style={{display: 'inline-block', marginTop: 15, color: '#2FBCD3'}}
+                className="forminputs"
+              >
+                <Typography style={{cursor: 'pointer', fontSize: '0.8rem'}}>Téléchargez une photo</Typography>
+                <input
+                  id="file"
+                  style={{display: 'none'}}
+                  name="myImage"
+                  type="file"
+                  onChange={this.onChange}
+                  className="form-control"
+                  accept={'image/*'}
+                />
+              </label>
             </Grid>
           </Grid>
           <Grid style={{textAlign: 'center', marginLeft: 15, marginRight: 15, marginTop: '3vh', marginBottom: '3vh'}}>
@@ -232,7 +209,6 @@ class Album extends React.Component {
     const url=this.state.showAddPicture ? '/myAlfred/api/users/profile/album/picture/add' : '/myAlfred/api/users/profile/album/add';
     axios.post(url, formData, config)
       .then(response => {
-        this.state.showAddPicture ? this.loadPictures() : this.loadAlbums();
         this.state.showAddPicture ? this.loadAlbums() : this.loadAlbums();
         // TODO: boite de dialogue ne se ferme pas à l'ajout d'une photo
         this.closeAddDialog()

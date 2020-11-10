@@ -365,7 +365,7 @@ class NavBar extends Component {
                       }}
                     >
                     { user ?
-                      <>
+                      <Grid>
                         <Link href={`/profile/about?user=${user._id}`}>
                           <MenuItem>Mon profil</MenuItem>
                         </Link>
@@ -383,7 +383,7 @@ class NavBar extends Component {
                           </Link> : null
                         }
                         <MenuItem onClick={() => this.logout2()}>Logout</MenuItem>
-                      </>
+                      </Grid>
                       :
                       null
                     }
