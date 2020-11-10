@@ -56,6 +56,8 @@ const NAVBAR_MENU = {
   ourServices: 'Nos services',
   ourTeam: 'Notre équipe',
   contactUs: 'Nous contacter',
+  aboutUs: 'À propos',
+  ourCom: 'Notre communauté',
   signIn: 'Inscription',
   logIn: 'Connexion'
 };
