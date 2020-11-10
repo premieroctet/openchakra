@@ -3,12 +3,14 @@ import Router from 'next/router'
 import Grid from '@material-ui/core/Grid'
 import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
-import styles from './AddServiceStyle';
+import styles from '../../static/css/components/AddService/AddService';
 import cookie from 'react-cookies';
 import {Button} from '@material-ui/core'
 import {SHOP} from '../../utils/i18n'
 import Box from '../Box/Box'
 import Typography from "@material-ui/core/Typography";
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import Hidden from "@material-ui/core/Hidden";
 
 class AddService extends React.Component {
   constructor(props) {
@@ -27,15 +29,16 @@ class AddService extends React.Component {
     const {classes}=this.props;
 
     return (
-      <Box>
-        <Grid style={{ display: 'flex', flexDirection:'column', alignItems:'center'}}>
+      <Grid className={classes.containerAddService}>
+        <Hidden only={['xs', 'sm', 'md']}>
           <h3>Mes services</h3>
-          <Typography>Ajoutez un service dans votre boutique</Typography>
-          <Button variant={'outlined'} classes={{root : classes.newsLetterButton}} onClick={this.addService}>
-            {SHOP.addService}
-          </Button>
-        </Grid>
-      </Box>
+        </Hidden>
+        <Button classes={{root : classes.buttonAddService}} onClick={this.addService} startIcon={<AddCircleOutlineIcon />}
+        >
+          {SHOP.addService}
+        </Button>
+        <Typography className={classes.descriptionAddService}>Développez votre boutique et ajoutez de nouveaux services !</Typography>
+      </Grid>
     )
   }
 }

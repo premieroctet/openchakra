@@ -69,9 +69,9 @@ class SummaryCommentary extends React.Component{
     var average = allComments.length ? allComments.map( r => r.note_alfred ? r.note_alfred.global : r.note_client.global ).reduce ((a,b) => a+b)/allComments.length : 0;
 
     return(
-      <Box>
-        <Grid container style={{display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between'}}>
-          <Grid style={{display: 'flex', flexDirection: 'column'}}>
+      <Grid>
+        <Grid container style={{display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center'}} spacing={3}>
+          <Grid item className={classes.summaryContainerAverageNote}>
             <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
               <Grid>
                 <Typography>
@@ -86,7 +86,7 @@ class SummaryCommentary extends React.Component{
               <Typography style={{color:'rgba(39,37,37,35%)', fontWeight: 'bold'}}>NOTE GENERALE</Typography>
             </Grid>
           </Grid>
-          <Grid style={{display: 'flex', flexDirection: 'column'}}>
+          <Grid item className={classes.summaryContainerCommentary}>
             <Grid>
               <Typography>
                 <strong>{commentsCount}</strong>
@@ -95,8 +95,9 @@ class SummaryCommentary extends React.Component{
             <Grid style={{marginTop: '2%'}}>
               <Typography style={{color:'rgba(39,37,37,35%)', fontWeight: 'bold'}}>COMMENTAIRES</Typography>
             </Grid>
+            { false ?
             <Grid container style={{marginTop: '5%'}}>
-              { false ?
+
               <Grid item xl={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">Filtrer par:</InputLabel>
@@ -116,14 +117,15 @@ class SummaryCommentary extends React.Component{
                   </Select>
                 </FormControl>
               </Grid>
+
+            </Grid>
               :
               null
             }
-            </Grid>
           </Grid>
-          <Grid>
+          <Grid item className={classes.summaryContainerCompliments}>
             <Grid>
-              <Typography>4</Typography>
+              <Typography><strong>4</strong></Typography>
             </Grid>
             <Grid>
               <Typography style={{color:'rgba(39,37,37,35%)', fontWeight: 'bold'}}>COMPLIMENTS</Typography>
@@ -150,7 +152,7 @@ class SummaryCommentary extends React.Component{
             :
             null
         }
-      </Box>
+      </Grid>
     );
   }
 }

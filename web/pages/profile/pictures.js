@@ -5,10 +5,11 @@ import Grid from "@material-ui/core/Grid";
 import ProfileLayout from '../../components/Profile/ProfileLayout'
 import Album from '../../components/Album/Album'
 import {withStyles} from '@material-ui/core/styles';
-import styles from '../../static/css/pages/homePage/index';
+import styles from '../../static/css/pages/profile/picture/picture';
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
+import Box from "../../components/Box/Box";
 const {getLoggedUserId}=require('../../utils/functions');
 
 class ProfilePictures extends React.Component {
@@ -28,15 +29,19 @@ class ProfilePictures extends React.Component {
 
   content = (classes, user) => {
     return(
-      <Grid container sapcing={3}>
+      <Grid container sapcing={3} className={classes.pictureContainer}>
         <Grid item xs={12}>
-          <Album user={user} classes={classes}/>
+          <Box>
+           <Album user={user}/>
+          </Box>
         </Grid>
-        <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-          <Grid style={{width: '70%'}}>
-            <AskQuestion user={user}/>
+        <Hidden only={['sm', 'xs']}>
+          <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+            <Grid style={{width: '70%'}}>
+              <AskQuestion user={user}/>
+            </Grid>
           </Grid>
-        </Grid>
+        </Hidden>
       </Grid>
     )
   };
@@ -59,7 +64,7 @@ class ProfilePictures extends React.Component {
         </Hidden>
         <Hidden only={['lg', 'xl']}>
           <LayoutMobile>
-            {this.content(classes)}
+            {this.content(classes, user)}
           </LayoutMobile>
         </Hidden>
       </React.Fragment>

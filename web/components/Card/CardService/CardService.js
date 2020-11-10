@@ -11,7 +11,7 @@ const {computeDistanceKm} = require('../../../utils/functions');
 import RoomIcon from '@material-ui/icons/Room';
 import Chip from "@material-ui/core/Chip";
 import Avatar from "@material-ui/core/Avatar";
-import styles from '../../../static/css/pages/searchPage/searchStyle'
+import styles from '../../../static/css/components/Card/CardService/CardService'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from "@material-ui/core/Typography";
 

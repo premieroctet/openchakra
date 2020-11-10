@@ -7,6 +7,11 @@ export default theme => ({
     paddingBottom: '5%',
     paddingRight: '10%',
     height: '100%',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    [theme.breakpoints.down('xs')]:{
+      border :'inherit',
+      paddingLeft: 0,
+      paddingRight: 0
+    }
   }
 })

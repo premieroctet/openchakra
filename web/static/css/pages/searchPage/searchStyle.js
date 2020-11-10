@@ -124,55 +124,13 @@ export default theme => ({
     marginTop: '4%'
 
   },
-  cardServiceFlexContainer:{
-    display: 'flex',
-    justifyContent :'center',
-    position: 'relative'
-  },
+
   searchContainerDisplayResult:{
     width: '70%'
   },
-  cardServicePicsContainer:{
-    width: '100%',
-    height: '20vh'
-  },
-  cardServiceBackgroundPics:{
-    width: '100%',
-    height: '100%',
-    backgroundPosition: 'center',
-    backgroundSize: 'cover',
-    borderRadius: 20
-  },
-  cardServiceMainStyle:{
-    width: '80%',
-    marginTop: '8%',
-    marginBottom: '5%',
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  cardServicePaper:{
-    borderRadius: 20,
-    display: 'flex',
-    justifyContent: 'center',
-    height: '40vh',
-    cursor: 'pointer'
-  },
-  cardServiceScoreAndButtonContainer:{
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  cardServiceRatingContainer:{
-    display: 'flex',
-    flexDirection: 'row',
-    width: '50%'
-  },
-  cardServicePlaceContainer:{
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
+
+
+
   cardServiceButton:{
     color: theme.palette.white.main,
     fontWeight: theme.typography.blackButton.fontWeight,
@@ -184,43 +142,8 @@ export default theme => ({
   cardServiceButtonContainer:{
     width: '50%'
   },
-  cardPreviewRatingBox:{
-    display: 'flex',
-    alignItems: 'center',
-    margin:0,
-    padding: 0
-  },
-  cardServiceLabelService:{
-    fontFamily: theme.typography.textLabel.fontFamily,
-    fontWeight: theme.typography.textLabel.fontWeight,
-    fontSize: theme.typography.textLabel.fontSize,
-    margin: theme.typography.textLabel.margin
-  },
-  cardServiceBoxRatingDisplay:{
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  cardServiceRating:{
-    marginRight: '20%',
-    marginLeft: '20%'
-  },
-  cardServicePlaceLogo:{
-    marginRight: '3%'
-  },
-  cardServiceChipName:{
-    position: 'absolute',
-    bottom:0,
-    left:0
-  },
-  cardServiceChip:{
-    backgroundColor: theme.palette.white.main,
-  },
-  stylecardServiceDistance:{
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
+
+
 
   searchFilterRightContainer:{
     display: 'flex',
@@ -266,18 +189,8 @@ export default theme => ({
   searchSearchByHastagContainer:{
     width: '80%'
   },
-  cardServiceInfoPaper:{
-    backgroundColor: theme.palette.primary.main,
-    borderRadius: 20,
-    display: 'flex',
-    justifyContent: 'center',
-    height: '40vh'
-  },
-  cardServiceInfoContent:{
-    display:'flex',
-    flexDirection: 'column',
-    justifyContent: 'center'
-  },
+
+
   searchResultMessage:{
     display: 'flex',
     justifyContent: 'center',
@@ -367,12 +280,5 @@ export default theme => ({
     justifyContent : 'center',
     alignItems: 'center'
   },
-  cardServiceInfoTitle:{
-    color: theme.palette.white.main,
-    fontFamily: theme.typography.fontFamily,
-  },
-  cardServiceInfoText:{
-    color: theme.palette.white.main,
-    fontFamily: theme.typography.fontFamily,
-  }
+
 })

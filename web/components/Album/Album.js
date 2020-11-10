@@ -3,7 +3,6 @@ import Grid from '@material-ui/core/Grid';
 import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Box from '../Box/Box'
 const {isEditableUser}=require('../../utils/functions');
 import IconButton from '@material-ui/core/IconButton';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
@@ -11,7 +10,7 @@ import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import DialogContent from '@material-ui/core/DialogContent';
-import styles from '../../static/css/pages/paymentMethod/paymentMethod';
+import styles from '../../static/css/components/Album/Album';
 import cookie from 'react-cookies';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
@@ -19,6 +18,8 @@ import CardAlbum from '../Card/CardAlbum/CardAlbum'
 import withSlide from '../../hoc/Slide/SlideShow'
 import withGrid from '../../hoc/Grid/GridCard'
 const {SlideGridDataModel}=require('../../utils/models/SlideGridDataModel');
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import Hidden from "@material-ui/core/Hidden";
 
 
 const ImageSlide=withSlide(withGrid(CardAlbum));
@@ -103,7 +104,7 @@ class Album extends React.Component {
         this.setState({
           alfred: shop.alfred,
         })
-      });
+      }).catch(err => console.error(err));
     this.loadAlbums()
   };
 
@@ -250,18 +251,23 @@ class Album extends React.Component {
     const {user, classes} = this.props;
 
     return (
-      <Box>
+     <Grid>
         <Grid style={{display :'flex',flexDirection: 'column'}}>
-          <Grid style={{display: 'flex', flexDirection:'row', justifyContent: 'space-between'}}>
-            <Grid>
+          <Grid className={classes.albumContainerHeader}>
+            <Grid className={classes.albumTitleContainer}>
               <h2>{`Les albums de ${alfred.firstname}` + " " + `(${albums.length})`}</h2>
             </Grid>
             {isEditableUser(user) ?
-              <Grid style={{display :'flex', alignItems: 'center', flexDirection: 'row'}}>
-                <IconButton aria-label="add" onClick={() => this.openAddAlbum()}>
-                  <AddCircleIcon />
-                </IconButton>
-                <Typography>Ajouter un album</Typography>
+              <Grid style={{display :'flex', alignItems: 'center', flexDirection: 'column'}}>
+                <Button
+                  startIcon={<AddCircleOutlineIcon />}
+                  onClick={() => this.openAddAlbum()}
+                >
+                  <Typography style={{fontWeight: 'bold', textTransform: 'initial'}}>Créez un album</Typography>
+                </Button>
+                <Hidden only={['lg', 'xl', 'md']}>
+                  <Typography style={{color: 'rgba(39,37,37,35%)', textAlign: 'center'}}>Les photos, c’est plus sympas quand on les partage !</Typography>
+                </Hidden>
               </Grid> : null
             }
           </Grid>
@@ -290,11 +296,11 @@ class Album extends React.Component {
         </Grid>
       {showAddAlbum ? this.modalAddDialog(classes, true) : null }
       {showAddPicture ? this.modalAddDialog(classes, false) : null }
-      </Box>
+     </Grid>
     )
   }
 
 
 }
 
-export default withStyles(styles, {withTheme: true})(Album)
+export default withStyles(styles)(Album)

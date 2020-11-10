@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
-import styles from './PresentationStyle';
+import styles from '../../static/css/components/Presentation/Presentation';
 import cookie from 'react-cookies';
 import Topic from "../../hoc/Topic/Topic"
 import Box from '../Box/Box'
@@ -34,9 +34,7 @@ class Presentation extends React.Component {
     const title=frenchFormat(`À propos de ${user ? user.firstname : ''}`);
 
     return (
-      <Box style={{backgroundColor: 'white'}}>
-        <Topic titleTopic={title} titleSummary={user ? user.description : ''} />
-      </Box>
+      <Topic titleTopic={title} titleSummary={user ? user.description : ''} />
     )
   }
 

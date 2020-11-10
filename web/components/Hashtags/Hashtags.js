@@ -46,12 +46,10 @@ class Hashtags extends React.Component {
     const {user} = this.props
 
     return (
-      <Box>
-        <Topic titleTopic={`Les tags de ${user ? user.firstname:''}`}>
-        HASHTAGS
-        jjkl
-        </Topic>
-      </Box>
+      <Topic titleTopic={`Les tags de ${user ? user.firstname:''}`}>
+      HASHTAGS
+      jjkl
+      </Topic>
     )
   }
 

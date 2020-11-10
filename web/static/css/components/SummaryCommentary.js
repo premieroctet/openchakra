@@ -11,5 +11,17 @@ export default theme => ({
     textTransform: 'initial',
     padding: '6px 36px',
     borderRadius: 27
+  },
+  summaryContainerAverageNote:{
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  summaryContainerCommentary:{
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  summaryContainerCompliments:{
+    display:'flex',
+    flexDirection: 'column'
   }
 })

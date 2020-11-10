@@ -7,6 +7,7 @@ import styles from '../../static/css/pages/homePage/index';
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
+import Box from "../../components/Box/Box";
 
 class ProfileReviews extends React.Component {
 
@@ -23,13 +24,17 @@ class ProfileReviews extends React.Component {
     return(
       <Grid container>
         <Grid item xs={12}>
-          <SummaryCommentary user={user} />
+          <Box>
+            <SummaryCommentary user={user} />
+          </Box>
         </Grid>
-        <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-          <Grid style={{width: '70%'}}>
-            <AskQuestion user={user}/>
+        <Hidden only={['sm', 'xs']}>
+          <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+            <Grid style={{width: '70%'}}>
+              <AskQuestion user={user}/>
+            </Grid>
           </Grid>
-        </Grid>
+        </Hidden>
       </Grid>
     )
   };
@@ -49,7 +54,7 @@ class ProfileReviews extends React.Component {
         </Hidden>
         <Hidden only={['lg', 'xl']}>
           <LayoutMobile>
-            {this.content(classes)}
+            {this.content(classes, user)}
           </LayoutMobile>
         </Hidden>
       </React.Fragment>

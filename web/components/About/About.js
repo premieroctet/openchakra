@@ -72,23 +72,21 @@ class About extends React.Component {
       null;
 
     return (
-      <Box>
-        <Grid style={{display: 'flex', flexDirection:'column'}}>
+      <Grid style={{display: 'flex', flexDirection:'column'}}>
+        { displayTitlePicture ?
+          <h3>{frenchFormat(`A propos de ${user ? user.firstname : ''}`)}</h3>
+          : null
+        }
+        <Grid style={{display: 'flex', flexDirection:'row'}}>
           { displayTitlePicture ?
-            <h3>{frenchFormat(`A propos de ${user ? user.firstname : ''}`)}</h3>
+            <Grid style={{ marginLeft: '1%', marginRight: '1%'}}>
+              <UserAvatar user={user} />
+            </Grid>
             : null
           }
-          <Grid style={{display: 'flex', flexDirection:'row'}}>
-            { displayTitlePicture ?
-              <Grid style={{ marginLeft: '1%', marginRight: '1%'}}>
-                <UserAvatar user={user} />
-              </Grid>
-              : null
-            }
-            <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} columnsXl={12} />
-          </Grid>
+          <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} columnsXl={12} />
         </Grid>
-      </Box>
+      </Grid>
     )
   }
 

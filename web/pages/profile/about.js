@@ -7,10 +7,11 @@ import Skills from '../../components/Skills/Skills'
 import Badges from '../../components/Badges/Badges'
 import Hashtags from '../../components/Hashtags/Hashtags'
 import {withStyles} from '@material-ui/core/styles';
-import styles from '../../static/css/pages/homePage/index';
+import styles from '../../static/css/pages/profile/about/about';
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
+import Box from "../../components/Box/Box";
 
 
 class ProfileAbout extends React.Component {
@@ -27,26 +28,38 @@ class ProfileAbout extends React.Component {
   content = (classes, user) =>{
     return(
       <Grid container spacing={3}>
-        <Grid item xl={5} lg={5}>
-          <About user={user} />
+        <Grid item xl={5} lg={5} md={12} sm={12} xs={12}>
+          <Box>
+            <About user={user} />
+          </Box>
         </Grid>
-        <Grid  item xl={7} lg={7}>
-          <Presentation user={user} />
+        <Grid  item xl={7} lg={7} md={12} sm={12} xs={12}>
+          <Box>
+            <Presentation user={user} />
+          </Box>
         </Grid>
-        <Grid item xl={8} lg={8}>
-          <Skills alfred={user} />
+        <Grid item xl={8} lg={8} md={12} sm={12} xs={12}>
+          <Box>
+            <Skills alfred={user} />
+          </Box>
         </Grid>
-        <Grid  item xl={4} lg={4}>
-          <Badges user={user} />
+        <Grid  item xl={4} lg={4} md={12} sm={12} xs={12}>
+          <Box>
+            <Badges user={user} />
+          </Box>
         </Grid>
-        <Grid item xl={12} lg={12}>
-          <Hashtags user={user} />
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.aboutHastagsContainer}>
+          <Box>
+            <Hashtags user={user} />
+          </Box>
         </Grid>
-        <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-          <Grid style={{width: '70%'}}>
-            <AskQuestion user={user}/>
+        <Hidden only={['sm', 'xs']}>
+          <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+            <Grid style={{width: '70%'}}>
+              <AskQuestion user={user}/>
+            </Grid>
           </Grid>
-        </Grid>
+        </Hidden>
       </Grid>
     )
   };

@@ -19,7 +19,7 @@ class AskQuestion extends React.Component{
         this.setState({
           user: user.alfred,
         })
-      })
+      }).catch(err => console.error(err))
   }
 
 

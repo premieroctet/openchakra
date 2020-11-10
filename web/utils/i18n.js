@@ -103,7 +103,7 @@ const getMangopayMessage = msg_id => {
 };
 
 const SHOP={
-  addService: 'Ajouter un service'
+  addService: 'Ajoutez des services'
 }
 
 module.exports = {

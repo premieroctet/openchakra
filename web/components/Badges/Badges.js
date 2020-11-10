@@ -14,9 +14,7 @@ class Badges extends React.Component {
   render() {
 
     return (
-      <Box>
         <Topic titleTopic={'Badges'}/>
-      </Box>
     )
   }
 }
