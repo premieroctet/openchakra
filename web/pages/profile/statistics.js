@@ -1,6 +1,5 @@
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
-import ProfileLayout from '../../components/Profile/ProfileLayout'
 import Topic from '../../hoc/Topic/Topic'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/profile/statistics/statistics';
@@ -19,9 +18,10 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Divider from '@material-ui/core/Divider';
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
+import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 
 
-const MONTHS=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
+const MONTHS=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
 const CHART_OPTIONS= {
   chart: {

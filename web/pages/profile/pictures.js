@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import cookie from 'react-cookies';
 import Grid from "@material-ui/core/Grid";
-import ProfileLayout from '../../components/Profile/ProfileLayout'
+import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import Album from '../../components/Album/Album'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/profile/picture/picture';
@@ -19,8 +19,8 @@ class ProfilePictures extends React.Component {
     this.state={}
   }
 
-  static getInitialProps({query: {user}}) {
-    return {user: user};
+  static getInitialProps({query: {user, indexAccount}}) {
+    return {user: user, index : indexAccount};
   }
 
   getUserId() {
@@ -48,7 +48,7 @@ class ProfilePictures extends React.Component {
 
 
   render() {
-    const {classes}=this.props;
+    const {classes, index}=this.props;
     const user=this.getUserId();
 
     if (!user) {
@@ -58,7 +58,7 @@ class ProfilePictures extends React.Component {
     return (
       <React.Fragment>
         <Hidden only={['xs', 'sm', 'md']}>
-          <ProfileLayout user={user}>
+          <ProfileLayout user={user} index={index}>
             {this.content(classes, user)}
           </ProfileLayout>
         </Hidden>

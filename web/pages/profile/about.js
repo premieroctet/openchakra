@@ -1,6 +1,6 @@
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
-import ProfileLayout from '../../components/Profile/ProfileLayout'
+import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import About from '../../components/About/About'
 import Presentation from '../../components/Presentation/Presentation'
 import Skills from '../../components/Skills/Skills'
@@ -21,8 +21,8 @@ class ProfileAbout extends React.Component {
     this.state={}
   }
 
-  static getInitialProps({query: {user}}) {
-    return {user: user};
+  static getInitialProps({query: {user, indexAccount}}) {
+    return {user: user, index: indexAccount};
   }
 
   content = (classes, user) =>{
@@ -48,11 +48,15 @@ class ProfileAbout extends React.Component {
             <Badges user={user} />
           </Box>
         </Grid>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.aboutHastagsContainer}>
-          <Box>
-            <Hashtags user={user} />
-          </Box>
-        </Grid>
+        { false ?
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.aboutHastagsContainer}>
+            <Box>
+              <Hashtags user={user} />
+            </Box>
+          </Grid>
+          :
+          null
+        }
         <Hidden only={['sm', 'xs']}>
           <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
             <Grid style={{width: '70%'}}>
@@ -65,7 +69,7 @@ class ProfileAbout extends React.Component {
   };
 
   render() {
-    const {user, classes}=this.props;
+    const {user, classes, index}=this.props;
 
     if (!user) {
       return null
@@ -74,7 +78,7 @@ class ProfileAbout extends React.Component {
     return (
       <React.Fragment>
         <Hidden only={['xs', 'sm', 'md']}>
-          <ProfileLayout user={user}>
+          <ProfileLayout user={user} index={index}>
             {this.content(classes, user)}
           </ProfileLayout>
         </Hidden>
