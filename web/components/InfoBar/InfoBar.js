@@ -16,7 +16,7 @@ class InfoBar extends React.Component{
       <Grid container className={style.infoBarMainStyle}>
         <Grid item className={style.infoBarLinkContainer}>
           <Grid className={style.infoBarPicsContainer}>
-            <img src={'../../static/assets/icon/warning.svg'} alt={'warning'} title={'warning'} width={'100%'} height={'100%'}/>
+            <img src={'/static/assets/img/warning.svg'} alt={'warning'} title={'warning'} width={'100%'} height={'100%'}/>
           </Grid>
           <Grid>
             <p className={style.infoBarColorText}>{INFOBAR_MESSAGE.message}</p>

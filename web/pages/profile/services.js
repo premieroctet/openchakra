@@ -1,6 +1,6 @@
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
-import ProfileLayout from '../../components/Profile/ProfileLayout'
+import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import AddService from '../../components/AddService/AddService'
 import Services from '../../components/Services/Services'
 import {withStyles} from '@material-ui/core/styles';
@@ -31,8 +31,8 @@ class ProfileServices extends React.Component {
       }).catch(err => console.error(err))
   }
 
-  static getInitialProps({query: {user}}) {
-    return {user: user};
+  static getInitialProps({query: {user, indexAccount}}) {
+    return {user: user, index: indexAccount};
   }
 
   content = (classes, user, shop) => {
@@ -60,13 +60,13 @@ class ProfileServices extends React.Component {
   };
 
   render() {
-    const {classes}=this.props;
+    const {classes, index}=this.props;
     const {shop, user}=this.state;
 
     return (
       <React.Fragment>
         <Hidden only={['xs', 'sm', 'md']}>
-          <ProfileLayout user={user}>
+          <ProfileLayout user={user} index={index}>
             {this.content(classes, user, shop)}
           </ProfileLayout>
         </Hidden>
