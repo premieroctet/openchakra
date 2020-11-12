@@ -7,31 +7,24 @@ import layoutStyle from '../../../static/css/pages/layout/layoutStyle'
 import {NAVBAR_MENU} from "../../../utils/i18n";
 import Apropos from "../../../pages/footer/apropos";
 import Link from 'next/link';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {withStyles} from '@material-ui/core/styles';
+
+const style = theme => ({
+    back: {
+        display: 'flex',
+        color: 'white',
+        padding: '15px'
+    }
+});
 
 class Header extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            items: [
-                {
-                    label: 'A propos',
-                    url: '/apropos'
-                },
-                {
-                    label: 'Notre communauté',
-                    url: '/communaute'
-                },
-                {
-                    label: 'Notre équipe',
-                    url: 'equipe'
-                }
-            ]
-        }
     }
 
     render() {
-        const {items} = this.state
-        const {children, index} = this.props;
+        const {classes} = this.props;
         return (
 
             <Grid>
@@ -40,17 +33,15 @@ class Header extends React.Component {
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     width: '100%'
-                }}><Link href={'/'}>
-                    <Grid style={{
-                        color: 'white',
-                        display: 'flex',
-                        justifyContent: 'start',
-                        margin: '0 50px',
-                        paddingTop: '10px'
-                    }}
-                          className={layoutStyle.navbarLogoContainer}>
-                        <img style={{width: '2%', marginRight: '10px'}}
-                             src='../../../static/assets/icon/left-arrow.svg'></img>
+                }}><Link style={{
+                    '&:hover': {
+                        color: 'grey'
+                    }
+                }} href={'/'}>
+                    <Grid className={classes.back}>
+                        <ArrowBackIcon style={{
+                            marginTop: '12px'
+                        }}/>
                         <p>Retour sur My Alfred</p>
                     </Grid>
                 </Link>
@@ -63,7 +54,6 @@ class Header extends React.Component {
                         }}>d'entreprise mais surtout d'humain</p>
                     </Grid>
                 </Grid>
-
                 <Tabs style={{padding: '-150px 0 0 0'}} aria-label="simple tabs example">
                     <div style={{margin: '0 auto'}}>
                         <Link href={'/footer/apropos'}>
@@ -80,16 +70,10 @@ class Header extends React.Component {
                         </Link>
                     </div>
                 </Tabs>
-                {/*<Grid>*/
-                }
-                {/*    <ScrollMenu style={{margin: '0 auto'}} categories={items} mode={Apropos} indexCat={index}/>*/
-                }
-                {/*</Grid>*/
-                }
             </Grid>
         )
     }
 
 }
 
-export default Header;
+export default withStyles(style)(Header);

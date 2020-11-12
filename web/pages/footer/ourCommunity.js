@@ -4,7 +4,7 @@ import layoutStyle from "../../static/css/pages/layout/layoutStyle"
 import Header from "../../hoc/Layout/About/Header";
 import Footer from "../../hoc/Layout/About/Footer";
 
-class OurCommunauty extends React.Component {
+class OurCommunity extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -30,4 +30,4 @@ class OurCommunauty extends React.Component {
     }
 }
 
-export default (OurCommunauty)
+export default (OurCommunity)
