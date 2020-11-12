@@ -1,9 +1,10 @@
 import React, {Fragment} from "react";
 import Grid from "@material-ui/core/Grid";
 import Header from "../../hoc/Layout/About/Header"
-import LayoutFaq from "../../hoc/Layout/LayoutFaq";
+import LayoutFaq from "../../hoc/Layout/Faq/LayoutFaq";
 import {withStyles} from "@material-ui/core/styles";
 import Link from 'next/link';
+import HeaderFaq from "../../hoc/Layout/Faq/HeaderFaq";
 
 const styles = theme => ({
     titleRub: {
@@ -21,23 +22,24 @@ class AddService extends React.Component {
         const {classes} = this.props;
         return (
             <Fragment>
-                {/*<Header/>*/}
+                <HeaderFaq/>
                 <Grid style={{display: 'flex', flexDirection: 'column', paddingTop: '30px'}}>
                     <Grid style={{
-                        display: 'flex', justifyContent: 'center', width: '600px',
-                        paddingBottom: '15px', margin: '0 auto'
+                        display: 'flex', justifyContent: 'center',
+                        width: '450px', margin: '0 auto',
+                        paddingBottom: '15px'
                     }}>
                         <h1 style={{marginRight: '25px', color: '#F8CF61'}}>1
                         </h1>
                         <Grid style={{display: 'flex', flexDirection: 'column'}}>
                             <p className={classes.titleRub}>Inscrivez-vous & détaillez vos informations</p>
-                            <p style={{marginTop: '5px'}}>Commencez par vous inscrire en précisant votre adresse
-                                et votre numéro de téléphone</p>
+                            <p style={{marginTop: '5px'}}>Commencez par vous inscrire en précisant votre adresse et
+                                votre numéro de téléphone</p>
                         </Grid>
                     </Grid>
                     <Grid style={{
                         display: 'flex', justifyContent: 'center',
-                        width: '600px', margin: '0 auto',
+                        width: '450px', margin: '0 auto',
                         paddingBottom: '15px'
                     }}>
                         <h1 style={{marginRight: '25px', color: '#84A5E0'}}>2
@@ -50,7 +52,7 @@ class AddService extends React.Component {
                         </Grid>
                     </Grid>
                     <Grid style={{
-                        display: 'flex', justifyContent: 'center', width: '600px',
+                        display: 'flex', justifyContent: 'center', width: '450px',
                         paddingBottom: '15px', margin: '0 auto'
                     }}>
                         <h1 style={{marginRight: '25px', color: '#F36B7F'}}>3
