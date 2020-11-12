@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react';
 import Grid from "@material-ui/core/Grid";
+import HeaderFaq from "../../hoc/Layout/Faq/HeaderFaq";
 import Footer from "../../hoc/Layout/About/Footer";
 import {withStyles} from "@material-ui/core/styles";
 import Link from 'next/link';
@@ -46,12 +47,13 @@ class Home extends React.Component {
         const {classes} = this.props;
         return (
             <Fragment>
+                <HeaderFaq/>
                 <Grid className={classes.menuContainer}>
                     <Grid style={{paddingRight: '25px'}}>
                         <Link href={'/faq/addService'}>
                             <Grid className={classes.linkBloc}>
                                 <img style={{margin: '0 auto', paddingBottom: '16px'}}
-                                     src="../../static/assets/icon/star.svg" alt=""/>
+                                     src="../../static/assets/faq/star.svg" alt=""/>
                                 <p className={classes.linkText}>Je suis client</p>
                             </Grid>
                         </Link>
@@ -60,7 +62,7 @@ class Home extends React.Component {
                         <Link href={'/faq/becomeAlfred'}>
                             <Grid className={classes.linkBloc}>
                                 <img style={{margin: '0 auto', width: '30px', paddingBottom: '10px'}}
-                                     src="../../static/assets/icon/amp.svg"
+                                     src="../../static/assets/faq/amp.svg"
                                      alt=""/>
                                 <p className={classes.linkText}>Je suis Alfred</p>
                             </Grid>
