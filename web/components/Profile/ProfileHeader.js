@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import cookie from 'react-cookies';
 import Link from 'next/link'
+import UserAvatar from '../Avatar/UserAvatar'
 
 class ProfileHeader extends React.Component {
 
@@ -18,7 +19,8 @@ class ProfileHeader extends React.Component {
     }
     return (
       <>
-      <div style={{display: 'flex', justifyContent: 'center'}}>
+      <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%', alignItems: 'center'}}>
+        <UserAvatar user={user} />
         <h3>{`Je m'appelle ${user ? user.firstname : ''}`}</h3>
       </div>
       </>
