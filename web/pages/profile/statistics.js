@@ -1,13 +1,10 @@
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
 import ProfileLayout from '../../components/Profile/ProfileLayout'
-import AddService from '../../components/AddService/AddService'
-import Services from '../../components/Services/Services'
 import Topic from '../../hoc/Topic/Topic'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/profile/statistics/statistics';
 import { Typography } from '@material-ui/core'
-import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import loadable from 'loadable-components';
 const Chart = loadable(() => import('react-apexcharts'));
@@ -15,13 +12,13 @@ import Router from 'next/router'
 import axios from 'axios'
 import cookie from 'react-cookies'
 const _ = require('lodash');
-import Link from 'next/link';
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import Box from "../../components/Box/Box";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Divider from '@material-ui/core/Divider';
+import AskQuestion from "../../components/AskQuestion/AskQuestion";
 
 
 const MONTHS=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
@@ -42,7 +39,7 @@ const CHART_OPTIONS= {
   xaxis: {
     categories: MONTHS,
   },
-}
+};
 
 class ProfileStatistics extends React.Component {
 
@@ -202,41 +199,40 @@ class ProfileStatistics extends React.Component {
                     style={{width: '100%'}}
                   />
                 </Grid>
-                <Grid container style={{textAlign: 'center', marginTop: '10vh', marginBottom: '12vh', backgroundColor:'rgba(229,229,229,1)', borderRadius: 44, padding: '5%', display: 'flex', justifyContent: 'space-around' }}>
-                  <Grid>
-                    <Grid>
+                <Grid container className={classes.statResultContainer}>
+                  <Grid container className={classes.statResultData}>
+                    <Grid item xs={9} sm={9} className={classes.statResultLabel}>
                       <Typography><strong>Revenus perçus</strong></Typography>
                     </Grid>
-                    <Grid style={{marginTop: '3vh'}}>
+                    <Grid item xs={3} sm={3} className={classes.statData}>
                       <Typography><strong>{this.state.totalPaid}€</strong></Typography>
                     </Grid>
                   </Grid>
                   <Grid>
                     <Divider orientation="vertical"/>
                   </Grid>
-                  <Grid>
-                    <Grid>
+                  <Grid container className={classes.statResultData}>
+                    <Grid  item xs={9}  sm={9} className={classes.statResultLabel}>
                       <Typography><strong>Revenus à venir</strong></Typography>
                     </Grid>
-                    <Grid style={{marginTop: '3vh'}}>
+                    <Grid  item xs={3}  sm={3} className={classes.statData}>
                       <Typography><strong>{this.state.totalComing}€</strong></Typography>
                     </Grid>
                   </Grid>
                   <Grid>
                     <Divider orientation="vertical" />
                   </Grid>
-                  <Grid>
-                    <Grid>
+                  <Grid container className={classes.statResultData}>
+                    <Grid item xs={9}  sm={9} className={classes.statResultLabel}>
                       <Typography><strong>{`Revenus prévisionnels ${this.state.year}`}</strong></Typography>
                     </Grid>
-                    <Grid style={{marginTop: '3vh'}}>
+                    <Grid  item xs={3}  sm={3} className={classes.statData}>
                       <Typography><strong>{this.state.totalYear}€</strong></Typography>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Topic>
-
           </Box>
         </Grid>
         <Grid item xs={12}>
@@ -270,45 +266,45 @@ class ProfileStatistics extends React.Component {
                         </FormControl>
                       </Grid>
                     </Grid>
-                    <Grid container style={{textAlign: 'center', marginTop: '10vh', marginBottom: '12vh', backgroundColor:'rgba(229,229,229,1)', borderRadius: 44, padding: '5%', display: 'flex', justifyContent: 'space-around' }}>
-                      <Grid>
-                        <Grid>
+                    <Grid container className={classes.statResultContainer}>
+                      <Grid container className={classes.statResultData}>
+                        <Grid item xs={9} className={classes.statResultLabel}>
                           <Typography><strong>Revenu total</strong></Typography>
                         </Grid>
-                        <Grid style={{marginTop: '3vh'}}>
+                        <Grid item xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.monthIncomes.toFixed(2)}€</strong></Typography>
                         </Grid>
                       </Grid>
                       <Grid>
                         <Divider orientation="vertical"/>
                       </Grid>
-                      <Grid>
-                        <Grid>
+                      <Grid container className={classes.statResultData}>
+                        <Grid item xs={9} className={classes.statResultLabel}>
                           <Typography><strong>Prestations réalisées</strong></Typography>
                         </Grid>
-                        <Grid  style={{marginTop: '3vh'}}>
+                        <Grid item xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.monthPrestations}</strong></Typography>
                         </Grid>
                       </Grid>
                       <Grid>
                         <Divider orientation="vertical"/>
                       </Grid>
-                      <Grid>
-                        <Grid>
+                      <Grid container className={classes.statResultData}>
+                        <Grid item xs={9} className={classes.statResultLabel}>
                           <Typography><strong>Vues du profil</strong></Typography>
                         </Grid>
-                        <Grid  style={{marginTop: '3vh'}}>
+                        <Grid item xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.monthViewsServices}</strong></Typography>
                         </Grid>
                       </Grid>
                       <Grid>
                         <Divider orientation="vertical"/>
                       </Grid>
-                      <Grid>
-                        <Grid>
+                      <Grid container className={classes.statResultData}>
+                        <Grid item xs={9} className={classes.statResultLabel}>
                           <Typography><strong>Commentaires</strong></Typography>
                         </Grid>
-                        <Grid  style={{marginTop: '3vh'}}>
+                        <Grid item xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.monthReviews}</strong></Typography>
                         </Grid>
                       </Grid>
@@ -342,45 +338,45 @@ class ProfileStatistics extends React.Component {
                         </FormControl>
                       </Grid>
                     </Grid>
-                    <Grid container style={{textAlign: 'center', marginTop: '10vh', marginBottom: '12vh', backgroundColor:'rgba(229,229,229,1)', borderRadius: 44, padding: '5%', display: 'flex', justifyContent: 'space-around' }}>
-                      <Grid>
-                        <Grid>
+                    <Grid container className={classes.statResultContainer}>
+                      <Grid container className={classes.statResultData}>
+                        <Grid item xs={9} className={classes.statResultLabel}>
                           <Typography><strong>Revenu total</strong></Typography>
                         </Grid>
-                        <Grid style={{marginTop: '3vh'}}>
+                        <Grid item xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.yearIncomes.toFixed(2)}€</strong></Typography>
                         </Grid>
                       </Grid>
                       <Grid>
                         <Divider orientation="vertical"/>
                       </Grid>
-                      <Grid>
-                        <Grid>
+                      <Grid container className={classes.statResultData}>
+                        <Grid item xs={9} className={classes.statResultLabel}>
                           <Typography><strong>Prestations réalisées</strong></Typography>
                         </Grid>
-                        <Grid style={{marginTop: '3vh'}}>
+                        <Grid item xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.yearPrestations}</strong></Typography>
                         </Grid>
                       </Grid>
                       <Grid>
                         <Divider orientation="vertical"/>
                       </Grid>
-                      <Grid>
-                        <Grid>
+                      <Grid container className={classes.statResultData}>
+                        <Grid item xs={9} className={classes.statResultLabel}>
                           <Typography><strong>Vues du profil</strong></Typography>
                         </Grid>
-                        <Grid style={{marginTop: '3vh'}}>
+                        <Grid item xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.yearViewsServices}</strong></Typography>
                         </Grid>
                       </Grid>
                       <Grid>
                         <Divider orientation="vertical"/>
                       </Grid>
-                      <Grid>
-                        <Grid>
+                      <Grid container className={classes.statResultData}>
+                        <Grid item xs={9} className={classes.statResultLabel}>
                           <Typography><strong>Commentaires</strong></Typography>
                         </Grid>
-                        <Grid style={{marginTop: '3vh'}}>
+                        <Grid item xs={3} className={classes.statData}>
                           <Typography><strong>{this.state.yearReviews}</strong></Typography>
                         </Grid>
                       </Grid>
@@ -391,6 +387,13 @@ class ProfileStatistics extends React.Component {
             </Topic>
           </Box>
         </Grid>
+        <Hidden only={['sm', 'xs']}>
+          <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+            <Grid style={{width: '70%'}}>
+              <AskQuestion user={user}/>
+            </Grid>
+          </Grid>
+        </Hidden>
       </Grid>
 
     )
