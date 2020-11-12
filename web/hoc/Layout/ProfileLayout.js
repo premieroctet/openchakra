@@ -7,6 +7,7 @@ import cookie from 'react-cookies';
 import axios from 'axios'
 const {getLoggedUserId}=require('../../utils/functions');
 import moment from 'moment'
+import Box from "../../components/Box/Box";
 
 class ProfileLayout extends React.Component {
 
@@ -64,13 +65,17 @@ class ProfileLayout extends React.Component {
       <Layout user={user}>
         <Grid style={{display:'flex', justifyContent:'center'}}>
           <Grid style={{display: 'flex', justifyContent:'center', flexDirection: 'column', alignItems:'center', width: '100%'}}>
-            <Grid style={{display: 'flex', justifyContent: 'center'}}>
-              <ProfileHeader key={user} user={user}/>
-            </Grid>
-            <Grid>
-              <ScrollMenu categories={items} mode={'profile'} indexCat={index} extraParams={{user: this.props.user}}/>
-            </Grid>
             <Grid style={{backgroundColor: 'rgba(249,249,249, 1)', width: '100%'}}>
+              <Grid style={{margin:'0 15%', display:'flex', justifyContent:'center', marginTop : '5vh', marginBottom: '5vh'}}>
+                <Box>
+                  <Grid style={{display: 'flex', justifyContent: 'center'}}>
+                    <ProfileHeader key={user} user={user}/>
+                  </Grid>
+                  <Grid>
+                    <ScrollMenu categories={items} mode={'profile'} indexCat={index} extraParams={{user: this.props.user}}/>
+                  </Grid>
+                </Box>
+              </Grid>
               <Grid style={{margin:'0 15%', display:'flex', justifyContent:'center', marginTop : '5vh', marginBottom: '5vh'}}>
                 {children}
               </Grid>

@@ -84,7 +84,7 @@ class About extends React.Component {
             </Grid>
             : null
           }
-          <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} columnsXl={12} />
+          <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} columnsXl={12} columnsSm={6} />
         </Grid>
       </Grid>
     )
