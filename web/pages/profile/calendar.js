@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import Grid from "@material-ui/core/Grid";
-import ProfileLayout from '../../components/Profile/ProfileLayout'
+import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/homePage/index';
@@ -22,8 +22,8 @@ class ProfileCalendar extends React.Component {
     }
   }
 
-  static getInitialProps({query: {user}}) {
-    return {user: user};
+  static getInitialProps({query: {user, indexAccount}}) {
+    return {user: user, index: indexAccount};
   }
 
   loadAvailabilities = () => {
@@ -67,7 +67,7 @@ class ProfileCalendar extends React.Component {
   };
 
   render() {
-    const {user, classes}=this.props;
+    const {user, classes, index}=this.props;
     const readOnly = this.props.user!==getLoggedUserId();
 
     if (!user) {
@@ -77,7 +77,7 @@ class ProfileCalendar extends React.Component {
     return (
       <React.Fragment>
         <Hidden only={['xs', 'sm', 'md']}>
-          <ProfileLayout user={user}>
+          <ProfileLayout user={user} index={index}>
             {this.content(classes, user, readOnly)}
           </ProfileLayout>
         </Hidden>

@@ -6,7 +6,7 @@ import styles from '../../static/css/pages/layout/layoutStyle'
 import {withStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import InfoBar from "../../components/InfoBar/InfoBar";
-import ScrollMenu from '../../components/ScrollMenu/SrollMenu'
+import ScrollMenu from '../../components/ScrollMenu/ScrollMenu'
 import axios from "axios";
 import TrustAndSecurity from "./TrustAndSecurity/TrustAndSecurity";
 import Divider from "@material-ui/core/Divider";

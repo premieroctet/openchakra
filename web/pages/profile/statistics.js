@@ -1,6 +1,6 @@
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
-import ProfileLayout from '../../components/Profile/ProfileLayout'
+import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import AddService from '../../components/AddService/AddService'
 import Services from '../../components/Services/Services'
 import Topic from '../../hoc/Topic/Topic'
@@ -66,8 +66,8 @@ class ProfileStatistics extends React.Component {
     };
   }
 
-  static getInitialProps({query: {user}}) {
-    return {user: user};
+  static getInitialProps({query: {user, indexAccount}}) {
+    return {user: user, index: indexAccount};
   }
 
   componentDidMount() {
@@ -157,11 +157,11 @@ class ProfileStatistics extends React.Component {
   }
 
   render() {
-    const {classes, user}=this.props
+    const {classes, user, index}=this.props
     const {serviceUser} = this.state
 
     return (
-      <ProfileLayout user={user}>
+      <ProfileLayout user={user} index={index}>
         <Grid container stylerr={{width: '100%'}}>
           <Grid item xs={12}>
           <Topic underline={true} titleTopic={'Mes revenus'} titleSummary={"Ici, vous pouvez suivre l'évolution de vos revenus et vos statistiques prévisionnelles"}>

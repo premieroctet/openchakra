@@ -1,6 +1,6 @@
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
-import ProfileLayout from '../../components/Profile/ProfileLayout'
+import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import SummaryCommentary from '../../components/SummaryCommentary/SummaryCommentary'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/homePage/index';
@@ -16,8 +16,8 @@ class ProfileReviews extends React.Component {
     this.state={}
   }
 
-  static getInitialProps({query: {user}}) {
-    return {user: user};
+  static getInitialProps({query: {user, indexAccount}}) {
+    return {user: user, index: indexAccount};
   }
 
   content = (classes, user) => {
@@ -40,7 +40,7 @@ class ProfileReviews extends React.Component {
   };
 
   render() {
-    const {user, classes}=this.props;
+    const {user, classes, index}=this.props;
 
     if (!user) {
       return null
@@ -48,7 +48,7 @@ class ProfileReviews extends React.Component {
     return (
       <React.Fragment>
         <Hidden only={['xs', 'sm', 'md']}>
-          <ProfileLayout user={user}>
+          <ProfileLayout user={user} index={index}>
             {this.content(classes, user)}
           </ProfileLayout>
         </Hidden>

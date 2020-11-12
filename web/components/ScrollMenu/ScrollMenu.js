@@ -5,6 +5,7 @@ import Tab from "@material-ui/core/Tab";
 import Link from 'next/link';
 import styles from '../../static/css/components/ScrollMenu/ScrollMenu';
 import withStyles from "@material-ui/core/styles/withStyles";
+import querystring from 'querystring'
 
 function a11yProps(index, res) {
   return {
@@ -13,7 +14,7 @@ function a11yProps(index, res) {
   };
 }
 
-class SrollMenu extends React.Component{
+class ScrollMenu extends React.Component{
   constructor(props) {
     super(props);
     this.state={
@@ -26,9 +27,10 @@ class SrollMenu extends React.Component{
   };
 
   render() {
-    const{classes, categories, gps, mode} = this.props;
+    const{classes, categories, gps, mode, extraParams} = this.props;
     const{value} = this.state;
 
+    console.log(`value:${JSON.stringify(value)}`)
   return(
       <Grid>
         <Grid className={classes.scrollMenuRoot}>
@@ -45,7 +47,12 @@ class SrollMenu extends React.Component{
               categories ?
                 categories.map((res, index) =>
                 {
-                  let url = mode === 'account' ? '/account' + res.url  + '?indexAccount=' + index  : '/search?search=1&category=' + res._id + (gps ? '&gps=' + JSON.stringify(gps) : '') + '&indexCat=' + index;
+
+                  let url = mode === 'account' ? '/account' + res.url  + '?' + querystring.stringify({indexAccount: index})
+                            :
+                            mode === 'profile' ? '/profile' + res.url  + '?' + querystring.stringify({...extraParams, indexAccount: index})
+                            :
+                            '/search?search=1&category=' + res._id + (gps ? '&gps=' + JSON.stringify(gps) : '') + '&indexCat=' + index;
                   return(
                     <Link href={url} key={index}>
                       <Tab label={res.label} className={classes.scrollMenuTab} {...a11yProps(index)}/>
@@ -61,4 +68,4 @@ class SrollMenu extends React.Component{
   }
 }
 
-export default withStyles(styles)(SrollMenu);
+export default withStyles(styles)(ScrollMenu);

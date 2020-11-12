@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
-import ScrollMenu from '../../components/ScrollMenu/SrollMenu';
+import ScrollMenu from '../../components/ScrollMenu/ScrollMenu';
 import Layout from "./Layout";
 import axios from 'axios'
 import cookie from 'react-cookies';
