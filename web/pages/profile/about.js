@@ -80,7 +80,7 @@ class ProfileAbout extends React.Component {
         </Hidden>
         <Hidden only={['lg', 'xl']}>
           <LayoutMobile>
-            {this.content(classes)}
+            {this.content(classes, user)}
           </LayoutMobile>
         </Hidden>
       </React.Fragment>
