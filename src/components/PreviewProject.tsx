@@ -1,18 +1,7 @@
 import React from 'react'
 import { Box, Spinner } from '@chakra-ui/core'
 import Image from 'next/image'
-
-interface Project {
-  id: number
-  createdAt: Date
-  updatedAt: Date
-  markup: JSON
-  userId: number
-  projectName: string
-  public: boolean
-  validated: boolean
-  tag: string
-}
+import { Project } from '@prisma/client'
 
 interface Props {
   project: Project

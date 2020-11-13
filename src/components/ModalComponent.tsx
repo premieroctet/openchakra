@@ -23,18 +23,7 @@ import {
 } from '@chakra-ui/core'
 import { useRouter } from 'next/router'
 import { AiFillProject } from 'react-icons/ai'
-
-interface Project {
-  createdAt: string
-  updatedAt: string
-  userId: number
-  id: number
-  markup: string
-  projectName: string
-  public: boolean
-  validated: boolean
-  tag: string
-}
+import { Project } from '@prisma/client'
 
 interface Props {
   isOpen: boolean

@@ -27,16 +27,7 @@ import { signIn, useSession } from 'next-auth/client'
 import { getComponents } from '~core/selectors/components'
 import { useRouter } from 'next/router'
 import ModalComponent from '~components/ModalComponent'
-
-interface Project {
-  createdAt: string
-  updatedAt: string
-  userId: number
-  id: number
-  markup: string
-  projectName: string
-  tag: string
-}
+import { Project } from '@prisma/client'
 
 const EditorPage = (props: {
   id: number

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Project } from '@prisma/client'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import { useSession } from 'next-auth/client'
 import useShortcuts, { keyMap } from '~hooks/useShortcuts'
@@ -51,28 +51,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
-interface User {
-  id: number
-  name: string | null
-  email: string | null
-  emailVerified: Date | null
-  image: string | null
-  createdAt: Date
-  updatedAt: Date
-}
-
-interface Project {
-  id: number
-  createdAt: Date
-  updatedAt: Date
-  markup: string
-  userId: number
-  projectName: string
-  public: boolean
-  validated: boolean
-  user: User
-}
-
 interface ProjectContainer {
   projects: Project
 }
@@ -90,7 +68,9 @@ const ProjectPublic = (props: ProjectContainer) => {
     if (props.projects) {
       if (props.projects.markup) {
         setError(true)
-        await dispatch.components.reset(JSON.parse(props.projects.markup))
+        await dispatch.components.reset(
+          JSON.parse(props.projects.markup as string),
+        )
         setLoading(false)
       } else {
         setError(false)

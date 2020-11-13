@@ -16,33 +16,10 @@ import useShortcuts, { keyMap } from '../../../hooks/useShortcuts'
 import Header from '../../../components/Header'
 import { useSession } from 'next-auth/client'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Project, User } from '@prisma/client'
 import { useRouter } from 'next/router'
 import PreviewProject from '~components/PreviewProject'
 var app = require('node-server-screenshot')
-
-interface User {
-  id: number
-  name: string | null
-  email: string | null
-  emailVerified: Date | null
-  image: string | null
-  createdAt: Date
-  updatedAt: Date
-}
-
-interface ProjectProps {
-  id: number
-  createdAt: Date
-  updatedAt: Date
-  markup: JSON
-  userId: number
-  projectName: string
-  public: boolean
-  validated: boolean
-  user: User
-  tag: string
-}
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prisma = new PrismaClient()
@@ -54,10 +31,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     },
   })
   let projects = JSON.parse(JSON.stringify(project))
-  let projectCount = 0
 
+  let projectCount = 0
   await new Promise((resolve, reject) => {
-    projects.map(async (e: ProjectProps) => {
+    projects.map(async (e: Project) => {
       const href = `http://localhost:3000/project/preview/${e.id}-${e.projectName}`
       await app.fromURL(href, `./public/thumbnails/${e.id}.jpg`, function() {
         projectCount++
@@ -136,7 +113,7 @@ const ProjectList = ({
 
           {projects.length > 0 ? (
             <SimpleGrid columns={[2, 2, 2, 3]} spacing={6} mt={10}>
-              {projects.map((e: ProjectProps, i: number) =>
+              {projects.map((e: Project & { user: User }, i: number) =>
                 radioValue === 'all' ? (
                   <PseudoBox
                     bg="#1A202C"

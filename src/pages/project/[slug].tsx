@@ -39,14 +39,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
-interface Project {
-  createdAt: string
-  updatedAt: string
-  userId: number
-  id: number
-  markup: string
-}
-
 const ProjectSlug = ({
   projects,
   id,
