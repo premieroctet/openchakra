@@ -25,16 +25,17 @@ class ProfileHeader extends React.Component {
     }
     return (
       <React.Fragment>
-        <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
-          <Grid className={classes.profilHeaderBackground}/>
-          <Grid className={classes.cardPreviewContainerAvatar}>
-            <Avatar alt="Remy Sharp" src={url} className={classes.cardPreviewLarge} />
-          </Grid>
-          <Grid>
-            <h3>{`Je m'appelle ${user ? user.firstname : ''}`}</h3>
-          </Grid>
-          <Grid>
-            <Typography style={{color:'rgba(39,37,37,35%)'}}>et j’ai hâte de vous rencontrer !</Typography>
+        <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', width: '100%'}}>
+          <Grid className={classes.profilHeaderContent}>
+            <Grid className={classes.cardPreviewContainerAvatar}>
+              <Avatar alt={user.firstname} src={url} className={classes.cardPreviewLarge} />
+            </Grid>
+            <Grid>
+              <h3>{`Je m'appelle ${user ? user.firstname : ''}`}</h3>
+            </Grid>
+            <Grid>
+              <Typography style={{color:'rgba(39,37,37,35%)'}}>et j’ai hâte de vous rencontrer !</Typography>
+            </Grid>
           </Grid>
         </Grid>
       </React.Fragment>

@@ -14,6 +14,14 @@ export default theme => ({
     height: '90%',
   },
   profilHeaderBackground:{
-    backgroundImage: 'url(../../static/assets/img/warning.svg)',
+
+
+  },
+  profilHeaderContent:{
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    position:'relative'
+
   }
 })
