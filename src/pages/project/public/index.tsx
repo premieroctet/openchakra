@@ -18,6 +18,8 @@ import { useSession } from 'next-auth/client'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { PrismaClient } from '@prisma/client'
 import { useRouter } from 'next/router'
+import PreviewProject from '~components/PreviewProject'
+var app = require('node-server-screenshot')
 
 interface User {
   id: number
@@ -52,6 +54,23 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     },
   })
   let projects = JSON.parse(JSON.stringify(project))
+  let projectCount = 0
+
+  await new Promise((resolve, reject) => {
+    projects.map(async (e: ProjectProps) => {
+      const href = `http://localhost:3000/project/public/${e.id}-${e.projectName}`
+      await app.fromURL(href, `./public/thumbnails/${e.id}.jpg`, function() {
+        projectCount++
+        if (projectCount === projects.length) {
+          resolve()
+        }
+      })
+      setTimeout(() => {
+        reject()
+      }, 10000)
+    })
+  })
+
   return {
     props: {
       projects,
@@ -66,6 +85,7 @@ const ProjectList = ({
   const [session] = useSession()
   const router = useRouter()
   const [radioValue, setRadioValue] = useState('all')
+
   return (
     <HotKeys allowChanges handlers={handlers} keyMap={keyMap}>
       <Global
@@ -77,11 +97,10 @@ const ProjectList = ({
       <Metadata />
 
       <Header session={session} projectPage={true} />
-
       <Flex
-        h="calc(100vh - 3rem)"
         backgroundColor="#252d3d"
         p="2rem 5rem 2rem 5rem"
+        minH="calc(100vh - 3rem)"
       >
         <Box w="100%">
           <Text
@@ -116,7 +135,7 @@ const ProjectList = ({
           </RadioGroup>
 
           {projects.length > 0 ? (
-            <SimpleGrid columns={3} spacing={10} mt={10}>
+            <SimpleGrid columns={[2, 2, 2, 3]} spacing={6} mt={10}>
               {projects.map((e: ProjectProps, i: number) =>
                 radioValue === 'all' ? (
                   <PseudoBox
@@ -131,6 +150,8 @@ const ProjectList = ({
                     }}
                     key={i}
                   >
+                    <PreviewProject project={e} />
+
                     <Text fontSize="xl">{e.projectName}</Text>
                     <Text fontSize="md" mt={2} textAlign="right">
                       <Avatar
@@ -156,6 +177,7 @@ const ProjectList = ({
                       }}
                       key={i}
                     >
+                      <PreviewProject project={e} />
                       <Text fontSize="xl">{e.projectName}</Text>
                       <Text fontSize="md" mt={2} textAlign="right">
                         <Avatar

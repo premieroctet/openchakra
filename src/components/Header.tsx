@@ -86,7 +86,6 @@ const Header = (props: Props) => {
 
   const initProject = async () => {
     if (props.projectPage) {
-      await dispatch.app.toggleCodePanel()
       await dispatch.app.toggleBuilderMode()
     }
   }
