@@ -30,7 +30,6 @@ class ScrollMenu extends React.Component{
     const{classes, categories, gps, mode, extraParams} = this.props;
     const{value} = this.state;
 
-    console.log(`value:${JSON.stringify(value)}`)
   return(
       <Grid>
         <Grid className={classes.scrollMenuRoot}>

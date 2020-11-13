@@ -91,7 +91,11 @@ const getLoggedUserAdmin = () => {
 
 // Returns true if user is the currently logged user
 const isEditableUser = user => {
-  return getLoggedUserId()==user
+  if (!user) {
+    return false
+  }
+  const isEditable=getLoggedUserId()==user || getLoggedUserId()==user._id
+  return isEditable
 }
 
 module.exports = {
