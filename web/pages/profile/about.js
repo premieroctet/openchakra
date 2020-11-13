@@ -12,6 +12,7 @@ import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
 import Box from "../../components/Box/Box";
+import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
 
 
 class ProfileAbout extends React.Component {
@@ -28,22 +29,24 @@ class ProfileAbout extends React.Component {
   content = (classes, user) =>{
     return(
       <Grid container spacing={3}>
-        <Grid item xl={5} lg={5} md={12} sm={12} xs={12}>
-          <Box>
-            <About user={user} />
-          </Box>
-        </Grid>
-        <Grid  item xl={7} lg={7} md={12} sm={12} xs={12}>
+        <Hidden only={['xs']}>
+          <Grid item xl={5} lg={5} md={6} sm={12} xs={12}>
+            <Box>
+              <About user={user} />
+            </Box>
+          </Grid>
+        </Hidden>
+        <Grid item xl={7} lg={7} md={6} sm={12} xs={12}>
           <Box>
             <Presentation user={user} />
           </Box>
         </Grid>
-        <Grid item xl={8} lg={8} md={12} sm={12} xs={12}>
+        <Grid item xl={8} lg={8} md={6} sm={12} xs={12}>
           <Box>
             <Skills alfred={user} />
           </Box>
         </Grid>
-        <Grid  item xl={4} lg={4} md={12} sm={12} xs={12}>
+        <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
           <Box>
             <Badges user={user} />
           </Box>
@@ -77,15 +80,15 @@ class ProfileAbout extends React.Component {
 
     return (
       <React.Fragment>
-        <Hidden only={['xs', 'sm', 'md']}>
+        <Hidden only={['xs']}>
           <ProfileLayout user={user} index={index}>
             {this.content(classes, user)}
           </ProfileLayout>
         </Hidden>
-        <Hidden only={['lg', 'xl']}>
-          <LayoutMobile>
+        <Hidden only={['lg', 'xl',  'sm', 'md']}>
+          <LayoutMobileProfile user={user} index={index}>
             {this.content(classes, user)}
-          </LayoutMobile>
+          </LayoutMobileProfile>
         </Hidden>
       </React.Fragment>
     )

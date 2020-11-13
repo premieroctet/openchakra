@@ -1,6 +1,5 @@
 import React from 'react'
 import Layout from '../../hoc/Layout/Layout'
-import ProfileHeader from '../../components/Profile/ProfileHeader'
 import Grid from "@material-ui/core/Grid";
 import ScrollMenu from '../../components/ScrollMenu/ScrollMenu';
 import cookie from 'react-cookies';
@@ -8,6 +7,11 @@ import axios from 'axios'
 const {getLoggedUserId}=require('../../utils/functions');
 import moment from 'moment'
 import Box from "../../components/Box/Box";
+import styles from '../../static/css/components/Layout/ProfileLayout/ProfileLayout'
+import withStyles from "@material-ui/core/styles/withStyles";
+import Avatar from "@material-ui/core/Avatar";
+import Typography from "@material-ui/core/Typography";
+
 
 class ProfileLayout extends React.Component {
 
@@ -55,42 +59,45 @@ class ProfileLayout extends React.Component {
 
   render() {
     const {items, user}=this.state;
-    const {children, index}=this.props;
+    const {children, index, classes}=this.props;
+
+
+
 
     if (!user) {
       return null
     }
 
+    const url = user.picture.match(/^https?:\/\//) ? user.picture : '/' + user.picture;
+
     return (
       <Layout user={user}>
-        <Grid style={{display:'flex', justifyContent:'center'}}>
-          <Grid style={{display: 'flex', justifyContent:'center', flexDirection: 'column', alignItems:'center', width: '100%'}}>
-            <Grid style={{backgroundColor: 'rgba(249,249,249, 1)', width: '100%'}}>
-              <Grid style={{margin:'3vh 15%', display:'flex', justifyContent:'center'}}>
-                <Grid style={{
-                  borderRadius: 17,
-                  border: '1px solid rgba(210, 210, 210, 0.5)',
-                  width: '100%',
-                  backgroundColor: 'white',
-                  height: '60vh',
-                  display: 'flex',
-                  flexDirection: 'column'
-                }}>
-                  <Grid style={{display: 'flex', justifyContent: 'center', height: '50%',
-                    backgroundImage: 'url(../../assets/img/homePage/illuHeader.png)',
-                    width: '100%',
-                    backgroundPosition: 'center',
-                    backgroundSize: 'contain',
-                    borderRadius: 17}}/>
-                  <Grid style={{position: 'absolute', top: '45%', left: '50%',  transform: 'translate(-49%,50%)',}}>
-                    <ProfileHeader key={user} user={user}/>
+        <Grid className={classes.profilLayoutMainContainer}>
+          <Grid className={classes.profilLayoutContainer}>
+            <Grid className={classes.profilLayoutBackgroundContainer}>
+              <Grid className={classes.profilLayoutMargin}>
+                <Grid className={classes.profilLayoutBox}>
+                  <Grid className={classes.profilLayoutBannerImg}>
+                    <Grid className={classes.profilLayoutAvatar}>
+                      <Avatar alt={user.firstname} src={url} className={classes.cardPreviewLarge} />
+                    </Grid>
                   </Grid>
-                  <Grid style={{display: 'flex', justifyContent: 'center', height : '50%', alignItems: 'end'}}>
+                  <Grid style={{display: 'flex', justifyContent: 'center', height: '40%', alignItems: 'center'}}>
+                    <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+                      <Grid>
+                        <h3>{`Je m'appelle ${user ? user.firstname : ''}`}</h3>
+                      </Grid>
+                      <Grid>
+                        <Typography style={{color:'rgba(39,37,37,35%)'}}>et j’ai hâte de vous rencontrer !</Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid className={classes.profilLayoutScrollMenu}>
                     <ScrollMenu categories={items} mode={'profile'} indexCat={index} extraParams={{user: this.props.user}}/>
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid style={{margin:'3vh 15%', display:'flex', justifyContent:'center'}}>
+              <Grid className={classes.profilLayoutChildren}>
                 {children}
               </Grid>
             </Grid>
@@ -101,4 +108,4 @@ class ProfileLayout extends React.Component {
   }
 }
 
-export default ProfileLayout
+export default withStyles (styles) (ProfileLayout);

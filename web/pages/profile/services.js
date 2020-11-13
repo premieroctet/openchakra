@@ -38,17 +38,17 @@ class ProfileServices extends React.Component {
   content = (classes, user, shop) => {
     return(
       <Grid container spacing={3} className={classes.servicesConntainer}>
-        <Grid item xs={12}>
+        <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
           <Box>
            <AddService user={user}/>
           </Box>
         </Grid>
-        <Grid item xs={12} xl={12}>
+        <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
           <Box>
            <Services user={user} shop={shop}/>
           </Box>
         </Grid>
-        <Hidden only={['sm', 'xs']}>
+        <Hidden only={['sm', 'xs', 'md']}>
           <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
             <Grid style={{width: '70%'}}>
               <AskQuestion user={user}/>
