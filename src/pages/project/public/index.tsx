@@ -58,7 +58,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   await new Promise((resolve, reject) => {
     projects.map(async (e: ProjectProps) => {
-      const href = `http://localhost:3000/project/public/${e.id}-${e.projectName}`
+      const href = `http://localhost:3000/project/preview/${e.id}-${e.projectName}`
       await app.fromURL(href, `./public/thumbnails/${e.id}.jpg`, function() {
         projectCount++
         if (projectCount === projects.length) {

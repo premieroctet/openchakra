@@ -1,0 +1,150 @@
+import React, { useEffect, useState } from 'react'
+import { PrismaClient } from '@prisma/client'
+import { GetStaticProps, GetStaticPaths } from 'next'
+import { Global } from '@emotion/core'
+import Metadata from '~components/Metadata'
+import { DndProvider } from 'react-dnd'
+import { Flex, Box, Spinner, Link } from '@chakra-ui/core'
+
+import Backend from 'react-dnd-html5-backend'
+import useDispatch from '~hooks/useDispatch'
+import ComponentPreview from '~components/editor/ComponentPreview'
+import { useSelector } from 'react-redux'
+import { getComponents } from '~core/selectors/components'
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const prisma = new PrismaClient()
+  let projectId = (params!.slug as string).split('-')[0]
+
+  const project = await prisma.project.findOne({
+    include: { user: true },
+    where: {
+      id: Number(projectId),
+    },
+  })
+
+  let projects = JSON.parse(JSON.stringify(project))
+
+  return {
+    props: {
+      projects,
+    },
+  }
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const prisma = new PrismaClient()
+  const projects = await prisma.project.findMany({
+    where: {
+      public: true,
+      validated: true,
+    },
+  })
+  return {
+    paths: projects.map(project => ({
+      params: {
+        slug: `${project.id.toString()}-${project.projectName.toString()}`,
+      },
+    })),
+    fallback: true,
+  }
+}
+
+interface User {
+  id: number
+  name: string | null
+  email: string | null
+  emailVerified: Date | null
+  image: string | null
+  createdAt: Date
+  updatedAt: Date
+}
+
+interface Project {
+  id: number
+  createdAt: Date
+  updatedAt: Date
+  markup: string
+  userId: number
+  projectName: string
+  public: boolean
+  validated: boolean
+  user: User
+}
+
+interface ProjectContainer {
+  projects: Project
+}
+
+const ProjectPreview = (props: ProjectContainer) => {
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(true)
+  const components = useSelector(getComponents)
+  const dispatch = useDispatch()
+
+  const initProject = async () => {
+    setLoading(true)
+    if (props.projects) {
+      if (props.projects.markup) {
+        setError(true)
+        await dispatch.components.reset(JSON.parse(props.projects.markup))
+        setLoading(false)
+      } else {
+        setError(false)
+        setLoading(false)
+      }
+    }
+  }
+
+  useEffect(() => {
+    initProject()
+    // eslint-disable-next-line
+  }, [])
+
+  return (
+    <>
+      <Global
+        styles={() => ({
+          html: { minWidth: '860px', backgroundColor: '#1a202c' },
+        })}
+      />
+
+      <Metadata />
+
+      <DndProvider backend={Backend}>
+        <Flex h="calc(100vh)">
+          {error ? (
+            loading ? (
+              <Spinner m="0 auto" color="white" size="xl" mt="3rem" />
+            ) : (
+              <Box
+                p={2}
+                height="100%"
+                minWidth="10rem"
+                width="100%"
+                display="block"
+                justifyContent="center"
+                alignItems="center"
+                overflow="auto"
+                position="relative"
+                flexDirection="column"
+              >
+                {components.root.children.map((name: string) => (
+                  <ComponentPreview key={name} componentName={name} />
+                ))}
+              </Box>
+            )
+          ) : (
+            <Box color="white" m="0 auto">
+              <Link href="/" color="teal.100">
+                An error has occurred, click to return
+              </Link>
+            </Box>
+          )}
+        </Flex>
+      </DndProvider>
+    </>
+  )
+}
+
+export default ProjectPreview
