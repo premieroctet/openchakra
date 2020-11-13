@@ -10,6 +10,7 @@ import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import Box from "../../components/Box/Box";
 import axios from "axios";
+const {isEditableUser}=require('../../utils/functions')
 
 class ProfileServices extends React.Component {
 
@@ -38,11 +39,15 @@ class ProfileServices extends React.Component {
   content = (classes, user, shop) => {
     return(
       <Grid container spacing={3} className={classes.servicesConntainer}>
-        <Grid item xs={12}>
-          <Box>
-           <AddService user={user}/>
-          </Box>
-        </Grid>
+        {isEditableUser(user) ?
+          <Grid item xs={12}>
+            <Box>
+             <AddService user={user}/>
+            </Box>
+          </Grid>
+          :
+          null
+        }
         <Grid item xs={12} xl={12}>
           <Box>
            <Services user={user} shop={shop}/>
