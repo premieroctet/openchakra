@@ -1,7 +1,5 @@
 import React, {Fragment} from 'react';
-import ReactDOM from 'react-dom';
 import Grid from '@material-ui/core/Grid';
-import layoutStyle from "../../static/css/pages/layout/layoutStyle"
 import Header from "../../hoc/Layout/About/Header";
 import Footer from "../../hoc/Layout/About/Footer";
 import Link from 'next/link';
@@ -11,6 +9,31 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import {withStyles} from '@material-ui/core/styles';
+
+const style = theme => ({
+    container: {},
+    accord: {
+        marginBottom: '10px',
+        width: '40%'
+    },
+    link: {
+        fontWeight: 'bold',
+        borderBottom: '1px solid black',
+        '&:hover': {
+            color: '#84A5E0',
+            borderBottom: '1px solid #84A5E0'
+        }
+    },
+    linkS: {
+        color: 'black',
+        borderBottom: '1 px solid black',
+        '&:hover': {
+            color: '#84A5E0',
+            borderBottom: '#84A5E0'
+        }
+    }
+})
 
 class Contact extends React.Component {
 
@@ -19,92 +42,83 @@ class Contact extends React.Component {
     }
 
     render() {
+        const {classes} = this.props;
 
         return (
             <Fragment>
                 <Header/>
-                <Grid className={layoutStyle.navbarTopContainer}>
-                    <Grid style={{padding: '0 300px', marginBottom: '100px'}}>
-                        <h1>Contact</h1>
-                        <Accordion style={{marginBottom: '10px'}}>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon/>}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                            >
-                                <Typography>Via le chat en direct ?</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography style={{color: '#707070'}}>
-                                    chat
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
-                        <Accordion style={{marginBottom: '10px'}}>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon/>}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                            >
-                                <Typography>Par e-mail</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography>
-                                    <Grid style={{display: 'flex'}}>
-                                        <MailOutlineIcon style={{paddingRight: '5px'}}/>
-                                        <a
-                                            style={{
-                                                color: 'black',
-                                                borderBottom: '1 px solid black',
-                                                '&:hover': {
-                                                    color: '#84A5E0',
-                                                    borderBottom: '#84A5E0'
-                                                }
-                                            }} href={'mailto:hello@my-alfred.io'}>
-                                            hello@my-alfred.io
-                                        </a>
-                                    </Grid>
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
-                        <Accordion style={{marginBottom: '10px'}}>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon/>}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                            >
-                                <Typography>Par téléphone ?</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography style={{color: '#707070'}}>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus
-                                    ex,
-                                    sit amet blandit leo lobortis eget.
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
-                        <Accordion style={{marginBottom: '10px'}}>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon/>}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                            >
-                                <Typography>Par courrier</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography style={{color: '#707070'}}>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus
-                                    ex,
-                                    sit amet blandit leo lobortis eget.
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
+                <Grid style={{
+                    padding: '0 400px',
+                    marginBottom: '50px',
+                    marginTop: '50px'
+                }}>
+                    <p style={{fontWeight: 'bold'}}>Service client - Nos heures d'ouverture</p>
+                    <Grid style={{display: 'flex'}}>
+                        <p style={{width: '200px', lineHeight: '2px'}}>Du Lundi au Vendredi</p>
+                        <p style={{lineHeight: '2px'}}> 10H - 18 H</p>
+                    </Grid>
+                    <Grid style={{display: 'flex'}}>
+                        <p style={{width: '200px', lineHeight: '2px'}}>Samedi</p>
+                        <p style={{lineHeight: '2px'}}>Fermé</p>
+                    </Grid>
+                    <Grid style={{display: 'flex'}}>
+                        <p style={{width: '200px', lineHeight: '2px'}}>Dimanche</p>
+                        <p style={{lineHeight: '2px'}}>Fermé</p>
                     </Grid>
                 </Grid>
+                <Grid style={{
+                    padding: '0 350px'
+                }}>
+                    <h3>Nous contacter</h3>
+                    <Accordion className={classes.accord}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon/>}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography>Par e-mail</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Typography>
+                                <Grid style={{display: 'flex'}}>
+                                    <MailOutlineIcon style={{paddingRight: '5px'}}/>
+                                    <a className={classes.linkS} href={'mailto:hello@my-alfred.io'}>
+                                        hello@my-alfred.io
+                                    </a>
+                                </Grid>
+                            </Typography>
+                        </AccordionDetails>
+                    </Accordion>
+                </Grid>
+
+                <Grid style={{
+                    display: ' flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    marginTop: '25px',
+                    marginBottom: '50px'
+                }}>
+                    <Grid style={{margin: '0 auto', textAlign: 'center'}}>
+                        <p style={{fontWeight: 'bold'}}>Consultez notre FAQ</p>
+                        <p>Retrouvez les questions fréquentes</p>
+                        <Link href={'/faq/home'}>
+                            <p style={{
+                                width: '70px',
+                                color: 'white',
+                                backgroundColor: '#84A5E0',
+                                borderRadius: '37px',
+                                margin: '0 auto',
+                            }}>
+                                FAQ
+                            </p>
+                        </Link>
+                    </Grid>
+                </Grid>
+
                 <Footer/>
             </Fragment>
         )
     }
 }
 
-export default (Contact)
+export default withStyles(style)(Contact)
