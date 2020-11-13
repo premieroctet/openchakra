@@ -30,21 +30,21 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       validated: true,
     },
   })
+
   let projects = JSON.parse(JSON.stringify(project))
 
-  let projectCount = 0
   await new Promise((resolve, reject) => {
-    projects.map(async (e: Project) => {
+    let projectCount = 0
+    project.map((e: Project, i: number) => {
       const href = `http://localhost:3000/project/preview/${e.id}-${e.projectName}`
-      await app.fromURL(href, `./public/thumbnails/${e.id}.jpg`, function() {
+      app.fromURL(href, `./public/thumbnails/${e.id}.jpg`, function() {
         projectCount++
-        if (projectCount === projects.length) {
+        if (projectCount === project.length) {
           resolve()
+        } else if (i === project.length && projectCount !== project.length) {
+          reject()
         }
       })
-      setTimeout(() => {
-        reject()
-      }, 10000)
     })
   })
 
