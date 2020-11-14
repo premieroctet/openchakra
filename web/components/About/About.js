@@ -70,8 +70,6 @@ class About extends React.Component {
 
         this.setState({
           user: user,
-          newLanguages: user.languages.map(l => ({value: l, label: l})),
-          newAddress: user.billing_address
         })
       })
       .catch (err => console.error(err))
@@ -106,6 +104,10 @@ class About extends React.Component {
     this.setState({showEdition: false}, () => setTimeout(this.loadUser, 1000))
   }
 
+  closeEditDialog = () => {
+    this.setState({showEdition: false, newLanguages: null, newAddress: null})
+  }
+
   modalEditDialog = (classes) =>{
     const {newLabel, newPicture, user, newAddress, newLanguages, showEdition}=this.state;
     const enabled = newAddress
@@ -114,7 +116,7 @@ class About extends React.Component {
     return(
       <Dialog
         open={showEdition}
-        onClose={() => this.closeAddDialog()}
+        onClose={this.closeEditDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -183,7 +185,13 @@ class About extends React.Component {
   };
 
   openEdition = () => {
-    this.setState({showEdition: true})
+    const {user}=this.state
+
+    this.setState({
+      showEdition: true,
+      newLanguages: user.languages.map(l => ({value: l, label: l})),
+      newAddress: user.billing_address
+    })
   }
 
   render() {

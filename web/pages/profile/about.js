@@ -30,12 +30,12 @@ class ProfileAbout extends React.Component {
       <Grid container spacing={3}>
         <Grid item xl={5} lg={5} md={12} sm={12} xs={12}>
           <Box>
-            <About user={user} />
+            <About user={user} classes={classes} />
           </Box>
         </Grid>
         <Grid  item xl={7} lg={7} md={12} sm={12} xs={12}>
           <Box>
-            <Presentation user={user} />
+            <Presentation user={user} classes={classes}/>
           </Box>
         </Grid>
         <Grid item xl={8} lg={8} md={12} sm={12} xs={12}>

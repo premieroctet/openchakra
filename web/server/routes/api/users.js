@@ -308,6 +308,18 @@ router.put('/profile/languages', passport.authenticate('jwt', {session: false}),
     });
 });
 
+// @Route PUT /myAlfred/api/users/profile/description
+// Sets the description
+// @Access private
+router.put('/profile/description', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  User.findById(req.user.id)
+    .then(user => {
+      user.description = req.body.description
+      user.save().then(user => res.json(user)).catch(err => console.error(err));
+    });
+});
+
 // @Route PUT /myAlfred/api/users/profile/serviceAddress
 // Add an other address in the profile
 // @Access private
