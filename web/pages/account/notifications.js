@@ -146,10 +146,10 @@ class notifications extends React.Component {
   }
 
   handleChange = name => event => {
-    this.setState({[name]: event.target.checked});
+    this.setState({[name]: event.target.checked}, this.save);
   };
 
-  onSubmit = () => {
+  save = () => {
     const data = {
       messages_email: this.state.messages_email,
       messages_push: this.state.messages_push,
@@ -482,25 +482,6 @@ class notifications extends React.Component {
         </Grid>
         <Grid>
           <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
-        </Grid>
-        <Grid className={classes.containerButtonSave}>
-          <Grid style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            width: '100%',
-            bottom: 0,
-            alignItems: 'center',
-          }}>
-            <Button
-              classes={{root: classes.buttonSave}}
-              type={'button'}
-              onClick={this.onSubmit}
-              variant="contained"
-              color="primary"
-            >
-              Enregistrer
-            </Button>
-          </Grid>
         </Grid>
       </Grid>
 
