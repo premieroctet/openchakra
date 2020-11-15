@@ -210,102 +210,104 @@ class ProfileStatistics extends React.Component {
           </Grid>
           </Topic>
           </Grid>
-          <Topic underline={true} titleTopic={'Mes statistiques'} titleSummary={'Retrouvez vos nombres de vues, de commentaires ou encore de prestations réalisées'}>
-          <Grid item className={classes.myStat} style={{width: '100%'}}>
-            <Grid container className={classes.mainContainer} style={{width: '100%'}}>
-              <Grid container className={classes.containerStatistique} style={{width: '100%'}}>
-              <TextField
-                id="outlined-select-currency"
-                select
-                label="Mois"
-                value={this.state.statisticsMonth}
-                onChange={this.statisticMonthChanged}
-                margin="normal"
-                variant="outlined"
-              >
-              { MONTHS.map((month, idx) => {
-                  return (
-                    <MenuItem value={idx+1}>{month}</MenuItem>
-                  )
-                })
-              }
-              </TextField>
-                <Grid item className={classes.webview} style={{width: '100%'}}/>
+          <Grid item xs={12}>
+            <Topic underline={true} titleTopic={'Mes statistiques'} titleSummary={'Retrouvez vos nombres de vues, de commentaires ou encore de prestations réalisées'}>
+            <Grid item className={classes.myStat} style={{width: '100%'}}>
+              <Grid container className={classes.mainContainer} style={{width: '100%'}}>
+                <Grid container className={classes.containerStatistique} style={{width: '100%'}}>
+                <TextField
+                  id="outlined-select-currency"
+                  select
+                  label="Mois"
+                  value={this.state.statisticsMonth}
+                  onChange={this.statisticMonthChanged}
+                  margin="normal"
+                  variant="outlined"
+                >
+                { MONTHS.map((month, idx) => {
+                    return (
+                      <MenuItem value={idx+1}>{month}</MenuItem>
+                    )
+                  })
+                }
+                </TextField>
+                  <Grid item className={classes.webview} style={{width: '100%'}}/>
 
-                <Grid className={classes.therevenus} container style={{
-                  textAlign: 'center',
-                  marginTop: '50px',
-                  borderTop: 'dimgray solid 1px',
-                  borderBottom: 'dimgray solid 1px',
-                  marginBottom: '30px',
-                }}>
-                  <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
-                    <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Revenu total</Typography>
-                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.monthIncomes.toFixed(2)}€</Typography>
+                  <Grid className={classes.therevenus} container style={{
+                    textAlign: 'center',
+                    marginTop: '50px',
+                    borderTop: 'dimgray solid 1px',
+                    borderBottom: 'dimgray solid 1px',
+                    marginBottom: '30px',
+                  }}>
+                    <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
+                      <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Revenu total</Typography>
+                      <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.monthIncomes.toFixed(2)}€</Typography>
+                    </Grid>
+                    <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
+                      <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Prestations réalisées</Typography>
+                      <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.monthPrestations}</Typography>
+                    </Grid>
+                    <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
+                      <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Vues du profil</Typography>
+                      <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.monthViewsServices}</Typography>
+                    </Grid>
+                    <Grid item xs={3} style={{padding: '40px 0px', margin: '20px 0px'}}>
+                      <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Commentaires</Typography>
+                      <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.monthReviews}</Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
-                    <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Prestations réalisées</Typography>
-                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.monthPrestations}</Typography>
-                  </Grid>
-                  <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
-                    <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Vues du profil</Typography>
-                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.monthViewsServices}</Typography>
-                  </Grid>
-                  <Grid item xs={3} style={{padding: '40px 0px', margin: '20px 0px'}}>
-                    <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Commentaires</Typography>
-                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.monthReviews}</Typography>
+                </Grid>
+              </Grid>
+              <Grid container className={classes.mainContainer} style={{width: '100%'}}>
+                <Grid container className={classes.containerStatistique} style={{width: '100%'}}>
+                <TextField
+                  id="outlined-select-currency"
+                  select
+                  label="Année"
+                  value={this.state.statisticsYear}
+                  onChange={this.statisticYearChanged}
+                  margin="normal"
+                  variant="outlined"
+                >
+                { [2019, 2020, 2021].map((year, idx) => {
+                    return (
+                      <MenuItem value={year}>{year}</MenuItem>
+                    )
+                  })
+                }
+                </TextField>
+                  <Grid item className={classes.webview} style={{width: '100%'}}/>
+
+                  <Grid className={classes.therevenus} container style={{
+                    textAlign: 'center',
+                    marginTop: '50px',
+                    borderTop: 'dimgray solid 1px',
+                    borderBottom: 'dimgray solid 1px',
+                    marginBottom: '30px',
+                  }}>
+                    <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
+                      <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Revenu total</Typography>
+                      <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.yearIncomes.toFixed(2)}€</Typography>
+                    </Grid>
+                    <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
+                      <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Prestations réalisées</Typography>
+                      <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.yearPrestations}</Typography>
+                    </Grid>
+                    <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
+                      <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Vues du profil</Typography>
+                      <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.yearViewsServices}</Typography>
+                    </Grid>
+                    <Grid item xs={3} style={{padding: '40px 0px', margin: '20px 0px'}}>
+                      <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Commentaires</Typography>
+                      <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.yearReviews}</Typography>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid container className={classes.mainContainer} style={{width: '100%'}}>
-              <Grid container className={classes.containerStatistique} style={{width: '100%'}}>
-              <TextField
-                id="outlined-select-currency"
-                select
-                label="Année"
-                value={this.state.statisticsYear}
-                onChange={this.statisticYearChanged}
-                margin="normal"
-                variant="outlined"
-              >
-              { [2019, 2020, 2021].map((year, idx) => {
-                  return (
-                    <MenuItem value={year}>{year}</MenuItem>
-                  )
-                })
-              }
-              </TextField>
-                <Grid item className={classes.webview} style={{width: '100%'}}/>
-
-                <Grid className={classes.therevenus} container style={{
-                  textAlign: 'center',
-                  marginTop: '50px',
-                  borderTop: 'dimgray solid 1px',
-                  borderBottom: 'dimgray solid 1px',
-                  marginBottom: '30px',
-                }}>
-                  <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
-                    <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Revenu total</Typography>
-                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.yearIncomes.toFixed(2)}€</Typography>
-                  </Grid>
-                  <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
-                    <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Prestations réalisées</Typography>
-                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.yearPrestations}</Typography>
-                  </Grid>
-                  <Grid item xs={3} style={{padding: '40px 0px', borderRight: 'dimgray solid 1px', margin: '20px 0px'}}>
-                    <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Vues du profil</Typography>
-                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.yearViewsServices}</Typography>
-                  </Grid>
-                  <Grid item xs={3} style={{padding: '40px 0px', margin: '20px 0px'}}>
-                    <Typography style={{color: '#7E7E7E', marginBottom: '20px'}}>Commentaires</Typography>
-                    <Typography style={{color: '#7E7E7E', fontSize: '1.2rem'}}>{this.state.yearReviews}</Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
+            </Topic>
           </Grid>
-          </Topic>
 
         </Grid>
       </ProfileLayout>
