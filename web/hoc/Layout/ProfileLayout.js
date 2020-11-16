@@ -54,7 +54,6 @@ class ProfileLayout extends React.Component {
       return null
     }
 
-    const url = user.picture.match(/^https?:\/\//) ? user.picture : '/' + user.picture;
     const menuItems = isEditableUser(this.props.user) ? this.logged_items : this.nonlogged_items
 
     return (

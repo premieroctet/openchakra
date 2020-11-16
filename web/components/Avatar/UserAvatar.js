@@ -8,6 +8,7 @@ import axios from 'axios';
 import styles from './UserAvatarStyle';
 import cookie from 'react-cookies';
 import {isEditableUser} from '../../utils/functions'
+import Typography from "@material-ui/core/Typography";
 
 const jwt = require('jsonwebtoken');
 
@@ -88,7 +89,8 @@ class UserAvatar extends React.Component {
     if (isEditableUser(this.props.user)) {
       this.fileInput.click()
     }
-  }
+  };
+
   avatarWithPics(user, className) {
     const url = user.picture.match(/^https?:\/\//) ? user.picture : '/' + user.picture;
     return (
@@ -98,7 +100,7 @@ class UserAvatar extends React.Component {
 
   avatarWithoutPics(user, className) {
     return (
-      <Avatar alt="photo de profil" className={className} onClick={this.selectPicture}>{user.avatar_letters}</Avatar>
+      <Avatar alt="photo de profil" className={className} onClick={this.selectPicture}><p>{user.avatar_letters}</p></Avatar>
 
     );
   }
@@ -132,7 +134,7 @@ class UserAvatar extends React.Component {
 
     if (user) {
       return (
-        <Grid>
+        <Grid style={{width: '100%', height: '100%'}}>
           {
             owner && kyc ?
               <Grid>
@@ -195,7 +197,7 @@ class UserAvatar extends React.Component {
                   </ul>
                 </Popover>
               </Grid> :
-              <Grid style={{display: 'flex', justifyContent: 'center'}}>
+              <Grid style={{display: 'flex', justifyContent: 'center', height: '100%', alignItems: 'center', width: '100%'}}>
                 {
                   user.picture ?
                     this.avatarWithPics(user, className)
