@@ -47,7 +47,7 @@ class ProfileAbout extends React.Component {
   content = (classes, user, alfred) =>{
 
     return(
-      <Grid container spacing={3}>
+      <Grid container spacing={3} style={{marginBottom: '12vh'}}>
         <Hidden only={['xs']}>
           <Grid item xl={5} lg={5} md={6} sm={12} xs={12}>
             <Box>

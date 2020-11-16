@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
-import styles from './AboutStyle';
+import styles from '../../static/css/components/About/About';
 import cookie from 'react-cookies';
 import ListAlfredConditions from "../ListAlfredConditions/ListAlfredConditions";
 import RoomIcon from '@material-ui/icons/Room';
@@ -24,6 +24,8 @@ import {LANGUAGES} from '../../utils/consts'
 import CreateIcon from '@material-ui/icons/Create'
 import {isEditableUser} from '../../utils/functions'
 import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Divider from "@material-ui/core/Divider";
 
 
 const {frenchFormat} = require('../../utils/text');
@@ -121,65 +123,69 @@ class About extends React.Component {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
+        <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog} style={{position: 'absolute', right: 0}}/>
         <DialogContent>
-        <Box>
           <Topic titleTopic={'Modifiez vos informations'} titleSummary={'Ici, vous pouvez modifier vos informations'} underline={true} />
-          <Grid style={{display: 'flex', flexDirection: 'column'}}>
-          </Grid>
           <Grid container>
-            <Grid item xs={12} lg={12} style={{marginTop: '2vh'}}>
-              <Typography style={{fontWeight: 'bold', textTransform: 'initial'}}>Lieu d'habitation</Typography>
-            </Grid>
-            <Grid item style={{width:'100%'}}>
-              <AlgoliaPlaces
-                key={moment()}
-                placeholder={placeholder}
-                options={{
-                  appId: 'plKATRG826CP',
-                  apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                  language: 'fr',
-                  countries: ['fr'],
-                  type: 'address',
+            <Grid container>
+              <Grid item xs={12} lg={12} style={{marginTop: '2vh'}}>
+                <Typography style={{fontWeight: 'bold', textTransform: 'initial'}}>Lieu d'habitation</Typography>
+              </Grid>
+              <Grid item style={{width:'100%', marginTop: '3vh', marginBottom: '3vh'}}>
+                <AlgoliaPlaces
+                  key={moment()}
+                  placeholder={placeholder}
+                  options={{
+                    appId: 'plKATRG826CP',
+                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                    language: 'fr',
+                    countries: ['fr'],
+                    type: 'address',
 
-                }}
-                onChange={this.onAddressChanged}
-                onClear = {() => this.onAddressChanged(null)}
-              />
+                  }}
+                  onChange={this.onAddressChanged}
+                  onClear = {() => this.onAddressChanged(null)}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={12} lg={12}  style={{marginTop: '2vh'}}>
-              <Typography style={{fontWeight: 'bold', textTransform: 'initial'}}>Langues parlées</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <MultipleSelect
-                key={moment()}
-                value={newLanguages}
-                onChange={this.onLanguagesChanged}
-                options={LANGUAGES}
-                styles={{
-                  menu: provided => ({...provided, zIndex: 2}),
-                }}
-                isMulti
-                isSearchable
-                closeMenuOnSelect={false}
-                placeholder={'Sélectionnez vos langues'}
-                noOptionsMessage={() => 'Plus d\'options disponibles'}
+            <Grid container>
+              <Grid item xs={12} lg={12}  style={{marginTop: '2vh'}}>
+                <Typography style={{fontWeight: 'bold', textTransform: 'initial'}}>Langues parlées</Typography>
+              </Grid>
+              <Grid item xs={12} style={{marginTop: '3vh', marginBottom: '3vh'}}>
+                <MultipleSelect
+                  key={moment()}
+                  value={newLanguages}
+                  onChange={this.onLanguagesChanged}
+                  options={LANGUAGES}
+                  styles={{
+                    menu: provided => ({...provided, zIndex: 2}),
+                  }}
+                  isMulti
+                  isSearchable
+                  closeMenuOnSelect={false}
+                  placeholder={'Sélectionnez vos langues'}
+                  noOptionsMessage={() => 'Plus d\'options disponibles'}
 
-              />
+                />
+              </Grid>
             </Grid>
-            <Grid style={{marginTop: '2vh'}}>
-            <Button
-              onClick={() => {
-                this.save();
-                }}
-              variant="contained"
-              classes={{root: classes.buttonSave}}
-              disabled={!enabled}
-            >
-              Modifier
-            </Button>
+            <Grid style={{marginTop: '2vh', width: '100%'}}>
+              <Divider/>
+              <Grid style={{marginTop: '2vh', width: '100%'}}>
+                <Button
+                  onClick={() => {
+                    this.save();
+                  }}
+                  variant="contained"
+                  classes={{root: classes.buttonSave}}
+                  disabled={!enabled}
+                >
+                  Modifier
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
-          </Box>
         </DialogContent>
       </Dialog>
   )
@@ -236,10 +242,19 @@ class About extends React.Component {
       null;
 
     return (
-      <Grid style={{display: 'flex', flexDirection:'column'}}>
+      <Grid style={{display: 'flex', flexDirection:'column', position: 'relative'}}>
         { displayTitlePicture ?
           <h3>{frenchFormat(`A propos de ${user ? user.firstname : ''}`)}</h3>
           : null
+        }
+        { editable ?
+          <Grid style={{position: 'absolute', right: 0}}>
+            <IconButton aria-label="edit" onClick={this.openEdition}>
+              <CreateIcon />
+            </IconButton>
+          </Grid>
+          :
+          null
         }
         <Grid style={{display: 'flex', flexDirection:'row'}}>
           { displayTitlePicture ?
@@ -249,13 +264,6 @@ class About extends React.Component {
             : null
           }
           <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} columnsXl={12} columnsSm={6} />
-          { editable ?
-            <Grid>
-              <Button classes={{root : classes.buttonAddService}} onClick={this.openEdition} startIcon={<CreateIcon />} />
-            </Grid>
-            :
-            null
-          }
         </Grid>
         {this.modalEditDialog(classes) }
       </Grid>

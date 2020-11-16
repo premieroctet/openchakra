@@ -17,6 +17,22 @@ import {MAX_TEXT_SIZE} from '../../utils/consts'
 import {isEditableUser} from '../../utils/functions'
 const {frenchFormat} = require('../../utils/text');
 import CreateIcon from '@material-ui/icons/Create'
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography {...other} className={classes.root}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
 
 
 class Presentation extends React.Component {
@@ -61,11 +77,12 @@ class Presentation extends React.Component {
 
   closeEditDialog = () => {
     this.setState({showEdition: false, newDescription: null})
-  }
+  };
+
   modalEditDialog = (classes) =>{
     const {user, showEdition, newDescription}=this.state;
-    const enabled = newDescription
-    const placeholder = newDescription || CMP_PRESENTATION.placeholder
+    const enabled = newDescription;
+    const placeholder = newDescription || CMP_PRESENTATION.placeholder;
 
     return(
       <Dialog
@@ -74,31 +91,31 @@ class Presentation extends React.Component {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
+        <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog} style={{position: 'absolute', right: 0}}/>
         <DialogContent>
-        <Box>
-          <Topic titleTopic={'Modifiez votre description'} titleSummary={'Ajoutez ou modifiez votre "À propos" '} underline={true} />
-          <Grid style={{display: 'flex', flexDirection: 'column'}}>
+        <Topic titleTopic={'Modifiez votre description'} titleSummary={'Ajoutez ou modifiez votre "À propos" '} underline={true} />
+        <Grid container>
+          <Grid item xs={12} lg={12}  style={{marginTop: '2vh', }}>
+            <TextField multiline classes={{root: classes.textField}} rowsMax={4} rows={4} value={newDescription} placeholder={placeholder} onChange={this.onTextChanged}/>
           </Grid>
-          <Grid container>
-            <Grid item xs={12} lg={12}  style={{marginTop: '2vh'}}>
-              <Box>
-                <TextField multiline rowsMax={4} rows={4} value={newDescription} placeholder={placeholder} onChange={this.onTextChanged}/>
-              </Box>
+          <Grid style={{marginTop: '2vh', display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column'}}>
+            <Grid>
+              <Typography>{`${MAX_TEXT_SIZE} caractères max`}</Typography>
             </Grid>
-            <Grid style={{marginTop: '2vh'}}>
-            <div>{`${MAX_TEXT_SIZE} caractères max`}</div>
-            <Button
-              onClick={() => {
-                this.save();
+            <Grid style={{width: '100%'}}>
+              <Button
+                onClick={() => {
+                  this.save();
                 }}
-              variant="contained"
-              disabled={!enabled}
-            >
-              Modifier
-            </Button>
+                variant="contained"
+                disabled={!enabled}
+                classes={{root: classes.button}}
+              >
+                Modifier
+              </Button>
             </Grid>
           </Grid>
-          </Box>
+        </Grid>
         </DialogContent>
       </Dialog>
   )
@@ -111,16 +128,18 @@ class Presentation extends React.Component {
   render() {
     const {classes}=this.props;
     const {user} = this.state;
-    const editable = isEditableUser(user)
+    const editable = isEditableUser(user);
     console.log(`Classes:${Object.keys(classes)}`);
 
     const title=frenchFormat(`À propos de ${user ? user.firstname : ''}`);
 
     return (
-      <>
+      <Grid style={{display: 'flex', flexDirection:'column', position: 'relative'}}>
         { editable ?
-          <Grid>
-            <Button classes={{root : classes.buttonAddService}} onClick={this.openEdition} startIcon={<CreateIcon />} />
+          <Grid style={{position: 'absolute', right: 0}}>
+            <IconButton aria-label="edit" onClick={this.openEdition}>
+              <CreateIcon />
+            </IconButton>
           </Grid>
           :
           null
@@ -129,7 +148,7 @@ class Presentation extends React.Component {
         <Grid>
           {this.modalEditDialog(classes)}
         </Grid>
-      </>
+      </Grid>
     )
   }
 

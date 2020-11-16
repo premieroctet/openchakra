@@ -98,8 +98,7 @@ const NEWS_LETTER = {
 };
 
 const CMP_PRESENTATION = {
-  placeholder: 'Ici, parlez-nous de vous, de votre personnalité, de vos passions\
-        ou encore de votre parcours. Soyez vous-même et montrez-nous votre personnalité !'
+  placeholder: 'Ici, parlez-nous de vous, de votre personnalité, de vos passions ou encore de votre parcours. Soyez vous-même et montrez-nous votre personnalité !'
 }
 const getMangopayMessage = msg_id => {
   if (!msg_id) {

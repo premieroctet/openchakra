@@ -39,4 +39,8 @@ export default theme => ({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  buttonSave: {
+    textTransform: 'initial',
+    width: '100%'
+  }
 })
