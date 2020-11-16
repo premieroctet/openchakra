@@ -5,7 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import ScrollMenu from '../../components/ScrollMenu/ScrollMenu';
 import cookie from 'react-cookies';
 import axios from 'axios'
-const {getLoggedUserId}=require('../../utils/functions')
+const {isEditableUser}=require('../../utils/functions')
 import moment from 'moment'
 
 class ProfileLayout extends React.Component {
@@ -13,34 +13,23 @@ class ProfileLayout extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            user: null,
-      items: [
-        {
-          label: 'À propos',
-          url: '/about'
-        },
-        {
-          label: 'Mes services',
-          url: '/services'
-        },
-        {
-          label: 'Mes photos',
-          url: '/pictures'
-        },
-        {
-          label: 'Mes avis',
-          url: '/reviews'
-        },
-        {
-          label: 'Mon calendrier',
-          url: '/calendar'
-        },
-        {
-          label: 'Mes statistiques',
-          url: '/statistics'
+          user: null,
         }
-      ]
-        }
+        this.logged_items= [
+          { label: 'À propos', url: '/about' },
+          { label: 'Mes services', url: '/services' },
+          { label: 'Mes photos', url: '/pictures' },
+          { label: 'Mes avis', url: '/reviews' },
+          { label: 'Mon calendrier', url: '/calendar' },
+          { label: 'Mes statistiques', url: '/statistics'}
+        ]
+        this.nonlogged_items= [
+          { label: 'À propos', url: '/about' },
+          { label: 'Services', url: '/services' },
+          { label: 'Photos', url: '/pictures' },
+          { label: 'Avis', url: '/reviews' },
+        ]
+
     }
 
   componentDidMount = () => {
@@ -60,6 +49,7 @@ class ProfileLayout extends React.Component {
       return null
     }
 
+    const menuItems = isEditableUser(this.props.user) ? this.logged_items : this.nonlogged_items
     return (
       <Layout user={user}>
       <Grid style={{display:'flex', justifyContent:'center'}}>
@@ -68,7 +58,7 @@ class ProfileLayout extends React.Component {
             <ProfileHeader key={user} user={user}/>
           </Grid>
 	              <Grid>
-              <ScrollMenu categories={items} mode={'profile'} indexCat={index} extraParams={{user: this.props.user}}/>
+              <ScrollMenu categories={menuItems} mode={'profile'} indexCat={index} extraParams={{user: this.props.user}}/>
             </Grid>
 
           <Grid style={{backgroundColor: 'rgba(249,249,249, 1)', width: '100%'}}>
