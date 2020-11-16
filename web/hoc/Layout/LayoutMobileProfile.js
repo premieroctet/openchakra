@@ -14,6 +14,7 @@ import Button from "@material-ui/core/Button";
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import ScrollMenu from "../../components/ScrollMenu/ScrollMenu";
 import Divider from "@material-ui/core/Divider";
+import UserAvatar from "../../components/Avatar/UserAvatar";
 
 class LayoutMobileProfile extends React.Component{
 
@@ -104,7 +105,7 @@ class LayoutMobileProfile extends React.Component{
           </Grid>
           <Grid className={classes.layoutMobileLayoutProfileHeader}>
             <Grid className={classes.profilLayoutAvatar}>
-              <Avatar alt={user.firstname} src={url} className={classes.cardPreviewLarge} />
+              <UserAvatar alt={user.firstname} user={user} className={classes.cardPreviewLarge} />
             </Grid>
           </Grid>
           <Grid style={{display: 'flex', flexDirection: 'row-reverse', marginTop: '5vh', marginRight: '3vh'}}>
