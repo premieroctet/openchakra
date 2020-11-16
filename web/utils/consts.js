@@ -328,9 +328,23 @@ const SKILLS={
   },
 }
 
+const LANGUAGES= [
+  {value: 'Français', label: 'Français'},
+  {value: 'Anglais', label: 'Anglais'},
+  {value: 'Allemand', label: 'Allemand'},
+  {value: 'Espagnol', label: 'Espagnol'},
+  {value: 'Chinois', label: 'Chinois'},
+  {value: 'Arabe', label: 'Arabe'},
+  {value: 'Portugais', label: 'Portugais'},
+  {value: 'Russe', label: 'Russe'},
+  {value: 'Japonais', label: 'Japonais'},
+];
+
+const MAX_TEXT_SIZE=300
+
 module.exports = {
   ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR,
   generate_id, COMM_ALFRED, COMM_CLIENT, GID_LEN, ENTITES, CESU,
   MODES, GOOGLE_PROVIDER, FACEBOOK_PROVIDER, AMAZON_HOST, LOCAL_HOST,
-  SKILLS,
+  SKILLS, LANGUAGES, MAX_TEXT_SIZE
 };

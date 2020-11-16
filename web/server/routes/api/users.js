@@ -273,7 +273,7 @@ router.post('/validateAccount', (req, res) => {
 });
 
 // @Route PUT /myAlfred/api/users/profile/billingAddress
-// Add an address in the profile
+// Set the main address in the profile
 // @Access private
 router.put('/profile/billingAddress', passport.authenticate('jwt', {session: false}), (req, res) => {
 
@@ -293,6 +293,30 @@ router.put('/profile/billingAddress', passport.authenticate('jwt', {session: fal
 
       user.save().then(user => res.json(user)).catch(err => console.error(err));
 
+    });
+});
+
+// @Route PUT /myAlfred/api/users/profile/languages
+// Sets the languages
+// @Access private
+router.put('/profile/languages', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  User.findById(req.user.id)
+    .then(user => {
+      user.languages = req.body.languages
+      user.save().then(user => res.json(user)).catch(err => console.error(err));
+    });
+});
+
+// @Route PUT /myAlfred/api/users/profile/description
+// Sets the description
+// @Access private
+router.put('/profile/description', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  User.findById(req.user.id)
+    .then(user => {
+      user.description = req.body.description
+      user.save().then(user => res.json(user)).catch(err => console.error(err));
     });
 });
 

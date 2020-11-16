@@ -11,6 +11,7 @@ import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import Box from "../../components/Box/Box";
 import axios from "axios";
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
+const {isEditableUser}=require('../../utils/functions');
 
 class ProfileServices extends React.Component {
 
@@ -39,12 +40,16 @@ class ProfileServices extends React.Component {
   content = (classes, user, shop) => {
     return(
       <Grid container spacing={3} className={classes.servicesConntainer}>
-        <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
-          <Box>
-           <AddService user={user}/>
-          </Box>
-        </Grid>
-        <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
+        {isEditableUser(user) ?
+          <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
+            <Box>
+             <AddService user={user}/>
+            </Box>
+          </Grid>
+          :
+          null
+        }
+        <Grid item xs={12} xl={12}>
           <Box>
            <Services user={user} shop={shop}/>
           </Box>

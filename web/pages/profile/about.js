@@ -95,7 +95,7 @@ class ProfileAbout extends React.Component {
         </Hidden>
         <Grid item xl={7} lg={7} md={6} sm={12} xs={12}>
           <Box>
-            <Presentation user={user} />
+            <Presentation user={user} classes={classes}/>
           </Box>
         </Grid>
         <Grid item xl={8} lg={8} md={6} sm={12} xs={12}>

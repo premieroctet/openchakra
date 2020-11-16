@@ -396,7 +396,6 @@ class ProfileStatistics extends React.Component {
           </Grid>
         </Hidden>
       </Grid>
-
     )
   };
 
