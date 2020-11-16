@@ -195,7 +195,7 @@ class UserAvatar extends React.Component {
                   </ul>
                 </Popover>
               </Grid> :
-              <Grid>
+              <Grid style={{display: 'flex', justifyContent: 'center'}}>
                 {
                   user.picture ?
                     this.avatarWithPics(user, className)
@@ -227,4 +227,4 @@ class UserAvatar extends React.Component {
   }
 }
 
-export default withStyles(styles, {withTheme: true})(UserAvatar);
+export default withStyles(styles)(UserAvatar);

@@ -11,6 +11,7 @@ import styles from '../../static/css/components/Layout/ProfileLayout/ProfileLayo
 import withStyles from "@material-ui/core/styles/withStyles";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
+import UserAvatar from "../../components/Avatar/UserAvatar";
 
 
 class ProfileLayout extends React.Component {
@@ -79,7 +80,7 @@ class ProfileLayout extends React.Component {
                 <Grid className={classes.profilLayoutBox}>
                   <Grid className={classes.profilLayoutBannerImg}>
                     <Grid className={classes.profilLayoutAvatar}>
-                      <Avatar alt={user.firstname} src={url} className={classes.cardPreviewLarge} />
+                      <UserAvatar alt={user.firstname} user={user} className={classes.cardPreviewLarge} />
                     </Grid>
                   </Grid>
                   <Grid style={{display: 'flex', justifyContent: 'center', height: '40%', alignItems: 'center'}}>
