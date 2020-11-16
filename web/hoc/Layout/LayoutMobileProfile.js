@@ -130,18 +130,6 @@ class LayoutMobileProfile extends React.Component{
               <Typography>Membre depuis 2020</Typography>
             </Grid>
           </Grid>
-          <Grid style={{display: 'flex', flexDirection: 'row', marginTop: '5vh', marginLeft: '5vh'}}>
-            <Grid>
-              <Button variant={'contained'} classes={{root: classes.button}} color={'primary'} style={{fontWeight: 'bold', color: 'white'}}>
-                Statistiques
-              </Button>
-            </Grid>
-            <Grid style={{marginLeft: '3vh'}}>
-              <Button variant={'contained'} classes={{root: classes.button}} color={'primary'} style={{fontWeight: 'bold', color: 'white'}}>
-                Calendrier
-              </Button>
-            </Grid>
-          </Grid>
         </Grid>
         <Grid style={{marginTop: '5vh'}}>
           <Divider/>

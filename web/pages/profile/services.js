@@ -10,6 +10,7 @@ import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import Box from "../../components/Box/Box";
 import axios from "axios";
+import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
 
 class ProfileServices extends React.Component {
 
@@ -65,15 +66,15 @@ class ProfileServices extends React.Component {
 
     return (
       <React.Fragment>
-        <Hidden only={['xs', 'sm', 'md']}>
+        <Hidden only={['xs']}>
           <ProfileLayout user={user} index={index}>
             {this.content(classes, user, shop)}
           </ProfileLayout>
         </Hidden>
-        <Hidden only={['lg', 'xl']}>
-          <LayoutMobile>
+        <Hidden only={['lg', 'xl','sm', 'md']}>
+          <LayoutMobileProfile user={user} index={index}>
             {this.content(classes, user, shop)}
-          </LayoutMobile>
+          </LayoutMobileProfile>
         </Hidden>
       </React.Fragment>
     )

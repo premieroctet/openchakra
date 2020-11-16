@@ -93,4 +93,4 @@ class About extends React.Component {
 
 }
 
-export default withStyles(styles, {withTheme: true})(About)
+export default withStyles(styles)(About)

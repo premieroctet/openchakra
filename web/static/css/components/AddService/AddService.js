@@ -3,7 +3,7 @@ export default theme => ({
     display: 'flex',
     flexDirection:'column',
     alignItems:'center',
-    [theme.breakpoints.down('lg')]:{
+    [theme.breakpoints.down('xs')]:{
       boxShadow: 'rgba(0, 0, 0, 0.15) 0px 16px 32px, rgba(0, 0, 0, 0.1) 0px 3px 8px',
       borderRadius: 10,
     }

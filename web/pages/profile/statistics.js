@@ -19,6 +19,7 @@ import Select from "@material-ui/core/Select";
 import Divider from '@material-ui/core/Divider';
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
+import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
 
 
 const MONTHS=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
@@ -406,15 +407,15 @@ class ProfileStatistics extends React.Component {
     return (
       <React.Fragment>
         <React.Fragment>
-          <Hidden only={['xs', 'sm', 'md']}>
+          <Hidden only={['xs']}>
             <ProfileLayout user={user} index={index}>
               {this.content(classes, user)}
             </ProfileLayout>
           </Hidden>
-          <Hidden only={['lg', 'xl']}>
-            <LayoutMobile>
+          <Hidden  only={['lg', 'xl','sm', 'md']}>
+            <LayoutMobileProfile user={user} index={index}>
               {this.content(classes, user)}
-            </LayoutMobile>
+            </LayoutMobileProfile>
           </Hidden>
         </React.Fragment>
       </React.Fragment>

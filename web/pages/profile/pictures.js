@@ -10,6 +10,7 @@ import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
 import Box from "../../components/Box/Box";
+import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
 const {getLoggedUserId}=require('../../utils/functions');
 
 class ProfilePictures extends React.Component {
@@ -57,15 +58,15 @@ class ProfilePictures extends React.Component {
 
     return (
       <React.Fragment>
-        <Hidden only={['xs', 'sm', 'md']}>
+        <Hidden only={['xs']}>
           <ProfileLayout user={user} index={index}>
             {this.content(classes, user)}
           </ProfileLayout>
         </Hidden>
-        <Hidden only={['lg', 'xl']}>
-          <LayoutMobile>
+        <Hidden only={['lg', 'xl','sm', 'md']}>
+          <LayoutMobileProfile user={user} index={index}>
             {this.content(classes, user)}
-          </LayoutMobile>
+          </LayoutMobileProfile>
         </Hidden>
       </React.Fragment>
     )
