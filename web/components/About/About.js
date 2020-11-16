@@ -23,6 +23,7 @@ import MultipleSelect from 'react-select'
 import {LANGUAGES} from '../../utils/consts'
 import CreateIcon from '@material-ui/icons/Create'
 import {isEditableUser} from '../../utils/functions'
+import IconButton from "@material-ui/core/IconButton";
 
 
 const {frenchFormat} = require('../../utils/text');
@@ -41,7 +42,7 @@ const DialogTitle = withStyles(styles)((props) => {
       ) : null}
     </MuiDialogTitle>
   );
-})
+});
 
 
 class About extends React.Component {
@@ -53,8 +54,8 @@ class About extends React.Component {
       newAddress: null,
       newLanguages: null,
       showEdition: false,
-    }
-    this.save = this.save.bind(this)
+    };
+    this.save = this.save.bind(this);
     this.loadUser = this.loadUser.bind(this)
   }
 
@@ -66,7 +67,7 @@ class About extends React.Component {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then( res => {
-        const user=res.data
+        const user=res.data;
 
         this.setState({
           user: user,
@@ -87,31 +88,31 @@ class About extends React.Component {
           lng: result.suggestion.latlng.lng,
       }
       :
-      null
+      null;
     this.setState({newAddress: newAddress})
-  }
+  };
 
   onLanguagesChanged = languages => {
     this.setState({newLanguages: languages})
-  }
+  };
 
   save = () => {
     // TODO: handle errors, remove timeout
-    const {newAddress, newLanguages}=this.state
+    const {newAddress, newLanguages}=this.state;
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
-    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress)
-    axios.put('/myAlfred/api/users/profile/languages', {languages: newLanguages.map( l => l.value)})
+    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress);
+    axios.put('/myAlfred/api/users/profile/languages', {languages: newLanguages.map( l => l.value)});
     this.setState({showEdition: false}, () => setTimeout(this.loadUser, 1000))
-  }
+  };
 
   closeEditDialog = () => {
     this.setState({showEdition: false, newLanguages: null, newAddress: null})
-  }
+  };
 
   modalEditDialog = (classes) =>{
     const {newLabel, newPicture, user, newAddress, newLanguages, showEdition}=this.state;
-    const enabled = newAddress
-    const placeholder = newAddress ? `${newAddress.city}, ${newAddress.country}` : 'Entrez votre adresse'
+    const enabled = newAddress;
+    const placeholder = newAddress ? `${newAddress.city}, ${newAddress.country}` : 'Entrez votre adresse';
 
     return(
       <Dialog
@@ -185,14 +186,14 @@ class About extends React.Component {
   };
 
   openEdition = () => {
-    const {user}=this.state
+    const {user}=this.state;
 
     this.setState({
       showEdition: true,
       newLanguages: user.languages.map(l => ({value: l, label: l})),
       newAddress: user.billing_address
     })
-  }
+  };
 
   render() {
     const {displayTitlePicture, classes} = this.props;
@@ -205,7 +206,7 @@ class About extends React.Component {
       )
     }
 
-    const editable = isEditableUser(user)
+    const editable = isEditableUser(user);
 
 
     const wrapperComponentProps = user ?
@@ -247,6 +248,7 @@ class About extends React.Component {
             </Grid>
             : null
           }
+          <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} columnsXl={12} columnsSm={6} />
           { editable ?
             <Grid>
               <Button classes={{root : classes.buttonAddService}} onClick={this.openEdition} startIcon={<CreateIcon />} />
@@ -254,14 +256,11 @@ class About extends React.Component {
             :
             null
           }
-          <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} columnsXl={12} />
         </Grid>
         {this.modalEditDialog(classes) }
       </Grid>
     )
   }
-
-
 }
 
-export default withStyles(styles, {withTheme: true})(About)
+export default withStyles(styles)(About)

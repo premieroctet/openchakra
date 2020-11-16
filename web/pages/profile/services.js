@@ -10,7 +10,8 @@ import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import Box from "../../components/Box/Box";
 import axios from "axios";
-const {isEditableUser}=require('../../utils/functions')
+import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
+const {isEditableUser}=require('../../utils/functions');
 
 class ProfileServices extends React.Component {
 
@@ -40,7 +41,7 @@ class ProfileServices extends React.Component {
     return(
       <Grid container spacing={3} className={classes.servicesConntainer}>
         {isEditableUser(user) ?
-          <Grid item xs={12}>
+          <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
             <Box>
              <AddService user={user}/>
             </Box>
@@ -53,7 +54,7 @@ class ProfileServices extends React.Component {
            <Services user={user} shop={shop}/>
           </Box>
         </Grid>
-        <Hidden only={['sm', 'xs']}>
+        <Hidden only={['sm', 'xs', 'md']}>
           <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
             <Grid style={{width: '70%'}}>
               <AskQuestion user={user}/>
@@ -70,15 +71,15 @@ class ProfileServices extends React.Component {
 
     return (
       <React.Fragment>
-        <Hidden only={['xs', 'sm', 'md']}>
+        <Hidden only={['xs']}>
           <ProfileLayout user={user} index={index}>
             {this.content(classes, user, shop)}
           </ProfileLayout>
         </Hidden>
-        <Hidden only={['lg', 'xl']}>
-          <LayoutMobile>
+        <Hidden only={['lg', 'xl','sm', 'md']}>
+          <LayoutMobileProfile user={user} index={index}>
             {this.content(classes, user, shop)}
-          </LayoutMobile>
+          </LayoutMobileProfile>
         </Hidden>
       </React.Fragment>
     )
