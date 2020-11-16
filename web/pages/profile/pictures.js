@@ -31,7 +31,7 @@ class ProfilePictures extends React.Component {
   content = (classes, user) => {
     return(
       <Grid container sapcing={3} className={classes.pictureContainer}>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={12} md={12} lg={12} xm={12}>
           <Box>
            <Album user={user}/>
           </Box>
