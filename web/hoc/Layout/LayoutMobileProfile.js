@@ -93,7 +93,6 @@ class LayoutMobileProfile extends React.Component{
     if (!user) {
       return null
     }
-    const url = user.picture.match(/^https?:\/\//) ? user.picture : '/' + user.picture;
 
     return(
       <React.Fragment>
