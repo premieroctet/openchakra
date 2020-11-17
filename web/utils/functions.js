@@ -91,7 +91,7 @@ const getLoggedUserAdmin = () => {
 
 // Returns true if user is the currently logged user
 const isEditableUser = user => {
-  if (!user) {
+  if (!user || !getLoggedUserId()) {
     return false
   }
   const isEditable=getLoggedUserId()==user || getLoggedUserId()==user._id

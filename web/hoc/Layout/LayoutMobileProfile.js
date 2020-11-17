@@ -107,11 +107,6 @@ class LayoutMobileProfile extends React.Component{
               <UserAvatar alt={user.firstname} user={user} className={classes.cardPreviewLarge} />
             </Grid>
           </Grid>
-          <Grid style={{display: 'flex', flexDirection: 'row-reverse', marginTop: '5vh', marginRight: '3vh'}}>
-            <Button variant={'outlined'} classes={{root: classes.button}}>
-              Editer mon profil
-            </Button>
-          </Grid>
           <Grid style={{display: 'flex',height: '40%', alignItems: 'center', marginTop: '5vh', marginLeft: '5vh'}}>
             <Grid style={{display: 'flex',flexDirection: 'column'}}>
               <Grid>
