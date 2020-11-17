@@ -47,13 +47,13 @@ class CategoryTopic extends React.Component{
           </Hidden>
         </Grid>
         <Grid className={style.categorySlideShowContainer}>
-          {
+          {/*{
             category.map(res =>{
               return(
                 <CategoryCard item={category} style={style}/>
               )
             })
-          }
+          }*/}
         </Grid>
       </Grid>
     );
