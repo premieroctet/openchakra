@@ -45,7 +45,7 @@ class TrustAndSecurity extends React.Component{
               <Grid>
                 {res.icon}
               </Grid>
-              <Grid>
+              <Grid style={{marginLeft: '3vh'}}>
                 <Grid>
                   <Typography><strong>{res.title}</strong></Typography>
                 </Grid>

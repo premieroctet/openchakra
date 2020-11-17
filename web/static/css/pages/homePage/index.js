@@ -29,135 +29,12 @@ export default theme => ({
   showmoreContainer:{
     marginLeft: 5,
   },
-  navbarSignIn:{
-    borderRadius: theme.border.button.borderRadius,
-    textTransform: theme.typography.textTransform,
-    fontWeight: theme.typography.fontWeight,
-    border: '3px solid rgba(255, 255, 255, 1)',
-    color: theme.palette.white.main,
-  },
-  navBarlogIn:{
-    textTransform: theme.typography.textTransform,
-    borderRadius: theme.border.button.borderRadius,
-    color: theme.palette.white.main,
-    fontWeight: theme.typography.fontWeight
-  },
-  navbarMainSytle:{
-    alignItems: 'center',
-    width: '80%',
-    display: 'flex',
-    [theme.breakpoints.down('xs')]:{
-      width: '90%'
-    }
-  },
-  navbarButtonContainer:{
-    display: 'flex',
-    flexDirection: 'row-reverse',
-    width: '100%',
-    alignItems: 'center'
-  },
-  navabarHomepageMenu:{
-    width: '100%'
-  },
-  navbarRegisterContainer:{
-    marginRight: 5
-  },
-  navbarSearch: {
-    padding: 14,
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    borderRadius: theme.border.button.borderRadius,
-    boxShadow: 'rgba(0, 0, 0, 0.15) 0px 16px 32px, rgba(0, 0, 0, 0.1) 0px 3px 8px'
-  },
-  navbarRootTextField: {
-    width: '100%',
-    fontFamily: theme.typography.text.fontFamily,
-    fontSize: theme.typography.placeHolder.fontSize,
-    fontWeight:  theme.typography.placeHolder.fontWeight,
-    lineHeight:  theme.typography.placeHolder.lineHeight,
-    "& .MuiFormLabel-root": {
-      fontWeight: 'bold',
-      '&:focus':{
-        color: theme.palette.primary.main
-      }
-    },
-    '& .MuiFormLabel-root.Mui-focused':{
-      color: theme.palette.primary.main
-    },
-    '& .MuiInputBase-input::placeholder':{
-      opacity: '0.5'
-    },
-    '& div':{
-      width:'100%'
-    }
-  },
-  navbarRootTextFieldWhere:{
-    width: '100%',
-    fontFamily: theme.typography.text.fontFamily,
-    fontSize: theme.typography.placeHolder.fontSize,
-    fontWeight:  theme.typography.placeHolder.fontWeight,
-    lineHeight:  theme.typography.placeHolder.lineHeight,
-    "& .MuiFormLabel-root": {
-      fontWeight: 'bold',
-      '&:focus':{
-        color: theme.palette.primary.main
-      }
-    },
-    '& .MuiFormLabel-root.Mui-focused':{
-      color: theme.palette.primary.main
-    },
-    '& .MuiInputBase-input::placeholder':{
-      opacity: '0.5'
-    },
-    '& div':{
-      width:'100%'
-    }
-  },
-  navbarRootTextFieldWhen:{
-    width: '100%',
-    fontFamily: theme.typography.text.fontFamily,
-    fontSize: theme.typography.placeHolder.fontSize,
-    fontWeight:  theme.typography.placeHolder.fontWeight,
-    lineHeight:  theme.typography.placeHolder.lineHeight,
-    "& .MuiFormLabel-root": {
-      fontWeight: 'bold',
-      '&:focus':{
-        color: theme.palette.primary.main
-      }
-    },
-    '& .MuiFormLabel-root.Mui-focused':{
-      color: theme.palette.primary.main
-    },
-    '& .MuiInputBase-input::placeholder':{
-      opacity: '0.5'
-    }
-  },
   navbarInput:{
     borderBottom: 'inherit',
     '&::placeholder':{
       opacity: '0.55',
       color: theme.palette.placeHolder.main,
     }
-  },
-  iconButton: {
-    padding: 12,
-    backgroundColor: theme.palette.yellow.main,
-    color: theme.palette.white.main,
-  },
-  navbarLogoContainer:{
-    width: '100%'
-  },
-  navbarSearchContainer:{
-    width: '50%',
-    marginTop: '5vh',
-    [theme.breakpoints.down('xs')]:{
-      width: '100%'
-    }
-  },
-  divider: {
-    height: 28,
-    margin: 4,
   },
   bannerPresentationTitle:{
     fontFamily: theme.typography.title.fontFamily,
@@ -230,53 +107,17 @@ export default theme => ({
   bannerPresentationContainer:{
     display: 'flex',
     justifyContent: 'center',
-    marginTop: '12vh'
+    marginTop: '10vh'
   },
   mainContainerStyle:{
     justifyContent: 'center',
-    marginTop: '6%',
-    marginBottom: '6%'
+    marginTop: '10vh',
+    marginBottom: '10vh'
   },
   mainNewsLetterStyle:{
     justifyContent: 'center',
+  },
 
-  },
-  categoryButton:{
-    borderRadius: theme.border.whiteButton.borderRadius,
-    border: theme.border.whiteButton.border,
-    textTransform: theme.typography.textTransform,
-    padding: theme.padding.whiteButton.padding,
-    fontFamily: theme.typography.whiteButton.fontFamily,
-    fontWeight: theme.typography.whiteButton.fontWeight
-  },
-  categoryTitle:{
-    fontFamily: theme.typography.sectionTitle.fontFamily,
-    fontWeight: theme.typography.sectionTitle.fontWeight,
-    fontSize: theme.typography.sectionTitle.fontSize,
-    margin: theme.typography.sectionTitle.margin
-  },
-  categoryText:{
-    fontFamily: theme.typography.text.fontFamily,
-    color: theme.typography.text.color,
-    fontWeight: theme.typography.text.fontWeight,
-    fontSize: theme.typography.text.fontSize,
-    margin: theme.typography.text.margin
-  },
-  categoryMainContainer:{
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  categoryContainer:{
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%'
-  },
-  categoryLeftContainer:{
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems:'center'
-  },
   becomeAlfredMainContainer:{
     display: 'flex',
     flexDirection: 'row',
@@ -313,42 +154,6 @@ export default theme => ({
     marginTop: '2%',
     backgroundColor: theme.palette.primary.main,
   },
-  ourAlfredMainStyle:{
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  ourAlfredMainContainer:{
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%'
-  },
-  ourAlfredMainHeader:{
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems:'center'
-  },
-  ourAlfredTitle:{
-    fontFamily: theme.typography.sectionTitle.fontFamily,
-    fontWeight: theme.typography.sectionTitle.fontWeight,
-    fontSize: theme.typography.sectionTitle.fontSize,
-    margin: theme.typography.sectionTitle.margin
-  },
-  ourAlfredSubtitle:{
-    fontFamily: theme.typography.text.fontFamily,
-    color: theme.typography.text.color,
-    fontWeight: theme.typography.text.fontWeight,
-    fontSize: theme.typography.text.fontSize,
-    margin: theme.typography.text.margin,
-  },
-  ourAlfredButton:{
-    borderRadius: theme.border.whiteButton.borderRadius,
-    border: theme.border.whiteButton.border,
-    textTransform: theme.typography.textTransform,
-    padding: theme.padding.whiteButton.padding,
-    fontFamily: theme.typography.whiteButton.fontFamily,
-    fontWeight: theme.typography.whiteButton.fontWeight
-  },
   howItWorksComponent:{
     justifyContent: 'center',
     marginTop: '2%',
@@ -363,7 +168,10 @@ export default theme => ({
     justifyContent: 'space-between'
   },
   howItWorksLeftContainer:{
-    width: '30%'
+    width: '30%',
+    [theme.breakpoints.down('xs')]:{
+      width: '100%'
+    }
   },
   howItWorksRightContainer:{
     display: 'flex',
@@ -447,109 +255,20 @@ export default theme => ({
   generalWidthFooter:{
     width: '90%'
   },
-  footerMainStyle:{
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  footerMainContainer:{
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around'
-  },
-  footerSection:{
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  footerSocialSection:{
-    display:'flex',
-    flexDirection: 'row-reverse',
-    width: '90%',
-    marginTop: '3%'
-  },
-  footerDividerContainer:{
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  footerDivider:{
-    height: 1,
-    width: '80%'
-  },
-  footerBrandContainer:{
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-  footerBrandStyle:{
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '80%'
-  },
-  footerRgpdButtons:{
-    display:'flex',
-    flexDirection: 'row',
-    width: '30%',
-    justifyContent : 'space-between'
-  },
-  categoryImgContainer:{
-    height: '100%',
-    marginTop: '-25px',
-    transform: 'rotate(-25deg)',
+  trustAndSecurityContainer:{
     [theme.breakpoints.down('xs')]:{
-      margin:0
+      marginTop: '5vh',
+      marginBottom: '5vh',
+      display: 'flex',
+      justifyContent: 'center'
     }
   },
-  categoryTextContainer:{
-    marginLeft: 10,
-  },
-  ourAlfredImgContainer:{
-    height: '100%',
-    marginTop: '-25px',
-    transform: 'rotate(-25deg)'
-  },
-  ourAlfredTextContainer:{
-    marginLeft: 10,
-  },
-  footerTitileSection:{
-    fontFamily: theme.typography.sectionTitle.fontFamily
-  },
-  footerLink:{
-    fontFamily: theme.typography.text.fontFamily
-  },
-  footerText:{
-    fontFamily: theme.typography.text.fontFamily
-  },
-  navbarModal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    '& .MuiDialog-paper': {
-      margin: '0px !important',
-    },
-  },
-  navbarPaperWidth:{
-    width: 400,
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-    },
-  },
-  navbarWidthLoginContent:{
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  navbarMuidialogContent: {
-    padding: 0,
-  },
-  navbarPaper: {
-    backgroundColor: theme.palette.white.main,
-    borderRadius: 10,
-    margin: '0px !important',
-    padding: 0,
-    width: '100%',
-  },
-  navbarCloseButton:{
-    position: 'absolute',
-    right: theme.spacing(1),
-    top: theme.spacing(1),
+  trustAndSecurityComponent:{
+    [theme.breakpoints.down('xs')]:{
+      marginTop: '5vh',
+      marginBottom: '5vh',
+      width: '80%'
+    }
   },
   mainContainerStyleFooter:{
     justifyContent: 'center',
@@ -561,59 +280,10 @@ export default theme => ({
     flexDirection: 'column',
     alignItems: 'center'
   },
-  categoryCardMedia:{
-    height: '20vh',
-    width: '90%',
-    borderRadius: 50
-  },
-  categorySlideShowContainer:{
-    marginTop: '3%'
-  },
   slideShowContainer:{
     display: 'flex',
     alignItems: 'center',
     padding: '2%'
-  },
-  categoryCardBackground:{
-    width: '100%',
-    height: '100%',
-    backgroundPosition: 'center',
-    backgroundSize: 'cover',
-    borderRadius: 50
-  },
-  cardPreviewLarge: {
-    width: '90%',
-    height: '90%',
-  },
-  cardPreviewContainerAvatar:{
-    width: 100,
-    height:100,
-    position: 'relative',
-    backgroundColor: 'white',
-    top: 50,
-    borderRadius: '50%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    border: '2px solid rgba(112, 112, 112, 0.3)'
-  },
-  cardPreviewRatingBox:{
-    display: 'flex',
-    alignItems: 'center',
-    margin:0,
-    padding: 0
-  },
-  cardPreviewLabelService:{
-    fontFamily: theme.typography.textLabel.fontFamily,
-    fontWeight: theme.typography.textLabel.fontWeight,
-    fontSize: theme.typography.textLabel.fontSize,
-    margin: theme.typography.textLabel.margin
-  },
-  cardPreviewNameAlfred:{
-    fontFamily: theme.typography.textAlfredName.fontFamily,
-    fontWeight: theme.typography.textAlfredName.fontWeight,
-    fontSize: theme.typography.textAlfredName.fontSize,
-    margin: theme.typography.textAlfredName.margin
   },
   slideShowSectionContainer:{
     width: '100%'
@@ -623,76 +293,6 @@ export default theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column'
-  },
-  cardPreviewBoxContentContainer:{
-    border: '2px solid rgba(112, 112, 112, 0.3)',
-    width: '80%',
-    borderRadius: 22,
-    height: '15vh'
-  },
-  cardPreviewBoxContentPosition:{
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
-    top: '55px'
-  },
-  cardPreviewContentIdentity:{
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'column',
-    width: '90%'
-  },
-  cardPreviewServiceContent:{
-    display: 'flex',
-    flexDirection: 'row',
-    width: '90%',
-    justifyContent: 'space-evenly',
-    alignItems: 'center'
-  },
-  navbarAlgoliaPlace:{
-    border: 'inherit',
-    fontFamily: theme.typography.text.fontFamily,
-    color: theme.palette.placeHolder.main,
-    fontSize: theme.typography.placeHolder.fontSize,
-    fontWeight:  theme.typography.placeHolder.fontWeight,
-    lineHeight:  theme.typography.placeHolder.lineHeight,
-    padding: '6px 0 7px',
-    height: 'auto'
-  },
-  navbarMenuBurgerContainer:{
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row-reverse'
-  },
-  navbarAlgoliaContent:{
-    flex:1,
-    marginLeft: 20,
-    '& .ap-input-icon':{
-      display: 'none',
-    }
-  },
-  inputDatePicker:{
-    border: 'inherit',
-    fontFamily: theme.typography.text.fontFamily,
-    color: theme.palette.placeHolder.main,
-    fontSize: theme.typography.placeHolder.fontSize,
-    fontWeight:  theme.typography.placeHolder.fontWeight,
-    lineHeight:  theme.typography.placeHolder.lineHeight,
-    padding: '6px 0 7px',
-  },
-  navbarAppBar:{
-    backgroundColor:'transparent',
-    boxShadow: 'inherit'
-  },
-  navbarDatePickerContainer:{
-    flex: 1,
-    marginLeft: 20
-  },
-  navbarTextFieldService:{
-    flex: 1,
-    marginLeft: 20
   },
   infoBarLinkContainer:{
     paddingTop: theme.padding.infoBar.paddingTop,
@@ -707,29 +307,6 @@ export default theme => ({
     width: 15,
     height: 15,
     marginRight: 5
-  },
-  navbarDatePickerMain:{
-    display: 'flex',
-    alignItems: 'center'
-  },
-  navBartoolbar:{
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  navbarTopContainer:{
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'space-between'
-  },
-  navbarTabRoot:{
-    textTransform: 'inherit',
-    opacity: 'inherit',
-    color: theme.palette.white.main,
-    fontWeight: theme.typography.buttonLink.fontWeight,
-    fontSize: theme.typography.buttonLink.fontSize,
-    '&:hover':{
-      borderBottom: '2px solid rgba(255,255,255,1)'
-    }
   },
   newsLetterEmailIcon:{
     color: 'rgba(128,128,128,1)'
