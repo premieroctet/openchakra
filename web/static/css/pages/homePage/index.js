@@ -1,9 +1,15 @@
 export default theme => ({
   generalWidthContainer:{
-    width: '60%'
+    width: '60%',
+    [theme.breakpoints.down('xs')]:{
+      width: '80%'
+    }
   },
   bannerSize:{
-    width: '60%'
+    width: '60%',
+    [theme.breakpoints.down('xs')]:{
+      width:'80%'
+    }
   },
   infoBarMainStyle:{
     backgroundColor: theme.palette.backgroundGrey.main,
@@ -15,7 +21,10 @@ export default theme => ({
     fontSize: theme.typography.infoBar.fontSize,
     lineHeight: theme.typography.infoBar.lineHeight,
     fontFamily: theme.typography.infoBar.fontFamily,
-    margin: 0
+    margin: 0,
+    [theme.breakpoints.down('xs')]:{
+      textAlign: 'center'
+    }
   },
   showmoreContainer:{
     marginLeft: 5,
@@ -37,6 +46,9 @@ export default theme => ({
     alignItems: 'center',
     width: '80%',
     display: 'flex',
+    [theme.breakpoints.down('xs')]:{
+      width: '90%'
+    }
   },
   navbarButtonContainer:{
     display: 'flex',
@@ -138,7 +150,10 @@ export default theme => ({
   },
   navbarSearchContainer:{
     width: '50%',
-    marginTop: '2%'
+    marginTop: '5vh',
+    [theme.breakpoints.down('xs')]:{
+      width: '100%'
+    }
   },
   divider: {
     height: 28,
@@ -150,6 +165,9 @@ export default theme => ({
     color: theme.palette.white.main,
     fontSize: theme.typography.title.fontSize,
     margin: theme.typography.title.margin,
+    [theme.breakpoints.down('xs')]:{
+      fontSize: '25px'
+    }
   },
   bannerPresentationMainStyle:{
     display: 'flex',
@@ -160,7 +178,10 @@ export default theme => ({
     display: 'flex',
     flexDirection: 'column',
     width: '50%',
-    marginBottom: '6%'
+    marginBottom: '6%',
+    [theme.breakpoints.down('xs')]:{
+      width: '100%'
+    }
   },
   bannerPresentationContainerText:{
     width: '75%'
@@ -185,8 +206,9 @@ export default theme => ({
     height: '85vh',
     backgroundImage: 'url(../../assets/img/homePage/illuHeader.png)',
     backgroundColor: 'rgba(207,223,252,1)',
-    backgroundSize: 'contain',
-    backgroundPosition: 'center'
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat'
   },
   navbarAndBannerBackground:{
     width: '100%',
@@ -201,11 +223,14 @@ export default theme => ({
     fontFamily: theme.typography.text.fontFamily,
     color: theme.palette.white.main,
     fontWeight: theme.typography.text.fontWeight,
+    [theme.breakpoints.down('xs')]:{
+      fontSize: '15px'
+    }
   },
   bannerPresentationContainer:{
     display: 'flex',
     justifyContent: 'center',
-    marginTop: '8%'
+    marginTop: '12vh'
   },
   mainContainerStyle:{
     justifyContent: 'center',
@@ -468,7 +493,10 @@ export default theme => ({
   categoryImgContainer:{
     height: '100%',
     marginTop: '-25px',
-    transform: 'rotate(-25deg)'
+    transform: 'rotate(-25deg)',
+    [theme.breakpoints.down('xs')]:{
+      margin:0
+    }
   },
   categoryTextContainer:{
     marginLeft: 10,
@@ -670,7 +698,10 @@ export default theme => ({
     paddingTop: theme.padding.infoBar.paddingTop,
     paddingBottom: theme.padding.infoBar.paddingBottom,
     alignItems: 'center',
-    display: 'flex'
+    display: 'flex',
+    [theme.breakpoints.down('xs')]:{
+      flexDirection: 'column'
+    }
   },
   infoBarPicsContainer:{
     width: 15,

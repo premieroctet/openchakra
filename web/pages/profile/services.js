@@ -38,6 +38,7 @@ class ProfileServices extends React.Component {
   }
 
   content = (classes, user, shop) => {
+
     return(
       <Grid container spacing={3} className={classes.servicesConntainer}>
         {isEditableUser(user) ?

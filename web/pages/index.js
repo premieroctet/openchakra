@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, {Fragment} from 'react';
+import React from 'react';
 import Footer from '../hoc/Layout/Footer/Footer';
 import BecomeAlfred from '../components/HomePage/BecomeAlfred/BecomeAlfred';
 import setAuthToken from '../utils/setAuthToken';
@@ -16,6 +16,8 @@ import CategoryTopic from '../components/HomePage/Category/CategoryTopic';
 import OurAlfred from "../components/HomePage/OurAlfred/OurAlfred";
 import HowItWorks from "../components/HomePage/HowItWorks/HowItWorks";
 import NewsLetter from "../components/HomePage/NewsLetter/NewsLetter";
+import MobileNavbar from "../hoc/Layout/NavBar/MobileNavbar";
+import Hidden from "@material-ui/core/Hidden";
 
 class Home extends React.Component {
   constructor(props) {
@@ -53,6 +55,11 @@ class Home extends React.Component {
     window.location.reload();
   };
 
+
+  content = (classes) =>{
+
+  };
+
   render() {
     const { classes } = this.props;
     const {category, alfred, logged} = this.state;
@@ -69,9 +76,9 @@ class Home extends React.Component {
           </Grid>
           <Grid container className={classes.navbarAndBannerContainer}>
             <Grid className={classes.navbarAndBannerBackground}>
-              <Grid className={classes.navbarComponentPosition}>
-                <NavBar style={classes} logged={logged}/>
-              </Grid>
+                <Grid className={classes.navbarComponentPosition}>
+                  <NavBar style={classes} logged={logged}/>
+                </Grid>
               <Grid className={classes.bannerPresentationContainer}>
                 <Grid className={classes.bannerSize}>
                   <BannerPresentation style={classes}/>
@@ -109,10 +116,17 @@ class Home extends React.Component {
               <Footer style={classes}/>
             </Grid>
           </Grid>
+          <Hidden only={['xl','lg', 'md', 'sm']}>
+            <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 1}}>
+              <Grid style={{width: '90%'}}>
+                <MobileNavbar currentUrlIndex={0}/>
+              </Grid>
+            </Grid>
+          </Hidden>
         </Grid>
       </React.Fragment>
     );
   }
 }
 
-export default withStyles(styles, {withTheme: true})(Home);
+export default withStyles(styles)(Home);

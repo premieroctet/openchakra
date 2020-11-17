@@ -16,7 +16,7 @@ class CategoryCard extends React.Component{
       return null
     }
     return(
-      <>
+      <Grid>
         <Grid className={style.categoryCardMedia}>
           <Grid
             style={{backgroundImage: `url('${item.picture}')`}}
@@ -24,7 +24,7 @@ class CategoryCard extends React.Component{
           />
         </Grid>
         <Grid><h6>{item.label}</h6></Grid>
-      </>
+      </Grid>
     )
   }
 

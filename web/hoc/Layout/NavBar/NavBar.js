@@ -30,6 +30,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Link from 'next/link';
 import axios from 'axios'
+import Hidden from "@material-ui/core/Hidden";
 
 const jwt = require('jsonwebtoken');
 
@@ -328,6 +329,7 @@ class NavBar extends Component {
       <Grid className={style.navbarMainSytle}>
         <AppBar position={'static'} className={style.navbarAppBar}>
           <Toolbar className={style.navBartoolbar}>
+            <Hidden only={['xs']}>
             <Grid className={style.navbarTopContainer}>
               <Grid className={style.navbarLogoContainer}>
                 <p>Mon logo</p>
@@ -437,6 +439,7 @@ class NavBar extends Component {
                   </Grid>
               }
             </Grid>
+          </Hidden>
             {
               ifHomePage ? SearchBarInput() : null
             }

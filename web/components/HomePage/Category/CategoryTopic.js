@@ -6,6 +6,7 @@ import {CATEGORY} from '../../../utils/i18n';
 import withSlide from '../../../hoc/Slide/SlideShow'
 import withGrid from '../../../hoc/Grid/GridCard'
 import CategoryCard from "../../Card/CategoryCard/CategoryCard";
+import {Hidden} from "@material-ui/core";
 const {SlideGridDataModel}=require('../../../utils/models/SlideGridDataModel')
 
 const CategorySlide=withSlide(withGrid(CategoryCard))
@@ -16,6 +17,10 @@ class CategoryTopic extends React.Component{
   }
   render(){
     const {style, category} = this.props;
+
+    if (!category) {
+      return null
+    }
 
     return(
       <Grid className={style.categoryMainContainer}>
@@ -33,14 +38,22 @@ class CategoryTopic extends React.Component{
               </Grid>
             </Grid>
           </Grid>
-          <Grid>
-            <Button variant={'outlined'} classes={{root : style.categoryButton}} onClick={() => Router.push('/search?search=1')}>
-              {CATEGORY.button}
-            </Button>
-          </Grid>
+          <Hidden only={['xs']}>
+            <Grid>
+              <Button variant={'outlined'} classes={{root : style.categoryButton}} onClick={() => Router.push('/search?search=1')}>
+                {CATEGORY.button}
+              </Button>
+            </Grid>
+          </Hidden>
         </Grid>
         <Grid className={style.categorySlideShowContainer}>
-          <CategorySlide model={new SlideGridDataModel(category, 4, 2, true)} style={style}/>
+          {
+            category.map(res =>{
+              return(
+                <CategoryCard item={category} style={style}/>
+              )
+            })
+          }
         </Grid>
       </Grid>
     );
