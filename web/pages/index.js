@@ -78,7 +78,7 @@ class Home extends React.Component {
           <Grid container className={classes.navbarAndBannerContainer}>
             <Grid className={classes.navbarAndBannerBackground}>
                 <Grid className={classes.navbarComponentPosition}>
-                  <NavBar style={classes} logged={logged}/>
+                  <NavBar logged={logged}/>
                 </Grid>
               <Grid className={classes.bannerPresentationContainer}>
                 <Grid className={classes.bannerSize}>

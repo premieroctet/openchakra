@@ -43,6 +43,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+
 class NavBar extends Component {
   constructor(props) {
     super(props);
@@ -66,11 +67,11 @@ class NavBar extends Component {
     if(Router.pathname === '/'){
       this.setState({ifHomePage: true})
     }
-    axios.defaults.headers.common['Authorization'] = cookie.load('token')
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         this.setState({ user : res.data})
-      })
+      }).catch(err => console.error(err))
   }
 
   logout2 = () => {
@@ -170,8 +171,8 @@ class NavBar extends Component {
 
   mobileSearchBarInput = (classes) =>{
     return(
-      <Grid className={classes.navbarSearchContainer}>
-        <Paper classes={{root: classes.navbarSearch}}>
+      <Grid className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
+        <Paper classes={{root: this.state.ifHomePage ? classes.navbarSearch : classes.navbarSearchP}}>
           <Grid>
             <IconButton classes={{root: classes.iconButton}} aria-label="search" onClick={() => this.setState({modalMobileSearchBarInput: true})}>
               <SearchIcon />
@@ -191,21 +192,22 @@ class NavBar extends Component {
         anchor={'bottom'}
         open={this.state.modalMobileSearchBarInput}
         onOpen={() =>this.setState({modalMobileSearchBarInput: true})}
-        onClose={() => this.setState({modalMobileSearchBarInput: false, mobileStepSearch: 0})}
+        onClose={() => this.setState({modalMobileSearchBarInput: false, mobileStepSearch: 0, keyword: null, city: undefined, gps: '' })}
+        className={classes.drawerStyle}
       >
-        <Grid>
-          <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+        <Grid container spacing={3}>
+          <Grid item style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
             <Grid>
-              <IconButton aria-label="delete" onClick={() =>this.setState({modalMobileSearchBarInput: false, mobileStepSearch: 0 })}>
+              <IconButton aria-label="delete" onClick={() =>this.setState({modalMobileSearchBarInput: false, mobileStepSearch: 0, keyword: null, city: undefined, gps: ''  })}>
                 <ClearIcon />
               </IconButton>
             </Grid>
             <Grid>
-              <Typography>{this.state.mobileStepSearch === 0 ? 'Votre Recherche' : this.state.mobileStepSearch === 1 ? 'Où' : 'Dates'}</Typography>
+              <h3>{this.state.mobileStepSearch === 0 ? 'Votre Recherche' : this.state.mobileStepSearch === 1 ? 'Où' : 'Dates'}</h3>
             </Grid>
           </Grid>
-          <Grid style={{display:'flex', justifyContent: 'center'}}>
-            <Grid style={{width: '90%'}}>
+          <Grid item container>
+            <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
               {
                 this.state.mobileStepSearch === 0 ?
                   <TextField
@@ -218,43 +220,44 @@ class NavBar extends Component {
                     }}
                     variant="outlined"
                     classes={{root: classes.textFieldMobilSearchInput}}
-                  /> :
-                  this.state.mobileStepSearch === 1 ?
-                    <TextField
-                      label={this.state.ifHomePage ? SEARCHBAR.labelWhere : false}
-                      classes={{root: classes.navbarRootTextFieldWhere}}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      InputProps={{
-                        inputComponent:(inputRef) => {
-                          return (
-                            <AlgoliaPlaces
-                              {...inputRef}
-                              placeholder={SEARCHBAR.where}
-                              className={classes.navbarAlgoliaPlace}
-                              options={{
-                                appId: 'plKATRG826CP',
-                                apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                                language: 'fr',
-                                countries: ['fr'],
-                                type: 'city',
-                              }}
-                              onChange={(suggestion) => this.onChangeCity(suggestion)}
-                              onClear={() => this.setState({city: '', gps: ''})}
-                            />)
-                        },
-                        disableUnderline: true
-                      }}
-                    /> :
-                    <TextField>FIN</TextField>
-              }
+                  />
+                  :
+                  <TextField
+                    item
+                    xs={12}
+                    classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhere : classes.navbarRootTextFieldWhereP}}
+                    InputProps={{
+                      inputComponent:(inputRef) => {
+                        return (
+                          <AlgoliaPlaces
+                            {...inputRef}
+                            placeholder={SEARCHBAR.where}
+                            className={classes.navbarAlgoliaPlace}
+                            options={{
+                              appId: 'plKATRG826CP',
+                              apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                              language: 'fr',
+                              countries: ['fr'],
+                              type: 'city',
+                            }}
+                            onChange={(suggestion) => this.onChangeCity(suggestion)}
+                            onClear={() => this.setState({city: '', gps: ''})}
+
+                          />)
+                      },
+                      disableUnderline: true
+                    }}
+                  />
+                }
             </Grid>
           </Grid>
-          <Grid style={{display:'flex', justifyContent: 'center'}}>
+          <Grid item xs={12} style={{display:'flex', justifyContent: 'center'}}>
             <Grid style={{width: '90%'}}>
-              <Button onClick={()=> this.setState({mobileStepSearch: this.state.mobileStepSearch + 1})} color={'primary'} classes={{root: classes.buttonNextRoot}} variant={'contained'}>{this.state.mobileStepSearch === 0 || 1 ? 'Suivant' : 'Rechercher'}</Button>
+              <Button onClick={()=> this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) :  this.findService()} color={'primary'} classes={{root: classes.buttonNextRoot}} variant={'contained'}>{this.state.mobileStepSearch === 0 ? 'Suivant' : 'Rechercher'}</Button>
             </Grid>
+          </Grid>
+          <Grid item xs={12} style={{display:'flex', justifyContent: 'center'}}>
+            <Button classes={{root: classes.buttonIgnore}} onClick={() => this.setState({modalMobileSearchBarInput: false, mobileStepSearch: 0, keyword: null, city: undefined, gps: '' })}>Ignorer</Button>
           </Grid>
         </Grid>
       </SwipeableDrawer>
@@ -263,11 +266,11 @@ class NavBar extends Component {
 
   searchBarInput = (classes) => {
     return(
-      <Grid className={classes.navbarSearchContainer}>
-        <Paper classes={{root: classes.navbarSearch}}>
+      <Grid className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
+        <Paper classes={{root: this.state.ifHomePage ? classes.navbarSearch : classes.navbarSearchP}}>
           <Grid className={classes.navbarTextFieldService}>
             <TextField
-              classes={{root: classes.navbarRootTextField}}
+              classes={{root: this.state.ifHomePage ? classes.navbarRootTextField : classes.navbarRootTextFieldP}}
               placeholder={SEARCHBAR.what}
               value={this.state.keyword}
               onChange={this.onChange}
@@ -286,8 +289,8 @@ class NavBar extends Component {
             <Divider className={classes.divider} orientation="vertical" />
           </Grid>
           {this.state.user ?
-            <Grid className={classes.navbarAddressContainer}> //todo
-              <FormControl className={classes.navbarFormControlAddress}> //todo
+            <Grid className={classes.navbarAddressContainer}>
+              <FormControl className={classes.navbarFormControlAddress}>
                 <Select
                   disableUnderline
                   id="outlined-select-currency"
@@ -319,13 +322,14 @@ class NavBar extends Component {
               </FormControl>
             </Grid>
             :
-            <Grid className={classes.navbarAlgoliaContent}>
+            <Grid className={this.state.ifHomePage ? classes.navbarAlgoliaContent : classes.navbarAlgoliaContentP}>
               <TextField
                 label={this.state.ifHomePage ? SEARCHBAR.labelWhere : false}
-                classes={{root: classes.navbarRootTextFieldWhere}}
+                classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhere : classes.navbarRootTextFieldWhereP}}
                 InputLabelProps={{
                   shrink: true,
                 }}
+                value={this.state.city}
                 InputProps={{
                   inputComponent:(inputRef) => {
                     return (
@@ -341,7 +345,7 @@ class NavBar extends Component {
                           type: 'city',
                         }}
                         onChange={(suggestion) => this.onChangeCity(suggestion)}
-                        onClear={() => this.setState({city: '', gps: ''})}
+                        onClear={() => this.setState({city: '', gps: null})}
                       />)
                   },
                   disableUnderline: true
@@ -355,10 +359,10 @@ class NavBar extends Component {
                 <Grid>
                   <Divider className={classes.divider} orientation="vertical" />
                 </Grid>
-                <Grid className={classes.navbarDatePickerContainer}>
+                <Grid className={this.state.ifHomePage ? classes.navbarDatePickerContainer : classes.navbarDatePickerContainerP}>
                   <TextField
                     label={this.state.ifHomePage ? SEARCHBAR.labelWhen : false}
-                    classes={{root: classes.navbarRootTextFieldWhen}}
+                    classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhen : classes.navbarRootTextFieldWhenP}}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -379,7 +383,7 @@ class NavBar extends Component {
                             dateFormat="dd/MM/yyyy"
                             placeholderText={SEARCHBAR.when}
                             minDate={new Date()}
-                            className={classes.inputDatePicker}
+                            className={this.state.ifHomePage ? classes.inputDatePicker : classes.inputDatePickerP}
                           />)
                       },
                       disableUnderline: true
@@ -420,22 +424,19 @@ class NavBar extends Component {
       return (
         <MuiDialogTitle disableTypography {...other}>
           <h6>{children}</h6>
-            <IconButton aria-label="close" className={classes.navbarCloseButton} onClick={onClose}>
+            <IconButton aria-label="close"  onClick={onClose}>
               <CloseIcon color={'secondary'}/>
             </IconButton>
         </MuiDialogTitle>
       );
     };
 
-
-
-
     return(
-      <Grid className={classes.navbarMainSytle}>
-        <AppBar position={'static'} className={classes.navbarAppBar}>
-          <Toolbar classes={{root: classes.navBartoolbar}}>
+      <Grid className={this.state.ifHomePage ? classes.navbarMainSytle : classes.navbarMainSytleP}>
+        <AppBar position={'static'} className={this.state.ifHomePage ? classes.navbarAppBar : classes.navbarAppBarP}>
+          <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Hidden only={['xs']}>
-            <Grid className={classes.navbarTopContainer}>
+            <Grid className={this.state.ifHomePage ? classes.navbarTopContainer : classes.navbarTopContainerP}>
               <Grid className={classes.navbarLogoContainer}>
                 <p>Mon logo</p>
               </Grid>

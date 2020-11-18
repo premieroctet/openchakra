@@ -53,9 +53,16 @@ export default theme => ({
     right: theme.spacing(1),
     top: theme.spacing(1),
   },
+  navbarAddressContainer: {
+    marginLeft: 20,
+    width: '50%'
+  },
   divider: {
     height: 28,
     margin: 4,
+  },
+  navbarFormControlAddress: {
+    width: '100%'
   },
   navbarAlgoliaContent:{
     flex:1,
@@ -70,6 +77,15 @@ export default theme => ({
     fontSize: theme.typography.placeHolder.fontSize,
     fontWeight:  theme.typography.placeHolder.fontWeight,
     lineHeight:  theme.typography.placeHolder.lineHeight,
+    display: 'flex',
+    justifyContent: 'center',
+    [theme.breakpoints.down('xs')]:{
+      width: '90%',
+      border: '1px solid rgba(0, 0, 0, 0.23)',
+      padding: '18.5px 14px',
+      borderRadius: 4
+
+    },
     "& .MuiFormLabel-root": {
       fontWeight: 'bold',
       '&:focus':{
@@ -86,7 +102,10 @@ export default theme => ({
       width:'100%'
     }
   },
-
+  buttonIgnore:{
+    textTransform: 'initial',
+    color: 'rgba(39,37,37,35%)'
+  },
   navbarAlgoliaPlace:{
     border: 'inherit',
     fontFamily: theme.typography.text.fontFamily,
@@ -95,7 +114,10 @@ export default theme => ({
     fontWeight:  theme.typography.placeHolder.fontWeight,
     lineHeight:  theme.typography.placeHolder.lineHeight,
     padding: '6px 0 7px',
-    height: 'auto'
+    height: 'auto',
+    [theme.breakpoints.down('xs')]:{
+      padding: 0,
+    }
   },
   navbarDatePickerMain:{
     display: 'flex',
@@ -229,7 +251,7 @@ export default theme => ({
     color: theme.palette.white.main,
   },
   textFieldMobilSearchInput:{
-    width: '100%'
+    width: '90%'
   },
   buttonNextRoot:{
     textTransform: 'initial',
@@ -237,9 +259,116 @@ export default theme => ({
     width: '100%',
     color:'white'
   },
-
-
+  drawerStyle:{
+    '& .MuiDrawer-paperAnchorBottom':{
+      height: '50%'
+    }
+  },
   navbarRegisterContainer:{
     marginRight: 5
   },
+
+  /**Ifsearchpage**/
+  navbarSearchContainerSearchP:{
+    width: '100%',
+  },
+  navbarSearchP: {
+    padding: '1%',
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    borderRadius: theme.border.button.borderRadius,
+  },
+  navbarRootTextFieldP: {
+    marginLeft: 20,
+    flex: 1,
+    fontFamily: theme.typography.text.fontFamily,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
+    "& .MuiFormLabel-root": {
+      fontWeight: 'bold',
+    },
+    '& .MuiInputBase-input::placeholder':{
+      opacity: '0.5'
+    },
+    '& div':{
+      width:'100%'
+    }
+  },
+  navbarRootTextFieldWhereP:{
+    flex: 1,
+    marginLeft: 20,
+    fontFamily: theme.typography.text.fontFamily,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
+    "& .MuiFormLabel-root": {
+      fontWeight: 'bold',
+    },
+    '& .MuiInputBase-input::placeholder':{
+      opacity: '0.5'
+    },
+    '& div':{
+      width:'100%'
+    }
+  },
+  navbarRootTextFieldWhenP:{
+    width: '100%',
+    marginLeft: 20,
+    fontFamily: theme.typography.text.fontFamily,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
+    "& .MuiFormLabel-root": {
+      fontWeight: 'bold',
+      '&:focus':{
+        color: theme.palette.primary.main
+      }
+    },
+    '& .MuiFormLabel-root.Mui-focused':{
+      color: theme.palette.primary.main
+    },
+    '& .MuiInputBase-input::placeholder':{
+      opacity: '0.5'
+    }
+  },
+  navbarAlgoliaContentP:{
+    flex:1,
+    '& .ap-input-icon':{
+      display: 'none',
+    }
+  },
+  navbarDatePickerContainerP:{
+    flex: 1,
+  },
+  navbarMainSytleP:{
+    alignItems: 'center',
+    width: '100%',
+    display: 'flex',
+  },
+  navbarAppBarP:{
+    boxShadow: 'inherit'
+  },
+  navBartoolbarP:{
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: '1%',
+    marginBottom: '1%'
+  },
+  navbarTopContainerP:{
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '90%',
+    alignItems: 'center'
+  },
+  inputDatePickerP:{
+    border: 'inherit',
+    fontFamily: theme.typography.text.fontFamily,
+    color: theme.palette.placeHolder.main,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
+  },
+
 })
