@@ -36,6 +36,7 @@ import styles from '../../../static/css/components/NavBar/NavBar';
 import {Typography} from '@material-ui/core';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import ClearIcon from '@material-ui/icons/Clear';
+import InputLabel from '@material-ui/core/InputLabel';
 
 const jwt = require('jsonwebtoken');
 
@@ -226,12 +227,15 @@ class NavBar extends Component {
                     item
                     xs={12}
                     classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhere : classes.navbarRootTextFieldWhereP}}
+                    value={this.state.city}
+                    label={SEARCHBAR.where}
+                    variant={'outlined'}
                     InputProps={{
                       inputComponent:(inputRef) => {
                         return (
                           <AlgoliaPlaces
                             {...inputRef}
-                            placeholder={SEARCHBAR.where}
+                            placeholder={''}
                             className={classes.navbarAlgoliaPlace}
                             options={{
                               appId: 'plKATRG826CP',
@@ -291,6 +295,11 @@ class NavBar extends Component {
           {this.state.user ?
             <Grid className={classes.navbarAddressContainer}>
               <FormControl className={classes.navbarFormControlAddress}>
+                {this.state.ifHomePage ?
+                  <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+                    L'Adresse
+                  </InputLabel> : null
+                }
                 <Select
                   disableUnderline
                   id="outlined-select-currency"

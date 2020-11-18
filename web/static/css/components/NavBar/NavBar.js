@@ -1,6 +1,5 @@
 export default theme => ({
   selectRoot:{
-    whiteSpace: 'inherit'
   },
   navbarSearchContainer:{
     width: '50%',
@@ -81,13 +80,9 @@ export default theme => ({
     justifyContent: 'center',
     [theme.breakpoints.down('xs')]:{
       width: '90%',
-      border: '1px solid rgba(0, 0, 0, 0.23)',
-      padding: '18.5px 14px',
       borderRadius: 4
-
     },
     "& .MuiFormLabel-root": {
-      fontWeight: 'bold',
       '&:focus':{
         color: theme.palette.primary.main
       }
@@ -116,7 +111,7 @@ export default theme => ({
     padding: '6px 0 7px',
     height: 'auto',
     [theme.breakpoints.down('xs')]:{
-      padding: 0,
+      padding: '18.5px 14px',
     }
   },
   navbarDatePickerMain:{
