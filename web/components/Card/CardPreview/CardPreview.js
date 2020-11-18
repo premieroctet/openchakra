@@ -21,15 +21,15 @@ class CardPreview extends React.Component {
       return null
     }
     return(
-      <Grid style={{height: '100%'}}>
-        <Grid style={{height: '20%', position:'relative'}}>
+      <Grid style={{height: 200}}>
+        <Grid style={{height: '30%', position:'relative'}}>
           <Grid style={{position: 'absolute', bottom: 0, left: '50%', transform:'translate(-50%,50%)',zIndex: 1}}>
             <Grid className={classes.cardPreviewContainerAvatar}>
               <Avatar alt="Remy Sharp" src={item.user.picture} className={classes.cardPreviewLarge} />
             </Grid>
           </Grid>
         </Grid>
-        <Grid style={{height: '80%'}}>
+        <Grid style={{height: '70%'}}>
           <Grid className={classes.cardPreviewBoxContentContainer}>
             <Grid className={classes.cardPreviewBoxContentPosition}>
               <Grid className={classes.cardPreviewContentIdentity}>

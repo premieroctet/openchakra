@@ -280,14 +280,7 @@ export default theme => ({
     flexDirection: 'column',
     alignItems: 'center'
   },
-  slideShowContainer:{
-    display: 'flex',
-    alignItems: 'center',
-    padding: '2%'
-  },
-  slideShowSectionContainer:{
-    width: '100%'
-  },
+
   cardPreviewMainStyle:{
     display: 'flex',
     alignItems: 'center',

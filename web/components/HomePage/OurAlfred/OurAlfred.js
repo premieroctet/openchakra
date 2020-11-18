@@ -2,11 +2,16 @@ import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import Router from 'next/router'
 import Button from "@material-ui/core/Button";
-import CardPreview from "../../Card/CardPreview/CardPreview";
 import Hidden from "@material-ui/core/Hidden";
 import {CATEGORY} from "../../../utils/i18n";
 import withStyles from "@material-ui/core/styles/withStyles";
-import styles from '../../../static/css/components/OurAlfred/OurAlfred'
+import styles from '../../../static/css/components/OurAlfred/OurAlfred';
+import withSlide from '../../../hoc/Slide/SlideShow';
+import withGrid from '../../../hoc/Grid/GridCard'
+import CardPreview from "../../Card/CardPreview/CardPreview";
+const {SlideGridDataModel}=require('../../../utils/models/SlideGridDataModel');
+
+const AlfredSlide=withSlide(withGrid(CardPreview))
 
 class OurAlfred extends React.Component{
   constructor(props) {
@@ -37,14 +42,19 @@ class OurAlfred extends React.Component{
             </Grid>
           </Hidden>
         </Grid>
-        <Grid container className={classes.categorySlideShowContainer} spacing={3} style={{height:'40vh'}}>
-          {
-            Object.keys(alfred).map(res =>(
-              <Grid item>
-                <CardPreview item={alfred[res]}/>
-              </Grid>
-            ))
-          }
+        <Grid container className={classes.categorySlideShowContainer} spacing={3}>
+          <Hidden only={['xs', 'sm']}>
+            <AlfredSlide model={new SlideGridDataModel(alfred, 4, 1, true)} style={classes} />
+          </Hidden>
+          <Hidden only={['md', 'lg', 'xl']}>
+            {
+              Object.keys(alfred).map(res =>(
+                <Grid item>
+                  <CardPreview item={alfred[res]}/>
+                </Grid>
+              ))
+            }
+          </Hidden>
         </Grid>
         <Hidden only={['xl', 'lg', 'md', 'sm']}>
           <Grid style={{marginTop: '10vh', display: 'flex', justifyContent: 'center'}}>

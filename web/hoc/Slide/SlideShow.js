@@ -3,6 +3,7 @@ import Carousel from 'react-material-ui-carousel'
 import Grid from '@material-ui/core/Grid';
 import Pagination from '@material-ui/lab/Pagination'
 import './SlideShow.css';
+import styles from '../../static/css/components/Slide/SlideShow/SlideShow'
 
 function withSlide(WrappedComponent) {
 
@@ -32,7 +33,7 @@ function withSlide(WrappedComponent) {
       }
 
       return(
-        <Grid>
+        <Grid style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
           <Carousel
             easing="ease"
             autoPlay={false}

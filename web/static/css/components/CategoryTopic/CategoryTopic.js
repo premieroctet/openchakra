@@ -27,6 +27,15 @@ export default theme => ({
   categoryTextContainer:{
     marginLeft: 10,
   },
+  slideShowContainer:{
+    display: 'flex',
+    alignItems: 'center',
+    padding: '2%'
+  },
+
+  slideShowSectionContainer:{
+    width: '100%'
+  },
   categoryTitle:{
     fontFamily: theme.typography.sectionTitle.fontFamily,
     fontWeight: theme.typography.sectionTitle.fontWeight,
@@ -42,7 +51,7 @@ export default theme => ({
   },
   categorySlideShowContainer:{
     marginTop: '5vh',
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('sm')]:{
       overflowX: 'scroll',
       display: 'flex',
       flexWrap: 'nowrap',

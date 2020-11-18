@@ -16,7 +16,7 @@ export default theme =>({
   },
   cardPreviewBoxContentContainer:{
     border: '2px solid rgba(112, 112, 112, 0.3)',
-    width: '75vw',
+    width: 250,
     borderRadius: 22,
     height: '100%',
     position:'relative'
@@ -28,7 +28,7 @@ export default theme =>({
     alignItems: 'center',
     position: 'relative',
     height: '100%',
-    marginTop: '3vh'
+    marginTop: '2vh'
   },
   cardPreviewContentIdentity:{
     display: 'flex',
