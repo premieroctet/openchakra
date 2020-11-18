@@ -77,6 +77,9 @@ class Messages extends React.Component {
   }
 
   messageDetails = () => {
+    const {relativeDetails, chats}=this.state
+    const filteredChats = chats.filter(c => c.emitter._id==relativeDetails || c.recipient._id==relativeDetails)
+
     return (
       <Dialog style={{width: '100%'}}
         open={this.state.relativeDetails}
@@ -84,7 +87,7 @@ class Messages extends React.Component {
       >
         <DialogContent>
           <MessagesDetails chatroomId={'5f1827ec04711c1f1e3b82e7'} id={'5f1827ec04711c1f1e3b82e7'}
-          booking={'5f1827ec04711c1f1e3b82e8'} relative={this.state.relativeDetails} />
+          booking={'5f1827ec04711c1f1e3b82e8'} relative={this.state.relativeDetails} chats={filteredChats}/>
         </DialogContent>
       </Dialog>
     )

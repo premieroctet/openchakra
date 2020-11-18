@@ -32,7 +32,6 @@ class MessagesDetails extends React.Component {
       oldMessages: [],
       roomData: {},
       emitter: '',
-      bookingObj: null,
       chats: null,
     };
 
@@ -50,24 +49,18 @@ class MessagesDetails extends React.Component {
         this.setState( {relative: res.data})
       })
 
-    axios.get('/myAlfred/api/chatRooms/userChatRooms')
-      .then( res => {
-        var chats=res.data.filter(c => c.latest && c.booking && c.booking.alfred && c.messages && c.messages.length>0)
-        chats = chats.filter( c => c.emitter._id==this.props.relative || c.recipient._id==this.props.relative)
-        console.log(`Chats:${chats.length}`)
-        this.setState({chats: chats})
-        const messages=[]
-        chats.forEach( c => {
-          if (c.messages.length>0) {
-            messages.push(...c.messages)
-          }
-        })
-        messages.sort( (m1, m2) => moment(m1.date)-moment(m2.date))
-        setTimeout(() => {
-          this.setState({oldMessagesDisplay: messages})
-        }, 1000)
+    this.setState({chats: this.props.chats})
+      const messages=[]
+      this.props.chats.forEach( c => {
+        if (c.messages.length>0) {
+          messages.push(...c.messages)
+        }
       })
-      .catch (err => console.error(err))
+      messages.sort( (m1, m2) => moment(m1.date)-moment(m2.date))
+      this.setState({
+        oldMessagesDisplay: messages,
+        oldMessage: messages,
+      })
 
     axios.get('/myAlfred/api/users/current')
       .then(res => {
@@ -82,21 +75,15 @@ class MessagesDetails extends React.Component {
         }
       });
 
-    const id = this.props.chatroomId;
+    const chatRoomId = this.props.chats.sort( (c1, c2) => moment(c1.latest)-moment(c2.latest))[0]._id
 
-    axios.put('/myAlfred/api/chatRooms/viewMessages/' + this.props.chatroomId)
+    axios.put('/myAlfred/api/chatRooms/viewMessages/' + chatRoomId)
       .then();
     axios
-      .get('/myAlfred/api/booking/' + this.props.bookingId)
-      .then(res => this.setState({bookingObj: res.data}))
-      .catch(err => console.error(err));
-    axios
-      .get(`/myAlfred/api/chatRooms/userChatRoom/${id}`)
+      .get(`/myAlfred/api/chatRooms/userChatRoom/${chatRoomId}`)
       .then(res => {
         this.setState({
           roomData: res.data,
-          oldMessagesDisplay: res.data.messages,
-          oldMessages: res.data.messages,
         }, () => this.grantNotificationPermission());
         this.socket = io();
         this.socket.on('connect', socket => {
@@ -109,7 +96,7 @@ class MessagesDetails extends React.Component {
           messages.push(data);
           axios
             .put(
-              `/myAlfred/api/chatRooms/saveMessages/${id}`,
+              `/myAlfred/api/chatRooms/saveMessages/${chatRoomId}`,
               {
                 messages: oldMessages,
                 booking_id: this.props.bookingId,
@@ -213,7 +200,7 @@ class MessagesDetails extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {bookingObj, relative, messages, oldMessagesDisplay} = this.state;
+    const {relative, messages, oldMessagesDisplay} = this.state;
 
     if (!relative) {
       return null
