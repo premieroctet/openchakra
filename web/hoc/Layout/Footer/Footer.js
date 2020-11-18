@@ -26,19 +26,19 @@ class Footer extends React.Component {
     return (
       <Grid className={classes.footerMainStyle}>
         <Grid>
-          <Grid className={classes.footerMainContainer}>
+          <Grid container className={classes.footerMainContainer}>
             <Hidden only={['xs']}>
-              <Grid className={classes.footerSection}>
+              <Grid item xl={3} lg={3} className={classes.footerSection}>
                 <Grid>
                   <h3 className={classes.footerTitileSection}>À propos</h3>
                 </Grid>
                 <Link href={'/footer/apropos'}>
-                  <Grid>
-                    <Typography className={classes.footerLink}>My Alfred ?</Typography>
+                  <Grid style={{marginBottom: '2vh'}}>
+                    <Typography className={classes.footerLink}>My Alfred</Typography>
                   </Grid>
                 </Link>
                 <Link href={'/footer/ourTeam'}>
-                  <Grid>
+                  <Grid style={{marginBottom: '2vh'}}>
                     <Typography className={classes.footerLink}>Notre équipe</Typography>
                   </Grid>
                 </Link>
@@ -50,17 +50,17 @@ class Footer extends React.Component {
               </Grid>
             </Hidden>
             <Hidden only={['xs']}>
-              <Grid className={classes.footerSection}>
+              <Grid item  xl={3} lg={3} className={classes.footerSection}>
                 <Grid>
                   <h3 className={classes.footerTitileSection}>Communauté</h3>
                 </Grid>
                 <Link href={'/footer/ourCommunity'}>
-                  <Grid>
+                  <Grid style={{marginBottom: '2vh'}}>
                     <Typography className={classes.footerLink}>Notre communauté</Typography>
                   </Grid>
                 </Link>
                 <Link href={'/'}>
-                  <Grid>
+                  <Grid style={{marginBottom: '2vh'}}>
                     <Typography className={classes.footerLink}>Le blog</Typography>
                   </Grid>
                 </Link>
@@ -72,17 +72,17 @@ class Footer extends React.Component {
               </Grid>
             </Hidden>
             <Hidden only={['xs']}>
-              <Grid className={classes.footerSection}>
+              <Grid item  xl={3} lg={3} className={classes.footerSection}>
                 <Grid>
                   <h3 className={classes.footerTitileSection}>Alfred</h3>
                 </Grid>
                 <Link href={'/footer/becomeAlfred'}>
-                  <Grid>
+                  <Grid style={{marginBottom: '2vh'}}>
                     <Typography className={classes.footerLink}>Devenir Alfred</Typography>
                   </Grid>
                 </Link>
                 <Link href={'/faq/home'}>
-                  <Grid>
+                  <Grid style={{marginBottom: '2vh'}}>
                     <Typography className={classes.footerLink}>FAQ des Alfred</Typography>
                   </Grid>
                 </Link>
@@ -93,17 +93,17 @@ class Footer extends React.Component {
                 </Link>
               </Grid>
             </Hidden>
-            <Grid className={classes.footerSection}>
+            <Grid item  xl={3} lg={3} className={classes.footerSection}>
               <Grid>
                 <h3 className={classes.footerTitileSection}>Assistance</h3>
               </Grid>
               <Link href={'/footer/addService'}>
-                <Grid>
+                <Grid style={{marginBottom: '2vh'}}>
                   <Typography className={classes.footerLink}>Réserver un service</Typography>
                 </Grid>
               </Link>
               <Link href={'/faq/home'}>
-                <Grid>
+                <Grid style={{marginBottom: '2vh'}}>
                   <Typography className={classes.footerLink}>FAQ des services</Typography>
                 </Grid>
               </Link>
@@ -114,9 +114,11 @@ class Footer extends React.Component {
               </Link>
             </Grid>
           </Grid>
-          <Grid className={classes.footerDividerContainer}>
-            <Divider className={classes.footerDivider}/>
-          </Grid>
+          <Hidden only={['xl', 'lg', 'md']}>
+            <Grid className={classes.footerDividerContainer}>
+              <Divider className={classes.footerDivider}/>
+            </Grid>
+          </Hidden>
           <Grid className={classes.footerSocialSection}>
             <Grid>
               <h3 className={classes.footerTitileSection}>Réseaux sociaux</h3>
