@@ -7,6 +7,8 @@ import {NEWS_LETTER} from '../../../utils/i18n';
 import axios from 'axios';
 import EmailIcon from '@material-ui/icons/Email';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import styles from '../../../static/css/components/NewsLetter/NewsLetter'
+import withStyles from "@material-ui/core/styles/withStyles";
 
 class NewsLetter extends React.Component{
   constructor(props) {
@@ -34,19 +36,19 @@ class NewsLetter extends React.Component{
   };
 
   render() {
-    const {style} = this.props;
+    const {classes} = this.props;
     return (
-      <Grid className={style.newsLetterMainStyle}>
-        <Grid className={style.newsLetterMainContainer}>
-          <Grid className={style.newsLetterLeftContainer}>
+      <Grid className={classes.newsLetterMainStyle}>
+        <Grid className={classes.newsLetterMainContainer}>
+          <Grid className={classes.newsLetterLeftContainer}>
             <Grid>
-              <h2 className={style.newsLetterTitle}>{NEWS_LETTER.title}</h2>
+              <h2 className={classes.newsLetterTitle}>{NEWS_LETTER.title}</h2>
             </Grid>
             <Grid>
-              <p className={style.newsLetterSubTitle}>{NEWS_LETTER.text}</p>
+              <p className={classes.newsLetterSubTitle}>{NEWS_LETTER.text}</p>
             </Grid>
           </Grid>
-          <Grid className={style.newsLetterRightContainer}>
+          <Grid className={classes.newsLetterRightContainer}>
             {/****TODO when googleAuth avail <Grid className={style.newsLetterContainer}>
               <Button
                 variant="outlined"
@@ -59,29 +61,29 @@ class NewsLetter extends React.Component{
             <Grid >
               <p className={style.newsLetterText}>{NEWS_LETTER.where}</p>
             </Grid>***/}
-            <Grid className={style.newsLetterContainer}>
+            <Grid className={classes.newsLetterContainer}>
               <Grid>
                 <TextField
                   id="outlined-basic"
                   placeholder="Email"
                   variant="outlined"
                   name="email"
-                  classes={{root: style.newsLetterTextField}}
+                  classes={{root: classes.newsLetterTextField}}
                   InputLabelProps={{ shrink: false }}
                   onChange={this.handleOnchange}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start" >
-                        <EmailIcon className={style.newsLetterEmailIcon}/>
+                        <EmailIcon className={classes.newsLetterEmailIcon}/>
                       </InputAdornment>
                     ),
                   }}
                 />
               </Grid>
             </Grid>
-            <Grid className={style.newsLetterContainer}>
+            <Grid className={classes.newsLetterContainer}>
               <Grid>
-                <Button style={{ width: '100%'}} variant={'outlined'} classes={{root : style.newsLetterButton}} onClick={this.sendSubscription}>{NEWS_LETTER.button}</Button>
+                <Button style={{ width: '100%'}} variant={'outlined'} classes={{root : classes.newsLetterButton}} onClick={this.sendSubscription}>{NEWS_LETTER.button}</Button>
               </Grid>
             </Grid>
           </Grid>
@@ -91,4 +93,4 @@ class NewsLetter extends React.Component{
   }
 }
 
-export default NewsLetter;
+export default withStyles (styles) (NewsLetter);

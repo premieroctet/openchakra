@@ -3,6 +3,8 @@ import Grid from "@material-ui/core/Grid";
 import {HOW_IT_WORKS} from '../../../utils/i18n'
 import Typography from "@material-ui/core/Typography";
 import Hidden from "@material-ui/core/Hidden";
+import withStyles from "@material-ui/core/styles/withStyles";
+import styles from '../../../static/css/components/HowItWorks/HowItWorks'
 
 class HowItWorks extends React.Component{
   constructor(props) {
@@ -10,17 +12,17 @@ class HowItWorks extends React.Component{
   }
 
   render() {
-    const{style} = this.props;
+    const{classes} = this.props;
     return (
-      <Grid className={style.howItWorksMainStyle}>
-        <Grid className={style.howItWorksMainContainer}>
-          <Grid className={style.howItWorksLeftContainer}>
-            <Typography className={style.howItWorksLeftText}>{HOW_IT_WORKS.leftText}</Typography>
+      <Grid className={classes.howItWorksMainStyle}>
+        <Grid className={classes.howItWorksMainContainer}>
+          <Grid className={classes.howItWorksLeftContainer}>
+            <Typography className={classes.howItWorksLeftText}>{HOW_IT_WORKS.leftText}</Typography>
           </Grid>
-          <Hidden only={['xs']}>
-            <Grid className={style.howItWorksRightContainer}>
+          <Hidden only={['xs', 'sm']}>
+            <Grid className={classes.howItWorksRightContainer}>
               <Grid>
-                <Typography className={style.howItWorksRightText}>
+                <Typography className={classes.howItWorksRightText}>
                   {HOW_IT_WORKS.rightText}
                 </Typography>
               </Grid>
@@ -33,4 +35,4 @@ class HowItWorks extends React.Component{
 
 }
 
-export default HowItWorks;
+export default withStyles (styles)(HowItWorks);

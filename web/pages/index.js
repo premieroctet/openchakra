@@ -19,6 +19,7 @@ import NewsLetter from "../components/HomePage/NewsLetter/NewsLetter";
 import MobileNavbar from "../hoc/Layout/NavBar/MobileNavbar";
 import Hidden from "@material-ui/core/Hidden";
 import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
+import {Divider} from "@material-ui/core";
 
 class Home extends React.Component {
   constructor(props) {
@@ -94,7 +95,7 @@ class Home extends React.Component {
           </Grid>
           <Grid container className={classes.howItWorksComponent}>
             <Grid className={classes.generalWidthContainer}>
-              <HowItWorks style={classes}/>
+              <HowItWorks/>
             </Grid>
           </Grid>
           <Grid container className={classes.mainContainerStyle}>
@@ -107,13 +108,16 @@ class Home extends React.Component {
               <BecomeAlfred style={classes}/>
             </Grid>
           </Grid>
-          <Hidden only={['xs']}>
+          <Hidden only={['xs', 'sm']}>
             <Grid container className={classes.mainNewsLetterStyle}>
-              <Grid className={classes.generalWidthContainer}>
-                <NewsLetter style={classes}/>
+              <Grid className={classes.generalWidthContainerNewsLtter}>
+                <NewsLetter/>
               </Grid>
             </Grid>
           </Hidden>
+          <Grid>
+            <Divider/>
+          </Grid>
           <Grid className={classes.trustAndSecurityContainer}>
             <Grid className={classes.trustAndSecurityComponent}>
               <TrustAndSecurity/>

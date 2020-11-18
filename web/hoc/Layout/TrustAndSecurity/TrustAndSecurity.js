@@ -5,6 +5,8 @@ import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import TextsmsIcon from '@material-ui/icons/Textsms';
 import Typography from "@material-ui/core/Typography";
+import withStyles from "@material-ui/core/styles/withStyles";
+import styles from '../../../static/css/components/TrustAndSecurity/TrustAndSecurity';
 
 class TrustAndSecurity extends React.Component{
   constructor(props) {
@@ -37,11 +39,12 @@ class TrustAndSecurity extends React.Component{
 
   render() {
     const{items} = this.state;
+    const{classes} = this.props;
     return(
-      <Grid container style={{justifyContent: 'space-between'}}>
+      <Grid className={classes.trustAndSecurityMainContainer} >
         {
           items.map((res, index) => (
-            <Grid key={index} style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
+            <Grid key={index} className={classes.trustAndSecurityContent}>
               <Grid>
                 {res.icon}
               </Grid>
@@ -61,4 +64,4 @@ class TrustAndSecurity extends React.Component{
   }
 }
 
-export default TrustAndSecurity;
+export default withStyles (styles) (TrustAndSecurity);

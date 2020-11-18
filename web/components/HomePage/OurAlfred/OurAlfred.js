@@ -43,10 +43,10 @@ class OurAlfred extends React.Component{
           </Hidden>
         </Grid>
         <Grid container className={classes.categorySlideShowContainer} spacing={3}>
-          <Hidden only={['xs', 'sm']}>
-            <AlfredSlide model={new SlideGridDataModel(alfred, 4, 1, true)} style={classes} />
+          <Hidden only={['xs', 'sm', 'md']}>
+            <AlfredSlide model={new SlideGridDataModel(alfred, 3, 1, true)} style={classes} />
           </Hidden>
-          <Hidden only={['md', 'lg', 'xl']}>
+          <Hidden only={['lg', 'xl',]}>
             {
               Object.keys(alfred).map(res =>(
                 <Grid item>

@@ -5,6 +5,12 @@ export default theme => ({
       width: '80%'
     }
   },
+  generalWidthContainerNewsLtter:{
+    width: '60%',
+    [theme.breakpoints.down('lg')]:{
+      width: '80%'
+    }
+  },
   bannerSize:{
     width: '60%',
     [theme.breakpoints.down('xs')]:{
@@ -159,99 +165,18 @@ export default theme => ({
     marginTop: '2%',
     backgroundColor: theme.palette.yellow.main
   },
-  howItWorksMainStyle:{
-    padding: theme.padding.homePage.section.padding
-  },
-  howItWorksMainContainer:{
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  howItWorksLeftContainer:{
-    width: '30%',
-    [theme.breakpoints.down('xs')]:{
-      width: '100%'
-    }
-  },
-  howItWorksRightContainer:{
-    display: 'flex',
-    flexDirection: 'column',
-    width: '30%'
-  },
-  howItWorksRightText:{
-    color: theme.palette.white.main,
-    fontSize: theme.typography.text.fontSize,
-    fontWeight: theme.typography.text.fontWeight,
-    fontFamily: theme.typography.text.fontFamily,
-  },
-  howItWorksLeftText:{
-    color: theme.palette.white.main,
-    fontSize: theme.typography.subTitle.fontSize,
-    fontWeight: theme.typography.subTitle.fontWeight,
-    fontFamily: theme.typography.subTitle.fontFamily,
-  },
-  newsLetterMainStyle:{
-    padding: theme.padding.homePage.section.padding
-  },
-  newsLetterMainContainer:{
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  newsLetterLeftContainer:{
-    display: 'flex',
-    flexDirection: 'column',
-    width: '30%'
-  },
-  newsLetterRightContainer:{
-    display: 'flex',
-    flexDirection: 'column',
-    width: '30%',
-    alignItems: 'center'
-  },
-  newsLetterButton:{
-    color: theme.palette.white.main,
-    fontWeight: theme.typography.blackButton.fontWeight,
-    fontFamily: theme.typography.blackButton.fontFamily,
-    backgroundColor: theme.palette.black.main,
-    borderRadius: theme.border.blackButton.borderRadius,
-    padding: theme.padding.blackButton.padding,
-  },
-  newsLetterTitle:{
-    fontFamily: theme.typography.subTitle.fontFamily,
-    fontWeight: theme.typography.subTitle.fontWeight,
-    margin: theme.typography.subTitle.margin,
-  },
-  newsLetterSubTitle:{
-    fontFamily: theme.typography.text.fontFamily,
-    color: theme.typography.text.color,
-    fontWeight: theme.typography.text.fontWeight,
-    fontSize: theme.typography.text.fontSize
-  },
-  newsLetterButtonGoogle:{
-    fontWeight: theme.typography.blackButton.fontWeight,
-    fontFamily: theme.typography.blackButton.fontFamily,
-    borderRadius: theme.border.blackButton.borderRadius,
-    padding: theme.padding.blackButton.padding,
-    width: '100%'
-  },
-  newsLetterText:{
-    color: theme.palette.black.main,
-    fontSize: theme.typography.text.fontSize,
-    fontWeight: theme.typography.text.fontWeight,
-    fontFamily: theme.typography.text.fontFamily,
-  },
-  newsLetterTextField:{
-    width: '100%',
-    marginBottom: '8%',
-    [`& fieldset`]: {
-      borderRadius: theme.border.textField.borderRadius,
-    },
-  },
-  newsLetterContainer:{
-    width: '100%'
-  },
+
+
+
+
+
+
+
+
+
+
+
+
   generalWidthFooter:{
     width: '90%'
   },
@@ -264,15 +189,19 @@ export default theme => ({
     }
   },
   trustAndSecurityComponent:{
-    [theme.breakpoints.down('xs')]:{
+    padding:'2vh',
+    [theme.breakpoints.down('sm')]:{
       marginTop: '5vh',
       marginBottom: '5vh',
-      width: '80%'
+      width: '100%',
+    },
+    [theme.breakpoints.down('xs')]:{
+      margin:0,
+      width: '90%',
     }
   },
   mainContainerStyleFooter:{
     justifyContent: 'center',
-    marginTop: '2%',
     backgroundColor: 'rgba(228, 228, 228, 8)'
   },
   categoryCardRoot:{
@@ -301,9 +230,7 @@ export default theme => ({
     height: 15,
     marginRight: 5
   },
-  newsLetterEmailIcon:{
-    color: 'rgba(128,128,128,1)'
-  },
+
   shomoreLink:{
     color: theme.palette.link.main,
     fontSize: theme.typography.infoBar.fontSize,
