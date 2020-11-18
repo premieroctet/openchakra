@@ -6,6 +6,9 @@ export default theme => ({
     marginTop: '5vh',
     [theme.breakpoints.down('xs')]:{
       width: '100%',
+    },
+    [theme.breakpoints.down('lg')]:{
+      width: '100%',
     }
   },
   navbarSearch: {

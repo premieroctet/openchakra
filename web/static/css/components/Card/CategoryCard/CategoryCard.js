@@ -1,7 +1,7 @@
 export default theme => ({
   categoryCardMedia:{
-    height: '30vh',
-    width: '60vw',
+    height: 180,
+    width: 180,
     borderRadius: 14
   },
   categoryCardBackground:{
