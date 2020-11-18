@@ -36,7 +36,11 @@ router.get('/userChatRooms', passport.authenticate('jwt', {session: false}), (re
       if (chatrooms) {
         res.json(chatrooms);
       }
-    });
+    })
+    .catch (err => {
+      console.error(err)
+      res.status(500)
+    })
 });
 
 // Get one chatroom
@@ -47,11 +51,14 @@ router.get('/userChatRoom/:id', passport.authenticate('jwt', {session: false}), 
       if (!chatroom) {
         res.status(404).json({msg: 'Aucun chat trouvé'});
       }
-
       if (chatroom) {
         res.json(chatroom);
       }
-    });
+    })
+    .catch (err => {
+      console.error(err)
+      res.status(500)
+    })
 });
 
 
@@ -119,6 +126,10 @@ router.put('/viewMessages/:id', passport.authenticate('jwt', {session: false}), 
         }
       });
       chatroom.save().then(() => res.json(chatroom)).catch(err => console.error(err));
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500)
     });
 });
 

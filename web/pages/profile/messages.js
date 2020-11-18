@@ -19,24 +19,30 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import cookie from 'react-cookies'
 const moment=require('moment')
+import MessageSummary from '../../components/MessageSummary/MessageSummary'
 import _ from 'lodash'
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import MessagesDetails from '../../components/MessagesDetails/MessagesDetails'
 
-class ProfileServices extends React.Component {
+class Messages extends React.Component {
 
   constructor(props) {
     super(props);
     this.state={
       tabIndex:0,
-      chats: []
+      chats: [],
+      visibleDetails: false,
     }
-    this.formatMessage = this.formatMessage.bind(this)
+    setTimeout( () => this.setState({visibleDetails: true}), 1000)
   }
 
   componentDidMount() {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get('/myAlfred/api/chatRooms/userChatRooms')
       .then( res => {
-        this.setState({chats: res.data})
+        const chats=res.data.filter(c => c.latest && c.booking && c.booking.alfred && c.messages && c.messages.length>0)
+        this.setState({chats: chats})
       })
   }
 
@@ -48,16 +54,11 @@ class ProfileServices extends React.Component {
     this.setState({tabIndex: newValue})
   }
 
-  formatMessage = () => {
+  getRelatives = () => {
     var {chats, tabIndex} = this.state
-
-    chats=chats.filter(c => c.latest && c.booking && c.booking.alfred && c.messages && c.messages.length>0)
-
     if (!chats || chats.length==0) {
-      console.log('No message')
       return []
     }
-
     // Tab index 0 : Alfred, 1 : client
     // Filter chats for Alfred or client
     if (tabIndex==0) {
@@ -67,32 +68,40 @@ class ProfileServices extends React.Component {
       chats=chats.filter(c => c.booking.alfred!=this.props.user)
     }
     chats = chats.sort( (c1, c2) => moment(c2.latest)-moment(c1.latest))
+    const users=_.uniqBy(chats.map( c => c.emitter._id.toString()==this.props.user ? c.recipient : c.emitter), '_id')
+    return users
+  }
 
-    const users=_.uniq(chats.map( c => c.emitter._id.toString()==this.props.user ? c.recipient._id : c.emitter._id))
-    console.log(JSON.stringify(users))
+  openMessagesDetails = relativeId => {
+    this.setState({ relativeDetails: relativeId})
+  }
 
-    var res=[]
-    chats.forEach( c => {
-      res.push(...c.messages)
-    });
-
-    return res
+  messageDetails = () => {
+    return (
+      <Dialog style={{width: '100%'}}
+        open={this.state.relativeDetails}
+        onClose={() => this.setState({relativeDetails: null})}
+      >
+        <DialogContent>
+          <MessagesDetails chatroomId={'5f1827ec04711c1f1e3b82e7'} id={'5f1827ec04711c1f1e3b82e7'}
+          booking={'5f1827ec04711c1f1e3b82e8'} relative={this.state.relativeDetails} />
+        </DialogContent>
+      </Dialog>
+    )
   }
 
   render() {
     const {classes, user}=this.props;
-    const {tabIndex}=this.state
-    const messages = this.formatMessage()
+    const {tabIndex, chats}=this.state
+    const relatives = this.getRelatives()
 
     return (
       <Layout>
       <Grid className={classes.profilLayoutMainContainer}>
         <Grid className={classes.profilLayoutContainer}>
-          <Grid className={classes.profilLayoutBackgroundContainer}>
+          <Grid className={classes.profilLayoutBackgroundContainer} style={{ display:'flex', alignItems:'center', flexDirection:'column'}}>
             <Grid className={classes.profilLayoutMargin}>
               <Grid className={classes.profilLayoutBox}>
-                <Grid className={classes.profilLayoutBannerImg}>
-                </Grid>
                 <Grid style={{display: 'flex', justifyContent: 'center', height: '40%', alignItems: 'center'}}>
                   <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                     <Grid>
@@ -114,20 +123,23 @@ class ProfileServices extends React.Component {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid className={classes.profilLayoutChildren}>
-              { messages.map( m => {
+            <Grid className={classes.profilLayoutChildren} style={{width:'80%'}}>
+            <Box>
+              <Typography style={{ fontSize: 30 }}>Mes messages</Typography>
+              { relatives.map( m => {
                 return (
-                  <div>{m.date} {m.user} {m.idsender} {m.content}</div>
+                  <MessageSummary chats={chats} relative={m} cbDetails={this.openMessagesDetails}/>
                 )
               })}
+            </Box>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-
+      { this.messageDetails() }
       </Layout>
     )
   }
 
 }
-export default withStyles(styles)(ProfileServices)
+export default withStyles(styles)(Messages)
