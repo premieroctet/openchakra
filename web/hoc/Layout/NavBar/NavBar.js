@@ -375,9 +375,16 @@ class NavBar extends Component {
                           <MenuItem>Mon compte</MenuItem>
                         </Link>
                         {user.is_alfred ?
+                          <>
                           <Link href={`/shop?id_alfred=${user._id}`}>
                             <MenuItem>Ma boutique</MenuItem>
-                          </Link> : null
+                          </Link>
+                          <Link href={`/profile/messages?user=${user._id}`}>
+                            <MenuItem>Mes messages</MenuItem>
+                          </Link>
+                          </>
+                          :
+                          null
                         }
                         {user.is_admin ?
                           <Link href={`/dashboard/home`}>

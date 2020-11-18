@@ -27,6 +27,7 @@ router.get('/userChatRooms', passport.authenticate('jwt', {session: false}), (re
   })
     .populate('emitter', '-id_card')
     .populate('recipient', '-id_card')
+    .populate('booking', 'alfred')
     .then(chatrooms => {
       if (!chatrooms) {
         res.status(404).json({msg: 'Aucun chat trouvé'});
