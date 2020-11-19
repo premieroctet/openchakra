@@ -322,7 +322,10 @@ router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
         return res.status(400).json({msg: 'No booking found'});
       }
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      console.error(err)
+      res.status(500)
+    })
 });
 
 

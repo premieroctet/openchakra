@@ -42,6 +42,15 @@ const ChatRoomsSchema = new Schema({
     ref: 'booking',
     required: false,
   },
+}, {toJSON: {virtuals: true, getters: true}});
+
+/** Return latest message date */
+ChatRoomsSchema.virtual('latest').get(function () {
+  if (!this.messages || this.messages.length==0) {
+    return null
+  }
+  return Math.max(...this.messages.map(m => m.date))
 });
+
 
 module.exports = ChatRooms = mongoose.model('chatRooms', ChatRoomsSchema);
