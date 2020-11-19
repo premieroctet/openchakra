@@ -143,20 +143,20 @@ class Footer extends React.Component {
           </Grid>
           <Grid className={classes.footerBrandContainer}>
             <Grid className={classes.footerBrandStyle}>
-              <Grid>
+              <Grid className={classes.footerLawContainer}>
                 <Typography className={classes.footerText}>© 2020 MY ALFRED Corporation. Tous droits réservés</Typography>
               </Grid>
-                <Grid className={classes.footerRgpdButtons}>
-                  <Grid>
-                    <Typography className={classes.footerLink}>Sécurité</Typography>
-                  </Grid>
-                  <Grid>
-                    <Typography className={classes.footerLink}>Informations légales</Typography>
-                  </Grid>
-                  <Grid>
-                    <Typography className={classes.footerLink}>Confidentialié</Typography>
-                  </Grid>
+              <Grid className={classes.footerRgpdButtons}>
+                <Grid>
+                  <Typography className={classes.footerLink}>Sécurité</Typography>
                 </Grid>
+                <Grid className={classes.footerLinkInfoContainer}>
+                  <Typography className={classes.footerLink}>Informations légales</Typography>
+                </Grid>
+                <Grid>
+                  <Typography className={classes.footerLink}>Confidentialié</Typography>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
           </Grid>

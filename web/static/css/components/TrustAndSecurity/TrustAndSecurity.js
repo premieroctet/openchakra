@@ -20,6 +20,9 @@ export default theme => ({
       justifyContent: 'start',
       paddingLeft: '7%'
     },
+    [theme.breakpoints.down("xs")]:{
+      padding: 0
+    }
 
   }
 })

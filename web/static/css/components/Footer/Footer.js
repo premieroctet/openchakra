@@ -17,12 +17,14 @@ export default theme => ({
   },
   footerSocialSection:{
     display:'flex',
-    flexDirection: 'row-reverse',
+    flexDirection: 'column',
     width: '90%',
     marginTop: '3%',
+    alignItems: 'end',
     [theme.breakpoints.down('xs')]:{
-      flexDirection: 'column',
+      alignItems: 'start'
     }
+
   },
   footerDividerContainer:{
     display: 'flex',
@@ -40,14 +42,14 @@ export default theme => ({
   footerLink:{
     fontFamily: theme.typography.text.fontFamily
   },
-  footerText:{
-    fontFamily: theme.typography.text.fontFamily
-  },
-
   footerBrandContainer:{
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    [theme.breakpoints.down('xs')]:{
+      marginBottom: '12vh',
+      marginTop: '5vh',
+    }
   },
   footerBrandStyle:{
     display: 'flex',
@@ -55,7 +57,10 @@ export default theme => ({
     width: '80%',
     [theme.breakpoints.down('xs')]:{
       width: 'inherit',
-      flexDirection: 'column',
+      flexDirection: 'row',
+    },
+    [theme.breakpoints.down('lg')]:{
+      width: '100%'
     }
   },
   footerRgpdButtons:{
@@ -66,12 +71,26 @@ export default theme => ({
     [theme.breakpoints.down('xs')]:{
       width: '100%',
       flexDirection: 'column',
-      marginBottom: '15vh'
-
+      marginBottom: '15vh',
+      alignItems: 'end'
+    },
+    [theme.breakpoints.down('lg')]:{
+      width: '50%'
+    }
+  },
+  footerLawContainer:{
+    [theme.breakpoints.down('lg')]:{
+      width: '50%'
     }
   },
   footerSocialContainer:{
     display: 'flex',
     flexDirection: 'row'
+  },
+  footerLinkInfoContainer:{
+    [theme.breakpoints.down('xs')]:{
+      marginTop: '2vh',
+      marginBottom: '2vh'
+    }
   }
 })
