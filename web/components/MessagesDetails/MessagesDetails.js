@@ -75,7 +75,7 @@ class MessagesDetails extends React.Component {
         }
       });
 
-    const chatRoomId = this.props.chats.sort( (c1, c2) => moment(c1.latest)-moment(c2.latest))[0]._id
+    const chatRoomId = this.props.chats.sort( (c1, c2) => moment(c1.latest)-moment(c2.latest))[0]._id;
 
     axios.put('/myAlfred/api/chatRooms/viewMessages/' + chatRoomId)
       .then();
