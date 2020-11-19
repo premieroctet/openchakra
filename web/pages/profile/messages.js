@@ -1,22 +1,10 @@
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
-import ProfileLayout from '../../hoc/Layout/ProfileLayout'
-import AddService from '../../components/AddService/AddService'
-import Services from '../../components/Services/Services'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/profile/services/services';
-import AskQuestion from "../../components/AskQuestion/AskQuestion";
 import Hidden from "@material-ui/core/Hidden";
-import LayoutMobile from "../../hoc/Layout/LayoutMobile";
-import Box from "../../components/Box/Box";
 import axios from "axios";
-import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
-const {isEditableUser}=require('../../utils/functions');
-import Layout from '../../hoc/Layout/Layout'
-import UserAvatar from '../../components/Avatar/UserAvatar'
 import Typography from '@material-ui/core/Typography';
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
 import cookie from 'react-cookies'
 const moment=require('moment');
 import MessageSummary from '../../components/MessageSummary/MessageSummary'
@@ -25,8 +13,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import MessagesDetails from '../../components/MessagesDetails/MessagesDetails'
 import LayoutMessages from "../../hoc/Layout/LayoutMessages";
-import {getLoggedUserId} from '../../utils/functions'
 import Divider from '@material-ui/core/Divider';
+import LayoutMobileMessages from "../../hoc/Layout/LayoutMobileMessages";
 
 class Messages extends React.Component {
 
@@ -145,9 +133,9 @@ class Messages extends React.Component {
           </LayoutMessages>
         </Hidden>
         <Hidden only={['lg', 'xl',  'sm', 'md']}>
-          <LayoutMobileProfile user={user}>
+          <LayoutMobileMessages ref={this.child} user={user} handleChange={this.handleChange} {...this.state}>
             {this.content(classes)}
-          </LayoutMobileProfile>
+          </LayoutMobileMessages>
         </Hidden>
       { this.messageDetails() }
       </React.Fragment>
