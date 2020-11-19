@@ -34,7 +34,7 @@ class UserAvatar extends React.Component {
       this.setState({currentUser: alfred_id},
         () => {
           // Check once then every 20s
-          if (this.props.warnings == true) {
+          if (this.props.warnings === true) {
             this.checkWarnings(token);
             this.interval_id = setInterval(() => this.checkWarnings(token), 20000);
           }
@@ -54,7 +54,7 @@ class UserAvatar extends React.Component {
       .then(res => {
         const nbMessages = res.data;
         if (nbMessages > 0) {
-          const plural = nbMessages == 1 ? '' : 's';
+          const plural = nbMessages === 1 ? '' : 's';
           kyc.push(`Vous avez ${res.data} message${plural} non lu${plural}`);
         }
         return axios.get('/myAlfred/api/users/current');
@@ -106,7 +106,7 @@ class UserAvatar extends React.Component {
   }
 
   onChange = event => {
-    const newPicture=event.target.files[0]
+    const newPicture=event.target.files[0];
     const formData = new FormData();
     formData.append('myImage', newPicture);
     const config = {

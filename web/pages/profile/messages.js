@@ -26,6 +26,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import MessagesDetails from '../../components/MessagesDetails/MessagesDetails'
 import LayoutMessages from "../../hoc/Layout/LayoutMessages";
 import {getLoggedUserId} from '../../utils/functions'
+import Divider from '@material-ui/core/Divider';
 
 class Messages extends React.Component {
 
@@ -80,13 +81,18 @@ class Messages extends React.Component {
     const filteredChats = chats.filter(c => c.emitter._id===relativeDetails || c.recipient._id===relativeDetails);
 
     return (
-      <Dialog style={{width: '100%'}}
-              open={this.state.relativeDetails}
-              onClose={() => this.setState({relativeDetails: null})}
+      <Dialog
+        style={{width: '100%'}}
+        open={this.state.relativeDetails}
+        onClose={() => this.setState({relativeDetails: null})}
       >
         <DialogContent>
-          <MessagesDetails chatroomId={'5f1827ec04711c1f1e3b82e7'} id={'5f1827ec04711c1f1e3b82e7'}
-                           booking={'5f1827ec04711c1f1e3b82e8'} relative={this.state.relativeDetails} chats={filteredChats}/>
+          <MessagesDetails
+            chatroomId={'5f1827ec04711c1f1e3b82e7'}
+            id={'5f1827ec04711c1f1e3b82e7'}
+            booking={'5f1827ec04711c1f1e3b82e8'}
+            relative={this.state.relativeDetails}
+            chats={filteredChats}/>
         </DialogContent>
       </Dialog>
     )
@@ -100,10 +106,28 @@ class Messages extends React.Component {
   content = (classes) => {
     const relatives = this.getRelatives();
     return(
-      <Grid>
+      <Grid style={{width: '100%'}}>
+        <Grid>
+          <Grid>
+            <h2>Mes messages</h2>
+          </Grid>
+          <Grid>
+            <Typography>{`Vous avez ${relatives.length} conversations `}</Typography>
+          </Grid>
+        </Grid>
+        <Grid>
+          <Divider style={{marginTop: '3vh', marginBottom: '3vh'}}/>
+        </Grid>
         {relatives.map( m => {
           return (
-            <MessageSummary chats={this.state.chats} relative={m} cbDetails={this.openMessagesDetails}/>
+            <Grid>
+              <Grid>
+                <MessageSummary chats={this.state.chats} relative={m} cbDetails={this.openMessagesDetails}/>
+              </Grid>
+              <Grid>
+                <Divider style={{marginTop: '3vh', marginBottom: '3vh'}}/>
+              </Grid>
+            </Grid>
           )
         })}
       </Grid>

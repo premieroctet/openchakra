@@ -1,33 +1,11 @@
-import Link from 'next/link';
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
-import styles from '../../static/css/components/About/About';
-import cookie from 'react-cookies';
-import ListAlfredConditions from "../ListAlfredConditions/ListAlfredConditions";
-import RoomIcon from '@material-ui/icons/Room';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import ChatBubbleOutlineOutlinedIcon from '@material-ui/icons/ChatBubbleOutlineOutlined';
-import PersonIcon from '@material-ui/icons/Person';
+import styles from '../../static/css/components/MessageSummary/MessageSummary';
 import UserAvatar from '../Avatar/UserAvatar'
-import Box from '../Box/Box'
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Topic from '../../hoc/Topic/Topic'
-import AlgoliaPlaces from 'algolia-places-react'
-import MultipleSelect from 'react-select'
-import {LANGUAGES} from '../../utils/consts'
-import CreateIcon from '@material-ui/icons/Create'
-import {isEditableUser} from '../../utils/functions'
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import Divider from "@material-ui/core/Divider";
 import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
 
 const {frenchFormat} = require('../../utils/text');
 const moment=require('moment');
@@ -53,28 +31,34 @@ class MessageSummary extends React.Component {
   };
 
   render() {
-    const {relative, chats}=this.props;
+    const {relative, chats, classes}=this.props;
 
     const last = this.getLastMessage();
     return (
       <Grid container style={{ width:'100%', display:'flex', flexDirection:'row'}} onClick={() => this.props.cbDetails(relative)}>
-        <Grid xs={1}>
-        <UserAvatar user={relative} />
-        </Grid>
-        <Grid xs={7} container style={{ width:'100%', display:'flex', flexDirection:'column'}}>
-          <Grid item>
-            <div>{relative.firstname}</div>
+        <Grid style={{width: '100%'}}>
+          <Grid style={{display: 'flex', justifyContent: 'flex-end'}}>
+            <Typography>{`Le ${moment(last.date).format('DD/MM')}`}</Typography>
           </Grid>
-          <Grid item>
-            <div style={{textOverflow: 'ellipsis'}}>{last.content}</div>
+          <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+            <Grid>
+              <Grid>
+                <UserAvatar user={relative} className={classes.cardPreviewLarge}/>
+              </Grid>
+            </Grid>
+            <Grid style={{marginLeft: '3vh'}}>
+              <Grid>
+                <Typography><strong>{relative.firstname}</strong></Typography>
+              </Grid>
+              <Grid>
+                <Typography style={{textOverflow: 'ellipsis'}}>{last.content}</Typography>
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid xs={2} container style={{ width:'100%', display:'flex', flexDirection:'column'}}>
-          <Grid item>
-            {`Le ${moment(last.date).format('DD/MM')}`}
-          </Grid>
-          <Grid item>
-            <DeleteIcon onClick={this.deleteMessages} />
+          <Grid style={{display: 'flex', justifyContent: 'flex-end'}}>
+            <IconButton onClick={this.deleteMessages} aria-label="delete">
+              <DeleteIcon />
+            </IconButton>
           </Grid>
         </Grid>
       </Grid>
