@@ -24,6 +24,7 @@ import _ from 'lodash'
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import MessagesDetails from '../../components/MessagesDetails/MessagesDetails'
+import {getLoggedUserId} from '../../utils/functions'
 
 class Messages extends React.Component {
 
@@ -34,7 +35,6 @@ class Messages extends React.Component {
       chats: [],
       visibleDetails: false,
     }
-    setTimeout( () => this.setState({visibleDetails: true}), 1000)
   }
 
   componentDidMount() {
@@ -54,6 +54,14 @@ class Messages extends React.Component {
     this.setState({tabIndex: newValue})
   }
 
+  getChatsRelative = relativeId => {
+    return this.state.chats.slice().filter( c=>
+      (c.emitter._id==this.props.user && c.recipient._id==relativeId)
+      ||
+      (c.emitter._id==relativeId && c.recipient._id==this.props.user)
+    )
+  }
+
   getRelatives = () => {
     var {chats, tabIndex} = this.state
     if (!chats || chats.length==0) {
@@ -61,28 +69,30 @@ class Messages extends React.Component {
     }
     // Tab index 0 : Alfred, 1 : client
     // Filter chats for Alfred or client
+    chats=chats.slice()
     if (tabIndex==0) {
       chats=chats.filter(c => c.booking.alfred==this.props.user)
     }
     else {
-      chats=chats.filter(c => c.booking.alfred!=this.props.user)
+      chats=chats.filter(c => c.booking.user==this.props.user)
     }
+
     chats = chats.sort( (c1, c2) => moment(c2.latest)-moment(c1.latest))
     const users=_.uniqBy(chats.map( c => c.emitter._id.toString()==this.props.user ? c.recipient : c.emitter), '_id')
     return users
   }
 
-  openMessagesDetails = relativeId => {
-    this.setState({ relativeDetails: relativeId})
+  openMessagesDetails = relative => {
+    this.setState({ relativeDetails: relative})
   }
 
   messageDetails = () => {
     const {relativeDetails, chats}=this.state
-    const filteredChats = chats.filter(c => c.emitter._id==relativeDetails || c.recipient._id==relativeDetails)
+    const filteredChats = this.getChatsRelative(relativeDetails._id)
 
     return (
       <Dialog style={{width: '100%'}}
-        open={this.state.relativeDetails}
+        open={Boolean(this.state.relativeDetails)}
         onClose={() => this.setState({relativeDetails: null})}
       >
         <DialogContent>
@@ -95,7 +105,7 @@ class Messages extends React.Component {
 
   render() {
     const {classes, user}=this.props;
-    const {tabIndex, chats}=this.state
+    const {tabIndex, chats, relativeDetails}=this.state
     const relatives = this.getRelatives()
 
     return (
@@ -131,7 +141,7 @@ class Messages extends React.Component {
               <Typography style={{ fontSize: 30 }}>Mes messages</Typography>
               { relatives.map( m => {
                 return (
-                  <MessageSummary chats={chats} relative={m} cbDetails={this.openMessagesDetails}/>
+                  <MessageSummary chats={this.getChatsRelative(m._id)} relative={m} cbDetails={this.openMessagesDetails}/>
                 )
               })}
             </Box>
@@ -139,7 +149,7 @@ class Messages extends React.Component {
           </Grid>
         </Grid>
       </Grid>
-      { this.messageDetails() }
+      { relativeDetails ? this.messageDetails() : null }
       </Layout>
     )
   }

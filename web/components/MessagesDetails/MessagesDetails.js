@@ -44,7 +44,7 @@ class MessagesDetails extends React.Component {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     localStorage.setItem('path', Router.pathname);
 
-    axios.get(`/myAlfred/api/users/users/${this.props.relative}`)
+    axios.get(`/myAlfred/api/users/users/${this.props.relative._id}`)
       .then (res => {
         this.setState( {relative: res.data})
       })
@@ -146,14 +146,6 @@ class MessagesDetails extends React.Component {
     this.child.current.handleDrawerToggle();
   };
 
-  static getInitialProps({query: {id, booking, relative}}) {
-    return {
-      chatroomId: id,
-      bookingId: booking,
-      relative: relative
-    };
-  }
-
   showNotification = message => {
 
     const {userData} = this.state;
@@ -216,7 +208,7 @@ class MessagesDetails extends React.Component {
                 <Grid item style={{marginRight: '5%'}}>
                   <UserAvatar
                     user={relative}
-                    classes={'avatarLetter'} className={classes.avatarLetter}/>
+                    className={classes.avatarLetter}/>
                 </Grid>
                 <Grid item xs={5} md={7}>
                   <Typography style={{fontSize: '1.3rem'}}>

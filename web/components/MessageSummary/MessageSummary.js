@@ -38,22 +38,13 @@ class MessageSummary extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: null,
-      relativeDetails: null,
     };
   }
 
-  componentDidMount = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
-    axios.get('/myAlfred/api/chatRooms/userChatRooms')
-
-  }
   getLastMessage = () => {
     var {chats, relative}=this.props
-    const messages=[]
-    chats = chats.filter(c => c.emitter._id==relative._id || c.recipient._id==relative._id)
     chats = chats.sort( (c1, c2) => c2.latest-c1.latest)
-    return chats[0].messages.reverse()[0]
+    return chats[0].messages.slice().reverse()[0]
   }
 
   deleteMessages = e => {
@@ -66,7 +57,7 @@ class MessageSummary extends React.Component {
 
     const last = this.getLastMessage()
     return (
-      <Grid container style={{ width:'100%', display:'flex', flexDirection:'row'}} onClick={() => this.props.cbDetails(relative._id)}>
+      <Grid container style={{ width:'100%', display:'flex', flexDirection:'row'}} onClick={() => this.props.cbDetails(relative)}>
         <Grid xs={1}>
         <UserAvatar user={relative} />
         </Grid>
@@ -75,7 +66,7 @@ class MessageSummary extends React.Component {
             <div>{relative.firstname}</div>
           </Grid>
           <Grid item>
-            <div>{last.content}</div>
+            <div style={{textOverflow: 'ellipsis'}}>{last.content}</div>
           </Grid>
         </Grid>
         <Grid xs={2} container style={{ width:'100%', display:'flex', flexDirection:'column'}}>

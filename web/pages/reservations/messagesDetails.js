@@ -60,7 +60,7 @@ class MessagesDetails extends React.Component {
     const div = document.getElementById('chat');
     setTimeout(function () {
       div.scrollTop = 99999;
-    }, 450);
+    }, 1000);
 
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.put('/myAlfred/api/chatRooms/viewMessages/' + this.props.chatroomId)

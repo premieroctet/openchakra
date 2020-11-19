@@ -27,7 +27,7 @@ router.get('/userChatRooms', passport.authenticate('jwt', {session: false}), (re
   })
     .populate('emitter', '-id_card')
     .populate('recipient', '-id_card')
-    .populate('booking', 'alfred')
+    .populate('booking', 'alfred user')
     .then(chatrooms => {
       if (!chatrooms) {
         res.status(404).json({msg: 'Aucun chat trouvé'});
@@ -120,6 +120,10 @@ router.put('/saveMessages/:id', (req, res) => {
 router.put('/viewMessages/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   ChatRooms.findById(req.params.id)
     .then(chatroom => {
+      if (!chatroom) {
+        res.status(404).json({msg: 'Aucun chat trouvé'});
+        return
+      }
       chatroom.messages.forEach(message => {
         if (message.idsender != req.user.id) {
           message.viewed = true;
