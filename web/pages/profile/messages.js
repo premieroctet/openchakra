@@ -18,12 +18,13 @@ import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import cookie from 'react-cookies'
-const moment=require('moment')
+const moment=require('moment');
 import MessageSummary from '../../components/MessageSummary/MessageSummary'
 import _ from 'lodash'
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import MessagesDetails from '../../components/MessagesDetails/MessagesDetails'
+import LayoutMessages from "../../hoc/Layout/LayoutMessages";
 
 class Messages extends React.Component {
 
@@ -33,7 +34,7 @@ class Messages extends React.Component {
       tabIndex:0,
       chats: [],
       visibleDetails: false,
-    }
+    };
     setTimeout( () => this.setState({visibleDetails: true}), 1000)
   }
 
@@ -41,7 +42,7 @@ class Messages extends React.Component {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get('/myAlfred/api/chatRooms/userChatRooms')
       .then( res => {
-        const chats=res.data.filter(c => c.latest && c.booking && c.booking.alfred && c.messages && c.messages.length>0)
+        const chats=res.data.filter(c => c.latest && c.booking && c.booking.alfred && c.messages && c.messages.length>0);
         this.setState({chats: chats})
       })
   }
@@ -50,35 +51,37 @@ class Messages extends React.Component {
     return {user: user};
   }
 
-  handleChange = (event, newValue) => {
-    this.setState({tabIndex: newValue})
-  }
+
 
   getRelatives = () => {
-    var {chats, tabIndex} = this.state
-    if (!chats || chats.length==0) {
+    var {chats, tabIndex} = this.state;
+    if (!chats || chats.length===0) {
       return []
     }
     // Tab index 0 : Alfred, 1 : client
     // Filter chats for Alfred or client
-    if (tabIndex==0) {
-      chats=chats.filter(c => c.booking.alfred==this.props.user)
+    if (tabIndex===0) {
+      chats=chats.filter(c => c.booking.alfred===this.props.user)
     }
     else {
-      chats=chats.filter(c => c.booking.alfred!=this.props.user)
+      chats=chats.filter(c => c.booking.alfred!==this.props.user)
     }
-    chats = chats.sort( (c1, c2) => moment(c2.latest)-moment(c1.latest))
-    const users=_.uniqBy(chats.map( c => c.emitter._id.toString()==this.props.user ? c.recipient : c.emitter), '_id')
+    chats = chats.sort( (c1, c2) => moment(c2.latest)-moment(c1.latest));
+    const users=_.uniqBy(chats.map( c => c.emitter._id.toString()===this.props.user ? c.recipient : c.emitter), '_id');
     return users
-  }
+  };
 
   openMessagesDetails = relativeId => {
     this.setState({ relativeDetails: relativeId})
-  }
+  };
+
+  handleChange = () =>{
+    console.log('coucou')
+  };
 
   messageDetails = () => {
-    const {relativeDetails, chats}=this.state
-    const filteredChats = chats.filter(c => c.emitter._id==relativeDetails || c.recipient._id==relativeDetails)
+    const {relativeDetails, chats}=this.state;
+    const filteredChats = chats.filter(c => c.emitter._id===relativeDetails || c.recipient._id===relativeDetails);
 
     return (
       <Dialog style={{width: '100%'}}
@@ -91,56 +94,40 @@ class Messages extends React.Component {
         </DialogContent>
       </Dialog>
     )
-  }
+  };
+
+  content = (classes) => {
+    const relatives = this.getRelatives();
+    return(
+      <Grid>
+        <Box>
+          {relatives.map( m => {
+            return (
+              <MessageSummary chats={this.state.chats} relative={m} cbDetails={this.openMessagesDetails}/>
+            )
+          })}
+        </Box>
+      </Grid>
+    )
+  };
 
   render() {
     const {classes, user}=this.props;
-    const {tabIndex, chats}=this.state
-    const relatives = this.getRelatives()
 
     return (
-      <Layout>
-      <Grid className={classes.profilLayoutMainContainer}>
-        <Grid className={classes.profilLayoutContainer}>
-          <Grid className={classes.profilLayoutBackgroundContainer} style={{ display:'flex', alignItems:'center', flexDirection:'column'}}>
-            <Grid className={classes.profilLayoutMargin}>
-              <Grid className={classes.profilLayoutBox}>
-                <Grid style={{display: 'flex', justifyContent: 'center', height: '40%', alignItems: 'center'}}>
-                  <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-                    <Grid>
-                      <h3>Mes messages</h3>
-                    </Grid>
-                    <Tabs
-                      orientation="horizontal"
-                      variant="scrollable"
-                      value={tabIndex}
-                      onChange={this.handleChange}
-                      aria-label="scrollable force tabs"
-                      scrollButtons="on"
-                      classes={{indicator: classes.scrollMenuIndicator}}
-                    >
-                      <Tab label={'Mes messages Alfred'} className={classes.scrollMenuTab} />
-                      <Tab label={"Mes messages d'utilisateur"} className={classes.scrollMenuTab} />
-                    </Tabs>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid className={classes.profilLayoutChildren} style={{width:'80%'}}>
-            <Box>
-              <Typography style={{ fontSize: 30 }}>Mes messages</Typography>
-              { relatives.map( m => {
-                return (
-                  <MessageSummary chats={chats} relative={m} cbDetails={this.openMessagesDetails}/>
-                )
-              })}
-            </Box>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
+      <React.Fragment>
+        <Hidden only={['xs']}>
+          <LayoutMessages user={user} handleChange={this.handleChange} {...this.state}>
+            {this.content(classes)}
+          </LayoutMessages>
+        </Hidden>
+        <Hidden only={['lg', 'xl',  'sm', 'md']}>
+          <LayoutMobileProfile user={user}>
+            {this.content(classes)}
+          </LayoutMobileProfile>
+        </Hidden>
       { this.messageDetails() }
-      </Layout>
+      </React.Fragment>
     )
   }
 
