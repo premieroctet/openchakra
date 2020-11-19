@@ -31,19 +31,20 @@ class Messages extends React.Component {
 
   constructor(props) {
     super(props);
+    this.child = React.createRef();
     this.state={
       tabIndex:0,
       chats: [],
       visibleDetails: false,
     };
     setTimeout( () => this.setState({visibleDetails: true}), 1000)
-    }
+  }
 
   componentDidMount() {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get('/myAlfred/api/chatRooms/userChatRooms')
       .then( res => {
-        const chats=res.data.filter(c => c.latest && c.booking && c.booking.alfred && c.messages && c.messages.length>0);
+        const chats=res.data.filter(c => c.latest && c.booking && c.booking.alfred && c.messages && c.messages.length>0)
         this.setState({chats: chats})
       })
   }
@@ -52,14 +53,6 @@ class Messages extends React.Component {
     return {user: user};
   }
 
-  getChatsRelative = relativeId => {
-    return this.state.chats.slice().filter( c=>
-      (c.emitter._id===this.props.user && c.recipient._id===relativeId)
-      ||
-      (c.emitter._id===relativeId && c.recipient._id===this.props.user)
-    )
-  };
-
   getRelatives = () => {
     var {chats, tabIndex} = this.state;
     if (!chats || chats.length===0) {
@@ -67,57 +60,52 @@ class Messages extends React.Component {
     }
     // Tab index 0 : Alfred, 1 : client
     // Filter chats for Alfred or client
-    chats=chats.slice()
     if (tabIndex===0) {
       chats=chats.filter(c => c.booking.alfred===this.props.user)
     }
     else {
-      chats=chats.filter(c => c.booking.user===this.props.user)
+      chats=chats.filter(c => c.booking.alfred!==this.props.user)
     }
-
     chats = chats.sort( (c1, c2) => moment(c2.latest)-moment(c1.latest));
     const users=_.uniqBy(chats.map( c => c.emitter._id.toString()===this.props.user ? c.recipient : c.emitter), '_id');
     return users
   };
 
-
-
-  handleChange = () =>{
-    console.log('coucou')
-  };
-
-  openMessagesDetails = relative => {
-    this.setState({ relativeDetails: relative})
+  openMessagesDetails = relativeId => {
+    this.setState({ relativeDetails: relativeId})
   };
 
   messageDetails = () => {
     const {relativeDetails, chats}=this.state;
-    const filteredChats = this.getChatsRelative(relativeDetails._id);
+    const filteredChats = chats.filter(c => c.emitter._id===relativeDetails || c.recipient._id===relativeDetails);
 
     return (
       <Dialog style={{width: '100%'}}
-        open={Boolean(this.state.relativeDetails)}
-        onClose={() => this.setState({relativeDetails: null})}
+              open={this.state.relativeDetails}
+              onClose={() => this.setState({relativeDetails: null})}
       >
         <DialogContent>
           <MessagesDetails chatroomId={'5f1827ec04711c1f1e3b82e7'} id={'5f1827ec04711c1f1e3b82e7'}
-          booking={'5f1827ec04711c1f1e3b82e8'} relative={this.state.relativeDetails} chats={filteredChats}/>
+                           booking={'5f1827ec04711c1f1e3b82e8'} relative={this.state.relativeDetails} chats={filteredChats}/>
         </DialogContent>
       </Dialog>
     )
+  };
+
+  handleChange = () => {
+    let childState = this.child.current.state;
+    this.setState({tabIndex: childState.tabIndex})
   };
 
   content = (classes) => {
     const relatives = this.getRelatives();
     return(
       <Grid>
-        <Box>
-          {relatives.map( m => {
-            return (
-              <MessageSummary chats={this.getChatsRelative(m._id)} relative={m} cbDetails={this.openMessagesDetails}/>
-            )
-          })}
-        </Box>
+        {relatives.map( m => {
+          return (
+            <MessageSummary chats={this.state.chats} relative={m} cbDetails={this.openMessagesDetails}/>
+          )
+        })}
       </Grid>
     )
   };
@@ -128,7 +116,7 @@ class Messages extends React.Component {
     return (
       <React.Fragment>
         <Hidden only={['xs']}>
-          <LayoutMessages user={user} handleChange={this.handleChange} {...this.state}>
+          <LayoutMessages ref={this.child} user={user} handleChange={this.handleChange} {...this.state}>
             {this.content(classes)}
           </LayoutMessages>
         </Hidden>

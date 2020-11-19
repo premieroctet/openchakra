@@ -42,20 +42,20 @@ class MessageSummary extends React.Component {
   }
 
   getLastMessage = () => {
-    var {chats, relative}=this.props
-    chats = chats.sort( (c1, c2) => c2.latest-c1.latest)
+    var {chats, relative}=this.props;
+    chats = chats.sort( (c1, c2) => c2.latest-c1.latest);
     return chats[0].messages.slice().reverse()[0]
-  }
+  };
 
   deleteMessages = e => {
-    e.stopPropagation()
+    e.stopPropagation();
     window.alert('Delete')
-  }
+  };
 
   render() {
-    const {relative, chats}=this.props
+    const {relative, chats}=this.props;
 
-    const last = this.getLastMessage()
+    const last = this.getLastMessage();
     return (
       <Grid container style={{ width:'100%', display:'flex', flexDirection:'row'}} onClick={() => this.props.cbDetails(relative)}>
         <Grid xs={1}>

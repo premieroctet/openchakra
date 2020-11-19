@@ -39,7 +39,7 @@ class LayoutMessages extends React.Component{
         <Grid style={{display:'flex', justifyContent:'center'}}>
           <Grid style={{display: 'flex', justifyContent:'center', flexDirection: 'column', alignItems:'center', width: '100%'}}>
             <Grid style={{display: 'flex', justifyContent: 'center'}}>
-              <h2>Mon Compte</h2>
+              <h2>Mes Messages</h2>
             </Grid>
             <Grid>
               <Tabs
@@ -49,7 +49,7 @@ class LayoutMessages extends React.Component{
                 onChange={this.handleChange}
                 aria-label="scrollable force tabs"
                 scrollButtons="on"
-                classes={{indicator: classes.scrollMenuIndicator}}
+                classes={{indicator: classes.scrollIndicator}}
               >
                 <Tab label={'Mes messages Alfred'} className={classes.scrollMenuTab} />
                 <Tab label={"Mes messages d'utilisateur"} className={classes.scrollMenuTab} />
