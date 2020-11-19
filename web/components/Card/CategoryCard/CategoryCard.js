@@ -1,7 +1,7 @@
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
-const {circular_get}=require('../../../utils/functions');
-
+import styles from '../../../static/css/components/Card/CategoryCard/CategoryCard'
+import withStyles from "@material-ui/core/styles/withStyles";
 
 class CategoryCard extends React.Component{
 
@@ -10,24 +10,26 @@ class CategoryCard extends React.Component{
   }
 
   render() {
-    const {style, item} = this.props;
+    const {classes, item} = this.props;
 
     if (!item) {
       return null
     }
     return(
-      <Grid>
-        <Grid className={style.categoryCardMedia}>
+      <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <Grid className={classes.categoryCardMedia}>
           <Grid
             style={{backgroundImage: `url('${item.picture}')`}}
-            className={style.categoryCardBackground}
+            className={classes.categoryCardBackground}
           />
         </Grid>
-        <Grid><h6>{item.label}</h6></Grid>
+        <Grid>
+          <h6>{item.label}</h6>
+        </Grid>
       </Grid>
     )
   }
 
 }
 
-export default CategoryCard;
+export default withStyles (styles) (CategoryCard);

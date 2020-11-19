@@ -18,9 +18,9 @@ function withGrid(WrappedComponent) {
       return(
         <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
           { indexes.map(idx => {
-            const row=Math.floor(idx/model.getColumns())
-            const col=idx%model.getColumns()
-            const item=model.getData(page, col, row)
+            const row=Math.floor(idx/model.getColumns());
+            const col=idx%model.getColumns();
+            const item=model.getData(page, col, row);
 
             return(
               <Grid item xl={colSize} lg={colSize} md={colSize} className={style.categoryCardRoot}>

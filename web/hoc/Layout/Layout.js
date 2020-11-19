@@ -40,7 +40,7 @@ class Layout extends React.Component {
     return (
       <React.Fragment>
         <InfoBar style={classes} />
-        <NavBar style={classes} selectedAddress={selectedAddress} logged={logged} key={this.logged}/>
+        <NavBar selectedAddress={selectedAddress} logged={logged} key={this.logged}/>
         <Grid className={classes.searchMenuScrollMenuContainer}>
           <Grid className={classes.searchScrollmenuContainer}>
             <ScrollMenu style={classes} categories={categories} gps={gps} indexCat={indexCat} mode={false}/>
@@ -54,7 +54,7 @@ class Layout extends React.Component {
           </Grid>
           <Grid className={classes.generalWidthFooter} >
             <Grid style={{width: '85%'}}>
-              <Footer style={classes}/>
+              <Footer/>
             </Grid>
           </Grid>
         </Grid>

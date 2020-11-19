@@ -18,6 +18,8 @@ import HowItWorks from "../components/HomePage/HowItWorks/HowItWorks";
 import NewsLetter from "../components/HomePage/NewsLetter/NewsLetter";
 import MobileNavbar from "../hoc/Layout/NavBar/MobileNavbar";
 import Hidden from "@material-ui/core/Hidden";
+import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
+import {Divider} from "@material-ui/core";
 
 class Home extends React.Component {
   constructor(props) {
@@ -77,7 +79,7 @@ class Home extends React.Component {
           <Grid container className={classes.navbarAndBannerContainer}>
             <Grid className={classes.navbarAndBannerBackground}>
                 <Grid className={classes.navbarComponentPosition}>
-                  <NavBar style={classes} logged={logged}/>
+                  <NavBar logged={logged}/>
                 </Grid>
               <Grid className={classes.bannerPresentationContainer}>
                 <Grid className={classes.bannerSize}>
@@ -88,17 +90,17 @@ class Home extends React.Component {
           </Grid>
           <Grid container className={classes.mainContainerStyle}>
             <Grid className={classes.generalWidthContainer}>
-              <CategoryTopic style={classes} category={category}/>
+              <CategoryTopic category={category}/>
             </Grid>
           </Grid>
           <Grid container className={classes.howItWorksComponent}>
             <Grid className={classes.generalWidthContainer}>
-              <HowItWorks style={classes}/>
+              <HowItWorks/>
             </Grid>
           </Grid>
           <Grid container className={classes.mainContainerStyle}>
             <Grid className={classes.generalWidthContainer}>
-              <OurAlfred style={classes} alfred={alfred}/>
+              <OurAlfred alfred={alfred}/>
             </Grid>
           </Grid>
           <Grid container className={classes.becomeAlfredComponent}>
@@ -106,14 +108,24 @@ class Home extends React.Component {
               <BecomeAlfred style={classes}/>
             </Grid>
           </Grid>
-          <Grid container className={classes.mainNewsLetterStyle}>
-            <Grid className={classes.generalWidthContainer}>
-              <NewsLetter style={classes}/>
+          <Hidden only={['xs', 'sm']}>
+            <Grid container className={classes.mainNewsLetterStyle}>
+              <Grid className={classes.generalWidthContainerNewsLtter}>
+                <NewsLetter/>
+              </Grid>
+            </Grid>
+          </Hidden>
+          <Grid>
+            <Divider/>
+          </Grid>
+          <Grid className={classes.trustAndSecurityContainer}>
+            <Grid className={classes.trustAndSecurityComponent}>
+              <TrustAndSecurity/>
             </Grid>
           </Grid>
           <Grid container className={classes.mainContainerStyleFooter}>
             <Grid className={classes.generalWidthFooter}>
-              <Footer style={classes}/>
+              <Footer/>
             </Grid>
           </Grid>
           <Hidden only={['xl','lg', 'md', 'sm']}>
