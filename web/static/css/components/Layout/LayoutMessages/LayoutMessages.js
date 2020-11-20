@@ -2,7 +2,7 @@ export default theme => ({
   scrollIndicator:{
     backgroundColor: theme.palette.yellow.main
   },
-  scrollMenuTab:{
+  scrollMenuTabLayoutMessage:{
     textTransform: 'initial'
   },
 })

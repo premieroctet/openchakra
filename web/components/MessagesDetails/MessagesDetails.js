@@ -183,14 +183,16 @@ class MessagesDetails extends React.Component {
     }
 
     return (
-      <Grid style={{ width: '100%',position:'relative' }}>
+      <Grid style={{ width: '100%'}}>
         <Grid style={{width:'100%'}}>
-          <Grid style={{marginTop: '10vh'}}>
+          <Grid>
             {this.state.oldMessagesDisplay.map((oldMessage, index) => {
               return (
-                <Grid className={this.state.emitter === oldMessage.idsender ? classes.currentUser : classes.senderUser} key={index}>
-                  <Grid>
-                    <Typography>{oldMessage.content}</Typography>
+                <Grid className={this.state.emitter === oldMessage.idsender ? classes.currentUserContainer : classes.senderUserContainer} key={index}>
+                  <Grid className={this.state.emitter === oldMessage.idsender ? classes.currentUser : classes.senderUser}>
+                    <Grid>
+                      <Typography>{oldMessage.content}</Typography>
+                    </Grid>
                   </Grid>
                   <Grid>
                     <Typography className={this.state.emitter === oldMessage.idsender ? classes.current : classes.sender}>{moment(oldMessage.date).calendar()}</Typography>
@@ -208,12 +210,14 @@ class MessagesDetails extends React.Component {
                 </Grid>
                 {this.state.messages.map((message, index) => {
                   return (
-                    <Grid style={{display: 'flex', flexDirection:' column'}} key={index}>
-                      <Grid>
-                        <Typography className={this.state.emitter === message.idsender ? classes.currentmsg : classes.othermsg}>{message.content}</Typography>
+                    <Grid className={this.state.emitter === oldMessage.idsender ? classes.currentUserContainer : classes.senderUserContainer} key={index}>
+                      <Grid className={this.state.emitter === oldMessage.idsender ? classes.currentUser : classes.senderUser}>
+                        <Grid>
+                          <Typography>{oldMessage.content}</Typography>
+                        </Grid>
                       </Grid>
                       <Grid>
-                        <Typography className={this.state.emitter === message.idsender ? classes.current : ''}>{moment(message.date).calendar()}</Typography>
+                        <Typography className={this.state.emitter === oldMessage.idsender ? classes.current : classes.sender}>{moment(oldMessage.date).calendar()}</Typography>
                       </Grid>
                     </Grid>
                   );

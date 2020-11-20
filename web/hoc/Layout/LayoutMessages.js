@@ -51,8 +51,8 @@ class LayoutMessages extends React.Component{
                 scrollButtons="on"
                 classes={{indicator: classes.scrollIndicator}}
               >
-                <Tab label={'Mes messages Alfred'} className={classes.scrollMenuTab} />
-                <Tab label={"Mes messages d'utilisateur"} className={classes.scrollMenuTab} />
+                <Tab label={'Mes messages Alfred'} className={classes.scrollMenuTabLayoutMessage} />
+                <Tab label={"Mes messages d'utilisateur"} className={classes.scrollMenuTabLayoutMessage} />
               </Tabs>
             </Grid>
             <Grid style={{backgroundColor: 'rgba(249,249,249, 1)', width: '100%'}}>
@@ -68,4 +68,4 @@ class LayoutMessages extends React.Component{
 
 }
 
-export default withStyles (styles)(LayoutMessages);
+export default withStyles(styles)(LayoutMessages);

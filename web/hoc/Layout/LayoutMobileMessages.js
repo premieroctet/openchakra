@@ -5,11 +5,7 @@ import styles from '../../static/css/components/Layout/LayoutMobileMessages/Layo
 import IconButton from "@material-ui/core/IconButton";
 import Router from "next/router";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import UserAvatar from "../../components/Avatar/UserAvatar";
-import Typography from "@material-ui/core/Typography";
-import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import Divider from "@material-ui/core/Divider";
-import ScrollMenu from "../../components/ScrollMenu/ScrollMenu";
 import MobileNavbar from "./NavBar/MobileNavbar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -54,12 +50,12 @@ class LayoutMobileMessages extends React.Component{
     const {currentUrlIndex}= this.state;
 
     return(
-      <React.Fragment>
+      <Grid>
         <Grid className={classes.layoutMobileMessageHeader}>
           <Grid>
             <Grid style={{padding: '5%'}}>
               <IconButton aria-label="ArrowBackIosIcon" onClick={() => Router.back()}>
-                <ArrowBackIosIcon />
+                <ArrowBackIosIcon/>
               </IconButton>
             </Grid>
           </Grid>
@@ -80,7 +76,7 @@ class LayoutMobileMessages extends React.Component{
               <Tab label={"Mes messages d'utilisateur"} className={classes.scrollMenuTab} />
             </Tabs>
           </Grid>
-          </Grid>
+        </Grid>
         <Grid>
           <Divider/>
         </Grid>
@@ -92,10 +88,10 @@ class LayoutMobileMessages extends React.Component{
             <MobileNavbar currentUrlIndex={currentUrlIndex}/>
           </Grid>
         </Grid>
-      </React.Fragment>
+      </Grid>
     );
   }
 
 }
 
-export default withStyles (styles) (LayoutMobileMessages);
+export default withStyles(styles)(LayoutMobileMessages);

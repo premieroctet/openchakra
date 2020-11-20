@@ -35,7 +35,7 @@ class MessageSummary extends React.Component {
 
     const last = this.getLastMessage();
     return (
-      <Grid container style={{ width:'100%', display:'flex', flexDirection:'row'}} onClick={() => this.props.cbDetails(relative)}>
+      <Grid container style={{ width:'100%', display:'flex', flexDirection:'row', cursor: 'pointer'}} onClick={() => this.props.cbDetails(relative)}>
         <Grid style={{width: '100%'}}>
           <Grid style={{display: 'flex', justifyContent: 'flex-end'}}>
             <Typography>{`Le ${moment(last.date).format('DD/MM')}`}</Typography>

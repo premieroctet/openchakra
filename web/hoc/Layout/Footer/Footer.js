@@ -1,18 +1,13 @@
-import React, {Component} from 'react';
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import Link from 'next/link';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {withStyles} from '@material-ui/core/styles';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import InstagramIcon from '@material-ui/icons/Instagram';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import Divider from "@material-ui/core/Divider";
-import Paper from "@material-ui/core/Paper";
 import styles from '../../../static/css/components/Footer/Footer'
 import Hidden from "@material-ui/core/Hidden";
 

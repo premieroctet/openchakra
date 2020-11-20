@@ -95,7 +95,7 @@ class LayoutMobileProfile extends React.Component{
     }
 
     return(
-      <React.Fragment>
+      <Grid>
         <Grid>
           <Grid className={classes.layoutMobileProfilHeader}>
             <IconButton aria-label="ArrowBackIosIcon" onClick={() => Router.back()}>
@@ -140,7 +140,7 @@ class LayoutMobileProfile extends React.Component{
             <MobileNavbar currentUrlIndex={currentUrlIndex}/>
           </Grid>
         </Grid>
-      </React.Fragment>
+      </Grid>
     );
   }
 }

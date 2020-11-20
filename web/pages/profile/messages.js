@@ -60,7 +60,7 @@ class Messages extends React.Component {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get('/myAlfred/api/chatRooms/userChatRooms')
       .then( res => {
-        const chats=res.data.filter(c => c.latest && c.booking && c.booking.alfred && c.messages && c.messages.length>0)
+        const chats=res.data.filter(c => c.latest && c.booking && c.booking.alfred && c.messages && c.messages.length>0);
         this.setState({chats: chats})
       })
   }
@@ -75,7 +75,7 @@ class Messages extends React.Component {
       ||
       (c.emitter._id===relativeId && c.recipient._id===this.props.user)
     )
-  }
+  };
 
   getRelatives = () => {
     var {chats, tabIndex} = this.state;
@@ -111,36 +111,42 @@ class Messages extends React.Component {
   };
 
   messageDetails = (classes) => {
-    let childState = this.messageDetailsRef.current.state;
-    console.log(childState)
     const filteredChats = this.getChatsRelative(this.state.relativeDetails._id);
-    const dates = childState.messages.concat(childState.oldMessagesDisplay).map(m => moment(m.date));
-    const lastMessageDate = Math.max(...dates);
+    if(this.messageDetailsRef.current){
+      var childState = this.messageDetailsRef.current.state;
+    }
+
+    console.log(childState);
+    //const dates = messages.concat(oldMessagesDisplay).map(m => moment(m.date));
+    //const lastMessageDate = Math.max(...dates);
 
 
     return (
       <Dialog
         style={{width: '100%'}}
         open={Boolean(this.state.relativeDetails)}
-        onClose={() => this.setState({relativeDetails: null})}
+        onClose={() => this.setState({relativeDetails: null, message: ''})}
         classes={{paper: classes.messagesDialog}}
       >
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({relativeDetails: false})}>
-          <Grid style={{display: 'flex', flexDirection: 'column'}}>
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({relativeDetails: false, message: ''})}>
+          <Grid className={classes.dialogTitleMessages}>
             <Grid>
               <UserAvatar
                 user={this.state.relativeDetails}
                 className={classes.avatarLetter}
               />
             </Grid>
-            <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+            <Grid className={classes.dialogTitleMessagesContent}>
               <Grid>
-                <Typography >{this.state.relative.firstname}</Typography>
+                <Typography>{this.state.relativeDetails.firstname}</Typography>
               </Grid>
               <Grid>
-                <Typography style={{textAlign: 'center', whiteSpace: 'nowrap'}}>{`Dernier message ${moment(lastMessageDate).calendar()}`}</Typography>
+                <Typography style={{textAlign: 'center', whiteSpace: 'nowrap'}}>{`Dernier message `}</Typography>
               </Grid>
             </Grid>
+          </Grid>
+          <Grid style={{marginTop: '5vh'}}>
+            <Divider/>
           </Grid>
         </DialogTitle>
         <DialogContent>
@@ -166,6 +172,7 @@ class Messages extends React.Component {
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
+                      classes={{root: classes.iconButton}}
                       onClick={this.handleSubmitMessage}
                       aria-label="toggle password visibility"
                     >
@@ -201,9 +208,9 @@ class Messages extends React.Component {
         <Grid>
           <Divider style={{marginTop: '3vh', marginBottom: '3vh'}}/>
         </Grid>
-        {relatives.map( m => {
+        {relatives.map( (m, index) => {
           return (
-            <Grid>
+            <Grid key={index}>
               <Grid>
                 <MessageSummary chats={this.getChatsRelative(m._id)} relative={m} cbDetails={this.openMessagesDetails}/>
               </Grid>

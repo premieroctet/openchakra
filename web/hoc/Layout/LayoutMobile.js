@@ -45,7 +45,7 @@ class LayoutMobile extends React.Component{
 
 
     return(
-      <React.Fragment>
+      <Grid>
         <Grid style={{padding: '10%'}}>
           {!myProfilUrl ?
             <Grid>
@@ -61,7 +61,7 @@ class LayoutMobile extends React.Component{
             <MobileNavbar currentUrlIndex={currentUrlIndex}/>
           </Grid>
         </Grid>
-      </React.Fragment>
+      </Grid>
     );
   }
 }
