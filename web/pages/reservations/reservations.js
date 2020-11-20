@@ -63,16 +63,28 @@ class AllReservations extends React.Component {
   }
 
   handleReservationTypeChanged = (event, newValue) => {
-    this.setState({reservationType: newValue})
+    this.setState({reservationType: newValue, reservationStatus: 0})
   }
 
   handleReservationStatusChanged = (event, newValue) => {
     this.setState({reservationStatus: newValue})
   }
 
+  isFinished = reservation => {
+    return ['Refusée', 'Annulée', 'Terminée', 'Expirée'].includes(reservation.status)
+  }
+
+  isComing = reservation => {
+    return ["Demande d'infos", 'En attente de confirmation', 'Confirmée', 'Pré-approuvée'].includes(reservation.status)
+  }
+
   filterReservations = () => {
     const {reservationType, reservationStatus, alfredReservations, userReservations}=this.state
+    // Alfred/customer reservatioons
     var reservations = reservationType==0 ?  alfredReservations : userReservations
+    // All/ coming/finished reservations
+    if (reservationStatus==1) { reservations = reservations.filter(this.isComing)}
+    if (reservationStatus==2) { reservations = reservations.filter(this.isFinished)}
     return reservations
   }
 
@@ -81,7 +93,7 @@ class AllReservations extends React.Component {
     const {classes} = this.props;
 
     const reservations = this.filterReservations()
-    
+
     return (
       <Fragment>
         <Layout>
@@ -122,14 +134,14 @@ class AllReservations extends React.Component {
 
                 <Grid container>
                   <Typography style={{fontSize: '0.8rem', marginBottom: '4%'}} >
-                    { `Vous avez ${this.state.userReservations.length + this.state.alfredReservations.length} réservations` }
+                    { `Vous avez ${reservations.length} réservations` }
                   </Typography>
                 </Grid>
                 {/************************************************************ début en tant que user web **************************************************/}
                 {reservationType ? (
                   <React.Fragment>
-                    {this.state.userReservations.length ? (
-                      this.state.userReservations.map(booking => {
+                    {reservations.length ? (
+                      reservations.map(booking => {
                         return (
                           <React.Fragment>
                             {/* Web */}
@@ -316,8 +328,8 @@ class AllReservations extends React.Component {
 
                   </React.Fragment>
 
-                ) : this.state.alfredReservations.length ? (
-                  this.state.alfredReservations.map(booking => {
+                ) : reservations.length ? (
+                  reservations.map(booking => {
                     return (
                       <React.Fragment>
                         {/* Web */}
