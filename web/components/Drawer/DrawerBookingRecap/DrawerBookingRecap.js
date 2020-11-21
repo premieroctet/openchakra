@@ -79,12 +79,12 @@ class DrawerBookingRecap extends React.Component{
                           marginBottom: '5%',
                           justifyContent: 'space-between'
                         }} key={index}>
-                          <Grid>
+                          <Grid item xs={6}>
                             <Grid>
                               <Typography>{prestation.name}</Typography>
                             </Grid>
                           </Grid>
-                          <Grid>
+                          <Grid item xs={6} className={classes.drawerBookingRecapPrice}>
                             <Grid>
                               <Typography><strong>{prestation.price ? prestation.price.toFixed(2) : '?'}€</strong></Typography>
                             </Grid>

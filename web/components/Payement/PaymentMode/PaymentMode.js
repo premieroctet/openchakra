@@ -8,6 +8,7 @@ import FormControl from "@material-ui/core/FormControl";
 import PaymentPics from "../../PaymentPics/PaymentPics";
 import HttpsIcon from '@material-ui/icons/Https';
 import PaymentCard from "../PaymentCard/PaymentCard";
+import Hidden from "@material-ui/core/Hidden";
 
 class PaymentMode extends React.Component{
   constructor(props) {
@@ -33,9 +34,11 @@ class PaymentMode extends React.Component{
               <Typography>Paiement sécurisé</Typography>
             </Grid>
           </Grid>
-          <Grid>
-            <PaymentPics/>
-          </Grid>
+          <Hidden only={['xs']}>
+            <Grid>
+              <PaymentPics/>
+            </Grid>
+          </Hidden>
         </Grid>
         <Grid style={{marginTop: '3vh', marginBottom: '3vh'}}>
           <FormControl component="fieldset" style={{width: '100%'}}>

@@ -7,5 +7,8 @@ export default theme => ({
     padding: '14px 28px',
     color: 'white',
     textTransform: 'initial',
+  },
+  drawerBookingRecapPrice:{
+    textAlign: 'end'
   }
 })

@@ -8,7 +8,11 @@ export default theme => ({
     paddingTop: theme.padding.infoBar.paddingTop,
     paddingBottom: theme.padding.infoBar.paddingBottom,
     alignItems: 'center',
-    display: 'flex'
+    display: 'flex',
+    [theme.breakpoints.down('xs')]:{
+      flexDirection: 'column',
+      textAlign: 'center'
+    }
   },
   infoBarColorText:{
     color: theme.palette.lightBlack.main,

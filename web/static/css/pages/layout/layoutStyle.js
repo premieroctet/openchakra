@@ -1,6 +1,19 @@
 export default theme => ({
+  layoutScrollMenu:{
+    display: 'flex',
+    justifyContent: 'center',
+    height : '10%',
+    alignItems: 'flex-end'
 
-
+  },
+  filterMenuDivierContainer:{
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  filterMenuDividerStyle:{
+    height: 1,
+    width: '100%'
+  },
   mainContainerStyleFooter:{
     justifyContent: 'center',
     flexDirection: 'column',

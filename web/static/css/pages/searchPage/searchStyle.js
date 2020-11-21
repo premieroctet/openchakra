@@ -76,15 +76,7 @@ export default theme => ({
 
 
 
-  filterMenuDivierContainer:{
-    display: 'flex',
-    justifyContent: 'center',
-    marginTop: '1%'
-  },
-  filterMenuDividerStyle:{
-    height: 1,
-    width: '100%'
-  },
+
 
   filterMenuTitleContainer:{
     marginTop: '5%',

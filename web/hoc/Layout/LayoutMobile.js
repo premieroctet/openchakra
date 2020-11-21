@@ -11,7 +11,8 @@ class LayoutMobile extends React.Component{
     super(props);
     this.state={
       currentUrlIndex : '',
-      myProfilUrl: false
+      myProfilUrl: false,
+      hideMobileNavbar: false
     }
 
   }
@@ -33,6 +34,9 @@ class LayoutMobile extends React.Component{
       case 'Search':
         this.setState({currentUrlIndex: 2});
         break;
+      case 'userServicePreview':
+        this.setState({hideMobileNavbar: true});
+        break;
       default:
         this.setState({currentUrlIndex: ''});
     }
@@ -40,13 +44,13 @@ class LayoutMobile extends React.Component{
 
   render() {
     const{children} = this.props;
-    const{currentUrlIndex, myProfilUrl} = this.state;
+    const{currentUrlIndex, myProfilUrl, hideMobileNavbar} = this.state;
 
 
 
     return(
       <Grid>
-        <Grid style={{padding: '10%'}}>
+        <Grid style={{padding: !hideMobileNavbar ? '10%' : 0}}>
           {!myProfilUrl ?
             <Grid>
               <IconButton aria-label="ArrowBackIosIcon" onClick={() => Router.back()}>
@@ -56,11 +60,15 @@ class LayoutMobile extends React.Component{
           }
           {children}
         </Grid>
-        <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 1}}>
-          <Grid style={{width: '90%'}}>
-            <MobileNavbar currentUrlIndex={currentUrlIndex}/>
-          </Grid>
-        </Grid>
+        {
+          !hideMobileNavbar ?
+            <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 1}}>
+              <Grid style={{width: '90%'}}>
+                <MobileNavbar currentUrlIndex={currentUrlIndex}/>
+              </Grid>
+            </Grid> : null
+        }
+
       </Grid>
     );
   }

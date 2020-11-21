@@ -27,6 +27,8 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import GallerySlidePics from "../components/GallerySlidePics/GallerySlidePics";
 import SummaryCommentary from "../components/SummaryCommentary/SummaryCommentary"
 import DrawerBooking from "../components/Drawer/DrawerBooking/DrawerBooking";
+import LayoutAccount from "../hoc/Layout/LayoutAccount";
+import LayoutMobile from "../hoc/Layout/LayoutMobile";
 
 
 const isEmpty = require('../server/validation/is-empty');
@@ -515,15 +517,240 @@ class UserServicesPreview extends React.Component {
     this.setState({date : dt, time: mode==='week' ? mmt : undefined}, () => this.checkBook())
   };
 
-  render() {
-    const {classes} = this.props;
-    const {serviceUser, service, equipments, alfred, user, allDetailEquipments, reviews} = this.state;
-
-    const serviceAddress = serviceUser.service_address;
+  content = (classes) => {
+    const serviceAddress = this.state.serviceUser.service_address;
 
     const filters = this.extractFilters();
 
     const pricedPrestations = this.computePricedPrestations();
+
+    return(
+      <Grid style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+        <Grid>
+          <Grid className={classes.mainContainer}>
+            <Grid container className={classes.widthContainer}>
+              <Grid item xl={6} className={classes.leftContainer}>
+                <Grid container className={classes.avatarAnDescription}>
+                  <Grid item xl={3} sm={3} className={classes.avatarContainer}>
+                    <Grid item className={classes.itemAvatar}>
+                      <UserAvatar user={this.state.alfred} className={classes.avatarLetter}/>
+                    </Grid>
+                  </Grid>
+                  <Grid item xl={9} sm={9} className={classes.flexContentAvatarAndDescription}>
+                    <Grid className={classes.marginAvatarAndDescriptionContent}>
+                      <Grid>
+                        <Typography variant="h6">{this.state.alfred.firstname} - {this.state.service.label}</Typography>
+                      </Grid>
+                      {
+                        serviceAddress ?
+                          <Grid>
+                            <Typography style={{color:'rgba(39,37,37,35%)'}}>{serviceAddress.city}, {serviceAddress.country} - {this.state.serviceUser.perimeter}km autour de {serviceAddress.city}</Typography>
+                          </Grid> : null
+                      }
+                    </Grid>
+                    <Grid>
+                      <Link
+                        href={{
+                          pathname: '/profile/about',
+                          query: {user: this.state.alfred._id},
+                        }}
+                      >
+                        <Button variant={'outlined'} className={classes.userServicePreviewButtonProfil}>Voir le profil</Button>
+                      </Link>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid style={{marginTop: '10%'}}>
+                  <Grid className={classes.overrideCssChild}>
+                    <Topic
+                      titleTopic={'Description'}
+                      titleSummary={this.state.serviceUser.description ? this.state.serviceUser.description : 'Cet utilisateur n\'a pas encore de description.'}
+                      needBackground={true}
+                      underline={true}
+                    >
+                      <ListAlfredConditions
+                        columnsXl={12}
+                        wrapperComponentProps={
+                          [
+                            {
+                              label: this.state.alfred.firstname ? 'Délai de prévenance' : '',
+                              summary: this.state.alfred.firstname ? `${this.state.alfred.firstname} a besoin de ${this.formatDeadline(this.state.serviceUser.deadline_before_booking)} pour préparer son service` : '',
+                              IconName:this.state. alfred.firstname ? <InsertEmoticonIcon fontSize="large"/> : ''
+                            },
+                            {
+                              label:  this.state.alfred.firstname ? 'Conditions d’annulation' : '',
+                              summary: this.state.alfred.firstname ? `${this.state.alfred.firstname} vous permet d’annuler votre réservation jusqu’à ${this.state.flexible ? '1 jour' : this.state.moderate ? '5 jours' : '10 jours'} avant la date prévue` : '',
+                              IconName:  this.state.alfred.firstname ? <CalendarTodayIcon fontSize="large"/> : ''
+                            },
+                            {
+                              label:  this.state.alfred.firstname ? 'Panier minimum' : '',
+                              summary: this.state.alfred.firstname ? `Le panier minimum de ${this.state.alfred.firstname} est de ${this.state.serviceUser.minimum_basket}€` : '',
+                              IconName:  this.state.alfred.firstname ? <ShoppingCartIcon fontSize="large"/> : ''
+                            },
+                          ]
+                        }
+                      />
+                    </Topic>
+                  </Grid>
+                </Grid>
+                <Grid className={classes.scheduleContainer}>
+                  <Topic
+                    underline={true}
+                    style={classes}
+                    titleTopic={'Sélectionnez vos dates'}
+                    titleSummary={this.state.alfred.firstname ? `Choisissez vos dates selon les disponibilités de ${this.state.alfred.firstname}` : ''}
+                  >
+                    <Schedule
+                      availabilities={this.state.availabilities}
+                      bookings={[]}
+                      services={[]}
+                      selectable={true}
+                      height={400}
+                      nbSchedule={1}
+                      handleSelection={this.scheduleDateChanged}
+                      singleSelection={true}
+                      mode={'week'}
+                      underline={true}
+                      style={classes}
+                    />
+                  </Topic>
+                </Grid>
+                {this.state.equipments.length !== 0 ?
+                  <Grid className={classes.equipmentsContainer}>
+                    <Topic
+                      titleTopic={'Matériel'}
+                      needBackground={true}
+                      underline={true}
+                      titleSummary={this.state.alfred.firstname ? `Le matériel de ${this.state.alfred.firstname}` : ''}
+                    >
+                      <ListAlfredConditions
+                        columnsXl={6}
+                        columnsLG={6}
+                        columnsMD={6}
+                        columnsSM={6}
+                        columnsXS={6}
+                        wrapperComponentProps={this.state.allDetailEquipments}
+                        equipmentsSelected={this.state.equipments}
+                      />
+                    </Topic>
+                  </Grid> : null
+                }
+                <Grid className={classes.perimeterContent}>
+                  {
+                    this.state.serviceUser && this.state.serviceUser.service_address ?
+                      <Grid style={{width: '100%'}}>
+                        <Topic
+                          underline={true}
+                          titleTopic={'Lieu de la prestation'}
+                          titleSummary={this.state.alfred.firstname ? `La zone dans laquelle ${this.state.alfred.firstname} peut intervenir` : ''}
+                        >
+                          <MapComponent
+                            position={[this.state.serviceUser.service_address.gps.lat, this.state.serviceUser.service_address.gps.lng]}
+                            perimeter={this.state.serviceUser.perimeter * 1000}
+                          />
+                        </Topic>
+                      </Grid> : ''
+                  }
+                </Grid>
+                <Hidden only={['xl', 'lg']}>
+                  <Grid className={classes.showReservation}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      aria-label="add"
+                      classes={{root: classes.buttonReservation}}
+                      onClick={this.toggleDrawer('bottom', true)}
+                    >
+                      Réserver
+                    </Button>
+                  </Grid>
+                  <Hidden only={['xl', 'lg']}>
+                    <Drawer anchor="bottom" open={this.state.bottom} onClose={this.toggleDrawer('bottom', false)}>
+                      <Grid className={classes.drawerContent}>
+                        <DrawerBooking
+                          side={'bottom'}
+                          filters={filters}
+                          pricedPrestations={pricedPrestations}
+                          toggleDrawer={this.toggleDrawer}
+                          onChangeDate={this.onChangeDate}
+                          onChangeTime={this.onChangeTime}
+                          isInPerimeter={this.isInPerimeter}
+                          onQtyChanged={this.onQtyChanged}
+                          onLocationChanged={this.onLocationChanged}
+                          computeTravelTax={this.computeTravelTax}
+                          getLocationLabel={this.getLocationLabel}
+                          book={this.book}
+                          {...this.state}
+                        />
+                      </Grid>
+                    </Drawer>
+                  </Hidden>
+                </Hidden>
+              </Grid>
+              {/* ------------------------------------------------------- ici content right ---------------------------------------------------*/}
+              <Hidden only={['xs', 'sm', 'md']}>
+                <Grid item xl={6} style={{paddingLeft: '5%', paddingRight: '5%'}}>
+                  <Grid className={classes.contentRight}>
+                    <DrawerBooking
+                      filters={filters}
+                      pricedPrestations={pricedPrestations}
+                      toggleDrawer={this.toggleDrawer}
+                      onChangeDate={this.onChangeDate}
+                      onChangeTime={this.onChangeTime}
+                      onQtyChanged={this.onQtyChanged}
+                      isInPerimeter={this.isInPerimeter}
+                      onLocationChanged={this.onLocationChanged}
+                      computeTravelTax={this.computeTravelTax}
+                      getLocationLabel={this.getLocationLabel}
+                      book={this.book}
+                      {...this.state}
+                    />
+                  </Grid>
+                </Grid>
+              </Hidden>
+            </Grid>
+          </Grid>
+          <Grid style={{display: 'flex', justifyContent: 'center'}}>
+            <Grid style={{width: '80%', paddingLeft: '5%', paddingRight: '5%'}}>
+              {
+                false ?
+                  <Grid style={{marginTop: '5%'}}>
+                    <Topic
+                      underline={true}
+                      titleTopic={this.state.alfred.firstname ? `Les photos de ${this.state.alfred.firstname}` : ''}
+                      titleSummary={this.state.alfred.firstname ? `Un aperçu du travail de ${this.state.alfred.firstname}` : ''}
+                      needBackground={true}
+                    >
+                      <GallerySlidePics />
+                    </Topic>
+                  </Grid> : null
+              }
+
+              {
+                this.state.reviews.length === 0 ? null :
+                  <Grid style={{marginTop: '5%'}}>
+                    <Topic
+                      underline={true}
+                      titleTopic={'Commentaires'}
+                      titleSummary={this.state.alfred.firstname ? `Ici, vous pouvez laisser des commentaires à ${this.state.alfred.firstname} !` : ''}
+                    >
+                      <SummaryCommentary user={this.state.alfred._id}  serviceUser={this.props.service_id}/>
+                    </Topic>
+
+                  </Grid>
+              }
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    )
+  };
+
+  render() {
+    const {classes} = this.props;
+    const {service,alfred, user,} = this.state;
+
+
 
     return (
       <React.Fragment>
@@ -535,229 +762,19 @@ class UserServicesPreview extends React.Component {
           <meta property="og:type" content="website"/>
           <meta property="og:url" content="https://my-alfred.io"/>
         </Helmet>
-        <Grid>
+        <Hidden only={['xs', ]}>
           <Layout user={user}>
-            <Grid style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-              <Grid>
-                <Grid className={classes.mainContainer}>
-                  <Grid container style={{width: '80%'}}>
-                    <Grid item xl={6}  style={{paddingLeft: '5%', paddingRight: '5%'}} className={classes.leftContainer}>
-                      <Grid container className={classes.avatarAnDescription}>
-                        <Grid item xl={3} sm={3} className={classes.avatarContainer}>
-                          <Grid item className={classes.itemAvatar}>
-                            <UserAvatar user={alfred} className={classes.avatarLetter}/>
-                          </Grid>
-                        </Grid>
-                        <Grid item xl={9} sm={9} className={classes.flexContentAvatarAndDescription}>
-                          <Grid className={classes.marginAvatarAndDescriptionContent}>
-                            <Grid>
-                              <Typography variant="h6">{alfred.firstname} - {service.label}</Typography>
-                            </Grid>
-                            {
-                              serviceAddress ?
-                                <Grid>
-                                  <Typography style={{color:'rgba(39,37,37,35%)'}}>{serviceAddress.city}, {serviceAddress.country} - {serviceUser.perimeter}km autour de {serviceAddress.city}</Typography>
-                                </Grid> : null
-                            }
-                          </Grid>
-                          <Grid>
-                            <Link
-                              href={{
-                                pathname: '/profile/about',
-                                query: {user: this.state.alfred._id},
-                              }}
-                            >
-                              <Button variant={'outlined'} className={classes.userServicePreviewButtonProfil}>Voir le profil</Button>
-                            </Link>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      <Grid style={{marginTop: '10%'}}>
-                        <Grid className={classes.overrideCssChild}>
-                          <Topic
-                            titleTopic={'Description'}
-                            titleSummary={serviceUser.description ? serviceUser.description : 'Cet utilisateur n\'a pas encore de description.'}
-                            needBackground={true}
-                            underline={true}
-                          >
-                          <ListAlfredConditions
-                            columnsXl={12}
-                            wrapperComponentProps={
-                              [
-                                {
-                                  label: alfred.firstname ? 'Délai de prévenance' : '',
-                                  summary: alfred.firstname ? `${alfred.firstname} a besoin de ${this.formatDeadline(serviceUser.deadline_before_booking)} pour préparer son service` : '',
-                                  IconName: alfred.firstname ? <InsertEmoticonIcon fontSize="large"/> : ''
-                                },
-                                {
-                                  label:  alfred.firstname ? 'Conditions d’annulation' : '',
-                                  summary: alfred.firstname ? `${alfred.firstname} vous permet d’annuler votre réservation jusqu’à ${this.state.flexible ? '1 jour' : this.state.moderate ? '5 jours' : '10 jours'} avant la date prévue` : '',
-                                  IconName:  alfred.firstname ? <CalendarTodayIcon fontSize="large"/> : ''
-                                },
-                                {
-                                  label:  alfred.firstname ? 'Panier minimum' : '',
-                                  summary: alfred.firstname ? `Le panier minimum de ${alfred.firstname} est de ${serviceUser.minimum_basket}€` : '',
-                                  IconName:  alfred.firstname ? <ShoppingCartIcon fontSize="large"/> : ''
-                                },
-                              ]
-                            }
-                          />
-                          </Topic>
-                        </Grid>
-                      </Grid>
-                      <Grid className={classes.scheduleContainer}>
-                        <Topic
-                          underline={true}
-                          style={classes}
-                          titleTopic={'Sélectionnez vos dates'}
-                          titleSummary={alfred.firstname ? `Choisissez vos dates selon les disponibilités de ${alfred.firstname}` : ''}
-                        >
-                        <Schedule
-                          availabilities={this.state.availabilities}
-                          bookings={[]}
-                          services={[]}
-                          selectable={true}
-                          height={400}
-                          nbSchedule={1}
-                          handleSelection={this.scheduleDateChanged}
-                          singleSelection={true}
-                          mode={'week'}
-                          underline={true}
-                          style={classes}
-                        />
-                        </Topic>
-                      </Grid>
-                      {equipments.length !== 0 ?
-                        <Grid className={classes.equipmentsContainer}>
-                          <Topic
-                            titleTopic={'Matériel'}
-                            needBackground={true}
-                            underline={true}
-                            titleSummary={alfred.firstname ? `Le matériel de ${alfred.firstname}` : ''}
-                          >
-                          <ListAlfredConditions
-                            columnsXl={6}
-                            columnsLG={6}
-                            columnsMD={6}
-                            columnsSM={6}
-                            columnsXS={6}
-                            wrapperComponentProps={allDetailEquipments}
-                            equipmentsSelected={equipments}
-                          />
-                          </Topic>
-                        </Grid> : null
-                      }
-                      <Grid className={classes.perimeterContent}>
-                        {
-                          serviceUser && serviceUser.service_address ?
-                            <Grid style={{width: '100%'}}>
-                            <Topic
-                              underline={true}
-                              titleTopic={'Lieu de la prestation'}
-                              titleSummary={alfred.firstname ? `La zone dans laquelle ${alfred.firstname} peut intervenir` : ''}
-                            >
-                              <MapComponent
-                                position={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]}
-                                perimeter={serviceUser.perimeter * 1000}
-                              />
-                            </Topic>
-                            </Grid> : ''
-                        }
-                      </Grid>
-                      <Hidden mdUp implementation="css">
-                        <Grid className={classes.showReservation}>
-                          <Button
-                            style={{color: 'white'}}
-                            variant="contained"
-                            size="medium"
-                            color="secondary"
-                            aria-label="add"
-                            className={classes.buttonReservation}
-                            onClick={this.toggleDrawer('bottom', true)}
-                          >
-                            Réserver
-                          </Button>
-                        </Grid>
-                        <Drawer anchor="bottom" open={this.state.bottom} onClose={this.toggleDrawer('bottom', false)}>
-                          <Grid className={classes.drawerContent}>
-                            <DrawerBooking
-                              side={'bottom'}
-                              classes={classes}
-                              filters={filters}
-                              pricedPrestations={pricedPrestations}
-                              toggleDrawer={this.toggleDrawer}
-                              onChangeDate={this.onChangeDate}
-                              onChangeTime={this.onChangeTime}
-                              isInPerimeter={this.isInPerimeter}
-                              onQtyChanged={this.onQtyChanged}
-                              onLocationChanged={this.onLocationChanged}
-                              computeTravelTax={this.computeTravelTax}
-                              getLocationLabel={this.getLocationLabel}
-                              book={this.book}
-                              {...this.state}
-                            />
-                          </Grid>
-                        </Drawer>
-                      </Hidden>
-                    </Grid>
-                    {/* ------------------------------------------------------- ici content right ---------------------------------------------------*/}
-                    <Grid item xl={6} style={{paddingLeft: '5%', paddingRight: '5%'}}>
-                      <Hidden mdDown implementation="css" className={classes.contentRight}>
-                        <Grid>
-                          <DrawerBooking
-                            filters={filters}
-                            pricedPrestations={pricedPrestations}
-                            classes={classes}
-                            toggleDrawer={this.toggleDrawer}
-                            onChangeDate={this.onChangeDate}
-                            onChangeTime={this.onChangeTime}
-                            onQtyChanged={this.onQtyChanged}
-                            isInPerimeter={this.isInPerimeter}
-                            onLocationChanged={this.onLocationChanged}
-                            computeTravelTax={this.computeTravelTax}
-                            getLocationLabel={this.getLocationLabel}
-                            book={this.book}
-                            {...this.state}
-                          />
-                        </Grid>
-                      </Hidden>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid style={{display: 'flex', justifyContent: 'center'}}>
-                  <Grid style={{width: '80%', paddingLeft: '5%', paddingRight: '5%'}}>
-                    <Grid style={{marginTop: '5%'}}>
-                      <Topic
-                        underline={true}
-                        titleTopic={alfred.firstname ? `Les photos de ${alfred.firstname}` : ''}
-                        titleSummary={alfred.firstname ? `Un aperçu du travail de ${alfred.firstname}` : ''}
-                        needBackground={true}
-                      >
-                        <GallerySlidePics />
-                      </Topic>
-                    </Grid>
-                    {
-                      reviews.length === 0 ? null :
-                        <Grid style={{marginTop: '5%'}}>
-                          <Topic
-                            underline={true}
-                            titleTopic={'Commentaires'}
-                            titleSummary={alfred.firstname ? `Ici, vous pouvez laisser des commentaires à ${alfred.firstname} !` : ''}
-                          >
-                            <SummaryCommentary user={alfred._id}  serviceUser={this.props.service_id}/>
-                          </Topic>
-
-                        </Grid>
-                    }
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
+            {this.content(classes)}
           </Layout>
-        </Grid>
+        </Hidden>
+        <Hidden only={['lg', 'xl', 'sm', 'md']}>
+          <LayoutMobile>
+            {this.content(classes)}
+          </LayoutMobile>
+        </Hidden>
       </React.Fragment>
     );
   }
 }
 
-export default withStyles(styles, {withTheme: true})(UserServicesPreview);
+export default withStyles(styles)(UserServicesPreview);
