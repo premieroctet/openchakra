@@ -51,6 +51,7 @@ class Messages extends React.Component {
       chats: [],
       visibleDetails: false,
       message: '',
+      lastMessageDate: ''
 
     };
     setTimeout( () => this.setState({visibleDetails: true}), 1000)
@@ -110,16 +111,18 @@ class Messages extends React.Component {
     this.messageDetailsRef.current.handleSubmit(event)
   };
 
+  getOldMessages = () =>{
+    let childState = this.messageDetailsRef.current.state;
+    const dates = childState.messages.concat(childState.oldMessagesDisplay).map(m => moment(m.date));
+    const lastMessageDate = Math.max(...dates);
+
+    if(this.state.lastMessageDate !== lastMessageDate){
+      this.setState({lastMessageDate: lastMessageDate})
+    }
+  };
+
   messageDetails = (classes) => {
     const filteredChats = this.getChatsRelative(this.state.relativeDetails._id);
-    if(this.messageDetailsRef.current){
-      var childState = this.messageDetailsRef.current.state;
-    }
-
-    console.log(childState);
-    //const dates = messages.concat(oldMessagesDisplay).map(m => moment(m.date));
-    //const lastMessageDate = Math.max(...dates);
-
 
     return (
       <Dialog
@@ -141,7 +144,7 @@ class Messages extends React.Component {
                 <Typography>{this.state.relativeDetails.firstname}</Typography>
               </Grid>
               <Grid>
-                <Typography style={{textAlign: 'center', whiteSpace: 'nowrap'}}>{`Dernier message `}</Typography>
+                <Typography style={{textAlign: 'center', whiteSpace: 'nowrap'}}>{`Dernier message ${moment(this.state.lastMessageDate).calendar()}`}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -157,6 +160,7 @@ class Messages extends React.Component {
             relative={this.state.relativeDetails}
             chats={filteredChats}
             ref={this.messageDetailsRef}
+            sendOldMessages={this.getOldMessages}
           />
         </DialogContent>
         <DialogActions classes={{root: classes.dialogActionRoot}}>

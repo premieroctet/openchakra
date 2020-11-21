@@ -43,12 +43,9 @@ class LayoutMessages extends React.Component{
             </Grid>
             <Grid>
               <Tabs
-                orientation="horizontal"
-                variant="scrollable"
                 value={tabIndex}
                 onChange={this.handleChange}
                 aria-label="scrollable force tabs"
-                scrollButtons="on"
                 classes={{indicator: classes.scrollIndicator}}
               >
                 <Tab label={'Mes messages Alfred'} className={classes.scrollMenuTabLayoutMessage} />

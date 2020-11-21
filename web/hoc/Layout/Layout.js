@@ -41,8 +41,8 @@ class Layout extends React.Component {
       <Grid>
         <InfoBar/>
         <NavBar selectedAddress={selectedAddress} logged={logged} key={this.logged}/>
-        <Grid className={classes.searchMenuScrollMenuContainer}>
-          <Grid className={classes.searchScrollmenuContainer}>
+        <Grid>
+          <Grid>
             <ScrollMenu categories={categories} gps={gps} indexCat={indexCat} mode={false}/>
           </Grid>
         </Grid>

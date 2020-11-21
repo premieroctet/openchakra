@@ -50,7 +50,7 @@ class MessagesDetails extends React.Component {
       this.setState({
         oldMessagesDisplay: messages,
         oldMessage: messages,
-      });
+      }, );
 
     axios.get('/myAlfred/api/users/current')
       .then(res => {
@@ -98,8 +98,15 @@ class MessagesDetails extends React.Component {
         });
       })
       .catch(err => console.error(err));
-
   }
+
+
+  componentDidUpdate = (prevState, prevProps) =>{
+    if(prevState.messages !== this.state.messages){
+      this.props.sendOldMessages();
+    }
+  };
+
 
   getMessage = (message) => {
     this.setState({message: message});
@@ -176,7 +183,7 @@ class MessagesDetails extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {relative, messages, oldMessagesDisplay} = this.state;
+    const {relative} = this.state;
 
     if (!relative) {
       return null
