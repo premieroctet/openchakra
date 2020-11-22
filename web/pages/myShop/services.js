@@ -232,7 +232,7 @@ class services extends React.Component {
           }
 
           toast.info('Service ' + (this.isNewService() ? 'créé' : 'modifié') + ' avec succès');
-          Router.push(`/shop?id_alfred=${this.state.user_id}`);
+          Router.push(`/profile/services?user=${this.state.user_id}&indexAccount=1`);
         })
         .catch(err => {
           console.error(JSON.stringify(err, null, 2));

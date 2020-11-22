@@ -50,11 +50,16 @@ class ProfileServices extends React.Component {
           :
           null
         }
-        <Grid item xs={12} xl={12}>
-          <Box>
-           <Services user={user} shop={shop}/>
-          </Box>
-        </Grid>
+        {
+          shop.services ?
+          shop.services.length ?
+            <Grid item xs={12} xl={12}>
+              <Box>
+                <Services user={user} shop={shop}/>
+              </Box>
+            </Grid> : null : null
+        }
+
         <Hidden only={['sm', 'xs', 'md']}>
           <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
             <Grid style={{width: '70%'}}>

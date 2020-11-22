@@ -15,6 +15,16 @@ import styles from '../../../static/css/components/Card/CardService/CardService'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from "@material-ui/core/Typography";
 import Hidden from "@material-ui/core/Hidden";
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import IconButton from '@material-ui/core/IconButton';
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import Dialog from "@material-ui/core/Dialog";
+import Router from 'next/router';
+
 
 class CardServiceInfo extends React.Component{
   constructor(props) {
@@ -65,27 +75,51 @@ class CardService extends React.Component{
       .catch(err => console.error(err));
   }
 
-  handleClickOpen(id) {
+  handleClickOpen =(id) => {
     this.setState({id_service: id, open: true});
-  }
+  };
 
-  handleClose() {
+  handleClose = () => {
     this.setState({id_service: '', open: false});
-  }
+  };
 
   deleteService(id) {
     axios.delete('/myAlfred/api/serviceUser/' + id)
       .then(() => {
-        toast.error('Service supprimé');
-        this.setState({open: false, id_service: ''});
-        this.props.needRefresh();
+        this.setState({open: false, id_service: ''}, () => window.location.reload());
       })
       .catch(err => console.error(err));
   }
 
+  modalDeleteServices = () => {
+    return(
+      <Dialog
+        open={this.state.open}
+        onClose={() => this.handleClose()}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{'Supprimer un service'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Voulez-vous vraiment supprimer ce service de votre service ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.handleClose()} color="primary">
+            Annuler
+          </Button>
+          <Button onClick={() => this.deleteService(this.state.id_service)} color="secondary" autoFocus>
+            Supprimer
+          </Button>
+        </DialogActions>
+      </Dialog>
+      )
+  };
+
   render() {
     const {classes, isOwner, gps,profileMode, user} = this.props;
-    const {cpData, alfred} = this.state;
+    const {cpData, alfred, open} = this.state;
 
     let distance = gps ? computeDistanceKm(gps, cpData.gps) : null;
     distance = distance ? distance.toFixed(0) : '';
@@ -107,18 +141,33 @@ class CardService extends React.Component{
 
     return(
       <Grid style={{ width: '100%'}}>
-        <Paper elevation={1} className={classes.cardServicePaper} onClick={() => window.open(resa_link, '_blank')}>
+        <Paper elevation={1} className={classes.cardServicePaper}>
           <Grid className={classes.cardServiceMainStyle}>
-            { profileMode ? null :
-              <Grid className={classes.cardServiceFlexContainer}>
-                <Grid className={classes.cardServicePicsContainer}>
-                  <Grid style={{backgroundImage: 'url("/' + cpData.picture + '")'}} className={classes.cardServiceBackgroundPics}/>
-                </Grid>
-                <Grid className={classes.cardServiceChipName}>
-                  <Chip label={alfred.firstname} avatar={cpData.is_professional ? <Avatar src="/static/assets/icon/pro_icon.svg"/> : null} className={classes.cardServiceChip} />
-                </Grid>
+            <Grid className={classes.cardServiceFlexContainer}>
+              <Grid className={classes.cardServicePicsContainer} onClick={() => window.open(resa_link, '_blank')}>
+                <Grid style={{backgroundImage: 'url("/' + cpData.picture + '")'}} className={classes.cardServiceBackgroundPics}/>
               </Grid>
-            }
+              {
+                profileMode ?
+                  <Grid style={{position: 'absolute', top: '5px', right: '5px', display: 'flex'}}>
+                    <Grid>
+                      <IconButton aria-label="delete" style={{backgroundColor: 'rgba(0,0,0,0.7)'}} size={'small'} onClick={() => Router.push(`/myShop/services?id=${cpData._id}`)}>
+                        <EditIcon style={{color: 'white'}} />
+                      </IconButton>
+                    </Grid>
+                    <Grid style={{marginLeft: '10px'}}>
+                      <IconButton aria-label="delete" size={'small'} style={{backgroundColor: 'rgba(0,0,0,0.7)'}} onClick={() => this.handleClickOpen(cpData._id)}>
+                        <DeleteForeverIcon style={{color: 'white'}} />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                  :
+                  <Grid className={classes.cardServiceChipName}>
+                    <Chip label={alfred.firstname} avatar={cpData.is_professional ? <Avatar src="/static/assets/icon/pro_icon.svg"/> : null} className={classes.cardServiceChip} />
+                  </Grid>
+              }
+
+            </Grid>
             <Grid className={classes.dataContainer}>
               <Grid className={classes.labelService}>
                 <Typography className={classes.labelDataContainer}>{cpData.label}</Typography>
@@ -175,6 +224,7 @@ class CardService extends React.Component{
             </Grid>
           </Grid>
         </Paper>
+        {open ? this.modalDeleteServices() : null}
       </Grid>
     );
   }
