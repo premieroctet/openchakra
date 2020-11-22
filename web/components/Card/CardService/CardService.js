@@ -14,6 +14,7 @@ import Avatar from "@material-ui/core/Avatar";
 import styles from '../../../static/css/components/Card/CardService/CardService'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from "@material-ui/core/Typography";
+import Hidden from "@material-ui/core/Hidden";
 
 class CardServiceInfo extends React.Component{
   constructor(props) {
@@ -94,7 +95,9 @@ class CardService extends React.Component{
     const resa_link =  `/userServicePreview?id=${cpData._id}`;
     if (this.props.item===null) {
       return (
-        <CardServiceInfo classes={classes} />
+        <Hidden only={['xs', 'sm']}>
+          <CardServiceInfo classes={classes} />
+        </Hidden>
       )
     }
 
@@ -116,20 +119,27 @@ class CardService extends React.Component{
                 </Grid>
               </Grid>
             }
-            <Grid style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginTop: '3vh'}}>
-              <Grid>
-                <Typography>{cpData.label}</Typography>
+            <Grid className={classes.dataContainer}>
+              <Grid className={classes.labelService}>
+                <Typography className={classes.labelDataContainer}>{cpData.label}</Typography>
               </Grid>
               { profileMode ? null :
                 <Grid className={classes.cardServicePlaceContainer}>
                   <Grid className={classes.cardServicePlaceLogo}>
                     <RoomIcon/>
                   </Grid>
-                  <Grid style={{whiteSpace: 'nowrap'}}>
-                    <Typography>{`À ${" "} ${distance} ${" "}km -`}</Typography>
-                  </Grid>
-                  <Grid className={classes.stylecardServiceDistance}>
-                    <Typography  className={classes.stylecardServiceDistance}>{cpData.city}</Typography>
+                  <Grid className={classes.cardKmContainer}>
+                    <Hidden only={['xs']}>
+                      <Grid style={{whiteSpace: 'nowrap'}}>
+                        <Typography>{`À ${" "} ${distance} ${" "}km `}</Typography>
+                      </Grid>
+                      <Grid>
+                        <Typography>-</Typography>
+                      </Grid>
+                    </Hidden>
+                    <Grid>
+                      <Typography className={classes.stylecardServiceDistance}>{cpData.city}</Typography>
+                    </Grid>
                   </Grid>
                 </Grid>
               }

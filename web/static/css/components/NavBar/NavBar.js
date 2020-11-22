@@ -266,6 +266,21 @@ export default theme => ({
     marginRight: 5
   },
 
+  navbarSearchContainerSearchPage:{
+    width: '90%',
+    marginTop: '5vh'
+  },
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+
   /**Ifsearchpage**/
   navbarSearchContainerSearchP:{
     width: '100%',

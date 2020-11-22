@@ -57,11 +57,6 @@ class Home extends React.Component {
     window.location.reload();
   };
 
-
-  content = (classes) =>{
-
-  };
-
   render() {
     const { classes } = this.props;
     const {category, alfred, logged} = this.state;

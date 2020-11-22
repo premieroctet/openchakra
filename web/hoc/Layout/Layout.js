@@ -51,7 +51,7 @@ class Layout extends React.Component {
         </Grid>
         {children}
         <Grid className={classes.mainContainerStyleFooter}>
-          <Divider style={{width: '100%', marginBottom: '3vh'}}/>
+          <Divider style={{width: '100%'}}/>
           <Grid style={{width: '90%'}}>
             <TrustAndSecurity/>
           </Grid>

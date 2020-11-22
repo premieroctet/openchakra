@@ -18,6 +18,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Layout from "../hoc/Layout/Layout";
 import withSlide from '../hoc/Slide/SlideShow'
 import withGrid from '../hoc/Grid/GridCard'
+import Hidden from "@material-ui/core/Hidden";
+import LayoutMobileSearch from "../hoc/Layout/LayoutMobileSearch";
+import Typography from "@material-ui/core/Typography";
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
 
 const SearchResults=withSlide(withGrid(CardService));
@@ -201,8 +204,9 @@ class SearchPage extends React.Component {
     this.setState(q, () => this.search());
   };
 
-  filter = () => {
-    let filterComponentstate = this.filterMenuComponent.current.state;
+  filter = (data) => {
+    let filterComponentstate = data ? data : this.filterMenuComponent.current.state;
+
     const serviceUsers = this.state.serviceUsers;
     let serviceUsersDisplay = [];
     if (filterComponentstate.proSelected || filterComponentstate.individualSelected) {
@@ -252,8 +256,6 @@ class SearchPage extends React.Component {
       });
     }
   };
-
-
 
   resetFilter() {
     this.setState({
@@ -336,88 +338,123 @@ class SearchPage extends React.Component {
   };
 
 
-
-  render() {
-    const {classes, search, indexCat} = this.props;
-    const {user, categories, gps, mounting, searching ,
-      selectedAddress,
-      filters,
-     } = this.state;
-
+  content = (classes ) => {
     const serviceUsers = this.state.serviceUsersDisplay;
 
-    return (
+    return(
       <Grid>
-      <Layout user={user} selectedAddress={selectedAddress} gps={gps} indexCat={indexCat}>
-        <Grid className={classes.searchFilterMenuPosition}>
-          <Grid className={classes.searchFilterMenuContent}>
-            <FilterMenu
-              ref={this.filterMenuComponent}
-              style={classes}
-              categories={categories}
-              gps={gps}
-              filter={this.filter}
-              mounting={mounting}
-              search={search}
-              searching={searching}
-              serviceUsers={serviceUsers}
-              resetFilter={this.resetFilter}
-              isSubFilterSet={this.isSubFilterSet}
-            />
+        <Hidden only={['xs']}>
+          <Grid className={classes.searchFilterMenuPosition}>
+            <Grid className={classes.searchFilterMenuContent}>
+              <FilterMenu
+                ref={this.filterMenuComponent}
+                style={classes}
+                categories={this.state.categories}
+                gps={this.state.gps}
+                filter={this.filter}
+                mounting={this.state.mounting}
+                search={this.props.search}
+                searching={this.state.searching}
+                serviceUsers={serviceUsers}
+                resetFilter={this.resetFilter}
+                isSubFilterSet={this.isSubFilterSet}
+              />
+            </Grid>
           </Grid>
-        </Grid>
+        </Hidden>
         <Grid className={classes.searchMainConainer}>
-          <Grid className={classes.searchMainContainerHeader}>
-            <Grid className={classes.searchContainerHeader}>
-              <Grid className={classes.searchSecondFilterContainer}>
-                <Grid className={classes.searchSecondFilterContainerLeft}>
-                  <p>{serviceUsers.length} Alfred disponibles</p>
-                </Grid>
-                <Grid className={classes.searchFilterRightContainer}>
-                  <Grid className={classes.searchFilterRightLabel}>
-                    <p>Trier par</p>
+          <Hidden only={['xs']}>
+            <Grid className={classes.searchMainContainerHeader}>
+              <Grid className={classes.searchContainerHeader}>
+                <Grid className={classes.searchSecondFilterContainer}>
+                  <Grid className={classes.searchSecondFilterContainerLeft}>
+                    <Typography>{serviceUsers.length} Alfred disponibles</Typography>
                   </Grid>
-                  <Grid>
-                    <FormControl className={classes.formControl}>
-                      <Select
-                        labelId="simple-select-placeholder-label-label"
-                        id="simple-select-placeholder-label"
-                        value={filters}
-                        onChange={this.handleChange}
-                        displayEmpty
-                        disableUnderline
-                        classes={{select: classes.searchSelectPadding}}
-                      >
-                        {filters.map((res,index) =>{
-                          return(
-                            <MenuItem key={index} value={res}><strong>{res}</strong></MenuItem>
-                          )
-                        })}
+                  <Grid className={classes.searchFilterRightContainer}>
+                    <Grid className={classes.searchFilterRightLabel}>
+                      <p>Trier par</p>
+                    </Grid>
+                    <Grid>
+                      <FormControl className={classes.formControl}>
+                        <Select
+                          labelId="simple-select-placeholder-label-label"
+                          id="simple-select-placeholder-label"
+                          value={this.state.filters}
+                          onChange={this.handleChange}
+                          displayEmpty
+                          disableUnderline
+                          classes={{select: classes.searchSelectPadding}}
+                        >
+                          {this.state.filters.map((res,index) =>{
+                            return(
+                              <MenuItem key={index} value={res}><strong>{res}</strong></MenuItem>
+                            )
+                          })}
 
-                      </Select>
-                    </FormControl>
+                        </Select>
+                      </FormControl>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          </Hidden>
           <Grid className={classes.searchMainContainerResult}>
             <Grid className={classes.searchContainerDisplayResult}>
+              <Hidden only={['sm','md', 'lg', 'xl']}>
+                <Grid style={{display: 'flex', justifyContent: 'center' , marginTop: '5vh', marginBottom: '5vh'}}>
+                  <Typography>{serviceUsers.length} Alfred disponibles</Typography>
+                </Grid>
+              </Hidden>
               <Grid container>
-              {
-                searching ?
-                  <Grid className={classes.searchLoadingContainer} item xl={3} lg={3} md={3}>
-                    <CircularProgress/>
-                  </Grid>
-                  :
-                  serviceUsers.length==0 ? null :
-                    <SearchResults
-                      model={new SearchDataModel(serviceUsers.map(su => su._id), 4, 3, false)}
-                      style={classes}
-                      gps={user ? user.billing_address.gps : this.state.gps}
-                      user={user}
-                    />
-              }
+                {
+                  this.state.searching ?
+                    <Grid className={classes.searchLoadingContainer} item xl={3} lg={3} md={3} sm={12} xs={12}>
+                      <CircularProgress/>
+                    </Grid>
+                    :
+                    serviceUsers.length===0 ? null :
+                      <Grid container spacing={2} className={classes.searchMainContainer}>
+                        <Hidden only={['xs', 'sm', 'md']}>
+                          <SearchResults
+                            model={new SearchDataModel(serviceUsers.map(su => su._id), 4, 3, false)}
+                            style={classes}
+                            gps={this.state.user ? this.state.user.billing_address.gps : this.state.gps}
+                            user={this.state.user}
+                          />
+                        </Hidden>
+                        <Hidden only={['xs', 'lg', 'xl', 'sm']}>
+                          <SearchResults
+                            model={new SearchDataModel(serviceUsers.map(su => su._id), 3, 3, false)}
+                            style={classes}
+                            gps={this.state.user ? this.state.user.billing_address.gps : this.state.gps}
+                            user={this.state.user}
+                          />
+                        </Hidden>
+                        <Hidden only={['xs', 'lg', 'xl', 'md']}>
+                          <SearchResults
+                            model={new SearchDataModel(serviceUsers.map(su => su._id), 2, 3, false)}
+                            style={classes}
+                            gps={this.state.user ? this.state.user.billing_address.gps : this.state.gps}
+                            user={this.state.user}
+                          />
+                        </Hidden>
+                        <Hidden only={['sm', 'md', 'lg', 'xl']}>
+                          {
+                            serviceUsers.map((su, index) =>{
+                              return (
+                                <Grid item xs={12} key={index}>
+                                  <CardService
+                                    item={su._id}
+                                    gps={this.state.user ? this.state.user.billing_address.gps : this.state.gps}
+                                    user={this.state.user}/>
+                                </Grid>
+                              );
+                              })
+                            }
+                        </Hidden>
+                      </Grid>
+                }
               </Grid>
             </Grid>
           </Grid>
@@ -432,8 +469,31 @@ class SearchPage extends React.Component {
           </Grid>
         </Grid>
         */}
-       </Layout>
       </Grid>
+    )
+  };
+
+
+
+  render() {
+    const {classes, indexCat} = this.props;
+    const {user, gps, selectedAddress} = this.state;
+
+
+    return (
+      <React.Fragment>
+        <Hidden only={['xs']}>
+          <Layout user={user} selectedAddress={selectedAddress} gps={gps} indexCat={indexCat}>
+            {this.content(classes)}
+          </Layout>
+        </Hidden>
+        <Hidden only={['sm', 'md', 'lg', 'xl']}>
+          <LayoutMobileSearch filter={this.filter}>
+            {this.content(classes)}
+          </LayoutMobileSearch>
+        </Hidden>
+
+      </React.Fragment>
     );
   }
 }

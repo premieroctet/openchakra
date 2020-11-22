@@ -25,23 +25,38 @@ export default theme => ({
     display: 'flex',
     justifyContent: 'center',
     height: '40vh',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    [theme.breakpoints.down('xs')]:{
+      height: '30vh'
+    }
   },
   cardServiceMainStyle:{
     width: '80%',
     marginTop: '8%',
     marginBottom: '5%',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    [theme.breakpoints.down('xs')]:{
+      flexDirection: 'row',
+      alignItems: 'center',
+      width: '90%',
+    }
   },
   cardServiceFlexContainer:{
     display: 'flex',
     justifyContent :'center',
-    position: 'relative'
+    position: 'relative',
+    [theme.breakpoints.down('xs')]:{
+      width: '50%'
+    }
   },
   cardServicePicsContainer:{
     width: '100%',
-    height: '20vh'
+    height: '20vh',
+    [theme.breakpoints.down('xs')]:{
+      width: 125,
+      height: 125
+    }
   },
 
   cardServiceBackgroundPics:{
@@ -63,7 +78,12 @@ export default theme => ({
   cardServicePlaceContainer:{
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]:{
+      marginTop: '1vh',
+      marginBottom: '1vh',
+      marginLeft: '1vh'
+    }
   },
   cardServicePlaceLogo:{
     marginRight: '3%'
@@ -79,7 +99,10 @@ export default theme => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('xs')]:{
+      justifyContent: 'center'
+    }
   },
 
   cardServiceRatingContainer:{
@@ -109,5 +132,39 @@ export default theme => ({
     fontSize: theme.typography.textLabel.fontSize,
     margin: theme.typography.textLabel.margin
   },
+
+  dataContainer:{
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    marginTop: '3vh',
+    [theme.breakpoints.down('xs')]:{
+      margin:0,
+      width: '50%',
+      flex: 'inherit'
+    }
+  },
+
+  labelDataContainer:{
+    [theme.breakpoints.down('xs')]:{
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden'
+    }
+  },
+  cardKmContainer:{
+    display: 'flex',
+    [theme.breakpoints.down('xs')]:{
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden'
+    }
+  },
+  labelService:{
+    [theme.breakpoints.down('xs')]:{
+      marginLeft: '1vh'
+    }
+  }
 
 })
