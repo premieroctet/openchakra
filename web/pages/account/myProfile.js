@@ -71,6 +71,7 @@ class myProfile extends React.Component{
               <Button
                 className={classes.button}
                 startIcon={<PersonOutlineIcon />}
+                onClick={() => Router.push(`/profile/about?user=${user._id}`)}
               >
                 Voir mon profil
               </Button>
