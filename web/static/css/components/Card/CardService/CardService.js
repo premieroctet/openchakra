@@ -153,6 +153,14 @@ export default theme => ({
       overflow: 'hidden'
     }
   },
+  profileModeCardService:{
+    [theme.breakpoints.down('xs')]:{
+      flexDirection: 'column',
+      alignItems: 'center',
+      width: '90%'
+
+    }
+  },
   cardKmContainer:{
     display: 'flex',
     [theme.breakpoints.down('xs')]:{
@@ -164,6 +172,12 @@ export default theme => ({
   labelService:{
     [theme.breakpoints.down('xs')]:{
       marginLeft: '1vh'
+    }
+  },
+  profileModecardServiceFlexContainer:{
+    [theme.breakpoints.down('xs')]:{
+      width: '100%',
+      position: 'relative'
     }
   }
 

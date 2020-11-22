@@ -142,8 +142,8 @@ class CardService extends React.Component{
     return(
       <Grid style={{ width: '100%'}}>
         <Paper elevation={1} className={classes.cardServicePaper}>
-          <Grid className={classes.cardServiceMainStyle}>
-            <Grid className={classes.cardServiceFlexContainer}>
+          <Grid className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle}>
+            <Grid className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
               <Grid className={classes.cardServicePicsContainer} onClick={() => window.open(resa_link, '_blank')}>
                 <Grid style={{backgroundImage: 'url("/' + cpData.picture + '")'}} className={classes.cardServiceBackgroundPics}/>
               </Grid>
