@@ -256,9 +256,9 @@ class NavBar extends Component {
     )
   };
 
-  modalMobileFilter = () =>{
+  modalMobileFilter = (classes) =>{
     return(
-      <Dialog onClose={() => this.setState({modalFilters: false})} aria-labelledby="customized-dialog-title" open={this.state.modalFilters}>
+      <Dialog onClose={() => this.setState({modalFilters: false})} aria-labelledby="customized-dialog-title" open={this.state.modalFilters} classes={{paper: classes.dialogNavbarMobileFilter}}>
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({modalFilters: false})}>
           Filtres
         </DialogTitle>

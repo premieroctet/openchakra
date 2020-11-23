@@ -404,4 +404,7 @@ export default theme => ({
       width:'100%'
     }
   },
+  dialogNavbarMobileFilter:{
+    minWidth: '100%'
+  }
 })
