@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import Grid from "@material-ui/core/Grid";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -54,11 +54,28 @@ class Header extends React.Component {
                         }}>d'entreprise mais surtout d'humain</p>
                     </Grid>
                 </Grid>
+                <Tabs style={{padding: '-150px 0 0 0'}} aria-label="simple tabs example">
+                    <div style={{margin: '0 auto'}}>
+                        <Link href={'/footer/apropos'}>
+                            <Tab classes={{root: layoutStyle.navbarTabRootSelected}}
+                                 label={NAVBAR_MENU.aboutUs}/>
+                        </Link>
+                        <Link href={'/footer/ourcommunauty'}>
+                            <Tab classes={{root: layoutStyle.navBarTabAbout}}
+                                 label={NAVBAR_MENU.ourCom}/>
+                        </Link>
+                        <Link href={'/footer/ourteam'}>
+                            <Tab classes={{root: layoutStyle.navBarTabAbout}}
+                                 label={NAVBAR_MENU.ourTeam}/>
+                        </Link>
+                    </div>
+                </Tabs>
             </Grid>
-
         )
+
     }
 
 }
+
 
 export default withStyles(style)(Header);
