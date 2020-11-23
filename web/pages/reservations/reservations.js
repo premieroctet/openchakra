@@ -18,6 +18,12 @@ import cookie from 'react-cookies';
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Box from "../../components/Box/Box";
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import BookingPreview from '../../components/BookingDetail/BookingPreview'
+import BookingCancel from '../../components/BookingDetail/BookingCancel'
+import BookingConfirm from '../../components/BookingDetail/BookingConfirm'
+
 
 moment.locale('fr');
 
@@ -37,7 +43,13 @@ class AllReservations extends React.Component {
       reservationType: 1,
       // Tab reservationStatus : 0 => toutes, 1 => à venir, 2 => terminées
       reservationStatus: 0,
+      bookingPreview: null,
+      bookingCancel: null,
+      bookingConfirm: null,
     };
+    this.bookingPreviewModal = this.bookingPreviewModal.bind(this)
+    this.bookingCancelModal = this.bookingCancelModal.bind(this)
+    this.bookingConfirmModal = this.bookingConfirmModal.bind(this)
   }
 
   componentDidMount() {
@@ -51,14 +63,17 @@ class AllReservations extends React.Component {
         reservationType: result.is_alfred ? 0 : 1,
       });
 
+      this.loadBookings()
+    });
+  }
 
-      axios.get('/myAlfred/api/booking/alfredBooking').then(res => {
-        this.setState({alfredReservations: res.data});
-      });
+  loadBookings = () => {
+    axios.get('/myAlfred/api/booking/alfredBooking').then(res => {
+      this.setState({alfredReservations: res.data});
+    });
 
-      axios.get('/myAlfred/api/booking/userBooking').then(res => {
-        this.setState({userReservations: res.data});
-      });
+    axios.get('/myAlfred/api/booking/userBooking').then(res => {
+      this.setState({userReservations: res.data});
     });
   }
 
@@ -87,6 +102,65 @@ class AllReservations extends React.Component {
     if (reservationStatus==2) { reservations = reservations.filter(this.isFinished)}
     return reservations
   }
+
+  openBookingPreview = bookingId => {
+    this.loadBookings()
+    this.setState({ bookingPreview: bookingId, bookingCancel: null, bookingConfirm: null})
+  }
+
+  openBookingCancel = bookingId => {
+    this.setState({ bookingPreview:null, bookingCancel: bookingId, bookingConfirm: null})
+  }
+
+  openBookingConfirm = bookingId => {
+    this.setState({ bookingPreview:null, bookingCancel: null, bookingConfirm: bookingId})
+  }
+
+  bookingPreviewModal = () => {
+    const {bookingPreview}=this.state
+
+    return (
+      <Dialog style={{width: '100%'}}
+        open={Boolean(bookingPreview)}
+        onClose={() => this.setState({bookingPreview: null})}
+      >
+        <DialogContent>
+          <BookingPreview booking_id={bookingPreview} onCancel={this.openBookingCancel} onConfirm={this.openBookingConfirm}/>
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
+  bookingCancelModal = () => {
+    const {bookingCancel}=this.state
+
+    return (
+      <Dialog style={{width: '100%'}}
+        open={Boolean(bookingCancel)}
+        onClose={() => this.setState({bookingCancel: null})}
+      >
+        <DialogContent>
+          <BookingCancel booking_id={bookingCancel} onMaintain={this.openBookingPreview}/>
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
+  bookingConfirmModal = () => {
+    const {bookingConfirm}=this.state
+
+    return (
+      <Dialog style={{width: '100%'}}
+        open={Boolean(bookingConfirm)}
+        onClose={() => this.setState({bookingConfirm: null})}
+      >
+        <DialogContent>
+          <BookingConfirm booking_id={bookingConfirm} onConfirm={this.openBookingPreview}/>
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
 
   render() {
     const {userInfo, reservationType, reservationStatus} = this.state;
@@ -144,7 +218,7 @@ class AllReservations extends React.Component {
                         return (
                           <React.Fragment>
                             {/* Web */}
-                            <Grid container className={classes.webrow}>
+                            <Grid container className={classes.webrow} >
                               <Grid item xs={2} md={1} className={classes.avatarContainer}>
                                 <UserAvatar user={alfredMode ? booking.user : booking.alfred}/>
                               </Grid>
@@ -182,9 +256,7 @@ class AllReservations extends React.Component {
                               </Grid>
                               <Grid item>
                                 <Grid>
-                                  <Link href={{pathname: '/reservations/detailsReservation', query: {id: booking._id}}}>
-                                    <Button color={'primary'} variant={'outlined'}>Détail</Button>
-                                  </Link>
+                                  <Button color={'primary'} variant={'outlined'} onClick={()=>this.openBookingPreview(booking._id)}>Détail</Button>
                                 </Grid>
                               </Grid>
                               <hr className={classes.hrSeparator}/>
@@ -261,13 +333,6 @@ class AllReservations extends React.Component {
                                 </Typography>
                               </Grid>
                               <Grid item xs={12} style={{}}>
-                                <Link
-                                  href={{
-                                    pathname:
-                                      '/reservations/detailsReservation',
-                                    query: {id: booking._id},
-                                  }}
-                                >
                                   <Typography
                                     className={classes.mobilevoir}
                                     style={{
@@ -279,6 +344,7 @@ class AllReservations extends React.Component {
                                       lineHeight: '3',
                                       marginTop: '5%',
                                     }}
+                                    onClick={()=>this.openBookingPreview(booking._id)}
                                   >
 
                                     <a
@@ -290,7 +356,6 @@ class AllReservations extends React.Component {
                                       Détail
                                     </a>
                                   </Typography>
-                                </Link>
                               </Grid>
                             </Grid>
                           </React.Fragment>
@@ -315,6 +380,9 @@ class AllReservations extends React.Component {
         {this.state.isAlfred ? (
           <NavbarMobile userId={this.state.user}/>
         ) : null}
+        { this.bookingPreviewModal()}
+        { this.bookingCancelModal()}
+        { this.bookingConfirmModal()}
       </Fragment>
     );
   }
