@@ -183,15 +183,22 @@ export default theme => ({
     },
   },
   avatarContainer: {
-    marginRight: '5%',
+
   },
   descriptionContainer: {
-    paddingRight: '5%',
-    paddingLeft: '5%',
+    [theme.breakpoints.down('sm')]:{
+      display: 'flex',
+      justifyContent: 'center',
+      flexDirection: 'column',
+      alignItems: 'center'
+    }
   },
   priceContainer: {
     display: 'flex',
     justifyContent: 'center',
+    [theme.breakpoints.down('sm')]:{
+      marginTop: '3vh'
+    }
   },
   hrSeparator: {
     width: '100%',
@@ -211,4 +218,43 @@ export default theme => ({
       display: 'none',
     },
   },
+  scrollMenuIndicator:{
+    backgroundColor: theme.palette.yellow.main
+  },
+  scrollMenuTab:{
+    textTransform: 'initial'
+  },
+  cardPreviewLarge: {
+    width: 80,
+    height: 80,
+    [theme.breakpoints.down('sm')]:{
+      width: 60,
+      height: 60
+    }
+  },
+  detailButtonContainer:{
+    [theme.breakpoints.down('sm')]:{
+      display: 'flex',
+      justifyContent: 'center',
+      marginTop: '3vh'
+    }
+  },
+  reservationsMainContainer:{
+    [theme.breakpoints.down('xs')]:{
+      marginBottom: '12vh'
+    }
+  },
+
+  bookingNameContainer:{
+    [theme.breakpoints.down('sm')]:{
+      textAlign: 'center'
+    }
+  },
+
+  dialogPreviewPaper:{
+    [theme.breakpoints.down('xs')]:{
+      minWidth: '100%'
+    }
+  }
+
 })

@@ -56,7 +56,7 @@ class MobileNavbar extends React.Component{
         Router.push('/search');
         break;
       case 2:
-        Router.push(`/profile/calendar?user=${this.state.user._id}`);
+        Router.push('/reservations/reservations');
         break;
       case 3:
         Router.push(`/profile/messages?user=${this.state.user._id}`);

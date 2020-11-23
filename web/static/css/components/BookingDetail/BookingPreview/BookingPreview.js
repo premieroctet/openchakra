@@ -1,4 +1,4 @@
-export default theme => ({
+export default theme =>  ({
   exp1: {
     '&::before': {
       height: '0px!important',
@@ -50,15 +50,19 @@ export default theme => ({
     marginLeft: '4%',
     marginTop: '2%',
     [theme.breakpoints.down('xs')]: {
-      marginRight: '4%',
+      margin: 0
     },
   },
   toggle: {
     zIndex: 0,
   },
   avatarLetter: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
+    [theme.breakpoints.down('sm')]:{
+      width: 60,
+      height: 60
+    }
   },
   hrSeparator: {
     width: '100%',
@@ -116,13 +120,17 @@ export default theme => ({
     },
   },
   mainContainerAbout: {
-    borderBottom: '1.5px #8281813b solid',
-    marginTop: '5%',
-    paddingBottom: '7%',
     alignItems: 'center',
     [theme.breakpoints.down('xs')]: {
-      marginTop: 30,
     },
+  },
+  bookingDetailContainer:{
+    display: 'flex',
+    width: '70%',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('xs')]:{
+      width: '100%'
+    }
   },
   rondYellow: {
     width: '30px',
@@ -211,7 +219,6 @@ export default theme => ({
       width: '100%',
       display: 'flex',
       justifyContent: 'center',
-      marginTop: '5%',
     },
   },
   menuButton: {

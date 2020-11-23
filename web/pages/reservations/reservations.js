@@ -26,6 +26,9 @@ import BookingConfirm from '../../components/BookingDetail/BookingConfirm'
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMessages from "../../hoc/Layout/LayoutMessages";
 import LayoutMobileMessages from "../../hoc/Layout/LayoutMobileMessages";
+import LayoutReservations from "../../hoc/Layout/LayoutReservations";
+import Divider from "@material-ui/core/Divider";
+import LayoutMobileReservations from "../../hoc/Layout/LayoutMobileReservations";
 
 
 moment.locale('fr');
@@ -81,7 +84,9 @@ class AllReservations extends React.Component {
   };
 
   handleReservationTypeChanged = (event, newValue) => {
-    this.setState({reservationType: newValue, reservationStatus: 0})
+    let childState = this.child.current.state;
+
+    this.setState({reservationType: childState.reservationType, reservationStatus: 0})
   };
 
   handleReservationStatusChanged = (event, newValue) => {
@@ -119,13 +124,16 @@ class AllReservations extends React.Component {
     this.setState({ bookingPreview:null, bookingCancel: null, bookingConfirm: bookingId})
   };
 
-  bookingPreviewModal = () => {
+  bookingPreviewModal = (classes) => {
     const {bookingPreview}=this.state;
 
     return (
-      <Dialog style={{width: '100%'}}
+      <Dialog
+        style={{width: '100%'}}
         open={Boolean(bookingPreview)}
         onClose={() => this.setState({bookingPreview: null})}
+        classes={{paper: classes.dialogPreviewPaper}}
+
       >
         <DialogContent>
           <BookingPreview booking_id={bookingPreview} onCancel={this.openBookingCancel} onConfirm={this.openBookingConfirm}/>
@@ -169,207 +177,78 @@ class AllReservations extends React.Component {
     const alfredMode = this.state.reservationType===0;
 
     return(
-      <Grid>
-        <Grid container className={classes.bigContainer}>
-          <Grid container stymle={{ width: '100%'}}>
-            <Grid xs={12} style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-              <Grid >
-                <h3>Mes réservations</h3>
-              </Grid>
-              <Tabs
-                orientation="horizontal"
-                variant="scrollable"
-                value={this.state.reservationType}
-                onChange={this.handleReservationTypeChanged}
-                aria-label="scrollable force tabs"
-                scrollButtons="on"
-                classes={{indicator: classes.scrollMenuIndicator}}
-              >
-                <Tab label={"Mes réservations d'Alfred"} className={classes.scrollMenuTab} />
-                <Tab label={"Mes réservations d'utilisateur"} className={classes.scrollMenuTab} />
-              </Tabs>
-            </Grid>
-            <Grid className={classes.paddresp} item xs={12} style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-              <Box>
-                <Tabs
-                  orientation="horizontal"
-                  variant="scrollable"
-                  value={this.state.reservationStatus}
-                  onChange={this.handleReservationStatusChanged}
-                  aria-label="scrollable force tabs"
-                  scrollButtons="on"
-                  classes={{indicator: classes.scrollMenuIndicator}}
-                >
-                  <Tab label={"Toutes mes réservations"} className={classes.scrollMenuTab} />
-                  <Tab label={"Mes réservations à venir"} className={classes.scrollMenuTab} />
-                  <Tab label={"Mes réservations terminées"} className={classes.scrollMenuTab} />
-                </Tabs>
-
-                <Grid container>
-                  <Typography style={{fontSize: '0.8rem', marginBottom: '4%'}} >
-                    { `Vous avez ${reservations.length} réservations` }
-                  </Typography>
+      <Grid style={{width: '100%'}}>
+        <Grid style={{display: 'flex', justifyContent :'center'}}>
+          <Tabs
+            orientation="horizontal"
+            variant="scrollable"
+            value={this.state.reservationStatus}
+            onChange={this.handleReservationStatusChanged}
+            aria-label="scrollable force tabs"
+            scrollButtons="on"
+            classes={{indicator: classes.scrollMenuIndicator}}
+          >
+            <Tab label={"Toutes mes réservations"} className={classes.scrollMenuTab} />
+            <Tab label={"Mes réservations à venir"} className={classes.scrollMenuTab} />
+            <Tab label={"Mes réservations terminées"} className={classes.scrollMenuTab} />
+          </Tabs>
+        </Grid>
+        <Grid style={{width: '100%'}}>
+          <Divider/>
+        </Grid>
+        <Grid container style={{marginTop: '10vh', display: 'flex', flexDirection: 'column'}}>
+          {reservations.length ? (
+            reservations.map(booking => {
+              return (
+                <Grid className={classes.reservationsMainContainer}>
+                  <Grid container style={{display: 'flex', alignItems: 'center'}}>
+                    <Grid item xl={3} lg={3} md={3} sm={6} xs={4} className={classes.avatarContainer}>
+                      <UserAvatar
+                        user={alfredMode ? booking.user : booking.alfred}
+                        className={classes.cardPreviewLarge}/>
+                    </Grid>
+                    <Grid item  xl={3} lg={3} md={3} sm={6} xs={8} className={classes.descriptionContainer}>
+                      <Grid className={classes.bookingNameContainer}>
+                        <Typography><strong> {booking.status} - {alfredMode ? booking.user.firstname : booking.alfred.firstname}</strong></Typography>
+                      </Grid>
+                      <Grid>
+                        <Typography>
+                          {booking.date_prestation} -{' '}
+                          {moment(booking.time_prestation).format(
+                            'HH:mm',
+                          )}
+                        </Typography>
+                      </Grid>
+                      <Grid>
+                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>{booking.service}</Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid item   xl={3} lg={3} md={3} sm={6} xs={4} className={classes.priceContainer}>
+                      <Grid>
+                        <Typography>
+                          {(alfredMode ? booking.alfred_amount : booking.amount).toFixed(2)}€
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid item  xl={3} lg={3} md={3} sm={6} xs={8} className={classes.detailButtonContainer}>
+                      <Grid>
+                        <Button
+                          color={'primary'}
+                          variant={'outlined'}
+                          onClick={() => this.openBookingPreview(booking._id)}>
+                          Détail
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid style={{marginTop: '5vh', marginBottom: '5vh'}}>
+                    <Divider/>
+                  </Grid>
                 </Grid>
-                {/************************************************************ début en tant que user web **************************************************/}
-                <React.Fragment>
-                  {reservations.length ? (
-                    reservations.map(booking => {
-                      return (
-                        <React.Fragment>
-                          {/* Web */}
-                          <Grid container className={classes.webrow} >
-                            <Grid item xs={2} md={1} className={classes.avatarContainer}>
-                              <UserAvatar user={alfredMode ? booking.user : booking.alfred}/>
-                            </Grid>
-                            <Grid item xs={5} md={6} className={classes.descriptionContainer}>
-                              <Grid>
-                                <Typography
-                                  style={{
-                                    marginTop: '2%',
-                                    fontSize: '0.8rem',
-                                  }}
-                                >
-                                  {booking.status} - { alfredMode ? booking.user.firstname : booking.alfred.firstname}
-                                </Typography>
-                              </Grid>
-                              <Grid>
-                                <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>
-                                  {booking.date_prestation} -{' '}
-                                  {moment(booking.time_prestation).format(
-                                    'HH:mm',
-                                  )}
-                                </Typography>
-                              </Grid>
-                              <Grid>
-                                <Typography style={{color: '#9B9B9B', fontSize: '0.8rem'}}>
-                                  {booking.service}
-                                </Typography>
-                              </Grid>
-                            </Grid>
-                            <Grid item xs={2} className={classes.priceContainer}>
-                              <Grid>
-                                <Typography style={{color: '#4FBDD7', fontWeight: '600'}}>
-                                  {(alfredMode ? booking.alfred_amount : booking.amount).toFixed(2)}€
-                                </Typography>
-                              </Grid>
-                            </Grid>
-                            <Grid item>
-                              <Grid>
-                                <Button color={'primary'} variant={'outlined'} onClick={()=>this.openBookingPreview(booking._id)}>Détail</Button>
-                              </Grid>
-                            </Grid>
-                            <hr className={classes.hrSeparator}/>
-                          </Grid>
-
-                          {/************************************************************ fin en tant que user web **************************************************/}
-
-                          {/************************************************************ début en tant que user mobile **************************************************/}
-                          {/* Mobile */}
-                          <Grid
-                            container
-                            className={classes.mobilerow1}
-
-                          >
-                            <Grid
-                              item
-                              xs={12}
-                              style={{
-                                textAlign: 'center',
-                                marginTop: '15px',
-                                display: 'flex',
-                                justifyContent: 'center',
-
-                              }}
-                            >
-                              <UserAvatar user={alfredMode ? booking.user : booking.alfred}/>
-                            </Grid>
-                            <Grid
-                              item
-                              xs={12}
-                              style={{
-                                textAlign: 'center',
-                                fontSize: '0.8rem',
-                              }}
-                            >
-                              <Typography
-                                style={{
-                                  marginTop: '2%',
-                                  fontSize: '0.8rem',
-                                }}
-                              >
-                                {booking.status} - {alfredMode ? booking.user.firstname : booking.alfred.firstname}
-                              </Typography>
-                              <Typography
-                                style={{
-                                  color: '#9B9B9B',
-                                  fontSize: '0.8rem',
-                                }}
-                              >
-                                {booking.date_prestation} -{' '}
-                                {moment(booking.time_prestation).format(
-                                  'HH:mm',
-                                )}
-                              </Typography>
-                              <Typography
-                                style={{
-                                  color: '#9B9B9B',
-                                  fontSize: '0.8rem',
-                                }}
-                              >
-                                {booking.service}
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12} style={{}}>
-                              <Typography
-                                style={{
-                                  color: '#4FBDD7',
-                                  fontWeight: '600',
-                                  paddingTop: '5%',
-                                  textAlign: 'center',
-                                }}
-                              >
-                                {(alfredMode ? booking.alfred_amount :booking.amount).toFixed(2)}€
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12} style={{}}>
-                              <Typography
-                                className={classes.mobilevoir}
-                                style={{
-                                  height: '45px',
-                                  backgroundColor: '#2FBCD3',
-                                  color: 'white',
-                                  textAlign: 'center',
-                                  cursor: 'pointer',
-                                  lineHeight: '3',
-                                  marginTop: '5%',
-                                }}
-                                onClick={()=>this.openBookingPreview(booking._id)}
-                              >
-
-                                <a
-                                  style={{
-                                    textDecoration: 'none',
-                                    color: 'white',
-                                  }}
-                                >
-                                  Détail
-                                </a>
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </React.Fragment>
-                      );
-                    })
-                  ) : (
-                    <p>
-                      { `Vous n'avez aucune réservation en tant qu'${alfredMode ? 'Alfred' : 'utilisateur'}` }
-                    </p>
-                  )}
-                  {/************************************************************ fin en tant que user mobile **************************************************/}
-                </React.Fragment>
-              </Box>
-            </Grid>
-          </Grid>
+              )
+            })) :
+            <Typography>{ `Vous n'avez aucune réservation en tant qu'${alfredMode ? 'Alfred' : 'utilisateur'}` }</Typography>
+          }
         </Grid>
       </Grid>
     )
@@ -382,16 +261,16 @@ class AllReservations extends React.Component {
     return (
       <React.Fragment>
         <Hidden only={['xs']}>
-          <LayoutMessages>
+          <LayoutReservations ref={this.child} handleReservationTypeChanged={this.handleReservationTypeChanged}>
             {this.content(classes)}
-          </LayoutMessages>
+          </LayoutReservations>
         </Hidden>
         <Hidden only={['lg', 'xl',  'sm', 'md']}>
-          <LayoutMobileMessages currentIndex={3}>
+          <LayoutMobileReservations ref={this.child} currentIndex={2} handleReservationTypeChanged={this.handleReservationTypeChanged}>
             {this.content(classes)}
-          </LayoutMobileMessages>
+          </LayoutMobileReservations>
         </Hidden>
-        { this.bookingPreviewModal()}
+        { this.bookingPreviewModal(classes)}
         { this.bookingCancelModal()}
         { this.bookingConfirmModal()}
       </React.Fragment>

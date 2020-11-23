@@ -22,7 +22,7 @@ class BookingDetail extends React.Component {
                       <Grid className={classes.labelContent}>
                         <p>{k}</p>
                       </Grid>
-                      <Grid>
+                      <Grid className={classes.priceContent}>
                         <p>{prestations[k].toFixed(2)}€</p>
                       </Grid>
                     </Grid>
@@ -48,7 +48,7 @@ class BookingDetail extends React.Component {
               <Grid className={classes.labelContent}>
                 <p>Frais de livraison/enlèvement</p>
               </Grid>
-              <Grid>
+              <Grid className={classes.priceContent}>
                 <p>{pick_tax.toFixed(2)}€</p>
               </Grid>
             </Grid> : null}
@@ -59,7 +59,7 @@ class BookingDetail extends React.Component {
               <Grid className={classes.labelContent}>
                 <p>Frais de service</p>
               </Grid>
-              <Grid>
+              <Grid className={classes.priceContent}>
                 <p>{client_fee.toFixed(2)}€</p>
               </Grid>
             </Grid> : null
@@ -69,7 +69,7 @@ class BookingDetail extends React.Component {
               <Grid className={classes.labelContent}>
                 <p>Frais de service</p>
               </Grid>
-              <Grid>
+              <Grid className={classes.priceContent}>
                 <p>-{alfred_fee.toFixed(2)}€</p>
               </Grid>
             </Grid> : null
