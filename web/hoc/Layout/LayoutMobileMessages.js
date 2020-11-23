@@ -19,35 +19,12 @@ class LayoutMobileMessages extends React.Component{
     }
   }
 
-  componentDidMount = () =>{
-    let currentUrl = Router.pathname;
-    let firstParamUrl= currentUrl.split('/')[1].split('/')[0];
-    if(currentUrl === '/account/myProfile'){
-      this.setState({myProfilUrl: true})
-    }
-
-    switch (firstParamUrl) {
-      case 'account':
-        this.setState({currentUrlIndex: 4});
-        break;
-      case '/':
-        this.setState({currentUrlIndex: 1});
-        break;
-      case 'Search':
-        this.setState({currentUrlIndex: 2});
-        break;
-      default:
-        this.setState({currentUrlIndex: ''});
-    }
-  };
-
   handleChange = (event, newValue) => {
     this.setState({tabIndex: newValue}, () => this.props.handleChange())
   };
 
   render() {
-    const {classes, children, tabIndex}= this.props;
-    const {currentUrlIndex}= this.state;
+    const {classes, children, tabIndex, currentIndex}= this.props;
 
     return(
       <Grid>
@@ -82,7 +59,7 @@ class LayoutMobileMessages extends React.Component{
         </Grid>
         <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 1}}>
           <Grid style={{width: '90%'}}>
-            <MobileNavbar currentUrlIndex={currentUrlIndex}/>
+            <MobileNavbar currentIndex={currentIndex}/>
           </Grid>
         </Grid>
       </Grid>

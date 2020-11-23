@@ -16,7 +16,7 @@ class personalInformation extends React.Component{
   render() {
     return(
       <React.Fragment>
-        <LayoutMobile>
+        <LayoutMobile currentIndex={4}>
           <Grid>
             <Grid>
               <h2 style={{whiteSpace: 'nowrap'}}>Informations personnelles</h2>

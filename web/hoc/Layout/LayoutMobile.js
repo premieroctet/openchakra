@@ -17,34 +17,9 @@ class LayoutMobile extends React.Component{
 
   }
 
-  componentDidMount(){
-    let currentUrl = Router.pathname;
-    let firstParamUrl= currentUrl.split('/')[1].split('/')[0];
-    if(currentUrl === '/account/myProfile'){
-      this.setState({myProfilUrl: true})
-    }
-
-    switch (firstParamUrl) {
-      case 'account':
-        this.setState({currentUrlIndex: 4});
-        break;
-      case '/':
-        this.setState({currentUrlIndex: 1});
-        break;
-      case 'Search':
-        this.setState({currentUrlIndex: 2});
-        break;
-      case 'userServicePreview':
-        this.setState({hideMobileNavbar: true});
-        break;
-      default:
-        this.setState({currentUrlIndex: ''});
-    }
-  };
-
   render() {
-    const{children} = this.props;
-    const{currentUrlIndex, myProfilUrl, hideMobileNavbar} = this.state;
+    const{children, currentIndex} = this.props;
+    const{myProfilUrl, hideMobileNavbar} = this.state;
 
 
 
@@ -64,7 +39,7 @@ class LayoutMobile extends React.Component{
           !hideMobileNavbar ?
             <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 1}}>
               <Grid style={{width: '90%'}}>
-                <MobileNavbar currentUrlIndex={currentUrlIndex}/>
+                <MobileNavbar currentIndex={currentIndex}/>
               </Grid>
             </Grid> : null
         }

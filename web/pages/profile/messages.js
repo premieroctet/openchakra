@@ -240,7 +240,7 @@ class Messages extends React.Component {
           </LayoutMessages>
         </Hidden>
         <Hidden only={['lg', 'xl',  'sm', 'md']}>
-          <LayoutMobileMessages ref={this.child} user={user} handleChange={this.handleChange} {...this.state}>
+          <LayoutMobileMessages ref={this.child} user={user} handleChange={this.handleChange} {...this.state} currentIndex={3}>
             {this.content(classes)}
           </LayoutMobileMessages>
         </Hidden>

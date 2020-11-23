@@ -34,7 +34,8 @@ class MobileNavbar extends React.Component{
         }
       ],
       user: {},
-      indexAccount: props.indexAccount
+      indexAccount: props.indexAccount,
+      currentIndex:0
     }
   }
 
@@ -43,12 +44,10 @@ class MobileNavbar extends React.Component{
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         this.setState({ user : res.data})
-      }).catch(err => console.error(err))
+      }).catch(err => console.error(err));
   }
 
   handleNavigation = (event, newValue) =>{
-    this.setState({value: newValue});
-
     switch (newValue) {
       case 0:
         Router.push('/');
@@ -73,11 +72,11 @@ class MobileNavbar extends React.Component{
 
   render() {
     const{labels} = this.state;
-    const{classes, currentUrlIndex} = this.props;
+    const{classes, currentIndex} = this.props;
 
     return(
       <BottomNavigation
-        value={currentUrlIndex}
+        value={currentIndex}
         onChange={(event, newValue) => {
           this.handleNavigation(event,newValue)
         }}

@@ -487,7 +487,7 @@ class SearchPage extends React.Component {
           </Layout>
         </Hidden>
         <Hidden only={['sm', 'md', 'lg', 'xl']}>
-          <LayoutMobileSearch filter={this.filter}>
+          <LayoutMobileSearch filter={this.filter} currentIndex={1}>
             {this.content(classes)}
           </LayoutMobileSearch>
         </Hidden>

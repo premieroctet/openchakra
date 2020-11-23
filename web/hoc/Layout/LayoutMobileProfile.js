@@ -62,33 +62,11 @@ class LayoutMobileProfile extends React.Component{
         this.setState( { user: res.data})
       })
       .catch (err => console.error(err));
-
-    let currentUrl = Router.pathname;
-    let firstParamUrl= currentUrl.split('/')[1].split('/')[0];
-    if(currentUrl === '/account/myProfile'){
-      this.setState({myProfilUrl: true})
-    }
-
-    switch (firstParamUrl) {
-      case 'account':
-        this.setState({currentUrlIndex: 4});
-        break;
-      case '/':
-        this.setState({currentUrlIndex: 1});
-        break;
-      case 'Search':
-        this.setState({currentUrlIndex: 2});
-        break;
-      default:
-        this.setState({currentUrlIndex: ''});
-    }
-
-
   };
 
   render() {
-    const{children, classes, index} = this.props;
-    const{currentUrlIndex, myProfilUrl, user, items} = this.state;
+    const{children, classes, index, currentIndex} = this.props;
+    const{user, items} = this.state;
 
     if (!user) {
       return null
@@ -137,7 +115,7 @@ class LayoutMobileProfile extends React.Component{
         </Grid>
         <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 1}}>
           <Grid style={{width: '90%'}}>
-            <MobileNavbar currentUrlIndex={currentUrlIndex}/>
+            <MobileNavbar currentIndex={currentIndex}/>
           </Grid>
         </Grid>
       </Grid>

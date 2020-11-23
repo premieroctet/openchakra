@@ -310,7 +310,7 @@ class ProfileAbout extends React.Component {
           </ProfileLayout>
         </Hidden>
         <Hidden only={['lg', 'xl',  'sm', 'md']}>
-          <LayoutMobileProfile user={user} index={index}>
+          <LayoutMobileProfile user={user} index={index} currentIndex={4}>
             {this.content(classes, user, alfred)}
           </LayoutMobileProfile>
         </Hidden>

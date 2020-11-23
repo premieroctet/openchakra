@@ -126,7 +126,7 @@ class Home extends React.Component {
           <Hidden only={['xl','lg', 'md', 'sm']}>
             <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 1}}>
               <Grid style={{width: '90%'}}>
-                <MobileNavbar currentUrlIndex={0}/>
+                <MobileNavbar currentIndex={0}/>
               </Grid>
             </Grid>
           </Hidden>
