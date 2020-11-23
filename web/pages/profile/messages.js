@@ -63,7 +63,6 @@ class Messages extends React.Component {
         const chats=res.data.filter(c => c.latest && c.booking && c.booking.alfred && c.messages && c.messages.length>0);
         var state={chats:chats}
         if (this.props.relative) {
-          console.log(`Loading relative${this.props.relative}`)
           axios.get(`/myAlfred/api/users/users/${this.props.relative}`)
             .then (res => this.setState({...state, relativeDetails:res.data}))
         }
