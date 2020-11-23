@@ -97,6 +97,9 @@ const NEWS_LETTER = {
   button: 'Je m\'inscris !'
 };
 
+const CMP_PRESENTATION = {
+  placeholder: 'Ici, parlez-nous de vous, de votre personnalité, de vos passions ou encore de votre parcours. Soyez vous-même et montrez-nous votre personnalité !'
+}
 const getMangopayMessage = msg_id => {
   if (!msg_id) {
     return null;
@@ -113,5 +116,5 @@ module.exports = {
   getMangopayMessage, SHOP_CREATION_SUCCESSFUL, ID_CARD_CONFIRM_DELETION,
   REGISTRATION_PROOF_CONFIRM_DELETION, INFOBAR_MESSAGE, SHOWMORE, SEARCHBAR,BANNER_PRESENTATION,
   CATEGORY, BECOME_ALFRED, HOW_IT_WORKS, NEWS_LETTER, NAVBAR_MENU,
-  SHOP
+  SHOP, CMP_PRESENTATION
 };

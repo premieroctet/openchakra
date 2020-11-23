@@ -7,6 +7,8 @@ import Popover from '@material-ui/core/Popover';
 import axios from 'axios';
 import styles from './UserAvatarStyle';
 import cookie from 'react-cookies';
+import {isEditableUser} from '../../utils/functions'
+import Typography from "@material-ui/core/Typography";
 
 const jwt = require('jsonwebtoken');
 
@@ -83,18 +85,41 @@ class UserAvatar extends React.Component {
     this.setState({anchorEl: null});
   };
 
+  selectPicture = () => {
+    if (isEditableUser(this.props.user)) {
+      this.fileInput.click()
+    }
+  };
+
   avatarWithPics(user, className) {
     const url = user.picture.match(/^https?:\/\//) ? user.picture : '/' + user.picture;
     return (
-      <Avatar alt="photo de profil" src={url} className={className}/>
+      <Avatar alt="photo de profil" src={url} className={className} onClick={this.selectPicture}/>
     );
   }
 
   avatarWithoutPics(user, className) {
     return (
-      <Avatar alt="photo de profil" className={className}>{user.avatar_letters}</Avatar>
+      <Avatar alt="photo de profil" className={className} onClick={this.selectPicture}><p>{user.avatar_letters}</p></Avatar>
 
     );
+  }
+
+  onChange = event => {
+    const newPicture=event.target.files[0]
+    const formData = new FormData();
+    formData.append('myImage', newPicture);
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    };
+    axios.post('/myAlfred/api/users/profile/picture', formData, config)
+      .then(response => {
+        // TODO: reload only avatar using setState
+        window.location.reload(false)
+      }).catch();
+
   }
 
   render() {
@@ -109,7 +134,7 @@ class UserAvatar extends React.Component {
 
     if (user) {
       return (
-        <Grid>
+        <Grid style={{width: '100%', height: '100%'}}>
           {
             owner && kyc ?
               <Grid>
@@ -133,6 +158,17 @@ class UserAvatar extends React.Component {
                       this.avatarWithoutPics(user, className)
                   }
                 </Badge>
+                <input
+                  id="file"
+                  ref={fileInput => this.fileInput = fileInput}
+                  style={{display: 'none'}}
+                  name="myImage"
+                  type="file"
+                  onChange={this.onChange}
+                  className="form-control"
+                  accept={'image/*'}
+                />
+
                 <Popover
                   id="mouse-over-popover"
                   className={classes.popover}
@@ -161,13 +197,23 @@ class UserAvatar extends React.Component {
                   </ul>
                 </Popover>
               </Grid> :
-              <Grid>
+              <Grid style={{display: 'flex', justifyContent: 'center', height: '100%', alignItems: 'center', width: '100%'}}>
                 {
                   user.picture ?
                     this.avatarWithPics(user, className)
                     :
                     this.avatarWithoutPics(user, className)
                 }
+                <input
+                  id="file"
+                  ref={fileInput => this.fileInput = fileInput}
+                  style={{display: 'none'}}
+                  name="myImage"
+                  type="file"
+                  onChange={this.onChange}
+                  className="form-control"
+                  accept={'image/*'}
+                />
               </Grid>
           }
 
@@ -183,4 +229,4 @@ class UserAvatar extends React.Component {
   }
 }
 
-export default withStyles(styles, {withTheme: true})(UserAvatar);
+export default withStyles(styles)(UserAvatar);

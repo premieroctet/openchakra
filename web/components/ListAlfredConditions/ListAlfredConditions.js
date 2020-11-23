@@ -11,13 +11,13 @@ class ListAlfredConditions extends React.Component{
 
   }
   render() {
-    const{columnsXl, columnsLG, columnsMD, columnsSM, columnsXS, wrapperComponentProps, classes} = this.props;
+    const{columnsXl, columnsLG, columnsMD, columnsSm, columnsXS, wrapperComponentProps, classes} = this.props;
     return(
       <Grid container className={classes.mainContainerListAlfred}>
         {
           wrapperComponentProps ?
           Object.keys(wrapperComponentProps).map((res, index) => (
-            <Grid item xl={columnsXl} lg={columnsLG} md={columnsMD} sm={columnsSM} xs={columnsXS} key={index}>
+            <Grid item xl={columnsXl} lg={columnsLG} md={columnsMD} sm={columnsSm} xs={columnsXS} key={index}>
               <InfoWithPics  {...this.props} data={wrapperComponentProps[res]}/>
             </Grid>
           )) : null

@@ -322,6 +322,10 @@ UserSchema.virtual('avatar_letters').get(function () {
   return (first_letter + second_letter).toUpperCase();
 });
 
+UserSchema.virtual('full_name').get(function () {
+  return `${this.firstname} ${this.name}`
+});
+
 UserSchema.virtual('age').get(function () {
   if (!this.birthday) {
     return null

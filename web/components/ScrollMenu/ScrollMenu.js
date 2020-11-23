@@ -30,40 +30,39 @@ class ScrollMenu extends React.Component{
     const{classes, categories, gps, mode, extraParams} = this.props;
     const{value} = this.state;
 
-    console.log(`value:${JSON.stringify(value)}`)
   return(
+    <Grid style={{maxWidth: '100%'}}>
       <Grid>
-        <Grid className={classes.scrollMenuRoot}>
-          <Tabs
-            orientation="horizontal"
-            variant="scrollable"
-            value={value}
-            onChange={this.handleChange}
-            aria-label="scrollable force tabs"
-            scrollButtons="on"
-            classes={{indicator: classes.scrollMenuIndicator}}
-          >
-            {
-              categories ?
-                categories.map((res, index) =>
-                {
+        <Tabs
+          orientation="horizontal"
+          variant="scrollable"
+          value={value}
+          onChange={this.handleChange}
+          aria-label="scrollable force tabs"
+          scrollButtons="on"
+          classes={{indicator: classes.scrollMenuIndicator}}
+        >
+          {
+            categories ?
+              categories.map((res, index) =>
+              {
 
-                  let url = mode === 'account' ? '/account' + res.url  + '?' + querystring.stringify({indexAccount: index})
-                            :
-                            mode === 'profile' ? '/profile' + res.url  + '?' + querystring.stringify({...extraParams, indexAccount: index})
-                            :
-                            '/search?search=1&category=' + res._id + (gps ? '&gps=' + JSON.stringify(gps) : '') + '&indexCat=' + index;
-                  return(
-                    <Link href={url} key={index}>
-                      <Tab label={res.label} className={classes.scrollMenuTab} {...a11yProps(index)}/>
-                    </Link>
-                  )
-                }
-                ) : null
-            }
-          </Tabs>
-        </Grid>
+                let url = mode === 'account' ? '/account' + res.url  + '?' + querystring.stringify({indexAccount: index})
+                          :
+                          mode === 'profile' ? '/profile' + res.url  + '?' + querystring.stringify({...extraParams, indexAccount: index})
+                          :
+                          '/search?search=1&category=' + res._id + (gps ? '&gps=' + JSON.stringify(gps) : '') + '&indexCat=' + index;
+                return(
+                  <Link href={url} key={index}>
+                    <Tab label={res.label} className={classes.scrollMenuTab} {...a11yProps(index)}/>
+                  </Link>
+                )
+              }
+              ) : null
+          }
+        </Tabs>
       </Grid>
+    </Grid>
     );
   }
 }

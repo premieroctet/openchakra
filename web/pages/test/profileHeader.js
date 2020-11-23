@@ -5,7 +5,6 @@ import cookie from 'react-cookies';
 
 
 import Select from 'react-dropdown-select';
-import ProfileHeader from '../../components/Profile/ProfileHeader'
 import Layout from '../../hoc/Layout/Layout'
 import Input from '@material-ui/core/Input';
 
