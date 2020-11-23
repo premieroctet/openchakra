@@ -5,6 +5,8 @@ import DrawerBookingRecap from "../../Drawer/DrawerBookingRecap/DrawerBookingRec
 import Topic from "../../../hoc/Topic/Topic";
 import AddressService from "../../AddressService/AddressService";
 import PaymentMode from "../PaymentMode/PaymentMode";
+import styles from '../../../static/css/components/PaymentChoice/PaymentChoice';
+import withStyles from "@material-ui/core/styles/withStyles";
 
 class PaymentChoice extends React.Component{
   constructor(props) {
@@ -24,7 +26,7 @@ class PaymentChoice extends React.Component{
   };
 
   render() {
-    const{pricedPrestations, countPrestations, bookingObj, user, currentUser} = this.props;
+    const{pricedPrestations, countPrestations, bookingObj, user, currentUser, classes} = this.props;
 
     if (currentUser && bookingObj) {
       var checkAdd = currentUser.billing_address.address === bookingObj.address.address && currentUser.billing_address.zip_code === bookingObj.address.zip_code && currentUser.billing_address.city === bookingObj.address.city;
@@ -33,8 +35,8 @@ class PaymentChoice extends React.Component{
 
     return(
       <Grid container style={{width: '90%',  marginBottom: '10vh'}}>
-        <Grid item xl={7}>
-          <Grid style={{display: 'flex', flexDirection: 'column', paddingRight: '5%', paddingLeft: '5%'}} >
+        <Grid item xl={7} xs={12} sm={12}>
+          <Grid className={classes.paymenChoiceMainContainer}>
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingRight: '10%', paddingTop: '5%', paddingBottom: '5%', position: 'relative'}}>
               <Topic
                 titleTopic={'Mode de paiment'}
@@ -63,7 +65,7 @@ class PaymentChoice extends React.Component{
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xl={5}>
+        <Grid item xl={5} xs={12} sm={12} className={classes.paymentChoiceSecondContainer}>
           <Grid  style={{
             display: 'flex',
             flexDirection: 'column',
@@ -93,4 +95,4 @@ class PaymentChoice extends React.Component{
   }
 }
 
-export default PaymentChoice;
+export default withStyles(styles) (PaymentChoice);

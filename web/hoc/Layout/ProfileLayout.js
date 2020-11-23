@@ -5,11 +5,8 @@ import ScrollMenu from '../../components/ScrollMenu/ScrollMenu';
 import cookie from 'react-cookies';
 import axios from 'axios'
 const {isEditableUser}=require('../../utils/functions');
-import moment from 'moment'
-import Box from "../../components/Box/Box";
 import styles from '../../static/css/components/Layout/ProfileLayout/ProfileLayout'
 import withStyles from "@material-ui/core/styles/withStyles";
-import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import UserAvatar from "../../components/Avatar/UserAvatar";
 

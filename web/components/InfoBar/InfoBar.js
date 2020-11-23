@@ -3,6 +3,8 @@ import Grid from '@material-ui/core/Grid';
 import {INFOBAR_MESSAGE} from '../../utils/i18n';
 import Link from 'next/link';
 import {Typography} from '@material-ui/core';
+import styles from '../../static/css/components/InfoBar/InfoBar'
+import withStyles from "@material-ui/core/styles/withStyles";
 
 
 class InfoBar extends React.Component{
@@ -11,20 +13,20 @@ class InfoBar extends React.Component{
 
   }
   render(){
-    const {style} = this.props;
+    const {classes} = this.props;
 
     return(
-      <Grid container className={style.infoBarMainStyle}>
-        <Grid item className={style.infoBarLinkContainer}>
-          <Grid className={style.infoBarPicsContainer}>
+      <Grid container className={classes.infoBarMainStyle}>
+        <Grid item className={classes.infoBarLinkContainer}>
+          <Grid className={classes.infoBarPicsContainer}>
             <img src={'/static/assets/img/warning.svg'} alt={'warning'} title={'warning'} width={'100%'} height={'100%'}/>
           </Grid>
           <Grid>
-            <Typography className={style.infoBarColorText}>{INFOBAR_MESSAGE.message}</Typography>
+            <Typography className={classes.infoBarColorText}>{INFOBAR_MESSAGE.message}</Typography>
           </Grid>
-          <Grid item className={style.showmoreContainer}>
+          <Grid item className={classes.showmoreContainer}>
             <Link href={"#"}>
-              <a href={"#"} className={style.shomoreLink}>{INFOBAR_MESSAGE.showMore}</a>
+              <a href={"#"} className={classes.shomoreLink}>{INFOBAR_MESSAGE.showMore}</a>
             </Link>
           </Grid>
         </Grid>
@@ -33,4 +35,4 @@ class InfoBar extends React.Component{
   }
 }
 
-export default InfoBar
+export default withStyles(styles)(InfoBar);

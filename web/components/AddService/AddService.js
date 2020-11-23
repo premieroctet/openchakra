@@ -21,9 +21,9 @@ class AddService extends React.Component {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
   };
 
-  addService() {
-    Router.push(`/myShop/services?user={this.props.user}`)
-  }
+  addService = () => {
+    Router.push(`/myShop/services?user=${this.props.user}`)
+  };
 
   render() {
     const {classes}=this.props;

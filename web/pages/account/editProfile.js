@@ -53,6 +53,11 @@ class editProfile extends React.Component {
     this.handleChangeLanguages = this.handleChangeLanguages.bind(this);
   }
 
+  static getInitialProps({query: {indexAccount}}) {
+    return {index: indexAccount};
+
+  }
+
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
@@ -160,7 +165,7 @@ class editProfile extends React.Component {
               label={'Nom'}
             />
           </Grid>
-          <Grid item lg={6} md={12} sm={12} xs={12}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <TextField
               classes={{root: classes.textField}}
               value={this.state.user.description || ''}
@@ -181,7 +186,7 @@ class editProfile extends React.Component {
             <h2 style={{whiteSpace: 'nowrap'}}>Informations personnelles</h2>
           </Grid>
           <Grid container spacing={3} style={{marginTop: '10vh'}}>
-            <Grid item lg={2} xs={12} sm={5} md={3}>
+            <Grid item xl={6} lg={6} xs={12} sm={5} md={3}>
               <TextField
                 classes={{root: classes.textField}}
                 value={this.state.user.gender || ''}
@@ -200,7 +205,7 @@ class editProfile extends React.Component {
                 </MenuItem>
               </TextField>
             </Grid>
-            <Grid item lg={3} xs={12} sm={6} md={3}>
+            <Grid item xl={6} lg={6} xs={12} sm={6} md={3}>
               <TextField
                 classes={{root: classes.textFieldDatePicker}}
                 InputLabelProps={{
@@ -228,39 +233,35 @@ class editProfile extends React.Component {
             </Grid>
           </Grid>
           <Grid container spacing={3}>
-            <Grid item xs={12} lg={6} md={6} sm={6}>
+            <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
               <TextField
                 classes={{root: classes.textField}}
                 value={this.state.user.email || ''}
                 onChange={this.onChange}
-                margin="normal"
                 name={'email'}
                 placeholder={'Email'}
                 variant={'outlined'}
                 label={'Adresse email'}
               />
             </Grid>
-          </Grid>
-          <Grid item xs={12} lg={6} md={6} sm={6}>
+          <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
             <TextField
               classes={{root: classes.textField}}
               value={this.state.user.phone || ''}
               type={'number'}
               onChange={this.onChange}
-              margin="normal"
               name={'phone'}
               placeholder={'Téléphone'}
               variant={'outlined'}
               label={'Téléphone'}
             />
           </Grid>
-          <Grid item xs={12} lg={6} md={6} sm={6}>
+          <Grid item xs={12} lg={12} md={6} sm={6} xl={12}>
             <TextField
               classes={{root: classes.textField}}
               value={this.state.user.emergency_phone || ''}
               type={'number'}
               onChange={this.onChange}
-              margin="normal"
               name={'emergency_phone'}
               placeholder={'Numéro d\'urgence'}
               variant={'outlined'}
@@ -268,6 +269,7 @@ class editProfile extends React.Component {
             />
           </Grid>
         </Grid>
+      </Grid>
         <Grid>
           <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
         </Grid>
@@ -275,8 +277,8 @@ class editProfile extends React.Component {
           <Grid>
             <h2>Informations facultatives</h2>
           </Grid>
-          <Grid container style={{marginTop: '10vh'}}>
-            <Grid item xs={12} lg={6} md={6} sm={6}>
+          <Grid container style={{marginTop: '10vh'}} spacing={3}>
+            <Grid item xs={12} lg={12} md={12} sm={12}>
               <TextField
                 classes={{root: classes.textField}}
                 value={this.state.user.diplomes || ''}
@@ -287,24 +289,22 @@ class editProfile extends React.Component {
                 label={'Diplômes'}
               />
             </Grid>
-            <Grid item xs={12} lg={6} md={6} sm={6}>
+            <Grid item xs={12} lg={12} md={12} sm={12}>
               <TextField
                 classes={{root: classes.textField}}
                 value={this.state.user.school || ''}
                 onChange={this.onChange}
-                margin="normal"
                 name={'school'}
                 placeholder={'Ecoles'}
                 variant={'outlined'}
                 label={'Ecoles'}
               />
             </Grid>
-            <Grid item xs={12} lg={6} md={6} sm={6}>
+            <Grid item xs={12} lg={12} md={12} sm={12}>
               <TextField
                 classes={{root: classes.textField}}
                 value={this.state.user.job || ''}
                 onChange={this.onChange}
-                margin="normal"
                 name={'job'}
                 placeholder={'Emploi'}
                 variant={'outlined'}
@@ -357,7 +357,7 @@ class editProfile extends React.Component {
 
 
   render() {
-    const {classes} = this.props;
+    const {classes, index} = this.props;
 
     return (
       <Fragment>
@@ -367,12 +367,12 @@ class editProfile extends React.Component {
                 content="Plateforme d’échange de services entre particuliers. Services rémunérés à des prix justes ! Profitez des talents de nos Alfred et trouvez un Alfred bricoleur, petsitter, pâtissier, décorateur, près de chez vous dans toute la france ! Des milliers de services proposés, trouvez le vôtre !"/>
         </Helmet>
         <Hidden only={['xs', 'sm', 'md']}>
-          <LayoutAccount>
+          <LayoutAccount index={index}>
             {this.content(classes)}
           </LayoutAccount>
         </Hidden>
         <Hidden only={['lg', 'xl']}>
-          <LayoutMobile>
+          <LayoutMobile currentIndex={4}>
             {this.content(classes)}
           </LayoutMobile>
         </Hidden>

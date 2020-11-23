@@ -7,6 +7,8 @@ import Topic from "../../../hoc/Topic/Topic";
 import AddressService from "../../AddressService/AddressService";
 import Profile from "../../Profile/Profile";
 import ListAlfredConditions from "../../ListAlfredConditions/ListAlfredConditions";
+import styles from '../../../static/css/components/AddressAndFacturation/AddressAndFacturation';
+import withStyles from "@material-ui/core/styles/withStyles";
 
 class AddressAndFacturation extends React.Component{
 
@@ -19,12 +21,12 @@ class AddressAndFacturation extends React.Component{
   };
 
   render() {
-    const{equipments, pricedPrestations, countPrestations, user} = this.props;
+    const{equipments, pricedPrestations, countPrestations, user, classes} = this.props;
 
     return(
       <Grid container style={{width: '90%', marginBottom: '10vh'}}>
-        <Grid item xl={6}>
-          <Grid style={{display: 'flex', flexDirection: 'column', paddingRight: '5%', paddingLeft: '5%'}}>
+        <Grid item xl={6} xs={12} sm={12} >
+          <Grid className={classes.addressAndFactuMainContainer}>
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%'}}>
               <Topic
                 titleTopic={'Adresse du service'}
@@ -66,7 +68,7 @@ class AddressAndFacturation extends React.Component{
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xl={6}>
+        <Grid item xl={6} xs={12} sm={12} className={classes.mainContainerAdressFactu}>
           <Grid style={{
             display: 'flex',
             flexDirection: 'column',
@@ -94,4 +96,4 @@ class AddressAndFacturation extends React.Component{
 
 }
 
-export default AddressAndFacturation
+export default withStyles(styles) (AddressAndFacturation);

@@ -82,119 +82,119 @@ class FilterMenu extends React.Component{
 
     return(
       <Grid>
-          <Grid className={style.filterMenuTitleContainer}>
-            <Grid>
-              <p className={style.filterMenuDescription}>{resultMessage}</p>
-            </Grid>
+        <Grid className={style.filterMenuTitleContainer}>
+          <Grid>
+            <p className={style.filterMenuDescription}>{resultMessage}</p>
           </Grid>
-          <Grid className={style.filterMenuChipContainer}>
-            <Grid className={style.filTerMenuStatusMainStyleFilter}>
-              {statusFilterVisible ?
-                <Grid className={style.filterMenuContainerStatut}>
-                  <Grid className={style.filterMenuFocused} onClick={() => this.statusFilterToggled()}>
-                    <Typography className={style.filterMenuTextFocused}>Statut</Typography>
-                  </Grid>
-                  <Grid className={style.filterMenuContentMainStyle}>
-                    <Grid className={style.filTerMenuStatusMainStyleFilter}>
-                      <Grid>
-                        <Grid>
-                          {individualSelected ? null :
-                            <Grid>
-                              <FormControlLabel
-                                classes={{root: style.filterMenuControlLabel}}
-                                control={
-                                  <Switch
-                                    checked={proSelected}
-                                    onChange={e => {
-                                      this.statusFilterChanged(e);
-                                    }}
-                                    value={proSelected}
-                                    color="primary"
-                                    name={'proSelected'}
-                                  />
-                                }
-                                label="Pro"
-                              />
-                            </Grid>
-                          }
-                        </Grid>
-                        <Grid>
-                          {proSelected ? null :
-                            <Grid>
-                              <FormControlLabel
-                                classes={{root: style.filterMenuControlLabel}}
-                                control={
-                                  <Switch
-                                    checked={individualSelected}
-                                    onChange={e => {
-                                      this.statusFilterChanged(e);
-                                    }}
-                                    value={individualSelected}
-                                    color="primary"
-                                    name={'individualSelected'}
-                                  />
-                                }
-                                label="Particulier"
-                              />
-                            </Grid>
-                          }
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
+        </Grid>
+        <Grid className={style.filterMenuChipContainer}>
+          <Grid className={style.filTerMenuStatusMainStyleFilter}>
+            {statusFilterVisible ?
+              <Grid className={style.filterMenuContainerStatut}>
+                <Grid className={style.filterMenuFocused} onClick={() => this.statusFilterToggled()}>
+                  <Typography className={style.filterMenuTextFocused}>Statut</Typography>
                 </Grid>
-                :
-                <Grid
-                  key={moment()}
-                  onClick={() => this.statusFilterToggled()}
-                  className={style.filterMenuStatusNotFocused}
-                  style={{backgroundColor: `${statusFilterBg}`}}>
-                    <Typography className={style.filterMenuTextNotFocused}>Statut</Typography>
-                </Grid>
-              }
-            </Grid>
-            <Grid className={style.filTerMenuStatusMainStyleFilterDate}>
-              {dateFilterVisible ?
-                <Grid className={style.filterMenuDateFocused}>
-                  <Grid className={style.filterMenuFocused} onClick={() => this.dateFilterToggled()}>
-                    <Typography >Quelle(s) date(s) ?</Typography>
-                  </Grid>
-                  <Grid className={style.filterMenuContentMainStyleDateFilter}>
+                <Grid className={style.filterMenuContentMainStyle}>
+                  <Grid className={style.filTerMenuStatusMainStyleFilter}>
                     <Grid>
-                      <DateRangePicker
-                        startDate={startDate} // momentPropTypes.momentObj or null,
-                        startDatePlaceholderText={'Début'}
-                        endDatePlaceholderText={'Fin'}
-                        startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                        endDate={endDate} // momentPropTypes.momentObj or null,
-                        endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                        onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
-                        focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                        onFocusChange={focusedInput => this.setState({focusedInput})} // PropTypes.func.isRequired,
-                        minimumNights={0}
-                        numberOfMonths={1}
-                      />
-                    </Grid>
-                    <Grid className={style.filterMenuDateFilterButtonContainer}>
                       <Grid>
-                        <Button onClick={() => this.cancelDateFilter()}>Annuler</Button>
+                        {individualSelected ? null :
+                          <Grid>
+                            <FormControlLabel
+                              classes={{root: style.filterMenuControlLabel}}
+                              control={
+                                <Switch
+                                  checked={proSelected}
+                                  onChange={e => {
+                                    this.statusFilterChanged(e);
+                                  }}
+                                  value={proSelected}
+                                  color="primary"
+                                  name={'proSelected'}
+                                />
+                              }
+                              label="Pro"
+                            />
+                          </Grid>
+                        }
                       </Grid>
                       <Grid>
-                        <Button onClick={() => this.validateDateFilter()}>Valider</Button>
+                        {proSelected ? null :
+                          <Grid>
+                            <FormControlLabel
+                              classes={{root: style.filterMenuControlLabel}}
+                              control={
+                                <Switch
+                                  checked={individualSelected}
+                                  onChange={e => {
+                                    this.statusFilterChanged(e);
+                                  }}
+                                  value={individualSelected}
+                                  color="primary"
+                                  name={'individualSelected'}
+                                />
+                              }
+                              label="Particulier"
+                            />
+                          </Grid>
+                        }
                       </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-                :
-                <Grid
-                  onClick={() => this.dateFilterToggled()}
-                  className={style.filterMenuStatusNotFocused}
-                  style={{backgroundColor: `${dateFilterBg}`}}>
-                  <Typography>Quelle(s) date(s) ?</Typography>
-                </Grid>
-              }
-            </Grid>
+              </Grid>
+              :
+              <Grid
+                key={moment()}
+                onClick={() => this.statusFilterToggled()}
+                className={style.filterMenuStatusNotFocused}
+                style={{backgroundColor: `${statusFilterBg}`}}>
+                  <Typography className={style.filterMenuTextNotFocused}>Statut</Typography>
+              </Grid>
+            }
           </Grid>
+          <Grid className={style.filTerMenuStatusMainStyleFilterDate}>
+            {dateFilterVisible ?
+              <Grid className={style.filterMenuDateFocused}>
+                <Grid className={style.filterMenuFocused} onClick={() => this.dateFilterToggled()}>
+                  <Typography >Quelle(s) date(s) ?</Typography>
+                </Grid>
+                <Grid className={style.filterMenuContentMainStyleDateFilter}>
+                  <Grid>
+                    <DateRangePicker
+                      startDate={startDate} // momentPropTypes.momentObj or null,
+                      startDatePlaceholderText={'Début'}
+                      endDatePlaceholderText={'Fin'}
+                      startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+                      endDate={endDate} // momentPropTypes.momentObj or null,
+                      endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+                      onDatesChange={({startDate, endDate}) => this.onChangeInterval(startDate, endDate)} // PropTypes.func.isRequired,
+                      focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                      onFocusChange={focusedInput => this.setState({focusedInput})} // PropTypes.func.isRequired,
+                      minimumNights={0}
+                      numberOfMonths={1}
+                    />
+                  </Grid>
+                  <Grid className={style.filterMenuDateFilterButtonContainer}>
+                    <Grid>
+                      <Button onClick={() => this.cancelDateFilter()}>Annuler</Button>
+                    </Grid>
+                    <Grid>
+                      <Button onClick={() => this.validateDateFilter()}>Valider</Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+              :
+              <Grid
+                onClick={() => this.dateFilterToggled()}
+                className={style.filterMenuStatusNotFocused}
+                style={{backgroundColor: `${dateFilterBg}`}}>
+                <Typography>Quelle(s) date(s) ?</Typography>
+              </Grid>
+            }
+          </Grid>
+        </Grid>
       </Grid>
     );
   }

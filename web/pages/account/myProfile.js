@@ -15,6 +15,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import Divider from "@material-ui/core/Divider";
 import InfoIcon from '@material-ui/icons/Info';
 import setAuthToken from "../../utils/setAuthToken";
+import UserAvatar from "../../components/Avatar/UserAvatar";
 
 class myProfile extends React.Component{
 
@@ -57,10 +58,10 @@ class myProfile extends React.Component{
     const {user} = this.state;
     return(
       <React.Fragment>
-        <LayoutMobile>
+        <LayoutMobile currentIndex={4}>
           <Grid style={{display: 'flex', alignItems: 'center', marginTop: '5vh'}}>
             <Grid className={classes.cardPreviewContainerAvatar}>
-              <Avatar alt="Remy Sharp" src={'../../static/chat 2.jpg'} className={classes.cardPreviewLarge} />
+              <UserAvatar alt={user.firstName} user={user} className={classes.cardPreviewLarge} />
             </Grid>
             <Grid style={{marginLeft: '5vh'}}>
               <h2>Hello {user.firstname}</h2>
@@ -71,6 +72,7 @@ class myProfile extends React.Component{
               <Button
                 className={classes.button}
                 startIcon={<PersonOutlineIcon />}
+                onClick={() => Router.push(`/profile/about?user=${user._id}`)}
               >
                 Voir mon profil
               </Button>

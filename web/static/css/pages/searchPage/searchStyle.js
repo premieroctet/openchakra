@@ -76,15 +76,7 @@ export default theme => ({
 
 
 
-  filterMenuDivierContainer:{
-    display: 'flex',
-    justifyContent: 'center',
-    marginTop: '1%'
-  },
-  filterMenuDividerStyle:{
-    height: 1,
-    width: '100%'
-  },
+
 
   filterMenuTitleContainer:{
     marginTop: '5%',
@@ -121,15 +113,30 @@ export default theme => ({
     display: 'flex',
     justifyContent: 'center',
     width: '100%',
-    marginTop: '4%'
+    marginTop: '4%',
+    [theme.breakpoints.down('xs')]:{
+      justifyContent: 'initial'
+    }
 
   },
 
   searchContainerDisplayResult:{
-    width: '70%'
+    width: '70%',
+    [theme.breakpoints.down('sm')]:{
+      width: '90%',
+    },
+    [theme.breakpoints.down('xs')]:{
+      width: '95%'
+    }
   },
 
+  searchMainContainer:{
+    marginLeft: 0,
+    [theme.breakpoints.down('xs')]:{
+      marginBottom: '20vh'
 
+    }
+  },
 
   cardServiceButton:{
     color: theme.palette.white.main,
@@ -235,7 +242,10 @@ export default theme => ({
   },
   filTerMenuStatusMainStyleFilterDate:{
     width: '15%',
-    marginLeft: '2%'
+    marginLeft: '2%',
+    [theme.breakpoints.down('md')]:{
+      width: '50%'
+    }
   },
   filterMenuFocused:{
     display: 'flex',
@@ -262,7 +272,10 @@ export default theme => ({
 
   },
   filTerMenuStatusMainStyleFilter:{
-    width: '15%'
+    width: '15%',
+    [theme.breakpoints.down('md')]:{
+      width: '50%'
+    }
   },
   filterMenuTextFocused:{
     color: theme.palette.white.main

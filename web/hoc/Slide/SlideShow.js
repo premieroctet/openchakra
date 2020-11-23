@@ -33,7 +33,7 @@ function withSlide(WrappedComponent) {
       }
 
       return(
-        <Grid style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+        <Grid style={{width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
           <Carousel
             easing="ease"
             autoPlay={false}
@@ -52,7 +52,7 @@ function withSlide(WrappedComponent) {
             </Grid>
           </Carousel>
           { !model.isInfinite() ?
-            <Grid style={{ display:'flex', justifyContent:'center', marginTop : '5vh'}}>
+            <Grid style={{ display:'flex', justifyContent:'center', marginTop : '5vh', marginBottom: '5vh'}}>
               <Pagination count={pageCount} page={pageIndex+1} onChange={this.onPageChange} classes={{root: style.paginationRoot}}/>
             </Grid>
             :

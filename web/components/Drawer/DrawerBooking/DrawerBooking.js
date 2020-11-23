@@ -18,6 +18,8 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import RemoveIcon from "@material-ui/icons/Remove";
 import AddIcon from "@material-ui/icons/Add";
+import styles from '../../../static/css/components/DrawerBooking/DrawerBooking';
+import withStyles from "@material-ui/core/styles/withStyles";
 const isEmpty = require('../../../server/validation/is-empty');
 const moment = require('moment');
 moment.locale('fr');
@@ -39,7 +41,7 @@ class DrawerBooking extends React.Component{
      prestations.map((p, index) => (
         <Grid container style={{display: 'flex', alignItems: 'center', width: '100%', marginBottom: '5%'}} key={index}>
           <Grid item xl={6}>
-            <Grid style={{display: 'flex', flexDirection: 'column'}}>
+            <Grid container style={{display: 'flex', flexDirection: 'column'}}>
               <Grid>
                 <Typography>{p.prestation.label}</Typography>
               </Grid>
@@ -136,7 +138,6 @@ class DrawerBooking extends React.Component{
                 <Grid style={{padding: '10px 16px', display: 'flex', alignItems: 'center', border: '1px solid rgba(112,112,112,0.5)', borderRadius: 14, width: '100%'}}>
                   <Grid style={{width: '50%'}}>
                     <TextField
-                      classes={{root: classes.navbarRootTextField}}
                       InputLabelProps={{
                         shrink: true,
                       }}
@@ -161,7 +162,6 @@ class DrawerBooking extends React.Component{
                   <Divider style={{height: 28, margin: 4}} orientation="vertical" />
                   <Grid style={{width: '50%', marginLeft: '3%'}}>
                     <TextField
-                      classes={{root: classes.navbarRootTextField}}
                       InputLabelProps={{
                         shrink: true,
                       }}
@@ -400,4 +400,4 @@ class DrawerBooking extends React.Component{
 
 }
 
-export default DrawerBooking;
+export default withStyles(styles)(DrawerBooking);

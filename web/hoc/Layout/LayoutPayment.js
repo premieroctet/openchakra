@@ -12,7 +12,7 @@ class LayoutPayment extends React.Component{
   render() {
     const{children} = this.props;
     return (
-      <React.Fragment>
+      <Grid>
         <HeaderColor/>
         <TrustAndSecurityBar/>
         {children}
@@ -21,7 +21,7 @@ class LayoutPayment extends React.Component{
             <TrustAndSecurity/>
           </Grid>
         </Grid>
-      </React.Fragment>
+      </Grid>
     );
   }
 }

@@ -11,8 +11,6 @@ class Services extends React.Component {
     super(props);
   }
 
-
-
   render() {
     const {classes, shop}=this.props;
 
