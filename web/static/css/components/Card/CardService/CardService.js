@@ -27,8 +27,17 @@ export default theme => ({
     height: '40vh',
     cursor: 'pointer',
     [theme.breakpoints.down('xs')]:{
-      height: '30vh'
+      height: '30vh',
+
     }
+  },
+  profileModecardServicePaper:{
+    height:300,
+    borderRadius: 20,
+    display: 'flex',
+    justifyContent: 'center',
+    cursor: 'pointer',
+
   },
   cardServiceMainStyle:{
     width: '80%',
@@ -57,6 +66,11 @@ export default theme => ({
       width: 125,
       height: 125
     }
+  },
+
+  profileModecardServicePicsContainer:{
+    width: '100%',
+    height: '50%',
   },
 
   cardServiceBackgroundPics:{
@@ -154,12 +168,20 @@ export default theme => ({
     }
   },
   profileModeCardService:{
+    width: '90%',
     [theme.breakpoints.down('xs')]:{
       flexDirection: 'column',
       alignItems: 'center',
-      width: '90%'
 
     }
+  },
+  profileModeDataContainer:{
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: '3vh',
+    height: '50%',
+    justifyContent: 'center',
   },
   cardKmContainer:{
     display: 'flex',
@@ -175,10 +197,9 @@ export default theme => ({
     }
   },
   profileModecardServiceFlexContainer:{
-    [theme.breakpoints.down('xs')]:{
-      width: '100%',
-      position: 'relative'
-    }
+    width: '100%',
+    height:'50%',
+    position: 'relative',
   }
 
 })

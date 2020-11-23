@@ -8,7 +8,6 @@ import 'react-dates/lib/css/_datepicker.css';
 import styles from '../static/css/pages/searchPage/searchStyle';
 import cookie from 'react-cookies';
 import FilterMenu from "../components/FilterMenu/FilterMenu";
-import Divider from "@material-ui/core/Divider";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -205,7 +204,7 @@ class SearchPage extends React.Component {
   };
 
   filter = (data) => {
-    let filterComponentstate = data ? data : this.filterMenuComponent.current.state;
+    let filterComponentstate = data ? data : this.filterMenuComponent.current ? this.filterMenuComponent.current.state : this.state;
 
     const serviceUsers = this.state.serviceUsers;
     let serviceUsersDisplay = [];

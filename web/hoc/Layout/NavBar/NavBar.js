@@ -242,8 +242,8 @@ class NavBar extends Component {
               <SearchIcon />
             </IconButton>
           </Grid>
-          <Grid style={{marginLeft: '2vh'}}>
-            <Typography>Commencez votre recherche</Typography>
+          <Grid style={{marginLeft: '2vh', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
+            <Typography style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>Commencez votre recherche</Typography>
           </Grid>
           <Grid style={{height: 30}}>
             <Divider style={{width :2}} orientation="vertical" />
@@ -337,7 +337,7 @@ class NavBar extends Component {
         onClose={() => this.setState({modalMobileSearchBarInput: false, mobileStepSearch: 0, keyword: null, city: undefined, gps: '' })}
         className={classes.drawerStyle}
       >
-        <Grid container spacing={3}>
+        <Grid container style={{height: '100%'}}>
           <Grid item style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
             <Grid>
               <IconButton aria-label="delete" onClick={() =>this.setState({modalMobileSearchBarInput: false, mobileStepSearch: 0, keyword: null, city: undefined, gps: ''  })}>
@@ -348,7 +348,7 @@ class NavBar extends Component {
               <h3>{this.state.mobileStepSearch === 0 ? 'Votre Recherche' : this.state.mobileStepSearch === 1 ? 'Où' : 'Dates'}</h3>
             </Grid>
           </Grid>
-          <Grid item container>
+          <Grid item container spacing={3} style={{margin: 0}}>
             <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
               {
                 this.state.mobileStepSearch === 0 ?
@@ -361,13 +361,13 @@ class NavBar extends Component {
                       e.key === 'Enter' && e.preventDefault();
                     }}
                     variant="outlined"
-                    classes={{root: classes.textFieldMobilSearchInput}}
+                    classes={{root: classes.modalMobileSearchBarInputTextField}}
                   />
                   :
                   <TextField
                     item
                     xs={12}
-                    classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhere : classes.navbarRootTextFieldWhereP}}
+                    classes={{root: classes.modalMobileSearchBartTextFieldWhereP}}
                     value={this.state.city}
                     label={SEARCHBAR.where}
                     variant={'outlined'}

@@ -267,8 +267,10 @@ export default theme => ({
   },
 
   navbarSearchContainerSearchPage:{
-    width: '90%',
-    marginTop: '5vh'
+    width: '100%',
+    marginTop: '2vh',
+    marginBottom: '2vh',
+
   },
   root: {
     margin: 0,
@@ -383,5 +385,23 @@ export default theme => ({
     fontWeight:  theme.typography.placeHolder.fontWeight,
     lineHeight:  theme.typography.placeHolder.lineHeight,
   },
-
+  modalMobileSearchBarInputTextField:{
+    width: '100%'
+  },
+  modalMobileSearchBartTextFieldWhereP:{
+    flex: 1,
+    fontFamily: theme.typography.text.fontFamily,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
+    "& .MuiFormLabel-root": {
+      fontWeight: 'bold',
+    },
+    '& .MuiInputBase-input::placeholder':{
+      opacity: '0.5'
+    },
+    '& div':{
+      width:'100%'
+    }
+  },
 })
