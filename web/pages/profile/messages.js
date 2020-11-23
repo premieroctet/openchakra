@@ -49,12 +49,11 @@ class Messages extends React.Component {
     this.state={
       tabIndex:0,
       chats: [],
-      visibleDetails: false,
+      relativeDetails: null,
       message: '',
       lastMessageDate: ''
 
     };
-    setTimeout( () => this.setState({visibleDetails: true}), 1000)
   }
 
   componentDidMount() {
@@ -62,12 +61,20 @@ class Messages extends React.Component {
     axios.get('/myAlfred/api/chatRooms/userChatRooms')
       .then( res => {
         const chats=res.data.filter(c => c.latest && c.booking && c.booking.alfred && c.messages && c.messages.length>0);
-        this.setState({chats: chats})
+        var state={chats:chats}
+        if (this.props.relative) {
+          console.log(`Loading relative${this.props.relative}`)
+          axios.get(`/myAlfred/api/users/users/${this.props.relative}`)
+            .then (res => this.setState({...state, relativeDetails:res.data}))
+        }
+        else {
+          this.setState(state)
+        }
       })
   }
 
-  static getInitialProps({query: {user}}) {
-    return {user: user};
+  static getInitialProps({query: {user, relative}}) {
+    return {user: user, relative: relative};
   }
 
   getChatsRelative = relativeId => {
@@ -154,9 +161,6 @@ class Messages extends React.Component {
         </DialogTitle>
         <DialogContent>
           <MessagesDetails
-            chatroomId={'5f1827ec04711c1f1e3b82e7'}
-            id={'5f1827ec04711c1f1e3b82e7'}
-            booking={'5f1827ec04711c1f1e3b82e8'}
             relative={this.state.relativeDetails}
             chats={filteredChats}
             ref={this.messageDetailsRef}
