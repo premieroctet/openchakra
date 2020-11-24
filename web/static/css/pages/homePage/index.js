@@ -62,7 +62,10 @@ export default theme => ({
     flexDirection: 'column',
     width: '50%',
     marginBottom: '6%',
-    [theme.breakpoints.down('lg')]:{
+    [theme.breakpoints.down('md')]:{
+      width: '60%'
+    },
+    [theme.breakpoints.down('sm')]:{
       width: '100%'
     }
   },

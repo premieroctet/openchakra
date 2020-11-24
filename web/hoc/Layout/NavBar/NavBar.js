@@ -427,6 +427,7 @@ class NavBar extends Component {
                 shrink: true,
               }}
               InputProps={{disableUnderline: true}}
+              style={{marginLeft: 20}}
             />
           </Grid>
           <Grid>

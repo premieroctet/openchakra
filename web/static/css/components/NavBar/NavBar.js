@@ -4,12 +4,15 @@ export default theme => ({
   navbarSearchContainer:{
     width: '50%',
     marginTop: '5vh',
-    [theme.breakpoints.down('xs')]:{
-      width: '100%',
+    [theme.breakpoints.down('md')]:{
+      width: '70%',
     },
-    [theme.breakpoints.down('lg')]:{
-      width: '100%',
-    }
+    [theme.breakpoints.down('sm')]:{
+      width: '90%',
+    },
+    [theme.breakpoints.down('xs')]:{
+      width: '70%',
+    },
   },
   navbarSearch: {
     padding: 14,
