@@ -101,13 +101,14 @@ export default theme => ({
   },
   buttonReservation: {
     position: 'fixed',
-    bottom: 0,
-    width: '100%',
+    bottom: '5px',
+    width: '95%',
     height: 50,
     textTransform: 'initial',
     fontWeight: 'bold',
-    zIndex:1000,
-    color:'white'
+    zIndex:9999999999,
+    color:'white',
+    borderRadius: 17
   },
   leftContainer:{
     paddingLeft: '5%',

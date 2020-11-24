@@ -72,13 +72,12 @@ class Album extends React.Component {
   };
 
   loadAlbums = () => {
-    console.log(`Chargement des albums`)
     axios.get(`/myAlfred/api/users/profile/albums/${this.props.user}`)
       .then( res => {
         this.setState({ albums: res.data})
       })
       .catch (err => console.error(err))
-  }
+  };
 
   getAlbum(id) {
     return this.state.albums.find( a => a._id===id)

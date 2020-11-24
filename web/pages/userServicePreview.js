@@ -29,6 +29,12 @@ import SummaryCommentary from "../components/SummaryCommentary/SummaryCommentary
 import DrawerBooking from "../components/Drawer/DrawerBooking/DrawerBooking";
 import LayoutAccount from "../hoc/Layout/LayoutAccount";
 import LayoutMobile from "../hoc/Layout/LayoutMobile";
+import withSlide from "../hoc/Slide/SlideShow";
+import withGrid from "../hoc/Grid/GridCard";
+import CardAlbum from "../components/Card/CardAlbum/CardAlbum";
+const ImageSlide=withSlide(withGrid(CardAlbum));
+const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
+
 
 
 const isEmpty = require('../server/validation/is-empty');
@@ -78,6 +84,7 @@ class UserServicesPreview extends React.Component {
       isChecked: false,
       warningPerimeter: false,
       use_cesu: false,
+      albums:[]
     };
     this.checkBook = this.checkBook.bind(this);
   }
@@ -182,6 +189,7 @@ class UserServicesPreview extends React.Component {
               if (!bookingObj) {
                 this.setDefaultLocation();
               }
+              this.loadAlbums();
             });
             this.state.allEquipments.map( res => {
               axios.get(`/myAlfred/api/equipment/${res}`).then( res => {let data = res.data ; this.setState({allDetailEquipments: [...this.state.allDetailEquipments, data]})}).catch( err => {console.error(err)});
@@ -189,6 +197,7 @@ class UserServicesPreview extends React.Component {
           });
       })
       .catch(err => console.error(err));
+
 
     localStorage.removeItem('bookingObj');
     setTimeout(() => {
@@ -517,12 +526,33 @@ class UserServicesPreview extends React.Component {
     this.setState({date : dt, time: mode==='week' ? mmt : undefined}, () => this.checkBook())
   };
 
+  loadAlbums = () => {
+    console.log('bonjour')
+    axios.get(`/myAlfred/api/users/profile/albums/${this.state.alfred._id}`)
+      .then( res => {
+        this.setState({ albums: res.data})
+      })
+      .catch (err => console.error(err))
+  };
+
+  getAlbum = (id) => {
+    return this.state.albums.find( a => a._id===id)
+  };
+
+  getAlbumPictures = () => {
+    const album=this.getAlbum(this.state.selectedAlbum);
+    return album ? album.pictures : []
+  };
+
   content = (classes) => {
     const serviceAddress = this.state.serviceUser.service_address;
 
     const filters = this.extractFilters();
 
     const pricedPrestations = this.computePricedPrestations();
+
+    const pictures = this.getAlbumPictures();
+
 
     return(
       <Grid style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
@@ -712,19 +742,23 @@ class UserServicesPreview extends React.Component {
           </Grid>
           <Grid style={{display: 'flex', justifyContent: 'center'}}>
             <Grid style={{width: '80%', paddingLeft: '5%', paddingRight: '5%'}}>
-              {
-                false ?
-                  <Grid style={{marginTop: '5%'}}>
-                    <Topic
-                      underline={true}
-                      titleTopic={this.state.alfred.firstname ? `Les photos de ${this.state.alfred.firstname}` : ''}
-                      titleSummary={this.state.alfred.firstname ? `Un aperçu du travail de ${this.state.alfred.firstname}` : ''}
-                      needBackground={true}
-                    >
-                      <GallerySlidePics />
-                    </Topic>
-                  </Grid> : null
-              }
+              { false ? <Grid style={{marginTop: '5%'}}>
+                <Topic
+                  underline={true}
+                  titleTopic={this.state.alfred.firstname ? `Les photos de ${this.state.alfred.firstname}` : ''}
+                  titleSummary={this.state.alfred.firstname ? `Un aperçu du travail de ${this.state.alfred.firstname}` : ''}
+                  needBackground={true}
+                >
+                  <Grid>
+                    {pictures.length === 0 ? null :
+                      <ImageSlide
+                        model={new SlideGridDataModel(pictures, 4, 1, true)}
+                        style={classes}
+                      />
+                    }
+                  </Grid>
+                </Topic>
+              </Grid>: null}
 
               {
                 this.state.reviews.length === 0 ? null :
