@@ -1653,7 +1653,7 @@ class faq extends React.Component {
                       </p>
                       <br/>
                       <ol style={{fontFamily: 'Helvetica', fontSize: '0.9rem'}}>
-                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong></li>
+                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mes paramètres</strong></li>
                         <li>Cliquez sur <strong>Paramètres</strong></li>
                         <li>Cliquez sur <strong>Supprimer</strong> dans la rubrique je souhaite supprimer ma boutique de
                           services
@@ -1706,7 +1706,7 @@ class faq extends React.Component {
                       </p>
                       <br/>
                       <ol style={{fontFamily: 'Helvetica', fontSize: '0.9rem'}}>
-                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong></li>
+                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mes paramètres</strong></li>
                         <li>Cliquez sur <strong>Paramètres</strong></li>
                         <li>Cliquez sur <strong>Désactiver</strong> dans la rubrique je souhaite désactiver mon compte
                         </li>
@@ -1762,7 +1762,7 @@ class faq extends React.Component {
                       </p>
                       <br/>
                       <ol style={{fontFamily: 'Helvetica', fontSize: '0.9rem'}}>
-                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong></li>
+                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mes paramètres</strong></li>
                         <li>Cliquez sur la rubrique <strong>Notifications</strong></li>
                         <li>Cliquez sur <strong>Enregistrer</strong></li>
 
@@ -1807,7 +1807,7 @@ class faq extends React.Component {
                       </ul>
                       <br/>
                       <ol style={{fontFamily: 'Helvetica', fontSize: '0.9rem'}}>
-                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong></li>
+                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mes paramètres</strong></li>
                         <li>Cliquez sur la rubrique <strong>Mes moyens de paiement</strong></li>
                       </ol>
                     </Grid>
@@ -1842,7 +1842,7 @@ class faq extends React.Component {
                       </p>
                       <br/>
                       <ol style={{fontFamily: 'Helvetica', fontSize: '0.9rem'}}>
-                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong></li>
+                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mes paramètres</strong></li>
                         <li>Cliquez sur <strong>Préférences de versement</strong></li>
                         <li>Cliquez sur <strong>Ajouter un RIB</strong></li>
                         <li>Renseignez votre IBAN</li>
@@ -1918,7 +1918,7 @@ class faq extends React.Component {
                       </p>
                       <br/>
                       <ol style={{fontFamily: 'Helvetica', fontSize: '0.9rem'}}>
-                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong></li>
+                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mes paramètres</strong></li>
                         <li>Cliquez sur <strong>Sécurité</strong></li>
                       </ol>
                       <p>
@@ -1996,7 +1996,7 @@ class faq extends React.Component {
                       </p>
                       <br/>
                       <ol style={{fontFamily: 'Helvetica', fontSize: '0.9rem'}}>
-                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong></li>
+                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mes paramètres</strong></li>
                         <li>Cliquez sur <strong>Applications connectées</strong></li>
                         <li>Cliquez sur <strong>Supprimer</strong> dans l’encart de l’application Gmail</li>
                       </ol>
@@ -2006,7 +2006,7 @@ class faq extends React.Component {
                       </p>
                       <br/>
                       <ol style={{fontFamily: 'Helvetica', fontSize: '0.9rem'}}>
-                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong></li>
+                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mes paramètres</strong></li>
                         <li>Cliquez sur <strong>Applications connectées</strong></li>
                         <li>Cliquez sur <strong>Connecter</strong> dans l’encart de l’application Gmail</li>
                         <li>Acceptez la connexion My-Alfred sur votre Gmail</li>
@@ -2047,7 +2047,7 @@ class faq extends React.Component {
                       </p>
                       <br/>
                       <ol style={{fontFamily: 'Helvetica', fontSize: '0.9rem'}}>
-                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong></li>
+                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mes paramètres</strong></li>
                         <li>Cliquez sur <strong>Applications connectées</strong></li>
                         <li>Cliquez sur <strong>Supprimer</strong> dans l’encart de l’application Facebook</li>
                       </ol>
@@ -2057,7 +2057,7 @@ class faq extends React.Component {
                       </p>
                       <br/>
                       <ol style={{fontFamily: 'Helvetica', fontSize: '0.9rem'}}>
-                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong></li>
+                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mes paramètres</strong></li>
                         <li>Cliquez sur <strong>Applications connectées</strong></li>
                         <li>Cliquez sur <strong>Connecter</strong> dans l’encart de l’application Facebook</li>
                         <li>Acceptez la connexion My-Alfred sur votre Facebook</li>
@@ -2097,7 +2097,7 @@ class faq extends React.Component {
                       </p>
                       <br/>
                       <ol style={{fontFamily: 'Helvetica', fontSize: '0.9rem'}}>
-                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mon compte</strong></li>
+                        <li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mes paramètres</strong></li>
                         <li>Cliquez sur <strong>Paramètres</strong></li>
                         <li>Désactiver la ligne ‘’J'accepte que mon profil et ma boutique soient indexés par les moteurs
                           de recherche”

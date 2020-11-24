@@ -628,7 +628,7 @@ class NavBar extends Component {
                           <MenuItem>Mon profil</MenuItem>
                         </Link>
                         <Link href={'/account/notifications'}>
-                          <MenuItem>Mon compte</MenuItem>
+                          <MenuItem>Mes paramètres</MenuItem>
                         </Link>
                         {user.is_alfred ?
                           <Link href={`/shop?id_alfred=${user._id}`}>
