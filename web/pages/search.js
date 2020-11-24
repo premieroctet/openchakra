@@ -413,7 +413,7 @@ class SearchPage extends React.Component {
                     </Grid>
                     :
                     serviceUsers.length===0 ? null :
-                      <Grid container spacing={2} className={classes.searchMainContainer}>
+                      <Grid className={classes.searchMainContainer}>
                         <Hidden only={['xs', 'sm', 'md']}>
                           <SearchResults
                             model={new SearchDataModel(serviceUsers.map(su => su._id), 4, 3, false)}

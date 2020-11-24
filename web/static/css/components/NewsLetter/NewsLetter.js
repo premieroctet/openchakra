@@ -1,6 +1,9 @@
 export default theme => ({
   newsLetterMainStyle:{
-    padding: theme.padding.homePage.section.padding
+    paddingLeft: theme.padding.homePage.section.padding,
+    paddingRight: theme.padding.homePage.section.padding,
+    marginTop: '10vh',
+    marginBottom: '10vh'
   },
   newsLetterMainContainer:{
     display: 'flex',
@@ -11,7 +14,10 @@ export default theme => ({
   newsLetterLeftContainer:{
     display: 'flex',
     flexDirection: 'column',
-    width: '30%'
+    width: '30%',
+    [theme.breakpoints.down('md')]:{
+      width: '50%'
+    }
   },
   newsLetterTitle:{
     fontFamily: theme.typography.subTitle.fontFamily,
@@ -29,7 +35,10 @@ export default theme => ({
     display: 'flex',
     flexDirection: 'column',
     width: '30%',
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.down('md')]:{
+      width: '40%'
+    }
   },
   newsLetterContainer:{
     width: '100%'
