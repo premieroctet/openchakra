@@ -190,7 +190,6 @@ class UserServicesPreview extends React.Component {
               if (!bookingObj) {
                 this.setDefaultLocation();
               }
-              this.loadAlbums();
             });
             this.state.allEquipments.map( res => {
               axios.get(`/myAlfred/api/equipment/${res}`).then( res => {let data = res.data ; this.setState({allDetailEquipments: [...this.state.allDetailEquipments, data]})}).catch( err => {console.error(err)});
@@ -209,7 +208,10 @@ class UserServicesPreview extends React.Component {
   setDefaultLocation = () => {
     const serviceUser = this.state.serviceUser;
     const user = this.state.user;
-    let location = serviceUser.location.client && (!user || this.isInPerimeter()) ? 'client' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
+    var location = serviceUser.location.client && (!user || this.isInPerimeter()) ? 'client' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
+    if (location == null && user) {
+      this.setState({warningPerimeter: true});
+    }
     this.setState({location: location});
   };
 
@@ -559,7 +561,6 @@ class UserServicesPreview extends React.Component {
 
     const pictures = this.getAlbumPictures();
 
-    const warningPerimeter = this.hasWarningPerimeter();
 
     return(
       <Grid style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
@@ -716,7 +717,7 @@ class UserServicesPreview extends React.Component {
                           onLocationChanged={this.onLocationChanged}
                           computeTravelTax={this.computeTravelTax}
                           getLocationLabel={this.getLocationLabel}
-                          warningPerimeter={warningPerimeter}
+                          warningPerimeter={this.state.warningPerimeter}
                           book={this.book}
                           {...this.state}
                         />
@@ -740,7 +741,7 @@ class UserServicesPreview extends React.Component {
                       onLocationChanged={this.onLocationChanged}
                       computeTravelTax={this.computeTravelTax}
                       getLocationLabel={this.getLocationLabel}
-                      warningPerimeter={warningPerimeter}
+                      warningPerimeter={this.state.warningPerimeter}
                       book={this.book}
                       {...this.state}
                     />

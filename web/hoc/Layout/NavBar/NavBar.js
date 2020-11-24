@@ -102,7 +102,7 @@ class NavBar extends Component {
         this.setState({ user : res.data})
       }).catch(err => console.error(err))
   }
-  
+
   logout2 = () => {
     cookie.remove('token', {path: '/'});
     localStorage.removeItem('path');

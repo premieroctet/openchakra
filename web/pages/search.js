@@ -410,7 +410,7 @@ class SearchPage extends React.Component {
                   <Typography>{serviceUsers.length} Alfred disponibles</Typography>
                 </Grid>
               </Hidden>
-              <Grid container>
+              <Grid container >
                 {
                   this.state.searching ?
                     <Grid className={classes.searchLoadingContainer} item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -418,7 +418,7 @@ class SearchPage extends React.Component {
                     </Grid>
                     :
                     serviceUsers.length===0 ? null :
-                      <Grid className={classes.searchMainContainer}>
+                      <Grid container className={classes.searchMainContainer} spacing={3}>
                         <Hidden only={['xs', 'sm', 'md']}>
                           <SearchResults
                             model={new SearchDataModel(serviceUsers.map(su => su._id), 4, 3, false)}

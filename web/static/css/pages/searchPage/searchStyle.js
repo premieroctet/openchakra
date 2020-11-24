@@ -126,7 +126,7 @@ export default theme => ({
       width: '90%',
     },
     [theme.breakpoints.down('xs')]:{
-      width: '95%'
+      width: '100%'
     }
   },
 
