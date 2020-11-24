@@ -25,23 +25,27 @@ class LayoutMobileProfile extends React.Component{
       currentUrlIndex: '',
       myProfilUrl: false,
       user: null,
-
     };
+    this.nonlogged_items= [
+      { label: 'À propos', url: '/about' },
+      { label: 'Services', url: '/services' },
+      //{ label: 'Photos', url: '/pictures' }, TODO : Albums 899538 899547
+      { label: 'Avis', url: '/reviews' },
+    ]
     this.logged_items= [
       { label: 'À propos', url: '/about' },
       { label: 'Mes services', url: '/services' },
-      //{ label: 'Mes photos', url: '/pictures' }, TODO: Albums 899504
+      //{ label: 'Mes photos', url: '/pictures' }, TODO : Albums 899538 899547
+      { label: 'Mes avis', url: '/reviews' },
+    ];
+    this.logged_alfred_items = [
+      { label: 'À propos', url: '/about' },
+      { label: 'Mes services', url: '/services' },
+      //{ label: 'Mes photos', url: '/pictures' }, TODO : Albums 899538 899547
       { label: 'Mes avis', url: '/reviews' },
       { label: 'Mon calendrier', url: '/calendar' },
       { label: 'Mes statistiques', url: '/statistics'}
     ];
-    this.nonlogged_items= [
-      { label: 'À propos', url: '/about' },
-      { label: 'Services', url: '/services' },
-      //{ label: 'Photos', url: '/pictures' }, TODO: Albums 899504 
-      { label: 'Avis', url: '/reviews' },
-    ]
-
   }
 
   componentDidMount = () =>{
@@ -57,12 +61,12 @@ class LayoutMobileProfile extends React.Component{
     const{children, classes, index, currentIndex} = this.props;
     const{user, items} = this.state;
 
-    const menuItems = isEditableUser(this.props.user) ? this.logged_items : this.nonlogged_items;
-
-
     if (!user) {
       return null
     }
+
+    const menuItems = isEditableUser(this.props.user) ? user.is_alfred ? this.logged_alfred_items : this.logged_items : this.nonlogged_items;
+
 
     return(
       <Grid>

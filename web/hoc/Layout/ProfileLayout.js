@@ -18,7 +18,19 @@ class ProfileLayout extends React.Component {
     this.state = {
       user: null,
     };
+    this.nonlogged_items= [
+      { label: 'À propos', url: '/about' },
+      { label: 'Services', url: '/services' },
+      //{ label: 'Photos', url: '/pictures' }, TODO : Albums 899538 899547
+      { label: 'Avis', url: '/reviews' },
+    ]
     this.logged_items= [
+      { label: 'À propos', url: '/about' },
+      { label: 'Mes services', url: '/services' },
+      //{ label: 'Mes photos', url: '/pictures' }, TODO : Albums 899538 899547
+      { label: 'Mes avis', url: '/reviews' },
+    ];
+    this.logged_alfred_items = [
       { label: 'À propos', url: '/about' },
       { label: 'Mes services', url: '/services' },
       //{ label: 'Mes photos', url: '/pictures' }, TODO : Albums 899538 899547
@@ -26,12 +38,6 @@ class ProfileLayout extends React.Component {
       { label: 'Mon calendrier', url: '/calendar' },
       { label: 'Mes statistiques', url: '/statistics'}
     ];
-    this.nonlogged_items= [
-      { label: 'À propos', url: '/about' },
-      { label: 'Services', url: '/services' },
-      //{ label: 'Photos', url: '/pictures' }, TODO : Albums 899538 899547
-      { label: 'Avis', url: '/reviews' },
-    ]
   }
 
   componentDidMount = () => {
@@ -51,7 +57,7 @@ class ProfileLayout extends React.Component {
       return null
     }
 
-    const menuItems = isEditableUser(this.props.user) ? this.logged_items : this.nonlogged_items
+    const menuItems = isEditableUser(this.props.user) ? user.is_alfred ? this.logged_alfred_items : this.logged_items : this.nonlogged_items
 
     return (
       <Layout user={user}>
