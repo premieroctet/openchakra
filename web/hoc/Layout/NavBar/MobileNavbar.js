@@ -64,10 +64,6 @@ class MobileNavbar extends React.Component{
       }).catch(err => console.error(err));
   }
 
-  callFilter = () =>{
-    this.props.filter()
-  };
-
   needRefresh = () => {
     this.setState({setOpenLogin: false});
     Router.push('/search');

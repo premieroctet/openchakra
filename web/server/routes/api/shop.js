@@ -9,7 +9,7 @@ const {data2ServiceUser} = require('../../../utils/mapping');
 const {sendShopDeleted, sendShopOnline} = require('../../../utils/mailing');
 const {createMangoProvider} = require('../../../utils/mangopay');
 const {GID_LEN} = require('../../../utils/consts');
-const {is_production}=require('../../../config/config')
+const {is_production, is_validation}=require('../../../config/config')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -459,7 +459,7 @@ router.put('/editStatus', passport.authenticate('jwt', {session: false}), (req, 
 
 
 // Create mango provider account for all alfred with shops
-if (is_production()) {
+if (is_production() || is_validation()) {
   new CronJob('0 */15 * * * *', function () {
     console.log('Alfred who need mango account');
     User.find({is_alfred: true, mangopay_provider_id: null, active: true})

@@ -62,6 +62,7 @@ class SearchPage extends React.Component {
   constructor(props) {
     super(props);
     this.filterMenuComponent = React.createRef();
+    this.filters=['Plus proche de moi']
     this.state = {
       user: null,
       address: {},
@@ -84,7 +85,6 @@ class SearchPage extends React.Component {
       isAdmin: false,
       mounting: true,
       searching: false,
-      filters:['Plus proche de moi'],
       logged: false
     };
   }
@@ -338,7 +338,8 @@ class SearchPage extends React.Component {
 
 
   content = (classes ) => {
-    const serviceUsers = this.state.serviceUsersDisplay;
+    const serviceUsers = this.state.serviceUsersDisplay
+    const gps = this.state.gps
 
     return(
       <Grid>
@@ -369,31 +370,35 @@ class SearchPage extends React.Component {
                   <Grid className={classes.searchSecondFilterContainerLeft}>
                     <Typography>{serviceUsers.length} Alfred disponibles</Typography>
                   </Grid>
-                  <Grid className={classes.searchFilterRightContainer}>
-                    <Grid className={classes.searchFilterRightLabel}>
-                      <p>Trier par</p>
-                    </Grid>
-                    <Grid>
-                      <FormControl className={classes.formControl}>
-                        <Select
-                          labelId="simple-select-placeholder-label-label"
-                          id="simple-select-placeholder-label"
-                          value={this.state.filters}
-                          onChange={this.handleChange}
-                          displayEmpty
-                          disableUnderline
-                          classes={{select: classes.searchSelectPadding}}
-                        >
-                          {this.state.filters.map((res,index) =>{
-                            return(
-                              <MenuItem key={index} value={res}><strong>{res}</strong></MenuItem>
-                            )
-                          })}
+                  { gps ?
+                    <Grid className={classes.searchFilterRightContainer}>
+                      <Grid className={classes.searchFilterRightLabel}>
+                        <p>Trier par</p>
+                      </Grid>
+                      <Grid>
+                        <FormControl className={classes.formControl}>
+                          <Select
+                            labelId="simple-select-placeholder-label-label"
+                            id="simple-select-placeholder-label"
+                            value={this.filters}
+                            onChange={this.handleChange}
+                            displayEmpty
+                            disableUnderline
+                            classes={{select: classes.searchSelectPadding}}
+                          >
+                            {this.filters.map((res,index) =>{
+                              return(
+                                <MenuItem key={index} value={res}><strong>{res}</strong></MenuItem>
+                              )
+                            })}
 
-                        </Select>
-                      </FormControl>
+                          </Select>
+                        </FormControl>
+                      </Grid>
                     </Grid>
-                  </Grid>
+                    :
+                    null
+                  }
                 </Grid>
               </Grid>
             </Grid>
@@ -477,7 +482,6 @@ class SearchPage extends React.Component {
   render() {
     const {classes, indexCat} = this.props;
     const {user, gps, selectedAddress} = this.state;
-
 
     return (
       <React.Fragment>

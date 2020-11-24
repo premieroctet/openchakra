@@ -125,9 +125,6 @@ class CardService extends React.Component{
 
     const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {};
 
-    const editable = isEditableUser(user);
-
-
     const resa_link =  `/userServicePreview?id=${cpData._id}`;
     if (this.props.item===null) {
       return (
@@ -141,13 +138,17 @@ class CardService extends React.Component{
       return null
     }
 
+    const picture = alfred.picture || cpData.picture;
+
+    const editable = isEditableUser(alfred);
+
     return(
       <Grid style={{ width: '100%'}}>
         <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : classes.cardServicePaper}>
-          <Grid className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle}>
+          <Grid className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => {profileMode && editable ? null : window.open(resa_link, '_blank')}}>
             <Grid className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
-              <Grid className={profileMode ? classes.profileModecardServicePicsContainer :  classes.cardServicePicsContainer} onClick={() => window.open(resa_link, '_blank')}>
-                <Grid style={{backgroundImage: 'url("/' + cpData.picture + '")'}} className={classes.cardServiceBackgroundPics}/>
+              <Grid className={profileMode ? classes.profileModecardServicePicsContainer :  classes.cardServicePicsContainer}>
+                <Grid style={{backgroundImage: `url("/${picture}")`}} className={classes.cardServiceBackgroundPics}/>
               </Grid>
               {
                 profileMode && editable ?
@@ -168,7 +169,6 @@ class CardService extends React.Component{
                     <Chip label={alfred.firstname} avatar={cpData.is_professional ? <Avatar src="/static/assets/icon/pro_icon.svg"/> : null} className={classes.cardServiceChip} />
                   </Grid>
               }
-
             </Grid>
             <Grid className={profileMode ? classes.profileModeDataContainer : classes.dataContainer}>
               <Grid className={classes.labelService}>
@@ -180,14 +180,18 @@ class CardService extends React.Component{
                     <RoomIcon/>
                   </Grid>
                   <Grid className={classes.cardKmContainer}>
-                    <Hidden only={['xs']}>
-                      <Grid style={{whiteSpace: 'nowrap'}}>
-                        <Typography>{`À ${" "} ${distance} ${" "}km `}</Typography>
-                      </Grid>
-                      <Grid>
-                        <Typography>-</Typography>
-                      </Grid>
-                    </Hidden>
+                    { distance ?
+                      <Hidden only={['xs']}>
+                        <Grid style={{whiteSpace: 'nowrap'}}>
+                          <Typography>{`À ${" "} ${distance} ${" "}km `}</Typography>
+                        </Grid>
+                        <Grid>
+                          <Typography>-</Typography>
+                        </Grid>
+                      </Hidden>
+                      :
+                      null
+                    }
                     <Grid style={{overflow: 'hidden'}}>
                       <Typography className={classes.stylecardServiceDistance}>{cpData.city}</Typography>
                     </Grid>

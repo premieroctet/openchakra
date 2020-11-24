@@ -6,7 +6,7 @@ import UserAvatar from '../Avatar/UserAvatar'
 import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
-
+import axios from 'axios';
 const {frenchFormat} = require('../../utils/text');
 const moment=require('moment');
 moment.locale('fr');
@@ -27,7 +27,12 @@ class MessageSummary extends React.Component {
 
   deleteMessages = e => {
     e.stopPropagation();
-    window.alert('Delete')
+    console.log(JSON.stringify(this.props.chats.map (c=>c._id )))
+    this.props.chats.forEach( chat => {
+      axios.delete(`/myAlfred/api/chatRooms/userChatRooms/${chat._id}`)
+        .then( res => console.log(`Chat supprimé:${chat._id}`))
+        .then( err => console.log(`Erreur chat supprimé:${chat._id}:${err}`))
+    });
   };
 
   render() {

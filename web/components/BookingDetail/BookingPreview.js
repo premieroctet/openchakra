@@ -168,11 +168,13 @@ class BookingPreview extends React.Component {
   }
 
   routingDetailsMessage() {
+    const {currentUser, bookingObj}=this.state
+    const displayUser = currentUser._id === bookingObj.alfred._id ? bookingObj.user : bookingObj.alfred
     Router.push({
       pathname: '/profile/messages',
       query: {
         user: this.state.currentUser._id,
-        relative: this.state.currentUser._id
+        relative: displayUser._id
       },
     });
   }

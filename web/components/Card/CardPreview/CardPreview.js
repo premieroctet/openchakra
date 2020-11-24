@@ -20,6 +20,9 @@ class CardPreview extends React.Component {
     if (!item) {
       return null
     }
+
+    const city = item.user && item.user.billing_address && item.user.billing_address.city ? item.user.billing_address.city : ''
+
     return(
       <Grid style={{height: 200}}>
         <Grid style={{height: '30%', position:'relative'}}>
@@ -42,7 +45,7 @@ class CardPreview extends React.Component {
               </Grid>
               <Grid className={classes.cardPreviewServiceContent}>
                 <Grid>
-                  <Typography>Lieux</Typography>
+                  <Typography>{city}</Typography>
                 </Grid>
                 <Grid>
                   <Box component="fieldset" mb={item.user.score} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>

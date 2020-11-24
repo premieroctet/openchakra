@@ -63,7 +63,7 @@ class LayoutAccount extends React.Component{
         <Grid style={{display:'flex', justifyContent:'center'}}>
           <Grid style={{display: 'flex', justifyContent:'center', flexDirection: 'column', alignItems:'center', width: '100%'}}>
             <Grid style={{display: 'flex', justifyContent: 'center'}}>
-              <h2>Mon Compte</h2>
+              <h2>Mes paramètres</h2>
             </Grid>
             <Grid>
               <ScrollMenu categories={items} mode={'account'} indexCat={index}/>
