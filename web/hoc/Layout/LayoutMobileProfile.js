@@ -30,7 +30,7 @@ class LayoutMobileProfile extends React.Component{
     this.logged_items= [
       { label: 'À propos', url: '/about' },
       { label: 'Mes services', url: '/services' },
-      { label: 'Mes photos', url: '/pictures' },
+      //{ label: 'Mes photos', url: '/pictures' }, TODO: Albums 899504
       { label: 'Mes avis', url: '/reviews' },
       { label: 'Mon calendrier', url: '/calendar' },
       { label: 'Mes statistiques', url: '/statistics'}
@@ -38,7 +38,7 @@ class LayoutMobileProfile extends React.Component{
     this.nonlogged_items= [
       { label: 'À propos', url: '/about' },
       { label: 'Services', url: '/services' },
-      { label: 'Photos', url: '/pictures' },
+      //{ label: 'Photos', url: '/pictures' }, TODO: Albums 899504 
       { label: 'Avis', url: '/reviews' },
     ]
 
