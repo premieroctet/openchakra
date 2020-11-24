@@ -102,7 +102,7 @@ class NavBar extends Component {
         this.setState({ user : res.data})
       }).catch(err => console.error(err))
   }
-
+  
   logout2 = () => {
     cookie.remove('token', {path: '/'});
     localStorage.removeItem('path');
@@ -138,7 +138,7 @@ class NavBar extends Component {
 
   needRefresh = () => {
     this.setState({setOpenLogin: false});
-    Router.push('/search');
+    Router.push('/search?search=1');
   };
 
   getData = (e) => {
@@ -612,7 +612,7 @@ class NavBar extends Component {
                           <MenuItem>Mon profil</MenuItem>
                         </Link>
                         <Link href={'/account/notifications'}>
-                          <MenuItem>Mon compte</MenuItem>
+                          <MenuItem>Mes paramètres</MenuItem>
                         </Link>
                         {user.is_alfred ?
                           <Link href={`/shop?id_alfred=${user._id}`}>
