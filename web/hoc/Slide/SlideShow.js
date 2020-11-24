@@ -44,7 +44,7 @@ function withSlide(WrappedComponent) {
           >
             { /** TODO importer les styles directement */ }
             <Grid container className={style.slideShowContainer}>
-              <Grid container>
+              <Grid container style={{display: 'flex', justifyContent: 'center'}}>
                 <Grid className={style.slideShowSectionContainer}>
                   <WrappedComponent {...this.props} page={pageIndex}/>
                 </Grid>

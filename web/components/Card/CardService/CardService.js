@@ -186,7 +186,7 @@ class CardService extends React.Component{
                         <Typography>-</Typography>
                       </Grid>
                     </Hidden>
-                    <Grid>
+                    <Grid style={{overflow: 'hidden'}}>
                       <Typography className={classes.stylecardServiceDistance}>{cpData.city}</Typography>
                     </Grid>
                   </Grid>

@@ -9,6 +9,7 @@ import styles from '../../../static/css/components/OurAlfred/OurAlfred';
 import withSlide from '../../../hoc/Slide/SlideShow';
 import withGrid from '../../../hoc/Grid/GridCard'
 import CardPreview from "../../Card/CardPreview/CardPreview";
+import Typography from "@material-ui/core/Typography";
 const {SlideGridDataModel}=require('../../../utils/models/SlideGridDataModel');
 
 const AlfredSlide=withSlide(withGrid(CardPreview))
@@ -29,10 +30,10 @@ class OurAlfred extends React.Component{
             </Grid>
             <Grid className={classes.ourAlfredTextContainer}>
               <Grid>
-                <p className={classes.ourAlfredTitle}>Nos Alfred</p>
+                <Typography className={classes.ourAlfredTitle}>Nos Alfred</Typography>
               </Grid>
               <Grid>
-                <p className={classes.ourAlfredSubtitle}>Découvrez les profils de nos Alfred</p>
+                <Typography className={classes.ourAlfredSubtitle}>Découvrez les profils de nos Alfred</Typography>
               </Grid>
             </Grid>
           </Grid>
