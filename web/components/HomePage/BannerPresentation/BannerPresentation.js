@@ -23,7 +23,7 @@ class BannerPresentation extends React.Component{
             <h2 className={style.bannerPresentationText}>{BANNER_PRESENTATION.text}</h2>
           </Grid>
           <Grid>
-            <Link href={'/search'}>
+            <Link href={'/search?search=1'}>
               <Button variant="contained" classes={{root: style.bannerPresentationButton}}>{BANNER_PRESENTATION.button}</Button>
             </Link>
           </Grid>

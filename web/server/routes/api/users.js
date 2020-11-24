@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const axiosCookieJarSupport = require('axios-cookiejar-support').default;
 const tough = require('tough-cookie');
-const {is_production}=require('../../../config/config')
+const {is_production, is_validation}=require('../../../config/config')
 const CronJob = require('cron').CronJob;
 
 const validateRegisterInput = require('../../validation/register');
@@ -1278,8 +1278,8 @@ router.get('/mangopay_kyc', (req, res) => {
 
 
 // Create mango client account for all user with no id_mangopay
-if (is_production()) {
-  new CronJob('0 */5 * * * *', function () {
+if (is_production() || is_validation()) {
+  new CronJob('0 */15 * * * *', function () {
     console.log("Customers who need mango account");
     User.find({id_mangopay: null, active: true})
       .limit(100)
