@@ -15,6 +15,7 @@ import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import ScrollMenu from "../../components/ScrollMenu/ScrollMenu";
 import Divider from "@material-ui/core/Divider";
 import UserAvatar from "../../components/Avatar/UserAvatar";
+const {isEditableUser}=require('../../utils/functions');
 
 class LayoutMobileProfile extends React.Component{
 
@@ -24,34 +25,22 @@ class LayoutMobileProfile extends React.Component{
       currentUrlIndex: '',
       myProfilUrl: false,
       user: null,
-      items: [
-        {
-          label: 'À propos',
-          url: '/about'
-        },
-        {
-          label: 'Mes services',
-          url: '/services'
-        },
-        {
-          label: 'Mes photos',
-          url: '/pictures'
-        },
-        {
-          label: 'Mes avis',
-          url: '/reviews'
-        },
-        {
-          label: 'Mon calendrier',
-          url: '/calendar'
-        },
-        {
-          label: 'Mes statistiques',
-          url: '/statistics'
-        }
-      ]
-    }
 
+    };
+    this.logged_items= [
+      { label: 'À propos', url: '/about' },
+      { label: 'Mes services', url: '/services' },
+      { label: 'Mes photos', url: '/pictures' },
+      { label: 'Mes avis', url: '/reviews' },
+      { label: 'Mon calendrier', url: '/calendar' },
+      { label: 'Mes statistiques', url: '/statistics'}
+    ];
+    this.nonlogged_items= [
+      { label: 'À propos', url: '/about' },
+      { label: 'Services', url: '/services' },
+      { label: 'Photos', url: '/pictures' },
+      { label: 'Avis', url: '/reviews' },
+    ]
 
   }
 
@@ -67,6 +56,9 @@ class LayoutMobileProfile extends React.Component{
   render() {
     const{children, classes, index, currentIndex} = this.props;
     const{user, items} = this.state;
+
+    const menuItems = isEditableUser(this.props.user) ? this.logged_items : this.nonlogged_items;
+
 
     if (!user) {
       return null
@@ -85,7 +77,7 @@ class LayoutMobileProfile extends React.Component{
               <UserAvatar alt={user.firstname} user={user} className={classes.cardPreviewLarge} />
             </Grid>
           </Grid>
-          <Grid style={{display: 'flex',height: '40%', alignItems: 'center', marginTop: '5vh', marginLeft: '5vh'}}>
+          <Grid style={{display: 'flex',height: '40%', alignItems: 'center', marginTop: '10vh', marginLeft: '5vh'}}>
             <Grid style={{display: 'flex',flexDirection: 'column'}}>
               <Grid>
                 <h3>{`Je m'appelle ${user ? user.firstname : ''}`}</h3>
@@ -108,7 +100,7 @@ class LayoutMobileProfile extends React.Component{
           <Divider/>
         </Grid>
         <Grid className={classes.profilLayoutScrollMenu}>
-          <ScrollMenu categories={items} mode={'profile'} indexCat={index} extraParams={{user: this.props.user}}/>
+          <ScrollMenu categories={menuItems} mode={'profile'} indexCat={index} extraParams={{user: this.props.user}}/>
         </Grid>
         <Grid style={{padding: '10%'}}>
           {children}
