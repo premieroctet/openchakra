@@ -112,7 +112,7 @@ export default theme => ({
   leftContainer:{
     paddingLeft: '5%',
     paddingRight: '5%',
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('sm')]:{
       padding: 0,
       width: '90%'
     }

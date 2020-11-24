@@ -529,7 +529,7 @@ class UserServicesPreview extends React.Component {
         <Grid>
           <Grid className={classes.mainContainer}>
             <Grid container className={classes.widthContainer}>
-              <Grid item xl={6} className={classes.leftContainer}>
+              <Grid item xl={6} lg={6} md={12} sm={12} xs={12} className={classes.leftContainer}>
                 <Grid container className={classes.avatarAnDescription}>
                   <Grid item xl={3} sm={3} className={classes.avatarContainer}>
                     <Grid item className={classes.itemAvatar}>
@@ -689,7 +689,7 @@ class UserServicesPreview extends React.Component {
               </Grid>
               {/* ------------------------------------------------------- ici content right ---------------------------------------------------*/}
               <Hidden only={['xs', 'sm', 'md']}>
-                <Grid item xl={6} style={{paddingLeft: '5%', paddingRight: '5%'}}>
+                <Grid item xl={6} lg={6} md={12} sm={12} xs={12} style={{paddingLeft: '5%', paddingRight: '5%'}}>
                   <Grid className={classes.contentRight}>
                     <DrawerBooking
                       filters={filters}
