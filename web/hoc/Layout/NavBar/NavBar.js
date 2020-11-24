@@ -592,23 +592,19 @@ class NavBar extends Component {
                 logged === true ?
                   <Grid className={classes.navbarMenuBurgerContainer}>
                     <IconButton
-                      edge="start"
-                      color="inherit"
                       aria-label="open drawer"
                       onClick={this.handleOpenMenuItem}
                     >
                       <MenuIcon classes={{color:'white'}}/>
                     </IconButton>
                     <Menu
-                      id="simple-menu"
                       anchorEl={anchorEl}
                       keepMounted
                       open={Boolean(anchorEl)}
                       onClose={this.handleClosenMenuItem}
-                      anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'right',
-                      }}
+                      getContentAnchorEl={null}
+                      anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+                      transformOrigin={{vertical: 'top', horizontal: 'center'}}
                     >
                     { user ?
                       <Grid>
