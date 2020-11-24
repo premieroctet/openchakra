@@ -140,7 +140,7 @@ class NavBar extends Component {
 
     needRefresh = () => {
         this.setState({setOpenLogin: false});
-        Router.push('/search');
+        Router.push('/search?search=1');
     };
 
     getData = (e) => {
