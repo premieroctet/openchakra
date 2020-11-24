@@ -23,7 +23,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
 import Router from 'next/router';
-
+const {isEditableUser}=require('../../../utils/functions');
 
 class CardServiceInfo extends React.Component{
   constructor(props) {
@@ -125,6 +125,9 @@ class CardService extends React.Component{
 
     const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {};
 
+    const editable = isEditableUser(user);
+
+
     const resa_link =  `/userServicePreview?id=${cpData._id}`;
     if (this.props.item===null) {
       return (
@@ -147,7 +150,7 @@ class CardService extends React.Component{
                 <Grid style={{backgroundImage: 'url("/' + cpData.picture + '")'}} className={classes.cardServiceBackgroundPics}/>
               </Grid>
               {
-                profileMode ?
+                profileMode && editable ?
                   <Grid style={{position: 'absolute', top: '5px', right: '5px', display: 'flex'}}>
                     <Grid>
                       <IconButton aria-label="delete" style={{backgroundColor: 'rgba(0,0,0,0.7)'}} size={'small'} onClick={() => Router.push(`/myShop/services?id=${cpData._id}`)}>
