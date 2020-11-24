@@ -17,6 +17,12 @@ class LayoutMobile extends React.Component{
 
   }
 
+  componentDidMount() {
+    if(Router.pathname === '/userServicePreview'){
+      this.setState({hideMobileNavbar: true})
+    }
+  }
+
   render() {
     const{children, currentIndex} = this.props;
     const{myProfilUrl, hideMobileNavbar} = this.state;

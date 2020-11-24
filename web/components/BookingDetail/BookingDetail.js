@@ -110,4 +110,4 @@ class BookingDetail extends React.Component {
   }
 }
 
-export default withStyles(styles, {withTheme: true})(BookingDetail);
+export default withStyles(styles)(BookingDetail);

@@ -8,7 +8,10 @@ export default theme => ({
     border: '2px solid #d2d2d2',
     borderRadius: 30,
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    [theme.breakpoints.down('xs')]:{
+      border: 'inherit'
+    }
   },
   iconButtonStyle: {
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -54,4 +57,12 @@ export default theme => ({
     padding: '5%',
     width: '100%'
   },
+  mainDrawerBooking:{
+    width: '80%',
+    paddingTop: '5%',
+    paddingBottom: '5%',
+    [theme.breakpoints.down('xs')]:{
+      width: '95%'
+    }
+  }
 })

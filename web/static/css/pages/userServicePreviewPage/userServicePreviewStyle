@@ -113,7 +113,6 @@ export default theme => ({
     paddingLeft: '5%',
     paddingRight: '5%',
     [theme.breakpoints.down('sm')]:{
-      padding: 0,
       width: '90%'
     }
   },

@@ -40,7 +40,7 @@ class DrawerBooking extends React.Component{
   selectedPresta = (prestations, classes) => (
      prestations.map((p, index) => (
         <Grid container style={{display: 'flex', alignItems: 'center', width: '100%', marginBottom: '5%'}} key={index}>
-          <Grid item xl={6}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
             <Grid container style={{display: 'flex', flexDirection: 'column'}}>
               <Grid>
                 <Typography>{p.prestation.label}</Typography>
@@ -52,7 +52,7 @@ class DrawerBooking extends React.Component{
                 <Grid style={{marginLeft : '5%', marginRight: '5%'}}>
                   <Typography style={{color:'rgba(39,37,37,35%)'}}>/</Typography>
                 </Grid>
-                <Grid>
+                <Grid style={{whiteSpace: 'nowrap'}}>
                   <Typography style={{color:'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : '?'}</Typography>
                 </Grid>
                 {p.prestation.cesu_eligible && this.props.use_cesu ?
@@ -64,7 +64,7 @@ class DrawerBooking extends React.Component{
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xl={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
             <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
               <Grid>
                 <IconButton onClick={this.props.onQtyChanged('remove', p._id)}>
@@ -120,7 +120,7 @@ class DrawerBooking extends React.Component{
             </Grid> : null
         }
         <Grid className={classes.borderContentRight}>
-          <Grid style={{width: '80%', paddingTop: '5%', paddingBottom: '5%'}}>
+          <Grid className={classes.mainDrawerBooking}>
             <Grid style={{marginBottom: 30}}>
               <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
                 <Grid>
