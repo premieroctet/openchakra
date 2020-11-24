@@ -28,7 +28,7 @@ class CategoryTopic extends React.Component{
         <Grid className={classes.categoryContainer}>
           <Grid className={classes.categoryLeftContainer}>
             <Grid className={classes.categoryImgContainer}>
-              <img src={'/static/assets/icon/star.png'} alt={'iconStar'} title={'iconStar'} />
+              <img src={'/static/assets/faq/star.svg'} alt={'iconStar'} title={'iconStar'} />
             </Grid>
             <Grid className={classes.categoryTextContainer}>
               <Grid>

@@ -26,7 +26,7 @@ class OurAlfred extends React.Component{
         <Grid className={classes.ourAlfredMainContainer}>
           <Grid className={classes.ourAlfredMainHeader}>
             <Grid className={classes.ourAlfredImgContainer}>
-              <img src={'/static/assets/icon/light.png'} alt={'iconStar'} title={'iconStar'}/>
+              <img src={'/static/assets/faq/star.svg'} alt={'iconStar'} title={'iconStar'}/>
             </Grid>
             <Grid className={classes.ourAlfredTextContainer}>
               <Grid>
