@@ -180,14 +180,18 @@ class CardService extends React.Component{
                     <RoomIcon/>
                   </Grid>
                   <Grid className={classes.cardKmContainer}>
-                    <Hidden only={['xs']}>
-                      <Grid style={{whiteSpace: 'nowrap'}}>
-                        <Typography>{`À ${" "} ${distance} ${" "}km `}</Typography>
-                      </Grid>
-                      <Grid>
-                        <Typography>-</Typography>
-                      </Grid>
-                    </Hidden>
+                    { distance ?
+                      <Hidden only={['xs']}>
+                        <Grid style={{whiteSpace: 'nowrap'}}>
+                          <Typography>{`À ${" "} ${distance} ${" "}km `}</Typography>
+                        </Grid>
+                        <Grid>
+                          <Typography>-</Typography>
+                        </Grid>
+                      </Hidden>
+                      :
+                      null
+                    }
                     <Grid>
                       <Typography className={classes.stylecardServiceDistance}>{cpData.city}</Typography>
                     </Grid>
