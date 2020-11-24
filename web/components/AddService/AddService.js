@@ -11,6 +11,7 @@ import Box from '../Box/Box'
 import Typography from "@material-ui/core/Typography";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import Hidden from "@material-ui/core/Hidden";
+const {isLoggedUserAlfred}=require('../../utils/functions')
 
 class AddService extends React.Component {
   constructor(props) {
@@ -21,8 +22,8 @@ class AddService extends React.Component {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
   };
 
-  addService = () => {
-    Router.push(`/myShop/services?user=${this.props.user}`)
+  clickService = () => {
+    Router.push(isLoggedUserAlfred() ? `/myShop/services?user=${this.props.user}` : '/creaShop/creaShop')
   };
 
   render() {
@@ -33,9 +34,12 @@ class AddService extends React.Component {
         <Hidden only={['xs', 'sm', 'md']}>
           <h3>Mes services</h3>
         </Hidden>
-        <Button classes={{root : classes.buttonAddService}} onClick={this.addService} startIcon={<AddCircleOutlineIcon />}
-        >
-          {SHOP.addService}
+        <Button classes={{root : classes.buttonAddService}} onClick={this.clickService} startIcon={<AddCircleOutlineIcon />}>
+          { isLoggedUserAlfred() ?
+            SHOP.addService
+            :
+            SHOP.createShop
+          }
         </Button>
         <Typography className={classes.descriptionAddService}>Développez votre boutique et ajoutez de nouveaux services !</Typography>
       </Grid>
