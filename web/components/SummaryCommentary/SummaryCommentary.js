@@ -68,6 +68,13 @@ class SummaryCommentary extends React.Component{
     const allComments=alfredReviews.concat(customerReviews);
     var average = allComments.length ? allComments.map( r => r.note_alfred ? r.note_alfred.global : r.note_client.global ).reduce ((a,b) => a+b)/allComments.length : 0;
 
+    var complimentsCount = 0
+    allComments.forEach( comp => {
+      if (comp.note_alfred) {
+        complimentsCount += Object.values(comp.note_alfred).filter( v => v===true).length
+      }
+    })
+
     return(
       <Grid>
         <Grid container style={{display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center'}} spacing={3}>
@@ -125,7 +132,7 @@ class SummaryCommentary extends React.Component{
           </Grid>
           <Grid item className={classes.summaryContainerCompliments}>
             <Grid>
-              <Typography><strong>4</strong></Typography>
+              <Typography><strong>{complimentsCount}</strong></Typography>
             </Grid>
             <Grid>
               <Typography style={{color:'rgba(39,37,37,35%)', fontWeight: 'bold'}}>COMPLIMENTS</Typography>
