@@ -24,6 +24,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
 import Router from 'next/router';
+const {isEditableUser}=require('../../../utils/functions')
 
 
 class CardServiceInfo extends React.Component{
@@ -141,16 +142,18 @@ class CardService extends React.Component{
 
     const picture = alfred.picture || cpData.picture
 
+    const editable = isEditableUser(alfred)
+
     return(
       <Grid style={{ width: '100%'}}>
         <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : classes.cardServicePaper}>
-          <Grid className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => {profileMode ? null : window.open(resa_link, '_blank')}}>
+          <Grid className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => {profileMode && editable ? null : window.open(resa_link, '_blank')}}>
             <Grid className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
               <Grid className={profileMode ? classes.profileModecardServicePicsContainer :  classes.cardServicePicsContainer}>
                 <Grid style={{backgroundImage: `url("/${picture}")`}} className={classes.cardServiceBackgroundPics}/>
               </Grid>
               {
-                profileMode ?
+                profileMode && editable ?
                   <Grid style={{position: 'absolute', top: '5px', right: '5px', display: 'flex'}}>
                     <Grid>
                       <IconButton aria-label="delete" style={{backgroundColor: 'rgba(0,0,0,0.7)'}} size={'small'} onClick={() => Router.push(`/myShop/services?id=${cpData._id}`)}>
