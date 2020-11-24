@@ -21,7 +21,6 @@ export default theme => ({
   },
   navbarTextFieldService:{
     flex: 1,
-    marginLeft: 20
   },
   navbarRootTextField: {
     width: '100%',
@@ -163,7 +162,7 @@ export default theme => ({
     padding: 0
   },
   navbarTopContainer:{
-    width: '100%',
+    width: '90%',
     display: 'flex',
     justifyContent: 'space-between'
   },

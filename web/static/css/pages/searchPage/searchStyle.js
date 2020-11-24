@@ -291,7 +291,9 @@ export default theme => ({
   searchLoadingContainer:{
     display: 'flex',
     justifyContent : 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop: '10vh',
+    marginBottom: '10vh'
   },
 
 })

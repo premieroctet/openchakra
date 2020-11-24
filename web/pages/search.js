@@ -408,7 +408,7 @@ class SearchPage extends React.Component {
               <Grid container>
                 {
                   this.state.searching ?
-                    <Grid className={classes.searchLoadingContainer} item xl={3} lg={3} md={3} sm={12} xs={12}>
+                    <Grid className={classes.searchLoadingContainer} item xl={12} lg={12} md={12} sm={12} xs={12}>
                       <CircularProgress/>
                     </Grid>
                     :

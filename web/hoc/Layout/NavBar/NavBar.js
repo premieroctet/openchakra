@@ -44,8 +44,6 @@ import Switch from "@material-ui/core/Switch";
 import {DateRangePicker} from "react-dates";
 
 
-const jwt = require('jsonwebtoken');
-
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -569,15 +567,15 @@ class NavBar extends Component {
         <Register callLogin={this.handleOpenLogin} sendParentData={this.getData}/>
       );
     };
-    
+
     return(
       <Grid className={this.state.ifHomePage ? classes.navbarMainSytle : classes.navbarMainSytleP}>
         <AppBar position={'static'} className={this.state.ifHomePage ? classes.navbarAppBar : classes.navbarAppBarP}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Hidden only={['xs']}>
-            <Grid className={this.state.ifHomePage || this.state.ifSearchPage ? classes.navbarTopContainer : classes.navbarTopContainerP}>
+            <Grid className={this.state.ifHomePage ? classes.navbarTopContainer : classes.navbarTopContainerP}>
               <Grid className={classes.navbarLogoContainer}>
-                <p>Mon logo</p>
+                <Typography>Mon logo</Typography>
               </Grid>
               {
                 ifHomePage ?
