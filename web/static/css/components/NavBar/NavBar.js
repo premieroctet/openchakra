@@ -11,7 +11,8 @@ export default theme => ({
       width: '90%',
     },
     [theme.breakpoints.down('xs')]:{
-      width: '70%',
+      cursor: 'pointer',
+      width: '100%',
     },
   },
   navbarSearch: {

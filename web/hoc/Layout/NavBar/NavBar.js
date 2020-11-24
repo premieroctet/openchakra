@@ -220,10 +220,10 @@ class NavBar extends Component {
 
   mobileSearchBarInput = (classes) =>{
     return(
-      <Grid className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
+      <Grid className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP} onClick={this.handleModalSearchBarInput}>
         <Paper classes={{root: this.state.ifHomePage ? classes.navbarSearch : classes.navbarSearchP}}>
           <Grid>
-            <IconButton classes={{root: classes.iconButton}} aria-label="search" onClick={this.handleModalSearchBarInput}>
+            <IconButton classes={{root: classes.iconButton}} aria-label="search">
               <SearchIcon />
             </IconButton>
           </Grid>
@@ -244,7 +244,7 @@ class NavBar extends Component {
               <SearchIcon />
             </IconButton>
           </Grid>
-          <Grid style={{marginLeft: '2vh', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
+          <Grid style={{marginLeft: '2vh', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', cursor: 'pointer' }} onClick={this.handleModalSearchBarInput}>
             <Typography style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>Commencez votre recherche</Typography>
           </Grid>
           <Grid style={{height: 30}}>
