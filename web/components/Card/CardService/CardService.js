@@ -3,7 +3,6 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import {Button} from "@material-ui/core";
 import axios from "axios";
-import {toast} from "react-toastify";
 import {computeAverageNotes} from '../../../utils/functions';
 import Box from "@material-ui/core/Box";
 import Rating from "@material-ui/lab/Rating";

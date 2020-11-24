@@ -70,7 +70,7 @@ export default theme => ({
 
   profileModecardServicePicsContainer:{
     width: '100%',
-    height: '50%',
+    height: '100%',
   },
 
   cardServiceBackgroundPics:{
@@ -169,6 +169,7 @@ export default theme => ({
   },
   profileModeCardService:{
     width: '90%',
+    padding: '5%',
     [theme.breakpoints.down('xs')]:{
       flexDirection: 'column',
       alignItems: 'center',
@@ -180,7 +181,7 @@ export default theme => ({
     flexDirection: 'column',
     alignItems: 'center',
     marginTop: '3vh',
-    height: '50%',
+    height: '30%',
     justifyContent: 'center',
   },
   cardKmContainer:{
@@ -198,7 +199,7 @@ export default theme => ({
   },
   profileModecardServiceFlexContainer:{
     width: '100%',
-    height:'50%',
+    height:'60%',
     position: 'relative',
   }
 

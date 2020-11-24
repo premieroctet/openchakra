@@ -23,10 +23,10 @@ class Services extends React.Component {
         <Grid>
           <Typography>Services ({shop.services.length})</Typography>
         </Grid>
-        <Grid container spacing={3} style={{marginTop: '5vh'}}>
+        <Grid container spacing={2} style={{marginTop: '5vh'}}>
         {
           shop.services.map(s => (
-            <Grid item xl={3} xs={12} sm={12} md={12} lg={3}>
+            <Grid item xl={3} xs={12} sm={6} md={3} lg={3}>
               <CardService item={s._id} page={0} profileMode={true}/>
             </Grid>
           ))
