@@ -23,7 +23,7 @@ class SummaryCommentary extends React.Component{
       alfredReviews: [],
       filter:'',
       showCommentary: false,
-      userServicesPreview: false
+      userServicesPreview: true
     }
   }
 
@@ -142,7 +142,9 @@ class SummaryCommentary extends React.Component{
         {userServicesPreview ?
           <Grid>
             <Grid style={{display:'flex', alignItems:'center', marginTop: '5vh'}}>
-              <Button variant={'contained'} onClick={this.handleShowCommentary} classes={{root: classes.buttonShowMore}}>Voir les commentaires</Button>
+              <Button variant={'contained'} onClick={this.handleShowCommentary} classes={{root: classes.buttonShowMore}}>
+                { showCommentary ? 'Cacher les commentaires' : 'Voir les commentaires'}
+              </Button>
             </Grid>
           </Grid> : null
         }
