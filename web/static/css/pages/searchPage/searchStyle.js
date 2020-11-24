@@ -132,6 +132,7 @@ export default theme => ({
 
   searchMainContainer:{
     marginLeft: 0,
+    width: '100%',
     [theme.breakpoints.down('xs')]:{
       marginBottom: '20vh'
 

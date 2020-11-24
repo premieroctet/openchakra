@@ -377,7 +377,7 @@ class UserServicesPreview extends React.Component {
     const coordSU = this.state.serviceUser.service_address.gps;
     const coordUser = this.state.user.billing_address.gps;
     const dist = computeDistanceKm(coordSU, coordUser);
-    const inPerimeter = parseFloat(dist) < parseFloat(this.state.serviceUser.perimeter)
+    const inPerimeter = parseFloat(dist) < parseFloat(this.state.serviceUser.perimeter);
     return inPerimeter;
   };
 
@@ -385,10 +385,9 @@ class UserServicesPreview extends React.Component {
     if (isEmpty(this.state.serviceUser) || isEmpty(this.state.user)) {
       return false;
     }
-    const result=!Boolean(this.isInPerimeter())
-    console.log(`hasWarningPerimeter()=>${result}`)
-    return
-  }
+    const result=!Boolean(this.isInPerimeter());
+    console.log(`hasWarningPerimeter()=>${result}`);
+  };
 
   getLocationLabel = () => {
     const titles = {
