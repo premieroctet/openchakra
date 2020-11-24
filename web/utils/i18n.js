@@ -108,7 +108,8 @@ const getMangopayMessage = msg_id => {
 };
 
 const SHOP={
-  addService: 'Ajoutez des services'
+  addService: 'Ajoutez des services',
+  createShop: 'Proposez votre premier service'
 }
 
 const BOOKING={
