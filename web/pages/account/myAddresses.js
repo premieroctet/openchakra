@@ -546,7 +546,7 @@ class myAddresses extends React.Component {
           </LayoutAccount>
         </Hidden>
         <Hidden only={['lg', 'xl']}>
-          <LayoutMobile>
+          <LayoutMobile currentIndex={4}>
             {this.content(classes)}
           </LayoutMobile>
         </Hidden>

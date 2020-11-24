@@ -37,12 +37,14 @@ class InfoWithPics extends React.Component {
                                                     opacity: equipmentsSelected ? !result.includes(data._id) ? 0.2 : 1 : 1
                                                 }}
                                                 src={`../../../static/equipments/${data.logo.slice(0, -4)}.svg`}
-                                                height={80} width={80} alt={`${data.name_logo.slice(0, -4)}.svg`}/>
+                                                alt={`${data.name_logo.slice(0, -4)}.svg`}
+                                                className={classes.picsSize}
+                                            />
                                         </Grid> : null
                             }
                             {
                                 data.label || data.summary ?
-                                    <Grid>
+                                    <Grid className={classes.containerListIcon}>
                                         {
                                             data.label ?
                                                 <Grid>

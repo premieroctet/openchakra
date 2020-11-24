@@ -3,7 +3,8 @@ import React from 'react';
 import Typography from "@material-ui/core/Typography";
 import {Divider} from "@material-ui/core";
 import Router from 'next/router';
-
+import withStyles from "@material-ui/core/styles/withStyles";
+import styles from '../../static/css/components/Topic/Topic';
 
 class Topic extends React.Component {
 
@@ -22,7 +23,7 @@ class Topic extends React.Component {
 
     render() {
       const{subTitleColor} = this.state;
-      const{titleTopic, titleSummary, needBackground, underline} = this.props;
+      const{titleTopic, titleSummary, needBackground, underline, classes} = this.props;
 
       return(
         <Grid>
@@ -38,7 +39,7 @@ class Topic extends React.Component {
           {
             underline ?
               <Grid style={{marginTop: '2%'}}>
-                <Divider style={{height: 6, backgroundColor:'rgba(178, 204, 251, 100%)', borderRadius: 27, width: '3vw'}}/>
+                <Divider className={classes.topicDivider}/>
               </Grid> : null
           }
           {this.props.children ?
@@ -54,4 +55,4 @@ class Topic extends React.Component {
 
 }
 
-export default Topic
+export default withStyles(styles)(Topic);

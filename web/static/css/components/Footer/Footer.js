@@ -72,7 +72,8 @@ export default theme => ({
       width: '100%',
       flexDirection: 'column',
       marginBottom: '15vh',
-      alignItems: 'end'
+      alignItems: 'end',
+      textAlign: 'end'
     },
     [theme.breakpoints.down('lg')]:{
       width: '50%'

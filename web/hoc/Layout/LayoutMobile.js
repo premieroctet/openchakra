@@ -11,42 +11,21 @@ class LayoutMobile extends React.Component{
     super(props);
     this.state={
       currentUrlIndex : '',
-      myProfilUrl: false
+      myProfilUrl: false,
+      hideMobileNavbar: false
     }
 
   }
 
-  componentDidMount(){
-    let currentUrl = Router.pathname;
-    let firstParamUrl= currentUrl.split('/')[1].split('/')[0];
-    if(currentUrl === '/account/myProfile'){
-      this.setState({myProfilUrl: true})
-    }
-
-    switch (firstParamUrl) {
-      case 'account':
-        this.setState({currentUrlIndex: 4});
-        break;
-      case '/':
-        this.setState({currentUrlIndex: 1});
-        break;
-      case 'Search':
-        this.setState({currentUrlIndex: 2});
-        break;
-      default:
-        this.setState({currentUrlIndex: ''});
-    }
-  };
-
   render() {
-    const{children} = this.props;
-    const{currentUrlIndex, myProfilUrl} = this.state;
+    const{children, currentIndex} = this.props;
+    const{myProfilUrl, hideMobileNavbar} = this.state;
 
 
 
     return(
-      <React.Fragment>
-        <Grid style={{padding: '10%'}}>
+      <Grid>
+        <Grid style={{padding: !hideMobileNavbar ? '10%' : 0}}>
           {!myProfilUrl ?
             <Grid>
               <IconButton aria-label="ArrowBackIosIcon" onClick={() => Router.back()}>
@@ -56,12 +35,16 @@ class LayoutMobile extends React.Component{
           }
           {children}
         </Grid>
-        <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 1}}>
-          <Grid style={{width: '90%'}}>
-            <MobileNavbar currentUrlIndex={currentUrlIndex}/>
-          </Grid>
-        </Grid>
-      </React.Fragment>
+        {
+          !hideMobileNavbar ?
+            <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 1}}>
+              <Grid style={{width: '90%'}}>
+                <MobileNavbar currentIndex={currentIndex}/>
+              </Grid>
+            </Grid> : null
+        }
+
+      </Grid>
     );
   }
 }

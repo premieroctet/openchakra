@@ -210,4 +210,14 @@ router.put('/addBookingId/:id', (req, res) => {
     .catch(err => console.error(err));
 });
 
+router.delete('/chatRoom/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+  ChatRooms.deleteOne(req.params.id)
+    .then(() => {
+      res.json({success: true});
+    })
+    .catch(err => {
+      console.error(err);
+    });
+})
+
 module.exports = router;

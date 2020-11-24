@@ -57,11 +57,6 @@ class Home extends React.Component {
     window.location.reload();
   };
 
-
-  content = (classes) =>{
-
-  };
-
   render() {
     const { classes } = this.props;
     const {category, alfred, logged} = this.state;
@@ -131,7 +126,7 @@ class Home extends React.Component {
           <Hidden only={['xl','lg', 'md', 'sm']}>
             <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 1}}>
               <Grid style={{width: '90%'}}>
-                <MobileNavbar currentUrlIndex={0}/>
+                <MobileNavbar currentIndex={0}/>
               </Grid>
             </Grid>
           </Hidden>

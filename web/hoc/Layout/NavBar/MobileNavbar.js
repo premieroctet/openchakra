@@ -8,6 +8,9 @@ import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import PersonIcon from '@material-ui/icons/Person';
 import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../../static/css/components/MobileNavbar/MobileNavbar';
+import Router from 'next/router';
+import axios from "axios";
+import cookie from "react-cookies";
 
 class MobileNavbar extends React.Component{
   constructor(props) {
@@ -30,25 +33,59 @@ class MobileNavbar extends React.Component{
           icon:  <PersonIcon/>
         }
       ],
+      user: {},
+      indexAccount: props.indexAccount,
+      currentIndex:0
     }
   }
 
+  componentDidMount() {
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    axios.get('/myAlfred/api/users/current')
+      .then(res => {
+        this.setState({ user : res.data})
+      }).catch(err => console.error(err));
+  }
+
+  handleNavigation = (event, newValue) =>{
+    switch (newValue) {
+      case 0:
+        Router.push('/');
+        break;
+      case 1:
+        Router.push('/search');
+        break;
+      case 2:
+        Router.push(`/profile/calendar?user=${this.state.user._id}`);
+        break;
+      case 3:
+        Router.push(`/profile/messages?user=${this.state.user._id}`);
+        break;
+      case 4:
+        Router.push('/account/myProfile');
+        break;
+      default:
+        this.setState({currentUrlIndex: ''});
+    }
+  };
+
+
   render() {
     const{labels} = this.state;
-    const{classes, currentUrlIndex} = this.props;
+    const{classes, currentIndex} = this.props;
 
     return(
       <BottomNavigation
-        value={currentUrlIndex}
+        value={currentIndex}
         onChange={(event, newValue) => {
-          this.setState({value: newValue});
+          this.handleNavigation(event,newValue)
         }}
         classes={{root: classes.navigationRoot}}
       >
         {
           labels.map((res, index) =>{
             return(
-              <BottomNavigationAction key={index} classes={{root: classes.navigationActionRoot}} value={index} icon={res.icon} />
+              <BottomNavigationAction key={index} classes={{root: classes.navigationActionRoot}} value={index} icon={res.icon}/>
             )
           })
         }

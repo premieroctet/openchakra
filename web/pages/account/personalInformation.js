@@ -16,7 +16,7 @@ class personalInformation extends React.Component{
   render() {
     return(
       <React.Fragment>
-        <LayoutMobile>
+        <LayoutMobile currentIndex={4}>
           <Grid>
             <Grid>
               <h2 style={{whiteSpace: 'nowrap'}}>Informations personnelles</h2>
@@ -24,7 +24,7 @@ class personalInformation extends React.Component{
           </Grid>
           <Grid style={{marginTop: '5vh'}}>
             <List component="nav" aria-label="main mailbox folders">
-              <ListItem button onClick={() => Router.push('/profile/editProfile')}>
+              <ListItem button onClick={() => Router.push('/account/editProfile')}>
                 <ListItemText primary="Mes informations" secondary={'Nom, date de naissance, e-mail'}/>
                 <ListItemIcon style={{display: 'flex', flexDirection: 'row-reverse'}}>
                   <ArrowForwardIosIcon />

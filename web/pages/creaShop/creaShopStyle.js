@@ -42,6 +42,8 @@ export default theme => ({
   },
   contentStepper: {
     width: '90%',
+    display: 'flex',
+    justifyContent: 'center',
     [theme.breakpoints.down('md')]: {
       display: 'none',
     },

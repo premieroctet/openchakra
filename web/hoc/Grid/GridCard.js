@@ -23,7 +23,7 @@ function withGrid(WrappedComponent) {
             const item=model.getData(page, col, row);
 
             return(
-              <Grid item xl={colSize} lg={colSize} md={colSize} className={style.categoryCardRoot}>
+              <Grid item xl={colSize} lg={colSize} md={colSize} sm={colSize} xs={colSize} className={style.categoryCardRoot}>
                 <WrappedComponent {...this.props} item={item} key={[page, col, row]}/>
               </Grid>
             )

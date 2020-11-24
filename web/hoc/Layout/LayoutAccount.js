@@ -17,6 +17,10 @@ class LayoutAccount extends React.Component{
           url: '/notifications'
         },
         {
+          label: 'Mes Informations',
+          url: '/editProfile'
+        },
+        {
           label: 'Mode de paiement',
           url: '/paymentMethod'
         },
