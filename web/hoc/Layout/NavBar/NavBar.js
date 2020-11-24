@@ -401,9 +401,6 @@ class NavBar extends Component {
               <Button onClick={()=> this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) :  this.findService()} color={'primary'} classes={{root: classes.buttonNextRoot}} variant={'contained'}>{this.state.mobileStepSearch === 0 ? 'Suivant' : 'Rechercher'}</Button>
             </Grid>
           </Grid>
-          <Grid item xs={12} style={{display:'flex', justifyContent: 'center'}}>
-            <Button classes={{root: classes.buttonIgnore}} onClick={() => this.setState({modalMobileSearchBarInput: false, mobileStepSearch: 0, keyword: null, city: undefined, gps: '' })}>Ignorer</Button>
-          </Grid>
         </Grid>
       </SwipeableDrawer>
     )
