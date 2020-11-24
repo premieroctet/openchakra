@@ -754,7 +754,7 @@ router.get('/home', (req, res) => {
 
   ServiceUser.find({}, 'user service')
     // {e.service.picture} title={e.service.label} alfred={e.user.firstname} user={e.user} score={e.user.score} /
-    .populate('user', 'picture firstname score')
+    .populate('user', 'picture firstname score billing_address')
     .populate('service', 'label picture')
     .then(services => {
       if (typeof services !== 'undefined' && services.length > 0) {
