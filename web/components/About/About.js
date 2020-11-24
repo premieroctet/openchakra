@@ -204,13 +204,7 @@ class About extends React.Component {
   render() {
     const {displayTitlePicture, classes} = this.props;
     const {user, newLanguages} = this.state;
-    var places= user ?`${user.billing_address.city}, ${user.billing_address.country}` : '';
-    if (user) {
-      user.service_address.forEach( sa => {
-        places+=`;${sa.city}, France`
-        }
-      )
-    }
+    var place= user ? user.billing_address.city : "Pas d'adresse";
 
     const editable = isEditableUser(user);
 
@@ -218,8 +212,8 @@ class About extends React.Component {
     const wrapperComponentProps = user ?
       [
         {
-          label: 'Lieux',
-          summary: places,
+          label: 'Lieu',
+          summary: place,
           IconName: user.firstname ? <RoomIcon fontSize="large"/> : ''
         },
         {
