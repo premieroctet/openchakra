@@ -23,6 +23,10 @@ export default theme => ({
   },
   drawerPaperAnchorBottom:{
     left: '10vh',
+    [theme.breakpoints.down('md')]:{
+      left: 'inherit',
+      width: '100%'
+    }
   },
 
   /***Schedule**/

@@ -104,7 +104,7 @@ class DrawerSchedule extends React.Component{
             }
           </SwipeableDrawer>
           <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
-            <Hidden only={['md', 'sm', 'xs']}>
+            <Hidden only={[ 'xs']}>
               <Grid style={{marginTop: '5vh'}}>
                 <Button
                   startIcon={this.state.eventsSelected.size > 0 ? <SettingsIcon /> : <AddCircleOutlineIcon />}
@@ -115,7 +115,7 @@ class DrawerSchedule extends React.Component{
                 </Button>
               </Grid>
             </Hidden>
-            <Hidden only={['lg', 'xl']}>
+            <Hidden only={['lg', 'xl', 'md', 'sm',]}>
               <Grid style={{position: 'fixed', bottom: '15vh', zIndex: 6, right: 0}}>
                 <Fab
                   color="primary"

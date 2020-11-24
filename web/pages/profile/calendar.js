@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule'
 import {withStyles} from '@material-ui/core/styles';
-import styles from '../../static/css/pages/homePage/index';
+import styles from '../../static/css/pages/profile/calendar/calendar';
 const I18N=require('../../utils/i18n');
 import {getLoggedUserId} from '../../utils/functions'
 import Hidden from "@material-ui/core/Hidden";
@@ -41,7 +41,7 @@ class ProfileCalendar extends React.Component {
 
   content = (classes, user, readOnly) =>{
     return(
-      <Grid container>
+      <Grid container className={classes.mainContainerSchedule}>
         <Grid item xs={12} xl={12}>
           <Box>
             <Topic
