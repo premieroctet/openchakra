@@ -1,19 +1,11 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import PropTypes from 'prop-types';
 import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
 import styles from './SkillsStyle';
-import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
-import Chip from '@material-ui/core/Chip';
-import clsx from 'clsx';
-import Badge from '@material-ui/core/Badge';
-import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
 import cookie from 'react-cookies';
-const {SKILLS}=require('../../utils/consts')
+const {SKILLS}=require('../../utils/consts');
 import Topic from "../../hoc/Topic/Topic"
-import Box from '../Box/Box'
 
 class Skills extends React.Component {
   constructor(props) {
@@ -62,17 +54,16 @@ class Skills extends React.Component {
 
   render() {
     const {classes, hideCount, onClick, needTitle, alfred, widthHr} = this.props;
-    const {skill_values}=this.state
+    const {skill_values}=this.state;
 
     return (
       <Topic titleTopic={'Compliments'}>
-        <Grid className={classes.skillsContainer}>
+        <Grid container className={classes.skillsContainer} spacing={3}>
           { Object.keys(SKILLS).map(skill => {
             const count=skill_values[skill];
               const pic=`/static/assets/img/skillsAlfred/${SKILLS[skill].picture}${count?'':'_disabled'}.svg`;
               return (
-                //<div style={{ display:'flex', flexDirection: 'column', alignItems: 'center'}}>
-                <Grid className={classes.skillCard} >
+                <Grid item xs={6} lg={3} xl={3} sm={6} md={6} className={classes.skillCard} >
                   <Grid>
                     <img src={pic} className={classes.avatarSize}/>
                   </Grid>
@@ -90,4 +81,4 @@ class Skills extends React.Component {
   }
 }
 
-export default withStyles(styles, {withTheme: true})(Skills)
+export default withStyles(styles)(Skills)
