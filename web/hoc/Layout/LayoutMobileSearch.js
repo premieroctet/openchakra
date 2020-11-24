@@ -23,6 +23,10 @@ class LayoutMobileSearch extends React.Component{
     this.props.filter(childState)
   };
 
+  callFilterNavBar = () => {
+    this.child.current.handleModalSearchBarInput();
+  };
+
   render() {
     const{children, currentIndex} = this.props;
 
@@ -36,7 +40,7 @@ class LayoutMobileSearch extends React.Component{
         </Grid>
           <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 1}}>
             <Grid style={{width: '90%'}}>
-              <MobileNavbar currentIndex={currentIndex}/>
+              <MobileNavbar currentIndex={currentIndex} filter={this.callFilterNavBar}/>
             </Grid>
           </Grid>
       </Grid>

@@ -220,12 +220,7 @@ export default theme => ({
       margin: '0px !important',
     },
   },
-  navbarPaperWidth:{
-    width: 400,
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-    },
-  },
+
   navbarMuidialogContent: {
     padding: 0,
   },

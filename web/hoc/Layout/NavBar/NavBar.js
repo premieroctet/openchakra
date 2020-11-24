@@ -216,12 +216,16 @@ class NavBar extends Component {
     this.setState({startDate: startDate, endDate: endDate});
   }
 
+  handleModalSearchBarInput = () =>{
+    this.setState({modalMobileSearchBarInput: true})
+  };
+
   mobileSearchBarInput = (classes) =>{
     return(
       <Grid className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
         <Paper classes={{root: this.state.ifHomePage ? classes.navbarSearch : classes.navbarSearchP}}>
           <Grid>
-            <IconButton classes={{root: classes.iconButton}} aria-label="search" onClick={() => this.setState({modalMobileSearchBarInput: true})}>
+            <IconButton classes={{root: classes.iconButton}} aria-label="search" onClick={this.handleModalSearchBarInput}>
               <SearchIcon />
             </IconButton>
           </Grid>
@@ -238,7 +242,7 @@ class NavBar extends Component {
       <Grid className={classes.navbarSearchContainerSearchPage}>
         <Paper classes={{root: classes.navbarSearch}}>
           <Grid>
-            <IconButton classes={{root: classes.iconButton}} aria-label="search" onClick={() => this.setState({modalMobileSearchBarInput: true})}>
+            <IconButton classes={{root: classes.iconButton}} aria-label="search" onClick={this.handleModalSearchBarInput}>
               <SearchIcon />
             </IconButton>
           </Grid>
@@ -565,19 +569,7 @@ class NavBar extends Component {
         <Register callLogin={this.handleOpenLogin} sendParentData={this.getData}/>
       );
     };
-
-    const DialogTitle = (props) => {
-      const {children, classes, onClose, ...other} = props;
-      return (
-        <MuiDialogTitle disableTypography {...other}>
-          <h6>{children}</h6>
-            <IconButton aria-label="close"  onClick={onClose}>
-              <CloseIcon color={'secondary'}/>
-            </IconButton>
-        </MuiDialogTitle>
-      );
-    };
-
+    
     return(
       <Grid className={this.state.ifHomePage ? classes.navbarMainSytle : classes.navbarMainSytleP}>
         <AppBar position={'static'} className={this.state.ifHomePage ? classes.navbarAppBar : classes.navbarAppBarP}>

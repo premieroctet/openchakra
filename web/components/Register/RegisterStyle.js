@@ -83,6 +83,7 @@ export default theme => ({
   },
   widthTextField: {
     width: '70%',
+    whiteSpace: 'nowrap',
     [theme.breakpoints.down('xs')]: {
       width: '80%',
     },

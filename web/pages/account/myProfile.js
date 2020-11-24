@@ -136,7 +136,7 @@ class myProfile extends React.Component{
             <Grid style={{marginTop: '5vh'}}>
               <Button
                 variant={'outlined'}
-                onClick={() => this.logout2}
+                onClick={this.logout2}
               >
                 Se deconnecter
               </Button>
