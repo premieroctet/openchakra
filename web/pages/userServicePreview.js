@@ -79,7 +79,8 @@ class UserServicesPreview extends React.Component {
       warningPerimeter: false,
       use_cesu: false,
     };
-    this.checkBook = this.checkBook.bind(this);
+    this.checkBook = this.checkBook.bind(this)
+    this.hasWarningPerimeter = this.hasWarningPerimeter.bind(this)
   }
 
   static getInitialProps({query: {id}}) {
@@ -200,9 +201,6 @@ class UserServicesPreview extends React.Component {
     const serviceUser = this.state.serviceUser;
     const user = this.state.user;
     let location = serviceUser.location.client && (!user || this.isInPerimeter()) ? 'client' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
-    if (location == null && user) {
-      this.setState({warningPerimeter: true});
-    }
     this.setState({location: location});
   };
 
@@ -370,9 +368,18 @@ class UserServicesPreview extends React.Component {
     const coordSU = this.state.serviceUser.service_address.gps;
     const coordUser = this.state.user.billing_address.gps;
     const dist = computeDistanceKm(coordSU, coordUser);
-    const inPerimeter = dist < this.state.serviceUser.perimeter;
+    const inPerimeter = parseFloat(dist) < parseFloat(this.state.serviceUser.perimeter)
     return inPerimeter;
   };
+
+  hasWarningPerimeter = () => {
+    if (isEmpty(this.state.serviceUser) || isEmpty(this.state.user)) {
+      return false;
+    }
+    const result=!Boolean(this.isInPerimeter())
+    console.log(`hasWarningPerimeter()=>${result}`)
+    return
+  }
 
   getLocationLabel = () => {
     const titles = {
@@ -523,6 +530,8 @@ class UserServicesPreview extends React.Component {
     const filters = this.extractFilters();
 
     const pricedPrestations = this.computePricedPrestations();
+
+    const warningPerimeter = this.hasWarningPerimeter()
 
     return(
       <Grid style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
@@ -679,6 +688,7 @@ class UserServicesPreview extends React.Component {
                           onLocationChanged={this.onLocationChanged}
                           computeTravelTax={this.computeTravelTax}
                           getLocationLabel={this.getLocationLabel}
+                          warningPerimeter={warningPerimeter}
                           book={this.book}
                           {...this.state}
                         />
@@ -702,6 +712,7 @@ class UserServicesPreview extends React.Component {
                       onLocationChanged={this.onLocationChanged}
                       computeTravelTax={this.computeTravelTax}
                       getLocationLabel={this.getLocationLabel}
+                      warningPerimeter={warningPerimeter}
                       book={this.book}
                       {...this.state}
                     />
@@ -749,8 +760,6 @@ class UserServicesPreview extends React.Component {
   render() {
     const {classes} = this.props;
     const {service,alfred, user,} = this.state;
-
-
 
     return (
       <React.Fragment>

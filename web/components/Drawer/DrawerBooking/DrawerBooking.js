@@ -104,12 +104,14 @@ class DrawerBooking extends React.Component{
 
   render() {
     const {expanded} = this.state;
-    const {warningPerimeter, side, classes, service, alfred, date, time, errors, count, serviceUser, isChecked, location, pick_tax, total, commission, cesu_total, filters, pricedPrestations} = this.props;
+    const {warningPerimeter, side, classes, service, alfred, date, time, errors,
+      count, serviceUser, isChecked, location, pick_tax, total, commission,
+      cesu_total, filters, pricedPrestations} = this.props;
 
     return(
       <Grid>
         {
-          !warningPerimeter ?
+          warningPerimeter ?
             <Grid className={classes.userServicePreviewWarningContainer}>
               <Grid>
                 <CancelIcon color={'secondary'}/>
