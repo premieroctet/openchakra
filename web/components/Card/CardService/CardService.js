@@ -139,13 +139,15 @@ class CardService extends React.Component{
       return null
     }
 
+    const picture = alfred.picture || cpData.picture
+
     return(
       <Grid style={{ width: '100%'}}>
         <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : classes.cardServicePaper}>
           <Grid className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => {profileMode ? null : window.open(resa_link, '_blank')}}>
             <Grid className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
               <Grid className={profileMode ? classes.profileModecardServicePicsContainer :  classes.cardServicePicsContainer}>
-                <Grid style={{backgroundImage: 'url("/' + cpData.picture + '")'}} className={classes.cardServiceBackgroundPics}/>
+                <Grid style={{backgroundImage: `url("/${picture}")`}} className={classes.cardServiceBackgroundPics}/>
               </Grid>
               {
                 profileMode ?
