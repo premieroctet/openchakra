@@ -4,9 +4,24 @@ export default theme => ({
     borderRadius: 10,
   },
   navigationActionRoot:{
-    paddingTop: '6px !important',
     minWidth: 'inherit',
-    maxWidth: 'inherit',
+    maxWidth: '20%',
+    padding: '0px 2px !important',
+    '& .Mui-selected':{
+      fontSize: 10,
+      fontWeight: 600,
+      textOverflow: 'ellipsis !important',
+      display: '-webkit-box !important',
+      overflowWrap: 'break-word !important',
+      maxHeight: '24px !important',
+      overflow:' hidden !important',
+      lineHeight: '12px !important',
+    },
+    '& .MuiSvgIcon-root':{
+      height: '30px !important',
+      marginBottom: '2px !important',
+      padding:' 3px !important',
+    }
   },
   navbarModal: {
     display: 'flex',
@@ -40,4 +55,15 @@ export default theme => ({
     top: theme.spacing(1),
     color: theme.palette.grey[500],
   },
+  label:{
+    fontSize: 10,
+    fontWeight: 600,
+    textOverflow: 'ellipsis !important',
+    display: '-webkit-box !important',
+    overflowWrap: 'break-word !important',
+    maxHeight: '24px !important',
+    overflow:' hidden !important',
+    lineHeight: '12px !important',
+  },
+
 })

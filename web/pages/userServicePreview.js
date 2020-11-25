@@ -535,7 +535,6 @@ class UserServicesPreview extends React.Component {
   };
 
   loadAlbums = () => {
-    console.log('bonjour')
     axios.get(`/myAlfred/api/users/profile/albums/${this.state.alfred._id}`)
       .then( res => {
         this.setState({ albums: res.data})
