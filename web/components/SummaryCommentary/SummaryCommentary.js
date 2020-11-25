@@ -23,7 +23,7 @@ class SummaryCommentary extends React.Component{
       alfredReviews: [],
       filter:'',
       showCommentary: false,
-      userServicesPreview: false
+      userServicesPreview: true
     }
   }
 
@@ -67,6 +67,13 @@ class SummaryCommentary extends React.Component{
     const commentsCount=alfredReviews.length + customerReviews.length;
     const allComments=alfredReviews.concat(customerReviews);
     var average = allComments.length ? allComments.map( r => r.note_alfred ? r.note_alfred.global : r.note_client.global ).reduce ((a,b) => a+b)/allComments.length : 0;
+
+    var complimentsCount = 0
+    allComments.forEach( comp => {
+      if (comp.note_alfred) {
+        complimentsCount += Object.values(comp.note_alfred).filter( v => v===true).length
+      }
+    })
 
     return(
       <Grid>
@@ -125,7 +132,7 @@ class SummaryCommentary extends React.Component{
           </Grid>
           <Grid item className={classes.summaryContainerCompliments}>
             <Grid>
-              <Typography><strong>4</strong></Typography>
+              <Typography><strong>{complimentsCount}</strong></Typography>
             </Grid>
             <Grid>
               <Typography style={{color:'rgba(39,37,37,35%)', fontWeight: 'bold'}}>COMPLIMENTS</Typography>
@@ -135,7 +142,9 @@ class SummaryCommentary extends React.Component{
         {userServicesPreview ?
           <Grid>
             <Grid style={{display:'flex', alignItems:'center', marginTop: '5vh'}}>
-              <Button variant={'contained'} onClick={this.handleShowCommentary} classes={{root: classes.buttonShowMore}}>Voir les commentaires</Button>
+              <Button variant={'contained'} onClick={this.handleShowCommentary} classes={{root: classes.buttonShowMore}}>
+                { showCommentary ? 'Cacher les commentaires' : 'Voir les commentaires'}
+              </Button>
             </Grid>
           </Grid> : null
         }
