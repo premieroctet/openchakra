@@ -616,18 +616,31 @@ class NavBar extends Component {
                 ifHomePage ?
                   <Grid className={classes.navabarHomepageMenu}>
                     <Tabs value={false} aria-label="simple tabs example">
-                                                <Link href={'/search?search=1'}>
-                                                    <Tab classes={{root: classes.navbarTabRoot}}
-                                                         label={NAVBAR_MENU.ourServices}/>
-                                                </Link>
-                                                <Link href={'/footer/ourTeam'}>
-                                                    <Tab classes={{root: classes.navbarTabRoot}}
-                                                         label={NAVBAR_MENU.ourTeam}/>
-                                                </Link>
-                                                <Link href={'/footer/contact'}>
-                                                    <Tab classes={{root: classes.navbarTabRoot}}
-                                                         label={NAVBAR_MENU.contactUs}/>
-                                                </Link>
+                      <Link href={'/search?search=1'}>
+                          <Tab classes={{root: classes.navbarTabRoot}}
+                               label={NAVBAR_MENU.ourServices}/>
+                      </Link>
+                      { user ?
+                          user.is_alfred ?
+                            <Link href={`/profile/services?user=${user._id}&indexAccount=1`}>
+                                <Tab classes={{root: classes.navbarTabRoot}}
+                                     label={NAVBAR_MENU.myServices}/>
+                            </Link>
+                            :
+                            <Link href={'/creaShop/creaShop'}>
+                                <Tab classes={{root: classes.navbarTabRoot}}
+                                     label={NAVBAR_MENU.registerServices}/>
+                            </Link>
+                        :
+                        <Link onClick={this.handleOpenRegister}>
+                            <Tab classes={{root: classes.navbarTabRoot}}
+                                 label={NAVBAR_MENU.registerServices}/>
+                        </Link>
+                      }
+                      <Link href={'/footer/contact'}>
+                          <Tab classes={{root: classes.navbarTabRoot}}
+                               label={NAVBAR_MENU.contactUs}/>
+                      </Link>
                     </Tabs>
                   </Grid> : this.searchBarInput(classes)
               }
