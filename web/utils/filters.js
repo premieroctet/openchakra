@@ -30,7 +30,7 @@ const isServiceAroundGPS = (serviceUser, coordinates) => {
         var in_perimeter = distance < serviceUser.perimeter;
         return in_perimeter;
       } catch (err) {
-        console.error(`Error computing distance between ${coordinates} and ${latAlfred}/${lngAlfred}:${JSON.stringify(err)}`);
+        console.error(`Error computing distance between ${JSON.stringify(coordinates)} and ${latAlfred}/${lngAlfred}:${err}`);
         return false;
       }
     }
