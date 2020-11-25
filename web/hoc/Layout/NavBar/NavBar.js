@@ -103,7 +103,7 @@ class NavBar extends Component {
       }).catch(err => console.error(err))
   }
 
-  logout2 = () => {
+  logout = () => {
     cookie.remove('token', {path: '/'});
     localStorage.removeItem('path');
     setAuthToken(null);
@@ -614,12 +614,14 @@ class NavBar extends Component {
                         <Link href={'/account/notifications'}>
                           <MenuItem>Mes paramètres</MenuItem>
                         </Link>
-                        {user.is_alfred ?
-                          <Link href={`/shop?id_alfred=${user._id}`}>
-                            <MenuItem>Ma boutique</MenuItem>
+                        { user.is_alfred ?
+                          <Link href={`/profile/services?user=${user._id}&indexAccount=1`}>
+                            <MenuItem>Mes services</MenuItem>
                           </Link>
                           :
-                          null
+                          <Link href={`/creaShop/creaShop`}>
+                            <MenuItem>Proposer mes services</MenuItem>
+                          </Link>
                         }
                         <Link href={`/profile/messages?user=${user._id}`}>
                           <MenuItem>Mes messages</MenuItem>
@@ -632,7 +634,7 @@ class NavBar extends Component {
                             <MenuItem>Dashboard</MenuItem>
                           </Link> : null
                         }
-                        <MenuItem onClick={() => this.logout2()}>Logout</MenuItem>
+                        <MenuItem onClick={this.logout}>Déconnexion</MenuItem>
                       </Grid>
                       :
                       null
