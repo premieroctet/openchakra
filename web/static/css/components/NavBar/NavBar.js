@@ -1,6 +1,4 @@
 export default theme => ({
-  selectRoot:{
-  },
   navbarSearchContainer:{
     width: '50%',
     marginTop: '5vh',
@@ -14,6 +12,11 @@ export default theme => ({
       cursor: 'pointer',
       width: '100%',
     },
+  },
+  fitlerMenuLogged:{
+    overflow: 'inherit',
+    textOverflow: 'inherit',
+    whiteSpace: 'inherit'
   },
   navbarSearch: {
     padding: 14,
@@ -151,9 +154,9 @@ export default theme => ({
     alignItems: 'center',
     width: '80%',
     display: 'flex',
-    [theme.breakpoints.down('xs')]:{
+    [theme.breakpoints.down('md')]:{
       width: '95%'
-    }
+    },
   },
   navbarAppBar:{
     backgroundColor:'transparent',
@@ -168,16 +171,51 @@ export default theme => ({
   navbarTopContainer:{
     width: '90%',
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    [theme.breakpoints.down('md')]:{
+      width: '100%'
+    }
   },
 
   navbarLogoContainer:{
-    width: '100%'
+    width: '20%',
+    cursor: 'pointer',
+    [theme.breakpoints.down('md')]:{
+      width: '10%'
+    }
+  },
+  navbarLogoContainerP:{
+    width: '100%',
+    cursor: 'pointer',
+  },
+  navabarHomepageMenu:{
+    width: '70%',
+    display: 'flex',
+    justifyContent: 'center',
+    [theme.breakpoints.down('md')]:{
+      width: '80%'
+    }
+  },
+  navabarHomepageMenuP:{
+    width: '100%',
+
+  },
+  navbarMenuBurgerContainer:{
+    width: '20%',
+    display: 'flex',
+    flexDirection: 'row-reverse',
+    [theme.breakpoints.down('md')]:{
+      width: '10%'
+    }
   },
 
-  navabarHomepageMenu:{
-    width: '100%'
+  navbarMenuBurgerContainerP:{
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row-reverse',
   },
+
   navbarTabRoot:{
     textTransform: 'inherit',
     opacity: 'inherit',
@@ -198,11 +236,7 @@ export default theme => ({
     padding: '6px 0 7px',
   },
 
-  navbarMenuBurgerContainer:{
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row-reverse'
-  },
+
   navbarButtonContainer:{
     display: 'flex',
     flexDirection: 'row-reverse',
@@ -373,7 +407,8 @@ export default theme => ({
     display: 'flex',
     justifyContent: 'space-between',
     width: '90%',
-    alignItems: 'center'
+    alignItems: 'center',
+
   },
   inputDatePickerP:{
     border: 'inherit',

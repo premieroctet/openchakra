@@ -402,6 +402,39 @@ class NavBar extends Component {
                     classes={{root: classes.modalMobileSearchBarInputTextField}}
                   />
                   :
+                  this.state.user ?
+                    <Grid>
+                      <FormControl variant="outlined">
+                        <Select
+                          id="outlined-select-currency"
+                          value={this.props.selectedAddress ? this.props.selectedAddress : 'main'}
+                          name={'selectedAddress'}
+                          onChange={(e) => {
+                            this.onChange(e);
+                          }}
+                          classes={{selectMenu: classes.fitlerMenuLogged}}
+                        >
+                          <MenuItem value={'main'} style={{whiteSpace: 'nowrap'}}>
+                            Adresse
+                            principale, {' ' + this.state.user.billing_address.address} {this.state.user.billing_address.zip_code},{this.state.user.billing_address.city}
+                          </MenuItem>
+                          {this.state.user.service_address.map((e, index) => (
+                            <MenuItem value={e._id} key={index}>
+                              {e.label + ', '} {' ' + e.address},{e.zip_code} {e.city}
+                            </MenuItem>
+                          ))}
+                          <MenuItem value={'all'}>
+                            Partout, Rechercher des Alfred partout
+                          </MenuItem>
+                          <MenuItem value={'addAddress'}>
+                            <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
+                              Ajouter une adresse
+                            </Typography>
+                          </MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    :
                   <TextField
                     item
                     xs={12}
@@ -592,7 +625,6 @@ class NavBar extends Component {
     )
   };
 
-
   render() {
     const {user, setOpenLogin, setOpenRegister, anchorEl, ifHomePage, modalMobileSearchBarInput, ifSearchPage, modalFilters} = this.state;
     const {classes, logged} = this.props;
@@ -611,18 +643,16 @@ class NavBar extends Component {
 
         return (
       <Grid className={this.state.ifHomePage ? classes.navbarMainSytle : classes.navbarMainSytleP}>
-                <AppBar position={'static'}
-                        className={this.state.ifHomePage ? classes.navbarAppBar : classes.navbarAppBarP}>
+        <AppBar position={'static'} className={this.state.ifHomePage ? classes.navbarAppBar : classes.navbarAppBarP}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Hidden only={['xs']}>
-                            <Grid
-                                className={this.state.ifHomePage ? classes.navbarTopContainer : classes.navbarTopContainerP}>
-              <Grid className={classes.navbarLogoContainer}>
-                                    <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'} width={102} height={32} style={{filter: 'invert(1)'}}/>
+              <Grid className={this.state.ifHomePage ? classes.navbarTopContainer : classes.navbarTopContainerP}>
+                <Grid className={ifHomePage ? classes.navbarLogoContainer : classes.navbarLogoContainerP } onClick={() => Router.push('/')}>
+                  <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'} width={102} height={64} style={{filter: 'invert(1)'}}/>
               </Grid>
               {
                 ifHomePage ?
-                  <Grid className={classes.navabarHomepageMenu}>
+                    <Grid className={ifHomePage ? classes.navabarHomepageMenu : classes.navabarHomepageMenuP}>
                     <Tabs value={false} aria-label="simple tabs example">
                       <Link href={'/search?search=1'}>
                           <Tab classes={{root: classes.navbarTabRoot}}
@@ -654,7 +684,7 @@ class NavBar extends Component {
               }
               {
                 logged === true ?
-                  <Grid className={classes.navbarMenuBurgerContainer}>
+                    <Grid className={ifHomePage ? classes.navbarMenuBurgerContainer : classes.navbarMenuBurgerContainerP}>
                     <IconButton
                       aria-label="open drawer"
                       onClick={this.handleOpenMenuItem}
@@ -706,7 +736,7 @@ class NavBar extends Component {
                     </Menu>
                   </Grid>
                   :
-                  <Grid className={classes.navbarButtonContainer}>
+                    <Grid className={ifHomePage ? classes.navbarButtonContainer : classes.navbarButtonContainerP}>
                     <Grid>
                                                 <Button className={classes.navBarlogIn}
                                                         onClick={this.handleOpenLogin}>{NAVBAR_MENU.logIn}</Button>
