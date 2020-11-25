@@ -55,13 +55,13 @@ class DrawerBooking extends React.Component{
                 <Grid style={{whiteSpace: 'nowrap'}}>
                   <Typography style={{color:'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : '?'}</Typography>
                 </Grid>
-                {p.prestation.cesu_eligible && this.props.use_cesu ?
-                  <Grid>
-                    <Typography><em>Eligible au <a href={'#'}>CESU</a></em></Typography>
-                  </Grid>
-                  : null
-                }
               </Grid>
+              {p.prestation.cesu_eligible && this.props.use_cesu ?
+                <Grid>
+                  <Typography style={{color:'rgba(39,37,37,35%)'}}><em>Eligible au <a style={{color:'rgba(39,37,37,35%)'}} href={'#'}>CESU</a></em></Typography>
+                </Grid>
+                : null
+              }
             </Grid>
           </Grid>
           <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
