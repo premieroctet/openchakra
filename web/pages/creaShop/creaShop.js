@@ -241,7 +241,7 @@ class creaShop extends React.Component {
           }
 
           toast.info(I18N.SHOP_CREATION_SUCCESSFUL);
-          Router.push(`/shop?id_alfred=${this.state.user_id}`);
+          Router.push(`/profile/services?user=${this.state.user_id}&indexAccount=1`);
         })
         .catch(err => {
           this.setState({saving: false});

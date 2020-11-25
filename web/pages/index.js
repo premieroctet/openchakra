@@ -27,7 +27,7 @@ class Home extends React.Component {
     this.state = {
       category:{},
       alfred:{},
-      logged: false
+      logged: false,
     };
   }
 
@@ -49,13 +49,6 @@ class Home extends React.Component {
         this.setState({alfred: alfred});
       });
   }
-
-  logout() {
-    cookie.remove('token', {path: '/'});
-    // Remove auth header for future requests
-    setAuthToken(false);
-    window.location.reload();
-  };
 
   render() {
     const { classes } = this.props;

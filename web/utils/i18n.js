@@ -54,6 +54,8 @@ const SEARCHBAR = {
 
 const NAVBAR_MENU = {
   ourServices: 'Nos services',
+  myServices: 'Mes services',
+  registerServices : 'Proposer mes services',
   ourTeam: 'Notre équipe',
   contactUs: 'Nous contacter',
   aboutUs: 'À propos',

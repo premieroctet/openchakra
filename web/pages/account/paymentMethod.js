@@ -268,7 +268,7 @@ class paymentMethod extends React.Component {
             </Grid>
             <Grid>
               <Grid>
-                <Typography style={{color:'rgba(39,37,37,35%)'}}>Toutes les données de paeiment sur My Alfred sont cryptées.</Typography>
+                <Typography style={{color:'rgba(39,37,37,35%)'}}>Toutes les données de paiement sur My Alfred sont cryptées.</Typography>
               </Grid>
               <Grid>
                 <Typography style={{color:'rgba(39,37,37,35%)'}}>Elles sont gérées par mangopay notre partenaire de confiance.</Typography>
@@ -359,7 +359,7 @@ class paymentMethod extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <Typography style={{color:'rgba(39,37,37,35%)'}}>Toutes les données de paeiment sur My Alfred sont cryptées.</Typography>
+              <Typography style={{color:'rgba(39,37,37,35%)'}}>Toutes les données de paiement sur My Alfred sont cryptées.</Typography>
             </Grid>
             <Grid>
               <Typography style={{color:'rgba(39,37,37,35%)'}}>Elles sont gérées par mangopay notre partenaire de confiance.</Typography>

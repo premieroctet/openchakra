@@ -652,7 +652,7 @@ class UserServicesPreview extends React.Component {
                     />
                   </Topic>
                 </Grid>
-                {this.state.equipments.length !== 0 ?
+                {this.state.allDetailEquipments.length !== 0 ?
                   <Grid className={classes.equipmentsContainer}>
                     <Topic
                       titleTopic={'Matériel'}

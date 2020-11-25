@@ -49,7 +49,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const DialogTitle = withStyles(styles)((props) => {
-  const {children, classes, onClose, ...other} = props;
+    const {children, classes, onClose, ...other} = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
@@ -99,15 +99,15 @@ class NavBar extends Component {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get('/myAlfred/api/users/current')
       .then(res => {
-        this.setState({user: res.data})
+                this.setState({user: res.data})
       }).catch(err => console.error(err))
   }
 
-  logout2 = () => {
+  logout = () => {
     cookie.remove('token', {path: '/'});
     localStorage.removeItem('path');
     setAuthToken(null);
-    Router.push('/');
+    Router.push('/?logout=1')
   };
 
   handleMenuClose = () => {
@@ -116,7 +116,7 @@ class NavBar extends Component {
 
   handleOpenLogin = (e) => {
     this.handleMenuClose();
-    this.setState({setOpenLogin: true, setOpenRegister: false});
+      this.setState({setOpenLogin: true, setOpenRegister: false});
   };
 
   handleCloseLogin = () => {
@@ -125,7 +125,7 @@ class NavBar extends Component {
 
   handleOpenRegister = (e) => {
     this.handleMenuClose();
-    this.setState({setOpenRegister: true, setOpenLogin: false});
+      this.setState({setOpenRegister: true, setOpenLogin: false});
   };
 
   handleCloseRegister = () => {
@@ -617,7 +617,6 @@ class NavBar extends Component {
     )
   };
 
-
   render() {
     const {user, setOpenLogin, setOpenRegister, anchorEl, ifHomePage, modalMobileSearchBarInput, ifSearchPage, modalFilters} = this.state;
     const {classes, logged} = this.props;
@@ -633,7 +632,7 @@ class NavBar extends Component {
         <Register callLogin={this.handleOpenLogin} sendParentData={this.getData}/>
       );
     };
-
+    
     return (
       <Grid className={this.state.ifHomePage ? classes.navbarMainSytle : classes.navbarMainSytleP}>
         <AppBar position={'static'}
@@ -653,10 +652,23 @@ class NavBar extends Component {
                           <Tab classes={{root: classes.navbarTabRoot}}
                                label={NAVBAR_MENU.ourServices}/>
                         </Link>
-                        <Link href={'/footer/ourTeam'}>
-                          <Tab classes={{root: classes.navbarTabRoot}}
-                               label={NAVBAR_MENU.ourTeam}/>
-                        </Link>
+                        { user ?
+                          user.is_alfred ?
+                            <Link href={`/profile/services?user=${user._id}&indexAccount=1`}>
+                              <Tab classes={{root: classes.navbarTabRoot}}
+                                   label={NAVBAR_MENU.myServices}/>
+                            </Link>
+                            :
+                            <Link href={'/creaShop/creaShop'}>
+                              <Tab classes={{root: classes.navbarTabRoot}}
+                                   label={NAVBAR_MENU.registerServices}/>
+                            </Link>
+                          :
+                          <Link onClick={this.handleOpenRegister}>
+                            <Tab classes={{root: classes.navbarTabRoot}}
+                                 label={NAVBAR_MENU.registerServices}/>
+                          </Link>
+                        }
                         <Link href={'/footer/contact'}>
                           <Tab classes={{root: classes.navbarTabRoot}}
                                label={NAVBAR_MENU.contactUs}/>
@@ -690,12 +702,14 @@ class NavBar extends Component {
                             <Link href={'/account/notifications'}>
                               <MenuItem>Mes paramètres</MenuItem>
                             </Link>
-                            {user.is_alfred ?
-                              <Link href={`/shop?id_alfred=${user._id}`}>
-                                <MenuItem>Ma boutique</MenuItem>
+                            { user.is_alfred ?
+                              <Link href={`/profile/services?user=${user._id}&indexAccount=1`}>
+                                <MenuItem>Mes services</MenuItem>
                               </Link>
                               :
-                              null
+                              <Link href={`/creaShop/creaShop`}>
+                                <MenuItem>Proposer mes services</MenuItem>
+                              </Link>
                             }
                             <Link href={`/profile/messages?user=${user._id}`}>
                               <MenuItem>Mes messages</MenuItem>
@@ -708,7 +722,7 @@ class NavBar extends Component {
                                 <MenuItem>Dashboard</MenuItem>
                               </Link> : null
                             }
-                            <MenuItem onClick={() => this.logout2()}>Logout</MenuItem>
+                            <MenuItem onClick={this.logout}>Déconnexion</MenuItem>
                           </Grid>
                           :
                           null
