@@ -15,14 +15,17 @@ class OurCommunity extends React.Component {
             <Fragment>
                 <Header/>
                 <Grid className={layoutStyle.navbarTopContainer}>
-                    <Grid style={{padding: '0 300px', marginBottom:'100px'}}>
+                    <Grid style={{display: 'flex', flexDirection: 'column', margin: '0 auto', width: '60%'}}>
                         <h2>Un monde où il fait bon vivre</h2>
-                        <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor
-                            incididunt ut
-                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                            exercitation
-                            ullamco</p>
+                        <p>Chez My Alfred, notre communauté est au coeur de nos préoccupations. Notre priorité est de
+                            créer un espace où il fait bon vivre dans lequel chacun puisse trouver sa place. Ici, le
+                            racisme, l’homophobie, le sexisme ou toute autre forme de discrimination n’est pas toléré.
+                        </p>
+                        <p>Nous croyons que le silence n’est pas une option et que nous devons faire front. Ensemble,
+                            nous pouvons nous éduquer et apprendre. Nous pouvons amplifier les voix de ceux qui
+                            subissent ces injustices et provoquer un vrai changement.
+                        </p>
+                        <p>My Alfred soutient les femmes, les personnes de couleur et la communauté LGBTQ+.</p>
                     </Grid>
                 </Grid>
                 <Footer/>
