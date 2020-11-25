@@ -632,15 +632,13 @@ class NavBar extends Component {
         <Register callLogin={this.handleOpenLogin} sendParentData={this.getData}/>
       );
     };
-    
+
     return (
       <Grid className={this.state.ifHomePage ? classes.navbarMainSytle : classes.navbarMainSytleP}>
-        <AppBar position={'static'}
-                className={this.state.ifHomePage ? classes.navbarAppBar : classes.navbarAppBarP}>
+        <AppBar position={'static'} className={this.state.ifHomePage ? classes.navbarAppBar : classes.navbarAppBarP}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Hidden only={['xs']}>
-              <Grid
-                className={this.state.ifHomePage ? classes.navbarTopContainer : classes.navbarTopContainerP}>
+              <Grid className={this.state.ifHomePage ? classes.navbarTopContainer : classes.navbarTopContainerP}>
                 <Grid className={classes.navbarLogoContainer}>
                   <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'} width={102} height={64} style={{filter: 'invert(1)'}}/>
                 </Grid>
