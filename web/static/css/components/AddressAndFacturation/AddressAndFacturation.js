@@ -10,6 +10,14 @@ export default theme => ({
     },
 
   },
+
+  addressAndFactContainer:{
+    width: '90%',
+    marginBottom: '10vh',
+    [theme.breakpoints.down('md')]:{
+      marginBottom: '15vh'
+    }
+  },
   addressAndFactuMainContainer:{
     display: 'flex',
     flexDirection: 'column',

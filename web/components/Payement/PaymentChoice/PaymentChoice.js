@@ -35,7 +35,7 @@ class PaymentChoice extends React.Component{
 
     return(
       <Grid container style={{width: '90%',  marginBottom: '10vh'}}>
-        <Grid item xl={7} xs={12} sm={12}>
+        <Grid item xl={7} lg={7} md={7} xs={12} sm={12}>
           <Grid className={classes.paymenChoiceMainContainer}>
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingRight: '10%', paddingTop: '5%', paddingBottom: '5%', position: 'relative'}}>
               <Topic
@@ -65,7 +65,7 @@ class PaymentChoice extends React.Component{
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xl={5} xs={12} sm={12} className={classes.paymentChoiceSecondContainer}>
+        <Grid item xl={5} lg={5} md={5} xs={12} sm={12} className={classes.paymentChoiceSecondContainer}>
           <Grid  style={{
             display: 'flex',
             flexDirection: 'column',
