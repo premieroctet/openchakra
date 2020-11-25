@@ -639,12 +639,12 @@ class NavBar extends Component {
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Hidden only={['xs']}>
               <Grid className={this.state.ifHomePage ? classes.navbarTopContainer : classes.navbarTopContainerP}>
-                <Grid className={classes.navbarLogoContainer}>
+                <Grid className={ifHomePage ? classes.navbarLogoContainer : classes.navbarLogoContainerP } onClick={() => Router.push('/')}>
                   <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'} width={102} height={64} style={{filter: 'invert(1)'}}/>
                 </Grid>
                 {
                   ifHomePage ?
-                    <Grid className={classes.navabarHomepageMenu}>
+                    <Grid className={ifHomePage ? classes.navabarHomepageMenu : classes.navabarHomepageMenuP}>
                       <Tabs value={false} aria-label="simple tabs example">
                         <Link href={'/search?search=1'}>
                           <Tab classes={{root: classes.navbarTabRoot}}
@@ -676,7 +676,7 @@ class NavBar extends Component {
                 }
                 {
                   logged === true ?
-                    <Grid className={classes.navbarMenuBurgerContainer}>
+                    <Grid className={ifHomePage ? classes.navbarMenuBurgerContainer : classes.navbarMenuBurgerContainerP}>
                       <IconButton
                         aria-label="open drawer"
                         onClick={this.handleOpenMenuItem}
@@ -728,7 +728,7 @@ class NavBar extends Component {
                       </Menu>
                     </Grid>
                     :
-                    <Grid className={classes.navbarButtonContainer}>
+                    <Grid className={ifHomePage ? classes.navbarButtonContainer : classes.navbarButtonContainerP}>
                       <Grid>
                         <Button className={classes.navBarlogIn}
                                 onClick={this.handleOpenLogin}>{NAVBAR_MENU.logIn}</Button>

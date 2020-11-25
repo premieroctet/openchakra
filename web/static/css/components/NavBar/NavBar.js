@@ -180,10 +180,14 @@ export default theme => ({
 
   navbarLogoContainer:{
     width: '20%',
+    cursor: 'pointer',
     [theme.breakpoints.down('md')]:{
       width: '10%'
     }
-
+  },
+  navbarLogoContainerP:{
+    width: '100%',
+    cursor: 'pointer',
   },
   navabarHomepageMenu:{
     width: '70%',
@@ -193,6 +197,10 @@ export default theme => ({
       width: '80%'
     }
   },
+  navabarHomepageMenuP:{
+    width: '100%',
+
+  },
   navbarMenuBurgerContainer:{
     width: '20%',
     display: 'flex',
@@ -200,6 +208,12 @@ export default theme => ({
     [theme.breakpoints.down('md')]:{
       width: '10%'
     }
+  },
+
+  navbarMenuBurgerContainerP:{
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row-reverse',
   },
 
   navbarTabRoot:{
