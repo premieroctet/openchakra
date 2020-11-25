@@ -31,7 +31,7 @@ export default theme => ({
     },
   },
   imageContentHeader: {
-    width: '10%',
+    width: '5%',
     margin: 'auto',
     [theme.breakpoints.down('md')]: {
       width: '20%',
@@ -41,7 +41,7 @@ export default theme => ({
     },
   },
   contentStepper: {
-    width: '90%',
+    width: '95%',
     display: 'flex',
     justifyContent: 'center',
     [theme.breakpoints.down('md')]: {
@@ -78,6 +78,7 @@ export default theme => ({
     height: '100%',
     display: 'block',
     backgroundRepeat: 'no-repeat',
+    position: 'sticky',
 
   },
   footerMainContainer: {

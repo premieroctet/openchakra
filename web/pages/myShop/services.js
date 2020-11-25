@@ -332,7 +332,7 @@ class services extends React.Component {
         <Grid className={classes.mainHeader}>
           <Grid className={classes.imageContentHeader}>
             <Link href={'/'}>
-              <img src={'../../../static/logo_final_My-Alfred.svg'} style={{cursor: 'pointer'}} alt={'Logo Bleu'}/>
+              <img src={'../../../static/assets/icon/logo.svg'} style={{cursor: 'pointer'}} width={102} height={64} alt={'logo'} title={'logo'}/>
             </Link>
           </Grid>
           <Grid className={classes.contentStepper}>
