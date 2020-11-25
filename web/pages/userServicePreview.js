@@ -191,9 +191,14 @@ class UserServicesPreview extends React.Component {
                 this.setDefaultLocation();
               }
             });
-            this.state.allEquipments.map( res => {
-              axios.get(`/myAlfred/api/equipment/${res}`).then( res => {let data = res.data ; this.setState({allDetailEquipments: [...this.state.allDetailEquipments, data]})}).catch( err => {console.error(err)});
-            });
+            const equipmentsPromise=this.state.allEquipments.map( res => axios.get(`/myAlfred/api/equipment/${res}`))
+            Promise.all(equipmentsPromise)
+              .then( res => {
+                this.setState({allDetailEquipments: res.map( r => r.data)})
+              })
+              .catch( err => {
+                console.error(err)
+              })
           });
       })
       .catch(err => console.error(err));
