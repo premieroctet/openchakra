@@ -15,43 +15,27 @@ class Apropos extends React.Component {
             <Fragment>
                 <Header/>
                 <Grid className={layoutStyle.navbarTopContainer}>
-                    <Grid style={{padding: '0 300px', marginBottom:'100px'}}>
+                    <Grid style={{display: 'flex', flexDirection: 'column', margin: '0 auto', width: '60%'}}>
                         <Grid>
                             <h2>Fondé en 2019</h2>
-                            <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                tempor
-                                incididunt ut
-                                labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                exercitation
-                                ullamco
-                                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                                in
-                                reprehenderit
-                                in
-                                voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-                                sint
-                                occaecat
-                                cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
-                                id est
-                                laborum."</p>
+                            <p>My Alfred est né de l’envie de nous simplifier la vie. Nous voulions répondre à une
+                                question simple : Comment gagnez du temps ? Aujourd’hui, nous sommes heureux de répondre
+                                à une multitude de problématiques. En créant une plateforme d’économie collaborative,
+                                nous voulons simplifiez votre quotidien mais nous espérons aussi rapprocher les
+                                générations, développer l’entrepreunariat, contribuer au développement des compétences
+                                de chacun et créer une communauté où il fait bon vivre.</p>
                         </Grid>
                         <Grid>
 
                             <h2>Notre mission</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                tempor
-                                incididunt
-                                ut
-                                labore et dolore magna aliqua.</p>
+                            <p>Notre mission est de créer un lieu de rencontres et d’opportunités, où trouver la bonne
+                                personne n’est plus un problème.</p>
                         </Grid>
                         <Grid>
-
                             <h2>Notre vision</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                tempor
-                                incididunt
-                                ut
-                                labore et dolore magna aliqua.</p>
+                            <p>Nous aimerions que My Alfred puisse vous accompagner au quotidien. Notre communauté est
+                                au coeur de ce que nous faisons et nous souhaitons créez un espace où règne la confiance
+                                et la simplicité. </p>
                         </Grid>
                     </Grid>
                 </Grid>
