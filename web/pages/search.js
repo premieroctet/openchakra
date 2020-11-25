@@ -143,6 +143,9 @@ class SearchPage extends React.Component {
     if ('prestation' in this.props) {
       st['prestation'] = this.props.prestation;
     }
+    if ('selectedAddress' in this.props) {
+      st['selectedAddress'] = this.props.selectedAddress;
+    }
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
 
     axios.get('/myAlfred/api/category/all/sort')
@@ -485,12 +488,12 @@ class SearchPage extends React.Component {
 
   render() {
     const {classes, indexCat} = this.props;
-    const {user, gps, selectedAddress} = this.state;
+    const {user, gps, selectedAddress, keyword} = this.state;
 
     return (
       <React.Fragment>
         <Hidden only={['xs']}>
-          <Layout user={user} selectedAddress={selectedAddress} gps={gps} indexCat={indexCat}>
+          <Layout key={selectedAddress||gps||indexCat||keyword} user={user} keyword={keyword} selectedAddress={selectedAddress} gps={gps} indexCat={indexCat}>
             {this.content(classes)}
           </Layout>
         </Hidden>

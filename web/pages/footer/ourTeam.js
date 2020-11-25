@@ -15,8 +15,9 @@ class OurTeam extends React.Component {
             <Fragment>
                 <Header/>
                 <Grid className={layoutStyle.navbarTopContainer}>
-                    <Grid style={{padding: '0 300px', marginBottom: '100px'}}>
+                    <Grid style={{display: 'flex', flexDirection: 'column', margin: '0 auto', width: '60%'}}>
                         <h2>Notre équipe</h2>
+                        <p>Coming soon !</p>
                     </Grid>
                 </Grid>
                 <Footer/>

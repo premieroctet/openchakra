@@ -21,35 +21,35 @@ const ID_CARD_CONFIRM_DELETION = 'Supprimer votre pièce d\'identité ?';
 const REGISTRATION_PROOF_CONFIRM_DELETION = 'Supprimer votre document d\'immatriculation ?';
 
 const MANGOPAY_MESSAGES = {
-  'DOCUMENT_UNREADABLE': 'Pièce d\'identité illisible',
-  'DOCUMENT_NOT_ACCEPTED': 'Pièce d\'identité invalide : carte d\'identité, passeport, permis de conduire ou titre de séjour attendu',
-  'DOCUMENT_HAS_EXPIRED': 'Pièce d\'identité expirée',
-  'DOCUMENT_INCOMPLETE': 'Pièce d\'identité incomplète ou illisible',
-  'DOCUMENT_DO_NOT_MATCH_USER_DATA': 'Pièce d\'identité ne correspond pas à l\'identité que vous avez indiquée',
-  'DOCUMENT_DO_NOT_MATCH_ACCOUNT_DATA': 'Pièce d\'identité ne correspond pas à vops coordonnées bancaires',
-  'DOCUMENT_FALSIFIED': 'Pièce d\'identité falsifié',
-  'DOCUMENT_MISSING': 'Pièce d\'identité vide',
-  'UNDERAGE_PERSON': 'Vous devez avoir au minimum 18 ans',
-  [KycDocumentStatus.Created]: 'Pièce d\'identité enregistrée, en attente de validation',
-  [KycDocumentStatus.ValidationAsked]: 'Pièce d\'identité en cours de validation',
-  [KycDocumentStatus.Validated]: 'Pièce d\'identité valide',
-  [KycDocumentStatus.Refused]: 'Pièce d\'identité refusée, merci d\'en fournir une valide',
+    'DOCUMENT_UNREADABLE': 'Pièce d\'identité illisible',
+    'DOCUMENT_NOT_ACCEPTED': 'Pièce d\'identité invalide : carte d\'identité, passeport, permis de conduire ou titre de séjour attendu',
+    'DOCUMENT_HAS_EXPIRED': 'Pièce d\'identité expirée',
+    'DOCUMENT_INCOMPLETE': 'Pièce d\'identité incomplète ou illisible',
+    'DOCUMENT_DO_NOT_MATCH_USER_DATA': 'Pièce d\'identité ne correspond pas à l\'identité que vous avez indiquée',
+    'DOCUMENT_DO_NOT_MATCH_ACCOUNT_DATA': 'Pièce d\'identité ne correspond pas à vops coordonnées bancaires',
+    'DOCUMENT_FALSIFIED': 'Pièce d\'identité falsifié',
+    'DOCUMENT_MISSING': 'Pièce d\'identité vide',
+    'UNDERAGE_PERSON': 'Vous devez avoir au minimum 18 ans',
+    [KycDocumentStatus.Created]: 'Pièce d\'identité enregistrée, en attente de validation',
+    [KycDocumentStatus.ValidationAsked]: 'Pièce d\'identité en cours de validation',
+    [KycDocumentStatus.Validated]: 'Pièce d\'identité valide',
+    [KycDocumentStatus.Refused]: 'Pièce d\'identité refusée, merci d\'en fournir une valide',
 };
 
-const INFOBAR_MESSAGE ={
-  message: 'Renseignez-vous sur les restrictions COVID 19 avant de réserver.',
-  showMore: 'En savoir plus'
-} ;
+const INFOBAR_MESSAGE = {
+    message: 'Renseignez-vous sur les restrictions COVID 19 avant de réserver.',
+    showMore: 'En savoir plus'
+};
 
 const SHOWMORE = 'En savoir plus';
 
 const SEARCHBAR = {
-  what: 'Quel service ?',
-  where: 'Où ?',
-  when: 'Quand ?',
-  labelWhere: 'L\'adresse',
-  labelWhat: 'Le service',
-  labelWhen: 'Les dates'
+    what: 'Quel service ?',
+    where: 'Où ?',
+    when: 'Quand ?',
+    labelWhere: 'L\'adresse',
+    labelWhat: 'Le service',
+    labelWhen: 'Les dates'
 };
 
 const NAVBAR_MENU = {
@@ -65,63 +65,69 @@ const NAVBAR_MENU = {
 };
 
 const BANNER_PRESENTATION = {
-  title: 'Et si vous pouviez réserver n\'importe quel service ?',
-  text: 'Stressez moins. En quelques clics, trouver la personne et le service dont vous avez besoin.',
-  button: 'Découvrir'
+    title: 'Et si vous pouviez réserver n\'importe quel service ?',
+    text: 'Stressez moins. En quelques clics, trouver la personne et le service dont vous avez besoin.',
+    button: 'Découvrir'
 };
 
 const CATEGORY = {
-  title: 'Catégories',
-  text: 'Des milliers de services à découvrir',
-  button: 'Tout découvrir'
+    title: 'Catégories',
+    text: 'Des milliers de services à découvrir',
+    button: 'Tout découvrir'
 };
 
 const BECOME_ALFRED = {
-  title: 'Devenir Alfred',
-  text: 'Créez votre compte et proposez vos services',
-  button: 'En savoir plus'
+    title: 'Devenir Alfred',
+    text: 'Créez votre compte et proposez vos services',
+    button: 'En savoir plus'
+};
+
+const RESA_SERVICE = {
+    title: 'Réserver un service',
+    text: 'Créez votre compte et proposez un service',
+    button: 'C\'est parti !'
 };
 
 const HOW_IT_WORKS = {
-  leftText : 'En quelques clics,\n' +
-    'réserver le service et la\n' +
-    'personne dont vous avez besoin.\n' +
-    '#MyAlfred.',
-  rightText: 'Vous pouvez consulter des centaines de profils, choisir votre Alfred, réservez et payez en ligne votre service. Notre équipe vous accompagne à chaque étape !'
+    leftText: 'En quelques clics,\n' +
+        'réserver le service et la\n' +
+        'personne dont vous avez besoin.\n' +
+        '#MyAlfred.',
+    rightText: 'Vous pouvez consulter des centaines de profils, choisir votre Alfred, réservez et payez en ligne votre service. Notre équipe vous accompagne à chaque étape !'
 };
 
 const NEWS_LETTER = {
-  title: 'Profitez des bon plans de la communauté avec la Newsletter des Alfred',
-  text: 'Inscrivez-vous gratuitement à notre super Newsletter pour recevoir les informations et les bons plans de la communauté.',
-  google: 'S\'inscrire avec Google',
-  where: 'ou',
-  email: 'Email',
-  button: 'Je m\'inscris !'
+    title: 'Profitez des bon plans de la communauté avec la Newsletter des Alfred',
+    text: 'Inscrivez-vous gratuitement à notre super Newsletter pour recevoir les informations et les bons plans de la communauté.',
+    google: 'S\'inscrire avec Google',
+    where: 'ou',
+    email: 'Email',
+    button: 'Je m\'inscris !'
 };
 
 const CMP_PRESENTATION = {
-  placeholder: 'Ici, parlez-nous de vous, de votre personnalité, de vos passions ou encore de votre parcours. Soyez vous-même et montrez-nous votre personnalité !'
+    placeholder: 'Ici, parlez-nous de vous, de votre personnalité, de vos passions ou encore de votre parcours. Soyez vous-même et montrez-nous votre personnalité !'
 }
 const getMangopayMessage = msg_id => {
-  if (!msg_id) {
-    return null;
-  }
-  return MANGOPAY_MESSAGES[msg_id] || `Erreur inconnue:${msg_id}`;
+    if (!msg_id) {
+        return null;
+    }
+    return MANGOPAY_MESSAGES[msg_id] || `Erreur inconnue:${msg_id}`;
 };
 
-const SHOP={
-  addService: 'Ajoutez des services',
-  createShop: 'Proposez votre premier service'
+const SHOP = {
+    addService: 'Ajoutez des services',
+    createShop: 'Proposez votre premier service'
 }
 
-const BOOKING={
-  MSG_EVALUATE: 'Vous avez 15 jours pour évaluer votre client. Une fois que votre client aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !'
+const BOOKING = {
+    MSG_EVALUATE: 'Vous avez 15 jours pour évaluer votre client. Une fois que votre client aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !'
 }
 
 module.exports = {
-  CESU_NOTICE, OUTSIDE_PERIMETER, SCHEDULE_TITLE, SCHEDULE_SUBTITLE,
-  getMangopayMessage, SHOP_CREATION_SUCCESSFUL, ID_CARD_CONFIRM_DELETION,
-  REGISTRATION_PROOF_CONFIRM_DELETION, INFOBAR_MESSAGE, SHOWMORE, SEARCHBAR,BANNER_PRESENTATION,
-  CATEGORY, BECOME_ALFRED, HOW_IT_WORKS, NEWS_LETTER, NAVBAR_MENU,
-  SHOP, CMP_PRESENTATION, BOOKING
+    CESU_NOTICE, OUTSIDE_PERIMETER, SCHEDULE_TITLE, SCHEDULE_SUBTITLE,
+    getMangopayMessage, SHOP_CREATION_SUCCESSFUL, ID_CARD_CONFIRM_DELETION,
+    REGISTRATION_PROOF_CONFIRM_DELETION, INFOBAR_MESSAGE, SHOWMORE, SEARCHBAR, BANNER_PRESENTATION,
+    CATEGORY, BECOME_ALFRED, RESA_SERVICE, HOW_IT_WORKS, NEWS_LETTER, NAVBAR_MENU,
+    SHOP, CMP_PRESENTATION, BOOKING
 };

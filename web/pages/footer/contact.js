@@ -2,7 +2,7 @@ import React, {Fragment} from 'react';
 import Grid from '@material-ui/core/Grid';
 import Header from "../../hoc/Layout/About/Header";
 import Footer from "../../hoc/Layout/About/Footer";
-import Link from 'next/link';
+import Link from '../../components/Link/Link'
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';

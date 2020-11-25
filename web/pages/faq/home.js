@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import Grid from "@material-ui/core/Grid";
 import HeaderFaq from "../../hoc/Layout/Faq/HeaderFaq";
+import Header from "../../hoc/Layout/About/Header";
 import Footer from "../../hoc/Layout/About/Footer";
 import {withStyles} from "@material-ui/core/styles";
 import Link from '../../components/Link/Link';
@@ -47,7 +48,8 @@ class Home extends React.Component {
         const {classes} = this.props;
         return (
             <Fragment>
-                <HeaderFaq/>
+
+                <Header></Header>
                 <Grid className={classes.menuContainer}>
                     <Grid style={{paddingRight: '25px'}}>
                         <Link href={'/faq/addService'}>
