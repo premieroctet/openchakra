@@ -55,7 +55,7 @@ const DialogTitle = withStyles(styles)((props) => {
       <Typography variant="h6">{children}</Typography>
       {onClose ? (
         <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
-          <CloseIcon/>
+                    <CloseIcon/>
         </IconButton>
       ) : null}
     </MuiDialogTitle>
@@ -99,8 +99,19 @@ class NavBar extends Component {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get('/myAlfred/api/users/current')
       .then(res => {
-                this.setState({user: res.data})
+        var allAddresses={'main':res.data.billing_address}
+        res.data.service_address.forEach( addr => {
+          allAddresses[addr._id]=addr
+        });
+
+        this.setState({
+          user: res.data,
+          allAddresses: allAddresses
+        })
       }).catch(err => console.error(err))
+
+    this.setState({selectedAddress: this.props.selectedAddress || 'main'})
+    this.setState({keyword: this.props.keyword || ''})
   }
 
   logout = () => {
@@ -188,8 +199,8 @@ class NavBar extends Component {
       queryParams['gps'] = JSON.stringify(this.state.gps);
     }
 
-    if (this.props.selectedAddress) {
-      queryParams['selectedAddress'] = this.props.selectedAddress;
+    if (this.state.selectedAddress) {
+      queryParams['selectedAddress'] = this.state.selectedAddress
     }
     Router.push({pathname: '/search', query: queryParams});
   };
@@ -199,7 +210,7 @@ class NavBar extends Component {
   };
 
   statusFilterChanged = event => {
-    this.setState({[event.target.name]: event.target.checked, modalFilters: false}, () => this.props.filter());
+        this.setState({[event.target.name]: event.target.checked, modalFilters: false}, () => this.props.filter());
   };
 
   onChangeInterval(startDate, endDate) {
@@ -214,19 +225,19 @@ class NavBar extends Component {
     this.setState({startDate: startDate, endDate: endDate});
   }
 
-  handleModalSearchBarInput = () => {
+    handleModalSearchBarInput = () => {
     this.setState({modalMobileSearchBarInput: true})
   };
 
-  mobileSearchBarInput = (classes) => {
-    return (
-      <Grid
-        className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}
-        onClick={this.handleModalSearchBarInput}>
+    mobileSearchBarInput = (classes) => {
+        return (
+            <Grid
+                className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}
+                onClick={this.handleModalSearchBarInput}>
         <Paper classes={{root: this.state.ifHomePage ? classes.navbarSearch : classes.navbarSearchP}}>
           <Grid>
             <IconButton classes={{root: classes.iconButton}} aria-label="search">
-              <SearchIcon/>
+                            <SearchIcon/>
             </IconButton>
           </Grid>
           <Grid style={{marginLeft: '2vh'}}>
@@ -237,42 +248,42 @@ class NavBar extends Component {
     )
   };
 
-  mobileSearchBarInputSearchPage = (classes) => {
-    return (
+    mobileSearchBarInputSearchPage = (classes) => {
+        return (
       <Grid className={classes.navbarSearchContainerSearchPage}>
         <Paper classes={{root: classes.navbarSearch}}>
           <Grid>
-            <IconButton classes={{root: classes.iconButton}} aria-label="search"
-                        onClick={this.handleModalSearchBarInput}>
-              <SearchIcon/>
+                        <IconButton classes={{root: classes.iconButton}} aria-label="search"
+                                    onClick={this.handleModalSearchBarInput}>
+                            <SearchIcon/>
             </IconButton>
           </Grid>
-          <Grid style={{
-            marginLeft: '2vh',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            cursor: 'pointer'
-          }} onClick={this.handleModalSearchBarInput}>
-            <Typography style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}}>Commencez
-              votre recherche</Typography>
+                    <Grid style={{
+                        marginLeft: '2vh',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        cursor: 'pointer'
+                    }} onClick={this.handleModalSearchBarInput}>
+                        <Typography style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}}>Commencez
+                            votre recherche</Typography>
           </Grid>
           <Grid style={{height: 30}}>
-            <Divider style={{width: 2}} orientation="vertical"/>
+                        <Divider style={{width: 2}} orientation="vertical"/>
           </Grid>
-          <IconButton color="primary" aria-label="directions"
-                      onClick={() => this.setState({modalFilters: true})}>
-            <TuneIcon/>
+                    <IconButton color="primary" aria-label="directions"
+                                onClick={() => this.setState({modalFilters: true})}>
+                        <TuneIcon/>
           </IconButton>
         </Paper>
       </Grid>
     )
   };
 
-  modalMobileFilter = (classes) => {
-    return (
-      <Dialog onClose={() => this.setState({modalFilters: false})} aria-labelledby="customized-dialog-title"
-              open={this.state.modalFilters} classes={{paper: classes.dialogNavbarMobileFilter}}>
+    modalMobileFilter = (classes) => {
+        return (
+            <Dialog onClose={() => this.setState({modalFilters: false})} aria-labelledby="customized-dialog-title"
+                    open={this.state.modalFilters} classes={{paper: classes.dialogNavbarMobileFilter}}>
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({modalFilters: false})}>
           Filtres
         </DialogTitle>
@@ -334,8 +345,8 @@ class NavBar extends Component {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={() => this.setState({modalFilters: false}, () => this.props.filter())}
-                  color="primary">
+                    <Button autoFocus onClick={() => this.setState({modalFilters: false}, () => this.props.filter())}
+                            color="primary">
             Afficher les résultats
           </Button>
         </DialogActions>
@@ -343,32 +354,32 @@ class NavBar extends Component {
     )
   };
 
-  modalMobileSearchBarInput = (classes) => {
-    return (
+    modalMobileSearchBarInput = (classes) => {
+        return (
       <SwipeableDrawer
         anchor={'bottom'}
         open={this.state.modalMobileSearchBarInput}
-        onOpen={() => this.setState({modalMobileSearchBarInput: true})}
-        onClose={() => this.setState({
-          modalMobileSearchBarInput: false,
-          mobileStepSearch: 0,
-          keyword: null,
-          city: undefined,
-          gps: ''
-        })}
+                onOpen={() => this.setState({modalMobileSearchBarInput: true})}
+                onClose={() => this.setState({
+                    modalMobileSearchBarInput: false,
+                    mobileStepSearch: 0,
+                    keyword: null,
+                    city: undefined,
+                    gps: ''
+                })}
         className={classes.drawerStyle}
       >
         <Grid container style={{height: '100%'}}>
           <Grid item style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
             <Grid>
-              <IconButton aria-label="delete" onClick={() => this.setState({
-                modalMobileSearchBarInput: false,
-                mobileStepSearch: 0,
-                keyword: null,
-                city: undefined,
-                gps: ''
-              })}>
-                <ClearIcon/>
+                            <IconButton aria-label="delete" onClick={() => this.setState({
+                                modalMobileSearchBarInput: false,
+                                mobileStepSearch: 0,
+                                keyword: null,
+                                city: undefined,
+                                gps: ''
+                            })}>
+                                <ClearIcon/>
               </IconButton>
             </Grid>
             <Grid>
@@ -424,44 +435,44 @@ class NavBar extends Component {
                       </FormControl>
                     </Grid>
                     :
-                      <TextField
-                        item
-                        xs={12}
-                        classes={{root: classes.modalMobileSearchBartTextFieldWhereP}}
-                        value={this.state.city}
-                        label={SEARCHBAR.where}
-                        variant={'outlined'}
-                        InputProps={{
-                          inputComponent: (inputRef) => {
-                            return (
-                              <AlgoliaPlaces
-                                {...inputRef}
-                                placeholder={''}
-                                className={classes.navbarAlgoliaPlace}
-                                options={{
-                                  appId: 'plKATRG826CP',
-                                  apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                                  language: 'fr',
-                                  countries: ['fr'],
-                                  type: 'city',
-                                }}
-                                onChange={(suggestion) => this.onChangeCity(suggestion)}
-                                onClear={() => this.setState({city: '', gps: ''})}
+                  <TextField
+                    item
+                    xs={12}
+                    classes={{root: classes.modalMobileSearchBartTextFieldWhereP}}
+                    value={this.state.city}
+                    label={SEARCHBAR.where}
+                    variant={'outlined'}
+                    InputProps={{
+                                            inputComponent: (inputRef) => {
+                        return (
+                          <AlgoliaPlaces
+                            {...inputRef}
+                            placeholder={''}
+                            className={classes.navbarAlgoliaPlace}
+                            options={{
+                              appId: 'plKATRG826CP',
+                              apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                              language: 'fr',
+                              countries: ['fr'],
+                              type: 'city',
+                            }}
+                            onChange={(suggestion) => this.onChangeCity(suggestion)}
+                            onClear={() => this.setState({city: '', gps: ''})}
 
-                              />)
-                          },
-                          disableUnderline: true
-                        }}
-                      />
-              }
+                          />)
+                      },
+                      disableUnderline: true
+                    }}
+                  />
+                }
             </Grid>
           </Grid>
-          <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+                    <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
             <Grid style={{width: '90%'}}>
-              <Button
-                onClick={() => this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) : this.findService()}
-                color={'primary'} classes={{root: classes.buttonNextRoot}}
-                variant={'contained'}>{this.state.mobileStepSearch === 0 ? 'Suivant' : 'Rechercher'}</Button>
+                            <Button
+                                onClick={() => this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) : this.findService()}
+                                color={'primary'} classes={{root: classes.buttonNextRoot}}
+                                variant={'contained'}>{this.state.mobileStepSearch === 0 ? 'Suivant' : 'Rechercher'}</Button>
             </Grid>
           </Grid>
         </Grid>
@@ -470,9 +481,9 @@ class NavBar extends Component {
   };
 
   searchBarInput = (classes) => {
-    return (
-      <Grid
-        className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
+        return (
+            <Grid
+                className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
         <Paper classes={{root: this.state.ifHomePage ? classes.navbarSearch : classes.navbarSearchP}}>
           <Grid className={classes.navbarTextFieldService}>
             <TextField
@@ -493,7 +504,7 @@ class NavBar extends Component {
             />
           </Grid>
           <Grid>
-            <Divider className={classes.divider} orientation="vertical"/>
+                        <Divider className={classes.divider} orientation="vertical"/>
           </Grid>
           {this.state.user ?
             <Grid className={classes.navbarAddressContainer}>
@@ -506,7 +517,7 @@ class NavBar extends Component {
                 <Select
                   disableUnderline
                   id="outlined-select-currency"
-                  value={this.props.selectedAddress ? this.props.selectedAddress : 'main'}
+                  value={this.state.selectedAddress || 'main'}
                   name={'selectedAddress'}
                   onChange={(e) => {
                     this.onChange(e);
@@ -534,14 +545,11 @@ class NavBar extends Component {
               </FormControl>
             </Grid>
             :
-            <Grid
-              className={this.state.ifHomePage ? classes.navbarAlgoliaContent : classes.navbarAlgoliaContentP}>
+            <Grid className={this.state.ifHomePage ? classes.navbarAlgoliaContent : classes.navbarAlgoliaContentP}>
               <TextField
                 label={this.state.ifHomePage ? SEARCHBAR.labelWhere : false}
                 classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhere : classes.navbarRootTextFieldWhereP}}
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                InputLabelProps={{ shrink: true }}
                 value={this.state.city}
                 InputProps={{
                   inputComponent: (inputRef) => {
@@ -570,10 +578,10 @@ class NavBar extends Component {
             this.state.logged === false ?
               <Grid className={classes.navbarDatePickerMain}>
                 <Grid>
-                  <Divider className={classes.divider} orientation="vertical"/>
+                                    <Divider className={classes.divider} orientation="vertical"/>
                 </Grid>
-                <Grid
-                  className={this.state.ifHomePage ? classes.navbarDatePickerContainer : classes.navbarDatePickerContainerP}>
+                                <Grid
+                                    className={this.state.ifHomePage ? classes.navbarDatePickerContainer : classes.navbarDatePickerContainerP}>
                   <TextField
                     label={this.state.ifHomePage ? SEARCHBAR.labelWhen : false}
                     classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhen : classes.navbarRootTextFieldWhenP}}
@@ -581,7 +589,7 @@ class NavBar extends Component {
                       shrink: true,
                     }}
                     InputProps={{
-                      inputComponent: (inputRef) => {
+                                            inputComponent: (inputRef) => {
                         return (
                           <DatePicker
                             {...inputRef}
@@ -607,9 +615,9 @@ class NavBar extends Component {
               </Grid> : null
           }
           <Grid>
-            <IconButton classes={{root: classes.iconButton}} aria-label="search"
-                        onClick={() => this.findService()}>
-              <SearchIcon/>
+                        <IconButton classes={{root: classes.iconButton}} aria-label="search"
+                                    onClick={() => this.findService()}>
+                            <SearchIcon/>
             </IconButton>
           </Grid>
         </Paper>
@@ -633,7 +641,7 @@ class NavBar extends Component {
       );
     };
 
-    return (
+        return (
       <Grid className={this.state.ifHomePage ? classes.navbarMainSytle : classes.navbarMainSytleP}>
         <AppBar position={'static'} className={this.state.ifHomePage ? classes.navbarAppBar : classes.navbarAppBarP}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
@@ -641,153 +649,153 @@ class NavBar extends Component {
               <Grid className={this.state.ifHomePage ? classes.navbarTopContainer : classes.navbarTopContainerP}>
                 <Grid className={ifHomePage ? classes.navbarLogoContainer : classes.navbarLogoContainerP } onClick={() => Router.push('/')}>
                   <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'} width={102} height={64} style={{filter: 'invert(1)'}}/>
-                </Grid>
-                {
-                  ifHomePage ?
+              </Grid>
+              {
+                ifHomePage ?
                     <Grid className={ifHomePage ? classes.navabarHomepageMenu : classes.navabarHomepageMenuP}>
-                      <Tabs value={false} aria-label="simple tabs example">
-                        <Link href={'/search?search=1'}>
+                    <Tabs value={false} aria-label="simple tabs example">
+                      <Link href={'/search?search=1'}>
                           <Tab classes={{root: classes.navbarTabRoot}}
                                label={NAVBAR_MENU.ourServices}/>
-                        </Link>
-                        { user ?
+                      </Link>
+                      { user ?
                           user.is_alfred ?
                             <Link href={`/profile/services?user=${user._id}&indexAccount=1`}>
-                              <Tab classes={{root: classes.navbarTabRoot}}
-                                   label={NAVBAR_MENU.myServices}/>
+                                <Tab classes={{root: classes.navbarTabRoot}}
+                                     label={NAVBAR_MENU.myServices}/>
                             </Link>
                             :
                             <Link href={'/creaShop/creaShop'}>
-                              <Tab classes={{root: classes.navbarTabRoot}}
-                                   label={NAVBAR_MENU.registerServices}/>
+                                <Tab classes={{root: classes.navbarTabRoot}}
+                                     label={NAVBAR_MENU.registerServices}/>
                             </Link>
-                          :
-                          <Link onClick={this.handleOpenRegister}>
+                        :
+                        <Link onClick={this.handleOpenRegister}>
                             <Tab classes={{root: classes.navbarTabRoot}}
                                  label={NAVBAR_MENU.registerServices}/>
-                          </Link>
-                        }
-                        <Link href={'/footer/contact'}>
+                        </Link>
+                      }
+                      <Link href={'/footer/contact'}>
                           <Tab classes={{root: classes.navbarTabRoot}}
                                label={NAVBAR_MENU.contactUs}/>
-                        </Link>
-                      </Tabs>
-                    </Grid> : this.searchBarInput(classes)
-                }
-                {
-                  logged === true ?
+                      </Link>
+                    </Tabs>
+                  </Grid> : this.searchBarInput(classes)
+              }
+              {
+                logged === true ?
                     <Grid className={ifHomePage ? classes.navbarMenuBurgerContainer : classes.navbarMenuBurgerContainerP}>
-                      <IconButton
-                        aria-label="open drawer"
-                        onClick={this.handleOpenMenuItem}
-                      >
-                        <MenuIcon classes={{color: 'white'}}/>
-                      </IconButton>
-                      <Menu
-                        anchorEl={anchorEl}
-                        keepMounted
-                        open={Boolean(anchorEl)}
-                        onClose={this.handleClosenMenuItem}
-                        getContentAnchorEl={null}
-                        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-                        transformOrigin={{vertical: 'top', horizontal: 'center'}}
-                      >
-                        {user ?
-                          <Grid>
-                            <Link href={`/profile/about?user=${user._id}`}>
-                              <MenuItem>Mon profil</MenuItem>
-                            </Link>
-                            <Link href={'/account/notifications'}>
-                              <MenuItem>Mes paramètres</MenuItem>
-                            </Link>
-                            { user.is_alfred ?
-                              <Link href={`/profile/services?user=${user._id}&indexAccount=1`}>
-                                <MenuItem>Mes services</MenuItem>
-                              </Link>
-                              :
-                              <Link href={`/creaShop/creaShop`}>
-                                <MenuItem>Proposer mes services</MenuItem>
-                              </Link>
-                            }
-                            <Link href={`/profile/messages?user=${user._id}`}>
-                              <MenuItem>Mes messages</MenuItem>
-                            </Link>
-                            <Link href={`/reservations/reservations`}>
-                              <MenuItem>Mes réservations</MenuItem>
-                            </Link>
-                            {user.is_admin ?
-                              <Link href={`/dashboard/home`}>
-                                <MenuItem>Dashboard</MenuItem>
-                              </Link> : null
-                            }
-                            <MenuItem onClick={this.logout}>Déconnexion</MenuItem>
-                          </Grid>
-                          :
-                          null
-                        }
-                      </Menu>
-                    </Grid>
-                    :
-                    <Grid className={ifHomePage ? classes.navbarButtonContainer : classes.navbarButtonContainerP}>
+                    <IconButton
+                      aria-label="open drawer"
+                      onClick={this.handleOpenMenuItem}
+                    >
+                                                <MenuIcon classes={{color: 'white'}}/>
+                    </IconButton>
+                    <Menu
+                      anchorEl={anchorEl}
+                      keepMounted
+                      open={Boolean(anchorEl)}
+                      onClose={this.handleClosenMenuItem}
+                      getContentAnchorEl={null}
+                      anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+                      transformOrigin={{vertical: 'top', horizontal: 'center'}}
+                    >
+                                                {user ?
                       <Grid>
-                        <Button className={classes.navBarlogIn}
-                                onClick={this.handleOpenLogin}>{NAVBAR_MENU.logIn}</Button>
-                        <Dialog
-                          scroll={'paper'}
-                          aria-labelledby="scroll-dialog-title"
-                          aria-describedby="scroll-dialog-description"
-                          className={classes.navbarModal}
-                          open={setOpenLogin}
-                          onClose={this.handleCloseLogin}
-                          TransitionComponent={Transition}
-                          classes={{paperWidthSm: classes.navbarPaperWidth}}
-                          disableBackdropClick={true}
-                          disableEscapeKeyDown={true}
-                        >
-                          <DialogTitle id="customized-dialog-title"
-                                       onClose={this.handleCloseLogin}/>
-                          <DialogContent classes={{root: classes.navbarWidthLoginContent}}>
-                            <div className={classes.navbarPaper}>
-                              {modalLogin()}
-                            </div>
-                          </DialogContent>
-                        </Dialog>
+                        <Link href={`/profile/about?user=${user._id}`}>
+                          <MenuItem>Mon profil</MenuItem>
+                        </Link>
+                        <Link href={'/account/notifications'}>
+                          <MenuItem>Mes paramètres</MenuItem>
+                        </Link>
+                        { user.is_alfred ?
+                          <Link href={`/profile/services?user=${user._id}&indexAccount=1`}>
+                            <MenuItem>Mes services</MenuItem>
+                          </Link>
+                          :
+                          <Link href={`/creaShop/creaShop`}>
+                            <MenuItem>Proposer mes services</MenuItem>
+                          </Link>
+                        }
+                        <Link href={`/profile/messages?user=${user._id}`}>
+                          <MenuItem>Mes messages</MenuItem>
+                        </Link>
+                        <Link href={`/reservations/reservations`}>
+                          <MenuItem>Mes réservations</MenuItem>
+                        </Link>
+                        {user.is_admin ?
+                          <Link href={`/dashboard/home`}>
+                            <MenuItem>Dashboard</MenuItem>
+                          </Link> : null
+                        }
+                        <MenuItem onClick={this.logout}>Déconnexion</MenuItem>
                       </Grid>
-                      <Grid className={classes.navbarRegisterContainer}>
-                        <Button variant="outlined" classes={{root: classes.navbarSignIn}}
-                                onClick={this.handleOpenRegister}>{NAVBAR_MENU.signIn}</Button>
-                        <Dialog
-                          scroll={'paper'}
-                          aria-labelledby="scroll-dialog-title"
-                          aria-describedby="scroll-dialog-description"
-                          className={classes.navbarModal}
-                          open={setOpenRegister}
-                          onClose={this.handleCloseRegister}
-                          TransitionComponent={Transition}
-                          disableBackdropClick={true}
-                          disableEscapeKeyDown={true}
-                        >
-                          <DialogTitle id="customized-dialog-title"
-                                       onClose={this.handleCloseRegister}/>
-                          <DialogContent dividers={false}
-                                         className={classes.navbarMuidialogContent}>
-                            <div className={classes.navbarPaper}>
-                              {modalRegister()}
-                            </div>
-                          </DialogContent>
-                        </Dialog>
-                      </Grid>
+                      :
+                      null
+                    }
+                    </Menu>
+                  </Grid>
+                  :
+                    <Grid className={ifHomePage ? classes.navbarButtonContainer : classes.navbarButtonContainerP}>
+                    <Grid>
+                                                <Button className={classes.navBarlogIn}
+                                                        onClick={this.handleOpenLogin}>{NAVBAR_MENU.logIn}</Button>
+                      <Dialog
+                        scroll={'paper'}
+                        aria-labelledby="scroll-dialog-title"
+                        aria-describedby="scroll-dialog-description"
+                        className={classes.navbarModal}
+                        open={setOpenLogin}
+                        onClose={this.handleCloseLogin}
+                        TransitionComponent={Transition}
+                        classes={{paperWidthSm: classes.navbarPaperWidth}}
+                        disableBackdropClick={true}
+                        disableEscapeKeyDown={true}
+                      >
+                                                    <DialogTitle id="customized-dialog-title"
+                                                                 onClose={this.handleCloseLogin}/>
+                        <DialogContent classes={{root: classes.navbarWidthLoginContent}}>
+                          <div className={classes.navbarPaper}>
+                            {modalLogin()}
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </Grid>
-                }
-              </Grid>
+                    <Grid className={classes.navbarRegisterContainer}>
+                                                <Button variant="outlined" classes={{root: classes.navbarSignIn}}
+                                                        onClick={this.handleOpenRegister}>{NAVBAR_MENU.signIn}</Button>
+                      <Dialog
+                        scroll={'paper'}
+                        aria-labelledby="scroll-dialog-title"
+                        aria-describedby="scroll-dialog-description"
+                        className={classes.navbarModal}
+                        open={setOpenRegister}
+                        onClose={this.handleCloseRegister}
+                        TransitionComponent={Transition}
+                        disableBackdropClick={true}
+                        disableEscapeKeyDown={true}
+                      >
+                                                    <DialogTitle id="customized-dialog-title"
+                                                                 onClose={this.handleCloseRegister}/>
+                                                    <DialogContent dividers={false}
+                                                                   className={classes.navbarMuidialogContent}>
+                          <div className={classes.navbarPaper}>
+                            {modalRegister()}
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </Grid>
+                  </Grid>
+              }
+            </Grid>
               {
                 ifHomePage ? this.searchBarInput(classes) : null
               }
-            </Hidden>
-            <Hidden only={['sm', 'md', 'lg', 'xl']}>
-              {ifHomePage ? this.mobileSearchBarInput(classes) : null}
-              {ifSearchPage ? this.mobileSearchBarInputSearchPage(classes) : null}
-            </Hidden>
+          </Hidden>
+          <Hidden only={['sm', 'md', 'lg', 'xl']}>
+            {ifHomePage ? this.mobileSearchBarInput(classes) : null}
+            {ifSearchPage ? this.mobileSearchBarInputSearchPage(classes) : null}
+          </Hidden>
           </Toolbar>
         </AppBar>
         {modalMobileSearchBarInput ? this.modalMobileSearchBarInput(classes) : null}

@@ -34,13 +34,13 @@ class Layout extends React.Component {
   }
 
   render() {
-    const {children, selectedAddress, classes, gps, indexCat} = this.props;
+    const {children, selectedAddress, classes, gps, indexCat, keyword} = this.props;
     const {logged, categories} = this.state;
 
     return (
       <Grid>
         <InfoBar/>
-        <NavBar selectedAddress={selectedAddress} logged={logged} key={this.logged}/>
+        <NavBar selectedAddress={selectedAddress} keyword={keyword} logged={logged} key={this.logged}/>
         <Grid>
           <Grid className={classes.layoutScrollMenu}>
             <ScrollMenu categories={categories} gps={gps} indexCat={indexCat} mode={false}/>
