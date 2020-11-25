@@ -535,7 +535,6 @@ class UserServicesPreview extends React.Component {
   };
 
   loadAlbums = () => {
-    console.log('bonjour')
     axios.get(`/myAlfred/api/users/profile/albums/${this.state.alfred._id}`)
       .then( res => {
         this.setState({ albums: res.data})
@@ -653,7 +652,7 @@ class UserServicesPreview extends React.Component {
                     />
                   </Topic>
                 </Grid>
-                {this.state.equipments.length !== 0 ?
+                {this.state.allDetailEquipments.length !== 0 ?
                   <Grid className={classes.equipmentsContainer}>
                     <Topic
                       titleTopic={'Matériel'}

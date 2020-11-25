@@ -58,7 +58,7 @@ class LayoutMobileReservations extends React.Component{
           {children}
         </Grid>
         <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 1}}>
-          <Grid style={{width: '90%'}}>
+          <Grid style={{width: '100%'}}>
             <MobileNavbar currentIndex={currentIndex}/>
           </Grid>
         </Grid>

@@ -138,7 +138,7 @@ class CardService extends React.Component{
       return null
     }
 
-    const picture = alfred.picture || cpData.picture;
+    const picture = profileMode ? cpData.picture : alfred.picture || cpData.picture;
 
     const editable = isEditableUser(alfred);
 

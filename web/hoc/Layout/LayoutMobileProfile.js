@@ -110,7 +110,7 @@ class LayoutMobileProfile extends React.Component{
           {children}
         </Grid>
         <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 4}}>
-          <Grid style={{width: '90%'}}>
+          <Grid style={{width: '100%'}}>
             <MobileNavbar currentIndex={currentIndex}/>
           </Grid>
         </Grid>

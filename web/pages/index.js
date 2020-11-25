@@ -27,7 +27,7 @@ class Home extends React.Component {
     this.state = {
       category:{},
       alfred:{},
-      logged: false
+      logged: false,
     };
   }
 
@@ -49,13 +49,6 @@ class Home extends React.Component {
         this.setState({alfred: alfred});
       });
   }
-
-  logout() {
-    cookie.remove('token', {path: '/'});
-    // Remove auth header for future requests
-    setAuthToken(false);
-    window.location.reload();
-  };
 
   render() {
     const { classes } = this.props;
@@ -125,7 +118,7 @@ class Home extends React.Component {
           </Grid>
           <Hidden only={['xl','lg', 'md', 'sm']}>
             <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 1}}>
-              <Grid style={{width: '90%'}}>
+              <Grid style={{width: '100%'}}>
                 <MobileNavbar currentIndex={0}/>
               </Grid>
             </Grid>

@@ -83,9 +83,11 @@ class paymentMethod extends React.Component {
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {
-        this.setState({user: res.data});
-        this.setState({userName: this.state.user.name + ' ' + this.state.user.firstname});
-        this.setState({name: this.state.userName});
+        this.setState({
+          user: res.data,
+          userName: this.state.user.name + ' ' + this.state.user.firstname,
+          name: this.state.userName
+        });
       })
       .catch(err => {
           if (err.response.status === 401 || err.response.status === 403) {
@@ -122,33 +124,6 @@ class paymentMethod extends React.Component {
     if (isValid) {
       this.setState({issuer});
     }
-  };
-
-  handleInputFocus = ({target}) => {
-    this.setState({
-      focused: target.name,
-      goodside: true,
-    });
-    setTimeout(() => {
-      if (this.state.goodside === true) {
-        document.querySelector('.rccs__card').classList.add('rccs__card--flipped');
-      } else {
-        document.querySelector('.rccs__card').classList.remove('rccs__card--flipped');
-      }
-    }, 400);
-  };
-
-  handleBadSide = () => {
-    this.setState({
-      goodside: false,
-    });
-    setTimeout(() => {
-      if (this.state.goodside === true) {
-        document.querySelector('.rccs__card').classList.add('rccs__card--flipped');
-      } else {
-        document.querySelector('.rccs__card').classList.remove('rccs__card--flipped');
-      }
-    }, 400);
   };
 
   handleInputChange = ({target}) => {
@@ -236,7 +211,6 @@ class paymentMethod extends React.Component {
           <Grid style={{display: 'flex', flexDirection: 'column'}}>
             <Grid style={{margin: '15px'}}>
               <NumberFormat
-                onClick={this.handleBadSide}
                 customInput={TextField}
                 variant={'outlined'}
                 label="Numéro de carte"
@@ -250,7 +224,6 @@ class paymentMethod extends React.Component {
             </Grid>
             <Grid style={{margin: '15px'}}>
               <NumberFormat
-                onClick={this.handleBadSide}
                 customInput={TextField}
                 variant={'outlined'}
                 label="Date d'expiration"
@@ -269,7 +242,6 @@ class paymentMethod extends React.Component {
                 value={this.state.csv}
                 onChange={this.onChange}
                 name={'csv'}
-                onClick={this.handleInputFocus}
                 type="number"
                 pattern="\d{3,4}"
                 style={{width:'100%'}}
@@ -296,7 +268,7 @@ class paymentMethod extends React.Component {
             </Grid>
             <Grid>
               <Grid>
-                <Typography style={{color:'rgba(39,37,37,35%)'}}>Toutes les données de paeiment sur My Alfred sont cryptées.</Typography>
+                <Typography style={{color:'rgba(39,37,37,35%)'}}>Toutes les données de paiement sur My Alfred sont cryptées.</Typography>
               </Grid>
               <Grid>
                 <Typography style={{color:'rgba(39,37,37,35%)'}}>Elles sont gérées par mangopay notre partenaire de confiance.</Typography>
@@ -387,7 +359,7 @@ class paymentMethod extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <Typography style={{color:'rgba(39,37,37,35%)'}}>Toutes les données de paeiment sur My Alfred sont cryptées.</Typography>
+              <Typography style={{color:'rgba(39,37,37,35%)'}}>Toutes les données de paiement sur My Alfred sont cryptées.</Typography>
             </Grid>
             <Grid>
               <Typography style={{color:'rgba(39,37,37,35%)'}}>Elles sont gérées par mangopay notre partenaire de confiance.</Typography>
