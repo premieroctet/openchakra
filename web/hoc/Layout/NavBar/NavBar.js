@@ -43,7 +43,6 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import {DateRangePicker} from "react-dates";
 
-
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -576,7 +575,7 @@ class NavBar extends Component {
             <Hidden only={['xs']}>
             <Grid className={this.state.ifHomePage ? classes.navbarTopContainer : classes.navbarTopContainerP}>
               <Grid className={classes.navbarLogoContainer}>
-                <Typography>Mon logo</Typography>
+                <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'} width={102} height={32} style={{filter: 'invert(1)'}}/>
               </Grid>
               {
                 ifHomePage ?
