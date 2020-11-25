@@ -1,6 +1,4 @@
 export default theme => ({
-  selectRoot:{
-  },
   navbarSearchContainer:{
     width: '50%',
     marginTop: '5vh',
@@ -14,6 +12,11 @@ export default theme => ({
       cursor: 'pointer',
       width: '100%',
     },
+  },
+  fitlerMenuLogged:{
+    overflow: 'inherit',
+    textOverflow: 'inherit',
+    whiteSpace: 'inherit'
   },
   navbarSearch: {
     padding: 14,
@@ -168,7 +171,8 @@ export default theme => ({
   navbarTopContainer:{
     width: '90%',
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
 
   navbarLogoContainer:{
