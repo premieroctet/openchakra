@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
-import Link from 'next/link';
+import Link from '../../../components/Link/Link'
 import {withStyles} from "@material-ui/core/styles";
 
 const styles = theme => ({

@@ -1,6 +1,6 @@
 export default theme => ({
   layoutMobileProfilHeader:{
-    backgroundImage: 'url(../../assets/img/homePage/illuHeader.png)',
+    backgroundImage: 'url(../../../../assets/img/banner/banneProfil.svg)',
     height: '30vh',
     backgroundPosition: 'center',
     backgroundSize: 'cover',

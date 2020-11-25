@@ -368,7 +368,9 @@ class SearchPage extends React.Component {
               <Grid className={classes.searchContainerHeader}>
                 <Grid className={classes.searchSecondFilterContainer}>
                   <Grid className={classes.searchSecondFilterContainerLeft}>
-                    <Typography>{serviceUsers.length} Alfred disponibles</Typography>
+                    {
+                      this.state.searching || serviceUsers.length===0  ? null : <Typography>{serviceUsers.length} Alfred disponibles</Typography>
+                    }
                   </Grid>
                   { gps ?
                     <Grid className={classes.searchFilterRightContainer}>
@@ -407,7 +409,9 @@ class SearchPage extends React.Component {
             <Grid className={classes.searchContainerDisplayResult}>
               <Hidden only={['sm','md', 'lg', 'xl']}>
                 <Grid style={{display: 'flex', justifyContent: 'center' , marginTop: '5vh', marginBottom: '5vh'}}>
-                  <Typography>{serviceUsers.length} Alfred disponibles</Typography>
+                  {
+                    this.state.searching && serviceUsers.length===0  ? null : <Typography>{serviceUsers.length} Alfred disponibles</Typography>
+                  }
                 </Grid>
               </Hidden>
               <Grid container >

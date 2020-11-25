@@ -160,20 +160,21 @@ class MobileNavbar extends React.Component{
     return(
       <BottomNavigation
         value={currentIndex}
+        showLabels
         classes={{root: classes.navigationRoot}}
       >
-        <BottomNavigationAction onClick={() => Router.push('/')} classes={{root: classes.navigationActionRoot}} value={0} icon={<HomeIcon/>}/>
-        <BottomNavigationAction onClick={() => Router.push('/search')} classes={{root: classes.navigationActionRoot}} value={1} icon={<SearchIcon/>}/>
+        <BottomNavigationAction onClick={() => Router.push('/')} label="Accueil" classes={{root: classes.navigationActionRoot, label: classes.label}} value={0} icon={<HomeIcon/>}/>
+        <BottomNavigationAction onClick={() => Router.push('/search')} label="Explorer" classes={{root: classes.navigationActionRoot, label: classes.label}} value={1} icon={<SearchIcon/>}/>
         {
           user ?
-            <BottomNavigationAction onClick={() => Router.push('/reservations/reservations')} classes={{root: classes.navigationActionRoot}} value={2} icon={<CalendarTodayIcon/>}/> : null
+            <BottomNavigationAction onClick={() => Router.push('/reservations/reservations')} label="Reservation" classes={{root: classes.navigationActionRoot, label: classes.label}} value={2} icon={<CalendarTodayIcon/>}/> : null
         }
         {
           user ?
-            <BottomNavigationAction onClick={() =>  Router.push(`/profile/messages?user=${this.state.user._id}`)} classes={{root: classes.navigationActionRoot}} value={3} icon={<MailOutlineIcon/>}/> : null
+            <BottomNavigationAction onClick={() =>  Router.push(`/profile/messages?user=${this.state.user._id}`)} label="Messages" classes={{root: classes.navigationActionRoot, label: classes.label}} value={3} icon={<MailOutlineIcon/>}/> : null
 
         }
-        <BottomNavigationAction onClick={user ? () => Router.push('/account/myProfile') : this.handleOpenLogin} classes={{root: classes.navigationActionRoot}} value={4} icon={ <PersonIcon/>}/>
+        <BottomNavigationAction onClick={user ? () => Router.push('/account/myProfile') : this.handleOpenLogin} label="Profil" classes={{root: classes.navigationActionRoot, label: classes.label}} value={4} icon={ <PersonIcon/>}/>
 
         {setOpenLogin ? this.modalLogin(classes) : null}
         {setOpenRegister ? this.modalRegister(classes) : null}

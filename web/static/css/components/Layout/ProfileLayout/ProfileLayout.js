@@ -35,7 +35,7 @@ export default theme => ({
     display: 'flex',
     justifyContent: 'center',
     height: '50%',
-    backgroundImage: 'url(../../assets/img/homePage/illuHeader.png)',
+    backgroundImage: 'url(../../../../assets/img/banner/banneProfil.svg)',
     width: '100%',
     backgroundPosition: 'center',
     backgroundSize: 'cover',
