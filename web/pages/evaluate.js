@@ -162,8 +162,8 @@ class Evaluate extends React.Component {
       .then(res => {
         let service = res.data;
         this.setState({service: service});
-      })
-      .catch();
+      }).catch(err => console.error(err))
+
   }
 
   onComplimentChanged = (name) => {
@@ -412,8 +412,6 @@ class Evaluate extends React.Component {
                 </Grid> </Grid>
             </Grid> </Grid>
         </Layout>
-        <Footer/>
-
       </Fragment>
     );
   };

@@ -35,7 +35,7 @@ class Skills extends React.Component {
             }
           });
           this.setState({ skill_values:skill_values})
-        })
+        }).catch(err => console.error(err))
     }
     if (this.props.review) {
       axios.get(`/myAlfred/api/reviews/review/${this.props.review}`)
@@ -48,7 +48,7 @@ class Skills extends React.Component {
             }
           });
           this.setState({ skill_values:skill_values})
-        })
+        }).catch(err => console.error(err))
     }
   };
 
