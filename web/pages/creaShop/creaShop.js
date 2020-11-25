@@ -165,12 +165,10 @@ class creaShop extends React.Component {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.post('/myAlfred/api/availability/add', avail)
       .then(res => {
-        toast.info('Disponibilité ajoutée avec succès !');
         this.loadAvailabilities()
       })
       .catch(err => {
         console.error(err);
-        toast.error(err);
       });
   };
 
@@ -179,7 +177,7 @@ class creaShop extends React.Component {
     axios.post('/myAlfred/api/availability/update', avail)
       .then(res => {
         this.loadAvailabilities()
-      });
+      }).catch(err => console.error(err));
   };
 
   loadAvailabilities = () => {
@@ -240,12 +238,10 @@ class creaShop extends React.Component {
               .catch(err => console.error(err));
           }
 
-          toast.info(I18N.SHOP_CREATION_SUCCESSFUL);
           Router.push(`/profile/services?user=${this.state.user_id}&indexAccount=1`);
         })
         .catch(err => {
           this.setState({saving: false});
-          toast.error(err);
         });
 
     }
@@ -393,7 +389,7 @@ class creaShop extends React.Component {
         <Grid className={classes.mainHeader}>
           <Grid className={classes.imageContentHeader}>
             <Link href={'/'}>
-              <img src={'../../../static/logo_final_My-Alfred.svg'} style={{cursor: 'pointer'}} alt={'Logo Bleu'}/>
+              <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../static/assets/icon/logo.svg'} width={102} height={64}/>
             </Link>
           </Grid>
           <Grid className={classes.contentStepper}>
@@ -409,7 +405,7 @@ class creaShop extends React.Component {
               null :
               <Grid className={classes.rightContentComponent}>
                 <Grid className={classes.contentRight}
-                      style={{backgroundImage: `url(../../../static/assets/img/creaShop/bgImage/etape${this.state.activeStep}.svg)`}}/>
+                      style={{backgroundImage: `url(../../static/assets/icon/creaShopBg.svg)`, height: '90vh'}}/>
               </Grid>
             }
           </Grid>

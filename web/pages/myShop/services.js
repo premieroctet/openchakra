@@ -103,7 +103,7 @@ class services extends React.Component {
           let serviceUsers = response.data;
           var services = serviceUsers.map(su => su.service._id);
           this.setState({exclude_services: services});
-        });
+        }).catch(err => console.error(err));
     }
 
     if (!this.isNewService()) {
@@ -139,7 +139,7 @@ class services extends React.Component {
           this.setState({shop: shop});
         })
         .catch(error => {
-          console.log(error);
+          console.error(error);
         });
     }
   }
@@ -212,7 +212,6 @@ class services extends React.Component {
 
             axios.post('/myAlfred/api/serviceUser/addDiploma/' + res.data._id, formData)
               .then(() => {
-                console.log('Diplôme ajouté');
               })
               .catch(err => console.error(err));
           }
@@ -226,7 +225,6 @@ class services extends React.Component {
 
             axios.post('/myAlfred/api/serviceUser/addCertification/' + res.data._id, formData)
               .then(() => {
-                console.log('Certification ajoutée');
               })
               .catch(err => console.error(err));
           }
@@ -334,7 +332,7 @@ class services extends React.Component {
         <Grid className={classes.mainHeader}>
           <Grid className={classes.imageContentHeader}>
             <Link href={'/'}>
-              <img src={'../../../static/logo_final_My-Alfred.svg'} style={{cursor: 'pointer'}} alt={'Logo Bleu'}/>
+              <img src={'../../../static/assets/icon/logo.svg'} style={{cursor: 'pointer'}} width={102} height={64} alt={'logo'} title={'logo'}/>
             </Link>
           </Grid>
           <Grid className={classes.contentStepper}>
