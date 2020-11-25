@@ -398,8 +398,8 @@ class Evaluate extends React.Component {
               {/*Contenu à droite*/}
               <Grid item xs={12} md={7} style={{marginTop: '2%', marginBottom: '5%'}}>
                 <Grid container style={{
-                  backgroundImage: `url('../../static/resa.svg')`,
-                  backgroundPosition: 'cover',
+                  backgroundImage: `url(../static/assets/icon/creaShopBg.svg)`,
+                  backgroundPosition: 'right',
                   backgroundRepeat: 'no-repeat',
                   border: 'thin solid transparent',
                   maxWidth: '100%',
