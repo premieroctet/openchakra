@@ -24,8 +24,8 @@ class AddressAndFacturation extends React.Component{
     const{equipments, pricedPrestations, countPrestations, user, classes} = this.props;
 
     return(
-      <Grid container style={{width: '90%', marginBottom: '10vh'}}>
-        <Grid item xl={6} xs={12} sm={12} >
+      <Grid container className={classes.addressAndFactContainer}>
+        <Grid item xl={6} lg={6} md={6} xs={12} sm={12} >
           <Grid className={classes.addressAndFactuMainContainer}>
             <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%'}}>
               <Topic
@@ -68,7 +68,7 @@ class AddressAndFacturation extends React.Component{
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xl={6} xs={12} sm={12} className={classes.mainContainerAdressFactu}>
+        <Grid item xl={6} lg={6} md={6} xs={12} sm={12} className={classes.mainContainerAdressFactu}>
           <Grid style={{
             display: 'flex',
             flexDirection: 'column',
