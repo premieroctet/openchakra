@@ -1,7 +1,7 @@
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import Tab from "@material-ui/core/Tab";
-import Link from 'next/link';
+import Link from "../../../components/Link/Link"
 
 class Footer extends React.Component {
     constructor(props) {
@@ -12,10 +12,12 @@ class Footer extends React.Component {
         return (
             <Grid style={{
                 padding: '0 150px',
-                borderTop: '1px dotted black'
+                borderTop: '1px dotted black',
+                marginTop: '30px'
             }}>
-                <span style={{float: 'start', paddingTop: '10px'}}>&Agrave; propos de nous</span>
-
+                <Link href={'/footer/apropos'}>
+                    <span style={{float: 'start', paddingTop: '10px'}}>&Agrave; propos de nous</span>
+                </Link>
                 <Grid style={{float: 'right', display: 'flex'}}>
                     <Link href={'/'}>
 

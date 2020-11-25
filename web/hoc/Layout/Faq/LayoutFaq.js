@@ -23,8 +23,7 @@ class LayoutFaq extends React.Component {
         const {classes} = this.props;
         return (
             <Grid style={{
-                display: ' flex', flexDirection: 'column', justifyContent: 'center',
-                borderTop: '1px dotted black'
+                display: ' flex', flexDirection: 'column', justifyContent: 'center'
             }}>
                 <Grid style={{margin: '0 auto'}}>
                     <p style={{fontWeight: 'bold'}}>Et si vous souhaitez en savoir plus</p>
