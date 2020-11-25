@@ -242,6 +242,7 @@ class creaShop extends React.Component {
         })
         .catch(err => {
           this.setState({saving: false});
+         console.error(err);
         });
 
     }
