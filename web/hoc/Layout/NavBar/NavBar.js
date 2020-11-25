@@ -90,17 +90,28 @@ class NavBar extends Component {
   }
 
   componentDidMount() {
-        if (Router.pathname === '/') {
+    if (Router.pathname === '/') {
       this.setState({ifHomePage: true})
     }
-        if (Router.pathname === '/search') {
+    if (Router.pathname === '/search') {
       this.setState({ifSearchPage: true})
     }
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get('/myAlfred/api/users/current')
       .then(res => {
-                this.setState({user: res.data})
+        var allAddresses={'main':res.data.billing_address}
+        res.data.service_address.forEach( addr => {
+          allAddresses[addr._id]=addr
+        });
+
+        this.setState({
+          user: res.data,
+          allAddresses: allAddresses
+        })
       }).catch(err => console.error(err))
+
+    this.setState({selectedAddress: this.props.selectedAddress || 'main'})
+    this.setState({keyword: this.props.keyword || ''})
   }
 
   logout = () => {
@@ -188,8 +199,8 @@ class NavBar extends Component {
       queryParams['gps'] = JSON.stringify(this.state.gps);
     }
 
-    if (this.props.selectedAddress) {
-      queryParams['selectedAddress'] = this.props.selectedAddress;
+    if (this.state.selectedAddress) {
+      queryParams['selectedAddress'] = this.state.selectedAddress
     }
     Router.push({pathname: '/search', query: queryParams});
   };
@@ -473,7 +484,7 @@ class NavBar extends Component {
                 <Select
                   disableUnderline
                   id="outlined-select-currency"
-                  value={this.props.selectedAddress ? this.props.selectedAddress : 'main'}
+                  value={this.state.selectedAddress || 'main'}
                   name={'selectedAddress'}
                   onChange={(e) => {
                     this.onChange(e);
@@ -501,17 +512,14 @@ class NavBar extends Component {
               </FormControl>
             </Grid>
             :
-                        <Grid
-                            className={this.state.ifHomePage ? classes.navbarAlgoliaContent : classes.navbarAlgoliaContentP}>
+            <Grid className={this.state.ifHomePage ? classes.navbarAlgoliaContent : classes.navbarAlgoliaContentP}>
               <TextField
                 label={this.state.ifHomePage ? SEARCHBAR.labelWhere : false}
                 classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhere : classes.navbarRootTextFieldWhereP}}
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                InputLabelProps={{ shrink: true }}
                 value={this.state.city}
                 InputProps={{
-                                    inputComponent: (inputRef) => {
+                  inputComponent: (inputRef) => {
                     return (
                       <AlgoliaPlaces
                         {...inputRef}
