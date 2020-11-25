@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import HeaderFaq from "../../hoc/Layout/Faq/HeaderFaq";
 import Footer from "../../hoc/Layout/About/Footer";
 import {withStyles} from "@material-ui/core/styles";
-import Link from 'next/link';
+import Link from '../../components/Link/Link';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';

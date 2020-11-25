@@ -6,9 +6,10 @@ import ScrollMenu from '../../../components/ScrollMenu/ScrollMenu';
 import layoutStyle from '../../../static/css/pages/layout/layoutStyle'
 import {NAVBAR_MENU} from "../../../utils/i18n";
 import Apropos from "../../../pages/footer/apropos";
-import Link from 'next/link';
+import Link from '../../../components/Link/Link'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {withStyles} from '@material-ui/core/styles';
+
 
 const style = theme => ({
     back: {
@@ -33,11 +34,7 @@ class Header extends React.Component {
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     width: '100%'
-                }}><Link style={{
-                    '&:hover': {
-                        color: 'grey'
-                    }
-                }} href={'/'}>
+                }}><Link href={'/'}>
                     <Grid className={classes.back}>
                         <ArrowBackIcon style={{
                             marginTop: '12px'
@@ -60,11 +57,11 @@ class Header extends React.Component {
                             <Tab classes={{root: layoutStyle.navbarTabRootSelected}}
                                  label={NAVBAR_MENU.aboutUs}/>
                         </Link>
-                        <Link href={'/footer/ourcommunauty'}>
+                        <Link href={'/footer/ourCommunity'}>
                             <Tab classes={{root: layoutStyle.navBarTabAbout}}
                                  label={NAVBAR_MENU.ourCom}/>
                         </Link>
-                        <Link href={'/footer/ourteam'}>
+                        <Link href={'/footer/ourTeam'}>
                             <Tab classes={{root: layoutStyle.navBarTabAbout}}
                                  label={NAVBAR_MENU.ourTeam}/>
                         </Link>
