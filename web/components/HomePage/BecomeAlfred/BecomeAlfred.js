@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import {BECOME_ALFRED} from '../../../utils/i18n';
-import Link from 'next/link'
+import Link from '../../Link/Link'
 
 class BecomeAlfred extends React.Component {
 
