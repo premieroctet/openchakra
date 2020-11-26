@@ -314,6 +314,7 @@ class UserServicesPreview extends React.Component {
   };
 
   onLocationChanged = (id, checked) => {
+    console.log(`Location:${id}:${checked}`)
     this.onChange({target: {name: 'location', value: checked ? id : null}});
   };
 
@@ -730,8 +731,8 @@ class UserServicesPreview extends React.Component {
                           computeTravelTax={this.computeTravelTax}
                           getLocationLabel={this.getLocationLabel}
                           warningPerimeter={this.state.warningPerimeter}
-                          clientAdress={this.getClientAddress()}
-                          clientAdressId={this.props.address}
+                          clientAddress={this.getClientAddress()}
+                          clientAddressId={this.props.address}
                           book={this.book}
                           {...this.state}
                         />
@@ -756,8 +757,8 @@ class UserServicesPreview extends React.Component {
                       computeTravelTax={this.computeTravelTax}
                       getLocationLabel={this.getLocationLabel}
                       warningPerimeter={this.state.warningPerimeter}
-                      clientAdress={this.getClientAddress()}
-                      clientAdressId={this.props.address}
+                      clientAddress={this.getClientAddress()}
+                      clientAddressId={this.props.address}
                       book={this.book}
                       {...this.state}
                     />
