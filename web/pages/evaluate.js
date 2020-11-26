@@ -120,9 +120,7 @@ class Evaluate extends React.Component {
 
     axios.post('/myAlfred/api/reviews/add/alfred', obj)
       .then(() => {
-        toast.info('Commentaire enregistré');
-        //Router.push('/merci')
-        Router.push(`/reservations/detailsReservation?id=${booking}`);
+        Router.push(`/reservations/reservations`);
       })
       .catch(err => {
        console.error(err)

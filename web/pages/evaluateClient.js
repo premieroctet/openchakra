@@ -1,16 +1,17 @@
-import React, {Fragment} from 'react';
-import Layout from '../hoc/Layout/Layout';
+import React from 'react';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
-import Footer from '../hoc/Layout/Footer/Footer';
 import StarRatings from 'react-star-ratings';
-import {toast} from 'react-toastify';
 import TextField from '@material-ui/core/TextField';
 import cookie from 'react-cookies';
-import styles from './evaluateClient/evaluateClientStyle';
+import styles from '../static/css/pages/evaluateClient/evaluateClient';
+import Typography from "@material-ui/core/Typography";
+import Hidden from "@material-ui/core/Hidden";
+import LayoutEvaluate from "../hoc/Layout/LayoutEvaluate";
+import LayoutMobile from "../hoc/Layout/LayoutMobile";
 
 class EvaluateClient extends React.Component {
   constructor(props) {
@@ -23,7 +24,6 @@ class EvaluateClient extends React.Component {
       relational: 0,
       content: '',
     };
-    this.onComplimentChanged = this.onComplimentChanged.bind(this);
   }
 
   static getInitialProps({query: {booking, id, client}}) {
@@ -44,7 +44,7 @@ class EvaluateClient extends React.Component {
       .catch(err => {
           if (err.response.status === 401 || err.response.status === 403) {
             cookie.remove('token', {path: '/'});
-            Router.push({pathname: '/login'});
+            Router.push({pathname: '/'});
           }
         },
       );
@@ -54,7 +54,7 @@ class EvaluateClient extends React.Component {
         let service = res.data;
         this.setState({service: service});
       })
-      .catch();
+      .catch(err => console.error(err));
   }
 
   onComplimentChanged = (name) => {
@@ -80,11 +80,11 @@ class EvaluateClient extends React.Component {
     });
   };
 
-  back() {
+  back = () => {
     Router.back();
-  }
+  };
 
-  evaluate() {
+  evaluate =() => {
     const id = this.props.service_id;
     const booking = this.props.booking;
     const client = this.props.client;
@@ -105,138 +105,136 @@ class EvaluateClient extends React.Component {
 
     axios.post('/myAlfred/api/reviews/add/client', obj)
       .then(() => {
-        toast.info('Commentaire enregistré');
-        Router.push(`/reservations/detailsReservation?id=${booking}`);
+        Router.push(`/reservations/reservations`);
       })
-      .catch(() => {
-        toast.error('Une erreur est survenue');
+      .catch((err) => {
+        console.error(err)
       });
 
-  }
+  };
 
-  render() {
-    const {classes} = this.props;
+  content = (classes) =>{
+    return(
 
-    return (
-      <Fragment>
-        <Layout>
-          <Grid container className={classes.bigContainer}>
-            <Grid container>
-              <Grid item className={classes.mainContainerEvaluateClient}>
-                <Grid container>
-                  <Grid item style={{marginTop: 50, marginBottom: 30}}>
-                    <h2 style={{
-                      fontSize: '2.5rem',
-                      color: 'rgba(84,89,95,0.95)',
-                      letterSpacing: -1,
-                      fontWeight: '100',
-                      textAlign: 'left',
-                    }}>Evaluation & commentaires</h2>
-                  </Grid>
+      <Grid container className={classes.bigContainer}>
+        <Grid style={{width: '100%'}}>
+          <Grid style={{width: '100%',display: 'flex', flexDirection: 'column'}}>
+            <Grid item>
+              <h3>Qu’avez-vous pensé de votre client ?</h3>
+            </Grid>
+            <Grid container style={{marginTop: '5vh'}} spacing={3}>
+              <Grid item container xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex'}}>
+                <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
+                  <Typography>Accueil</Typography>
                 </Grid>
-                <Grid>
-                  <Grid container className={classes.containerSkillsEvaluate}>
-                    <Grid item style={{textAlign: 'left'}}>
-                      <p style={{fontSize: '25px'}}>Qu’avez-vous pensé de votre client ?</p>
-                    </Grid>
-                    <Grid item className={classes.skillsEvaluate}>
-                      <Grid container className={classes.starsValueContainer}>
-                        <Grid item>
-                          <p style={{fontSize: '18px'}}>Accueil</p>
-                        </Grid>
-                        <Grid item style={{lineHeight: '4'}}>
-                          <StarRatings
-                            rating={this.state.accueil}
-                            starRatedColor={'#2FBCD3'}
-                            changeRating={this.changeRating}
-                            numberOfStars={5}
-                            name='rating'
-                            starDimension={'20px'}
-                            starHoverColor={'#2FBCD3'}
-                            starSpacing={'3px'}
-                          />
-                        </Grid>
-                      </Grid>
-                      <Grid container className={classes.starsValueContainer}>
-                        <Grid item>
-                          <p style={{fontSize: '18px'}}>Précision de la demande</p>
-                        </Grid>
-                        <Grid item style={{lineHeight: '4'}}>
-                          <StarRatings
-                            rating={this.state.accuracy}
-                            starRatedColor={'#2FBCD3'}
-                            changeRating={this.changeRating2}
-                            numberOfStars={5}
-                            name='rating2'
-                            starDimension={'20px'}
-                            starHoverColor={'#2FBCD3'}
-                            starSpacing={'3px'}
-                          />
-                        </Grid>
-                      </Grid>
-                      <Grid container className={classes.starsValueContainer}>
-                        <Grid item>
-                          <p style={{fontSize: '18px'}}>Relationnel</p>
-                        </Grid>
-                        <Grid item style={{lineHeight: '4'}}>
-                          <StarRatings
-                            rating={this.state.relational}
-                            starRatedColor={'#2FBCD3'}
-                            changeRating={this.changeRating3}
-                            numberOfStars={5}
-                            name='rating3'
-                            starDimension={'20px'}
-                            starHoverColor={'#2FBCD3'}
-                            starSpacing={'3px'}
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
+                <Grid  item xl={6} lg={6} md={6} sm={6} xs={6}>
+                  <StarRatings
+                    rating={this.state.accueil}
+                    starRatedColor={'rgba(248, 207, 97, 1)'}
+                    changeRating={this.changeRating}
+                    numberOfStars={5}
+                    name='rating'
+                    starDimension={'20px'}
+                    starHoverColor={'rgba(248, 207, 97, 1)'}
+                    starSpacing={'3px'}
+                  />
                 </Grid>
-                <Grid>
-                  <p style={{fontSize: '25px'}}>Votre commentaire</p>
-                  <Grid container>
-                    <Grid item style={{width: '100%'}}>
-                      <TextField
-                        id="outlined-multiline-static"
-                        style={{width: '100%'}}
-                        multiline
-                        rows="6"
-                        margin="normal"
-                        variant="outlined"
-                        onChange={(e) => this.setState({content: e.target.value})}
-                      />
-                    </Grid>
-                  </Grid>
+              </Grid>
+              <Grid  item container xl={12} lg={12} md={12} sm={12} xs={12}>
+                <Grid  item xl={6} lg={6} md={6} sm={6} xs={6}>
+                  <Typography>Précision de la demande</Typography>
                 </Grid>
-                <Grid className={classes.containerNavigationButton}>
-                  <Grid>
-                    <Button
-                      onClick={() => this.back()}
-                      color={'white'}
-                      variant={'contained'}
-                    >
-                      Retour
-                    </Button>
-                  </Grid>
-                  <Grid>
-                    <Button
-                      disabled={this.state.accueil === 0 || this.state.accuracy === 0 || this.state.relational === 0 || !this.state.content.trim()}
-                      onClick={() => this.evaluate()}
-                      color={'primary'}
-                      variant={'contained'}
-                    >
-                      Terminé
-                    </Button>
-                  </Grid>
+                <Grid  item xl={6} lg={6} md={6} sm={6} xs={6}>
+                  <StarRatings
+                    rating={this.state.accuracy}
+                    starRatedColor={'rgba(248, 207, 97, 1)'}
+                    changeRating={this.changeRating2}
+                    numberOfStars={5}
+                    name='rating2'
+                    starDimension={'20px'}
+                    starHoverColor={'rgba(248, 207, 97, 1)'}
+                    starSpacing={'3px'}
+                  />
+                </Grid>
+              </Grid>
+              <Grid  item container xl={12} lg={12} md={12} sm={12} xs={12}>
+                <Grid  item xl={6} lg={6} md={6} sm={6} xs={6}>
+                  <Typography>Relationnel</Typography>
+                </Grid>
+                <Grid  item xl={6} lg={6} md={6} sm={6} xs={6} >
+                  <StarRatings
+                    rating={this.state.relational}
+                    starRatedColor={'rgba(248, 207, 97, 1)'}
+                    changeRating={this.changeRating3}
+                    numberOfStars={5}
+                    name='rating3'
+                    starDimension={'20px'}
+                    starHoverColor={'rgba(248, 207, 97, 1)'}
+                    starSpacing={'3px'}
+                  />
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Layout>
-        <Footer/>
-      </Fragment>
+        </Grid>
+        <Grid style={{marginTop: '10vh'}}>
+          <Grid>
+            <h3>Votre commentaire</h3>
+          </Grid>
+          <Grid>
+            <TextField
+              id="outlined-multiline-static"
+              style={{width: '100%'}}
+              multiline
+              rows="6"
+              variant="outlined"
+              onChange={(e) => this.setState({content: e.target.value})}
+            />
+          </Grid>
+        </Grid>
+        <Grid style={{display: 'flex', justifyContent: 'space-between', marginTop: '10vh'}}>
+          <Grid>
+            <Button
+              onClick={this.back}
+              variant={'outlined'}
+              classes={{root: classes.buttonBack}}
+            >
+              Retour
+            </Button>
+          </Grid>
+          <Grid>
+            <Button
+              disabled={this.state.accueil === 0 || this.state.accuracy === 0 || this.state.relational === 0 || !this.state.content.trim()}
+              onClick={this.evaluate}
+              variant={'contained'}
+              classes={{root: classes.buttonSend}}
+              color={'primary'}
+            >
+              Terminé
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
+    )
+  };
+
+  render() {
+    const {classes} = this.props;
+    const {user} = this.state;
+    return (
+
+      <React.Fragment>
+        <Hidden only={['xs', 'sm', 'md']}>
+          <LayoutEvaluate user={user}>
+            {this.content(classes)}
+          </LayoutEvaluate>
+        </Hidden>
+        <Hidden only={['lg', 'xl']}>
+          <LayoutMobile currentIndex={null}>
+            {this.content(classes)}
+          </LayoutMobile>
+        </Hidden>
+      </React.Fragment>
     );
   };
 }
