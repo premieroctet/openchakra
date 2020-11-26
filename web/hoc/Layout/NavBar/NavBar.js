@@ -700,7 +700,7 @@ class NavBar extends Component {
                       aria-label="open drawer"
                       onClick={this.handleOpenMenuItem}
                     >
-                      <MenuIcon classes={{color: 'white'}}/>
+                      <MenuIcon style={{color: 'white'}}/>
                     </IconButton>
                     <Menu
                       anchorEl={anchorEl}
