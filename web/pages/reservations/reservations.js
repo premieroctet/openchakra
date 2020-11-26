@@ -23,6 +23,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import BookingPreview from '../../components/BookingDetail/BookingPreview'
 import BookingCancel from '../../components/BookingDetail/BookingCancel'
 import BookingConfirm from '../../components/BookingDetail/BookingConfirm'
+import BookingPreApprouve from "../../components/BookingDetail/BookingPreApprouve";
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMessages from "../../hoc/Layout/LayoutMessages";
 import LayoutMobileMessages from "../../hoc/Layout/LayoutMobileMessages";
@@ -52,6 +53,7 @@ class AllReservations extends React.Component {
       bookingPreview: null,
       bookingCancel: null,
       bookingConfirm: null,
+      bookingPreApprouved: null
     };
     this.bookingPreviewModal = this.bookingPreviewModal.bind(this)
     this.bookingCancelModal = this.bookingCancelModal.bind(this)
@@ -113,15 +115,20 @@ class AllReservations extends React.Component {
 
   openBookingPreview = bookingId => {
     this.loadBookings();
-    this.setState({ bookingPreview: bookingId, bookingCancel: null, bookingConfirm: null})
+    this.setState({ bookingPreview: bookingId, bookingCancel: null, bookingConfirm: null, bookingPreApprouved: null})
   };
 
   openBookingCancel = bookingId => {
-    this.setState({ bookingPreview:null, bookingCancel: bookingId, bookingConfirm: null})
+    this.setState({ bookingPreview:null, bookingCancel: bookingId, bookingConfirm: null, bookingPreApprouved: null})
   };
 
   openBookingConfirm = bookingId => {
-    this.setState({ bookingPreview:null, bookingCancel: null, bookingConfirm: bookingId})
+    this.setState({ bookingPreview:null, bookingCancel: null, bookingConfirm: bookingId, bookingPreApprouved: null})
+  };
+
+  openBookingPreAprouved = bookingId =>{
+    this.loadBookings();
+    this.setState({ bookingPreview:null, bookingCancel: null, bookingConfirm: null, bookingPreApprouved: bookingId})
   };
 
   bookingPreviewModal = (classes) => {
@@ -136,7 +143,7 @@ class AllReservations extends React.Component {
 
       >
         <DialogContent>
-          <BookingPreview booking_id={bookingPreview} onCancel={this.openBookingCancel} onConfirm={this.openBookingConfirm}/>
+          <BookingPreview booking_id={bookingPreview} onCancel={this.openBookingCancel} onConfirm={this.openBookingConfirm} onConfirmPreaProuved={this.openBookingPreAprouved}/>
         </DialogContent>
       </Dialog>
     )
@@ -167,6 +174,21 @@ class AllReservations extends React.Component {
       >
         <DialogContent>
           <BookingConfirm booking_id={bookingConfirm} onConfirm={this.openBookingPreview}/>
+        </DialogContent>
+      </Dialog>
+    )
+  };
+
+  bookingPreApprouved = () =>{
+    const {bookingPreApprouved}=this.state;
+
+    return (
+      <Dialog style={{width: '100%'}}
+              open={Boolean(bookingPreApprouved)}
+              onClose={() => this.setState({bookingPreApprouved: null})}
+      >
+        <DialogContent>
+          <BookingPreApprouve booking_id={bookingPreApprouved} onConfirm={this.openBookingPreAprouved}/>
         </DialogContent>
       </Dialog>
     )
@@ -273,6 +295,7 @@ class AllReservations extends React.Component {
         { this.bookingPreviewModal(classes)}
         { this.bookingCancelModal()}
         { this.bookingConfirmModal()}
+        { this.bookingPreApprouved()}
       </React.Fragment>
 
     );

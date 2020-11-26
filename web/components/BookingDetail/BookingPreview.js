@@ -474,18 +474,15 @@ class BookingPreview extends React.Component {
                             ) : bookingObj.status === 'Demande d\'infos' &&
                             currentUser._id === bookingObj.alfred._id ? (
                               <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                                <Link
-                                  href={{
-                                    pathname: '/reservations/preapprouve',
-                                    query: {id: booking_id},
-                                  }}
-                                >
-                                  <Button color={'secondary'} variant={'contained'}
-                                          style={{color: 'white', textTransform: 'initial'}}>Pré-approuver</Button>
-                                </Link>
+                                <Button onClick={()=>this.props.onConfirmPreaProuved(booking_id)} color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Pré-approuver</Button>
                                 <Grid style={{marginTop: '5%'}}>
-                                  <Button onClick={() => this.changeStatus('Refusée')} variant={'outlined'}
-                                          color={'primary'}>Refuser</Button>
+                                  <Button
+                                    onClick={() => this.changeStatus('Refusée')}
+                                    variant={'outlined'}
+                                    style={{textTransform: 'initial'}}
+                                    color={'primary'}>
+                                    Refuser
+                                  </Button>
                                 </Grid>
                               </Grid>
                             ) : bookingObj.status === 'Demande d\'infos' &&
