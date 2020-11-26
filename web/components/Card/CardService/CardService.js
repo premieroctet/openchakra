@@ -125,7 +125,10 @@ class CardService extends React.Component{
 
     const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {};
 
-    const resa_link =  `/userServicePreview?id=${cpData._id}`;
+    var resa_link =  `/userServicePreview?id=${cpData._id}`
+    if (this.props.address) {
+      resa_link+=`&address=${this.props.address}`
+    }
     if (this.props.item===null) {
       return (
         <Hidden only={['xs', 'sm']}>

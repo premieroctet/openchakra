@@ -90,8 +90,8 @@ class UserServicesPreview extends React.Component {
     this.hasWarningPerimeter = this.hasWarningPerimeter.bind(this)
   }
 
-  static getInitialProps({query: {id}}) {
-    return {service_id: id};
+  static getInitialProps({query: {id, address}}) {
+    return {service_id: id, address: address};
   }
 
   componentDidMount() {
@@ -213,7 +213,7 @@ class UserServicesPreview extends React.Component {
   setDefaultLocation = () => {
     const serviceUser = this.state.serviceUser;
     const user = this.state.user;
-    var location = serviceUser.location.client && (!user || this.isInPerimeter()) ? 'client' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
+    var location = serviceUser.location.client && (!user || this.isInPerimeter()) ? this.props.address || 'client' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
     if (location == null && user) {
       this.setState({warningPerimeter: true});
     }
@@ -396,9 +396,17 @@ class UserServicesPreview extends React.Component {
     console.log(`hasWarningPerimeter()=>${result}`);
   };
 
+  getClientAddress = () => {
+    const {location, user}=this.state
+    if (['client', 'main'].includes(location)) {
+      return 'A mon adresse principale'
+    }
+    return user ? (user.service_address.find(a => a._id.toString()==location) || {label:''}).label : ''
+  }
+
   getLocationLabel = () => {
     const titles = {
-      'client': 'A mon adresse principale',
+      'client': this.getClientAddress(),
       'alfred': 'Chez ' + this.state.alfred.firstname,
       'visio': 'En visio',
     };
@@ -722,6 +730,8 @@ class UserServicesPreview extends React.Component {
                           computeTravelTax={this.computeTravelTax}
                           getLocationLabel={this.getLocationLabel}
                           warningPerimeter={this.state.warningPerimeter}
+                          clientAdress={this.getClientAddress()}
+                          clientAdressId={this.props.address}
                           book={this.book}
                           {...this.state}
                         />
@@ -746,6 +756,8 @@ class UserServicesPreview extends React.Component {
                       computeTravelTax={this.computeTravelTax}
                       getLocationLabel={this.getLocationLabel}
                       warningPerimeter={this.state.warningPerimeter}
+                      clientAdress={this.getClientAddress()}
+                      clientAdressId={this.props.address}
                       book={this.book}
                       {...this.state}
                     />
