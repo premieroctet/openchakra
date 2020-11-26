@@ -693,6 +693,32 @@ router.post('/login', (req, res) => {
     });
 });
 
+router.get('/token',  passport.authenticate('jwt', {session: false}), (req, res) => {
+  User.findById(req.user.id)
+    .then( user => {
+      const payload = {
+        id: user.id,
+        name: user.name,
+        firstname: user.firstname,
+        is_admin: user.is_admin,
+        is_alfred: user.is_alfred,
+      }; // Create JWT payload
+
+      jwt.sign(payload, keys.JWT.secretOrKey, (err, token) => {
+        res.cookie('token', 'Bearer ' + token, {
+          httpOnly: false,
+          secure: true,
+          sameSite: true,
+        })
+          .status('201').json()
+      })
+    })
+    .catch( err => {
+      console.error(err)
+      res.status('404')
+    })
+})
+
 // @Route GET /myAlfred/api/users/logout
 // logout
 router.get('/logout', function (req, res) {
