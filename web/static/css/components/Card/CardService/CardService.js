@@ -189,7 +189,7 @@ export default theme => ({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     overflow: 'hidden'
-    
+
   },
   labelService:{
     [theme.breakpoints.down('xs')]:{
