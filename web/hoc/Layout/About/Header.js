@@ -6,15 +6,9 @@ import layoutStyle from '../../../static/css/pages/layout/layoutStyle'
 import {NAVBAR_MENU} from "../../../utils/i18n";
 import Link from '../../../components/Link/Link'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles} from "@material-ui/core/styles";
+import styles from '../../../static/css/pages/homePage/index';
 
-const style = theme => ({
-    back: {
-        display: 'flex',
-        color: 'white',
-        padding: '15px'
-    }
-});
 
 class Header extends React.Component {
     constructor(props) {
@@ -62,7 +56,11 @@ class Header extends React.Component {
                     backgroundRepeat: 'no-repeat',
                     width: '100%'
                 }}><Link href={'/'}>
-                    <Grid className={classes.back}>
+                    <Grid style={{
+                        display: 'flex',
+                        color: 'white',
+                        padding: '15px'
+                    }}>
                         <ArrowBackIcon style={{
                             marginTop: '12px'
                         }}/>
@@ -107,4 +105,4 @@ class Header extends React.Component {
 }
 
 
-export default withStyles(style)(Header);
+export default withStyles(styles)(Header);

@@ -3,6 +3,8 @@ import Grid from '@material-ui/core/Grid';
 import layoutStyle from "../../static/css/pages/layout/layoutStyle"
 import Header from "../../hoc/Layout/About/Header";
 import Footer from "../../hoc/Layout/About/Footer";
+import {withStyles} from "@material-ui/core/styles";
+import styles from '../../static/css/pages/homePage/index';
 
 class Apropos extends React.Component {
     constructor(props) {
@@ -10,7 +12,7 @@ class Apropos extends React.Component {
     }
 
     render() {
-        const {style} = this.props;
+        const {classes} = this.props;
         return (
             <Fragment>
                 <Header>
@@ -80,4 +82,4 @@ class Apropos extends React.Component {
     }
 }
 
-export default (Apropos)
+export default withStyles(styles)(Apropos)
