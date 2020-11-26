@@ -186,11 +186,10 @@ export default theme => ({
   },
   cardKmContainer:{
     display: 'flex',
-    [theme.breakpoints.down('xs')]:{
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
-      overflow: 'hidden'
-    }
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden'
+    
   },
   labelService:{
     [theme.breakpoints.down('xs')]:{
