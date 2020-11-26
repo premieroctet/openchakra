@@ -118,7 +118,12 @@ class NavBar extends Component {
     cookie.remove('token', {path: '/'});
     localStorage.removeItem('path');
     setAuthToken(null);
-    Router.push('/?logout=1')
+    if (this.state.ifHomePage) {
+      window.location.reload(false)
+    }
+    else {
+      Router.push('/')
+    }
   };
 
   handleMenuClose = () => {
