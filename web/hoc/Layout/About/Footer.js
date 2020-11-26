@@ -2,6 +2,8 @@ import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import Tab from "@material-ui/core/Tab";
 import Link from "../../../components/Link/Link"
+import {withStyles} from "@material-ui/core/styles";
+import styles from '../../../static/css/pages/homePage/index';
 
 class Footer extends React.Component {
     constructor(props) {
@@ -35,4 +37,4 @@ class Footer extends React.Component {
     }
 }
 
-export default Footer;
+export default withStyles(styles)(Footer)

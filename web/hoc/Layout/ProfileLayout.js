@@ -57,7 +57,7 @@ class ProfileLayout extends React.Component {
       return null
     }
 
-    const menuItems = isEditableUser(this.props.user) ? user.is_alfred ? this.logged_alfred_items : this.logged_items : this.nonlogged_items
+    const menuItems = isEditableUser(this.props.user) ? user.is_alfred ? this.logged_alfred_items : this.logged_items : this.nonlogged_items;
 
     return (
       <Layout user={user}>

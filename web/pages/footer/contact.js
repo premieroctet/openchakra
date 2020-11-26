@@ -9,31 +9,8 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
-import {withStyles} from '@material-ui/core/styles';
-
-const style = theme => ({
-    container: {},
-    accord: {
-        marginBottom: '10px',
-        width: '40%'
-    },
-    link: {
-        fontWeight: 'bold',
-        borderBottom: '1px solid black',
-        '&:hover': {
-            color: '#84A5E0',
-            borderBottom: '1px solid #84A5E0'
-        }
-    },
-    linkS: {
-        color: 'black',
-        borderBottom: '1 px solid black',
-        '&:hover': {
-            color: '#84A5E0',
-            borderBottom: '#84A5E0'
-        }
-    }
-})
+import {withStyles} from "@material-ui/core/styles";
+import styles from '../../static/css/pages/homePage/index';
 
 class Contact extends React.Component {
 
@@ -70,7 +47,10 @@ class Contact extends React.Component {
                     padding: '0 350px'
                 }}>
                     <h3>Nous contacter</h3>
-                    <Accordion className={classes.accord}>
+                    <Accordion style={{
+                        marginBottom: '10px',
+                        width: '40%'
+                    }}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon/>}
                             aria-controls="panel1a-content"
@@ -82,7 +62,14 @@ class Contact extends React.Component {
                             <Typography>
                                 <Grid style={{display: 'flex'}}>
                                     <MailOutlineIcon style={{paddingRight: '5px'}}/>
-                                    <a className={classes.linkS} href={'mailto:hello@my-alfred.io'}>
+                                    <a style={{
+                                        color: 'black',
+                                        borderBottom: '1 px solid black',
+                                        '&:hover': {
+                                            color: '#84A5E0',
+                                            borderBottom: '#84A5E0'
+                                        }
+                                    }} href={'mailto:hello@my-alfred.io'}>
                                         hello@my-alfred.io
                                     </a>
                                 </Grid>
@@ -121,4 +108,4 @@ class Contact extends React.Component {
     }
 }
 
-export default withStyles(style)(Contact)
+export default withStyles(styles)(Contact)

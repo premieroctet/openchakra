@@ -53,15 +53,15 @@ const SEARCHBAR = {
 };
 
 const NAVBAR_MENU = {
-  ourServices: 'Nos services',
-  myServices: 'Mes services',
-  registerServices : 'Proposer mes services',
-  ourTeam: 'Notre équipe',
-  contactUs: 'Nous contacter',
-  aboutUs: 'À propos',
-  ourCom: 'Notre communauté',
-  signIn: 'Inscription',
-  logIn: 'Connexion'
+    ourServices: 'Nos services',
+    myServices: 'Mes services',
+    registerServices: 'Proposer mes services',
+    ourTeam: 'Notre équipe',
+    contactUs: 'Nous contacter',
+    aboutUs: 'À propos',
+    ourCom: 'Notre communauté',
+    signIn: 'Inscription',
+    logIn: 'Connexion'
 };
 
 const BANNER_PRESENTATION = {
@@ -83,7 +83,7 @@ const BECOME_ALFRED = {
 };
 
 const RESA_SERVICE = {
-    title: 'Réserver un service',
+    title: 'Proposez un service',
     text: 'Créez votre compte et proposez un service',
     button: 'C\'est parti !'
 };

@@ -11,6 +11,7 @@ import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
 import Box from "../../components/Box/Box";
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
+import {isEditableUser} from "../../utils/functions";
 const {getLoggedUserId}=require('../../utils/functions');
 
 class ProfilePictures extends React.Component {
@@ -29,6 +30,8 @@ class ProfilePictures extends React.Component {
   }
 
   content = (classes, user) => {
+    const editable = isEditableUser(user);
+
     return(
       <Grid container sapcing={3} className={classes.pictureContainer}>
         <Grid item xs={12} sm={12} md={12} lg={12} xm={12}>
@@ -36,13 +39,16 @@ class ProfilePictures extends React.Component {
            <Album user={user}/>
           </Box>
         </Grid>
-        <Hidden only={['sm', 'xs']}>
-          <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-            <Grid style={{width: '70%'}}>
-              <AskQuestion user={user}/>
-            </Grid>
-          </Grid>
-        </Hidden>
+        {
+          !editable ?
+            <Hidden only={['sm', 'xs']}>
+              <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                <Grid style={{width: '70%'}}>
+                  <AskQuestion user={user}/>
+                </Grid>
+              </Grid>
+            </Hidden> : null
+        }
       </Grid>
     )
   };

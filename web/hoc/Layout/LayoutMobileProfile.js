@@ -68,6 +68,7 @@ class LayoutMobileProfile extends React.Component{
     const menuItems = isEditableUser(this.props.user) ? user.is_alfred ? this.logged_alfred_items : this.logged_items : this.nonlogged_items;
 
 
+
     return(
       <Grid>
         <Grid>

@@ -22,6 +22,7 @@ import {Typography} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 const {getLoggedUserId}=require('../../../utils/functions');
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -174,9 +175,13 @@ class MobileNavbar extends React.Component{
             <BottomNavigationAction onClick={() =>  Router.push(`/profile/messages?user=${this.state.user._id}`)} label="Messages" classes={{root: classes.navigationActionRoot, label: classes.label}} value={3} icon={<MailOutlineIcon/>}/> : null
 
         }
-        <BottomNavigationAction onClick={user ? () => Router.push('/account/myProfile') : this.handleOpenLogin} label="Profil" classes={{root: classes.navigationActionRoot, label: classes.label}} value={4} icon={ <PersonIcon/>}/>
+        <BottomNavigationAction onClick={user ? () => Router.push('/account/myProfile') : this.handleOpenLogin} label={user ? "Profil" : 'Connexion'} classes={{root: classes.navigationActionRoot, label: classes.label}} value={4} icon={ <PersonIcon/>}/>
+        {
+          !user ?
+            <BottomNavigationAction onClick={this.handleOpenRegister} label={'Inscription'} classes={{root: classes.navigationActionRoot, label: classes.label}} value={5} icon={ <GroupAddIcon/>}/> : null
+        }
+            {setOpenLogin ? this.modalLogin(classes) : null}
 
-        {setOpenLogin ? this.modalLogin(classes) : null}
         {setOpenRegister ? this.modalRegister(classes) : null}
       </BottomNavigation>
     );

@@ -20,6 +20,7 @@ import Divider from '@material-ui/core/Divider';
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
+import {isEditableUser} from "../../utils/functions";
 
 
 const MONTHS=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
@@ -161,6 +162,8 @@ class ProfileStatistics extends React.Component {
   }
 
   content = (classes, user) =>{
+    const editable = isEditableUser(user);
+
     return(
       <Grid container stylerr={{width: '100%'}} spacing={3}>
         <Grid item xs={12}>
@@ -388,13 +391,16 @@ class ProfileStatistics extends React.Component {
             </Topic>
           </Box>
         </Grid>
-        <Hidden only={['sm', 'xs']}>
-          <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-            <Grid style={{width: '70%'}}>
-              <AskQuestion user={user}/>
-            </Grid>
-          </Grid>
-        </Hidden>
+        {
+          !editable ?
+            <Hidden only={['sm', 'xs']}>
+              <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                <Grid style={{width: '70%'}}>
+                  <AskQuestion user={user}/>
+                </Grid>
+              </Grid>
+            </Hidden> : null
+        }
       </Grid>
     )
   };

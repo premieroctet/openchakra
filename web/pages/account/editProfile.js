@@ -360,7 +360,7 @@ class editProfile extends React.Component {
     const {classes, index} = this.props;
 
     return (
-      <Fragment>
+      <React.Fragment>
         <Helmet>
           <title>Profil - Modifier mon profil - My Alfred </title>
           <meta property="description"
@@ -376,7 +376,7 @@ class editProfile extends React.Component {
             {this.content(classes)}
           </LayoutMobile>
         </Hidden>
-      </Fragment>
+      </React.Fragment>
     );
   };
 }
