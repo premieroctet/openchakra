@@ -188,13 +188,16 @@ export default theme => ({
   navbarLogoContainerP:{
     width: '100%',
     cursor: 'pointer',
+    [theme.breakpoints.down('md')]:{
+      width: '40%'
+    }
   },
   navabarHomepageMenu:{
     width: '70%',
     display: 'flex',
     justifyContent: 'center',
-    [theme.breakpoints.down('md')]:{
-      width: '80%'
+    [theme.breakpoints.down('sm')]:{
+      display: 'none'
     }
   },
   navabarHomepageMenuP:{
@@ -214,6 +217,9 @@ export default theme => ({
     width: '100%',
     display: 'flex',
     flexDirection: 'row-reverse',
+    [theme.breakpoints.down('md')]:{
+      width: '40%'
+    }
   },
 
   navbarTabRoot:{
@@ -235,13 +241,27 @@ export default theme => ({
     lineHeight:  theme.typography.placeHolder.lineHeight,
     padding: '6px 0 7px',
   },
+  logoMyAlfred:{
+    height: 64,
+
+  },
 
 
   navbarButtonContainer:{
     display: 'flex',
     flexDirection: 'row-reverse',
+    width: '20%',
+    alignItems: 'center',
+  },
+  navbarButtonContainerP:{
+    display: 'flex',
+    flexDirection: 'row-reverse',
     width: '100%',
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.down('md')]:{
+      flexDirection: 'inherit',
+      width: '40%'
+    }
   },
   navBarlogIn:{
     textTransform: theme.typography.textTransform,
@@ -408,6 +428,9 @@ export default theme => ({
     justifyContent: 'space-between',
     width: '90%',
     alignItems: 'center',
+    [theme.breakpoints.down('md')]:{
+      width: '100%'
+    }
 
   },
   inputDatePickerP:{

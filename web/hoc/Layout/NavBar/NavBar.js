@@ -44,6 +44,7 @@ import Switch from "@material-ui/core/Switch";
 import {DateRangePicker} from "react-dates";
 
 
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -658,35 +659,35 @@ class NavBar extends Component {
             <Hidden only={['xs']}>
               <Grid className={this.state.ifHomePage ? classes.navbarTopContainer : classes.navbarTopContainerP}>
                 <Grid className={ifHomePage ? classes.navbarLogoContainer : classes.navbarLogoContainerP } onClick={() => Router.push('/')}>
-                  <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'} width={102} height={64} style={{filter: 'invert(1)'}}/>
+                  <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'} className={classes.logoMyAlfred}  height={64} style={{filter: 'invert(1)'}}/>
               </Grid>
               {
                 ifHomePage ?
                   <Grid className={ifHomePage ? classes.navabarHomepageMenu : classes.navabarHomepageMenuP}>
                     <Tabs value={false} aria-label="simple tabs example">
                       <Link href={'/search?search=1'}>
-                          <Tab classes={{root: classes.navbarTabRoot}}
+                        <Tab classes={{root: classes.navbarTabRoot}}
                                label={NAVBAR_MENU.ourServices}/>
                       </Link>
                       { user ?
-                          user.is_alfred ?
-                            <Link href={`/profile/services?user=${user._id}&indexAccount=1`}>
-                                <Tab classes={{root: classes.navbarTabRoot}}
-                                     label={NAVBAR_MENU.myServices}/>
-                            </Link>
-                            :
-                            <Link href={'/creaShop/creaShop'}>
-                                <Tab classes={{root: classes.navbarTabRoot}}
-                                     label={NAVBAR_MENU.registerServices}/>
-                            </Link>
+                        user.is_alfred ?
+                          <Link href={`/profile/services?user=${user._id}&indexAccount=1`}>
+                            <Tab classes={{root: classes.navbarTabRoot}}
+                                   label={NAVBAR_MENU.myServices}/>
+                          </Link>
+                          :
+                          <Link href={'/creaShop/creaShop'}>
+                            <Tab classes={{root: classes.navbarTabRoot}}
+                                   label={NAVBAR_MENU.registerServices}/>
+                          </Link>
                         :
                         <Link onClick={this.handleOpenRegister}>
-                            <Tab classes={{root: classes.navbarTabRoot}}
+                          <Tab classes={{root: classes.navbarTabRoot}}
                                  label={NAVBAR_MENU.registerServices}/>
                         </Link>
                       }
                       <Link href={'/footer/contact'}>
-                          <Tab classes={{root: classes.navbarTabRoot}}
+                        <Tab classes={{root: classes.navbarTabRoot}}
                                label={NAVBAR_MENU.contactUs}/>
                       </Link>
                     </Tabs>
