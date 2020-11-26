@@ -39,6 +39,9 @@ class ProfileServices extends React.Component {
 
   content = (classes, user, shop) => {
 
+    const editable = isEditableUser(user);
+
+
     return(
       <Grid container spacing={3} className={classes.servicesConntainer}>
         {isEditableUser(user) ?
@@ -60,13 +63,16 @@ class ProfileServices extends React.Component {
             </Grid> : null : null
         }
 
-        <Hidden only={['sm', 'xs', 'md']}>
-          <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-            <Grid style={{width: '70%'}}>
-              <AskQuestion user={user}/>
-            </Grid>
-          </Grid>
-        </Hidden>
+        {
+          !editable ?
+            <Hidden only={['sm', 'xs']}>
+              <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                <Grid style={{width: '70%'}}>
+                  <AskQuestion user={user}/>
+                </Grid>
+              </Grid>
+            </Hidden> : null
+        }
       </Grid>
     )
   };

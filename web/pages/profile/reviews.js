@@ -9,6 +9,7 @@ import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
 import Box from "../../components/Box/Box";
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
+import {isEditableUser} from "../../utils/functions";
 
 class ProfileReviews extends React.Component {
 
@@ -22,6 +23,8 @@ class ProfileReviews extends React.Component {
   }
 
   content = (classes, user) => {
+    const editable = isEditableUser(user);
+
     return(
       <Grid container>
         <Grid item xs={12}>
@@ -29,13 +32,16 @@ class ProfileReviews extends React.Component {
             <SummaryCommentary user={user} />
           </Box>
         </Grid>
-        <Hidden only={['sm', 'xs']}>
-          <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-            <Grid style={{width: '70%'}}>
-              <AskQuestion user={user}/>
-            </Grid>
-          </Grid>
-        </Hidden>
+        {
+          !editable ?
+            <Hidden only={['sm', 'xs']}>
+              <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                <Grid style={{width: '70%'}}>
+                  <AskQuestion user={user}/>
+                </Grid>
+              </Grid>
+            </Hidden> : null
+        }
       </Grid>
     )
   };

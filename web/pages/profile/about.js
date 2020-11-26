@@ -283,13 +283,17 @@ class ProfileAbout extends React.Component {
           :
           null
         }
-        <Hidden only={['sm', 'xs']}>
-          <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-            <Grid style={{width: '70%'}}>
-              <AskQuestion user={user}/>
-            </Grid>
-          </Grid>
-        </Hidden>
+        {
+          !editable ?
+            <Hidden only={['sm', 'xs']}>
+              <Grid item style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                <Grid style={{width: '70%'}}>
+                  <AskQuestion user={user}/>
+                </Grid>
+              </Grid>
+            </Hidden> : null
+        }
+
       </Grid>
     )
   };
