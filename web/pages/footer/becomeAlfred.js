@@ -3,8 +3,8 @@ import Grid from "@material-ui/core/Grid";
 import Header from "../../hoc/Layout/About/Header";
 import LayoutFaq from "../../hoc/Layout/Faq/LayoutFaq";
 import Footer from "../../hoc/Layout/About/Footer";
-import {withStyles} from "@material-ui/core/styles";
 import ResaService from '../../components/HomePage/ResaService/ResaService';
+import {withStyles} from "@material-ui/core/styles";
 import styles from '../../static/css/pages/homePage/index';
 
 
