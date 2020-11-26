@@ -15,6 +15,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import Divider from "@material-ui/core/Divider";
 import InfoIcon from '@material-ui/icons/Info';
 import setAuthToken from "../../utils/setAuthToken";
+import ViewComfyIcon from '@material-ui/icons/ViewComfy';
 import UserAvatar from "../../components/Avatar/UserAvatar";
 
 class myProfile extends React.Component{
@@ -75,6 +76,16 @@ class myProfile extends React.Component{
                 onClick={() => Router.push(`/profile/about?user=${user._id}`)}
               >
                 Voir mon profil
+              </Button>
+            </Grid>
+            <Grid style={{marginTop: '2vh', marginBottom: '2vh' }}>
+              <Button
+                className={classes.button}
+                startIcon={<ViewComfyIcon />}
+                onClick={() => user.is_alfred ? Router.push(`/profile/services?user=${user._id}&indexAccount=1`) : Router.push('/creaShop/creaShop')}
+
+              >
+                {user.is_alfred ? 'Mes Services' : 'Proposer mes services'}
               </Button>
             </Grid>
             <Grid style={{marginTop: '2vh', marginBottom: '2vh' }}>
