@@ -161,8 +161,10 @@ class NavBar extends Component {
 
   needRefresh = () => {
     this.setState({setOpenLogin: false});
-    if (localStorage.getItem('path')) {
-      Router.push(localStorage.getItem('path'));
+    const path=localStorage.getItem('path')
+    if (path) {
+      localStorage.removeItem('path');
+      Router.push(path)
     }
     else {
       Router.push('/search?search=1');
