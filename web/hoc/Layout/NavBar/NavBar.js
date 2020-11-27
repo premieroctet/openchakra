@@ -719,6 +719,7 @@ class NavBar extends Component {
                     >
                     {user ?
                       <Grid>
+                        <MenuItem>Bonjour {user.firstname} !</MenuItem>
                         <Link href={`/profile/about?user=${user._id}`}>
                           <MenuItem>Mon profil</MenuItem>
                         </Link>
