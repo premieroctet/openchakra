@@ -120,6 +120,9 @@ const displayConfig = () => {
   `)
 }
 
+// TODO : bloque le processus de résa pour les demandes d'info
+const BLOCK_INFO_RESERVATION=true
+
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -132,5 +135,5 @@ module.exports = {
   GOOGLE_PROVIDER, FACEBOOK_PROVIDER, PROVIDERS,
   is_production, is_validation, is_development, is_development_nossl, SERVER_PROD,
   get_host_url, MANGOPAY_CONFIG, displayConfig,
-  ENABLE_MAILING,
+  ENABLE_MAILING, BLOCK_INFO_RESERVATION
 };

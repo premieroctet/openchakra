@@ -21,6 +21,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import cookie from 'react-cookies';
 import {BOOKING} from '../../utils/i18n'
+import {BLOCK_INFO_RESERVATION} from '../../config/config'
 
 
 moment.locale('fr');
@@ -472,7 +473,7 @@ class BookingPreview extends React.Component {
                                 <p>En attente de confirmation</p>
                               )
                             ) : bookingObj.status === 'Demande d\'infos' &&
-                            currentUser._id === bookingObj.alfred._id ? (
+                            currentUser._id === bookingObj.alfred._id && !BLOCK_INFO_RESERVATION ? (
                               <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                 <Button onClick={()=>this.props.onConfirmPreaProuved(booking_id)} color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Pré-approuver</Button>
                                 <Grid style={{marginTop: '5%'}}>
