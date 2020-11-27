@@ -43,7 +43,9 @@ class MessageSummary extends React.Component {
       <Grid container style={{ width:'100%', display:'flex', flexDirection:'row', cursor: 'pointer'}} onClick={() => this.props.cbDetails(relative)}>
         <Grid style={{width: '100%'}}>
           <Grid style={{display: 'flex', justifyContent: 'flex-end'}}>
-            <Typography>{`Le ${moment(last.date).format('DD/MM')}`}</Typography>
+            <Typography>
+              { last ? `Le ${moment(last.date).format('DD/MM')}` : null }
+            </Typography>
           </Grid>
           <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
             <Grid>
@@ -56,7 +58,7 @@ class MessageSummary extends React.Component {
                 <Typography><strong>{relative.firstname}</strong></Typography>
               </Grid>
               <Grid>
-                <Typography style={{textOverflow: 'ellipsis'}}>{last.content}</Typography>
+                <Typography style={{textOverflow: 'ellipsis'}}>{last ? last.content : 'Aucun message'}</Typography>
               </Grid>
             </Grid>
           </Grid>
