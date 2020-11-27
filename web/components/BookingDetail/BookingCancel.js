@@ -166,7 +166,9 @@ class Cancel extends React.Component {
                   {/*Petite Description*/}
                   <Grid
                     item
-                    md={5}
+                    lg={12}
+                    xl={12}
+                    md={12}
                     xs={12}
                     style={{
                       textAlign: 'left',

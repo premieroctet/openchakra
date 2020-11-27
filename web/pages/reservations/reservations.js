@@ -188,7 +188,7 @@ class AllReservations extends React.Component {
               onClose={() => this.setState({bookingPreApprouved: null})}
       >
         <DialogContent>
-          <BookingPreApprouve booking_id={bookingPreApprouved} onConfirm={this.openBookingPreAprouved}/>
+          <BookingPreApprouve booking_id={bookingPreApprouved} onConfirm={this.openBookingConfirm}/>
         </DialogContent>
       </Dialog>
     )
