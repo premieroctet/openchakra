@@ -8,14 +8,8 @@ import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import Footer from '../hoc/Layout/Footer/Footer';
 import cookie from 'react-cookies';
-
-const styles = theme => ({
-  bigContainer: {
-    flexGrow: 1,
-
-  },
-
-});
+import LayoutPayment from "../hoc/Layout/LayoutPayment";
+import Typography from "@material-ui/core/Typography";
 
 class PaymentFailed extends React.Component {
   constructor(props) {
@@ -42,7 +36,7 @@ class PaymentFailed extends React.Component {
       .catch(err => {
         if (err.response.status === 401 || err.response.status === 403) {
           cookie.remove('token', {path: '/'});
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/'});
         }
       });
 
@@ -55,73 +49,33 @@ class PaymentFailed extends React.Component {
 
 
     return (
-      <Fragment>
-        <Layout>
-          <Grid container className={classes.bigContainer}>
-
-            {/*Le Header */}
-
-            {/*Le Contenu */}
-            <Grid container>
-              <br/>
-              {/*Contenu à Gauche*/}
-
-              {/*Petite Description*/}
-              <Grid item md={5} xs={12}
-                    style={{textAlign: 'left', margin: '0 auto', float: 'right', paddingLeft: '3%'}}>
-                <div style={{margin: '20px 11%', marginTop: '5%', width: '90%'}}/>
-                <Grid container>
-
-                  <Grid item xs={12} style={{marginTop: 50, marginBottom: 30}}>
-                    <h2 style={{
-                      fontSize: '2.5rem',
-                      color: 'rgba(84,89,95,0.95)',
-                      letterSpacing: -1,
-                      fontWeight: '100',
-                      textAlign: 'center',
-                    }}>Oups !</h2>
-
+      <React.Fragment>
+        <LayoutPayment>
+          <Grid style={{display: 'flex', backgroundColor: 'rgba(249,249,249, 1)', width: '100%', justifyContent: 'center', padding: '10%', minHeight: '80vh'}}>
+            <Grid style={{display: 'flex', justifyContent: 'center', width: '50%', backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', paddingRight: '10%', textAlign: 'center'}}>
+              <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                <Grid style={{display: 'flex', flexDirection: 'column'}}>
+                  <Grid>
+                    <h2>Oups !</h2>
+                  </Grid>
+                  <Grid>
+                    <Typography>Une erreur est survenue lors du paiement.</Typography>
                   </Grid>
                 </Grid>
-                <br/>
-                <div>
-                  <Grid container>
-                    <Grid item xs={12} style={{textAlign: 'center'}}>
-                      <p style={{fontSize: '30px'}}>Une erreur est survenue lors du paiement. </p>
-                      <Link href={'/search'}>
-                        <Button variant={'contained'} color={'primary'} style={{color: 'white'}}>Retour à
-                          l'accueil</Button>
-                      </Link>
-                      <br/>
-                    </Grid>
+                <Grid style={{marginTop: '5vh'}}>
+                  <Grid>
+                    <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={()=> Router.push('/')}>Retour à
+                      l'accueil</Button>
                   </Grid>
-                </div>
-                {/*cadre avec couleur et checkbox*/}
+                </Grid>
               </Grid>
-
-              {/*Contenu à droite*/}
-              <Grid item xs={12} md={7} style={{marginTop: '2%', marginBottom: '5%'}}>
-                <Grid container style={{
-                  backgroundImage: `url('../../static/resa.svg')`,
-                  backgroundPosition: 'cover',
-                  backgroundRepeat: 'no-repeat',
-                  border: 'thin solid transparent',
-                  maxWidth: '100%',
-                  height: '90vh',
-                  padding: '2%',
-                  position: 'sticky',
-                  top: 100,
-                }}>
-
-                </Grid> </Grid>
-            </Grid> </Grid>
-        </Layout>
-        <Footer/>
-
-      </Fragment>
+            </Grid>
+          </Grid>
+        </LayoutPayment>
+      </React.Fragment>
     );
   };
 }
 
 
-export default withStyles(styles)(PaymentFailed);
+export default PaymentFailed;
