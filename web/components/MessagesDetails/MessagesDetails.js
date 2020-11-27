@@ -98,6 +98,14 @@ class MessagesDetails extends React.Component {
         });
       })
       .catch(err => console.error(err));
+
+      const div = document.getElementById('chat');
+      if (div) {
+        setTimeout(function () {
+          div.scrollTop = 999999;
+        }, 200)
+      }
+
   }
 
 
@@ -129,9 +137,11 @@ class MessagesDetails extends React.Component {
       this.socket.emit('message', messObj);
       this.setState({message: ''});
       const div = document.getElementById('chat');
-      setTimeout(function () {
-        div.scrollTop = 99999;
-      }, 50);
+      if (div) {
+        setTimeout(function () {
+          div.scrollTop = 999999;
+        }, 200)
+      }
     } else {
       event.preventDefault();
     }
@@ -183,7 +193,7 @@ class MessagesDetails extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {relative} = this.state;
+    const {relative, emitter} = this.state;
 
     if (!relative) {
       return null
@@ -195,14 +205,14 @@ class MessagesDetails extends React.Component {
           <Grid>
             {this.state.oldMessagesDisplay.map((oldMessage, index) => {
               return (
-                <Grid className={this.state.emitter === oldMessage.idsender ? classes.currentUserContainer : classes.senderUserContainer} key={index}>
-                  <Grid className={this.state.emitter === oldMessage.idsender ? classes.currentUser : classes.senderUser}>
+                <Grid className={emitter === oldMessage.idsender ? classes.currentUserContainer : classes.senderUserContainer} key={index}>
+                  <Grid className={emitter === oldMessage.idsender ? classes.currentUser : classes.senderUser}>
                     <Grid>
-                      <Typography>{oldMessage.content}</Typography>
+                      <Typography>{`${oldMessage.idsender} ${oldMessage.content}`}</Typography>
                     </Grid>
                   </Grid>
                   <Grid>
-                    <Typography className={this.state.emitter === oldMessage.idsender ? classes.current : classes.sender}>{moment(oldMessage.date).calendar()}</Typography>
+                    <Typography className={emitter === oldMessage.idsender ? classes.current : classes.sender}>{moment(oldMessage.date).calendar()}</Typography>
                   </Grid>
                 </Grid>
               );
@@ -217,14 +227,14 @@ class MessagesDetails extends React.Component {
                 </Grid>
                 {this.state.messages.map((message, index) => {
                   return (
-                    <Grid className={this.state.emitter === oldMessage.idsender ? classes.currentUserContainer : classes.senderUserContainer} key={index}>
-                      <Grid className={this.state.emitter === oldMessage.idsender ? classes.currentUser : classes.senderUser}>
+                    <Grid className={emitter === message.idsender ? classes.currentUserContainer : classes.senderUserContainer} key={index}>
+                      <Grid className={emitter === message.idsender ? classes.currentUser : classes.senderUser}>
                         <Grid>
-                          <Typography>{oldMessage.content}</Typography>
+                          <Typography>{message.content}</Typography>
                         </Grid>
                       </Grid>
                       <Grid>
-                        <Typography className={this.state.emitter === oldMessage.idsender ? classes.current : classes.sender}>{moment(oldMessage.date).calendar()}</Typography>
+                        <Typography className={emitter === message.idsender ? classes.current : classes.sender}>{moment(message.date).calendar()}</Typography>
                       </Grid>
                     </Grid>
                   );

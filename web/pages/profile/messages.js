@@ -54,9 +54,15 @@ class Messages extends React.Component {
       lastMessageDate: ''
 
     };
+    this.onDetailsClosed = this.onDetailsClosed.bind(this)
+    this.loadChats = this.loadChats.bind(this)
   }
 
   componentDidMount() {
+    this.loadChats()
+  }
+
+  loadChats = () => {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get('/myAlfred/api/chatRooms/userChatRooms')
       .then( res => {
@@ -127,17 +133,29 @@ class Messages extends React.Component {
     }
   };
 
+  getBookingId = chats => {
+    chats = chats.slice().sort( (c1, c2) => c2.latest-c1.latest);
+    const booking=chats[0].booking
+    console.log(`Booking:${booking}`)
+    return booking
+  };
+
+  onDetailsClosed = () => {
+    this.setState({relativeDetails: null, message: ''})
+    this.loadChats()
+  }
+
   messageDetails = (classes) => {
     const filteredChats = this.getChatsRelative(this.state.relativeDetails._id);
-
+    const bookingId = this.getBookingId(filteredChats)
     return (
       <Dialog
         style={{width: '100%'}}
         open={Boolean(this.state.relativeDetails)}
-        onClose={() => this.setState({relativeDetails: null, message: ''})}
+        onClose={this.onDetailsClosed}
         classes={{paper: classes.messagesDialog}}
       >
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({relativeDetails: false, message: ''})}>
+        <DialogTitle id="customized-dialog-title" onClose={this.onDetailsClosed}>
           <Grid className={classes.dialogTitleMessages}>
             <Grid>
               <UserAvatar
@@ -158,11 +176,12 @@ class Messages extends React.Component {
             <Divider/>
           </Grid>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent  id={'chat'}>
           <MessagesDetails
             relative={this.state.relativeDetails}
             chats={filteredChats}
             ref={this.messageDetailsRef}
+            bookingId={bookingId}
             sendOldMessages={this.getOldMessages}
           />
         </DialogContent>
