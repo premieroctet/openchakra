@@ -87,18 +87,19 @@ class NavBar extends Component {
       startDate: null,
       endDate: null,
       focusedInput: null,
+
     }
   }
 
   componentDidMount() {
+    let query = Router.query;
     if (Router.pathname === '/') {
       this.setState({ifHomePage: true})
     }
     if (Router.pathname === '/search') {
       this.setState({ifSearchPage: true})
     }
-    if(Router.pathname === '/?login=true'){
-      console.log('bonjour')
+    if(query.login === 'true'){
       this.handleOpenLogin()
     }
 

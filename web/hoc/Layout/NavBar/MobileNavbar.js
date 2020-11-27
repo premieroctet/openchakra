@@ -58,6 +58,12 @@ class MobileNavbar extends React.Component{
   }
 
   componentDidMount() {
+      let query = Router.query;
+
+      if(query.login === 'true'){
+        this.handleOpenLogin()
+      }
+
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get('/myAlfred/api/users/current')
       .then(res => {
