@@ -129,8 +129,6 @@ class Presentation extends React.Component {
     const {classes}=this.props;
     const {user} = this.state;
     const editable = isEditableUser(user);
-    console.log(`Classes:${Object.keys(classes)}`);
-
     const title=frenchFormat(`À propos de ${user ? user.firstname : ''}`);
 
     return (

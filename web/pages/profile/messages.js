@@ -66,14 +66,13 @@ class Messages extends React.Component {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get('/myAlfred/api/chatRooms/userChatRooms')
       .then( res => {
-        const chats=res.data.filter(c => c.latest && c.booking && c.booking.alfred && c.messages && c.messages.length>0);
-        var state={chats:chats}
+        const chats=res.data.filter(c => c.booking && c.booking.alfred && c.messages);
         if (checkRelative && this.props.relative) {
           axios.get(`/myAlfred/api/users/users/${this.props.relative}`)
-            .then (res => this.setState({...state, relativeDetails:res.data}))
+            .then (res => this.setState({chats: chats, relativeDetails: res.data}))
         }
         else {
-          this.setState(state)
+          this.setState({chats: chats})
         }
       })
   }
@@ -126,7 +125,7 @@ class Messages extends React.Component {
   getOldMessages = () =>{
     let childState = this.messageDetailsRef.current.state;
     const dates = childState.messages.concat(childState.oldMessagesDisplay).map(m => moment(m.date));
-    const lastMessageDate = Math.max(...dates);
+    const lastMessageDate = dates.length>0 ? Math.max(...dates) : null
 
     if(this.state.lastMessageDate !== lastMessageDate){
       this.setState({lastMessageDate: lastMessageDate})
@@ -167,7 +166,9 @@ class Messages extends React.Component {
                 <Typography>{this.state.relativeDetails.firstname}</Typography>
               </Grid>
               <Grid>
-                <Typography style={{textAlign: 'center', whiteSpace: 'nowrap'}}>{`Dernier message ${moment(this.state.lastMessageDate).calendar()}`}</Typography>
+                <Typography style={{textAlign: 'center', whiteSpace: 'nowrap'}}>
+                  {this.state.lastMessageDate ? `Dernier message ${moment(this.state.lastMessageDate).calendar()}` : 'Aucun message'}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
