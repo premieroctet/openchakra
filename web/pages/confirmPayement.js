@@ -111,7 +111,7 @@ class ConfirmPayement extends React.Component {
   };
 
   payDirect = () => {
-    const total = parseFloat(this.state.total);
+    const total = parseFloat(this.state.grandTotal);
     const fees = parseFloat(this.state.fees);
     const data = {
       id_card: this.state.id_card,
@@ -126,7 +126,7 @@ class ConfirmPayement extends React.Component {
   };
 
   pay = () => {
-    const total = parseFloat(this.state.total);
+    const total = parseFloat(this.state.grandTotal);
     const fees = parseFloat(this.state.fees);
     const data = {amount: total, fees: fees};
 
