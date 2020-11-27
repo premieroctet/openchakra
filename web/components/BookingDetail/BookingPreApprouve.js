@@ -339,7 +339,6 @@ class BookingPreApprouve extends React.Component {
 
                     <Grid style={{float: 'right'}} item xs={12}>
                       {' '}
-                      <Link href={{pathname: '/reservations/detailsReservation', query: {id: this.state.booking_id}}}>
                         <Button
                           color={'primary'}
                           variant={'contained'}
@@ -355,11 +354,11 @@ class BookingPreApprouve extends React.Component {
                             paddingRight: '20px',
                             marginBottom: 50,
                             marginRight: 20,
+                            textTransform: 'initial'
                           }}
                         >
                           Pré-approuver
                         </Button>
-                      </Link>
                     </Grid>
 
                     {/*cadre avec couleur et checkbox*/}

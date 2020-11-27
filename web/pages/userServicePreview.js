@@ -393,7 +393,6 @@ class UserServicesPreview extends React.Component {
       return false;
     }
     const result=!Boolean(this.isInPerimeter());
-    console.log(`hasWarningPerimeter()=>${result}`);
   };
 
   getLocationLabel = () => {
@@ -483,7 +482,7 @@ class UserServicesPreview extends React.Component {
 
         if (!this.state.user) {
           cookie.remove('token', {path: '/'});
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/'});
         } else {
           Router.push({
             pathname: '/confirmPayement',
@@ -495,17 +494,16 @@ class UserServicesPreview extends React.Component {
           cookie.remove('token', {path: '/'});
           localStorage.setItem('bookingObj', JSON.stringify(bookingObj));
           localStorage.setItem('path', Router.pathname);
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/'});
         } else {
           axios.post('/myAlfred/api/booking/add', bookingObj)
             .then(response => {
+              console.log(response, 'myresponse')
               axios.put('/myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, {booking: response.data._id})
                 .then(() => {
                   localStorage.removeItem('address');
-                  Router.push({
-                    pathname: '/reservations/messagesDetails',
-                    query: {id: bookingObj.chatroom, booking: response.data._id},
-                  });
+                  Router.push(`/profile/messages?user=${response.data.user}&relative=${response.data.alfred}`
+                  );
                 });
             })
             .catch(err => console.error(err));

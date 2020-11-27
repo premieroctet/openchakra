@@ -102,7 +102,7 @@ class BookingPreview extends React.Component {
         console.log(error);
         if (error.response && error.response.status === 401 || error.response.status === 403) {
           cookie.remove('token', {path: '/'});
-          Router.push({pathname: '/login'});
+          Router.push({pathname: '/'});
         }
       });
 
@@ -615,25 +615,6 @@ class BookingPreview extends React.Component {
                         </a>
                       </Grid>
                     ) : null}
-                    <Grid
-                      container
-                      style={{
-                        borderBottom: '1.5px #8281813b solid',
-                        marginTop: '2%',
-                        paddingBottom: '3%',
-                      }}
-                    >
-                      <Link href="/faq">
-                        <a
-                          style={{
-                            textDecoration: 'none',
-                            color: 'rgb(47, 188, 211)',
-                          }}
-                        >
-                          Aide
-                        </a>
-                      </Link>
-                    </Grid>
                   </Grid>
                 </Grid>
 

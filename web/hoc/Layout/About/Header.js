@@ -18,32 +18,41 @@ class Header extends React.Component {
             content: '',
             searchBar: false,
             aboutMenu: false,
-            becomeAlfredMenu: false
+            becomeAlfredMenu: false,
+            active: false,
+            classNameMenu: ''
         }
 
     }
 
     render() {
+
         const {classes} = this.props;
-        let {title, content, searchBar, aboutMenu, becomeAlfredMenu} = this.state;
+        let {title, content, searchBar, aboutMenu, becomeAlfredMenu, active, classNameMenu} = this.state;
         if (process.browser) {
             if (window.location.pathname === '/footer/apropos') {
                 title = 'Nos valeurs';
                 content = 'd\'entreprise mais surtout d\'humain';
                 aboutMenu = true;
+                classNameMenu = classes.menuHeaderActive;
+
             } else if (window.location.pathname === '/footer/ourCommunity') {
                 title = 'Notre Communauté';
                 content = 'Qui nous fait vivre';
                 aboutMenu = true;
+                classNameMenu = classes.menuHeaderActive;
+
             } else if (window.location.pathname === '/footer/ourTeam') {
                 title = 'Notre Équipe';
                 content = 'Qui nous fait vivre';
                 aboutMenu = true;
+                classNameMenu = classes.menuHeaderActive;
+
             } else if (window.location.pathname === '/faq/home') {
                 title = 'FAQ';
                 content = 'Pour trouver vos réponses';
-            } else if(window.location.pathname === '/footer/becomeAlfred'){
-                title = 'Réserver un service';
+            } else if (window.location.pathname === '/footer/becomeAlfred') {
+                title = 'Devenir un Alfred';
                 content = 'les bases'
             }
         }
@@ -83,15 +92,15 @@ class Header extends React.Component {
                         <Tabs style={{padding: '-150px 0 0 0'}} aria-label="simple tabs example">
                             <div style={{margin: '0 auto'}}>
                                 <Link href={'/footer/apropos'}>
-                                    <Tab classes={{root: layoutStyle.navbarTabRootSelected}}
+                                    <Tab className={classNameMenu}
                                          label={NAVBAR_MENU.aboutUs}/>
                                 </Link>
                                 <Link href={'/footer/ourCommunity'}>
-                                    <Tab classes={{root: layoutStyle.navBarTabAbout}}
+                                    <Tab className={classNameMenu}
                                          label={NAVBAR_MENU.ourCom}/>
                                 </Link>
                                 <Link href={'/footer/ourTeam'}>
-                                    <Tab classes={{root: layoutStyle.navBarTabAbout}}
+                                    <Tab className={classNameMenu}
                                          label={NAVBAR_MENU.ourTeam}/>
                                 </Link>
                             </div>
