@@ -735,7 +735,7 @@ class Register extends React.Component {
                   </Grid>
                   <Grid item className={classes.responsiveButton}>
                     <Grid item style={{marginRight: '1%'}}>
-                      <Link href={'/search'}>
+                      <Link href={'/search?search=1'}>
                         <a style={{textDecoration: 'none'}}>
                           <Button variant={'contained'} color={'primary'} style={{color: 'white'}}>Commencez à
                             explorer</Button>

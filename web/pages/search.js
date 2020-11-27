@@ -436,7 +436,7 @@ class SearchPage extends React.Component {
                         </Hidden>
                         <Hidden only={['xs', 'lg', 'xl', 'sm']}>
                           <SearchResults
-                            model={new SearchDataModel(serviceUsers.map(su => su._id), 3, 3, false)}
+                            model={new SearchDataModel(serviceUsers.slice(0, 20).map(su => su._id), 3, 3, false)}
                             style={classes}
                             gps={this.state.user ? this.state.user.billing_address.gps : this.state.gps}
                             user={this.state.user}
@@ -444,7 +444,7 @@ class SearchPage extends React.Component {
                         </Hidden>
                         <Hidden only={['xs', 'lg', 'xl', 'md']}>
                           <SearchResults
-                            model={new SearchDataModel(serviceUsers.map(su => su._id), 2, 3, false)}
+                            model={new SearchDataModel(serviceUsers.slice(0, 20).map(su => su._id), 2, 3, false)}
                             style={classes}
                             gps={this.state.user ? this.state.user.billing_address.gps : this.state.gps}
                             user={this.state.user}
@@ -452,7 +452,7 @@ class SearchPage extends React.Component {
                         </Hidden>
                         <Hidden only={['sm', 'md', 'lg', 'xl']}>
                           {
-                            serviceUsers.map((su, index) =>{
+                            serviceUsers.slice(0, 20).map((su, index) =>{
                               return (
                                 <Grid item xs={12} key={index}>
                                   <CardService

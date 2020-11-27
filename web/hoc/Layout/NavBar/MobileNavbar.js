@@ -73,7 +73,7 @@ class MobileNavbar extends React.Component{
 
   needRefresh = () => {
     this.setState({setOpenLogin: false});
-    Router.push('/search');
+    Router.push('/search?search=1');
   };
 
   getUserId() {
@@ -171,7 +171,7 @@ class MobileNavbar extends React.Component{
         classes={{root: classes.navigationRoot}}
       >
         <BottomNavigationAction onClick={() => Router.push('/')} label="Accueil" classes={{root: classes.navigationActionRoot, label: classes.label}} value={0} icon={<HomeIcon/>}/>
-        <BottomNavigationAction onClick={() => Router.push('/search')} label="Explorer" classes={{root: classes.navigationActionRoot, label: classes.label}} value={1} icon={<SearchIcon/>}/>
+        <BottomNavigationAction onClick={() => Router.push('/search?search=1')} label="Explorer" classes={{root: classes.navigationActionRoot, label: classes.label}} value={1} icon={<SearchIcon/>}/>
         {
           user ?
             <BottomNavigationAction onClick={() => Router.push('/reservations/reservations')} label="Reservation" classes={{root: classes.navigationActionRoot, label: classes.label}} value={2} icon={<CalendarTodayIcon/>}/> : null
