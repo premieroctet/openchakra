@@ -59,16 +59,16 @@ class Messages extends React.Component {
   }
 
   componentDidMount() {
-    this.loadChats()
+    this.loadChats(true)
   }
 
-  loadChats = () => {
+  loadChats = checkRelative => {
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get('/myAlfred/api/chatRooms/userChatRooms')
       .then( res => {
         const chats=res.data.filter(c => c.latest && c.booking && c.booking.alfred && c.messages && c.messages.length>0);
         var state={chats:chats}
-        if (this.props.relative) {
+        if (checkRelative && this.props.relative) {
           axios.get(`/myAlfred/api/users/users/${this.props.relative}`)
             .then (res => this.setState({...state, relativeDetails:res.data}))
         }
@@ -193,6 +193,7 @@ class Messages extends React.Component {
                 type={'text'}
                 value={this.state.message}
                 onChange={this.handleChangeMessage}
+                onKeyDown={e => {if (e.key === 'Enter') this.handleSubmitMessage(e)}}
                 label={'Saisissez votre message'}
                 endAdornment={
                   <InputAdornment position="end">
