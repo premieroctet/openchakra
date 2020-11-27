@@ -208,7 +208,7 @@ class MessagesDetails extends React.Component {
                 <Grid className={emitter === oldMessage.idsender ? classes.currentUserContainer : classes.senderUserContainer} key={index}>
                   <Grid className={emitter === oldMessage.idsender ? classes.currentUser : classes.senderUser}>
                     <Grid>
-                      <Typography>{`${oldMessage.idsender} ${oldMessage.content}`}</Typography>
+                      <Typography>{`${oldMessage.content}`}</Typography>
                     </Grid>
                   </Grid>
                   <Grid>
