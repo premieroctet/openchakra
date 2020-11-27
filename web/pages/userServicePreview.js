@@ -482,7 +482,7 @@ class UserServicesPreview extends React.Component {
 
         if (!this.state.user) {
           cookie.remove('token', {path: '/'});
-          Router.push({pathname: '/'});
+          Router.push('/?login=true');
         } else {
           Router.push({
             pathname: '/confirmPayement',
