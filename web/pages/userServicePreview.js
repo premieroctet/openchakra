@@ -88,6 +88,7 @@ class UserServicesPreview extends React.Component {
     };
     this.checkBook = this.checkBook.bind(this)
     this.hasWarningPerimeter = this.hasWarningPerimeter.bind(this)
+    this.book = this.book.bind(this)
   }
 
   static getInitialProps({query: {id}}) {
@@ -110,7 +111,6 @@ class UserServicesPreview extends React.Component {
         localStorage.removeItem('bookingObj');
       }
     }
-    localStorage.setItem('path', Router.pathname);
     axios.get(`/myAlfred/api/serviceUser/${id}`)
       .then(res => {
         axios.get('/myAlfred/api/users/current')
@@ -493,7 +493,6 @@ class UserServicesPreview extends React.Component {
         if (!user) {
           cookie.remove('token', {path: '/'});
           localStorage.setItem('bookingObj', JSON.stringify(bookingObj));
-          localStorage.setItem('path', Router.pathname);
           Router.push({pathname: '/'});
         } else {
           axios.post('/myAlfred/api/booking/add', bookingObj)
