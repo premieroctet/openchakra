@@ -117,6 +117,34 @@ router.put('/saveMessages/:id', (req, res) => {
     .catch(err => console.error(err));
 });
 
+router.put('/addMessage/:id', (req, res) => {
+  ChatRooms.findById(req.params.id)
+    .then(chatroom => {
+      if (!chatroom) {
+        return res.status(404).json({msg: 'no chatroom found'});
+      }
+      if (chatroom) {
+        chatroom.messages.push(req.body.message)
+        chatroom.save()
+          .then( chatroom => {
+          Booking.findById(req.body.booking_id)
+            .populate('alfred')
+            .populate('user')
+            .then(b => {
+              if (b.alfred._id.equals(req.body.message.idsender)) {
+                sendNewMessageToClient(b, req.params.id, req);
+              } else {
+                sendNewMessageToAlfred(b, req.params.id, req);
+              }
+            })
+          })
+          .catch(err => console.error(err));
+        return res.json();
+      }
+    })
+    .catch(err => console.error(err));
+});
+
 router.put('/viewMessages/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   ChatRooms.findById(req.params.id)
     .then(chatroom => {

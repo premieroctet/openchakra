@@ -136,7 +136,6 @@ class Messages extends React.Component {
   getBookingId = chats => {
     chats = chats.slice().sort( (c1, c2) => c2.latest-c1.latest);
     const booking=chats[0].booking
-    console.log(`Booking:${booking}`)
     return booking
   };
 
