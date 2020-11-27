@@ -30,8 +30,6 @@ import {
 } from '../../utils/validationSteps/validationSteps';
 import cookie from 'react-cookies';
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
-import util from 'util'
-
 const I18N = require('../../utils/i18n');
 
 class creaShop extends React.Component {
@@ -392,8 +390,7 @@ class creaShop extends React.Component {
         <Grid className={classes.mainHeader}>
           <Grid className={classes.imageContentHeader}>
             <Link href={'/'}>
-              <Grid style={{maskImage: 'url(../../static/assets/icon/logo.svg)',   maskSize: 'contain', maskPosition: 'center',
-                maskRepeat: 'no-repeat', backgroundColor:'#82B5A5', height: 64, width: 102}}/>
+              <img alt={'logoMyAlfredGreen'} title={'logoMyAlfredGreen'} src={'../../static/assets/icon/logoGreen.svg'} style={{cursor: 'pointer'}} width={102} height={64}/>
             </Link>
           </Grid>
           <Grid className={classes.contentStepper}>

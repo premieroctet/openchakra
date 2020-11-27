@@ -97,10 +97,15 @@ class NavBar extends Component {
     if (Router.pathname === '/search') {
       this.setState({ifSearchPage: true})
     }
+    if(Router.pathname === '/?login=true'){
+      console.log('bonjour')
+      this.handleOpenLogin()
+    }
+
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get('/myAlfred/api/users/current')
       .then(res => {
-        var allAddresses={'main':res.data.billing_address}
+        var allAddresses={'main':res.data.billing_address};
         res.data.service_address.forEach( addr => {
           allAddresses[addr._id]=addr
         });
@@ -109,9 +114,9 @@ class NavBar extends Component {
           user: res.data,
           allAddresses: allAddresses
         })
-      }).catch(err => console.error(err))
+      }).catch(err => console.error(err));
 
-    this.setState({selectedAddress: this.props.selectedAddress || 'main'})
+    this.setState({selectedAddress: this.props.selectedAddress || 'main'});
     this.setState({keyword: this.props.keyword || ''})
   }
 

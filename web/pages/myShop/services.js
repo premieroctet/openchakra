@@ -332,7 +332,7 @@ class services extends React.Component {
         <Grid className={classes.mainHeader}>
           <Grid className={classes.imageContentHeader}>
             <Link href={'/'}>
-              <img src={'../../../static/assets/icon/logo.svg'} style={{cursor: 'pointer'}} width={102} height={64} alt={'logo'} title={'logo'}/>
+              <img src={'../../../static/assets/icon/logoGreen.svg'} style={{cursor: 'pointer'}} width={102} height={64} alt={'logo'} title={'logo'}/>
             </Link>
           </Grid>
           <Grid className={classes.contentStepper}>
@@ -349,7 +349,7 @@ class services extends React.Component {
               null :
               <Grid className={classes.rightContentComponent}>
                 <Grid className={classes.contentRight}
-                      style={{backgroundImage: `url(/static/assets/img/creaShop/bgImage/etape${this.state.activeStep}.svg)`}}/>
+                      style={{backgroundImage: `url(../../../static/assets/icon/creaShopBg.svg)`, height: '90vh'}}/>
               </Grid>
             }
           </Grid>
