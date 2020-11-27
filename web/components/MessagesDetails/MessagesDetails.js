@@ -82,15 +82,17 @@ class MessagesDetails extends React.Component {
           const oldMessages = [...this.state.oldMessages];
           oldMessages.push(data);
           messages.push(data);
+          /*
           axios
             .put(
-              `/myAlfred/api/chatRooms/saveMessages/${chatRoomId}`,
+              `/myAlfred/api/chatRooms/addMessagefdfsd/${chatRoomId}`,
               {
-                messages: oldMessages,
+                message: this.state.message,
                 booking_id: this.props.bookingId,
               },
             )
             .then();
+          */
           this.setState({
             messages,
             oldMessages,
@@ -133,6 +135,18 @@ class MessagesDetails extends React.Component {
         //lusender: this.state.lusender,
         //lurecipient: this.state.lurecipient
       };
+      const chatRoomId = this.props.chats.sort( (c1, c2) => moment(c1.latest)-moment(c2.latest))[0]._id;
+
+      axios
+        .put(
+          `/myAlfred/api/chatRooms/addMessage/${chatRoomId}`,
+          {
+            message: messObj,
+            booking_id: this.props.bookingId,
+          },
+        )
+        .then();
+
       event.preventDefault();
       this.socket.emit('message', messObj);
       this.setState({message: ''});
