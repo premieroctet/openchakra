@@ -237,8 +237,10 @@ class creaShop extends React.Component {
               })
               .catch(err => console.error(err));
           }
-
-          Router.push(`/profile/services?user=${this.state.user_id}&indexAccount=1`);
+          axios.get('/myAlfred/api/users/token')
+            .then (res => {
+              Router.push(`/profile/services?user=${this.state.user_id}&indexAccount=1`)
+            })
         })
         .catch(err => {
           this.setState({saving: false});

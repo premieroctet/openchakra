@@ -246,4 +246,11 @@ export default theme => ({
         fontFamily: theme.typography.infoBar.fontFamily,
         fontWeight: theme.typography.infoBar.fontWeight
     },
+
+    menuHeaderActive: {
+        '&:active': {
+            color: '#84A5E0',
+            borderBottom: '#84A5E0'
+        }
+    }
 })

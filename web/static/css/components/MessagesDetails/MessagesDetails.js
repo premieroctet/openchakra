@@ -69,12 +69,12 @@ export default theme => ({
     display:'flex',
     justifyContent: 'flex-end',
     flexDirection: 'column',
-    alignItems: 'end',
+    alignItems: 'flex-end',
   },
   senderUserContainer:{
     display:'flex',
     justifyContent: 'flex-start',
     flexDirection: 'column',
-    alignItems: 'start',
+    alignItems: 'flex-start',
   }
 })

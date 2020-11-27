@@ -163,9 +163,10 @@ class security extends React.Component {
             axios.put('/myAlfred/api/users/users/deleteAlfred')
               .then(() => {
                 this.setState({open: false});
-                toast.error('Boutique supprimée');
-                cookie.remove('token', {path: '/'});
-                Router.push('/');
+                axios.get('/myAlfred/api/users/token')
+                  .then ( res => {
+                    window.location.reload(true)
+                  })
               })
               .catch(err => {console.error(err)});
           })
@@ -485,8 +486,8 @@ class security extends React.Component {
             {this.content(classes)}
           </LayoutMobile>
         </Hidden>
-          {open ? this.modalDeleteShop : null}
-          {open2 ? this.modalDeleteAccount : null}
+          {open ? this.modalDeleteShop() : null}
+          {open2 ? this.modalDeleteAccount() : null}
       </Fragment>
     );
   };

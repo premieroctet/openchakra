@@ -329,7 +329,7 @@ class UserServicesPreview extends React.Component {
       count[id] = value + 1;
 
     }else{
-      count[id] = value - 1;
+      count[id] = Math.max(0, value - 1);
     }
       this.setState({count: count}, () => this.computeTotal());
   };
