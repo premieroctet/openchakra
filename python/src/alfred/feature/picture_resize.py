@@ -6,15 +6,16 @@ Created on 3 mars 2020
 import os
 from PIL.Image import open, ANTIALIAS
 import sys
+from os.path import abspath, join, isfile
 
-MAX_SIZE = 800
+MAX_SIZE = 500
 IMAGES_EXTENSIONS='.png .jpg .jpeg'.split()
 
 def get_image_files(root_path):
-  result = []
-  for dirpath, _, filenames in os.walk(root_path):
-    fnames = [f for f in filenames if len(list(filter(lambda e : f.lower().endswith(e), IMAGES_EXTENSIONS)))]
-    result+=[os.path.join(dirpath, f) for f in fnames]
+  result = os.listdir(root_path)
+  result = [f for f in result if filter(lambda e : f.lower().endswith(e), IMAGES_EXTENSIONS)]
+  result = [join(root_path,f) for f in result]
+  result = [f for f in result if isfile(f)]
   return result
 
 def get_resized_size(size, max_dimension):
@@ -29,7 +30,12 @@ def get_image_size(fname):
   return img, img.size
 
 def handle(dirpath):
+  dirpath=abspath(dirpath)
+  if not dirpath.endswith('/static/profile'):
+    raise Exception('Répertoire {} incorrect, profile attendu'.format(dirpath))
+  print("Searching in {}".format(dirpath))
   files = get_image_files(dirpath)
+  print("Checking {} files size".format(len(files)))
   for f in files:
     try:
       img, sz = get_image_size(f)
@@ -38,11 +44,11 @@ def handle(dirpath):
         #print("No resizing {} {}".format(sz, f))
         pass
       else:
-        print("Resizing from {} to {} for {}".format(sz, resized, f))
         img.thumbnail(resized, ANTIALIAS)
         img.save(f)
+        print("Resized from {} to {} for {}".format(sz, resized, f))
     except Exception as e:
-      sys.stderr.write("Impossible de convertir {}:{}\n".format(f, e))
+      sys.stderr.write("Can not convert {}:{}\n".format(f, e))
   
 if __name__ == '__main__':
   handle(sys.argv[1])
