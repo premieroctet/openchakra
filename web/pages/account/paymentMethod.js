@@ -103,13 +103,7 @@ class paymentMethod extends React.Component {
   }
 
   refreshCards = () => {
-    console.log('bonjour');
-    this.setState({addCreditCard: false, deletedial: false});
-    axios.get('/myAlfred/api/payment/cards')
-      .then(response => {
-        let cards = response.data;
-        this.setState({cards: cards});
-      });
+    this.setState({deletedial: false, addCreditCard: false}, () => this.componentDidMount());
   };
 
   handleCloseDial = () => {
@@ -151,13 +145,13 @@ class paymentMethod extends React.Component {
     };
 
     axios.post('/myAlfred/api/payment/createCard', obj)
-      .then(() => {this.refreshCards()}).catch(err => console.error(err));
+      .then(this.refreshCards).catch(err => console.error(err));
   };
 
   deleteCard = () => {
     const obj = {id_card: this.state.Idtempo};
     axios.put('/myAlfred/api/payment/cards', obj)
-      .then(() => {this.refreshCards()}).catch(err => console.error(err));
+      .then(()=>this.refreshCards()).catch(err => console.error(err));
   };
 
   handleCloseCreditCard = () =>{

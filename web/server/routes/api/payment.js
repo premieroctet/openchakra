@@ -329,7 +329,7 @@ router.post('/bankAccount', passport.authenticate('jwt', {session: false}), (req
 router.get('/cards', passport.authenticate('jwt', {session: false}), (req, res) => {
   User.findById(req.user.id)
     .then(user => {
-      mangoApi.Users.getCards(user.id_mangopay).then(cards => res.json(cards));
+      mangoApi.Users.getCards(user.id_mangopay, {parameters: { per_page: 100}}).then(cards => res.json(cards));
     })
     .catch(err => console.error(err));
 
