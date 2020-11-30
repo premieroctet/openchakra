@@ -222,11 +222,6 @@ class About extends React.Component {
           IconName:  user.firstname ? <ChatBubbleOutlineOutlinedIcon fontSize="large"/> : ''
         },
         {
-          label: 'Membre depuis',
-          summary: moment(user.creation_date).format("MMMM YYYY"),
-          IconName: user.firstname ? <PersonIcon fontSize="large"/> : ''
-        },
-        {
           label:  'Vérification',
           summary: user.id_card_status_text,
           IconName:  user.firstname ? <CheckCircleOutlineIcon fontSize="large"/> : ''

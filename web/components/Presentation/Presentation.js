@@ -19,6 +19,8 @@ const {frenchFormat} = require('../../utils/text');
 import CreateIcon from '@material-ui/icons/Create'
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+const moment=require('moment');
+moment.locale('fr');
 
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
@@ -123,7 +125,7 @@ class Presentation extends React.Component {
 
   openEdition = () => {
     this.setState({ showEdition: true, newDescription: this.state.user.description})
-  }
+  };
 
   render() {
     const {classes}=this.props;
@@ -142,7 +144,9 @@ class Presentation extends React.Component {
           :
           null
         }
-        <Topic titleTopic={title} titleSummary={user ? user.description : ''} />
+        <Topic titleTopic={title} titleSummary={ user ? `membre depuis ${moment(user.creation_date).format("MMMM YYYY")}`  : ''}>
+          {user ? user.description : ''}
+        </Topic>
         <Grid>
           {this.modalEditDialog(classes)}
         </Grid>

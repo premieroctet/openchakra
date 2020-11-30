@@ -92,14 +92,6 @@ class LayoutMobileProfile extends React.Component{
               </Grid>
             </Grid>
           </Grid>
-          <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '5vh', marginLeft: '5vh'}}>
-            <Grid>
-              <CalendarTodayIcon/>
-            </Grid>
-            <Grid style={{marginLeft: '3vh'}}>
-              <Typography>Membre depuis 2020</Typography>
-            </Grid>
-          </Grid>
         </Grid>
         <Grid style={{marginTop: '5vh'}}>
           <Divider/>
