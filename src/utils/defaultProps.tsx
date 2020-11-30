@@ -43,11 +43,9 @@ import {
   GridProps,
   CenterProps,
   ContainerProps,
-  Heading,
-  PropsWithAs,
 } from '@chakra-ui/react'
 
-import { ChevronDownIcon, CopyIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon } from '@chakra-ui/icons'
 import iconsList from '~iconsList'
 
 type PreviewDefaultProps = {
@@ -70,7 +68,7 @@ type PreviewDefaultProps = {
   Code?: any
   Textarea?: any
   CircularProgress?: any
-  Heading?: PropsWithAs<typeof Heading, HeadingProps>
+  Heading?: HeadingProps
   Tag?: TagProps
   SimpleGrid?: SimpleGridProps
   Switch?: SwitchProps
