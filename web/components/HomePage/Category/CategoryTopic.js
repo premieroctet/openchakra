@@ -17,7 +17,7 @@ class CategoryTopic extends React.Component{
     super(props);
   }
   render(){
-    const {classes, category} = this.props;
+    const {classes, category, user} = this.props;
 
     if (!category) {
       return null
@@ -49,7 +49,7 @@ class CategoryTopic extends React.Component{
         </Grid>
         <Grid container className={classes.categorySlideShowContainer} spacing={3}>
           <Hidden only={['xs', 'sm']}>
-            <CategorySlide model={new SlideGridDataModel(category, 4, 2, true)} style={classes}/>
+            <CategorySlide model={new SlideGridDataModel(category, 4, 2, true)} style={classes} user={user}/>
           </Hidden>
           <Hidden only={['md', 'lg', 'xl']}>
             {

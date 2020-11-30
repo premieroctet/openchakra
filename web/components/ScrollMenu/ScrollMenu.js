@@ -5,7 +5,9 @@ import Tab from "@material-ui/core/Tab";
 import Link from 'next/link';
 import styles from '../../static/css/components/ScrollMenu/ScrollMenu';
 import withStyles from "@material-ui/core/styles/withStyles";
-import querystring from 'querystring'
+import querystring from 'querystring';
+import Router from 'next/router';
+
 
 function a11yProps(index, res) {
   return {
@@ -21,6 +23,10 @@ class ScrollMenu extends React.Component{
       value: props.indexCat ? parseInt(props.indexCat) : 0,
     }
   }
+
+  controllerUrl = (url) =>{
+    Router.push(url)
+  };
 
   handleChange = (event, newValue) => {
     this.setState({value: newValue})
@@ -53,9 +59,7 @@ class ScrollMenu extends React.Component{
                           :
                           '/search?search=1&category=' + res._id + (gps ? '&gps=' + JSON.stringify(gps) : '') + '&indexCat=' + index;
                 return(
-                  <Link href={url} key={index}>
-                    <Tab label={res.label} className={classes.scrollMenuTab} {...a11yProps(index)}/>
-                  </Link>
+                  <Tab key={index} label={res.label} className={classes.scrollMenuTab} {...a11yProps(index)} onClick={()=>this.controllerUrl(url)}/>
                 )
               }
               ) : null

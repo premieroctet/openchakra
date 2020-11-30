@@ -14,11 +14,11 @@ class PaymentPics extends React.Component{
           name: 'visa'
         },
         {
-          urlName: 'MASTERCARD',
+          urlName: 'mastercard',
           name: 'mastercard'
         },
         {
-          urlName: 'AMEX',
+          urlName: 'amex',
           name: 'AmericanExpress'
         },
         {

@@ -47,11 +47,13 @@ class Home extends React.Component {
         let alfred = response.data;
         this.setState({alfred: alfred});
       });
+
+
   }
 
   render() {
     const { classes } = this.props;
-    const {category, alfred, logged} = this.state;
+    const {category, alfred, logged, user} = this.state;
     return (
       <React.Fragment>
         <Helmet>

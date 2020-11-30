@@ -2,15 +2,11 @@ import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import ScrollMenu from '../../components/ScrollMenu/ScrollMenu';
 import Layout from "./Layout";
-import axios from 'axios'
-import cookie from 'react-cookies';
-
 
 class LayoutAccount extends React.Component{
   constructor(props) {
     super(props);
     this.state= {
-      user: null,
       items: [
         {
           label: 'Notifications',
@@ -44,23 +40,12 @@ class LayoutAccount extends React.Component{
     }
   }
 
-
-
-  componentDidMount = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
-    axios.get(`/myAlfred/api/users/users/${this.props.user}`)
-      .then( res => {
-        this.setState( { user: res.data})
-      })
-      .catch (err => console.error(err))
-  };
-
   render() {
-    const{items, user}= this.state;
+    const{items}= this.state;
     const{children, index} = this.props;
 
     return(
-      <Layout user={user}>
+      <Layout>
         <Grid style={{display:'flex', justifyContent:'center'}}>
           <Grid style={{display: 'flex', justifyContent:'center', flexDirection: 'column', alignItems:'center', width: '100%'}}>
             <Grid style={{display: 'flex', justifyContent: 'center'}}>

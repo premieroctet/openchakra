@@ -62,7 +62,6 @@ class paymentMethod extends React.Component {
       expiration_date: '',
       issuer: '',
       focused: '',
-      name: '',
       csv: '',
       goodside: false,
       deletedial: false,
@@ -85,14 +84,13 @@ class paymentMethod extends React.Component {
       .then(res => {
         this.setState({
           user: res.data,
-          userName: this.state.user.name + ' ' + this.state.user.firstname,
-          name: this.state.userName
+          userName: res.data.full_name,
         });
       })
       .catch(err => {
           if (err.response.status === 401 || err.response.status === 403) {
             cookie.remove('token', {path: '/'});
-            Router.push({pathname: '/login'});
+            Router.push({pathname: '/'});
           }
         },
       );
@@ -105,6 +103,8 @@ class paymentMethod extends React.Component {
   }
 
   refreshCards = () => {
+    console.log('bonjour');
+    this.setState({addCreditCard: false, deletedial: false});
     axios.get('/myAlfred/api/payment/cards')
       .then(response => {
         let cards = response.data;
@@ -151,25 +151,13 @@ class paymentMethod extends React.Component {
     };
 
     axios.post('/myAlfred/api/payment/createCard', obj)
-      .then(() => {
-        axios.get('/myAlfred/api/payment/cards')
-          .then(response => {
-            let cards = response.data;
-            this.setState({cards: cards});
-          });
-      }).catch(err => console.error(err));
+      .then(() => {this.refreshCards()}).catch(err => console.error(err));
   };
 
-  deleteCard = (id) => {
-    const obj = {id_card: id};
+  deleteCard = () => {
+    const obj = {id_card: this.state.Idtempo};
     axios.put('/myAlfred/api/payment/cards', obj)
-      .then(() => {
-        axios.get('/myAlfred/api/payment/cards')
-          .then(response => {
-            let cards = response.data;
-            this.setState({cards: cards});
-          });
-      });
+      .then(() => {this.refreshCards()}).catch(err => console.error(err));
   };
 
   handleCloseCreditCard = () =>{
@@ -250,10 +238,7 @@ class paymentMethod extends React.Component {
           </Grid>
           <Grid style={{textAlign: 'center', marginLeft: 15, marginRight: 15, marginTop: '3vh', marginBottom: '3vh'}}>
             <Button
-              onClick={(e) => {
-                this.addCard(e);
-                this.refreshCards(e);
-                }}
+              onClick={this.addCard}
               variant="contained"
               classes={{root: classes.buttonSave}}
             >
@@ -284,7 +269,7 @@ class paymentMethod extends React.Component {
     return(
       <Dialog
         open={this.state.deletedial}
-        onClose={() => this.handleCloseDial()}
+        onClose={this.handleCloseDial}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -296,14 +281,10 @@ class paymentMethod extends React.Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.handleCloseDial()} color="primary">
+          <Button onClick={this.handleCloseDial} color="primary">
             Annuler
           </Button>
-          <Button onClick={(e) => {
-            this.deleteCard(this.state.Idtempo);
-            this.refreshCards(e);
-            this.handleCloseDial(e);
-          }} color="secondary" autoFocus>
+          <Button onClick={this.deleteCard} color="secondary" autoFocus>
             Supprimer
           </Button>
         </DialogActions>
@@ -373,7 +354,7 @@ class paymentMethod extends React.Component {
 
   render() {
     const {classes, index} = this.props;
-    const {cards, deletedial, userName, addCreditCard} = this.state;
+    const {deletedial,addCreditCard} = this.state;
 
     return (
       <React.Fragment>
