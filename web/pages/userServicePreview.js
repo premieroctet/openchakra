@@ -700,7 +700,7 @@ class UserServicesPreview extends React.Component {
                       classes={{root: classes.buttonReservation}}
                       onClick={this.toggleDrawer('bottom', true)}
                     >
-                      Réserver
+                      Voir les services
                     </Button>
                   </Grid>
                   <Hidden only={['xl', 'lg']}>

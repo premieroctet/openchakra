@@ -106,7 +106,7 @@ export default theme => ({
     height: 50,
     textTransform: 'initial',
     fontWeight: 'bold',
-    zIndex:9999999999,
+    zIndex:10,
     color:'white',
     borderRadius: 17
   },
@@ -359,7 +359,8 @@ export default theme => ({
       display : 'none'
     },
     '& .rbc-time-view': {
-      borderRadius: 5
+      borderRadius: 5,
+      zIndex:0
     }
   },
   schedule_policySizeTitle: {

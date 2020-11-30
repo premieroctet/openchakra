@@ -34,7 +34,7 @@ class MapComponent extends React.Component {
     if (Map) {
       return (
         <Grid id={'map-container'} style={{height: 300}}>
-          <Map center={position} zoom={zoom} style={{height: '100%'}}>
+          <Map center={position} zoom={zoom} style={{height: '100%', zIndex:0}}>
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
