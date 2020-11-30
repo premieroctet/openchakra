@@ -12,7 +12,7 @@ import {
   InputRightElement,
   Input,
   ButtonGroup,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { EditIcon, SmallCloseIcon } from '@chakra-ui/icons'
 import useDispatch from '~hooks/useDispatch'
 import { useForm } from '~hooks/useForm'

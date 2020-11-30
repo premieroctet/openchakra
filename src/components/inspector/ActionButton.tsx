@@ -5,7 +5,7 @@ import {
   Tooltip,
   IconButton,
   As,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 
 interface Props
   extends Omit<TooltipProps, 'label' | 'aria-label' | 'children' | 'onClick'> {

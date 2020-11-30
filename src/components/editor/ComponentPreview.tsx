@@ -11,7 +11,7 @@ import AccordionPreview, {
   AccordionItemPreview,
   AccordionPanelPreview,
 } from '~components/editor/previews/AccordionPreview'
-import * as Chakra from '@chakra-ui/core'
+import * as Chakra from '@chakra-ui/react'
 import { getComponentBy } from '~core/selectors/components'
 import { InputRightElementPreview } from '~components/editor/previews/InputRightElement'
 import { InputLeftElementPreview } from '~components/editor/previews/InputLeftElement'

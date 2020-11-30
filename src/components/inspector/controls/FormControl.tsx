@@ -4,7 +4,7 @@ import {
   FormControl as ChakraFormControl,
   Grid,
   Box,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 
 type FormControlPropType = {
   label: ReactNode

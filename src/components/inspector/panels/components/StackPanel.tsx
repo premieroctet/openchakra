@@ -2,7 +2,7 @@ import React from 'react'
 import SwitchControl from '~components/inspector/controls/SwitchControl'
 import TextControl from '~components/inspector/controls/TextControl'
 import FormControl from '~components/inspector/controls/FormControl'
-import { Select } from '@chakra-ui/core'
+import { Select } from '@chakra-ui/react'
 import usePropsSelector from '~hooks/usePropsSelector'
 import { useForm } from '~hooks/useForm'
 

@@ -83,7 +83,7 @@ describe('Code utils', () => {
     const code = await generateCode(componentFixtures)
 
     expect(code).toEqual(`import React from 'react'
-import { ChakraProvider, Box, Text } from '@chakra-ui/core'
+import { ChakraProvider, Box, Text } from '@chakra-ui/react'
 import theme from '@chakra-ui/theme'
 
 const MyBox = () => (
@@ -106,7 +106,7 @@ export default App
     const code = await generateCode(componentFixturesWithButtonIcon)
 
     expect(code).toEqual(`import React from 'react'
-import { ChakraProvider, Box, Button } from '@chakra-ui/core'
+import { ChakraProvider, Box, Button } from '@chakra-ui/react'
 import theme from '@chakra-ui/theme'
 import { PhoneIcon } from '@chakra-ui/icons'
 

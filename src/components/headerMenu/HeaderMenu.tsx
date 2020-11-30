@@ -13,7 +13,7 @@ import {
   MenuItemProps,
   MenuButtonProps,
   ButtonProps,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { FaBomb } from 'react-icons/fa'
 import { GoRepo } from 'react-icons/go'

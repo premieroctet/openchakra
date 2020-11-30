@@ -6,7 +6,7 @@ import {
   AccordionPanel,
   Box,
   AccordionItemProps,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 
 const AccordionContainer: React.FC<{
   title: ReactNode

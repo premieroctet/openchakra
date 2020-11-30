@@ -20,7 +20,7 @@ import {
   PopoverFooter,
   Tooltip,
   HStack,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { ExternalLinkIcon, SmallCloseIcon, CheckIcon } from '@chakra-ui/icons'
 import { DiGithubBadge } from 'react-icons/di'
 import { AiFillThunderbolt } from 'react-icons/ai'

@@ -5,7 +5,7 @@ import {
   ComboboxPopover,
   ComboboxList,
 } from '@reach/combobox'
-import { Input } from '@chakra-ui/core'
+import { Input } from '@chakra-ui/react'
 import { useForm } from '~hooks/useForm'
 
 type FormControlPropType = {

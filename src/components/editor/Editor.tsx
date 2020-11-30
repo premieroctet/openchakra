@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { Box, Text, Link } from '@chakra-ui/core'
+import { Box, Text, Link } from '@chakra-ui/react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import SplitPane from 'react-split-pane'
 import CodePanel from '~components/CodePanel'

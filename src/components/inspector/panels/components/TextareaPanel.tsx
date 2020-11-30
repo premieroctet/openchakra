@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { Input, Select } from '@chakra-ui/core'
+import { Input, Select } from '@chakra-ui/react'
 import FormControl from '~components/inspector/controls/FormControl'
 import { useForm } from '~hooks/useForm'
 import SizeControl, { Size } from '~components/inspector/controls/SizeControl'

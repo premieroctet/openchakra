@@ -1,5 +1,5 @@
 import React from 'react'
-import { InputGroup, Box } from '@chakra-ui/core'
+import { InputGroup, Box } from '@chakra-ui/react'
 import ComponentPreview from '~components/editor/ComponentPreview'
 import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'

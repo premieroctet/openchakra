@@ -1,5 +1,5 @@
 import React from 'react'
-import { Select } from '@chakra-ui/core'
+import { Select } from '@chakra-ui/react'
 import FormControl from '~components/inspector/controls/FormControl'
 import { useForm } from '~hooks/useForm'
 import ColorsControl from '~components/inspector/controls/ColorsControl'

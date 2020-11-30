@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box } from '@chakra-ui/core'
+import { Box } from '@chakra-ui/react'
 import ElementListItem from './ElementListItemDraggable'
 
 interface Props {

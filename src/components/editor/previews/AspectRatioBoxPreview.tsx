@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, AspectRatio } from '@chakra-ui/core'
+import { Box, AspectRatio } from '@chakra-ui/react'
 import { useInteractive } from '~hooks/useInteractive'
 import { useDropComponent } from '~hooks/useDropComponent'
 import ComponentPreview from '~components/editor/ComponentPreview'

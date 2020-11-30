@@ -18,7 +18,7 @@ import {
   Button,
   useDisclosure,
   Text,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { CopyIcon, CheckIcon, EditIcon } from '@chakra-ui/icons'
 import Panels from '~components/inspector/panels/Panels'
 import { GoRepo, GoCode } from 'react-icons/go'

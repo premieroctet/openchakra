@@ -7,7 +7,7 @@ import {
   AccordionButton,
   AccordionItem,
   AccordionPanel,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import ComponentPreview from '~components/editor/ComponentPreview'
 import { AccordionWhitelist } from '~utils/editor'
 

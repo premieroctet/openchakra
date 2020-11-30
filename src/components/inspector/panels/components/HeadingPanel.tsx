@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { Select } from '@chakra-ui/core'
+import { Select } from '@chakra-ui/react'
 import { useForm } from '~hooks/useForm'
 import FormControl from '~components/inspector/controls/FormControl'
 import ChildrenControl from '~components/inspector/controls/ChildrenControl'

@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import ColorsControl from '~components/inspector/controls/ColorsControl'
 import SizeControl from '~components/inspector/controls/SizeControl'
-import { Select } from '@chakra-ui/core'
+import { Select } from '@chakra-ui/react'
 import ChildrenControl from '~components/inspector/controls/ChildrenControl'
 import FormControl from '~components/inspector/controls/FormControl'
 import { useForm } from '~hooks/useForm'

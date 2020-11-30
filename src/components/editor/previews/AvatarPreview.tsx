@@ -5,7 +5,7 @@ import {
   Box,
   AvatarBadge,
   BoxProps,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { useInteractive } from '~hooks/useInteractive'
 import { useDropComponent } from '~hooks/useDropComponent'
 import ComponentPreview from '~components/editor/ComponentPreview'

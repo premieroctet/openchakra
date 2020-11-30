@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
-// import * as Chakra from '@chakra-ui/core'
-import { useTheme } from '@chakra-ui/core'
+// import * as Chakra from '@chakra-ui/react'
+import { useTheme } from '@chakra-ui/react'
 import FormControl from './FormControl'
 import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'

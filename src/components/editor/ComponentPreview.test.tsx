@@ -4,7 +4,7 @@ import { init } from '@rematch/core'
 import { Provider } from 'react-redux'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
-import { ChakraProvider } from '@chakra-ui/core'
+import { ChakraProvider } from '@chakra-ui/react'
 import theme from '@chakra-ui/theme'
 
 import ComponentPreview from './ComponentPreview'

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
-import { Button } from '@chakra-ui/core'
+import { Button } from '@chakra-ui/react'
 import icons from '~iconsList'
 
 interface Props {

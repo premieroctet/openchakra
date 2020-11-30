@@ -7,7 +7,7 @@ import {
   SliderFilledTrack,
   Slider,
   SliderThumb,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import TextControl from '~components/inspector/controls/TextControl'
 
 const EffectsPanel = () => {

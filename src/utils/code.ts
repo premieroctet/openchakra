@@ -1,7 +1,7 @@
 import isBoolean from 'lodash/isBoolean'
 import filter from 'lodash/filter'
 import icons from '~iconsList'
-import { propNames } from '@chakra-ui/core'
+import { propNames } from '@chakra-ui/react'
 
 const capitalize = (value: string) => {
   return value.charAt(0).toUpperCase() + value.slice(1)
@@ -166,7 +166,7 @@ export const generateCode = async (components: IComponents) => {
 import {
   ChakraProvider,
   ${imports.join(',')}
-} from "@chakra-ui/core";
+} from "@chakra-ui/react";
 import theme from "@chakra-ui/theme";${
     iconImports.length
       ? `

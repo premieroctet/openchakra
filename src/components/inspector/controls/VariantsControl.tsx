@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { Select } from '@chakra-ui/core'
+import { Select } from '@chakra-ui/react'
 import FormControl from './FormControl'
 import { useForm } from '~hooks/useForm'
 

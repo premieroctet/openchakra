@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { IconButton, ButtonGroup, useTheme } from '@chakra-ui/core'
+import { IconButton, ButtonGroup, useTheme } from '@chakra-ui/react'
 import ColorsControl from '~components/inspector/controls/ColorsControl'
 import { GoBold, GoItalic } from 'react-icons/go'
 import {

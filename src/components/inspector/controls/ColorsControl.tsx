@@ -19,7 +19,7 @@ import {
   Input,
   useTheme,
   Slider,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import FormControl from './FormControl'
 import { useForm } from '~hooks/useForm'
 import omit from 'lodash/omit'

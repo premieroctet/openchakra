@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { SimpleGrid, Select } from '@chakra-ui/core'
+import { SimpleGrid, Select } from '@chakra-ui/react'
 import FormControl from '~components/inspector/controls/FormControl'
 import usePropsSelector from '~hooks/usePropsSelector'
 import { useForm } from '~hooks/useForm'

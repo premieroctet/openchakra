@@ -1,5 +1,5 @@
 import React from 'react'
-import * as Chakra from '@chakra-ui/core'
+import * as Chakra from '@chakra-ui/react'
 
 import {
   BadgeProps,
@@ -45,7 +45,7 @@ import {
   ContainerProps,
   Heading,
   PropsWithAs,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 
 import { ChevronDownIcon, CopyIcon } from '@chakra-ui/icons'
 import iconsList from '~iconsList'

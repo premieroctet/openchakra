@@ -1,5 +1,5 @@
 import React from 'react'
-import { MenuItem, Box } from '@chakra-ui/core'
+import { MenuItem, Box } from '@chakra-ui/react'
 import { FiUpload } from 'react-icons/fi'
 import { loadFromJSON } from '~utils/import'
 import useDispatch from '~hooks/useDispatch'

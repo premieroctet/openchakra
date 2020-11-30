@@ -11,7 +11,7 @@ import {
   SliderFilledTrack,
   Select,
   Slider,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'
 

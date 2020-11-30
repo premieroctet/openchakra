@@ -7,7 +7,7 @@ import {
   InputGroup,
   InputLeftElement,
   Box,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import {
   ArrowBackIcon,
   ArrowForwardIcon,
