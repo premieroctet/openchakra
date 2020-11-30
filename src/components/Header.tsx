@@ -115,8 +115,8 @@ const Header = () => {
                   fontSize="xs"
                   htmlFor="preview"
                   pb={0}
-                  m={0}
-                  mr={3}
+                  mb={0}
+                  mr={2}
                   whiteSpace="nowrap"
                 >
                   Builder mode
@@ -137,8 +137,8 @@ const Header = () => {
               <FormLabel
                 color="gray.200"
                 fontSize="xs"
-                m={0}
-                mr={3}
+                mr={2}
+                mb={0}
                 htmlFor="code"
                 pb={0}
                 whiteSpace="nowrap"
@@ -213,7 +213,7 @@ const Header = () => {
           spacing="2"
         >
           <Link isExternal href="https://github.com/premieroctet/openchakra">
-            <Box as={DiGithubBadge} size="8" color="gray.200" />
+            <Box as={DiGithubBadge} size={32} color="gray.200" />
           </Link>
           <Box lineHeight="shorter" color="white" fontSize="xs">
             by{' '}
