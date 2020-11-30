@@ -19,6 +19,7 @@ import {
   Input,
   useTheme,
   Slider,
+  Portal,
 } from '@chakra-ui/react'
 import FormControl from './FormControl'
 import { useForm } from '~hooks/useForm'
@@ -117,36 +118,38 @@ const ColorsControl = (props: ColorControlPropsType) => {
             {props.label}
           </IconButton>
         </PopoverTrigger>
-        <PopoverContent width="200px" zIndex={theme.zIndices.modal}>
-          <PopoverArrow />
-          <PopoverBody>
-            {props.withFullColor ? (
-              <Tabs size="sm" variant="soft-borderRadius" colorScheme="green">
-                <TabList>
-                  <Tab>Theme</Tab>
-                  <Tab>All</Tab>
-                </TabList>
-                <TabPanels mt={4}>
-                  <TabPanel>{huesPicker}</TabPanel>
+        <Portal>
+          <PopoverContent width="200px">
+            <PopoverArrow />
+            <PopoverBody>
+              {props.withFullColor ? (
+                <Tabs size="sm" variant="soft-borderRadius" colorScheme="green">
+                  <TabList>
+                    <Tab>Theme</Tab>
+                    <Tab>All</Tab>
+                  </TabList>
+                  <TabPanels mt={4}>
+                    <TabPanel p={0}>{huesPicker}</TabPanel>
 
-                  <TabPanel>
-                    <Box position="relative" height="150px">
-                      <ColorPicker
-                        color={value}
-                        onChange={(color: any) => {
-                          setValue(props.name, `#${color.hex}`)
-                        }}
-                      />
-                      );
-                    </Box>
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
-            ) : (
-              huesPicker
-            )}
-          </PopoverBody>
-        </PopoverContent>
+                    <TabPanel p={0}>
+                      <Box position="relative" height="150px">
+                        <ColorPicker
+                          color={value}
+                          onChange={(color: any) => {
+                            setValue(props.name, `#${color.hex}`)
+                          }}
+                        />
+                        );
+                      </Box>
+                    </TabPanel>
+                  </TabPanels>
+                </Tabs>
+              ) : (
+                huesPicker
+              )}
+            </PopoverBody>
+          </PopoverContent>
+        </Portal>
       </Popover>
       <Input
         width="100px"

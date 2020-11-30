@@ -41,7 +41,7 @@ const Menu = () => {
                 x
               </IconButton>
             ) : (
-              <SearchIcon path="" color="gray.300" />
+              <SearchIcon path="" color="gray.300" zIndex={0} />
             )}
           </InputRightElement>
           <Input
@@ -51,6 +51,11 @@ const Menu = () => {
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               setSearchTerm(event.target.value)
             }
+            borderColor="rgba(255, 255, 255, 0.04)"
+            bg="rgba(255, 255, 255, 0.06)"
+            _hover={{
+              borderColor: 'rgba(255, 255, 255, 0.08)',
+            }}
           />
         </InputGroup>
 
