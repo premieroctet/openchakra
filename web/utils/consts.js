@@ -313,20 +313,24 @@ const SKILLS={
   careful: {
     label: 'Travail soigneux',
     picture: 'careful_work',
+    entrieName: 'careful'
   },
   punctual: {
     label: 'Ponctualité',
     picture: 'punctuality',
+    entrieName: 'punctual'
   },
   flexible: {
     label: 'Flexibilité',
     picture: 'flexibility',
+    entrieName: 'flexible'
   },
   reactive: {
     label: 'Réactivité',
     picture: 'reactivity',
+    entrieName: 'reactive'
   },
-}
+};
 
 const LANGUAGES= [
   {value: 'Français', label: 'Français'},

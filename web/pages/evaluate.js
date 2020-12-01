@@ -68,7 +68,6 @@ class Evaluate extends React.Component {
 
   onComplimentChanged = (name) => {
     const org = this.state[name];
-    console.log(name + ' was ' + org);
     this.setState({[name]: !org});
   };
 

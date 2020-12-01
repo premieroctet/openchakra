@@ -53,19 +53,28 @@ class Skills extends React.Component {
   };
 
   render() {
-    const {classes, hideCount, onClick, needTitle, alfred, widthHr} = this.props;
+    const {classes, hideCount, onClick, skills} = this.props;
     const {skill_values}=this.state;
+
+    const skillClicked = (e, name) => {
+      e.stopPropagation();
+      if (onClick) {
+        onClick(name);
+      }
+    };
+
 
     return (
       <Topic titleTopic={'Compliments'}>
         <Grid container className={classes.skillsContainer} spacing={3}>
           { Object.keys(SKILLS).map(skill => {
-            const count=skill_values[skill];
-              const pic=`/static/assets/img/skillsAlfred/${SKILLS[skill].picture}${count?'':'_disabled'}.svg`;
+            const name =  SKILLS[skill].entrieName;
+            const count=skills[name];
+            const pic=`/static/assets/img/skillsAlfred/${SKILLS[skill].picture}${count?'':'_disabled'}.svg`;
               return (
-                <Grid item xs={6} lg={3} xl={3} sm={6} md={6} className={classes.skillCard} >
+                <Grid item xs={6} lg={3} xl={3} sm={6} md={6} className={classes.skillCard} onClick={(e) => skillClicked(e, name)}>
                   <Grid>
-                    <img src={pic} className={classes.avatarSize}/>
+                    <img title={'pics'} alt={'pics'} src={pic} className={classes.avatarSize}/>
                   </Grid>
                   <Grid className={classes.skillTitle}>{SKILLS[skill].label}</Grid>
                   { hideCount ? null:
