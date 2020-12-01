@@ -174,7 +174,7 @@ class MobileNavbar extends React.Component{
         <BottomNavigationAction onClick={() => Router.push('/search?search=1')} label="Explorer" classes={{root: classes.navigationActionRoot, label: classes.label}} value={1} icon={<SearchIcon/>}/>
         {
           user ?
-            <BottomNavigationAction onClick={() => Router.push('/reservations/reservations')} label="Reservation" classes={{root: classes.navigationActionRoot, label: classes.label}} value={2} icon={<CalendarTodayIcon/>}/> : null
+            <BottomNavigationAction onClick={() => Router.push('/reservations/reservations')} label="Réservations" classes={{root: classes.navigationActionRoot, label: classes.label}} value={2} icon={<CalendarTodayIcon/>}/> : null
         }
         {
           user ?
