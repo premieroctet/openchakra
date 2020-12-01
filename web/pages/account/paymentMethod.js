@@ -68,7 +68,6 @@ class paymentMethod extends React.Component {
       Idtempo: '',
       addCreditCard: false
     };
-    this.callDrawer = this.callDrawer.bind(this);
   }
 
   static getInitialProps({query: {indexAccount}}) {
@@ -103,13 +102,7 @@ class paymentMethod extends React.Component {
   }
 
   refreshCards = () => {
-    console.log('bonjour');
-    this.setState({addCreditCard: false, deletedial: false});
-    axios.get('/myAlfred/api/payment/cards')
-      .then(response => {
-        let cards = response.data;
-        this.setState({cards: cards});
-      });
+    this.setState({deletedial: false, addCreditCard: false}, () => this.componentDidMount());
   };
 
   handleCloseDial = () => {
@@ -151,13 +144,14 @@ class paymentMethod extends React.Component {
     };
 
     axios.post('/myAlfred/api/payment/createCard', obj)
-      .then(() => {this.refreshCards()}).catch(err => console.error(err));
+      .then(this.refreshCards).catch(err => console.error(err));
   };
 
   deleteCard = () => {
+    /*TODO pas de réponse de mongopay, api tourne en boucle, du coup j'ai supprimé then & catch*/
     const obj = {id_card: this.state.Idtempo};
-    axios.put('/myAlfred/api/payment/cards', obj)
-      .then(() => {this.refreshCards()}).catch(err => console.error(err));
+    axios.put('/myAlfred/api/payment/cards', obj);
+    this.refreshCards()
   };
 
   handleCloseCreditCard = () =>{
@@ -168,10 +162,6 @@ class paymentMethod extends React.Component {
     this.setState({addCreditCard: true});
 
   };
-
-  callDrawer() {
-    this.child.current.handleDrawerToggle();
-  }
 
   callDialogDeletedCard = (e) =>{
     this.setState({deletedial: true, Idtempo: e})
