@@ -84,7 +84,6 @@ describe('Code utils', () => {
 
     expect(code).toEqual(`import React from 'react'
 import { ChakraProvider, Box, Text } from '@chakra-ui/react'
-import theme from '@chakra-ui/theme'
 
 const MyBox = () => (
   <Box bg="whatsapp.500">
@@ -93,7 +92,7 @@ const MyBox = () => (
 )
 
 const App = () => (
-  <ChakraProvider resetCSS theme={theme}>
+  <ChakraProvider resetCSS>
     <MyBox />
   </ChakraProvider>
 )
@@ -107,7 +106,6 @@ export default App
 
     expect(code).toEqual(`import React from 'react'
 import { ChakraProvider, Box, Button } from '@chakra-ui/react'
-import theme from '@chakra-ui/theme'
 import { PhoneIcon } from '@chakra-ui/icons'
 
 const MyBox = () => (
@@ -117,7 +115,7 @@ const MyBox = () => (
 )
 
 const App = () => (
-  <ChakraProvider resetCSS theme={theme}>
+  <ChakraProvider resetCSS>
     <MyBox />
   </ChakraProvider>
 )
