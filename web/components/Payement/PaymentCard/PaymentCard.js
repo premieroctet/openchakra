@@ -14,11 +14,15 @@ class PaymentCard extends React.Component{
   }
   render() {
     const{cards, userName, editable, classes} = this.props;
+    const isEqualToFlase = (currentValue) => currentValue === false;
+
+    let activeCard = [];
 
     return(
       <Grid container>
         {cards ?
           cards.map((e, index) => {
+            activeCard.push(e.Active);
             if(e.Active){
               let experiationDate = e.ExpirationDate.slice(0,2) + "/20" + e.ExpirationDate.slice(2);
               let cb = e.CardProvider === 'MASTERCARD' ? e.Product === 'MCC'  ? e.CardProvider : 'MSI' : e.CardProvider === 'AMEX' ? 'AMEX' :  e.CardProvider === 'CB' ? e.CardProvider : 'visa' ;
@@ -58,8 +62,13 @@ class PaymentCard extends React.Component{
                 </Grid>
               )
             }
-            }) :
-          <Typography>Aucun mode de paiement enregistré</Typography>
+            })
+          :
+            <Typography>Aucun mode de paiement enregistré</Typography>
+        }
+        {
+          cards && activeCard.every(isEqualToFlase) ?
+          <Typography>Aucun mode de paiement enregistré</Typography> : null
         }
       </Grid>
     );
