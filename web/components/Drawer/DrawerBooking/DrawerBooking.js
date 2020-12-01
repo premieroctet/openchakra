@@ -240,12 +240,12 @@ class DrawerBooking extends React.Component{
                     <Grid>
                       <ButtonSwitch
                         key={moment()}
-                        id='client'
-                        label={'A mon adresse principale'}
+                        id={this.props.clientAddressId}
+                        label={this.props.clientAddress}
                         isEditable={false}
                         isPrice={false}
                         isOption={false}
-                        checked={location === 'client'}
+                        checked={location === this.props.clientAddressId}
                         onChange={this.props.onLocationChanged}/>
                     </Grid>
                     : null

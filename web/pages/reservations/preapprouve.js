@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
+import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import moment from 'moment';
 import Button from '@material-ui/core/Button';
@@ -12,14 +13,14 @@ import io from 'socket.io-client';
 import styles from './preApprouve/preApprouveStyle';
 import About from '../../components/About/About';
 import UserAvatar from '../../components/Avatar/UserAvatar';
-import Typography from '@material-ui/core/Typography';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
 import cookie from 'react-cookies';
+
+const {frenchFormat} = require('../../utils/text');
 
 registerLocale('fr', fr);
 moment.locale('fr');
 const _ = require('lodash');
-const {frenchFormat} = require('../../utils/text');
 
 const Input2 = ({value, onClick}) => (
   <Button value={value} color={'inherit'} variant={'outlined'} style={{color: 'gray'}} className="example-custom-input"

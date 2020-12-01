@@ -9,6 +9,7 @@ class AddressService extends React.Component {
   render() {
     const {bookingObj, currentUser, user} = this.props;
 
+    console.log(`BookingObj:${JSON.stringify(bookingObj, null, 2)}`)
     if (currentUser && bookingObj) {
       var checkAdd = currentUser.billing_address.address === bookingObj.address.address && currentUser.billing_address.zip_code === bookingObj.address.zip_code && currentUser.billing_address.city === bookingObj.address.city;
     }
