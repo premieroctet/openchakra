@@ -51,7 +51,6 @@ ReactDOM.render(<App />, rootElement);
   "dependencies": {
     "@chakra-ui/react": "^1.0.1",
     "@chakra-ui/icons": "^1.0.1",
-    "@chakra-ui/theme": "^1.0.1",
     "@emotion/react": "^11.1.1",
     "@emotion/styled": "^11.0.0",
     "framer-motion": "^2.9.4",

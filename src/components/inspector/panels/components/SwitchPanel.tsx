@@ -28,7 +28,7 @@ const SwitchPanel = () => {
         </Select>
       </FormControl>
 
-      <ColorsControl label="Color" name="color" />
+      <ColorsControl label="Color" name="colorScheme" />
     </>
   )
 }

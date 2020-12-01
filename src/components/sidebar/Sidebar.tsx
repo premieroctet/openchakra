@@ -29,7 +29,7 @@ const Menu = () => {
         width="15rem"
       >
         <InputGroup size="sm" mb={4}>
-          <InputRightElement>
+          <InputRightElement zIndex={0}>
             {searchTerm ? (
               <IconButton
                 color="gray.300"
@@ -41,7 +41,7 @@ const Menu = () => {
                 x
               </IconButton>
             ) : (
-              <SearchIcon path="" color="gray.300" zIndex={0} />
+              <SearchIcon path="" color="gray.300" />
             )}
           </InputRightElement>
           <Input

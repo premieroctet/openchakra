@@ -43,6 +43,8 @@ import {
   GridProps,
   CenterProps,
   ContainerProps,
+  AvatarBadgeProps,
+  CircularProgressProps,
 } from '@chakra-ui/react'
 
 import { ChevronDownIcon } from '@chakra-ui/icons'
@@ -57,7 +59,7 @@ type PreviewDefaultProps = {
   Image?: ImageProps
   Text?: BoxProps
   Progress?: ProgressProps
-  AvatarBadge?: any
+  AvatarBadge?: AvatarBadgeProps
   AvatarGroup?: Omit<AvatarGroupProps, 'children'>
   Avatar?: AvatarProps
   Checkbox?: CheckboxProps
@@ -67,7 +69,7 @@ type PreviewDefaultProps = {
   Divider?: any
   Code?: any
   Textarea?: any
-  CircularProgress?: any
+  CircularProgress?: CircularProgressProps
   Heading?: HeadingProps
   Tag?: TagProps
   SimpleGrid?: SimpleGridProps
@@ -153,6 +155,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Checkbox: {
     children: 'Label checkbox',
     isReadOnly: true,
+    isChecked: false,
   },
   AlertTitle: {
     children: 'Alert title',
@@ -163,7 +166,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   },
   AvatarBadge: {
     bg: 'green.500',
-    size: '1.25em',
+    boxSize: '1.25rem',
     borderColor: 'white',
   },
   TabPanel: { children: 'Tab' },
@@ -199,6 +202,20 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Select: {
     icon: <ChevronDownIcon path="" />,
   },
+  Switch: {
+    isChecked: false,
+  },
+  CircularProgress: {
+    size: '48px',
+    value: 60,
+    min: 0,
+    max: 100,
+  },
+  Progress: {
+    value: 60,
+    min: 0,
+    max: 100,
+  },
 }
 
 export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
@@ -213,6 +230,9 @@ export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
   },
   CircularProgress: {
     size: '48px',
+    value: 60,
+    min: 0,
+    max: 100,
   },
   Badge: {
     variant: 'subtle',
@@ -272,6 +292,11 @@ export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
     separator: '/',
   },
   CloseButton: { size: 'md' },
+  Progress: {
+    value: 60,
+    min: 0,
+    max: 100,
+  },
 }
 
 export const getDefaultFormProps = (type: ComponentType) => {

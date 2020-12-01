@@ -123,7 +123,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
             <PopoverArrow />
             <PopoverBody>
               {props.withFullColor ? (
-                <Tabs size="sm" variant="soft-borderRadius" colorScheme="green">
+                <Tabs size="sm" variant="soft-rounded" colorScheme="green">
                   <TabList>
                     <Tab>Theme</Tab>
                     <Tab>All</Tab>
