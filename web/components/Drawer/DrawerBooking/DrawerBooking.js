@@ -241,8 +241,7 @@ class DrawerBooking extends React.Component{
                       <ButtonSwitch
                         key={moment()}
                         id={this.props.clientAddressId}
-                        //label={this.props.clientAddress}
-                        label={'tagada'}
+                        label={this.props.clientAddress}
                         isEditable={false}
                         isPrice={false}
                         isOption={false}

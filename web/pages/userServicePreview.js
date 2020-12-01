@@ -89,6 +89,8 @@ class UserServicesPreview extends React.Component {
     this.checkBook = this.checkBook.bind(this)
     this.hasWarningPerimeter = this.hasWarningPerimeter.bind(this)
     this.book = this.book.bind(this)
+    this.getClientAddress = this.getClientAddress.bind(this)
+    this.isInPerimeter = this.isInPerimeter.bind(this)
   }
 
   static getInitialProps({query: {id, address}}) {
@@ -314,7 +316,6 @@ class UserServicesPreview extends React.Component {
   };
 
   onLocationChanged = (id, checked) => {
-    console.log(`Location:${id}:${checked}`)
     this.onChange({target: {name: 'location', value: checked ? id : null}});
   };
 
@@ -379,11 +380,11 @@ class UserServicesPreview extends React.Component {
   };
 
   isInPerimeter = () => {
-    if (isEmpty(this.state.serviceUser) || isEmpty(this.state.user)) {
+    if (isEmpty(this.state.serviceUser) || isEmpty(this.state.user) || this.getClientAddress()==null) {
       return false;
     }
     const coordSU = this.state.serviceUser.service_address.gps;
-    const coordUser = this.state.user.billing_address.gps;
+    const coordUser = this.getClientAddress().gps;
     const dist = computeDistanceKm(coordSU, coordUser);
     const inPerimeter = parseFloat(dist) < parseFloat(this.state.serviceUser.perimeter);
     return inPerimeter;
@@ -397,6 +398,19 @@ class UserServicesPreview extends React.Component {
   };
 
   getClientAddress = () => {
+    const {user}=this.state
+    const{address}=this.props
+    if (!address || ['client', 'main'].includes(address)) {
+      return user.billing_address
+    }
+    var res = user ? user.service_address.find(a => a._id.toString()==address) : null
+    if (res) {
+      res.gps = { lat: res.lat, lng: res.lng}
+    }
+    return res
+  }
+
+  getClientAddressLabel = () => {
     const {location, user}=this.state
     if (['client', 'main'].includes(location)) {
       return 'A mon adresse principale'
@@ -406,7 +420,7 @@ class UserServicesPreview extends React.Component {
 
   getLocationLabel = () => {
     const titles = {
-      'client': this.getClientAddress(),
+      'client': this.getClientAddressLabel(),
       'alfred': 'Chez ' + this.state.alfred.firstname,
       'visio': 'En visio',
     };
@@ -436,12 +450,13 @@ class UserServicesPreview extends React.Component {
     let place;
     if (user) {
       switch (this.state.location) {
-        case 'client':
-          place = this.state.user.billing_address;
-          break;
         case 'alfred':
           place = this.state.serviceUser.service_address;
           break;
+        case 'visio':
+          break;
+        default:
+          place = this.getClientAddress()
       }
     }
 
@@ -728,7 +743,7 @@ class UserServicesPreview extends React.Component {
                           computeTravelTax={this.computeTravelTax}
                           getLocationLabel={this.getLocationLabel}
                           warningPerimeter={this.state.warningPerimeter}
-                          clientAddress={this.getClientAddress()}
+                          clientAddress={this.getClientAddressLabel()}
                           clientAddressId={this.props.address}
                           book={this.book}
                           {...this.state}
@@ -754,7 +769,7 @@ class UserServicesPreview extends React.Component {
                       computeTravelTax={this.computeTravelTax}
                       getLocationLabel={this.getLocationLabel}
                       warningPerimeter={this.state.warningPerimeter}
-                      clientAddress={this.getClientAddress()}
+                      clientAddress={this.getClientAddressLabel()}
                       clientAddressId={this.props.address}
                       book={this.book}
                       {...this.state}
