@@ -478,7 +478,7 @@ class UserServicesPreview extends React.Component {
       pick_tax: this.computePickTax(),
       cesu_amount: this.state.cesu_total,
       fees: this.state.commission,
-      status: actual ? 'En attente de confirmation' : 'Demande d\'infos',
+      status: actual ? 'En attente de paiement' : 'Demande d\'infos',
       serviceUserId: this.state.serviceUser._id,
     };
 
@@ -490,7 +490,8 @@ class UserServicesPreview extends React.Component {
         recipient: this.state.serviceUser.user._id,
       });
 
-    chatPromise.then(res => {
+    chatPromise
+      .then(res => {
 
       if (user) {
         bookingObj['chatroom'] = res.data._id;
@@ -528,6 +529,9 @@ class UserServicesPreview extends React.Component {
         })
         .catch(err => console.error(err))
     })
+      .catch (err => {
+        console.console.error(err);
+      })
   }
 
   formatDeadline = dl => {
