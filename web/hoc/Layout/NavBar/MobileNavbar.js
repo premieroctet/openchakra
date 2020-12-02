@@ -365,7 +365,7 @@ class MobileNavbar extends React.Component{
         <BottomNavigationAction onClick={()=> this.setState({modalMobileSearchBarInput: true})} label="Explorer" classes={{root: classes.navigationActionRoot, label: classes.label}} value={1} icon={<SearchIcon/>}/>
         {
           logged ?
-            <BottomNavigationAction onClick={() => Router.push('/reservations/reservations')} label="Reservation" classes={{root: classes.navigationActionRoot, label: classes.label}} value={2} icon={<CalendarTodayIcon/>}/> : null
+            <BottomNavigationAction onClick={() => Router.push('/reservations/reservations')} label="Réservation" classes={{root: classes.navigationActionRoot, label: classes.label}} value={2} icon={<CalendarTodayIcon/>}/> : null
         }
         {
           logged ?

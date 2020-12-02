@@ -18,12 +18,8 @@ class LayoutMobileReservations extends React.Component{
     }
   }
 
-  handleReservationTypeChanged = (event, newValue) =>{
-    this.setState({reservationType: newValue}, () => this.props.handleReservationTypeChanged())
-  };
-
   render() {
-    const{classes, currentIndex, children} = this.props;
+    const{classes, currentIndex, children, reservationType} = this.props;
 
     return(
       <Grid>
@@ -40,8 +36,8 @@ class LayoutMobileReservations extends React.Component{
           </Grid>
           <Grid>
             <Tabs
-              value={this.state.reservationType}
-              onChange={this.handleReservationTypeChanged}
+              value={reservationType}
+              onChange={this.props.onReservationTypeChanged}
               aria-label="scrollable force tabs"
               scrollButtons="on"
               classes={{indicator: classes.scrollIndicator}}

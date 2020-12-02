@@ -29,13 +29,9 @@ class LayoutReservations extends React.Component{
       .catch (err => console.error(err))
   };
 
-  handleReservationTypeChanged = (event, newValue) =>{
-    this.setState({reservationType: newValue}, () => this.props.handleReservationTypeChanged())
-  };
-
   render() {
     const {user} = this.state;
-    const {classes, children} = this.props;
+    const {classes, children, reservationType} = this.props;
 
     return(
       <Layout user={user}>
@@ -46,8 +42,8 @@ class LayoutReservations extends React.Component{
             </Grid>
             <Grid>
               <Tabs
-                value={this.state.reservationType}
-                onChange={this.handleReservationTypeChanged}
+                value={reservationType}
+                onChange={this.props.onReservationTypeChanged}
                 aria-label="scrollable force tabs"
                 scrollButtons="on"
                 classes={{indicator: classes.scrollMenuIndicator}}

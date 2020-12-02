@@ -342,7 +342,7 @@ class SearchPage extends React.Component {
 
   content = (classes ) => {
     const serviceUsers = this.state.serviceUsersDisplay
-    const gps = this.state.gps
+    const {gps, selectedAddress} = this.state
 
     return(
       <Grid>
@@ -432,6 +432,7 @@ class SearchPage extends React.Component {
                             style={classes}
                             gps={this.state.user ? this.state.user.billing_address.gps : this.state.gps}
                             user={this.state.user}
+                            address={selectedAddress}
                           />
                         </Hidden>
                         <Hidden only={['xs', 'lg', 'xl', 'sm']}>
@@ -440,6 +441,7 @@ class SearchPage extends React.Component {
                             style={classes}
                             gps={this.state.user ? this.state.user.billing_address.gps : this.state.gps}
                             user={this.state.user}
+                            address={selectedAddress}
                           />
                         </Hidden>
                         <Hidden only={['xs', 'lg', 'xl', 'md']}>
@@ -448,6 +450,7 @@ class SearchPage extends React.Component {
                             style={classes}
                             gps={this.state.user ? this.state.user.billing_address.gps : this.state.gps}
                             user={this.state.user}
+                            address={selectedAddress}
                           />
                         </Hidden>
                         <Hidden only={['sm', 'md', 'lg', 'xl']}>
@@ -458,7 +461,8 @@ class SearchPage extends React.Component {
                                   <CardService
                                     item={su._id}
                                     gps={this.state.user ? this.state.user.billing_address.gps : this.state.gps}
-                                    user={this.state.user}/>
+                                    user={this.state.user}
+                                    address={selectedAddress} />
                                 </Grid>
                               );
                               })

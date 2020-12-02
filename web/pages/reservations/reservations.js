@@ -39,7 +39,6 @@ moment.locale('fr');
 class AllReservations extends React.Component {
   constructor(props) {
     super(props);
-    this.child = React.createRef();
     this.state = {
       user: null,
       alfredReservations: [],
@@ -85,10 +84,8 @@ class AllReservations extends React.Component {
     });
   };
 
-  handleReservationTypeChanged = (event, newValue) => {
-    let childState = this.child.current.state;
-
-    this.setState({reservationType: childState.reservationType, reservationStatus: 0})
+  onReservationTypeChanged = (event, newValue) => {
+    this.setState({reservationType: newValue, reservationStatus: 0})
   };
 
   handleReservationStatusChanged = (event, newValue) => {
@@ -278,17 +275,18 @@ class AllReservations extends React.Component {
 
 
   render() {
-    const {classes} = this.props;
+    const {classes} = this.props
+    const {reservationType} = this.state
 
     return (
       <React.Fragment>
         <Hidden only={['xs']}>
-          <LayoutReservations ref={this.child} handleReservationTypeChanged={this.handleReservationTypeChanged}>
+          <LayoutReservations reservationType={reservationType} onReservationTypeChanged={this.onReservationTypeChanged}>
             {this.content(classes)}
           </LayoutReservations>
         </Hidden>
         <Hidden only={['lg', 'xl',  'sm', 'md']}>
-          <LayoutMobileReservations ref={this.child} currentIndex={2} handleReservationTypeChanged={this.handleReservationTypeChanged}>
+          <LayoutMobileReservations reservationType={reservationType} currentIndex={2} onReservationTypeChanged={this.onReservationTypeChanged}>
             {this.content(classes)}
           </LayoutMobileReservations>
         </Hidden>
