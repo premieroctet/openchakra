@@ -40,6 +40,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import {DateRangePicker} from "react-dates";
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import ClearIcon from "@material-ui/icons/Clear";
 
 
 
@@ -77,7 +79,7 @@ class NavBar extends Component {
       dateSelected: '',
       ifHomePage: false,
       modalMobileSearchBarInput: false,
-
+      mobileStepSearch: 0,
       ifSearchPage: false,
       modalFilters: false,
       individualSelected: false,
@@ -260,6 +262,135 @@ class NavBar extends Component {
           </Grid>
         </Paper>
       </Grid>
+    )
+  };
+
+  modalMobileSearchBarInput = (classes) => {
+    return (
+      <SwipeableDrawer
+        anchor={'bottom'}
+        open={this.state.modalMobileSearchBarInput}
+        onOpen={() => this.setState({modalMobileSearchBarInput: true})}
+        onClose={() => this.setState({
+          modalMobileSearchBarInput: false,
+          mobileStepSearch: 0,
+          keyword: null,
+          city: undefined,
+          gps: ''
+        })}
+        className={classes.drawerStyle}
+      >
+        <Grid container style={{height: '100%'}}>
+          <Grid item style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+            <Grid>
+              <IconButton
+                aria-label="delete"
+                onClick={() => this.setState({
+                  modalMobileSearchBarInput: false,
+                  mobileStepSearch: 0,
+                  keyword: null,
+                  city: undefined,
+                  gps: ''
+                })}>
+                <ClearIcon/>
+              </IconButton>
+            </Grid>
+            <Grid>
+              <h3>{this.state.mobileStepSearch === 0 ? 'Votre Recherche' : this.state.mobileStepSearch === 1 ? 'Où' : 'Dates'}</h3>
+            </Grid>
+          </Grid>
+          <Grid item container spacing={3} style={{margin: 0}}>
+            <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+              {
+                this.state.mobileStepSearch === 0 ?
+                  <TextField
+                    value={this.state.keyword}
+                    onChange={this.onChange}
+                    name={'keyword'}
+                    label={this.state.ifHomePage ? 'Quel service recherchez-vous ? ' : false}
+                    onKeyPress={(e) => {
+                      e.key === 'Enter' && e.preventDefault();
+                    }}
+                    variant="outlined"
+                    classes={{root: classes.modalMobileSearchBarInputTextField}}
+                  />
+                  :
+                  this.state.user ?
+                    <Grid>
+                      <FormControl variant="outlined">
+                        <Select
+                          id="outlined-select-currency"
+                          value={this.props.selectedAddress ? this.props.selectedAddress : 'main'}
+                          name={'selectedAddress'}
+                          onChange={(e) => {
+                            this.onChange(e);
+                          }}
+                          classes={{selectMenu: classes.fitlerMenuLogged}}
+                        >
+                          <MenuItem value={'main'} style={{whiteSpace: 'nowrap'}}>
+                            Adresse
+                            principale, {' ' + this.state.user.billing_address.address} {this.state.user.billing_address.zip_code},{this.state.user.billing_address.city}
+                          </MenuItem>
+                          {this.state.user.service_address.map((e, index) => (
+                            <MenuItem value={e._id} key={index}>
+                              {e.label + ', '} {' ' + e.address},{e.zip_code} {e.city}
+                            </MenuItem>
+                          ))}
+                          <MenuItem value={'all'}>
+                            Partout, Rechercher des Alfred partout
+                          </MenuItem>
+                          <MenuItem value={'addAddress'}>
+                            <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
+                              Ajouter une adresse
+                            </Typography>
+                          </MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    :
+                    <TextField
+                      item
+                      xs={12}
+                      classes={{root: classes.modalMobileSearchBartTextFieldWhereP}}
+                      value={this.state.city}
+                      label={SEARCHBAR.where}
+                      variant={'outlined'}
+                      InputProps={{
+                        inputComponent: (inputRef) => {
+                          return (
+                            <AlgoliaPlaces
+                              {...inputRef}
+                              placeholder={''}
+                              className={classes.navbarAlgoliaPlace}
+                              options={{
+                                appId: 'plKATRG826CP',
+                                apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                                language: 'fr',
+                                countries: ['fr'],
+                                type: 'city',
+                              }}
+                              onChange={(suggestion) => this.onChangeCity(suggestion)}
+                              onClear={() => this.setState({city: '', gps: ''})}
+
+                            />)
+                        },
+                        disableUnderline: true
+                      }}
+                    />
+              }
+            </Grid>
+          </Grid>
+          <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+            <Grid style={{width: '90%'}}>
+              <Button
+                onClick={() => this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) : this.findService()}
+                color={'primary'} classes={{root: classes.buttonNextRoot}}
+                variant={'contained'}>{this.state.mobileStepSearch === 0 ? 'Suivant' : 'Rechercher'}
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+      </SwipeableDrawer>
     )
   };
 
@@ -696,6 +827,7 @@ class NavBar extends Component {
           </Hidden>
           </Toolbar>
         </AppBar>
+        {modalMobileSearchBarInput ? this.modalMobileSearchBarInput(classes) : null}
         {modalFilters ? this.modalMobileFilter(classes) : null}
       </Grid>
     )
