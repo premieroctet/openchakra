@@ -445,34 +445,39 @@ class UserServicesPreview extends React.Component {
     }
 
 
-    let chatPromise = (actual || !user) ? emptyPromise({res: null}) : axios.post('/myAlfred/api/chatRooms/addAndConnect', {
-      emitter: this.state.user._id,
-      recipient: this.state.serviceUser.user._id,
-    });
+    let bookingObj = {
+      reference: user ? computeBookingReference(user, this.state.serviceUser.user) : '',
+      service: this.state.serviceUser.service.label,
+      serviceId: this.state.serviceUser.service._id,
+      address: place,
+      location: this.state.location,
+      equipments: this.state.serviceUser.equipments,
+      amount: this.state.total,
+      date_prestation: moment(this.state.date).format('DD/MM/YYYY'),
+      time_prestation: this.state.time,
+      alfred: this.state.serviceUser.user._id,
+      user: user ? user._id : null,
+      prestations: prestations,
+      travel_tax: this.computeTravelTax(),
+      pick_tax: this.computePickTax(),
+      cesu_amount: this.state.cesu_total,
+      fees: this.state.commission,
+      status: actual ? 'En attente de paiement' : 'Demande d\'infos',
+      serviceUserId: this.state.serviceUser._id,
+    };
 
-    chatPromise.then(res => {
-      let bookingObj = {
-        reference: user ? computeBookingReference(user, this.state.serviceUser.user) : '',
-        service: this.state.serviceUser.service.label,
-        serviceId: this.state.serviceUser.service._id,
-        address: place,
-        location: this.state.location,
-        equipments: this.state.serviceUser.equipments,
-        amount: this.state.total,
-        date_prestation: moment(this.state.date).format('DD/MM/YYYY'),
-        time_prestation: this.state.time,
-        alfred: this.state.serviceUser.user._id,
-        user: user ? user._id : null,
-        prestations: prestations,
-        travel_tax: this.computeTravelTax(),
-        pick_tax: this.computePickTax(),
-        cesu_amount: this.state.cesu_total,
-        fees: this.state.commission,
-        status: actual ? 'En attente de confirmation' : 'Demande d\'infos',
-        serviceUserId: this.state.serviceUser._id,
-      };
+    let chatPromise = !user ?
+      emptyPromise({res: null})
+      :
+      axios.post('/myAlfred/api/chatRooms/addAndConnect', {
+        emitter: this.state.user._id,
+        recipient: this.state.serviceUser.user._id,
+      });
 
-      if (!actual && user) {
+    chatPromise
+      .then(res => {
+
+      if (user) {
         bookingObj['chatroom'] = res.data._id;
       }
 
@@ -480,44 +485,38 @@ class UserServicesPreview extends React.Component {
         bookingObj.option = this.state.selectedOption;
       }
 
-      if (actual) {
-        localStorage.setItem('bookingObj', JSON.stringify(bookingObj));
-        if (user) {
-          localStorage.setItem('emitter', this.state.user._id);
-          localStorage.setItem('recipient', this.state.serviceUser.user._id);
-          localStorage.removeItem('address');
-        }
+      localStorage.setItem('bookingObj', JSON.stringify(bookingObj));
+      localStorage.setItem('emitter', this.state.user._id);
+      localStorage.setItem('recipient', this.state.serviceUser.user._id);
+      localStorage.removeItem('address');
 
-        if (!this.state.user) {
-          cookie.remove('token', {path: '/'});
-          Router.push('/?login=true');
-        } else {
-          Router.push({
-            pathname: '/confirmPayement',
-            query: {id: this.props.service_id},
-          });
-        }
-      } else {
-        if (!user) {
-          cookie.remove('token', {path: '/'});
-          localStorage.setItem('bookingObj', JSON.stringify(bookingObj));
-          Router.push({pathname: '/'});
-        } else {
-          axios.post('/myAlfred/api/booking/add', bookingObj)
-            .then(response => {
-              console.log(response, 'myresponse')
-              axios.put('/myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, {booking: response.data._id})
-                .then(() => {
-                  localStorage.removeItem('address');
-                  Router.push(`/profile/messages?user=${response.data.user}&relative=${response.data.alfred}`
-                  );
-                });
-            })
-            .catch(err => console.error(err));
-        }
+      if (!this.state.user) {
+        cookie.remove('token', {path: '/'});
+        Router.push('/?login=true');
+        return
       }
-    });
-  };
+
+      axios.post('/myAlfred/api/booking/add', bookingObj)
+        .then(response => {
+          const booking = response.data
+          console.log(response, 'myresponse')
+          axios.put('/myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, {booking: booking._id})
+            .then(() => {
+              localStorage.removeItem('address');
+              if (actual) {
+                Router.push({pathname: '/confirmPayement',query: {booking_id: booking._id}})
+              }
+              else {
+                Router.push(`/profile/messages?user=${response.data.user}&relative=${response.data.alfred}`)
+              }
+            });
+        })
+        .catch(err => console.error(err))
+    })
+      .catch (err => {
+        console.console.error(err);
+      })
+  }
 
   formatDeadline = dl => {
     if (!dl) {

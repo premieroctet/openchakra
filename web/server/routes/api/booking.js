@@ -125,6 +125,7 @@ router.get('/endConfirmedBookings', passport.authenticate('jwt', {session: false
 
 
 router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {
+
   const random = crypto.randomBytes(Math.ceil(5 / 2)).toString('hex').slice(0, 5);
 
   const bookingFields = {};
@@ -151,9 +152,10 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
 
   const newBooking = new Booking(bookingFields);
 
+
   newBooking.save()
     .then(booking => {
-      if (booking.status == 'Demande d\'infos' || booking.status == 'En attente de confirmation') {
+    if (booking.status == 'Demande d\'infos' || booking.status == 'En attente de confirmation') {
         // Reload to get user,alfred,service
         Booking.findById(booking._id)
           .populate('alfred')
@@ -170,11 +172,17 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
             if (booking.status == 'Confirmée') {
               sendNewBooking(book, req);
             }
-          }).catch(err => console.error(err));
-        res.json(booking);
+          })
+          .catch(err => {
+            console.error(err)
+          })
       }
+      res.json(booking);
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      console.error(err)
+      res.status(404)
+    })
 });
 
 // @Route GET /myAlfred/api/booking/all

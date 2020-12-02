@@ -84,7 +84,10 @@ router.post('/addAndConnect', (req, res) => {
         return res.status(400).json({msg: 'chat déjà existant'});
       }
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      console.error(err)
+      res.status(404)
+    });
 });
 
 router.put('/saveMessages/:id', (req, res) => {

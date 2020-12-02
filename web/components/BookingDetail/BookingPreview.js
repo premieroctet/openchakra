@@ -21,7 +21,6 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import cookie from 'react-cookies';
 import {BOOKING} from '../../utils/i18n'
-import {BLOCK_INFO_RESERVATION} from '../../config/config'
 
 
 moment.locale('fr');
@@ -469,11 +468,14 @@ class BookingPreview extends React.Component {
                                             onClick={() => this.changeStatus('Refusée')}>Refuser</Button>
                                   </Grid>
                                 </Grid>
-                              ) : (
+                              )
+                              :
+                              (
                                 <p>En attente de confirmation</p>
                               )
-                            ) : bookingObj.status === 'Demande d\'infos' &&
-                            currentUser._id === bookingObj.alfred._id && !BLOCK_INFO_RESERVATION ? (
+                            )
+                            :
+                            bookingObj.status === 'Demande d\'infos' && currentUser._id === bookingObj.alfred._id ? (
                               <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                 <Button onClick={()=>this.props.onConfirmPreaProuved(booking_id)} color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Pré-approuver</Button>
                                 <Grid style={{marginTop: '5%'}}>
@@ -486,23 +488,28 @@ class BookingPreview extends React.Component {
                                   </Button>
                                 </Grid>
                               </Grid>
-                            ) : bookingObj.status === 'Demande d\'infos' &&
-                            currentUser._id === bookingObj.user._id ? (
+                            )
+                            :
+                            bookingObj.status === 'En attente de paiement' && currentUser._id === bookingObj.user._id ? (
+                              <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                <Button onClick={()=>Router.push(`/confirmPayement?booking_id=${booking_id}`)}
+                                  color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Payer ma réservation</Button>
+                              </Grid>
+                            )
+                            :
+                            bookingObj.status === 'Demande d\'infos' && currentUser._id === bookingObj.user._id ?
+                            (
                               null
-                            ) : bookingObj.status === 'Invitation à réserver' ? (
-                              <Link
-                                href={{
-                                  pathname: '/profile/messages',
-                                  query: {
-                                    user: currentUser._id
-                                  },
-                                }}
-                              >
-                                <Grid className={classes.buttonReservaionRed}>
-                                  <a onClick={this.routingDetailsMessage} style={{textDecoration: 'none', color: 'white'}}>Envoyer un message</a>
-                                </Grid>
-                              </Link>
-                            ) : null}
+                            )
+                            :
+                            bookingObj.status === 'Pré-approuvée' ? (
+                              <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                <Button onClick={()=>Router.push(`/confirmPayement?booking_id=${booking_id}`)}
+                                  color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Payer ma réservation</Button>
+                              </Grid>
+                            )
+                            :
+                            null}
                           </Grid>
                         </Grid>
                       </Grid>

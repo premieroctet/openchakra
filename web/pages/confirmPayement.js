@@ -36,7 +36,6 @@ class ConfirmPayement extends React.Component {
       optionPrice: null,
       date: null,
       hour: null,
-      languages: [],
       alfredId: '',
       activeStep: 0,
       equipments: [],
@@ -47,25 +46,50 @@ class ConfirmPayement extends React.Component {
     };
   }
 
-  static getInitialProps({query: {id}}) {
-    return {shop_id: id};
+  static getInitialProps({query: {booking_id}}) {
+    return {booking_id: booking_id};
   }
 
   componentDidMount() {
     const token = cookie.load('token');
-    const bookingObj = JSON.parse(localStorage.getItem('bookingObj'));
-    this.setState({bookingObj: bookingObj});
 
     axios.defaults.headers.common['Authorization'] = token;
+    axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
+      .then(res => {
+        const bookingObj = res.data
+        console.log(JSON.stringify(bookingObj, null, 2))
+        this.setState({
+          emitter: localStorage.getItem('emitter'),
+          recipient: localStorage.getItem('recipient'),
+          prestations: bookingObj.prestations,
+          bookingObj: bookingObj,
+          date: bookingObj.date_prestation,
+          hour: bookingObj.time_prestation,
+          travel_tax: bookingObj.travel_tax,
+          pick_tax: bookingObj.pick_tax,
+          fees: bookingObj.fees,
+          grandTotal: bookingObj.amount,
+          cesu_total: bookingObj.cesu_amount,
+          alfredId: bookingObj.alfred._id,
+          equipments: bookingObj.equipments
+        })
 
-    axios.get('/myAlfred/api/users/current').then(res => {
-      this.setState({currentUser: res.data});
-    }).catch(err => {
-      if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-        cookie.remove('token', {path: '/'});
-        Router.push({pathname: '/'});
-      }
-    });
+        axios.get('/myAlfred/api/serviceUser/' + bookingObj.serviceUserId).then(res => {
+          this.setState({user: res.data.user})
+        })
+
+      })
+
+    axios.get('/myAlfred/api/users/current')
+      .then(res => {
+        this.setState({currentUser: res.data});
+      })
+      .catch(err => {
+        if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+          cookie.remove('token', {path: '/'});
+          Router.push({pathname: '/'});
+        }
+      })
 
     axios.get('/myAlfred/api/payment/cardsActive')
       .then(response => {
@@ -76,32 +100,8 @@ class ConfirmPayement extends React.Component {
         console.error(err);
       });
 
-    this.setState({
-      emitter: localStorage.getItem('emitter'),
-      recipient: localStorage.getItem('recipient'),
-      prestations: bookingObj.prestations,
-      bookingObj: bookingObj,
-      date: bookingObj.date_prestation,
-      hour: bookingObj.time_prestation,
-      travel_tax: bookingObj.travel_tax,
-      pick_tax: bookingObj.pick_tax,
-      fees: bookingObj.fees,
-      grandTotal: bookingObj.amount,
-      cesu_total: bookingObj.cesu_amount,
-      alfredId: bookingObj.alfred._id,
-      equipments: bookingObj.equipments
-    });
-
-    const id = this.props.shop_id;
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = token;
 
-    axios.get('/myAlfred/api/serviceUser/' + id).then(res => {
-      this.setState({
-        user: res.data.user,
-        languages: res.data.user.languages,
-      });
-    });
   }
 
   handleStep = () => {
@@ -114,13 +114,16 @@ class ConfirmPayement extends React.Component {
     const total = parseFloat(this.state.grandTotal);
     const fees = parseFloat(this.state.fees);
     const data = {
+      booking_id: this.props.booking_id,
       id_card: this.state.id_card,
       amount: total,
       fees: fees,
     };
     axios.post('/myAlfred/api/payment/payInDirect', data)
-      .then(() => {
-        Router.push('/paymentSuccess?id=' + this.state.booking_id);
+      .then(res => {
+        const payInResult=res.data
+        //Router.push(payInResult.RedirectURL);
+        Router.push(`/paymentSuccess?booking_id=${this.props.booking_id}`);
       })
       .catch( err => { console.error(err)});
   };
@@ -128,13 +131,17 @@ class ConfirmPayement extends React.Component {
   pay = () => {
     const total = parseFloat(this.state.grandTotal);
     const fees = parseFloat(this.state.fees);
-    const data = {amount: total, fees: fees};
+    const data = {
+      booking_id: this.props.booking_id,
+      amount: total,
+      fees: fees,
+    };
 
     axios.post('/myAlfred/api/payment/payIn', data)
       .then(res => {
-        localStorage.setItem('booking_id', this.state.booking_id);
-        let payIn = res.data;
-        Router.push(payIn.RedirectURL);
+        const payInResult=res.data
+        Router.push(payInResult.RedirectURL);
+        //Router.push(`/paymentSuccess?booking_id=${this.props.booking_id}`);
       })
       .catch(err => {
         console.error(err);
