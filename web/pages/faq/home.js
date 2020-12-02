@@ -10,6 +10,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import {FAQ} from '../../utils/i18n'
 
 const styles = theme => ({
     menuContainer: {
@@ -44,9 +45,41 @@ class Home extends React.Component {
     }
 
     render() {
-
         const {classes} = this.props;
+
+        function renderFaq(faq) {
+
+
+            return (
+                Array.from(Array(faq.length), (e, i) => {
+                        return (
+                            <Grid className={classes.accord}>
+                                <Accordion>
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon/>}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <Typography key={i}>{i}</Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Typography style={{color: '#707070'}}>
+                                            non
+                                        </Typography>
+                                    </AccordionDetails>
+                                </Accordion>
+                            </Grid>
+                        )
+                    }
+                )
+            )
+        }
+
+// console.log(`faq.${prop} = ${faq[prop].title}`);
+
+
         return (
+
             <Fragment>
 
                 <Header></Header>
@@ -71,23 +104,25 @@ class Home extends React.Component {
                         </Link>
                     </Grid>
                 </Grid>
-                <Grid className={classes.accord}>
-                    <Accordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon/>}
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
-                        >
-                            <Typography>Comment réserver un service ?</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <Typography style={{color: '#707070'}}>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                                sit amet blandit leo lobortis eget.
-                            </Typography>
-                        </AccordionDetails>
-                    </Accordion>
-                </Grid>
+                {
+                    renderFaq(FAQ.alfred)
+                }
+                {/*<Grid className={classes.accord}>*/}
+                {/*    <Accordion>*/}
+                {/*        <AccordionSummary*/}
+                {/*            expandIcon={<ExpandMoreIcon/>}*/}
+                {/*            aria-controls="panel1a-content"*/}
+                {/*            id="panel1a-header"*/}
+                {/*        >*/}
+                {/*            <Typography>{FAQ.alfred[3].title}</Typography>*/}
+                {/*        </AccordionSummary>*/}
+                {/*        <AccordionDetails>*/}
+                {/*            <Typography style={{color: '#707070'}}>*/}
+                {/*                {FAQ.alfred[3].text}*/}
+                {/*            </Typography>*/}
+                {/*        </AccordionDetails>*/}
+                {/*    </Accordion>*/}
+                {/*</Grid>*/}
                 <Footer/>
             </Fragment>
         )
