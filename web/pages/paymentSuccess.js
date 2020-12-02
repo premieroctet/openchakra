@@ -16,15 +16,17 @@ class paymentSuccess extends React.Component {
       user: {},
       success: false,
     };
+  }
 
+  static getInitialProps({query: {booking_id}}) {
+    return {booking_id: booking_id};
   }
 
   componentDidMount() {
 
     localStorage.setItem('path', Router.pathname);
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
-    axios
-      .get('/myAlfred/api/users/current')
+    axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
         this.setState({user: user});
@@ -39,9 +41,9 @@ class paymentSuccess extends React.Component {
       .then(result => {
         let transaction = result.data;
         if (transaction.Status === 'FAILED') {
-          Router.push('/paymentFailed');
+          Router.push(`/paymentFailed?booking_id=${this.props.booking_id}`);
         } else {
-          const booking_id = localStorage.getItem('booking_id');
+          const booking_id = this.props.booking_id
           this.socket = io();
           this.socket.on('connect', socket => {
             this.socket.emit('booking', booking_id);
@@ -49,6 +51,7 @@ class paymentSuccess extends React.Component {
               .then(res => {
                 setTimeout(() => this.socket.emit('changeStatus', res.data), 100);
                 localStorage.removeItem('booking_id');
+                setTimeout(() => Router.push('/reservations/reservations'), 4000)
               })
               .catch();
           });
@@ -82,7 +85,7 @@ class paymentSuccess extends React.Component {
                     <Typography>Vous allez être redirigé vers votre page Mes Réservations.</Typography>
                   </Grid>
                   <Grid>
-                    <Typography>Si la redirection ne fonctionne pas <a href={'#'}>cliquez ici</a></Typography>
+                    <Typography>Si la redirection ne fonctionne pas <a href={'/reservations/reservations'}>cliquez ici</a></Typography>
                   </Grid>
                 </Grid>
               </Grid>
