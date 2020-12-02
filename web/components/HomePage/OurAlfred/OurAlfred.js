@@ -49,8 +49,8 @@ class OurAlfred extends React.Component{
           </Hidden>
           <Hidden only={['lg', 'xl',]}>
             {
-              Object.keys(alfred).map(res =>(
-                <Grid item>
+              Object.keys(alfred).map((res, index) =>(
+                <Grid item key={index}>
                   <CardPreview item={alfred[res]}/>
                 </Grid>
               ))

@@ -23,6 +23,17 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 const {getLoggedUserId}=require('../../../utils/functions');
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import TextField from "@material-ui/core/TextField";
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import ClearIcon from '@material-ui/icons/Clear';
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import AlgoliaPlaces from 'algolia-places-react';
+import Button from "@material-ui/core/Button";
+import {SEARCHBAR, NAVBAR_MENU} from '../../../utils/i18n';
+
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -47,27 +58,41 @@ class MobileNavbar extends React.Component{
   constructor(props) {
     super(props);
     this.state={
-      user: {},
+      user: null,
       indexAccount: props.indexAccount,
       currentIndex:0,
       anchorEl: null,
       setOpenLogin: false,
       setOpenRegister: false,
-      activeStep: 0
+      activeStep: 0,
+      modalMobileSearchBarInput: false,
+      mobileStepSearch: 0,
+      keyword: '',
+      city: undefined,
+      gps: '',
+      logged: false
     }
   }
 
   componentDidMount() {
-      let query = Router.query;
+    let query = Router.query;
 
-      if(query.login === 'true'){
-        this.handleOpenLogin()
-      }
+    if(query.login === 'true'){
+      this.handleOpenLogin()
+    }
+    const token = cookie.load('token');
+    if (token) {
+      this.setState({logged: true, selectedAddress: 'main'});
+    }
 
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
     axios.get('/myAlfred/api/users/current')
       .then(res => {
-        this.setState({ user : res.data})
+        var allAddresses={'main':res.data.billing_address};
+        res.data.service_address.forEach( addr => {
+          allAddresses[addr._id]=addr
+        });
+        this.setState({ user : res.data, allAddresses: allAddresses})
       }).catch(err => console.error(err));
   }
 
@@ -75,10 +100,6 @@ class MobileNavbar extends React.Component{
     this.setState({setOpenLogin: false});
     Router.push('/search?search=1');
   };
-
-  getUserId() {
-    return this.state.user._id || getLoggedUserId()
-  }
 
   handleMenuClose = () => {
     this.setState({anchorEl: null});
@@ -111,6 +132,26 @@ class MobileNavbar extends React.Component{
     this.setState({activeStep: e});
   };
 
+  findService = () => {
+    var queryParams = {search: 1};
+    if (this.state.keyword) {
+      queryParams['keyword'] = this.state.keyword;
+    }
+
+    if (this.state.city) {
+      queryParams['city'] = this.state.city;
+    }
+
+    if (this.state.gps) {
+      queryParams['gps'] = JSON.stringify(this.state.gps);
+    }
+
+    if (this.state.selectedAddress) {
+      queryParams['selectedAddress'] = this.state.selectedAddress
+    }
+    Router.push({pathname: '/search', query: queryParams});
+  };
+
   modalLogin = (classes) => {
     return (
       <Dialog
@@ -135,6 +176,29 @@ class MobileNavbar extends React.Component{
     );
   };
 
+
+  onChangeCity({suggestion}) {
+    this.setState({gps: suggestion.latlng, city: suggestion.name});
+  };
+
+  onChange = e => {
+    let {name, value} = e.target;
+    this.setState({[name]: value});
+    if (name === 'selectedAddress') {
+      if (value === 'addAddress') {
+        Router.push('/profile/myAddresses');
+      } else {
+        this.setState({
+          gps: value === 'all' ? null : value === 'main' ? this.state.allAddresses['main'].gps : {
+            lat: this.state.allAddresses[value].lat,
+            lng: this.state.allAddresses[value].lng,
+          },
+        });
+      }
+    }
+  };
+
+
   modalRegister = (classes) =>{
     return(
       <Dialog
@@ -158,11 +222,138 @@ class MobileNavbar extends React.Component{
     )
   };
 
+  modalMobileSearchBarInput = (classes) => {
+    return (
+      <SwipeableDrawer
+        anchor={'bottom'}
+        open={this.state.modalMobileSearchBarInput}
+        onOpen={() => this.setState({modalMobileSearchBarInput: true})}
+        onClose={() => this.setState({
+          modalMobileSearchBarInput: false,
+          mobileStepSearch: 0,
+          keyword: null,
+          city: undefined,
+          gps: ''
+        })}
+        className={classes.drawerStyle}
+      >
+        <Grid container style={{height: '100%'}}>
+          <Grid item style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+            <Grid>
+              <IconButton
+                aria-label="delete"
+                onClick={() => this.setState({
+                  modalMobileSearchBarInput: false,
+                  mobileStepSearch: 0,
+                  keyword: null,
+                  city: undefined,
+                  gps: ''
+                })}>
+                <ClearIcon/>
+              </IconButton>
+            </Grid>
+            <Grid>
+              <h3>{this.state.mobileStepSearch === 0 ? 'Votre Recherche' : this.state.mobileStepSearch === 1 ? 'Où' : 'Dates'}</h3>
+            </Grid>
+          </Grid>
+          <Grid item container spacing={3} style={{margin: 0}}>
+            <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+              {
+                this.state.mobileStepSearch === 0 ?
+                  <TextField
+                    value={this.state.keyword}
+                    onChange={this.onChange}
+                    name={'keyword'}
+                    label={'Quel service recherchez-vous ? '}
+                    onKeyPress={(e) => {
+                      e.key === 'Enter' && e.preventDefault();
+                    }}
+                    variant="outlined"
+                    classes={{root: classes.modalMobileSearchBarInputTextField}}
+                  />
+                  :
+                  this.state.user ?
+                    <Grid>
+                      <FormControl variant="outlined">
+                        <Select
+                          id="outlined-select-currency"
+                          value={'main'}
+                          name={'selectedAddress'}
+                          onChange={(e) => {
+                            this.onChange(e);
+                          }}
+                          classes={{selectMenu: classes.fitlerMenuLogged}}
+                        >
+                          <MenuItem value={'main'} style={{whiteSpace: 'nowrap'}}>
+                            Adresse
+                            principale, {' ' + this.state.user.billing_address.address} {this.state.user.billing_address.zip_code},{this.state.user.billing_address.city}
+                          </MenuItem>
+                          {this.state.user.service_address.map((e, index) => (
+                            <MenuItem value={e._id} key={index}>
+                              {e.label + ', '} {' ' + e.address},{e.zip_code} {e.city}
+                            </MenuItem>
+                          ))}
+                          <MenuItem value={'all'}>
+                            Partout, Rechercher des Alfred partout
+                          </MenuItem>
+                          <MenuItem value={'addAddress'}>
+                            <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
+                              Ajouter une adresse
+                            </Typography>
+                          </MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    :
+                    <TextField
+                      item
+                      xs={12}
+                      classes={{root: classes.modalMobileSearchBartTextFieldWhereP}}
+                      value={this.state.city}
+                      label={SEARCHBAR.where}
+                      variant={'outlined'}
+                      InputProps={{
+                        inputComponent: (inputRef) => {
+                          return (
+                            <AlgoliaPlaces
+                              {...inputRef}
+                              placeholder={''}
+                              className={classes.navbarAlgoliaPlace}
+                              options={{
+                                appId: 'plKATRG826CP',
+                                apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                                language: 'fr',
+                                countries: ['fr'],
+                                type: 'city',
+                              }}
+                              onChange={(suggestion) => this.onChangeCity(suggestion)}
+                              onClear={() => this.setState({city: '', gps: ''})}
+
+                            />)
+                        },
+                        disableUnderline: true
+                      }}
+                    />
+              }
+            </Grid>
+          </Grid>
+          <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+            <Grid style={{width: '90%'}}>
+              <Button
+                onClick={() => this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) : this.findService()}
+                color={'primary'} classes={{root: classes.buttonNextRoot}}
+                variant={'contained'}>{this.state.mobileStepSearch === 0 ? 'Suivant' : 'Rechercher'}
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+      </SwipeableDrawer>
+    )
+  };
+
   render() {
     const{classes, currentIndex} = this.props;
-    const{setOpenLogin, setOpenRegister} = this.state;
-
-    const user = this.getUserId();
+    const{setOpenLogin, setOpenRegister, modalMobileSearchBarInput, logged} = this.state;
 
     return(
       <BottomNavigation
@@ -171,24 +362,25 @@ class MobileNavbar extends React.Component{
         classes={{root: classes.navigationRoot}}
       >
         <BottomNavigationAction onClick={() => Router.push('/')} label="Accueil" classes={{root: classes.navigationActionRoot, label: classes.label}} value={0} icon={<HomeIcon/>}/>
-        <BottomNavigationAction onClick={() => Router.push('/search?search=1')} label="Explorer" classes={{root: classes.navigationActionRoot, label: classes.label}} value={1} icon={<SearchIcon/>}/>
+        <BottomNavigationAction onClick={()=> this.setState({modalMobileSearchBarInput: true})} label="Explorer" classes={{root: classes.navigationActionRoot, label: classes.label}} value={1} icon={<SearchIcon/>}/>
         {
-          user ?
+          logged ?
             <BottomNavigationAction onClick={() => Router.push('/reservations/reservations')} label="Reservation" classes={{root: classes.navigationActionRoot, label: classes.label}} value={2} icon={<CalendarTodayIcon/>}/> : null
         }
         {
-          user ?
+          logged ?
             <BottomNavigationAction onClick={() =>  Router.push(`/profile/messages?user=${this.state.user._id}`)} label="Messages" classes={{root: classes.navigationActionRoot, label: classes.label}} value={3} icon={<MailOutlineIcon/>}/> : null
 
         }
-        <BottomNavigationAction onClick={user ? () => Router.push('/account/myProfile') : this.handleOpenLogin} label={user ? "Profil" : 'Connexion'} classes={{root: classes.navigationActionRoot, label: classes.label}} value={4} icon={ <PersonIcon/>}/>
+        <BottomNavigationAction onClick={logged ? () => Router.push('/account/myProfile') : this.handleOpenLogin} label={logged ? "Profil" : 'Connexion'} classes={{root: classes.navigationActionRoot, label: classes.label}} value={4} icon={ <PersonIcon/>}/>
         {
-          !user ?
+          !logged ?
             <BottomNavigationAction onClick={this.handleOpenRegister} label={'Inscription'} classes={{root: classes.navigationActionRoot, label: classes.label}} value={5} icon={ <GroupAddIcon/>}/> : null
         }
-            {setOpenLogin ? this.modalLogin(classes) : null}
-
+        {setOpenLogin ? this.modalLogin(classes) : null}
         {setOpenRegister ? this.modalRegister(classes) : null}
+        {modalMobileSearchBarInput ? this.modalMobileSearchBarInput(classes) : null}
+
       </BottomNavigation>
     );
   }

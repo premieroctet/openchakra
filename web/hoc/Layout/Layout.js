@@ -23,13 +23,13 @@ class Layout extends React.Component {
 
   componentDidMount() {
     const token = cookie.load('token');
+    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    axios.get('/myAlfred/api/category/all/sort').then(res => {
+      let cat = res.data;
+      this.setState({categories: cat})
+    }).catch(err => { console.error(err)})
     if (token) {
-      axios.defaults.headers.common['Authorization'] = cookie.load('token');
       this.setState({logged: true});
-      axios.get('/myAlfred/api/category/all/sort').then(res => {
-        let cat = res.data;
-        this.setState({categories: cat})
-      }).catch(err => { console.error(err)})
     }
   }
 

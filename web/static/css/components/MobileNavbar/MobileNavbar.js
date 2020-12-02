@@ -65,5 +65,52 @@ export default theme => ({
     overflow:' hidden !important',
     lineHeight: '12px !important',
   },
-
+  drawerStyle:{
+    '& .MuiDrawer-paperAnchorBottom':{
+      height: '50%'
+    }
+  },
+  modalMobileSearchBarInputTextField:{
+    width: '100%'
+  },
+  fitlerMenuLogged:{
+    overflow: 'inherit',
+    textOverflow: 'inherit',
+    whiteSpace: 'inherit'
+  },
+  buttonNextRoot:{
+    textTransform: 'initial',
+    fontWeight:'bold',
+    width: '100%',
+    color:'white'
+  },
+  navbarAlgoliaPlace:{
+    border: 'inherit',
+    fontFamily: theme.typography.text.fontFamily,
+    color: theme.palette.placeHolder.main,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
+    padding: '6px 0 7px',
+    height: 'auto',
+    [theme.breakpoints.down('xs')]:{
+      padding: '18.5px 14px',
+    }
+  },
+  modalMobileSearchBartTextFieldWhereP:{
+    flex: 1,
+    fontFamily: theme.typography.text.fontFamily,
+    fontSize: theme.typography.placeHolder.fontSize,
+    fontWeight:  theme.typography.placeHolder.fontWeight,
+    lineHeight:  theme.typography.placeHolder.lineHeight,
+    "& .MuiFormLabel-root": {
+      fontWeight: 'bold',
+    },
+    '& .MuiInputBase-input::placeholder':{
+      opacity: '0.5'
+    },
+    '& div':{
+      width:'100%'
+    }
+  },
 })
