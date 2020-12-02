@@ -151,13 +151,7 @@ class paymentMethod extends React.Component {
     /*TODO pas de réponse de mongopay, api tourne en boucle, du coup j'ai supprimé then & catch*/
     const obj = {id_card: this.state.Idtempo};
     axios.put('/myAlfred/api/payment/cards', obj);
-    this.setState({deletedial: false, addCreditCard: false}, () =>
-      axios.get('/myAlfred/api/payment/cards')
-      .then(response => {
-        let cards = response.data;
-        this.setState({cards: cards});
-      }).catch(err => console.error(err)));
-
+    this.setState({deletedial: false, addCreditCard: false},() => document.location.reload());
   };
 
   handleCloseCreditCard = () =>{
