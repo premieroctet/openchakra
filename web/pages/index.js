@@ -40,13 +40,13 @@ class Home extends React.Component {
       .then(res => {
         let category = res.data;
         this.setState({category: category});
-      }).catch();
+      }).catch(err => console.error(err));
 
     axios.get('/myAlfred/api/serviceUser/home')
       .then(response => {
         let alfred = response.data;
         this.setState({alfred: alfred});
-      });
+      }).catch(err => console.error(err));
 
 
   }

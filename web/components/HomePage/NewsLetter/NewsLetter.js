@@ -9,34 +9,56 @@ import EmailIcon from '@material-ui/icons/Email';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import styles from '../../../static/css/components/NewsLetter/NewsLetter'
 import withStyles from "@material-ui/core/styles/withStyles";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 class NewsLetter extends React.Component{
   constructor(props) {
     super(props);
     this.state={
-      email: ''
+      email: '',
+      modalSubscription: false
     }
   }
-
-  sendSubscription = () =>{
-    const user = {
-      EMAIL: this.state.email,
-      locale: 'fr',
-      email_address_check: ''
-    };
-    axios.post('https://cef7ace9.sibforms.com/serve/MUIEAMozm6936onrqiPaove-mb4-eZhjKq9N50iJ7FVKRVk4NFAVimF-eRdZmyw9XmVuQh9ItQdDfS1NJLu11EDcUGdHWDoNY13qixwVVhV1R_OjaeI5i5iVjN7Jl86BzlIwoqHgutCV84BudSu-zdJ1Jrq0dAHZBFarwabS9kqbbKhRu9hK2T5XHv6cw8K5NdVf1hkL_BMB3hy7',
-      user, {headers: {
-          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',"Accept": "*/*"
-        }})
-      .then( res => {console.log(res)}).catch((error) => console.log(error) );
-  };
 
   handleOnchange = (event) =>{
     this.setState({[event.target.name]: event.target.value})
   };
 
+  handleSubmit = (event) => {
+    event.preventDefault();
+
+    var form_data = new FormData();
+
+    const obj = {
+      EMAIL: this.state.email,
+      email_address_check: "",
+      locale: "fr",
+    };
+
+    for ( var key in obj ) {
+      form_data.append(key, obj[key]);
+    }
+
+    fetch('https://cef7ace9.sibforms.com/serve/MUIEAMozm6936onrqiPaove-mb4-eZhjKq9N50iJ7FVKRVk4NFAVimF-eRdZmyw9XmVuQh9ItQdDfS1NJLu11EDcUGdHWDoNY13qixwVVhV1R_OjaeI5i5iVjN7Jl86BzlIwoqHgutCV84BudSu-zdJ1Jrq0dAHZBFarwabS9kqbbKhRu9hK2T5XHv6cw8K5NdVf1hkL_BMB3hy7', {
+      method: 'POST',
+      mode: 'no-cors',
+      body: form_data
+    }).then(() => this.setState({modalSubscription: true})).catch(err => console.error(err));
+  };
+
+
   render() {
     const {classes} = this.props;
+
     return (
       <Grid className={classes.newsLetterMainStyle}>
         <Grid className={classes.newsLetterMainContainer}>
@@ -83,11 +105,27 @@ class NewsLetter extends React.Component{
             </Grid>
             <Grid className={classes.newsLetterContainer}>
               <Grid>
-                <Button style={{ width: '100%'}} variant={'outlined'} classes={{root : classes.newsLetterButton}} onClick={this.sendSubscription}>{NEWS_LETTER.button}</Button>
+                <Button style={{ width: '100%'}} variant={'outlined'} classes={{root : classes.newsLetterButton}} onClick={this.handleSubmit}>{NEWS_LETTER.button}</Button>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
+        <Dialog
+          open={this.state.modalSubscription}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={() => this.setState({modalSubscription: false})}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle id="alert-dialog-slide-title">{"Use Google's location service?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              Let Google help apps determine location. This means sending anonymous location data to
+              Google, even when no apps are running.
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
       </Grid>
     );
   }

@@ -252,7 +252,7 @@ class About extends React.Component {
             </Grid>
             : null
           }
-          <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} columnsXl={12} columnsSm={6} />
+          <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} columnsXl={12} columnsLG={12} columnsMD={6} columnsSm={6} columnsXS={6} />
         </Grid>
         {this.modalEditDialog(classes) }
       </Grid>
