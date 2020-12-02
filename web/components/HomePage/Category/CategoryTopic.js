@@ -53,8 +53,8 @@ class CategoryTopic extends React.Component{
           </Hidden>
           <Hidden only={['md', 'lg', 'xl']}>
             {
-              Object.keys(category).map(res => (
-                <Grid item>
+              Object.keys(category).map((res,index) => (
+                <Grid item key={index}>
                   <CategoryCard item={category[res]}/>
                 </Grid>
               ))
