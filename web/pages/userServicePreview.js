@@ -506,6 +506,7 @@ class UserServicesPreview extends React.Component {
 
         if (!this.state.user) {
           cookie.remove('token', {path: '/'});
+          localStorage.setItem('path', Router.asPath)
           Router.push('/?login=true');
         } else {
           Router.push({
