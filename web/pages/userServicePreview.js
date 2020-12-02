@@ -209,8 +209,6 @@ class UserServicesPreview extends React.Component {
     const serviceUser = this.state.serviceUser;
     const user = this.state.user;
     var location = serviceUser.location.client && (!user || this.isInPerimeter()) ? 'client' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
-    console.log(location, 'location')
-    console.log(user, 'user')
     if (location == null && user) {
       this.setState({warningPerimeter: true});
     }
@@ -497,8 +495,7 @@ class UserServicesPreview extends React.Component {
 
       axios.post('/myAlfred/api/booking/add', bookingObj)
         .then(response => {
-          const booking = response.data
-          console.log(response, 'myresponse')
+          const booking = response.data;
           axios.put('/myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, {booking: booking._id})
             .then(() => {
               localStorage.removeItem('address');
@@ -515,7 +512,7 @@ class UserServicesPreview extends React.Component {
       .catch (err => {
         console.console.error(err);
       })
-  }
+  };
 
   formatDeadline = dl => {
     if (!dl) {
