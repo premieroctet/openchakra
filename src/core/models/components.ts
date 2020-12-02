@@ -52,9 +52,9 @@ const components = createModel({
     resetProps(state: ComponentsState, componentId: string): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
         const component = draftState.components[componentId]
+        const { form, ...defaultProps } = DEFAULT_PROPS[component.type] || {}
 
-        draftState.components[componentId].props =
-          DEFAULT_PROPS[component.type] || {}
+        draftState.components[componentId].props = defaultProps || {}
       })
     },
     updateProps(

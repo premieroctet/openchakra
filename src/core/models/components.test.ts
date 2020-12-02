@@ -8,7 +8,7 @@ const STATE: ComponentsState = {
       children: [],
       id: 'button-testid',
       parent: 'root',
-      props: { children: 'Button text' },
+      props: { children: 'Button text', variant: 'solid', size: 'md' },
       rootParentType: 'Button',
       type: 'Button',
     },
@@ -61,6 +61,8 @@ describe('Components model', () => {
 
       expect(nextState.components['button-testid'].props).toEqual({
         children: 'Button text',
+        variant: 'solid',
+        size: 'md',
       })
     })
   })
@@ -75,6 +77,8 @@ describe('Components model', () => {
     expect(nextState.components['button-testid'].props).toEqual({
       children: 'Button text',
       colorScheme: 'teal.300',
+      variant: 'solid',
+      size: 'md',
     })
   })
 
