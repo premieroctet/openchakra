@@ -114,9 +114,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
             aria-label="Color"
             size="xs"
             {...propsIconButton}
-          >
-            {props.label}
-          </IconButton>
+          />
         </PopoverTrigger>
         <Portal>
           <PopoverContent width="200px">

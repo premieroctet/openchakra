@@ -21,6 +21,8 @@ import PreviewContainer from '~components/editor/PreviewContainer'
 import WithChildrenPreviewContainer from '~components/editor/WithChildrenPreviewContainer'
 import IconPreview from './previews/IconPreview'
 import IconButtonPreview from './previews/IconButtonPreview'
+import SelectPreview from '~components/editor/previews/SelectPreview'
+import NumberInputPreview from '~components/editor/previews/NumberInputPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -52,9 +54,7 @@ const ComponentPreview: React.FC<{
     case 'Input':
     case 'Radio':
     case 'ListItem':
-    case 'NumberInput':
     case 'BreadcrumbLink':
-    case 'Select':
       return (
         <PreviewContainer
           component={component}
@@ -146,6 +146,10 @@ const ComponentPreview: React.FC<{
       return <IconPreview component={component} />
     case 'IconButton':
       return <IconButtonPreview component={component} />
+    case 'Select':
+      return <SelectPreview component={component} />
+    case 'NumberInput':
+      return <NumberInputPreview component={component} />
     default:
       return null
   }

@@ -157,11 +157,12 @@ const components = createModel({
     ): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
         const id = payload.testId || generateId()
+        const { form, ...defaultProps } = DEFAULT_PROPS[payload.type] || {}
         draftState.selectedId = id
         draftState.components[payload.parentName].children.push(id)
         draftState.components[id] = {
           id,
-          props: DEFAULT_PROPS[payload.type] || {},
+          props: defaultProps || {},
           children: [],
           type: payload.type,
           parent: payload.parentName,

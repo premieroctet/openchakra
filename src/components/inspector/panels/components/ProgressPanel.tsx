@@ -38,7 +38,7 @@ const ProgressPanel = () => {
       <SwitchControl label="Has stripe" name="hasStripe" />
       <SwitchControl label="Is animated" name="isAnimated" />
 
-      <ColorsControl label="Color Scheme" name="colorScheme" enableHues />
+      <ColorsControl label="Color Scheme" name="colorScheme" />
 
       <SizeControl label="Size" options={['sm', 'md', 'lg']} value={size} />
     </>

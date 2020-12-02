@@ -32,6 +32,8 @@ class Composer {
     }
     const localRootParentType = rootParentType || this.rootComponentType
 
+    const { form, ...defaultProps } = DEFAULT_PROPS[type] || {}
+
     this.components = {
       ...this.components,
       [id]: {
@@ -39,7 +41,7 @@ class Composer {
         type,
         parent,
         id,
-        props: { ...DEFAULT_PROPS[type], ...props },
+        props: { ...defaultProps, ...props },
         rootParentType: localRootParentType,
       },
     }
