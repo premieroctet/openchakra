@@ -75,13 +75,18 @@ class AllReservations extends React.Component {
   }
 
   loadBookings = () => {
-    axios.get('/myAlfred/api/booking/alfredBooking').then(res => {
-      this.setState({alfredReservations: res.data});
-    });
+    axios.get('/myAlfred/api/booking/alfredBooking')
+      .then(res => {
+        // On n'affiche pas les résas en attente de paiement
+        const bookings=res.data.filter( r => r.status != 'En attente de paiement')
+        this.setState({alfredReservations: bookings});
+      });
 
-    axios.get('/myAlfred/api/booking/userBooking').then(res => {
-      this.setState({userReservations: res.data});
-    });
+    axios.get('/myAlfred/api/booking/userBooking')
+      .then(res => {
+        const bookings=res.data
+        this.setState({userReservations: bookings});
+      });
   };
 
   onReservationTypeChanged = (event, newValue) => {

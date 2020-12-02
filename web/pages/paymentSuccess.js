@@ -14,17 +14,20 @@ class paymentSuccess extends React.Component {
     super(props);
     this.state = {
       user: {},
+      booking: null,
       success: false,
     };
+  }
 
+  static getInitialProps({query: {booking_id}}) {
+    return {booking_id: booking_id};
   }
 
   componentDidMount() {
 
     localStorage.setItem('path', Router.pathname);
     axios.defaults.headers.common['Authorization'] = cookie.load('token');
-    axios
-      .get('/myAlfred/api/users/current')
+    axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
         this.setState({user: user});
@@ -35,26 +38,34 @@ class paymentSuccess extends React.Component {
           Router.push({pathname: '/'});
         }
       });
-    axios.get('/myAlfred/api/payment/transactions')
-      .then(result => {
-        let transaction = result.data;
-        if (transaction.Status === 'FAILED') {
-          Router.push('/paymentFailed');
-        } else {
-          const booking_id = localStorage.getItem('booking_id');
-          this.socket = io();
-          this.socket.on('connect', socket => {
-            this.socket.emit('booking', booking_id);
-            axios.put('/myAlfred/api/booking/modifyBooking/' + booking_id, {status: 'Confirmée'})
-              .then(res => {
-                setTimeout(() => this.socket.emit('changeStatus', res.data), 100);
-                localStorage.removeItem('booking_id');
-              })
-              .catch();
+    axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
+      .then (res => {
+        const booking = res.data
+        axios.get('/myAlfred/api/payment/transactions')
+          .then(result => {
+            let transaction = result.data;
+            if (transaction.Status === 'FAILED') {
+              Router.push(`/paymentFailed?booking_id=${this.props.booking_id}`);
+            } else {
+              const booking_id = this.props.booking_id
+              this.socket = io();
+              this.socket.on('connect', socket => {
+                this.socket.emit('booking', booking_id);
+                const newStatus = ['Pré-approuvée', 'En attente de confirmation'].includes(booking.status) ? "Confirmée" : "En attente de confirmation"
+                axios.put(`/myAlfred/api/booking/modifyBooking/${booking_id}`, {status: newStatus})
+                  .then(res => {
+                    setTimeout(() => this.socket.emit('changeStatus', res.data), 100);
+                    localStorage.removeItem('booking_id');
+                    setTimeout(() => Router.push('/reservations/reservations'), 4000)
+                  })
+                  .catch();
+              });
+            }
           });
-        }
-      });
-
+      })
+      .catch (err => {
+        console.error(err)
+      })
 
   }
 
@@ -82,7 +93,7 @@ class paymentSuccess extends React.Component {
                     <Typography>Vous allez être redirigé vers votre page Mes Réservations.</Typography>
                   </Grid>
                   <Grid>
-                    <Typography>Si la redirection ne fonctionne pas <a href={'#'}>cliquez ici</a></Typography>
+                    <Typography>Si la redirection ne fonctionne pas <a href={'/reservations/reservations'}>cliquez ici</a></Typography>
                   </Grid>
                 </Grid>
               </Grid>
