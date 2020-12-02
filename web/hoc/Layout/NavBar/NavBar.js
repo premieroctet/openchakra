@@ -182,7 +182,7 @@ class NavBar extends Component {
     this.setState({[name]: value});
     if (name === 'selectedAddress') {
       if (value === 'addAddress') {
-        Router.push('/profile/myAddresses');
+        Router.push('/account/myAddresses?indexAccount=4');
       } else {
         this.setState({
           gps: value === 'all' ? null : value === 'main' ? this.state.allAddresses['main'].gps : {
