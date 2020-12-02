@@ -510,7 +510,7 @@ class UserServicesPreview extends React.Component {
         .catch(err => console.error(err))
     })
       .catch (err => {
-        console.console.error(err);
+        console.error(err);
       })
   };
 
