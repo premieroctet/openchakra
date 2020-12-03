@@ -3,11 +3,11 @@ import {
   Box,
   Input,
   InputGroup,
-  Icon,
   InputRightElement,
   DarkMode,
   IconButton,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
+import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
 import { menuItems, MenuItem } from '~componentsList'
 
@@ -20,7 +20,7 @@ const Menu = () => {
         maxH="calc(100vh - 3rem)"
         overflowY="auto"
         overflowX="visible"
-        shadow="xl"
+        boxShadow="xl"
         flex="0 0 14rem"
         p={5}
         m={0}
@@ -29,22 +29,6 @@ const Menu = () => {
         width="15rem"
       >
         <InputGroup size="sm" mb={4}>
-          <InputRightElement>
-            {searchTerm ? (
-              <IconButton
-                color="gray.300"
-                aria-label="clear"
-                icon="close"
-                size="xs"
-                onClick={() => setSearchTerm('')}
-              >
-                x
-              </IconButton>
-            ) : (
-              <Icon name="search" color="gray.300" />
-            )}
-          </InputRightElement>
-          )}
           <Input
             value={searchTerm}
             color="gray.300"
@@ -52,7 +36,26 @@ const Menu = () => {
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               setSearchTerm(event.target.value)
             }
+            borderColor="rgba(255, 255, 255, 0.04)"
+            bg="rgba(255, 255, 255, 0.06)"
+            _hover={{
+              borderColor: 'rgba(255, 255, 255, 0.08)',
+            }}
+            zIndex={0}
           />
+          <InputRightElement zIndex={1}>
+            {searchTerm ? (
+              <IconButton
+                color="gray.300"
+                aria-label="clear"
+                icon={<CloseIcon path="" />}
+                size="xs"
+                onClick={() => setSearchTerm('')}
+              />
+            ) : (
+              <SearchIcon path="" color="gray.300" />
+            )}
+          </InputRightElement>
         </InputGroup>
 
         {(Object.keys(menuItems) as ComponentType[])

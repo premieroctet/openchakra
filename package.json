@@ -5,9 +5,11 @@
   "dependencies": {
     "@bugsnag/js": "^6.5.2",
     "@bugsnag/plugin-react": "^6.5.0",
-    "@chakra-ui/core": "^0.5.2",
-    "@emotion/core": "^10.0.27",
-    "@emotion/styled": "^10.0.27",
+    "@chakra-ui/icons": "^1.0.1",
+    "@chakra-ui/react": "^1.0.1",
+    "@chakra-ui/theme": "^1.0.1",
+    "@emotion/react": "^11.1.1",
+    "@emotion/styled": "^11.0.0",
     "@mdx-js/react": "^1.5.5",
     "@reach/combobox": "^0.7.3",
     "@rehooks/local-storage": "^2.1.1",
@@ -16,7 +18,7 @@
     "codesandbox": "^2.1.11",
     "coloreact": "^0.3.1",
     "copy-to-clipboard": "^3.2.1",
-    "emotion-theming": "^10.0.27",
+    "framer-motion": "^2.9.4",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
     "lz-string": "^1.4.4",
@@ -37,7 +39,7 @@
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
     "redux-undo": "^1.0.0",
-    "typescript": "^3.7.5",
+    "typescript": "3.8",
     "webpack-bundle-analyzer": "^3.6.0"
   },
   "scripts": {

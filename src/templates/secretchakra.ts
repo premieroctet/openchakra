@@ -78,7 +78,7 @@ export const secretchakra: IComponents = {
   'comp-K74L8Y2I2J5V4': {
     id: 'comp-K74L8Y2I2J5V4',
     props: {
-      name: 'moon',
+      icon: 'MoonIcon',
       color: 'whatsapp.100',
       mr: '2',
     },
@@ -223,7 +223,7 @@ export const secretchakra: IComponents = {
   'comp-K74LJUTPCBAFB': {
     id: 'comp-K74LJUTPCBAFB',
     props: {
-      name: 'drag-handle',
+      icon: 'DragHandleIcon',
       color: 'gray.300',
       fontSize: 'sm',
       mr: '2',
@@ -248,7 +248,7 @@ export const secretchakra: IComponents = {
   'comp-K74LN1I49Q2D6': {
     id: 'comp-K74LN1I49Q2D6',
     props: {
-      name: 'drag-handle',
+      icon: 'DragHandleIcon',
       color: 'gray.300',
       fontSize: 'sm',
       mr: '2',
@@ -285,7 +285,7 @@ export const secretchakra: IComponents = {
   'comp-K74LN28W6SFUY': {
     id: 'comp-K74LN28W6SFUY',
     props: {
-      name: 'drag-handle',
+      icon: 'DragHandleIcon',
       color: 'gray.300',
       fontSize: 'sm',
       mr: '2',
@@ -322,7 +322,7 @@ export const secretchakra: IComponents = {
   'comp-K74LNLUXPHO6M': {
     id: 'comp-K74LNLUXPHO6M',
     props: {
-      name: 'drag-handle',
+      icon: 'DragHandleIcon',
       color: 'gray.300',
       fontSize: 'sm',
       mr: '2',
@@ -359,7 +359,7 @@ export const secretchakra: IComponents = {
   'comp-K74LNM597JAOI': {
     id: 'comp-K74LNM597JAOI',
     props: {
-      name: 'drag-handle',
+      icon: 'DragHandleIcon',
       color: 'gray.300',
       fontSize: 'sm',
       mr: '2',
@@ -396,7 +396,7 @@ export const secretchakra: IComponents = {
   'comp-K74LNMAD8I86G': {
     id: 'comp-K74LNMAD8I86G',
     props: {
-      name: 'drag-handle',
+      icon: 'DragHandleIcon',
       color: 'gray.300',
       fontSize: 'sm',
       mr: '2',
@@ -433,7 +433,7 @@ export const secretchakra: IComponents = {
   'comp-K74LNMENCU4KP': {
     id: 'comp-K74LNMENCU4KP',
     props: {
-      name: 'drag-handle',
+      icon: 'DragHandleIcon',
       color: 'gray.300',
       fontSize: 'sm',
       mr: '2',
@@ -518,7 +518,7 @@ export const secretchakra: IComponents = {
     props: {
       bg: 'yellow.100',
       p: '2',
-      shadow: 'sm',
+      boxShadow: 'sm',
     },
     children: ['comp-K74LZHHZT6RVX'],
     type: 'Box',
@@ -557,10 +557,10 @@ export const secretchakra: IComponents = {
     id: 'comp-K74M2CH7IR4IT',
     props: {
       'aria-label': 'icon',
-      icon: 'copy',
+      icon: 'CopyIcon',
       size: 'xs',
       variant: 'ghost',
-      variantColor: 'gray',
+      colorScheme: 'gray',
     },
     children: [],
     type: 'IconButton',
@@ -571,10 +571,10 @@ export const secretchakra: IComponents = {
     id: 'comp-K74M2TSIDQKT0',
     props: {
       'aria-label': 'icon',
-      icon: 'delete',
+      icon: 'DeleteIcon',
       size: 'xs',
       variant: 'ghost',
-      variantColor: 'gray',
+      colorScheme: 'gray',
     },
     children: [],
     type: 'IconButton',
@@ -585,10 +585,10 @@ export const secretchakra: IComponents = {
     id: 'comp-K74M2U4X3SQZX',
     props: {
       'aria-label': 'icon',
-      icon: 'repeat',
+      icon: 'RepeatIcon',
       size: 'xs',
       variant: 'ghost',
-      variantColor: 'gray',
+      colorScheme: 'gray',
     },
     children: [],
     type: 'IconButton',
@@ -716,7 +716,7 @@ export const secretchakra: IComponents = {
   'comp-K74M9CCGNQPHP': {
     id: 'comp-K74M9CCGNQPHP',
     props: {
-      name: 'moon',
+      icon: 'MoonIcon',
       color: 'whatsapp.100',
       mr: '2',
     },
@@ -856,7 +856,7 @@ export const secretchakra: IComponents = {
   'comp-K74M9CCGGZE9Q': {
     id: 'comp-K74M9CCGGZE9Q',
     props: {
-      name: 'drag-handle',
+      icon: 'DragHandleIcon',
       color: 'gray.300',
       fontSize: 'sm',
       mr: '2',
@@ -893,7 +893,7 @@ export const secretchakra: IComponents = {
   'comp-K74M9CCG0S0RV': {
     id: 'comp-K74M9CCG0S0RV',
     props: {
-      name: 'drag-handle',
+      icon: 'DragHandleIcon',
       color: 'gray.300',
       fontSize: 'sm',
       mr: '2',
@@ -930,7 +930,7 @@ export const secretchakra: IComponents = {
   'comp-K74M9CCGPQ7C2': {
     id: 'comp-K74M9CCGPQ7C2',
     props: {
-      name: 'drag-handle',
+      icon: 'DragHandleIcon',
       color: 'gray.300',
       fontSize: 'sm',
       mr: '2',
@@ -967,7 +967,7 @@ export const secretchakra: IComponents = {
   'comp-K74M9CCGEPP92': {
     id: 'comp-K74M9CCGEPP92',
     props: {
-      name: 'drag-handle',
+      icon: 'DragHandleIcon',
       color: 'gray.300',
       fontSize: 'sm',
       mr: '2',
@@ -1004,7 +1004,7 @@ export const secretchakra: IComponents = {
   'comp-K74M9CCG2CWCC': {
     id: 'comp-K74M9CCG2CWCC',
     props: {
-      name: 'drag-handle',
+      icon: 'DragHandleIcon',
       color: 'gray.300',
       fontSize: 'sm',
       mr: '2',
@@ -1041,7 +1041,7 @@ export const secretchakra: IComponents = {
   'comp-K74M9CCGBHD01': {
     id: 'comp-K74M9CCGBHD01',
     props: {
-      name: 'drag-handle',
+      icon: 'DragHandleIcon',
       color: 'gray.300',
       fontSize: 'sm',
       mr: '2',
@@ -1078,7 +1078,7 @@ export const secretchakra: IComponents = {
   'comp-K74M9CCGJS0IN': {
     id: 'comp-K74M9CCGJS0IN',
     props: {
-      name: 'drag-handle',
+      icon: 'DragHandleIcon',
       color: 'gray.300',
       fontSize: 'sm',
       mr: '2',
@@ -1173,7 +1173,7 @@ export const secretchakra: IComponents = {
     props: {
       bg: 'yellow.100',
       p: '2',
-      shadow: 'sm',
+      boxShadow: 'sm',
     },
     children: ['comp-K74M9CCG9YO15'],
     type: 'Box',
@@ -1184,10 +1184,10 @@ export const secretchakra: IComponents = {
     id: 'comp-K74M9CCGSW3SU',
     props: {
       'aria-label': 'icon',
-      icon: 'copy',
+      icon: 'CopyIcon',
       size: 'xs',
       variant: 'ghost',
-      variantColor: 'gray',
+      colorScheme: 'gray',
     },
     children: [],
     type: 'IconButton',
@@ -1198,10 +1198,10 @@ export const secretchakra: IComponents = {
     id: 'comp-K74M9CCGTKCJ7',
     props: {
       'aria-label': 'icon',
-      icon: 'delete',
+      icon: 'DeleteIcon',
       size: 'xs',
       variant: 'ghost',
-      variantColor: 'gray',
+      colorScheme: 'gray',
     },
     children: [],
     type: 'IconButton',
@@ -1212,10 +1212,10 @@ export const secretchakra: IComponents = {
     id: 'comp-K74M9CCGGX02O',
     props: {
       'aria-label': 'icon',
-      icon: 'repeat',
+      icon: 'RepeatIcon',
       size: 'xs',
       variant: 'ghost',
-      variantColor: 'gray',
+      colorScheme: 'gray',
     },
     children: [],
     type: 'IconButton',

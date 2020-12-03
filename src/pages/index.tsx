@@ -1,8 +1,8 @@
 import React from 'react'
-import { Flex, Box } from '@chakra-ui/core'
+import { Flex, Box } from '@chakra-ui/react'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
-import { Global } from '@emotion/core'
+import { Global } from '@emotion/react'
 import { HotKeys } from 'react-hotkeys'
 import Metadata from '~components/Metadata'
 import useShortcuts, { keyMap } from '~hooks/useShortcuts'
@@ -31,7 +31,7 @@ const App = () => {
         <Flex h="calc(100vh - 3rem)">
           <Sidebar />
           <EditorErrorBoundary>
-            <Box bg="white" flex={1} zIndex={10} position="relative">
+            <Box bg="white" flex={1} position="relative">
               <Editor />
             </Box>
           </EditorErrorBoundary>

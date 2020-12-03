@@ -12,7 +12,7 @@ export const onboarding: IComponents = {
     id: 'comp-1580479567',
     props: {
       bg: '#ffffff',
-      rounded: 'lg',
+      borderRadius: 'lg',
       width: 'sm',
       minHeight: 'sm',
       border: '1px solid lightgrey',
@@ -77,9 +77,9 @@ export const onboarding: IComponents = {
     props: {
       children: 'NEW',
       variant: 'subtle',
-      variantColor: 'teal',
+      colorScheme: 'teal',
       mr: '2',
-      rounded: 'lg',
+      borderRadius: 'lg',
       pl: '2',
       pr: '2',
     },
@@ -136,7 +136,7 @@ export const onboarding: IComponents = {
   'comp-1580479816': {
     id: 'comp-1580479816',
     props: {
-      name: 'star',
+      icon: 'StarIcon',
       color: 'yellow.400',
       mr: '1',
     },
@@ -170,7 +170,6 @@ export const onboarding: IComponents = {
     props: {
       isInline: true,
       spacing: '3',
-      shouldWrapChildren: true,
     },
     children: ['comp-K6GOJIZK48606', 'comp-K6GOMJN7JIXFL'],
     type: 'Stack',
@@ -346,7 +345,7 @@ export const onboarding: IComponents = {
     id: 'comp-K6GOPXN2COS0O',
     props: {
       isInline: true,
-      shouldWrapChildren: true,
+
       spacing: '4',
       p: '',
       m: '',
@@ -402,7 +401,7 @@ export const onboarding: IComponents = {
   'comp-K6GP60GCOFWJI': {
     id: 'comp-K6GP60GCOFWJI',
     props: {
-      name: 'email',
+      icon: 'EmailIcon',
       color: 'blackAlpha.300',
     },
     children: [],
@@ -444,7 +443,7 @@ export const onboarding: IComponents = {
     props: {
       children: 'BETA',
       variant: 'subtle',
-      variantColor: 'pink',
+      colorScheme: 'pink',
       ml: '1',
     },
     children: [],
@@ -464,7 +463,7 @@ export const onboarding: IComponents = {
     id: 'comp-K6GXDV4IMW2CP',
     props: {
       backgroundColor: 'white',
-      shadow: 'sm',
+      boxShadow: 'sm',
       borderRadius: 'lg',
       p: '',
       pl: '3',
@@ -481,7 +480,7 @@ export const onboarding: IComponents = {
     id: 'comp-K6GXFBY5JLD6C',
     props: {
       isInline: false,
-      shouldWrapChildren: true,
+
       justifyContent: 'flex-start',
       alignItems: 'flex-start',
       ml: '',
@@ -512,7 +511,7 @@ export const onboarding: IComponents = {
   'comp-K6GXHPLKU3KD7': {
     id: 'comp-K6GXHPLKU3KD7',
     props: {
-      name: 'chevron-left',
+      icon: 'ChevronLeftIcon',
     },
     children: [],
     type: 'Icon',
@@ -538,7 +537,7 @@ export const onboarding: IComponents = {
     props: {
       ml: '',
       isInline: false,
-      shouldWrapChildren: true,
+
       spacing: '2',
     },
     children: ['comp-K6GYJVZZPAWEH', 'comp-K6GYL9G557J57'],
@@ -553,7 +552,7 @@ export const onboarding: IComponents = {
       size: 'md',
       variant: 'subtle',
       isInline: false,
-      variantColor: 'whatsapp',
+      colorScheme: 'whatsapp',
     },
     children: [],
     type: 'Tag',
@@ -577,7 +576,7 @@ export const onboarding: IComponents = {
     props: {
       ml: '4',
       spacing: '2',
-      shouldWrapChildren: true,
+
       mt: '4',
       mr: '4',
     },
@@ -625,8 +624,8 @@ export const onboarding: IComponents = {
       children: 'Drag and Drop!',
       size: 'md',
       variant: 'subtle',
-      variantColor: 'whatsapp',
-      rounded: 'sm',
+      colorScheme: 'whatsapp',
+      borderRadius: 'sm',
       fontSize: 'sm',
     },
     children: [],
@@ -712,7 +711,7 @@ export const onboarding: IComponents = {
     props: {
       backgroundColor: 'white',
       borderRadius: 'lg',
-      shadow: 'sm',
+      boxShadow: 'sm',
       pl: '3',
       pr: '3',
       pt: '5',
@@ -739,7 +738,7 @@ export const onboarding: IComponents = {
   'comp-K6H0L81XGIHU1': {
     id: 'comp-K6H0L81XGIHU1',
     props: {
-      name: 'chevron-right',
+      icon: 'ChevronRightIcon',
     },
     children: [],
     type: 'Icon',
@@ -749,7 +748,6 @@ export const onboarding: IComponents = {
   'comp-K6H0PTU71NGNY': {
     id: 'comp-K6H0PTU71NGNY',
     props: {
-      shouldWrapChildren: true,
       spacing: '4',
       ml: '4',
       mt: '4',
@@ -766,7 +764,6 @@ export const onboarding: IComponents = {
   'comp-K6H0PXX1VMIEO': {
     id: 'comp-K6H0PXX1VMIEO',
     props: {
-      shouldWrapChildren: true,
       spacing: '2',
     },
     children: ['comp-K6H0Q3HFG0Q14', 'comp-K6H0RNTHVY7IT'],
@@ -780,7 +777,7 @@ export const onboarding: IComponents = {
       children: 'Update props & style',
       size: 'md',
       variant: 'subtle',
-      variantColor: 'yellow',
+      colorScheme: 'yellow',
     },
     children: [],
     type: 'Tag',
@@ -804,7 +801,6 @@ export const onboarding: IComponents = {
     id: 'comp-K6H0VNVDZ2TRH',
     props: {
       spacing: '2',
-      shouldWrapChildren: true,
     },
     children: ['comp-K6H0VZBSG4SCN', 'comp-K6H0WPDNKQ6CR'],
     type: 'Stack',
@@ -818,7 +814,7 @@ export const onboarding: IComponents = {
       size: 'md',
       variant: 'subtle',
       isInline: false,
-      variantColor: 'yellow',
+      colorScheme: 'yellow',
     },
     children: [],
     type: 'Tag',
@@ -897,7 +893,6 @@ export const onboarding: IComponents = {
   'comp-K6H175A76GO7R': {
     id: 'comp-K6H175A76GO7R',
     props: {
-      shouldWrapChildren: true,
       spacing: '2',
     },
     children: ['comp-K6H17C6VB8XQL', 'comp-K6H17HIGGSUHM'],
@@ -911,7 +906,7 @@ export const onboarding: IComponents = {
       children: 'Delete, reset and read doc',
       size: 'md',
       variant: 'subtle',
-      variantColor: 'yellow',
+      colorScheme: 'yellow',
     },
     children: [],
     type: 'Tag',
@@ -1031,7 +1026,7 @@ export const onboarding: IComponents = {
     props: {
       backgroundColor: 'white',
       borderRadius: 'lg',
-      shadow: 'sm',
+      boxShadow: 'sm',
       pl: '3',
       pr: '3',
       pt: '5',
@@ -1076,7 +1071,6 @@ export const onboarding: IComponents = {
   'comp-K6H1TRQ8GRP98': {
     id: 'comp-K6H1TRQ8GRP98',
     props: {
-      shouldWrapChildren: true,
       spacing: '5',
       pl: '4',
       pt: '4',
@@ -1093,7 +1087,6 @@ export const onboarding: IComponents = {
   'comp-K6H1UG7QF7UP4': {
     id: 'comp-K6H1UG7QF7UP4',
     props: {
-      shouldWrapChildren: true,
       spacing: '2',
     },
     children: ['comp-K6H1UMW2YLSAB', 'comp-K6H1VU1P3OYRQ'],
@@ -1107,7 +1100,7 @@ export const onboarding: IComponents = {
       children: 'Builder mode',
       size: 'md',
       variant: 'solid',
-      variantColor: 'facebook',
+      colorScheme: 'facebook',
     },
     children: [],
     type: 'Tag',
@@ -1128,9 +1121,7 @@ export const onboarding: IComponents = {
   },
   'comp-K6H1WTCRIIFNG': {
     id: 'comp-K6H1WTCRIIFNG',
-    props: {
-      shouldWrapChildren: true,
-    },
+    props: {},
     children: ['comp-K6H1XCSNJY88G', 'comp-K6H1XZB37JTJ4'],
     type: 'Stack',
     parent: 'comp-K6H1TRQ8GRP98',
@@ -1142,7 +1133,7 @@ export const onboarding: IComponents = {
       children: 'Code Panel',
       size: 'md',
       variant: 'solid',
-      variantColor: 'facebook',
+      colorScheme: 'facebook',
     },
     children: [],
     type: 'Tag',
@@ -1164,7 +1155,6 @@ export const onboarding: IComponents = {
   'comp-K6HM4MGL0S6AH': {
     id: 'comp-K6HM4MGL0S6AH',
     props: {
-      shouldWrapChildren: true,
       spacing: '4',
     },
     children: [
@@ -1184,7 +1174,7 @@ export const onboarding: IComponents = {
       children: 'ctrl+z',
       size: 'sm',
       variant: 'subtle',
-      variantColor: 'gray',
+      colorScheme: 'gray',
     },
     children: [],
     type: 'Tag',
@@ -1207,7 +1197,6 @@ export const onboarding: IComponents = {
     id: 'comp-K6HM7KLJLO714',
     props: {
       isInline: true,
-      shouldWrapChildren: true,
     },
     children: [
       'comp-K6HM7F0ZLPGFE',
@@ -1233,7 +1222,6 @@ export const onboarding: IComponents = {
     id: 'comp-K6HM9HOFHX07Z',
     props: {
       isInline: true,
-      shouldWrapChildren: true,
     },
     children: ['comp-K6HM9L3VKMKHN', 'comp-K6HM9Y9W5FRUJ'],
     type: 'Stack',
@@ -1246,7 +1234,7 @@ export const onboarding: IComponents = {
       children: 'b',
       size: 'md',
       variant: 'subtle',
-      variantColor: 'gray',
+      colorScheme: 'gray',
     },
     children: [],
     type: 'Tag',
@@ -1268,7 +1256,6 @@ export const onboarding: IComponents = {
     id: 'comp-K6HMA6UCR000W',
     props: {
       isInline: true,
-      shouldWrapChildren: true,
     },
     children: ['comp-K6HMAAF672VE5', 'comp-K6HMAKMTZWD8Z'],
     type: 'Stack',
@@ -1281,7 +1268,7 @@ export const onboarding: IComponents = {
       children: 'c',
       size: 'sm',
       variant: 'subtle',
-      variantColor: 'gray',
+      colorScheme: 'gray',
     },
     children: [],
     type: 'Tag',
@@ -1305,7 +1292,7 @@ export const onboarding: IComponents = {
       children: 'Shortcuts',
       size: 'md',
       variant: 'solid',
-      variantColor: 'facebook',
+      colorScheme: 'facebook',
     },
     children: [],
     type: 'Tag',
@@ -1315,7 +1302,6 @@ export const onboarding: IComponents = {
   'comp-K6HMEG7J926M9': {
     id: 'comp-K6HMEG7J926M9',
     props: {
-      shouldWrapChildren: true,
       isInline: true,
     },
     children: [
@@ -1333,7 +1319,7 @@ export const onboarding: IComponents = {
       children: 'cmd+y',
       size: 'sm',
       variant: 'subtle',
-      variantColor: 'gray',
+      colorScheme: 'gray',
       isInline: false,
     },
     children: [],
@@ -1358,7 +1344,7 @@ export const onboarding: IComponents = {
       children: 'ctrl+y',
       size: 'sm',
       variant: 'subtle',
-      variantColor: 'gray',
+      colorScheme: 'gray',
     },
     children: [],
     type: 'Tag',

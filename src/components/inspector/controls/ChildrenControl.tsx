@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, KeyboardEvent } from 'react'
-import { Input } from '@chakra-ui/core'
+import { Input } from '@chakra-ui/react'
 import useDispatch from '~hooks/useDispatch'
 import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'

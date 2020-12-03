@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import ColorsControl from '~components/inspector/controls/ColorsControl'
 import InputSuggestion from '~components/inspector/inputs/InputSuggestion'
-import theme from '~theme/theme'
+import theme from '@chakra-ui/theme'
 import { ComboboxOption } from '@reach/combobox'
 import FormControl from '~components/inspector/controls/FormControl'
 import { useForm } from '~hooks/useForm'
@@ -11,19 +11,19 @@ import IconControl from '~components/inspector/controls/IconControl'
 const IconPanel = () => {
   const { setValueFromEvent } = useForm()
 
-  const fontSize = usePropsSelector('fontSize')
+  const boxSize = usePropsSelector('boxSize')
 
   return (
     <>
-      <IconControl label="Icon" name="name" />
+      <IconControl label="Icon" name="icon" />
 
-      <FormControl label="Font size" htmlFor="fontSize">
+      <FormControl label="Size" htmlFor="boxSize">
         <InputSuggestion
-          value={fontSize}
+          value={boxSize}
           handleChange={setValueFromEvent}
-          name="fontSize"
+          name="boxSize"
         >
-          {Object.keys(theme.fontSizes).map((option, index) => (
+          {Object.keys(theme.sizes).map((option, index) => (
             <ComboboxOption key={index} value={option} />
           ))}
         </InputSuggestion>

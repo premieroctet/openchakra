@@ -6,7 +6,7 @@ const CodePanel = () => {
   return (
     <>
       <ChildrenControl />
-      <ColorsControl label="Variant Color" name="variantColor" />
+      <ColorsControl label="Color Scheme" name="colorScheme" />
     </>
   )
 }

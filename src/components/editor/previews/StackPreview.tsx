@@ -1,5 +1,5 @@
 import React from 'react'
-import { Stack, Box } from '@chakra-ui/core'
+import { Stack, Box } from '@chakra-ui/react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
 import ComponentPreview from '~components/editor/ComponentPreview'

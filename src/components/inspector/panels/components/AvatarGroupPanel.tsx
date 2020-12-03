@@ -1,7 +1,6 @@
 import React, { memo } from 'react'
 import FormControl from '~components/inspector/controls/FormControl'
 import {
-  Slider,
   SliderTrack,
   SliderThumb,
   NumberInput,
@@ -11,7 +10,8 @@ import {
   NumberDecrementStepper,
   SliderFilledTrack,
   Select,
-} from '@chakra-ui/core'
+  Slider,
+} from '@chakra-ui/react'
 import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'
 
@@ -50,8 +50,9 @@ const AvatarGroupPanel = () => {
           step={1}
           defaultValue={spacing}
         >
-          <SliderTrack />
-          <SliderFilledTrack />
+          <SliderTrack>
+            <SliderFilledTrack />
+          </SliderTrack>
           <SliderThumb />
         </Slider>
       </FormControl>

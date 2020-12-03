@@ -3,7 +3,7 @@ import ColorsControl from '~components/inspector/controls/ColorsControl'
 import ChildrenControl from '~components/inspector/controls/ChildrenControl'
 import { useForm } from '~hooks/useForm'
 import FormControl from '~components/inspector/controls/FormControl'
-import { Select } from '@chakra-ui/core'
+import { Select } from '@chakra-ui/react'
 import usePropsSelector from '~hooks/usePropsSelector'
 import SwitchControl from '~components/inspector/controls/SwitchControl'
 
@@ -15,7 +15,7 @@ const CheckboxPanel = () => {
     <>
       <ChildrenControl />
       <SwitchControl label="Checked" name="isChecked" />
-      <ColorsControl label="Variant Color" name="variantColor" />
+      <ColorsControl label="Color Scheme" name="colorScheme" />
       <FormControl label="Size" htmlFor="size">
         <Select
           name="size"

@@ -108,7 +108,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'InputLeftAddon' && <ChildrenControl />}
       {type === 'Grid' && <GridPanel />}
       {type === 'NumberInput' && <NumberInputPanel />}
-      {type === 'AspectRatioBox' && <AspectRatioPanel />}
+      {type === 'AspectRatio' && <AspectRatioPanel />}
       {type === 'Breadcrumb' && <BreadcrumbPanel />}
       {type === 'BreadcrumbItem' && <BreadcrumbItemPanel />}
       {type === 'BreadcrumbLink' && <LinkPanel />}

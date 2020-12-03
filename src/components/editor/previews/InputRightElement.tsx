@@ -2,7 +2,7 @@ import React from 'react'
 import { useInteractive } from '~hooks/useInteractive'
 import { useDropComponent } from '~hooks/useDropComponent'
 import ComponentPreview from '~components/editor/ComponentPreview'
-import { InputRightElement } from '@chakra-ui/core'
+import { InputRightElement } from '@chakra-ui/react'
 
 export const InputRightElementPreview: React.FC<{ component: IComponent }> = ({
   component,

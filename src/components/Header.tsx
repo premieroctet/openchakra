@@ -19,7 +19,9 @@ import {
   LightMode,
   PopoverFooter,
   Tooltip,
-} from '@chakra-ui/core'
+  HStack,
+} from '@chakra-ui/react'
+import { ExternalLinkIcon, SmallCloseIcon, CheckIcon } from '@chakra-ui/icons'
 import { DiGithubBadge } from 'react-icons/di'
 import { AiFillThunderbolt } from 'react-icons/ai'
 import { buildParameters } from '~utils/codesandbox'
@@ -55,7 +57,7 @@ const CodeSandboxButton = () => {
           )
         }}
         isLoading={isLoading}
-        rightIcon="external-link"
+        rightIcon={<ExternalLinkIcon path="" />}
         variant="ghost"
         size="xs"
       >
@@ -95,11 +97,11 @@ const Header = () => {
         </Flex>
 
         <Flex flexGrow={1} justifyContent="space-between" alignItems="center">
-          <Stack isInline spacing={4} justify="center" align="center">
+          <HStack spacing={4} justify="center" align="center">
             <Box>
               <HeaderMenu />
             </Box>
-            <FormControl>
+            <FormControl flexDirection="row" display="flex" alignItems="center">
               <Tooltip
                 zIndex={100}
                 hasArrow
@@ -113,34 +115,49 @@ const Header = () => {
                   fontSize="xs"
                   htmlFor="preview"
                   pb={0}
+                  mb={0}
+                  mr={2}
+                  whiteSpace="nowrap"
                 >
                   Builder mode
                 </FormLabel>
               </Tooltip>
-              <Switch
-                isChecked={showLayout}
-                color="teal"
-                size="sm"
-                onChange={() => dispatch.app.toggleBuilderMode()}
-                id="preview"
-              />
+              <LightMode>
+                <Switch
+                  isChecked={showLayout}
+                  colorScheme="teal"
+                  size="sm"
+                  onChange={() => dispatch.app.toggleBuilderMode()}
+                  id="preview"
+                />
+              </LightMode>
             </FormControl>
 
-            <FormControl>
-              <FormLabel color="gray.200" fontSize="xs" htmlFor="code" pb={0}>
+            <FormControl display="flex" flexDirection="row" alignItems="center">
+              <FormLabel
+                color="gray.200"
+                fontSize="xs"
+                mr={2}
+                mb={0}
+                htmlFor="code"
+                pb={0}
+                whiteSpace="nowrap"
+              >
                 Code panel
               </FormLabel>
-              <Switch
-                isChecked={showCode}
-                id="code"
-                color="teal"
-                onChange={() => dispatch.app.toggleCodePanel()}
-                size="sm"
-              />
+              <LightMode>
+                <Switch
+                  isChecked={showCode}
+                  id="code"
+                  colorScheme="teal"
+                  onChange={() => dispatch.app.toggleCodePanel()}
+                  size="sm"
+                />
+              </LightMode>
             </FormControl>
-          </Stack>
+          </HStack>
 
-          <Stack isInline>
+          <Stack direction="row">
             <CodeSandboxButton />
             <Popover>
               {({ onClose }) => (
@@ -148,7 +165,7 @@ const Header = () => {
                   <PopoverTrigger>
                     <Button
                       ml={4}
-                      rightIcon="small-close"
+                      rightIcon={<SmallCloseIcon path="" />}
                       size="xs"
                       variant="ghost"
                     >
@@ -156,7 +173,7 @@ const Header = () => {
                     </Button>
                   </PopoverTrigger>
                   <LightMode>
-                    <PopoverContent zIndex={100}>
+                    <PopoverContent zIndex={100} bg="white">
                       <PopoverArrow />
                       <PopoverCloseButton />
                       <PopoverHeader>Are you sure?</PopoverHeader>
@@ -168,8 +185,8 @@ const Header = () => {
                         <Button
                           size="sm"
                           variant="ghost"
-                          variantColor="red"
-                          rightIcon="check"
+                          colorScheme="red"
+                          rightIcon={<CheckIcon path="" />}
                           onClick={() => {
                             dispatch.components.reset()
                             if (onClose) {
@@ -192,11 +209,11 @@ const Header = () => {
           justifyContent="flex-end"
           width="13rem"
           align="center"
-          isInline
+          direction="row"
           spacing="2"
         >
           <Link isExternal href="https://github.com/premieroctet/openchakra">
-            <Box as={DiGithubBadge} size="8" color="gray.200" />
+            <Box as={DiGithubBadge} size={32} color="gray.200" />
           </Link>
           <Box lineHeight="shorter" color="white" fontSize="xs">
             by{' '}

@@ -17,7 +17,7 @@ export const productHunt: IComponents = {
       alignItems: 'flex-start',
       justifyContent: 'space-between',
       p: '5',
-      shadow: 'sm',
+      boxShadow: 'sm',
     },
     children: ['comp-K6IAUUX80CXD6', 'comp-K6IAWV0WFDNW7'],
     type: 'Box',
@@ -88,7 +88,7 @@ export const productHunt: IComponents = {
     parent: 'comp-K6IATGON4BXKS',
     id: 'comp-K6IATGOOHID42',
     props: {
-      name: 'email',
+      icon: 'EmailIcon',
     },
     rootParentType: 'Input',
   },
@@ -125,7 +125,7 @@ export const productHunt: IComponents = {
     props: {
       isInline: true,
       isReversed: false,
-      shouldWrapChildren: true,
+
       alignItems: 'center',
       spacing: '3',
     },
@@ -278,7 +278,7 @@ export const productHunt: IComponents = {
     id: 'comp-K6IB42UQBXOB8',
     props: {
       isInline: true,
-      shouldWrapChildren: true,
+
       spacing: '2',
       alignItems: 'center',
     },
@@ -305,7 +305,6 @@ export const productHunt: IComponents = {
   'comp-K6IB6HDI4V5B0': {
     id: 'comp-K6IB6HDI4V5B0',
     props: {
-      shouldWrapChildren: true,
       spacing: '0',
     },
     children: [

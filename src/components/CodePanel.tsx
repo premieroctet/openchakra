@@ -1,6 +1,6 @@
 import React, { memo, useState, useEffect } from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
-import { Box, Button, useClipboard } from '@chakra-ui/core'
+import { Box, Button, useClipboard } from '@chakra-ui/react'
 import { generateCode } from '~utils/code'
 import theme from 'prism-react-renderer/themes/nightOwl'
 import { useSelector } from 'react-redux'
@@ -19,7 +19,7 @@ const CodePanel = () => {
     getCode()
   }, [components])
 
-  const { onCopy, hasCopied } = useClipboard(code)
+  const { onCopy, hasCopied } = useClipboard(code!)
 
   return (
     <Box
@@ -39,7 +39,7 @@ const CodePanel = () => {
         size="sm"
         position="absolute"
         textTransform="uppercase"
-        variantColor="teal"
+        colorScheme="teal"
         fontSize="xs"
         height="24px"
         top={4}

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDrag } from 'react-dnd'
-import { Text, PseudoBox, Icon, Box } from '@chakra-ui/core'
+import { Text, Box } from '@chakra-ui/react'
+import { DragHandleIcon } from '@chakra-ui/icons'
 
 const DragItem: React.FC<ComponentItemProps> = ({
   type,
@@ -28,7 +29,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
         ml: -1,
         mr: 1,
         bg: 'teal.100',
-        shadow: 'sm',
+        boxShadow: 'sm',
         color: 'teal.800',
       },
     }
@@ -39,22 +40,20 @@ const DragItem: React.FC<ComponentItemProps> = ({
   }
 
   return (
-    <PseudoBox
+    <Box
       boxSizing="border-box"
       transition="margin 200ms"
       my={1}
-      rounded="md"
+      borderRadius="md"
       p={1}
       display="flex"
       alignItems="center"
       {...boxProps}
     >
-      <Icon fontSize="xs" mr={2} name="drag-handle" />
-
+      <DragHandleIcon path="" fontSize="xs" mr={2} />
       <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
         {label}
       </Text>
-
       {isMeta && (
         <Box
           ml={2}
@@ -62,13 +61,12 @@ const DragItem: React.FC<ComponentItemProps> = ({
           color="teal.300"
           borderColor="teal.600"
           fontSize="xs"
-          rounded={4}
+          borderRadius={4}
           px={1}
         >
           preset
         </Box>
       )}
-
       {soon && (
         <Box
           ml={2}
@@ -76,13 +74,13 @@ const DragItem: React.FC<ComponentItemProps> = ({
           color="whiteAlpha.500"
           borderColor="whiteAlpha.300"
           fontSize="xs"
-          rounded={4}
+          borderRadius={4}
           px={1}
         >
           soon
         </Box>
       )}
-    </PseudoBox>
+    </Box>
   )
 }
 

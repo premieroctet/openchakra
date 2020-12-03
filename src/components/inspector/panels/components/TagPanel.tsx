@@ -1,5 +1,5 @@
 import React from 'react'
-import { Select } from '@chakra-ui/core'
+import { Select } from '@chakra-ui/react'
 import { useForm } from '~hooks/useForm'
 import SizeControl from '~components/inspector/controls/SizeControl'
 import ChildrenControl from '~components/inspector/controls/ChildrenControl'
@@ -38,7 +38,7 @@ const TagPanel = () => {
         </Select>
       </FormControl>
 
-      <ColorsControl label="Variant Color" name="variantColor" />
+      <ColorsControl label="Color Scheme" name="colorScheme" />
 
       <SizeControl name="rounded" label="Border radius" value={rounded} />
 

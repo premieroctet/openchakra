@@ -7,17 +7,22 @@ import AvatarPreview, {
   AvatarGroupPreview,
 } from '~components/editor/previews/AvatarPreview'
 import AccordionPreview, {
-  AccordionHeaderPreview,
+  AccordionButtonPreview,
   AccordionItemPreview,
   AccordionPanelPreview,
 } from '~components/editor/previews/AccordionPreview'
-import * as Chakra from '@chakra-ui/core'
+import * as Chakra from '@chakra-ui/react'
 import { getComponentBy } from '~core/selectors/components'
 import { InputRightElementPreview } from '~components/editor/previews/InputRightElement'
 import { InputLeftElementPreview } from '~components/editor/previews/InputLeftElement'
-import AspectRatioBoxPreview from '~components/editor/previews/AspectRatioBoxPreview'
+import AspectRatioPreview from '~components/editor/previews/AspectRatioBoxPreview'
+import ButtonPreview from '~components/editor/previews/ButtonPreview'
 import PreviewContainer from '~components/editor/PreviewContainer'
 import WithChildrenPreviewContainer from '~components/editor/WithChildrenPreviewContainer'
+import IconPreview from './previews/IconPreview'
+import IconButtonPreview from './previews/IconButtonPreview'
+import SelectPreview from '~components/editor/previews/SelectPreview'
+import NumberInputPreview from '~components/editor/previews/NumberInputPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -32,8 +37,6 @@ const ComponentPreview: React.FC<{
   switch (type) {
     // Simple components
     case 'Badge':
-    case 'Button':
-    case 'IconButton':
     case 'Image':
     case 'Text':
     case 'Link':
@@ -51,9 +54,7 @@ const ComponentPreview: React.FC<{
     case 'Input':
     case 'Radio':
     case 'ListItem':
-    case 'NumberInput':
     case 'BreadcrumbLink':
-    case 'Select':
       return (
         <PreviewContainer
           component={component}
@@ -67,7 +68,6 @@ const ComponentPreview: React.FC<{
     case 'CloseButton':
     case 'AccordionIcon':
     case 'Code':
-    case 'Icon':
     case 'ListIcon':
     case 'Divider':
     case 'AlertDescription':
@@ -93,6 +93,8 @@ const ComponentPreview: React.FC<{
     case 'TabList':
     case 'TabPanels':
     case 'Grid':
+    case 'Center':
+    case 'Container':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -130,14 +132,24 @@ const ComponentPreview: React.FC<{
       return <AlertPreview component={component} />
     case 'Accordion':
       return <AccordionPreview component={component} />
-    case 'AccordionHeader':
-      return <AccordionHeaderPreview component={component} />
+    case 'AccordionButton':
+      return <AccordionButtonPreview component={component} />
     case 'AccordionItem':
       return <AccordionItemPreview component={component} />
     case 'AccordionPanel':
       return <AccordionPanelPreview component={component} />
-    case 'AspectRatioBox':
-      return <AspectRatioBoxPreview component={component} />
+    case 'AspectRatio':
+      return <AspectRatioPreview component={component} />
+    case 'Button':
+      return <ButtonPreview component={component} />
+    case 'Icon':
+      return <IconPreview component={component} />
+    case 'IconButton':
+      return <IconButtonPreview component={component} />
+    case 'Select':
+      return <SelectPreview component={component} />
+    case 'NumberInput':
+      return <NumberInputPreview component={component} />
     default:
       return null
   }

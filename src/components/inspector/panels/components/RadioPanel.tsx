@@ -10,7 +10,7 @@ const RadioPanel = () => {
   return (
     <>
       <SizeControl label="Size" options={['sm', 'md', 'lg']} value={size} />
-      <ColorsControl name="variantColor" label="Variant color" />
+      <ColorsControl name="colorScheme" label="Color Scheme" />
       <SwitchControl label="Checked" name="isChecked" />
       <SwitchControl label="Full width" name="isFullWidth" />
       <SwitchControl label="Invalid" name="isInvalid" />

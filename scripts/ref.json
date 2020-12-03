@@ -37,7 +37,7 @@
       "description": "The variant of the badge"
     },
     {
-      "name": "variantColor",
+      "name": "colorScheme",
       "type": { "type": "string" },
       "description": "The color scheme of the badge"
     }
@@ -107,7 +107,7 @@
       "description": "The variant of the button style to use."
     },
     {
-      "name": "variantColor",
+      "name": "colorScheme",
       "type": { "type": "string" },
       "description": "The color scheme of the button."
     }
@@ -179,7 +179,7 @@
       "description": "The value to be used in the checkbox input.\nThis is the value that will be returned on form submission."
     },
     {
-      "name": "variantColor",
+      "name": "colorScheme",
       "type": { "type": "string" },
       "description": "The color scheme of the checkbox."
     }
@@ -265,7 +265,7 @@
       "description": "The variant of the tag."
     },
     {
-      "name": "variantColor",
+      "name": "colorScheme",
       "type": { "type": "string" },
       "description": "The color scheme of the tag."
     }

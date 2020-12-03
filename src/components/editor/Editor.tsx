@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { Box, Text, Link } from '@chakra-ui/core'
+import { Box, Text, Link } from '@chakra-ui/react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import SplitPane from 'react-split-pane'
 import CodePanel from '~components/CodePanel'
@@ -13,7 +13,7 @@ export const gridStyles = {
   backgroundImage:
     'linear-gradient(to right, #d9e2e9 1px, transparent 1px),linear-gradient(to bottom, #d9e2e9 1px, transparent 1px);',
   backgroundSize: '20px 20px',
-  bg: '#edf2f6',
+  bgColor: '#edf2f6',
   p: 10,
 }
 

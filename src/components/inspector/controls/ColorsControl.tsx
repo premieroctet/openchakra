@@ -5,10 +5,8 @@ import {
   PopoverContent,
   PopoverArrow,
   Grid,
-  PseudoBox,
   PopoverBody,
   IconButton,
-  Slider,
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
@@ -20,7 +18,9 @@ import {
   TabPanel,
   Input,
   useTheme,
-} from '@chakra-ui/core'
+  Slider,
+  Portal,
+} from '@chakra-ui/react'
 import FormControl from './FormControl'
 import { useForm } from '~hooks/useForm'
 import omit from 'lodash/omit'
@@ -49,17 +49,17 @@ const ColorsControl = (props: ColorControlPropsType) => {
 
   let propsIconButton: any = { bg: value }
   if (value && themeColors[value]) {
-    propsIconButton = { variantColor: value }
+    propsIconButton = { colorScheme: value }
   }
 
   const huesPicker = (
     <>
       <Grid mb={2} templateColumns="repeat(5, 1fr)" gap={0}>
         {Object.keys(themeColors).map(colorName => (
-          <PseudoBox
+          <Box
             border={colorName.includes('white') ? '1px solid lightgrey' : ''}
             key={colorName}
-            _hover={{ shadow: 'lg' }}
+            _hover={{ boxShadow: 'lg' }}
             cursor="pointer"
             bg={`${colorName}.${props.enableHues ? hue : 500}`}
             onClick={() =>
@@ -69,7 +69,7 @@ const ColorsControl = (props: ColorControlPropsType) => {
               )
             }
             mt={2}
-            rounded="full"
+            borderRadius="full"
             height="30px"
             width="30px"
           />
@@ -77,24 +77,27 @@ const ColorsControl = (props: ColorControlPropsType) => {
       </Grid>
 
       {props.enableHues && (
-        <Slider
-          onChange={value => {
-            value = value === 0 ? 50 : value
-            setHue(value)
-          }}
-          min={0}
-          max={900}
-          step={100}
-          value={hue}
-        >
-          <SliderTrack />
-          <SliderFilledTrack />
-          <SliderThumb size={8}>
-            <Box rounded="full" fontSize="xs">
-              {hue}
-            </Box>
-          </SliderThumb>
-        </Slider>
+        <>
+          <Slider
+            onChange={value => {
+              value = value === 0 ? 50 : value
+              setHue(value)
+            }}
+            min={0}
+            max={900}
+            step={100}
+            value={hue}
+          >
+            <SliderTrack>
+              <SliderFilledTrack />
+            </SliderTrack>
+            <SliderThumb boxSize={8}>
+              <Box borderRadius="full" fontSize="xs">
+                {hue}
+              </Box>
+            </SliderThumb>
+          </Slider>
+        </>
       )}
     </>
   )
@@ -105,46 +108,46 @@ const ColorsControl = (props: ColorControlPropsType) => {
         <PopoverTrigger>
           <IconButton
             mr={2}
-            shadow="md"
+            boxShadow="md"
             border={value ? 'none' : '2px solid grey'}
             isRound
             aria-label="Color"
             size="xs"
             {...propsIconButton}
-          >
-            {props.label}
-          </IconButton>
+          />
         </PopoverTrigger>
-        <PopoverContent width="200px" zIndex={theme.zIndices.modal}>
-          <PopoverArrow />
-          <PopoverBody>
-            {props.withFullColor ? (
-              <Tabs size="sm" variant="soft-rounded" variantColor="green">
-                <TabList>
-                  <Tab>Theme</Tab>
-                  <Tab>All</Tab>
-                </TabList>
-                <TabPanels mt={4}>
-                  <TabPanel>{huesPicker}</TabPanel>
+        <Portal>
+          <PopoverContent width="200px">
+            <PopoverArrow />
+            <PopoverBody>
+              {props.withFullColor ? (
+                <Tabs size="sm" variant="soft-rounded" colorScheme="green">
+                  <TabList>
+                    <Tab>Theme</Tab>
+                    <Tab>All</Tab>
+                  </TabList>
+                  <TabPanels mt={4}>
+                    <TabPanel p={0}>{huesPicker}</TabPanel>
 
-                  <TabPanel>
-                    <Box position="relative" height="150px">
-                      <ColorPicker
-                        color={value}
-                        onChange={(color: any) => {
-                          setValue(props.name, `#${color.hex}`)
-                        }}
-                      />
-                      );
-                    </Box>
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
-            ) : (
-              huesPicker
-            )}
-          </PopoverBody>
-        </PopoverContent>
+                    <TabPanel p={0}>
+                      <Box position="relative" height="150px">
+                        <ColorPicker
+                          color={value}
+                          onChange={(color: any) => {
+                            setValue(props.name, `#${color.hex}`)
+                          }}
+                        />
+                        );
+                      </Box>
+                    </TabPanel>
+                  </TabPanels>
+                </Tabs>
+              ) : (
+                huesPicker
+              )}
+            </PopoverBody>
+          </PopoverContent>
+        </Portal>
       </Popover>
       <Input
         width="100px"

@@ -4,38 +4,39 @@ import {
   IconButtonProps,
   Tooltip,
   IconButton,
-} from '@chakra-ui/core'
+  As,
+} from '@chakra-ui/react'
 
 interface Props
-  extends Omit<TooltipProps, 'label' | 'aria-label' | 'children'> {
+  extends Omit<TooltipProps, 'label' | 'aria-label' | 'children' | 'onClick'> {
   icon: IconButtonProps['icon']
-  as?: IconButtonProps['as']
   label: string
+  as?: As
   isLoading?: boolean
   onClick?: IconButtonProps['onClick']
-  variantColor?: IconButtonProps['variantColor']
+  colorScheme?: IconButtonProps['colorScheme']
 }
 
-const ActionButton: React.FC<Props> = ({
+const ActionButton = ({
   icon,
   as,
   label,
   onClick,
-  variantColor,
+  colorScheme,
   isLoading,
   ...props
-}) => {
+}: Props) => {
   return (
     <Tooltip hasArrow aria-label={label} label={label} zIndex={11} {...props}>
       <IconButton
-        size="xs"
         variant="ghost"
         as={as}
         isLoading={isLoading}
         onClick={onClick}
         icon={icon}
         aria-label={label}
-        variantColor={variantColor}
+        colorScheme={colorScheme}
+        size="xs"
       />
     </Tooltip>
   )

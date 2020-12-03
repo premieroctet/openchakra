@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { Input } from '@chakra-ui/core'
+import { Input } from '@chakra-ui/react'
 import FormControl from './FormControl'
 import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'
@@ -25,7 +25,7 @@ const TextControl: React.FC<TextControlPropsType> = ({
   return (
     <FormControl hasColumn={hasColumn} htmlFor={name} label={label}>
       <Input
-        rounded="md"
+        borderRadius="md"
         autoComplete="off"
         id={name}
         name={name}

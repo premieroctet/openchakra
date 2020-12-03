@@ -1,10 +1,10 @@
 import React from 'react'
-import { Box, AspectRatioBox } from '@chakra-ui/core'
+import { Box, AspectRatio } from '@chakra-ui/react'
 import { useInteractive } from '~hooks/useInteractive'
 import { useDropComponent } from '~hooks/useDropComponent'
 import ComponentPreview from '~components/editor/ComponentPreview'
 
-const AspectRatioBoxPreview: React.FC<{ component: IComponent }> = ({
+const AspectRatioPreview: React.FC<{ component: IComponent }> = ({
   component,
 }) => {
   const { props, ref } = useInteractive(component, true)
@@ -23,11 +23,11 @@ const AspectRatioBoxPreview: React.FC<{ component: IComponent }> = ({
 
   return (
     <Box {...boxProps} ref={drop(ref)}>
-      <AspectRatioBox {...props}>
+      <AspectRatio {...props}>
         {!children.length ? (
           /*
            * We need at least one children because of the implementation
-           * of AspectRatioBox
+           * of AspectRatio
            */
           <Box />
         ) : (
@@ -35,9 +35,9 @@ const AspectRatioBoxPreview: React.FC<{ component: IComponent }> = ({
             <ComponentPreview componentName={children[0]} />
           </Box>
         )}
-      </AspectRatioBox>
+      </AspectRatio>
     </Box>
   )
 }
 
-export default AspectRatioBoxPreview
+export default AspectRatioPreview

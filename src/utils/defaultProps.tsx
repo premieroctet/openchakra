@@ -1,5 +1,5 @@
 import React from 'react'
-import * as Chakra from '@chakra-ui/core'
+import * as Chakra from '@chakra-ui/react'
 
 import {
   BadgeProps,
@@ -23,7 +23,7 @@ import {
   FlexProps,
   StackProps,
   AccordionProps,
-  AccordionHeaderProps,
+  AccordionButtonProps,
   AccordionItemProps,
   FormControlProps,
   TabListProps,
@@ -31,7 +31,7 @@ import {
   TabPanelsProps,
   TabsProps,
   InputProps,
-  AspectRatioBoxProps,
+  AspectRatioProps,
   BreadcrumbItemProps,
   EditableProps,
   MenuProps,
@@ -41,126 +41,160 @@ import {
   RadioGroupProps,
   InputGroupProps,
   GridProps,
-} from '@chakra-ui/core'
-import { FormLabelProps } from '@chakra-ui/core/dist/FormLabel'
+  CenterProps,
+  ContainerProps,
+  AvatarBadgeProps,
+  CircularProgressProps,
+  TextProps,
+  DividerProps,
+  CodeProps,
+  TextareaProps,
+  AlertIconProps,
+  AlertTitleProps,
+  AlertDescriptionProps,
+  AccordionPanelProps,
+  FormLabelProps,
+  FormErrorMessageProps,
+  TabProps,
+  BreadcrumbLinkProps,
+  ListProps,
+} from '@chakra-ui/react'
+
+import { ChevronDownIcon } from '@chakra-ui/icons'
+import iconsList from '~iconsList'
+
+type PropsWithForm<T> = T & { form?: T }
 
 type PreviewDefaultProps = {
-  Badge?: BadgeProps
-  Box?: BoxProps
-  Button?: ButtonProps
-  Icon?: IconProps
-  IconButton?: IconButtonProps
-  Image?: ImageProps
-  Text?: BoxProps
-  Progress?: ProgressProps
-  AvatarBadge?: any
-  AvatarGroup?: Omit<AvatarGroupProps, 'children'>
-  Avatar?: AvatarProps
-  Checkbox?: CheckboxProps
-  Link?: LinkProps
-  Spinner?: SpinnerProps
-  CloseButton?: CloseButtonProps
-  Divider?: any
-  Code?: any
-  Textarea?: any
-  CircularProgress?: any
-  Heading?: HeadingProps
-  Tag?: TagProps
-  SimpleGrid?: SimpleGridProps
-  Switch?: SwitchProps
-  Alert?: AlertProps
-  AlertIcon?: IconProps
-  AlertTitle?: BoxProps
-  AlertDescription?: BoxProps
-  Flex?: FlexProps
-  Stack?: StackProps
-  Accordion?: Omit<AccordionProps, 'children'>
-  AccordionHeader?: AccordionHeaderProps
-  AccordionItem?: Omit<AccordionItemProps, 'children'>
-  AccordionPanel?: any
-  AccordionIcon?: IconProps
-  FormControl?: FormControlProps
-  FormLabel?: FormLabelProps
-  FormHelperText?: any
-  FormErrorMessage?: any
-  Grid?: GridProps
-  TabList?: TabListProps
-  TabPanel?: TabPanelProps
-  TabPanels?: TabPanelsProps
-  Tab?: any
-  Tabs?: TabsProps
-  Select?: SelectProps
-  Input?: InputProps
-  InputGroup?: InputGroupProps
-  InputLeftAddon?: any
-  InputRightAddon?: any
-  InputLeftElement?: any
-  InputRightElement?: any
-  AspectRatioBox?: AspectRatioBoxProps
-  Breadcrumb?: BreadcrumbItemProps
-  BreadcrumbItem?: BreadcrumbItemProps
-  BreadcrumbLink?: any
-  Editable?: EditableProps
-  Menu?: MenuProps
-  NumberInput?: NumberInputProps
-  Radio?: RadioProps
-  RadioGroup?: RadioGroupProps
-  List?: any
-  ListIcon?: IconProps
-  ListItem?: any
+  Badge?: PropsWithForm<BadgeProps>
+  Box?: PropsWithForm<BoxProps>
+  Button?: PropsWithForm<ButtonProps>
+  Icon?: PropsWithForm<IconProps> & { icon: keyof typeof iconsList }
+  IconButton?: PropsWithForm<IconButtonProps>
+  Image?: PropsWithForm<ImageProps>
+  Text?: PropsWithForm<TextProps>
+  Progress?: PropsWithForm<ProgressProps>
+  AvatarBadge?: PropsWithForm<AvatarBadgeProps>
+  AvatarGroup?: PropsWithForm<Omit<AvatarGroupProps, 'children'>>
+  Avatar?: PropsWithForm<AvatarProps>
+  Checkbox?: PropsWithForm<CheckboxProps>
+  Link?: PropsWithForm<LinkProps>
+  Spinner?: PropsWithForm<SpinnerProps>
+  CloseButton?: PropsWithForm<CloseButtonProps>
+  Divider?: PropsWithForm<DividerProps>
+  Code?: PropsWithForm<CodeProps>
+  Textarea?: PropsWithForm<TextareaProps>
+  CircularProgress?: PropsWithForm<CircularProgressProps>
+  Heading?: PropsWithForm<HeadingProps>
+  Tag?: PropsWithForm<TagProps>
+  SimpleGrid?: PropsWithForm<SimpleGridProps>
+  Switch?: PropsWithForm<SwitchProps>
+  Alert?: PropsWithForm<AlertProps>
+  AlertIcon?: PropsWithForm<AlertIconProps>
+  AlertTitle?: PropsWithForm<AlertTitleProps>
+  AlertDescription?: PropsWithForm<AlertDescriptionProps>
+  Flex?: PropsWithForm<FlexProps>
+  Stack?: PropsWithForm<StackProps>
+  Accordion?: PropsWithForm<Omit<AccordionProps, 'children'>>
+  AccordionButton?: PropsWithForm<AccordionButtonProps>
+  AccordionItem?: PropsWithForm<Omit<AccordionItemProps, 'children'>>
+  AccordionPanel?: PropsWithForm<AccordionPanelProps>
+  AccordionIcon?: PropsWithForm<IconProps>
+  FormControl?: PropsWithForm<FormControlProps>
+  FormLabel?: PropsWithForm<FormLabelProps>
+  FormHelperText?: PropsWithForm<TextProps>
+  FormErrorMessage?: PropsWithForm<FormErrorMessageProps>
+  Grid?: PropsWithForm<GridProps>
+  TabList?: PropsWithForm<TabListProps>
+  TabPanel?: PropsWithForm<TabPanelProps>
+  TabPanels?: PropsWithForm<TabPanelsProps>
+  Tab?: PropsWithForm<TabProps>
+  Tabs?: PropsWithForm<TabsProps>
+  Select?: PropsWithForm<SelectProps & { children: JSX.Element }>
+  Input?: PropsWithForm<InputProps>
+  InputGroup?: PropsWithForm<InputGroupProps>
+  InputLeftAddon?: PropsWithForm<any>
+  InputRightAddon?: PropsWithForm<any>
+  InputLeftElement?: PropsWithForm<any>
+  InputRightElement?: PropsWithForm<any>
+  AspectRatio?: PropsWithForm<AspectRatioProps>
+  Breadcrumb?: PropsWithForm<BreadcrumbItemProps>
+  BreadcrumbItem?: PropsWithForm<BreadcrumbItemProps>
+  BreadcrumbLink?: PropsWithForm<BreadcrumbLinkProps>
+  Editable?: PropsWithForm<EditableProps>
+  Menu?: PropsWithForm<MenuProps>
+  NumberInput?: PropsWithForm<NumberInputProps>
+  Radio?: PropsWithForm<RadioProps>
+  RadioGroup?: PropsWithForm<RadioGroupProps>
+  List?: PropsWithForm<ListProps>
+  ListIcon?: PropsWithForm<IconProps>
+  ListItem?: PropsWithForm<any>
+  Center?: PropsWithForm<CenterProps>
+  Container?: PropsWithForm<ContainerProps>
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
-  Badge: {
-    children: 'Badge name',
-  },
-  Button: {
-    children: 'Button text',
-  },
-  Divider: { borderColor: 'blackAlpha.500' },
-  IconButton: {
-    'aria-label': 'icon',
-    icon: 'copy',
-  },
-  Icon: { name: 'copy' },
-  Image: {
-    height: '100px',
-    width: '100px',
-  },
-  Text: { children: 'Text value' },
-  Link: { children: 'Link text' },
-  Code: {
-    children: 'Code value',
-  },
-  Heading: {
-    children: 'Heading title',
-  },
-  Tag: {
-    children: 'Tag name',
-  },
-  SimpleGrid: {
-    columns: 2,
-    spacingX: 1,
-    spacingY: 1,
-  },
-  Checkbox: {
-    children: 'Label checkbox',
-    isReadOnly: true,
+  AlertDescription: {
+    children: 'Alert description',
   },
   AlertTitle: {
     children: 'Alert title',
     mr: 1,
-  },
-  AlertDescription: {
-    children: 'Alert description',
+    fontWeight: 'bold',
   },
   AvatarBadge: {
     bg: 'green.500',
-    size: '1.25em',
+    boxSize: '1.25rem',
     borderColor: 'white',
   },
-  TabPanel: { children: 'Tab' },
-  Tab: { children: 'Tab' },
+  AvatarGroup: {
+    spacing: -3,
+    max: 3,
+    size: 'md',
+    form: {
+      display: 'flex',
+    },
+  },
+  Badge: {
+    children: 'Badge name',
+    variant: 'subtle',
+  },
+  Breadcrumb: {
+    form: {
+      separator: '/',
+    },
+  },
+  BreadcrumbLink: {
+    children: 'Lorem Ipsum',
+  },
+  Button: {
+    children: 'Button text',
+    variant: 'solid',
+    size: 'md',
+  },
+  Checkbox: {
+    children: 'Label checkbox',
+    isReadOnly: true,
+    isChecked: false,
+  },
+  CircularProgress: {
+    size: '48px',
+    value: 60,
+    min: 0,
+    max: 100,
+  },
+  CloseButton: {
+    size: 'md',
+  },
+  Code: {
+    children: 'Code value',
+  },
+  Divider: { borderColor: 'blackAlpha.500' },
+  Flex: {
+    form: {
+      display: 'flex',
+    },
+  },
   FormLabel: { children: 'Label' },
   FormHelperText: {
     children: 'Helper message',
@@ -171,106 +205,82 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Grid: {
     templateColumns: 'repeat(5, 1fr)',
     gap: 6,
+    form: {
+      display: 'grid',
+    },
   },
-  Radio: { children: 'Radio' },
-  ListItem: { children: 'list' },
-  AccordionItem: {
-    defaultIsOpen: true,
+  Heading: {
+    children: 'Heading title',
+  },
+  Icon: { icon: 'CopyIcon' },
+  IconButton: {
+    'aria-label': 'icon',
+    // @ts-ignore
+    icon: 'CopyIcon',
+    size: 'md',
+  },
+  Image: {
+    height: '100px',
+    width: '100px',
   },
   InputLeftAddon: { children: 'left' },
   InputRightAddon: {
     children: 'right',
   },
-  BreadcrumbLink: {
-    children: 'Lorem Ipsum',
+  Link: { children: 'Link text' },
+  List: {
+    form: {
+      styleType: 'none',
+    },
   },
-  AvatarGroup: {
-    spacing: -3,
-    max: 3,
-    size: 'md',
+  ListItem: { children: 'list' },
+  Progress: {
+    value: 60,
+    min: 0,
+    max: 100,
   },
+  Radio: { children: 'Radio' },
   Select: {
-    icon: 'chevron-down',
-  },
-}
-
-export const DEFAULT_FORM_PROPS: PreviewDefaultProps = {
-  AlertTitle: {
-    fontWeight: 'bold',
+    // @ts-ignore
+    icon: 'ChevronDownIcon',
+    variant: 'outline',
+    size: 'md',
+    // @ts-ignore
+    form: {
+      children: (
+        <>
+          <option value="option1">Option 1</option>
+          <option value="option2">Option 2</option>
+          <option value="option3">Option 3</option>
+        </>
+      ),
+    },
   },
   SimpleGrid: {
-    display: 'grid',
+    columns: 2,
+    spacingX: 1,
+    spacingY: 1,
   },
-  Grid: {
-    display: 'grid',
+  Stack: {
+    spacing: 2,
+    form: {
+      display: 'flex',
+    },
   },
-  CircularProgress: {
-    size: '48px',
+  Switch: {
+    isChecked: false,
   },
-  Badge: {
-    variant: 'subtle',
-  },
-  Input: {
-    variant: 'outline',
-  },
-  Button: {
-    variant: 'solid',
-    size: 'md',
-    children: 'Lorem ipsum',
-  },
-  IconButton: {
-    'aria-label': 'icon',
-    size: 'md',
-  },
-  Spinner: {
-    size: 'md',
-    thickness: '2px',
-    speed: '0.45s',
-  },
-  Heading: {
-    size: 'xl',
-    as: 'h2',
-    lineHeight: 'shorter',
-    fontWeight: 'bold',
-    fontFamily: 'heading',
-  },
+  Tab: { children: 'Tab' },
+  TabPanel: { children: 'Tab' },
   Tag: {
-    size: 'md',
-    variant: 'subtle',
+    children: 'Tag name',
   },
-  Textarea: {
-    size: 'md',
-  },
-  AvatarGroup: {
-    display: 'flex',
-  },
-  Radio: {
-    size: 'md',
-  },
-  Select: {
-    variant: 'outline',
-    size: 'md',
-    iconSize: '20px',
-    children: (
-      <>
-        <option value="option1">Option 1</option>
-        <option value="option2">Option 2</option>
-        <option value="option3">Option 3</option>
-      </>
-    ),
-  },
-  List: { styleType: 'none' },
-  Stack: { display: 'flex', spacing: 2 },
-  Flex: { display: 'flex' },
-  Breadcrumb: {
-    separator: '/',
-    addSeparator: true,
-  },
-  CloseButton: { size: 'md' },
+  Text: { children: 'Text value' },
 }
 
 export const getDefaultFormProps = (type: ComponentType) => {
+  //@ts-ignore
   const chakraDefaultProps = Chakra[type].defaultProps
-
-  return { ...chakraDefaultProps, ...DEFAULT_FORM_PROPS[type] }
+  // @ts-ignore
+  return { ...chakraDefaultProps, ...DEFAULT_PROPS[type]?.form }
 }

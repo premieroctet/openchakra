@@ -2,7 +2,7 @@ import React from 'react'
 import SwitchControl from '~components/inspector/controls/SwitchControl'
 import TextControl from '~components/inspector/controls/TextControl'
 import FormControl from '~components/inspector/controls/FormControl'
-import { Select } from '@chakra-ui/core'
+import { Select } from '@chakra-ui/react'
 import usePropsSelector from '~hooks/usePropsSelector'
 import { useForm } from '~hooks/useForm'
 
@@ -16,7 +16,6 @@ const StackPanel = () => {
     <>
       <SwitchControl label="Inline" name="isInline" />
       <SwitchControl label="Reversed" name="isReversed" />
-      <SwitchControl label="Wrap children" name="shouldWrapChildren" />
       <TextControl name="spacing" label="Spacing" />
       <FormControl label="Justify content">
         <Select

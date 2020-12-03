@@ -4,7 +4,8 @@ import { init } from '@rematch/core'
 import { Provider } from 'react-redux'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { ChakraProvider } from '@chakra-ui/react'
+import theme from '@chakra-ui/theme'
 
 import ComponentPreview from './ComponentPreview'
 import { storeConfig } from '~core/store'
@@ -20,11 +21,11 @@ function renderWithRedux(
 ) {
   return {
     ...render(
-      <ThemeProvider theme={theme}>
+      <ChakraProvider resetCSS theme={theme}>
         <DndProvider backend={Backend}>
           <Provider store={store}>{components}</Provider>
         </DndProvider>
-      </ThemeProvider>,
+      </ChakraProvider>,
     ),
     // adding `store` to the returned utilities to allow us
     // to reference it in our tests (just try to avoid using
@@ -53,9 +54,6 @@ const componentsToTest = [
   'Tag',
   'Switch',
   'FormLabel',
-  'FormHelperText',
-  'FormErrorMessage',
-  'TabPanel',
   // 'Tab',
   'Input',
   'Radio',
@@ -72,23 +70,16 @@ const componentsToTest = [
   // 'Tabs',
   // 'TabList',
   // 'TabPanels',
-  'InputLeftElement',
-  'InputRightElement',
   'List',
   'Avatar',
-  'AvatarBadge',
   'AvatarGroup',
   'Alert',
-  'AlertTitle',
-  'AlertDescription',
   'Stack',
   'Accordion',
-  // 'AccordionHeader',
+  // 'AccordionButton',
   'RadioGroup',
   'Select',
   'InputGroup',
-  'InputLeftAddon',
-  'InputRightAddon',
 ]
 
 test.each(componentsToTest)('Component Preview for %s', componentName => {

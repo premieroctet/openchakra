@@ -18,7 +18,8 @@ import {
   Button,
   useDisclosure,
   Text,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
+import { CopyIcon, CheckIcon, EditIcon } from '@chakra-ui/icons'
 import Panels from '~components/inspector/panels/Panels'
 import { GoRepo, GoCode } from 'react-icons/go'
 import { FiTrash2 } from 'react-icons/fi'
@@ -54,7 +55,7 @@ const CodeActionButton = memo(() => {
     <ActionButton
       isLoading={isLoading}
       label="Copy code component"
-      variantColor={hasCopied ? 'green' : 'gray'}
+      colorScheme={hasCopied ? 'green' : 'gray'}
       onClick={async () => {
         setIsLoading(true)
         const code = await generateComponentCode({
@@ -66,7 +67,7 @@ const CodeActionButton = memo(() => {
         onCopy(await formatCode(code))
         setIsLoading(false)
       }}
-      icon={hasCopied ? 'check' : GoCode}
+      icon={hasCopied ? <CheckIcon path="" /> : <GoCode />}
     />
   )
 })
@@ -119,7 +120,7 @@ const Inspector = () => {
           color="yellow.900"
           py={2}
           px={2}
-          shadow="sm"
+          boxShadow="sm"
           bg="yellow.100"
           display="flex"
           justifyContent="space-between"
@@ -134,9 +135,9 @@ const Inspector = () => {
         </Box>
         {!isRoot && (
           <Stack
-            isInline
+            direction="row"
             py={2}
-            spacing={4}
+            spacing={2}
             align="center"
             zIndex={99}
             px={2}
@@ -147,18 +148,18 @@ const Inspector = () => {
             {!component.componentName && (
               <ActionButton
                 label="Name component"
-                icon="edit"
+                icon={<EditIcon path="" />}
                 onClick={onOpen}
               />
             )}
             <ActionButton
               label="Duplicate"
               onClick={() => dispatch.components.duplicate()}
-              icon="copy"
+              icon={<CopyIcon path="" />}
             />
             <ActionButton
               label="Reset props"
-              icon={IoMdRefresh}
+              icon={<IoMdRefresh />}
               onClick={() => dispatch.components.resetProps(component.id)}
             />
             <ActionButton
@@ -170,13 +171,13 @@ const Inspector = () => {
                   '_blank',
                 )
               }}
-              icon={GoRepo}
+              icon={<GoRepo />}
             />
             <ActionButton
               bg="red.500"
               label="Remove"
               onClick={() => dispatch.components.deleteComponent(component.id)}
-              icon={FiTrash2}
+              icon={<FiTrash2 />}
             />
           </Stack>
         )}
@@ -192,52 +193,54 @@ const Inspector = () => {
         parentIsRoot={parentIsRoot}
       />
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <form onSubmit={saveComponent}>
-            <ModalHeader>Save this component</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <FormControl isInvalid={!isValidComponentName}>
-                <FormLabel>Component name</FormLabel>
-                <Input
-                  size="md"
-                  autoFocus
-                  variant="outline"
-                  isFullWidth
-                  focusBorderColor="blue.500"
-                  errorBorderColor="red.500"
-                  value={componentName}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    onChangeComponentName(e.target.value)
-                  }
-                />
-                {!isValidComponentName && (
-                  <FormErrorMessage>
-                    Component name must start with a capital character and must
-                    not contain space or special character, and name should not
-                    be already taken (including existing chakra-ui components).
-                  </FormErrorMessage>
-                )}
-                <FormHelperText>
-                  This will name your component that you will see in the code
-                  panel as a separated component.
-                </FormHelperText>
-              </FormControl>
-            </ModalBody>
-            <ModalFooter>
-              <Button
-                variantColor="blue"
-                mr={3}
-                type="submit"
-                isDisabled={!isValidComponentName}
-              >
-                Save
-              </Button>
-              <Button onClick={onClose}>Cancel</Button>
-            </ModalFooter>
-          </form>
-        </ModalContent>
+        <ModalOverlay>
+          <ModalContent>
+            <form onSubmit={saveComponent}>
+              <ModalHeader>Save this component</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <FormControl isInvalid={!isValidComponentName}>
+                  <FormLabel>Component name</FormLabel>
+                  <Input
+                    size="md"
+                    autoFocus
+                    variant="outline"
+                    isFullWidth
+                    focusBorderColor="blue.500"
+                    errorBorderColor="red.500"
+                    value={componentName}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      onChangeComponentName(e.target.value)
+                    }
+                  />
+                  {!isValidComponentName && (
+                    <FormErrorMessage>
+                      Component name must start with a capital character and
+                      must not contain space or special character, and name
+                      should not be already taken (including existing chakra-ui
+                      components).
+                    </FormErrorMessage>
+                  )}
+                  <FormHelperText>
+                    This will name your component that you will see in the code
+                    panel as a separated component.
+                  </FormHelperText>
+                </FormControl>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  colorScheme="blue"
+                  mr={3}
+                  type="submit"
+                  isDisabled={!isValidComponentName}
+                >
+                  Save
+                </Button>
+                <Button onClick={onClose}>Cancel</Button>
+              </ModalFooter>
+            </form>
+          </ModalContent>
+        </ModalOverlay>
       </Modal>
     </>
   )

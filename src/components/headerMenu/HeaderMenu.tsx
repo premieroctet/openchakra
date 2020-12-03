@@ -13,9 +13,11 @@ import {
   MenuItemProps,
   MenuButtonProps,
   ButtonProps,
-} from '@chakra-ui/core'
+  Portal,
+} from '@chakra-ui/react'
+import { ChevronDownIcon } from '@chakra-ui/icons'
 import { FaBomb } from 'react-icons/fa'
-import { GoRepo } from 'react-icons/go'
+import { GoRepo, GoArchive } from 'react-icons/go'
 
 type MenuItemLinkProps = MenuItemProps | LinkProps
 
@@ -41,33 +43,43 @@ const ImportMenuItem = dynamic(() => import('./ImportMenuItem'), { ssr: false })
 
 const HeaderMenu = () => {
   return (
-    <Menu>
+    <Menu placement="bottom">
       <CustomMenuButton
-        rightIcon="chevron-down"
-        as={Button}
+        rightIcon={<ChevronDownIcon path="" />}
         size="xs"
         variant="ghost"
-        variantColor="gray"
+        colorScheme="gray"
       >
         Editor
       </CustomMenuButton>
-      <LightMode>
-        <MenuList zIndex={100}>
-          <ExportMenuItem />
-          <ImportMenuItem />
+      <Portal>
+        <LightMode>
+          <MenuList bg="white" zIndex={999}>
+            {process.env.NEXT_PUBLIC_IS_V1 && (
+              <MenuItemLink isExternal href="https://v0.openchakra.app">
+                <Box mr={2} as={GoArchive} />
+                Chakra v0 Editor
+              </MenuItemLink>
+            )}
+            <ExportMenuItem />
+            <ImportMenuItem />
 
-          <MenuDivider />
+            <MenuDivider />
 
-          <MenuItemLink isExternal href="https://chakra-ui.com/getting-started">
-            <Box mr={2} as={GoRepo} />
-            Chakra UI Docs
-          </MenuItemLink>
-          <MenuItemLink href="https://github.com/premieroctet/openchakra/issues">
-            <Box mr={2} as={FaBomb} />
-            Report issue
-          </MenuItemLink>
-        </MenuList>
-      </LightMode>
+            <MenuItemLink
+              isExternal
+              href="https://chakra-ui.com/getting-started"
+            >
+              <Box mr={2} as={GoRepo} />
+              Chakra UI Docs
+            </MenuItemLink>
+            <MenuItemLink href="https://github.com/premieroctet/openchakra/issues">
+              <Box mr={2} as={FaBomb} />
+              Report issue
+            </MenuItemLink>
+          </MenuList>
+        </LightMode>
+      </Portal>
     </Menu>
   )
 }
