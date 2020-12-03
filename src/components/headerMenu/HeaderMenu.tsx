@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { FaBomb } from 'react-icons/fa'
-import { GoRepo } from 'react-icons/go'
+import { GoRepo, GoArchive } from 'react-icons/go'
 
 type MenuItemLinkProps = MenuItemProps | LinkProps
 
@@ -55,6 +55,12 @@ const HeaderMenu = () => {
       <Portal>
         <LightMode>
           <MenuList bg="white" zIndex={999}>
+            {process.env.NEXT_PUBLIC_IS_V0 && (
+              <MenuItemLink isExternal href="https://v0.openchakra.app">
+                <Box mr={2} as={GoArchive} />
+                Chakra v0 Editor
+              </MenuItemLink>
+            )}
             <ExportMenuItem />
             <ImportMenuItem />
 
