@@ -46,12 +46,21 @@ const buildBlock = ({
       const componentName = capitalize(childComponent.type)
       let propsContent = ''
 
-      const propsNames = Object.keys(childComponent.props)
+      const propsNames = Object.keys(childComponent.props).filter(propName => {
+        if (childComponent.type === 'Icon') {
+          return propName !== 'icon'
+        }
+
+        return true
+      })
 
       propsNames.forEach((propName: string) => {
         const propsValue = childComponent.props[propName]
 
-        if (propName.toLowerCase().includes('icon')) {
+        if (
+          propName.toLowerCase().includes('icon') &&
+          childComponent.type !== 'Icon'
+        ) {
           if (Object.keys(icons).includes(propsValue)) {
             let operand = `={<${propsValue} />}`
 
@@ -79,6 +88,8 @@ const buildBlock = ({
         childComponent.children.length === 0
       ) {
         content += `<${componentName} ${propsContent}>${childComponent.props.children}</${componentName}>`
+      } else if (childComponent.type === 'Icon') {
+        content += `<${childComponent.props.icon} ${propsContent} />`
       } else if (childComponent.children.length) {
         content += `<${componentName} ${propsContent}>
       ${buildBlock({ component: childComponent, components, forceBuildBlock })}
@@ -152,7 +163,7 @@ const getIconsImports = (components: IComponents) => {
 export const generateCode = async (components: IComponents) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
-  const iconImports = getIconsImports(components)
+  const iconImports = [...new Set(getIconsImports(components))]
 
   const imports = [
     ...new Set(
