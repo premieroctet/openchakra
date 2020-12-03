@@ -50,7 +50,8 @@
     "migration": "prisma migrate save --experimental && prisma migrate up --experimental && prisma generate",
     "start": "next start",
     "test": "jest",
-    "analyze": "BUNDLE_VISUALIZE=1 react-app-rewired build"
+    "analyze": "BUNDLE_VISUALIZE=1 react-app-rewired build",
+    "postinstall": "prisma migrate up --experimental"
   },
   "eslintConfig": {
     "extends": "react-app"
