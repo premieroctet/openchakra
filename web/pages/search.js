@@ -430,7 +430,7 @@ class SearchPage extends React.Component {
                           <SearchResults
                             model={new SearchDataModel(serviceUsers.map(su => su._id), 4, 3, false)}
                             style={classes}
-                            gps={this.state.user ? this.state.user.billing_address.gps : this.state.gps}
+                            gps={gps}
                             user={this.state.user}
                             address={selectedAddress}
                           />
@@ -439,7 +439,7 @@ class SearchPage extends React.Component {
                           <SearchResults
                             model={new SearchDataModel(serviceUsers.slice(0, 20).map(su => su._id), 3, 3, false)}
                             style={classes}
-                            gps={this.state.user ? this.state.user.billing_address.gps : this.state.gps}
+                            gps={gps}
                             user={this.state.user}
                             address={selectedAddress}
                           />
@@ -448,7 +448,7 @@ class SearchPage extends React.Component {
                           <SearchResults
                             model={new SearchDataModel(serviceUsers.slice(0, 20).map(su => su._id), 2, 3, false)}
                             style={classes}
-                            gps={this.state.user ? this.state.user.billing_address.gps : this.state.gps}
+                            gps={gps}
                             user={this.state.user}
                             address={selectedAddress}
                           />
@@ -460,7 +460,7 @@ class SearchPage extends React.Component {
                                 <Grid item xs={12} key={index}>
                                   <CardService
                                     item={su._id}
-                                    gps={this.state.user ? this.state.user.billing_address.gps : this.state.gps}
+                                    gps={gps}
                                     user={this.state.user}
                                     address={selectedAddress} />
                                 </Grid>
