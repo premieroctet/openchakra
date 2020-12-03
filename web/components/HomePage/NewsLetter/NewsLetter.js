@@ -13,11 +13,29 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
+});
+
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
 });
 
 class NewsLetter extends React.Component{
@@ -25,7 +43,8 @@ class NewsLetter extends React.Component{
     super(props);
     this.state={
       email: '',
-      modalSubscription: false
+      modalSubscription: false,
+      modalSubscriptionFailed: false
     }
   }
 
@@ -52,12 +71,60 @@ class NewsLetter extends React.Component{
       method: 'POST',
       mode: 'no-cors',
       body: form_data
-    }).then(() => this.setState({modalSubscription: true})).catch(err => console.error(err));
+    }).then(() => this.setState({modalSubscription: true})).catch((err) => this.setState({modalSubscriptionFailed: true}, () => console.error(err)));
+  };
+
+  modalSubscription = () => {
+    return(
+      <Dialog
+        onClose={() => this.setState({modalSubscription: false})}
+        aria-labelledby="customized-dialog-title"
+        open={this.state.modalSubscription}
+        TransitionComponent={Transition}
+        keepMounted
+      >
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({modalSubscription: false})}>
+          Abonnement à la newsletter de MyAlfred
+        </DialogTitle>
+        <DialogContent dividers>
+          <Typography gutterBottom>
+            Vous avez reçu un email contenant un lien de confirmation !
+          </Typography>
+        </DialogContent>
+      </Dialog>
+    )
+  };
+
+  modalSubscriptionFailed = () => {
+    return(
+      <Dialog
+        onClose={() => this.setState({modalSubscriptionFailed: false})}
+        aria-labelledby="customized-dialog-title"
+        open={this.state.modalSubscriptionFailed}
+        TransitionComponent={Transition}
+        keepMounted
+      >
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({modalSubscriptionFailed: false})}>
+          Abonnement à la newsletter de MyAlfred
+        </DialogTitle>
+        <DialogContent dividers>
+          <Typography gutterBottom>
+            Une erreur est survenue veuillez réessayer ultérieurement, pour plus d'informations contactez-nous via notre chat instantané ou directement par e-mail :
+            <a href={'mailto:hello@my-alfred.io'}>
+            hello@my-alfred.io
+          </a>
+          </Typography>
+        </DialogContent>
+      </Dialog>
+    )
   };
 
 
   render() {
     const {classes} = this.props;
+    const {modalSubscription, modalSubscriptionFailed} = this.state;
+
+
 
     return (
       <Grid className={classes.newsLetterMainStyle}>
@@ -110,22 +177,8 @@ class NewsLetter extends React.Component{
             </Grid>
           </Grid>
         </Grid>
-        <Dialog
-          open={this.state.modalSubscription}
-          TransitionComponent={Transition}
-          keepMounted
-          onClose={() => this.setState({modalSubscription: false})}
-          aria-labelledby="alert-dialog-slide-title"
-          aria-describedby="alert-dialog-slide-description"
-        >
-          <DialogTitle id="alert-dialog-slide-title">{"Use Google's location service?"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
-              Let Google help apps determine location. This means sending anonymous location data to
-              Google, even when no apps are running.
-            </DialogContentText>
-          </DialogContent>
-        </Dialog>
+        {modalSubscription ? this.modalSubscription() : null}
+        {modalSubscriptionFailed ? this.modalSubscriptionFailed() : null}
       </Grid>
     );
   }
