@@ -19,7 +19,8 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { PrismaClient, Project, User } from '@prisma/client'
 import { useRouter } from 'next/router'
 import PreviewProject from '~components/PreviewProject'
-var app = require('node-server-screenshot')
+//var app = require('node-server-screenshot')
+const puppeteer = require('puppeteer')
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prisma = new PrismaClient()
@@ -35,16 +36,39 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   await new Promise((resolve, reject) => {
     let projectCount = 0
-    project.map((e: Project, i: number) => {
+
+    project.map(async (e: Project, i: number) => {
       const href = `http://localhost:3000/project/preview/${e.id}-${e.projectName}`
-      app.fromURL(href, `./public/thumbnails/${e.id}.jpg`, function() {
-        projectCount++
-        if (projectCount === project.length) {
-          resolve()
-        } else if (i === project.length && projectCount !== project.length) {
-          reject()
-        }
+
+      const browser = await puppeteer.launch({
+        headless: true,
+        executablePath:
+          '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
       })
+      const page = await browser.newPage()
+      await page.goto(href, {
+        waitUntil: 'domcontentloaded',
+      })
+      await page.screenshot({
+        fullPage: true,
+        path: `./public/thumbnails/${e.id}.png`,
+      })
+      projectCount++
+
+      if (projectCount === project.length) {
+        await browser.close()
+        resolve()
+      } else if (i === project.length && projectCount !== project.length) {
+        reject()
+      }
+      // app.fromURL(href, `./public/thumbnails/${e.id}.jpg`, function() {
+      //   projectCount++
+      //   if (projectCount === project.length) {
+      //     resolve()
+      //   } else if (i === project.length && projectCount !== project.length) {
+      //     reject()
+      //   }
+      // })
     })
   })
 

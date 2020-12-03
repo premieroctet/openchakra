@@ -13,15 +13,13 @@ const PreviewProject = (props: Props) => {
       {!props.project ? (
         <Spinner m="0 auto" color="white" size="xl" mt="3rem" />
       ) : (
-        <>
-          <Image
-            src={`/thumbnails/${props.project.id}.jpg`}
-            alt={props.project.projectName}
-            width={300}
-            height={180}
-            sizes="(max-height: 350px) 500px"
-          />
-        </>
+        <Image
+          src={`/thumbnails/${props.project.id}.png`}
+          alt={props.project.projectName}
+          width={300}
+          height={180}
+          sizes="(max-height: 350px) 500px"
+        />
       )}
     </Box>
   )
