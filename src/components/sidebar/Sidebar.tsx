@@ -29,21 +29,6 @@ const Menu = () => {
         width="15rem"
       >
         <InputGroup size="sm" mb={4}>
-          <InputRightElement zIndex={0}>
-            {searchTerm ? (
-              <IconButton
-                color="gray.300"
-                aria-label="clear"
-                icon={<CloseIcon path="" />}
-                size="xs"
-                onClick={() => setSearchTerm('')}
-              >
-                x
-              </IconButton>
-            ) : (
-              <SearchIcon path="" color="gray.300" />
-            )}
-          </InputRightElement>
           <Input
             value={searchTerm}
             color="gray.300"
@@ -57,6 +42,19 @@ const Menu = () => {
               borderColor: 'rgba(255, 255, 255, 0.08)',
             }}
           />
+          <InputRightElement zIndex={0}>
+            {searchTerm ? (
+              <IconButton
+                color="gray.300"
+                aria-label="clear"
+                icon={<CloseIcon path="" />}
+                size="xs"
+                onClick={() => setSearchTerm('')}
+              />
+            ) : (
+              <SearchIcon path="" color="gray.300" />
+            )}
+          </InputRightElement>
         </InputGroup>
 
         {(Object.keys(menuItems) as ComponentType[])
