@@ -41,8 +41,9 @@ const Menu = () => {
             _hover={{
               borderColor: 'rgba(255, 255, 255, 0.08)',
             }}
+            zIndex={0}
           />
-          <InputRightElement zIndex={0}>
+          <InputRightElement zIndex={1}>
             {searchTerm ? (
               <IconButton
                 color="gray.300"
