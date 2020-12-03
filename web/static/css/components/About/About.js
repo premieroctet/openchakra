@@ -42,5 +42,14 @@ export default theme => ({
   buttonSave: {
     textTransform: 'initial',
     width: '100%'
+  },
+  algoPlace:{
+    height: '100%'
+  },
+  containerAlgoPlace:{
+    height:'100%',
+    '& div, span':{
+      height: '100%'
+    }
   }
 })
