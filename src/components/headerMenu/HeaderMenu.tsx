@@ -55,7 +55,7 @@ const HeaderMenu = () => {
       <Portal>
         <LightMode>
           <MenuList bg="white" zIndex={999}>
-            {process.env.NEXT_PUBLIC_IS_V0 && (
+            {process.env.NEXT_PUBLIC_IS_V1 && (
               <MenuItemLink isExternal href="https://v0.openchakra.app">
                 <Box mr={2} as={GoArchive} />
                 Chakra v0 Editor
