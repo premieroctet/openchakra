@@ -470,9 +470,7 @@ class BookingPreview extends React.Component {
                                 </Grid>
                               )
                               :
-                              (
-                                <p>En attente de confirmation</p>
-                              )
+                              null
                             )
                             :
                             bookingObj.status === 'Demande d\'infos' && currentUser._id === bookingObj.alfred._id ? (
@@ -502,7 +500,7 @@ class BookingPreview extends React.Component {
                               null
                             )
                             :
-                            bookingObj.status === 'Pré-approuvée' ? (
+                            bookingObj.status === 'Pré-approuvée' && currentUser._id === bookingObj.user._id ? (
                               <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                 <Button onClick={()=>Router.push(`/confirmPayement?booking_id=${booking_id}`)}
                                   color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Payer ma réservation</Button>
