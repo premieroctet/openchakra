@@ -438,8 +438,8 @@ class UserServicesPreview extends React.Component {
 
   book = (actual) => { //actual : true=> book, false=>infos request
 
-    const count = this.state.count;
-    const user = this.state.user;
+    const {count, user, serviceUser} = this.state
+
     let prestations = [];
     this.state.prestations.forEach(p => {
       if (this.state.count[p._id]) {
@@ -501,12 +501,15 @@ class UserServicesPreview extends React.Component {
       }
 
       localStorage.setItem('bookingObj', JSON.stringify(bookingObj));
-      localStorage.setItem('emitter', this.state.user._id);
-      localStorage.setItem('recipient', this.state.serviceUser.user._id);
       localStorage.removeItem('address');
+      if (user) {
+        localStorage.setItem('emitter', user._id);
+        localStorage.setItem('recipient', serviceUser.user._id);
+      }
 
-      if (!this.state.user) {
+      if (!user) {
         cookie.remove('token', {path: '/'});
+        localStorage.setItem('path', Router.asPath)
         Router.push('/?login=true');
         return
       }
