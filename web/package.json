@@ -16,6 +16,8 @@
     "@material-ui/lab": "^4.0.0-alpha.51",
     "@material-ui/pickers": "^3.0.0",
     "@zeit/next-css": "^1.0.1",
+    "ag-grid-community": "^24.1.0",
+    "ag-grid-react": "^24.1.1",
     "algolia-places-react": "^1.4.1",
     "apexcharts": "^3.10.1",
     "axios": "^0.18.0",
