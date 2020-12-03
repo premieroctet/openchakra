@@ -134,7 +134,7 @@ export const airbnbCard: IComponents = {
   'comp-1580479816': {
     id: 'comp-1580479816',
     props: {
-      name: 'star',
+      icon: 'StarIcon',
       color: 'yellow.400',
       mr: '1',
     },

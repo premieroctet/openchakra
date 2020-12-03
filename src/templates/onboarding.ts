@@ -136,7 +136,7 @@ export const onboarding: IComponents = {
   'comp-1580479816': {
     id: 'comp-1580479816',
     props: {
-      name: 'star',
+      icon: 'StarIcon',
       color: 'yellow.400',
       mr: '1',
     },
@@ -401,7 +401,7 @@ export const onboarding: IComponents = {
   'comp-K6GP60GCOFWJI': {
     id: 'comp-K6GP60GCOFWJI',
     props: {
-      name: 'email',
+      icon: 'EmailIcon',
       color: 'blackAlpha.300',
     },
     children: [],
@@ -511,7 +511,7 @@ export const onboarding: IComponents = {
   'comp-K6GXHPLKU3KD7': {
     id: 'comp-K6GXHPLKU3KD7',
     props: {
-      name: 'chevron-left',
+      icon: 'ChevronLeftIcon',
     },
     children: [],
     type: 'Icon',
@@ -738,7 +738,7 @@ export const onboarding: IComponents = {
   'comp-K6H0L81XGIHU1': {
     id: 'comp-K6H0L81XGIHU1',
     props: {
-      name: 'chevron-right',
+      icon: 'ChevronRightIcon',
     },
     children: [],
     type: 'Icon',

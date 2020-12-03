@@ -88,7 +88,7 @@ export const productHunt: IComponents = {
     parent: 'comp-K6IATGON4BXKS',
     id: 'comp-K6IATGOOHID42',
     props: {
-      name: 'email',
+      icon: 'EmailIcon',
     },
     rootParentType: 'Input',
   },
