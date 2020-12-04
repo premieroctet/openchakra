@@ -42,6 +42,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 const ProjectSlug = ({
   projects,
   id,
+  projectName,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [loading, setLoading] = useState(true)
   const [projectExist, setProjectExist] = useState(true)
@@ -70,7 +71,14 @@ const ProjectSlug = ({
     // eslint-disable-next-line
   }, [])
 
-  return <EditorPage id={id} loading={loading} projectExist={projectExist} />
+  return (
+    <EditorPage
+      id={id}
+      loading={loading}
+      projectExist={projectExist}
+      projectName={projectName}
+    />
+  )
 }
 
 export default ProjectSlug

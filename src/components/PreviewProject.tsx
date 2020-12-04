@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Spinner } from '@chakra-ui/core'
-import Image from 'next/image'
+//import Image from 'next/image'
 import { Project } from '@prisma/client'
 
 interface Props {
@@ -13,8 +13,8 @@ const PreviewProject = (props: Props) => {
       {!props.project ? (
         <Spinner m="0 auto" color="white" size="xl" mt="3rem" />
       ) : (
-        <Image
-          src={`/thumbnails/${props.project.id}.png`}
+        <img
+          src={props.project.thumbnail}
           alt={props.project.projectName}
           width={300}
           height={180}

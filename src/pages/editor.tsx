@@ -33,6 +33,7 @@ const EditorPage = (props: {
   id: number
   projectExist: boolean
   loading: boolean
+  projectName: string
 }) => {
   const { handlers } = useShortcuts()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -51,6 +52,7 @@ const EditorPage = (props: {
       project: {
         markup: markup,
         id: props.id,
+        projectName: props.projectName,
       },
     }
     const response = await fetch('/api/project/update', {
