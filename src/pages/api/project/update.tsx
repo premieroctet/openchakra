@@ -8,12 +8,10 @@ export default async function(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { project: projectData } = req.body
 
-    const href = `http://localhost:3000/project/preview/${projectData.id}-${projectData.projectName}`
+    const href = `${process.env.DEPLOY_URL}/project/preview/${projectData.id}-${projectData.projectName}`
 
     const browser = await puppeteer.launch({
       headless: true,
-      executablePath:
-        '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
     })
     const page = await browser.newPage()
     await page.goto(href, {
