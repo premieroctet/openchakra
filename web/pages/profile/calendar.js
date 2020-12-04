@@ -5,10 +5,8 @@ import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/profile/calendar/calendar';
-const I18N=require('../../utils/i18n');
 import {getLoggedUserId} from '../../utils/functions'
 import Hidden from "@material-ui/core/Hidden";
-import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import Topic from "../../hoc/Topic/Topic";
 import Box from "../../components/Box/Box";
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
@@ -56,7 +54,6 @@ class ProfileCalendar extends React.Component {
                 availabilityUpdate={this.loadAvailabilities}
                 availabilityCreated={this.loadAvailabilities}
                 onAvailabilityChanged={this.loadAvailabilities}
-                style={classes}
                 selectable={!readOnly}
                 ref={this.scheduleDrawer}
                 readOnly={readOnly}/>

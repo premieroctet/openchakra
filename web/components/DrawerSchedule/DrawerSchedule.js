@@ -1,11 +1,8 @@
 import React from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Hidden from '@material-ui/core/Hidden';
-import Drawer from '@material-ui/core/Drawer';
 import Grid from '@material-ui/core/Grid';
-import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
-//import styles from './DrawerScheduleStyle';
+import styles from '../../static/css/components/DrawerSchedule/DrawerSchedule';
 import Fab from '@material-ui/core/Fab';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DrawerEditingSchedule from '../Drawer/DrawerEditingSchedule/DrawerEditingSchedule';
@@ -66,7 +63,7 @@ class DrawerSchedule extends React.Component{
   };
 
   render() {
-    const {classes, windows, style} = this.props;
+    const {classes, windows} = this.props;
     const {mobileOpen} = this.state;
 
     const container = windows !== undefined ? () => windows.document.body : undefined;
@@ -80,8 +77,8 @@ class DrawerSchedule extends React.Component{
             open={mobileOpen}
             onClose={this.handleDrawerToggle}
             classes={{
-              paper: style.drawerScheduleDrawerPaper,
-              paperAnchorBottom : style.drawerPaperAnchorBottom
+              paper: classes.drawerScheduleDrawerPaper,
+              paperAnchorBottom : classes.drawerPaperAnchorBottom
             }}
             ModalProps={{
                 keepMounted: true,
@@ -121,13 +118,11 @@ class DrawerSchedule extends React.Component{
                   color="primary"
                   aria-label="add"
                   onClick={this.handleDrawerToggle}
-                  className={style.drawerScheduleButton}>
+                  className={classes.drawerScheduleButton}>
                   <SettingsIcon style={{color: 'white'}}/>
                 </Fab>
               </Grid>
             </Hidden>
-
-
           </Grid>
         </Grid>
 
@@ -135,4 +130,4 @@ class DrawerSchedule extends React.Component{
   }
 }
 
-export default DrawerSchedule;
+export default withStyles(styles) (DrawerSchedule);

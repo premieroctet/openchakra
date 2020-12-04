@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import DrawerSchedule from '../../DrawerSchedule/DrawerSchedule';
 import Schedule from '../../Schedule/Schedule';
 import {withStyles} from '@material-ui/core/styles'
-import styles from './DrawerAndScheduleStyle'
+import styles from '../../../static/css/components/DrawerAndSchedule/DrawerAndSchedule'
 
 class DrawerAndSchedule extends React.Component{
   constructor(props) {
@@ -57,12 +57,11 @@ class DrawerAndSchedule extends React.Component{
             handleSelection={this.onDateSelectionChanged}
             mode={'month'}
             booking={booking}
-            style={classes}
           />
         </Grid>
         {readOnly ? null:
           <Grid>
-            <DrawerSchedule ref={this.drawer} onAvailabilityChanged={this.onAvailabilityChanged} onDateSelectionCleared={this.onDateSelectionCleared} style={classes}/>
+            <DrawerSchedule ref={this.drawer} onAvailabilityChanged={this.onAvailabilityChanged} onDateSelectionCleared={this.onDateSelectionCleared}/>
           </Grid>
         }
       </Grid>

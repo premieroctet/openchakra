@@ -363,7 +363,6 @@ class creaShop extends React.Component {
                                   availabilityCreated={this.availabilityCreated}
                                   onAvailabilityChanged={this.loadAvailabilities}
                                   onDateSelectionCleared={this.onDateSelectionCleared}
-                                  style={this.props.classes}
                                   selectable={true}
                                   ref={this.scheduleDrawer}
                                   />;
