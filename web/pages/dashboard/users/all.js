@@ -63,6 +63,18 @@ class all extends React.Component {
     this.state = {
       user: [],
     };
+
+  this.columnDefs=[
+      {headerName: "Statut", field: "status", cellRenderer: 'statusCellRenderer', filter:'statusCellFilter'},
+      {headerName: "Prénom", field: "firstname"},
+      {headerName: "Nom", field: "name"},
+      {headerName: "Email", field: "email"},
+      {headerName: "Ville", field: "billing_address.city"},
+      {headerName: "Né(e) le", field: "birthday", cellRenderer: 'dateCellRenderer', filter:'agDateColumnFilter',},
+      {headerName: "Inscrit le", field: "creation_date", cellRenderer: 'dateCellRenderer', filter:'agDateColumnFilter', initialSort: 'desc'},
+      {headerName: "Client Mangopay", field: "id_mangopay", cellRenderer:'mangopayCellRenderer'},
+      {headerName: "Alfred Mangopay", field: "mangopay_provider_id", cellRenderer:'mangopayCellRenderer'},
+    ]
   }
 
   componentDidMount() {
@@ -71,8 +83,8 @@ class all extends React.Component {
 
     axios.get('/myAlfred/api/admin/users/all')
       .then((response) => {
-        let user = response.data;
-        this.setState({user: user.map( u => {
+        let users = response.data;
+        this.setState({users: users.map( u => {
           u.status={'alfred':u.is_alfred, 'admin': u.is_admin}
           return u
         })});
@@ -85,34 +97,32 @@ class all extends React.Component {
     });
   }
 
+  onRowClick = data => {
+    if (data) {
+      //Router.push(`/dashboard/users/view?id=${data._id}`)
+      window.open(`/dashboard/users/view?id=${data._id}`, '_blank')
+    }
+  }
+
   render() {
     const {classes} = this.props;
-    const {user} = this.state;
-
-    const columnDefs=[
-      {headerName: "Statut", field: "status", cellRenderer: 'statusCellRenderer', filter:'statusCellFilter'},
-      {headerName: "Prénom", field: "firstname"},
-      {headerName: "Nom", field: "name"},
-      {headerName: "Email", field: "email"},
-      {headerName: "Né(e) le", field: "birthday", cellRenderer: 'dateCellRenderer'},
-      {headerName: "Inscrit le", field: "creation_date", cellRenderer: 'dateCellRenderer', filter:'agDateColumnFilter', initialSort: 'desc'},
-      {headerName: "Client Mangopay", field: "id_mangopay", cellRenderer:'mangopayCellRenderer'},
-      {headerName: "Alfred Mangopay", field: "mangopay_provider_id", cellRenderer:'mangopayCellRenderer'},
-    ]
+    const {users} = this.state;
 
     return (
       <Layout>
         <Grid container style={{marginTop: 70}}>
         </Grid>
         <Grid container className={classes.signupContainer} style={{width:'100%'}}>
+	  <Link href={'/dashboard/home'}>
 
-          <Card style={{backgroundColor:'red'}}>
-            <Grid>
+            <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour dashboard</span></Typography>
+	  </Link>
+            <Grid style={{width: '90%'}}>
               <Paper style={{width: '100%'}}>
-               <BigList data={user} columnDefs={columnDefs} classes={classes} title={'Utilisateurs'}/>
+               <BigList data={users} columnDefs={this.columnDefs} classes={classes}
+                        title={'Utilisateurs'} onRowClick={this.onRowClick} />
               </Paper>
             </Grid>
-          </Card>
         </Grid>
       </Layout>
     );

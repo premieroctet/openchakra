@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState} from 'react';
 import Checkbox from '@material-ui/core/Checkbox'
 import Link from 'next/link';
 const moment = require('moment-timezone');
 moment.locale('fr');
+const util = require('util');
 
 class StatusCellRenderer extends React.Component {
 
@@ -82,51 +83,32 @@ class StatusCellFilter extends React.Component {
 
 class DateCellRenderer extends React.Component {
 
-  constructor(props) {
-    super(props)
-    this.state= {
-      value: props.value
-    }
-  }
-
   render = () => {
+    const m=moment(this.props.value)
     return (
-      <>{moment(this.state.value).format('L LT')}</>
+      <>{m.isValid() ? m.format('L LT') : 'date invalide'}</>
     )
   }
 }
 
 class MangopayCellRenderer extends React.Component {
 
-  constructor(props) {
-    super(props)
-    this.state= {
-      value: props.value
-    }
-  }
-
   render = () => {
     return (
       <a target="_blank"
-         href={`https://dashboard.mangopay.com/User/${this.state.value}/Details`}>{this.state.value}</a>
+         href={`https://dashboard.mangopay.com/User/${this.props.value}/Details`}>{this.props.value}</a>
     )
   }
 }
 
 class PictureCellRenderer extends React.Component {
 
-  constructor(props) {
-    super(props)
-    this.state= {
-      value: props.value
-    }
-  }
-
   render = () => {
+    const rowHeight = this.props.node.rowHeight
     return (
-      <a href={`/${this.state.value}`} target='_blank'>
-        <img style={{ width:'auto', height:'auto'}} src={`/${this.state.value}`} />
-      </a>
+      <div>
+      <img style={{ width:'auto', height:rowHeight}} src={`${this.props.value}`}/>
+      </div>
     )
   }
 }
