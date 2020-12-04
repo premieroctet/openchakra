@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/runpy.py", line 193, in _run_module_as_main
+    "__main__", mod_spec)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/runpy.py", line 85, in _run_code
+    exec(code, run_globals)
+  File "/Users/seb/workspace/myAlfred/python/src/alfred/feature/update_availabilities.py", line 7, in <module>
+    from alfred.fix.fix_base import FixBase
+  File "/Users/seb/workspace/myAlfred/python/src/alfred/fix/fix_base.py", line 6, in <module>
+    from alfred.database.db_access import DBAccess
+  File "/Users/seb/workspace/myAlfred/python/src/alfred/database/db_access.py", line 6, in <module>
+    import pymongo
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/pymongo/__init__.py", line 81, in <module>
+    from pymongo.mongo_client import MongoClient
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/pymongo/mongo_client.py", line 54, in <module>
+    from pymongo.client_options import ClientOptions
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/pymongo/client_options.py", line 24, in <module>
+    from pymongo.pool import PoolOptions
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/pymongo/pool.py", line 73, in <module>
+    from pymongo.ssl_match_hostname import match_hostname, CertificateError
+  File "<frozen importlib._bootstrap>", line 971, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 955, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 665, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 674, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 764, in get_code
+  File "<frozen importlib._bootstrap_external>", line 833, in get_data
+KeyboardInterrupt

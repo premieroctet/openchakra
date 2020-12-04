@@ -6,6 +6,7 @@ Created on 11 janv. 2020
 import pymongo
 from bson import SON
 from alfred.misc.utils import AttributeDict
+from matplotlib.sphinxext.tests.tinypages.conf import project
 
 
 class DBAccess():
@@ -34,11 +35,12 @@ class DBAccess():
     coll = self.database[coll_name]
     return coll.find_one({'label': label})
 
-  def get_items(self, coll_name, fltr={}):
+  def get_items(self, coll_name, fltr={}, exclude_fields=[]):
     if not coll_name in self.database.list_collection_names():
       raise Exception("Unkown collection {} amongst {}".format(coll_name, sorted(self.database.list_collection_names())))
     coll = self.database[coll_name]
-    return list(map(AttributeDict, coll.find(dict(fltr))))
+    projection=dict(map(lambda f : (f, False), exclude_fields)) if exclude_fields else None
+    return list(map(AttributeDict, coll.find(dict(fltr), projection=projection)))
 
   def get_item(self, coll_name, fltr):
     if not coll_name in self.database.list_collection_names():
