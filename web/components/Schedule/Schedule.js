@@ -8,6 +8,7 @@ import {Typography} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import styles from '../../static/css/components/Schedule/Schedule';
 import withStyles from "@material-ui/core/styles/withStyles";
+import Hidden from "@material-ui/core/Hidden";
 
 const {isDateAvailable, isMomentAvailable} = require('../../utils/dateutils');
 moment.locale('fr');
@@ -30,6 +31,7 @@ class Schedule extends React.Component {
 
   toggleSelection = ({start, end, action}) => {
     // Don't select dates before today
+    console.error(start)
     if (moment(start).isBefore(moment().startOf('day'))) {
       return
     }
@@ -141,14 +143,21 @@ class Schedule extends React.Component {
         return null
       }
       else if (moment(event.date).isBefore(moment().startOf('day'))) {
-        return <p className={classes.schedule_monthDateHeaderLabelOldDay}>{event.label}</p>
+        return <Typography className={classes.schedule_monthDateHeaderLabelOldDay}>{event.label}</Typography>
       }
       else {
         return (
           <Grid className={classes.schedule_containerLabelSelector}>
-            <Grid className={eventsSelected.has(newDate) ? classes.schedule_labelSelectorActive : classes.schedule_labelSelector}>
-              <p className={classes.schedule_monthDateHeaderLabel}>{event.label}</p>
-            </Grid>
+            <Hidden only={['xs']}>
+              <Grid className={eventsSelected.has(newDate) ? classes.schedule_labelSelectorActive : classes.schedule_labelSelector}>
+                <Typography className={classes.schedule_monthDateHeaderLabel}>{event.label}</Typography>
+              </Grid>
+            </Hidden>
+            <Hidden only={['sm', 'md', 'lg', 'xl']}>
+              <Grid className={eventsSelected.has(newDate) ? classes.schedule_labelSelectorActive : ''}>
+                <Typography className={classes.schedule_monthDateHeaderLabel}>{event.label}</Typography>
+              </Grid>
+            </Hidden>
           </Grid>
         )
       }
@@ -310,6 +319,7 @@ class Schedule extends React.Component {
                   dayLayoutAlgorithm={'no-overlap'}
                   scrollToTime={date}
                   className={classes.schedule_scheduleMainStyle}
+                  longPressThreshold={false}
                   components={{
                     /* event: MyEvent, // used by each view (Month, Day, Week)
                      *   eventWrapper: MyEventWrapper,

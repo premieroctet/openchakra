@@ -72,7 +72,7 @@ class Home extends React.Component {
                 </Grid>
               <Grid className={classes.bannerPresentationContainer}>
                 <Grid className={classes.bannerSize}>
-                  <BannerPresentation style={classes}/>
+                  <BannerPresentation/>
                 </Grid>
               </Grid>
             </Grid>

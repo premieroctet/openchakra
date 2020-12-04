@@ -180,6 +180,9 @@ export default theme => ({
     },
     '& .rbc-time-view': {
       borderRadius: 5
+    },
+    '& .rbc-row':{
+      flex: 1
     }
   },
   schedule_containerToolbar:{
