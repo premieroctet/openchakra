@@ -4,9 +4,7 @@ Created on 11 janv. 2020
 @author: seb
 '''
 import pymongo
-from bson import SON
 from alfred.misc.utils import AttributeDict
-from matplotlib.sphinxext.tests.tinypages.conf import project
 
 
 class DBAccess():
