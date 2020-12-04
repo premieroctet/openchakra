@@ -9,12 +9,13 @@ import {withStyles} from '@material-ui/core/styles';
 import DatePicker, {registerLocale} from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
 import io from 'socket.io-client';
-import styles from '../../pages/reservations/preApprouve/preApprouveStyle';
+import styles from '../../static/css/components/BookingPreApprouve/BookingPreApprouve';
 import About from '../../components/About/About';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import Typography from '@material-ui/core/Typography';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
 import cookie from 'react-cookies';
+import {Divider} from "@material-ui/core";
 
 registerLocale('fr', fr);
 moment.locale('fr');
@@ -150,58 +151,74 @@ class BookingPreApprouve extends React.Component {
         {this.state.bookingObj === null ?
           null
           :
-          <>
+          <Grid>
             <Grid container className={classes.bigContainer}>
-                <Grid container>
-                  <Grid item md={12} xl={12} lg={12} sm={12}  xs={12}
-                        style={{textAlign: 'left',float: 'right',}}>
-                    <Grid container>
-                      <Grid item xs={12} xl={12} lg={12} md={12} sm={12}>
-                        <Grid item style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                          <UserAvatar classes={'avatarLetter'} user={bookingObj.user} className={classes.avatarLetter}/>
-                          <Typography style={{marginTop: 20}}
-                                      className={classes.textAvatar}>{bookingObj.user.firstname}</Typography>
-                        </Grid>
-                      <Grid item xs={12} style={{ marginBottom: 30}}>
-                        <h3>
+              <Grid container>
+                <Grid item md={12} xl={12} lg={12} sm={12} xs={12}>
+                  <Grid
+                    container
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      marginTop: '5%',
+                      justifyContent: 'space-between'
+                    }}
+                  >
+                    <Grid item  xs={2} sm={3} md={3} xl={3} lg={3}>
+                      <UserAvatar
+                        classes={'avatarLetter'}
+                        user={bookingObj.user}
+                        className={classes.avatarLetter}
+                      />
+                    </Grid>
+                    <Grid item xs={9} sm={9} md={9} xl={9} lg={9}>
+                      <Grid>
+                        <Typography>{bookingObj.user.firstname}</Typography>
+                      </Grid>
+                      <Grid item style={{marginTop: '2%'}}>
+                        <Typography className={classes.fontSizeTitleSectionAbout}>
                           {frenchFormat(`Pré-approuver la réservation de ${bookingObj.user.firstname} ${bookingObj.user.name} `)}
-                        </h3>
+                        </Typography>
                       </Grid>
-                    </Grid>
-                    <Grid container>
-                      <Grid item>
-                        <div style={{marginLeft: '3%', width: '100%'}}>
-                          <About alfred={bookingObj.user._id} profil={false}/>
-                        </div>
-                      </Grid>
-
-                      </Grid>
-                    </Grid>
-
-                    <div style={{marginTop: '8%'}}>
-                      <hr></hr>
-
                       <Grid container>
-                        <Grid item xs={12}>
-                          <h3>
-                            Détail de la réservation
-                          </h3>
-                          <Grid xs={12}>
-                            <BookingDetail prestations={pricedPrestations} count={countPrestations}
-                                           travel_tax={this.state.bookingObj ? this.state.bookingObj.travel_tax : 0}
-                                           pick_tax={this.state.bookingObj ? this.state.bookingObj.pick_tax : 0}
-                                           total={amount}
-                                           cesu_total={this.state.bookingObj ? this.state.bookingObj.cesu_amount : 0}/>
+                        <Grid item>
+                          <Grid style={{marginLeft: '3%', width: '100%'}}>
+                            <About alfred={bookingObj.user._id} profil={false}/>
                           </Grid>
                         </Grid>
-                        <Grid container>
-                          <Grid item xs={12}>
-                            <hr></hr>
-                            <h3>
-                              Planning de la réservation
-                            </h3>
-                            <br></br>
-                            <p>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid>
+                    <Grid container>
+                      <Grid style={{width: '100%', marginTop: '5vh', marginBottom: '5vh'}}>
+                        <Divider/>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Grid>
+                          <h3>Détail de la réservation</h3>
+                        </Grid>
+                        <Grid xs={12} style={{marginTop: '3vh'}}>
+                          <BookingDetail
+                            prestations={pricedPrestations}
+                            count={countPrestations}
+                            travel_tax={this.state.bookingObj ? this.state.bookingObj.travel_tax : 0}
+                            pick_tax={this.state.bookingObj ? this.state.bookingObj.pick_tax : 0}
+                            total={amount}
+                            cesu_total={this.state.bookingObj ? this.state.bookingObj.cesu_amount : 0}
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid style={{width: '100%', marginTop: '5vh', marginBottom: '5vh'}}>
+                        <Divider/>
+                      </Grid>
+                      <Grid container style={{width: '100%'}}>
+                        <Grid>
+                          <h3>Planning de la réservation</h3>
+                        </Grid>
+                        <Grid item xs={12} style={{marginTop: '3vh'}}>
+                          <Grid>
+                            <Typography>
                               Afin de mettre à jour votre calendrier et donner de la
                               visibilité à votre client sur la réalisation de la
                               prestation, le planning de la réservation doit être
@@ -211,163 +228,142 @@ class BookingPreApprouve extends React.Component {
                               cours etc.), échangez avec votre client sur un
                               planning et des créneaux horaires pour cette
                               prestation.
-                            </p>
-                            <br></br>
-                            <Grid container style={{alignItems: 'center'}}>
-                              <Grid item style={{marginRight: 50}}>
-                                <Grid item>
-                                  <Grid>
-                                    <img style={{width: 40, height: 40}} alt={'adresse'} title={'adresse'}
-                                         src={'../../static/assets/img/userServicePreview/adresse.svg'}/>
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-                              <Grid item>
-                                <Grid>
-                                  <p>Adresse de la prestation:</p>{' '}
-                                </Grid>
-                                <Grid>
-                                  <p>{bookingObj.address.address}, {bookingObj.address.city} {bookingObj.address.zip_code}</p>
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                          <Grid item style={{display: 'flex', marginTop: 30, marginBottom: 30, alignItems: 'center'}}>
-                            <Grid item style={{marginRight: 50}}>
-                              <Grid item>
-                                <Grid>
-                                  <img style={{width: 40, height: 40}} alt={'calendrier'} title={'calendrier'}
-                                       src={'../../static/assets/img/userServicePreview/calendrier.svg'}/>
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                            <Grid item style={{display: 'inline-block', width: '100%'}}>
-                              <p>Date de début:</p>
-                              <p>{bookingObj.date_prestation} - {moment(bookingObj.time_prestation).format('HH:mm')}</p>
-                            </Grid>
-                            {typeof bookingObj.end_date !== 'undefined' && typeof bookingObj.end_time !== 'undefined' ?
-                              <Grid item style={{display: 'flex', width: '100%'}}>
-                                <Grid>
-                                  <p>Date de fin:</p>
-                                </Grid>
-                                <Grid>
-                                  <p>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_time}</p>
-                                </Grid>
-                              </Grid>
-                              :
-                              null
-                            }
-                            {typeof this.state.bookingObj.end_date === 'undefined' && typeof this.state.bookingObj.end_time === 'undefined' ?
-                              typeof this.state.end === null ? null :
-
-                                <Grid item style={{
-                                  display: 'flex',
-                                  width: '100%',
-                                  alignItems: 'center',
-                                  flexDirection: 'column',
-                                  marginLeft: 30,
-                                }}>
-                                  <Grid style={{width: '100%'}}>
-                                    <p>Date de fin:</p>
-                                  </Grid>
-                                  <Grid style={{display: 'flex'}}>
-                                    <Grid style={{marginRight: 10}}>
-                                      <DatePicker
-                                        selected={moment(this.state.end).isAfter(this.state.currDate) ? this.state.end : this.state.currDate}
-                                        onChange={date => {
-                                          let isToday = moment(date).isSame(moment(new Date()), 'day');
-                                          this.setState({
-                                            end: date,
-                                            isToday: isToday,
-                                          }, () => {
-                                            this.setState({
-                                              hourToSend: moment(this.state.begin).isSame(this.state.end, 'day') ? moment(new Date(this.state.time_prestation).setHours(new Date(this.state.time_prestation).getHours() + 1)).utc()._d : moment(this.state.currDate).utc()._d,
-                                            });
-
-                                          });
-                                        }}
-                                        customInput={<Input2/>}
-                                        locale='fr'
-                                        showMonthDropdown
-                                        dateFormat="dd/MM/yyyy"
-                                        minDate={this.state.begin}
-                                      />
-                                    </Grid>
-
-                                    - {
-                                    <Grid style={{marginLeft: 10}}>
-                                      <DatePicker
-                                        selected={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.time_prestation).setHours(new Date(this.state.time_prestation).getHours() + 1) : this.state.currDate}
-                                        onChange={
-                                          moment(this.state.begin).isSame(this.state.end, 'day') ?
-                                            (date) => this.setState({
-                                              time_prestation: moment(date.setHours(date.getHours() - 1)).utc()._d,
-                                              hour: date,
-                                              hourToSend: moment(date.setHours(date.getHours() + 1)).utc()._d,
-                                            })
-                                            :
-                                            (date) => this.setState({
-                                              currDate: date,
-                                              hour: date,
-                                              hourToSend: date,
-                                            })
-
-                                        }
-
-                                        customInput={<Input2/>}
-                                        showTimeSelect
-                                        showTimeSelectOnly
-                                        timeIntervals={15}
-                                        minTime={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.min_time_prestation).setHours(new Date(this.state.min_time_prestation).getHours() + 1) : this.state.isToday ? this.state.currDate : null}
-                                        maxTime={moment(this.state.begin).isSame(this.state.end, 'day') || this.state.isToday ? moment().endOf('day').toDate() : null}
-                                        timeCaption="Heure"
-                                        dateFormat="HH:mm"
-                                        locale='fr'
-                                        minDate={new Date()}
-                                      />
-                                    </Grid>
-
-                                  }
-                                  </Grid>
-                                </Grid>
-                              :
-                              null}
+                            </Typography>
                           </Grid>
                         </Grid>
+                        <Grid container style={{marginTop: '3vh'}}>
+                          <Grid item>
+                            <Grid>
+                              <Typography>Adresse de la prestation:</Typography>
+                            </Grid>
+                            <Grid>
+                              <Typography>{bookingObj.address.address}, {bookingObj.address.city} {bookingObj.address.zip_code}</Typography>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                        <Grid item style={{display: 'flex', marginTop: 30, marginBottom: 30, alignItems: 'center'}}>
+                          <Grid item style={{display: 'inline-block', width: '100%'}}>
+                            <Typography>Date de début:</Typography>
+                            <Typography>{bookingObj.date_prestation} - {moment(bookingObj.time_prestation).format('HH:mm')}</Typography>
+                          </Grid>
+                          {typeof bookingObj.end_date !== 'undefined' && typeof bookingObj.end_time !== 'undefined' ?
+                            <Grid item style={{display: 'flex', width: '100%'}}>
+                              <Grid>
+                                <Typography>Date de fin:</Typography>
+                              </Grid>
+                              <Grid>
+                                <Typography>{moment(bookingObj.end_date).format('DD/MM/YYYY')} - {bookingObj.end_time}</Typography>
+                              </Grid>
+                            </Grid>
+                            :
+                            null
+                          }
+                          {typeof this.state.bookingObj.end_date === 'undefined' && typeof this.state.bookingObj.end_time === 'undefined' ?
+                            typeof this.state.end === null ? null :
+
+                              <Grid item style={{
+                                display: 'flex',
+                                width: '100%',
+                                alignItems: 'center',
+                                flexDirection: 'column',
+                                marginLeft: 30,
+                              }}>
+                                <Grid style={{width: '100%'}}>
+                                  <Typography>Date de fin:</Typography>
+                                </Grid>
+                                <Grid style={{display: 'flex'}}>
+                                  <Grid style={{marginRight: 10}}>
+                                    <DatePicker
+                                      selected={moment(this.state.end).isAfter(this.state.currDate) ? this.state.end : this.state.currDate}
+                                      onChange={date => {
+                                        let isToday = moment(date).isSame(moment(new Date()), 'day');
+                                        this.setState({
+                                          end: date,
+                                          isToday: isToday,
+                                        }, () => {
+                                          this.setState({
+                                            hourToSend: moment(this.state.begin).isSame(this.state.end, 'day') ? moment(new Date(this.state.time_prestation).setHours(new Date(this.state.time_prestation).getHours() + 1)).utc()._d : moment(this.state.currDate).utc()._d,
+                                          });
+
+                                        });
+                                      }}
+                                      customInput={<Input2/>}
+                                      locale='fr'
+                                      showMonthDropdown
+                                      dateFormat="dd/MM/yyyy"
+                                      minDate={this.state.begin}
+                                    />
+                                  </Grid>
+
+                                  - {
+                                  <Grid style={{marginLeft: 10}}>
+                                    <DatePicker
+                                      selected={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.time_prestation).setHours(new Date(this.state.time_prestation).getHours() + 1) : this.state.currDate}
+                                      onChange={
+                                        moment(this.state.begin).isSame(this.state.end, 'day') ?
+                                          (date) => this.setState({
+                                            time_prestation: moment(date.setHours(date.getHours() - 1)).utc()._d,
+                                            hour: date,
+                                            hourToSend: moment(date.setHours(date.getHours() + 1)).utc()._d,
+                                          })
+                                          :
+                                          (date) => this.setState({
+                                            currDate: date,
+                                            hour: date,
+                                            hourToSend: date,
+                                          })
+
+                                      }
+
+                                      customInput={<Input2/>}
+                                      showTimeSelect
+                                      showTimeSelectOnly
+                                      timeIntervals={15}
+                                      minTime={moment(this.state.begin).isSame(this.state.end, 'day') ? new Date(this.state.min_time_prestation).setHours(new Date(this.state.min_time_prestation).getHours() + 1) : this.state.isToday ? this.state.currDate : null}
+                                      maxTime={moment(this.state.begin).isSame(this.state.end, 'day') || this.state.isToday ? moment().endOf('day').toDate() : null}
+                                      timeCaption="Heure"
+                                      dateFormat="HH:mm"
+                                      locale='fr'
+                                      minDate={new Date()}
+                                    />
+                                  </Grid>
+
+                                }
+                                </Grid>
+                              </Grid>
+                            :
+                            null}
+                        </Grid>
                       </Grid>
-                    </div>
-
-                    <Grid style={{float: 'right'}} item xs={12}>
-                      {' '}
-                        <Button
-                          color={'primary'}
-                          variant={'contained'}
-                          onClick={() => {
-                            this.changeStatus()
-                            setTimeout(()=> this.props.onConfirm(this.state.booking_id), 500)
-                          }}
-                          style={{
-                            color: 'white',
-                            fontSize: '16px',
-                            width: '100%',
-                            paddingLeft: '20px',
-                            paddingRight: '20px',
-                            marginBottom: 50,
-                            marginRight: 20,
-                            textTransform: 'initial'
-                          }}
-                        >
-                          Pré-approuver
-                        </Button>
                     </Grid>
-
-                    {/*cadre avec couleur et checkbox*/}
                   </Grid>
 
-                  {/*Contenu à droite*/}
-                </Grid>{' '}
+                  <Grid style={{float: 'right'}} item xs={12}>
+                    <Button
+                      color={'primary'}
+                      variant={'contained'}
+                      onClick={() => {
+                        this.changeStatus();
+                        setTimeout(()=> this.props.onConfirm(this.state.booking_id), 500)
+                      }}
+                      style={{
+                        color: 'white',
+                        fontSize: '16px',
+                        width: '100%',
+                        paddingLeft: '20px',
+                        paddingRight: '20px',
+                        marginBottom: 50,
+                        marginRight: 20,
+                        textTransform: 'initial'
+                      }}
+                    >
+                      Pré-approuver
+                    </Button>
+                  </Grid>
+                </Grid>
               </Grid>
-          </>
+            </Grid>
+          </Grid>
         }
       </Fragment>
     );
