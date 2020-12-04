@@ -42,8 +42,7 @@
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
     "redux-undo": "^1.0.0",
-    "typescript": "^3.7.5",
-    "webpack-bundle-analyzer": "^3.6.0"
+    "typescript": "^3.7.5"
   },
   "scripts": {
     "dev": "next dev",
@@ -91,7 +90,8 @@
     "prettier": "^1.19.1",
     "pretty-quick": "^2.0.1",
     "ts-jest": "^26.1.4",
-    "typedoc": "^0.16.9"
+    "typedoc": "^0.16.9",
+    "webpack-bundle-analyzer": "^3.6.0"
   },
   "husky": {
     "hooks": {
