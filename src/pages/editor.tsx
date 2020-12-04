@@ -103,7 +103,7 @@ const EditorPage = (props: {
   const showUserProjectList = async () => {
     setLoading(true)
     if (session) {
-      const userProject = await checkUser(session.user.name)
+      const userProject = await checkUser(session.user.name as string)
       setUserProjectList(userProject.project)
       setLoading(false)
       setNewProject(false)
@@ -117,7 +117,7 @@ const EditorPage = (props: {
   const saveProject = async () => {
     if (session) {
       if (props.id) {
-        const userProject = await checkUser(session.user.name)
+        const userProject = await checkUser(session.user.name as string)
         const userCanEdit = userProject.project.some(
           (e: Project) => e.id === props.id,
         )
@@ -185,6 +185,7 @@ const EditorPage = (props: {
               ) : (
                 <>
                   <Sidebar />
+                  {/* @ts-ignore */}
                   <EditorErrorBoundary>
                     <Box bg="white" flex={1} zIndex={10} position="relative">
                       <Editor />
@@ -229,6 +230,7 @@ const EditorPage = (props: {
           ) : (
             <>
               <Sidebar />
+              {/* @ts-ignore */}
               <EditorErrorBoundary>
                 <Box bg="white" flex={1} zIndex={10} position="relative">
                   <Editor />

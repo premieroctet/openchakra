@@ -243,8 +243,8 @@ const Header = (props: Props) => {
                   <MenuButton>
                     <Avatar
                       size="xs"
-                      name={props.session.user.name}
-                      src={props.session.user.image}
+                      name={props.session.user.name as string}
+                      src={props.session.user.image as string}
                     />
                   </MenuButton>
                   <MenuList backgroundColor="white">

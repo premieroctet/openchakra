@@ -46,7 +46,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
         slug: `${project.id.toString()}-${project.projectName.toString()}`,
       },
     })),
-    fallback: true,
+    fallback: false,
   }
 }
 

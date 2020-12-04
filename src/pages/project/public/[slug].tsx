@@ -47,7 +47,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
         slug: `${project.id.toString()}-${project.projectName.toString()}`,
       },
     })),
-    fallback: true,
+    fallback: false,
   }
 }
 
@@ -102,6 +102,7 @@ const ProjectPublic = (props: ProjectContainer) => {
             loading ? (
               <Spinner m="0 auto" color="white" size="xl" mt="3rem" />
             ) : (
+              /* @ts-ignore */
               <EditorErrorBoundary>
                 <Box bg="white" flex={1} zIndex={10} position="relative">
                   <Editor />
