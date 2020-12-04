@@ -42,41 +42,16 @@ class Home extends React.Component {
 
     constructor(props) {
         super(props);
+        this.setState({ faq:{}})
+    }
+
+    componentDidMount() {
+      this.setState({faq:FAQ})
     }
 
     render() {
         const {classes} = this.props;
-
-        function renderFaq(faq) {
-
-
-            return (
-                Array.from(Array(faq.length), (e, i) => {
-                        return (
-                            <Grid className={classes.accord}>
-                                <Accordion>
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon/>}
-                                        aria-controls="panel1a-content"
-                                        id="panel1a-header"
-                                    >
-                                        <Typography key={i}>{i}</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <Typography style={{color: '#707070'}}>
-                                            non
-                                        </Typography>
-                                    </AccordionDetails>
-                                </Accordion>
-                            </Grid>
-                        )
-                    }
-                )
-            )
-        }
-
-// console.log(`faq.${prop} = ${faq[prop].title}`);
-
+        const {faq} = this.state
 
         return (
 
@@ -105,24 +80,30 @@ class Home extends React.Component {
                     </Grid>
                 </Grid>
                 {
-                    renderFaq(FAQ.alfred)
+                    faq.map( category => {
+                      const items=faq[category]
+                      return (
+                      <div>category</div>
+                      {items.map( item => {
+                        <Grid className={classes.accord}>
+                            <Accordion>
+                                <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon/>}
+                                    aria-controls="panel1a-content"
+                                    id="panel1a-header"*
+                                >
+                                    <Typography>{item.title}</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <Typography style={{color: '#707070'}}>
+                                        {item.text}
+                                    </Typography>
+                                </AccordionDetails>
+                            </Accordion>
+                        </Grid>
+                    })}
+                    )
                 }
-                {/*<Grid className={classes.accord}>*/}
-                {/*    <Accordion>*/}
-                {/*        <AccordionSummary*/}
-                {/*            expandIcon={<ExpandMoreIcon/>}*/}
-                {/*            aria-controls="panel1a-content"*/}
-                {/*            id="panel1a-header"*/}
-                {/*        >*/}
-                {/*            <Typography>{FAQ.alfred[3].title}</Typography>*/}
-                {/*        </AccordionSummary>*/}
-                {/*        <AccordionDetails>*/}
-                {/*            <Typography style={{color: '#707070'}}>*/}
-                {/*                {FAQ.alfred[3].text}*/}
-                {/*            </Typography>*/}
-                {/*        </AccordionDetails>*/}
-                {/*    </Accordion>*/}
-                {/*</Grid>*/}
                 <Footer/>
             </Fragment>
         )
