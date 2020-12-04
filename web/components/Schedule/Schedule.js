@@ -31,7 +31,6 @@ class Schedule extends React.Component {
 
   toggleSelection = ({start, end, action}) => {
     // Don't select dates before today
-    console.error(start)
     if (moment(start).isBefore(moment().startOf('day'))) {
       return
     }
