@@ -8,15 +8,12 @@ import ListAlfredConditions from "../ListAlfredConditions/ListAlfredConditions";
 import RoomIcon from '@material-ui/icons/Room';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import ChatBubbleOutlineOutlinedIcon from '@material-ui/icons/ChatBubbleOutlineOutlined';
-import PersonIcon from '@material-ui/icons/Person';
 import UserAvatar from '../Avatar/UserAvatar'
-import Box from '../Box/Box'
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Topic from '../../hoc/Topic/Topic'
 import AlgoliaPlaces from 'algolia-places-react'
 import MultipleSelect from 'react-select'
@@ -26,9 +23,6 @@ import {isEditableUser} from '../../utils/functions'
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Divider from "@material-ui/core/Divider";
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
-import {SEARCHBAR} from "../../utils/i18n";
 
 const {frenchFormat} = require('../../utils/text');
 const moment=require('moment');
@@ -48,7 +42,6 @@ const DialogTitle = withStyles(styles)((props) => {
   );
 });
 
-
 class About extends React.Component {
 
   constructor(props) {
@@ -58,7 +51,6 @@ class About extends React.Component {
       newAddress: null,
       newLanguages: null,
       showEdition: false,
-      indexNewAddress: 1
     };
     this.save = this.save.bind(this);
     this.loadUser = this.loadUser.bind(this)
@@ -114,15 +106,6 @@ class About extends React.Component {
     this.setState({showEdition: false, newLanguages: null, newAddress: null})
   };
 
-  addNewAdresse = () =>{
-    this.setState({indexNewAddress: this.state.indexNewAddress + 1})
-  };
-
-  removeAdresse = (index) => {
-    this.setState({indexNewAddress: this.state.indexNewAddress - 1})
-
-  };
-
   modalEditDialog = (classes) =>{
     const {newLabel, newPicture, user, newAddress, newLanguages, showEdition, indexNewAddress}=this.state;
     const enabled = newAddress;
@@ -141,7 +124,7 @@ class About extends React.Component {
           <Grid container>
             <Grid container>
               <Grid item xs={12} lg={12} style={{marginTop: '2vh'}}>
-                <h3 style={{fontWeight: 'bold', textTransform: 'initial'}}>Mon adresse principale</h3>
+                <h3 style={{fontWeight: 'bold', textTransform: 'initial'}}>Lieu d'habitation</h3>
               </Grid>
               <Grid item style={{width:'100%', marginTop: '3vh', marginBottom: '3vh'}}>
                 <AlgoliaPlaces
@@ -159,48 +142,6 @@ class About extends React.Component {
                   onClear = {() => this.onAddressChanged(null)}
                 />
               </Grid>
-            </Grid>
-            <Grid container spacing={3}>
-              <Grid item style={{display:'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
-                <Grid>
-                  <h3 style={{fontWeight: 'bold', textTransform: 'initial'}}>Mon carnet d’adresse</h3>
-                </Grid>
-                <Grid>
-                  <IconButton aria-label="AddCircleOutlineIcon" onClick={this.addNewAdresse}>
-                    <AddCircleOutlineIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
-              {
-                [...Array(indexNewAddress)].map((res, index) => (
-                  <Grid item container style={{width:'100%', display: 'flex', flexDirection:'row', alignItems: 'center'}} spacing={3} key={index}>
-                    <Grid item xl={3}>
-                      <TextField id="outlined-basic" label="Nom" variant="outlined" />
-                    </Grid>
-                    <Grid item xl={8} className={classes.containerAlgoPlace}>
-                      <AlgoliaPlaces
-                        key={moment()}
-                        placeholder={placeholder}
-                        className={classes.algoPlace}
-                        options={{
-                          appId: 'plKATRG826CP',
-                          apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                          language: 'fr',
-                          countries: ['fr'],
-                          type: 'address',
-                        }}
-                        onChange={this.onAddressChanged}
-                        onClear = {() => this.onAddressChanged(null)}
-                      />
-                    </Grid>
-                    <Grid item xl={1}>
-                      <IconButton aria-label="AddCircleOutlineIcon" onClick={() => this.removeAdresse(index)}>
-                        <RemoveCircleOutlineIcon />
-                      </IconButton>
-                    </Grid>
-                  </Grid>
-                ))
-              }
             </Grid>
             <Grid container>
               <Grid item xs={12} lg={12}  style={{marginTop: '2vh'}}>
