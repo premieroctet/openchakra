@@ -42,17 +42,25 @@ class Home extends React.Component {
 
     constructor(props) {
         super(props);
-        this.setState({ faq:{}})
+        this.state={
+          faq:{}
+        }
     }
 
     componentDidMount() {
       this.setState({faq:FAQ})
     }
 
+    filter = faqs => {
+      // Filter faqs item depending on customer or Alfred state
+      return faqs
+    }
+
     render() {
         const {classes} = this.props;
         const {faq} = this.state
 
+        const filteredFaqs = this.filter(faq)
         return (
 
             <Fragment>
@@ -80,29 +88,32 @@ class Home extends React.Component {
                     </Grid>
                 </Grid>
                 {
-                    faq.map( category => {
-                      const items=faq[category]
+                    Object.keys(filteredFaqs).map( category => {
+                      const items=filteredFaqs[category]
                       return (
-                      <div>category</div>
-                      {items.map( item => {
-                        <Grid className={classes.accord}>
                             <Accordion>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon/>}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"*
-                                >
-                                    <Typography>{item.title}</Typography>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                                <Typography>{category}</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    <Typography style={{color: '#707070'}}>
-                                        {item.text}
-                                    </Typography>
+                                  <Grid container>
+                                  {items.map( i => {
+                                    return (
+                                      <Grid>
+                                      <Accordion>
+                                      <AccordionSummary expandIcon={<ExpandMoreIcon/>}>{i.title}</AccordionSummary>
+                                      <AccordionDetails>
+                                        <div dangerouslySetInnerHTML={{ __html: i.contents}} />
+                                      </AccordionDetails>
+                                      </Accordion>
+                                      </Grid>
+                                    )
+                                  })}
+                                  </Grid>
                                 </AccordionDetails>
                             </Accordion>
-                        </Grid>
-                    })}
-                    )
+                      )
+                    })
                 }
                 <Footer/>
             </Fragment>
