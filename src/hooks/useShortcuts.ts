@@ -2,20 +2,19 @@ import useDispatch from './useDispatch'
 import { useSelector } from 'react-redux'
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
 import { getSelectedComponent } from '~core/selectors/components'
+import { useHotkeys } from 'react-hotkeys-hook'
 
-export const keyMap = {
-  DELETE_NODE: ['backspace', 'del'],
+const keyMap = {
+  DELETE_NODE: 'Backspace, del',
   TOGGLE_BUILDER_MODE: 'b',
   TOGGLE_CODE_PANEL: 'c',
-  UNDO: ['ctrl+z', 'cmd+z'],
-  REDO: ['ctrl+y', 'cmd+y'],
-  UNSELECT: ['Escape'],
+  UNDO: 'ctrl+z, command+z',
+  REDO: 'ctrl+y, cmd+y',
+  UNSELECT: 'esc',
   PARENT: 'p',
-  DUPLICATE: ['ctrl+d', 'cmd+d'],
-  KONAMI_CODE: [
-    'up up down down left right left right b a',
-    'up up down down left right left right B A',
-  ],
+  DUPLICATE: 'ctrl+d, command+d',
+  KONAMI_CODE:
+    'up up down down left right left right b a, up up down down left right left right B A',
 }
 
 const hasNoSpecialKeyPressed = (event: KeyboardEvent | undefined) =>
@@ -85,19 +84,15 @@ const useShortcuts = () => {
     dispatch.components.loadDemo('secretchakra')
   }
 
-  const handlers = {
-    DELETE_NODE: deleteNode,
-    TOGGLE_BUILDER_MODE: toggleBuilderMode,
-    TOGGLE_CODE_PANEL: toggleCodePanel,
-    UNDO: undo,
-    REDO: redo,
-    UNSELECT: onUnselect,
-    PARENT: onSelectParent,
-    DUPLICATE: onDuplicate,
-    KONAMI_CODE: onKonamiCode,
-  }
-
-  return { handlers }
+  useHotkeys(keyMap.DELETE_NODE, deleteNode, {}, [selected.id])
+  useHotkeys(keyMap.TOGGLE_BUILDER_MODE, toggleBuilderMode)
+  useHotkeys(keyMap.TOGGLE_CODE_PANEL, toggleCodePanel)
+  useHotkeys(keyMap.UNDO, undo)
+  useHotkeys(keyMap.REDO, redo)
+  useHotkeys(keyMap.UNSELECT, onUnselect)
+  useHotkeys(keyMap.PARENT, onSelectParent)
+  useHotkeys(keyMap.DUPLICATE, onDuplicate)
+  useHotkeys(keyMap.KONAMI_CODE, onKonamiCode)
 }
 
 export default useShortcuts
