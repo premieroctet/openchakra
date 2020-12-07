@@ -49,7 +49,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build && rm -rf node_modules && yarn install --only=production",
+    "build": "next build",
     "migration": "prisma migrate save --experimental && prisma migrate up --experimental && prisma generate",
     "postbuild": "next-on-netlify",
     "start": "next start",
