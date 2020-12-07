@@ -85,6 +85,7 @@ router.post('/createCard', passport.authenticate('jwt', {session: false}), (req,
 router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res) => {
   const amount = req.body.amount * 100;
   const fees = req.body.fees * 100;
+  const returnUrl= req.body.returnUrl || `/paymentSuccess?booking_id=${req.body.booking_id}`
   User.findById(req.user.id)
     .then(user => {
       const id_mangopay = user.id_mangopay;
@@ -101,7 +102,7 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
               Currency: 'EUR',
               Amount: fees,
             },
-            ReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
+            ReturnURL: `${computeUrl(req)}${returnUrl}`,
             CardType: 'CB_VISA_MASTERCARD',
             PaymentType: 'CARD',
             ExecutionType: 'WEB',

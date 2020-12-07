@@ -40,7 +40,7 @@
     "loadable-components": "^2.2.3",
     "lodash": "^4.17.11",
     "log-timestamp": "^0.3.0",
-    "mangopay2-nodejs-sdk": "^1.12.0",
+    "mangopay2-nodejs-sdk": "^1.14.3",
     "material-ui": "^0.20.2",
     "material-ui-popup-state": "^1.5.4",
     "moment": "^2.24.0",

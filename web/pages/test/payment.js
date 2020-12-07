@@ -43,6 +43,8 @@ class PaymentTest extends React.Component{
     }
     else {
       this.login().then( res => {
+        console.log(`sessonStorage:${JSON.stringify(sessionStorage)}`)
+        sessionStorage.setItem('cookie', cookie.load('token'))
         this.doIt(this.loadUser())
       })
     }
@@ -50,7 +52,7 @@ class PaymentTest extends React.Component{
 
   loadUser = () => {
     console.log('Loading user')
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    axios.defaults.headers.common['Authorization'] = sessionStorage.getItem('cookie');
     return axios.get(`/myAlfred/api/users/current`)
   }
 
