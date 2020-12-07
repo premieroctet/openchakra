@@ -26,3 +26,6 @@ yarn-error.log*
 pgdata
 /out_publish/
 /out_functions/
+
+# Local Netlify folder
+.netlify
