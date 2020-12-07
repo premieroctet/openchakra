@@ -11,7 +11,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import cookie from 'react-cookies';
 import _ from 'lodash';
-const jwt = require('jsonwebtoken');
+const {getLoggedUserId}=require('../../../utils/functions')
 
 class SelectPrestation extends React.Component {
   constructor(props) {
@@ -33,9 +33,8 @@ class SelectPrestation extends React.Component {
 
     // Get current alfred id
     const token = cookie.load('token');
-    const token2 = token.split(' ')[1];
-    const decode = jwt.decode(token2);
-    const alfred_id = decode.id;
+
+    const alfred_id = getLoggedUserId()
 
     let billings = null;
     axios.defaults.headers.common['Authorization'] = token;

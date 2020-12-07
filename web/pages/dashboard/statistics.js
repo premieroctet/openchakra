@@ -6,12 +6,12 @@ import axios from 'axios';
 import Link from 'next/link';
 import HomeIcon from '@material-ui/icons/Home';
 import cookie from 'react-cookies';
-const jwt = require('jsonwebtoken');
 const moment = require('moment')
 import {Card, Grid, Typography, Checkbox, Avatar} from '@material-ui/core'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 const {XYPlot, XAxis, YAxis, VerticalGridLines, HorizontalGridLines, LineSeries, RadialChart}=require('react-vis')
 import Layout from '../../hoc/Layout/Layout';
+const {isLoggedUserAdmin}=require('../../utils/functions')
 
 const styles = theme => ({
 
@@ -93,13 +93,10 @@ class statistics extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    const auth = cookie.load('token');
-    if (!auth) {
+    if (!isLoggedUserAdmin()) {
       Router.push('/login');
     } else {
-      const token = auth.split(' ')[1];
-      const decode = jwt.decode(token);
-      this.setState({is_admin: decode.is_admin});
+      this.setState({is_admin: true});
     }
     this.getCounts();
     setInterval(() => this.getCounts(), 30000);

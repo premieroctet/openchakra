@@ -84,7 +84,7 @@ const getLoggedUserId = () => {
   return logged && logged.id
 }
 
-const getLoggedUserAdmin = () => {
+const isLoggedUserAdmin = () => {
   const logged=getLoggedUser()
   return logged && logged.is_admin
 }
@@ -105,6 +105,6 @@ const isEditableUser = user => {
 
 module.exports = {
   computeDistanceKm, computeBookingReference, computeAverageNotes,
-  computeSumSkills, circular_get, getLoggedUser, getLoggedUserId,
-  getLoggedUserAdmin, isEditableUser, isLoggedUserAlfred
+  computeSumSkills, circular_get, getLoggedUserId,
+  isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred
 };

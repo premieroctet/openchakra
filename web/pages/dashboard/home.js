@@ -10,7 +10,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import {CSVLink} from 'react-csv';
 import cookie from 'react-cookies';
-
+const {isLoggedUserAdmin}=require('../../utils/functions')
 
 const jwt = require('jsonwebtoken');
 const styles = theme => ({
@@ -48,12 +48,10 @@ class home extends React.Component {
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     const auth = cookie.load('token');
-    if (!auth) {
+    if (!isloggedUserAdmin()) {
       Router.push('/login');
     } else {
-      const token = auth.split(' ')[1];
-      const decode = jwt.decode(token);
-      this.setState({is_admin: decode.is_admin});
+      this.setState({is_admin: true});
     }
     axios.defaults.headers.common['Authorization'] = auth;
     /**
