@@ -1,6 +1,5 @@
 const moment = require('moment');
 const path = require('path');
-const fs = require('fs');
 const emptyPromise = require('./promise');
 const {MANGOPAY_CONFIG} = require('../config/config')
 const mangopay = require('mangopay2-nodejs-sdk');
