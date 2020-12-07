@@ -48,7 +48,10 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
-      this.setState({faq:FAQ})
+      this.setState({
+        faq:FAQ,
+        alfredFaq: false,
+      })
     }
 
     filter = faqs => {
@@ -56,9 +59,14 @@ class Home extends React.Component {
       return faqs
     }
 
+    setAlfred = alfred => {
+      console.log(alfred)
+      this.setState({alfredFaq: alfred})
+    }
+
     render() {
         const {classes} = this.props;
-        const {faq} = this.state
+        const {faq, alfredFaq} = this.state
 
         const filteredFaqs = this.filter(faq)
         return (
@@ -67,24 +75,20 @@ class Home extends React.Component {
 
                 <Header></Header>
                 <Grid className={classes.menuContainer}>
-                    <Grid style={{paddingRight: '25px'}}>
-                        <Link href={'/faq/addService'}>
+                    <Grid style={{paddingRight: '25px'}} onClick={() => this.setAlfred(false)}>
                             <Grid className={classes.linkBloc}>
                                 <img style={{margin: '0 auto', paddingBottom: '16px'}}
                                      src="../../static/assets/faq/star.svg" alt=""/>
                                 <p className={classes.linkText}>Je suis client</p>
                             </Grid>
-                        </Link>
                     </Grid>
                     <Grid>
-                        <Link href={'/faq/becomeAlfred'}>
-                            <Grid className={classes.linkBloc}>
+                            <Grid className={classes.linkBloc} onClick={() => this.setAlfred(true)}>
                                 <img style={{margin: '0 auto', width: '30px', paddingBottom: '10px'}}
                                      src="../../static/assets/faq/amp.svg"
                                      alt=""/>
                                 <p className={classes.linkText}>Je suis Alfred</p>
                             </Grid>
-                        </Link>
                     </Grid>
                 </Grid>
                 {
