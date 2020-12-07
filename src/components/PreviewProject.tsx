@@ -9,17 +9,11 @@ interface Props {
 
 const PreviewProject = (props: Props) => {
   return (
-    <Box mb={3}>
+    <Box mb={3} maxW="100%">
       {!props.project ? (
         <Spinner m="0 auto" color="white" size="xl" mt="3rem" />
       ) : (
-        <img
-          src={props.project.thumbnail}
-          alt={props.project.projectName}
-          width={300}
-          height={180}
-          sizes="(max-height: 350px) 500px"
-        />
+        <img src={props.project.thumbnail} alt={props.project.projectName} />
       )}
     </Box>
   )
