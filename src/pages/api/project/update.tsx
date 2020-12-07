@@ -1,28 +1,61 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
-const puppeteer = require('puppeteer')
+//const puppeteer = require('puppeteer')
+const chromium = require('chrome-aws-lambda')
 
 export default async function(req: NextApiRequest, res: NextApiResponse) {
   const prisma = new PrismaClient()
   let ts = new Date()
+
   try {
     const { project: projectData } = req.body
-
+    let result = null
+    let browser: any = null
     const href = `${process.env.DEPLOY_URL}/project/preview/${projectData.id}-${projectData.projectName}`
 
-    const browser = await puppeteer.launch({
-      headless: true,
-    })
-    const page = await browser.newPage()
-    await page.goto(href, {
-      waitUntil: 'domcontentloaded',
-    })
-    await page.screenshot({
-      fullPage: true,
-    })
-    const b64string: string = (await page.screenshot({
-      encoding: 'base64',
-    })) as string
+    // const browser = await puppeteer.launch({
+    //   headless: true,
+    // })
+    // const page = await browser.newPage()
+    // await page.goto(href, {
+    //   waitUntil: 'domcontentloaded',
+    // })
+    // await page.screenshot({
+    //   fullPage: true,
+    // })
+    // const b64string: string = (await page.screenshot({
+    //   encoding: 'base64',
+    // })) as string
+
+    const screenShot = async () => {
+      try {
+        browser = await chromium.puppeteer.launch({
+          args: chromium.args,
+          defaultViewport: chromium.defaultViewport,
+          executablePath: await chromium.executablePath,
+          headless: chromium.headless,
+          ignoreHTTPSErrors: true,
+        })
+        let page = await browser.newPage()
+        await page.goto(href)
+        await page.screenshot({
+          fullPage: true,
+        })
+        result = (await page.screenshot({
+          encoding: 'base64',
+        })) as string
+      } catch (error) {
+        return console.log(error)
+      } finally {
+        if (browser !== null) {
+          await browser.close()
+        }
+      }
+      return result
+    }
+
+    const screen = await screenShot()
+
     const actualProject = await prisma.project.update({
       where: {
         id: projectData.id,
@@ -30,7 +63,7 @@ export default async function(req: NextApiRequest, res: NextApiResponse) {
       data: {
         markup: projectData.markup,
         public: projectData.public,
-        thumbnail: `data:image/png;base64, ${b64string}`,
+        thumbnail: `data:image/png;base64, ${screen}`,
         updatedAt: ts.toISOString(),
       },
     })
