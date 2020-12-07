@@ -81,7 +81,7 @@ class MobileNavbar extends React.Component{
       this.handleOpenLogin()
     }
     const token = cookie.load('token');
-    if (token) {
+    if (getLoggedUserId()) {
       this.setState({logged: true, selectedAddress: 'main'});
     }
 

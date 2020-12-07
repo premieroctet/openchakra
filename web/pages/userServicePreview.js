@@ -34,7 +34,7 @@ import withGrid from "../hoc/Grid/GridCard";
 import CardAlbum from "../components/Card/CardAlbum/CardAlbum";
 const ImageSlide=withSlide(withGrid(CardAlbum));
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
-
+const {getLoggedUserId}=require('../utils/functions')
 
 
 const isEmpty = require('../server/validation/is-empty');
@@ -99,7 +99,7 @@ class UserServicesPreview extends React.Component {
 
   componentDidMount() {
     const token = cookie.load('token');
-    if (token) {
+    if (getLoggedUserId()) {
       this.setState({logged: true});
     }
     axios.defaults.headers.common['Authorization'] = token;

@@ -21,6 +21,7 @@ import Hidden from "@material-ui/core/Hidden";
 import LayoutMobileSearch from "../hoc/Layout/LayoutMobileSearch";
 import Typography from "@material-ui/core/Typography";
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
+const {getLoggedUserId}=require('../utils/functions')
 
 const SearchResults=withSlide(withGrid(CardService));
 
@@ -116,7 +117,7 @@ class SearchPage extends React.Component {
 
   componentDidMount() {
     const token = cookie.load('token');
-    if (token) {
+    if (getLoggedUserId()) {
       this.setState({logged: true});
     }
     // Mount components gets criterion from URL

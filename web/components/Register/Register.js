@@ -34,6 +34,7 @@ import Link from 'next/link';
 import cookie from 'react-cookies';
 import OAuth from '../OAuth/OAuth';
 import Information from '../Information/Information';
+const {getLoggedUserId}=require('../../utils/functions')
 
 var parse = require('url-parse');
 const {PROVIDERS} = require('../../utils/consts');
@@ -146,7 +147,7 @@ class Register extends React.Component {
       this.setState({errorExistEmail: true});
     }
     const token = cookie.load('token');
-    if (token) {
+    if (getLoggedUserId()) {
       toast.warn('Vous êtes déjà inscrit');
       Router.push('/');
     }

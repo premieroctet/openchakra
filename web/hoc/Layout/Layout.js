@@ -10,7 +10,7 @@ import ScrollMenu from '../../components/ScrollMenu/ScrollMenu'
 import axios from "axios";
 import TrustAndSecurity from "./TrustAndSecurity/TrustAndSecurity";
 import Divider from "@material-ui/core/Divider";
-
+const {getLoggedUserId}=require('../../utils/functions')
 
 class Layout extends React.Component {
   constructor(props) {
@@ -28,7 +28,7 @@ class Layout extends React.Component {
       let cat = res.data;
       this.setState({categories: cat})
     }).catch(err => { console.error(err)})
-    if (token) {
+    if (getLoggedUserId()) {
       this.setState({logged: true});
     }
   }

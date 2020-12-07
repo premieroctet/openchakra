@@ -19,6 +19,7 @@ import MobileNavbar from "../hoc/Layout/NavBar/MobileNavbar";
 import Hidden from "@material-ui/core/Hidden";
 import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
 import {Divider} from "@material-ui/core";
+const {getLoggedUserId}=require('../utils/functions')
 
 class Home extends React.Component {
   constructor(props) {
@@ -32,7 +33,7 @@ class Home extends React.Component {
 
   componentDidMount() {
     const token = cookie.load('token');
-    if (token) {
+    if (getLoggedUserId()) {
       this.setState({logged: true})
     }
     axios.get('/myAlfred/api/category/all')
