@@ -17,6 +17,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import cookie from 'react-cookies';
 import Router from 'next/router';
+const {getLoggedUserId}=require('../../utils/functions')
 
 class Messages extends React.Component {
   constructor(props) {
@@ -37,7 +38,7 @@ class Messages extends React.Component {
 
   componentDidMount() {
     const token = cookie.load('token');
-    if (!token) {
+    if (!getLoggedUserId()) {
       Router.push('/login');
     }
     axios.defaults.headers.common['Authorization'] = token;

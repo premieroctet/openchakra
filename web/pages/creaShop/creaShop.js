@@ -31,6 +31,7 @@ import {
 import cookie from 'react-cookies';
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
 const I18N = require('../../utils/i18n');
+const {getLoggedUserId}=require('../../utils/functions')
 
 class creaShop extends React.Component {
   constructor(props) {
@@ -91,7 +92,7 @@ class creaShop extends React.Component {
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     const token = cookie.load('token');
-    if (!token) {
+    if (!getLoggedUserId()) {
       Router.push('/login');
     }
 

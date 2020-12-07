@@ -22,6 +22,7 @@ import {
   settingService,
 } from '../../utils/validationSteps/validationSteps';
 import cookie from 'react-cookies';
+const {getLoggedUserId}=require('../../utils/functions')
 
 
 class services extends React.Component {
@@ -75,7 +76,7 @@ class services extends React.Component {
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     const token = cookie.load('token');
-    if (!token) {
+    if (!getLoggedUserId()) {
       Router.push('/login');
     }
 
@@ -181,7 +182,7 @@ class services extends React.Component {
 
   handleNext = () => {
     const token=cookie.load('token')
-    if (!token) {
+    if (!getLoggedUserId()) {
       Router.push('/login');
     }
     if (this.state.activeStep < 4) {
