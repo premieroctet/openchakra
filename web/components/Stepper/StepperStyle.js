@@ -1,5 +1,9 @@
 export default theme => ({
-  root: {},
+  root: {
+    overflow:'hidden',
+    width: '100%',
+
+  },
   instructions: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
@@ -14,7 +18,22 @@ export default theme => ({
       fill: 'white',
     },
   },
+  stepLabelRoot:{
+    '& .MuiStepLabel-labelContainer':{
+      overflow:'hidden',
+      '& span':{
+        overflow:'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+      }
+    },
+  },
+  stepRoot:{
+    overflow: 'hidden'
+  },
   stepperRoot:{
-    backgroundColor: 'transparent'
-  }
+    backgroundColor: 'transparent',
+    width: '100%',
+    display: 'flex',
+  },
 })

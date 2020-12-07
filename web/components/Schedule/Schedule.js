@@ -318,7 +318,7 @@ class Schedule extends React.Component {
                   dayLayoutAlgorithm={'no-overlap'}
                   scrollToTime={date}
                   className={classes.schedule_scheduleMainStyle}
-                  longPressThreshold={false}
+                  longPressThreshold={0}
                   components={{
                     /* event: MyEvent, // used by each view (Month, Day, Week)
                      *   eventWrapper: MyEventWrapper,

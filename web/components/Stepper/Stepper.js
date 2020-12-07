@@ -5,15 +5,15 @@ import {withStyles} from '@material-ui/core/styles';
 import StepperMaterial from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
+import Router from 'next/router';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 import styles from './StepperStyle';
 
 
 const ColorlibConnector = () =>{
   return(
-    <Grid>
-      <span> > </span>
-    </Grid>
+    <ArrowForwardIosIcon style={{color:'#9E9E9E'}}/>
   )
 };
 
@@ -22,32 +22,39 @@ class Stepper extends React.Component {
     super(props);
     this.state = {
       steps: props.isType === 'creaShop' ? this.getStepsCreaShop() : props.isType === 'updateService' ? this.getStepsUpdateService() : props.isType === 'confirmPaiement' ? this.getStepsPayement() :  this.getStepsAddService(),
+      urlName : ''
     };
+  }
+
+  componentDidMount() {
+    const url = Router.pathname;
+    this.setState({urlName: url})
+
   }
 
   getStepsCreaShop() {
     return [
       'Bienvenue',
-      'Créez votre boutique de services',
-      'Indiquez vos prestations',
-      'Paramétrez votre service',
-      'Vos préférences de réservation',
-      'Vos atouts pour ce service !',
-      'Indiquez vos disponibilités',
-      'Vos conditions de réservation',
-      'Paramétrez votre boutique',
-      'Présentez-vous !',
+      'Création',
+      'Prestations',
+      'Paramétrage',
+      'Préférences',
+      'Atouts',
+      'Disponibilités',
+      'Conditions',
+      'Profil',
+      'Présentation',
 
     ];
   }
 
   getStepsAddService() {
     return [
-      'Ajouter un service',
-      'Indiquez vos prestations',
-      'Paramétrez votre service',
-      'Vos préférences de réservation',
-      'Vos atouts pour ce service !',
+      'Ajouter',
+      'Prestations',
+      'Paramétrage',
+      'Préférences',
+      'Atouts',
       //TODO a remettre quand les dispos seront affichés dans le schedule /'Indiquez vos disponibilités',
     ];
   }
@@ -77,15 +84,27 @@ class Stepper extends React.Component {
 
   render() {
     const {classes, activeStep} = this.props;
+    const {urlName} = this.state;
+
 
     return (
       <Grid className={classes.root}>
-        <StepperMaterial activeStep={activeStep} nonLinear classes={{root : classes.stepperRoot}} connector={<ColorlibConnector />}>
+        <StepperMaterial
+          activeStep={activeStep}
+          nonLinear
+          classes={{root : classes.stepperRoot}}
+          style={{
+            justifyContent : urlName === '/creaShop/creaShop' ? 'space-around' : 'center'
+          }}
+          connector={<ColorlibConnector />}>
           {this.state.steps.map(label => (
-            <Step key={label} >
-              <StepLabel StepIconProps={{
-                classes: {root: classes.stepIcon},
-              }}>{label}</StepLabel>
+            <Step key={label} classes={{root : classes.stepRoot}}>
+              <StepLabel
+                classes={{root: classes.stepLabelRoot}}
+                StepIconProps={{classes: {root: classes.stepIcon},
+              }}>
+                {label}
+              </StepLabel>
             </Step>
           ))}
         </StepperMaterial>
@@ -94,9 +113,4 @@ class Stepper extends React.Component {
   }
 }
 
-Stepper.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, {withTheme: true})(Stepper);
+export default withStyles(styles)(Stepper);

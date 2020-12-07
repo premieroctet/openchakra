@@ -31,8 +31,8 @@ export default theme => ({
     },
   },
   imageContentHeader: {
-    width: '5%',
     margin: 'auto',
+    width: '10%',
     [theme.breakpoints.down('md')]: {
       width: '20%',
     },
@@ -41,7 +41,7 @@ export default theme => ({
     },
   },
   contentStepper: {
-    width: '95%',
+    width: '90%',
     display: 'flex',
     justifyContent: 'center',
     [theme.breakpoints.down('md')]: {
@@ -114,7 +114,4 @@ export default theme => ({
   nextButton: {
     color: 'white',
   },
-
-
-
 })

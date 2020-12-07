@@ -8,5 +8,5 @@ export default theme => ({
     backgroundColor: 'rgba(249,249,249, 1)',
     display: 'flex',
     justifyContent: 'center',
-  }
+  },
 })

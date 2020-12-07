@@ -18,7 +18,7 @@ class CreaShopPresentation extends React.Component {
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
-          <Grid className={classes.contentLeft}>
+          <Grid>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
                 <Typography className={classes.policySizeTitle}>Nous allons vous aider à créer votre service & devenir
@@ -27,7 +27,7 @@ class CreaShopPresentation extends React.Component {
               <Grid className={classes.contentTextSize}>
                 <Grid>
                   <Grid>
-                    <p class="customPolice">Etape 1 </p>
+                    <h3>Etape 1 </h3>
                     <hr className={classes.hrStyle}/>
                   </Grid>
                   <Grid>
@@ -35,15 +35,15 @@ class CreaShopPresentation extends React.Component {
                       <h3 className={classes.policySizeSubtitle}>Choisissez votre premier super talent ! </h3>
                     </Grid>
                     <Grid>
-                      <p className={classes.policySizeContent}>Sélectionnez le premier service que vous souhaitez
+                      <Typography className={classes.policySizeContent}>Sélectionnez le premier service que vous souhaitez
                         proposer ! Et comme un talent en appelle un autre, vous pourrez ajouter autant de services que
-                        vous voulez</p>
+                        vous voulez</Typography>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid>
                   <Grid>
-                    <p class="customPolice">Etape 2 </p>
+                    <h3>Etape 2 </h3>
                     <hr className={classes.hrStyle}/>
                   </Grid>
                   <Grid>
@@ -52,14 +52,14 @@ class CreaShopPresentation extends React.Component {
                         conditions…</h3>
                     </Grid>
                     <Grid>
-                      <p className={classes.policySizeContent}>Indiquez vos disponibilités, paramètres de réservation et
-                        vos conditions d’annulation</p>
+                      <Typography className={classes.policySizeContent}>Indiquez vos disponibilités, paramètres de réservation et
+                        vos conditions d’annulation</Typography>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid style={{height: 250}}>
                   <Grid>
-                    <p class="customPolice">Etape 3</p>
+                    <h3>Etape 3</h3>
                     <hr className={classes.hrStyle}/>
                   </Grid>
                   <Grid>
@@ -67,8 +67,8 @@ class CreaShopPresentation extends React.Component {
                       <h3 className={classes.policySizeSubtitle}>Présentez-vous !</h3>
                     </Grid>
                     <Grid>
-                      <p className={classes.policySizeContent}>Renseignez votre profil Alfred, partagez vos
-                        réalisations, et décrivez-vous ! </p>
+                      <Typography className={classes.policySizeContent}>Renseignez votre profil Alfred, partagez vos
+                        réalisations, et décrivez-vous ! </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -81,9 +81,4 @@ class CreaShopPresentation extends React.Component {
   }
 }
 
-CreaShopPresentation.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, {withTheme: true})(CreaShopPresentation);
+export default withStyles(styles)(CreaShopPresentation);
