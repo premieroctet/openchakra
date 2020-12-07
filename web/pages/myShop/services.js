@@ -92,7 +92,7 @@ class services extends React.Component {
         }
       })
       .catch(error => {
-        console.log(error);
+        console.error(error);
       });
 
 
@@ -181,9 +181,19 @@ class services extends React.Component {
   }
 
   handleNext = () => {
+<<<<<<< HEAD
     const token=cookie.load('token')
     if (!getLoggedUserId()) {
       Router.push('/login');
+||||||| 88cb3e6f
+    const token=cookie.load('token')
+    if (!token) {
+      Router.push('/login');
+=======
+    const token=cookie.load('token');
+    if (!token) {
+      Router.push('/');
+>>>>>>> v3/validation
     }
     if (this.state.activeStep < 4) {
       this.setState({activeStep: this.state.activeStep + 1});
@@ -324,12 +334,13 @@ class services extends React.Component {
 
     const {classes} = this.props;
     let hideRightPanel = this.isRightPanelHidden();
+
     return (
       <Grid>
         <Grid className={classes.mainHeader}>
           <Grid className={classes.imageContentHeader}>
             <Link href={'/'}>
-              <img src={'../../../static/assets/icon/logoGreen.svg'} style={{cursor: 'pointer'}} width={102} height={64} alt={'logo'} title={'logo'}/>
+              <img src={'../../../static/assets/icon/logoGreen.svg'} style={{cursor: 'pointer'}} width={160} height={64} alt={'logo'} title={'logo'}/>
             </Link>
           </Grid>
           <Grid className={classes.contentStepper}>
@@ -381,9 +392,4 @@ class services extends React.Component {
   }
 }
 
-services.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, {withTheme: true})(services);
+export default withStyles(styles)(services);

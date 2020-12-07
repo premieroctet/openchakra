@@ -117,11 +117,11 @@ class SelectService extends React.Component {
                   </Grid>
                   {creationBoutique ?
                     <Grid className={classes.bottomSpacer}>
-                      <p className={classes.policySizeContent}>Identifiez maintenant le premier service que vous
+                      <Typography className={classes.policySizeContent}>Identifiez maintenant le premier service que vous
                         souhaitez configurer dans
                         votre boutique de services. Vous pourrez en ajouter autant que vous voulez dans
                         votre boutique. Un service n’apparait pas ? Cliquez ici pour l’ajouter.
-                      </p>
+                      </Typography>
                     </Grid> : null
                   }
                 </Grid>
@@ -178,10 +178,4 @@ class SelectService extends React.Component {
   }
 }
 
-
-SelectService.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, {withTheme: true})(SelectService);
+export default withStyles(styles)(SelectService);

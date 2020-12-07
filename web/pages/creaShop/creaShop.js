@@ -217,9 +217,7 @@ class creaShop extends React.Component {
             formData.append('file_diploma', dpChanged ? cloned_shop.diplomaPicture : null);
 
             axios.post('/myAlfred/api/serviceUser/addDiploma/' + su_id, formData)
-              .then(() => {
-                console.log('Diplôme ajouté');
-              })
+              .then()
               .catch(err => console.error(err));
           }
 
@@ -231,9 +229,7 @@ class creaShop extends React.Component {
             formData.append('file_certification', cpChanged ? cloned_shop.certificationPicture : null);
 
             axios.post('/myAlfred/api/serviceUser/addCertification/' + su_id, formData)
-              .then(() => {
-                console.log('Certification ajoutée');
-              })
+              .then()
               .catch(err => console.error(err));
           }
           axios.get('/myAlfred/api/users/token')
@@ -390,7 +386,7 @@ class creaShop extends React.Component {
         <Grid className={classes.mainHeader}>
           <Grid className={classes.imageContentHeader}>
             <Link href={'/'}>
-              <img alt={'logoMyAlfredGreen'} title={'logoMyAlfredGreen'} src={'../../static/assets/icon/logoGreen.svg'} style={{cursor: 'pointer'}} width={102} height={64}/>
+              <img alt={'logoMyAlfredGreen'} title={'logoMyAlfredGreen'} src={'../../static/assets/icon/logoGreen.svg'} style={{cursor: 'pointer'}} width={160} height={64}/>
             </Link>
           </Grid>
           <Grid className={classes.contentStepper}>
@@ -442,9 +438,4 @@ class creaShop extends React.Component {
   }
 }
 
-creaShop.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, {withTheme: true})(creaShop);
+export default withStyles(styles)(creaShop);

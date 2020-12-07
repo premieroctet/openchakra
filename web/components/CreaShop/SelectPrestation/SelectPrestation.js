@@ -116,8 +116,8 @@ class SelectPrestation extends React.Component {
             </Grid>
             <Grid className={classes.containerPrestas}>
               <Grid className={classes.bottomSpacer}>
-                <p className={classes.policySizeContent}>Quelles prestations souhaitez-vous réaliser ? Indiquez vos
-                  tarifs et votre unité de facturation. </p>
+                <Typography className={classes.policySizeContent}>Quelles prestations souhaitez-vous réaliser ? Indiquez vos
+                  tarifs et votre unité de facturation. </Typography>
               </Grid>
               <Grid className={classes.buttonAddPrestas}>
                 <Grid item className={classes.maxWidth} style={{marginBottom: 100}}>
@@ -131,7 +131,7 @@ class SelectPrestation extends React.Component {
                   {Object.keys(this.state.grouped).map((fltr, i) => {
                     let prestas = this.state.grouped[fltr];
                     return (
-                      <Grid className={classes.maxWidth}>
+                      <Grid key={i} className={classes.maxWidth}>
                         <Grid className={classes.marginThirty}>
                           <Grid item>
                             {fltr === 'Aucun' ? '' : fltr === 'Prestations personnalisées' && this.state.grouped['Prestations personnalisées'].length === 0 ? '' : fltr}
@@ -167,9 +167,4 @@ class SelectPrestation extends React.Component {
   }
 }
 
-SelectPrestation.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, {withTheme: true})(SelectPrestation);
+export default withStyles(styles)(SelectPrestation);

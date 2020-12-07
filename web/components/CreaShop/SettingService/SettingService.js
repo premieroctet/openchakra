@@ -51,7 +51,7 @@ class SettingService extends React.Component {
         }, () => this.fireOnChange());
       })
       .catch(error => {
-        console.log(error);
+        console.error(error);
       });
   }
 
@@ -103,9 +103,9 @@ class SettingService extends React.Component {
                   </Grid>
                   <Grid className={classes.bottomSpacer}>
                     <Grid container spacing={1}>
-                      {service.equipments.map((result) => {
+                      {service.equipments.map((result, index) => {
                         return (
-                          <Grid item xl={3} lg={4} md={4} sm={4} xs={4}>
+                          <Grid key={index} item xl={3} lg={4} md={4} sm={4} xs={4}>
                             <label style={{cursor: 'pointer'}}>
                               {
                                 this.state.selectedEquipments.includes(result._id) ?
@@ -188,9 +188,4 @@ class SettingService extends React.Component {
   }
 }
 
-SettingService.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, {withTheme: true})(SettingService);
+export default withStyles(styles)(SettingService);

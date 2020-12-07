@@ -29,10 +29,8 @@ class SettingShop extends React.Component {
   }
 
   cancelModeChanged(mode_id, checked) {
-    console.log('canceModeChanged:' + mode_id, checked);
     this.setState({cancel_mode: mode_id}, () => this.props.onChange(this.state.welcome_message, mode_id));
     Object.values(CANCEL_MODE).forEach(v => {
-      console.log(v);
       this.cancel_buttons[v].current.setState({checked: mode_id === v});
     });
   }
@@ -108,9 +106,4 @@ class SettingShop extends React.Component {
   }
 }
 
-SettingShop.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, {withTheme: true})(SettingShop);
+export default withStyles(styles)(SettingShop);

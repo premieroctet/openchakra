@@ -102,7 +102,6 @@ class ButtonSwitch extends React.Component {
   };
 
   onChangeBilling(event, index) {
-    console.log('Bill:' + event.target.value);
     this.setState({billing: event.target.value}, () => this.fireChange());
   }
 
@@ -200,9 +199,4 @@ class ButtonSwitch extends React.Component {
   }
 }
 
-ButtonSwitch.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, {withTheme: true})(ButtonSwitch);
+export default withStyles(styles)(ButtonSwitch);

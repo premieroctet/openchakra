@@ -11,7 +11,6 @@ const selectService = (shop) => {
 };
 
 const selectPrestation = (shop) => {
-  console.debug(`Validating prestations : ${JSON.stringify(shop.prestations)}`);
   if (Object.keys(shop.prestations).length === 0) {
     return 'disabled';
   }
