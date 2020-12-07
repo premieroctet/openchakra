@@ -10,6 +10,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import {FAQ} from '../../utils/i18n'
 
 const styles = theme => ({
     menuContainer: {
@@ -41,12 +42,19 @@ class Home extends React.Component {
 
     constructor(props) {
         super(props);
+        this.setState({ faq:{}})
+    }
+
+    componentDidMount() {
+      this.setState({faq:FAQ})
     }
 
     render() {
-
         const {classes} = this.props;
+        const {faq} = this.state
+
         return (
+
             <Fragment>
 
                 <Header></Header>
@@ -71,23 +79,31 @@ class Home extends React.Component {
                         </Link>
                     </Grid>
                 </Grid>
-                <Grid className={classes.accord}>
-                    <Accordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon/>}
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
-                        >
-                            <Typography>Comment réserver un service ?</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <Typography style={{color: '#707070'}}>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                                sit amet blandit leo lobortis eget.
-                            </Typography>
-                        </AccordionDetails>
-                    </Accordion>
-                </Grid>
+                {
+                    faq.map( category => {
+                      const items=faq[category]
+                      return (
+                      <div>category</div>
+                      {items.map( item => {
+                        <Grid className={classes.accord}>
+                            <Accordion>
+                                <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon/>}
+                                    aria-controls="panel1a-content"
+                                    id="panel1a-header"*
+                                >
+                                    <Typography>{item.title}</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <Typography style={{color: '#707070'}}>
+                                        {item.text}
+                                    </Typography>
+                                </AccordionDetails>
+                            </Accordion>
+                        </Grid>
+                    })}
+                    )
+                }
                 <Footer/>
             </Fragment>
         )
