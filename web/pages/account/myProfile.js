@@ -14,7 +14,7 @@ import ContactMailIcon from '@material-ui/icons/ContactMail';
 import SettingsIcon from '@material-ui/icons/Settings';
 import Divider from "@material-ui/core/Divider";
 import InfoIcon from '@material-ui/icons/Info';
-import setAuthToken from "../../utils/setAuthToken";
+const  {clearAuthenticationToken}=require('../../utils/authentication')
 import ViewComfyIcon from '@material-ui/icons/ViewComfy';
 import UserAvatar from "../../components/Avatar/UserAvatar";
 
@@ -47,9 +47,8 @@ class myProfile extends React.Component{
   }
 
   logout2 = () => {
-    cookie.remove('token', {path: '/'});
     localStorage.removeItem('path');
-    setAuthToken(false);
+    clearAuthenticationToken()
     Router.push('/?disconnect=1');
   };
 

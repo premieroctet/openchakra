@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
-import setAuthToken from '../../utils/setAuthToken';
+const  {setAxiosAuthentication}=require('../../utils/authentication')
 import axios from 'axios';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
@@ -48,7 +48,7 @@ class LogIn extends React.Component {
     axios.post('/myAlfred/api/users/login', user)
       .then(res => {
         const token = cookie.load('token');
-        setAuthToken(token);
+        setAxiosAuthentication()
         axios.put('/myAlfred/api/users/account/lastLogin')
           .then(data => {
             let path = localStorage.getItem('path');

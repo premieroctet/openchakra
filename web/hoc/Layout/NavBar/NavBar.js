@@ -5,7 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import setAuthToken from '../../../utils/setAuthToken';
+const  {clearAuthenticationToken}=require('../../../utils/authentication')
 import Router from 'next/router';
 import Grid from '@material-ui/core/Grid';
 import cookie from 'react-cookies';
@@ -124,7 +124,7 @@ class NavBar extends Component {
   logout = () => {
     cookie.remove('token', {path: '/'});
     localStorage.removeItem('path');
-    setAuthToken(null);
+    clearAuthenticationToken()
     if (this.state.ifHomePage) {
       window.location.reload(false)
     }

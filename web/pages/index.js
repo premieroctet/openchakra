@@ -2,7 +2,6 @@ import axios from 'axios';
 import React from 'react';
 import Footer from '../hoc/Layout/Footer/Footer';
 import BecomeAlfred from '../components/HomePage/BecomeAlfred/BecomeAlfred';
-import setAuthToken from '../utils/setAuthToken';
 import Router from 'next/router';
 import {Helmet} from 'react-helmet';
 import cookie from 'react-cookies';
