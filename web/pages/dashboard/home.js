@@ -48,7 +48,7 @@ class home extends React.Component {
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     const auth = cookie.load('token');
-    if (!isloggedUserAdmin()) {
+    if (!isLoggedUserAdmin()) {
       Router.push('/login');
     } else {
       this.setState({is_admin: true});
