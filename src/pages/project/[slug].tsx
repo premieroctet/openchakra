@@ -4,6 +4,7 @@ import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next'
 import { getSession, signIn } from 'next-auth/client'
 import useDispatch from '~hooks/useDispatch'
 import EditorPage from '~pages/editor'
+import project from '~pages/api/project'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prisma = new PrismaClient()
@@ -77,6 +78,7 @@ const ProjectSlug = ({
       loading={loading}
       projectExist={projectExist}
       projectName={projectName}
+      validated={projects.validated}
     />
   )
 }

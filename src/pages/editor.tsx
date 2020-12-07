@@ -34,6 +34,7 @@ const EditorPage = (props: {
   projectExist: boolean
   loading: boolean
   projectName: string
+  validated: boolean
 }) => {
   const { handlers } = useShortcuts()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -53,6 +54,7 @@ const EditorPage = (props: {
         markup: markup,
         id: props.id,
         projectName: props.projectName,
+        validated: props.validated,
       },
     }
     const response = await fetch('/api/project/update', {

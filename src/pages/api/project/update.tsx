@@ -54,7 +54,10 @@ export default async function(req: NextApiRequest, res: NextApiResponse) {
       return result
     }
 
-    const screen = await screenShot()
+    let screen = null
+    if (projectData.validated) {
+      screen = await screenShot()
+    }
 
     const actualProject = await prisma.project.update({
       where: {
