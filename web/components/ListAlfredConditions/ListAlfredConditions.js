@@ -1,9 +1,6 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import InfoWithPics from "../InfoWithPics/InfoWithPics";
-import styles from '../../static/css/components/ListAlfredConditions/ListAlfredConditions'
-import withStyles from "@material-ui/core/styles/withStyles";
-
 
 class ListAlfredConditions extends React.Component{
   constructor(props) {
@@ -11,9 +8,9 @@ class ListAlfredConditions extends React.Component{
 
   }
   render() {
-    const{columnsXl, columnsLG, columnsMD, columnsSm, columnsXS, wrapperComponentProps, classes} = this.props;
+    const{columnsXl, columnsLG, columnsMD, columnsSm, columnsXS, wrapperComponentProps} = this.props;
     return(
-      <Grid container className={classes.mainContainerListAlfred}>
+      <Grid container style={{padding: '1%',display:'flex',}}>
         {
           wrapperComponentProps ?
           Object.keys(wrapperComponentProps).map((res, index) => (
@@ -27,4 +24,4 @@ class ListAlfredConditions extends React.Component{
   }
 }
 
-export default withStyles (styles) (ListAlfredConditions)
+export default ListAlfredConditions
