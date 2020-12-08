@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
@@ -31,7 +32,7 @@ class MessagesDetails extends React.Component {
 
   componentDidMount() {
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     localStorage.setItem('path', Router.pathname);
 
     axios.get(`/myAlfred/api/users/users/${this.props.relative._id}`)

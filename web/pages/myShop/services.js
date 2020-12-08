@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import styles from '../creaShop/creaShopStyle';
@@ -80,7 +81,7 @@ class services extends React.Component {
       Router.push('/login');
     }
 
-    axios.defaults.headers.common['Authorization'] = token;
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
@@ -98,7 +99,7 @@ class services extends React.Component {
 
     if (this.isNewService()) {
       // Get shop to update exclusion services list
-      axios.defaults.headers.common['Authorization'] = token;
+      setAxiosAuthentication()
       axios.get(`/myAlfred/api/serviceUser/currentAlfred`)
         .then(response => {
           let serviceUsers = response.data;
@@ -108,7 +109,7 @@ class services extends React.Component {
     }
 
     if (!this.isNewService()) {
-      axios.defaults.headers.common['Authorization'] = token;
+      setAxiosAuthentication()
       axios.get(`/myAlfred/api/serviceUser/${this.props.service_user_id}`)
         .then(res => {
           let resultat = res.data;

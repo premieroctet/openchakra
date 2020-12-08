@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -61,7 +62,7 @@ class idCard extends React.Component {
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     const id = this.props.user_id;
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/users/users/${id}`)
       .then(response => {
 

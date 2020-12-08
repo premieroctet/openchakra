@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React, {Component} from 'react';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
@@ -103,7 +104,7 @@ class NavBar extends Component {
       this.handleOpenLogin()
     }
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         var allAddresses={'main':res.data.billing_address};

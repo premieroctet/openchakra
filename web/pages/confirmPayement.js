@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
@@ -53,7 +54,7 @@ class ConfirmPayement extends React.Component {
   componentDidMount() {
     const token = cookie.load('token');
 
-    axios.defaults.headers.common['Authorization'] = token;
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
       .then(res => {
         const bookingObj = res.data

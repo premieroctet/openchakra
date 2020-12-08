@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import Layout from '../../hoc/Layout/Layout';
 import axios from 'axios';
@@ -51,7 +52,7 @@ class myAvailabilities extends React.Component {
       Router.push('/login');
     }
     // FIX : get current availabilities
-    axios.defaults.headers.common['Authorization'] = auth;
+    setAxiosAuthentication()
 
     this.loadAvailabilities();
     axios.get('/myAlfred/api/booking/alfredBooking')
@@ -111,7 +112,7 @@ class myAvailabilities extends React.Component {
     if (avail._id.length === GID_LEN) {
       avail._id = null;
     }
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/availability/add', avail)
       .then(res => {
         toast.info('Disponibilité ajoutée avec succès !');
@@ -128,7 +129,7 @@ class myAvailabilities extends React.Component {
   };
 
   availabilityUpdate = (avail) => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/availability/update', avail)
       .then(res => {
 

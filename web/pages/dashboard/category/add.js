@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 
 import Card from '@material-ui/core/Card';
@@ -73,7 +74,7 @@ class add extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/admin/tags/all')
       .then((response) => {
         let tags = response.data;
@@ -115,7 +116,7 @@ class add extends React.Component {
     formData.append('tags', JSON.stringify(arrayTags));
     formData.append('description', this.state.description);
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios
       .post('/myAlfred/api/admin/category/all', formData)
       .then(res => {

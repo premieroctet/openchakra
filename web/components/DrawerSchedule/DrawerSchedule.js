@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Hidden from '@material-ui/core/Hidden';
 import Grid from '@material-ui/core/Grid';
@@ -30,7 +31,7 @@ class DrawerSchedule extends React.Component{
 
   componentDidMount = () => {
     const auth = cookie.load('token');
-    axios.defaults.headers.common['Authorization'] = auth;
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/availability/currentAlfred')
       .then ( res => {
         this.setState({availabilities: res.data})

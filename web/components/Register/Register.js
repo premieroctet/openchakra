@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import {toast} from 'react-toastify';
 import {checkPass1, checkPass2} from '../../utils/passwords';
@@ -206,7 +207,7 @@ class Register extends React.Component {
   };
 
   sendSms = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/users/sendSMSVerification', {phone: this.state.phone})
       .then(res => {
         var txt = 'Le SMS a été envoyé';
@@ -220,7 +221,7 @@ class Register extends React.Component {
   };
 
   checkSmsCode = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/users/checkSMSVerification', {sms_code: this.state.smsCode})
       .then(res => {
         if (res.data.sms_code_ok) {
@@ -264,7 +265,7 @@ class Register extends React.Component {
         axios.post('/myAlfred/api/users/login', {username, password, google_id, facebook_id})
           .then(() => {
             const token = cookie.load('token');
-            axios.defaults.headers.common['Authorization'] = token;
+            setAxiosAuthentication()
           })
           .catch()
           .then(this.addPhoto).catch()
@@ -288,7 +289,7 @@ class Register extends React.Component {
   };
 
   addPhoto = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
 
     if (this.state.picture !== '' || this.state.avatar !== '') {
       const formData = new FormData();
@@ -315,7 +316,7 @@ class Register extends React.Component {
 
 
   onSubmitPhone = e => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
 
     if (!this.state.phoneConfirmed && !this.state.serverError) {
       this.sendSms();

@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
 import {withStyles} from '@material-ui/core/styles';
@@ -63,7 +64,7 @@ class Messages extends React.Component {
   }
 
   loadChats = checkRelative => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/chatRooms/userChatRooms')
       .then( res => {
         const chats=res.data.filter(c => c.booking && c.booking.alfred && c.messages);

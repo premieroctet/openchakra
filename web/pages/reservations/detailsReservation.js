@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
@@ -57,7 +58,7 @@ class DetailsReservation extends React.Component {
 
     this.setState({booking_id: booking_id});
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
 
     axios.get('/myAlfred/api/users/current').then(res => {
       let result = res.data;

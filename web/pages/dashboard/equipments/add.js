@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 
 import Card from '@material-ui/core/Card';
@@ -66,7 +67,7 @@ class add extends React.Component {
         'content-type': 'multipart/form-data',
       },
     };
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/admin/equipment/all', formData, config)
       .then((response) => {
         alert('Equipment ajouté');

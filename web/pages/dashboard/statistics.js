@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 
 import {withStyles} from '@material-ui/core/styles';
@@ -66,7 +67,7 @@ class statistics extends React.Component {
 
   getCounts() {
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
 
     axios.get('/myAlfred/api/admin/statistics')
       .then((response) => {

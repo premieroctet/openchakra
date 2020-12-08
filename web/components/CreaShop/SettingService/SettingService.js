@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import styles from '../componentStyle';
@@ -33,7 +34,7 @@ class SettingService extends React.Component {
   }
 
   componentDidMount() {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/service/${this.props.service}`)
       .then(response => {
         let service = response.data;

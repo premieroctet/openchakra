@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import NavBar from './NavBar/NavBar';
 import Footer from './Footer/Footer';
@@ -23,7 +24,7 @@ class Layout extends React.Component {
 
   componentDidMount() {
     const token = cookie.load('token');
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/category/all/sort').then(res => {
       let cat = res.data;
       this.setState({categories: cat})

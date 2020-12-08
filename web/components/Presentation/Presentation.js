@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import axios from 'axios'
 import Grid from '@material-ui/core/Grid';
@@ -53,7 +54,7 @@ class Presentation extends React.Component {
   }
 
   loadUser = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then( res => {
         this.setState( { user: res.data})
@@ -63,7 +64,7 @@ class Presentation extends React.Component {
 
   save = () => {
     const {newDescription}=this.state
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.put('/myAlfred/api/users/profile/description', {description: newDescription})
       .then( res => {
         this.loadUser()

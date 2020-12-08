@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 import Router from 'next/router';
 import axios from 'axios';
@@ -28,7 +29,7 @@ class EditPicture extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/${this.props.type}/all/${this.props.id}`)
       .then(response => {
         console.log(response, ' response');

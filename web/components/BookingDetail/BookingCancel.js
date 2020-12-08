@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
@@ -24,7 +25,7 @@ class Cancel extends React.Component {
 
   componentDidMount() {
     const booking_id = this.props.booking_id;
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current').then(res => {
       this.setState({currUser: res.data});
     });
@@ -40,7 +41,7 @@ class Cancel extends React.Component {
   }
 
   changeStatus(status) {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.put('/myAlfred/api/booking/modifyBooking/' + this.props.booking_id, {
       status: status, user: this.state.currUser._id,
     })

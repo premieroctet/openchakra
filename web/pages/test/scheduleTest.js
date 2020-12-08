@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import styles from './style';
@@ -36,7 +37,7 @@ class scheduleTest extends React.Component {
     if (avail._id.length == GID_LEN) {
       avail._id = null;
     }
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/availability/add', avail)
       .then(res => {
         toast.info('Disponibilité ajoutée avec succès !');
@@ -53,7 +54,7 @@ class scheduleTest extends React.Component {
   };
 
   availabilityUpdate = (avail) => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/availability/update', avail)
       .then(res => {
 

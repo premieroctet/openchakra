@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
@@ -62,7 +63,7 @@ class MessagesDetails extends React.Component {
       div.scrollTop = 99999;
     }, 1000);
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.put('/myAlfred/api/chatRooms/viewMessages/' + this.props.chatroomId)
       .then();
     axios

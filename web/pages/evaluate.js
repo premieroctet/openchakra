@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
@@ -43,7 +44,7 @@ class Evaluate extends React.Component {
   componentDidMount() {
     const id = this.props.service_id;
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {

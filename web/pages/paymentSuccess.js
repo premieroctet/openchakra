@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
@@ -26,7 +27,7 @@ class paymentSuccess extends React.Component {
   componentDidMount() {
 
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;

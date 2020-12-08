@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
@@ -41,7 +42,7 @@ class Messages extends React.Component {
     if (!getLoggedUserId()) {
       Router.push('/login');
     }
-    axios.defaults.headers.common['Authorization'] = token;
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current').then(res => {
       this.setState({idEmitter: res.data._id, currentUser: res.data});
       if (res.data.is_alfred === true) {

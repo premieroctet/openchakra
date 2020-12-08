@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
@@ -37,7 +38,7 @@ class SelectPrestation extends React.Component {
     const alfred_id = getLoggedUserId()
 
     let billings = null;
-    axios.defaults.headers.common['Authorization'] = token;
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/billing/all`)
       .then(res => {
         billings = res.data;

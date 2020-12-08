@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
@@ -35,7 +36,7 @@ class Commentary extends React.Component {
   componentDidMount() {
     const review_id = this.props.review
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/reviews/review/${review_id}`)
       .then(res => {
         this.setState({review: res.data});

@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -53,7 +54,7 @@ class view extends React.Component {
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     const id = this.props.job_id;
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/job/all/${id}`)
       .then(response => {
         let job = response.data;

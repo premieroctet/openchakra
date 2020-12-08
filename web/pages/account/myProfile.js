@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
@@ -30,7 +31,7 @@ class myProfile extends React.Component{
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {

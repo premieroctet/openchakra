@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios'
@@ -61,7 +62,7 @@ class About extends React.Component {
   };
 
   loadUser() {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then( res => {
         const user=res.data;
@@ -96,7 +97,7 @@ class About extends React.Component {
   save = () => {
     // TODO: handle errors, remove timeout
     const {newAddress, newLanguages}=this.state;
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.put('/myAlfred/api/users/profile/billingAddress', newAddress);
     axios.put('/myAlfred/api/users/profile/languages', {languages: newLanguages.map( l => l.value)});
     this.setState({showEdition: false}, () => setTimeout(this.loadUser, 1000))

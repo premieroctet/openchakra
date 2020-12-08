@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
@@ -147,7 +148,7 @@ class SearchPage extends React.Component {
     if ('selectedAddress' in this.props) {
       st['selectedAddress'] = this.props.selectedAddress;
     }
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
 
     axios.get('/myAlfred/api/category/all/sort')
       .catch(err => {

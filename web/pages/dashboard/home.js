@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 
 import Card from '@material-ui/core/Card';
@@ -53,7 +54,7 @@ class home extends React.Component {
     } else {
       this.setState({is_admin: true});
     }
-    axios.defaults.headers.common['Authorization'] = auth;
+    setAxiosAuthentication()
     /**
     TODO : générer boutiques si nécessaire seulement
     axios.get('/myAlfred/api/admin/shops/extract')

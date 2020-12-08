@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
@@ -102,7 +103,7 @@ class UserServicesPreview extends React.Component {
     if (getLoggedUserId()) {
       this.setState({logged: true});
     }
-    axios.defaults.headers.common['Authorization'] = token;
+    setAxiosAuthentication()
     let bookingObj = JSON.parse(localStorage.getItem('bookingObj'));
 
     const id = this.props.service_id;

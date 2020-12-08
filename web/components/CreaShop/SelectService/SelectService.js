@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 const AUTOCOMPLETE = false;
 
 import React from 'react';
@@ -30,7 +31,7 @@ class SelectService extends React.Component {
   setServices(pattern) {
     pattern = pattern || '%20';
     var kw_url = `/myAlfred/api/service/keyword/${pattern}`;
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(kw_url)
       .then((response) => {
         let data = response.data;

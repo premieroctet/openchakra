@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 
 import Card from '@material-ui/core/Card';
@@ -77,7 +78,7 @@ class add extends React.Component {
 
 
     };
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios
       .post('/myAlfred/api/admin/users/admin', newAdmin)
       .then(res => {

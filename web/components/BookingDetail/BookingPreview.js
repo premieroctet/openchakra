@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import Link from 'next/link';
 import Grid from '@material-ui/core/Grid';
@@ -49,7 +50,7 @@ class BookingPreview extends React.Component {
 
     this.setState({booking_id: booking_id});
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
 
     axios.get('/myAlfred/api/users/current').then(res => {
       let result = res.data;

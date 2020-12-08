@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios'
@@ -22,7 +23,7 @@ class Skills extends React.Component {
   }
 
   componentDidMount = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
 
     if (this.props.alfred) {
       axios.get(`/myAlfred/api/reviews/${this.props.alfred}`)

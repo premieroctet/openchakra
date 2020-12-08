@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
@@ -72,7 +73,7 @@ class ServicesMap extends React.Component {
     if (!auth) {
       Router.push('/login');
     } else {
-      axios.defaults.headers.common['Authorization'] = auth;
+      setAxiosAuthentication()
       axios.get('/myAlfred/api/service/allCount')
         .then(response => {
           this.setState({allServices: response.data});

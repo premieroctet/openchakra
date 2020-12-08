@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../utils/authentication')
 import React, {Fragment} from 'react';
 import Link from 'next/link';
 import Layout from '../hoc/Layout/Layout';
@@ -26,7 +27,7 @@ class PaymentFailed extends React.Component {
 
     localStorage.setItem('path', Router.pathname);
     let bookingObj = JSON.parse(localStorage.getItem('bookingObj'));
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {

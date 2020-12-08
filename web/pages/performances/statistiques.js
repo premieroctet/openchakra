@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
@@ -37,7 +38,7 @@ class Statistiques extends React.Component {
   componentDidMount() {
 
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/performances/statistics/totalBookings')
       .then(res => {
         this.setState({totalIncomes: res.data.incomes, totalPrestations: res.data.prestations});

@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Router from 'next/router'
 import Grid from '@material-ui/core/Grid'
@@ -19,7 +20,7 @@ class AddService extends React.Component {
   }
 
   componentDidMount = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
   };
 
   clickService = () => {
