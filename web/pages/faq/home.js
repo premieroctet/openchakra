@@ -27,9 +27,6 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'column',
         boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
-        '&:hover': {
-            border: '0.2px solid grey',
-        }
     },
     linkText: {
         margin: '0 auto'
@@ -116,13 +113,13 @@ class Home extends React.Component {
                       <Grid style={{paddingRight: '25px'}} onClick={() => this.setAlfred(false)}>
                         <Grid className={classes.linkBloc}>
                           <img style={{margin: '0 auto', paddingBottom: '16px'}} src="/static/assets/faq/star.svg" />
-                          <p className={classes.linkText}>Je suis client</p>
+                          <p className={classes.linkText} style={{fontWeight: alfredFaq ? 'normal' :'bold'}}>Je suis client</p>
                         </Grid>
                     </Grid>
                     <Grid>
                       <Grid className={classes.linkBloc} onClick={() => this.setAlfred(true)}>
                         <img style={{margin: '0 auto', width: '30px', paddingBottom: '10px'}} src="/static/assets/faq/amp.svg" />
-                        <p className={classes.linkText}>Je suis Alfred</p>
+                        <p className={classes.linkText} style={{fontWeight: alfredFaq ? 'bold' :'normal'}}>Je suis Alfred</p>
                       </Grid>
                     </Grid>
                     </>
