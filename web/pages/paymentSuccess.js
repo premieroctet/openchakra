@@ -1,3 +1,4 @@
+const {clearAuthenticationToken}=require('../utils/authentication')
 const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import axios from 'axios';
@@ -35,7 +36,7 @@ class paymentSuccess extends React.Component {
       })
       .catch(err => {
         if (err.response.status === 401 || err.response.status === 403) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/'});
         }
       });

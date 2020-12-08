@@ -40,7 +40,7 @@ class myProfile extends React.Component{
       })
       .catch(err => {
           if (err.response.status === 401 || err.response.status === 403) {
-            cookie.remove('token', {path: '/'});
+            clearAuthenticationToken()
             Router.push({pathname: '/'});
           }
         },

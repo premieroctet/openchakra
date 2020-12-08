@@ -1,3 +1,4 @@
+const {clearAuthenticationToken}=require('../utils/authentication')
 const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -507,7 +508,7 @@ class UserServicesPreview extends React.Component {
       localStorage.removeItem('address');
 
       if (!this.state.user) {
-        cookie.remove('token', {path: '/'});
+        clearAuthenticationToken()
         Router.push('/?login=true');
         return
       }

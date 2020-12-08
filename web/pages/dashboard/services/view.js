@@ -1,3 +1,4 @@
+const {clearAuthenticationToken}=require('../../../utils/authentication')
 const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 import Card from '@material-ui/core/Card';
@@ -143,7 +144,7 @@ class view extends React.Component {
       .catch(err => {
         console.error(err);
         if (err.response.status === 401 || err.response.status === 403) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/login'});
         }
       });
@@ -277,7 +278,7 @@ class view extends React.Component {
       .catch(err => {
         console.error(err);
         if (err.response.status === 401 || err.response.status === 403) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/login'});
         }
       });
@@ -296,7 +297,7 @@ class view extends React.Component {
       .catch(err => {
         console.error(err);
         if (err.response.status === 401 || err.response.status === 403) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/login'});
         }
       });

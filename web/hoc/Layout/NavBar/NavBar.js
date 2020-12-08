@@ -123,7 +123,7 @@ class NavBar extends Component {
   }
 
   logout = () => {
-    cookie.remove('token', {path: '/'});
+    clearAuthenticationToken()
     localStorage.removeItem('path');
     clearAuthenticationToken()
     if (this.state.ifHomePage) {

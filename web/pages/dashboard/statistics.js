@@ -1,3 +1,4 @@
+const {clearAuthenticationToken}=require('../../utils/authentication')
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 
@@ -76,7 +77,7 @@ class statistics extends React.Component {
       .catch((error) => {
         console.error(error);
         if (error.response.status === 401 || error.response.status === 403) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/login'});
         }
       });

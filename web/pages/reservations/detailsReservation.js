@@ -1,3 +1,4 @@
+const {clearAuthenticationToken}=require('../../utils/authentication')
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import Link from 'next/link';
@@ -102,7 +103,7 @@ class DetailsReservation extends React.Component {
       .catch(error => {
         console.log(error);
         if (error.response && error.response.status === 401 || error.response.status === 403) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/login'});
         }
       });

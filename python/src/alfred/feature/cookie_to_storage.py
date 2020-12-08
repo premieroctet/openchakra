@@ -93,7 +93,7 @@ class CookieToStorage(object):
     
   def fix(self):
     self.phase1()
-    #self.phase2()
+    self.phase2()
     #self.phase3()
     
 if __name__ == '__main__':

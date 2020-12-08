@@ -1,3 +1,4 @@
+const {clearAuthenticationToken}=require('../../../utils/authentication')
 const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 import Router from 'next/router';
@@ -39,7 +40,7 @@ class EditPicture extends React.Component {
       .catch(err => {
         console.error(err);
         if (err.response.status === 401 || err.response.status === 403) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/login'});
         }
       });

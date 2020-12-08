@@ -1,3 +1,4 @@
+const {clearAuthenticationToken}=require('../../utils/authentication')
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import Layout from '../../hoc/Layout/Layout';
@@ -126,7 +127,7 @@ class security extends React.Component {
       })
       .catch(err => {
         if (err.response.status === 401 || err.response.status === 403) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/'});
         }
       });
@@ -191,7 +192,7 @@ class security extends React.Component {
                 .then(() => {
                   this.setState({open2: false});
                   toast.error('Compte désactivé');
-                  cookie.remove('token', {path: '/'});
+                  clearAuthenticationToken()
                   Router.push('/');
                 })
                 .catch(err => {console.error(err)});
@@ -207,7 +208,7 @@ class security extends React.Component {
         .then(() => {
           this.setState({open2: false});
           toast.error('Compte désactivé');
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push('/');
         })
         .catch(err => {console.error(err)});
