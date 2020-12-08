@@ -4,7 +4,7 @@ import Footer from '../hoc/Layout/Footer/Footer';
 import BecomeAlfred from '../components/HomePage/BecomeAlfred/BecomeAlfred';
 import Router from 'next/router';
 import {Helmet} from 'react-helmet';
-import cookie from 'react-cookies';
+
 import Grid from '@material-ui/core/Grid';
 import InfoBar from '../components/InfoBar/InfoBar';
 import {withStyles} from '@material-ui/core/styles';
@@ -32,7 +32,6 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    const token = cookie.load('token');
     if (getLoggedUserId()) {
       this.setState({logged: true})
     }

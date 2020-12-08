@@ -15,7 +15,7 @@ import AskQuestion from "../../components/AskQuestion/AskQuestion";
 import Box from "../../components/Box/Box";
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
 import axios from "axios";
-import cookie from "react-cookies";
+
 import Typography from "@material-ui/core/Typography";
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import IconButton from "@material-ui/core/IconButton";

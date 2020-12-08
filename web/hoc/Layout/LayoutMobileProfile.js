@@ -8,7 +8,7 @@ import MobileNavbar from "./NavBar/MobileNavbar";
 import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../static/css/components/Layout/LayoutMobileProfile/LayoutMobileProfile'
 import axios from "axios";
-import cookie from "react-cookies";
+
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";

@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
 import styles from './SkillsStyle';
-import cookie from 'react-cookies';
+
 const {SKILLS}=require('../../utils/consts');
 import Topic from "../../hoc/Topic/Topic"
 

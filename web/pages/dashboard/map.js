@@ -10,10 +10,9 @@ import axios from 'axios';
 import MapComponent from '../../components/map';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import cookie from 'react-cookies';
+const {getLoggedUserId}=require('../../utils/functions')
 import AlgoliaPlaces from 'algolia-places-react';
 
-const jwt = require('jsonwebtoken');
 const styles = theme => ({
   signupContainer: {
     alignItems: 'center',
@@ -69,8 +68,7 @@ class ServicesMap extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    const auth = cookie.load('token');
-    if (!auth) {
+    if (!getLoggedUserId()) {
       Router.push('/login');
     } else {
       setAxiosAuthentication()

@@ -13,7 +13,7 @@ import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import FormControl from '@material-ui/core/FormControl';
 import Select2 from 'react-select';
-import cookie from 'react-cookies';
+
 
 const styles = theme => ({
   signupContainer: {

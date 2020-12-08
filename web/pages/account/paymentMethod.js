@@ -22,7 +22,7 @@ import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import styles from '../../static/css/pages/paymentMethod/paymentMethod';
-import cookie from 'react-cookies';
+
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";

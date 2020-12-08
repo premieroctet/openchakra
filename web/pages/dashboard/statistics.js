@@ -7,7 +7,7 @@ import Router from 'next/router';
 import axios from 'axios';
 import Link from 'next/link';
 import HomeIcon from '@material-ui/icons/Home';
-import cookie from 'react-cookies';
+
 const moment = require('moment')
 import {Card, Grid, Typography, Checkbox, Avatar} from '@material-ui/core'
 import FormControlLabel from '@material-ui/core/FormControlLabel'

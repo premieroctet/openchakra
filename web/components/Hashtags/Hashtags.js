@@ -11,7 +11,7 @@ import Chip from '@material-ui/core/Chip';
 import clsx from 'clsx';
 import Badge from '@material-ui/core/Badge';
 import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
-import cookie from 'react-cookies';
+
 import Topic from "../../hoc/Topic/Topic"
 import ListAlfredConditions from "../ListAlfredConditions/ListAlfredConditions";
 import RoomIcon from '@material-ui/icons/Room';

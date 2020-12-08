@@ -18,7 +18,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select2 from 'react-select';
-import cookie from 'react-cookies';
+
 import Checkbox from '@material-ui/core/Checkbox';
 
 const styles = theme => ({

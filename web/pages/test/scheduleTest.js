@@ -6,7 +6,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import PropTypes from 'prop-types';
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
 import axios from 'axios';
-import cookie from 'react-cookies';
+
 import {toast} from 'react-toastify';
 const I18N = require('../../utils/i18n');
 

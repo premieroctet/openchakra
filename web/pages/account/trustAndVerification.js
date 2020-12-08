@@ -23,7 +23,7 @@ import styles from '../../static/css/pages/trustAndVerification/trustAndVerifica
 import Siret from '../../components/Siret/Siret';
 import {Radio, RadioGroup} from '@material-ui/core';
 import ButtonSwitch from '../../components/ButtonSwitch/ButtonSwitch';
-import cookie from 'react-cookies';
+
 import DocumentEditor from '../../components/DocumentEditor/DocumentEditor';
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";

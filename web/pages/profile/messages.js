@@ -6,7 +6,7 @@ import styles from '../../static/css/pages/profile/messages/messages';
 import Hidden from "@material-ui/core/Hidden";
 import axios from "axios";
 import Typography from '@material-ui/core/Typography';
-import cookie from 'react-cookies'
+
 const moment=require('moment');
 import MessageSummary from '../../components/MessageSummary/MessageSummary'
 import _ from 'lodash'

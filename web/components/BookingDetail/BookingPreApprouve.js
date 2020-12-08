@@ -15,7 +15,7 @@ import About from '../../components/About/About';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import Typography from '@material-ui/core/Typography';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
-import cookie from 'react-cookies';
+
 import {Divider} from "@material-ui/core";
 
 registerLocale('fr', fr);

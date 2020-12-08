@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/components/About/About';
-import cookie from 'react-cookies';
+
 import ListAlfredConditions from "../ListAlfredConditions/ListAlfredConditions";
 import RoomIcon from '@material-ui/icons/Room';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';

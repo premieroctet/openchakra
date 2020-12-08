@@ -10,7 +10,7 @@ import {Document, Page, pdfjs} from 'react-pdf';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from 'next/router';
-import cookie from 'react-cookies';
+
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 

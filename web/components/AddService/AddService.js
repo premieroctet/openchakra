@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid'
 import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/components/AddService/AddService';
-import cookie from 'react-cookies';
+
 import {Button} from '@material-ui/core'
 import {SHOP} from '../../utils/i18n'
 import Box from '../Box/Box'

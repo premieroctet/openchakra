@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../static/css/pages/confirmPayement/confirmPayement';
-import cookie from 'react-cookies';
+
 import Stepper from "../components/Stepper/Stepper";
 import AddressAndFacturation from "../components/Payement/AddressAndFacturation/AddressAndFacturation";
 import PaymentChoice from "../components/Payement/PaymentChoice/PaymentChoice";
@@ -53,7 +53,6 @@ class ConfirmPayement extends React.Component {
   }
 
   componentDidMount() {
-    const token = cookie.load('token');
 
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)

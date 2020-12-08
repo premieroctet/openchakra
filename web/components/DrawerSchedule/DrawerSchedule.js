@@ -8,7 +8,7 @@ import Fab from '@material-ui/core/Fab';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DrawerEditingSchedule from '../Drawer/DrawerEditingSchedule/DrawerEditingSchedule';
 import DrawerSettingSchedule from '../Drawer/DrawerSettingSchedule/DrawerSettingSchedule';
-import cookie from 'react-cookies';
+
 import axios from 'axios';
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import Button from "@material-ui/core/Button";
@@ -30,7 +30,6 @@ class DrawerSchedule extends React.Component{
   }
 
   componentDidMount = () => {
-    const auth = cookie.load('token');
     setAxiosAuthentication()
     axios.get('/myAlfred/api/availability/currentAlfred')
       .then ( res => {

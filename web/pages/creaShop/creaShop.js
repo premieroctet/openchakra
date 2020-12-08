@@ -1,4 +1,4 @@
-const {setAxiosAuthentication}=require('../../utils/authentication')
+const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import styles from './creaShopStyle';
@@ -29,7 +29,7 @@ import {
   settingService,
   settingShop,
 } from '../../utils/validationSteps/validationSteps';
-import cookie from 'react-cookies';
+
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
 const I18N = require('../../utils/i18n');
 const {getLoggedUserId}=require('../../utils/functions')
@@ -92,7 +92,6 @@ class creaShop extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    const token = cookie.load('token');
     if (!getLoggedUserId()) {
       Router.push('/login');
     }
@@ -235,6 +234,7 @@ class creaShop extends React.Component {
           }
           axios.get('/myAlfred/api/users/token')
             .then (res => {
+              setAuthToken()
               Router.push(`/profile/services?user=${this.state.user_id}&indexAccount=1`)
             })
         })

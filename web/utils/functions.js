@@ -70,7 +70,10 @@ const circular_get = (array, start, length) => {
 
 const getLoggedUser = () => {
   const token = cookie.load('token')
-  if (!token) {
+  if (token) {
+    console.log(`Cookie:${JSON.stringify(token)}`)
+  }
+  else {
     console.log('Pas de cookie')
     return null
   }

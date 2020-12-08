@@ -10,7 +10,7 @@ import loadable from 'loadable-components';
 const Chart = loadable(() => import('react-apexcharts'));
 import Router from 'next/router'
 import axios from 'axios'
-import cookie from 'react-cookies'
+
 const _ = require('lodash');
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";

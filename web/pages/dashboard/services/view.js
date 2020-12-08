@@ -21,7 +21,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from 'next/link';
-import cookie from 'react-cookies';
+
 
 const styles = {
   loginContainer: {

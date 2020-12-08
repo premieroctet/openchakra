@@ -1,4 +1,4 @@
-const {setAxiosAuthentication}=require('../../utils/authentication')
+const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import {toast} from 'react-toastify';
 import {checkPass1, checkPass2} from '../../utils/passwords';
@@ -32,7 +32,7 @@ import Dialog from '@material-ui/core/Dialog';
 import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined';
 import Router from 'next/router';
 import Link from 'next/link';
-import cookie from 'react-cookies';
+
 import OAuth from '../OAuth/OAuth';
 import Information from '../Information/Information';
 const {getLoggedUserId}=require('../../utils/functions')
@@ -147,7 +147,6 @@ class Register extends React.Component {
     if (query.error) {
       this.setState({errorExistEmail: true});
     }
-    const token = cookie.load('token');
     if (getLoggedUserId()) {
       toast.warn('Vous êtes déjà inscrit');
       Router.push('/');
@@ -264,7 +263,7 @@ class Register extends React.Component {
         toast.info('Inscription réussie');
         axios.post('/myAlfred/api/users/login', {username, password, google_id, facebook_id})
           .then(() => {
-            const token = cookie.load('token');
+            setAuthToken()
             setAxiosAuthentication()
           })
           .catch()

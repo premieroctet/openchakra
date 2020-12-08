@@ -10,7 +10,7 @@ import Layout from '../../hoc/Layout/Layout';
 import axios from 'axios';
 import Link from 'next/link';
 import {CSVLink} from 'react-csv';
-import cookie from 'react-cookies';
+
 const {isLoggedUserAdmin}=require('../../utils/functions')
 
 const jwt = require('jsonwebtoken');
@@ -48,7 +48,6 @@ class home extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    const auth = cookie.load('token');
     if (!isLoggedUserAdmin()) {
       Router.push('/login');
     } else {

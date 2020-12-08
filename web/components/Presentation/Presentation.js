@@ -4,7 +4,7 @@ import axios from 'axios'
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/components/Presentation/Presentation';
-import cookie from 'react-cookies';
+
 import Topic from "../../hoc/Topic/Topic"
 import Box from '../Box/Box'
 import MuiDialogTitle from '@material-ui/core/DialogTitle';

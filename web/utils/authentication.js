@@ -1,6 +1,10 @@
 import axios from 'axios';
 import cookie from 'react-cookies'
 
+const setAuthToken = () => {
+  // Has to set in storage
+}
+
 const setAxiosAuthentication = () => {
   const token = cookie.load('token')
   if (token) {
@@ -13,7 +17,7 @@ const setAxiosAuthentication = () => {
 };
 
 const clearAuthenticationToken = () => {
-  cookie.remove('token', {path: '/'});  
+  cookie.remove('token', {path: '/'});
 }
 
-module.exports={setAxiosAuthentication, clearAuthenticationToken}
+module.exports={setAxiosAuthentication, clearAuthenticationToken, setAuthToken}

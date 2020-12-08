@@ -15,7 +15,7 @@ import styles from './preApprouve/preApprouveStyle';
 import About from '../../components/About/About';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
-import cookie from 'react-cookies';
+
 
 const {frenchFormat} = require('../../utils/text');
 

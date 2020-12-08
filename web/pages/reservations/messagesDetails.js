@@ -12,7 +12,7 @@ import getDistance from 'geolib/es/getDistance';
 import convertDistance from 'geolib/es/convertDistance';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import styles from './messagesDetails/messagesDetailsStyle';
-import cookie from 'react-cookies';
+
 import Router from 'next/router';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';

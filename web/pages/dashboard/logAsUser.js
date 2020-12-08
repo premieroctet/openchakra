@@ -14,7 +14,7 @@ import Router from 'next/router';
 import Select from 'react-dropdown-select';
 import Input from '@material-ui/core/Input';
 import FormControl from '@material-ui/core/FormControl';
-import cookie from 'react-cookies';
+
 
 const styles = {
   loginContainer: {
@@ -105,7 +105,6 @@ class logAsUser extends React.Component {
     setAxiosAuthentication()
     axios.post('/myAlfred/api/admin/loginAs', {username: this.state.user})
       .then(res => {
-        const token = cookie.load('token');
         Router.push('/');
       })
       .catch(err => {

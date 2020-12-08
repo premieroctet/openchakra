@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
 import io from 'socket.io-client';
 import Typography from '@material-ui/core/Typography';
-import cookie from 'react-cookies';
+
 import styles from '../../static/css/components/BookingCancel/BookingCancel';
 import Divider from "@material-ui/core/Divider";
 

@@ -5,7 +5,7 @@ import styles from '../../../static/css/components/Card/CategoryCard/CategoryCar
 import withStyles from "@material-ui/core/styles/withStyles";
 import Link from 'next/link';
 import axios from "axios";
-import cookie from "react-cookies";
+
 
 class CategoryCard extends React.Component{
 

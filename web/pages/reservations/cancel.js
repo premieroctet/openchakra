@@ -10,7 +10,7 @@ import {withStyles} from '@material-ui/core/styles';
 import dynamic from 'next/dynamic';
 import io from 'socket.io-client';
 import Typography from '@material-ui/core/Typography';
-import cookie from 'react-cookies';
+
 
 const _ = require('lodash');
 moment.locale('fr');

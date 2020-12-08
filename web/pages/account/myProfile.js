@@ -7,7 +7,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../static/css/pages/account/myProfile/myProfile'
 import Router from "next/router";
 import axios from "axios";
-import cookie from "react-cookies";
+
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';

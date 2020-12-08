@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import cookie from 'react-cookies';
+
 import Grid from "@material-ui/core/Grid";
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import Album from '../../components/Album/Album'

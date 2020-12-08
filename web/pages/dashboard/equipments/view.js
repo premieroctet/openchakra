@@ -11,7 +11,7 @@ import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from 'next/router';
 import Link from 'next/link';
-import cookie from 'react-cookies';
+
 
 const styles = {
   loginContainer: {

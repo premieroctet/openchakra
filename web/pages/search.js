@@ -7,7 +7,7 @@ import 'react-dates/initialize';
 import moment from 'moment';
 import 'react-dates/lib/css/_datepicker.css';
 import styles from '../static/css/pages/searchPage/searchStyle';
-import cookie from 'react-cookies';
+
 import FilterMenu from "../components/FilterMenu/FilterMenu";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
@@ -117,7 +117,6 @@ class SearchPage extends React.Component {
   }
 
   componentDidMount() {
-    const token = cookie.load('token');
     if (getLoggedUserId()) {
       this.setState({logged: true});
     }

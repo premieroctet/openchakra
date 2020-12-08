@@ -5,12 +5,12 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Link from 'next/link';
 import Button from '@material-ui/core/Button';
-const  {setAxiosAuthentication}=require('../../utils/authentication')
+const  {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
 import axios from 'axios';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
 import OAuth from '../OAuth/OAuth';
-import cookie from 'react-cookies';
+
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -47,7 +47,7 @@ class LogIn extends React.Component {
 
     axios.post('/myAlfred/api/users/login', user)
       .then(res => {
-        const token = cookie.load('token');
+        setAuthToken()
         setAxiosAuthentication()
         axios.put('/myAlfred/api/users/account/lastLogin')
           .then(data => {

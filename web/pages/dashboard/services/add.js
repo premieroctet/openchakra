@@ -23,7 +23,7 @@ import {toast} from 'react-toastify';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Select2 from 'react-select';
-import cookie from 'react-cookies';
+
 
 
 const styles = theme => ({

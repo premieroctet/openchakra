@@ -15,7 +15,7 @@ import fr from 'date-fns/locale/fr';
 import {toast} from 'react-toastify';
 import {Helmet} from 'react-helmet';
 import styles from '../../static/css/pages/profile/editProfile/editProfile';
-import cookie from 'react-cookies';
+
 import Hidden from "@material-ui/core/Hidden";
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";

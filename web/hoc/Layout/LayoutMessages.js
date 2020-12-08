@@ -4,7 +4,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../static/css/components/Layout/LayoutMessages/LayoutMessages'
 import Grid from "@material-ui/core/Grid";
 import axios from "axios";
-import cookie from "react-cookies";
+
 import Layout from "./Layout";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";

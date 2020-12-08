@@ -12,7 +12,7 @@ import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
 import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import styles from './myAvailabilities/myAvailabilitiesStyle';
 import Router from 'next/router';
-import cookie from 'react-cookies';
+const {getLoggedUserId}=require('../../utils/functions')
 import DrawerSchedule from '../../components/DrawerSchedule/DrawerSchedule';
 
 const {GID_LEN} = require('../../utils/consts');
@@ -46,8 +46,7 @@ class myAvailabilities extends React.Component {
 
   componentDidMount() {
 
-    const auth = cookie.load('token');
-    if (!this.props.aboutId && !auth) {
+    if (!this.props.aboutId && !getLoggedUserId()) {
       localStorage.setItem('path', Router.pathname);
       Router.push('/login');
     }

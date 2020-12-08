@@ -14,7 +14,7 @@ import Button from '@material-ui/core/Button';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Router from 'next/router';
-import cookie from 'react-cookies';
+
 
 
 moment.locale('fr');

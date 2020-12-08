@@ -8,7 +8,7 @@ import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import StarRatings from 'react-star-ratings';
 import TextField from '@material-ui/core/TextField';
-import cookie from 'react-cookies';
+
 import styles from '../static/css/pages/evaluateClient/evaluateClient';
 import Typography from "@material-ui/core/Typography";
 import Hidden from "@material-ui/core/Hidden";

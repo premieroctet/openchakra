@@ -22,7 +22,7 @@ import {
   selectService,
   settingService,
 } from '../../utils/validationSteps/validationSteps';
-import cookie from 'react-cookies';
+
 const {getLoggedUserId}=require('../../utils/functions')
 
 
@@ -76,7 +76,6 @@ class services extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    const token = cookie.load('token');
     if (!getLoggedUserId()) {
       Router.push('/login');
     }
@@ -182,19 +181,8 @@ class services extends React.Component {
   }
 
   handleNext = () => {
-<<<<<<< HEAD
-    const token=cookie.load('token')
     if (!getLoggedUserId()) {
       Router.push('/login');
-||||||| 88cb3e6f
-    const token=cookie.load('token')
-    if (!token) {
-      Router.push('/login');
-=======
-    const token=cookie.load('token');
-    if (!token) {
-      Router.push('/');
->>>>>>> v3/validation
     }
     if (this.state.activeStep < 4) {
       this.setState({activeStep: this.state.activeStep + 1});

@@ -3,7 +3,7 @@ import React from 'react'
 import Layout from '../../hoc/Layout/Layout'
 import Grid from "@material-ui/core/Grid";
 import ScrollMenu from '../../components/ScrollMenu/ScrollMenu';
-import cookie from 'react-cookies';
+
 import axios from 'axios'
 const {isEditableUser}=require('../../utils/functions');
 import styles from '../../static/css/components/Layout/ProfileLayout/ProfileLayout'

@@ -18,7 +18,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import {Helmet} from 'react-helmet';
 import styles from '../../static/css/pages/myAddresses/myAddresses';
 import IconButton from '@material-ui/core/IconButton';
-import cookie from 'react-cookies';
+
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";

@@ -11,7 +11,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../../static/css/components/MobileNavbar/MobileNavbar';
 import Router from 'next/router';
 import axios from "axios";
-import cookie from "react-cookies";
+
 import LogIn from "../../../components/LogIn/LogIn";
 import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
@@ -81,7 +81,6 @@ class MobileNavbar extends React.Component{
     if(query.login === 'true'){
       this.handleOpenLogin()
     }
-    const token = cookie.load('token');
     if (getLoggedUserId()) {
       this.setState({logged: true, selectedAddress: 'main'});
     }

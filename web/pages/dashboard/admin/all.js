@@ -24,7 +24,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import HomeIcon from '@material-ui/icons/Home';
 import Typography from '@material-ui/core/Typography';
-import cookie from 'react-cookies';
+
 
 
 const styles = theme => ({

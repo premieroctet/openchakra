@@ -2,7 +2,7 @@ const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import NavBar from './NavBar/NavBar';
 import Footer from './Footer/Footer';
-import cookie from "react-cookies";
+
 import styles from '../../static/css/pages/layout/layoutStyle'
 import {withStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -23,7 +23,6 @@ class Layout extends React.Component {
   }
 
   componentDidMount() {
-    const token = cookie.load('token');
     setAxiosAuthentication()
     axios.get('/myAlfred/api/category/all/sort').then(res => {
       let cat = res.data;

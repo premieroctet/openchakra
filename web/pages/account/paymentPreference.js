@@ -17,7 +17,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import {Helmet} from 'react-helmet';
 import IconButton from '@material-ui/core/IconButton';
 import {formatIban} from '../../utils/text';
-import cookie from 'react-cookies';
+
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";

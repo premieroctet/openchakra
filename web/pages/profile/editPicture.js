@@ -22,7 +22,7 @@ import styles from './editPicture/editPictureStyle';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import cookie from 'react-cookies';
+
 
 moment.locale('fr');
 

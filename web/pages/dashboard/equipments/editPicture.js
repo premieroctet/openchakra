@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from 'next/router';
-import cookie from 'react-cookies';
+
 
 const styles = {
   loginContainer: {

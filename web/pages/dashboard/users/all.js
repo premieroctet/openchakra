@@ -23,7 +23,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import PropTypes from 'prop-types';
 import HomeIcon from '@material-ui/icons/Home';
-import cookie from 'react-cookies'
+
 
 const moment = require('moment-timezone');
 moment.locale('fr');

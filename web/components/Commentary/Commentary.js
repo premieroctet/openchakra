@@ -15,7 +15,7 @@ import Notes from '../Notes/Notes';
 import {computeAverageNotes, computeSumSkills} from '../../utils/functions';
 import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
-import cookie from 'react-cookies';
+
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";

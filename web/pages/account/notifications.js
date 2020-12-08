@@ -11,7 +11,7 @@ import Switch from '@material-ui/core/Switch';
 import {toast} from 'react-toastify';
 import {Helmet} from 'react-helmet';
 import styles from '../../static/css/pages/account/notifications/notifications';
-import cookie from 'react-cookies';
+
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";

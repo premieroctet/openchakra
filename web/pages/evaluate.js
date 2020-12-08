@@ -10,7 +10,7 @@ import StarRatings from 'react-star-ratings';
 import {toast} from 'react-toastify';
 import TextField from '@material-ui/core/TextField';
 import Skills from '../components/Skills/Skills';
-import cookie from 'react-cookies';
+
 import Typography from "@material-ui/core/Typography";
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../hoc/Layout/LayoutMobile";

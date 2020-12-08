@@ -9,7 +9,7 @@ import moment from 'moment';
 import {withStyles} from '@material-ui/core/styles';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import styles from '../../static/css/components/MessagesDetails/MessagesDetails';
-import cookie from 'react-cookies';
+
 import Router from 'next/router';
 const {hideIllegal} = require('../../utils/text');
 import Divider from '@material-ui/core/Divider';

@@ -10,7 +10,7 @@ import styles from '../componentStyle';
 import {CUSTOM_PRESTATIONS_FLTR, generate_id, GID_LEN} from '../../../utils/consts';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import cookie from 'react-cookies';
+
 import _ from 'lodash';
 const {getLoggedUserId}=require('../../../utils/functions')
 
@@ -33,8 +33,6 @@ class SelectPrestation extends React.Component {
   componentDidMount() {
 
     // Get current alfred id
-    const token = cookie.load('token');
-
     const alfred_id = getLoggedUserId()
 
     let billings = null;

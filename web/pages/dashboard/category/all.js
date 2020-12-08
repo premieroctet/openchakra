@@ -24,7 +24,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import HomeIcon from '@material-ui/icons/Home';
-import cookie from 'react-cookies';
+
 
 const styles = theme => ({
   signupContainer: {

@@ -1,5 +1,6 @@
 const {clearAuthenticationToken}=require('../../utils/authentication')
 const {setAxiosAuthentication}=require('../../utils/authentication')
+const {setAuthToken}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import Layout from '../../hoc/Layout/Layout';
 import axios from 'axios';
@@ -16,7 +17,7 @@ import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import {checkPass1, checkPass2} from '../../utils/passwords';
-import cookie from 'react-cookies';
+
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
@@ -167,6 +168,7 @@ class security extends React.Component {
                 this.setState({open: false});
                 axios.get('/myAlfred/api/users/token')
                   .then ( res => {
+                    setAuthToken()
                     window.location.reload(true)
                   })
               })

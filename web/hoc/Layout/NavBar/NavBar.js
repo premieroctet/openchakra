@@ -9,7 +9,7 @@ import Menu from '@material-ui/core/Menu';
 const  {clearAuthenticationToken}=require('../../../utils/authentication')
 import Router from 'next/router';
 import Grid from '@material-ui/core/Grid';
-import cookie from 'react-cookies';
+
 import LogIn from '../../../components/LogIn/LogIn';
 import Register from '../../../components/Register/Register';
 import Dialog from '@material-ui/core/Dialog';

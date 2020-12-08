@@ -25,7 +25,7 @@ import Link from 'next/link';
 import HomeIcon from '@material-ui/icons/Home';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment-timezone';
-import cookie from 'react-cookies';
+
 
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus');
 moment.locale('fr');

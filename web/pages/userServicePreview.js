@@ -20,7 +20,7 @@ import fr from 'date-fns/locale/fr';
 import Switch from '@material-ui/core/Switch';
 import {Helmet} from 'react-helmet';
 import Link from 'next/link';
-import cookie from 'react-cookies';
+
 import Topic from "../hoc/Topic/Topic";
 import ListAlfredConditions from "../components/ListAlfredConditions/ListAlfredConditions";
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
@@ -100,7 +100,6 @@ class UserServicesPreview extends React.Component {
   }
 
   componentDidMount() {
-    const token = cookie.load('token');
     if (getLoggedUserId()) {
       this.setState({logged: true});
     }

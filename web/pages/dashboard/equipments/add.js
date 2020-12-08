@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import Router from 'next/router';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
-import cookie from 'react-cookies';
+
 
 const styles = theme => ({
   signupContainer: {

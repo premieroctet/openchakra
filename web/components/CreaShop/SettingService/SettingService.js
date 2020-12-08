@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
 import axios from 'axios';
 import isEmpty from '../../../server/validation/is-empty';
-import cookie from 'react-cookies';
+
 
 class SettingService extends React.Component {
   constructor(props) {

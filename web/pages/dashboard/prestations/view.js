@@ -19,7 +19,7 @@ import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Link from 'next/link';
-import cookie from 'react-cookies';
+
 import Checkbox from '@material-ui/core/Checkbox';
 
 const styles = {
