@@ -5,7 +5,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 })
 
 module.exports = withPlugins([
+  { target: 'experimental-serverless-trace' },
   [withBundleAnalyzer, {}],
   [withTM],
-  { target: 'experimental-serverless-trace' },
 ])
