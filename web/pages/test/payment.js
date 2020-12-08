@@ -1,6 +1,7 @@
+const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 import axios from 'axios'
-import cookie from 'react-cookies';
+
 import Button from '@material-ui/core/Button'
 const {getLoggedUserId}=require('../../utils/functions');
 import Router from 'next/router';
@@ -44,7 +45,7 @@ class PaymentTest extends React.Component{
     else {
       this.login().then( res => {
         console.log(`sessonStorage:${JSON.stringify(sessionStorage)}`)
-        sessionStorage.setItem('cookie', cookie.load('token'))
+        setAuthToken()
         this.doIt(this.loadUser())
       })
     }
@@ -52,7 +53,7 @@ class PaymentTest extends React.Component{
 
   loadUser = () => {
     console.log('Loading user')
-    axios.defaults.headers.common['Authorization'] = sessionStorage.getItem('cookie');
+    setAxiosAuthentication()
     return axios.get(`/myAlfred/api/users/current`)
   }
 
@@ -80,7 +81,7 @@ class PaymentTest extends React.Component{
     return(
       <div>
         <div>{`Utilisateur ${user ? user.avatar_letters : 'Aucun'}`}</div>
-        <div>{`Cookie id ${userid}`}</div>
+        <div>{`Logged id ${userid}`}</div>
         <div>{`Transaction:${JSON.stringify(transaction_id)}`}</div>
         <div>{`Result:${JSON.stringify(result)}`}</div>
       </div>

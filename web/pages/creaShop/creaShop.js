@@ -1,3 +1,4 @@
+const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import styles from './creaShopStyle';
@@ -28,7 +29,7 @@ import {
   settingService,
   settingShop,
 } from '../../utils/validationSteps/validationSteps';
-import cookie from 'react-cookies';
+
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
 const I18N = require('../../utils/i18n');
 const {getLoggedUserId}=require('../../utils/functions')
@@ -91,12 +92,11 @@ class creaShop extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    const token = cookie.load('token');
     if (!getLoggedUserId()) {
       Router.push('/login');
     }
 
-    axios.defaults.headers.common['Authorization'] = token;
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
@@ -161,7 +161,7 @@ class creaShop extends React.Component {
     if (avail._id.length === GID_LEN) {
       avail._id = null;
     }
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/availability/add', avail)
       .then(res => {
         this.loadAvailabilities()
@@ -172,7 +172,7 @@ class creaShop extends React.Component {
   };
 
   availabilityUpdate = (avail) => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/availability/update', avail)
       .then(res => {
         this.loadAvailabilities()
@@ -203,7 +203,7 @@ class creaShop extends React.Component {
       cloned_shop.prestations = JSON.stringify(cloned_shop.prestations);
       cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
 
-      axios.defaults.headers.common['Authorization'] = cookie.load('token');
+      setAxiosAuthentication()
       axios.post('/myAlfred/api/shop/add', cloned_shop)
         .then(res => {
 
@@ -234,6 +234,7 @@ class creaShop extends React.Component {
           }
           axios.get('/myAlfred/api/users/token')
             .then (res => {
+              setAuthToken()
               Router.push(`/profile/services?user=${this.state.user_id}&indexAccount=1`)
             })
         })

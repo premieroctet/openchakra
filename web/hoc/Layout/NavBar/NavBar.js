@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React, {Component} from 'react';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
@@ -8,7 +9,7 @@ import Menu from '@material-ui/core/Menu';
 const  {clearAuthenticationToken}=require('../../../utils/authentication')
 import Router from 'next/router';
 import Grid from '@material-ui/core/Grid';
-import cookie from 'react-cookies';
+
 import LogIn from '../../../components/LogIn/LogIn';
 import Register from '../../../components/Register/Register';
 import Dialog from '@material-ui/core/Dialog';
@@ -103,7 +104,7 @@ class NavBar extends Component {
       this.handleOpenLogin()
     }
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         var allAddresses={'main':res.data.billing_address};
@@ -122,7 +123,7 @@ class NavBar extends Component {
   }
 
   logout = () => {
-    cookie.remove('token', {path: '/'});
+    clearAuthenticationToken()
     localStorage.removeItem('path');
     clearAuthenticationToken()
     if (this.state.ifHomePage) {

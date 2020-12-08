@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from "react";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
@@ -10,7 +11,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../../static/css/components/MobileNavbar/MobileNavbar';
 import Router from 'next/router';
 import axios from "axios";
-import cookie from "react-cookies";
+
 import LogIn from "../../../components/LogIn/LogIn";
 import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
@@ -80,12 +81,11 @@ class MobileNavbar extends React.Component{
     if(query.login === 'true'){
       this.handleOpenLogin()
     }
-    const token = cookie.load('token');
     if (getLoggedUserId()) {
       this.setState({logged: true, selectedAddress: 'main'});
     }
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         var allAddresses={'main':res.data.billing_address};

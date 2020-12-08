@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../utils/authentication')
+const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
@@ -5,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import io from 'socket.io-client';
-import cookie from 'react-cookies';
+
 import LayoutPayment from "../hoc/Layout/LayoutPayment";
 import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
 
@@ -26,7 +28,7 @@ class paymentSuccess extends React.Component {
   componentDidMount() {
 
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
@@ -34,7 +36,7 @@ class paymentSuccess extends React.Component {
       })
       .catch(err => {
         if (err.response.status === 401 || err.response.status === 403) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/'});
         }
       });

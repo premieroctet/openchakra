@@ -1,3 +1,6 @@
+const {clearAuthenticationToken}=require('../../utils/authentication')
+const {setAxiosAuthentication}=require('../../utils/authentication')
+const {setAuthToken}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import Layout from '../../hoc/Layout/Layout';
 import axios from 'axios';
@@ -14,7 +17,7 @@ import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import {checkPass1, checkPass2} from '../../utils/passwords';
-import cookie from 'react-cookies';
+
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
@@ -111,7 +114,7 @@ class security extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {
@@ -125,7 +128,7 @@ class security extends React.Component {
       })
       .catch(err => {
         if (err.response.status === 401 || err.response.status === 403) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/'});
         }
       });
@@ -165,6 +168,7 @@ class security extends React.Component {
                 this.setState({open: false});
                 axios.get('/myAlfred/api/users/token')
                   .then ( res => {
+                    setAuthToken()
                     window.location.reload(true)
                   })
               })
@@ -190,7 +194,7 @@ class security extends React.Component {
                 .then(() => {
                   this.setState({open2: false});
                   toast.error('Compte désactivé');
-                  cookie.remove('token', {path: '/'});
+                  clearAuthenticationToken()
                   Router.push('/');
                 })
                 .catch(err => {console.error(err)});
@@ -206,7 +210,7 @@ class security extends React.Component {
         .then(() => {
           this.setState({open2: false});
           toast.error('Compte désactivé');
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push('/');
         })
         .catch(err => {console.error(err)});

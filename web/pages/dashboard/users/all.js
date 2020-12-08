@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 
 import Card from '@material-ui/core/Card';
@@ -22,7 +23,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import PropTypes from 'prop-types';
 import HomeIcon from '@material-ui/icons/Home';
-import cookie from 'react-cookies'
+
 
 const moment = require('moment-timezone');
 moment.locale('fr');
@@ -122,7 +123,7 @@ class all extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
 
     axios.get('/myAlfred/api/admin/users/all')
       .then((response) => {
@@ -131,7 +132,6 @@ class all extends React.Component {
       }).catch((error) => {
       console.log(error);
       if (error.response.status === 401 || error.response.status === 403) {
-        localStorage.removeItem('token');
         Router.push({pathname: '/login'});
       }
     });

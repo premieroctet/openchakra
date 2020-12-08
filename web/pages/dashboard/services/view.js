@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../../../utils/authentication')
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -19,7 +21,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from 'next/link';
-import cookie from 'react-cookies';
+
 
 const styles = {
   loginContainer: {
@@ -102,7 +104,7 @@ class view extends React.Component {
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     const id = this.props.service_id;
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/service/all/${id}`)
       .then(response => {
         let service = response.data;
@@ -142,7 +144,7 @@ class view extends React.Component {
       .catch(err => {
         console.error(err);
         if (err.response.status === 401 || err.response.status === 403) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/login'});
         }
       });
@@ -276,7 +278,7 @@ class view extends React.Component {
       .catch(err => {
         console.error(err);
         if (err.response.status === 401 || err.response.status === 403) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/login'});
         }
       });
@@ -295,7 +297,7 @@ class view extends React.Component {
       .catch(err => {
         console.error(err);
         if (err.response.status === 401 || err.response.status === 403) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/login'});
         }
       });

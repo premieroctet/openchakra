@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../../utils/authentication')
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
@@ -7,7 +9,7 @@ import moment from 'moment';
 import {withStyles} from '@material-ui/core/styles';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import styles from '../../static/css/components/MessagesDetails/MessagesDetails';
-import cookie from 'react-cookies';
+
 import Router from 'next/router';
 const {hideIllegal} = require('../../utils/text');
 import Divider from '@material-ui/core/Divider';
@@ -31,7 +33,7 @@ class MessagesDetails extends React.Component {
 
   componentDidMount() {
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     localStorage.setItem('path', Router.pathname);
 
     axios.get(`/myAlfred/api/users/users/${this.props.relative._id}`)
@@ -58,7 +60,7 @@ class MessagesDetails extends React.Component {
       })
       .catch(err => {
         if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/login'});
         }
       });

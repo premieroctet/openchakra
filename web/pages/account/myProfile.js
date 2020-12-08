@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
@@ -6,7 +7,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../static/css/pages/account/myProfile/myProfile'
 import Router from "next/router";
 import axios from "axios";
-import cookie from "react-cookies";
+
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
@@ -30,7 +31,7 @@ class myProfile extends React.Component{
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {
@@ -39,7 +40,7 @@ class myProfile extends React.Component{
       })
       .catch(err => {
           if (err.response.status === 401 || err.response.status === 403) {
-            cookie.remove('token', {path: '/'});
+            clearAuthenticationToken()
             Router.push({pathname: '/'});
           }
         },

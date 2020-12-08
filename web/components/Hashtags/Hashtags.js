@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
@@ -10,7 +11,7 @@ import Chip from '@material-ui/core/Chip';
 import clsx from 'clsx';
 import Badge from '@material-ui/core/Badge';
 import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
-import cookie from 'react-cookies';
+
 import Topic from "../../hoc/Topic/Topic"
 import ListAlfredConditions from "../ListAlfredConditions/ListAlfredConditions";
 import RoomIcon from '@material-ui/icons/Room';
@@ -33,7 +34,7 @@ class Hashtags extends React.Component {
   }
 
   componentDidMount = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then( res => {
         this.setState( { user: res.data})

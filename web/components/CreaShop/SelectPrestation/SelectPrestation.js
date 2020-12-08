@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
@@ -9,7 +10,7 @@ import styles from '../componentStyle';
 import {CUSTOM_PRESTATIONS_FLTR, generate_id, GID_LEN} from '../../../utils/consts';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import cookie from 'react-cookies';
+
 import _ from 'lodash';
 const {getLoggedUserId}=require('../../../utils/functions')
 
@@ -32,12 +33,10 @@ class SelectPrestation extends React.Component {
   componentDidMount() {
 
     // Get current alfred id
-    const token = cookie.load('token');
-
     const alfred_id = getLoggedUserId()
 
     let billings = null;
-    axios.defaults.headers.common['Authorization'] = token;
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/billing/all`)
       .then(res => {
         billings = res.data;

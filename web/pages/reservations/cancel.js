@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
@@ -9,7 +10,7 @@ import {withStyles} from '@material-ui/core/styles';
 import dynamic from 'next/dynamic';
 import io from 'socket.io-client';
 import Typography from '@material-ui/core/Typography';
-import cookie from 'react-cookies';
+
 
 const _ = require('lodash');
 moment.locale('fr');
@@ -126,7 +127,7 @@ class Cancel extends React.Component {
 
   componentDidMount() {
     const booking_id = this.props.booking_id;
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current').then(res => {
       this.setState({currUser: res.data});
     });
@@ -142,7 +143,7 @@ class Cancel extends React.Component {
   }
 
   changeStatus(status) {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.put('/myAlfred/api/booking/modifyBooking/' + this.props.booking_id, {
       status: status, user: this.state.currUser._id,
     })

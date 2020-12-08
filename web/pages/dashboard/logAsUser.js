@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../../utils/authentication')
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -12,7 +14,7 @@ import Router from 'next/router';
 import Select from 'react-dropdown-select';
 import Input from '@material-ui/core/Input';
 import FormControl from '@material-ui/core/FormControl';
-import cookie from 'react-cookies';
+
 
 const styles = {
   loginContainer: {
@@ -70,7 +72,7 @@ class logAsUser extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/users/all_light`)
       .then(response => {
         let users = response.data;
@@ -87,7 +89,7 @@ class logAsUser extends React.Component {
       .catch(err => {
         console.error(err);
         if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/login'});
         }
       });
@@ -100,10 +102,9 @@ class logAsUser extends React.Component {
   onSubmit = e => {
     e.preventDefault();
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/admin/loginAs', {username: this.state.user})
       .then(res => {
-        const token = cookie.load('token');
         Router.push('/');
       })
       .catch(err => {

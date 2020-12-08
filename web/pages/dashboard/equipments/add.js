@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../../../utils/authentication')
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 
 import Card from '@material-ui/core/Card';
@@ -9,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import Router from 'next/router';
 import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
-import cookie from 'react-cookies';
+
 
 const styles = theme => ({
   signupContainer: {
@@ -66,7 +68,7 @@ class add extends React.Component {
         'content-type': 'multipart/form-data',
       },
     };
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/admin/equipment/all', formData, config)
       .then((response) => {
         alert('Equipment ajouté');
@@ -75,7 +77,7 @@ class add extends React.Component {
       console.log(error);
       this.setState({errors: error.response.data});
       if (error.response.status === 401 || error.response.status === 403) {
-        cookie.remove('token', {path: '/'});
+        clearAuthenticationToken()
         Router.push({pathname: '/login'});
       }
     });

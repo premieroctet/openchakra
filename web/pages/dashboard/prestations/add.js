@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../../../utils/authentication')
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 
 import Card from '@material-ui/core/Card';
@@ -16,7 +18,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select2 from 'react-select';
-import cookie from 'react-cookies';
+
 import Checkbox from '@material-ui/core/Checkbox';
 
 const styles = theme => ({
@@ -88,7 +90,7 @@ class add extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
 
     axios.get('/myAlfred/api/admin/service/all')
       .then((response) => {
@@ -213,7 +215,7 @@ class add extends React.Component {
           this.setState({errors: err.response.data});
 
           if (err.response.status === 401 || err.response.status === 403) {
-            cookie.remove('token', {path: '/'});
+            clearAuthenticationToken()
             Router.push({pathname: '/login'});
           }
         },

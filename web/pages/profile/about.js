@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
@@ -14,7 +15,7 @@ import AskQuestion from "../../components/AskQuestion/AskQuestion";
 import Box from "../../components/Box/Box";
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
 import axios from "axios";
-import cookie from "react-cookies";
+
 import Typography from "@material-ui/core/Typography";
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import IconButton from "@material-ui/core/IconButton";
@@ -73,7 +74,7 @@ class ProfileAbout extends React.Component {
   };
 
   componentDidMount = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then( res => {
         this.setState( { alfred: res.data})
@@ -89,7 +90,7 @@ class ProfileAbout extends React.Component {
   save = () => {
     // TODO: handle errors, remove timeout
     const {newAddress, newLanguages}=this.state;
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.put('/myAlfred/api/users/profile/billingAddress', newAddress);
     axios.put('/myAlfred/api/users/profile/languages', {languages: newLanguages.map( l => l.value)});
     this.setState({showEdition: false}, () => setTimeout(this.componentDidMount, 1000))

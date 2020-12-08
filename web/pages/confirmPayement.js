@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../utils/authentication')
+const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
@@ -5,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../static/css/pages/confirmPayement/confirmPayement';
-import cookie from 'react-cookies';
+
 import Stepper from "../components/Stepper/Stepper";
 import AddressAndFacturation from "../components/Payement/AddressAndFacturation/AddressAndFacturation";
 import PaymentChoice from "../components/Payement/PaymentChoice/PaymentChoice";
@@ -51,9 +53,8 @@ class ConfirmPayement extends React.Component {
   }
 
   componentDidMount() {
-    const token = cookie.load('token');
 
-    axios.defaults.headers.common['Authorization'] = token;
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
       .then(res => {
         const bookingObj = res.data
@@ -86,7 +87,7 @@ class ConfirmPayement extends React.Component {
       })
       .catch(err => {
         if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/'});
         }
       })

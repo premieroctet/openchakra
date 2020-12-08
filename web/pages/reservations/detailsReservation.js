@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../../utils/authentication')
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
@@ -21,7 +23,7 @@ import Router from 'next/router';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import cookie from 'react-cookies';
+
 
 
 moment.locale('fr');
@@ -57,7 +59,7 @@ class DetailsReservation extends React.Component {
 
     this.setState({booking_id: booking_id});
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
 
     axios.get('/myAlfred/api/users/current').then(res => {
       let result = res.data;
@@ -101,7 +103,7 @@ class DetailsReservation extends React.Component {
       .catch(error => {
         console.log(error);
         if (error.response && error.response.status === 401 || error.response.status === 403) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/login'});
         }
       });

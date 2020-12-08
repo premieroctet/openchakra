@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../../utils/authentication')
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 
 import {withStyles} from '@material-ui/core/styles';
@@ -5,7 +7,7 @@ import Router from 'next/router';
 import axios from 'axios';
 import Link from 'next/link';
 import HomeIcon from '@material-ui/icons/Home';
-import cookie from 'react-cookies';
+
 const moment = require('moment')
 import {Card, Grid, Typography, Checkbox, Avatar} from '@material-ui/core'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
@@ -66,7 +68,7 @@ class statistics extends React.Component {
 
   getCounts() {
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
 
     axios.get('/myAlfred/api/admin/statistics')
       .then((response) => {
@@ -75,7 +77,7 @@ class statistics extends React.Component {
       .catch((error) => {
         console.error(error);
         if (error.response.status === 401 || error.response.status === 403) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/login'});
         }
       });

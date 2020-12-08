@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 
 import Card from '@material-ui/core/Card';
@@ -9,7 +10,7 @@ import Layout from '../../hoc/Layout/Layout';
 import axios from 'axios';
 import Link from 'next/link';
 import {CSVLink} from 'react-csv';
-import cookie from 'react-cookies';
+
 const {isLoggedUserAdmin}=require('../../utils/functions')
 
 const jwt = require('jsonwebtoken');
@@ -47,13 +48,12 @@ class home extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    const auth = cookie.load('token');
     if (!isLoggedUserAdmin()) {
       Router.push('/login');
     } else {
       this.setState({is_admin: true});
     }
-    axios.defaults.headers.common['Authorization'] = auth;
+    setAxiosAuthentication()
     /**
     TODO : générer boutiques si nécessaire seulement
     axios.get('/myAlfred/api/admin/shops/extract')

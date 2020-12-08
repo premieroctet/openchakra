@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import {withStyles} from '@material-ui/core/styles';
@@ -45,7 +46,7 @@ class UserAvatar extends React.Component {
   }
 
   checkWarnings = token => {
-    axios.defaults.headers.common['Authorization'] = token;
+    setAxiosAuthentication()
     var kyc = [];
     axios.get('/myAlfred/api/chatRooms/nonViewedMessagesCount')
       .then(res => {

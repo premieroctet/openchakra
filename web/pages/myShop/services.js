@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import styles from '../creaShop/creaShopStyle';
@@ -21,7 +22,7 @@ import {
   selectService,
   settingService,
 } from '../../utils/validationSteps/validationSteps';
-import cookie from 'react-cookies';
+
 const {getLoggedUserId}=require('../../utils/functions')
 
 
@@ -75,12 +76,11 @@ class services extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    const token = cookie.load('token');
     if (!getLoggedUserId()) {
       Router.push('/login');
     }
 
-    axios.defaults.headers.common['Authorization'] = token;
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
@@ -98,7 +98,7 @@ class services extends React.Component {
 
     if (this.isNewService()) {
       // Get shop to update exclusion services list
-      axios.defaults.headers.common['Authorization'] = token;
+      setAxiosAuthentication()
       axios.get(`/myAlfred/api/serviceUser/currentAlfred`)
         .then(response => {
           let serviceUsers = response.data;
@@ -108,7 +108,7 @@ class services extends React.Component {
     }
 
     if (!this.isNewService()) {
-      axios.defaults.headers.common['Authorization'] = token;
+      setAxiosAuthentication()
       axios.get(`/myAlfred/api/serviceUser/${this.props.service_user_id}`)
         .then(res => {
           let resultat = res.data;
@@ -181,19 +181,8 @@ class services extends React.Component {
   }
 
   handleNext = () => {
-<<<<<<< HEAD
-    const token=cookie.load('token')
     if (!getLoggedUserId()) {
       Router.push('/login');
-||||||| 88cb3e6f
-    const token=cookie.load('token')
-    if (!token) {
-      Router.push('/login');
-=======
-    const token=cookie.load('token');
-    if (!token) {
-      Router.push('/');
->>>>>>> v3/validation
     }
     if (this.state.activeStep < 4) {
       this.setState({activeStep: this.state.activeStep + 1});

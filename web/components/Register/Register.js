@@ -1,3 +1,4 @@
+const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import {toast} from 'react-toastify';
 import {checkPass1, checkPass2} from '../../utils/passwords';
@@ -31,7 +32,7 @@ import Dialog from '@material-ui/core/Dialog';
 import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined';
 import Router from 'next/router';
 import Link from 'next/link';
-import cookie from 'react-cookies';
+
 import OAuth from '../OAuth/OAuth';
 import Information from '../Information/Information';
 const {getLoggedUserId}=require('../../utils/functions')
@@ -146,7 +147,6 @@ class Register extends React.Component {
     if (query.error) {
       this.setState({errorExistEmail: true});
     }
-    const token = cookie.load('token');
     if (getLoggedUserId()) {
       toast.warn('Vous êtes déjà inscrit');
       Router.push('/');
@@ -206,7 +206,7 @@ class Register extends React.Component {
   };
 
   sendSms = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/users/sendSMSVerification', {phone: this.state.phone})
       .then(res => {
         var txt = 'Le SMS a été envoyé';
@@ -220,7 +220,7 @@ class Register extends React.Component {
   };
 
   checkSmsCode = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/users/checkSMSVerification', {sms_code: this.state.smsCode})
       .then(res => {
         if (res.data.sms_code_ok) {
@@ -263,8 +263,8 @@ class Register extends React.Component {
         toast.info('Inscription réussie');
         axios.post('/myAlfred/api/users/login', {username, password, google_id, facebook_id})
           .then(() => {
-            const token = cookie.load('token');
-            axios.defaults.headers.common['Authorization'] = token;
+            setAuthToken()
+            setAxiosAuthentication()
           })
           .catch()
           .then(this.addPhoto).catch()
@@ -288,7 +288,7 @@ class Register extends React.Component {
   };
 
   addPhoto = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
 
     if (this.state.picture !== '' || this.state.avatar !== '') {
       const formData = new FormData();
@@ -315,7 +315,7 @@ class Register extends React.Component {
 
 
   onSubmitPhone = e => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
 
     if (!this.state.phoneConfirmed && !this.state.serverError) {
       this.sendSms();

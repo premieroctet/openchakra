@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
 import Topic from '../../hoc/Topic/Topic'
@@ -9,7 +10,7 @@ import loadable from 'loadable-components';
 const Chart = loadable(() => import('react-apexcharts'));
 import Router from 'next/router'
 import axios from 'axios'
-import cookie from 'react-cookies'
+
 const _ = require('lodash');
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
@@ -79,7 +80,7 @@ class ProfileStatistics extends React.Component {
   componentDidMount() {
 
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     const revenus1layer = this.state.revenus;
     revenus1layer.forEach((revenus1layerbis) => {
       const revenus2layer = revenus1layerbis.data;

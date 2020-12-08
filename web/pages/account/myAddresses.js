@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../../utils/authentication')
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
@@ -16,7 +18,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import {Helmet} from 'react-helmet';
 import styles from '../../static/css/pages/myAddresses/myAddresses';
 import IconButton from '@material-ui/core/IconButton';
-import cookie from 'react-cookies';
+
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
@@ -78,7 +80,7 @@ class myAddresses extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {
@@ -101,7 +103,7 @@ class myAddresses extends React.Component {
       })
       .catch(err => {
           if (err.response.status === 401 || err.response.status === 403) {
-            cookie.remove('token', {path: '/'});
+            clearAuthenticationToken()
             Router.push({pathname: '/login'});
           }
         },
