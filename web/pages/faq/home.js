@@ -11,6 +11,8 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {FAQ} from '../../utils/i18n'
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button'
 
 const styles = theme => ({
     menuContainer: {
@@ -45,6 +47,7 @@ class Home extends React.Component {
         this.state={
           faq:null,
           alfredFaq: false,
+          search: null,
         }
     }
 
@@ -56,8 +59,27 @@ class Home extends React.Component {
     }
 
     filteredFaq = () => {
-      const {alfredFaq, faq}=this.state
-      return alfredFaq ? faq['alfred']:faq['client']
+      var {alfredFaq, faq, search}=this.state
+      var faqs=alfredFaq ? faq['alfred']:faq['client']
+      if (search) {
+        search = search.toLowerCase()
+        const allFaqs={...faq['alfred'], ...faq['client']}
+        var res={}
+        Object.keys(allFaqs).forEach(cat => {
+            if (cat.toLowerCase().includes(search)) {
+              res[cat]=allFaqs[cat]
+            }
+            else allFaqs[cat].forEach( topic => {
+              console.log(topic.title)
+              if (topic.title.toLowerCase().includes(search) || topic.contents.toLowerCase().includes(search)) {
+                if (!res[cat]) {res[cat]=[]}
+                res[cat].push(topic)
+              }
+            });
+        })
+        faqs=res
+      }
+      return faqs
     }
 
     setAlfred = alfred => {
@@ -65,13 +87,22 @@ class Home extends React.Component {
       this.setState({alfredFaq: alfred})
     }
 
+    onSearchChange = ev => {
+      this.setState({search: ev.target.value})
+    }
+
+    onSearchClear = () => {
+      this.setState({search: null})
+    }
+
     render() {
         const {classes} = this.props;
-        const {faq, alfredFaq} = this.state
+        const {faq, alfredFaq, search} = this.state
 
         if (!faq) {
           return null
         }
+        const searching = Boolean(search)
         const filteredFaqs = this.filteredFaq()
 
         return (
@@ -79,27 +110,34 @@ class Home extends React.Component {
             <Fragment>
 
                 <Header></Header>
-                <Grid className={classes.menuContainer}>
-                    <Grid style={{paddingRight: '25px'}} onClick={() => this.setAlfred(false)}>
-                            <Grid className={classes.linkBloc}>
-                                <img style={{margin: '0 auto', paddingBottom: '16px'}}
-                                     src="/static/assets/faq/star.svg" />
-                                <p className={classes.linkText}>Je suis client</p>
-                            </Grid>
+                <Grid container className={classes.menuContainer}>
+                  { searching ? null :
+                    <>
+                      <Grid style={{paddingRight: '25px'}} onClick={() => this.setAlfred(false)}>
+                        <Grid className={classes.linkBloc}>
+                          <img style={{margin: '0 auto', paddingBottom: '16px'}} src="/static/assets/faq/star.svg" />
+                          <p className={classes.linkText}>Je suis client</p>
+                        </Grid>
                     </Grid>
                     <Grid>
-                            <Grid className={classes.linkBloc} onClick={() => this.setAlfred(true)}>
-                                <img style={{margin: '0 auto', width: '30px', paddingBottom: '10px'}}
-                                     src="/static/assets/faq/amp.svg" />
-                                <p className={classes.linkText}>Je suis Alfred</p>
-                            </Grid>
+                      <Grid className={classes.linkBloc} onClick={() => this.setAlfred(true)}>
+                        <img style={{margin: '0 auto', width: '30px', paddingBottom: '10px'}} src="/static/assets/faq/amp.svg" />
+                        <p className={classes.linkText}>Je suis Alfred</p>
+                      </Grid>
                     </Grid>
+                    </>
+                  }
+                  <br/>
+                  <Grid>
+                    <TextField onChange={this.onSearchChange} placeholder={'Recherche'}/>
+                    <Button disabled={!searching} onClick={this.onSearchClear}>Annuler</Button>
+                  </Grid>
                 </Grid>
                 {
                     Object.keys(filteredFaqs).map( category => {
                       const items=filteredFaqs[category]
                       return (
-                            <Accordion>
+                            <Accordion key={category}>
                                 <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                                 <Typography>{category}</Typography>
                                 </AccordionSummary>
@@ -108,7 +146,7 @@ class Home extends React.Component {
                                   {items.map( i => {
                                     return (
                                       <Grid>
-                                      <Accordion>
+                                      <Accordion key={i.title}>
                                       <AccordionSummary expandIcon={<ExpandMoreIcon/>}>{i.title}</AccordionSummary>
                                       <AccordionDetails>
                                         <div dangerouslySetInnerHTML={{ __html: i.contents}} />
