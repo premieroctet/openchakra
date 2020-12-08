@@ -49,7 +49,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "rm -rf out_functions && rm -rf out_publish && next build",
     "migration": "prisma migrate save --experimental && prisma migrate up --experimental && prisma generate",
     "postbuild": "next-on-netlify",
     "start": "next start",
