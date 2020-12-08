@@ -123,19 +123,13 @@ const SHOP = {
 const BOOKING = {
     MSG_EVALUATE: 'Vous avez 15 jours pour évaluer votre client. Une fois que votre client aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !'
 }
-const FAQ = {
+
+const FAQ_ALFRED = {
   "Devenir Alfred": [
     {
       title: 'Qui peut devenir Alfred ?',
-      contents: '<p>Nous sommes tous des Alfred ! Dès l’âge de 16 ans, vous pouvez\
-      devenir Alfred en créant votre propre boutique de service(s) sur My-Alfred.\
-      Votre inscription et la mise en ligne de votre boutique sont entièrement\
-      gratuites et ne demandent aucun frais au préalable ou abonnement vous engageant\
-      sur la durée.Vous pouvez proposer immédiatement vos talents, vos compétences\
-      sur My-Alfred en choisissant laliste des services que vous souhaitez proposer.\
-      Nous avons répertorié pour vous plus de 2000 prestationsclassées dans des\
-      services et des catégories.Alors, prêt à rejoindre l’aventure ? Je deviens\
-      alfred maintenant !</p>'
+      contents: '<p>Nous sommes tous des Alfred ! Dès l’âge de 16 ans, vous pouvez devenir Alfred en créant votre propre boutique de service(s) sur My-Alfred.\
+      Votre inscription et la mise en ligne de votre boutique sont entièrement gratuites et ne demandent aucun frais au préalable ou abonnement vous engageant sur la durée.Vous pouvez proposer immédiatement vos talents, vos compétences sur My-Alfred en choisissant laliste des services que vous souhaitez proposer. Nous avons répertorié pour vous plus de 2000 prestationsclassées dans des services et des catégories.Alors, prêt à rejoindre l’aventure ? Je deviens alfred maintenant !</p>'
     },
     {
       title: 'Comment créer sa boutique de service ?',
@@ -194,23 +188,6 @@ const FAQ = {
       contents: '<p>Votre photo de couverture est la photo positionnée en en-tête de votre boutique. Elle seravisibledes utilisateurs du site.La photo de couverture peut refléter vos goûts, vous permettre de mettrevotre travail en avant etc.Par défaut, My-Alfred attribue une photo de couverture à votre boutique.</p><p>Vous pouvez à tout moment visualiser, ajouter ou supprimer votre photodans votre boutique.</p><p style=\{\{width: \'100%\'\}\}>Pour ajouter ou supprimer votre photo de couverture :</p><br/><ol style=\{\{fontFamily: \'Helvetica\', fontSize: \'0.9rem\'\}\}><li>Consultez <strong>votre Boutique</strong> sur my-alfred.io</li><li>Cliquez sur le crayon pour modifier, en haut à droite de votre photode couverture</li><li>Sélectionnez votre photo de couverture</li><li>Cliquez sur <strong>Valider</strong></li></ol>'
     },
   ],
-  "Identification et vérification": [
-    {
-      title: 'Fonctionnement ?',
-      contents: '<p>Chez My-Alfred nous souhaitons que les membres puissent proposer etconsommer des services entoutesécurité. C’est la raison pour laquelle , nous vous laissons lapossibilité de nous fournir unepièced’identité officielle lorsque vous êtes utilisateur et souhaitezsimplement consommer desservices.Lorsque vous souhaitez proposer vos services et devenir Alfred, nousvous demanderons une pièced’identité. Certains clients seront sensibles à cette vérificationd’identité et feront plus facilement le choix de votre boutique. Cependant, votre pièce d’identiténe sera jamais partagéeetvisible par un autre utilisateur de My-Alfred.</p>'
-    }, {
-      title: 'A quel moment dois-je fournir une pièce d\'identité ?',
-      contents: '<p>Pour devenir Alfred, vous devez fournir une pièce d’identité en règle qui peut être soit unecartenationale d’identité soit un passeport. Vous pouvez fournir cette pièced’identité lors de lacréationde votre boutique ou plus tard dans le menu Votre profil. Lavérification de votre pièced’identitéest indispensable pour Devenir Alfred et pour que votre boutique soitvisible des autres autresmembresMy-Alfred.</p><p>Vous pouvez à tout moment insérer votre pièce d\'identité .</p><p style=\{\{width: \'100%\'\}\}>c</p><br/><ol style=\{\{fontFamily: \'Helvetica\', fontSize: \'0.9rem\'\}\}><li>Consultez <strong>votre Profil</strong> sur my-alfred.io</li><li>Cliquez sur l’onglet <strong>Confiance & vérification</strong> devotre compte</li><li>Sélectionnez le type de pièce Passeport ou Carte nationaled’identité</li><li>Cliquez sur Recto pour télécharger votre photo de pièce d’identité</li><li>Cliquez sur Verso pour ajouter le verso de votre pièce d’identité.</li></ol>'
-    }, {
-      title: 'Quel type de pièce d\'identité puis-je fournir ?',
-      contents: '<p style=\{\{width: \'100%\'\}\}>Vous pouvez ajouter une des pièces d’identité officielle suivante sur laplateforme My-Alfred :</p><br/><ul style=\{\{fontFamily: \'Helvetica\', fontSize: \'0.9rem\'\}\}><li>Passeport</li><li>Carte Nationale d’Identité</li></ul><p>Si vous ajoutez votre carte Nationale d’identité, vous devreztélécharger 2 photos à savoir,le recto et le verso de votre document. Si vous ajoutez votre passeport,1 seule photo àtéléchargerest nécessaire mais assurez vous que que les numéros situés en bas de lapage du passeport oùfigurevotre photo soient bien visibles.</p>'
-    }, {
-      title: 'Quelles sont les données partagées avec votre pièce d’identité ?',
-      contents: '<p style=\{\{width: \'100%\'\}\}>Si vous acceptez de fournir une pièce d\'identité officielle, lesinformations suivantes peuventêtre visibles par les autres utilisateurs de la plateforme My-Alfred :</p><br/><ul style=\{\{fontFamily: \'Helvetica\', fontSize: \'0.9rem\'\}\}><li>La confirmation que votre pièce d\'identité a bien été ajoutée</li><li>Votre photo de profil et le prénom et le nom figurant sur votreprofil</li></ul><p>La photo de votre carte d’identité ainsi que les informations (à l\’exception de votre nom etprénom)ne seront jamais visibles par les autres utilisateurs de la plateformeMy-Alfred.</p>'
-    }, {
-      title: 'Comment est stockée ou supprimée la photo de ma pièce d\'identité ?',
-      contents: '<p>Le stockage de la photo de votre pièce d\'identité officielle est régiepar notre <Linkhref={\'/\'}><a> Politique deconfidentialité.</a></Link>Il est préférable de ne pas supprimer votre pièce d’identité. Si vousavez des réservations pourlesquelles les clients ont exigé une pièce d’identité vérifiée, nousannulerons toutes lesréservationconcernées à venir.Cependant, vous pouvez demander la suppression de la photo de votrepièce d\'identité 90 joursaprès lafin de votre dernière réservation.</p><p style=\{\{width: \'100%\'\}\}>Pour supprimer la photo de votre pièce d\'identité :</p><br/><ol style=\{\{fontFamily: \'Helvetica\', fontSize: \'0.9rem\'\}\}><li>Consultez <strong>votre Profil</strong> sur my-alfred.io</li><li>Cliquez sur l’onglet <strong>Confiance & vérification</strong> devotre compte</li><li>Cliquez sur la corbeille à côté de votre pièce d’identité pour lasupprimer</li></ol>'
-    }],
   "Mes versements": [
     {
       title: 'Comment toucher mon versement ?',
@@ -239,7 +216,39 @@ const FAQ = {
     }, {
       title: 'Comment rembourser mon utilisateur ?',
       contents: '<p>En cas d’annulation d’une réservation par un Alfred, le clientutilisateur sera remboursé de latotalité des frais engagés sur la plateforme My-Alfred dans le cadre dela réservationconcernée.</p><p style=\{\{width: \'100%\'\}\}>Pour annuler votre réservation :</p><br/><ol style=\{\{fontFamily: \'Helvetica\', fontSize: \'0.9rem\'\}\}><li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Je suisAlfred</strong></li><li>Cliquez sur <strong>Mes réservations</strong></li><li>Parcourez votre fiche réservation et cliquez sur modifier en bas devotre fiche deréservation</li><li>Cliquez sur <strong>Annuler ma réservation</strong></li><li>Choisissez le motif de l’annulation</li><li>Rédigez un message à votre client utilisateur lui expliquant que sonservice est annulé</li><li>Cliquez sur <strong>Enregistrer</strong></li></ol><p>A noter qu’en cas d’imprévu, vous avez la possibilité de modifier ladate de la réservation avec l’accord de votre client utilisateur My-Alfred.</p>'
+    }
+  ],
+  "Mon compte": [
+    {
+      title: 'Comment supprimer sa boutique ?',
+      contents: '<p>A tout moment, vous avez la possibilité de supprimer votre boutique deservices My-Alfred.La suppression de votre boutique entraîne l’annulation de l’ensemble desréservations acceptées à venir, et leur remboursement.</p><p style=\{\{width: \'100%\'\}\}>Pour supprimer votre boutique :</p><br/><ol style=\{\{fontFamily: \'Helvetica\', fontSize: \'0.9rem\'\}\}><li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mesparamètres</strong></li><li>Cliquez sur <strong>Paramètres</strong></li><li>Cliquez sur <strong>Supprimer</strong> dans la rubrique je souhaitesupprimer ma boutique deservices</li></ol><p>Saisissez votre mot de passe. Cette étape nous permet de nous assurerque vous êtes bienà l’initiative de la suppression de votre compte. Attention, cetteaction est irrémédiable.</p>'
     }, {
+      title: 'Comment gérer mes modes de versement ?',
+      contents: '<p>Après chaque prestation réalisée par un Alfred, un versement du montantindiqué sur la fichede réservation lui sera adressé sur le mode de versement renseigné dansson compte utilisateur.A tout moment, vous pouvez ajouter ou supprimer un mode de versement.</p><p style=\{\{width: \'100%\'\}\}>Pour ajouter ou modifier votre préférence de versement :</p><br/><ol style=\{\{fontFamily: \'Helvetica\', fontSize: \'0.9rem\'\}\}><li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mesparamètres</strong></li><li>Cliquez sur <strong>Préférences de versement</strong></li><li>Cliquez sur <strong>Ajouter un RIB</strong></li><li>Renseignez votre IBAN</li></ol><p>Vous pourrez ensuite modifier ou supprimer votre RIB.</p>'
+    }
+  ],
+}
+
+const FAQ_CLIENT = {
+  "Identification et vérification": [
+    {
+      title: 'Fonctionnement ?',
+      contents: '<p>Chez My-Alfred nous souhaitons que les membres puissent proposer etconsommer des services entoutesécurité. C’est la raison pour laquelle , nous vous laissons lapossibilité de nous fournir unepièced’identité officielle lorsque vous êtes utilisateur et souhaitezsimplement consommer desservices.Lorsque vous souhaitez proposer vos services et devenir Alfred, nousvous demanderons une pièced’identité. Certains clients seront sensibles à cette vérificationd’identité et feront plus facilement le choix de votre boutique. Cependant, votre pièce d’identiténe sera jamais partagéeetvisible par un autre utilisateur de My-Alfred.</p>'
+    }, {
+      title: 'A quel moment dois-je fournir une pièce d\'identité ?',
+      contents: '<p>Pour devenir Alfred, vous devez fournir une pièce d’identité en règle qui peut être soit unecartenationale d’identité soit un passeport. Vous pouvez fournir cette pièced’identité lors de lacréationde votre boutique ou plus tard dans le menu Votre profil. Lavérification de votre pièced’identitéest indispensable pour Devenir Alfred et pour que votre boutique soitvisible des autres autresmembresMy-Alfred.</p><p>Vous pouvez à tout moment insérer votre pièce d\'identité .</p><p style=\{\{width: \'100%\'\}\}>c</p><br/><ol style=\{\{fontFamily: \'Helvetica\', fontSize: \'0.9rem\'\}\}><li>Consultez <strong>votre Profil</strong> sur my-alfred.io</li><li>Cliquez sur l’onglet <strong>Confiance & vérification</strong> devotre compte</li><li>Sélectionnez le type de pièce Passeport ou Carte nationaled’identité</li><li>Cliquez sur Recto pour télécharger votre photo de pièce d’identité</li><li>Cliquez sur Verso pour ajouter le verso de votre pièce d’identité.</li></ol>'
+    }, {
+      title: 'Quel type de pièce d\'identité puis-je fournir ?',
+      contents: '<p style=\{\{width: \'100%\'\}\}>Vous pouvez ajouter une des pièces d’identité officielle suivante sur laplateforme My-Alfred :</p><br/><ul style=\{\{fontFamily: \'Helvetica\', fontSize: \'0.9rem\'\}\}><li>Passeport</li><li>Carte Nationale d’Identité</li></ul><p>Si vous ajoutez votre carte Nationale d’identité, vous devreztélécharger 2 photos à savoir,le recto et le verso de votre document. Si vous ajoutez votre passeport,1 seule photo àtéléchargerest nécessaire mais assurez vous que que les numéros situés en bas de lapage du passeport oùfigurevotre photo soient bien visibles.</p>'
+    }, {
+      title: 'Quelles sont les données partagées avec votre pièce d’identité ?',
+      contents: '<p style=\{\{width: \'100%\'\}\}>Si vous acceptez de fournir une pièce d\'identité officielle, lesinformations suivantes peuventêtre visibles par les autres utilisateurs de la plateforme My-Alfred :</p><br/><ul style=\{\{fontFamily: \'Helvetica\', fontSize: \'0.9rem\'\}\}><li>La confirmation que votre pièce d\'identité a bien été ajoutée</li><li>Votre photo de profil et le prénom et le nom figurant sur votreprofil</li></ul><p>La photo de votre carte d’identité ainsi que les informations (à l\’exception de votre nom etprénom)ne seront jamais visibles par les autres utilisateurs de la plateformeMy-Alfred.</p>'
+    }, {
+      title: 'Comment est stockée ou supprimée la photo de ma pièce d\'identité ?',
+      contents: '<p>Le stockage de la photo de votre pièce d\'identité officielle est régiepar notre <Linkhref={\'/\'}><a> Politique deconfidentialité.</a></Link>Il est préférable de ne pas supprimer votre pièce d’identité. Si vousavez des réservations pourlesquelles les clients ont exigé une pièce d’identité vérifiée, nousannulerons toutes lesréservationconcernées à venir.Cependant, vous pouvez demander la suppression de la photo de votrepièce d\'identité 90 joursaprès lafin de votre dernière réservation.</p><p style=\{\{width: \'100%\'\}\}>Pour supprimer la photo de votre pièce d\'identité :</p><br/><ol style=\{\{fontFamily: \'Helvetica\', fontSize: \'0.9rem\'\}\}><li>Consultez <strong>votre Profil</strong> sur my-alfred.io</li><li>Cliquez sur l’onglet <strong>Confiance & vérification</strong> devotre compte</li><li>Cliquez sur la corbeille à côté de votre pièce d’identité pour lasupprimer</li></ol>'
+    }],
+  "Mes réservations": [
+    {
       title: 'Puis-je modifier le prix d’une réservation en attente ou confirmée ?',
       contents: '<p>Chaque réservation peut-être modifiée quelque soit son statut. En revanche, votre clientutilisateurdoit impérativement accepter cette modification pour que la réservationretrouve son statutconfirmée.</p><p>Si votre réservation est confirmée mais que vous choisissez de lamodifier, son statut passerade réservation confirmée à réservation en attente jusqu’à ce que votreclient utilisateurconfirmeles modifications.</p><p>Si votre utilisateur ne valide pas vos modifications dans un délai 48h,la réservation estexpirée.Si votre utilisateur refuse vos modifications, la réservation estannulée et votre client seraremboursé de l’intégralité du montant engagé.</p>'
     }, {
@@ -252,9 +261,6 @@ const FAQ = {
   ],
   "Mon compte": [
     {
-      title: 'Comment supprimer sa boutique ?',
-      contents: '<p>A tout moment, vous avez la possibilité de supprimer votre boutique deservices My-Alfred.La suppression de votre boutique entraîne l’annulation de l’ensemble desréservations acceptées à venir, et leur remboursement.</p><p style=\{\{width: \'100%\'\}\}>Pour supprimer votre boutique :</p><br/><ol style=\{\{fontFamily: \'Helvetica\', fontSize: \'0.9rem\'\}\}><li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mesparamètres</strong></li><li>Cliquez sur <strong>Paramètres</strong></li><li>Cliquez sur <strong>Supprimer</strong> dans la rubrique je souhaitesupprimer ma boutique deservices</li></ol><p>Saisissez votre mot de passe. Cette étape nous permet de nous assurerque vous êtes bienà l’initiative de la suppression de votre compte. Attention, cetteaction est irrémédiable.</p>'
-    }, {
       title: 'Comment supprimer son compte ?',
       contents: ' <p>A tout moment, vous avez la possibilité de supprimer votre compteMy-Alfred. La suppression devotrecompte est irrémédiable.Si vous êtes Alfred, la suppression du compte implique la suppression devotre boutique,l’annulationde l’ensemble des réservations acceptées à venir, et leur remboursement.Si vous êtes simple utilisateur, la suppression de votre compte impliquel’annulation del’ensembledes réservations acceptées à venir, moyennant - en fonction desconditions d’annulation de(s) Alfred impacté(s) par cette annulation - des frais d’annulation.</p><p style=\{\{width: \'100%\'\}\}>Pour supprimer votre compte :</p><br/><ol style=\{\{fontFamily: \'Helvetica\', fontSize: \'0.9rem\'\}\}><li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mesparamètres</strong></li><li>Cliquez sur <strong>Paramètres</strong></li><li>Cliquez sur <strong>Désactiver</strong> dans la rubrique je souhaitedésactiver mon compte</li></ol><p>Saisissez votre mot de passe. Cette étape nous permet de nous assurerque vous êtes bien àl’initiative de la suppression de votre compte.</p>'
     }, {
@@ -263,9 +269,6 @@ const FAQ = {
     }, {
       title: 'Comment gérer mes modes de paiement ?',
       contents: '  <p>Depuis votre compte, vous pouvez gérer l’ensemble de vos modes depaiement.</p><p style=\{\{width: \'100%\'\}\}>Les différents moyens de paiements de My-Alfred sont les suivants :</p><br/><ul style=\{\{fontFamily: \'Helvetica\', fontSize: \'0.9rem\'\}\}><li>Carte de paiement</li><li>Crédit (remboursement crédité sur votre compte)</li><li>Coupons (programme fidélité, parrainage, code promotionnel etc.)</li></ul><br/><ol style=\{\{fontFamily: \'Helvetica\', fontSize: \'0.9rem\'\}\}><li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mesparamètres</strong></li><li>Cliquez sur la rubrique <strong>Mes moyens de paiement</strong></li></ol>'
-    }, {
-      title: 'Comment gérer mes modes de versement ?',
-      contents: '<p>Après chaque prestation réalisée par un Alfred, un versement du montantindiqué sur la fichede réservation lui sera adressé sur le mode de versement renseigné dansson compte utilisateur.A tout moment, vous pouvez ajouter ou supprimer un mode de versement.</p><p style=\{\{width: \'100%\'\}\}>Pour ajouter ou modifier votre préférence de versement :</p><br/><ol style=\{\{fontFamily: \'Helvetica\', fontSize: \'0.9rem\'\}\}><li>Rendez-vous sur my-alfred.io, cliquez sur <strong>Mesparamètres</strong></li><li>Cliquez sur <strong>Préférences de versement</strong></li><li>Cliquez sur <strong>Ajouter un RIB</strong></li><li>Renseignez votre IBAN</li></ol><p>Vous pourrez ensuite modifier ou supprimer votre RIB.</p>'
     }, {
       title: 'Comment suivre mes transactions ?',
       contents: '<p>En tant qu’utilisateur de My-ALfred, vous pouvez suivre l’ensemble devos transactions depuis la rubrique “Historique de transactions” de votre compte. Lestransactions concernentles paiements et les versements.Vous pourrez ainsi retrouver vos transactions à venir et vostransactions passées.</p><p>En tant qu’Alfred, vous avez aussi la possibilité de suivre vostransactions dans la rubriqueperformance de votre boutique. Vous trouverez un tableau de bord completvous permettant desuivrel’évolution des transactions, de suivre vos versements, et d’estimervotre volume de transactionà venir.</p>'
@@ -316,6 +319,10 @@ const FAQ = {
 
 }
 
+const FAQ={
+  'alfred': FAQ_ALFRED,
+  'client': FAQ_CLIENT,
+}
 module.exports = {
     CESU_NOTICE, OUTSIDE_PERIMETER, SCHEDULE_TITLE, SCHEDULE_SUBTITLE,
     getMangopayMessage, SHOP_CREATION_SUCCESSFUL, ID_CARD_CONFIRM_DELETION,

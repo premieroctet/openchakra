@@ -43,7 +43,8 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state={
-          faq:{}
+          faq:null,
+          alfredFaq: false,
         }
     }
 
@@ -54,9 +55,9 @@ class Home extends React.Component {
       })
     }
 
-    filter = faqs => {
-      // Filter faqs item depending on customer or Alfred state
-      return faqs
+    filteredFaq = () => {
+      const {alfredFaq, faq}=this.state
+      return alfredFaq ? faq['alfred']:faq['client']
     }
 
     setAlfred = alfred => {
@@ -68,7 +69,11 @@ class Home extends React.Component {
         const {classes} = this.props;
         const {faq, alfredFaq} = this.state
 
-        const filteredFaqs = this.filter(faq)
+        if (!faq) {
+          return null
+        }
+        const filteredFaqs = this.filteredFaq()
+
         return (
 
             <Fragment>
@@ -78,15 +83,14 @@ class Home extends React.Component {
                     <Grid style={{paddingRight: '25px'}} onClick={() => this.setAlfred(false)}>
                             <Grid className={classes.linkBloc}>
                                 <img style={{margin: '0 auto', paddingBottom: '16px'}}
-                                     src="../../static/assets/faq/star.svg" alt=""/>
+                                     src="/static/assets/faq/star.svg" />
                                 <p className={classes.linkText}>Je suis client</p>
                             </Grid>
                     </Grid>
                     <Grid>
                             <Grid className={classes.linkBloc} onClick={() => this.setAlfred(true)}>
                                 <img style={{margin: '0 auto', width: '30px', paddingBottom: '10px'}}
-                                     src="../../static/assets/faq/amp.svg"
-                                     alt=""/>
+                                     src="/static/assets/faq/amp.svg" />
                                 <p className={classes.linkText}>Je suis Alfred</p>
                             </Grid>
                     </Grid>
