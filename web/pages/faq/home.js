@@ -41,18 +41,25 @@ class Home extends React.Component {
     }
 
     filteredFaq = () => {
-      var {alfredFaq, faq, search}=this.state;
-      var faqs=alfredFaq ? faq['alfred']:faq['client'];
+
+      const matches = (search_arr, text) => {
+        console.log(`matches:${JSON.stringify(search_arr)}, ${text.slice(1,20)}`)
+        return search_arr.every(s => text.toLowerCase().includes(s))
+      }
+
+      var {alfredFaq, faq, search}=this.state
+      var faqs=alfredFaq ? faq['alfred']:faq['client']
       if (search) {
-        search = search.toLowerCase();
-        const allFaqs={...faq['alfred'], ...faq['client']};
-        var res={};
+        search = search.toLowerCase().split(' ').map(s => s.trim()).filter(s => s)
+        const allFaqs={...faq['alfred'], ...faq['client']}
+        var res={}
         Object.keys(allFaqs).forEach(cat => {
             if (cat.toLowerCase().includes(search)) {
               res[cat]=allFaqs[cat]
             }
             else allFaqs[cat].forEach( topic => {
-              if (topic.title.toLowerCase().includes(search) || topic.contents.toLowerCase().includes(search)) {
+              console.log(topic.title)
+              if (matches(search, topic.title) || matches(search, topic.contents)) {
                 if (!res[cat]) {res[cat]=[]}
                 res[cat].push(topic)
               }
@@ -108,8 +115,7 @@ class Home extends React.Component {
           <Grid>
             <Input
               id="standard-with-placeholder"
-              label="Recherche"
-              placeholder="Recherche"
+              placeholder="Chercher dans la FAQ"
               style={{width: '100%'}}
               type={"text"}
               value={search}

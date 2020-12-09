@@ -76,11 +76,6 @@ class Footer extends React.Component {
                                         <Typography className={classes.footerLink}>Devenir Alfred</Typography>
                                     </Grid>
                                 </Link>
-                                <Link href={'/faq/home'}>
-                                    <Grid style={{marginBottom: '2vh'}}>
-                                        <Typography className={classes.footerLink}>FAQ des Alfred</Typography>
-                                    </Grid>
-                                </Link>
                                 <Link href={'/'}>
                                     <Grid>
                                         <Typography className={classes.footerLink}>Centre de ressources</Typography>
@@ -97,14 +92,14 @@ class Footer extends React.Component {
                                     <Typography className={classes.footerLink}>Réserver un service</Typography>
                                 </Grid>
                             </Link>
-                            <Link href={'/faq/home'}>
-                                <Grid style={{marginBottom: '2vh'}}>
-                                    <Typography className={classes.footerLink}>FAQ des services</Typography>
+                            <Link href={'/'}>
+                              <Grid style={{marginBottom: '2vh'}}>
+                                    <Typography className={classes.footerLink}>Parler à un humain</Typography>
                                 </Grid>
                             </Link>
-                            <Link href={'/'}>
+                            <Link href={'/faq/home'}>
                                 <Grid>
-                                    <Typography className={classes.footerLink}>Parler à un humain</Typography>
+                                    <Typography className={classes.footerLink}>FAQ</Typography>
                                 </Grid>
                             </Link>
                         </Grid>
