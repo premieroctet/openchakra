@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { PrismaClient } from '@prisma/client'
 import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next'
 import { getSession, signIn } from 'next-auth/client'
 import useDispatch from '~hooks/useDispatch'
 import EditorPage from '~pages/editor'
+import prisma from '../../utils/prisma'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const prisma = new PrismaClient()
   let projectId = (params!.slug as string).split('-')[0]
   let projectName = (params!.slug as string).split('-')[1]
 
@@ -27,7 +26,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const prisma = new PrismaClient()
   const projects = await prisma.project.findMany()
   return {
     paths: projects.map(project => ({

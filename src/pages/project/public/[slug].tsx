@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { PrismaClient, Project } from '@prisma/client'
+import { Project } from '@prisma/client'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import { useSession } from 'next-auth/client'
 import useShortcuts, { keyMap } from '~hooks/useShortcuts'
@@ -13,11 +13,10 @@ import EditorErrorBoundary from '~components/errorBoundaries/EditorErrorBoundary
 import Editor from '~components/editor/Editor'
 import Backend from 'react-dnd-html5-backend'
 import useDispatch from '~hooks/useDispatch'
+import prisma from '../../../utils/prisma'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const prisma = new PrismaClient()
   let projectId = (params!.slug as string).split('-')[0]
-
   const project = await prisma.project.findOne({
     include: { user: true },
     where: {
@@ -35,7 +34,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const prisma = new PrismaClient()
   const projects = await prisma.project.findMany({
     where: {
       public: true,

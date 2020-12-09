@@ -71,7 +71,11 @@ const EditorPage = (props: {
   const initProject = async () => {
     if (projectName.length > 0) {
       const markup = JSON.stringify(components)
-      let newProject = await createProject(markup, projectName)
+      let newProject = await createProject(
+        markup,
+        projectName,
+        session?.accessToken as string,
+      )
       if (newProject) {
         toast({
           title: 'Created project',
@@ -105,7 +109,7 @@ const EditorPage = (props: {
   const showUserProjectList = async () => {
     setLoading(true)
     if (session) {
-      const userProject = await checkUser(session.user.name as string)
+      const userProject = await checkUser(session.accessToken as string)
       setUserProjectList(userProject.project)
       setLoading(false)
       setNewProject(false)
@@ -119,7 +123,7 @@ const EditorPage = (props: {
   const saveProject = async () => {
     if (session) {
       if (props.id) {
-        const userProject = await checkUser(session.user.name as string)
+        const userProject = await checkUser(session.accessToken as string)
         const userCanEdit = userProject.project.some(
           (e: Project) => e.id === props.id,
         )

@@ -1,20 +1,25 @@
-export const checkUser = async (name: string) => {
+export const checkUser = async (accessToken: string) => {
   const response = await fetch('/api/project/check', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(name),
+    body: JSON.stringify(accessToken),
   })
   const data = await response.json()
   return data
 }
 
-export const createProject = async (markup: string, projectName: string) => {
+export const createProject = async (
+  markup: string,
+  projectName: string,
+  accessToken: string,
+) => {
   let bodyData = {
     project: {
-      markup: markup,
+      markup,
       projectName: projectName.replace(/\s/g, '').replace(/-/g, ''),
+      accessToken,
     },
   }
   const response = await fetch('/api/project/create', {

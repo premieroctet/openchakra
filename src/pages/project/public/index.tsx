@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Flex,
   Text,
@@ -8,6 +8,7 @@ import {
   Avatar,
   RadioGroup,
   Radio,
+  Spinner,
 } from '@chakra-ui/core'
 import { Global } from '@emotion/core'
 import { HotKeys } from 'react-hotkeys'
@@ -15,37 +16,30 @@ import Metadata from '../../../components/Metadata'
 import useShortcuts, { keyMap } from '../../../hooks/useShortcuts'
 import Header from '../../../components/Header'
 import { useSession } from 'next-auth/client'
-import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { PrismaClient, Project, User } from '@prisma/client'
+import { Project, User } from '@prisma/client'
 import { useRouter } from 'next/router'
 import PreviewProject from '~components/PreviewProject'
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const prisma = new PrismaClient()
-  const project = await prisma.project.findMany({
-    include: { user: true },
-    where: {
-      public: true,
-      validated: true,
-    },
-  })
-
-  let projects = JSON.parse(JSON.stringify(project))
-
-  return {
-    props: {
-      projects,
-    },
-  }
+interface Projects {
+  project: []
 }
 
-const ProjectList = ({
-  projects,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const ProjectList = () => {
+  const [projects, setProjects] = useState<Projects | undefined>(undefined)
   const { handlers } = useShortcuts()
   const [session] = useSession()
   const router = useRouter()
   const [radioValue, setRadioValue] = useState('all')
+
+  const fetchProject = async () => {
+    const res = await fetch('/api/project/public')
+    const project = await res.json()
+    setProjects(project)
+  }
+
+  useEffect(() => {
+    fetchProject()
+  }, [])
 
   return (
     <HotKeys allowChanges handlers={handlers} keyMap={keyMap}>
@@ -95,69 +89,76 @@ const ProjectList = ({
             <Radio value="layouts">Layouts</Radio>
           </RadioGroup>
 
-          {projects.length > 0 ? (
-            <SimpleGrid columns={[2, 2, 2, 3]} spacing={6} mt={10}>
-              {projects.map((e: Project & { user: User }, i: number) =>
-                radioValue === 'all' ? (
-                  <PseudoBox
-                    bg="#1A202C"
-                    color="white"
-                    p="1rem"
-                    cursor="pointer"
-                    _hover={{ backgroundColor: '#2d384b' }}
-                    onClick={() => {
-                      const href = `/project/public/${e.id}-${e.projectName}`
-                      router.push(href, href, { shallow: true })
-                    }}
-                    key={i}
-                  >
-                    <PreviewProject project={e} />
+          {projects ? (
+            projects?.project.length > 0 ? (
+              <SimpleGrid columns={[2, 2, 2, 3]} spacing={6} mt={10}>
+                {projects?.project.map(
+                  (e: Project & { user: User }, i: number) =>
+                    radioValue === 'all' ? (
+                      <PseudoBox
+                        bg="#1A202C"
+                        color="white"
+                        p="1rem"
+                        cursor="pointer"
+                        _hover={{ backgroundColor: '#2d384b' }}
+                        onClick={() => {
+                          const href = `/project/public/${e.id}-${e.projectName}`
+                          router.push(href, href, { shallow: true })
+                        }}
+                        key={i}
+                      >
+                        <PreviewProject project={e} />
 
-                    <Text fontSize="xl">{e.projectName}</Text>
-                    <Text fontSize="md" mt={2} textAlign="right">
-                      <Avatar
-                        size="xs"
-                        mr={2}
-                        name={e.user.name || ''}
-                        src={e.user.image || ''}
-                      />
-                      {e.user.name}
-                    </Text>
-                  </PseudoBox>
-                ) : (
-                  radioValue === e.tag && (
-                    <PseudoBox
-                      bg="#1A202C"
-                      color="white"
-                      p="1rem"
-                      cursor="pointer"
-                      _hover={{ backgroundColor: '#2d384b' }}
-                      onClick={() => {
-                        const href = `/project/public/${e.id}-${e.projectName}`
-                        router.push(href, href, { shallow: true })
-                      }}
-                      key={i}
-                    >
-                      <PreviewProject project={e} />
-                      <Text fontSize="xl">{e.projectName}</Text>
-                      <Text fontSize="md" mt={2} textAlign="right">
-                        <Avatar
-                          size="xs"
-                          mr={2}
-                          name={e.user.name || ''}
-                          src={e.user.image || ''}
-                        />
-                        {e.user.name}
-                      </Text>
-                    </PseudoBox>
-                  )
-                ),
-              )}
-              )
-            </SimpleGrid>
+                        <Text fontSize="xl">{e.projectName}</Text>
+                        <Text fontSize="md" mt={2} textAlign="right">
+                          <Avatar
+                            size="xs"
+                            mr={2}
+                            name={e.user.name || ''}
+                            src={e.user.image || ''}
+                          />
+                          {e.user.name}
+                        </Text>
+                      </PseudoBox>
+                    ) : (
+                      radioValue === e.tag && (
+                        <PseudoBox
+                          bg="#1A202C"
+                          color="white"
+                          p="1rem"
+                          cursor="pointer"
+                          _hover={{ backgroundColor: '#2d384b' }}
+                          onClick={() => {
+                            const href = `/project/public/${e.id}-${e.projectName}`
+                            router.push(href, href, { shallow: true })
+                          }}
+                          key={i}
+                        >
+                          <PreviewProject project={e} />
+                          <Text fontSize="xl">{e.projectName}</Text>
+                          <Text fontSize="md" mt={2} textAlign="right">
+                            <Avatar
+                              size="xs"
+                              mr={2}
+                              name={e.user.name || ''}
+                              src={e.user.image || ''}
+                            />
+                            {e.user.name}
+                          </Text>
+                        </PseudoBox>
+                      )
+                    ),
+                )}
+                )
+              </SimpleGrid>
+            ) : (
+              <Box textAlign="center" mt={30}>
+                <Text color="white">There is no projects</Text>
+              </Box>
+            )
           ) : (
             <Box textAlign="center" mt={30}>
-              <Text color="white">There is no projects</Text>
+              <Spinner m="0 auto" color="white" size="xl" mt="3rem" />
             </Box>
           )}
         </Box>

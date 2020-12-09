@@ -1,17 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient } from '@prisma/client'
+import prisma from '../../../utils/prisma'
 const chromium = require('chrome-aws-lambda')
 
 export default async function(req: NextApiRequest, res: NextApiResponse) {
-  const prisma = new PrismaClient()
   let ts = new Date()
 
   try {
     const { project: projectData } = req.body
+
     let result = null
     let browser: any = null
     const href = `${process.env.DEPLOY_URL}/project/preview/${projectData.id}-${projectData.projectName}`
-
     const screenShot = async () => {
       try {
         browser = await chromium.puppeteer.launch({

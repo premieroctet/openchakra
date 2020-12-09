@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { PrismaClient, Project } from '@prisma/client'
+import { Project } from '@prisma/client'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import { Global } from '@emotion/core'
 import Metadata from '~components/Metadata'
@@ -11,9 +11,9 @@ import useDispatch from '~hooks/useDispatch'
 import ComponentPreview from '~components/editor/ComponentPreview'
 import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
+import prisma from '../../../utils/prisma'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const prisma = new PrismaClient()
   let projectId = (params!.slug as string).split('-')[0]
 
   const project = await prisma.project.findOne({
@@ -33,7 +33,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const prisma = new PrismaClient()
   const projects = await prisma.project.findMany({
     where: {
       public: true,

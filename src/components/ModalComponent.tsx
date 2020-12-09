@@ -44,11 +44,11 @@ const ModalComponent = (props: Props) => {
   const router = useRouter()
   const toast = useToast()
 
-  const updateProject = async (props: UpdateProject) => {
+  const updateProject = async (e: UpdateProject) => {
     let bodyData = {
       project: {
-        id: props.id,
-        public: !props.public,
+        id: e.id,
+        public: !e.public,
       },
     }
     const response = await fetch('/api/project/update', {
@@ -62,8 +62,14 @@ const ModalComponent = (props: Props) => {
     return data
   }
 
-  const publishPublicProject = async (props: UpdateProject) => {
-    const projectUpdated = await updateProject(props)
+  const publishPublicProject = async (e: UpdateProject) => {
+    const data = {
+      id: e.id,
+      public: e.public,
+    }
+
+    const projectUpdated = await updateProject(data)
+
     if (projectUpdated) {
       toast({
         title: 'The project visibility has been updated',
