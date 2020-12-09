@@ -2,7 +2,6 @@ import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import layoutStyle from '../../../static/css/pages/layout/layoutStyle'
 import {NAVBAR_MENU} from "../../../utils/i18n";
 import Link from '../../../components/Link/Link'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
