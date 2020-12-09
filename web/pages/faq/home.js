@@ -20,6 +20,7 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Input from "@material-ui/core/Input";
 import CloseIcon from '@material-ui/icons/Close';
+import LayoutFaq from "../../hoc/Layout/LayoutFaq"
 
 class Home extends React.Component {
 
@@ -86,48 +87,48 @@ class Home extends React.Component {
     const filteredFaqs = this.filteredFaq();
 
     return (
-      <Fragment>
-        <Header/>
-        <Grid container className={classes.menuContainer}>
-          { searching ? null :
-            <Grid className={classes.logoContainer}>
-              <Grid style={{paddingRight: '25px', cursor : 'pointer'}} onClick={() => this.setAlfred(false)}>
-                <Grid className={classes.linkBloc}>
-                  <img title={'star'} alt={'star'} style={{margin: '0 auto', paddingBottom: '16px'}} src="/static/assets/faq/star.svg" />
-                  <Typography className={classes.linkText} style={{fontWeight: alfredFaq ? 'normal' :'bold'}}>Je suis client</Typography>
+      <Grid>
+        <LayoutFaq>
+          <Grid container className={classes.menuContainer}>
+            { searching ? null :
+              <Grid className={classes.logoContainer}>
+                <Grid style={{paddingRight: '25px', cursor : 'pointer'}} onClick={() => this.setAlfred(false)}>
+                  <Grid className={classes.linkBloc}>
+                    <img title={'star'} alt={'star'} style={{margin: '0 auto', paddingBottom: '16px'}} src="/static/assets/faq/star.svg" />
+                    <Typography className={classes.linkText} style={{fontWeight: alfredFaq ? 'normal' :'bold'}}>Je suis client</Typography>
+                  </Grid>
                 </Grid>
-            </Grid>
-            <Grid>
-              <Grid className={classes.linkBloc} onClick={() => this.setAlfred(true)}>
-                <img title={'ampoulelogo'} alt={'ampoulelogo'} style={{margin: '0 auto', width: '30px', paddingBottom: '10px'}} src="/static/assets/faq/amp.svg" />
-                <Typography className={classes.linkText} style={{fontWeight: alfredFaq ? 'bold' :'normal'}}>Je suis Alfred</Typography>
+                <Grid>
+                  <Grid className={classes.linkBloc} onClick={() => this.setAlfred(true)}>
+                    <img title={'ampoulelogo'} alt={'ampoulelogo'} style={{margin: '0 auto', width: '30px', paddingBottom: '10px'}} src="/static/assets/faq/amp.svg" />
+                    <Typography className={classes.linkText} style={{fontWeight: alfredFaq ? 'bold' :'normal'}}>Je suis Alfred</Typography>
+                  </Grid>
+                </Grid>
               </Grid>
+            }
+            <Grid>
+              <Input
+                id="standard-with-placeholder"
+                label="Recherche"
+                placeholder="Recherche"
+                style={{width: '100%'}}
+                type={"text"}
+                value={search}
+                onChange={this.onSearchChange}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={this.onSearchClear}
+                      disabled={!searching}
+                    >
+                      {<CloseIcon /> }
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
             </Grid>
-            </Grid>
-          }
-          <Grid>
-            <Input
-              id="standard-with-placeholder"
-              label="Recherche"
-              placeholder="Recherche"
-              style={{width: '100%'}}
-              type={"text"}
-              value={search}
-              onChange={this.onSearchChange}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={this.onSearchClear}
-                    disabled={!searching}
-                  >
-                    {<CloseIcon /> }
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
           </Grid>
-        </Grid>
           {
             Object.keys(filteredFaqs).map( category => {
               const items=filteredFaqs[category];
@@ -140,24 +141,24 @@ class Home extends React.Component {
                     <Grid container>
                       {items.map( i => {
                         return (
-                         <Accordion key={i.title}>
-                           <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                             {i.title}
-                           </AccordionSummary>
+                          <Accordion key={i.title}>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                              {i.title}
+                            </AccordionSummary>
                             <AccordionDetails>
                               <div dangerouslySetInnerHTML={{ __html: i.contents}} />
-                          </AccordionDetails>
-                        </Accordion>
+                            </AccordionDetails>
+                          </Accordion>
                         )
                       })}
-                      </Grid>
+                    </Grid>
                   </AccordionDetails>
                 </Accordion>
               )
             })
           }
-          <Footer/>
-      </Fragment>
+        </LayoutFaq>
+      </Grid>
     )
   }
 }
