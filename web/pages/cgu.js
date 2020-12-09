@@ -1,6 +1,6 @@
 import React from 'react';
 import {withStyles} from '@material-ui/core/styles';
-import Layout from '../../hoc/Layout/Layout';
+import Layout from '../hoc/Layout/Layout';
 import Grid from '@material-ui/core/Grid';
 import Link from 'next/link';
 
@@ -19,7 +19,7 @@ const styles = theme => ({
     },
 });
 
-class cguPage extends React.Component {
+class CguPage extends React.Component {
     constructor(props) {
         super(props);
 
@@ -1113,4 +1113,4 @@ class cguPage extends React.Component {
 }
 
 
-export default withStyles(styles)(cguPage);
+export default withStyles(styles)(CguPage);

@@ -700,7 +700,7 @@ class NavBar extends Component {
                                  label={NAVBAR_MENU.registerServices}/>
                         </Link>
                       }
-                      <Link href={'/footer/contact'}>
+                      <Link href={'/contact'}>
                         <Tab classes={{root: classes.navbarTabRoot}}
                                label={NAVBAR_MENU.contactUs}/>
                       </Link>

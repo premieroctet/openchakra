@@ -47,7 +47,7 @@ class Header extends React.Component {
                 aboutMenu = true;
                 classNameMenu = classes.menuHeaderActive;
 
-            } else if (window.location.pathname === '/faq/home') {
+            } else if (window.location.pathname === '/faq') {
                 title = 'FAQ';
                 content = 'Pour trouver vos réponses';
             } else if (window.location.pathname === '/footer/becomeAlfred') {

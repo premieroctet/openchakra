@@ -21,16 +21,15 @@ class Footer extends React.Component {
                     <span style={{float: 'start', paddingTop: '10px'}}>&Agrave; propos de nous</span>
                 </Link>
                 <Grid style={{float: 'right', display: 'flex'}}>
+                  { true ? null:
                     <Link href={'/'}>
-
                         <p style={{marginTop: '2.5px', paddingRight: '18px'}}>Sécurité</p>
                     </Link>
-                    <Link>
+                  }
+                    <Link href={'/cgu'}>
                         <p style={{marginTop: '2.5px', paddingRight: '18px'}}>Informations légales</p>
                     </Link>
-                    <Link>
                         <p style={{marginTop: '2.5px', paddingRight: '18px'}}>Confidentialité</p>
-                    </Link>
                 </Grid>
             </Grid>
         )

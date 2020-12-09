@@ -1,8 +1,8 @@
 import React, {Fragment} from 'react';
 import Grid from '@material-ui/core/Grid';
-import Header from "../../hoc/Layout/About/Header";
-import Footer from "../../hoc/Layout/About/Footer";
-import Link from '../../components/Link/Link'
+import Header from "../hoc/Layout/About/Header";
+import Footer from "../hoc/Layout/About/Footer";
+import Link from '../components/Link/Link'
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import {withStyles} from "@material-ui/core/styles";
-import styles from '../../static/css/pages/homePage/index';
+import styles from '../static/css/pages/homePage/index';
 
 class Contact extends React.Component {
 
@@ -88,7 +88,7 @@ class Contact extends React.Component {
                     <Grid style={{margin: '0 auto', textAlign: 'center'}}>
                         <p style={{fontWeight: 'bold'}}>Consultez notre FAQ</p>
                         <p>Retrouvez les questions fréquentes</p>
-                        <Link href={'/faq/home'}>
+                        <Link href={'/faq'}>
                             <p style={{
                                 width: '70px',
                                 color: 'white',
