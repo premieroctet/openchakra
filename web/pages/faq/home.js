@@ -13,28 +13,13 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {FAQ} from '../../utils/i18n'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
-
-const styles = theme => ({
-    menuContainer: {
-        display: 'flex',
-        justifyContent: 'center'
-    },
-    linkBloc: {
-        width: '100%',
-        padding: '30px 30px 30px 30px',
-        margin: '25px',
-        borderRadius: '30px',
-        display: 'flex',
-        flexDirection: 'column',
-        boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
-    },
-    linkText: {
-        margin: '0 auto'
-    },
-    accord: {
-        padding: '0 300px'
-    }
-});
+import styles from '../../static/css/pages/faq/home';
+import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import Input from "@material-ui/core/Input";
+import CloseIcon from '@material-ui/icons/Close';
 
 class Home extends React.Component {
 
@@ -44,7 +29,7 @@ class Home extends React.Component {
         this.state={
           faq:null,
           alfredFaq: false,
-          search: null,
+          search: '',
         }
     }
 
@@ -56,112 +41,125 @@ class Home extends React.Component {
     }
 
     filteredFaq = () => {
-      var {alfredFaq, faq, search}=this.state
-      var faqs=alfredFaq ? faq['alfred']:faq['client']
+      var {alfredFaq, faq, search}=this.state;
+      var faqs=alfredFaq ? faq['alfred']:faq['client'];
       if (search) {
-        search = search.toLowerCase()
-        const allFaqs={...faq['alfred'], ...faq['client']}
-        var res={}
+        search = search.toLowerCase();
+        const allFaqs={...faq['alfred'], ...faq['client']};
+        var res={};
         Object.keys(allFaqs).forEach(cat => {
             if (cat.toLowerCase().includes(search)) {
               res[cat]=allFaqs[cat]
             }
             else allFaqs[cat].forEach( topic => {
-              console.log(topic.title)
               if (topic.title.toLowerCase().includes(search) || topic.contents.toLowerCase().includes(search)) {
                 if (!res[cat]) {res[cat]=[]}
                 res[cat].push(topic)
               }
             });
-        })
+        });
         faqs=res
       }
       return faqs
-    }
+    };
 
     setAlfred = alfred => {
-      console.log(alfred)
       this.setState({alfredFaq: alfred})
-    }
+    };
 
     onSearchChange = ev => {
       this.setState({search: ev.target.value})
-    }
+    };
 
     onSearchClear = () => {
-      this.setState({search: null})
+      this.setState({search: ''})
+    };
+
+  render() {
+    const {classes} = this.props;
+    const {faq, alfredFaq, search} = this.state;
+
+    if (!faq) {
+      return null
     }
+    const searching = Boolean(search);
+    const filteredFaqs = this.filteredFaq();
 
-    render() {
-        const {classes} = this.props;
-        const {faq, alfredFaq, search} = this.state
-
-        if (!faq) {
-          return null
-        }
-        const searching = Boolean(search)
-        const filteredFaqs = this.filteredFaq()
-
-        return (
-
-            <Fragment>
-
-                <Header></Header>
-                <Grid container className={classes.menuContainer}>
-                  { searching ? null :
-                    <>
-                      <Grid style={{paddingRight: '25px'}} onClick={() => this.setAlfred(false)}>
-                        <Grid className={classes.linkBloc}>
-                          <img style={{margin: '0 auto', paddingBottom: '16px'}} src="/static/assets/faq/star.svg" />
-                          <p className={classes.linkText} style={{fontWeight: alfredFaq ? 'normal' :'bold'}}>Je suis client</p>
-                        </Grid>
-                    </Grid>
-                    <Grid>
-                      <Grid className={classes.linkBloc} onClick={() => this.setAlfred(true)}>
-                        <img style={{margin: '0 auto', width: '30px', paddingBottom: '10px'}} src="/static/assets/faq/amp.svg" />
-                        <p className={classes.linkText} style={{fontWeight: alfredFaq ? 'bold' :'normal'}}>Je suis Alfred</p>
-                      </Grid>
-                    </Grid>
-                    </>
-                  }
-                  <br/>
-                  <Grid>
-                    <TextField onChange={this.onSearchChange} placeholder={'Recherche'}/>
-                    <Button disabled={!searching} onClick={this.onSearchClear}>Annuler</Button>
-                  </Grid>
+    return (
+      <Fragment>
+        <Header/>
+        <Grid container className={classes.menuContainer}>
+          { searching ? null :
+            <Grid className={classes.logoContainer}>
+              <Grid style={{paddingRight: '25px', cursor : 'pointer'}} onClick={() => this.setAlfred(false)}>
+                <Grid className={classes.linkBloc}>
+                  <img title={'star'} alt={'star'} style={{margin: '0 auto', paddingBottom: '16px'}} src="/static/assets/faq/star.svg" />
+                  <Typography className={classes.linkText} style={{fontWeight: alfredFaq ? 'normal' :'bold'}}>Je suis client</Typography>
                 </Grid>
-                {
-                    Object.keys(filteredFaqs).map( category => {
-                      const items=filteredFaqs[category]
-                      return (
-                            <Accordion key={category}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                                <Typography>{category}</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                  <Grid container>
-                                  {items.map( i => {
-                                    return (
-                                      <Grid>
-                                      <Accordion key={i.title}>
-                                      <AccordionSummary expandIcon={<ExpandMoreIcon/>}>{i.title}</AccordionSummary>
-                                      <AccordionDetails>
-                                        <div dangerouslySetInnerHTML={{ __html: i.contents}} />
-                                      </AccordionDetails>
-                                      </Accordion>
-                                      </Grid>
-                                    )
-                                  })}
-                                  </Grid>
-                                </AccordionDetails>
-                            </Accordion>
-                      )
-                    })
-                }
-                <Footer/>
-            </Fragment>
-        )
-    }
+            </Grid>
+            <Grid>
+              <Grid className={classes.linkBloc} onClick={() => this.setAlfred(true)}>
+                <img title={'ampoulelogo'} alt={'ampoulelogo'} style={{margin: '0 auto', width: '30px', paddingBottom: '10px'}} src="/static/assets/faq/amp.svg" />
+                <Typography className={classes.linkText} style={{fontWeight: alfredFaq ? 'bold' :'normal'}}>Je suis Alfred</Typography>
+              </Grid>
+            </Grid>
+            </Grid>
+          }
+          <Grid>
+            <Input
+              id="standard-with-placeholder"
+              label="Recherche"
+              placeholder="Recherche"
+              style={{width: '100%'}}
+              type={"text"}
+              value={search}
+              onChange={this.onSearchChange}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={this.onSearchClear}
+                    disabled={!searching}
+                  >
+                    {<CloseIcon /> }
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </Grid>
+        </Grid>
+          {
+            Object.keys(filteredFaqs).map( category => {
+              const items=filteredFaqs[category];
+              return (
+                <Accordion key={category}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                    <Typography>{category}</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Grid container>
+                      {items.map( i => {
+                        return (
+                         <Accordion key={i.title}>
+                           <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                             {i.title}
+                           </AccordionSummary>
+                            <AccordionDetails>
+                              <div dangerouslySetInnerHTML={{ __html: i.contents}} />
+                          </AccordionDetails>
+                        </Accordion>
+                        )
+                      })}
+                      </Grid>
+                  </AccordionDetails>
+                </Accordion>
+              )
+            })
+          }
+          <Footer/>
+      </Fragment>
+    )
+  }
 }
 
 export default withStyles(styles)(Home);
