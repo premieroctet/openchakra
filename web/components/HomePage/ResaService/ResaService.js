@@ -22,7 +22,7 @@ class ResaService extends React.Component {
                         <p className={style.becomeAlfredText}>{RESA_SERVICE.text}</p>
                     </Grid>
                     <Grid>
-                        <Link href={'/creashop/creashop'}>
+                        <Link href={'/creaShop/creaShop'}>
                             <Button variant={'contained'}
                                     className={style.resaServiceButton}>{RESA_SERVICE.button}</Button>
                         </Link>
