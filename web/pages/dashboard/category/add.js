@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../../../utils/authentication')
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 
 import Card from '@material-ui/core/Card';
@@ -11,7 +13,7 @@ import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import FormControl from '@material-ui/core/FormControl';
 import Select2 from 'react-select';
-import cookie from 'react-cookies';
+
 
 const styles = theme => ({
   signupContainer: {
@@ -73,7 +75,7 @@ class add extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/admin/tags/all')
       .then((response) => {
         let tags = response.data;
@@ -115,7 +117,7 @@ class add extends React.Component {
     formData.append('tags', JSON.stringify(arrayTags));
     formData.append('description', this.state.description);
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios
       .post('/myAlfred/api/admin/category/all', formData)
       .then(res => {
@@ -126,7 +128,7 @@ class add extends React.Component {
           console.error(err);
           this.setState({errors: err.response.data});
           if (err.response.status === 401 || err.response.status === 403) {
-            cookie.remove('token', {path: '/'});
+            clearAuthenticationToken()
             Router.push({pathname: '/login'});
           }
         },

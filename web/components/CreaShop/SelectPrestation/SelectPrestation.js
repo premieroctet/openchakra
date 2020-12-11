@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
@@ -9,9 +10,9 @@ import styles from '../componentStyle';
 import {CUSTOM_PRESTATIONS_FLTR, generate_id, GID_LEN} from '../../../utils/consts';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import cookie from 'react-cookies';
+
 import _ from 'lodash';
-const jwt = require('jsonwebtoken');
+const {getLoggedUserId}=require('../../../utils/functions')
 
 class SelectPrestation extends React.Component {
   constructor(props) {
@@ -32,13 +33,10 @@ class SelectPrestation extends React.Component {
   componentDidMount() {
 
     // Get current alfred id
-    const token = cookie.load('token');
-    const token2 = token.split(' ')[1];
-    const decode = jwt.decode(token2);
-    const alfred_id = decode.id;
+    const alfred_id = getLoggedUserId()
 
     let billings = null;
-    axios.defaults.headers.common['Authorization'] = token;
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/billing/all`)
       .then(res => {
         billings = res.data;
@@ -117,8 +115,8 @@ class SelectPrestation extends React.Component {
             </Grid>
             <Grid className={classes.containerPrestas}>
               <Grid className={classes.bottomSpacer}>
-                <p className={classes.policySizeContent}>Quelles prestations souhaitez-vous réaliser ? Indiquez vos
-                  tarifs et votre unité de facturation. </p>
+                <Typography className={classes.policySizeContent}>Quelles prestations souhaitez-vous réaliser ? Indiquez vos
+                  tarifs et votre unité de facturation. </Typography>
               </Grid>
               <Grid className={classes.buttonAddPrestas}>
                 <Grid item className={classes.maxWidth} style={{marginBottom: 100}}>
@@ -132,7 +130,7 @@ class SelectPrestation extends React.Component {
                   {Object.keys(this.state.grouped).map((fltr, i) => {
                     let prestas = this.state.grouped[fltr];
                     return (
-                      <Grid className={classes.maxWidth}>
+                      <Grid key={i} className={classes.maxWidth}>
                         <Grid className={classes.marginThirty}>
                           <Grid item>
                             {fltr === 'Aucun' ? '' : fltr === 'Prestations personnalisées' && this.state.grouped['Prestations personnalisées'].length === 0 ? '' : fltr}
@@ -168,9 +166,4 @@ class SelectPrestation extends React.Component {
   }
 }
 
-SelectPrestation.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, {withTheme: true})(SelectPrestation);
+export default withStyles(styles)(SelectPrestation);

@@ -10,7 +10,6 @@ import {ALF_CONDS} from '../../../utils/consts.js';
 class BookingConditions extends React.Component {
   constructor(props) {
     super(props);
-    console.log('Constructor:' + this.props.booking_request);
     this.state = {
       booking_request: this.props.booking_request,
       my_alfred_conditions: this.props.conditions, // BASIC/PICTURE/ID_CARD/RECOMMEND
@@ -24,13 +23,10 @@ class BookingConditions extends React.Component {
 
     this.conditions = {};
     Object.values(ALF_CONDS).forEach(k => this.conditions[k] = React.createRef());
-    console.log('condition buttons:' + JSON.stringify(this.conditions));
   }
 
   onBookingChanged(id, checked) {
-    console.log('Booking changed:' + id + checked);
     let req = (id === 'request' && checked) || (id === 'auto' && !checked);
-    console.log('Booking request is ' + req);
     this.setState({booking_request: req},
       () => this.props.onChange(this.state.booking_request, this.state.my_alfred_conditions));
     this.booking_request.current.setState({checked: req});
@@ -39,7 +35,6 @@ class BookingConditions extends React.Component {
   }
 
   onAlfredConditionsChanged(id, checked) {
-    console.log(id + ',' + checked);
     let value = checked ? id : Math.max(id - 1, 0);
     this.setState({my_alfred_conditions: value},
       () => this.props.onChange(this.state.booking_request, this.state.my_alfred_conditions));
@@ -48,7 +43,7 @@ class BookingConditions extends React.Component {
 
   render() {
     const {classes} = this.props;
-    console.log('Render BookingConditions:' + JSON.stringify(this.state));
+
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
@@ -117,9 +112,4 @@ class BookingConditions extends React.Component {
   }
 }
 
-BookingConditions.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, {withTheme: true})(BookingConditions);
+export default withStyles(styles)(BookingConditions);

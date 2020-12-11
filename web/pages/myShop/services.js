@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import styles from '../creaShop/creaShopStyle';
@@ -21,7 +22,8 @@ import {
   selectService,
   settingService,
 } from '../../utils/validationSteps/validationSteps';
-import cookie from 'react-cookies';
+
+const {getLoggedUserId}=require('../../utils/functions')
 
 
 class services extends React.Component {
@@ -74,12 +76,11 @@ class services extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    const token = cookie.load('token');
-    if (!token) {
+    if (!getLoggedUserId()) {
       Router.push('/login');
     }
 
-    axios.defaults.headers.common['Authorization'] = token;
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
@@ -91,13 +92,13 @@ class services extends React.Component {
         }
       })
       .catch(error => {
-        console.log(error);
+        console.error(error);
       });
 
 
     if (this.isNewService()) {
       // Get shop to update exclusion services list
-      axios.defaults.headers.common['Authorization'] = token;
+      setAxiosAuthentication()
       axios.get(`/myAlfred/api/serviceUser/currentAlfred`)
         .then(response => {
           let serviceUsers = response.data;
@@ -107,7 +108,7 @@ class services extends React.Component {
     }
 
     if (!this.isNewService()) {
-      axios.defaults.headers.common['Authorization'] = token;
+      setAxiosAuthentication()
       axios.get(`/myAlfred/api/serviceUser/${this.props.service_user_id}`)
         .then(res => {
           let resultat = res.data;
@@ -180,8 +181,7 @@ class services extends React.Component {
   }
 
   handleNext = () => {
-    const token=cookie.load('token')
-    if (!token) {
+    if (!getLoggedUserId()) {
       Router.push('/login');
     }
     if (this.state.activeStep < 4) {
@@ -315,11 +315,7 @@ class services extends React.Component {
                                   minimum_basket={shop.minimum_basket}/>;
       case 4:
         return <AssetsService data={shop} onChange={this.onAssetsChanged}/>;
-      { //TODO DISPLAY allavailabilities
-        /*case 5:
-        return <Schedule availabilities={shop.availabilities} services={[]} onCreateAvailability={this.onAvailabilityCreated} onDeleteAvailability={this.onAvailabilityDeleted} title={this.state.title} subtitle={this.state.subtitle} selectable={true}/>;
-        */
-      }
+
     }
   }
 
@@ -327,12 +323,13 @@ class services extends React.Component {
 
     const {classes} = this.props;
     let hideRightPanel = this.isRightPanelHidden();
+
     return (
       <Grid>
         <Grid className={classes.mainHeader}>
           <Grid className={classes.imageContentHeader}>
             <Link href={'/'}>
-              <img src={'../../../static/assets/icon/logoGreen.svg'} style={{cursor: 'pointer'}} width={102} height={64} alt={'logo'} title={'logo'}/>
+              <img src={'../../../static/assets/icon/logoGreen.svg'} style={{cursor: 'pointer'}} width={160} height={64} alt={'logo'} title={'logo'}/>
             </Link>
           </Grid>
           <Grid className={classes.contentStepper}>
@@ -384,9 +381,4 @@ class services extends React.Component {
   }
 }
 
-services.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, {withTheme: true})(services);
+export default withStyles(styles)(services);

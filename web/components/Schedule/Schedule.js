@@ -6,6 +6,9 @@ import Grid from '@material-ui/core/Grid';
 import {bookings2events} from '../../utils/converters';
 import {Typography} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import styles from '../../static/css/components/Schedule/Schedule';
+import withStyles from "@material-ui/core/styles/withStyles";
+import Hidden from "@material-ui/core/Hidden";
 
 const {isDateAvailable, isMomentAvailable} = require('../../utils/dateutils');
 moment.locale('fr');
@@ -66,7 +69,7 @@ class Schedule extends React.Component {
   };
 
   render() {
-    const {title, subtitle, selectable, nbSchedule, bookings, mode, style} = this.props;
+    const {title, subtitle, selectable, nbSchedule, bookings, mode, classes} = this.props;
     const {view, eventsSelected, currentDate} = this.state;
 
     let events = [];
@@ -100,7 +103,7 @@ class Schedule extends React.Component {
       const label = () => {
         const date = moment(toolbar.date);
         return (
-          <Grid container className={style.schedule_containerToolbar}
+          <Grid container className={classes.schedule_containerToolbar}
                 style={{justifyContent: this.props.nbSchedule === 1 ? 'space-between' : 'center'}}>
             {
               this.props.nbSchedule === 1 ?
@@ -123,7 +126,7 @@ class Schedule extends React.Component {
 
       return (
         <Grid container>
-          <Grid className={style.schedule_customToolbarStyle}>
+          <Grid className={classes.schedule_customToolbarStyle}>
             <Grid style={{width: '100%'}}>
               <Grid>{label()}</Grid>
             </Grid>
@@ -139,14 +142,21 @@ class Schedule extends React.Component {
         return null
       }
       else if (moment(event.date).isBefore(moment().startOf('day'))) {
-        return <p className={style.schedule_monthDateHeaderLabelOldDay}>{event.label}</p>
+        return <Typography className={classes.schedule_monthDateHeaderLabelOldDay}>{event.label}</Typography>
       }
       else {
         return (
-          <Grid className={style.schedule_containerLabelSelector}>
-            <Grid className={eventsSelected.has(newDate) ? style.schedule_labelSelectorActive : style.schedule_labelSelector}>
-              <p className={style.schedule_monthDateHeaderLabel}>{event.label}</p>
-            </Grid>
+          <Grid className={classes.schedule_containerLabelSelector}>
+            <Hidden only={['xs']}>
+              <Grid className={eventsSelected.has(newDate) ? classes.schedule_labelSelectorActive : classes.schedule_labelSelector}>
+                <Typography className={classes.schedule_monthDateHeaderLabel}>{event.label}</Typography>
+              </Grid>
+            </Hidden>
+            <Hidden only={['sm', 'md', 'lg', 'xl']}>
+              <Grid className={eventsSelected.has(newDate) ? classes.schedule_labelSelectorActive : ''}>
+                <Typography className={classes.schedule_monthDateHeaderLabel}>{event.label}</Typography>
+              </Grid>
+            </Hidden>
           </Grid>
         )
       }
@@ -161,29 +171,29 @@ class Schedule extends React.Component {
 
       if (propsStyle === 'rbc-day-bg rbc-off-range-bg') {
         return (
-          <Grid className={style.schedule_off_range_style}/>
+          <Grid className={classes.schedule_off_range_style}/>
         );
       } else if (isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
         return (
-          <Grid className={style.schedule_today_style_avail}>
-            <Grid className={style.schedule_today_style}/>
+          <Grid className={classes.schedule_today_style_avail}>
+            <Grid className={classes.schedule_today_style}/>
           </Grid>
         );
       } else if (!isAvailable && propsStyle === 'rbc-day-bg rbc-today') {
         return (
-          <Grid className={style.style_today_style_off}>
-            <Grid className={style.schedule_today_style}/>
+          <Grid className={classes.style_today_style_off}>
+            <Grid className={classes.schedule_today_style}/>
           </Grid>
         );
       }
       else {
         if (isAvailable) {
           return (
-            <Grid className={style.schedule_day_style}/>
+            <Grid className={classes.schedule_day_style}/>
           );
         } else {
           return (
-            <Grid className={style.schedule_non_available_style}/>
+            <Grid className={classes.schedule_non_available_style}/>
           );
         }
       }
@@ -191,7 +201,7 @@ class Schedule extends React.Component {
 
     const customMonthEventWrapper = () => {
       return (
-        <Grid className={style.schedule_myEventWrapperStyle}/>
+        <Grid className={classes.schedule_myEventWrapperStyle}/>
       );
     };
 
@@ -230,7 +240,7 @@ class Schedule extends React.Component {
         if(typeof resource === "undefined") {
           if (date.minutes() === 0){
             return(
-              <Grid className={style.schedule_timeSlotWrapper}>
+              <Grid className={classes.schedule_timeSlotWrapper}>
                 <span>{date.hours() + ':' + date.format('mm')}</span>
               </Grid>
             )
@@ -243,30 +253,30 @@ class Schedule extends React.Component {
         }
         if (!isAvailable) {
           return(
-            <Grid className={style.schedule_non_available_style}/>
+            <Grid className={classes.schedule_non_available_style}/>
           )
         }
       };
 
       return(
-        <Grid container className={style.schedule_containerTimeSlotWrapper}>
+        <Grid container className={classes.schedule_containerTimeSlotWrapper}>
           {label()}
         </Grid>
       )
     };
 
     return (
-      <Grid className={style.schedule_heightContainer}>
+      <Grid className={classes.schedule_heightContainer}>
         {title || subtitle ?
           <Grid>
             {title ?
               <Grid>
-                <Typography className={style.schedule_policySizeTitle}>{title}</Typography>
+                <Typography className={classes.schedule_policySizeTitle}>{title}</Typography>
               </Grid> : null
             }
             {subtitle ?
               <Grid>
-                <p className={style.schedule_policySizeContent}>{subtitle}</p>
+                <p className={classes.schedule_policySizeContent}>{subtitle}</p>
               </Grid> : null
             }
           </Grid>
@@ -293,7 +303,7 @@ class Schedule extends React.Component {
             const monthEvents = events.filter(e => moment(e.start).format('M') === monthStr);
             return (
               <Grid item xl={nbSchedule === 1 ? 11 : 4} lg={nbSchedule === 1 ? 11 : 4} md={nbSchedule === 1 ? 11 : 6}
-                    sm={nbSchedule === 1 ? 11 : 6} xs={12} className={style.schedule_height} key={i}>
+                    sm={nbSchedule === 1 ? 11 : 6} xs={12} className={classes.schedule_height} key={i}>
                 <Calendar
                   key={date}
                   selectable={selectable}
@@ -307,7 +317,8 @@ class Schedule extends React.Component {
                   onSelectSlot={this.toggleSelection}
                   dayLayoutAlgorithm={'no-overlap'}
                   scrollToTime={date}
-                  className={style.schedule_scheduleMainStyle}
+                  className={classes.schedule_scheduleMainStyle}
+                  longPressThreshold={0}
                   components={{
                     /* event: MyEvent, // used by each view (Month, Day, Week)
                      *   eventWrapper: MyEventWrapper,
@@ -357,4 +368,4 @@ class Schedule extends React.Component {
   }
 }
 
-export default Schedule;
+export default withStyles(styles)(Schedule);

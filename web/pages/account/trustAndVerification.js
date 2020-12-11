@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../../utils/authentication')
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import axios from 'axios';
 import moment from 'moment';
@@ -21,7 +23,7 @@ import styles from '../../static/css/pages/trustAndVerification/trustAndVerifica
 import Siret from '../../components/Siret/Siret';
 import {Radio, RadioGroup} from '@material-ui/core';
 import ButtonSwitch from '../../components/ButtonSwitch/ButtonSwitch';
-import cookie from 'react-cookies';
+
 import DocumentEditor from '../../components/DocumentEditor/DocumentEditor';
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
@@ -44,7 +46,7 @@ class trustAndVerification extends React.Component {
     this.child = React.createRef();
     this.state = {
       user: {},
-      type: null,
+      type: 'identite',
       selected: false,
       id_recto: null,
       id_verso: null,
@@ -98,7 +100,7 @@ class trustAndVerification extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {
@@ -153,7 +155,7 @@ class trustAndVerification extends React.Component {
       .catch(err => {
         console.error(err);
         if (err.response.status === 401 || err.response.status === 403) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/'});
         }
       });
@@ -264,8 +266,12 @@ class trustAndVerification extends React.Component {
     axios.post('/myAlfred/api/users/profile/idCard', formData, config)
       .then((response) => {
         toast.info('Pièce d\'identité ajoutée');
-        this.componentDidMount();
-      }).catch();
+        window.reload()
+      })
+      .catch(err => {
+        console.log('Ajout nok')
+        console.error(err)
+      });
   };
 
   addVerso() {
@@ -396,7 +402,6 @@ class trustAndVerification extends React.Component {
   }
 
   statusSaveDisabled = () => {
-    console.log(`statusSaveDisabled`);
     const particular = this.state.particular;
     const cesu = this.state.cesu;
     const ss_id = this.state.social_security;
@@ -571,7 +576,7 @@ class trustAndVerification extends React.Component {
               </Grid>
               :
               <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
-                <Button onClick={() => this.onSubmit} variant="contained" className={classes.buttonSave}>
+                <Button onClick={this.onSubmit} variant="contained" className={classes.buttonSave}>
                   Enregistrer
                 </Button>
               </Grid>

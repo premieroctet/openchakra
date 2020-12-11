@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from "react";
 import styles from '../../static/css/components/Layout/LayoutReserations/LayoutReservations';
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -6,7 +7,7 @@ import Layout from "./Layout";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import axios from "axios";
-import cookie from "react-cookies";
+
 
 class LayoutReservations extends React.Component{
 
@@ -21,7 +22,7 @@ class LayoutReservations extends React.Component{
   }
 
   componentDidMount = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then( res => {
         this.setState( { user: res.data})

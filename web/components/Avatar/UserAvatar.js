@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import {withStyles} from '@material-ui/core/styles';
@@ -6,8 +7,8 @@ import Grid from '@material-ui/core/Grid';
 import Popover from '@material-ui/core/Popover';
 import axios from 'axios';
 import styles from './UserAvatarStyle';
-import cookie from 'react-cookies';
 import {isEditableUser} from '../../utils/functions'
+const {getLoggedUserId}=require('../../utils/functions')
 import Typography from "@material-ui/core/Typography";
 
 const jwt = require('jsonwebtoken');
@@ -26,12 +27,9 @@ class UserAvatar extends React.Component {
   }
 
   componentDidMount() {
-    const token = cookie.load('token');
-    if (token) {
-      const token2 = token.split(' ')[1];
-      const decode = jwt.decode(token2);
-      const alfred_id = decode.id;
-      this.setState({currentUser: alfred_id},
+    const user_id = getLoggedUserId()
+    if (user_id) {
+      this.setState({currentUser: user_id},
         () => {
           // Check once then every 20s
           if (this.props.warnings === true) {
@@ -48,7 +46,7 @@ class UserAvatar extends React.Component {
   }
 
   checkWarnings = token => {
-    axios.defaults.headers.common['Authorization'] = token;
+    setAxiosAuthentication()
     var kyc = [];
     axios.get('/myAlfred/api/chatRooms/nonViewedMessagesCount')
       .then(res => {

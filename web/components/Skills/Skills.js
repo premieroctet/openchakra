@@ -1,9 +1,10 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
 import styles from './SkillsStyle';
-import cookie from 'react-cookies';
+
 const {SKILLS}=require('../../utils/consts');
 import Topic from "../../hoc/Topic/Topic"
 
@@ -22,7 +23,7 @@ class Skills extends React.Component {
   }
 
   componentDidMount = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
 
     if (this.props.alfred) {
       axios.get(`/myAlfred/api/reviews/${this.props.alfred}`)
@@ -67,12 +68,12 @@ class Skills extends React.Component {
     return (
       <Topic titleTopic={'Compliments'}>
         <Grid container className={classes.skillsContainer} spacing={3}>
-          { Object.keys(SKILLS).map(skill => {
+          { Object.keys(SKILLS).map((skill, index) => {
             const name =  SKILLS[skill].entrieName;
             const count= skills ? skills[name] : skill_values[skill];
             const pic=`/static/assets/img/skillsAlfred/${SKILLS[skill].picture}${count?'':'_disabled'}.svg`;
               return (
-                <Grid item xs={6} lg={3} xl={3} sm={6} md={6} className={classes.skillCard} onClick={(e) => skillClicked(e, name)}>
+                <Grid key={index} item xs={6} lg={3} xl={3} sm={6} md={6} className={classes.skillCard} onClick={(e) => skillClicked(e, name)}>
                   <Grid>
                     <img title={'pics'} alt={'pics'} src={pic} className={classes.avatarSize}/>
                   </Grid>

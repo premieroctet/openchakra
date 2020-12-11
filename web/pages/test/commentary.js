@@ -1,6 +1,7 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 import axios from 'axios'
-import cookie from 'react-cookies';
+
 
 import Select from 'react-dropdown-select';
 import About from '../../components/About/About'
@@ -23,7 +24,7 @@ class AboutTest extends React.Component{
   }
 
   componentDidMount() {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/users/all_light`)
       .then(response => {
         let users = response.data;

@@ -35,7 +35,7 @@ class BookingPreference extends React.Component {
         this.setState({service: service});
       })
       .catch(error => {
-        console.log(error);
+        console.error(error);
       });
   }
 
@@ -43,7 +43,6 @@ class BookingPreference extends React.Component {
     const {classes} = this.props;
     const {service} = this.state;
 
-    console.log('Render:' + JSON.stringify(this.state));
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
@@ -61,10 +60,10 @@ class BookingPreference extends React.Component {
                   </Grid>
                 </Grid>
                 <Grid>
-                  <p className={classes.policySizeContent}>
+                  <Typography className={classes.policySizeContent}>
                     Par exemple, si vous indiquez un délai de 24 heures, un client devra réserver votre service au moins
                     24 heures avant votre intervention.
-                  </p>
+                  </Typography>
                 </Grid>
                 <Grid className={classes.contentTextSize}>
                   <Grid item className={classes.contentAddandRemove}>
@@ -99,12 +98,12 @@ class BookingPreference extends React.Component {
                   <Grid>
                     <h3 className={classes.policySizeSubtitle}>Quel est votre montant minimum de réservation ?</h3>
                   </Grid>
-                  <Grid>
-                    <p className={classes.policySizeContent}>
+                  <Grid style={{marginBottom: 30}}>
+                    <Typography className={classes.policySizeContent}>
                       Le montant minimum de réservation correspond au panier minimum requis pour réserver ce service.
                       Si vous indiquez un montant de 10€, les clients ne pourront pas réserver vos services si la somme
                       des prestations n’atteint pas ce montant.
-                    </p>
+                    </Typography>
                   </Grid>
                   <Grid>
                     <TextField
@@ -150,9 +149,9 @@ class BookingPreference extends React.Component {
                   </Grid>
                   <Grid className={classes.contentIntervention}>
                     <Grid>
-                      <p className={classes.policySizeContent}>
+                      <Typography className={classes.policySizeContent}>
                         Définissez à présent le périmètre que vous souhaitez couvrir :
-                      </p>
+                      </Typography>
                     </Grid>
                     <Grid className={classes.contentTextSize}>
                       <Grid item className={classes.contentAddandRemoveKm}>
@@ -168,7 +167,7 @@ class BookingPreference extends React.Component {
                                 onClick={() => this.handleChange('perimeter', this.state.perimeter + 1)}>+</Grid>
                         </Grid>
                         <Grid className={classes.contentKilometers}>
-                          <p className={classes.policySizeContent}>kilomètre(s)</p>
+                          <Typography className={classes.policySizeContent}>kilomètre(s)</Typography>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -183,9 +182,4 @@ class BookingPreference extends React.Component {
   }
 }
 
-BookingPreference.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, {withTheme: true})(BookingPreference);
+export default withStyles(styles)(BookingPreference);

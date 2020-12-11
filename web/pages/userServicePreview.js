@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../utils/authentication')
+const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
@@ -18,7 +20,7 @@ import fr from 'date-fns/locale/fr';
 import Switch from '@material-ui/core/Switch';
 import {Helmet} from 'react-helmet';
 import Link from 'next/link';
-import cookie from 'react-cookies';
+
 import Topic from "../hoc/Topic/Topic";
 import ListAlfredConditions from "../components/ListAlfredConditions/ListAlfredConditions";
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
@@ -34,7 +36,7 @@ import withGrid from "../hoc/Grid/GridCard";
 import CardAlbum from "../components/Card/CardAlbum/CardAlbum";
 const ImageSlide=withSlide(withGrid(CardAlbum));
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
-
+const {getLoggedUserId}=require('../utils/functions')
 
 
 const isEmpty = require('../server/validation/is-empty');
@@ -98,11 +100,10 @@ class UserServicesPreview extends React.Component {
   }
 
   componentDidMount() {
-    const token = cookie.load('token');
-    if (token) {
+    if (getLoggedUserId()) {
       this.setState({logged: true});
     }
-    axios.defaults.headers.common['Authorization'] = token;
+    setAxiosAuthentication()
     let bookingObj = JSON.parse(localStorage.getItem('bookingObj'));
 
     const id = this.props.service_id;
@@ -507,9 +508,8 @@ class UserServicesPreview extends React.Component {
         localStorage.setItem('recipient', serviceUser.user._id);
       }
 
-      if (!user) {
-        cookie.remove('token', {path: '/'});
-        localStorage.setItem('path', Router.asPath)
+      if (!this.state.user) {
+        clearAuthenticationToken()
         Router.push('/?login=true');
         return
       }

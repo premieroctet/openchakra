@@ -1,6 +1,5 @@
 import getDistance from 'geolib/es/getDistance';
 import convertDistance from 'geolib/es/convertDistance';
-import cookie from 'react-cookies'
 const jwt = require('jsonwebtoken')
 const isEmpty = require('../server/validation/is-empty');
 const moment = require('moment');
@@ -69,9 +68,16 @@ const circular_get = (array, start, length) => {
 }
 
 const getLoggedUser = () => {
-  const token = cookie.load('token')
-  if (!token) {
-    console.log('Pas de cookie')
+  if (typeof localStorage=='undefined') {
+    console.log(`Token inconnnu, localStorage non défini`)
+    return null
+  }
+  const token = localStorage.getItem('token')
+  if (token) {
+    console.log(`Token:${JSON.stringify(token)}`)
+  }
+  else {
+    console.log('Pas de token')
     return null
   }
   const data=token.split(' ')[1]
@@ -84,7 +90,7 @@ const getLoggedUserId = () => {
   return logged && logged.id
 }
 
-const getLoggedUserAdmin = () => {
+const isLoggedUserAdmin = () => {
   const logged=getLoggedUser()
   return logged && logged.is_admin
 }
@@ -105,6 +111,6 @@ const isEditableUser = user => {
 
 module.exports = {
   computeDistanceKm, computeBookingReference, computeAverageNotes,
-  computeSumSkills, circular_get, getLoggedUser, getLoggedUserId,
-  getLoggedUserAdmin, isEditableUser, isLoggedUserAlfred
+  computeSumSkills, circular_get, getLoggedUserId,
+  isLoggedUserAdmin, isEditableUser, isLoggedUserAlfred
 };

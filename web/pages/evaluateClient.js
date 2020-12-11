@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../utils/authentication')
+const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
@@ -6,7 +8,7 @@ import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import StarRatings from 'react-star-ratings';
 import TextField from '@material-ui/core/TextField';
-import cookie from 'react-cookies';
+
 import styles from '../static/css/pages/evaluateClient/evaluateClient';
 import Typography from "@material-ui/core/Typography";
 import Hidden from "@material-ui/core/Hidden";
@@ -34,7 +36,7 @@ class EvaluateClient extends React.Component {
   componentDidMount() {
     const id = this.props.service_id;
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {
@@ -43,7 +45,7 @@ class EvaluateClient extends React.Component {
       })
       .catch(err => {
           if (err.response.status === 401 || err.response.status === 403) {
-            cookie.remove('token', {path: '/'});
+            clearAuthenticationToken()
             Router.push({pathname: '/'});
           }
         },

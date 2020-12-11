@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
@@ -6,7 +7,7 @@ import 'react-dates/initialize';
 import moment from 'moment';
 import 'react-dates/lib/css/_datepicker.css';
 import styles from '../static/css/pages/searchPage/searchStyle';
-import cookie from 'react-cookies';
+
 import FilterMenu from "../components/FilterMenu/FilterMenu";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
@@ -21,6 +22,7 @@ import Hidden from "@material-ui/core/Hidden";
 import LayoutMobileSearch from "../hoc/Layout/LayoutMobileSearch";
 import Typography from "@material-ui/core/Typography";
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
+const {getLoggedUserId}=require('../utils/functions')
 
 const SearchResults=withSlide(withGrid(CardService));
 
@@ -115,8 +117,7 @@ class SearchPage extends React.Component {
   }
 
   componentDidMount() {
-    const token = cookie.load('token');
-    if (token) {
+    if (getLoggedUserId()) {
       this.setState({logged: true});
     }
     // Mount components gets criterion from URL
@@ -146,7 +147,7 @@ class SearchPage extends React.Component {
     if ('selectedAddress' in this.props) {
       st['selectedAddress'] = this.props.selectedAddress;
     }
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
 
     axios.get('/myAlfred/api/category/all/sort')
       .catch(err => {

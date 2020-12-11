@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../../utils/authentication')
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
@@ -10,7 +12,7 @@ import getDistance from 'geolib/es/getDistance';
 import convertDistance from 'geolib/es/convertDistance';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import styles from './messagesDetails/messagesDetailsStyle';
-import cookie from 'react-cookies';
+
 import Router from 'next/router';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
@@ -50,7 +52,7 @@ class MessagesDetails extends React.Component {
       })
       .catch(err => {
         if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/login'});
         }
       });
@@ -62,7 +64,7 @@ class MessagesDetails extends React.Component {
       div.scrollTop = 99999;
     }, 1000);
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.put('/myAlfred/api/chatRooms/viewMessages/' + this.props.chatroomId)
       .then();
     axios

@@ -71,8 +71,14 @@ module.exports = function validateSimpleRegisterInput(data) {
     errors.country = 'Veuillez choisir un pays';
   }
 
-  if (!moment(data.birthday).isValid() || moment(data.birthday).isAfter(moment().subtract(16, 'years'))) {
-    errors.birthday = 'Date de naissance invalide, vous devez avoir 16 ans au minimum';
+  if (!moment(data.birthday).isValid()) {
+    errors.birthday = 'Date de naissance invalide';
+  }
+  if (moment(data.birthday).isValid() && moment(data.birthday).isAfter(moment().subtract(16, 'years'))) {
+    errors.birthday = 'Vous devez avoir 16 ans au minimum';
+  }
+  if (moment(data.birthday).isValid() && moment(data.birthday).isBefore(moment().subtract(150, 'years'))) {
+    errors.birthday = 'Date de naissance invalide, merci de saisir l\'année sur 4 chiffres';
   }
 
 

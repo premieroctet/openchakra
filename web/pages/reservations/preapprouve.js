@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import Link from 'next/link';
 import Layout from '../../hoc/Layout/Layout';
@@ -14,7 +15,7 @@ import styles from './preApprouve/preApprouveStyle';
 import About from '../../components/About/About';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
-import cookie from 'react-cookies';
+
 
 const {frenchFormat} = require('../../utils/text');
 
@@ -56,7 +57,7 @@ class Preapprouve extends React.Component {
     const booking_id = this.props.booking_id;
     this.setState({booking_id: booking_id});
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/booking/' + booking_id)
       .then(res => {
         this.setState({bookingObj: res.data});

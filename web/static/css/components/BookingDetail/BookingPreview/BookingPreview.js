@@ -215,9 +215,11 @@ export default theme =>  ({
     marginTop: '3%',
   },
   containerButtonGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     [theme.breakpoints.down('xs')]: {
       width: '100%',
-      display: 'flex',
       justifyContent: 'center',
     },
   },

@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../../utils/authentication')
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import axios from 'axios';
 import moment from 'moment';
@@ -13,7 +15,7 @@ import fr from 'date-fns/locale/fr';
 import {toast} from 'react-toastify';
 import {Helmet} from 'react-helmet';
 import styles from '../../static/css/pages/profile/editProfile/editProfile';
-import cookie from 'react-cookies';
+
 import Hidden from "@material-ui/core/Hidden";
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
@@ -60,7 +62,7 @@ class editProfile extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {
@@ -77,7 +79,7 @@ class editProfile extends React.Component {
       .catch(err => {
           console.error(err);
           if (err.response.status === 401 || err.response.status === 403) {
-            cookie.remove('token', {path: '/'});
+            clearAuthenticationToken()
             Router.push({pathname: '/login'});
           }
         },
