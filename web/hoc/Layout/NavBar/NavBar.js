@@ -116,7 +116,7 @@ class NavBar extends Component {
           user: res.data,
           allAddresses: allAddresses
         })
-      }).catch(err => console.error(err));
+      }).catch();
 
     this.setState({selectedAddress: this.props.selectedAddress || 'main'});
     this.setState({keyword: this.props.keyword || ''})
@@ -124,8 +124,7 @@ class NavBar extends Component {
 
   logout = () => {
     clearAuthenticationToken()
-    localStorage.removeItem('path');
-    clearAuthenticationToken()
+    localStorage.removeItem('path')
     if (this.state.ifHomePage) {
       window.location.reload(false)
     }

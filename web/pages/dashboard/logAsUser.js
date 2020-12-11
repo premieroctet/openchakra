@@ -79,7 +79,7 @@ class logAsUser extends React.Component {
         let users = response.data;
         const muUsers = users.map(u => {
           return {
-            label: `${u.name} ${u.firstname} ${u.email}`,
+            label: `${u.name} ${u.firstname} ${u.email} (${u._id})`,
             value: u.email,
             key: u.id,
           };

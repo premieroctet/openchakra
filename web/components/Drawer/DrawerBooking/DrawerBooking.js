@@ -21,6 +21,7 @@ import AddIcon from "@material-ui/icons/Add";
 import styles from '../../../static/css/components/DrawerBooking/DrawerBooking';
 import withStyles from "@material-ui/core/styles/withStyles";
 const isEmpty = require('../../../server/validation/is-empty');
+const {getLoggedUserId} = require('../../../utils/functions')
 const moment = require('moment');
 moment.locale('fr');
 
@@ -117,7 +118,7 @@ class DrawerBooking extends React.Component{
                 <CancelIcon color={'secondary'}/>
               </Grid>
               <Grid>
-                <Typography>Attention, cet Alfred se trouve loin de chez vous !</Typography>
+                <Typography>Cet Alfred se trouve trop loin de chez vous pour être réservé!</Typography>
               </Grid>
             </Grid> : null
         }
@@ -374,7 +375,7 @@ class DrawerBooking extends React.Component{
                     variant="contained"
                     color="primary"
                     aria-label="add"
-                    disabled={!isEmpty(errors)}
+                    disabled={getLoggedUserId() && !isEmpty(errors)}
                     onClick={() => this.props.book(true)}
                   >
                     <Typography>Réserver</Typography>

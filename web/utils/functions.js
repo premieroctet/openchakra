@@ -73,11 +73,8 @@ const getLoggedUser = () => {
     return null
   }
   const token = localStorage.getItem('token')
-  if (token) {
-    console.log(`Token:${JSON.stringify(token)}`)
-  }
-  else {
-    console.log('Pas de token')
+  if (!token) {
+    console.debug('Pas de token')
     return null
   }
   const data=token.split(' ')[1]
