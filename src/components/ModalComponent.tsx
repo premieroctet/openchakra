@@ -38,6 +38,7 @@ interface Props {
 interface UpdateProject {
   id: number
   public: boolean
+  projectName: string
 }
 
 const ModalComponent = (props: Props) => {
@@ -59,12 +60,15 @@ const ModalComponent = (props: Props) => {
       body: JSON.stringify(bodyData),
     })
     if (e.public) {
-      await fetch('/api/project/createThumbnail', {
+      await fetch('/.netlify/functions/take-screenshot', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json; charset=utf-8',
         },
-        body: JSON.stringify(e.id),
+        body: JSON.stringify({
+          pageToScreenshot: `${process.env.DEPLOY_URL}/project/preview/${e.id}-${e.projectName}`,
+          id: e.id,
+        }),
       })
     }
     const data = await response.json()
@@ -75,6 +79,7 @@ const ModalComponent = (props: Props) => {
     const data = {
       id: e.id,
       public: e.public,
+      projectName: e.projectName,
     }
 
     const projectUpdated = await updateProject(data)

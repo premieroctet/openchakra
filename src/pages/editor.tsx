@@ -66,12 +66,15 @@ const EditorPage = (props: {
       body: JSON.stringify(bodyData),
     })
     if (props.public) {
-      await fetch('/api/project/createThumbnail', {
+      await fetch('/.netlify/functions/take-screenshot', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json; charset=utf-8',
         },
-        body: JSON.stringify(props.id),
+        body: JSON.stringify({
+          pageToScreenshot: `${process.env.DEPLOY_URL}/project/preview/${props.id}-${props.projectName}`,
+          id: props.id,
+        }),
       })
     }
     const data = await response.json()
