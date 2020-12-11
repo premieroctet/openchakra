@@ -54,10 +54,10 @@ const ProjectList = () => {
       <Header session={session} projectPage={true} />
       <Flex
         backgroundColor="#252d3d"
-        p="2rem 5rem 2rem 5rem"
+        p={['2rem', '2rem 5rem', '2rem 5rem 2rem 5rem', '2rem 5rem 2rem 5rem']}
         minH="calc(100vh - 3rem)"
       >
-        <Box w="100%">
+        <Box w={['45%', '80%', '100%', '100%']}>
           <Text
             m="0 auto"
             mt={5}
@@ -79,19 +79,35 @@ const ProjectList = () => {
             value={radioValue}
             mt={5}
           >
-            <Radio value="all">All</Radio>
-            <Radio value="buttons">Buttons</Radio>
-            <Radio value="form">Form</Radio>
-            <Radio value="navigations">Navigations</Radio>
-            <Radio value="cards">Cards</Radio>
-            <Radio value="widget">Widget</Radio>
-            <Radio value="tables">Tables</Radio>
-            <Radio value="layouts">Layouts</Radio>
+            <Radio value="all" mt={[5, 5, 0, 0]}>
+              All
+            </Radio>
+            <Radio value="buttons" mt={[5, 5, 0, 0]}>
+              Buttons
+            </Radio>
+            <Radio value="form" mt={[5, 5, 0, 0]}>
+              Form
+            </Radio>
+            <Radio value="navigations" mt={[5, 5, 0, 0]}>
+              Navigations
+            </Radio>
+            <Radio value="cards" mt={[5, 5, 0, 0]}>
+              Cards
+            </Radio>
+            <Radio value="widget" mt={[5, 5, 0, 0]}>
+              Widget
+            </Radio>
+            <Radio value="tables" mt={[5, 5, 0, 0]}>
+              Tables
+            </Radio>
+            <Radio value="layouts" mt={[5, 5, 0, 0]}>
+              Layouts
+            </Radio>
           </RadioGroup>
 
           {projects ? (
             projects?.project.length > 0 ? (
-              <SimpleGrid columns={[2, 2, 2, 3]} spacing={6} mt={10}>
+              <SimpleGrid columns={[1, 1, 2, 3]} spacing={6} mt={10}>
                 {projects?.project.map(
                   (e: Project & { user: User }, i: number) =>
                     radioValue === 'all' ? (

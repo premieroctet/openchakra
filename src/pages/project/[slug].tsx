@@ -21,6 +21,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       projects,
       id: Number(projectId),
       projectName: projectName,
+      public: project?.public,
     },
   }
 }
@@ -76,6 +77,7 @@ const ProjectSlug = ({
       projectExist={projectExist}
       projectName={projectName}
       validated={projects.validated}
+      public={projects.public}
     />
   )
 }

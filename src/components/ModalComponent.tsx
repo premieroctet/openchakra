@@ -58,6 +58,15 @@ const ModalComponent = (props: Props) => {
       },
       body: JSON.stringify(bodyData),
     })
+    if (e.public) {
+      await fetch('/api/project/createThumbnail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(e.id),
+      })
+    }
     const data = await response.json()
     return data
   }

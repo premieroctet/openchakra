@@ -35,6 +35,7 @@ const EditorPage = (props: {
   loading: boolean
   projectName: string
   validated: boolean
+  public: boolean
 }) => {
   const { handlers } = useShortcuts()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -64,6 +65,15 @@ const EditorPage = (props: {
       },
       body: JSON.stringify(bodyData),
     })
+    if (props.public) {
+      await fetch('/api/project/createThumbnail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(props.id),
+      })
+    }
     const data = await response.json()
     return data
   }

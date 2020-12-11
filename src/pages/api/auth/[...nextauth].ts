@@ -4,9 +4,6 @@ import Providers from 'next-auth/providers'
 import Adapters from 'next-auth/adapters'
 import prisma from '../../../utils/prisma'
 
-const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options)
-export default authHandler
-
 const options = {
   providers: [
     Providers.GitHub({
@@ -18,3 +15,6 @@ const options = {
     prisma,
   }),
 }
+
+const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options)
+export default authHandler
