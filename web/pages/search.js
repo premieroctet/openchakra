@@ -429,6 +429,7 @@ class SearchPage extends React.Component {
                       <Grid container className={classes.searchMainContainer} spacing={3}>
                         <Hidden only={['xs', 'sm', 'md']}>
                           <SearchResults
+                            key={moment()}
                             model={new SearchDataModel(serviceUsers.map(su => su._id), 4, 3, false)}
                             style={classes}
                             gps={gps}
@@ -438,6 +439,7 @@ class SearchPage extends React.Component {
                         </Hidden>
                         <Hidden only={['xs', 'lg', 'xl', 'sm']}>
                           <SearchResults
+                            key={moment()}
                             model={new SearchDataModel(serviceUsers.slice(0, 20).map(su => su._id), 3, 3, false)}
                             style={classes}
                             gps={gps}
@@ -447,6 +449,7 @@ class SearchPage extends React.Component {
                         </Hidden>
                         <Hidden only={['xs', 'lg', 'xl', 'md']}>
                           <SearchResults
+                            key={moment()}
                             model={new SearchDataModel(serviceUsers.slice(0, 20).map(su => su._id), 2, 3, false)}
                             style={classes}
                             gps={gps}
@@ -460,6 +463,7 @@ class SearchPage extends React.Component {
                               return (
                                 <Grid item xs={12} key={index}>
                                   <CardService
+                                    key={moment()}
                                     item={su._id}
                                     gps={gps}
                                     user={this.state.user}
