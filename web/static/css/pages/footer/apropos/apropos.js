@@ -4,6 +4,6 @@ export default theme => ({
     justifyContent: 'center'
   },
   containerWidth:{
-    width: '50%'
+    width: '100%'
   }
 })

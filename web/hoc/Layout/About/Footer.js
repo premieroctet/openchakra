@@ -28,7 +28,7 @@ class Footer extends React.Component {
           }
           <Grid item>
             <Link href={'/cgu'}>
-                <Typography>Informations légales</Typography>
+              <Typography>Informations légales</Typography>
             </Link>
           </Grid>
           <Grid item>

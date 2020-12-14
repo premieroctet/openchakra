@@ -12,14 +12,14 @@ class LayoutFaq extends React.Component{
   }
 
   render(){
-    const{children}= this.props;
+    const{children, classes}= this.props;
     return(
-      <Grid style={{position:'relative', minHeight: '100vh'}}>
+      <Grid className={classes.mainContainerLayoutFaq}>
         <Header/>
-        <Grid>
+        <Grid className={classes.childrenContainer}>
           {children}
         </Grid>
-        <Grid style={{position: 'absolute', bottom: 0, height: 50, width: '95%', display: 'flex', justifyContent: 'center', flexDirection:'column'}}>
+        <Grid className={classes.footerContainerFaq}>
           <Footer/>
         </Grid>
       </Grid>
