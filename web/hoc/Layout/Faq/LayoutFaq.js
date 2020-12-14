@@ -27,7 +27,7 @@ class LayoutFaq extends React.Component {
             }}>
                 <Grid style={{margin: '0 auto'}}>
                     <p style={{fontWeight: 'bold'}}>Et si vous souhaitez en savoir plus</p>
-                    <p>Vous pouvez consulter <Link href={'/faq/home'}>
+                    <p>Vous pouvez consulter <Link href={'/faq'}>
                         <span className={classes.link}>notre FAQ</span>
                     </Link>
                     </p>

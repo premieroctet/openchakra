@@ -1,5 +1,6 @@
 const {clearAuthenticationToken}=require('../../utils/authentication')
 const {setAxiosAuthentication}=require('../../utils/authentication')
+const {setAuthToken}=require('../../utils/authentication')
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -78,7 +79,7 @@ class logAsUser extends React.Component {
         let users = response.data;
         const muUsers = users.map(u => {
           return {
-            label: `${u.name} ${u.firstname} ${u.email}`,
+            label: `${u.name} ${u.firstname} ${u.email} (${u._id})`,
             value: u.email,
             key: u.id,
           };
@@ -105,6 +106,7 @@ class logAsUser extends React.Component {
     setAxiosAuthentication()
     axios.post('/myAlfred/api/admin/loginAs', {username: this.state.user})
       .then(res => {
+        setAuthToken()
         Router.push('/');
       })
       .catch(err => {

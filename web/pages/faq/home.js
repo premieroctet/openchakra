@@ -13,7 +13,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {FAQ} from '../../utils/i18n'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
-import styles from '../../static/css/pages/faq/home';
+import styles from '../../static/css/pages/faq/home/home';
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import Visibility from "@material-ui/icons/Visibility";

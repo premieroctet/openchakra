@@ -84,7 +84,6 @@ class UserServicesPreview extends React.Component {
       },
       errors: {},
       isChecked: false,
-      warningPerimeter: false,
       use_cesu: false,
       albums:[]
     };
@@ -121,7 +120,7 @@ class UserServicesPreview extends React.Component {
             let user = res.data;
             this.setState({user: user});
           })
-          .catch(err => console.error(err))
+          .catch()
           .finally(() => {
 
             let serviceUser = res.data;
@@ -185,8 +184,8 @@ class UserServicesPreview extends React.Component {
               alfred: serviceUser.user,
               count: count,
               pick_tax: null,
-              date: bookingObj ? moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate() : null,
-              time: bookingObj ? moment(bookingObj.time_prestation).toDate() : null,
+              date: bookingObj && bookingObj.date_prestation ? moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate() : null,
+              time: bookingObj && bookingObj.time_prestation ? moment(bookingObj.time_prestation).toDate() : null,
               location: bookingObj ? bookingObj.location : null,
               commission: bookingObj ? bookingObj.fees : null,
             }, () => {
@@ -208,18 +207,16 @@ class UserServicesPreview extends React.Component {
 
 
     localStorage.removeItem('bookingObj');
+
     setTimeout(() => {
       this.computeTotal();
-    }, 3000);
+    }, 2000);
   }
 
   setDefaultLocation = () => {
     const serviceUser = this.state.serviceUser;
     const user = this.state.user;
-    var location = serviceUser.location.client && (!user || this.isInPerimeter()) ? this.props.address || 'client' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
-    if (location == null && user) {
-      this.setState({warningPerimeter: true});
-    }
+    var location = serviceUser.location.client && (!user || this.isInPerimeter()) ? this.props.address || 'main' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
     this.setState({location: location});
   };
 
@@ -337,8 +334,12 @@ class UserServicesPreview extends React.Component {
       this.setState({count: count}, () => this.computeTotal());
   };
 
+  isServiceAtHome = () => {
+      return this.state.location && (!['visio', 'alfred'].includes(this.state.location))
+  }
+
   computeTravelTax = () => {
-    return this.state.serviceUser.travel_tax && this.state.location === 'client' ? this.state.serviceUser.travel_tax : 0;
+    return this.state.serviceUser.travel_tax && this.isServiceAtHome() ? this.state.serviceUser.travel_tax : 0;
   };
 
   computePickTax = () => {
@@ -381,7 +382,7 @@ class UserServicesPreview extends React.Component {
   };
 
   isInPerimeter = () => {
-    if (isEmpty(this.state.serviceUser) || isEmpty(this.state.user) || this.getClientAddress()==null) {
+    if (isEmpty(this.state.location) || isEmpty(this.state.serviceUser) || isEmpty(this.state.user) || this.getClientAddress()==null) {
       return false;
     }
     const coordSU = this.state.serviceUser.service_address.gps;
@@ -395,7 +396,13 @@ class UserServicesPreview extends React.Component {
     if (isEmpty(this.state.serviceUser) || isEmpty(this.state.user)) {
       return false;
     }
-    const result=!Boolean(this.isInPerimeter());
+    if (isEmpty(this.state.location)) {
+      return true
+    }
+    if (this.isServiceAtHome() && !this.isInPerimeter()) {
+      return true
+    }
+    return false
   };
 
   getClientAddress = () => {
@@ -422,6 +429,7 @@ class UserServicesPreview extends React.Component {
   getLocationLabel = () => {
     const titles = {
       'client': this.getClientAddressLabel(),
+      'main': this.getClientAddressLabel(),
       'alfred': 'Chez ' + this.state.alfred.firstname,
       'visio': 'En visio',
     };
@@ -439,8 +447,8 @@ class UserServicesPreview extends React.Component {
 
   book = (actual) => { //actual : true=> book, false=>infos request
 
-    const count = this.state.count;
-    const user = this.state.user;
+    const {count, user, serviceUser} = this.state
+
     let prestations = [];
     this.state.prestations.forEach(p => {
       if (this.state.count[p._id]) {
@@ -470,7 +478,7 @@ class UserServicesPreview extends React.Component {
       location: this.state.location,
       equipments: this.state.serviceUser.equipments,
       amount: this.state.total,
-      date_prestation: moment(this.state.date).format('DD/MM/YYYY'),
+      date_prestation: this.state.date ? moment(this.state.date).format('DD/MM/YYYY') : null,
       time_prestation: this.state.time,
       alfred: this.state.serviceUser.user._id,
       user: user ? user._id : null,
@@ -502,12 +510,9 @@ class UserServicesPreview extends React.Component {
       }
 
       localStorage.setItem('bookingObj', JSON.stringify(bookingObj));
-      localStorage.setItem('emitter', this.state.user._id);
-      localStorage.setItem('recipient', this.state.serviceUser.user._id);
-      localStorage.removeItem('address');
 
       if (!this.state.user) {
-        clearAuthenticationToken()
+        localStorage.setItem('path', Router.asPath)
         Router.push('/?login=true');
         return
       }
@@ -517,7 +522,6 @@ class UserServicesPreview extends React.Component {
           const booking = response.data
           axios.put('/myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, {booking: booking._id})
             .then(() => {
-              localStorage.removeItem('address');
               if (actual) {
                 Router.push({pathname: '/confirmPayement',query: {booking_id: booking._id}})
               }
@@ -737,7 +741,7 @@ class UserServicesPreview extends React.Component {
                           onLocationChanged={this.onLocationChanged}
                           computeTravelTax={this.computeTravelTax}
                           getLocationLabel={this.getLocationLabel}
-                          warningPerimeter={this.state.warningPerimeter}
+                          warningPerimeter={this.hasWarningPerimeter()}
                           clientAddress={this.getClientAddressLabel()}
                           clientAddressId={this.props.address}
                           book={this.book}
@@ -763,7 +767,7 @@ class UserServicesPreview extends React.Component {
                       onLocationChanged={this.onLocationChanged}
                       computeTravelTax={this.computeTravelTax}
                       getLocationLabel={this.getLocationLabel}
-                      warningPerimeter={this.state.warningPerimeter}
+                      warningPerimeter={this.hasWarningPerimeter()}
                       clientAddress={this.getClientAddressLabel()}
                       clientAddressId={this.props.address}
                       book={this.book}

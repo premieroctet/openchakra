@@ -547,6 +547,7 @@ class Register extends React.Component {
         return (
           <Grid container>
             <Grid className={classes.margin}>
+            { true ? null  :
               <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                 <input accept="image/*"
                        className="input"
@@ -570,6 +571,7 @@ class Register extends React.Component {
                   </IconButton>
                 </label>
               </Grid>
+            }
             </Grid>
             <Grid className={classes.margin}>
               <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
@@ -709,7 +711,7 @@ class Register extends React.Component {
                       />
                     </Grid>
                     <Grid>
-                      <a href={'footer/cguPage'} target="_blank" style={{color: '#2FBCD3'}}>J’accepte les conditions
+                      <a href={'/cgu'} target="_blank" style={{color: '#2FBCD3'}}>J’accepte les conditions
                         générales d’utilisation de My-Alfred.</a>
                     </Grid>
                   </Grid>

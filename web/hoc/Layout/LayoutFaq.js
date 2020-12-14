@@ -16,10 +16,12 @@ class LayoutFaq extends React.Component{
     return(
       <Grid style={{position:'relative', minHeight: '100vh'}}>
         <Header/>
+        <Grid>
           {children}
-          <Grid style={{position: 'absolute', bottom: 0, height: 50, width: '100%'}}>
-            <Footer/>
-          </Grid>
+        </Grid>
+        <Grid style={{position: 'absolute', bottom: 0, height: 50, width: '95%', display: 'flex', justifyContent: 'center', flexDirection:'column'}}>
+          <Footer/>
+        </Grid>
       </Grid>
     )
   }

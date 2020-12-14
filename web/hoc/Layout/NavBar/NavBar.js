@@ -116,7 +116,7 @@ class NavBar extends Component {
           user: res.data,
           allAddresses: allAddresses
         })
-      }).catch(err => console.error(err));
+      }).catch();
 
     this.setState({selectedAddress: this.props.selectedAddress || 'main'});
     this.setState({keyword: this.props.keyword || ''})
@@ -124,8 +124,7 @@ class NavBar extends Component {
 
   logout = () => {
     clearAuthenticationToken()
-    localStorage.removeItem('path');
-    clearAuthenticationToken()
+    localStorage.removeItem('path')
     if (this.state.ifHomePage) {
       window.location.reload(false)
     }
@@ -506,6 +505,8 @@ class NavBar extends Component {
   };
 
   searchBarInput = (classes) => {
+
+    const logged = this.state.user !=null
     return (
       <Grid className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
       <Paper classes={{root: this.state.ifHomePage ? classes.navbarSearch : classes.navbarSearchP}}>
@@ -599,7 +600,7 @@ class NavBar extends Component {
           </Grid>
         }
         {
-          this.state.logged === false ?
+          logged === false ?
             <Grid className={classes.navbarDatePickerMain}>
               <Grid>
                 <Divider className={classes.divider} orientation="vertical"/>
@@ -652,8 +653,9 @@ class NavBar extends Component {
 
   render() {
     const {user, setOpenLogin, setOpenRegister, anchorEl, ifHomePage, modalMobileSearchBarInput, ifSearchPage, modalFilters} = this.state;
-    const {classes, logged} = this.props;
+    const {classes} = this.props;
 
+    const logged = user != null
     const modalLogin = () => {
       return (
         <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh}/>
@@ -665,6 +667,7 @@ class NavBar extends Component {
         <Register callLogin={this.handleOpenLogin} sendParentData={this.getData}/>
       );
     };
+
 
         return (
       <Grid className={this.state.ifHomePage ? classes.navbarMainSytle : classes.navbarMainSytleP}>
@@ -700,7 +703,7 @@ class NavBar extends Component {
                                  label={NAVBAR_MENU.registerServices}/>
                         </Link>
                       }
-                      <Link href={'/footer/contact'}>
+                      <Link href={'/contact'}>
                         <Tab classes={{root: classes.navbarTabRoot}}
                                label={NAVBAR_MENU.contactUs}/>
                       </Link>

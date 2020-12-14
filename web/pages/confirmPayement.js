@@ -21,8 +21,6 @@ class ConfirmPayement extends React.Component {
     this.state = {
       user: null,
       currentUser: null,
-      emitter: null,
-      recipient: null,
       bookingObj: null,
       city: null,
       address: null,
@@ -60,8 +58,6 @@ class ConfirmPayement extends React.Component {
         const bookingObj = res.data
         console.log(JSON.stringify(bookingObj, null, 2))
         this.setState({
-          emitter: localStorage.getItem('emitter'),
-          recipient: localStorage.getItem('recipient'),
           prestations: bookingObj.prestations,
           bookingObj: bookingObj,
           date: bookingObj.date_prestation,
@@ -107,8 +103,6 @@ class ConfirmPayement extends React.Component {
 
   handleStep = () => {
       this.setState({activeStep: this.state.activeStep + 1});
-      localStorage.setItem('emitter', this.state.emitter);
-      localStorage.setItem('recipient', this.state.recipient);
   };
 
   payDirect = () => {

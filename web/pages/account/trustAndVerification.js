@@ -46,7 +46,7 @@ class trustAndVerification extends React.Component {
     this.child = React.createRef();
     this.state = {
       user: {},
-      type: null,
+      type: 'identite',
       selected: false,
       id_recto: null,
       id_verso: null,
@@ -266,8 +266,12 @@ class trustAndVerification extends React.Component {
     axios.post('/myAlfred/api/users/profile/idCard', formData, config)
       .then((response) => {
         toast.info('Pièce d\'identité ajoutée');
-        this.componentDidMount();
-      }).catch();
+        window.reload()
+      })
+      .catch(err => {
+        console.log('Ajout nok')
+        console.error(err)
+      });
   };
 
   addVerso() {
@@ -398,7 +402,6 @@ class trustAndVerification extends React.Component {
   }
 
   statusSaveDisabled = () => {
-    console.log(`statusSaveDisabled`);
     const particular = this.state.particular;
     const cesu = this.state.cesu;
     const ss_id = this.state.social_security;
@@ -573,7 +576,7 @@ class trustAndVerification extends React.Component {
               </Grid>
               :
               <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
-                <Button onClick={() => this.onSubmit} variant="contained" className={classes.buttonSave}>
+                <Button onClick={this.onSubmit} variant="contained" className={classes.buttonSave}>
                   Enregistrer
                 </Button>
               </Grid>
