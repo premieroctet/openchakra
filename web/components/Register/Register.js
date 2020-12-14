@@ -547,6 +547,7 @@ class Register extends React.Component {
         return (
           <Grid container>
             <Grid className={classes.margin}>
+            { true ? null  :
               <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
                 <input accept="image/*"
                        className="input"
@@ -570,6 +571,7 @@ class Register extends React.Component {
                   </IconButton>
                 </label>
               </Grid>
+            }
             </Grid>
             <Grid className={classes.margin}>
               <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
