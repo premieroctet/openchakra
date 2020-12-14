@@ -1,6 +1,5 @@
 import React from 'react'
 import { Box, Spinner } from '@chakra-ui/core'
-//import Image from 'next/image'
 import { Project } from '@prisma/client'
 
 interface Props {
