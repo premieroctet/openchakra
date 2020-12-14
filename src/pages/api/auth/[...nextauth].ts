@@ -16,5 +16,8 @@ const options = {
   }),
 }
 
-const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options)
+const authHandler: NextApiHandler = (req, res) => {
+  console.log('test')
+}
+//NextAuth(req, res, options)
 export default authHandler

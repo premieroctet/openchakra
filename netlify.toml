@@ -1,12 +1,16 @@
+# [context.deploy-preview.environment]
+# DEPLOY_URL_PLACEHOLDER = "http://localhost:3000"
+
 [build]
-  functions = "out_functions"
-  publish   = "out_publish"
-  command   = "npm run build"
-  
+# command = "sed -i s/DEPLOY_URL_PLACEHOLDER/$DEPLOY_URL/g netlify.toml && npm run build"
+command = "npm run build"
+functions = "out_functions"
+publish = "out_publish"
+
 [dev]
-  functions = "out_functions"
-  publish   = "out_publish"
-  # We manually set the framework to static, otherwise Netlify automatically
-  # detects Next.js and redirects do not work.
-  # Read more: https://github.com/netlify/cli/blob/master/docs/netlify-dev.md#project-detection
-  framework = "#static"
+functions = "out_functions"
+publish = "out_publish"
+# We manually set the framework to static, otherwise Netlify automatically
+# detects Next.js and redirects do not work.
+# Read more: https://github.com/netlify/cli/blob/master/docs/netlify-dev.md#project-detection
+framework = "#static"
