@@ -822,7 +822,7 @@ class UserServicesPreview extends React.Component {
   };
 
   render() {
-    const {classes} = this.props;
+    const {classes, address} = this.props;
     const {service,alfred, user,} = this.state;
 
     return (
@@ -836,7 +836,7 @@ class UserServicesPreview extends React.Component {
           <meta property="og:url" content="https://my-alfred.io"/>
         </Helmet>
         <Hidden only={['xs', ]}>
-          <Layout user={user}>
+          <Layout user={user} selectedAddress={address}>
             {this.content(classes)}
           </Layout>
         </Hidden>
