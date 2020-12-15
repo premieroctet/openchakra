@@ -382,10 +382,10 @@ class UserServicesPreview extends React.Component {
   };
 
   isInPerimeter = () => {
-    if (isEmpty(this.state.location) || isEmpty(this.state.serviceUser) || isEmpty(this.state.user) || this.getClientAddress()==null) {
-      return false;
-    }
     const coordSU = this.state.serviceUser.service_address.gps;
+    if (!this.getClientAddress()) {
+      return false
+    }
     const coordUser = this.getClientAddress().gps;
     const dist = computeDistanceKm(coordSU, coordUser);
     const inPerimeter = parseFloat(dist) < parseFloat(this.state.serviceUser.perimeter);
@@ -407,6 +407,9 @@ class UserServicesPreview extends React.Component {
 
   getClientAddress = () => {
     const {user}=this.state
+    if (!user) {
+      return null
+    }
     const{address}=this.props
     if (!address || ['client', 'main'].includes(address)) {
       return user.billing_address
