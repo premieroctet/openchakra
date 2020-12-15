@@ -64,13 +64,14 @@ const isMomentInAvail = (m, serviceId, avail) => {
   }
   // Test event. If in period, check only time
   const res = events.some(e => isMomentInEvent(m, serviceId, e, period));
-  if (res) {
-    console.log(`Moment ${m} in ${JSON.stringify(avail._id)}`);
-  }
   return res;
 };
 
 const isMomentAvailable = (mom, avails) => {
+  if (!moment.isMoment(mom)) {
+    console.error(`Objet moment attendu: ${JSON.stringify(mmt)}`)
+    return false
+  }
   const availability=getAvailabilityForDate(mom, avails)
   if (!availability || !availability.available) {
     return false
@@ -80,6 +81,11 @@ const isMomentAvailable = (mom, avails) => {
 };
 
 const isIntervalAvailable = (start, end, serviceId, avails) => {
+  if (!moment.isMoment(start)||!moment.isMoment(end)) {
+    console.error(`Objet moment attendu:${JSON.stringify(start)}, ${JSON.stringify(end)}`)
+    return false
+  }
+
   if (isEmpty(avails)) {
     return true;
   }
@@ -166,14 +172,15 @@ const eventIncludesDate = (event, mmt) => {
 const availIncludesDate = (avail, mmt) => {
 
   if (avail.is_punctual) {
-    return [moment(avail.punctual).isSame(mmt, 'day'), avail.available]
+    return moment(avail.punctual).isSame(mmt, 'day')
   }
   else {
     var range=moment.range(avail.period.begin, avail.period.end)
     if (!range.snapTo('day').contains(mmt)) {
-      return [false, false]
+      return false
     }
-    return [avail.period.days.includes(mmt.isoWeekday()-1), avail.available]
+    const includedDay = avail.period.days.includes(mmt.isoWeekday()-1)
+    return includedDay
   }
 };
 
@@ -190,11 +197,15 @@ const getAvailabilityForDate = (mmt, availabilities) => {
   if (!availabilities || availabilities.length==0) {
     return null
   }
-  const availability = availabilities.sort(availabilitiesComparator).find( avail => availIncludesDate(avail, mmt)[0])
+  const availability = availabilities.sort(availabilitiesComparator).find( avail => availIncludesDate(avail, mmt))
   return availability
 }
 /** Moment mmt's date is available for alfred_id => true/false */
 const isDateAvailable = (mmt, availabilities) => {
+  if (!moment.isMoment(mmt)) {
+    console.error(`Objet moment attendu: ${JSON.stringify(mmt)}`)
+    return false
+  }
   if (!availabilities || availabilities.length == 0) {
     return false;
   }

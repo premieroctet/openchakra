@@ -22,6 +22,7 @@ import styles from '../../../static/css/components/DrawerBooking/DrawerBooking';
 import withStyles from "@material-ui/core/styles/withStyles";
 const isEmpty = require('../../../server/validation/is-empty');
 const {getLoggedUserId} = require('../../../utils/functions')
+const {isDateAvailable} = require('../../../utils/dateutils')
 const moment = require('moment');
 moment.locale('fr');
 
@@ -103,11 +104,27 @@ class DrawerBooking extends React.Component{
     )
   };
 
+  getExcludedDays = () =>  {
+    const date=moment(new Date())
+    var currMoment=moment(date).set("date", 1)
+    const endMoment=moment(date).add(1.5, "year")
+    var exclude=[]
+    while (currMoment<endMoment) {
+      if (!isDateAvailable(currMoment, this.props.availabilities)) {
+        exclude.push(currMoment.toDate())
+      }
+      currMoment.add(1, "d")
+    }
+    return exclude
+  }
+
   render() {
     const {expanded} = this.state;
     const {warningPerimeter, side, classes, service, alfred, date, time, errors,
       count, serviceUser, isChecked, location, pick_tax, total, commission,
-      cesu_total, filters, pricedPrestations} = this.props;
+      cesu_total, filters, pricedPrestations, availabilities} = this.props;
+
+    const excludedDays = this.getExcludedDays()
 
     return(
       <Grid>
@@ -155,6 +172,7 @@ class DrawerBooking extends React.Component{
                               locale='fr'
                               minDate={new Date()}
                               className={classes.datePickerStyle}
+                              excludeDates={excludedDays}
                             />
                           )
                         },
