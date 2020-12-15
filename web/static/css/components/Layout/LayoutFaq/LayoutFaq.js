@@ -21,7 +21,7 @@ export default theme => ({
     position: 'absolute',
     bottom: 0,
     height: 50,
-    width: '95%',
+    width: '100%',
     display: 'flex',
     justifyContent: 'center',
     flexDirection:'row-reverse',

@@ -1,7 +1,7 @@
 import React, {Fragment} from "react";
 import Grid from "@material-ui/core/Grid";
 import Header from "../../hoc/Layout/About/Header"
-import LayoutFaq from "../../hoc/Layout/Faq/LayoutFaq";
+import LayoutFaq from "../../hoc/Layout/Faq/NeedMoreFaq";
 import {withStyles} from "@material-ui/core/styles";
 import Link from 'next/link';
 import HeaderFaq from "../../hoc/Layout/Faq/HeaderFaq";

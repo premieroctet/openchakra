@@ -1,7 +1,7 @@
 import React, {Fragment} from "react";
 import Grid from "@material-ui/core/Grid";
 import Header from "../../hoc/Layout/About/Header";
-import LayoutFaq from "../../hoc/Layout/Faq/LayoutFaq";
+import LayoutFaq from "../../hoc/Layout/Faq/NeedMoreFaq";
 import Footer from "../../hoc/Layout/About/Footer";
 import ResaService from '../../components/HomePage/ResaService/ResaService';
 import {withStyles} from "@material-ui/core/styles";

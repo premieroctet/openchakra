@@ -14,7 +14,7 @@ const styles = theme => ({
     }
 });
 
-class LayoutFaq extends React.Component {
+class NeedMoreFaq extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -37,4 +37,4 @@ class LayoutFaq extends React.Component {
     }
 }
 
-export default withStyles(styles)(LayoutFaq);
+export default withStyles(styles)(NeedMoreFaq);
