@@ -27,12 +27,12 @@ class Footer extends React.Component {
                 <Grid>
                   <h3 className={classes.footerTitileSection}>À propos</h3>
                 </Grid>
-                <Link href={'/footer/apropos'}>
+                <Link href={'/footer/apropos?indexFaq=0'}>
                   <Grid style={{marginBottom: '2vh'}}>
                     <Typography className={classes.footerLink}>My Alfred</Typography>
                   </Grid>
                 </Link>
-                <Link href={'/footer/ourTeam'}>
+                <Link href={'/footer/ourTeam?indexFaq=2'}>
                   <Grid style={{marginBottom: '2vh'}}>
                     <Typography className={classes.footerLink}>Notre équipe</Typography>
                   </Grid>
@@ -49,7 +49,7 @@ class Footer extends React.Component {
                 <Grid>
                   <h3 className={classes.footerTitileSection}>Communauté</h3>
                 </Grid>
-                <Link href={'/footer/ourCommunity'}>
+                <Link href={'/footer/ourCommunity?indexFaq=1'}>
                   <Grid style={{marginBottom: '2vh'}}>
                     <Typography className={classes.footerLink}>Notre communauté</Typography>
                   </Grid>

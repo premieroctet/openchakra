@@ -12,10 +12,10 @@ class LayoutFaq extends React.Component{
   }
 
   render(){
-    const{children, classes}= this.props;
+    const{children, classes, index}= this.props;
     return(
       <Grid className={classes.mainContainerLayoutFaq}>
-        <Header/>
+        <Header index={index}/>
         <Grid className={classes.childrenContainer}>
           {children}
         </Grid>
