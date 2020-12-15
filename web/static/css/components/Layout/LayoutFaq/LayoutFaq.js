@@ -17,6 +17,9 @@ export default theme => ({
       paddingBottom: '45%'
     }
   },
+  becomeAlfredPageContainer:{
+    paddingBottom: '10%',
+  },
   footerContainerFaq:{
     position: 'absolute',
     bottom: 0,
