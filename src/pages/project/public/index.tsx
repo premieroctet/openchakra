@@ -174,7 +174,8 @@ const ProjectList = () => {
             )
           ) : (
             <Box textAlign="center" mt={30}>
-              <Spinner m="0 auto" color="white" size="xl" mt="3rem" />
+              {/* <Spinner m="0 auto" color="white" size="xl" mt="3rem" /> */}
+              <Text color="white">There is no projects</Text>
             </Box>
           )}
         </Box>
