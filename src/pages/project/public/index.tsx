@@ -8,7 +8,6 @@ import {
   Avatar,
   RadioGroup,
   Radio,
-  Spinner,
 } from '@chakra-ui/core'
 import { Global } from '@emotion/core'
 import { HotKeys } from 'react-hotkeys'

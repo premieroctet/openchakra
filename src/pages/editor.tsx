@@ -129,7 +129,7 @@ const EditorPage = (props: {
       onOpen()
     } else {
       setLoading(false)
-      signIn('github')
+      signIn()
     }
   }
 
@@ -169,7 +169,7 @@ const EditorPage = (props: {
         onOpen()
       }
     } else {
-      signIn('github')
+      signIn()
     }
   }
 

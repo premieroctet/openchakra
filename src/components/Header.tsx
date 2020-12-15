@@ -258,7 +258,11 @@ const Header = (props: Props) => {
             </Box>
           ) : (
             <Button
-              onClick={() => signIn('github')}
+              onClick={() =>
+                signIn(undefined, {
+                  callbackUrl: 'test',
+                })
+              }
               variantColor="teal"
               variant="outline"
               size="xs"

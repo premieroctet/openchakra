@@ -1,8 +1,8 @@
 [context.deploy-preview.environment]
-NEXTAUTH_URL = "https://deploy-preview-107--openchakra.netlify.app/"
+VERCEL_URL = "NEXTAUTH_URL_PLACEHOLDER"
 
 [build]
-command = "npm run build"
+command = "sed -i 's/NEXTAUTH_URL_PLACEHOLDER/$DEPLOY_PRIME_URL/g' netlify.toml && npm run build"
 functions = "out_functions"
 publish = "out_publish"
 
