@@ -76,11 +76,12 @@ class Footer extends React.Component {
                                         <Typography className={classes.footerLink}>Devenir Alfred</Typography>
                                     </Grid>
                                 </Link>
-                                <Link href={'/'}>
-                                    <Grid>
-                                        <Typography className={classes.footerLink}>Centre de ressources</Typography>
-                                    </Grid>
-                                </Link>
+                                {true ? null :
+                                    <Link href={'/'}>
+                                        <Grid>
+                                            <Typography className={classes.footerLink}>Centre de ressources</Typography>
+                                        </Grid>
+                                    </Link>}
                             </Grid>
                         </Hidden>
                         <Grid item xl={3} lg={3} className={classes.footerSection}>
@@ -93,7 +94,7 @@ class Footer extends React.Component {
                                 </Grid>
                             </Link>
                             <Link onClick={() => Tawk_API.maximize()}>
-                              <Grid style={{marginBottom: '2vh'}}>
+                                <Grid style={{marginBottom: '2vh'}}>
                                     <Typography className={classes.footerLink}>Parler à un humain</Typography>
                                 </Grid>
                             </Link>
@@ -138,15 +139,15 @@ class Footer extends React.Component {
                                     réservés</Typography>
                             </Grid>
                             <Grid className={classes.footerRgpdButtons}>
-                                {  true ? null :
-                                  <Grid>
-                                    <Typography className={classes.footerLink}>Sécurité</Typography>
+                                {true ? null :
+                                    <Grid>
+                                        <Typography className={classes.footerLink}>Sécurité</Typography>
                                     </Grid>
                                 }
                                 <Grid className={classes.footerLinkInfoContainer}>
-                                  <Link href={'/cgu'}>
-                                    <Typography className={classes.footerLink}>Informations légales</Typography>
-                                  </Link>
+                                    <Link href={'/cgu'}>
+                                        <Typography className={classes.footerLink}>Informations légales</Typography>
+                                    </Link>
                                 </Grid>
                                 <Grid>
                                     <Typography className={classes.footerLink}>Confidentialié</Typography>
