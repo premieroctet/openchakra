@@ -19,6 +19,13 @@ export default theme => ({
   },
   becomeAlfredPageContainer:{
     paddingBottom: '10%',
+    [theme.breakpoints.down('sm')]:{
+      margin:0,
+      paddingBottom: '20%'
+    },
+    [theme.breakpoints.down('xs')]:{
+      paddingBottom: '45%'
+    }
   },
   footerContainerFaq:{
     position: 'absolute',

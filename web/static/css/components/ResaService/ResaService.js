@@ -20,7 +20,10 @@ export default theme => ({
     fontFamily: theme.typography.text.fontFamily,
     color: theme.palette.white.main,
     fontWeight: theme.typography.text.fontWeight,
-    fontSize: theme.typography.text.fontSize
+    fontSize: theme.typography.text.fontSize,
+    [theme.breakpoints.down('xs')]:{
+      textAlign: 'center'
+    }
   },
   resaServiceButton: {
     fontWeight: theme.typography.blackButton.fontWeight,

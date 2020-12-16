@@ -8,6 +8,9 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {withStyles} from "@material-ui/core/styles";
 import styles from '../../../static/css/components/Layout/About/Header/Header';
 import ScrollMenu from "../../../components/ScrollMenu/ScrollMenu";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Router from 'next/router';
 
 
 class Header extends React.Component {
@@ -68,7 +71,7 @@ class Header extends React.Component {
         content = 'Pour trouver vos réponses';
       } else if (window.location.pathname === '/footer/becomeAlfred') {
         title = 'Devenir un Alfred';
-        content = 'les bases'
+        content = 'Les bases'
       }
     }
     return (
@@ -79,26 +82,23 @@ class Header extends React.Component {
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           width: '100%'
-        }}><Link href={'/'}>
-          <Grid style={{
-            display: 'flex',
-            color: 'white',
-            padding: '15px'
-          }}>
-            <ArrowBackIcon style={{
-              marginTop: '12px'
-            }}/>
-            <p>Retour sur My Alfred</p>
+        }}>
+          <Grid className={classes.containerArrowBack}>
+            <Button
+              classes={{root: classes.button}}
+              startIcon={<ArrowBackIcon style={{color: 'white'}}/>}
+              onClick={() => Router.push('/')}
+            >
+              Retour sur My Alfred
+            </Button>
           </Grid>
-        </Link>
-          <Grid style={{color: 'white', textAlign: 'center', lineHeight: '0.6em'}}>
-            <h3 style={{
-              paddingTop: '30px',
-              fontSize: '1.5vw'
-            }}>{title}</h3>
-            <p style={{
-              paddingBottom: '100px'
-            }}>{content}</p>
+          <Grid className={classes.containerTitleAndSubtitle}>
+            <Grid>
+              <h1 style={{color: 'white'}}>{title}</h1>
+            </Grid>
+            <Grid>
+              <h2 style={{color: 'white'}}>{content}</h2>
+            </Grid>
           </Grid>
         </Grid>
         {

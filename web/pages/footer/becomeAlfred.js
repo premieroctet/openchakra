@@ -5,6 +5,7 @@ import ResaService from '../../components/HomePage/ResaService/ResaService';
 import {withStyles} from "@material-ui/core/styles";
 import styles from '../../static/css/pages/footer/becomeAlfred/becomeAlfred';
 import Typography from "@material-ui/core/Typography";
+import Hidden from "@material-ui/core/Hidden";
 
 
 class BecomeAlfred extends React.Component {
@@ -19,9 +20,11 @@ class BecomeAlfred extends React.Component {
         <Grid container style={{margin: 0, width: '100%'}}>
           <Grid container style={{ margin:'0 10%', padding: '5% 10%'}} spacing={3}>
             <Grid item xl={4} lg={4} md={4} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row'}}>
-              <Grid>
-                <Typography style={{marginRight: '25px', color: '#F8CF61', fontSize: 34, fontWeight: 'bold'}}>1</Typography>
-              </Grid>
+              <Hidden only={['xs']}>
+                <Grid>
+                  <Typography style={{marginRight: '25px', color: '#F8CF61', fontSize: 34, fontWeight: 'bold'}}>1</Typography>
+                </Grid>
+              </Hidden>
               <Grid style={{display: 'flex', flexDirection: 'column'}}>
                 <Grid>
                   <h3>Proposez vos services</h3>
@@ -35,9 +38,11 @@ class BecomeAlfred extends React.Component {
               </Grid>
             </Grid>
             <Grid item xl={4} lg={4} md={4} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row'}}>
-              <Grid>
-                <Typography style={{marginRight: '25px',color: '#84A5E0', fontSize: 34, fontWeight: 'bold'}}>2</Typography>
-              </Grid>
+              <Hidden only={['xs']}>
+                <Grid>
+                  <Typography style={{marginRight: '25px',color: '#84A5E0', fontSize: 34, fontWeight: 'bold'}}>2</Typography>
+                </Grid>
+              </Hidden>
               <Grid style={{display: 'flex', flexDirection: 'column'}}>
                 <Grid>
                   <h3>Fixez vos conditions</h3>
@@ -51,9 +56,11 @@ class BecomeAlfred extends React.Component {
               </Grid>
             </Grid>
             <Grid item xl={4} lg={4} md={4} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row'}}>
-              <Grid>
-                <Typography style={{marginRight: '25px',color: '#F36B7F', fontSize: 34, fontWeight: 'bold'}}>3</Typography>
-              </Grid>
+              <Hidden only={['xs']}>
+                <Grid>
+                  <Typography style={{marginRight: '25px',color: '#F36B7F', fontSize: 34, fontWeight: 'bold'}}>3</Typography>
+                </Grid>
+              </Hidden>
               <Grid style={{display: 'flex', flexDirection: 'column'}}>
                 <Grid>
                   <h3>Choisissez votre Alfred et réservez !</h3>
@@ -99,7 +106,7 @@ class BecomeAlfred extends React.Component {
           <Grid style={{width: '100%'}}>
             <h1 style={{textAlign: 'center'}}>Créez votre boutique à votre façon</h1>
           </Grid>
-          <Grid container spacing={3}>
+          <Grid container spacing={3} style={{marginTop: '5vh'}}>
             <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
               <Grid>
                 <h2 style={{textAlign: 'center'}}>Vous proposez vos services</h2>
