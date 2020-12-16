@@ -22,7 +22,7 @@ import styles from '../../../static/css/components/DrawerBooking/DrawerBooking';
 import withStyles from "@material-ui/core/styles/withStyles";
 const isEmpty = require('../../../server/validation/is-empty');
 const {getLoggedUserId} = require('../../../utils/functions')
-const {isDateAvailable} = require('../../../utils/dateutils')
+const {isDateAvailable, isMomentAvailable} = require('../../../utils/dateutils')
 const moment = require('moment');
 moment.locale('fr');
 
@@ -118,6 +118,18 @@ class DrawerBooking extends React.Component{
     return exclude
   }
 
+  getExcludedTimes = () =>  {
+    var currMoment=moment(this.props.date || new Date()).set({hour:0, minute:0})
+    var exclude=[]
+    while (currMoment.hour()!=23 || currMoment.minute()!=30) {
+      if (!isMomentAvailable(currMoment, this.props.availabilities)) {
+        exclude.push(currMoment.toDate())
+      }
+      currMoment.add(30, "minutes")
+    }
+    return exclude
+  }
+
   render() {
     const {expanded} = this.state;
     const {warningPerimeter, side, classes, service, alfred, date, time, errors,
@@ -125,6 +137,7 @@ class DrawerBooking extends React.Component{
       cesu_total, filters, pricedPrestations, availabilities} = this.props;
 
     const excludedDays = this.getExcludedDays()
+    const excludedTimes = this.getExcludedTimes()
 
     return(
       <Grid>
@@ -199,8 +212,8 @@ class DrawerBooking extends React.Component{
                               placeholderText="Heure"
                               dateFormat="HH:mm"
                               locale='fr'
-                              minDate={new Date()}
                               className={classes.datePickerStyle}
+                              excludeTimes={excludedTimes}
                             />
                           )
                         },

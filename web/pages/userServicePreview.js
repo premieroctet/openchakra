@@ -36,7 +36,6 @@ import withGrid from "../hoc/Grid/GridCard";
 import CardAlbum from "../components/Card/CardAlbum/CardAlbum";
 const ImageSlide=withSlide(withGrid(CardAlbum));
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
-const {getLoggedUserId}=require('../utils/functions')
 
 
 const isEmpty = require('../server/validation/is-empty');
@@ -99,9 +98,7 @@ class UserServicesPreview extends React.Component {
   }
 
   componentDidMount() {
-    if (getLoggedUserId()) {
-      this.setState({logged: true});
-    }
+
     setAxiosAuthentication()
     let bookingObj = JSON.parse(localStorage.getItem('bookingObj'));
 
@@ -335,7 +332,7 @@ class UserServicesPreview extends React.Component {
   };
 
   isServiceAtHome = () => {
-      return this.state.location && (!['visio', 'alfred'].includes(this.state.location))
+    return this.state.location && (!['visio', 'alfred'].includes(this.state.location))
   }
 
   computeTravelTax = () => {
