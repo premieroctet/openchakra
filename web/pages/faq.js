@@ -1,35 +1,28 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import Grid from "@material-ui/core/Grid";
-import Header from "../hoc/Layout/About/Header";
-import Footer from "../hoc/Layout/About/Footer";
 import {withStyles} from "@material-ui/core/styles";
-import Link from '../components/Link/Link';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {FAQ} from '../utils/i18n'
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button'
 import styles from '../static/css/pages/faq';
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Input from "@material-ui/core/Input";
 import CloseIcon from '@material-ui/icons/Close';
 import LayoutFaq from "../hoc/Layout/LayoutFaq";
+import NeedMoreFaq from "../hoc/Layout/Faq/NeedMoreFaq";
 
 class Home extends React.Component {
 
   constructor(props) {
-      super(props);
-      this.state={
-        faq:null,
-        alfredFaq: false,
-        search: '',
-      }
+    super(props);
+    this.state={
+      faq:null,
+      alfredFaq: false,
+    }
   }
 
   componentDidMount() {
@@ -77,6 +70,7 @@ class Home extends React.Component {
 
     onSearchClear = () => {
       this.setState({search: ''})
+      this.props.search()
     };
 
   render() {
@@ -91,73 +85,80 @@ class Home extends React.Component {
 
     return (
       <LayoutFaq>
-        <Grid container className={classes.menuContainer}>
-          { searching ? null :
-            <Grid className={classes.logoContainer}>
-              <Grid style={{paddingRight: '25px', cursor : 'pointer'}} onClick={() => this.setAlfred(false)}>
-                <Grid className={classes.linkBloc}>
-                  <img title={'star'} alt={'star'} style={{margin: '0 auto', paddingBottom: '16px'}} src="/static/assets/faq/star.svg" />
-                  <Typography className={classes.linkText} style={{fontWeight: alfredFaq ? 'normal' :'bold'}}>Je suis client</Typography>
-                </Grid>
-            </Grid>
-            <Grid>
-              <Grid className={classes.linkBloc} onClick={() => this.setAlfred(true)}>
-                <img title={'ampoulelogo'} alt={'ampoulelogo'} style={{margin: '0 auto', width: '30px', paddingBottom: '10px'}} src="/static/assets/faq/amp.svg" />
-                <Typography className={classes.linkText} style={{fontWeight: alfredFaq ? 'bold' :'normal'}}>Je suis Alfred</Typography>
+        <Grid style={{display: 'flex', flexDirection: 'column'}}>
+          <Grid container className={classes.menuContainer}>
+            { searching ? null :
+              <Grid className={classes.logoContainer}>
+                <Grid style={{paddingRight: '25px', cursor : 'pointer'}} onClick={() => this.setAlfred(false)}>
+                  <Grid className={classes.linkBloc}>
+                    <img title={'star'} alt={'star'} style={{margin: '0 auto', paddingBottom: '16px'}} src="/static/assets/faq/star.svg" />
+                    <Typography className={classes.linkText} style={{fontWeight: alfredFaq ? 'normal' :'bold'}}>Je suis client</Typography>
+                  </Grid>
               </Grid>
+              <Grid>
+                <Grid className={classes.linkBloc} onClick={() => this.setAlfred(true)}>
+                  <img title={'ampoulelogo'} alt={'ampoulelogo'} style={{margin: '0 auto', width: '30px', paddingBottom: '10px'}} src="/static/assets/faq/amp.svg" />
+                  <Typography className={classes.linkText} style={{fontWeight: alfredFaq ? 'bold' :'normal'}}>Je suis Alfred</Typography>
+                </Grid>
+              </Grid>
+              </Grid>
+            }
+            <Grid style={{marginTop: '5vh'}}>
+              <Input
+                id="standard-with-placeholder"
+                placeholder="Chercher dans la FAQ"
+                style={{width: '100%'}}
+                type={"text"}
+                value={search}
+                onChange={this.onSearchChange}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={this.onSearchClear}
+                      disabled={!searching}
+                    >
+                      {<CloseIcon /> }
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
             </Grid>
-            </Grid>
-          }
+          </Grid>
+          <Grid style={{marginTop :'10vh'}}>
+            {
+              Object.keys(filteredFaqs).map( category => {
+                const items=filteredFaqs[category];
+                return (
+                  <Accordion key={category}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                      <Typography>{category}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Grid container>
+                        {items.map( i => {
+                          return (
+                            <Accordion key={i.title}>
+                              <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                                {i.title}
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                <div dangerouslySetInnerHTML={{ __html: i.contents}} />
+                              </AccordionDetails>
+                            </Accordion>
+                          )
+                        })}
+                      </Grid>
+                    </AccordionDetails>
+                  </Accordion>
+                )
+              })
+            }
+          </Grid>
           <Grid>
-            <Input
-              id="standard-with-placeholder"
-              placeholder="Chercher dans la FAQ"
-              style={{width: '100%'}}
-              type={"text"}
-              value={search}
-              onChange={this.onSearchChange}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={this.onSearchClear}
-                    disabled={!searching}
-                  >
-                    {<CloseIcon /> }
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
+            <NeedMoreFaq/>
           </Grid>
         </Grid>
-          {
-            Object.keys(filteredFaqs).map( category => {
-              const items=filteredFaqs[category];
-              return (
-                <Accordion key={category}>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                    <Typography>{category}</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Grid container>
-                      {items.map( i => {
-                        return (
-                         <Accordion key={i.title}>
-                           <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                             {i.title}
-                           </AccordionSummary>
-                            <AccordionDetails>
-                              <div dangerouslySetInnerHTML={{ __html: i.contents}} />
-                          </AccordionDetails>
-                        </Accordion>
-                        )
-                      })}
-                      </Grid>
-                  </AccordionDetails>
-                </Accordion>
-              )
-            })
-          }
       </LayoutFaq>
     )
   }

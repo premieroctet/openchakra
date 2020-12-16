@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {createRef} from 'react';
 import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../static/css/components/Layout/LayoutFaq/LayoutFaq';
@@ -9,10 +9,14 @@ import Router from 'next/router';
 
 class LayoutFaq extends React.Component{
   constructor(props){
-    super(props)
+    super(props);
+    this.child = React.createRef();
+
     this.state={
-      becomeAlfredPage: false
+      becomeAlfredPage: false,
+      search: ''
     }
+
   }
 
   componentDidMount() {
@@ -21,15 +25,25 @@ class LayoutFaq extends React.Component{
     }
   }
 
+  sendSearch = () =>{
+    let state = this.child.current.state;
+    this.setState({search: state.search})
+    console.log('coucou')
+  };
+
+
+
   render(){
-    const{children, classes, index}= this.props;
-    const{becomeAlfredPage}= this.state;
+    const{classes, index, children}= this.props;
+    const{becomeAlfredPage, search}= this.state;
+    const Children = () => {return children};
+
 
     return(
       <Grid className={classes.mainContainerLayoutFaq}>
-        <Header index={index}/>
+        <Header ref={this.child} index={index} search={this.sendSearch}/>
         <Grid className={becomeAlfredPage ? classes.becomeAlfredPageContainer : classes.childrenContainer}>
-          {children}
+          <Children search={this.sendSearch}/>
         </Grid>
         <Grid className={classes.footerContainerFaq}>
           <Footer/>

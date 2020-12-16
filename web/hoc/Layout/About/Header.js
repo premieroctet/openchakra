@@ -11,6 +11,11 @@ import ScrollMenu from "../../../components/ScrollMenu/ScrollMenu";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Router from 'next/router';
+import Paper from "@material-ui/core/Paper";
+import IconButton from "@material-ui/core/IconButton";
+import SearchIcon from "@material-ui/icons/Search";
+import TextField from "@material-ui/core/TextField";
+import InputBase from "@material-ui/core/InputBase";
 
 
 class Header extends React.Component {
@@ -37,10 +42,14 @@ class Header extends React.Component {
           label: NAVBAR_MENU.ourTeam,
           url: '/footer/ourTeam'
         },
-      ]
+      ],
+      search: ''
     }
-
   }
+
+  onSearchChange = ev => {
+    this.setState({search: ev.target.value}, () => this.props.search())
+  };
 
   render() {
 
@@ -93,14 +102,33 @@ class Header extends React.Component {
             <Grid>
               <h3 style={{color: 'white'}}>{content}</h3>
             </Grid>
+            <Grid className={classes.navbarSearchContainer}>
+              <Paper classes={{root: classes.navbarSearch}}>
+                <InputBase
+                  className={classes.input}
+                  placeholder="Chercher dans la FAQ"
+                  inputProps={{ 'aria-label': 'Chercher dans la FAQ' }}
+                  onChange={this.onSearchChange}
+                />
+                <Grid>
+                  <IconButton classes={{root: classes.iconButton}} aria-label="search">
+                    <SearchIcon/>
+                  </IconButton>
+                </Grid>
+              </Paper>
+            </Grid>
           </Grid>
+
+
         </Grid>
         {
           aboutMenu ?
             <Grid className={classes.layoutScrollMenu}>
               <ScrollMenu categories={items} indexCat={index} mode={'faq'}/>
             </Grid>
-            : null}
+            : null
+        }
+
       </Grid>
     )
   }
