@@ -193,9 +193,10 @@ class Messages extends React.Component {
               <OutlinedInput
                 id="standard-adornment-password"
                 type={'text'}
+                multiline={true}
                 value={this.state.message}
                 onChange={this.handleChangeMessage}
-                onKeyDown={e => {if (e.key === 'Enter') this.handleSubmitMessage(e)}}
+                // onKeyDown={e => {if (e.key === 'Enter') this.handleSubmitMessage(e)}}
                 label={'Saisissez votre message'}
                 endAdornment={
                   <InputAdornment position="end">
