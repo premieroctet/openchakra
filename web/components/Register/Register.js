@@ -193,13 +193,21 @@ class Register extends React.Component {
     }, () => this.validatorFirstStep());
   };
 
-  onChangeAddress({suggestion}) {
-    this.setState({
-      city: suggestion.city, address: suggestion.name, zip_code: suggestion.postcode, country: suggestion.country,
-      lat: suggestion.latlng.lat, lng: suggestion.latlng.lng,
-    });
-
-  };
+  onChangeAddress(result) {
+    if (result) {
+      const suggestion=result.suggestion
+      this.setState({
+        city: suggestion.city, address: suggestion.name, zip_code: suggestion.postcode, country: suggestion.country,
+        lat: suggestion.latlng.lat, lng: suggestion.latlng.lng,
+      })
+    }
+    else {
+      this.setState({
+        city: null, address: null, zip_code: null, country: null,
+        lat: null, lng: null,
+      })
+    }
+  }
 
   handleChecked() {
     this.setState({checked: !this.state.checked}, () => this.validatorSecondStep());
@@ -256,6 +264,9 @@ class Register extends React.Component {
     const password = this.state.password;
     const google_id = this.state.google_id;
     const facebook_id = this.state.facebook_id;
+
+    this.setState({cityError: null})
+    this.setState({birthdayError: null})
 
     axios
       .post('/myAlfred/api/users/register', newUser)
@@ -332,7 +343,7 @@ class Register extends React.Component {
         toast.info('Téléphone ajouté');
       })
       .catch(err =>
-        console.log(err),
+        console.error(err)
       );
   };
 
@@ -600,7 +611,7 @@ class Register extends React.Component {
 
                     }}
                     onChange={(suggestion) => this.onChangeAddress(suggestion)}
-
+                    onClear={() => this.onChangeAddress(null)}
                   />
                   <em style={{color: 'red'}}>{this.state.cityError}</em>
                 </Grid>

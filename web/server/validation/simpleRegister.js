@@ -4,6 +4,8 @@ const moment = require('moment');
 moment.locale('fr');
 
 module.exports = function validateSimpleRegisterInput(data) {
+
+  console.log(`Validating ${JSON.stringify(data)}`)
   let errors = {};
 
   data.name = !isEmpty(data.name) ? data.name : '';
@@ -56,6 +58,7 @@ module.exports = function validateSimpleRegisterInput(data) {
   }
 
   if (Validator.isEmpty(data.address)) {
+    console.warn(`Invalid address:${data.adddress}`)
     errors.address = 'Veuillez saisir une adresse';
   }
 
@@ -75,6 +78,7 @@ module.exports = function validateSimpleRegisterInput(data) {
     errors.birthday = 'Date de naissance invalide';
   }
   if (moment(data.birthday).isValid() && moment(data.birthday).isAfter(moment().subtract(16, 'years'))) {
+    console.warn(`${data.birthday} ${moment(data.birthday)}<${moment().subtract(16, 'years')}`)
     errors.birthday = 'Vous devez avoir 16 ans au minimum';
   }
   if (moment(data.birthday).isValid() && moment(data.birthday).isBefore(moment().subtract(150, 'years'))) {
