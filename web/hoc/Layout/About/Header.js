@@ -45,28 +45,22 @@ class Header extends React.Component {
   render() {
 
     const {classes, index} = this.props;
-    let {title, content, searchBar, aboutMenu, becomeAlfredMenu, active, classNameMenu, items} = this.state;
+    let {title, content, aboutMenu, items} = this.state;
 
     if (process.browser) {
       if (window.location.pathname === '/footer/apropos') {
         title = 'Nos valeurs';
         content = 'd\'entreprise mais surtout d\'humain';
         aboutMenu = true;
-        classNameMenu = classes.menuHeaderActive;
-
       } else if (window.location.pathname === '/footer/ourCommunity') {
         title = 'Notre Communauté';
         content = 'Qui nous fait vivre';
         aboutMenu = true;
-        classNameMenu = classes.menuHeaderActive;
-
       } else if (window.location.pathname === '/footer/ourTeam') {
         title = 'Notre Équipe';
         content = 'Qui nous fait vivre';
         aboutMenu = true;
-        classNameMenu = classes.menuHeaderActive;
-
-      } else if (window.location.pathname === '/faq') {
+      } else if (window.location.pathname === '/footer/addService' || '/faq') {
         title = 'FAQ';
         content = 'Pour trouver vos réponses';
       } else if (window.location.pathname === '/footer/becomeAlfred') {
@@ -74,8 +68,8 @@ class Header extends React.Component {
         content = 'Les bases'
       }
     }
-    return (
 
+    return (
       <Grid>
         <Grid style={{
           backgroundImage: "url('../../../static/assets/img/footer/footerBanner.svg')",
@@ -97,7 +91,7 @@ class Header extends React.Component {
               <h1 style={{color: 'white'}}>{title}</h1>
             </Grid>
             <Grid>
-              <h2 style={{color: 'white'}}>{content}</h2>
+              <h3 style={{color: 'white'}}>{content}</h3>
             </Grid>
           </Grid>
         </Grid>
@@ -109,9 +103,7 @@ class Header extends React.Component {
             : null}
       </Grid>
     )
-
   }
-
 }
 
 

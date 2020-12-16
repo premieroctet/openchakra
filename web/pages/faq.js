@@ -1,6 +1,5 @@
 import React, {Fragment} from 'react';
 import Grid from "@material-ui/core/Grid";
-import HeaderFaq from "../hoc/Layout/Faq/HeaderFaq";
 import Header from "../hoc/Layout/About/Header";
 import Footer from "../hoc/Layout/About/Footer";
 import {withStyles} from "@material-ui/core/styles";
@@ -20,50 +19,48 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Input from "@material-ui/core/Input";
 import CloseIcon from '@material-ui/icons/Close';
+import LayoutFaq from "../hoc/Layout/LayoutFaq";
 
 class Home extends React.Component {
 
-
-    constructor(props) {
-        super(props);
-        this.state={
-          faq:null,
-          alfredFaq: false,
-          search: '',
-        }
-    }
-
-    componentDidMount() {
-      this.setState({
-        faq:FAQ,
+  constructor(props) {
+      super(props);
+      this.state={
+        faq:null,
         alfredFaq: false,
-      })
-    }
+        search: '',
+      }
+  }
+
+  componentDidMount() {
+    this.setState({
+      faq:FAQ,
+      alfredFaq: false,
+    })
+  }
 
     filteredFaq = () => {
 
       const matches = (search_arr, text) => {
-        console.log(`matches:${JSON.stringify(search_arr)}, ${text.slice(1,20)}`)
         return search_arr.every(s => text.toLowerCase().includes(s))
-      }
+      };
 
-      var {alfredFaq, faq, search}=this.state
-      var faqs=alfredFaq ? faq['alfred']:faq['client']
+      var {alfredFaq, faq, search}=this.state;
+      var faqs=alfredFaq ? faq['alfred']:faq['client'];
       if (search) {
-        search = search.toLowerCase().split(' ').map(s => s.trim()).filter(s => s)
-        const allFaqs={...faq['alfred'], ...faq['client']}
-        var res={}
+        search = search.toLowerCase().split(' ').map(s => s.trim()).filter(s => s);
+        const allFaqs={...faq['alfred'], ...faq['client']};
+        var res={};
         Object.keys(allFaqs).forEach(cat => {
-            if (cat.toLowerCase().includes(search)) {
-              res[cat]=allFaqs[cat]
+          if (cat.toLowerCase().includes(search)) {
+            res[cat]=allFaqs[cat]
+          }
+          else allFaqs[cat].forEach( topic => {
+            if (matches(search, topic.title) || matches(search, topic.contents)) {
+              if (!res[cat]) {res[cat]=[]}
+              res[cat].push(topic)
             }
-            else allFaqs[cat].forEach( topic => {
-              console.log(topic.title)
-              if (matches(search, topic.title) || matches(search, topic.contents)) {
-                if (!res[cat]) {res[cat]=[]}
-                res[cat].push(topic)
-              }
-            });
+          });
         });
         faqs=res
       }
@@ -93,8 +90,7 @@ class Home extends React.Component {
     const filteredFaqs = this.filteredFaq();
 
     return (
-      <Fragment>
-        <Header/>
+      <LayoutFaq>
         <Grid container className={classes.menuContainer}>
           { searching ? null :
             <Grid className={classes.logoContainer}>
@@ -162,8 +158,7 @@ class Home extends React.Component {
               )
             })
           }
-          <Footer/>
-      </Fragment>
+      </LayoutFaq>
     )
   }
 }
