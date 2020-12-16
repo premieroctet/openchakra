@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../utils/authentication')
+const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
@@ -18,7 +20,7 @@ import fr from 'date-fns/locale/fr';
 import Switch from '@material-ui/core/Switch';
 import {Helmet} from 'react-helmet';
 import Link from 'next/link';
-import cookie from 'react-cookies';
+
 import Topic from "../hoc/Topic/Topic";
 import ListAlfredConditions from "../components/ListAlfredConditions/ListAlfredConditions";
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
@@ -34,7 +36,6 @@ import withGrid from "../hoc/Grid/GridCard";
 import CardAlbum from "../components/Card/CardAlbum/CardAlbum";
 const ImageSlide=withSlide(withGrid(CardAlbum));
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
-
 
 
 const isEmpty = require('../server/validation/is-empty');
@@ -82,7 +83,6 @@ class UserServicesPreview extends React.Component {
       },
       errors: {},
       isChecked: false,
-      warningPerimeter: false,
       use_cesu: false,
       albums:[]
     };
@@ -98,11 +98,8 @@ class UserServicesPreview extends React.Component {
   }
 
   componentDidMount() {
-    const token = cookie.load('token');
-    if (token) {
-      this.setState({logged: true});
-    }
-    axios.defaults.headers.common['Authorization'] = token;
+
+    setAxiosAuthentication()
     let bookingObj = JSON.parse(localStorage.getItem('bookingObj'));
 
     const id = this.props.service_id;
@@ -120,7 +117,7 @@ class UserServicesPreview extends React.Component {
             let user = res.data;
             this.setState({user: user});
           })
-          .catch(err => console.error(err))
+          .catch()
           .finally(() => {
 
             let serviceUser = res.data;
@@ -184,8 +181,8 @@ class UserServicesPreview extends React.Component {
               alfred: serviceUser.user,
               count: count,
               pick_tax: null,
-              date: bookingObj ? moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate() : null,
-              time: bookingObj ? moment(bookingObj.time_prestation).toDate() : null,
+              date: bookingObj && bookingObj.date_prestation ? moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate() : null,
+              time: bookingObj && bookingObj.time_prestation ? moment(bookingObj.time_prestation).toDate() : null,
               location: bookingObj ? bookingObj.location : null,
               commission: bookingObj ? bookingObj.fees : null,
             }, () => {
@@ -207,18 +204,16 @@ class UserServicesPreview extends React.Component {
 
 
     localStorage.removeItem('bookingObj');
+
     setTimeout(() => {
       this.computeTotal();
-    }, 3000);
+    }, 2000);
   }
 
   setDefaultLocation = () => {
     const serviceUser = this.state.serviceUser;
     const user = this.state.user;
-    var location = serviceUser.location.client && (!user || this.isInPerimeter()) ? this.props.address || 'client' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
-    if (location == null && user) {
-      this.setState({warningPerimeter: true});
-    }
+    var location = serviceUser.location.client && (!user || this.isInPerimeter()) ? this.props.address || 'main' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
     this.setState({location: location});
   };
 
@@ -336,8 +331,12 @@ class UserServicesPreview extends React.Component {
       this.setState({count: count}, () => this.computeTotal());
   };
 
+  isServiceAtHome = () => {
+    return this.state.location && (!['visio', 'alfred'].includes(this.state.location))
+  }
+
   computeTravelTax = () => {
-    return this.state.serviceUser.travel_tax && this.state.location === 'client' ? this.state.serviceUser.travel_tax : 0;
+    return this.state.serviceUser.travel_tax && this.isServiceAtHome() ? this.state.serviceUser.travel_tax : 0;
   };
 
   computePickTax = () => {
@@ -380,10 +379,10 @@ class UserServicesPreview extends React.Component {
   };
 
   isInPerimeter = () => {
-    if (isEmpty(this.state.serviceUser) || isEmpty(this.state.user) || this.getClientAddress()==null) {
-      return false;
-    }
     const coordSU = this.state.serviceUser.service_address.gps;
+    if (!this.getClientAddress()) {
+      return false
+    }
     const coordUser = this.getClientAddress().gps;
     const dist = computeDistanceKm(coordSU, coordUser);
     const inPerimeter = parseFloat(dist) < parseFloat(this.state.serviceUser.perimeter);
@@ -394,11 +393,20 @@ class UserServicesPreview extends React.Component {
     if (isEmpty(this.state.serviceUser) || isEmpty(this.state.user)) {
       return false;
     }
-    const result=!Boolean(this.isInPerimeter());
+    if (isEmpty(this.state.location)) {
+      return true
+    }
+    if (this.isServiceAtHome() && !this.isInPerimeter()) {
+      return true
+    }
+    return false
   };
 
   getClientAddress = () => {
     const {user}=this.state
+    if (!user) {
+      return null
+    }
     const{address}=this.props
     if (!address || ['client', 'main'].includes(address)) {
       return user.billing_address
@@ -421,6 +429,7 @@ class UserServicesPreview extends React.Component {
   getLocationLabel = () => {
     const titles = {
       'client': this.getClientAddressLabel(),
+      'main': this.getClientAddressLabel(),
       'alfred': 'Chez ' + this.state.alfred.firstname,
       'visio': 'En visio',
     };
@@ -438,8 +447,8 @@ class UserServicesPreview extends React.Component {
 
   book = (actual) => { //actual : true=> book, false=>infos request
 
-    const count = this.state.count;
-    const user = this.state.user;
+    const {count, user, serviceUser} = this.state
+
     let prestations = [];
     this.state.prestations.forEach(p => {
       if (this.state.count[p._id]) {
@@ -461,34 +470,38 @@ class UserServicesPreview extends React.Component {
     }
 
 
-    let chatPromise = (actual || !user) ? emptyPromise({res: null}) : axios.post('/myAlfred/api/chatRooms/addAndConnect', {
-      emitter: this.state.user._id,
-      recipient: this.state.serviceUser.user._id,
-    });
+    let bookingObj = {
+      reference: user ? computeBookingReference(user, this.state.serviceUser.user) : '',
+      service: this.state.serviceUser.service.label,
+      serviceId: this.state.serviceUser.service._id,
+      address: place,
+      location: this.state.location,
+      equipments: this.state.serviceUser.equipments,
+      amount: this.state.total,
+      date_prestation: this.state.date ? moment(this.state.date).format('DD/MM/YYYY') : null,
+      time_prestation: this.state.time,
+      alfred: this.state.serviceUser.user._id,
+      user: user ? user._id : null,
+      prestations: prestations,
+      travel_tax: this.computeTravelTax(),
+      pick_tax: this.computePickTax(),
+      cesu_amount: this.state.cesu_total,
+      fees: this.state.commission,
+      status: actual ? 'En attente de paiement' : 'Demande d\'infos',
+      serviceUserId: this.state.serviceUser._id,
+    };
+
+    let chatPromise = !user ?
+      emptyPromise({res: null})
+      :
+      axios.post('/myAlfred/api/chatRooms/addAndConnect', {
+        emitter: this.state.user._id,
+        recipient: this.state.serviceUser.user._id,
+      });
 
     chatPromise.then(res => {
-      let bookingObj = {
-        reference: user ? computeBookingReference(user, this.state.serviceUser.user) : '',
-        service: this.state.serviceUser.service.label,
-        serviceId: this.state.serviceUser.service._id,
-        address: place,
-        location: this.state.location,
-        equipments: this.state.serviceUser.equipments,
-        amount: this.state.total,
-        date_prestation: moment(this.state.date).format('DD/MM/YYYY'),
-        time_prestation: this.state.time,
-        alfred: this.state.serviceUser.user._id,
-        user: user ? user._id : null,
-        prestations: prestations,
-        travel_tax: this.computeTravelTax(),
-        pick_tax: this.computePickTax(),
-        cesu_amount: this.state.cesu_total,
-        fees: this.state.commission,
-        status: actual ? 'En attente de confirmation' : 'Demande d\'infos',
-        serviceUserId: this.state.serviceUser._id,
-      };
 
-      if (!actual && user) {
+      if (user) {
         bookingObj['chatroom'] = res.data._id;
       }
 
@@ -496,45 +509,30 @@ class UserServicesPreview extends React.Component {
         bookingObj.option = this.state.selectedOption;
       }
 
-      if (actual) {
-        localStorage.setItem('bookingObj', JSON.stringify(bookingObj));
-        if (user) {
-          localStorage.setItem('emitter', this.state.user._id);
-          localStorage.setItem('recipient', this.state.serviceUser.user._id);
-          localStorage.removeItem('address');
-        }
+      localStorage.setItem('bookingObj', JSON.stringify(bookingObj));
 
-        if (!this.state.user) {
-          cookie.remove('token', {path: '/'});
-          localStorage.setItem('path', Router.asPath)
-          Router.push('/?login=true');
-        } else {
-          Router.push({
-            pathname: '/confirmPayement',
-            query: {id: this.props.service_id},
-          });
-        }
-      } else {
-        if (!user) {
-          cookie.remove('token', {path: '/'});
-          localStorage.setItem('bookingObj', JSON.stringify(bookingObj));
-          Router.push({pathname: '/'});
-        } else {
-          axios.post('/myAlfred/api/booking/add', bookingObj)
-            .then(response => {
-              console.log(response, 'myresponse')
-              axios.put('/myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, {booking: response.data._id})
-                .then(() => {
-                  localStorage.removeItem('address');
-                  Router.push(`/profile/messages?user=${response.data.user}&relative=${response.data.alfred}`
-                  );
-                });
-            })
-            .catch(err => console.error(err));
-        }
+      if (!this.state.user) {
+        localStorage.setItem('path', Router.asPath)
+        Router.push('/?login=true');
+        return
       }
-    });
-  };
+
+      axios.post('/myAlfred/api/booking/add', bookingObj)
+        .then(response => {
+          const booking = response.data
+          axios.put('/myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, {booking: booking._id})
+            .then(() => {
+              if (actual) {
+                Router.push({pathname: '/confirmPayement',query: {booking_id: booking._id}})
+              }
+              else {
+                Router.push(`/profile/messages?user=${response.data.user}&relative=${response.data.alfred}`)
+              }
+            });
+        })
+        .catch(err => console.error(err))
+    })
+  }
 
   formatDeadline = dl => {
     if (!dl) {
@@ -743,7 +741,7 @@ class UserServicesPreview extends React.Component {
                           onLocationChanged={this.onLocationChanged}
                           computeTravelTax={this.computeTravelTax}
                           getLocationLabel={this.getLocationLabel}
-                          warningPerimeter={this.state.warningPerimeter}
+                          warningPerimeter={this.hasWarningPerimeter()}
                           clientAddress={this.getClientAddressLabel()}
                           clientAddressId={this.props.address}
                           book={this.book}
@@ -769,7 +767,7 @@ class UserServicesPreview extends React.Component {
                       onLocationChanged={this.onLocationChanged}
                       computeTravelTax={this.computeTravelTax}
                       getLocationLabel={this.getLocationLabel}
-                      warningPerimeter={this.state.warningPerimeter}
+                      warningPerimeter={this.hasWarningPerimeter()}
                       clientAddress={this.getClientAddressLabel()}
                       clientAddressId={this.props.address}
                       book={this.book}
@@ -821,7 +819,7 @@ class UserServicesPreview extends React.Component {
   };
 
   render() {
-    const {classes} = this.props;
+    const {classes, address} = this.props;
     const {service,alfred, user,} = this.state;
 
     return (
@@ -835,7 +833,7 @@ class UserServicesPreview extends React.Component {
           <meta property="og:url" content="https://my-alfred.io"/>
         </Helmet>
         <Hidden only={['xs', ]}>
-          <Layout user={user}>
+          <Layout user={user} selectedAddress={address}>
             {this.content(classes)}
           </Layout>
         </Hidden>

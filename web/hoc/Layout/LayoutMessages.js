@@ -1,9 +1,10 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../static/css/components/Layout/LayoutMessages/LayoutMessages'
 import Grid from "@material-ui/core/Grid";
 import axios from "axios";
-import cookie from "react-cookies";
+
 import Layout from "./Layout";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -18,7 +19,7 @@ class LayoutMessages extends React.Component{
   }
 
   componentDidMount = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then( res => {
         this.setState( { user: res.data})

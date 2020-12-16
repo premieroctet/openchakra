@@ -2,10 +2,9 @@ import axios from 'axios';
 import React from 'react';
 import Footer from '../hoc/Layout/Footer/Footer';
 import BecomeAlfred from '../components/HomePage/BecomeAlfred/BecomeAlfred';
-import setAuthToken from '../utils/setAuthToken';
 import Router from 'next/router';
 import {Helmet} from 'react-helmet';
-import cookie from 'react-cookies';
+
 import Grid from '@material-ui/core/Grid';
 import InfoBar from '../components/InfoBar/InfoBar';
 import {withStyles} from '@material-ui/core/styles';
@@ -20,6 +19,7 @@ import MobileNavbar from "../hoc/Layout/NavBar/MobileNavbar";
 import Hidden from "@material-ui/core/Hidden";
 import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
 import {Divider} from "@material-ui/core";
+const {getLoggedUserId}=require('../utils/functions')
 
 class Home extends React.Component {
   constructor(props) {
@@ -32,21 +32,20 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    const token = cookie.load('token');
-    if (token) {
+    if (getLoggedUserId()) {
       this.setState({logged: true})
     }
     axios.get('/myAlfred/api/category/all')
       .then(res => {
         let category = res.data;
         this.setState({category: category});
-      }).catch();
+      }).catch(err => console.error(err));
 
     axios.get('/myAlfred/api/serviceUser/home')
       .then(response => {
         let alfred = response.data;
         this.setState({alfred: alfred});
-      });
+      }).catch(err => console.error(err));
 
 
   }
@@ -68,11 +67,11 @@ class Home extends React.Component {
           <Grid container className={classes.navbarAndBannerContainer}>
             <Grid className={classes.navbarAndBannerBackground}>
                 <Grid className={classes.navbarComponentPosition}>
-                  <NavBar logged={logged}/>
+                  <NavBar/>
                 </Grid>
               <Grid className={classes.bannerPresentationContainer}>
                 <Grid className={classes.bannerSize}>
-                  <BannerPresentation style={classes}/>
+                  <BannerPresentation/>
                 </Grid>
               </Grid>
             </Grid>

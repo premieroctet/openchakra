@@ -213,18 +213,30 @@ class CardService extends React.Component{
               <Grid className={classes.cardServiceScoreAndButtonContainer}>
                 <Grid className={classes.cardServiceRatingContainer}>
                   <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
+                  { cpData.reviews && cpData.reviews.length>0 ?
                     <Rating
                       name="simple-controlled"
                       value={cpData.reviews && cpData.reviews.length>0 ? 1:0}
                       max={1}
                       readOnly
                     />
+                    :
+                    null
+                  }
                     <Grid className={classes.cardServiceBoxRatingDisplay}>
                       <Grid className={classes.cardServiceRating}>
+                        { notes.global && notes.global >0 ?
                         <Typography className={classes.cardServiceLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</Typography>
+                        :
+                        null
+                      }
                       </Grid>
                       <Grid>
-                        <Typography className={classes.cardServiceLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</Typography>
+                        { cpData.reviews && cpData.reviews.length >0 ?
+                          <Typography className={classes.cardServiceLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</Typography>
+                          :
+                          null
+                        }
                       </Grid>
                     </Grid>
                   </Box>

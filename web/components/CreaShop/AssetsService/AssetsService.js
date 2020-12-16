@@ -40,7 +40,6 @@ class AssetsService extends React.Component {
   }
 
   handleChange(key, value) {
-    console.log('onChange:' + key, value);
     var stat = {[key]: value};
     if (key == 'diplomaName' && isEmpty(value)) {
       stat['diplomaYear'] = null;
@@ -48,7 +47,6 @@ class AssetsService extends React.Component {
     if (key == 'certificationName' && isEmpty(value)) {
       stat['certificationYear'] = null;
     }
-    console.log('after onChange:stat:' + JSON.stringify(stat));
     this.setState(stat, () => this.props.onChange(this.state));
   }
 
@@ -56,7 +54,6 @@ class AssetsService extends React.Component {
     const {classes} = this.props;
     const {dates} = this.state;
 
-    console.log('AssetsService:render:state is :' + JSON.stringify(this.state, null, 2));
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
@@ -71,13 +68,13 @@ class AssetsService extends React.Component {
                     <h3 className={classes.policySizeSubtitle}>Décrivez votre expertise ! (facultatif)</h3>
                   </Grid>
                   <Grid>
-                    <p className={classes.policySizeContent}>
+                    <Typography className={classes.policySizeContent}>
                       Mettez en évidence vos compétences et votre expertise dans ce service.
                       Vous pouvez également donner des précisions sur vos prestations.
                       Par exemple, si vous proposez un service de confection de tapis, vous pouvez indiquer les heures
                       nécessaires pour différentes dimension de tapis.
                       Précisez tout ce qui peut aider votre client à réserver correctement votre service !
-                    </p>
+                    </Typography>
                   </Grid>
                   <Grid>
                     <TextField
@@ -96,12 +93,12 @@ class AssetsService extends React.Component {
               </Grid>
               <Grid style={{width: '80%'}}>
                 <Grid>
-                  <p className={classes.policySizeContent}>
+                  <Typography className={classes.policySizeContent}>
                     Précisez le nombre d’années d’expérience dont vous disposez sur ce service.
                     Si vous possédez des certifications et/ou diplômes pour ce service, mettez-les en avant !
                     Après vérification par My-Alfred, vous aurez le statut d’Alfred expérimenté/certifié et/ou diplômé
                     sur ce service.
-                  </p>
+                  </Typography>
                 </Grid>
                 <Grid style={{marginBottom: 150}}>
                   <Grid item xs={12}>
@@ -148,7 +145,6 @@ class AssetsService extends React.Component {
                               margin="dense"
                               variant="outlined"
                               select
-                              InputLabelProps={''}
                               onChange={e => this.handleChange('diplomaYear', e.target.value)}
                             >
                               {this.state.dates.map(date => {
@@ -169,7 +165,7 @@ class AssetsService extends React.Component {
                               </label>
                               {this.state.diplomaPicture !== null ?
                                 <Grid style={{display: 'flex', alignItems: 'center'}}>
-                                  <p>{typeof (this.state.diplomaPicture) == 'string' ? 'Diplôme déjà joint' : this.state.diplomaPicture.name}</p>
+                                  <Typography>{typeof (this.state.diplomaPicture) == 'string' ? 'Diplôme déjà joint' : this.state.diplomaPicture.name}</Typography>
                                   <CheckCircleIcon color={'primary'} style={{marginLeft: 10}}/>
                                   {false ?
                                     <IconButton style={{marginLeft: 10}}>
@@ -180,8 +176,8 @@ class AssetsService extends React.Component {
                                 : null
                               }
                             </Grid>
-                            <p>En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié
-                              auprès des utilisateurs mais il ne sera jamais visible par ces derniers</p>
+                            <Typography>En téléchargeant votre diplôme, votre diplôme aura le statut de diplôme vérifié
+                              auprès des utilisateurs mais il ne sera jamais visible par ces derniers</Typography>
                           </Grid>
                         </Grid>
                       </AccordionDetails>
@@ -223,7 +219,7 @@ class AssetsService extends React.Component {
                               </label>
                               {this.state.certificationPicture !== null ?
                                 <Grid style={{display: 'flex', alignItems: 'center'}}>
-                                  <p>{typeof (this.state.certificationPicture) == 'string' ? 'Certification déjà jointe' : this.state.certificationPicture.name}</p>
+                                  <Typography>{typeof (this.state.certificationPicture) == 'string' ? 'Certification déjà jointe' : this.state.certificationPicture.name}</Typography>
                                   <CheckCircleIcon color={'primary'} style={{marginLeft: 10}}/>
                                   {false ?
                                     <IconButton style={{marginLeft: 10}}>
@@ -234,9 +230,9 @@ class AssetsService extends React.Component {
                                 : null
                               }
                             </Grid>
-                            <p>En téléchargeant votre certification, votre certification aura le statut de
+                            <Typography>En téléchargeant votre certification, votre certification aura le statut de
                               certification vérifiée auprès des utilisateurs mais elle ne sera jamais visible par ces
-                              derniers</p>
+                              derniers</Typography>
                           </Grid>
                         </Grid>
                       </AccordionDetails>
@@ -252,9 +248,4 @@ class AssetsService extends React.Component {
   }
 }
 
-AssetsService.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, {withTheme: true})(AssetsService);
+export default withStyles(styles)(AssetsService);

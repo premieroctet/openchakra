@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
@@ -15,7 +16,7 @@ import Radio from '@material-ui/core/Radio';
 import axios from 'axios';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment'
-import cookie from 'react-cookies'
+
 
 class DrawerEditingSchedule extends React.Component {
 
@@ -39,7 +40,7 @@ class DrawerEditingSchedule extends React.Component {
 
   onDateSelectionChanged = (eventsSelected) => {
     this.setState({eventsSelected: new Set(eventsSelected)})
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/availability/dates', { dates: Array(...eventsSelected) })
       .then( result => {
         if (result.data) {

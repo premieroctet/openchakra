@@ -17,13 +17,13 @@ function withGrid(WrappedComponent) {
 
       return(
         <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
-          { indexes.map(idx => {
+          { indexes.map((idx, index) => {
             const row=Math.floor(idx/model.getColumns());
             const col=idx%model.getColumns();
             const item=model.getData(page, col, row);
 
             return(
-              <Grid item xl={colSize} lg={colSize} md={colSize} sm={colSize} xs={colSize} className={style.categoryCardRoot}>
+              <Grid key={index} item xl={colSize} lg={colSize} md={colSize} sm={colSize} xs={colSize} className={style.categoryCardRoot}>
                 <WrappedComponent {...this.props} item={item} key={[page, col, row]}/>
               </Grid>
             )

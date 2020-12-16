@@ -1,3 +1,4 @@
+const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import styles from './creaShopStyle';
@@ -28,9 +29,10 @@ import {
   settingService,
   settingShop,
 } from '../../utils/validationSteps/validationSteps';
-import cookie from 'react-cookies';
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
 const I18N = require('../../utils/i18n');
+const {getLoggedUserId}=require('../../utils/functions')
+const {getDefaultAvailability}=require('../../utils/dateutils')
 
 class creaShop extends React.Component {
   constructor(props) {
@@ -90,12 +92,11 @@ class creaShop extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    const token = cookie.load('token');
-    if (!token) {
+    if (!getLoggedUserId()) {
       Router.push('/login');
     }
 
-    axios.defaults.headers.common['Authorization'] = token;
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
@@ -156,11 +157,32 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
+  addDefaultAvailability = () => {
+    console.log(`Adding default availability`)
+    const avail=getDefaultAvailability()
+    const data={
+      startDate: avail.period.begin,
+      endDate: avail.period.end,
+      days: avail.period.days,
+      available: true,
+      timelapses: avail.timelapses,
+    }
+
+    setAxiosAuthentication()
+    axios.post('/myAlfred/api/availability/addRecurrent', data)
+      .then(res => {
+        this.loadAvailabilities(false)
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
+
   availabilityCreated = (avail) => {
     if (avail._id.length === GID_LEN) {
       avail._id = null;
     }
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/availability/add', avail)
       .then(res => {
         this.loadAvailabilities()
@@ -171,17 +193,22 @@ class creaShop extends React.Component {
   };
 
   availabilityUpdate = (avail) => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.post('/myAlfred/api/availability/update', avail)
       .then(res => {
         this.loadAvailabilities()
       }).catch(err => console.error(err));
   };
 
-  loadAvailabilities = () => {
+  loadAvailabilities = no_default => {
     axios.get('/myAlfred/api/availability/currentAlfred')
       .then(res => {
-        this.setState({availabilities: res.data});
+        if (res.data.length==0 && !no_default) {
+          this.addDefaultAvailability()
+        }
+        else {
+          this.setState({availabilities: res.data});
+        }
       })
       .catch(err => console.error(err));
   };
@@ -202,7 +229,7 @@ class creaShop extends React.Component {
       cloned_shop.prestations = JSON.stringify(cloned_shop.prestations);
       cloned_shop.equipments = JSON.stringify(cloned_shop.equipments);
 
-      axios.defaults.headers.common['Authorization'] = cookie.load('token');
+      setAxiosAuthentication()
       axios.post('/myAlfred/api/shop/add', cloned_shop)
         .then(res => {
 
@@ -216,9 +243,7 @@ class creaShop extends React.Component {
             formData.append('file_diploma', dpChanged ? cloned_shop.diplomaPicture : null);
 
             axios.post('/myAlfred/api/serviceUser/addDiploma/' + su_id, formData)
-              .then(() => {
-                console.log('Diplôme ajouté');
-              })
+              .then()
               .catch(err => console.error(err));
           }
 
@@ -230,13 +255,12 @@ class creaShop extends React.Component {
             formData.append('file_certification', cpChanged ? cloned_shop.certificationPicture : null);
 
             axios.post('/myAlfred/api/serviceUser/addCertification/' + su_id, formData)
-              .then(() => {
-                console.log('Certification ajoutée');
-              })
+              .then()
               .catch(err => console.error(err));
           }
           axios.get('/myAlfred/api/users/token')
             .then (res => {
+              setAuthToken()
               Router.push(`/profile/services?user=${this.state.user_id}&indexAccount=1`)
             })
         })
@@ -363,7 +387,6 @@ class creaShop extends React.Component {
                                   availabilityCreated={this.availabilityCreated}
                                   onAvailabilityChanged={this.loadAvailabilities}
                                   onDateSelectionCleared={this.onDateSelectionCleared}
-                                  style={this.props.classes}
                                   selectable={true}
                                   ref={this.scheduleDrawer}
                                   />;
@@ -390,7 +413,7 @@ class creaShop extends React.Component {
         <Grid className={classes.mainHeader}>
           <Grid className={classes.imageContentHeader}>
             <Link href={'/'}>
-              <img alt={'logoMyAlfredGreen'} title={'logoMyAlfredGreen'} src={'../../static/assets/icon/logoGreen.svg'} style={{cursor: 'pointer'}} width={102} height={64}/>
+              <img alt={'logoMyAlfredGreen'} title={'logoMyAlfredGreen'} src={'../../static/assets/icon/logoGreen.svg'} style={{cursor: 'pointer'}} width={160} height={64}/>
             </Link>
           </Grid>
           <Grid className={classes.contentStepper}>
@@ -442,9 +465,4 @@ class creaShop extends React.Component {
   }
 }
 
-creaShop.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, {withTheme: true})(creaShop);
+export default withStyles(styles)(creaShop);

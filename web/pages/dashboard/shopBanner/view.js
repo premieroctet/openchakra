@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../../../utils/authentication')
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -11,7 +13,7 @@ import Layout from '../../../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from 'next/router';
 import Link from 'next/link';
-import cookie from 'react-cookies';
+
 
 const styles = {
   loginContainer: {
@@ -57,7 +59,7 @@ class view extends React.Component {
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     const id = this.props.banner_id;
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/shopBanner/all/${id}`)
       .then(response => {
         let shopBanner = response.data;
@@ -67,7 +69,7 @@ class view extends React.Component {
       .catch(err => {
         console.error(err);
         if (err.response.status === 401 || err.response.status === 403) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/login'});
         }
       });

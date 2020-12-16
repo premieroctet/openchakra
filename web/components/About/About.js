@@ -1,22 +1,20 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/components/About/About';
-import cookie from 'react-cookies';
+
 import ListAlfredConditions from "../ListAlfredConditions/ListAlfredConditions";
 import RoomIcon from '@material-ui/icons/Room';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import ChatBubbleOutlineOutlinedIcon from '@material-ui/icons/ChatBubbleOutlineOutlined';
-import PersonIcon from '@material-ui/icons/Person';
 import UserAvatar from '../Avatar/UserAvatar'
-import Box from '../Box/Box'
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Topic from '../../hoc/Topic/Topic'
 import AlgoliaPlaces from 'algolia-places-react'
 import MultipleSelect from 'react-select'
@@ -26,7 +24,6 @@ import {isEditableUser} from '../../utils/functions'
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Divider from "@material-ui/core/Divider";
-
 
 const {frenchFormat} = require('../../utils/text');
 const moment=require('moment');
@@ -45,7 +42,6 @@ const DialogTitle = withStyles(styles)((props) => {
     </MuiDialogTitle>
   );
 });
-
 
 class About extends React.Component {
 
@@ -66,7 +62,7 @@ class About extends React.Component {
   };
 
   loadUser() {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then( res => {
         const user=res.data;
@@ -101,7 +97,7 @@ class About extends React.Component {
   save = () => {
     // TODO: handle errors, remove timeout
     const {newAddress, newLanguages}=this.state;
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.put('/myAlfred/api/users/profile/billingAddress', newAddress);
     axios.put('/myAlfred/api/users/profile/languages', {languages: newLanguages.map( l => l.value)});
     this.setState({showEdition: false}, () => setTimeout(this.loadUser, 1000))
@@ -112,7 +108,7 @@ class About extends React.Component {
   };
 
   modalEditDialog = (classes) =>{
-    const {newLabel, newPicture, user, newAddress, newLanguages, showEdition}=this.state;
+    const {newLabel, newPicture, user, newAddress, newLanguages, showEdition, indexNewAddress}=this.state;
     const enabled = newAddress;
     const placeholder = newAddress ? `${newAddress.city}, ${newAddress.country}` : 'Entrez votre adresse';
 
@@ -129,7 +125,7 @@ class About extends React.Component {
           <Grid container>
             <Grid container>
               <Grid item xs={12} lg={12} style={{marginTop: '2vh'}}>
-                <Typography style={{fontWeight: 'bold', textTransform: 'initial'}}>Lieu d'habitation</Typography>
+                <h3 style={{fontWeight: 'bold', textTransform: 'initial'}}>Lieu d'habitation</h3>
               </Grid>
               <Grid item style={{width:'100%', marginTop: '3vh', marginBottom: '3vh'}}>
                 <AlgoliaPlaces
@@ -252,7 +248,7 @@ class About extends React.Component {
             </Grid>
             : null
           }
-          <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} columnsXl={12} columnsSm={6} />
+          <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} columnsXl={12} columnsLG={12} columnsMD={6} columnsSm={6} columnsXS={6} />
         </Grid>
         {this.modalEditDialog(classes) }
       </Grid>

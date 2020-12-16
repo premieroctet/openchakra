@@ -37,7 +37,7 @@ class Footer extends React.Component {
                                         <Typography className={classes.footerLink}>Notre équipe</Typography>
                                     </Grid>
                                 </Link>
-                                <Link href={'/footer/contact'}>
+                                <Link href={'/contact'}>
                                     <Grid>
                                         <Typography className={classes.footerLink}>Nous contacter</Typography>
                                     </Grid>
@@ -76,16 +76,12 @@ class Footer extends React.Component {
                                         <Typography className={classes.footerLink}>Devenir Alfred</Typography>
                                     </Grid>
                                 </Link>
-                                <Link href={'/faq/home'}>
-                                    <Grid style={{marginBottom: '2vh'}}>
-                                        <Typography className={classes.footerLink}>FAQ des Alfred</Typography>
-                                    </Grid>
-                                </Link>
-                                <Link href={'/'}>
-                                    <Grid>
-                                        <Typography className={classes.footerLink}>Centre de ressources</Typography>
-                                    </Grid>
-                                </Link>
+                                {true ? null :
+                                    <Link href={'/'}>
+                                        <Grid>
+                                            <Typography className={classes.footerLink}>Centre de ressources</Typography>
+                                        </Grid>
+                                    </Link>}
                             </Grid>
                         </Hidden>
                         <Grid item xl={3} lg={3} className={classes.footerSection}>
@@ -97,14 +93,14 @@ class Footer extends React.Component {
                                     <Typography className={classes.footerLink}>Réserver un service</Typography>
                                 </Grid>
                             </Link>
-                            <Link href={'/faq/home'}>
+                            <Link onClick={() => Tawk_API.maximize()}>
                                 <Grid style={{marginBottom: '2vh'}}>
-                                    <Typography className={classes.footerLink}>FAQ des services</Typography>
+                                    <Typography className={classes.footerLink}>Parler à un humain</Typography>
                                 </Grid>
                             </Link>
-                            <Link href={'/'}>
+                            <Link href={'/faq'}>
                                 <Grid>
-                                    <Typography className={classes.footerLink}>Parler à un humain</Typography>
+                                    <Typography className={classes.footerLink}>FAQ</Typography>
                                 </Grid>
                             </Link>
                         </Grid>
@@ -143,11 +139,15 @@ class Footer extends React.Component {
                                     réservés</Typography>
                             </Grid>
                             <Grid className={classes.footerRgpdButtons}>
-                                <Grid>
-                                    <Typography className={classes.footerLink}>Sécurité</Typography>
-                                </Grid>
+                                {true ? null :
+                                    <Grid>
+                                        <Typography className={classes.footerLink}>Sécurité</Typography>
+                                    </Grid>
+                                }
                                 <Grid className={classes.footerLinkInfoContainer}>
-                                    <Typography className={classes.footerLink}>Informations légales</Typography>
+                                    <Link href={'/cgu'}>
+                                        <Typography className={classes.footerLink}>Informations légales</Typography>
+                                    </Link>
                                 </Grid>
                                 <Grid>
                                     <Typography className={classes.footerLink}>Confidentialié</Typography>

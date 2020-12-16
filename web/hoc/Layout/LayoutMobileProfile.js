@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
@@ -7,7 +8,7 @@ import MobileNavbar from "./NavBar/MobileNavbar";
 import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../static/css/components/Layout/LayoutMobileProfile/LayoutMobileProfile'
 import axios from "axios";
-import cookie from "react-cookies";
+
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -49,7 +50,7 @@ class LayoutMobileProfile extends React.Component{
   }
 
   componentDidMount = () =>{
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then( res => {
         this.setState( { user: res.data})

@@ -42,5 +42,5 @@ export default theme => ({
   buttonSave: {
     textTransform: 'initial',
     width: '100%'
-  }
+  },
 })

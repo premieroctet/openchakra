@@ -41,7 +41,6 @@ class IntroduceYou extends React.Component {
 
   onChange = event => {
     const {name, value} = event.target;
-    console.log(`onChange:${name}=>${value}`);
     this.setState({[name]: value},
       () => this.fireChange());
   };
@@ -61,13 +60,11 @@ class IntroduceYou extends React.Component {
   }
 
   onCertifiedChanged(event) {
-    console.log('Certified change:' + event.target.checked);
     this.setState({is_certified: event.target.checked},
       () => this.fireChange());
   }
 
   onCompanyChanged(company) {
-    console.log(`Company changed:${JSON.stringify(company)}`);
     this.setState({company: company},
       () => this.fireChange());
   }
@@ -76,12 +73,11 @@ class IntroduceYou extends React.Component {
     const {classes} = this.props;
 
     const {cesu} = this.state;
-    console.log(`CESU:${this.state.cesu}`);
 
     return (
       <Grid className={classes.mainContainer}>
         <Grid className={classes.contentContainer}>
-          <Grid className={classes.contentLeft}>
+          <Grid>
             <Grid className={classes.contentLeftTop}>
               <Grid className={classes.contentTitle}>
                 <Typography className={classes.policySizeTitle}>Précisez votre statut ! </Typography>
@@ -103,8 +99,8 @@ class IntroduceYou extends React.Component {
               </Grid>
               <Grid>
                 <Grid>
-                  <Grid container className={classes.checkboxespart}>
-                    <Grid container>
+                  <Grid container >
+                    <Grid container spacing={3}>
                       <Grid item xs={12}>
                         <FormControlLabel
                           control={
@@ -120,20 +116,20 @@ class IntroduceYou extends React.Component {
                             />
                           }
                           label={
-                            <p className={classes.policySizeSubtitle}>
+                            <Typography className={classes.policySizeSubtitle}>
                               Je suis un particulier
-                            </p>}
+                            </Typography>}
                         />
                       </Grid>
                       <Grid item xs={11}>
-                        <p className={classes.policySizeContent}>
+                        <Typography className={classes.policySizeContent}>
                           En tant que particulier, vous pouvez rendre des services occasionnels sur My-Alfred. Si votre
                           activité devient régulière, un statut professionnel (micro-entrepreneur,...) s’impose. Il est
                           également requis pour certains secteurs d’activité réglementés.
-                        </p>
+                        </Typography>
                       </Grid>
                       {this.state.is_particular ?
-                        <Grid style={{marginLeft: 40}}>
+                        <Grid style={{marginLeft: 40,marginTop: 30, marginBottom:30}}>
                           <RadioGroup name={'cesu'} value={this.state.cesu} onChange={this.onChange}>
                             <div><Radio color="primary" value={CESU[0]}/>Je veux être déclaré(e) en CESU</div>
                             {cesu == CESU[0] ?
@@ -181,7 +177,7 @@ class IntroduceYou extends React.Component {
                         : null
                       }
                     </Grid>
-                    <Grid container style={{marginTop: 10, marginBottom: 100}}>
+                    <Grid container style={{marginTop: 10, marginBottom: 100}} spacing={3}>
                       <Grid item xs={12}>
                         <FormControlLabel
                           control={
@@ -197,19 +193,19 @@ class IntroduceYou extends React.Component {
                             />
                           }
                           label={
-                            <p className={classes.policySizeSubtitle}>
+                            <Typography className={classes.policySizeSubtitle}>
                               Je suis un professionnel/J'ai un numéro de SIRET
-                            </p>
+                            </Typography>
                           }
                         />
                       </Grid>
                       <Grid item xs={11}>
-                        <p className={classes.policySizeContent}>
+                        <Typography className={classes.policySizeContent}>
                           Un statut professionnel avec un numéro de SIRET est nécessaire pour les métiers réglementés et
                           permet une activité régulière sur My-Alfred. Seuls les professionnels peuvent proposer leurs
                           services aux entreprises qui ont besoin d’une facture. Un statut professionnel est requis dès
                           lors que votre activité devient régulière.
-                        </p>
+                        </Typography>
                         {this.state.is_particular ? null :
                           <React.Fragment>
                             <div>
@@ -228,8 +224,8 @@ class IntroduceYou extends React.Component {
                                 />
                               }
                               label={
-                                <p className={classes.policySizeContent}>Je certifie sur l’honneur qu’il s’agit bien de
-                                  mon entreprise.</p>
+                                <Typography className={classes.policySizeContent}>Je certifie sur l’honneur qu’il s’agit bien de
+                                  mon entreprise.</Typography>
                               }
                             /></React.Fragment>
                         }
@@ -246,9 +242,4 @@ class IntroduceYou extends React.Component {
   }
 }
 
-IntroduceYou.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, {withTheme: true})(IntroduceYou);
+export default withStyles(styles)(IntroduceYou);

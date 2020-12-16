@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../../utils/authentication')
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
@@ -16,7 +18,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import {Helmet} from 'react-helmet';
 import styles from '../../static/css/pages/myAddresses/myAddresses';
 import IconButton from '@material-ui/core/IconButton';
-import cookie from 'react-cookies';
+
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
@@ -78,7 +80,7 @@ class myAddresses extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {
@@ -101,7 +103,7 @@ class myAddresses extends React.Component {
       })
       .catch(err => {
           if (err.response.status === 401 || err.response.status === 403) {
-            cookie.remove('token', {path: '/'});
+            clearAuthenticationToken()
             Router.push({pathname: '/login'});
           }
         },
@@ -298,6 +300,7 @@ class myAddresses extends React.Component {
                 placeholder={'Adresse'}
                 label={'Rue'}
                 className={classes.textField}
+                disabled={true}
               />
             </Grid>
             <Grid item xl={6} lg={6} xs={12} md={12} sm={6}>
@@ -309,6 +312,7 @@ class myAddresses extends React.Component {
                 variant="outlined"
                 placeholder={'Code postal'}
                 label={'Code postal'}
+                disabled={true}
               />
             </Grid>
             <Grid item xl={6} lg={6} xs={12} md={6} sm={6}>
@@ -321,6 +325,7 @@ class myAddresses extends React.Component {
                 variant="outlined"
                 placeholder={'Ville'}
                 label={'Ville'}
+                disabled={true}
               />
             </Grid>
             <Grid item xs={12} lg={12} md={6} sm={12} xl={12}>
@@ -332,6 +337,7 @@ class myAddresses extends React.Component {
                 variant="outlined"
                 name={'currentCountry'}
                 label={'Pays'}
+                disabled={true}
               />
             </Grid>
             <Grid item xs={12} lg={12} xl={12} sm={12} md={12} style={{marginTop: '5vh'}}>
@@ -427,9 +433,10 @@ class myAddresses extends React.Component {
                   variant={'outlined'}
                   className={classes.textField}
                   label={'Rue'}
+                  disabled={true}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xl={6} lg={6} xs={12} md={12} sm={6}>
                 <TextField
                   value={this.state.new_zip_code}
                   onChange={this.onChange}
@@ -437,9 +444,10 @@ class myAddresses extends React.Component {
                   variant={'outlined'}
                   className={classes.textField}
                   label={'Code postal'}
+                  disabled={true}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xl={6} lg={6} xs={12} md={12} sm={6}>
                 <TextField
                   value={this.state.new_city}
                   onChange={this.onChange}
@@ -447,6 +455,7 @@ class myAddresses extends React.Component {
                   variant={'outlined'}
                   className={classes.textField}
                   label={'Ville'}
+                  disabled={true}
                 />
               </Grid>
               <Grid item xs={12} style={{marginBottom: '12vh'}}>
@@ -493,9 +502,10 @@ class myAddresses extends React.Component {
                     placeholder={'Ecrire ici'}
                     variant={'outlined'}
                     label={'Rue'}
+                    disabled={true}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xl={6} lg={6} xs={12} md={12} sm={6}>
                   <TextField
                     value={this.state.edit_zip_code}
                     onChange={this.onChange}
@@ -504,9 +514,10 @@ class myAddresses extends React.Component {
                     variant={'outlined'}
                     label={'Code postal'}
                     className={classes.textField}
+                    disabled={true}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xl={6} lg={6} xs={12} md={12} sm={6}>
                   <TextField
                     value={this.state.edit_city}
                     onChange={this.onChange}
@@ -515,6 +526,7 @@ class myAddresses extends React.Component {
                     variant={'outlined'}
                     label={'Ville'}
                     className={classes.textField}
+                    disabled={true}
                   />
                 </Grid>
                 <Grid item xs={12}>

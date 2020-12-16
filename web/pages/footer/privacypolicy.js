@@ -199,7 +199,7 @@ class Privacypolicy extends React.Component {
                     <a style={{
                       textDecoration: 'none',
                       fontWeight: 'bold',
-                      color: '#4FBDD7',
+                      color: '#84A5E0',
                       fontSize: '1.1rem',
                     }}>Préambule</a>
                   </Grid>
@@ -221,7 +221,7 @@ class Privacypolicy extends React.Component {
                     <a style={{
                       textDecoration: 'none',
                       fontWeight: 'bold',
-                      color: '#4FBDD7',
+                      color: '#84A5E0',
                       fontSize: '1.1rem',
                     }}>Définitions</a>
                   </Grid>
@@ -240,7 +240,7 @@ class Privacypolicy extends React.Component {
                 {click2 ?
                   <Grid onClick={this.handleClick2} item xs={12}
                         style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
-                    <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#4FBDD7', fontSize: '1.1rem'}}>Les
+                    <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#84A5E0', fontSize: '1.1rem'}}>Les
                       données & informations collectées</a>
                   </Grid>
                   :
@@ -254,7 +254,7 @@ class Privacypolicy extends React.Component {
                 {click3 ?
                   <Grid onClick={this.handleClick3} item xs={12}
                         style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
-                    <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#4FBDD7', fontSize: '1.1rem'}}>Paiements
+                    <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#84A5E0', fontSize: '1.1rem'}}>Paiements
                       & versements</a>
                   </Grid>
                   :
@@ -268,7 +268,7 @@ class Privacypolicy extends React.Component {
                 {click4 ?
                   <Grid onClick={this.handleClick4} item xs={12}
                         style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
-                    <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#4FBDD7', fontSize: '1.1rem'}}>Utilisation
+                    <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#84A5E0', fontSize: '1.1rem'}}>Utilisation
                       des données</a>
                   </Grid>
                   :
@@ -285,7 +285,7 @@ class Privacypolicy extends React.Component {
                     <a style={{
                       textDecoration: 'none',
                       fontWeight: 'bold',
-                      color: '#4FBDD7',
+                      color: '#84A5E0',
                       fontSize: '1.1rem',
                     }}>Communication</a>
                   </Grid>
@@ -304,7 +304,7 @@ class Privacypolicy extends React.Component {
                 {click6 ?
                   <Grid onClick={this.handleClick6} item xs={12}
                         style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
-                    <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#4FBDD7', fontSize: '1.1rem'}}>Droits
+                    <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#84A5E0', fontSize: '1.1rem'}}>Droits
                       relatifs aux données à caractère personnel</a>
                   </Grid>
                   :
@@ -321,7 +321,7 @@ class Privacypolicy extends React.Component {
                     <a style={{
                       textDecoration: 'none',
                       fontWeight: 'bold',
-                      color: '#4FBDD7',
+                      color: '#84A5E0',
                       fontSize: '1.1rem',
                     }}>Sécurité</a>
                   </Grid>
@@ -331,7 +331,7 @@ class Privacypolicy extends React.Component {
                     <a style={{
                       textDecoration: 'none',
                       fontWeight: 'bold',
-                      color: '#585858',
+                      color: '#84A5E0',
                       fontSize: '1.1rem',
                     }}>Sécurité</a>
                   </Grid>
@@ -343,7 +343,7 @@ class Privacypolicy extends React.Component {
                     <a style={{
                       textDecoration: 'none',
                       fontWeight: 'bold',
-                      color: '#4FBDD7',
+                      color: '#84A5E0',
                       fontSize: '1.1rem',
                     }}>Modifications</a>
                   </Grid>
@@ -362,7 +362,7 @@ class Privacypolicy extends React.Component {
                 {click9 ?
                   <Grid onClick={this.handleClick9} item xs={12}
                         style={{padding: '20px 50px', cursor: 'pointer', zIndex: '999', backgroundColor: 'white'}}>
-                    <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#4FBDD7', fontSize: '1.1rem'}}>Politique
+                    <a style={{textDecoration: 'none', fontWeight: 'bold', color: '#84A5E0', fontSize: '1.1rem'}}>Politique
                       de gestion des cookies</a>
                   </Grid>
                   :
@@ -383,7 +383,7 @@ class Privacypolicy extends React.Component {
                 {click ?
                   <Grid item xs={12} className={classes.responsiveContainer2}>
                     <p style={{
-                      color: '#4FBDD7',
+                      color: '#84A5E0',
                       fontSize: '1.3rem',
                       paddingLeft: '7%',
                       fontWeight: 'bold',

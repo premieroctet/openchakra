@@ -1,10 +1,11 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import styles from '../../../static/css/components/Card/CategoryCard/CategoryCard'
 import withStyles from "@material-ui/core/styles/withStyles";
 import Link from 'next/link';
 import axios from "axios";
-import cookie from "react-cookies";
+
 
 class CategoryCard extends React.Component{
 
@@ -17,7 +18,7 @@ class CategoryCard extends React.Component{
   }
 
   componentDidMount() {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
 
     axios
       .get('/myAlfred/api/users/current')

@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../utils/authentication')
+const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
@@ -5,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../static/css/pages/confirmPayement/confirmPayement';
-import cookie from 'react-cookies';
+
 import Stepper from "../components/Stepper/Stepper";
 import AddressAndFacturation from "../components/Payement/AddressAndFacturation/AddressAndFacturation";
 import PaymentChoice from "../components/Payement/PaymentChoice/PaymentChoice";
@@ -19,8 +21,6 @@ class ConfirmPayement extends React.Component {
     this.state = {
       user: null,
       currentUser: null,
-      emitter: null,
-      recipient: null,
       bookingObj: null,
       city: null,
       address: null,
@@ -51,16 +51,13 @@ class ConfirmPayement extends React.Component {
   }
 
   componentDidMount() {
-    const token = cookie.load('token');
 
-    axios.defaults.headers.common['Authorization'] = token;
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
       .then(res => {
         const bookingObj = res.data
         console.log(JSON.stringify(bookingObj, null, 2))
         this.setState({
-          emitter: localStorage.getItem('emitter'),
-          recipient: localStorage.getItem('recipient'),
           prestations: bookingObj.prestations,
           bookingObj: bookingObj,
           date: bookingObj.date_prestation,
@@ -86,7 +83,7 @@ class ConfirmPayement extends React.Component {
       })
       .catch(err => {
         if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/'});
         }
       })
@@ -106,8 +103,6 @@ class ConfirmPayement extends React.Component {
 
   handleStep = () => {
       this.setState({activeStep: this.state.activeStep + 1});
-      localStorage.setItem('emitter', this.state.emitter);
-      localStorage.setItem('recipient', this.state.recipient);
   };
 
   payDirect = () => {

@@ -2,7 +2,7 @@ export default theme => ({
   layoutMobileProfilHeader:{
     backgroundImage: 'url(../../../../assets/img/banner/banneProfil.svg)',
     height: '30vh',
-    backgroundPosition: 'center',
+    backgroundPosition: 'right',
     backgroundSize: 'cover',
     position: 'relative',
     backgroundRepeat: 'no-repeat'

@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios'
@@ -11,7 +12,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import DialogContent from '@material-ui/core/DialogContent';
 import styles from '../../static/css/components/Album/Album';
-import cookie from 'react-cookies';
+
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
 import CardAlbum from '../Card/CardAlbum/CardAlbum'
@@ -60,7 +61,7 @@ class Album extends React.Component {
   }
 
   componentDidMount = () => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/shop/alfred/${this.props.user}`)
       .then(response => {
         let shop = response.data;

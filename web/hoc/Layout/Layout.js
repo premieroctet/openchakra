@@ -1,7 +1,8 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import NavBar from './NavBar/NavBar';
 import Footer from './Footer/Footer';
-import cookie from "react-cookies";
+
 import styles from '../../static/css/pages/layout/layoutStyle'
 import {withStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -10,7 +11,7 @@ import ScrollMenu from '../../components/ScrollMenu/ScrollMenu'
 import axios from "axios";
 import TrustAndSecurity from "./TrustAndSecurity/TrustAndSecurity";
 import Divider from "@material-ui/core/Divider";
-
+const {getLoggedUserId}=require('../../utils/functions')
 
 class Layout extends React.Component {
   constructor(props) {
@@ -22,13 +23,12 @@ class Layout extends React.Component {
   }
 
   componentDidMount() {
-    const token = cookie.load('token');
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/category/all/sort').then(res => {
       let cat = res.data;
       this.setState({categories: cat})
     }).catch(err => { console.error(err)})
-    if (token) {
+    if (getLoggedUserId()) {
       this.setState({logged: true});
     }
   }
@@ -40,7 +40,7 @@ class Layout extends React.Component {
     return (
       <Grid>
         <InfoBar/>
-        <NavBar selectedAddress={selectedAddress} keyword={keyword} logged={logged} key={this.logged}/>
+        <NavBar selectedAddress={selectedAddress} keyword={keyword} key={this.logged}/>
         <Grid>
           <Grid className={classes.layoutScrollMenu}>
             <ScrollMenu categories={categories} gps={gps} indexCat={indexCat} mode={false}/>

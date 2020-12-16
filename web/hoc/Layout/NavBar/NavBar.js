@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React, {Component} from 'react';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
@@ -5,10 +6,10 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import setAuthToken from '../../../utils/setAuthToken';
+const  {clearAuthenticationToken}=require('../../../utils/authentication')
 import Router from 'next/router';
 import Grid from '@material-ui/core/Grid';
-import cookie from 'react-cookies';
+
 import LogIn from '../../../components/LogIn/LogIn';
 import Register from '../../../components/Register/Register';
 import Dialog from '@material-ui/core/Dialog';
@@ -103,7 +104,7 @@ class NavBar extends Component {
       this.handleOpenLogin()
     }
 
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         var allAddresses={'main':res.data.billing_address};
@@ -115,16 +116,15 @@ class NavBar extends Component {
           user: res.data,
           allAddresses: allAddresses
         })
-      }).catch(err => console.error(err));
+      }).catch();
 
     this.setState({selectedAddress: this.props.selectedAddress || 'main'});
     this.setState({keyword: this.props.keyword || ''})
   }
 
   logout = () => {
-    cookie.remove('token', {path: '/'});
-    localStorage.removeItem('path');
-    setAuthToken(null);
+    clearAuthenticationToken()
+    localStorage.removeItem('path')
     if (this.state.ifHomePage) {
       window.location.reload(false)
     }
@@ -505,6 +505,8 @@ class NavBar extends Component {
   };
 
   searchBarInput = (classes) => {
+
+    const logged = this.state.user !=null
     return (
       <Grid className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
       <Paper classes={{root: this.state.ifHomePage ? classes.navbarSearch : classes.navbarSearchP}}>
@@ -598,7 +600,7 @@ class NavBar extends Component {
           </Grid>
         }
         {
-          this.state.logged === false ?
+          logged === false ?
             <Grid className={classes.navbarDatePickerMain}>
               <Grid>
                 <Divider className={classes.divider} orientation="vertical"/>
@@ -651,8 +653,9 @@ class NavBar extends Component {
 
   render() {
     const {user, setOpenLogin, setOpenRegister, anchorEl, ifHomePage, modalMobileSearchBarInput, ifSearchPage, modalFilters} = this.state;
-    const {classes, logged} = this.props;
+    const {classes} = this.props;
 
+    const logged = user != null
     const modalLogin = () => {
       return (
         <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh}/>
@@ -664,6 +667,7 @@ class NavBar extends Component {
         <Register callLogin={this.handleOpenLogin} sendParentData={this.getData}/>
       );
     };
+
 
         return (
       <Grid className={this.state.ifHomePage ? classes.navbarMainSytle : classes.navbarMainSytleP}>
@@ -699,7 +703,7 @@ class NavBar extends Component {
                                  label={NAVBAR_MENU.registerServices}/>
                         </Link>
                       }
-                      <Link href={'/footer/contact'}>
+                      <Link href={'/contact'}>
                         <Tab classes={{root: classes.navbarTabRoot}}
                                label={NAVBAR_MENU.contactUs}/>
                       </Link>

@@ -3,7 +3,7 @@ import axios from 'axios'
 import CardService from '../Card/CardService/CardService'
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import cookie from "react-cookies";
+
 
 class Services extends React.Component {
 

@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import styles from '../componentStyle';
@@ -8,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch';
 import axios from 'axios';
 import isEmpty from '../../../server/validation/is-empty';
-import cookie from 'react-cookies';
+
 
 class SettingService extends React.Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class SettingService extends React.Component {
   }
 
   componentDidMount() {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/service/${this.props.service}`)
       .then(response => {
         let service = response.data;
@@ -51,7 +52,7 @@ class SettingService extends React.Component {
         }, () => this.fireOnChange());
       })
       .catch(error => {
-        console.log(error);
+        console.error(error);
       });
   }
 
@@ -103,9 +104,9 @@ class SettingService extends React.Component {
                   </Grid>
                   <Grid className={classes.bottomSpacer}>
                     <Grid container spacing={1}>
-                      {service.equipments.map((result) => {
+                      {service.equipments.map((result, index) => {
                         return (
-                          <Grid item xl={3} lg={4} md={4} sm={4} xs={4}>
+                          <Grid key={index} item xl={3} lg={4} md={4} sm={4} xs={4}>
                             <label style={{cursor: 'pointer'}}>
                               {
                                 this.state.selectedEquipments.includes(result._id) ?
@@ -188,9 +189,4 @@ class SettingService extends React.Component {
   }
 }
 
-SettingService.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, {withTheme: true})(SettingService);
+export default withStyles(styles)(SettingService);

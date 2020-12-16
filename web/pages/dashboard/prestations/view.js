@@ -1,3 +1,5 @@
+const {clearAuthenticationToken}=require('../../../utils/authentication')
+const {setAxiosAuthentication}=require('../../../utils/authentication')
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -17,7 +19,7 @@ import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Link from 'next/link';
-import cookie from 'react-cookies';
+
 import Checkbox from '@material-ui/core/Checkbox';
 
 const styles = {
@@ -108,7 +110,7 @@ class view extends React.Component {
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     const id = this.props.prestation_id;
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/prestation/all/${id}`)
       .then(response => {
         let prestation = response.data;
@@ -152,7 +154,7 @@ class view extends React.Component {
       .catch(err => {
         console.error(err);
         if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-          cookie.remove('token', {path: '/'});
+          clearAuthenticationToken()
           Router.push({pathname: '/login'});
         }
       });

@@ -1,3 +1,4 @@
+const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
 import {withStyles} from '@material-ui/core/styles';
@@ -5,7 +6,7 @@ import styles from '../../static/css/pages/profile/messages/messages';
 import Hidden from "@material-ui/core/Hidden";
 import axios from "axios";
 import Typography from '@material-ui/core/Typography';
-import cookie from 'react-cookies'
+
 const moment=require('moment');
 import MessageSummary from '../../components/MessageSummary/MessageSummary'
 import _ from 'lodash'
@@ -63,7 +64,7 @@ class Messages extends React.Component {
   }
 
   loadChats = checkRelative => {
-    axios.defaults.headers.common['Authorization'] = cookie.load('token');
+    setAxiosAuthentication()
     axios.get('/myAlfred/api/chatRooms/userChatRooms')
       .then( res => {
         const chats=res.data.filter(c => c.booking && c.booking.alfred && c.messages);
@@ -192,9 +193,10 @@ class Messages extends React.Component {
               <OutlinedInput
                 id="standard-adornment-password"
                 type={'text'}
+                multiline={true}
                 value={this.state.message}
                 onChange={this.handleChangeMessage}
-                onKeyDown={e => {if (e.key === 'Enter') this.handleSubmitMessage(e)}}
+                // onKeyDown={e => {if (e.key === 'Enter') this.handleSubmitMessage(e)}}
                 label={'Saisissez votre message'}
                 endAdornment={
                   <InputAdornment position="end">
