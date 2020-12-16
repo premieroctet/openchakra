@@ -280,7 +280,7 @@ class Register extends React.Component {
           .catch()
           .then(this.addPhoto).catch()
           .then(this.setState({activeStep: this.state.activeStep + 1})).catch()
-          .then(this.onSubmitPhone).catch();
+          .then(this.submitPhone).catch();
       })
       .catch(err => {
         const errors=err.response.data
@@ -325,9 +325,12 @@ class Register extends React.Component {
   };
 
 
-  onSubmitPhone = e => {
-    setAxiosAuthentication()
+  submitPhone = e => {
 
+    // Don't send empty phone number
+    if (!this.state.phone) {
+      return
+    }
     if (!this.state.phoneConfirmed && !this.state.serverError) {
       this.sendSms();
     }
@@ -337,6 +340,7 @@ class Register extends React.Component {
       phone_confirmed: this.state.phoneConfirmed,
     };
 
+    setAxiosAuthentication()
     axios
       .put('/myAlfred/api/users/profile/phone', newPhone)
       .then(res => {
