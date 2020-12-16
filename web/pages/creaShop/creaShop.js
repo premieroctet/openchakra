@@ -29,10 +29,10 @@ import {
   settingService,
   settingShop,
 } from '../../utils/validationSteps/validationSteps';
-
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
 const I18N = require('../../utils/i18n');
 const {getLoggedUserId}=require('../../utils/functions')
+const {getDefaultAvailability}=require('../../utils/dateutils')
 
 class creaShop extends React.Component {
   constructor(props) {
@@ -157,6 +157,27 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
+  addDefaultAvailability = () => {
+    console.log(`Adding default availability`)
+    const avail=getDefaultAvailability()
+    const data={
+      startDate: avail.period.begin,
+      endDate: avail.period.end,
+      days: avail.period.days,
+      available: true,
+      timelapses: avail.timelapses,
+    }
+
+    setAxiosAuthentication()
+    axios.post('/myAlfred/api/availability/addRecurrent', data)
+      .then(res => {
+        this.loadAvailabilities(false)
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
+
   availabilityCreated = (avail) => {
     if (avail._id.length === GID_LEN) {
       avail._id = null;
@@ -179,10 +200,15 @@ class creaShop extends React.Component {
       }).catch(err => console.error(err));
   };
 
-  loadAvailabilities = () => {
+  loadAvailabilities = no_default => {
     axios.get('/myAlfred/api/availability/currentAlfred')
       .then(res => {
-        this.setState({availabilities: res.data});
+        if (res.data.length==0 && !no_default) {
+          this.addDefaultAvailability()
+        }
+        else {
+          this.setState({availabilities: res.data});
+        }
       })
       .catch(err => console.error(err));
   };

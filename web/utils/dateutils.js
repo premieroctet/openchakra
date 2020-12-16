@@ -129,37 +129,23 @@ const booking_datetime_str = booking => {
   return `Le ${booking.date_prestation} à ${moment(booking.time_prestation).tz('Europe/Paris').format('HH:mm')}`;
 };
 
-const createDefaultAvailability = () => {
+const getDefaultAvailability = () => {
+
+  var start = moment().set({hour:1, minute:0, second:0});
+  var end = moment(start).add(6, 'month')
 
 
-  var start = new Date();
-  start = new Date(start.setHours(8));
-  start = new Date(start.setMinutes(0));
-  start = new Date(start.setSeconds(0));
-  start = new Date(start.setMilliseconds(0));
-
-  var end = new Date();
-  end = new Date(end.setHours(19));
-  end = new Date(end.setMinutes(0));
-  end = new Date(end.setSeconds(0));
-  end = new Date(end.setMilliseconds(0));
-
-  var dt = new Date(end);
-  dt.setMonth(dt.getMonth() + 6);
-
-  const eventUI = {
-    _id: generate_id(),
-    isExpanded: 'panel1',
-    recurrDays: new Set([0, 1, 2, 3, 4, 5]),
-    selectedDateStart: start,
-    selectedDateEnd: end,
-    selectedTimeStart: start.toLocaleTimeString('fr-FR', {hour12: false}).slice(0, 5),
-    selectedTimeEnd: end.toLocaleTimeString('fr-FR', {hour12: false}).slice(0, 5),
-    servicesSelected: [ALL_SERVICES],
-    selectedDateEndRecu: dt,
+  const avail = {
+    period: {
+      days: [0,1,2,3,4,5],
+      begin: start,
+      end: end,
+    },
+    timelapses: [9,10,11,12,13,14,15,16,17,18],
+    available: true,
+    punctual: null,
+    available: true,
   };
-
-  const avail = eventUI2availability(eventUI);
 
   return avail;
 };
@@ -248,6 +234,6 @@ const timelapsesSetToArray = timelapses => {
 
 module.exports = {
   isMomentAvailable, isIntervalAvailable, getDeadLine, booking_datetime_str,
-  createDefaultAvailability, isDateAvailable, hasAlfredDateBooking, DAYS,
+  getDefaultAvailability, isDateAvailable, hasAlfredDateBooking, DAYS,
   getAvailabilityForDate, combineTimelapses, timelapsesSetToArray
 };

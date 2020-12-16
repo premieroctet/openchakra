@@ -5,7 +5,7 @@ const moment = require('moment');
 const {availability2eventUI, eventUI2availability} = require('../../../utils/converters');
 const Availability = require('../../models/Availability');
 const ServiceUser = require('../../models/ServiceUser');
-const {createDefaultAvailability} = require('../../../utils/dateutils');
+const {getDefaultAvailability} = require('../../../utils/dateutils');
 const mongoose = require('mongoose');
 const {isIntervalAvailable} = require('../../../utils/dateutils');
 const validateAvailability = require('../../validation/availability');
@@ -112,8 +112,12 @@ router.post('/addPunctual', passport.authenticate('jwt', {session: false}), (req
 // Get converted availability to eventUI
 // access public
 router.get('/toEventUI', (req, res) => {
-  const eventUI = createDefaultAvailability();
-  res.json({avail: eventUI});
+  const eventUI = getDefaultAvailability();
+  Availability.find()
+    .limit(1)
+    .then (data => {
+      res.json({availDB: data[0], availGen: eventUI});
+    })
 });
 
 // @Route POST /myAlfred/api/availability/update
