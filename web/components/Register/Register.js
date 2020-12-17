@@ -193,13 +193,21 @@ class Register extends React.Component {
     }, () => this.validatorFirstStep());
   };
 
-  onChangeAddress({suggestion}) {
-    this.setState({
-      city: suggestion.city, address: suggestion.name, zip_code: suggestion.postcode, country: suggestion.country,
-      lat: suggestion.latlng.lat, lng: suggestion.latlng.lng,
-    });
-
-  };
+  onChangeAddress(result) {
+    if (result) {
+      const suggestion=result.suggestion
+      this.setState({
+        city: suggestion.city, address: suggestion.name, zip_code: suggestion.postcode, country: suggestion.country,
+        lat: suggestion.latlng.lat, lng: suggestion.latlng.lng,
+      })
+    }
+    else {
+      this.setState({
+        city: null, address: null, zip_code: null, country: null,
+        lat: null, lng: null,
+      })
+    }
+  }
 
   handleChecked() {
     this.setState({checked: !this.state.checked}, () => this.validatorSecondStep());
@@ -257,6 +265,9 @@ class Register extends React.Component {
     const google_id = this.state.google_id;
     const facebook_id = this.state.facebook_id;
 
+    this.setState({cityError: null})
+    this.setState({birthdayError: null})
+
     axios
       .post('/myAlfred/api/users/register', newUser)
       .then(() => {
@@ -269,7 +280,7 @@ class Register extends React.Component {
           .catch()
           .then(this.addPhoto).catch()
           .then(this.setState({activeStep: this.state.activeStep + 1})).catch()
-          .then(this.onSubmitPhone).catch();
+          .then(this.submitPhone).catch();
       })
       .catch(err => {
         const errors=err.response.data
@@ -314,9 +325,12 @@ class Register extends React.Component {
   };
 
 
-  onSubmitPhone = e => {
-    setAxiosAuthentication()
+  submitPhone = e => {
 
+    // Don't send empty phone number
+    if (!this.state.phone) {
+      return
+    }
     if (!this.state.phoneConfirmed && !this.state.serverError) {
       this.sendSms();
     }
@@ -326,13 +340,14 @@ class Register extends React.Component {
       phone_confirmed: this.state.phoneConfirmed,
     };
 
+    setAxiosAuthentication()
     axios
       .put('/myAlfred/api/users/profile/phone', newPhone)
       .then(res => {
         toast.info('Téléphone ajouté');
       })
       .catch(err =>
-        console.log(err),
+        console.error(err)
       );
   };
 
@@ -600,7 +615,7 @@ class Register extends React.Component {
 
                     }}
                     onChange={(suggestion) => this.onChangeAddress(suggestion)}
-
+                    onClear={() => this.onChangeAddress(null)}
                   />
                   <em style={{color: 'red'}}>{this.state.cityError}</em>
                 </Grid>

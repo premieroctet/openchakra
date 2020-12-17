@@ -64,13 +64,14 @@ const isMomentInAvail = (m, serviceId, avail) => {
   }
   // Test event. If in period, check only time
   const res = events.some(e => isMomentInEvent(m, serviceId, e, period));
-  if (res) {
-    console.log(`Moment ${m} in ${JSON.stringify(avail._id)}`);
-  }
   return res;
 };
 
 const isMomentAvailable = (mom, avails) => {
+  if (!moment.isMoment(mom)) {
+    console.error(`Objet moment attendu: ${JSON.stringify(mmt)}`)
+    return false
+  }
   const availability=getAvailabilityForDate(mom, avails)
   if (!availability || !availability.available) {
     return false
@@ -80,6 +81,11 @@ const isMomentAvailable = (mom, avails) => {
 };
 
 const isIntervalAvailable = (start, end, serviceId, avails) => {
+  if (!moment.isMoment(start)||!moment.isMoment(end)) {
+    console.error(`Objet moment attendu:${JSON.stringify(start)}, ${JSON.stringify(end)}`)
+    return false
+  }
+
   if (isEmpty(avails)) {
     return true;
   }
@@ -123,37 +129,23 @@ const booking_datetime_str = booking => {
   return `Le ${booking.date_prestation} à ${moment(booking.time_prestation).tz('Europe/Paris').format('HH:mm')}`;
 };
 
-const createDefaultAvailability = () => {
+const getDefaultAvailability = () => {
+
+  var start = moment().set({hour:1, minute:0, second:0});
+  var end = moment(start).add(6, 'month')
 
 
-  var start = new Date();
-  start = new Date(start.setHours(8));
-  start = new Date(start.setMinutes(0));
-  start = new Date(start.setSeconds(0));
-  start = new Date(start.setMilliseconds(0));
-
-  var end = new Date();
-  end = new Date(end.setHours(19));
-  end = new Date(end.setMinutes(0));
-  end = new Date(end.setSeconds(0));
-  end = new Date(end.setMilliseconds(0));
-
-  var dt = new Date(end);
-  dt.setMonth(dt.getMonth() + 6);
-
-  const eventUI = {
-    _id: generate_id(),
-    isExpanded: 'panel1',
-    recurrDays: new Set([0, 1, 2, 3, 4, 5]),
-    selectedDateStart: start,
-    selectedDateEnd: end,
-    selectedTimeStart: start.toLocaleTimeString('fr-FR', {hour12: false}).slice(0, 5),
-    selectedTimeEnd: end.toLocaleTimeString('fr-FR', {hour12: false}).slice(0, 5),
-    servicesSelected: [ALL_SERVICES],
-    selectedDateEndRecu: dt,
+  const avail = {
+    period: {
+      days: [0,1,2,3,4,5],
+      begin: start,
+      end: end,
+    },
+    timelapses: [9,10,11,12,13,14,15,16,17,18],
+    available: true,
+    punctual: null,
+    available: true,
   };
-
-  const avail = eventUI2availability(eventUI);
 
   return avail;
 };
@@ -166,14 +158,15 @@ const eventIncludesDate = (event, mmt) => {
 const availIncludesDate = (avail, mmt) => {
 
   if (avail.is_punctual) {
-    return [moment(avail.punctual).isSame(mmt, 'day'), avail.available]
+    return moment(avail.punctual).isSame(mmt, 'day')
   }
   else {
     var range=moment.range(avail.period.begin, avail.period.end)
     if (!range.snapTo('day').contains(mmt)) {
-      return [false, false]
+      return false
     }
-    return [avail.period.days.includes(mmt.isoWeekday()-1), avail.available]
+    const includedDay = avail.period.days.includes(mmt.isoWeekday()-1)
+    return includedDay
   }
 };
 
@@ -190,11 +183,15 @@ const getAvailabilityForDate = (mmt, availabilities) => {
   if (!availabilities || availabilities.length==0) {
     return null
   }
-  const availability = availabilities.sort(availabilitiesComparator).find( avail => availIncludesDate(avail, mmt)[0])
+  const availability = availabilities.sort(availabilitiesComparator).find( avail => availIncludesDate(avail, mmt))
   return availability
 }
 /** Moment mmt's date is available for alfred_id => true/false */
 const isDateAvailable = (mmt, availabilities) => {
+  if (!moment.isMoment(mmt)) {
+    console.error(`Objet moment attendu: ${JSON.stringify(mmt)}`)
+    return false
+  }
   if (!availabilities || availabilities.length == 0) {
     return false;
   }
@@ -237,6 +234,6 @@ const timelapsesSetToArray = timelapses => {
 
 module.exports = {
   isMomentAvailable, isIntervalAvailable, getDeadLine, booking_datetime_str,
-  createDefaultAvailability, isDateAvailable, hasAlfredDateBooking, DAYS,
+  getDefaultAvailability, isDateAvailable, hasAlfredDateBooking, DAYS,
   getAvailabilityForDate, combineTimelapses, timelapsesSetToArray
 };

@@ -36,7 +36,6 @@ import withGrid from "../hoc/Grid/GridCard";
 import CardAlbum from "../components/Card/CardAlbum/CardAlbum";
 const ImageSlide=withSlide(withGrid(CardAlbum));
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
-const {getLoggedUserId}=require('../utils/functions')
 
 
 const isEmpty = require('../server/validation/is-empty');
@@ -99,9 +98,7 @@ class UserServicesPreview extends React.Component {
   }
 
   componentDidMount() {
-    if (getLoggedUserId()) {
-      this.setState({logged: true});
-    }
+
     setAxiosAuthentication()
     let bookingObj = JSON.parse(localStorage.getItem('bookingObj'));
 
@@ -335,7 +332,7 @@ class UserServicesPreview extends React.Component {
   };
 
   isServiceAtHome = () => {
-      return this.state.location && (!['visio', 'alfred'].includes(this.state.location))
+    return this.state.location && (!['visio', 'alfred'].includes(this.state.location))
   }
 
   computeTravelTax = () => {
@@ -382,10 +379,10 @@ class UserServicesPreview extends React.Component {
   };
 
   isInPerimeter = () => {
-    if (isEmpty(this.state.location) || isEmpty(this.state.serviceUser) || isEmpty(this.state.user) || this.getClientAddress()==null) {
-      return false;
-    }
     const coordSU = this.state.serviceUser.service_address.gps;
+    if (!this.getClientAddress()) {
+      return false
+    }
     const coordUser = this.getClientAddress().gps;
     const dist = computeDistanceKm(coordSU, coordUser);
     const inPerimeter = parseFloat(dist) < parseFloat(this.state.serviceUser.perimeter);
@@ -407,6 +404,9 @@ class UserServicesPreview extends React.Component {
 
   getClientAddress = () => {
     const {user}=this.state
+    if (!user) {
+      return null
+    }
     const{address}=this.props
     if (!address || ['client', 'main'].includes(address)) {
       return user.billing_address
@@ -819,7 +819,7 @@ class UserServicesPreview extends React.Component {
   };
 
   render() {
-    const {classes} = this.props;
+    const {classes, address} = this.props;
     const {service,alfred, user,} = this.state;
 
     return (
@@ -833,7 +833,7 @@ class UserServicesPreview extends React.Component {
           <meta property="og:url" content="https://my-alfred.io"/>
         </Helmet>
         <Hidden only={['xs', ]}>
-          <Layout user={user}>
+          <Layout user={user} selectedAddress={address}>
             {this.content(classes)}
           </Layout>
         </Hidden>
