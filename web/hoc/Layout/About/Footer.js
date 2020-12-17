@@ -1,38 +1,47 @@
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import Tab from "@material-ui/core/Tab";
-import Link from "../../../components/Link/Link"
+import Link from '../../../components/Link/Link';
 import {withStyles} from "@material-ui/core/styles";
-import styles from '../../../static/css/pages/homePage/index';
+import styles from '../../../static/css/components/Layout/About/Footer/Footer';
+import Typography from "@material-ui/core/Typography";
 
 class Footer extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
+  constructor(props) {
+    super(props);
+  }
     render() {
-        return (
-            <Grid style={{
-                padding: '0 150px',
-                borderTop: '1px dotted black',
-                marginTop: '30px'
-            }}>
-                <Link href={'/footer/apropos'}>
-                    <span style={{float: 'start', paddingTop: '10px'}}>&Agrave; propos de nous</span>
-                </Link>
-                <Grid style={{float: 'right', display: 'flex'}}>
-                  { true ? null:
-                    <Link href={'/'}>
-                        <p style={{marginTop: '2.5px', paddingRight: '18px'}}>Sécurité</p>
-                    </Link>
-                  }
-                    <Link href={'/cgu'}>
-                        <p style={{marginTop: '2.5px', paddingRight: '18px'}}>Informations légales</p>
-                    </Link>
-                        <p style={{marginTop: '2.5px', paddingRight: '18px'}}>Confidentialité</p>
-                </Grid>
+    const {classes}= this.props;
+      return (
+        <Grid container className={classes.mainContainerFooter}>
+          <Grid className={classes.mainContainerWidth}>
+            <Grid item>
+              <Link href={'/footer/apropos'}>
+                <Typography>&Agrave; propos de nous</Typography>
+              </Link>
             </Grid>
-        )
+            <Grid item className={classes.rightMainContainerFooter}>
+              { true ? null:
+                <Grid item>
+                  <Link href={'/'}>
+                    <Typography>Sécurité</Typography>
+                  </Link>
+                </Grid>
+              }
+              <Grid item className={classes.marginLink}>
+                <Link href={'/cgu'}>
+                  <Typography>Informations légales</Typography>
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link>
+                  <Typography>Confidentialité</Typography>
+                </Link>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      )
     }
 }
 

@@ -1,38 +1,50 @@
 import React, {Fragment} from 'react';
 import Grid from '@material-ui/core/Grid';
-import layoutStyle from "../../static/css/pages/layout/layoutStyle"
-import Header from "../../hoc/Layout/About/Header";
-import Footer from "../../hoc/Layout/About/Footer";
 import {withStyles} from "@material-ui/core/styles";
-import styles from '../../static/css/pages/homePage/index';
+import styles from '../../static/css/pages/footer/ourCommunity/ourCommunity';
+import LayoutFaq from "../../hoc/Layout/LayoutFaq";
+import Typography from "@material-ui/core/Typography";
 
 class OurCommunity extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+  constructor(props) {
+    super(props);
+  }
 
-    render() {
-        const {style} = this.props;
-        return (
-            <Fragment>
-                <Header/>
-                <Grid className={layoutStyle.navbarTopContainer}>
-                    <Grid style={{display: 'flex', flexDirection: 'column', margin: '0 auto', width: '60%'}}>
-                        <h2>Un monde où il fait bon vivre</h2>
-                        <p>Chez My Alfred, notre communauté est au coeur de nos préoccupations. Notre priorité est de
-                            créer un espace où il fait bon vivre dans lequel chacun puisse trouver sa place. Ici, le
-                            racisme, l’homophobie, le sexisme ou toute autre forme de discrimination n’est pas toléré.
-                        </p>
-                        <p>Nous croyons que le silence n’est pas une option et que nous devons faire front. Ensemble,
-                            nous pouvons nous éduquer et apprendre. Nous pouvons amplifier les voix de ceux qui
-                            subissent ces injustices et provoquer un vrai changement.
-                        </p>
-                        <p>My Alfred soutient les femmes, les personnes de couleur et la communauté LGBTQ+.</p>
-                    </Grid>
-                </Grid>
-                <Footer/>
-            </Fragment>)
-    }
+  static getInitialProps({query: {indexFaq}}) {
+    return {index: indexFaq};
+  }
+
+  render() {
+    const {classes, index} = this.props;
+    return (
+     <LayoutFaq index={index}>
+      <Grid container spacing={4} style={{margin: 0, width: '100%'}}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerApropos}>
+          <Grid className={classes.containerWidth}>
+            <Grid>
+              <h2 style={{textAlign: 'center'}}>Un monde où il fait bon vivre</h2>
+            </Grid>
+            <Grid>
+              <Typography style={{textAlign: 'justify'}}>Chez My Alfred, notre communauté est au coeur de nos préoccupations. Notre priorité est de
+                créer un espace où il fait bon vivre dans lequel chacun puisse trouver sa place. Ici, le
+                racisme, l’homophobie, le sexisme ou toute autre forme de discrimination n’est pas toléré.
+              </Typography>
+            </Grid>
+            <Grid>
+              <Typography style={{textAlign: 'justify'}}>Nous croyons que le silence n’est pas une option et que nous devons faire front. Ensemble,
+                nous pouvons nous éduquer et apprendre. Nous pouvons amplifier les voix de ceux qui
+                subissent ces injustices et provoquer un vrai changement.
+              </Typography>
+            </Grid>
+            <Grid>
+              <Typography style={{textAlign: 'justify'}}>My Alfred soutient les femmes, les personnes de couleur et la communauté LGBTQ+.</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+     </LayoutFaq>
+    )
+  }
 }
 
 export default withStyles(styles)(OurCommunity)
