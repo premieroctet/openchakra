@@ -10,9 +10,9 @@ export default class needHelp extends React.Component {
   render() {
     return (
       <Layout>
-        <Grid style={{marginTop: 100}}>
+        <Grid style={{marginTop: '10vh', marginBottom: '10vh'}}>
           <iframe src={'https://calendly.com/solene-de-my-alfred/15min'}
-                  style={{height: 630, width: '100%', border: 0}}/>
+                  style={{minHeight: '100vh', width: '100%', border: 0}}/>
 
         </Grid>
       </Layout>

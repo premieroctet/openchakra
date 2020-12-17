@@ -116,7 +116,7 @@ class NavBar extends Component {
           user: res.data,
           allAddresses: allAddresses
         })
-      }).catch();
+      }).catch(err =>{console.error(err)});
 
     this.setState({selectedAddress: this.props.selectedAddress || 'main'});
     this.setState({keyword: this.props.keyword || ''})
@@ -658,13 +658,13 @@ class NavBar extends Component {
     const logged = user != null
     const modalLogin = () => {
       return (
-        <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh}/>
+        <LogIn callRegister={this.handleOpenRegister} login={this.needRefresh} id={'connect'}/>
       );
     };
 
     const modalRegister = () => {
       return (
-        <Register callLogin={this.handleOpenLogin} sendParentData={this.getData}/>
+        <Register callLogin={this.handleOpenLogin} sendParentData={this.getData} id={'register'}/>
       );
     };
 

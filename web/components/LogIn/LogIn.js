@@ -73,7 +73,7 @@ class LogIn extends React.Component {
   };
 
   render() {
-    const {classes, callRegister} = this.props;
+    const {classes, callRegister, id} = this.props;
     const {errors, username, password, showPassword} = this.state;
     return (
       <Grid className={classes.fullContainer}>
