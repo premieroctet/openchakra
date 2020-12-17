@@ -145,7 +145,7 @@ class Footer extends React.Component {
                                     </Grid>
                                 }
                                 <Grid className={classes.footerLinkInfoContainer}>
-                                    <Link href={'/cgu'}>
+                                    <Link href={'/footer/legalNotice'}>
                                         <Typography className={classes.footerLink}>Informations légales</Typography>
                                     </Link>
                                 </Grid>
