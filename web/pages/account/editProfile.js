@@ -51,6 +51,7 @@ class editProfile extends React.Component {
       birthday: null,
       dpDate: moment().toDate(),
       ipDate: moment().format(momentDateFormat),
+      errors:{},
     };
     this.handleChangeLanguages = this.handleChangeLanguages.bind(this);
   }
@@ -128,12 +129,15 @@ class editProfile extends React.Component {
       .then(res => {
         toast.info('Profil modifié avec succès');
         this.componentDidMount();
-
+        this.setState({errors: {}})
       })
-      .catch();
+      .catch( err => {
+        this.setState(err.response.data)
+      });
   };
 
   content = (classes) =>{
+    const {errors}=this.state
     return(
       <Grid>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
@@ -244,6 +248,8 @@ class editProfile extends React.Component {
                 placeholder={'Email'}
                 variant={'outlined'}
                 label={'Adresse email'}
+                helperText={errors.email}
+                error={errors.email}
               />
             </Grid>
           <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
@@ -360,7 +366,6 @@ class editProfile extends React.Component {
 
   render() {
     const {classes, index} = this.props;
-
     return (
       <React.Fragment>
         <Helmet>
