@@ -259,8 +259,8 @@ const Header = (props: Props) => {
           ) : (
             <Button
               onClick={() =>
-                signIn(undefined, {
-                  callbackUrl: 'test',
+                signIn('github', {
+                  callbackUrl: process.env.NEXTAUTH_URL as string,
                 })
               }
               variantColor="teal"

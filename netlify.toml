@@ -1,8 +1,6 @@
-[context.deploy-preview.environment]
-VERCEL_URL = "NEXTAUTH_URL_PLACEHOLDER"
-
 [build]
-command = "sed -i 's/NEXTAUTH_URL_PLACEHOLDER/$DEPLOY_PRIME_URL/g' netlify.toml && npm run build"
+command = "npm run build"
+
 functions = "out_functions"
 publish = "out_publish"
 

@@ -61,7 +61,9 @@ const ProjectSlug = ({
         setProjectExist(false)
       }
     } else {
-      signIn()
+      signIn('github', {
+        callbackUrl: process.env.NEXTAUTH_URL as string,
+      })
     }
   }
 

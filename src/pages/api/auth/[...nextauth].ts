@@ -5,7 +5,6 @@ import Adapters from 'next-auth/adapters'
 import prisma from '../../../utils/prisma'
 
 const options = {
-  site: process.env.NEXTAUTH_URL,
   providers: [
     Providers.GitHub({
       clientId: process.env.GITHUB_ID as string,

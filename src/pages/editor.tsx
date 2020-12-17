@@ -129,7 +129,9 @@ const EditorPage = (props: {
       onOpen()
     } else {
       setLoading(false)
-      signIn()
+      signIn('github', {
+        callbackUrl: process.env.NEXTAUTH_URL as string,
+      })
     }
   }
 
@@ -169,7 +171,9 @@ const EditorPage = (props: {
         onOpen()
       }
     } else {
-      signIn()
+      signIn('github', {
+        callbackUrl: process.env.NEXTAUTH_URL as string,
+      })
     }
   }
 
