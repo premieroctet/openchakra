@@ -1,21 +1,16 @@
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
 import {NAVBAR_MENU} from "../../../utils/i18n";
-import Link from '../../../components/Link/Link'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {withStyles} from "@material-ui/core/styles";
 import styles from '../../../static/css/components/Layout/About/Header/Header';
 import ScrollMenu from "../../../components/ScrollMenu/ScrollMenu";
-import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Router from 'next/router';
 import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
-import SearchIcon from "@material-ui/icons/Search";
-import TextField from "@material-ui/core/TextField";
 import InputBase from "@material-ui/core/InputBase";
+import CloseIcon from '@material-ui/icons/Close';
 
 
 class Header extends React.Component {
@@ -26,6 +21,7 @@ class Header extends React.Component {
       content: '',
       searchBar: false,
       aboutMenu: false,
+      aboutSearch: false,
       becomeAlfredMenu: false,
       active: false,
       classNameMenu: '',
@@ -47,14 +43,24 @@ class Header extends React.Component {
     }
   }
 
+  componentDidMount() {
+    if(Router.pathname === '/faq'){
+      this.setState({aboutSearch: true})
+    }
+  }
+
   onSearchChange = ev => {
     this.setState({search: ev.target.value}, () => this.props.search())
+  };
+
+  callClearFunction = () =>{
+    this.setState({search: ''}, () => this.props.clearFuntion())
   };
 
   render() {
 
     const {classes, index} = this.props;
-    let {title, content, aboutMenu, items} = this.state;
+    let {title, content, aboutMenu, items, search, aboutSearch} = this.state;
 
     if (process.browser) {
       if (window.location.pathname === '/footer/apropos') {
@@ -74,7 +80,7 @@ class Header extends React.Component {
         content = 'Pour trouver vos réponses';
       } else if (window.location.pathname === '/footer/becomeAlfred') {
         title = 'Devenir un Alfred';
-        content = 'Les bases'
+        content = 'Les bases';
       }
     }
 
@@ -102,24 +108,26 @@ class Header extends React.Component {
             <Grid>
               <h3 style={{color: 'white'}}>{content}</h3>
             </Grid>
-            <Grid className={classes.navbarSearchContainer}>
-              <Paper classes={{root: classes.navbarSearch}}>
-                <InputBase
-                  className={classes.input}
-                  placeholder="Chercher dans la FAQ"
-                  inputProps={{ 'aria-label': 'Chercher dans la FAQ' }}
-                  onChange={this.onSearchChange}
-                />
-                <Grid>
-                  <IconButton classes={{root: classes.iconButton}} aria-label="search">
-                    <SearchIcon/>
-                  </IconButton>
-                </Grid>
-              </Paper>
-            </Grid>
+            {
+              aboutSearch ?
+                <Grid className={classes.navbarSearchContainer}>
+                  <Paper classes={{root: classes.navbarSearch}}>
+                    <InputBase
+                      className={classes.input}
+                      placeholder="Chercher dans la FAQ"
+                      inputProps={{ 'aria-label': 'Chercher dans la FAQ' }}
+                      onChange={this.onSearchChange}
+                      value={search}
+                    />
+                    <Grid>
+                      <IconButton classes={{root: classes.iconButton}} aria-label="search" onClick={this.callClearFunction}>
+                        <CloseIcon />
+                      </IconButton>
+                    </Grid>
+                  </Paper>
+                </Grid> : null
+            }
           </Grid>
-
-
         </Grid>
         {
           aboutMenu ?

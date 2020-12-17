@@ -27,23 +27,25 @@ class LayoutFaq extends React.Component{
 
   sendSearch = () =>{
     let state = this.child.current.state;
-    this.setState({search: state.search})
-    console.log('coucou')
+    this.setState({search: state.search}, () => this.props.onSearchChange());
   };
 
+  callClearFunction = () =>{
+    this.setState({search: ''}, () => this.props.callClearFunction());
+  };
 
 
   render(){
     const{classes, index, children}= this.props;
-    const{becomeAlfredPage, search}= this.state;
+    const{becomeAlfredPage}= this.state;
     const Children = () => {return children};
 
 
     return(
       <Grid className={classes.mainContainerLayoutFaq}>
-        <Header ref={this.child} index={index} search={this.sendSearch}/>
+        <Header ref={this.child} index={index} search={this.sendSearch} clearFuntion={this.callClearFunction}/>
         <Grid className={becomeAlfredPage ? classes.becomeAlfredPageContainer : classes.childrenContainer}>
-          <Children search={this.sendSearch}/>
+          <Children/>
         </Grid>
         <Grid className={classes.footerContainerFaq}>
           <Footer/>
