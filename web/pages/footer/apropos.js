@@ -111,7 +111,7 @@ class Apropos extends React.Component {
             </Grid>
           </Grid>
       </Grid>
-    </LayoutFaq>
+      </LayoutFaq>
     )
   }
 }

@@ -8,9 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {FAQ} from '../utils/i18n'
 import styles from '../static/css/pages/faq';
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
-import Input from "@material-ui/core/Input";
 import LayoutFaq from "../hoc/Layout/LayoutFaq";
 import NeedMoreFaq from "../hoc/Layout/Faq/NeedMoreFaq";
 

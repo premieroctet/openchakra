@@ -1,4 +1,4 @@
-import React, {createRef} from 'react';
+import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../static/css/components/Layout/LayoutFaq/LayoutFaq';
@@ -38,14 +38,12 @@ class LayoutFaq extends React.Component{
   render(){
     const{classes, index, children}= this.props;
     const{becomeAlfredPage}= this.state;
-    const Children = () => {return children};
-
 
     return(
       <Grid className={classes.mainContainerLayoutFaq}>
         <Header ref={this.child} index={index} search={this.sendSearch} clearFuntion={this.callClearFunction}/>
         <Grid className={becomeAlfredPage ? classes.becomeAlfredPageContainer : classes.childrenContainer}>
-          <Children/>
+          {children}
         </Grid>
         <Grid className={classes.footerContainerFaq}>
           <Footer/>
