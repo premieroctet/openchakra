@@ -16,5 +16,12 @@ const options = {
   }),
 }
 
-const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options)
+const authHandler: NextApiHandler = async (req, res) => {
+  try {
+    await NextAuth(req, res, options)
+  } finally {
+    prisma.$disconnect()
+  }
+}
+
 export default authHandler

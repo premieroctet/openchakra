@@ -52,6 +52,7 @@ const ModalComponent = (props: Props) => {
         public: !e.public,
       },
     }
+    console.log(bodyData)
     const response = await fetch('/api/project/update', {
       method: 'POST',
       headers: {
