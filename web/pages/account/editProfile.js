@@ -63,6 +63,10 @@ class editProfile extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
+    this.loadUser()
+  }
+
+  loadUser = () => {
     setAxiosAuthentication()
     axios
       .get('/myAlfred/api/users/current')
@@ -128,8 +132,8 @@ class editProfile extends React.Component {
     })
       .then(res => {
         toast.info('Profil modifié avec succès');
-        this.componentDidMount();
         this.setState({errors: {}})
+        this.loadUser()
       })
       .catch( err => {
         this.setState(err.response.data)
