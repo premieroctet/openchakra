@@ -186,7 +186,9 @@ class all extends React.Component {
                           <TableRow key={index}>
                             <TableCell>
                               {e.is_alfred ?
+                                <a href={`/profile/services?user=${e._id}&indexAccount=1`} target='_blank'>
                                 <img src="/static/assets/img/userServicePreview/alfred.svg" style={{width: '40px'}}/>
+                                </a>
                                 :
                                 null
                               }
