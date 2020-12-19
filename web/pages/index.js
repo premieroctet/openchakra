@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React from 'react';
 import Footer from '../hoc/Layout/Footer/Footer';
-import BecomeAlfred from '../components/HomePage/BecomeAlfred/BecomeAlfred';
 import Router from 'next/router';
 import {Helmet} from 'react-helmet';
 
@@ -19,7 +18,8 @@ import MobileNavbar from "../hoc/Layout/NavBar/MobileNavbar";
 import Hidden from "@material-ui/core/Hidden";
 import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
 import {Divider} from "@material-ui/core";
-const {getLoggedUserId}=require('../utils/functions')
+import ResaService from "../components/HomePage/ResaService/ResaService";
+const {getLoggedUserId}=require('../utils/functions');
 
 class Home extends React.Component {
   constructor(props) {
@@ -93,7 +93,7 @@ class Home extends React.Component {
           </Grid>
           <Grid container className={classes.becomeAlfredComponent}>
             <Grid className={classes.generalWidthContainer}>
-              <BecomeAlfred style={classes}/>
+              <ResaService/>
             </Grid>
           </Grid>
           <Hidden only={['xs', 'sm']}>

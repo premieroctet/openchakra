@@ -265,13 +265,11 @@ class Register extends React.Component {
     const google_id = this.state.google_id;
     const facebook_id = this.state.facebook_id;
 
-    this.setState({cityError: null})
-    this.setState({birthdayError: null})
+    this.setState({cityError: null, birthdayError: null});
 
     axios
       .post('/myAlfred/api/users/register', newUser)
       .then(() => {
-        toast.info('Inscription réussie');
         axios.post('/myAlfred/api/users/login', {username, password, google_id, facebook_id})
           .then(() => {
             setAuthToken()
@@ -594,9 +592,9 @@ class Register extends React.Component {
                   <Typography className={classes.subtitle}>Adresse postale</Typography>
                 </Grid>
                 <Grid>
-                  <p className={classes.textStyle}>Votre adresse ne sera pas visible, mais nous l’utiliserons pour vous
+                  <Typography className={classes.textStyle}>Votre adresse ne sera pas visible, mais nous l’utiliserons pour vous
                     proposer
-                    ou proposer vos services aux utilisateurs ou Alfred proches de chez vous.</p>
+                    ou proposer vos services aux utilisateurs ou Alfred proches de chez vous.</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -627,10 +625,10 @@ class Register extends React.Component {
                   <Typography className={classes.subtitle}>Date de naissance</Typography>
                 </Grid>
                 <Grid>
-                  <p className={classes.textStyle}>Pour vous inscrire, vous devez être âgé d’au moins 16 ans. Les
+                  <Typography className={classes.textStyle}>Pour vous inscrire, vous devez être âgé d’au moins 16 ans. Les
                     autres
                     utilisateurs ne verront pas votre date de naissance.
-                  </p>
+                  </Typography>
                 </Grid>
                 <Grid item className={classes.datenaissance} style={{display: 'flex', alignItems: 'center'}}>
                   <Grid container style={{justifyContent: 'space-between', flexWrap: 'nowrap'}}>
@@ -688,9 +686,9 @@ class Register extends React.Component {
                     <Typography className={classes.subtitle}>Téléphone</Typography>
                   </Grid>
                   <Grid>
-                    <p className={classes.textStyle}>L'ajout de votre numéro de téléphone permet aux membres My-Alfred
+                    <Typography className={classes.textStyle}>L'ajout de votre numéro de téléphone permet aux membres My-Alfred
                       de disposer d'un moyen pour vous contacter.
-                    </p>
+                    </Typography>
                   </Grid>
                 </Grid>
                 <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
@@ -744,18 +742,15 @@ class Register extends React.Component {
                   <h2 className={classes.titleRegister}>Inscription terminée</h2>
                 </Grid>
                 <Grid className={classes.newContainer}>
-                  <Grid container style={{display: 'flex', justifyContent: 'center', height: 100 /*safari*/}}>
-                    <img src='../../static/happy_castor.svg' style={{width: 100}} alt={'success'}/>
-                  </Grid>
                   <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 20, textAlign: 'center'}}>
-                    <p>Inscription réussie ! Vous pouvez maintenant proposer ou rechercher vos services sur My
-                      Alfred</p>
+                    <Typography>Inscription réussie ! Vous pouvez maintenant proposer ou rechercher vos services sur My
+                      Alfred</Typography>
                   </Grid>
                   <Grid item className={classes.responsiveButton}>
                     <Grid item style={{marginRight: '1%'}}>
                       <Link href={'/search?search=1'}>
                         <a style={{textDecoration: 'none'}}>
-                          <Button variant={'contained'} color={'primary'} style={{color: 'white'}}>Commencez à
+                          <Button variant={'contained'} color={'primary'} style={{color: 'white', textTransform: 'initial'}}>Commencez à
                             explorer</Button>
                         </a>
                       </Link>
@@ -763,7 +758,7 @@ class Register extends React.Component {
                     <Grid item className={classes.responsiveSecondaryButton}>
                       <Link href={'/creaShop/creaShop'}>
                         <a style={{textDecoration: 'none'}}>
-                          <Button variant={'contained'} color={'secondary'} style={{color: 'white'}}>Proposer mes
+                          <Button variant={'contained'} color={'secondary'} style={{color: 'white', textTransform: 'initial'}}>Proposer mes
                             services</Button>
                         </a>
                       </Link>
@@ -845,7 +840,7 @@ class Register extends React.Component {
 
 
   render() {
-    const {classes, callLogin} = this.props;
+    const {classes, callLogin, id} = this.props;
     const {errors, activeStep, firstPageValidator, secondPageValidator} = this.state;
 
     return (

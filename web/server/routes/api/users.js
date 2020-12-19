@@ -925,7 +925,7 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
   User.findOne({email: req.body.email})
     .then(user => {
       if (user && req.body.email != req.user.email) {
-        return res.status(400).json({error: 'This email already exist'});
+        return res.status(400).json({errors: {email: 'Adresse mail déjà utilisée'}});
       } else {
         User.findByIdAndUpdate(req.user.id, {
           email: req.body.email,

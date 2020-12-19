@@ -7,6 +7,7 @@ import TextsmsIcon from '@material-ui/icons/Textsms';
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../../static/css/components/TrustAndSecurity/TrustAndSecurity';
+import Hidden from "@material-ui/core/Hidden";
 
 class TrustAndSecurity extends React.Component{
   constructor(props) {
@@ -45,9 +46,11 @@ class TrustAndSecurity extends React.Component{
         {
           items.map((res, index) => (
             <Grid key={index} className={classes.trustAndSecurityContent}>
-              <Grid>
-                {res.icon}
-              </Grid>
+              <Hidden only={['xs']}>
+                <Grid>
+                  {res.icon}
+                </Grid>
+              </Hidden>
               <Grid style={{marginLeft: '3vh'}}>
                 <Grid>
                   <Typography><strong>{res.title}</strong></Typography>

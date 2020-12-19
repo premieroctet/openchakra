@@ -57,6 +57,8 @@ class ScrollMenu extends React.Component{
                           :
                           mode === 'profile' ? '/profile' + res.url  + '?' + querystring.stringify({...extraParams, indexAccount: index})
                           :
+                          mode === 'faq' ? res.url + '?' + 'indexFaq=' + index
+                          :
                           '/search?search=1&category=' + res._id + (gps ? '&gps=' + JSON.stringify(gps) : '') + '&indexCat=' + index;
                 return(
                   <Tab key={index} label={res.label} className={classes.scrollMenuTab} {...a11yProps(index)} onClick={()=>this.controllerUrl(url)}/>

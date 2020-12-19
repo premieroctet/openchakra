@@ -143,7 +143,8 @@ export default theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: '5vh',
+    marginBottom: '5vh',
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
       justifyContent: 'center',
