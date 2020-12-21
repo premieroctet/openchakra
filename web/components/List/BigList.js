@@ -14,7 +14,7 @@ import Link from 'next/link';
 import Grid from '@material-ui/core/Grid';
 const {
   StatusCellRenderer, StatusCellFilter, DateCellRenderer,
-  MangopayCellRenderer, PictureCellRenderer, LinkEdit }=require('../Render/models')
+  MangopayCellRenderer, PictureCellRenderer, LinkEdit, PrivateRenderer }=require('../Render/models')
 
 class BigList extends React.Component {
 
@@ -45,6 +45,7 @@ class BigList extends React.Component {
       'statusCellFilter' : StatusCellFilter,
       'pictureCellRenderer' : PictureCellRenderer,
       'linkEdit' : LinkEdit,
+      'privateRenderer' : PrivateRenderer,
     }
 
     const defaultColDef={

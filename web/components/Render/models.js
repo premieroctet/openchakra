@@ -4,6 +4,7 @@ import Link from 'next/link';
 const moment = require('moment-timezone');
 moment.locale('fr');
 const util = require('util');
+import LockIcon from '@material-ui/icons/Lock';
 
 class StatusCellRenderer extends React.Component {
 
@@ -115,18 +116,25 @@ class PictureCellRenderer extends React.Component {
 
 class LinkEdit extends React.Component {
 
-    constructor(props) {
-      super(props)
-      this.state= {
-        value: props.value
-      }
-    }
-
     render = () => {
       return (
-        <Link href={`/dashboard/services/view?id=${this.state.value}`}><a>Modifier</a></Link>
+        <Link href={`/dashboard/services/view?id=${this.props.value}`}><a>Modifier</a></Link>
       )
     }
 }
 
-module.exports= {StatusCellRenderer, DateCellRenderer, MangopayCellRenderer, StatusCellFilter, PictureCellRenderer, LinkEdit}
+class PrivateRenderer extends React.Component {
+
+  render = () => {
+    return (
+      <>
+      { this.props.value ? <LockIcon/> : null }
+      </>
+    )
+  }
+
+}
+
+module.exports= {
+  StatusCellRenderer, DateCellRenderer, MangopayCellRenderer, StatusCellFilter,
+  PictureCellRenderer, LinkEdit, PrivateRenderer}
