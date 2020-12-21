@@ -144,7 +144,7 @@ class view extends React.Component {
                   />
                 </Grid>
                 <Grid item>
-                  <img src={`../../../${equipment.logo}`} alt={'logo'} width={100}/>
+                  <img src={`/static/equipments/${equipment.logo}`} alt={'logo'} width={100}/>
                 </Grid>
                 <Grid item>
                   <img src={`../../../${equipment.logo2}`} alt={'logo2'} width={100}/>
