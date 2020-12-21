@@ -11,7 +11,7 @@ import useDispatch from '~hooks/useDispatch'
 import ComponentPreview from '~components/editor/ComponentPreview'
 import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
-import prisma from '../../../utils/prisma'
+import { prisma } from '../../../utils/prisma'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   let projectId = (params!.slug as string).split('-')[0]

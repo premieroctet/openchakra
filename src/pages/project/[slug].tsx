@@ -3,7 +3,7 @@ import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next'
 import { getSession, signIn } from 'next-auth/client'
 import useDispatch from '~hooks/useDispatch'
 import EditorPage from '~pages/editor'
-import prisma from '../../utils/prisma'
+import { prisma } from '../../utils/prisma'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   let projectId = (params!.slug as string).split('-')[0]
