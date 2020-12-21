@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+// TODO: supprimer logo2
 const EquipmentSchema = new Schema({
   label: {
     type: String,
