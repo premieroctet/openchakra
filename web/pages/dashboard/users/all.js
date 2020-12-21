@@ -98,7 +98,7 @@ class all extends React.Component {
 
   onRowClick = data => {
     if (data) {
-      window.open(`/dashboard/prestations/view?id=${data._id}`, '_blank')
+      window.open(`/dashboard/users/view?id=${data._id}`, '_blank')
     }
   }
 
