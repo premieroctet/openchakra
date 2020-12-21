@@ -5,7 +5,6 @@ import { Global } from '@emotion/core'
 import Metadata from '~components/Metadata'
 import { DndProvider } from 'react-dnd'
 import { Flex, Box, Spinner, Link } from '@chakra-ui/core'
-
 import Backend from 'react-dnd-html5-backend'
 import useDispatch from '~hooks/useDispatch'
 import ComponentPreview from '~components/editor/ComponentPreview'
