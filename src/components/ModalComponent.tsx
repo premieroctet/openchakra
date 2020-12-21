@@ -46,13 +46,10 @@ const ModalComponent = (props: Props) => {
   const toast = useToast()
 
   const updateProject = async (e: UpdateProject) => {
-    console.log(!e.public)
-    let publicValue = !e.public
-    console.log(publicValue)
     let bodyData = {
       project: {
         id: e.id,
-        public: publicValue,
+        public: e.public,
       },
     }
     console.log(bodyData)
@@ -80,6 +77,7 @@ const ModalComponent = (props: Props) => {
   }
 
   const publishPublicProject = async (e: UpdateProject) => {
+    e.public = !e.public
     const data = {
       id: e.id,
       public: e.public,

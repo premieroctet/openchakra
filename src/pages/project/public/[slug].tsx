@@ -13,7 +13,7 @@ import EditorErrorBoundary from '~components/errorBoundaries/EditorErrorBoundary
 import Editor from '~components/editor/Editor'
 import Backend from 'react-dnd-html5-backend'
 import useDispatch from '~hooks/useDispatch'
-import { prisma } from '../../../utils/prisma'
+import prisma from '../../../utils/prisma'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   let projectId = (params!.slug as string).split('-')[0]
