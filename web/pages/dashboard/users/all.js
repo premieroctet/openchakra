@@ -111,16 +111,15 @@ class all extends React.Component {
         <Grid container style={{marginTop: 70}}>
         </Grid>
         <Grid container className={classes.signupContainer} style={{width:'100%'}}>
-	  <Link href={'/dashboard/home'}>
-
+	        <Link href={'/dashboard/home'}>
             <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour dashboard</span></Typography>
-	  </Link>
-            <Grid style={{width: '90%'}}>
-              <Paper style={{width: '100%'}}>
-               <BigList data={users} columnDefs={this.columnDefs} classes={classes}
+	        </Link>
+          <Grid style={{width: '90%'}}>
+            <Paper style={{width: '100%'}}>
+              <BigList data={users} columnDefs={this.columnDefs} classes={classes}
                         title={'Utilisateurs'} onRowClick={this.onRowClick} />
-              </Paper>
-            </Grid>
+            </Paper>
+          </Grid>
         </Grid>
       </Layout>
     );

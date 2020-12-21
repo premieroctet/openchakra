@@ -5,6 +5,7 @@ const moment = require('moment-timezone');
 moment.locale('fr');
 const util = require('util');
 import LockIcon from '@material-ui/icons/Lock';
+const {MANGOPAY_CONFIG}=require('../../config/config')
 
 class StatusCellRenderer extends React.Component {
 
@@ -95,9 +96,11 @@ class DateCellRenderer extends React.Component {
 class MangopayCellRenderer extends React.Component {
 
   render = () => {
+    const sandbox = MANGOPAY_CONFIG.sandbox
+    const mangopay_base_url = sandbox ? 'https://dashboard.sandbox.mangopay.com' : 'https://dashboard.mangopay.com'
     return (
       <a target="_blank"
-         href={`https://dashboard.mangopay.com/User/${this.props.value}/Details`}>{this.props.value}</a>
+         href={`${mangopay_base_url}/User/${this.props.value}/Details`}>{this.props.value}</a>
     )
   }
 }
