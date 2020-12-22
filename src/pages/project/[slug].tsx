@@ -10,31 +10,35 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   let projectName = (params!.slug as string).split('-')[1]
 
   const project = await prisma.project.findOne({
-    include: { user: true },
+    //include: { user: true },
     where: {
       id: Number(projectId),
     },
   })
   let projects = JSON.parse(JSON.stringify(project))
+  await new Promise(res => setTimeout(res, 5000))
   return {
     props: {
       projects,
       id: Number(projectId),
       projectName: projectName,
-      public: project?.public,
+      publicValue: project?.public,
+      validated: project?.validated,
     },
+    revalidate: 3,
   }
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const projects = await prisma.project.findMany()
+  const projects = await prisma.project.findMany({ take: 3 })
+  const paths = await projects.map(project => ({
+    params: {
+      slug: `${project.id.toString()}-${project.projectName.toString()}`,
+    },
+  }))
   return {
-    paths: projects.map(project => ({
-      params: {
-        slug: `${project.id.toString()}-${project.projectName.toString()}`,
-      },
-    })),
     fallback: false,
+    paths,
   }
 }
 
@@ -42,6 +46,8 @@ const ProjectSlug = ({
   projects,
   id,
   projectName,
+  validated,
+  publicValue,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [loading, setLoading] = useState(true)
   const [projectExist, setProjectExist] = useState(true)
@@ -78,8 +84,8 @@ const ProjectSlug = ({
       loading={loading}
       projectExist={projectExist}
       projectName={projectName}
-      validated={projects.validated}
-      public={projects.public}
+      validated={validated}
+      public={publicValue}
     />
   )
 }
