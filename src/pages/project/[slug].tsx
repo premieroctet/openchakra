@@ -16,7 +16,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     },
   })
   let projects = JSON.parse(JSON.stringify(project))
-  await new Promise(res => setTimeout(res, 5000))
   return {
     props: {
       projects,
@@ -25,7 +24,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       publicValue: project?.public,
       validated: project?.validated,
     },
-    revalidate: 3,
   }
 }
 
