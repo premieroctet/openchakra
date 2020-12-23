@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next'
 import { getSession, signIn } from 'next-auth/client'
 import useDispatch from '~hooks/useDispatch'
+import { useRouter } from 'next/router'
 import EditorPage from '~pages/editor'
 import prisma from '../../utils/prisma'
 
@@ -24,6 +25,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       publicValue: project?.public,
       validated: project?.validated,
     },
+    revalidate: 1,
   }
 }
 
@@ -35,7 +37,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     },
   }))
   return {
-    fallback: false,
+    fallback: true,
     paths,
   }
 }
@@ -49,6 +51,7 @@ const ProjectSlug = ({
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [loading, setLoading] = useState(true)
   const [projectExist, setProjectExist] = useState(true)
+  const router = useRouter()
 
   const dispatch = useDispatch()
 
@@ -76,7 +79,9 @@ const ProjectSlug = ({
     // eslint-disable-next-line
   }, [])
 
-  return (
+  return router.isFallback ? (
+    <div>Loading...</div>
+  ) : (
     <EditorPage
       id={id}
       loading={loading}
