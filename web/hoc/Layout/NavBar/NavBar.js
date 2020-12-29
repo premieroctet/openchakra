@@ -600,7 +600,7 @@ class NavBar extends Component {
           </Grid>
         }
         {
-          logged === false ?
+          logged === false && this.state.ifHomePage ?
             <Grid className={classes.navbarDatePickerMain}>
               <Grid>
                 <Divider className={classes.divider} orientation="vertical"/>
