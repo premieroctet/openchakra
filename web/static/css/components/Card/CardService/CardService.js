@@ -4,7 +4,10 @@ export default theme => ({
     borderRadius: 20,
     display: 'flex',
     justifyContent: 'center',
-    height: '40vh'
+    height: '40vh',
+    [theme.breakpoints.down('md')]:{
+      height: 300
+    }
   },
   cardServiceInfoContent:{
     display:'flex',
@@ -26,6 +29,9 @@ export default theme => ({
     justifyContent: 'center',
     height: '40vh',
     cursor: 'pointer',
+    [theme.breakpoints.down('md')]:{
+      height: 300
+    },
     [theme.breakpoints.down('xs')]:{
       height: '30vh',
 
@@ -62,6 +68,9 @@ export default theme => ({
   cardServicePicsContainer:{
     width: '100%',
     height: '20vh',
+    [theme.breakpoints.down('md')]:{
+      height: 130
+    },
     [theme.breakpoints.down('xs')]:{
       width: 125,
       height: 125
