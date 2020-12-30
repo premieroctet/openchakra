@@ -157,7 +157,6 @@ class creaShop extends React.Component {
     this.setState({shop: shop});
   }
 
-<<<<<<< Updated upstream
   addDefaultAvailability = () => {
     console.log(`Adding default availability`)
     const avail=getDefaultAvailability()
@@ -179,30 +178,6 @@ class creaShop extends React.Component {
       });
   }
 
-||||||| constructed merge base
-=======
-  addDefaultAvailability = () => {
-    console.log(`Adding default availability`)
-    const avail=getDefaultAvailability()
-    const data={
-      startDate: avail.period.begin,
-      endDate: avail.period.end,
-      days: avail.period.days,
-      available: true,
-      timelapses: avail.timelapses,
-    }
-
-    setAxiosAuthentication()
-    axios.post('/myAlfred/api/availability/addRecurrent', data)
-      .then(res => {
-        this.loadAvailabilities()
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }
-
->>>>>>> Stashed changes
   availabilityCreated = (avail) => {
     window.alert('hop')
     if (avail._id.length === GID_LEN) {
@@ -229,23 +204,12 @@ class creaShop extends React.Component {
   loadAvailabilities = no_default => {
     axios.get('/myAlfred/api/availability/currentAlfred')
       .then(res => {
-<<<<<<< Updated upstream
         if (res.data.length==0 && !no_default) {
           this.addDefaultAvailability()
         }
         else {
           this.setState({availabilities: res.data});
         }
-||||||| constructed merge base
-        this.setState({availabilities: res.data});
-=======
-        if (res.data.length==0) {
-          this.addDefaultAvailability()
-        }
-        else {
-          this.setState({availabilities: res.data});
-        }
->>>>>>> Stashed changes
       })
       .catch(err => console.error(err));
   };
