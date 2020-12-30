@@ -23,7 +23,8 @@ import LayoutMobileSearch from "../hoc/Layout/LayoutMobileSearch";
 import Typography from "@material-ui/core/Typography";
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
 const {getLoggedUserId}=require('../utils/functions')
-
+import withWidth from '@material-ui/core/withWidth';
+import InfiniteScroll from 'react-infinite-scroll-component'
 const SearchResults=withSlide(withGrid(CardService));
 
 moment.locale('fr');
@@ -87,8 +88,10 @@ class SearchPage extends React.Component {
       isAdmin: false,
       mounting: true,
       searching: false,
-      logged: false
+      logged: false,
+      scroll_count: 0,
     };
+    this.SCROLL_DELTA=30
   }
 
   static getInitialProps({query: {keyword, city, gps, selectedAddress, category, service, prestation, search, date, indexCat}}) {
@@ -244,7 +247,7 @@ class SearchPage extends React.Component {
   };
 
   setFilteredServiceUsers = serviceUsers => {
-    this.setState({serviceUsersDisplay: serviceUsers});
+    this.setState({serviceUsersDisplay: serviceUsers, scroll_count: Math.min(this.SCROLL_DELTA, serviceUsers.length)});
   };
 
   onChange = e => {
@@ -307,7 +310,8 @@ class SearchPage extends React.Component {
     axios.post('/myAlfred/api/serviceUser/search', filters)
       .then(res => {
         let serviceUsers = res.data;
-        this.setState({serviceUsers: serviceUsers, serviceUsersDisplay: serviceUsers});
+        this.setState({serviceUsers: serviceUsers});
+        this.setFilteredServiceUsers(serviceUsers)
         const categories = this.state.categories;
         var proAlfred = this.state.shops.filter(s => s.is_professional).map(s => s.alfred._id);
         this.setState({categories: categories, proAlfred: proAlfred},
@@ -342,8 +346,12 @@ class SearchPage extends React.Component {
 
 
   content = (classes ) => {
-    const serviceUsers = this.state.serviceUsersDisplay
-    const {gps, selectedAddress} = this.state
+    var serviceUsers = this.state.serviceUsersDisplay
+    const {gps, selectedAddress, scroll_count} = this.state
+
+    const {width} = this.props
+
+    const [cols,rows]={ 'xs': [100,1], 'sm': [2,3], 'md': [3,3], 'lg': [4,4], 'xl':[4,3]}[width]
 
     return(
       <Grid>
@@ -427,30 +435,10 @@ class SearchPage extends React.Component {
                     :
                     serviceUsers.length===0 ? null :
                       <Grid container className={classes.searchMainContainer} spacing={3}>
-                        <Hidden only={['xs', 'sm', 'md']}>
+                        <Hidden only={['xs']}>
                           <SearchResults
                             key={moment()}
-                            model={new SearchDataModel(serviceUsers.map(su => su._id), 4, 3, false)}
-                            style={classes}
-                            gps={gps}
-                            user={this.state.user}
-                            address={selectedAddress}
-                          />
-                        </Hidden>
-                        <Hidden only={['xs', 'lg', 'xl', 'sm']}>
-                          <SearchResults
-                            key={moment()}
-                            model={new SearchDataModel(serviceUsers.slice(0, 20).map(su => su._id), 3, 3, false)}
-                            style={classes}
-                            gps={gps}
-                            user={this.state.user}
-                            address={selectedAddress}
-                          />
-                        </Hidden>
-                        <Hidden only={['xs', 'lg', 'xl', 'md']}>
-                          <SearchResults
-                            key={moment()}
-                            model={new SearchDataModel(serviceUsers.slice(0, 20).map(su => su._id), 2, 3, false)}
+                            model={new SearchDataModel(serviceUsers.map(su => su._id), cols, rows, false)}
                             style={classes}
                             gps={gps}
                             user={this.state.user}
@@ -458,20 +446,26 @@ class SearchPage extends React.Component {
                           />
                         </Hidden>
                         <Hidden only={['sm', 'md', 'lg', 'xl']}>
-                          {
-                            serviceUsers.slice(0, 20).map((su, index) =>{
-                              return (
-                                <Grid item xs={12} key={index}>
+                        <Grid item xs={12}>
+                          <InfiniteScroll
+                            dataLength={scroll_count}
+                            next={() => this.setState({scroll_count : this.state.scroll_count+this.SCROLL_DELTA}) }
+                            hasMore={scroll_count<serviceUsers.length}
+                            loader={<CircularProgress/>}
+                          >
+                            {
+                            serviceUsers.slice(0, scroll_count).map((su, index) =>(
                                   <CardService
-                                    key={moment()}
+                                    key={su._id}
                                     item={su._id}
                                     gps={gps}
                                     user={this.state.user}
                                     address={selectedAddress} />
-                                </Grid>
-                              );
-                              })
+                              )
+                              )
                             }
+                            </InfiniteScroll>
+                            </Grid>
                         </Hidden>
                       </Grid>
                 }
@@ -518,4 +512,4 @@ class SearchPage extends React.Component {
 }
 
 
-export default withStyles(styles)(SearchPage);
+export default withWidth()(withStyles(styles)(SearchPage))
