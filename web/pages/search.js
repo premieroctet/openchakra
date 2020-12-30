@@ -451,7 +451,6 @@ class SearchPage extends React.Component {
                             next={() => setTimeout(() => this.setState({scroll_count : this.state.scroll_count+this.SCROLL_DELTA}), 1000)}
                             hasMore={scroll_count<serviceUsers.length}
                             loader={<CircularProgress/>}
-                            style={{width: '100%', backgroundColor: 'red'}}
                           >
                             {
                             serviceUsers.slice(0, scroll_count).map((su, index) =>(
