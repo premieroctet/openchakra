@@ -91,7 +91,7 @@ class SearchPage extends React.Component {
       logged: false,
       scroll_count: 0,
     };
-    this.SCROLL_DELTA=10
+    this.SCROLL_DELTA=30
   }
 
   static getInitialProps({query: {keyword, city, gps, selectedAddress, category, service, prestation, search, date, indexCat}}) {
@@ -446,26 +446,26 @@ class SearchPage extends React.Component {
                           />
                         </Hidden>
                         <Hidden only={['sm', 'md', 'lg', 'xl']}>
+                        <Grid item xs={12}>
                           <InfiniteScroll
                             dataLength={scroll_count}
-                            next={() => setTimeout(() => this.setState({scroll_count : this.state.scroll_count+this.SCROLL_DELTA}), 1000)}
+                            next={() => this.setState({scroll_count : this.state.scroll_count+this.SCROLL_DELTA}) }
                             hasMore={scroll_count<serviceUsers.length}
                             loader={<CircularProgress/>}
                           >
                             {
                             serviceUsers.slice(0, scroll_count).map((su, index) =>(
-                                <Grid item key={index}>
                                   <CardService
                                     key={su._id}
                                     item={su._id}
                                     gps={gps}
                                     user={this.state.user}
                                     address={selectedAddress} />
-                                </Grid>
                               )
                               )
                             }
                             </InfiniteScroll>
+                            </Grid>
                         </Hidden>
                       </Grid>
                 }
