@@ -32,7 +32,6 @@ class BookingPreview extends React.Component {
       booking_id: null,
       bookingObj: null,
       currentUser: null,
-      splitAddress: null,
       categoryLabel: '',
       is_alfred: null,
       alfredId: null,
@@ -77,8 +76,6 @@ class BookingPreview extends React.Component {
             console.log(error);
           });
         }
-
-        this.setState({splitAddress: this.state.bookingObj.address.address.split(' ')});
 
         this.socket = io();
         this.socket.on('connect', socket => {
@@ -179,7 +176,7 @@ class BookingPreview extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {bookingObj, splitAddress, currentUser, categoryLabel, is_alfred, booking_id} = this.state;
+    const {bookingObj, currentUser, categoryLabel, is_alfred, booking_id} = this.state;
 
     if (!bookingObj || !currentUser) {
       return null
@@ -220,7 +217,7 @@ class BookingPreview extends React.Component {
 
     return (
       <Grid>
-        {splitAddress === null ? null : currentUser._id !==
+        {currentUser._id !==
         bookingObj.alfred._id && currentUser._id !== bookingObj.user._id ? (
           <Typography>Vous n'avez pas l'autorisation d'accéder à cette page</Typography>
         ) : (
