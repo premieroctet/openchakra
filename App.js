@@ -8,32 +8,31 @@ import {
     TouchableOpacity,
     Image
 } from 'react-native';
-
 import SplashScreen from 'react-native-splash-screen';
+import AppStatusBar from './components/AppStatusBar/AppStatusBar';
+const THEME_COLOR = 'transparent';
 
 const App = () => {
-    useEffect(()=>{
+  useEffect(()=>{
+      SplashScreen.hide();
+  });
 
-        SplashScreen.hide();
+  const webviewRef = useRef(null);
 
-    });
-
-    const webviewRef = useRef(null);
-
-    return (
-        <>
-            <StatusBar style={styles.statusBar} />
-            <SafeAreaView style={styles.flexContainer}>
-                <WebView
-                    startInLoadingState={true}
-                    allowsBackForwardNavigationGestures
-                    mediaPlaybackRequiresUserAction={true}
-                    source={{ uri: "https://my-alfred.io/" }}
-                    ref={webviewRef}
-                />
-            </SafeAreaView>
-        </>
-    )
+  return (
+    <>
+      <AppStatusBar backgroundColor={THEME_COLOR} barStyle="dark-content"/>
+      <SafeAreaView style={styles.flexContainer}  >
+        <WebView
+          startInLoadingState={true}
+          allowsBackForwardNavigationGestures
+          mediaPlaybackRequiresUserAction={true}
+          source={{ uri: "https://my-alfred.io/" }}
+          ref={webviewRef}
+        />
+        </SafeAreaView>
+    </>
+  )
 };
 
 const styles = StyleSheet.create({
