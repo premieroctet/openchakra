@@ -22,7 +22,7 @@ const App = () => {
 
     return (
         <>
-            <StatusBar barStyle="light-content" />
+            <StatusBar style={styles.statusBar} />
             <SafeAreaView style={styles.flexContainer}>
                 <WebView
                     startInLoadingState={true}
@@ -40,6 +40,10 @@ const styles = StyleSheet.create({
     flexContainer: {
         flex: 1
     },
+    statusBar:{
+        backgroundColor: 'transparent',
+        color: '#EDEDED'
+    }
 });
 
 export default App
