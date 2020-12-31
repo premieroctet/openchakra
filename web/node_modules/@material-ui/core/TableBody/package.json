@@ -1,0 +1,5 @@
+{
+  "sideEffects": false,
+  "module": "../esm/TableBody/index.js",
+  "typings": "./index.d.ts"
+}

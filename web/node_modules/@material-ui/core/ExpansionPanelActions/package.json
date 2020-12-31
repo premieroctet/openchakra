@@ -1,0 +1,5 @@
+{
+  "sideEffects": false,
+  "module": "../esm/ExpansionPanelActions/index.js",
+  "typings": "./index.d.ts"
+}

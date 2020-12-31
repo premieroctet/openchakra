@@ -1,0 +1,5 @@
+{
+  "sideEffects": false,
+  "module": "../esm/ButtonGroup/index.js",
+  "typings": "./index.d.ts"
+}

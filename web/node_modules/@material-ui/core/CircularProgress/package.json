@@ -1,0 +1,5 @@
+{
+  "sideEffects": false,
+  "module": "../esm/CircularProgress/index.js",
+  "typings": "./index.d.ts"
+}

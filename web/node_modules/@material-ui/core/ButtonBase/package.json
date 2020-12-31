@@ -1,0 +1,5 @@
+{
+  "sideEffects": false,
+  "module": "../esm/ButtonBase/index.js",
+  "typings": "./index.d.ts"
+}
