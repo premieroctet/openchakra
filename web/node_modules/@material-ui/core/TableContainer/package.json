@@ -1,0 +1,5 @@
+{
+  "sideEffects": false,
+  "module": "../esm/TableContainer/index.js",
+  "typings": "./index.d.ts"
+}

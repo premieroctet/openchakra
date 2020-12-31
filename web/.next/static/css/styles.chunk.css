@@ -2533,15 +2533,16 @@ button.rbc-input::-moz-focus-inner {
 
 }
 
-@font-face {
-    font-family: Signatra;
-    src: url("/static/assets/police/Signatra.ttf") format("truetype"),
-    url("/static/assets/police/Signatra.otf") format("truetype");
+.react-paginate ul {
+  display: flex;
+  flex-direction: column;
+  padding-left: 300px;
+  padding-right: 15px;
 }
 
-.customPolice {
-    font-family: Signatra;
-    font-size: 30px
+.react-paginate li {
+  display: flex;
+  flex-direction: column;
 }
 
 

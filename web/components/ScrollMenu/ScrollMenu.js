@@ -1,0 +1,76 @@
+import React from 'react';
+import Grid from "@material-ui/core/Grid";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Link from 'next/link';
+import styles from '../../static/css/components/ScrollMenu/ScrollMenu';
+import withStyles from "@material-ui/core/styles/withStyles";
+import querystring from 'querystring';
+import Router from 'next/router';
+
+
+function a11yProps(index, res) {
+  return {
+    id: `scrollable-force-tab-${index}`,
+    'aria-controls': `vertical-tabpanel-${index}`,
+  };
+}
+
+class ScrollMenu extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state={
+      value: props.indexCat ? parseInt(props.indexCat) : 0,
+    }
+  }
+
+  controllerUrl = (url) =>{
+    Router.push(url)
+  };
+
+  handleChange = (event, newValue) => {
+    this.setState({value: newValue})
+  };
+
+  render() {
+    const{classes, categories, gps, mode, extraParams} = this.props;
+    const{value} = this.state;
+
+  return(
+    <Grid style={{maxWidth: '100%'}}>
+      <Grid>
+        <Tabs
+          orientation="horizontal"
+          variant="scrollable"
+          value={value}
+          onChange={this.handleChange}
+          aria-label="scrollable force tabs"
+          scrollButtons="on"
+          classes={{indicator: classes.scrollMenuIndicator}}
+        >
+          {
+            categories ?
+              categories.map((res, index) =>
+              {
+
+                let url = mode === 'account' ? '/account' + res.url  + '?' + querystring.stringify({indexAccount: index})
+                          :
+                          mode === 'profile' ? '/profile' + res.url  + '?' + querystring.stringify({...extraParams, indexAccount: index})
+                          :
+                          mode === 'faq' ? res.url + '?' + 'indexFaq=' + index
+                          :
+                          '/search?search=1&category=' + res._id + (gps ? '&gps=' + JSON.stringify(gps) : '') + '&indexCat=' + index;
+                return(
+                  <Tab key={index} label={res.label} className={classes.scrollMenuTab} {...a11yProps(index)} onClick={()=>this.controllerUrl(url)}/>
+                )
+              }
+              ) : null
+          }
+        </Tabs>
+      </Grid>
+    </Grid>
+    );
+  }
+}
+
+export default withStyles(styles)(ScrollMenu);

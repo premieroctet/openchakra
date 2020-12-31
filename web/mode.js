@@ -1,3 +1,3 @@
-const MODE='development'
+const MODE = 'development';
 
-module.exports = { MODE }
+module.exports = {MODE}

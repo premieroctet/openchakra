@@ -1,0 +1,10 @@
+@font-face {
+    font-family: Signatra;
+    src: url("/static/assets/police/Signatra.ttf") format("truetype"),
+    url("/static/assets/police/Signatra.otf") format("truetype");
+}
+
+.customPolice {
+    font-family: Signatra;
+    font-size: 30px
+}

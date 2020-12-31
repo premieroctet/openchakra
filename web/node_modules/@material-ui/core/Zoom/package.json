@@ -1,0 +1,5 @@
+{
+  "sideEffects": false,
+  "module": "../esm/Zoom/index.js",
+  "typings": "./index.d.ts"
+}
