@@ -1,0 +1,11 @@
+.react-paginate ul {
+  display: flex;
+  flex-direction: column;
+  padding-left: 300px;
+  padding-right: 15px;
+}
+
+.react-paginate li {
+  display: flex;
+  flex-direction: column;
+}
