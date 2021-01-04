@@ -1,0 +1,36 @@
+WebView:
+
+pré-requis:
+-Installer Xcode
+	-CocoaPods(sudo gem install cocoapods)
+-Installer Android Studio
+
+
+Apple:
+
+1) Lancement de l'app:
+	a) Android :
+	- npx react-native start.
+	- npx react-native run-android.
+
+
+	b)IOS:
+	- Lancer Xcode.
+	- Ouvrir le dossier Ios dans Xcode.
+	- Choisir un device sur lequel lancé l'app (mobile ou emulateur).
+	- Cliqué sur la flèche en haut à gauche 'build'.
+
+
+2) Mettre l'app sur l'appleStoreConnect:
+	-Product/Archive
+	-Validate App
+	-Distribute App
+	
+Source : https://help.dropsource.com/docs/documentation/after-dropsource/publishing-your-app/submitting-an-ios-app-to-the-app-store/
+
+
+3) Changer l'app Icon & LaunchScreen
+	Ios & Android
+	Source: 
+	-https://medium.com/better-programming/react-native-add-app-icons-and-launch-screens-onto-ios-and-android-apps-3bfbc20b7d4c
+	-https://medium.com/handlebar-labs/how-to-add-a-splash-screen-to-a-react-native-app-ios-and-android-30a3cec835ae
