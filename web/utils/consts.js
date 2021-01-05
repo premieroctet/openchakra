@@ -307,7 +307,7 @@ const GOOGLE_PROVIDER = 'google';
 const FACEBOOK_PROVIDER = 'facebook';
 
 const AMAZON_HOST='my-alfred.io'
-const LOCAL_HOST='lvh.me'
+const LOCAL_HOST='882bff15285a.ngrok.io'
 
 const SKILLS={
   careful: {

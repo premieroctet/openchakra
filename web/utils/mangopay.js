@@ -6,8 +6,8 @@ const mangopay = require('mangopay2-nodejs-sdk');
 const KycDocumentType = require('mangopay2-nodejs-sdk/lib/models/KycDocumentType');
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus');
 const PersonType = require('mangopay2-nodejs-sdk/lib/models/PersonType');
-
 const mangoApi = new mangopay(MANGOPAY_CONFIG)
+const {get_host_url} = require('../config/config');
 
 const createMangoClient = user => {
   var userData = {
@@ -280,6 +280,46 @@ const payAlfred = booking => {
     });
 };
 
+const install_hooks= (hook_types, url) => {
+  const hook_url = new URL(url, get_host_url());
+  hook_types.forEach(hookType => {
+   console.log(`Setting hook ${hook_url} for ${hookType}`);
+   mangoApi.Hooks.create({
+     Tag: 'MyAlfred hook',
+     EventType: hookType,
+     Status: 'ENABLED',
+     Validity: 'VALID',
+     Url: hook_url,
+   })
+     .then(res => {
+       console.log(`Set hook ${hookType} to ${hook_url}`);
+     })
+     .catch(err => {
+       if (err.errors && err.errors.EventType && err.errors.EventType.includes('already been registered')) {
+         mangoApi.Hooks.getAll()
+           .then(res => {
+             const hookId = res.find(h => h.EventType == hookType).Id;
+             return hookId;
+           })
+           .then(hookId => {
+             mangoApi.Hooks.update({
+               Id: hookId,
+               Tag: 'MyAlfred hook',
+               EventType: hookType,
+               Status: 'ENABLED',
+               Validity: 'VALID',
+               Url: hook_url,
+             })
+               .then(() => {
+                 console.log(`Updated ${hookType} to ${hook_url}`);
+               });
+           });
+       } else {
+         console.error(`Error for hook ${hookType}:${JSON.stringify(err)}`);
+       }
+     });
+ });
+}
 
 module.exports = {
   mangoApi,
@@ -288,4 +328,5 @@ module.exports = {
   addIdIfRequired,
   addRegistrationProof,
   payAlfred,
+  install_hooks,
 };
