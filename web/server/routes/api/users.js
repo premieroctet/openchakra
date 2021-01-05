@@ -1265,9 +1265,9 @@ const install_hooks= () => {
   });
 }
 
-if (!is_development()) {
+//if (!is_development()) {
   install_hooks()
-}
+//}
 
 // @Route GET /myAlfred/api/users/mangopay_kyc
 // Send email

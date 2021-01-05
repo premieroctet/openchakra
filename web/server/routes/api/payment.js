@@ -20,6 +20,60 @@ const {computeUrl} = require('../../../config/config');
 
 router.get('/test', (req, res) => res.json({msg: 'Payment Works!'}));
 
+HOOK_TYPES=
+"PAYIN_NORMAL_CREATED PAYIN_NORMAL_SUCCEEDED PAYIN_NORMAL_FAILED \
+PAYOUT_NORMAL_CREATED PAYOUT_NORMAL_SUCCEEDED PAYOUT_NORMAL_FAILED \
+TRANSFER_NORMAL_CREATED TRANSFER_NORMAL_SUCCEEDED TRANSFER_NORMAL_FAILED \
+PAYIN_REFUND_CREATED PAYIN_REFUND_SUCCEEDED PAYIN_REFUND_FAILED \
+PAYOUT_REFUND_CREATED PAYOUT_REFUND_SUCCEEDED PAYOUT_REFUND_FAILED \
+TRANSFER_REFUND_CREATED TRANSFER_REFUND_SUCCEEDED TRANSFER_REFUND_FAILED".split(' ')
+
+console.log(`Types:${HOOK_TYPES}`)
+
+/** Hooks Mangopay */
+const install_hooks= () => {
+ const {get_host_url} = require('../../../config/config');
+ HOOK_TYPES.forEach(hookType => {
+   const hook_url = new URL('/myAlfred/api/users/mangopay_kyc', get_host_url());
+   console.log(`Setting hook ${hook_url} for ${hookType}`);
+   mangoApi.Hooks.create({
+     Tag: 'MyAlfred hook',
+     EventType: hookType,
+     Status: 'ENABLED',
+     Validity: 'VALID',
+     Url: hook_url,
+   })
+     .then(res => {
+       console.log(`Set hook ${hookType} to ${hook_url}`);
+     })
+     .catch(err => {
+       if (err.errors && err.errors.EventType && err.errors.EventType.includes('already been registered')) {
+         mangoApi.Hooks.getAll()
+           .then(res => {
+             const hookId = res.find(h => h.EventType == hookType).Id;
+             return hookId;
+           })
+           .then(hookId => {
+             mangoApi.Hooks.update({
+               Id: hookId,
+               Tag: 'MyAlfred hook',
+               EventType: hookType,
+               Status: 'ENABLED',
+               Validity: 'VALID',
+               Url: hook_url,
+             })
+               .then(() => {
+                 console.log(`Updated ${hookType} to ${hook_url}`);
+               });
+           });
+       } else {
+         console.error(`Error for hook ${hookType}:${JSON.stringify(err)}`);
+       }
+     });
+ });
+}
+
+install_hooks()
 
 // GET /myAlfred/api/payment/mangopay_hook
 // Create credit card
@@ -110,6 +164,7 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
             CreditedWalletId: wallet_id,
           })
             .then(data => {
+              console.log(`Created Payin ${JSON.stringify(data)}`)
               res.json(data);
             });
         });
@@ -151,6 +206,7 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
             SecureModeReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
           })
             .then(data => {
+              console.log(`Created Payin ${JSON.stringify(data)}`)
               res.json(data);
             });
         });
