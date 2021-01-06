@@ -51,11 +51,13 @@ const MANGOPAY_CONFIG_PROD = {
  clientId: 'myalfredprod',
  clientApiKey: 'j8R8fLZmUderNNp27siCqMAJ3y7Bv7BB82trfGuhqSKcYpEZ91',
  baseUrl: 'https://api.mangopay.com',
+ sandbox: false,
 }
 
 const MANGOPAY_CONFIG_TEST = {
  clientId: 'testmyalfredv2',
  clientApiKey: 'cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN',
+ sandbox: true,
  logClass: () => {
  },
 }

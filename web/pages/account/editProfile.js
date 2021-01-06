@@ -1,6 +1,8 @@
-const {clearAuthenticationToken}=require('../../utils/authentication')
-const {setAxiosAuthentication}=require('../../utils/authentication')
-import React, {Fragment} from 'react';
+import SnackBar from "../../components/SnackBar/SnackBar";
+
+const {clearAuthenticationToken}=require('../../utils/authentication');
+const {setAxiosAuthentication}=require('../../utils/authentication');
+import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import Button from '@material-ui/core/Button';
@@ -12,7 +14,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MultipleSelect from 'react-select';
 import DatePicker, {registerLocale} from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
-import {toast} from 'react-toastify';
 import {Helmet} from 'react-helmet';
 import styles from '../../static/css/pages/profile/editProfile/editProfile';
 
@@ -52,8 +53,8 @@ class editProfile extends React.Component {
       dpDate: moment().toDate(),
       ipDate: moment().format(momentDateFormat),
       errors:{},
+      open: false
     };
-    this.handleChangeLanguages = this.handleChangeLanguages.bind(this);
   }
 
   static getInitialProps({query: {indexAccount}}) {
@@ -63,14 +64,19 @@ class editProfile extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    setAxiosAuthentication()
+    this.loadUser()
+  }
+
+  loadUser = () => {
+    setAxiosAuthentication();
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
-        this.setState({user: user, phone: user.phone});
-        this.setState({birthday: user.birthday});
         this.setState({
+          birthday: user.birthday,
+          user: user,
+          phone: user.phone,
           selectedLanguages: user.languages.map(b => ({
             label: b,
             value: b,
@@ -80,12 +86,12 @@ class editProfile extends React.Component {
       .catch(err => {
           console.error(err);
           if (err.response.status === 401 || err.response.status === 403) {
-            clearAuthenticationToken()
-            Router.push({pathname: '/login'});
+            clearAuthenticationToken();
+            Router.push({pathname: '/'});
           }
         },
       );
-  }
+  };
 
   onChange = e => {
     const state = this.state.user;
@@ -95,6 +101,9 @@ class editProfile extends React.Component {
       if (phoneOk && e.target.value.startsWith('0')) {
         value = '33' + value.substring(1);
       }
+    }
+    if(name === 'name' || 'firstname'){
+      value = value.charAt(0).toUpperCase() + value.slice(1)
     }
 
     state[e.target.name] = value;
@@ -127,17 +136,18 @@ class editProfile extends React.Component {
       emergency_phone, languages,
     })
       .then(res => {
-        toast.info('Profil modifié avec succès');
-        this.componentDidMount();
-        this.setState({errors: {}})
+        console.log(res, 'res');
+        this.setState({errors: {}, open: true});
+        this.loadUser()
       })
       .catch( err => {
+        console.log(err.response.data, 'error');
         this.setState(err.response.data)
       });
   };
 
   content = (classes) =>{
-    const {errors}=this.state
+    const {errors, user}=this.state;
     return(
       <Grid>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
@@ -145,14 +155,14 @@ class editProfile extends React.Component {
             <h2>Modifier votre profil</h2>
           </Grid>
         </Grid>
-        <Grid style={{}}>
+        <Grid>
           <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
         </Grid>
         <Grid container spacing={3} style={{marginTop: '5vh'}}>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <TextField
               classes={{root: classes.textField}}
-              value={this.state.user.firstname || ''}
+              value={user.firstname || ''}
               onChange={this.onChange}
               name={'firstname'}
               placeholder={'Prénom'}
@@ -163,7 +173,7 @@ class editProfile extends React.Component {
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <TextField
               classes={{root: classes.textField}}
-              value={this.state.user.name || ''}
+              value={user.name || ''}
               onChange={this.onChange}
               name={'name'}
               placeholder={'Nom'}
@@ -174,7 +184,7 @@ class editProfile extends React.Component {
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <TextField
               classes={{root: classes.textField}}
-              value={this.state.user.description || ''}
+              value={user.description || ''}
               multiline
               rows={5}
               variant={'outlined'}
@@ -195,7 +205,7 @@ class editProfile extends React.Component {
             <Grid item xl={6} lg={6} xs={12} sm={5} md={3}>
               <TextField
                 classes={{root: classes.textField}}
-                value={this.state.user.gender || ''}
+                value={user.gender || ''}
                 select
                 variant={'outlined'}
                 onChange={this.onChange}
@@ -242,7 +252,7 @@ class editProfile extends React.Component {
             <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
               <TextField
                 classes={{root: classes.textField}}
-                value={this.state.user.email || ''}
+                value={user.email || ''}
                 onChange={this.onChange}
                 name={'email'}
                 placeholder={'Email'}
@@ -255,7 +265,7 @@ class editProfile extends React.Component {
           <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
             <TextField
               classes={{root: classes.textField}}
-              value={this.state.user.phone || ''}
+              value={user.phone || ''}
               type={'number'}
               onChange={this.onChange}
               name={'phone'}
@@ -267,7 +277,7 @@ class editProfile extends React.Component {
           <Grid item xs={12} lg={12} md={6} sm={6} xl={12}>
             <TextField
               classes={{root: classes.textField}}
-              value={this.state.user.emergency_phone || ''}
+              value={user.emergency_phone || ''}
               type={'number'}
               onChange={this.onChange}
               name={'emergency_phone'}
@@ -289,7 +299,7 @@ class editProfile extends React.Component {
             <Grid item xs={12} lg={12} md={12} sm={12}>
               <TextField
                 classes={{root: classes.textField}}
-                value={this.state.user.diplomes || ''}
+                value={user.diplomes || ''}
                 onChange={this.onChange}
                 name={'diplomes'}
                 placeholder={'Diplomes'}
@@ -300,7 +310,7 @@ class editProfile extends React.Component {
             <Grid item xs={12} lg={12} md={12} sm={12}>
               <TextField
                 classes={{root: classes.textField}}
-                value={this.state.user.school || ''}
+                value={user.school || ''}
                 onChange={this.onChange}
                 name={'school'}
                 placeholder={'Ecoles'}
@@ -311,7 +321,7 @@ class editProfile extends React.Component {
             <Grid item xs={12} lg={12} md={12} sm={12}>
               <TextField
                 classes={{root: classes.textField}}
-                value={this.state.user.job || ''}
+                value={user.job || ''}
                 onChange={this.onChange}
                 name={'job'}
                 placeholder={'Emploi'}
@@ -354,11 +364,13 @@ class editProfile extends React.Component {
               variant="contained"
               color="primary"
               classes={{root: classes.button}}
+              disabled={user.firstname === "" || user.name === "" }
             >
               Enregistrer
             </Button>
           </Grid>
         </Grid>
+        <SnackBar message={'Profil modifié avec succès'} open={this.state.open} closeSnackBar={() => this.setState({open: false})}/>
       </Grid>
     )
   };

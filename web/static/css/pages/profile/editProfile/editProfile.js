@@ -1,7 +1,6 @@
 export default theme => ({
   textField:{
     width: '100%',
-
   },
   datePicker:{
     padding: '18.5px 14px',

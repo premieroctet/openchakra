@@ -74,7 +74,7 @@ export default theme => ({
   bannerPresentationContainer: {
     display: 'flex',
     justifyContent: 'center',
-    marginTop: '10vh'
+    marginTop: '10vh',
   },
   mainContainerStyle: {
     justifyContent: 'center',

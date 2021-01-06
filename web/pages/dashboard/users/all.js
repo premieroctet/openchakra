@@ -23,8 +23,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import PropTypes from 'prop-types';
 import HomeIcon from '@material-ui/icons/Home';
-
-
+const  {BigList}=require('../../../components/List/BigList')
 const moment = require('moment-timezone');
 moment.locale('fr');
 
@@ -58,67 +57,24 @@ const actionsStyles = theme => ({
   },
 });
 
-class TablePaginationActions extends React.Component {
-  handleFirstPageButtonClick = event => {
-    this.props.onChangePage(event, 0);
-  };
-
-  handleBackButtonClick = event => {
-    this.props.onChangePage(event, this.props.page - 1);
-  };
-
-  handleNextButtonClick = event => {
-    this.props.onChangePage(event, this.props.page + 1);
-  };
-
-  handleLastPageButtonClick = event => {
-    this.props.onChangePage(event, Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1));
-  };
-
-  render() {
-    const {classes, count, page, rowsPerPage, theme} = this.props;
-
-    return <div className={classes.root}>
-      <IconButton onClick={this.handleFirstPageButtonClick} disabled={page === 0} aria-label="First Page">
-        {theme.direction === 'rtl' ? <LastPageIcon/> : <FirstPageIcon/>}
-      </IconButton>
-      <IconButton onClick={this.handleBackButtonClick} disabled={page === 0} aria-label="Previous Page">
-        {theme.direction === 'rtl' ? <KeyboardArrowRight/> : <KeyboardArrowLeft/>}
-      </IconButton>
-      <IconButton onClick={this.handleNextButtonClick} disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                  aria-label="Next Page">
-        {theme.direction === 'rtl' ? <KeyboardArrowLeft/> : <KeyboardArrowRight/>}
-      </IconButton>
-      <IconButton onClick={this.handleLastPageButtonClick} disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                  aria-label="Last Page">
-        {theme.direction === 'rtl' ? <FirstPageIcon/> : <LastPageIcon/>}
-      </IconButton>
-    </div>;
-  }
-}
-
-TablePaginationActions.propTypes = {
-  classes: PropTypes.object.isRequired,
-  count: PropTypes.number.isRequired,
-  onChangePage: PropTypes.func.isRequired,
-  page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
-  theme: PropTypes.object.isRequired,
-
-};
-const TablePaginationActionsWrapped = withStyles(actionsStyles, {withTheme: true})(TablePaginationActions);
-
 class all extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       user: [],
-      page: 0,
-      rowsPerPage: 10,
     };
-    this.handleChangePage = this.handleChangePage.bind(this);
-    this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
 
+  this.columnDefs=[
+      {headerName: "Statut", field: "status", cellRenderer: 'statusCellRenderer', filter:'statusCellFilter'},
+      {headerName: "Prénom", field: "firstname"},
+      {headerName: "Nom", field: "name"},
+      {headerName: "Email", field: "email"},
+      {headerName: "Ville", field: "billing_address.city"},
+      {headerName: "Né(e) le", field: "birthday", cellRenderer: 'dateCellRenderer', filter:'agDateColumnFilter',},
+      {headerName: "Inscrit le", field: "creation_date", cellRenderer: 'dateCellRenderer', filter:'agDateColumnFilter', initialSort: 'desc'},
+      {headerName: "Client Mangopay", field: "id_mangopay", cellRenderer:'mangopayCellRenderer'},
+      {headerName: "Alfred Mangopay", field: "mangopay_provider_id", cellRenderer:'mangopayCellRenderer'},
+    ]
   }
 
   componentDidMount() {
@@ -127,8 +83,11 @@ class all extends React.Component {
 
     axios.get('/myAlfred/api/admin/users/all')
       .then((response) => {
-        let user = response.data;
-        this.setState({user: user});
+        let users = response.data;
+        this.setState({users: users.map( u => {
+          u.status={'alfred':u.is_alfred, 'admin': u.is_admin}
+          return u
+        })});
       }).catch((error) => {
       console.log(error);
       if (error.response.status === 401 || error.response.status === 403) {
@@ -137,127 +96,33 @@ class all extends React.Component {
     });
   }
 
-  handleChangePage(event, page) {
-    this.setState({page});
+  onRowClick = data => {
+    if (data) {
+      window.open(`/dashboard/users/view?id=${data._id}`, '_blank')
+    }
   }
-
-  handleChangeRowsPerPage(event) {
-    this.setState({page: 0, rowsPerPage: event.target.value});
-  }
-
 
   render() {
     const {classes} = this.props;
-    const {user} = this.state;
+    const {users} = this.state;
 
     return (
       <Layout>
         <Grid container style={{marginTop: 70}}>
-          <Link href={'/dashboard/home'}>
-            <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour</span></Typography>
-          </Link>
         </Grid>
-        <Grid container className={classes.signupContainer}>
-
-          <Card className={classes.card}>
-            <Grid>
-              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                <Typography style={{fontSize: 30}}>Utilisateurs</Typography>
-              </Grid>
-              <Paper style={{width: '100%'}}>
-                <div>
-                  <Table className={classes.table}>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Statut</TableCell>
-                        <TableCell>Nom</TableCell>
-                        <TableCell>Prénom</TableCell>
-                        <TableCell>Email</TableCell>
-                        <TableCell>Inscrit(e) le</TableCell>
-                        <TableCell>Action</TableCell>
-                        <TableCell>Carte d'identité</TableCell>
-                        <TableCell>Mangopay client</TableCell>
-                        <TableCell>Mangopay Alfred</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {user.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-                        .map((e, index) =>
-                          <TableRow key={index}>
-                            <TableCell>
-                              {e.is_alfred ?
-                                <a href={`/profile/services?user=${e._id}&indexAccount=1`} target='_blank'>
-                                <img src="/static/assets/img/userServicePreview/alfred.svg" style={{width: '40px'}}/>
-                                </a>
-                                :
-                                null
-                              }
-                              {e.is_admin ?
-                                <img src="/static/assets/img/userServicePreview/admin.svg" style={{width: '40px'}}/>
-                                :
-                                null
-                              }
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              {e.name}
-                            </TableCell>
-                            <TableCell>
-                              {e.firstname}
-                            </TableCell>
-                            <TableCell>
-                              {e.email}
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              {moment(e.creation_date).format('L LT')}
-                            </TableCell>
-                            <TableCell>
-                              <Link href={`/dashboard/users/view?id=${e._id}`}><a>Modifier</a></Link>
-                            </TableCell>
-                            <TableCell>
-                              {e.id_card ?
-                                <Link href={`/dashboard/users/idCard?id=${e._id}`}><a>Détails</a></Link>
-                                :
-                                `Aucune`
-                              }
-                            </TableCell>
-                            <TableCell>
-                              <a target="_blank"
-                                 href={`https://dashboard.mangopay.com/User/${e.id_mangopay}/Details`}>{e.id_mangopay}</a>
-                            </TableCell>
-                            <TableCell>
-                              <a target="_blank"
-                                 href={`https://dashboard.mangopay.com/User/${e.mangopay_provider_id}/Details`}>{e.mangopay_provider_id}</a>
-                            </TableCell>
-                          </TableRow>,
-                        )}
-
-                    </TableBody>
-                  </Table>
-                </div>
-                <TablePagination
-                  rowsPerPageOptions={[10, 25]}
-                  component="div"
-                  count={user.length}
-                  rowsPerPage={this.state.rowsPerPage}
-                  page={this.state.page}
-                  backIconButtonProps={{
-                    'aria-label': 'Previous Page',
-                  }}
-                  nextIconButtonProps={{
-                    'aria-label': 'Next Page',
-                  }}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActionsWrapped}
-                />
-              </Paper>
-            </Grid>
-          </Card>
+        <Grid container className={classes.signupContainer} style={{width:'100%'}}>
+	        <Link href={'/dashboard/home'}>
+            <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour dashboard</span></Typography>
+	        </Link>
+          <Grid style={{width: '90%'}}>
+            <Paper style={{width: '100%'}}>
+              <BigList data={users} columnDefs={this.columnDefs} classes={classes}
+                        title={'Utilisateurs'} onRowClick={this.onRowClick} />
+            </Paper>
+          </Grid>
         </Grid>
       </Layout>
     );
-
-
   };
 }
 

@@ -179,6 +179,7 @@ class creaShop extends React.Component {
   }
 
   availabilityCreated = (avail) => {
+    window.alert('hop')
     if (avail._id.length === GID_LEN) {
       avail._id = null;
     }

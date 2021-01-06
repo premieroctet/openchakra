@@ -300,7 +300,8 @@ class view extends React.Component {
     })
       .then(res => {
         alert('Prestation modifiée avec succès');
-        Router.push({pathname: '/dashboard/prestations/all'});
+        //Router.push({pathname: '/dashboard/prestations/all'});
+        window.close()
       })
       .catch(err => {
         console.error(err);
@@ -471,7 +472,7 @@ class view extends React.Component {
                   </FormControl>
                 </Grid>
                 <Grid item style={{width: '100%', marginTop: 20}}>
-                  <Typography style={{fontSize: 20}}>{current_filter_presentation.label}</Typography>
+                  <Typography style={{fontSize: 20}}>{current_filter_presentation ? current_filter_presentation.label : 'Aucun'}</Typography>
                   <FormControl className={classes.formControl} style={{width: '100%'}}>
                     <InputLabel shrink htmlFor="genre-label-placeholder">
                       Filtre de présentation
