@@ -99,11 +99,11 @@ class AllReservations extends React.Component {
   };
 
   isFinished = reservation => {
-    return ['Refusée', 'Annulée', 'Terminée', 'Expirée'].includes(reservation.status)
+    return [ BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.FINISHED, BOOK_STATUS.EXPIRED].includes(reservation.status)
   };
 
   isComing = reservation => {
-    return ["Demande d'infos", 'En attente de confirmation', 'Confirmée', 'Pré-approuvée'].includes(reservation.status)
+    return [ BOOK_STATUS.INFO, BOOK_STATUS.TO_CONFIRM, BOOK_STATUS.CONFIRMED, BOOK_STATUS.PREAPPROVED].includes(reservation.status)
   };
 
   filterReservations = () => {

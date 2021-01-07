@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const moment = require('moment');
 const axios = require('axios');
 
+const {BOOK_STATUS}=require('../../../utils/consts')
 const Booking = require('../../models/Booking');
 const User = require('../../models/User');
 const CronJob = require('cron').CronJob;
@@ -102,7 +103,7 @@ router.get('/endConfirmedBookings', passport.authenticate('jwt', {session: false
   Booking.find({
     $and: [
       {$or: [{user: userId}, {alfred: userId}]},
-      {status: 'Confirmée'},
+      {status: BOOK_STATUS.CONFIRMED},
     ],
   })
     .then(booking => {
@@ -169,7 +170,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
               sendBookingDetails(book);
               sendNewBookingManual(book, req);
             }
-            if (booking.status == 'Confirmée') {
+            if (booking.status == BOOK_STATUS.CONFIRMED) {
               sendNewBooking(book, req);
             }
           })
@@ -281,7 +282,7 @@ router.get('/getPaid', passport.authenticate('jwt', {session: false}), (req, res
 // Get all booking paid soon for an alfred
 // @access private
 router.get('/getPaidSoon', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Booking.find({alfred: req.user.id, paid: false, status: 'Confirmée'})
+  Booking.find({alfred: req.user.id, paid: false, status: BOOK_STATUS.CONFIRMED})
     .populate('user', '-id_card')
     .then(booking => {
       res.json(booking);
@@ -305,7 +306,7 @@ router.get('/account/paid', passport.authenticate('jwt', {session: false}), (req
 // Get all booking paid soon for a user
 // @access private
 router.get('/account/paidSoon', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Booking.find({user: req.user.id, paid: false, status: 'Confirmée'})
+  Booking.find({user: req.user.id, paid: false, status: BOOK_STATUS.CONFIRMED})
     .populate('alfred', '-id_card')
     .then(booking => {
       res.json(booking);
@@ -368,7 +369,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
         return res.status(404).json({msg: 'no booking found'});
       }
       if (booking) {
-        if (booking.status == 'Confirmée') {
+        if (booking.status == BOOK_STATUS.CONFIRMED) {
           sendBookingConfirmed(booking);
         }
         if (booking.status == 'Refusée') {
@@ -400,7 +401,7 @@ if (is_production()) {
   new CronJob('0 */5 * * * *', function () {
     console.log('Checking bookings to terminate');
     const date = moment(new Date(), 'DD-MM-YYYY').startOf('day');
-    Booking.find({status: 'Confirmée', paid: false})
+    Booking.find({status: BOOK_STATUS.CONFIRMED, paid: false})
       .populate('user')
       .populate('alfred')
       .catch(err => console.error(err))

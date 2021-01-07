@@ -14,7 +14,7 @@ import Button from '@material-ui/core/Button';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Router from 'next/router';
-
+const {BOOK_STATUS}=require('../../utils/consts')
 
 
 moment.locale('fr');
@@ -195,21 +195,21 @@ class BookingPreview extends React.Component {
     const status=bookingObj.status;
     const paymentTitle =
       amIAlfred ?
-        status === 'Refusée' ? 'Paiement non réalisé'
-          : ['Terminée', 'Confirmée'].includes(status) ? 'Versement' :  'Revenus potentiels'
+        status === BOOK_STATUS.REFUSED ? 'Paiement non réalisé'
+          : [BOOK_STATUS.FINISHED, BOOK_STATUS.CONFIRMED].includes(status) ? 'Versement' :  'Revenus potentiels'
         :
-        ['Refusée', 'Annulée', 'Expirée'].includes(status) ?
+        [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.EXPIRED].includes(status) ?
           'Paiement non réalisé'
           :
-          status === 'Terminée' ?
+          status === BOOK_STATUS.FINISHED ?
             'Paiement'
             :
-            ['Confirmée', 'Pré-approuvée', 'Demande d\'infos', 'Pré-approuvée', 'En attente de confirmation'].includes(status) ?
+            [BOOK_STATUS.CONFIRMED, BOOK_STATUS.PREAPPROVED, BOOK_STATUS.INFO, BOOK_STATUS.TO_CONFIRM].includes(status) ?
               'Paiement si acceptation'
               :
               'Revenus potentiels'
 
-    const momentTitle = ['Confirmée', 'Terminée'].includes(status) ?
+    const momentTitle = [BOOK_STATUS.CONFIRMED, BOOK_STATUS.FINISHED].includes(status) ?
       `Du ${bookingObj.date_prestation} - ${moment(bookingObj.time_prestation).format('HH:mm')}
        au ${moment(bookingObj.end_date).format('DD/MM/YYYY')} à ${bookingObj.end_time}`
        :
@@ -242,7 +242,7 @@ class BookingPreview extends React.Component {
                       </Grid>
                       <Grid>
                       <h2>
-                        {status === 'Pré-approuvée' && !amIAlfred ? 'Invitation à réserver' : status}
+                        {status === BOOK_STATUS.PREAPPROVED && !amIAlfred ? 'Invitation à réserver' : 'Pré-approuvée'}
                       </h2>
                       </Grid>
                     </Grid>
@@ -250,7 +250,7 @@ class BookingPreview extends React.Component {
                   <hr className={classes.hrSeparator}/>
                   {bookingObj === null ||
                   currentUser === null ? null : bookingObj.status ===
-                  'Terminée' ? (
+                  BOOK_STATUS.FINISHED ? (
                     currentUser._id === bookingObj.alfred._id ? (
                       <Grid container style={{ borderBottom: '1.5px #8281813b solid', marginTop: '5%', paddingBottom: '7%'}}>
                         <Grid container>
@@ -374,7 +374,7 @@ class BookingPreview extends React.Component {
                           <Grid item>
                             <Button variant={'contained'} color={'primary'} onClick={this.routingDetailsMessage} style={{textTransform: 'initial', color:'white'}}>Envoyer un message</Button>
                           </Grid>
-                          {bookingObj.status === 'Confirmée' ?
+                          {bookingObj.status === BOOK_STATUS.CONFIRMED ?
                             <Grid item>
                               <Button>
                                 <a
@@ -422,7 +422,7 @@ class BookingPreview extends React.Component {
                       <Grid container className={classes.mainContainerStateResa}>
                         <Grid>
                           {status ===
-                          'En attente de confirmation' ? (
+                          BOOK_STATUS.TO_CONFIRM ? (
                             amIAlfred ? (
                               <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                 <Grid className={classes.labelReservation}>
@@ -448,7 +448,7 @@ class BookingPreview extends React.Component {
                             null
                           )
                           :
-                          bookingObj.status === 'Demande d\'infos' && currentUser._id === bookingObj.alfred._id ? (
+                          bookingObj.status === BOOK_STATUS.INFO && currentUser._id === bookingObj.alfred._id ? (
                             <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                               <Button onClick={()=>this.props.onConfirmPreaProuved(booking_id)} color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Pré-approuver</Button>
                               <Grid style={{marginTop: '5%'}}>
@@ -463,19 +463,19 @@ class BookingPreview extends React.Component {
                             </Grid>
                           )
                           :
-                          bookingObj.status === 'En attente de paiement' && currentUser._id === bookingObj.user._id ? (
+                          bookingObj.status === BOOK_STATUS.TO_PAY && currentUser._id === bookingObj.user._id ? (
                             <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                               <Button onClick={()=>Router.push(`/confirmPayement?booking_id=${booking_id}`)}
                                 color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Payer ma réservation</Button>
                             </Grid>
                           )
                           :
-                          bookingObj.status === 'Demande d\'infos' && currentUser._id === bookingObj.user._id ?
+                          bookingObj.status === BOOK_STATUS.INFO && currentUser._id === bookingObj.user._id ?
                           (
                             null
                           )
                           :
-                          bookingObj.status === 'Pré-approuvée' && currentUser._id === bookingObj.user._id ? (
+                          bookingObj.status === BOOK_STATUS.PREAPPROVED && currentUser._id === bookingObj.user._id ? (
                             <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                               <Button onClick={()=>Router.push(`/confirmPayement?booking_id=${booking_id}`)}
                                 color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Payer ma réservation</Button>
@@ -543,8 +543,8 @@ class BookingPreview extends React.Component {
                       </Grid>
                     </Grid>
                   </Grid>
-                  {(['En attente de confirmation','Demande d\'infos'].includes(status) && !amIAlfred) ||
-                    status === 'Confirmée' || status === 'Pré-approuvée' ? (
+                  {([BOOK_STATUS.TO_CONFIRM, BOOK_STATUS.INFO].includes(status) && !amIAlfred) ||
+                    status === BOOK_STATUS.CONFIRMED || status === BOOK_STATUS.PREAPPROVED ? (
                     <Grid
                       container
                       style={{
