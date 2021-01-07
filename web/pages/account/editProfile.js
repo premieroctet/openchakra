@@ -266,7 +266,6 @@ class editProfile extends React.Component {
             <TextField
               classes={{root: classes.textField}}
               value={user.phone || ''}
-              type={'number'}
               onChange={this.onChange}
               name={'phone'}
               placeholder={'Téléphone'}
