@@ -66,7 +66,6 @@ export default theme => ({
   footerRgpdButtons:{
     display:'flex',
     flexDirection: 'row',
-    width: '30%',
     justifyContent : 'space-between',
     [theme.breakpoints.down('xs')]:{
       width: '100%',
