@@ -8,11 +8,9 @@ export default theme => ({
     display: 'flex',
     flexDirection: 'column',
     width: '50%',
-    marginBottom: '6%',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]:{
       width: '100%'
-    },
-
+    }
   },
   bannerPresentationTitle: {
     fontFamily: theme.typography.title.fontFamily,

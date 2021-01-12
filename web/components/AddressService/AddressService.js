@@ -9,9 +9,12 @@ class AddressService extends React.Component {
   render() {
     const {bookingObj, currentUser, user} = this.props;
 
+    if (!bookingObj) {
+      return null
+    }
     console.log(`BookingObj:${JSON.stringify(bookingObj, null, 2)}`)
     if (currentUser && bookingObj) {
-      var checkAdd = currentUser.billing_address.address === bookingObj.address.address && currentUser.billing_address.zip_code === bookingObj.address.zip_code && currentUser.billing_address.city === bookingObj.address.city;
+      var checkAdd = bookingObj.address && currentUser.billing_address.address === bookingObj.address.address && currentUser.billing_address.zip_code === bookingObj.address.zip_code && currentUser.billing_address.city === bookingObj.address.city;
     }
 
     return(
@@ -20,12 +23,18 @@ class AddressService extends React.Component {
           <Grid>
             <Typography>{bookingObj.address ? checkAdd ? currentUser.firstname + " " +  currentUser.name : user.firstname + " " + user.name : 'En visio' }</Typography>
           </Grid>
-          <Grid>
-            <Typography>{bookingObj.address.address}</Typography>
-          </Grid>
-          <Grid>
-            <Typography>{bookingObj.address.zip_code} {bookingObj.address.city} - {bookingObj.address.country}</Typography>
-          </Grid>
+          { bookingObj.address ?
+            <>
+              <Grid>
+                <Typography>{bookingObj.address.address}</Typography>
+              </Grid>
+              <Grid>
+                <Typography>{bookingObj.address.zip_code} {bookingObj.address.city} - {bookingObj.address.country}</Typography>
+              </Grid>
+            </>
+            :
+            null
+          }
           {/*TODO UPDATE ADDRESS + CHECK ADDRESS FACTURE
           <Grid style={{marginTop: '2vh'}}>
             <Typography style={{color:'rgba(39,37,37,35%)'}}>L'adresse de facturation est identique</Typography>

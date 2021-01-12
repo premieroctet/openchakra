@@ -29,7 +29,7 @@ class PaymentChoice extends React.Component{
     const{pricedPrestations, countPrestations, bookingObj, user, currentUser, classes} = this.props;
 
     if (currentUser && bookingObj) {
-      var checkAdd = currentUser.billing_address.address === bookingObj.address.address && currentUser.billing_address.zip_code === bookingObj.address.zip_code && currentUser.billing_address.city === bookingObj.address.city;
+      var checkAdd = bookingObj.address && currentUser.billing_address.address === bookingObj.address.address && currentUser.billing_address.zip_code === bookingObj.address.zip_code && currentUser.billing_address.city === bookingObj.address.city;
     }
 
 

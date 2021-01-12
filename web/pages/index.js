@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React from 'react';
 import Footer from '../hoc/Layout/Footer/Footer';
-import Router from 'next/router';
 import {Helmet} from 'react-helmet';
 
 import Grid from '@material-ui/core/Grid';
@@ -106,11 +105,13 @@ class Home extends React.Component {
           <Grid>
             <Divider/>
           </Grid>
-          <Grid className={classes.trustAndSecurityContainer}>
-            <Grid className={classes.trustAndSecurityComponent}>
-              <TrustAndSecurity/>
+          <Hidden only={['xs', 'sm', 'md']}>
+            <Grid className={classes.trustAndSecurityContainer}>
+              <Grid className={classes.trustAndSecurityComponent}>
+                <TrustAndSecurity/>
+              </Grid>
             </Grid>
-          </Grid>
+          </Hidden>
           <Grid container className={classes.mainContainerStyleFooter}>
             <Grid className={classes.generalWidthFooter}>
               <Footer/>

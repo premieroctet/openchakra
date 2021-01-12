@@ -10,7 +10,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import withSlide from "../../../hoc/Slide/SlideShow";
 import withGrid from '../../../hoc/Grid/GridCard'
 const {SlideGridDataModel}=require('../../../utils/models/SlideGridDataModel');
-const CategorySlide=withSlide(withGrid(CategoryCard))
+const CategorySlide=withSlide(withGrid(CategoryCard));
 
 class CategoryTopic extends React.Component{
   constructor(props) {
@@ -48,10 +48,10 @@ class CategoryTopic extends React.Component{
           </Hidden>
         </Grid>
         <Grid container className={classes.categorySlideShowContainer} spacing={3}>
-          <Hidden only={['xs', 'sm']}>
+          <Hidden only={['xs', 'sm', 'md']}>
             <CategorySlide model={new SlideGridDataModel(category, 4, 2, true)} style={classes} user={user}/>
           </Hidden>
-          <Hidden only={['md', 'lg', 'xl']}>
+          <Hidden only={['lg', 'xl']}>
             {
               Object.keys(category).map((res,index) => (
                 <Grid item key={index}>

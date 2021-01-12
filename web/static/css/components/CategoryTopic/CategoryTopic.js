@@ -51,7 +51,7 @@ export default theme => ({
   },
   categorySlideShowContainer:{
     marginTop: '5vh',
-    [theme.breakpoints.down('sm')]:{
+    [theme.breakpoints.down('md')]:{
       overflowX: 'scroll',
       display: 'flex',
       flexWrap: 'nowrap',

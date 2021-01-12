@@ -37,8 +37,8 @@ const MANGOPAY_MESSAGES = {
 };
 
 const INFOBAR_MESSAGE = {
-    message: 'Renseignez-vous sur les restrictions COVID 19 avant de réserver.',
-    showMore: 'En savoir plus'
+    message: 'Vous ne trouvez pas votre service ? L’équipe Alfred se mobilise pour vous trouver le meilleur Alfred près de chez vous',
+    showMore: 'ici.'
 };
 
 const SHOWMORE = 'En savoir plus';

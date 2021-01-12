@@ -1,3 +1,5 @@
+import Hidden from "@material-ui/core/Hidden";
+
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
 import NavBar from './NavBar/NavBar';
@@ -51,10 +53,12 @@ class Layout extends React.Component {
         </Grid>
         {children}
         <Grid className={classes.mainContainerStyleFooter}>
-          <Divider style={{width: '100%'}}/>
-          <Grid style={{width: '90%'}}>
-            <TrustAndSecurity/>
-          </Grid>
+          <Hidden only={['xs', 'sm', 'md']}>
+            <Divider style={{width: '100%'}}/>
+            <Grid style={{width: '90%', marginTop: '2vh'}}>
+              <TrustAndSecurity/>
+            </Grid>
+          </Hidden>
           <Grid className={classes.generalWidthFooter} >
             <Grid style={{width: '85%'}}>
               <Footer/>

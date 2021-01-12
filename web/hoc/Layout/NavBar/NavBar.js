@@ -118,8 +118,7 @@ class NavBar extends Component {
         })
       }).catch(err =>{console.error(err)});
 
-    this.setState({selectedAddress: this.props.selectedAddress || 'main'});
-    this.setState({keyword: this.props.keyword || ''})
+    this.setState({selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || ''});
   }
 
   logout = () => {
@@ -600,7 +599,7 @@ class NavBar extends Component {
           </Grid>
         }
         {
-          logged === false ?
+          logged === false && this.state.ifHomePage ?
             <Grid className={classes.navbarDatePickerMain}>
               <Grid>
                 <Divider className={classes.divider} orientation="vertical"/>
