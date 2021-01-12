@@ -508,7 +508,7 @@ class BookingPreview extends React.Component {
                               alt={equipment.logo}
                               title={equipment.logo}
                               style={{width: '98%'}}
-                              src={`../../static/equipments/${equipment.logo.slice(0, -4)}_Selected.svg`}
+                              src={`/static/equipments/${equipment.logo}`}
                             />
                           </Grid>
                         );
