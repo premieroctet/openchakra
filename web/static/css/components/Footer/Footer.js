@@ -67,6 +67,7 @@ export default theme => ({
     display:'flex',
     flexDirection: 'row',
     justifyContent : 'space-between',
+    width: '30%',
     [theme.breakpoints.down('xs')]:{
       width: '100%',
       flexDirection: 'column',
@@ -89,7 +90,6 @@ export default theme => ({
   },
   footerLinkInfoContainer:{
     [theme.breakpoints.down('xs')]:{
-      marginTop: '2vh',
       marginBottom: '2vh'
     }
   }
