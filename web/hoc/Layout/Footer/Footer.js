@@ -82,6 +82,7 @@ class Footer extends React.Component {
                       <Typography className={classes.footerLink}>Centre de ressources</Typography>
                     </Grid>
                   </Link>}
+
               </Grid>
             </Hidden>
             <Grid item xl={3} lg={3} className={classes.footerSection}>
@@ -160,12 +161,14 @@ class Footer extends React.Component {
                     <Typography className={classes.footerLink}>Informations légales</Typography>
                   </Link>
                 </Grid>
-                {
-                  true ? null :
-                    <Grid>
-                      <Typography className={classes.footerLink}>Confidentialié</Typography>
-                    </Grid>
-                }
+                <Grid>
+                  <Link href={'/cgu'}>
+                    <Typography className={classes.footerLink}>CGU</Typography>
+                  </Link>
+                </Grid>
+                <Grid>
+                  <Typography className={classes.footerLink}>Confidentialié</Typography>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
