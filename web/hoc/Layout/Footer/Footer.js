@@ -54,16 +54,6 @@ class Footer extends React.Component {
                     <Typography className={classes.footerLink}>Notre communauté</Typography>
                   </Grid>
                 </Link>
-                {/*<Link href={'/'}>*/}
-                {/*    <Grid style={{marginBottom: '2vh'}}>*/}
-                {/*        <Typography className={classes.footerLink}>Le blog</Typography>*/}
-                {/*    </Grid>*/}
-                {/*</Link>*/}
-                {/*<Link href={'/'}>*/}
-                {/*    <Grid>*/}
-                {/*        <Typography className={classes.footerLink}>Inviter un ami</Typography>*/}
-                {/*    </Grid>*/}
-                {/*</Link>*/}
               </Grid>
             </Hidden>
             <Hidden only={['xs']}>
@@ -82,7 +72,6 @@ class Footer extends React.Component {
                       <Typography className={classes.footerLink}>Centre de ressources</Typography>
                     </Grid>
                   </Link>}
-
               </Grid>
             </Hidden>
             <Grid item xl={3} lg={3} className={classes.footerSection}>
@@ -147,8 +136,7 @@ class Footer extends React.Component {
           <Grid className={classes.footerBrandContainer}>
             <Grid className={classes.footerBrandStyle}>
               <Grid className={classes.footerLawContainer}>
-                <Typography className={classes.footerText}>© 2020 MY ALFRED Corporation. Tous droits
-                  réservés</Typography>
+                <Typography>© 2020 MY ALFRED Corporation. Tous droits  réservés</Typography>
               </Grid>
               <Grid className={classes.footerRgpdButtons}>
                 {true ? null :
@@ -161,14 +149,19 @@ class Footer extends React.Component {
                     <Typography className={classes.footerLink}>Informations légales</Typography>
                   </Link>
                 </Grid>
-                <Grid>
+                <Grid  className={classes.footerLinkInfoContainer}>
                   <Link href={'/cgu'}>
-                    <Typography className={classes.footerLink}>CGU</Typography>
+                    <Grid>
+                      <Typography className={classes.footerLink}>Conditions générales d'utilisation</Typography>
+                    </Grid>
                   </Link>
                 </Grid>
-                <Grid>
-                  <Typography className={classes.footerLink}>Confidentialié</Typography>
-                </Grid>
+                {
+                  true ? null :
+                    <Grid>
+                      <Typography className={classes.footerLink}>Confidentialié</Typography>
+                    </Grid>
+                }
               </Grid>
             </Grid>
           </Grid>
