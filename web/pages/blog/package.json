@@ -1,0 +1,27 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Frontity project",
+  "keywords": [
+    "frontity"
+  ],
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
+  },
+  "scripts": {
+    "dev": "frontity dev",
+    "build": "frontity build",
+    "serve": "frontity serve"
+  },
+  "prettier": {},
+  "dependencies": {
+    "frontity": "^1.13.0",
+    "@frontity/core": "^1.9.1",
+    "@frontity/wp-source": "^1.10.0",
+    "@frontity/tiny-router": "^1.2.4",
+    "@frontity/html2react": "^1.5.0",
+    "@frontity/twentytwenty-theme": "./packages/twentytwenty-theme"
+  }
+}
