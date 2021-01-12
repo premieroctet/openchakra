@@ -224,7 +224,7 @@ class MessagesDetails extends React.Component {
                 <Grid className={emitter === oldMessage.idsender ? classes.currentUserContainer : classes.senderUserContainer} key={index}>
                   <Grid className={emitter === oldMessage.idsender ? classes.currentUser : classes.senderUser}>
                     <Grid>
-                      <Typography>{`${oldMessage.content}`}</Typography>
+                      <Typography style={{wordWrap: 'break-word'}}>{`${oldMessage.content}`}</Typography>
                     </Grid>
                   </Grid>
                   <Grid>
@@ -246,7 +246,7 @@ class MessagesDetails extends React.Component {
                     <Grid className={emitter === message.idsender ? classes.currentUserContainer : classes.senderUserContainer} key={index}>
                       <Grid className={emitter === message.idsender ? classes.currentUser : classes.senderUser}>
                         <Grid>
-                          <Typography>{message.content}</Typography>
+                          <Typography style={{wordWrap: 'break-word'}}>{message.content}</Typography>
                         </Grid>
                       </Grid>
                       <Grid>
