@@ -230,4 +230,12 @@ export default theme =>  ({
       display: 'none',
     },
   },
+  groupButtonsContainer:{
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]:{
+      marginTop: '5vh'
+    }
+  }
 })
