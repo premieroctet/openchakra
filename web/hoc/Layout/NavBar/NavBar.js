@@ -299,7 +299,7 @@ class NavBar extends Component {
             </Grid>
           </Grid>
           <Grid item container spacing={3} style={{margin: 0}}>
-            <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+            <Grid item xs={12} style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingBottom: 0, paddingTop: 0}}>
               {
                 this.state.mobileStepSearch === 0 ?
                   <TextField
