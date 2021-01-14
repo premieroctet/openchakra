@@ -346,9 +346,21 @@ const LANGUAGES= [
 
 const MAX_TEXT_SIZE=300
 
+const BOOK_STATUS= {
+  CONFIRMED: 'Confirmée',
+  REFUSED: 'Refusée',
+  CANCELED: 'Annulée',
+  FINISHED: 'Terminée',
+  EXPIRED: 'Expirée',
+  TO_CONFIRM: 'En attente de confirmation',
+  TO_PAY: 'En attente de paiement',
+  INFO: "Demande d'infos",
+  PREAPPROVED: 'Pré-approuvée'
+}
+
 module.exports = {
   ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR,
   generate_id, COMM_ALFRED, COMM_CLIENT, GID_LEN, ENTITES, CESU,
   MODES, GOOGLE_PROVIDER, FACEBOOK_PROVIDER, AMAZON_HOST, LOCAL_HOST,
-  SKILLS, LANGUAGES, MAX_TEXT_SIZE
+  SKILLS, LANGUAGES, MAX_TEXT_SIZE, BOOK_STATUS
 };
