@@ -1,3 +1,5 @@
+import ListAlfredConditions from "../ListAlfredConditions/ListAlfredConditions";
+
 const {clearAuthenticationToken}=require('../../utils/authentication')
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
@@ -12,7 +14,6 @@ import io from 'socket.io-client';
 import styles from '../../static/css/components/BookingDetail/BookingPreview/BookingPreview';
 import Button from '@material-ui/core/Button';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Router from 'next/router';
 const {BOOK_STATUS}=require('../../utils/consts')
 
@@ -370,7 +371,7 @@ class BookingPreview extends React.Component {
                         </Grid>
                       </Grid>
                       <Grid item xl={6} className={classes.mainContainerAbout}>
-                        <Grid item container className={classes.containerButtonGroup} spacing={3}>
+                        <Grid item container className={classes.containerButtonGroup}>
                           <Grid item>
                             <Button variant={'contained'} color={'primary'} onClick={this.routingDetailsMessage} style={{textTransform: 'initial', color:'white'}}>Envoyer un message</Button>
                           </Grid>
@@ -449,9 +450,11 @@ class BookingPreview extends React.Component {
                           )
                           :
                           bookingObj.status === BOOK_STATUS.INFO && currentUser._id === bookingObj.alfred._id ? (
-                            <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                              <Button onClick={()=>this.props.onConfirmPreaProuved(booking_id)} color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Pré-approuver</Button>
-                              <Grid style={{marginTop: '5%'}}>
+                            <Grid container className={classes.groupButtonsContainer} spacing={1}>
+                              <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
+                                <Button onClick={()=>this.props.onConfirmPreaProuved(booking_id)} color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Pré-approuver</Button>
+                              </Grid>
+                              <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
                                 <Button
                                   onClick={() => this.changeStatus('Refusée')}
                                   variant={'outlined'}
@@ -464,7 +467,7 @@ class BookingPreview extends React.Component {
                           )
                           :
                           bookingObj.status === BOOK_STATUS.TO_PAY && currentUser._id === bookingObj.user._id ? (
-                            <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                            <Grid className={classes.groupButtonsContainer}>
                               <Button onClick={()=>Router.push(`/confirmPayement?booking_id=${booking_id}`)}
                                 color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Payer ma réservation</Button>
                             </Grid>
@@ -476,7 +479,7 @@ class BookingPreview extends React.Component {
                           )
                           :
                           bookingObj.status === BOOK_STATUS.PREAPPROVED && currentUser._id === bookingObj.user._id ? (
-                            <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                            <Grid className={classes.groupButtonsContainer}>
                               <Button onClick={()=>Router.push(`/confirmPayement?booking_id=${booking_id}`)}
                                 color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Payer ma réservation</Button>
                             </Grid>
@@ -499,20 +502,17 @@ class BookingPreview extends React.Component {
                         Matériel fourni
                       </Typography>
                     </Grid>
-                    {bookingObj === null ? null : bookingObj.equipments
-                      .length ? (
-                      bookingObj.equipments.map(equipment => {
-                        return (
-                          <Grid item xs={1} style={{textAlign: 'center'}}>
-                            <img
-                              alt={equipment.logo}
-                              title={equipment.logo}
-                              style={{width: '98%'}}
-                              src={`../../static/equipments/${equipment.logo.slice(0, -4)}_Selected.svg`}
-                            />
-                          </Grid>
-                        );
-                      })
+                    {bookingObj === null ? null : bookingObj.equipments.length ? (
+                      <Grid>
+                        <ListAlfredConditions
+                          wrapperComponentProps={bookingObj.equipments}
+                          columnsXl={6}
+                          columnsLG={6}
+                          columnsMD={6}
+                          columnsSM={6}
+                          columnsXS={6}
+                        />
+                      </Grid>
                     ) : (
                       <Grid style={{marginTop: '2%'}}>
                         <Typography>Aucun équipement fourni</Typography>

@@ -1,24 +1,16 @@
-const {setAxiosAuthentication}=require('../../utils/authentication')
-import React, {Fragment} from 'react';
-import Link from 'next/link';
-import Layout from '../../hoc/Layout/Layout';
+const {setAxiosAuthentication}=require('../../utils/authentication');
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
 import axios from 'axios';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import UserAvatar from '../../components/Avatar/UserAvatar';
-import NavBarShop from '../../components/NavBar/NavBarShop/NavBarShop';
-import NavbarMobile from '../../components/NavbarMobile/NavbarMobile';
 import styles from './reservationsStyle';
 import Button from '@material-ui/core/Button';
-import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-import Box from "../../components/Box/Box";
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import BookingPreview from '../../components/BookingDetail/BookingPreview'
@@ -26,11 +18,26 @@ import BookingCancel from '../../components/BookingDetail/BookingCancel'
 import BookingConfirm from '../../components/BookingDetail/BookingConfirm'
 import BookingPreApprouve from "../../components/BookingDetail/BookingPreApprouve";
 import Hidden from "@material-ui/core/Hidden";
-import LayoutMessages from "../../hoc/Layout/LayoutMessages";
-import LayoutMobileMessages from "../../hoc/Layout/LayoutMobileMessages";
 import LayoutReservations from "../../hoc/Layout/LayoutReservations";
 import Divider from "@material-ui/core/Divider";
 import LayoutMobileReservations from "../../hoc/Layout/LayoutMobileReservations";
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import CloseIcon from '@material-ui/icons/Close';
+
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
 
 
 moment.locale('fr');
@@ -145,6 +152,7 @@ class AllReservations extends React.Component {
         classes={{paper: classes.dialogPreviewPaper}}
 
       >
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({bookingPreview: null})}/>
         <DialogContent>
           <BookingPreview booking_id={bookingPreview} onCancel={this.openBookingCancel} onConfirm={this.openBookingConfirm} onConfirmPreaProuved={this.openBookingPreAprouved}/>
         </DialogContent>
@@ -160,6 +168,7 @@ class AllReservations extends React.Component {
         open={Boolean(bookingCancel)}
         onClose={() => this.setState({bookingCancel: null})}
       >
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({bookingCancel: null})}/>
         <DialogContent>
           <BookingCancel booking_id={bookingCancel} onMaintain={this.openBookingPreview}/>
         </DialogContent>
@@ -175,6 +184,7 @@ class AllReservations extends React.Component {
         open={Boolean(bookingConfirm)}
         onClose={() => this.setState({bookingConfirm: null})}
       >
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({bookingConfirm: null})}/>
         <DialogContent>
           <BookingConfirm booking_id={bookingConfirm} onConfirm={this.openBookingPreview}/>
         </DialogContent>
@@ -190,6 +200,7 @@ class AllReservations extends React.Component {
               open={Boolean(bookingPreApprouved)}
               onClose={() => this.setState({bookingPreApprouved: null})}
       >
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({bookingPreApprouved: null})}/>
         <DialogContent>
           <BookingPreApprouve booking_id={bookingPreApprouved} onConfirm={() => this.setState({bookingPreApprouved: false})}/>
         </DialogContent>
@@ -245,7 +256,7 @@ class AllReservations extends React.Component {
                         </Typography>
                       </Grid>
                       <Grid>
-                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>{booking.service}</Typography>
+                        <Typography className={classes.serviceName} style={{color: 'rgba(39,37,37,35%)'}}>{booking.service}</Typography>
                       </Grid>
                     </Grid>
                     <Grid item   xl={3} lg={3} md={3} sm={6} xs={4} className={classes.priceContainer}>

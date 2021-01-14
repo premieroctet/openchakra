@@ -270,7 +270,13 @@ class BookingConfirm extends React.Component {
                                   <p>Adresse de la prestation:</p>{' '}
                                 </Grid>
                                 <Grid>
-                                  <p>{bookingObj.address.address}, {bookingObj.address.city} {bookingObj.address.zip_code}</p>
+                                  <p>
+                                    { bookingObj.address ?
+                                      `${bookingObj.address.address}, ${bookingObj.address.city} ${bookingObj.address.zip_code}`
+                                      :
+                                      `en visio`
+                                    }
+                                  </p>
                                 </Grid>
                               </Grid>
                             </Grid>
