@@ -23,6 +23,7 @@ import Divider from "@material-ui/core/Divider";
 import LayoutMobileReservations from "../../hoc/Layout/LayoutMobileReservations";
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
+const {BOOK_STATUS}=require('../../utils/consts')
 
 
 const DialogTitle = withStyles(styles)((props) => {
@@ -86,7 +87,7 @@ class AllReservations extends React.Component {
     axios.get('/myAlfred/api/booking/alfredBooking')
       .then(res => {
         // On n'affiche pas les résas en attente de paiement
-        const bookings=res.data.filter( r => r.status != 'En attente de paiement')
+        const bookings=res.data.filter( r => r.status != BOOK_STATUS.TO_PAY)
         this.setState({alfredReservations: bookings});
       });
 
@@ -141,6 +142,9 @@ class AllReservations extends React.Component {
     this.setState({ bookingPreview:null, bookingCancel: null, bookingConfirm: null, bookingPreApprouved: bookingId})
   };
 
+  onClosePreview = () => {
+    this.setState({bookingPreview: null}, () => this.loadBookings())
+  }
   bookingPreviewModal = (classes) => {
     const {bookingPreview}=this.state;
 
@@ -148,11 +152,11 @@ class AllReservations extends React.Component {
       <Dialog
         style={{width: '100%'}}
         open={Boolean(bookingPreview)}
-        onClose={() => this.setState({bookingPreview: null})}
+        onClose={this.onClosePreview}
         classes={{paper: classes.dialogPreviewPaper}}
 
       >
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({bookingPreview: null})}/>
+        <DialogTitle id="customized-dialog-title" onClose={this.onClosePreview}/>
         <DialogContent>
           <BookingPreview booking_id={bookingPreview} onCancel={this.openBookingCancel} onConfirm={this.openBookingConfirm} onConfirmPreaProuved={this.openBookingPreAprouved}/>
         </DialogContent>

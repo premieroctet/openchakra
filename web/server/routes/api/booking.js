@@ -162,11 +162,11 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
           .populate('alfred')
           .populate('user')
           .then(book => {
-            if (booking.status == 'Demande d\'infos') {
+            if (booking.status == BOOK_STATUS.INFO) {
               sendBookingInfos(book);
               sendAskingInfo(book, req);
             }
-            if (booking.status == 'En attente de confirmation') {
+            if (booking.status == BOOK_STATUS.TO_CONFIRM) {
               sendBookingDetails(book);
               sendNewBookingManual(book, req);
             }
@@ -359,6 +359,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
     obj.end_time = req.body.end_time;
   }
 
+  console.log(`Setting booking status:${req.params.id} to ${JSON.stringify(obj)}`)
   Booking.findByIdAndUpdate(req.params.id, obj, {new: true})
     .populate('alfred')
     .populate('user')
@@ -372,17 +373,17 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
         if (booking.status == BOOK_STATUS.CONFIRMED) {
           sendBookingConfirmed(booking);
         }
-        if (booking.status == 'Refusée') {
+        if (booking.status == BOOK_STATUS.REFUSED) {
           if (canceller_id == booking.user._id) {
             sendBookingRefusedToAlfred(booking, req);
           } else {
             sendBookingRefusedToClient(booking, req);
           }
         }
-        if (booking.status == 'Pré-approuvée') {
+        if (booking.status == BOOK_STATUS.PREAPPROVED) {
           sendAskInfoPreapproved(booking, req);
         }
-        if (booking.status == 'Annulée') {
+        if (booking.status == BOOK_STATUS.CANCELED) {
           if (canceller_id == booking.user._id) {
             sendBookingCancelledByClient(booking);
           } else {
