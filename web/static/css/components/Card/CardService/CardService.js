@@ -209,6 +209,12 @@ export default theme => ({
     width: '100%',
     height:'60%',
     position: 'relative',
+  },
+  mainCardServiceContainer:{
+    width: '100%',
+    [theme.breakpoints.down('xs')]:{
+      padding:10
+    }
   }
 
 })

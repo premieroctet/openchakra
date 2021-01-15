@@ -146,7 +146,7 @@ class CardService extends React.Component{
     const editable = isEditableUser(alfred);
 
     return(
-      <Grid style={{ width: '100%'}}>
+      <Grid className={classes.mainCardServiceContainer}>
         <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : classes.cardServicePaper}>
           <Grid className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => {profileMode && editable ? null : window.open(resa_link, '_blank')}}>
             <Grid className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>

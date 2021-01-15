@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React from 'react';
 import Footer from '../hoc/Layout/Footer/Footer';
-import Router from 'next/router';
 import {Helmet} from 'react-helmet';
 
 import Grid from '@material-ui/core/Grid';

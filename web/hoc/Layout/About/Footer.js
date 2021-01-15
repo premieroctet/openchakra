@@ -33,11 +33,14 @@ class Footer extends React.Component {
                   <Typography>Informations légales</Typography>
                 </Link>
               </Grid>
-              <Grid item>
-                <Link>
-                  <Typography>Confidentialité</Typography>
-                </Link>
-              </Grid>
+              {
+                true ? null:
+                  <Grid item>
+                    <Link>
+                      <Typography>Confidentialité</Typography>
+                    </Link>
+                  </Grid>
+              }
             </Grid>
           </Grid>
         </Grid>

@@ -114,6 +114,7 @@ class myProfile extends React.Component{
               <Button
                 className={classes.button}
                 startIcon={<InfoIcon />}
+                onClick={() => Router.push('/footer/addService')}
               >
                 Comment ça marche ?
               </Button>
@@ -122,6 +123,7 @@ class myProfile extends React.Component{
               <Button
                 className={classes.button}
                 startIcon={<InfoIcon />}
+                onClick={() => Router.push('/faq')}
               >
                 Obtenir de l’aide
               </Button>
@@ -130,7 +132,7 @@ class myProfile extends React.Component{
               <Button
                 className={classes.button}
                 startIcon={<InfoIcon />}
-                onClick={() => Router.push('/account/parameters')}
+                onClick={() => Router.push('/contact')}
               >
                 Nous contacter
               </Button>

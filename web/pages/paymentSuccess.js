@@ -8,8 +8,11 @@ import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import io from 'socket.io-client';
 
+
 import LayoutPayment from "../hoc/Layout/LayoutPayment";
 import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
+
+const {BOOK_STATUS}=require('../utils/consts')
 
 class paymentSuccess extends React.Component {
   constructor(props) {
@@ -53,7 +56,7 @@ class paymentSuccess extends React.Component {
               this.socket = io();
               this.socket.on('connect', socket => {
                 this.socket.emit('booking', booking_id);
-                const newStatus = ['Pré-approuvée', 'En attente de confirmation'].includes(booking.status) ? "Confirmée" : "En attente de confirmation"
+                const newStatus = [BOOK_STATUS.PREAPPROVED, BOOK_STATUS.TO_CONFIRM].includes(booking.status) ? BOOK_STATUS.CONFIRMED : BOOK_STATUS.TO_CONFIRM
                 axios.put(`/myAlfred/api/booking/modifyBooking/${booking_id}`, {status: newStatus})
                   .then(res => {
                     setTimeout(() => this.socket.emit('changeStatus', res.data), 100);
@@ -80,7 +83,7 @@ class paymentSuccess extends React.Component {
       <React.Fragment>
         <LayoutPayment>
           <Grid style={{display: 'flex', backgroundColor: 'rgba(249,249,249, 1)', width: '100%', justifyContent: 'center', padding: '10%', minHeight: '80vh'}}>
-            <Grid style={{display: 'flex', justifyContent: 'center', width: '50%', backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', paddingRight: '10%', textAlign: 'center'}}>
+            <Grid className={classes.containerPaymentSuccess}>
               <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
                 <Grid style={{display: 'flex', flexDirection: 'column'}}>
                   <Grid>

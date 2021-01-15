@@ -422,7 +422,7 @@ class SearchPage extends React.Component {
               <Hidden only={['sm','md', 'lg', 'xl']}>
                 <Grid style={{display: 'flex', justifyContent: 'center' , marginTop: '5vh', marginBottom: '5vh'}}>
                   {
-                    this.state.searching && serviceUsers.length===0  ? null : <Typography>{serviceUsers.length} Alfred disponibles</Typography>
+                    this.state.searching || serviceUsers.length===0  ? null : <Typography>{serviceUsers.length} Alfred disponibles</Typography>
                   }
                 </Grid>
               </Hidden>
@@ -455,12 +455,12 @@ class SearchPage extends React.Component {
                           >
                             {
                             serviceUsers.slice(0, scroll_count).map((su, index) =>(
-                                  <CardService
-                                    key={su._id}
-                                    item={su._id}
-                                    gps={gps}
-                                    user={this.state.user}
-                                    address={selectedAddress} />
+                              <CardService
+                                key={su._id}
+                                item={su._id}
+                                gps={gps}
+                                user={this.state.user}
+                                address={selectedAddress} />
                               )
                               )
                             }

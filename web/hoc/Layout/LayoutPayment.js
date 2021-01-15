@@ -16,11 +16,6 @@ class LayoutPayment extends React.Component{
         <HeaderColor/>
         <TrustAndSecurityBar/>
         {children}
-        <Grid style={{width: '100%', display: 'flex', justifyContent: 'center', position: 'absolute', bottom: 0, backgroundColor: 'white'}}>
-          <Grid style={{width: '90%'}}>
-            <TrustAndSecurity/>
-          </Grid>
-        </Grid>
       </Grid>
     );
   }
