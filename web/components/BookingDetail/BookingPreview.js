@@ -15,35 +15,48 @@ import styles from '../../static/css/components/BookingDetail/BookingPreview/Boo
 import Button from '@material-ui/core/Button';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
 import Router from 'next/router';
-
-
-
+const {BOOK_STATUS}=require('../../utils/consts')
+import DatePicker, {registerLocale} from 'react-datepicker';
+import fr from 'date-fns/locale/fr';
+registerLocale('fr', fr);
 moment.locale('fr');
+
+const Input2 = ({value, onClick}) => (
+  <Button value={value} color={'inherit'} variant={'outlined'} style={{color: 'gray'}} className="example-custom-input"
+          onClick={onClick}>
+    {value}
+  </Button>
+
+);
 
 class BookingPreview extends React.Component {
   constructor(props) {
     super(props);
     this.child = React.createRef();
     this.state = {
-      value: 4,
-      modal1: false,
-      modal2: false,
-      modal3: false,
-      modal4: false,
       booking_id: null,
       bookingObj: null,
       currentUser: null,
-      categoryLabel: '',
       is_alfred: null,
-      alfredId: null,
+      end_datetime: null,
     };
     this.routingDetailsMessage = this.routingDetailsMessage.bind(this)
+    this.getPrestationMinMoment = this.getPrestationMinMoment.bind(this)
   }
 
   static getInitialProps({query: {id, user}}) {
     return {
       booking_id: id,
     };
+  }
+
+  getPrestationMinMoment = () => {
+    const {bookingObj}=this.state
+    if (!bookingObj) {
+      return null
+    }
+    const mini=moment(`${bookingObj.date_prestation} $${moment(bookingObj.time_prestation).format('HH:mm')}`, 'DD/MM/YYYY HH:mm').add(1, 'hours')
+    return mini
   }
 
   componentDidMount() {
@@ -56,25 +69,23 @@ class BookingPreview extends React.Component {
     axios.get('/myAlfred/api/users/current').then(res => {
       let result = res.data;
       this.setState({currentUser: result});
-      axios.get('/myAlfred/api/booking/' + booking_id).then(res => {
+      axios.get(`/myAlfred/api/booking/${booking_id}`).then(res => {
+        const booking=res.data
+        const end_datetime=moment(`${booking.date_prestation} $${moment(booking.time_prestation).format('HH:mm')}`, 'DD/MM/YYYY HH:mm').add(1, 'hours')
         this.setState(
           {
-            bookingObj: res.data,
-            alfredId: res.data.alfred._id,
-            is_alfred: res.data.alfred._id === result._id,
+            bookingObj: booking,
+            is_alfred: booking.alfred._id === result._id,
+            end_datetime: end_datetime,
           },
         );
 
         if (res.data.serviceUserId) {
           axios.get(`/myAlfred/api/serviceUser/${this.state.bookingObj.serviceUserId}`).then(res => {
             let resultat = res.data;
-            this.setState({category: resultat.service.category}, () =>
-              axios.get(`/myAlfred/api/category/${this.state.category}`).then(res => {
-                this.setState({categoryLabel: res.data.label});
-              }),
-            );
+            this.setState({category: resultat.service.category})
           }).catch(error => {
-            console.log(error);
+            console.error(error);
           });
         }
 
@@ -101,42 +112,26 @@ class BookingPreview extends React.Component {
   }
 
   changeStatus(status) {
-    axios
-      .put(
-        '/myAlfred/api/booking/modifyBooking/' + this.state.booking_id,
-        {status: status},
-      )
+    axios.put(`/myAlfred/api/booking/modifyBooking/${this.state.booking_id}`,{status: status})
       .then(res => {
         this.setState({bookingObj: res.data});
-
         this.socket.emit('changeStatus', this.state.bookingObj);
       })
       .catch(err => console.error(err));
   }
 
-  handleOpen1() {
-    this.setState({modal1: true});
+  onChangeEndDate = ev => {
+    const m = moment(`${moment(ev).format('DD/MM/YYYY')} $${moment(this.state.end_datetime).format('HH:mm')}`, 'DD/MM/YYYY HH:mm')
+    if (m.isAfter(this.getPrestationMinMoment())) {
+      this.setState({ end_datetime: m})
+    }
   }
 
-  handleOpen2() {
-    this.setState({modal2: true});
-  }
-
-  handleOpen3() {
-    this.setState({modal3: true});
-  }
-
-  handleOpen4() {
-    this.setState({modal4: true});
-  }
-
-  handleClose() {
-    this.setState({
-      modal1: false,
-      modal2: false,
-      modal3: false,
-      modal4: false,
-    });
+  onChangeEndTime = ev => {
+    const m = moment(`$${moment(this.state.end_datetime).format('DD/MM/YYYY')} ${moment(ev).format('HH:mm')}`, 'DD/MM/YYYY HH:mm')
+    if (m.isAfter(this.getPrestationMinMoment())) {
+      this.setState({ end_datetime: m})
+    }
   }
 
   computePricedPrestations() {
@@ -159,6 +154,20 @@ class BookingPreview extends React.Component {
     return result;
   }
 
+  onConfirm = () => {
+    const {end_datetime}=this.state
+    const endDate = moment(end_datetime).format('YYYY-MM-DD');
+    const endHour = moment(end_datetime).format('HH:mm');
+    const modifyObj = {end_date: endDate, end_time: endHour, status: BOOK_STATUS.CONFIRMED};
+
+    axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, modifyObj)
+      .then(res => {
+        this.setState({bookingObj: res.data});
+        setTimeout(() => this.socket.emit('changeStatus', res.data), 100);
+      })
+      .catch(err => console.error(err));
+  }
+
   routingDetailsMessage() {
     const {currentUser, bookingObj}=this.state
     const displayUser = currentUser._id === bookingObj.alfred._id ? bookingObj.user : bookingObj.alfred
@@ -177,7 +186,7 @@ class BookingPreview extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {bookingObj, currentUser, categoryLabel, is_alfred, booking_id} = this.state;
+    const {bookingObj, currentUser, is_alfred, booking_id, end_datetime} = this.state;
 
     if (!bookingObj || !currentUser) {
       return null
@@ -196,21 +205,21 @@ class BookingPreview extends React.Component {
     const status=bookingObj.status;
     const paymentTitle =
       amIAlfred ?
-        status === 'Refusée' ? 'Paiement non réalisé'
-          : ['Terminée', 'Confirmée'].includes(status) ? 'Versement' :  'Revenus potentiels'
+        status === BOOK_STATUS.REFUSED ? 'Paiement non réalisé'
+          : [BOOK_STATUS.FINISHED, BOOK_STATUS.CONFIRMED].includes(status) ? 'Versement' :  'Revenus potentiels'
         :
-        ['Refusée', 'Annulée', 'Expirée'].includes(status) ?
+        [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELED, BOOK_STATUS.EXPIRED].includes(status) ?
           'Paiement non réalisé'
           :
-          status === 'Terminée' ?
+          status === BOOK_STATUS.FINISHED ?
             'Paiement'
             :
-            ['Confirmée', 'Pré-approuvée', 'Demande d\'infos', 'Pré-approuvée', 'En attente de confirmation'].includes(status) ?
+            [BOOK_STATUS.CONFIRMED, BOOK_STATUS.PREAPPROVED, BOOK_STATUS.INFO, BOOK_STATUS.TO_CONFIRM].includes(status) ?
               'Paiement si acceptation'
               :
               'Revenus potentiels'
 
-    const momentTitle = ['Confirmée', 'Terminée'].includes(status) ?
+    const momentTitle = [BOOK_STATUS.CONFIRMED, BOOK_STATUS.FINISHED].includes(status) ?
       `Du ${bookingObj.date_prestation} - ${moment(bookingObj.time_prestation).format('HH:mm')}
        au ${moment(bookingObj.end_date).format('DD/MM/YYYY')} à ${bookingObj.end_time}`
        :
@@ -243,7 +252,11 @@ class BookingPreview extends React.Component {
                       </Grid>
                       <Grid>
                       <h2>
-                        {status === 'Pré-approuvée' && !amIAlfred ? 'Invitation à réserver' : status}
+                        {status === BOOK_STATUS.PREAPPROVED ?
+                           amIAlfred ? 'Pré-approuvée': 'Invitation à réserver'
+                          :
+                          status
+                        }
                       </h2>
                       </Grid>
                     </Grid>
@@ -251,7 +264,7 @@ class BookingPreview extends React.Component {
                   <hr className={classes.hrSeparator}/>
                   {bookingObj === null ||
                   currentUser === null ? null : bookingObj.status ===
-                  'Terminée' ? (
+                  BOOK_STATUS.FINISHED ? (
                     currentUser._id === bookingObj.alfred._id ? (
                       <Grid container style={{ borderBottom: '1.5px #8281813b solid', marginTop: '5%', paddingBottom: '7%'}}>
                         <Grid container>
@@ -375,7 +388,7 @@ class BookingPreview extends React.Component {
                           <Grid item>
                             <Button variant={'contained'} color={'primary'} onClick={this.routingDetailsMessage} style={{textTransform: 'initial', color:'white'}}>Envoyer un message</Button>
                           </Grid>
-                          {bookingObj.status === 'Confirmée' ?
+                          {bookingObj.status === BOOK_STATUS.CONFIRMED ?
                             <Grid item>
                               <Button>
                                 <a
@@ -418,12 +431,43 @@ class BookingPreview extends React.Component {
                               </Typography>
                             </Grid>
                           </Grid>
+                          { bookingObj.status === BOOK_STATUS.TO_CONFIRM && amIAlfred ?
+                            <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
+                              <Grid item style={{paddingLeft: '3%'}}>
+                                <Typography>
+                                Date de fin:
+                                </Typography>
+                                  <DatePicker
+                                    selected={moment(end_datetime).toDate()}
+                                    onChange={this.onChangeEndDate}
+                                    locale='fr'
+                                    showMonthDropdown
+                                    dateFormat="dd/MM/yyyy"
+                                    customInput={<Input2/>}
+                                  />
+                                  -
+                                  <DatePicker
+                                    selected={moment(end_datetime).toDate()}
+                                    onChange={this.onChangeEndTime}
+                                    customInput={<Input2/>}
+                                    showTimeSelect
+                                    showTimeSelectOnly
+                                    timeIntervals={15}
+                                    timeCaption="Heure"
+                                    dateFormat="HH:mm"
+                                    locale='fr'
+                                    minDate={new Date()}
+                                  />
+                              </Grid>
+                            </Grid>
+                            :
+                            null
+                          }
                         </Grid>
                       </Grid>
                       <Grid container className={classes.mainContainerStateResa}>
                         <Grid>
-                          {status ===
-                          'En attente de confirmation' ? (
+                          {status === BOOK_STATUS.TO_CONFIRM ? (
                             amIAlfred ? (
                               <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                 <Grid className={classes.labelReservation}>
@@ -437,7 +481,7 @@ class BookingPreview extends React.Component {
                                 </Grid>
                                 <Grid className={classes.buttonConfirmResa}>
                                   <Button variant={'contained'} className={classes.buttonConfirm}
-                                  onClick={()=>this.props.onConfirm(booking_id)}>Confirmer</Button>
+                                  onClick={this.onConfirm}>Confirmer</Button>
                                 </Grid>
                                 <Grid>
                                   <Button variant={'outlined'} color={'primary'}
@@ -449,7 +493,7 @@ class BookingPreview extends React.Component {
                             null
                           )
                           :
-                          bookingObj.status === 'Demande d\'infos' && currentUser._id === bookingObj.alfred._id ? (
+                          bookingObj.status === BOOK_STATUS.INFO && currentUser._id === bookingObj.alfred._id ? (
                             <Grid container className={classes.groupButtonsContainer} spacing={1}>
                               <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
                                 <Button onClick={()=>this.props.onConfirmPreaProuved(booking_id)} color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Pré-approuver</Button>
@@ -466,19 +510,19 @@ class BookingPreview extends React.Component {
                             </Grid>
                           )
                           :
-                          bookingObj.status === 'En attente de paiement' && currentUser._id === bookingObj.user._id ? (
+                          bookingObj.status === BOOK_STATUS.TO_PAY && currentUser._id === bookingObj.user._id ? (
                             <Grid className={classes.groupButtonsContainer}>
                               <Button onClick={()=>Router.push(`/confirmPayement?booking_id=${booking_id}`)}
                                 color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Payer ma réservation</Button>
                             </Grid>
                           )
                           :
-                          bookingObj.status === 'Demande d\'infos' && currentUser._id === bookingObj.user._id ?
+                          bookingObj.status === BOOK_STATUS.INFO && currentUser._id === bookingObj.user._id ?
                           (
                             null
                           )
                           :
-                          bookingObj.status === 'Pré-approuvée' && currentUser._id === bookingObj.user._id ? (
+                          bookingObj.status === BOOK_STATUS.PREAPPROVED && currentUser._id === bookingObj.user._id ? (
                             <Grid className={classes.groupButtonsContainer}>
                               <Button onClick={()=>Router.push(`/confirmPayement?booking_id=${booking_id}`)}
                                 color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Payer ma réservation</Button>
@@ -543,8 +587,8 @@ class BookingPreview extends React.Component {
                       </Grid>
                     </Grid>
                   </Grid>
-                  {(['En attente de confirmation','Demande d\'infos'].includes(status) && !amIAlfred) ||
-                    status === 'Confirmée' || status === 'Pré-approuvée' ? (
+                  {([BOOK_STATUS.TO_CONFIRM, BOOK_STATUS.INFO].includes(status) && !amIAlfred) ||
+                    status === BOOK_STATUS.CONFIRMED || status === BOOK_STATUS.PREAPPROVED ? (
                     <Grid
                       container
                       style={{

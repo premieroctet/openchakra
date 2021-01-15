@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const moment = require('moment');
 const axios = require('axios');
 
+const {BOOK_STATUS}=require('../../../utils/consts')
 const Booking = require('../../models/Booking');
 const User = require('../../models/User');
 const CronJob = require('cron').CronJob;
@@ -102,7 +103,7 @@ router.get('/endConfirmedBookings', passport.authenticate('jwt', {session: false
   Booking.find({
     $and: [
       {$or: [{user: userId}, {alfred: userId}]},
-      {status: 'Confirmée'},
+      {status: BOOK_STATUS.CONFIRMED},
     ],
   })
     .then(booking => {
@@ -161,15 +162,15 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
           .populate('alfred')
           .populate('user')
           .then(book => {
-            if (booking.status == 'Demande d\'infos') {
+            if (booking.status == BOOK_STATUS.INFO) {
               sendBookingInfos(book);
               sendAskingInfo(book, req);
             }
-            if (booking.status == 'En attente de confirmation') {
+            if (booking.status == BOOK_STATUS.TO_CONFIRM) {
               sendBookingDetails(book);
               sendNewBookingManual(book, req);
             }
-            if (booking.status == 'Confirmée') {
+            if (booking.status == BOOK_STATUS.CONFIRMED) {
               sendNewBooking(book, req);
             }
           })
@@ -281,7 +282,7 @@ router.get('/getPaid', passport.authenticate('jwt', {session: false}), (req, res
 // Get all booking paid soon for an alfred
 // @access private
 router.get('/getPaidSoon', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Booking.find({alfred: req.user.id, paid: false, status: 'Confirmée'})
+  Booking.find({alfred: req.user.id, paid: false, status: BOOK_STATUS.CONFIRMED})
     .populate('user', '-id_card')
     .then(booking => {
       res.json(booking);
@@ -305,7 +306,7 @@ router.get('/account/paid', passport.authenticate('jwt', {session: false}), (req
 // Get all booking paid soon for a user
 // @access private
 router.get('/account/paidSoon', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Booking.find({user: req.user.id, paid: false, status: 'Confirmée'})
+  Booking.find({user: req.user.id, paid: false, status: BOOK_STATUS.CONFIRMED})
     .populate('alfred', '-id_card')
     .then(booking => {
       res.json(booking);
@@ -358,6 +359,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
     obj.end_time = req.body.end_time;
   }
 
+  console.log(`Setting booking status:${req.params.id} to ${JSON.stringify(obj)}`)
   Booking.findByIdAndUpdate(req.params.id, obj, {new: true})
     .populate('alfred')
     .populate('user')
@@ -368,20 +370,20 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
         return res.status(404).json({msg: 'no booking found'});
       }
       if (booking) {
-        if (booking.status == 'Confirmée') {
+        if (booking.status == BOOK_STATUS.CONFIRMED) {
           sendBookingConfirmed(booking);
         }
-        if (booking.status == 'Refusée') {
+        if (booking.status == BOOK_STATUS.REFUSED) {
           if (canceller_id == booking.user._id) {
             sendBookingRefusedToAlfred(booking, req);
           } else {
             sendBookingRefusedToClient(booking, req);
           }
         }
-        if (booking.status == 'Pré-approuvée') {
+        if (booking.status == BOOK_STATUS.PREAPPROVED) {
           sendAskInfoPreapproved(booking, req);
         }
-        if (booking.status == 'Annulée') {
+        if (booking.status == BOOK_STATUS.CANCELED) {
           if (canceller_id == booking.user._id) {
             sendBookingCancelledByClient(booking);
           } else {
@@ -400,7 +402,7 @@ if (is_production()) {
   new CronJob('0 */5 * * * *', function () {
     console.log('Checking bookings to terminate');
     const date = moment(new Date(), 'DD-MM-YYYY').startOf('day');
-    Booking.find({status: 'Confirmée', paid: false})
+    Booking.find({status: BOOK_STATUS.CONFIRMED, paid: false})
       .populate('user')
       .populate('alfred')
       .catch(err => console.error(err))

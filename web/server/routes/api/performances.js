@@ -8,6 +8,7 @@ const Booking = require('../../models/Booking');
 const ServiceUser = require('../../models/ServiceUser');
 const Reviews = require('../../models/Reviews');
 const User = require('../../models/User');
+const {BOOK_STATUS}=require('../../../utils/consts')
 
 moment.locale('fr');
 
@@ -20,7 +21,7 @@ router.get('/test', (req, res) => res.json({msg: 'Performances Works!'}));
 router.get('/incomes/totalComing/:year', passport.authenticate('jwt', {session: false}), (req, res) => {
   const year = req.params.year;
   let total = 0;
-  Booking.find({alfred: req.user.id, status: 'Confirmée', date_prestation: /year$/i})
+  Booking.find({alfred: req.user.id, status: BOOK_STATUS.CONFIRMED, date_prestation: /year$/i})
     .then(booking => {
       booking.forEach(b => {
         total += b.amount;

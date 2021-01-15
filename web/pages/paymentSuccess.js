@@ -12,6 +12,8 @@ import io from 'socket.io-client';
 import LayoutPayment from "../hoc/Layout/LayoutPayment";
 import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
 
+const {BOOK_STATUS}=require('../utils/consts')
+
 class paymentSuccess extends React.Component {
   constructor(props) {
     super(props);
@@ -54,7 +56,7 @@ class paymentSuccess extends React.Component {
               this.socket = io();
               this.socket.on('connect', socket => {
                 this.socket.emit('booking', booking_id);
-                const newStatus = ['Pré-approuvée', 'En attente de confirmation'].includes(booking.status) ? "Confirmée" : "En attente de confirmation"
+                const newStatus = [BOOK_STATUS.PREAPPROVED, BOOK_STATUS.TO_CONFIRM].includes(booking.status) ? BOOK_STATUS.CONFIRMED : BOOK_STATUS.TO_CONFIRM
                 axios.put(`/myAlfred/api/booking/modifyBooking/${booking_id}`, {status: newStatus})
                   .then(res => {
                     setTimeout(() => this.socket.emit('changeStatus', res.data), 100);
