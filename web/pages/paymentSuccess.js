@@ -8,6 +8,7 @@ import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import io from 'socket.io-client';
 
+
 import LayoutPayment from "../hoc/Layout/LayoutPayment";
 import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
 
@@ -80,7 +81,7 @@ class paymentSuccess extends React.Component {
       <React.Fragment>
         <LayoutPayment>
           <Grid style={{display: 'flex', backgroundColor: 'rgba(249,249,249, 1)', width: '100%', justifyContent: 'center', padding: '10%', minHeight: '80vh'}}>
-            <Grid style={{display: 'flex', justifyContent: 'center', width: '50%', backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', paddingRight: '10%', textAlign: 'center'}}>
+            <Grid className={classes.containerPaymentSuccess}>
               <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
                 <Grid style={{display: 'flex', flexDirection: 'column'}}>
                   <Grid>
