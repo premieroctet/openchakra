@@ -319,7 +319,7 @@ class NavBar extends Component {
                       <FormControl variant="outlined">
                         <Select
                           id="outlined-select-currency"
-                          value={this.props.selectedAddress ? this.props.selectedAddress : 'main'}
+                          value={this.state.selectedAddress || 'main'}
                           name={'selectedAddress'}
                           onChange={(e) => {
                             this.onChange(e);

@@ -277,7 +277,7 @@ class MobileNavbar extends React.Component{
                       <FormControl variant="outlined">
                         <Select
                           id="outlined-select-currency"
-                          value={'main'}
+                          value={this.state.selectedAddress || 'main'}
                           name={'selectedAddress'}
                           onChange={(e) => {
                             this.onChange(e);
