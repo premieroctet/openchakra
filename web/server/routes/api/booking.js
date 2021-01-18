@@ -427,7 +427,7 @@ if (is_production()) {
 
 // Handle terminated but not paid bookings
 if (is_production()) {
-  new CronJob('0 */5 * * * *', function () {
+  new CronJob('0 */15 * * * *', function () {
     const date = moment(new Date(), 'DD-MM-YYYY').startOf('day');
     Booking.find({status: 'Terminée', paid: false})
       .populate('user')
