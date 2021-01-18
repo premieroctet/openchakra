@@ -22,15 +22,19 @@ const Album = require('../../models/Albums');
 const ResetToken = require('../../models/ResetToken');
 const crypto = require('crypto');
 const multer = require('multer');
-const {mangoApi} = require('../../../utils/mangopay');
 const fs = require('fs');
 const axios = require('axios');
 const {is_development, computeUrl} = require('../../../config/config');
 
-const {addIdIfRequired, addRegistrationProof, createMangoClient} = require('../../../utils/mangopay');
+const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient,install_hooks} = require('../../../utils/mangopay');
+
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus');
 
 axios.defaults.withCredentials = true;
+
+const HOOK_TYPES = 'KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED'.split(' ');
+install_hooks(HOOK_TYPES, '/myAlfred/api/users/hook')
+
 
 const storageIdPicture = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -486,6 +490,7 @@ router.post('/profile/idCard', uploadIdCard.fields([{name: 'myCardR', maxCount: 
     })
     .catch(err => {
       console.error(err);
+      res.statut(400, err)
     });
 });
 
@@ -1221,58 +1226,10 @@ router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), 
     });
 });
 
-/** Hooks Mangopay */
-const install_hooks= () => {
-  const {get_host_url} = require('../../../config/config');
-  const HOOK_TYPES = 'KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED'.split(' ');
-  HOOK_TYPES.forEach(hookType => {
-    const hook_url = new URL('/myAlfred/api/users/mangopay_kyc', get_host_url());
-    console.log(`Setting hook ${hook_url} for ${hookType}`);
-    mangoApi.Hooks.create({
-      Tag: 'MyAlfred hook',
-      EventType: hookType,
-      Status: 'ENABLED',
-      Validity: 'VALID',
-      Url: hook_url,
-    })
-      .then(res => {
-        console.log(`Set hook ${hookType} to ${hook_url}`);
-      })
-      .catch(err => {
-        if (err.errors && err.errors.EventType && err.errors.EventType.includes('already been registered')) {
-          mangoApi.Hooks.getAll()
-            .then(res => {
-              const hookId = res.find(h => h.EventType == hookType).Id;
-              return hookId;
-            })
-            .then(hookId => {
-              mangoApi.Hooks.update({
-                Id: hookId,
-                Tag: 'MyAlfred hook',
-                EventType: hookType,
-                Status: 'ENABLED',
-                Validity: 'VALID',
-                Url: hook_url,
-              })
-                .then(() => {
-                  console.log(`Updated ${hookType} to ${hook_url}`);
-                });
-            });
-        } else {
-          console.error(`Error for hook ${hookType}:${JSON.stringify(err)}`);
-        }
-      });
-  });
-}
-
-if (!is_development()) {
-  install_hooks()
-}
-
 // @Route GET /myAlfred/api/users/mangopay_kyc
 // Send email
 // @access private
-router.get('/mangopay_kyc', (req, res) => {
+router.get('/hook', (req, res) => {
   const doc_id = req.query.RessourceId;
   const kyc_status = req.query.EventType;
   console.log(`Mangopay called ${req.url}`);

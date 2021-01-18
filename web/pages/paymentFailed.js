@@ -7,6 +7,8 @@ import Grid from '@material-ui/core/Grid';
 import Router from 'next/router';
 import LayoutPayment from "../hoc/Layout/LayoutPayment";
 import Typography from "@material-ui/core/Typography";
+import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
+import {withStyles} from '@material-ui/core/styles';
 
 class PaymentFailed extends React.Component {
   constructor(props) {
@@ -75,4 +77,4 @@ class PaymentFailed extends React.Component {
 }
 
 
-export default PaymentFailed;
+export default withStyles(styles)(PaymentFailed)
