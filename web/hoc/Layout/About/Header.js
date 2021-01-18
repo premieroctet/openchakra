@@ -76,8 +76,8 @@ class Header extends React.Component {
         content = 'Qui nous fait vivre';
         aboutMenu = true;
       } else if (window.location.pathname === '/footer/addService') {
-        title = 'FAQ';
-        content = 'Pour trouver vos réponses';
+        title = 'Réserver un service';
+        content = 'Les bases';
 
       } else if (window.location.pathname === '/faq') {
         title = 'FAQ';
@@ -85,6 +85,10 @@ class Header extends React.Component {
       } else if (window.location.pathname === '/footer/becomeAlfred') {
         title = 'Devenir un Alfred';
         content = 'Les bases';
+      }
+      else if (window.location.pathname === '/contact') {
+        title = 'Contact';
+        content = 'Posez-nous toutes vos questions';
       }
     }
 
