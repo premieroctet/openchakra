@@ -247,7 +247,7 @@ class BookingPreview extends React.Component {
                       </Grid>
                       <Grid style={{marginTop: '2%'}}>
                         <Typography>
-                          { `${bookingObj.service} le ${bookingObj.date_prestation} à ${moment(bookingObj.date).format('HH:mm')}`}
+                          { `${bookingObj.service} le ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}`}
                         </Typography>
                       </Grid>
                       <Grid>
