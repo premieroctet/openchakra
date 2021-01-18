@@ -9,7 +9,6 @@ import prisma from '../../utils/prisma'
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   let projectId = (params!.slug as string).split('-')[0]
   let projectName = (params!.slug as string).split('-')[1]
-
   const project = await prisma.project.findOne({
     //include: { user: true },
     where: {
@@ -37,7 +36,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     },
   }))
   return {
-    fallback: false,
+    fallback: true,
     paths,
   }
 }
