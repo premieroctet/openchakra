@@ -6,8 +6,8 @@ const mangopay = require('mangopay2-nodejs-sdk');
 const KycDocumentType = require('mangopay2-nodejs-sdk/lib/models/KycDocumentType');
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus');
 const PersonType = require('mangopay2-nodejs-sdk/lib/models/PersonType');
-
 const mangoApi = new mangopay(MANGOPAY_CONFIG)
+const {is_development, get_host_url} = require('../config/config');
 
 const createMangoClient = user => {
   var userData = {
@@ -98,11 +98,6 @@ const createMangoProvider = (user, shop) => {
 
 const addIdIfRequired = user => {
   console.log('addIdIfRequired');
-
-  if (!user.mangopay_provider_id) {
-    console.log(`User ${user._id}:pas besoin d'envoyer l'ID pour un client`);
-    return false;
-  }
 
   const objStatus = {
     Type: KycDocumentType.IdentityProof,
@@ -280,6 +275,50 @@ const payAlfred = booking => {
     });
 };
 
+const install_hooks= (hook_types, url) => {
+  var host=get_host_url()
+  if (is_development()) {
+    host=host.replace('https', 'http')
+  }
+  const hook_url = new URL(url, host);
+  hook_types.forEach(hookType => {
+   console.log(`Setting hook ${hook_url} for ${hookType}`);
+   mangoApi.Hooks.create({
+     Tag: 'MyAlfred hook',
+     EventType: hookType,
+     Status: 'ENABLED',
+     Validity: 'VALID',
+     Url: hook_url,
+   })
+     .then(res => {
+       console.log(`Set hook ${hookType} to ${hook_url}`);
+     })
+     .catch(err => {
+       if (err.errors && err.errors.EventType && err.errors.EventType.includes('already been registered')) {
+         mangoApi.Hooks.getAll()
+           .then(res => {
+             const hookId = res.find(h => h.EventType == hookType).Id;
+             return hookId;
+           })
+           .then(hookId => {
+             mangoApi.Hooks.update({
+               Id: hookId,
+               Tag: 'MyAlfred hook',
+               EventType: hookType,
+               Status: 'ENABLED',
+               Validity: 'VALID',
+               Url: hook_url,
+             })
+               .then(() => {
+                 console.log(`Updated ${hookType} to ${hook_url}`);
+               });
+           });
+       } else {
+         console.error(`Error for hook ${hookType}:${JSON.stringify(err)}`);
+       }
+     });
+ });
+}
 
 module.exports = {
   mangoApi,
@@ -288,4 +327,5 @@ module.exports = {
   addIdIfRequired,
   addRegistrationProof,
   payAlfred,
+  install_hooks,
 };

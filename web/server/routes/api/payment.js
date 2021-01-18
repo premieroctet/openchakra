@@ -5,11 +5,12 @@ const router = express.Router();
 const passport = require('passport');
 const mongoose = require('mongoose');
 const User = require('../../models/User');
+const Booking = require('../../models/Booking');
 const axios = require('axios');
 const _ = require('lodash');
 const moment = require('moment');
 const request = require('request');
-const {mangoApi} = require('../../../utils/mangopay');
+const {mangoApi, install_hooks} = require('../../../utils/mangopay');
 const {maskIban} = require('../../../utils/text');
 var parse = require('url-parse');
 const {inspect} = require('util');
@@ -20,11 +21,20 @@ const {computeUrl} = require('../../../config/config');
 
 router.get('/test', (req, res) => res.json({msg: 'Payment Works!'}));
 
+HOOK_TYPES=
+"PAYIN_NORMAL_CREATED PAYIN_NORMAL_SUCCEEDED PAYIN_NORMAL_FAILED \
+PAYOUT_NORMAL_CREATED PAYOUT_NORMAL_SUCCEEDED PAYOUT_NORMAL_FAILED \
+TRANSFER_NORMAL_CREATED TRANSFER_NORMAL_SUCCEEDED TRANSFER_NORMAL_FAILED \
+PAYIN_REFUND_CREATED PAYIN_REFUND_SUCCEEDED PAYIN_REFUND_FAILED \
+PAYOUT_REFUND_CREATED PAYOUT_REFUND_SUCCEEDED PAYOUT_REFUND_FAILED \
+TRANSFER_REFUND_CREATED TRANSFER_REFUND_SUCCEEDED TRANSFER_REFUND_FAILED".split(' ')
 
-// GET /myAlfred/api/payment/mangopay_hook
+install_hooks(HOOK_TYPES, '/myAlfred/api/payment/hook')
+
+// GET /myAlfred/api/payment/hook
 // Create credit card
 // @access public
-router.get('/mangopay_hook', (req, res) => {
+router.get('/hook', (req, res) => {
   var query = parse(req.originalUrl, true).query;
   console.log(`Got params:${JSON.stringify(query)}`);
   res.json();
@@ -85,7 +95,7 @@ router.post('/createCard', passport.authenticate('jwt', {session: false}), (req,
 router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res) => {
   const amount = req.body.amount * 100;
   const fees = req.body.fees * 100;
-  const returnUrl= req.body.returnUrl || `/paymentSuccess?booking_id=${req.body.booking_id}`
+  const returnUrl= `/paymentSuccess?booking_id=${req.body.booking_id}`
   User.findById(req.user.id)
     .then(user => {
       const id_mangopay = user.id_mangopay;
@@ -108,9 +118,14 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
             ExecutionType: 'WEB',
             Culture: 'FR',
             CreditedWalletId: wallet_id,
+            SecureModeReturnURL: `${computeUrl(req)}${returnUrl}`,
           })
-            .then(data => {
-              res.json(data);
+            .then(payin => {
+              Booking.findByIdAndUpdate(req.body.booking_id, {mangopay_payin_id: payin.Id})
+                .then( () => console.log('booking update ok'))
+                .catch( err => console.error(`booking update error:${err}`))
+              console.log(`Created Payin ${JSON.stringify(payin)}`)
+              res.json(payin);
             });
         });
     })
@@ -150,8 +165,12 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
             CardId: id_card,
             SecureModeReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
           })
-            .then(data => {
-              res.json(data);
+            .then(payin => {
+              console.log(`Created Payin ${JSON.stringify(payin)}`)
+              Booking.findByIdAndUpdate(req.body.booking_id, {mangopay_payin_id: payin.Id})
+                .then( () => console.log('booking update ok'))
+                .catch( err => console.error(`booking update error:${err}`))
+              res.json(payin);
             });
         });
     });
@@ -309,23 +328,16 @@ router.get('/activeAccount', passport.authenticate('jwt', {session: false}), (re
 // GET /myAlfred/api/payment/transactions
 // View transaction for a user
 // @access private
-router.get('/transactions', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const allTransactions = [];
-  User.findById(req.user.id)
-    .then(user => {
-      const id_mangopay = user.id_mangopay;
-      let options = {
-        parameters: {
-          page: 1,
-          per_page: 100,
-        },
-      };
-      mangoApi.Users.getTransactions(id_mangopay, null, options)
-        .then(transactions => {
-          const reverse = _.reverse(transactions);
-          res.json(reverse[0]);
-        });
-    });
+router.get('/payin/:payin_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    mangoApi.PayIns.get(req.params.payin_id)
+      .then(payin => {
+        console.log(`Got payin:${JSON.stringify(payin)}`)
+        res.json(payin);
+      })
+      .catch(err => {
+        console.error(err)
+        res.json({})
+      })
 });
 
 // PUT /myAlfred/api/payment/account

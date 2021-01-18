@@ -247,7 +247,7 @@ class trustAndVerification extends React.Component {
     axios.post('/myAlfred/api/users/profile/idCard', formData, config)
       .then((response) => {
         toast.info('Pièce d\'identité ajoutée');
-        window.reload()
+        window.location.reload()
       })
       .catch(err => {
         console.log('Ajout nok')
