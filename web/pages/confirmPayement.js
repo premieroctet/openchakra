@@ -117,8 +117,13 @@ class ConfirmPayement extends React.Component {
     axios.post('/myAlfred/api/payment/payInDirect', data)
       .then(res => {
         const payInResult=res.data
-        //Router.push(payInResult.RedirectURL);
-        Router.push(`/paymentSuccess?booking_id=${this.props.booking_id}`);
+        console.log(`Received result:${JSON.stringify(payInResult)}`)
+        if (payInResult.SecureModeNeeded) {
+          Router.push(payInResult.SecureModeRedirectURL)
+        }
+        else {
+          Router.push(payInResult.RedirectURL)
+        }
       })
       .catch( err => { console.error(err)});
   };
@@ -135,8 +140,13 @@ class ConfirmPayement extends React.Component {
     axios.post('/myAlfred/api/payment/payIn', data)
       .then(res => {
         const payInResult=res.data
-        Router.push(payInResult.RedirectURL);
-        //Router.push(`/paymentSuccess?booking_id=${this.props.booking_id}`);
+        console.log(`Received result:${JSON.stringify(payInResult)}`)
+        if (payInResult.SecureModeNeeded) {
+          Router.push(payInResult.SecureModeRedirectURL)
+        }
+        else {
+          Router.push(payInResult.RedirectURL)
+        }
       })
       .catch(err => {
         console.error(err);

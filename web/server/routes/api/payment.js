@@ -31,6 +31,9 @@ TRANSFER_REFUND_CREATED TRANSFER_REFUND_SUCCEEDED TRANSFER_REFUND_FAILED".split(
 
 install_hooks(HOOK_TYPES, '/myAlfred/api/payment/hook')
 
+/**
+MANGOPAY 3DS schema : https://support.mangopay.com/s/article/How-does-3DS-work-with-the-API?language=fr
+*/
 // GET /myAlfred/api/payment/hook
 // Create credit card
 // @access public
