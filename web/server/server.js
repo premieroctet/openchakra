@@ -121,7 +121,7 @@ nextApp.prepare().then(() => {
   });
   app.use(express.static('static'));
 
-  if (!is_development_nossl()) {
+  if (!is_development_nossl() && !is_development()) {
     app.use(function (req, res, next) {
       if (!req.secure) {
         console.log('Redirecting to' + JSON.stringify(req.originalUrl));
@@ -130,11 +130,13 @@ nextApp.prepare().then(() => {
       next();
     });
   }
+
   app.get('*', routerHandler);
 
-  if (SERVER_PROD) {
+  if (SERVER_PROD || is_development()) {
     // HTTP only handling redirect to HTTPS
-    http.createServer(app).listen(80);
+    http.createServer(app).listen(80)
+    console.log('Created server on port 80')
   }
   // HTTPS server using certificates
   var httpsServer = https.createServer({
@@ -171,7 +173,6 @@ nextApp.prepare().then(() => {
       io.to(roomName).emit('displayMessage', msg);
     });
     socket.on('changeStatus', booking => {
-      console.log('works');
       io.to(bookingName).emit('displayStatus', booking);
     })
   });
