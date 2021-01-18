@@ -490,6 +490,7 @@ router.post('/profile/idCard', uploadIdCard.fields([{name: 'myCardR', maxCount: 
     })
     .catch(err => {
       console.error(err);
+      res.statut(400, err)
     });
 });
 

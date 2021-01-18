@@ -5,6 +5,7 @@ const router = express.Router();
 const passport = require('passport');
 const mongoose = require('mongoose');
 const User = require('../../models/User');
+const Booking = require('../../models/Booking');
 const axios = require('axios');
 const _ = require('lodash');
 const moment = require('moment');
@@ -94,7 +95,7 @@ router.post('/createCard', passport.authenticate('jwt', {session: false}), (req,
 router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res) => {
   const amount = req.body.amount * 100;
   const fees = req.body.fees * 100;
-  const returnUrl= req.body.returnUrl || `/paymentSuccess?booking_id=${req.body.booking_id}`
+  const returnUrl= `/paymentSuccess?booking_id=${req.body.booking_id}`
   User.findById(req.user.id)
     .then(user => {
       const id_mangopay = user.id_mangopay;
@@ -117,10 +118,14 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
             ExecutionType: 'WEB',
             Culture: 'FR',
             CreditedWalletId: wallet_id,
+            SecureModeReturnURL: `${computeUrl(req)}${returnUrl}`,
           })
-            .then(data => {
-              console.log(`Created Payin ${JSON.stringify(data)}`)
-              res.json(data);
+            .then(payin => {
+              Booking.findByIdAndUpdate(req.body.booking_id, {mangopay_payin_id: payin.Id})
+                .then( () => console.log('booking update ok'))
+                .catch( err => console.error(`booking update error:${err}`))
+              console.log(`Created Payin ${JSON.stringify(payin)}`)
+              res.json(payin);
             });
         });
     })
@@ -160,9 +165,12 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
             CardId: id_card,
             SecureModeReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
           })
-            .then(data => {
-              console.log(`Created Payin ${JSON.stringify(data)}`)
-              res.json(data);
+            .then(payin => {
+              console.log(`Created Payin ${JSON.stringify(payin)}`)
+              Booking.findByIdAndUpdate(req.body.booking_id, {mangopay_payin_id: payin.Id})
+                .then( () => console.log('booking update ok'))
+                .catch( err => console.error(`booking update error:${err}`))
+              res.json(payin);
             });
         });
     });
@@ -320,23 +328,16 @@ router.get('/activeAccount', passport.authenticate('jwt', {session: false}), (re
 // GET /myAlfred/api/payment/transactions
 // View transaction for a user
 // @access private
-router.get('/transactions', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const allTransactions = [];
-  User.findById(req.user.id)
-    .then(user => {
-      const id_mangopay = user.id_mangopay;
-      let options = {
-        parameters: {
-          page: 1,
-          per_page: 100,
-        },
-      };
-      mangoApi.Users.getTransactions(id_mangopay, null, options)
-        .then(transactions => {
-          const reverse = _.reverse(transactions);
-          res.json(reverse[0]);
-        });
-    });
+router.get('/payin/:payin_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    mangoApi.PayIns.get(req.params.payin_id)
+      .then(payin => {
+        console.log(`Got payin:${JSON.stringify(payin)}`)
+        res.json(payin);
+      })
+      .catch(err => {
+        console.error(err)
+        res.json({})
+      })
 });
 
 // PUT /myAlfred/api/payment/account

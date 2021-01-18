@@ -14,7 +14,6 @@ import time
 from alfred.misc.consts import AttributeDict
 
 cache = Cache(directory='/tmp/mangopay')
-#cache.clear()
 
 # SANDBOX
 mangopay.client_id='testmyalfredv2'
