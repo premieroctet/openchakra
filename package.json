@@ -49,11 +49,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "migration": "prisma migrate save --experimental && prisma migrate up --experimental && prisma generate",
+    "migration": "prisma migrate save --experimental && prisma generate",
     "start": "next start",
     "test": "jest",
-    "analyze": "BUNDLE_VISUALIZE=1 react-app-rewired build",
-    "postinstall": "prisma migrate up --experimental"
+    "analyze": "BUNDLE_VISUALIZE=1 react-app-rewired build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -73,7 +72,7 @@
   "devDependencies": {
     "@netlify/plugin-nextjs": "^1.0.7",
     "@next/bundle-analyzer": "^9.5.1",
-    "@prisma/cli": "2.12.0",
+    "@prisma/cli": "^2.14.0",
     "@testing-library/jest-dom": "^5.1.1",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^8.1.0",
