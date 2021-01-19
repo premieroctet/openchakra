@@ -1,6 +1,7 @@
 export default theme => ({
   bigContainer: {
     flexGrow: 1,
+    marginBottom: 50
   },
   grosHR: {
     height: '7px',
