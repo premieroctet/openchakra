@@ -247,7 +247,7 @@ class BookingPreview extends React.Component {
                       </Grid>
                       <Grid style={{marginTop: '2%'}}>
                         <Typography>
-                          { `${bookingObj.service} le ${bookingObj.date_prestation} à ${moment(bookingObj.date).format('HH:mm')}`}
+                          { `${bookingObj.service} le ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}`}
                         </Typography>
                       </Grid>
                       <Grid>
@@ -546,17 +546,20 @@ class BookingPreview extends React.Component {
                         Matériel fourni
                       </Typography>
                     </Grid>
-                    {bookingObj === null ? null : bookingObj.equipments.length ? (
-                      <Grid>
-                        <ListAlfredConditions
-                          wrapperComponentProps={bookingObj.equipments}
-                          columnsXl={6}
-                          columnsLG={6}
-                          columnsMD={6}
-                          columnsSM={6}
-                          columnsXS={6}
-                        />
-                      </Grid>
+                    {bookingObj === null ? null : bookingObj.equipments
+                      .length ? (
+                      bookingObj.equipments.map(equipment => {
+                        return (
+                          <Grid item xs={1} style={{textAlign: 'center'}}>
+                            <img
+                              alt={equipment.logo}
+                              title={equipment.logo}
+                              style={{width: '98%'}}
+                              src={`/static/equipments/${equipment.logo}`}
+                            />
+                          </Grid>
+                        );
+                      })
                     ) : (
                       <Grid style={{marginTop: '2%'}}>
                         <Typography>Aucun équipement fourni</Typography>
