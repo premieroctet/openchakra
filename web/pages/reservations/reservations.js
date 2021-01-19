@@ -6,7 +6,7 @@ import axios from 'axios';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import UserAvatar from '../../components/Avatar/UserAvatar';
-import styles from './reservationsStyle';
+import styles from '../../static/css/pages/reservations/reservations';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Tabs from '@material-ui/core/Tabs'
@@ -23,7 +23,7 @@ import Divider from "@material-ui/core/Divider";
 import LayoutMobileReservations from "../../hoc/Layout/LayoutMobileReservations";
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
-const {BOOK_STATUS}=require('../../utils/consts')
+const {BOOK_STATUS}=require('../../utils/consts');
 
 
 const DialogTitle = withStyles(styles)((props) => {
@@ -63,13 +63,10 @@ class AllReservations extends React.Component {
       bookingConfirm: null,
       bookingPreApprouved: null
     };
-    this.bookingPreviewModal = this.bookingPreviewModal.bind(this)
-    this.bookingCancelModal = this.bookingCancelModal.bind(this)
-    this.bookingConfirmModal = this.bookingConfirmModal.bind(this)
   }
 
   componentDidMount() {
-    setAxiosAuthentication()
+    setAxiosAuthentication();
     axios.get('/myAlfred/api/users/current').then(res => {
       let result = res.data;
       this.setState({
@@ -87,13 +84,13 @@ class AllReservations extends React.Component {
     axios.get('/myAlfred/api/booking/alfredBooking')
       .then(res => {
         // On n'affiche pas les résas en attente de paiement
-        const bookings=res.data.filter( r => r.status != BOOK_STATUS.TO_PAY)
+        const bookings=res.data.filter( r => r.status !== BOOK_STATUS.TO_PAY);
         this.setState({alfredReservations: bookings});
       });
 
     axios.get('/myAlfred/api/booking/userBooking')
       .then(res => {
-        const bookings=res.data
+        const bookings=res.data;
         this.setState({userReservations: bookings});
       });
   };
@@ -144,7 +141,7 @@ class AllReservations extends React.Component {
 
   onClosePreview = () => {
     this.setState({bookingPreview: null}, () => this.loadBookings())
-  }
+  };
   bookingPreviewModal = (classes) => {
     const {bookingPreview}=this.state;
 
@@ -296,13 +293,13 @@ class AllReservations extends React.Component {
 
 
   render() {
-    const {classes} = this.props
-    const {reservationType} = this.state
+    const {classes} = this.props;
+    const {reservationType, userInfo} = this.state;
 
     return (
       <React.Fragment>
         <Hidden only={['xs']}>
-          <LayoutReservations reservationType={reservationType} onReservationTypeChanged={this.onReservationTypeChanged}>
+          <LayoutReservations reservationType={reservationType} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
             {this.content(classes)}
           </LayoutReservations>
         </Hidden>
