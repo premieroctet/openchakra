@@ -15,7 +15,7 @@ import Button from '@material-ui/core/Button';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-
+const {BOOK_STATUS}=require('../../utils/consts')
 
 moment.locale('fr');
 
@@ -271,14 +271,12 @@ class AllReservations extends React.Component {
                                       marginTop: '2%',
                                       fontSize: '0.8rem',
                                       color:
-                                        booking.status === 'Confirmée'
+                                        booking.status === BOOK_STATUS.CONFIRMED
                                           ? '#419F41'
-                                          : booking.status ===
-                                          'Demande d\'infos' ||
-                                          booking.status ===
-                                          'En attente de confirmation'
+                                          : booking.status === BOOK_STATUS.INFO ||
+                                          booking.status === BOOK_STATUS.TO_CONFIRM
                                           ? '#F87280'
-                                          : booking.status === 'Pré-approuvée'
+                                          : booking.status === BOOK_STATUS.PREAPPROVED
                                             ? '#F89B72'
                                             : '#5D5D5D',
                                     }}
@@ -352,14 +350,13 @@ class AllReservations extends React.Component {
                                     marginTop: '2%',
                                     fontSize: '0.8rem',
                                     color:
-                                      booking.status === 'Confirmée'
+                                      booking.status === BOOK_STATUS.CONFIRMED
                                         ? '#419F41'
-                                        : booking.status ===
-                                        'Demande d\'infos' ||
-                                        booking.status ===
-                                        'En attente de confirmation'
+                                        : booking.status === BOOK_STATUS.INFO
+                                        ||
+                                        booking.status === BOOK_STATUS.TO_CONFIRM
                                         ? '#F87280'
-                                        : booking.status === 'Pré-approuvée'
+                                        : booking.status === BOOK_STATUS.PREAPPROVED
                                           ? '#F89B72'
                                           : '#5D5D5D',
                                   }}
@@ -458,13 +455,12 @@ class AllReservations extends React.Component {
                                 marginTop: '2%',
                                 fontSize: '0.8rem',
                                 color:
-                                  booking.status === 'Confirmée'
+                                  booking.status === BOOK_STATUS.CONFIRMED
                                     ? '#419F41'
-                                    : booking.status ===
-                                    'En attente de confirmation' ||
-                                    booking.status === 'Demande d\'infos'
+                                    : booking.status === BOOK_STATUS.TO_CONFIRM ||
+                                    booking.status === BOOK_STATUS.INFO
                                     ? '#F87280'
-                                    : booking.status === 'Pré-approuvée'
+                                    : booking.status === BOOK_STATUS.PREAPPROVED
                                       ? '#F89B72'
                                       : '#5D5D5D',
                               }}
@@ -522,13 +518,13 @@ class AllReservations extends React.Component {
                                 marginTop: '2%',
                                 fontSize: '0.8rem',
                                 color:
-                                  booking.status === 'Confirmée'
+                                  booking.status === BOOK_STATUS.CONFIRMED
                                     ? '#419F41'
-                                    : booking.status ===
-                                    'En attente de confirmation' ||
-                                    booking.status === 'Demande d\'infos'
+                                    : booking.status === BOOK_STATUS.TO_CONFIRM
+                                    ||
+                                    booking.status === BOOK_STATUS.INFO
                                     ? '#F87280'
-                                    : booking.status === 'Pré-approuvée'
+                                    : booking.status === BOOK_STATUS.PREAPPROVED
                                       ? '#F89B72'
                                       : '#5D5D5D',
                               }}

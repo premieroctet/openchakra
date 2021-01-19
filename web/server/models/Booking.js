@@ -164,7 +164,7 @@ BookingSchema.virtual('calendar_display').get(function () {
   if (!this.status) {
     return false;
   }
-  if ('Annulée Expirée Refusée'.split(' ').includes(this.status)) {
+  if ([BOOK_STATUS.CANCELED, BOOK_STATUS.EXPIRED, BOOK_STATUS.REFUSED].includes(this.status)) {
     return false;
   }
   return true;

@@ -16,7 +16,7 @@ import Button from '@material-ui/core/Button';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-
+const {BOOK_STATUS}=require('../../utils/consts')
 import Router from 'next/router';
 const {getLoggedUserId}=require('../../utils/functions')
 
@@ -242,7 +242,7 @@ class Messages extends React.Component {
                                 <Typography style={{
                                   marginTop: '2%',
                                   fontSize: '0.8rem',
-                                  color: booking.status === 'Confirmée' ? '#419F41' : booking.status === 'En attente de confirmation' || booking.status === 'Demande d\'infos' ? '#F87280' : booking.status === 'Pré-approuvée' ? '#F89B72' : '#5D5D5D',
+                                  color: booking.status === BOOK_STATUS.CONFIRMED ? '#419F41' : booking.status === BOOK_STATUS.TO_CONFIRM || booking.status === BOOK_STATUS.INFO ? '#F87280' : booking.status === BOOK_STATUS.PREAPPROVED ? '#F89B72' : '#5D5D5D',
                                 }}>
                                   {booking.status} -{' '}
                                   {booking.alfred.firstname}
@@ -289,7 +289,7 @@ class Messages extends React.Component {
                               <Typography style={{
                                 marginTop: '2%',
                                 fontSize: '0.8rem',
-                                color: booking.status === 'Confirmée' ? '#419F41' : booking.status === 'En attente de confirmation' || booking.status === 'Demande d\'infos' ? '#F87280' : booking.status === 'Pré-approuvée' ? '#F89B72' : '#5D5D5D',
+                                color: booking.status === BOOK_STATUS.CONFIRMED ? '#419F41' : booking.status === BOOK_STATUS.TO_CONFIRM || booking.status === BOOK_STATUS.INFO ? '#F87280' : booking.status === BOOK_STATUS.PREAPPROVED ? '#F89B72' : '#5D5D5D',
                               }}>
                                 {booking.status} -{' '}
                                 {booking.alfred.firstname}
@@ -343,7 +343,7 @@ class Messages extends React.Component {
                                     style={{
                                       marginTop: '2%',
                                       fontSize: '0.8rem',
-                                      color: booking.status === 'Confirmée' ? '#419F41' : booking.status === 'En attente de confirmation' || booking.status === 'Demande d\'infos' ? '#F87280' : booking.status === 'Pré-approuvée' ? '#F89B72' : '#5D5D5D',
+                                      color: booking.status === BOOK_STATUS.CONFIRMED ? '#419F41' : booking.status === BOOK_STATUS.TO_CONFIRM || booking.status === BOOK_STATUS.INFO ? '#F87280' : booking.status === BOOK_STATUS.PREAPPROVED ? '#F89B72' : '#5D5D5D',
                                     }}
                                   >
                                     {booking.status} -{' '}
@@ -389,7 +389,7 @@ class Messages extends React.Component {
                                 <Typography style={{
                                   marginTop: '2%',
                                   fontSize: '0.8rem',
-                                  color: booking.status === 'Confirmée' ? '#419F41' : booking.status === 'En attente de confirmation' || booking.status === 'Demande d\'infos' ? '#F87280' : booking.status === 'Pré-approuvée' ? '#F89B72' : '#5D5D5D',
+                                  color: booking.status === BOOK_STATUS.CONFIRMED ? '#419F41' : booking.status === BOOK_STATUS.TO_CONFIRM || booking.status === BOOK_STATUS.INFO ? '#F87280' : booking.status === BOOK_STATUS.PREAPPROVED ? '#F89B72' : '#5D5D5D',
                                 }}>
                                   {booking.status} -{' '}
                                   {booking.user.firstname}

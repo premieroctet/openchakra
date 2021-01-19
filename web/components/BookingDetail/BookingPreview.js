@@ -485,7 +485,7 @@ class BookingPreview extends React.Component {
                                 </Grid>
                                 <Grid>
                                   <Button variant={'outlined'} color={'primary'}
-                                          onClick={() => this.changeStatus('Refusée')}>Refuser</Button>
+                                          onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)}>Refuser</Button>
                                 </Grid>
                               </Grid>
                             )
@@ -496,11 +496,11 @@ class BookingPreview extends React.Component {
                           bookingObj.status === BOOK_STATUS.INFO && currentUser._id === bookingObj.alfred._id ? (
                             <Grid container className={classes.groupButtonsContainer} spacing={1}>
                               <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
-                                <Button onClick={()=>this.props.onConfirmPreaProuved(booking_id)} color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Pré-approuver</Button>
+                                <Button onClick={()=>this.props.onConfirmPreapproved(booking_id)} color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Pré-approuver</Button>
                               </Grid>
                               <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
                                 <Button
-                                  onClick={() => this.changeStatus('Refusée')}
+                                  onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)}
                                   variant={'outlined'}
                                   style={{textTransform: 'initial'}}
                                   color={'primary'}>
@@ -626,7 +626,7 @@ class BookingPreview extends React.Component {
                   </Grid>
                   {bookingObj === null ||
                   currentUser === null ? null : bookingObj.status ===
-                  'Terminée' ? (
+                  BOOK_STATUS.FINISHED ? (
                     <Grid
                       container
                       style={{

@@ -15,7 +15,7 @@ import Button from '@material-ui/core/Button';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-
+const {BOOK_STATUS}=require('../../utils/consts')
 
 moment.locale('fr');
 
@@ -56,10 +56,10 @@ class FinishedReservations extends React.Component {
 
           this.state.alfredReservations.forEach(booking => {
             if (
-              booking.status === 'Refusée' ||
-              booking.status === 'Annulée' ||
-              booking.status === 'Terminée' ||
-              booking.status === 'Expirée'
+              booking.status === BOOK_STATUS.REFUSED ||
+              booking.status === BOOK_STATUS.CANCELED ||
+              booking.status === BOOK_STATUS.FINISHED ||
+              booking.status === BOOK_STATUS.EXPIRED
             ) {
               this.setState({
                 finishedReservations: this.state.finishedReservations + 1,
@@ -69,10 +69,10 @@ class FinishedReservations extends React.Component {
 
           this.state.userReservations.forEach(booking => {
             if (
-              booking.status === 'Refusée' ||
-              booking.status === 'Annulée' ||
-              booking.status === 'Terminée' ||
-              booking.status === 'Expirée'
+              booking.status === BOOK_STATUS.REFUSED ||
+              booking.status === BOOK_STATUS.CANCELED ||
+              booking.status === BOOK_STATUS.FINISHED ||
+              booking.status === BOOK_STATUS.EXPIRED
             ) {
               this.setState({
                 finishedReservations: this.state.finishedReservations + 1,
@@ -276,10 +276,10 @@ class FinishedReservations extends React.Component {
                     {this.state.userReservations.length ? (
                       this.state.userReservations.map((booking, i) => {
                         if (
-                          booking.status === 'Refusée' ||
-                          booking.status === 'Annulée' ||
-                          booking.status === 'Terminée' ||
-                          booking.status === 'Expirée'
+                          booking.status === BOOK_STATUS.REFUSED ||
+                          booking.status === BOOK_STATUS.CANCELED ||
+                          booking.status === BOOK_STATUS.FINISHED ||
+                          booking.status === BOOK_STATUS.EXPIRED
                         ) {
                           return (
                             <React.Fragment>
@@ -453,10 +453,10 @@ class FinishedReservations extends React.Component {
                 ) : this.state.alfredReservations.length ? (
                   this.state.alfredReservations.map((booking, i) => {
                     if (
-                      booking.status === 'Refusée' ||
-                      booking.status === 'Annulée' ||
-                      booking.status === 'Terminée' ||
-                      booking.status === 'Expirée'
+                      booking.status === BOOK_STATUS.REFUSED ||
+                      booking.status === BOOK_STATUS.CANCELED ||
+                      booking.status === BOOK_STATUS.FINISHED ||
+                      booking.status === BOOK_STATUS.EXPIRED
                     ) {
                       return (
                         <React.Fragment>
