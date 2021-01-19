@@ -1,7 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../utils/prisma'
 
-export default async function(req: NextApiRequest, res: NextApiResponse) {
+export default async function UpdateProject(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   let ts = new Date()
 
   try {

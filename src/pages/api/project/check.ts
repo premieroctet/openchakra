@@ -1,7 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../utils/prisma'
 
-export default async function(req: NextApiRequest, res: NextApiResponse) {
+export default async function CheckProject(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   try {
     const actualUser = await prisma.session.findMany({
       where: {

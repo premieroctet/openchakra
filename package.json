@@ -23,7 +23,7 @@
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
     "lz-string": "^1.4.4",
-    "next": "9.5.5 ",
+    "next": "10.0.5 ",
     "next-auth": "^3.1.0",
     "next-redux-wrapper": "^6.0.2",
     "prism-react-renderer": "^1.0.2",
