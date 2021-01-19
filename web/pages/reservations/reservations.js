@@ -304,7 +304,7 @@ class AllReservations extends React.Component {
           </LayoutReservations>
         </Hidden>
         <Hidden only={['lg', 'xl',  'sm', 'md']}>
-          <LayoutMobileReservations reservationType={reservationType} currentIndex={2} onReservationTypeChanged={this.onReservationTypeChanged}>
+          <LayoutMobileReservations reservationType={reservationType} currentIndex={2} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
             {this.content(classes)}
           </LayoutMobileReservations>
         </Hidden>

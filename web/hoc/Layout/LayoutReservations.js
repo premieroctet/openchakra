@@ -24,7 +24,7 @@ class LayoutReservations extends React.Component{
   render() {
     const {user} = this.state;
     const {classes, children, reservationType, userInfo} = this.props;
-    
+
     return(
       <Layout user={user}>
         <Grid style={{display:'flex', justifyContent:'center'}}>
@@ -35,7 +35,7 @@ class LayoutReservations extends React.Component{
             <Grid>
               <Tabs
                 value={userInfo && !userInfo.is_alfred ? 0 : reservationType}
-                onChange={this.props.onReservationTypeChanged}
+                onChange={userInfo && !userInfo.is_alfred ? null : this.props.onReservationTypeChanged}
                 aria-label="scrollable force tabs"
                 scrollButtons="on"
                 classes={{indicator: classes.scrollMenuIndicator}}
