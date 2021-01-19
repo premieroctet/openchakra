@@ -9,8 +9,7 @@ import prisma from '../../utils/prisma'
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   let projectId = (params!.slug as string).split('-')[0]
   let projectName = (params!.slug as string).split('-')[1]
-  const project = await prisma.project.findOne({
-    //include: { user: true },
+  const project = await prisma.project.findUnique({
     where: {
       id: Number(projectId),
     },

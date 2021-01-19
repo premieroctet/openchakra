@@ -15,7 +15,7 @@ import prisma from '../../../utils/prisma'
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   let projectId = (params!.slug as string).split('-')[0]
 
-  const project = await prisma.project.findOne({
+  const project = await prisma.project.findUnique({
     include: { user: true },
     where: {
       id: Number(projectId),
