@@ -1,7 +1,5 @@
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React, {Fragment} from 'react';
-import Link from 'next/link';
-import Layout from '../../hoc/Layout/Layout';
 import axios from 'axios';
 import moment from 'moment';
 import Button from '@material-ui/core/Button';
@@ -162,20 +160,17 @@ class BookingPreApprouve extends React.Component {
                       display: 'flex',
                       alignItems: 'center',
                       marginTop: '5%',
-                      justifyContent: 'space-between'
+                      justifyContent: 'space-between',
                     }}
                   >
-                    <Grid item  xs={2} sm={3} md={3} xl={3} lg={3}>
+                    <Grid item  xs={12} sm={3} md={3} xl={3} lg={3}>
                       <UserAvatar
                         classes={'avatarLetter'}
                         user={bookingObj.user}
                         className={classes.avatarLetter}
                       />
                     </Grid>
-                    <Grid item xs={9} sm={9} md={9} xl={9} lg={9}>
-                      <Grid>
-                        <Typography>{bookingObj.user.firstname}</Typography>
-                      </Grid>
+                    <Grid item xs={12} sm={9} md={9} xl={9} lg={9}>
                       <Grid item style={{marginTop: '2%'}}>
                         <Typography className={classes.fontSizeTitleSectionAbout}>
                           {frenchFormat(`Pré-approuver la réservation de ${bookingObj.user.firstname} ${bookingObj.user.name} `)}
@@ -242,9 +237,9 @@ class BookingPreApprouve extends React.Component {
                             </Grid>
                           </Grid>
                         </Grid>
-                        <Grid item style={{display: 'flex', marginTop: 30, marginBottom: 30, alignItems: 'center'}}>
+                        <Grid item className={classes.containerDate}>
                           <Grid item style={{display: 'inline-block', width: '100%'}}>
-                            <Typography>Date de début:</Typography>
+                            <Typography><strong>Date de début:</strong></Typography>
                             <Typography>{bookingObj.date_prestation} - {moment(bookingObj.time_prestation).format('HH:mm')}</Typography>
                           </Grid>
                           {typeof bookingObj.end_date !== 'undefined' && typeof bookingObj.end_time !== 'undefined' ?
@@ -262,15 +257,9 @@ class BookingPreApprouve extends React.Component {
                           {typeof this.state.bookingObj.end_date === 'undefined' && typeof this.state.bookingObj.end_time === 'undefined' ?
                             typeof this.state.end === null ? null :
 
-                              <Grid item style={{
-                                display: 'flex',
-                                width: '100%',
-                                alignItems: 'center',
-                                flexDirection: 'column',
-                                marginLeft: 30,
-                              }}>
+                              <Grid item className={classes.endDateContainer}>
                                 <Grid style={{width: '100%'}}>
-                                  <Typography>Date de fin:</Typography>
+                                  <Typography><strong>Date de fin:</strong></Typography>
                                 </Grid>
                                 <Grid style={{display: 'flex'}}>
                                   <Grid style={{marginRight: 10}}>
@@ -338,8 +327,7 @@ class BookingPreApprouve extends React.Component {
                       </Grid>
                     </Grid>
                   </Grid>
-
-                  <Grid style={{float: 'right'}} item xs={12}>
+                  <Grid item xs={12}>
                     <Button
                       color={'primary'}
                       variant={'contained'}
@@ -349,12 +337,7 @@ class BookingPreApprouve extends React.Component {
                       }}
                       style={{
                         color: 'white',
-                        fontSize: '16px',
                         width: '100%',
-                        paddingLeft: '20px',
-                        paddingRight: '20px',
-                        marginBottom: 50,
-                        marginRight: 20,
                         textTransform: 'initial'
                       }}
                     >

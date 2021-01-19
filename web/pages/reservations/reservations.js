@@ -161,13 +161,15 @@ class AllReservations extends React.Component {
     )
   };
 
-  bookingCancelModal = () => {
+  bookingCancelModal = (classes) => {
     const {bookingCancel}=this.state;
 
     return (
       <Dialog style={{width: '100%'}}
         open={Boolean(bookingCancel)}
         onClose={() => this.setState({bookingCancel: null})}
+        classes={{paper: classes.dialogPreviewPaper}}
+
       >
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({bookingCancel: null})}/>
         <DialogContent>
@@ -177,13 +179,15 @@ class AllReservations extends React.Component {
     )
   };
 
-  bookingConfirmModal = () => {
+  bookingConfirmModal = (classes) => {
     const {bookingConfirm}=this.state;
 
     return (
       <Dialog style={{width: '100%'}}
         open={Boolean(bookingConfirm)}
         onClose={() => this.setState({bookingConfirm: null})}
+        classes={{paper: classes.dialogPreviewPaper}}
+
       >
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({bookingConfirm: null})}/>
         <DialogContent>
@@ -193,13 +197,14 @@ class AllReservations extends React.Component {
     )
   };
 
-  bookingPreApprouved = () =>{
+  bookingPreApprouved = (classes) =>{
     const {bookingPreApprouved}=this.state;
 
     return (
       <Dialog style={{width: '100%'}}
               open={Boolean(bookingPreApprouved)}
               onClose={() => this.setState({bookingPreApprouved: null})}
+              classes={{paper: classes.dialogPreviewPaper}}
       >
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({bookingPreApprouved: null})}/>
         <DialogContent>
@@ -309,9 +314,9 @@ class AllReservations extends React.Component {
           </LayoutMobileReservations>
         </Hidden>
         { this.bookingPreviewModal(classes)}
-        { this.bookingCancelModal()}
-        { this.bookingConfirmModal()}
-        { this.bookingPreApprouved()}
+        { this.bookingCancelModal(classes)}
+        { this.bookingConfirmModal(classes)}
+        { this.bookingPreApprouved(classes)}
       </React.Fragment>
 
     );
