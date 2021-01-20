@@ -9,11 +9,17 @@ import prisma from '../../utils/prisma'
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   let projectId = (params!.slug as string).split('-')[0]
   let projectName = (params!.slug as string).split('-')[1]
-  const project = await prisma.project.findUnique({
-    where: {
-      id: Number(projectId),
-    },
-  })
+  let project
+  try {
+    project = await prisma.project.findUnique({
+      where: {
+        id: Number(projectId),
+      },
+    })
+  } finally {
+    await prisma.$disconnect
+  }
+
   let projects = JSON.parse(JSON.stringify(project))
   return {
     props: {
@@ -28,7 +34,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const projects = await prisma.project.findMany({ take: 3 })
+  let projects
+  try {
+    projects = await prisma.project.findMany({ take: 3 })
+  } finally {
+    await prisma.$disconnect
+  }
+
   const paths = await projects.map(project => ({
     params: {
       slug: `${project.id.toString()}-${project.projectName.toString()}`,
