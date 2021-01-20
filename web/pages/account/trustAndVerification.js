@@ -34,6 +34,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 
+var util = require('util');
 const {CESU} = require('../../utils/consts');
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 const I18N = require('../../utils/i18n');
@@ -62,7 +63,6 @@ class trustAndVerification extends React.Component {
       extVerso: '',
       extRegistrationProof: '',
       professional: false,
-      particular: false,
       alfred: false,
       company: {},
       siret: '',
@@ -105,30 +105,28 @@ class trustAndVerification extends React.Component {
       .get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
-        this.setState({user: user});
+        var st={'user': user}
         if (user.id_card) {
-          this.setState({card: user.id_card});
+          st['card']= user.id_card
           if (user.id_card.recto) {
-            const ext = user.id_card.recto.split('.').pop();
-            this.setState({ext: ext});
+            st['ext']=user.id_card.recto.split('.').pop();
           }
           if (user.id_card.verso) {
-            const extVerso = user.id_card.verso.split('.').pop();
-            this.setState({extVerso: extVerso});
+            st['extVerso']=user.id_card.verso.split('.').pop();
           }
           if (user.id_card.recto) {
             this.setState({type: user.id_card.verso ? 'identite' : 'passeport'});
           }
         }
         if (user.registration_proof) {
-          this.setState({registration_proof: user.registration_proof});
-          const ext = user.registration_proof.split('.').pop();
-          this.setState({extRegistrationProof: ext});
+          st['registration_proof']=user.registration_proof
+          st['extRegistrationProof']=user.registration_proof.split('.').pop();
         }
-        this.setState({id_card_status: user.id_card_status_text});
+        st['id_card_status']=user.id_card_status_text
         if (user.id_card_error) {
-          this.setState({id_card_error: user.id_card_error_text});
+          st['id_card_error']=user.id_card_error_text
         }
+        this.setState(st);
         if (user.is_alfred) {
           this.setState({alfred: true});
           axios.get('/myAlfred/api/shop/currentAlfred')
@@ -138,7 +136,6 @@ class trustAndVerification extends React.Component {
                 cis: result.cis,
                 cesu: result.cesu,
                 professional: result.is_professional,
-                particular: result.is_particular,
                 company: result.company,
                 social_security: result.social_security,
               });
@@ -191,13 +188,10 @@ class trustAndVerification extends React.Component {
   };
 
   onChangePartPro = event => {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
+    const {name, checked} = event.target
 
-    this.setState({
-      [name]: value,
-    });
+    const pro=(name=='professional' && checked) || (name=='particular' && !checked)
+    this.setState({ professional: pro})
   };
 
   onSiretChange = data => {
@@ -218,19 +212,6 @@ class trustAndVerification extends React.Component {
     this.setState({id_registrationproof: e.target.files[0]});
     this.setState({registration_proof_file: URL.createObjectURL(e.target.files[0])});
   };
-
-  handleChecked() {
-    this.setState({particular: false});
-  }
-
-  handleChecked2() {
-    this.setState({professional: false});
-    this.setState({name: ''});
-    this.setState({siret: ''});
-    this.setState({naf_ape: ''});
-    this.setState({creation_date: ''});
-    this.setState({status: ''});
-  }
 
   handleSiret() {
     const code = this.state.siret;
@@ -266,7 +247,7 @@ class trustAndVerification extends React.Component {
     axios.post('/myAlfred/api/users/profile/idCard', formData, config)
       .then((response) => {
         toast.info('Pièce d\'identité ajoutée');
-        window.reload()
+        window.location.reload()
       })
       .catch(err => {
         console.log('Ajout nok')
@@ -334,13 +315,15 @@ class trustAndVerification extends React.Component {
       })
       .then(() => {
         const formData = new FormData();
-        formData.append('registrationProof', this.state.id_registrationproof);
-        const config = {headers: {'content-type': 'multipart/form-data'}};
-        axios.post('/myAlfred/api/users/profile/registrationProof/add', formData, config)
-          .then((response) => {
-            toast.info('Document d\'immatriculation ajouté');
-          });
-
+        if (this.state.id_registrationproof) {
+          formData.append('registrationProof', this.state.id_registrationproof);
+          const config = {headers: {'content-type': 'multipart/form-data'}};
+          axios.post('/myAlfred/api/users/profile/registrationProof/add', formData, config)
+            .then(response => {
+              toast.info('Document d\'immatriculation ajouté');
+            })
+            .catch (err=> console.error(err))
+        }
       })
       .catch(err => console.error(err));
   }
@@ -402,11 +385,9 @@ class trustAndVerification extends React.Component {
   }
 
   statusSaveDisabled = () => {
-    const particular = this.state.particular;
     const cesu = this.state.cesu;
     const ss_id = this.state.social_security;
-    console.log(`${particular},${JSON.stringify(cesu)},${ss_id}`);
-    if (particular) {
+    if (!this.state.professional) {
       if (cesu === CESU[0] || cesu === CESU[1]) {
         return checkSocialSecurity(ss_id) != null;
       }
@@ -650,12 +631,11 @@ class trustAndVerification extends React.Component {
                   <FormControlLabel
                     control={
                       <Radio
-                        checked={this.state.particular}
+                        checked={!this.state.professional}
                         onChange={(e) => {
                           this.onChangePartPro(e);
-                          this.handleChecked2();
                         }}
-                        value={this.state.particular}
+                        value={!this.state.professional}
                         name="particular"
                         color="primary"
                       />
@@ -663,7 +643,7 @@ class trustAndVerification extends React.Component {
                     label="Je suis un particulier"
                   />
                 </Grid>
-                {this.state.particular ?
+                {!this.state.professional ?
                   <Grid>
                     <RadioGroup name={'cesu'} value={this.state.cesu} onChange={this.onChange}>
                       <Grid style={{display: 'flex', alignItems:'center'}}>
@@ -721,7 +701,6 @@ class trustAndVerification extends React.Component {
                         checked={this.state.professional}
                         onChange={(e) => {
                           this.onChangePartPro(e);
-                          this.handleChecked();
                         }}
                         value={this.state.professional}
                         name="professional"

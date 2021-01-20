@@ -86,8 +86,10 @@ const bufferToString = buff => {
 const ILLEGAL_REGEX = /(O|0|\+33)[O\d \.,-]+\d|\S+@\S+|@\S+/
 
 const hideIllegal = text => {
-  while (text.match(ILLEGAL_REGEX)) {
-    text = text.replace(ILLEGAL_REGEX, '[Masqué]')
+  if (text) {
+    while (text.match(ILLEGAL_REGEX)) {
+      text = text.replace(ILLEGAL_REGEX, '[Masqué]')
+    }
   }
   return text
 }

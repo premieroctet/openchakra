@@ -242,6 +242,7 @@ class MobileNavbar extends React.Component{
             <Grid>
               <IconButton
                 aria-label="delete"
+                classes={{root: classes.rootIconButton}}
                 onClick={() => this.setState({
                   modalMobileSearchBarInput: false,
                   mobileStepSearch: 0,
@@ -253,18 +254,18 @@ class MobileNavbar extends React.Component{
               </IconButton>
             </Grid>
             <Grid>
-              <h3>{this.state.mobileStepSearch === 0 ? 'Votre Recherche' : this.state.mobileStepSearch === 1 ? 'Où' : 'Dates'}</h3>
+              <h3 style={{margin:0}}>{this.state.mobileStepSearch === 0 ? 'Quel service recherchez-vous ? ' : this.state.mobileStepSearch === 1 ? 'Où' : 'Dates'}</h3>
             </Grid>
           </Grid>
           <Grid item container spacing={3} style={{margin: 0}}>
-            <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+            <Grid item xs={12} style={{display: 'flex', justifyContent: 'center', paddingBottom: 0, paddingTop: 0}}>
               {
                 this.state.mobileStepSearch === 0 ?
                   <TextField
                     value={this.state.keyword}
                     onChange={this.onChange}
                     name={'keyword'}
-                    label={'Quel service recherchez-vous ? '}
+                    label={'Ménage, jardinage, ...'}
                     onKeyPress={(e) => {
                       e.key === 'Enter' && e.preventDefault();
                     }}
@@ -277,7 +278,7 @@ class MobileNavbar extends React.Component{
                       <FormControl variant="outlined">
                         <Select
                           id="outlined-select-currency"
-                          value={'main'}
+                          value={this.state.selectedAddress || 'main'}
                           name={'selectedAddress'}
                           onChange={(e) => {
                             this.onChange(e);

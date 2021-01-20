@@ -44,7 +44,7 @@ class Header extends React.Component {
   }
 
   componentDidMount() {
-    if(Router.pathname === '/faq'){
+    if (Router.pathname === '/faq') {
       this.setState({aboutSearch: true})
     }
   }
@@ -53,7 +53,7 @@ class Header extends React.Component {
     this.setState({search: ev.target.value}, () => this.props.search())
   };
 
-  callClearFunction = () =>{
+  callClearFunction = () => {
     this.setState({search: ''}, () => this.props.clearFuntion())
   };
 
@@ -75,12 +75,20 @@ class Header extends React.Component {
         title = 'Notre Équipe';
         content = 'Qui nous fait vivre';
         aboutMenu = true;
-      } else if (window.location.pathname === '/footer/addService' || '/faq') {
+      } else if (window.location.pathname === '/footer/addService') {
+        title = 'Réserver un service';
+        content = 'Les bases';
+
+      } else if (window.location.pathname === '/faq') {
         title = 'FAQ';
-        content = 'Pour trouver vos réponses';
+        content = 'Pour trouver vos réponses'
       } else if (window.location.pathname === '/footer/becomeAlfred') {
         title = 'Devenir un Alfred';
         content = 'Les bases';
+      }
+      else if (window.location.pathname === '/contact') {
+        title = 'Contact';
+        content = 'Posez-nous toutes vos questions';
       }
     }
 
@@ -115,13 +123,14 @@ class Header extends React.Component {
                     <InputBase
                       className={classes.input}
                       placeholder="Chercher dans la FAQ"
-                      inputProps={{ 'aria-label': 'Chercher dans la FAQ' }}
+                      inputProps={{'aria-label': 'Chercher dans la FAQ'}}
                       onChange={this.onSearchChange}
                       value={search}
                     />
                     <Grid>
-                      <IconButton classes={{root: classes.iconButton}} aria-label="search" onClick={this.callClearFunction}>
-                        <CloseIcon />
+                      <IconButton classes={{root: classes.iconButton}} aria-label="search"
+                                  onClick={this.callClearFunction}>
+                        <CloseIcon/>
                       </IconButton>
                     </Grid>
                   </Paper>

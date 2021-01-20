@@ -6,10 +6,10 @@ import {withStyles} from '@material-ui/core/styles';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import InstagramIcon from '@material-ui/icons/Instagram';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
-import TwitterIcon from '@material-ui/icons/Twitter';
 import Divider from "@material-ui/core/Divider";
 import styles from '../../../static/css/components/Footer/Footer'
 import Hidden from "@material-ui/core/Hidden";
+import IconButton from "@material-ui/core/IconButton";
 
 class Footer extends React.Component {
   constructor(props) {
@@ -54,16 +54,6 @@ class Footer extends React.Component {
                     <Typography className={classes.footerLink}>Notre communauté</Typography>
                   </Grid>
                 </Link>
-                {/*<Link href={'/'}>*/}
-                {/*    <Grid style={{marginBottom: '2vh'}}>*/}
-                {/*        <Typography className={classes.footerLink}>Le blog</Typography>*/}
-                {/*    </Grid>*/}
-                {/*</Link>*/}
-                {/*<Link href={'/'}>*/}
-                {/*    <Grid>*/}
-                {/*        <Typography className={classes.footerLink}>Inviter un ami</Typography>*/}
-                {/*    </Grid>*/}
-                {/*</Link>*/}
               </Grid>
             </Hidden>
             <Hidden only={['xs']}>
@@ -93,11 +83,13 @@ class Footer extends React.Component {
                   <Typography className={classes.footerLink}>Réserver un service</Typography>
                 </Grid>
               </Link>
-              <Link onClick={() => Tawk_API.maximize()}>
-                <Grid style={{marginBottom: '2vh'}}>
-                  <Typography className={classes.footerLink}>Parler à un humain</Typography>
-                </Grid>
-              </Link>
+              <Hidden only={['xs']}>
+                <Link onClick={() => Tawk_API.maximize()}>
+                  <Grid style={{marginBottom: '2vh'}}>
+                    <Typography className={classes.footerLink}>Parler à un humain</Typography>
+                  </Grid>
+                </Link>
+              </Hidden>
               <Link href={'/faq'}>
                 <Grid>
                   <Typography className={classes.footerLink}>FAQ</Typography>
@@ -116,16 +108,25 @@ class Footer extends React.Component {
             </Grid>
             <Grid className={classes.footerSocialContainer}>
               <Grid>
-                <FacebookIcon/>
+                <a href={'https://www.facebook.com/myalfred1/'} target={'_blank'}>
+                  <IconButton aria-label="FacebookIcon" >
+                    <FacebookIcon/>
+                  </IconButton>
+                </a>
               </Grid>
               <Grid>
-                <InstagramIcon/>
+                <a href={'https://www.instagram.com/my_alfred_/'} target={'_blank'}>
+                  <IconButton aria-label="InstagramIcon">
+                    <InstagramIcon/>
+                  </IconButton>
+                </a>
               </Grid>
               <Grid>
-                <LinkedInIcon/>
-              </Grid>
-              <Grid>
-                <TwitterIcon/>
+                <a href={'https://www.linkedin.com/company/my-alfred/'} target={'_blank'}>
+                  <IconButton aria-label="LinkedInIcon">
+                    <LinkedInIcon/>
+                  </IconButton>
+                </a>
               </Grid>
             </Grid>
           </Grid>
@@ -135,8 +136,7 @@ class Footer extends React.Component {
           <Grid className={classes.footerBrandContainer}>
             <Grid className={classes.footerBrandStyle}>
               <Grid className={classes.footerLawContainer}>
-                <Typography className={classes.footerText}>© 2020 MY ALFRED Corporation. Tous droits
-                  réservés</Typography>
+                <Typography>© 2020 MY ALFRED Corporation. Tous droits  réservés</Typography>
               </Grid>
               <Grid className={classes.footerRgpdButtons}>
                 {true ? null :
@@ -149,9 +149,19 @@ class Footer extends React.Component {
                     <Typography className={classes.footerLink}>Informations légales</Typography>
                   </Link>
                 </Grid>
-                <Grid>
-                  <Typography className={classes.footerLink}>Confidentialié</Typography>
+                <Grid  className={classes.footerLinkInfoContainer}>
+                  <Link href={'/cgu'}>
+                    <Grid>
+                      <Typography className={classes.footerLink}>Conditions générales d'utilisation</Typography>
+                    </Grid>
+                  </Link>
                 </Grid>
+                {
+                  true ? null :
+                    <Grid>
+                      <Typography className={classes.footerLink}>Confidentialié</Typography>
+                    </Grid>
+                }
               </Grid>
             </Grid>
           </Grid>

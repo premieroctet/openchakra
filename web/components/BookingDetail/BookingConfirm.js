@@ -119,11 +119,11 @@ class BookingConfirm extends React.Component {
     const endDate = moment(this.state.end).format('YYYY-MM-DD');
     const endHour = moment(this.state.hourToSend).format('HH:mm');
 
-    const dateObj = {end_date: endDate, end_time: endHour, status: 'Confirmée'};
+    const dateObj = {end_date: endDate, end_time: endHour, status: BOOK_STATUS.CONFIRMED};
 
 
     if (typeof this.state.bookingObj.end_date !== 'undefined' && typeof this.state.bookingObj.end_time !== 'undefined') {
-      axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, {status: 'Confirmée'})
+      axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, {status: BOOK_STATUS.CONFIRMED})
 
         .then(res => {
           this.setState({bookingObj: res.data});
@@ -270,7 +270,13 @@ class BookingConfirm extends React.Component {
                                   <p>Adresse de la prestation:</p>{' '}
                                 </Grid>
                                 <Grid>
-                                  <p>{bookingObj.address.address}, {bookingObj.address.city} {bookingObj.address.zip_code}</p>
+                                  <p>
+                                    { bookingObj.address ?
+                                      `${bookingObj.address.address}, ${bookingObj.address.city} ${bookingObj.address.zip_code}`
+                                      :
+                                      `en visio`
+                                    }
+                                  </p>
                                 </Grid>
                               </Grid>
                             </Grid>

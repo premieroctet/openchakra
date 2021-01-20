@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
-
+const {BOOK_STATUS}=require('../../utils/consts')
 const Schema = mongoose.Schema;
 
 const BookingSchema = new Schema({
@@ -100,7 +100,7 @@ const BookingSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['Confirmée', 'Refusée', 'Annulée', 'Terminée', 'Expirée', 'En attente de confirmation', 'En attente de paiement','Demande d\'infos', 'Pré-approuvée'],
+    enum: Object.values(BOOK_STATUS),
   },
   serviceUserId: {
     type: String,

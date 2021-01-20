@@ -24,7 +24,7 @@ class LayoutMobileMessages extends React.Component{
   };
 
   render() {
-    const {classes, children, tabIndex, currentIndex}= this.props;
+    const {classes, children, tabIndex, currentIndex, userInfo}= this.props;
 
     return(
       <Grid>
@@ -41,12 +41,17 @@ class LayoutMobileMessages extends React.Component{
           </Grid>
           <Grid>
             <Tabs
-              value={tabIndex}
-              onChange={this.handleChange}
+              value={userInfo && !userInfo.is_alfred ? 0 : tabIndex}
+              onChange={userInfo && !userInfo.is_alfred ? null : this.handleChange}
               aria-label="scrollable force tabs"
               classes={{indicator: classes.scrollIndicator}}
             >
-              <Tab label={'Mes messages Alfred'} className={classes.scrollMenuTab} />
+              {
+                userInfo && userInfo.is_alfred ?
+                  <Tab label={'Mes messages Alfred'} className={classes.scrollMenuTab} />
+                  :null
+
+              }
               <Tab label={"Mes messages d'utilisateur"} className={classes.scrollMenuTab} />
             </Tabs>
           </Grid>

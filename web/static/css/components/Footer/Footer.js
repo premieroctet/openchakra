@@ -66,8 +66,8 @@ export default theme => ({
   footerRgpdButtons:{
     display:'flex',
     flexDirection: 'row',
-    width: '30%',
     justifyContent : 'space-between',
+    width: '30%',
     [theme.breakpoints.down('xs')]:{
       width: '100%',
       flexDirection: 'column',
@@ -90,7 +90,6 @@ export default theme => ({
   },
   footerLinkInfoContainer:{
     [theme.breakpoints.down('xs')]:{
-      marginTop: '2vh',
       marginBottom: '2vh'
     }
   }
