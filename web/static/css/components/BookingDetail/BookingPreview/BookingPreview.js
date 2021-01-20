@@ -122,6 +122,7 @@ export default theme =>  ({
   mainContainerAbout: {
     alignItems: 'center',
     [theme.breakpoints.down('xs')]: {
+      marginTop: '3vh'
     },
   },
   bookingDetailContainer:{
@@ -237,5 +238,16 @@ export default theme =>  ({
     [theme.breakpoints.down('xs')]:{
       marginTop: '5vh'
     }
+  },
+  containerPhone:{
+    marginTop: '3vh',
+    textAlign:'center',
+    width: '100%'
+  },
+  phoneContainerWeb:{
+    display: 'flex',
+    flexDirection: 'row',
+    JustifyContent: 'space-between',
+    width: '100%'
   }
 })

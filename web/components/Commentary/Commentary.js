@@ -56,8 +56,8 @@ class Commentary extends React.Component {
     const globalNote = (review.note_alfred ? review.note_alfred : review.note_client).global
     const name = (review.alfred.id==user ? review.user : review.alfred).firstname
       return (
-        <Grid container style={{width: '100%', display: 'flex', flexDirection: 'row'}}>
-          <Grid item xl={3} style={{display: 'flex', flexDirection: 'column'}}>
+        <Grid container style={{width: '100%', display: 'flex', flexDirection: 'row', marginBottom: 50}} spacing={3}>
+          <Grid item xl={3} lg={3} md={3} sm={3} style={{display: 'flex', flexDirection: 'column'}}>
             <Grid>
               <Typography><strong>{name}</strong></Typography>
             </Grid>
@@ -68,7 +68,7 @@ class Commentary extends React.Component {
               <Typography>{review.serviceUser.service.label}</Typography>
             </Grid>
           </Grid>
-          <Grid xl={4} item>
+          <Grid xl={4} lg={9} md={9} sm={9} item>
             <Grid>
               <Rating name="half-rating-read" value={globalNote} precision={0.5} readOnly />
             </Grid>
