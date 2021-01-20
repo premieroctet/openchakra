@@ -49,6 +49,7 @@ const app = express();
 const server = require('http').Server(app);
 const SocketIo = require('socket.io');
 
+require('console-stamp')(console, '[HH:MM:ss.l]');
 // Avoid deprecation warning
 mongoose.set('useUnifiedTopology', true)
 mongoose.set('useFindAndModify', false)

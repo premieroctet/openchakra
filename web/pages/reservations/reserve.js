@@ -15,7 +15,7 @@ import styles from '../reserve/reserveStyle';
 import About from '../../components/About/About';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
-
+const {BOOK_STATUS}=require('../../utils/consts')
 
 const _ = require('lodash');
 registerLocale('fr', fr);
@@ -97,7 +97,7 @@ class Reserve extends React.Component {
   changeStatus() {
     const endDate = moment(this.state.date).format('DD/MM/YYYY');
     const endHour = moment(this.state.hour).format('HH:mm');
-    const dateObj = {end_date: endDate, end_time: endHour, status: 'Pré-approuvée'};
+    const dateObj = {end_date: endDate, end_time: endHour, status: BOOK_STATUS.PREAPPROVED};
 
 
     axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, dateObj)

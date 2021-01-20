@@ -15,7 +15,7 @@ import Button from '@material-ui/core/Button';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-
+const {BOOK_STATUS}=require('../../utils/consts')
 
 moment.locale('fr');
 
@@ -56,10 +56,10 @@ class ComingReservations extends React.Component {
 
                     this.state.alfredReservations.forEach(booking => {
                         if (
-                            booking.status === 'Demande d\'infos' ||
-                            booking.status === 'En attente de confirmation' ||
-                            booking.status === 'Confirmée' ||
-                            booking.status === 'Pré-approuvée'
+                            booking.status === BOOK_STATUS.INFO ||
+                            booking.status === BOOK_STATUS.TO_CONFIRM ||
+                            booking.status === BOOK_STATUS.CONFIRMED ||
+                            booking.status === BOOK_STATUS.PREAPPROVED
                         ) {
                             this.setState({
                                 comingReservations: this.state.comingReservations + 1,
@@ -69,10 +69,10 @@ class ComingReservations extends React.Component {
 
                     this.state.userReservations.forEach(booking => {
                         if (
-                            booking.status === 'Demande d\'infos' ||
-                            booking.status === 'En attente de confirmation' ||
-                            booking.status === 'Confirmée' ||
-                            booking.status === 'Pré-approuvée'
+                          booking.status === BOOK_STATUS.INFO ||
+                          booking.status === BOOK_STATUS.TO_CONFIRM ||
+                          booking.status === BOOK_STATUS.CONFIRMED ||
+                          booking.status === BOOK_STATUS.PREAPPROVED
                         ) {
                             this.setState({
                                 comingReservations: this.state.comingReservations + 1,
@@ -278,10 +278,10 @@ class ComingReservations extends React.Component {
                                         {this.state.userReservations.length ? (
                                             this.state.userReservations.map((booking, i) => {
                                                 if (
-                                                    booking.status === 'Confirmée' ||
-                                                    booking.status === 'En attente de confirmation' ||
-                                                    booking.status === 'Demande d\'infos' ||
-                                                    booking.status === 'Pré-approuvée'
+                                                  booking.status === BOOK_STATUS.INFO ||
+                                                  booking.status === BOOK_STATUS.TO_CONFIRM ||
+                                                  booking.status === BOOK_STATUS.CONFIRMED ||
+                                                  booking.status === BOOK_STATUS.PREAPPROVED
                                                 ) {
                                                     return (
                                                         <React.Fragment>
@@ -299,13 +299,13 @@ class ComingReservations extends React.Component {
                                                                                 marginTop: '2%',
                                                                                 fontSize: '0.8rem',
                                                                                 color:
-                                                                                    booking.status === 'Confirmée'
+                                                                                    booking.status === BOOK_STATUS.CONFIRMED
                                                                                         ? '#419F41'
-                                                                                        : booking.status ===
-                                                                                        'En attente de confirmation' ||
-                                                                                        booking.status === 'Demande d\'infos'
+                                                                                        : booking.status === BOOK_STATUS.TO_CONFIRM
+                                                                                        ||
+                                                                                        booking.status === BOOK_STATUS.INFO
                                                                                         ? '#F87280'
-                                                                                        : booking.status === 'Pré-approuvée'
+                                                                                        : booking.status === BOOK_STATUS.PREAPPROVED
                                                                                             ? '#F89B72'
                                                                                             : '#5D5D5D',
                                                                             }}
@@ -390,13 +390,13 @@ class ComingReservations extends React.Component {
                                                                             marginTop: '2%',
                                                                             fontSize: '0.8rem',
                                                                             color:
-                                                                                booking.status === 'Confirmée'
+                                                                                booking.status === BOOK_STATUS.CONFIRMED
                                                                                     ? '#419F41'
-                                                                                    : booking.status ===
-                                                                                    'En attente de confirmation' ||
-                                                                                    booking.status === 'Demande d\'infos'
+                                                                                    : booking.status === BOOK_STATUS.TO_CONFIRM
+                                                                                     ||
+                                                                                    booking.status === BOOK_STATUS.INFO
                                                                                     ? '#F87280'
-                                                                                    : booking.status === 'Pré-approuvée'
+                                                                                    : booking.status === BOOK_STATUS.PREAPPROVED
                                                                                         ? '#F89B72'
                                                                                         : '#5D5D5D',
                                                                         }}
@@ -483,10 +483,10 @@ class ComingReservations extends React.Component {
                                 ) : this.state.alfredReservations.length ? (
                                     this.state.alfredReservations.map((booking, i) => {
                                         if (
-                                            booking.status === 'Confirmée' ||
-                                            booking.status === 'En attente de confirmation' ||
-                                            booking.status === 'Demande d\'infos' ||
-                                            booking.status === 'Pré-approuvée'
+                                          booking.status === BOOK_STATUS.INFO ||
+                                          booking.status === BOOK_STATUS.TO_CONFIRM ||
+                                          booking.status === BOOK_STATUS.CONFIRMED ||
+                                          booking.status === BOOK_STATUS.PREAPPROVED
                                         ) {
                                             return (
                                                 <React.Fragment>
@@ -502,18 +502,18 @@ class ComingReservations extends React.Component {
                                                                     marginTop: '2%',
                                                                     fontSize: '0.8rem',
                                                                     color:
-                                                                        booking.status === 'Confirmée'
-                                                                            ? '#419F41'
-                                                                            : booking.status ===
-                                                                            'En attente de confirmation' ||
-                                                                            booking.status === 'Demande d\'infos'
-                                                                            ? '#F87280'
-                                                                            : booking.status === 'Pré-approuvée'
-                                                                                ? '#F89B72'
-                                                                                : '#5D5D5D',
+                                                                    booking.status === BOOK_STATUS.CONFIRMED
+                                                                        ? '#419F41'
+                                                                        : booking.status === BOOK_STATUS.TO_CONFIRM
+                                                                        ||
+                                                                        booking.status === BOOK_STATUS.INFO
+                                                                        ? '#F87280'
+                                                                        : booking.status === BOOK_STATUS.PREAPPROVED
+                                                                            ? '#F89B72'
+                                                                            : '#5D5D5D',
                                                                 }}
                                                             >
-                                                                {booking.status === 'Pré-approuvée'
+                                                                {booking.status === BOOK_STATUS.PREAPPROVED
                                                                     ? 'Invitation à réserver'
                                                                     : booking.status}{' '}
                                                                 - {booking.user.firstname}
@@ -580,18 +580,18 @@ class ComingReservations extends React.Component {
                                                                     fontSize: '0.8rem',
                                                                     marginTop: '2%',
                                                                     color:
-                                                                        booking.status === 'Confirmée'
-                                                                            ? '#419F41'
-                                                                            : booking.status ===
-                                                                            'En attente de confirmation' ||
-                                                                            booking.status === 'Demande d\'infos'
-                                                                            ? '#F87280'
-                                                                            : booking.status === 'Pré-approuvée'
-                                                                                ? '#F89B72'
-                                                                                : '#5D5D5D',
+                                                                    booking.status === BOOK_STATUS.CONFIRMED
+                                                                        ? '#419F41'
+                                                                        : booking.status === BOOK_STATUS.TO_CONFIRM
+                                                                        ||
+                                                                        booking.status === BOOK_STATUS.INFO
+                                                                        ? '#F87280'
+                                                                        : booking.status === BOOK_STATUS.PREAPPROVED
+                                                                            ? '#F89B72'
+                                                                            : '#5D5D5D',
                                                                 }}
                                                             >
-                                                                {booking.status === 'Pré-approuvée'
+                                                                {booking.status === BOOK_STATUS.PREAPPROVED
                                                                     ? 'Invitation à réserver'
                                                                     : booking.status}{' '}
                                                                 - {booking.user.firstname}

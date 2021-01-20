@@ -23,7 +23,7 @@ import Router from 'next/router';
 import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-
+const {BOOK_STATUS}=require('../../utils/consts')
 
 
 moment.locale('fr');
@@ -245,20 +245,20 @@ class DetailsReservation extends React.Component {
                         color:
                           bookingObj === null || currentUser === null
                             ? null
-                            : bookingObj.status === 'Confirmée'
+                            : bookingObj.status === BOOK_STATUS.CONFIRMED
                             ? '#89CE2C'
                             : bookingObj.status ===
-                            'En attente de confirmation' ||
-                            bookingObj.status === 'Demande d\'infos'
+                            BOOK_STATUS.TO_CONFIRM ||
+                            bookingObj.status === BOOK_STATUS.INFO
                               ? '#F87280'
-                              : bookingObj.status === 'Pré-approuvée'
+                              : bookingObj.status === BOOK_STATUS.PREAPPROVED
                                 ? '#F89672'
                                 : 'black',
                       }}
                     >
                       {bookingObj === null || currentUser === null
                         ? null
-                        : bookingObj.status === 'Pré-approuvée'
+                        : bookingObj.status === BOOK_STATUS.PREAPPROVED
                           ? currentUser._id === bookingObj.alfred._id
                             ? 'Pré-approuvée'
                             : 'Invitation à réserver'
@@ -346,7 +346,7 @@ class DetailsReservation extends React.Component {
                           aria-label="vertical contained primary button group"
                         >
                           <Button onClick={() => this.rootingDetailsMessage(bookingObj)}>Envoyer un message</Button>
-                          {bookingObj === null ? null : bookingObj.status === 'Confirmée' ? <Button> <a
+                          {bookingObj === null ? null : bookingObj.status === BOOK_STATUS.CONFIRMED ? <Button> <a
                             href={`tel:${
                               bookingObj === null || currentUser === null
                                 ? null
@@ -362,14 +362,14 @@ class DetailsReservation extends React.Component {
                             Appeler
                           </a>
                           </Button> : null}
-                          {bookingObj === null ? null : bookingObj.status === 'Confirmée' ?
+                          {bookingObj === null ? null : bookingObj.status === BOOK_STATUS.CONFIRMED ?
                             <Button>{bookingObj === null || currentUser === null ? null : currentUser._id === bookingObj.alfred._id ? bookingObj.user.phone : bookingObj.alfred.phone}</Button> : null}
                         </ButtonGroup>
                       </Grid>
                     </Grid>
                     {bookingObj === null ||
                     currentUser === null ? null : bookingObj.status ===
-                    'Terminée' ? (
+                    BOOK_STATUS.FINISHED ? (
                       currentUser._id === bookingObj.alfred._id ? (
                         <Grid
                           container
@@ -591,7 +591,7 @@ class DetailsReservation extends React.Component {
                           <Grid>
                             {bookingObj === null ||
                             currentUser === null ? null : bookingObj.status ===
-                            'En attente de confirmation' ? (
+                            BOOK_STATUS.TO_CONFIRM ? (
                               currentUser._id === bookingObj.alfred._id ? (
                                 <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                   <Grid className={classes.labelReservation}>
@@ -615,13 +615,13 @@ class DetailsReservation extends React.Component {
                                   </Grid>
                                   <Grid>
                                     <Button variant={'outlined'} color={'primary'}
-                                            onClick={() => this.changeStatus('Refusée')}>Refuser</Button>
+                                            onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)}>Refuser</Button>
                                   </Grid>
                                 </Grid>
                               ) : (
                                 <p>En attente de confirmation</p>
                               )
-                            ) : bookingObj.status === 'Demande d\'infos' &&
+                            ) : bookingObj.status === BOOK_STATUS.INFO &&
                             currentUser._id === bookingObj.alfred._id ? (
                               <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                 <Link
@@ -634,11 +634,11 @@ class DetailsReservation extends React.Component {
                                           style={{color: 'white'}}>Pré-approuver</Button>
                                 </Link>
                                 <Grid style={{marginTop: '5%'}}>
-                                  <Button onClick={() => this.changeStatus('Refusée')} variant={'outlined'}
+                                  <Button onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)} variant={'outlined'}
                                           color={'primary'}>Refuser</Button>
                                 </Grid>
                               </Grid>
-                            ) : bookingObj.status === 'Demande d\'infos' &&
+                            ) : bookingObj.status === BOOK_STATUS.INFO &&
                             currentUser._id === bookingObj.user._id ? (
                               null
                             ) : bookingObj.status === 'Invitation à réserver' ? (
@@ -661,7 +661,7 @@ class DetailsReservation extends React.Component {
                                   <a style={{textDecoration: 'none', color: 'white'}}>Envoyer un message</a>
                                 </Grid>
                               </Link>
-                            ) : bookingObj.status === 'Confirmée' ? (
+                            ) : bookingObj.status === BOOK_STATUS.CONFIRMED ? (
                               <Grid className={classes.containerStateResa}>
                                 <Grid item>
                                   <Grid className={classes.rondYellow}/>
@@ -672,7 +672,7 @@ class DetailsReservation extends React.Component {
                                   </Typography>
                                 </Grid>
                               </Grid>
-                            ) : bookingObj.status === 'Expirée' ? (
+                            ) : bookingObj.status === BOOK_STATUS.EXPIRED ? (
                               <Grid className={classes.containerStateResa}>
                                 <Grid item>
                                   <Grid className={classes.rondGrey}/>
@@ -683,7 +683,7 @@ class DetailsReservation extends React.Component {
                                   </Typography>
                                 </Grid>
                               </Grid>
-                            ) : bookingObj.status === 'Terminée' ? (
+                            ) : bookingObj.status === BOOK_STATUS.FINISHED ? (
                               <Grid className={classes.containerStateResa}>
                                 <Grid item>
                                   <Grid className={classes.rondGrey}/>
@@ -694,7 +694,7 @@ class DetailsReservation extends React.Component {
                                   </Typography>
                                 </Grid>
                               </Grid>
-                            ) : bookingObj.status === 'Annulée' ? (
+                            ) : bookingObj.status === BOOK_STATUS.CANCELED ? (
                               <Grid className={classes.containerStateResa}>
                                 <Grid item>
                                   <Grid className={classes.rondGrey}/>
@@ -705,7 +705,7 @@ class DetailsReservation extends React.Component {
                                   </Typography>
                                 </Grid>
                               </Grid>
-                            ) : bookingObj.status === 'Refusée' ? (
+                            ) : bookingObj.status === BOOK_STATUS.REFUSED ? (
                               <Grid className={classes.containerStateResa}>
                                 <Grid item>
                                   <Grid className={classes.rondGrey}/>
@@ -716,7 +716,7 @@ class DetailsReservation extends React.Component {
                                   </Typography>
                                 </Grid>
                               </Grid>
-                            ) : bookingObj.status === 'Pré-approuvée' ? (
+                            ) : bookingObj.status === BOOK_STATUS.PREAPPROVED ? (
                               currentUser._id === bookingObj.alfred._id ? (
                                 <Grid className={classes.containerStateResa}>
                                   <Grid item>
@@ -780,27 +780,27 @@ class DetailsReservation extends React.Component {
                             <span>Revenus potentiels</span>
                             :
                             currentUser._id === bookingObj.alfred._id ?
-                              bookingObj.status === 'Refusée' ?
+                              bookingObj.status === BOOK_STATUS.REFUSED ?
                                 <span>Paiement non réalisé</span>
                                 :
-                                bookingObj.status === 'Annulée' || bookingObj.status === 'Expirée' ?
+                                bookingObj.status === BOOK_STATUS.CANCELED || bookingObj.status === BOOK_STATUS.EXPIRED ?
                                   <span>Revenus potentiels</span>
                                   :
-                                  bookingObj.status === 'Terminée' || bookingObj.status === 'Confirmée' ?
+                                  bookingObj.status === BOOK_STATUS.FINISHED || bookingObj.status === BOOK_STATUS.CONFIRMED ?
                                     <span>Versement</span>
                                     :
-                                    bookingObj.status === 'Demande d\'infos' || bookingObj.status === 'Pré-approuvée' || bookingObj.status === 'En attente de confirmation' ?
+                                    bookingObj.status === BOOK_STATUS.INFO || bookingObj.status === BOOK_STATUS.PREAPPROVED || bookingObj.status === BOOK_STATUS.TO_CONFIRM ?
                                       <span>Revenus potentiels</span>
                                       :
                                       <span>Revenus potentiels</span>
                               :
-                              bookingObj.status === 'Refusée' || bookingObj.status === 'Annulée' || bookingObj.status === 'Expirée' ?
+                              bookingObj.status === BOOK_STATUS.REFUSED || bookingObj.status === BOOK_STATUS.CANCELED || bookingObj.status === BOOK_STATUS.EXPIRED ?
                                 <span>Paiement non réalisé</span>
                                 :
-                                bookingObj.status === 'Terminée' ?
+                                bookingObj.status === BOOK_STATUS.FINISHED ?
                                   <span>Paiement</span>
                                   :
-                                  bookingObj.status === 'Confirmée' || bookingObj.status === 'Pré-approuvée' || bookingObj.status === 'Demande d\'infos' || bookingObj.status === 'Pré-approuvée' || bookingObj.status === 'En attente de confirmation' ?
+                                  bookingObj.status === BOOK_STATUS.CONFIRMED || bookingObj.status === BOOK_STATUS.PREAPPROVED || bookingObj.status === BOOK_STATUS.INFO || bookingObj.status === BOOK_STATUS.TO_CONFIRM ?
                                     <span>Paiement si acceptation</span>
                                     :
                                     <span>Revenus potentiels</span>
@@ -843,7 +843,7 @@ class DetailsReservation extends React.Component {
                       </Grid>
                       <Grid item xs={12}>
                         {bookingObj === null ? null : bookingObj.status ===
-                        'Confirmée' || bookingObj.status === 'Terminée' ? (
+                        BOOK_STATUS.CONFIRMED || bookingObj.status === BOOK_STATUS.FINISHED ? (
                           <Typography>
                             Fin le{' '}
                             {bookingObj === null ? null : moment(bookingObj.end_date).format('DD/MM/YYYY')} à{' '}
@@ -853,13 +853,13 @@ class DetailsReservation extends React.Component {
                       </Grid>
                     </Grid>
                     {bookingObj === null ||
-                    currentUser === null ? null : (bookingObj.status ===
-                      'En attente de confirmation' &&
+                    currentUser === null ? null : (bookingObj.status === BOOK_STATUS.TO_CONFIRM
+                       &&
                       currentUser._id !== bookingObj.alfred._id) ||
-                    bookingObj.status === 'Confirmée' ||
-                    (bookingObj.status === 'Demande d\'infos' &&
+                    bookingObj.status === BOOK_STATUS.CONFIRMED ||
+                    (bookingObj.status === BOOK_STATUS.INFO &&
                       currentUser._id !== bookingObj.alfred._id) ||
-                    bookingObj.status === 'Pré-approuvée' ? (
+                    bookingObj.status === BOOK_STATUS.PREAPPROVED ? (
                       <Grid
                         container
                         style={{
@@ -905,7 +905,7 @@ class DetailsReservation extends React.Component {
                     </Grid>
                     {bookingObj === null ||
                     currentUser === null ? null : bookingObj.status ===
-                    'Terminée' ? (
+                    BOOK_STATUS.FINISHED ? (
                       <Grid
                         container
                         style={{
