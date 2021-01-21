@@ -25,6 +25,7 @@ export default theme => ({
     fontSize: '0.8rem',
     color: 'rgba(84,89,95,0.95)',
     fontWeight: 'bold',
+    textAlign: 'center'
   },
   skillValue: {
     fontSize: '0.7rem',

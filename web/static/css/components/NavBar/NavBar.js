@@ -462,5 +462,9 @@ export default theme => ({
   },
   dialogNavbarMobileFilter:{
     minWidth: '100%'
+  },
+  rootIconButton:{
+    paddingTop:0,
+    paddingBottom: 0
   }
 })
