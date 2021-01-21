@@ -12,7 +12,7 @@ class FixUserCreationDate(FixBase):
     URL = "https://api-adresse.data.gouv.fr/search/?q={}"
     
     def fix(self):
-        users = self.db.get_items("users")
+        users = self.db.get_items("users", exclude_fields=['birthday'])
         for u in users:
           dt = u.get('creation_date', None)
           if dt:

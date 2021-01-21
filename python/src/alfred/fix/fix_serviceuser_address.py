@@ -20,7 +20,7 @@ class FixServiceUserAddress(FixBase):
         return result
         
     def fix(self):
-        users = self.db.get_items("users")
+        users = self.db.get_items("users", exclude_fields=['birthday'])
         services = self.db.get_items("serviceusers")
         invalid_services = [s for s in services if not self.isAddrValid(s.get('service_address', None))]
         for s in invalid_services:
