@@ -122,7 +122,12 @@ class ConfirmPayement extends React.Component {
           Router.push(payInResult.SecureModeRedirectURL)
         }
         else {
-          Router.push(payInResult.RedirectURL)
+          if (payInResult.RedirectURL) {
+            Router.push(payInResult.RedirectURL)
+          }
+          else {
+            Router.push(`/paymentSuccess?booking_id=${this.props.booking_id}`)
+          }
         }
       })
       .catch( err => { console.error(err)});
@@ -145,7 +150,12 @@ class ConfirmPayement extends React.Component {
           Router.push(payInResult.SecureModeRedirectURL)
         }
         else {
-          Router.push(payInResult.RedirectURL)
+          if (payInResult.RedirectURL) {
+            Router.push(payInResult.RedirectURL)
+          }
+          else {
+            Router.push(`/paymentSuccess?booking_id=${this.props.booking_id}`)
+          }
         }
       })
       .catch(err => {
