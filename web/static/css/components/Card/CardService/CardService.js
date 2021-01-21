@@ -215,6 +215,11 @@ export default theme => ({
     [theme.breakpoints.down('xs')]:{
       padding:10
     }
+  },
+  containerDescription:{
+    [theme.breakpoints.down('xs')]:{
+      marginLeft: '1vh'
+    }
   }
 
 })

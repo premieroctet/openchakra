@@ -175,7 +175,7 @@ class CardService extends React.Component{
             </Grid>
             <Grid className={profileMode ? classes.profileModeDataContainer : classes.dataContainer}>
               <Grid className={classes.labelService}>
-                <Typography className={classes.labelDataContainer}>{cpData.label}</Typography>
+                <Typography className={classes.labelDataContainer}><strong>{cpData.label}</strong></Typography>
               </Grid>
               { profileMode ? null :
                 <Grid className={classes.cardServicePlaceContainer}>
@@ -201,15 +201,11 @@ class CardService extends React.Component{
                   </Grid>
                 </Grid>
               }
-              {
-                /*TODO API POUR USER DESCRIPTION
-              <Grid>
+              <Grid className={classes.containerDescription}>
                 <Grid>
-                  <Typography>{user.description ? user.description : 'aucune descrption'}</Typography>
+                  <Typography style={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color:'rgba(39,37,37,35%)'}}>{cpData.description ? cpData.description : 'Aucune descrption'}</Typography>
                 </Grid>
-              </Grid>*/
-              }
-
+              </Grid>
               <Grid className={classes.cardServiceScoreAndButtonContainer}>
                 <Grid className={classes.cardServiceRatingContainer}>
                   <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
