@@ -1,24 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next'
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { getSession, signIn } from 'next-auth/client'
 import useDispatch from '~hooks/useDispatch'
 import { useRouter } from 'next/router'
 import EditorPage from '~pages/editor'
-import prisma from '../../utils/prisma'
+import prisma from '~utils/prisma'
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   let projectId = (params!.slug as string).split('-')[0]
   let projectName = (params!.slug as string).split('-')[1]
-  let project
-  try {
-    project = await prisma.project.findUnique({
-      where: {
-        id: Number(projectId),
-      },
-    })
-  } finally {
-    await prisma.$disconnect
-  }
+
+  const project = await prisma.project.findUnique({
+    where: {
+      id: Number(projectId),
+    },
+  })
 
   let projects = JSON.parse(JSON.stringify(project))
   return {
@@ -29,28 +25,22 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       publicValue: project?.public,
       validated: project?.validated,
     },
-    revalidate: 1,
   }
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  let projects
-  try {
-    projects = await prisma.project.findMany({ take: 3 })
-  } finally {
-    await prisma.$disconnect
-  }
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   const projects = await prisma.project.findMany({ take: 3 })
 
-  const paths = await projects.map(project => ({
-    params: {
-      slug: `${project.id.toString()}-${project.projectName.toString()}`,
-    },
-  }))
-  return {
-    fallback: true,
-    paths,
-  }
-}
+//   const paths = await projects.map(project => ({
+//     params: {
+//       slug: `${project.id.toString()}-${project.projectName.toString()}`,
+//     },
+//   }))
+//   return {
+//     fallback: false,
+//     paths,
+//   }
+// }
 
 const ProjectSlug = ({
   projects,
@@ -58,7 +48,7 @@ const ProjectSlug = ({
   projectName,
   validated,
   publicValue,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [loading, setLoading] = useState(true)
   const [projectExist, setProjectExist] = useState(true)
   const router = useRouter()

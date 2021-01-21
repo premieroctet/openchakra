@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Project } from '@prisma/client'
-import { GetStaticProps, GetStaticPaths } from 'next'
+import { GetServerSideProps } from 'next'
 import { useSession } from 'next-auth/client'
 import useShortcuts, { keyMap } from '~hooks/useShortcuts'
 import { HotKeys } from 'react-hotkeys'
@@ -13,22 +13,17 @@ import EditorErrorBoundary from '~components/errorBoundaries/EditorErrorBoundary
 import Editor from '~components/editor/Editor'
 import Backend from 'react-dnd-html5-backend'
 import useDispatch from '~hooks/useDispatch'
-import prisma from '../../../utils/prisma'
+import prisma from '~utils/prisma'
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   let projectId = (params!.slug as string).split('-')[0]
-  let project
-
-  try {
-    project = await prisma.project.findUnique({
-      include: { user: true },
-      where: {
-        id: Number(projectId),
-      },
-    })
-  } finally {
-    await prisma.$disconnect
-  }
+  //need to check if the project is public or not
+  const project = await prisma.project.findUnique({
+    include: { user: true },
+    where: {
+      id: Number(projectId),
+    },
+  })
 
   let projects = JSON.parse(JSON.stringify(project))
 
@@ -39,27 +34,22 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   }
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  let projects
-  try {
-    projects = await prisma.project.findMany({
-      where: {
-        public: true,
-      },
-    })
-  } finally {
-    await prisma.$disconnect
-  }
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   const projects = await prisma.project.findMany({
+//     where: {
+//       public: true,
+//     },
+//   })
 
-  return {
-    paths: projects.map(project => ({
-      params: {
-        slug: `${project.id.toString()}-${project.projectName.toString()}`,
-      },
-    })),
-    fallback: false,
-  }
-}
+//   return {
+//     paths: projects.map(project => ({
+//       params: {
+//         slug: `${project.id.toString()}-${project.projectName.toString()}`,
+//       },
+//     })),
+//     fallback: false,
+//   }
+// }
 
 interface ProjectContainer {
   projects: Project
