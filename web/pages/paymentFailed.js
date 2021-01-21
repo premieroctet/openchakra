@@ -63,8 +63,12 @@ class PaymentFailed extends React.Component {
                 </Grid>
                 <Grid style={{marginTop: '5vh'}}>
                   <Grid>
-                    <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={()=> Router.push('/')}>Retour à
-                      l'accueil</Button>
+                    <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={()=> Router.push('/reservations/reservations')}>
+                      Retour aux réservations
+                    </Button>
+                    <Button variant={'contained'} color={'primary'} style={{color: 'white'}} onClick={()=> Router.push('/')}>
+                      Retour à l'accueil
+                    </Button>
                   </Grid>
                 </Grid>
               </Grid>

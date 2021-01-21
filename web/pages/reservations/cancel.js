@@ -10,7 +10,7 @@ import {withStyles} from '@material-ui/core/styles';
 import dynamic from 'next/dynamic';
 import io from 'socket.io-client';
 import Typography from '@material-ui/core/Typography';
-
+const {BOOK_STATUS}=require('../../utils/consts')
 
 const _ = require('lodash');
 moment.locale('fr');
@@ -280,7 +280,7 @@ class Cancel extends React.Component {
                             borderRadius: '20px',
                             textTransform: 'capitalize',
                           }}
-                          onClick={() => this.changeStatus('Annulée')}
+                          onClick={() => this.changeStatus(BOOK_STATUS.CANCELED)}
                         >
                           Annuler
                         </Button>

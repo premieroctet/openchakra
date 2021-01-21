@@ -36,7 +36,7 @@ import withGrid from "../hoc/Grid/GridCard";
 import CardAlbum from "../components/Card/CardAlbum/CardAlbum";
 const ImageSlide=withSlide(withGrid(CardAlbum));
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
-
+const {BOOK_STATUS}=require('../utils/consts')
 
 const isEmpty = require('../server/validation/is-empty');
 const {computeBookingReference} = require('../utils/functions');
@@ -487,7 +487,7 @@ class UserServicesPreview extends React.Component {
       pick_tax: this.computePickTax(),
       cesu_amount: this.state.cesu_total,
       fees: this.state.commission,
-      status: actual ? 'En attente de paiement' : 'Demande d\'infos',
+      status: actual ? BOOK_STATUS.TO_PAY : BOOK_STATUS.INFO,
       serviceUserId: this.state.serviceUser._id,
     };
 

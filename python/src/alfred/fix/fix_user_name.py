@@ -9,7 +9,7 @@ from alfred.fix.fix_base import FixBase
 class FixUserName(FixBase):
 
     def fix(self):
-        users = self.db.get_items("users")
+        users = self.db.get_items("users", exclude_fields=['birthday'])
         for u in users:
           prenom, nom = u.firstname, u.name
           if not prenom:

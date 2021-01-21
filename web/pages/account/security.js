@@ -114,16 +114,26 @@ class security extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
+    this.loadData()
+  }
+
+  loadData= () => {
     setAxiosAuthentication()
-    axios
-      .get('/myAlfred/api/users/current')
+    axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
         this.setState({
           user: user,
           last_login: user.last_login,
           index_google: user.index_google,
-          alfred: user.is_alfred
+          alfred: user.is_alfred,
+          password: '',
+          newPassword: '',
+          newPassword2: '',
+          check: false,
+          check1: false,
+          check2: false,
+          wrongPassword: false,
         });
       })
       .catch(err => {
@@ -131,7 +141,8 @@ class security extends React.Component {
           clearAuthenticationToken()
           Router.push({pathname: '/'});
         }
-      });
+      })
+      toast.info('hop')
   }
 
   onChange = e => {
@@ -169,7 +180,7 @@ class security extends React.Component {
                 axios.get('/myAlfred/api/users/token')
                   .then ( res => {
                     setAuthToken()
-                    window.location.reload(true)
+                    this.loadData()
                   })
               })
               .catch(err => {console.error(err)});
@@ -230,8 +241,8 @@ class security extends React.Component {
     axios
       .put('/myAlfred/api/users/profile/editPassword', data)
       .then(() => {
-        toast.info('Mot de passe modifié');
-        setTimeout(() => window.location.reload(), 2000);
+        toast.info('Mot de passe modifié')
+        setTimeout(this.loadData, 1000);
       })
       .catch(err => {
         console.error(err);
@@ -313,6 +324,8 @@ class security extends React.Component {
   };
 
   content = (classes) => {
+    const checkButtonValidate = this.state.check && this.state.check1 && this.state.check2;
+
     return(
       <Grid  style={{display: 'flex', flexDirection: 'column', width: '100%'}} >
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
@@ -354,7 +367,6 @@ class security extends React.Component {
                   </Grid>
                   <Grid item xs={12} md={4}  xl={12}>
                     <TextField
-                      id="standard-with-placeholder"
                       label={'Nouveau mot de passe'}
                       type="password"
                       name="newPassword"
@@ -370,7 +382,6 @@ class security extends React.Component {
                   </Grid>
                   <Grid item xs={12} md={4}  xl={12}>
                     <TextField
-                      id="standard-with-placeholder"
                       label={'Répéter le mot de passe'}
                       type="password"
                       name="newPassword2"
@@ -386,7 +397,7 @@ class security extends React.Component {
                   </Grid>
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'left', marginTop: 30}}>
-                  <Button disabled={!this.state.checkButtonValidate} type="submit" className={classes.buttonSave} variant="contained">
+                  <Button disabled={!checkButtonValidate} type="submit" className={classes.buttonSave} variant="contained">
                     Valider
                   </Button>
                 </Grid>
@@ -470,7 +481,6 @@ class security extends React.Component {
 
   render() {
     const {classes, index} = this.props;
-    const checkButtonValidate = this.state.check && this.state.check1 && this.state.check2;
     const {last_login, open, open2, user} = this.state;
 
     return (
@@ -478,7 +488,7 @@ class security extends React.Component {
         <Helmet>
           <title>Compte - Sécurité - My Alfred </title>
           <meta property="description"
-                content="Modifiez votre mot de passe et gérer la sécurité de votre compte My Alfred. Des milliers de particuliers et auto-entrepreneurs proches de chez vous prêts à vous rendre service ! Paiement sécurisé. Inscription 100% gratuite !"/>
+                content="Modifiez votre mot de passe et gérez la sécurité de votre compte My Alfred. Des milliers de particuliers et auto-entrepreneurs proches de chez vous prêts à vous rendre service ! Paiement sécurisé. Inscription 100% gratuite !"/>
         </Helmet>
         <Hidden only={['xs', 'sm', 'md']}>
           <LayoutAccount index={index}>

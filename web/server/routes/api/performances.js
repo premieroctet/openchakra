@@ -42,7 +42,7 @@ router.get('/incomes/:year?/:month?', passport.authenticate('jwt', {session: fal
   const bookings = new Array(12).fill(0)
 
   const re=new RegExp(`${month==undefined ? '':month}/${year}$`)
-  Booking.find({alfred: req.user.id, status: 'Terminée', date_prestation: re})
+  Booking.find({alfred: req.user.id, status: BOOK_STATUS.FINISHED, date_prestation: re})
     .then(booking => {
       booking.forEach(b => {
         const b_month = b.date_prestation.slice(3, 5)
@@ -70,7 +70,7 @@ router.get('/statistics/:year/:month?', passport.authenticate('jwt', {session: f
 
   const re=new RegExp(`${month==undefined ? '':month}/${year}$`)
 
-  Booking.find({alfred: req.user.id, status: 'Terminée', date_prestation: re})
+  Booking.find({alfred: req.user.id, status: BOOK_STATUS.FINISHED, date_prestation: re})
     .then(booking => {
       booking.forEach(b => {
         totalIncomes += b.alfred_amount;
@@ -106,7 +106,7 @@ router.get('/statistics/:year/:month?', passport.authenticate('jwt', {session: f
 router.get('/statistics/totalBookings', passport.authenticate('jwt', {session: false}), (req, res) => {
   let totalIncomes = 0;
   let totalPrestations = 0;
-  Booking.find({alfred: req.user.id, status: 'Terminée'})
+  Booking.find({alfred: req.user.id, status: BOOK_STATUS.FINISHED})
     .then(booking => {
 
       booking.forEach(b => {

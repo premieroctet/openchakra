@@ -14,7 +14,7 @@ import io from 'socket.io-client';
 import About from '../../components/About/About';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
-
+const {BOOK_STATUS}=require('../../utils/consts')
 
 const {frenchFormat} = require('../../utils/text');
 
@@ -120,11 +120,11 @@ class Confirm extends React.Component {
     const endDate = moment(this.state.end).format('YYYY-MM-DD');
     const endHour = moment(this.state.hourToSend).format('HH:mm');
 
-    const dateObj = {end_date: endDate, end_time: endHour, status: 'Confirmée'};
+    const dateObj = {end_date: endDate, end_time: endHour, status: BOOK_STATUS.CONFIRMED};
 
 
     if (typeof this.state.bookingObj.end_date !== 'undefined' && typeof this.state.bookingObj.end_time !== 'undefined') {
-      axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, {status: 'Confirmée'})
+      axios.put('/myAlfred/api/booking/modifyBooking/' + this.state.booking_id, {status: BOOK_STATUS.CONFIRMED})
 
         .then(res => {
           this.setState({bookingObj: res.data});

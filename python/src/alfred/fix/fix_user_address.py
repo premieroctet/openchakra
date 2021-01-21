@@ -17,7 +17,7 @@ class FixUserAddress(FixBase):
         return result
         
     def fix(self):
-        users = self.db.get_items("users")
+        users = self.db.get_items("users", exclude_fields=['birthday'])
         invalid_users = [u for u in users if not self.isAddrValid(u.get('billing_address', None))]
         """
         valid_users = [u for u in users if self.isAddrValid(u.get('billing_address', None))]

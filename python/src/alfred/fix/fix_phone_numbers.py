@@ -9,7 +9,7 @@ from alfred.fix.fix_base import FixBase
 class FixPhoneNumbers(FixBase):
 
     def fix(self):
-      alfreds = self.db.get_items("users")
+      alfreds = self.db.get_items("users", exclude_fields=['birthday'])
       for u in alfreds:
         phone=u.get('phone', '') or ''
         if (len(phone)==10) and phone.startswith("0"):

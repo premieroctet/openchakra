@@ -13,7 +13,7 @@ import io from 'socket.io-client';
 import About from '../../components/About/About';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
-
+const {BOOK_STATUS}=require('../../utils/consts')
 
 const {frenchFormat} = require('../../utils/text');
 

@@ -21,7 +21,7 @@ if __name__ == '__main__':
     db = sys.argv[1]
     print("Fixing db {}".format(db))
     FixUserCreationDate(db).fix()
-    FixUserAddress(db).fix()
+    #FixUserAddress(db).fix()
     FixShopsCreationDate(db).fix()
     FixServiceUserAddress(db).fix()
     FixOrphanShops(db).fix()

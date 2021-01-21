@@ -15,7 +15,7 @@ import styles from './preApprouve/preApprouveStyle';
 import About from '../../components/About/About';
 import UserAvatar from '../../components/Avatar/UserAvatar';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
-
+const {BOOK_STATUS}=require('../../utils/consts')
 
 const {frenchFormat} = require('../../utils/text');
 
@@ -105,7 +105,7 @@ class Preapprouve extends React.Component {
     const endDate = moment(this.state.end).format('YYYY-MM-DD');
     const endHour = moment(this.state.hourToSend).format('HH:mm');
 
-    const dateObj = {end_date: endDate, end_time: endHour, status: 'Pré-approuvée'};
+    const dateObj = {end_date: endDate, end_time: endHour, status: BOOK_STATUS.PREAPPROVED};
 
     console.log('dateObj:' + JSON.stringify(dateObj));
 

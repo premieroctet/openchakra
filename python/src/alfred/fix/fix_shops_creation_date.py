@@ -10,7 +10,7 @@ class FixShopsCreationDate(FixBase):
 
     def fix(self):
         shops = self.db.get_items("shops")
-        users = self.db.get_items("users")
+        users = self.db.get_items("users", exclude_fields=['birthday'])
         no_date_shops = filter(lambda s : not s.get('creation_date', None), shops)
         for s in no_date_shops:
           user = next(filter(lambda u : u._id==s.alfred, users), None)
