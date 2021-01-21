@@ -131,7 +131,6 @@ nextApp.prepare().then(() => {
       next();
     });
   }
-
   app.get('*', routerHandler);
 
   if (SERVER_PROD || is_development()) {
