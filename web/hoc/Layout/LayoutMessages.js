@@ -14,17 +14,11 @@ class LayoutMessages extends React.Component{
   constructor(props) {
     super(props);
     this.state={
-      user:{}
     }
   }
 
   componentDidMount = () => {
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/users/users/${this.props.user}`)
-      .then( res => {
-        this.setState( { user: res.data})
-      })
-      .catch (err => console.error(err))
   };
 
   handleChange = (event, newValue) => {
@@ -32,11 +26,10 @@ class LayoutMessages extends React.Component{
   };
 
   render() {
-    const{user}= this.state;
-    const{children, tabIndex, classes}= this.props;
+    const{children, tabIndex, classes, userInfo}= this.props;
 
     return(
-      <Layout user={user}>
+      <Layout user={userInfo}>
         <Grid style={{display:'flex', justifyContent:'center'}}>
           <Grid style={{display: 'flex', justifyContent:'center', flexDirection: 'column', alignItems:'center', width: '100%'}}>
             <Grid style={{display: 'flex', justifyContent: 'center'}}>
@@ -44,12 +37,17 @@ class LayoutMessages extends React.Component{
             </Grid>
             <Grid>
               <Tabs
-                value={tabIndex}
-                onChange={this.handleChange}
+                value={userInfo && !userInfo.is_alfred ? 0 : tabIndex}
+                onChange={userInfo && !userInfo.is_alfred ? null : this.handleChange}
                 aria-label="scrollable force tabs"
                 classes={{indicator: classes.scrollIndicator}}
               >
-                <Tab label={'Mes messages Alfred'} className={classes.scrollMenuTabLayoutMessage} />
+                {
+                  userInfo && userInfo.is_alfred ?
+                    <Tab label={'Mes messages Alfred'} className={classes.scrollMenuTabLayoutMessage} />
+                    :null
+
+                }
                 <Tab label={"Mes messages d'utilisateur"} className={classes.scrollMenuTabLayoutMessage} />
               </Tabs>
             </Grid>

@@ -18,6 +18,7 @@ import Router from 'next/router';
 const {BOOK_STATUS}=require('../../utils/consts')
 import DatePicker, {registerLocale} from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
+import Hidden from "@material-ui/core/Hidden";
 registerLocale('fr', fr);
 moment.locale('fr');
 
@@ -184,6 +185,11 @@ class BookingPreview extends React.Component {
     this.child.current.handleDrawerToggle();
   };
 
+  phoneDigit(str,index,chr) {
+    if(index > str.length-1) return str;
+    return str.substring(0,index) + chr + str.substring(index+1);
+  }
+
   render() {
     const {classes} = this.props;
     const {bookingObj, currentUser, is_alfred, booking_id, end_datetime} = this.state;
@@ -224,6 +230,9 @@ class BookingPreview extends React.Component {
        au ${moment(bookingObj.end_date).format('DD/MM/YYYY')} à ${bookingObj.end_time}`
        :
        `Le ${bookingObj.date_prestation} - ${moment(bookingObj.time_prestation).format('HH:mm')}`;
+
+    const phone = amIAlfred ? bookingObj.user.phone : bookingObj.alfred.phone;
+
 
     return (
       <Grid>
@@ -368,7 +377,7 @@ class BookingPreview extends React.Component {
                       <Grid item xl={6}>
                         <Grid container>
                           <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
-                            <Grid item style={{paddingLeft: '3%'}}>
+                            <Grid item>
                               { displayUser.id_confirmed ?
                                 <Typography>
                                   Pièce d'identité vérifiée
@@ -389,19 +398,37 @@ class BookingPreview extends React.Component {
                             <Button variant={'contained'} color={'primary'} onClick={this.routingDetailsMessage} style={{textTransform: 'initial', color:'white'}}>Envoyer un message</Button>
                           </Grid>
                           {bookingObj.status === BOOK_STATUS.CONFIRMED ?
-                            <Grid item>
-                              <Button>
-                                <a
-                                  href={`tel:${amIAlfred ? bookingObj.user.phone : bookingObj.alfred.phone}`}
-                                  style={{textDecoration: 'none', color: 'rgba(178,204,251,1)', cursor: 'pointer'}}
-                                >
-                                  Appeler
-                                </a>
-                              </Button>
+                            <Grid item className={classes.containerPhone}>
+                              <Hidden only={['xl', 'lg', 'md', 'sm']}>
+                                <Button>
+                                  <a
+                                    href={`tel:${phone}`}
+                                    style={{textDecoration: 'none', color: 'rgba(178,204,251,1)', cursor: 'pointer'}}
+                                  >
+                                    Appeler
+                                  </a>
+                                </Button>
+                              </Hidden>
                             </Grid> : null
                           }
                         </Grid>
                       </Grid>
+                      {
+                        bookingObj.status === BOOK_STATUS.CONFIRMED ?
+                          <Hidden only={['xs']}>
+                            <Grid item xl={6}>
+                              <Grid>
+                                <Typography>Numéro de téléphone :</Typography>
+                              </Grid>
+                            </Grid>
+                            <Grid item xl={6}>
+                              <Grid>
+                                <Typography style={{textAlign: 'center'}}> {this.phoneDigit(phone.substring(1),0, "0")}</Typography>
+                              </Grid>
+                            </Grid>
+
+                          </Hidden> : null
+                      }
                     </Grid>
                   </Grid>
                   <Grid container className={classes.mainContainerAboutResa}>
@@ -414,7 +441,7 @@ class BookingPreview extends React.Component {
                       <Grid item>
                         <Grid container>
                           <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
-                            <Grid item style={{paddingLeft: '3%'}}>
+                            <Grid item>
                               <Typography>
                               { bookingObj.service}
                               </Typography>
@@ -424,7 +451,7 @@ class BookingPreview extends React.Component {
                             </Grid>
                           </Grid>
                           <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
-                            <Grid item style={{paddingLeft: '3%'}}>
+                            <Grid item>
                               <Typography>
                                 {bookingObj.address ?
                                   `Au ${bookingObj.address.address}, ${bookingObj.address.zip_code} ${bookingObj.address.city}` : 'En visio'}
@@ -433,7 +460,7 @@ class BookingPreview extends React.Component {
                           </Grid>
                           { bookingObj.status === BOOK_STATUS.TO_CONFIRM && amIAlfred ?
                             <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
-                              <Grid item style={{paddingLeft: '3%'}}>
+                              <Grid item>
                                 <Typography>
                                 Date de fin:
                                 </Typography>

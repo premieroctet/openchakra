@@ -52,15 +52,21 @@ class Messages extends React.Component {
       chats: [],
       relativeDetails: null,
       message: '',
-      lastMessageDate: ''
+      lastMessageDate: '',
+      user: {}
 
     };
-    this.onDetailsClosed = this.onDetailsClosed.bind(this)
-    this.loadChats = this.loadChats.bind(this)
   }
 
   componentDidMount() {
-    this.loadChats(true)
+    this.loadChats(true);
+    axios.get('/myAlfred/api/users/current').then(res => {
+      let result = res.data;
+      this.setState({
+        user: result,
+        tabIndex: result.is_alfred ? 0 : 1
+      });
+    })
   }
 
   loadChats = checkRelative => {
@@ -76,6 +82,7 @@ class Messages extends React.Component {
           this.setState({chats: chats})
         }
       })
+
   }
 
   static getInitialProps({query: {user, relative}}) {
@@ -254,18 +261,18 @@ class Messages extends React.Component {
   };
 
   render() {
-    const {classes, user}=this.props;
-    const {relativeDetails}=this.state;
+    const {classes}=this.props;
+    const {relativeDetails, user}=this.state;
 
     return (
       <React.Fragment>
         <Hidden only={['xs']}>
-          <LayoutMessages ref={this.child} user={user} handleChange={this.handleChange} {...this.state}>
+          <LayoutMessages ref={this.child} handleChange={this.handleChange} {...this.state} userInfo={user}>
             {this.content(classes)}
           </LayoutMessages>
         </Hidden>
         <Hidden only={['lg', 'xl',  'sm', 'md']}>
-          <LayoutMobileMessages ref={this.child} user={user} handleChange={this.handleChange} {...this.state} currentIndex={3}>
+          <LayoutMobileMessages ref={this.child} handleChange={this.handleChange} {...this.state} currentIndex={3} userInfo={user}>
             {this.content(classes)}
           </LayoutMobileMessages>
         </Hidden>

@@ -113,4 +113,8 @@ export default theme => ({
       width:'100%'
     }
   },
+  rootIconButton:{
+    paddingTop:0,
+    paddingBottom: 0
+  }
 })

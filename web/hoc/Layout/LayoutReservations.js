@@ -1,4 +1,4 @@
-const {setAxiosAuthentication}=require('../../utils/authentication')
+const {setAxiosAuthentication}=require('../../utils/authentication');
 import React from "react";
 import styles from '../../static/css/components/Layout/LayoutReserations/LayoutReservations';
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -6,33 +6,24 @@ import Grid from "@material-ui/core/Grid";
 import Layout from "./Layout";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import axios from "axios";
-
 
 class LayoutReservations extends React.Component{
 
   constructor(props) {
     super(props);
     this.state={
-      user: {},
       reservationStatus: 0,
       reservationType: 1,
-
     }
   }
 
   componentDidMount = () => {
-    setAxiosAuthentication()
-    axios.get(`/myAlfred/api/users/users/${this.props.user}`)
-      .then( res => {
-        this.setState( { user: res.data})
-      })
-      .catch (err => console.error(err))
+    setAxiosAuthentication();
   };
 
   render() {
     const {user} = this.state;
-    const {classes, children, reservationType} = this.props;
+    const {classes, children, reservationType, userInfo} = this.props;
 
     return(
       <Layout user={user}>
@@ -43,13 +34,17 @@ class LayoutReservations extends React.Component{
             </Grid>
             <Grid>
               <Tabs
-                value={reservationType}
-                onChange={this.props.onReservationTypeChanged}
+                value={userInfo && !userInfo.is_alfred ? 0 : reservationType}
+                onChange={userInfo && !userInfo.is_alfred ? null : this.props.onReservationTypeChanged}
                 aria-label="scrollable force tabs"
                 scrollButtons="on"
                 classes={{indicator: classes.scrollMenuIndicator}}
               >
-                <Tab label={"Mes réservations d'Alfred"} className={classes.scrollMenuTab} />
+                {
+                  userInfo && userInfo.is_alfred ?
+                    <Tab label={"Mes réservations d'Alfred"} className={classes.scrollMenuTab} />
+                   : null
+                }
                 <Tab label={"Mes réservations d'utilisateur"} className={classes.scrollMenuTab} />
               </Tabs>
             </Grid>

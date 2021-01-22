@@ -284,6 +284,7 @@ class NavBar extends Component {
             <Grid>
               <IconButton
                 aria-label="delete"
+                classes={{root: classes.rootIconButton}}
                 onClick={() => this.setState({
                   modalMobileSearchBarInput: false,
                   mobileStepSearch: 0,
@@ -295,18 +296,18 @@ class NavBar extends Component {
               </IconButton>
             </Grid>
             <Grid>
-              <h3>{this.state.mobileStepSearch === 0 ? 'Votre Recherche' : this.state.mobileStepSearch === 1 ? 'Où' : 'Dates'}</h3>
+              <h3 style={{margin:0}}>{this.state.mobileStepSearch === 0 ? 'Quel service recherchez-vous ?' : this.state.mobileStepSearch === 1 ? 'Où' : 'Dates'}</h3>
             </Grid>
           </Grid>
           <Grid item container spacing={3} style={{margin: 0}}>
-            <Grid item xs={12} style={{display: 'flex', justifyContent: 'center', alignItems: 'center', paddingBottom: 0, paddingTop: 0}}>
+            <Grid item xs={12} style={{display: 'flex', justifyContent: 'center', paddingBottom: 0, paddingTop: 0}}>
               {
                 this.state.mobileStepSearch === 0 ?
                   <TextField
                     value={this.state.keyword}
                     onChange={this.onChange}
                     name={'keyword'}
-                    label={this.state.ifHomePage ? 'Quel service recherchez-vous ? ' : false}
+                    label={'Ménage, jardinage, ...'}
                     onKeyPress={(e) => {
                       e.key === 'Enter' && e.preventDefault();
                     }}
@@ -512,11 +513,11 @@ class NavBar extends Component {
         <Grid className={classes.navbarTextFieldService}>
           <TextField
             classes={{root: this.state.ifHomePage ? classes.navbarRootTextField : classes.navbarRootTextFieldP}}
-            placeholder={SEARCHBAR.what}
+            placeholder={'Ménage, Jardinage, ...'}
             value={this.state.keyword}
             onChange={this.onChange}
             name={'keyword'}
-            label={this.state.ifHomePage ? SEARCHBAR.labelWhat : false}
+            label={this.state.ifHomePage ? SEARCHBAR.labelWhat : null}
             onKeyPress={(e) => {
               e.key === 'Enter' && e.preventDefault();
             }}
@@ -667,8 +668,7 @@ class NavBar extends Component {
       );
     };
 
-
-        return (
+    return (
       <Grid className={this.state.ifHomePage ? classes.navbarMainSytle : classes.navbarMainSytleP}>
         <AppBar position={'static'} className={this.state.ifHomePage ? classes.navbarAppBar : classes.navbarAppBarP}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
