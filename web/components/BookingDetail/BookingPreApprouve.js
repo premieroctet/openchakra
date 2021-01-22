@@ -15,7 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import BookingDetail from '../../components/BookingDetail/BookingDetail';
 
 import {Divider} from "@material-ui/core";
-
+const {BOOK_STATUS}=require('../../utils/consts')
 registerLocale('fr', fr);
 moment.locale('fr');
 const _ = require('lodash');
@@ -103,7 +103,7 @@ class BookingPreApprouve extends React.Component {
     const endDate = moment(this.state.end).format('YYYY-MM-DD');
     const endHour = moment(this.state.hourToSend).format('HH:mm');
 
-    const dateObj = {end_date: endDate, end_time: endHour, status: 'Pré-approuvée'};
+    const dateObj = {end_date: endDate, end_time: endHour, status: BOOK_STATUS.PREAPPROVED};
 
     console.log('dateObj:' + JSON.stringify(dateObj));
 

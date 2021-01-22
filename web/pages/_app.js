@@ -60,8 +60,8 @@ class MyApp extends App {
           <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
                 integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
                 crossOrigin=""/>
-          <link rel="shortcut icon" type="image/png" href="/static/favicon.png"/>
-          <link rel="icon" type="image/png" href="/static/favicon.png"/>
+          <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon"/>
+          <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
           <script src="https://www.googletagmanager.com/gtag/js?id=G-5ZTWZ756HY"/>
           <script src="/static/assets/ga.js"/>
           <script src="https://sibforms.com/forms/end-form/build/main.js"/>

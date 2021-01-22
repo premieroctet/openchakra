@@ -90,13 +90,6 @@ class all extends React.Component {
     });
   }
 
-  onRowClick = data => {
-    if (data) {
-      window.open(`/dashboard/prestations/view?id=${data._id}`, '_blank')
-    }
-  }
-
-
   render() {
     const {classes} = this.props;
     const {equipments} = this.state;

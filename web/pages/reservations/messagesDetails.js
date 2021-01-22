@@ -18,7 +18,7 @@ import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 const {hideIllegal} = require('../../utils/text')
-
+const {BOOK_STATUS}=require('../../utils/consts')
 moment.locale('fr');
 
 
@@ -222,7 +222,7 @@ class MessagesDetails extends React.Component {
                   style={{
                     fontSize: '1.1rem',
                     marginBottom: '15px',
-                    color: bookingObj === null ? null : bookingObj.status === 'Confirmée' ? '#419F41' : bookingObj.status === 'En attente de confirmation' || bookingObj.status === 'Demande d\'infos' ? '#F87280' : bookingObj.status === 'Pré-approuvée' ? '#F89B72' : '#5D5D5D',
+                    color: bookingObj === null ? null : bookingObj.status === BOOK_STATUS.CONFIRMED ? '#419F41' : bookingObj.status === BOOK_STATUS.TO_CONFIRM || bookingObj.status === BOOK_STATUS.INFO ? '#F87280' : bookingObj.status === BOOK_STATUS.PREAPPROVED ? '#F89B72' : '#5D5D5D',
                   }}
                 >
                   {bookingObj === null ? null : bookingObj.status}

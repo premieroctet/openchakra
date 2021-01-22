@@ -81,14 +81,14 @@ router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: fal
         ],
       },
       {
-        status: 'Pré-approuvée',
+        status: BOOK_STATUS.PREAPPROVED,
       },
     ],
   })
     .then(booking => {
       booking.forEach(b => {
         if (!moment(b.date).isBetween(moment(b.date), moment(b.date).add(1, 'd'))) {
-          Booking.findByIdAndUpdate(b._id, {status: 'Expirée'}, {new: true})
+          Booking.findByIdAndUpdate(b._id, {status: BOOK_STATUS.EXPIRED}, {new: true})
             .then(newB => {
               res.json(newB);
             });
@@ -114,7 +114,7 @@ router.get('/endConfirmedBookings', passport.authenticate('jwt', {session: false
         const hourBooking = parseInt(b.end_time.slice(0, 2));
         if (moment().isAfter(date)) {
           if (hourNow >= hourBooking) {
-            Booking.findByIdAndUpdate(b._id, {status: 'Terminée'}, {new: true})
+            Booking.findByIdAndUpdate(b._id, {status: BOOK_STATUS.FINISHED}, {new: true})
               .then(newB => {
                 res.json(newB);
               });
@@ -156,7 +156,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
 
   newBooking.save()
     .then(booking => {
-    if (booking.status == 'Demande d\'infos' || booking.status == 'En attente de confirmation') {
+    if (booking.status == BOOK_STATUS.INFO || booking.status == BOOK_STATUS.TO_CONFIRM) {
         // Reload to get user,alfred,service
         Booking.findById(booking._id)
           .populate('alfred')
@@ -248,7 +248,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (re
 // @Route GET /myAlfred/api/booking/last/:id
 // View 3 last booking for shop page
 router.get('/last/:id', (req, res) => {
-  Booking.find({alfred: req.params.id, status: 'Terminée'}, {}, {sort: {'date': -1}}).limit(3)
+  Booking.find({alfred: req.params.id, status: BOOK_STATUS.FINISHED}, {}, {sort: {'date': -1}}).limit(3)
     .populate('alfred', '-id_card')
     .populate('user', '-id_card')
     .populate('prestation')
@@ -412,7 +412,7 @@ if (is_production()) {
           console.log(`End date:${end_date}`);
           if (moment(date).isSameOrAfter(end_date)) {
             console.log('Resa terminé:' + b._id);
-            b.status = 'Terminée';
+            b.status = BOOK_STATUS.FINISHED
             b.save()
               .then(b => {
                 sendLeaveCommentForAlfred(b);
@@ -427,9 +427,9 @@ if (is_production()) {
 
 // Handle terminated but not paid bookings
 if (is_production()) {
-  new CronJob('0 */5 * * * *', function () {
+  new CronJob('0 */15 * * * *', function () {
     const date = moment(new Date(), 'DD-MM-YYYY').startOf('day');
-    Booking.find({status: 'Terminée', paid: false})
+    Booking.find({status: BOOK_STATUS.FINISHED, paid: false})
       .populate('user')
       .populate('alfred')
       .then(bookings => {
@@ -443,7 +443,7 @@ if (is_production()) {
 if (is_production()) {
   new CronJob('0 0 6 * * *', function () {
     const currentDate = moment(new Date(), 'DD-MM-YYYY').startOf('day');
-    Booking.find({status: 'En attente de confirmation'})
+    Booking.find({status: BOOK_STATUS.TO_CONFIRM})
       .populate('user')
       .populate('alfred')
       .then(booking => {
@@ -453,7 +453,7 @@ if (is_production()) {
           const newDate = moment(date, 'DD-MM-YYYY').startOf('day');
           if (moment(currentDate).isSameOrAfter(newDate)) {
             console.log('Expired');
-            b.status = 'Expirée';
+            b.status = BOOK_STATUS.EXPIRED
             b.save()
               .then(b => {
                 sendBookingExpiredToAlfred(b);

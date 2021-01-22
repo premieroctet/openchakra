@@ -256,7 +256,7 @@ class BookingPreview extends React.Component {
                       </Grid>
                       <Grid style={{marginTop: '2%'}}>
                         <Typography>
-                          { `${bookingObj.service} le ${bookingObj.date_prestation} à ${moment(bookingObj.date).format('HH:mm')}`}
+                          { `${bookingObj.service} le ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}`}
                         </Typography>
                       </Grid>
                       <Grid>
@@ -512,7 +512,7 @@ class BookingPreview extends React.Component {
                                 </Grid>
                                 <Grid>
                                   <Button variant={'outlined'} color={'primary'}
-                                          onClick={() => this.changeStatus('Refusée')}>Refuser</Button>
+                                          onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)}>Refuser</Button>
                                 </Grid>
                               </Grid>
                             )
@@ -523,11 +523,11 @@ class BookingPreview extends React.Component {
                           bookingObj.status === BOOK_STATUS.INFO && currentUser._id === bookingObj.alfred._id ? (
                             <Grid container className={classes.groupButtonsContainer} spacing={1}>
                               <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
-                                <Button onClick={()=>this.props.onConfirmPreaProuved(booking_id)} color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Pré-approuver</Button>
+                                <Button onClick={()=>this.props.onConfirmPreapproved(booking_id)} color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Pré-approuver</Button>
                               </Grid>
                               <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
                                 <Button
-                                  onClick={() => this.changeStatus('Refusée')}
+                                  onClick={() => this.changeStatus(BOOK_STATUS.REFUSED)}
                                   variant={'outlined'}
                                   style={{textTransform: 'initial'}}
                                   color={'primary'}>
@@ -573,17 +573,20 @@ class BookingPreview extends React.Component {
                         Matériel fourni
                       </Typography>
                     </Grid>
-                    {bookingObj === null ? null : bookingObj.equipments.length ? (
-                      <Grid>
-                        <ListAlfredConditions
-                          wrapperComponentProps={bookingObj.equipments}
-                          columnsXl={6}
-                          columnsLG={6}
-                          columnsMD={6}
-                          columnsSM={6}
-                          columnsXS={6}
-                        />
-                      </Grid>
+                    {bookingObj === null ? null : bookingObj.equipments
+                      .length ? (
+                      bookingObj.equipments.map(equipment => {
+                        return (
+                          <Grid item xs={1} style={{textAlign: 'center'}}>
+                            <img
+                              alt={equipment.logo}
+                              title={equipment.logo}
+                              style={{width: '98%'}}
+                              src={`/static/equipments/${equipment.logo}`}
+                            />
+                          </Grid>
+                        );
+                      })
                     ) : (
                       <Grid style={{marginTop: '2%'}}>
                         <Typography>Aucun équipement fourni</Typography>
@@ -650,7 +653,7 @@ class BookingPreview extends React.Component {
                   </Grid>
                   {bookingObj === null ||
                   currentUser === null ? null : bookingObj.status ===
-                  'Terminée' ? (
+                  BOOK_STATUS.FINISHED ? (
                     <Grid
                       container
                       style={{

@@ -155,7 +155,7 @@ class AllReservations extends React.Component {
       >
         <DialogTitle id="customized-dialog-title" onClose={this.onClosePreview}/>
         <DialogContent>
-          <BookingPreview booking_id={bookingPreview} onCancel={this.openBookingCancel} onConfirm={this.openBookingConfirm} onConfirmPreaProuved={this.openBookingPreAprouved}/>
+          <BookingPreview booking_id={bookingPreview} onCancel={this.openBookingCancel} onConfirm={this.openBookingConfirm} onConfirmPreapproved={this.openBookingPreAprouved}/>
         </DialogContent>
       </Dialog>
     )
