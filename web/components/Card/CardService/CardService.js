@@ -203,7 +203,7 @@ class CardService extends React.Component{
               }
               <Grid className={classes.containerDescription}>
                 <Grid>
-                  <Typography style={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color:'rgba(39,37,37,35%)'}}>{cpData.description ? cpData.description : 'Aucune descrption'}</Typography>
+                  <Typography style={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color:'rgba(39,37,37,35%)'}}>{cpData.description ? cpData.description : 'Cet alfred est peut être trop timide pour parler de lui !'}</Typography>
                 </Grid>
               </Grid>
               <Grid className={classes.cardServiceScoreAndButtonContainer}>
