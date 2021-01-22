@@ -28,7 +28,7 @@ export default theme =>({
     alignItems: 'center',
     position: 'relative',
     height: '100%',
-    marginTop: '2vh'
+    marginTop: '3vh'
   },
   cardPreviewContentIdentity:{
     display: 'flex',
