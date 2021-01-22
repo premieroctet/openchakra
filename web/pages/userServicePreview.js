@@ -93,124 +93,122 @@ class UserServicesPreview extends React.Component {
     this.isInPerimeter = this.isInPerimeter.bind(this)
   }
 
+  setState = (st, cb) => {
+    console.log(`setState:${Object.keys(st)}`)
+    return super.setState(st, cb)
+  }
+
   static getInitialProps({query: {id, address}}) {
     return {service_id: id, address: address};
   }
 
   componentDidMount() {
 
-    setAxiosAuthentication()
-    let bookingObj = JSON.parse(localStorage.getItem('bookingObj'));
-
     const id = this.props.service_id;
 
-    if (bookingObj) {
-      if (bookingObj.serviceUserId.toString() !== id) {
-        bookingObj = null;
-        localStorage.removeItem('bookingObj');
-      }
+    setAxiosAuthentication()
+
+    let bookingObj = JSON.parse(localStorage.getItem('bookingObj'));
+    if (bookingObj && bookingObj.serviceUserId.toString() !== id) {
+      bookingObj = null;
+      localStorage.removeItem('bookingObj');
     }
+
     axios.get(`/myAlfred/api/serviceUser/${id}`)
       .then(res => {
+        let serviceUser = res.data;
+        var count = {};
+        serviceUser.prestations.forEach(p => count[p._id] = null);
+
+        if (bookingObj) {
+          serviceUser.prestations.forEach(p => {
+            const bookP = bookingObj.prestations.find(bp => {
+              return bp.name === p.prestation.label;
+            });
+            if (bookP) {
+              count[p._id] = parseInt(bookP.value);
+            }
+          });
+        }
+
+        var st = []
         axios.get('/myAlfred/api/users/current')
           .then(res => {
             let user = res.data;
-            this.setState({user: user});
-          })
-          .catch()
-          .finally(() => {
-
-            let serviceUser = res.data;
-            var count = {};
-            serviceUser.prestations.forEach(p => count[p._id] = null);
-
-            if (bookingObj) {
-              serviceUser.prestations.forEach(p => {
-                const bookP = bookingObj.prestations.find(bp => {
-                  return bp.name === p.prestation.label;
-                });
-                if (bookP) {
-                  count[p._id] = parseInt(bookP.value);
-                }
-              });
-            }
-
+            st['user']=user
             axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
               .then(res => {
                 let availabilities = res.data;
-                this.setState({availabilities: availabilities});
+                st['availabilities']=availabilities
+                axios.get('/myAlfred/api/reviews/' + serviceUser.user._id)
+                  .then(response => {
+                    const skills = response.data;
+                    st['skills']=skills
+                    axios.get('/myAlfred/api/shop/alfred/' + serviceUser.user._id)
+                      .then(res => {
+                        let shop = res.data;
+                        st['shop']=shop
+                        st['flexible']=shop.flexible_cancel
+                        st['moderate']=shop.moderate_cancel
+                        st['strict']=shop.strict_cancel
+                        st['use_cesu']=shop.cesu !== 'Disabled'
+                        axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${serviceUser.user._id}`)
+                          .then(res => {
+                            var reviews = res.data;
+                            if (id) {
+                              reviews = reviews.filter(r => r.serviceUser._id === id);
+                            }
+                            st['reviews']=reviews
+                            const equipmentsPromise=this.state.allEquipments.map( res => axios.get(`/myAlfred/api/equipment/${res}`))
+                            Promise.all(equipmentsPromise)
+                              .then( res => {
+                                st['allDetailEquipments']=res.map( r => r.data)
+                                this.setState({
+                                  serviceUser: serviceUser,
+                                  service: serviceUser.service,
+                                  equipments: serviceUser.equipments,
+                                  prestations: serviceUser.prestations,
+                                  allEquipments: serviceUser.service.equipments,
+                                  alfred: serviceUser.user,
+                                  count: count,
+                                  pick_tax: null,
+                                  date: bookingObj && bookingObj.date_prestation ? moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate() : null,
+                                  time: bookingObj && bookingObj.time_prestation ? moment(bookingObj.time_prestation).toDate() : null,
+                                  location: bookingObj ? bookingObj.location : null,
+                                  commission: bookingObj ? bookingObj.fees : null,
+                                  ...st
+                                }, () => {
+                                  if (!bookingObj) {
+                                    this.setDefaultLocation();
+                                  }
+                                  this.computeTotal()
+                                })
+                              })
+                              .catch( err => {
+                                console.error(err)
+                              })
+                          })
+                          .catch(err => console.error(err));
+
+
+                      })
+                      .catch(err => console.error(err));
+
+                  })
+                  .catch(error => console.error(error));
               })
               .catch(err => console.error(err));
-
-            axios.get('/myAlfred/api/reviews/' + serviceUser.user._id)
-              .then(response => {
-                const skills = response.data;
-                this.setState({skills: skills});
-              })
-              .catch(error => console.error(error));
-
-            axios.get('/myAlfred/api/shop/alfred/' + serviceUser.user._id)
-              .then(res => {
-                let shop = res.data;
-                this.setState({
-                  shop: shop,
-                  flexible: shop.flexible_cancel,
-                  moderate: shop.moderate_cancel,
-                  strict: shop.strict_cancel,
-                  use_cesu: shop.cesu !== 'Disabled',
-                });
-              })
-              .catch(err => console.error(err));
-
-            axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${serviceUser.user._id}`)
-              .then(res => {
-                var reviews = res.data;
-                if (id) {
-                  reviews = reviews.filter(r => r.serviceUser._id === id);
-                }
-                this.setState({reviews: reviews});
-              })
-              .catch(err => console.error(err));
-
-            this.setState({
-              serviceUser: serviceUser,
-              service: serviceUser.service,
-              equipments: serviceUser.equipments,
-              prestations: serviceUser.prestations,
-              allEquipments: serviceUser.service.equipments,
-              alfred: serviceUser.user,
-              count: count,
-              pick_tax: null,
-              date: bookingObj && bookingObj.date_prestation ? moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate() : null,
-              time: bookingObj && bookingObj.time_prestation ? moment(bookingObj.time_prestation).toDate() : null,
-              location: bookingObj ? bookingObj.location : null,
-              commission: bookingObj ? bookingObj.fees : null,
-            }, () => {
-              if (!bookingObj) {
-                this.setDefaultLocation();
-              }
-            });
-            const equipmentsPromise=this.state.allEquipments.map( res => axios.get(`/myAlfred/api/equipment/${res}`))
-            Promise.all(equipmentsPromise)
-              .then( res => {
-                this.setState({allDetailEquipments: res.map( r => r.data)})
-              })
-              .catch( err => {
-                console.error(err)
-              })
-          });
+          })
       })
       .catch(err => console.error(err));
 
 
     localStorage.removeItem('bookingObj');
 
-    setTimeout(() => {
-      this.computeTotal();
-    }, 2000);
   }
 
   setDefaultLocation = () => {
+    console.log('setDefaultLocation')
     const serviceUser = this.state.serviceUser;
     const user = this.state.user;
     var location = serviceUser.location.client && (!user || this.isInPerimeter()) ? this.props.address || 'main' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
@@ -304,10 +302,13 @@ class UserServicesPreview extends React.Component {
 
   onChange = event => {
     const {name, value} = event.target;
-    this.setState({[name]: value}, () => this.computeTotal());
+    var st={[name]:value}
     if (name === 'location' && value !== 'alfred') {
-      this.setState({pick_tax: null, isChecked: false});
+      st['pick_tax']=null
+      st['isChecked']=false
     }
+    //this.setState(st, () => this.computeTotal());
+    this.setState(st)
   };
 
   onLocationChanged = (id, checked) => {
@@ -822,6 +823,7 @@ class UserServicesPreview extends React.Component {
     const {classes, address} = this.props;
     const {service,alfred, user,} = this.state;
 
+    console.count('Render')
     return (
       <React.Fragment>
         <Helmet>
