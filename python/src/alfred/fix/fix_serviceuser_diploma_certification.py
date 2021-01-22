@@ -22,7 +22,7 @@ class FixServiceUserDiplomaCertification(FixBase):
         for field in 'diploma certification'.split():
           invalid_services = [s for s in serviceusers if not self.isDocumentValid(s.get(field, None))]
           for su in invalid_services:
-            print('Invalid {} for {}'.format(field, su.get(field)))
+            print('Invalid {} for {}/service {}'.format(field, su.get(field), su._id))
             setattr(su, field, None)
             setattr(su, 'graduated' if field=='diploma' else 'is_certified', False)
             self.db.update_document("serviceusers", su)
