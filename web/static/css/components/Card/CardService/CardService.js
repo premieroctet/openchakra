@@ -4,10 +4,7 @@ export default theme => ({
     borderRadius: 20,
     display: 'flex',
     justifyContent: 'center',
-    height: '40vh',
-    [theme.breakpoints.down('md')]:{
-      height: 300
-    }
+    height: 450,
   },
   cardServiceInfoContent:{
     display:'flex',
@@ -27,11 +24,8 @@ export default theme => ({
     borderRadius: 20,
     display: 'flex',
     justifyContent: 'center',
-    height: '40vh',
+    height: 450,
     cursor: 'pointer',
-    [theme.breakpoints.down('md')]:{
-      height: 300
-    },
     [theme.breakpoints.down('xs')]:{
       height: '30vh',
 
@@ -67,10 +61,7 @@ export default theme => ({
   },
   cardServicePicsContainer:{
     width: '100%',
-    height: '20vh',
-    [theme.breakpoints.down('md')]:{
-      height: 130
-    },
+    height: 200,
     [theme.breakpoints.down('xs')]:{
       width: 125,
       height: 125
@@ -123,9 +114,6 @@ export default theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    [theme.breakpoints.down('xs')]:{
-      justifyContent: 'center'
-    }
   },
 
   cardServiceRatingContainer:{
@@ -202,7 +190,7 @@ export default theme => ({
   },
   labelService:{
     [theme.breakpoints.down('xs')]:{
-      marginLeft: '1vh'
+      marginLeft: '2vh'
     }
   },
   profileModecardServiceFlexContainer:{
@@ -217,8 +205,27 @@ export default theme => ({
     }
   },
   containerDescription:{
+    height:70,
+
     [theme.breakpoints.down('xs')]:{
-      marginLeft: '1vh'
+      marginLeft: '2vh',
+      height: 'initial'
+    }
+  },
+  descriptionStyle:{
+    color:'rgba(39,37,37,35%)',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    lineClamp:3,
+    boxOrient:'vertical',
+    display: '-webkit-box',
+    [theme.breakpoints.down('md')]:{
+      lineClamp:2,
+
+    },
+    [theme.breakpoints.down('xs')]:{
+      lineClamp:1,
+
     }
   }
 
