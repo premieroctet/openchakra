@@ -35541,12 +35541,12 @@ class MyApp extends next_app__WEBPACK_IMPORTED_MODULE_1___default.a {
       crossOrigin: ""
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("link", {
       rel: "shortcut icon",
-      type: "image/png",
-      href: "/static/favicon.png"
+      href: "/static/favicon.ico",
+      type: "image/x-icon"
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("link", {
       rel: "icon",
-      type: "image/png",
-      href: "/static/favicon.png"
+      href: "/static/favicon.ico",
+      type: "image/x-icon"
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("script", {
       src: "https://www.googletagmanager.com/gtag/js?id=G-5ZTWZ756HY"
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("script", {

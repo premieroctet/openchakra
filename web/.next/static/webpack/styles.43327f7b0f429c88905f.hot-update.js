@@ -1,4 +1,4 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["styles"],{
+webpackHotUpdate("styles",{
 
 /***/ "./node_modules/react-big-calendar/lib/css/react-big-calendar.css":
 /*!************************************************************************!*\
@@ -444,5 +444,5 @@
 
 /***/ })
 
-}]);
-//# sourceMappingURL=styles.js.map
+})
+//# sourceMappingURL=styles.43327f7b0f429c88905f.hot-update.js.map
