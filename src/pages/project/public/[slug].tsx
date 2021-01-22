@@ -34,23 +34,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   }
 }
 
-// export const getStaticPaths: GetStaticPaths = async () => {
-//   const projects = await prisma.project.findMany({
-//     where: {
-//       public: true,
-//     },
-//   })
-
-//   return {
-//     paths: projects.map(project => ({
-//       params: {
-//         slug: `${project.id.toString()}-${project.projectName.toString()}`,
-//       },
-//     })),
-//     fallback: false,
-//   }
-// }
-
 interface ProjectContainer {
   projects: Project
 }

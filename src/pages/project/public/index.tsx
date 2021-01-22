@@ -19,12 +19,8 @@ import { Project, User } from '@prisma/client'
 import { useRouter } from 'next/router'
 import PreviewProject from '~components/PreviewProject'
 
-interface Projects {
-  project: []
-}
-
 const ProjectList = () => {
-  const [projects, setProjects] = useState<Projects | undefined>(undefined)
+  const [projects, setProjects] = useState<any | undefined>(undefined)
   const { handlers } = useShortcuts()
   const [session] = useSession()
   const router = useRouter()
@@ -173,7 +169,6 @@ const ProjectList = () => {
             )
           ) : (
             <Box textAlign="center" mt={30}>
-              {/* <Spinner m="0 auto" color="white" size="xl" mt="3rem" /> */}
               <Text color="white">There is no projects</Text>
             </Box>
           )}
