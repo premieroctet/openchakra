@@ -39,6 +39,7 @@ const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
 const {BOOK_STATUS}=require('../utils/consts')
 
 const isEmpty = require('../server/validation/is-empty');
+const {isDateAvailable} = require('../utils/dateutils')
 const {computeBookingReference} = require('../utils/functions');
 const {COMM_CLIENT} = require('../utils/consts');
 const emptyPromise = require('../utils/promise');
@@ -84,7 +85,8 @@ class UserServicesPreview extends React.Component {
       errors: {},
       isChecked: false,
       use_cesu: false,
-      albums:[]
+      albums:[],
+      excludedDays: [],
     };
     this.checkBook = this.checkBook.bind(this)
     this.hasWarningPerimeter = this.hasWarningPerimeter.bind(this)
@@ -102,6 +104,13 @@ class UserServicesPreview extends React.Component {
     return {service_id: id, address: address};
   }
 
+  /**
+  setState = (st, cb) => {
+    console.log(`Setting state ${Object.keys(st)}`)
+    super.setState(st, cb)
+  }
+  */
+
   componentDidMount() {
 
     const id = this.props.service_id;
@@ -114,6 +123,7 @@ class UserServicesPreview extends React.Component {
       localStorage.removeItem('bookingObj');
     }
 
+    var st={}
     axios.get(`/myAlfred/api/serviceUser/${id}`)
       .then(res => {
         let serviceUser = res.data;
@@ -140,6 +150,8 @@ class UserServicesPreview extends React.Component {
               .then(res => {
                 let availabilities = res.data;
                 st['availabilities']=availabilities
+                const excludedDays = this.getExcludedDays(availabilities)
+                st['excludedDays']=excludedDays
                 axios.get('/myAlfred/api/reviews/' + serviceUser.user._id)
                   .then(response => {
                     const skills = response.data;
@@ -184,28 +196,31 @@ class UserServicesPreview extends React.Component {
                                   this.computeTotal()
                                 })
                               })
-                              .catch( err => {
-                                console.error(err)
-                              })
                           })
-                          .catch(err => console.error(err));
-
-
                       })
-                      .catch(err => console.error(err));
-
                   })
-                  .catch(error => console.error(error));
               })
-              .catch(err => console.error(err));
-          })
       })
+    })
       .catch(err => console.error(err));
 
-
     localStorage.removeItem('bookingObj');
-
   }
+
+  getExcludedDays = (availabilities) =>  {
+    const date=moment(new Date())
+    var currMoment=moment(date).set("date", 1)
+    const endMoment=moment(date).add(1, "year")
+    var exclude=[]
+    while (currMoment<endMoment) {
+      if (!isDateAvailable(currMoment, availabilities)) {
+        exclude.push(currMoment.toDate())
+      }
+      currMoment.add(1, "d")
+    }
+    return exclude
+  }
+
 
   setDefaultLocation = () => {
     console.log('setDefaultLocation')
@@ -227,11 +242,11 @@ class UserServicesPreview extends React.Component {
 
   checkBook = () => {
     var errors = {};
-    if (Object.values(this.state.count).every(v => v === 0 || v == null)) {
+    if (Object.values(this.state.count).every(v => !v)) {
       errors['prestations'] = 'Sélectionnez au moins une prestation';
     }
-    if (this.state.totalPrestations < this.state.serviceUser.minimum_basket) {
-      errors['total'] = 'Commande minimum des prestation de ' + this.state.serviceUser.minimum_basket + '€ requise';
+    else if (this.state.totalPrestations < this.state.serviceUser.minimum_basket) {
+      errors['prestations'] = 'Commande minimum des prestation de ' + this.state.serviceUser.minimum_basket + '€ requise';
     }
 
     if (!errors.datetime && this.state.date == null) {
@@ -281,7 +296,6 @@ class UserServicesPreview extends React.Component {
         }
       }
     });
-    // Set "no filter" to first position
     return result;
   };
 
@@ -307,8 +321,7 @@ class UserServicesPreview extends React.Component {
       st['pick_tax']=null
       st['isChecked']=false
     }
-    //this.setState(st, () => this.computeTotal());
-    this.setState(st)
+    this.setState(st, this.checkBook)
   };
 
   onLocationChanged = (id, checked) => {
@@ -371,6 +384,7 @@ class UserServicesPreview extends React.Component {
     let commission = totalPrestations * COMM_CLIENT;
     let total = totalPrestations;
     total += commission;
+
     this.setState({
       totalPrestations: totalPrestations,
       commission: commission,
@@ -574,7 +588,8 @@ class UserServicesPreview extends React.Component {
 
   getAlbumPictures = () => {
     const album=this.getAlbum(this.state.selectedAlbum);
-    return album ? album.pictures : []
+    const res = album ? album.pictures : []
+    return res
   };
 
   content = (classes) => {
@@ -823,8 +838,12 @@ class UserServicesPreview extends React.Component {
     const {classes, address} = this.props;
     const {service,alfred, user,} = this.state;
 
+    if (!this.state.serviceUser) {
+      return null
+    }
+
     console.count('Render')
-    return (
+    const res = (
       <React.Fragment>
         <Helmet>
           <meta property="og:image" content={`/${service.picture}`}/>
@@ -845,7 +864,8 @@ class UserServicesPreview extends React.Component {
           </LayoutMobile>
         </Hidden>
       </React.Fragment>
-    );
+    )
+    return res
   }
 }
 
