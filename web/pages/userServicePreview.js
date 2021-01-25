@@ -142,8 +142,9 @@ class UserServicesPreview extends React.Component {
 
         var st = []
         axios.get('/myAlfred/api/users/current')
+          .catch (err => {})
           .then(res => {
-            let user = res.data;
+            let user = res ? res.data : null
             st['user']=user
             axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
               .then(res => {
