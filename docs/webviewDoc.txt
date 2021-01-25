@@ -1,0 +1,83 @@
+WebView:
+
+pré-requis:
+	-Installer Xcode
+	-CocoaPods(sudo gem install cocoapods)
+	-Installer Android Studio
+
+
+Apple:
+
+1) Lancement de l'app:
+
+	a) Android :
+	- npx react-native start.
+	- npx react-native run-android.
+
+
+	b)IOS:
+	- Lancer Xcode.
+	- Ouvrir le dossier Ios dans Xcode.
+	- Choisir un device sur lequel lancé l'app (mobile ou emulateur).
+	- Cliqué sur la flèche en haut à gauche 'build'.
+
+
+2) Mettre l'app sur l'appleStoreConnect:
+
+	-Product/Archive
+	-Validate App
+	-Distribute App
+	
+	Source : https://help.dropsource.com/docs/documentation/after-dropsource/publishing-your-app/submitting-an-ios-app-to-the-app-store/
+
+
+3)Generate keytore Android
+
+	- (terminal)keytool -genkey -v -keystore your_key_name.keystore -alias your_key_alias -keyalg RSA -keysize 2048 -validity 10000
+	- You can change your_key_name with any name you want, as well as your_key_alias. This key uses key-size 2048, instead of default 1024 for security reason.
+	- As a result, it generates a key-store file on your project directory named my-release-key.keystore valid for 10000 days. Most importantly, back up this keystore file and its credentials (store password, alias, and alias password) which will be required later.
+	- you need to copy the file your_key_name.keystore and paste it under the android/app directory in your React Native project folder.(mv my-release-key.keystore /android/app)
+	- open your android\app\build.gradle file and add the keystore configuration.
+	-    signingConfigs {
+		  release {
+    			storeFile file('your_key_name.keystore')
+    			storePassword System.console().readLine("\nKeystore password:")
+   			 keyAlias System.console().readLine("\nAlias: ")
+   			 keyPassword System.console().readLine("\Alias password: ")
+   			}
+      	
+   	 	}
+	-(You should make sure the signingConfigs block appears before buildTypes block to avoid unnecessary errors)
+	-Make sure you have an assets folder under android/app/src/main/assets. If it’s not there, create one. 
+	-react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle 
+	- --assets-dest android/app/src/main/res/
+
+	source:(https://www.instamobile.io/android-development/generate-react-native-release-build-android/)
+	
+
+4) Release APK 
+
+	Terminal:
+		- cd android
+		- windows : gradlew assembleRelease, linux/max : ./gradlew assembleRelease
+	AndroidStudio:
+		- Open your app in Android Studio by browsing to the android folder of your React Native project
+		- Navigate to the Build tab, then click on Generate signed bundle / APK
+		- Select APK to generate release APK for your React Native Android project. Then, Click on Next
+		- Under Key store path click Create new
+		- Pick a path like /home/User/keystores/android.jks
+		- Select passwords for the keystore and key and rnter the certificate information.
+		- Click on OK, then click on Next. Select both the V1 and the V2 signature version and click Finish.
+
+	source:(https://www.instamobile.io/android-development/generate-react-native-release-build-android/)
+	
+
+5) Changer l'app Icon & LaunchScreen
+
+	Ios & Android
+
+	Source: 
+	-https://medium.com/better-programming/react-native-add-app-icons-and-launch-screens-onto-ios-and-android-apps-3bfbc20b7d4c
+	-https://medium.com/handlebar-labs/how-to-add-a-splash-screen-to-a-react-native-app-ios-and-android-30a3cec835ae
+
+

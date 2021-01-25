@@ -3,7 +3,6 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
 import Avatar from "@material-ui/core/Avatar";
-const {circular_get}=require('../../../utils/functions');
 import styles from '../../../static/css/components/Card/CardPreview/CardPreview'
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";

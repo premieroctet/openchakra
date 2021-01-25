@@ -1,0 +1,5 @@
+{
+  "sideEffects": false,
+  "module": "../esm/TableRow/index.js",
+  "typings": "./index.d.ts"
+}

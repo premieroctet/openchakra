@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "iconBlueDeep2x - copie-1.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "iconBlueDeep4x - copie-1.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "iconBlueDeep6x - copie.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

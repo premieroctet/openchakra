@@ -39,6 +39,7 @@ const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel');
 const {BOOK_STATUS}=require('../utils/consts')
 
 const isEmpty = require('../server/validation/is-empty');
+const {isDateAvailable} = require('../utils/dateutils')
 const {computeBookingReference} = require('../utils/functions');
 const {COMM_CLIENT} = require('../utils/consts');
 const emptyPromise = require('../utils/promise');
@@ -84,7 +85,8 @@ class UserServicesPreview extends React.Component {
       errors: {},
       isChecked: false,
       use_cesu: false,
-      albums:[]
+      albums:[],
+      excludedDays: [],
     };
     this.checkBook = this.checkBook.bind(this)
     this.hasWarningPerimeter = this.hasWarningPerimeter.bind(this)
@@ -93,124 +95,134 @@ class UserServicesPreview extends React.Component {
     this.isInPerimeter = this.isInPerimeter.bind(this)
   }
 
+  setState = (st, cb) => {
+    console.log(`setState:${Object.keys(st)}`)
+    return super.setState(st, cb)
+  }
+
   static getInitialProps({query: {id, address}}) {
     return {service_id: id, address: address};
   }
 
-  componentDidMount() {
+  /**
+  setState = (st, cb) => {
+    console.log(`Setting state ${Object.keys(st)}`)
+    super.setState(st, cb)
+  }
+  */
 
-    setAxiosAuthentication()
-    let bookingObj = JSON.parse(localStorage.getItem('bookingObj'));
+  componentDidMount() {
 
     const id = this.props.service_id;
 
-    if (bookingObj) {
-      if (bookingObj.serviceUserId.toString() !== id) {
-        bookingObj = null;
-        localStorage.removeItem('bookingObj');
-      }
+    setAxiosAuthentication()
+
+    let bookingObj = JSON.parse(localStorage.getItem('bookingObj'));
+    if (bookingObj && bookingObj.serviceUserId.toString() !== id) {
+      bookingObj = null;
+      localStorage.removeItem('bookingObj');
     }
+
+    var st={}
     axios.get(`/myAlfred/api/serviceUser/${id}`)
       .then(res => {
+        let serviceUser = res.data;
+        var count = Object.fromEntries(serviceUser.prestations.map(p => [p._id, null]))
+
+        if (bookingObj) {
+          serviceUser.prestations.forEach(p => {
+            const bookP = bookingObj.prestations.find(bp => {
+              return bp.name === p.prestation.label;
+            });
+            if (bookP) {
+              count[p._id] = parseInt(bookP.value);
+            }
+          });
+        }
+
+        var st = []
         axios.get('/myAlfred/api/users/current')
           .then(res => {
             let user = res.data;
-            this.setState({user: user});
-          })
-          .catch()
-          .finally(() => {
-
-            let serviceUser = res.data;
-            var count = {};
-            serviceUser.prestations.forEach(p => count[p._id] = null);
-
-            if (bookingObj) {
-              serviceUser.prestations.forEach(p => {
-                const bookP = bookingObj.prestations.find(bp => {
-                  return bp.name === p.prestation.label;
-                });
-                if (bookP) {
-                  count[p._id] = parseInt(bookP.value);
-                }
-              });
-            }
-
+            st['user']=user
             axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
               .then(res => {
                 let availabilities = res.data;
-                this.setState({availabilities: availabilities});
+                st['availabilities']=availabilities
+                const excludedDays = this.getExcludedDays(availabilities)
+                st['excludedDays']=excludedDays
+                axios.get('/myAlfred/api/reviews/' + serviceUser.user._id)
+                  .then(response => {
+                    const skills = response.data;
+                    st['skills']=skills
+                    axios.get('/myAlfred/api/shop/alfred/' + serviceUser.user._id)
+                      .then(res => {
+                        let shop = res.data;
+                        st['shop']=shop
+                        st['flexible']=shop.flexible_cancel
+                        st['moderate']=shop.moderate_cancel
+                        st['strict']=shop.strict_cancel
+                        st['use_cesu']=shop.cesu !== 'Disabled'
+                        axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${serviceUser.user._id}`)
+                          .then(res => {
+                            var reviews = res.data;
+                            if (id) {
+                              reviews = reviews.filter(r => r.serviceUser._id === id);
+                            }
+                            st['reviews']=reviews
+                            const equipmentsPromise=this.state.allEquipments.map( res => axios.get(`/myAlfred/api/equipment/${res}`))
+                            Promise.all(equipmentsPromise)
+                              .then( res => {
+                                st['allDetailEquipments']=res.map( r => r.data)
+                                this.setState({
+                                  serviceUser: serviceUser,
+                                  service: serviceUser.service,
+                                  equipments: serviceUser.equipments,
+                                  prestations: serviceUser.prestations,
+                                  allEquipments: serviceUser.service.equipments,
+                                  alfred: serviceUser.user,
+                                  count: count,
+                                  pick_tax: null,
+                                  date: bookingObj && bookingObj.date_prestation ? moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate() : null,
+                                  time: bookingObj && bookingObj.time_prestation ? moment(bookingObj.time_prestation).toDate() : null,
+                                  location: bookingObj ? bookingObj.location : null,
+                                  commission: bookingObj ? bookingObj.fees : null,
+                                  ...st
+                                }, () => {
+                                  if (!bookingObj) {
+                                    this.setDefaultLocation();
+                                  }
+                                  this.computeTotal()
+                                })
+                              })
+                          })
+                      })
+                  })
               })
-              .catch(err => console.error(err));
-
-            axios.get('/myAlfred/api/reviews/' + serviceUser.user._id)
-              .then(response => {
-                const skills = response.data;
-                this.setState({skills: skills});
-              })
-              .catch(error => console.error(error));
-
-            axios.get('/myAlfred/api/shop/alfred/' + serviceUser.user._id)
-              .then(res => {
-                let shop = res.data;
-                this.setState({
-                  shop: shop,
-                  flexible: shop.flexible_cancel,
-                  moderate: shop.moderate_cancel,
-                  strict: shop.strict_cancel,
-                  use_cesu: shop.cesu !== 'Disabled',
-                });
-              })
-              .catch(err => console.error(err));
-
-            axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${serviceUser.user._id}`)
-              .then(res => {
-                var reviews = res.data;
-                if (id) {
-                  reviews = reviews.filter(r => r.serviceUser._id === id);
-                }
-                this.setState({reviews: reviews});
-              })
-              .catch(err => console.error(err));
-
-            this.setState({
-              serviceUser: serviceUser,
-              service: serviceUser.service,
-              equipments: serviceUser.equipments,
-              prestations: serviceUser.prestations,
-              allEquipments: serviceUser.service.equipments,
-              alfred: serviceUser.user,
-              count: count,
-              pick_tax: null,
-              date: bookingObj && bookingObj.date_prestation ? moment(bookingObj.date_prestation, 'DD/MM/YYYY').toDate() : null,
-              time: bookingObj && bookingObj.time_prestation ? moment(bookingObj.time_prestation).toDate() : null,
-              location: bookingObj ? bookingObj.location : null,
-              commission: bookingObj ? bookingObj.fees : null,
-            }, () => {
-              if (!bookingObj) {
-                this.setDefaultLocation();
-              }
-            });
-            const equipmentsPromise=this.state.allEquipments.map( res => axios.get(`/myAlfred/api/equipment/${res}`))
-            Promise.all(equipmentsPromise)
-              .then( res => {
-                this.setState({allDetailEquipments: res.map( r => r.data)})
-              })
-              .catch( err => {
-                console.error(err)
-              })
-          });
       })
+    })
       .catch(err => console.error(err));
 
-
     localStorage.removeItem('bookingObj');
-
-    setTimeout(() => {
-      this.computeTotal();
-    }, 2000);
   }
 
+  getExcludedDays = (availabilities) =>  {
+    const date=moment(new Date())
+    var currMoment=moment(date).set("date", 1)
+    const endMoment=moment(date).add(1, "year")
+    var exclude=[]
+    while (currMoment<endMoment) {
+      if (!isDateAvailable(currMoment, availabilities)) {
+        exclude.push(currMoment.toDate())
+      }
+      currMoment.add(1, "d")
+    }
+    return exclude
+  }
+
+
   setDefaultLocation = () => {
+    console.log('setDefaultLocation')
     const serviceUser = this.state.serviceUser;
     const user = this.state.user;
     var location = serviceUser.location.client && (!user || this.isInPerimeter()) ? this.props.address || 'main' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null;
@@ -229,11 +241,11 @@ class UserServicesPreview extends React.Component {
 
   checkBook = () => {
     var errors = {};
-    if (Object.values(this.state.count).every(v => v === 0 || v == null)) {
+    if (Object.values(this.state.count).every(v => !v)) {
       errors['prestations'] = 'Sélectionnez au moins une prestation';
     }
-    if (this.state.totalPrestations < this.state.serviceUser.minimum_basket) {
-      errors['total'] = 'Commande minimum des prestation de ' + this.state.serviceUser.minimum_basket + '€ requise';
+    else if (this.state.totalPrestations < this.state.serviceUser.minimum_basket) {
+      errors['prestations'] = 'Commande minimum des prestation de ' + this.state.serviceUser.minimum_basket + '€ requise';
     }
 
     if (!errors.datetime && this.state.date == null) {
@@ -283,7 +295,6 @@ class UserServicesPreview extends React.Component {
         }
       }
     });
-    // Set "no filter" to first position
     return result;
   };
 
@@ -304,10 +315,12 @@ class UserServicesPreview extends React.Component {
 
   onChange = event => {
     const {name, value} = event.target;
-    this.setState({[name]: value}, () => this.computeTotal());
+    var st={[name]:value}
     if (name === 'location' && value !== 'alfred') {
-      this.setState({pick_tax: null, isChecked: false});
+      st['pick_tax']=null
+      st['isChecked']=false
     }
+    this.setState(st, this.checkBook)
   };
 
   onLocationChanged = (id, checked) => {
@@ -370,6 +383,7 @@ class UserServicesPreview extends React.Component {
     let commission = totalPrestations * COMM_CLIENT;
     let total = totalPrestations;
     total += commission;
+
     this.setState({
       totalPrestations: totalPrestations,
       commission: commission,
@@ -573,7 +587,8 @@ class UserServicesPreview extends React.Component {
 
   getAlbumPictures = () => {
     const album=this.getAlbum(this.state.selectedAlbum);
-    return album ? album.pictures : []
+    const res = album ? album.pictures : []
+    return res
   };
 
   content = (classes) => {
@@ -822,7 +837,12 @@ class UserServicesPreview extends React.Component {
     const {classes, address} = this.props;
     const {service,alfred, user,} = this.state;
 
-    return (
+    if (!this.state.serviceUser) {
+      return null
+    }
+
+    console.count('Render')
+    const res = (
       <React.Fragment>
         <Helmet>
           <meta property="og:image" content={`/${service.picture}`}/>
@@ -843,7 +863,8 @@ class UserServicesPreview extends React.Component {
           </LayoutMobile>
         </Hidden>
       </React.Fragment>
-    );
+    )
+    return res
   }
 }
 

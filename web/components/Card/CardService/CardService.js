@@ -201,11 +201,13 @@ class CardService extends React.Component{
                   </Grid>
                 </Grid>
               }
-              <Grid className={classes.containerDescription}>
-                <Grid>
-                  <Typography style={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color:'rgba(39,37,37,35%)'}}>{cpData.description ? cpData.description : 'Cet alfred est peut être trop timide pour parler de lui !'}</Typography>
-                </Grid>
-              </Grid>
+              {
+                profileMode ? null :
+                  <Grid className={classes.containerDescription}>
+                    <Typography className={classes.descriptionStyle}>{cpData.description ? cpData.description : 'Cet alfred est peut être trop timide pour parler de lui !'}</Typography>
+                  </Grid>
+              }
+
               <Grid className={classes.cardServiceScoreAndButtonContainer}>
                 <Grid className={classes.cardServiceRatingContainer}>
                   <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
