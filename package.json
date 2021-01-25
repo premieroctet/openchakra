@@ -23,6 +23,7 @@
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
     "lz-string": "^1.4.4",
+    "netlify-cli": "^3.2.4",
     "next": "9.5.5",
     "next-auth": "^3.1.0",
     "next-redux-wrapper": "^6.0.2",
