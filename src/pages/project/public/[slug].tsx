@@ -14,7 +14,10 @@ import Editor from '~components/editor/Editor'
 import Backend from 'react-dnd-html5-backend'
 import useDispatch from '~hooks/useDispatch'
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  params,
+  req,
+}) => {
   let projectId = (params!.slug as string).split('-')[0]
   //need to check if the project is public or not
 
@@ -22,16 +25,16 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     projectId,
   }
 
-  const response = await fetch(
-    `${process.env.DEPLOY_URL}/api/project/searchById`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(bodyData),
+  //@ts-ignore
+  const baseUrl = req ? `https://${req.headers.host}` : ''
+
+  const response = await fetch(baseUrl + '/api/project/searchById', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
-  )
+    body: JSON.stringify(bodyData),
+  })
   const data = await response.json()
   let project = JSON.parse(JSON.stringify(data.project))
 

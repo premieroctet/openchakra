@@ -11,23 +11,25 @@ import ComponentPreview from '~components/editor/ComponentPreview'
 import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  params,
+  req,
+}) => {
   let projectId = (params!.slug as string).split('-')[0]
 
   let bodyData = {
     projectId,
   }
+  //@ts-ignore
+  const baseUrl = req ? `https://${req.headers.host}` : ''
 
-  const response = await fetch(
-    `${process.env.DEPLOY_URL}/api/project/searchById`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(bodyData),
+  const response = await fetch(baseUrl + '/api/project/searchById', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
-  )
+    body: JSON.stringify(bodyData),
+  })
   const data = await response.json()
   let project = JSON.parse(JSON.stringify(data.project))
 
