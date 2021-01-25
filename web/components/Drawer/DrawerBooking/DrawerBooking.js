@@ -22,7 +22,7 @@ import styles from '../../../static/css/components/DrawerBooking/DrawerBooking';
 import withStyles from "@material-ui/core/styles/withStyles";
 const isEmpty = require('../../../server/validation/is-empty');
 const {getLoggedUserId} = require('../../../utils/functions')
-const {isDateAvailable, isMomentAvailable} = require('../../../utils/dateutils')
+const {isMomentAvailable} = require('../../../utils/dateutils')
 const moment = require('moment');
 moment.locale('fr');
 
@@ -104,20 +104,6 @@ class DrawerBooking extends React.Component{
     )
   };
 
-  getExcludedDays = () =>  {
-    const date=moment(new Date())
-    var currMoment=moment(date).set("date", 1)
-    const endMoment=moment(date).add(1.5, "year")
-    var exclude=[]
-    while (currMoment<endMoment) {
-      if (!isDateAvailable(currMoment, this.props.availabilities)) {
-        exclude.push(currMoment.toDate())
-      }
-      currMoment.add(1, "d")
-    }
-    return exclude
-  }
-
   getExcludedTimes = () =>  {
     var currMoment=moment(this.props.date || new Date()).set({hour:0, minute:0})
     var exclude=[]
@@ -131,15 +117,16 @@ class DrawerBooking extends React.Component{
   }
 
   render() {
+
+    console.time('Drawerbooking.render')
     const {expanded} = this.state;
     const {warningPerimeter, side, classes, service, alfred, date, time, errors,
       count, serviceUser, isChecked, location, pick_tax, total, commission,
-      cesu_total, filters, pricedPrestations, availabilities} = this.props;
+      cesu_total, filters, pricedPrestations, availabilities, excludedDays} = this.props;
 
-    const excludedDays = this.getExcludedDays()
     const excludedTimes = this.getExcludedTimes()
 
-    return(
+    const res = (
       <Grid>
         {
           warningPerimeter ?
@@ -429,7 +416,9 @@ class DrawerBooking extends React.Component{
           </Grid>
         </Grid>
       </Grid>
-    );
+    )
+    console.timeEnd('Drawerbooking.render')
+    return res
   }
 
 }
