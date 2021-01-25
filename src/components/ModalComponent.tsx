@@ -60,16 +60,16 @@ const ModalComponent = (props: Props) => {
       body: JSON.stringify(bodyData),
     })
     if (e.public) {
-      // await fetch('/.netlify/functions/take-screenshot', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json; charset=utf-8',
-      //   },
-      //   body: JSON.stringify({
-      //     pageToScreenshot: `${process.env.DEPLOY_URL}/project/preview/${e.id}-${e.projectName}`,
-      //     id: e.id,
-      //   }),
-      // })
+      await fetch('/.netlify/functions/take-screenshot', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        body: JSON.stringify({
+          pageToScreenshot: `${process.env.DEPLOY_URL}/project/preview/${e.id}-${e.projectName}`,
+          id: e.id,
+        }),
+      })
     }
     const data = await response.json()
     return data

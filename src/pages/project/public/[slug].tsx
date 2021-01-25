@@ -13,29 +13,37 @@ import EditorErrorBoundary from '~components/errorBoundaries/EditorErrorBoundary
 import Editor from '~components/editor/Editor'
 import Backend from 'react-dnd-html5-backend'
 import useDispatch from '~hooks/useDispatch'
-import prisma from '~utils/prisma'
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   let projectId = (params!.slug as string).split('-')[0]
   //need to check if the project is public or not
-  const project = await prisma.project.findUnique({
-    include: { user: true },
-    where: {
-      id: Number(projectId),
-    },
-  })
 
-  let projects = JSON.parse(JSON.stringify(project))
+  let bodyData = {
+    projectId,
+  }
+
+  const response = await fetch(
+    `${process.env.DEPLOY_URL}/api/project/searchById`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bodyData),
+    },
+  )
+  const data = await response.json()
+  let project = JSON.parse(JSON.stringify(data.project))
 
   return {
     props: {
-      projects,
+      project,
     },
   }
 }
 
 interface ProjectContainer {
-  projects: Project
+  project: Project
 }
 
 const ProjectPublic = (props: ProjectContainer) => {
@@ -48,11 +56,11 @@ const ProjectPublic = (props: ProjectContainer) => {
 
   const initProject = async () => {
     setLoading(true)
-    if (props.projects) {
-      if (props.projects.markup) {
+    if (props.project) {
+      if (props.project.markup) {
         setError(true)
         await dispatch.components.reset(
-          JSON.parse(props.projects.markup as string),
+          JSON.parse(props.project.markup as string),
         )
         setLoading(false)
       } else {
