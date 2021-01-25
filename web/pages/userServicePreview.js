@@ -127,8 +127,7 @@ class UserServicesPreview extends React.Component {
     axios.get(`/myAlfred/api/serviceUser/${id}`)
       .then(res => {
         let serviceUser = res.data;
-        var count = {};
-        serviceUser.prestations.forEach(p => count[p._id] = null);
+        var count = Object.fromEntries(serviceUser.prestations.map(p => [p._id, null]))
 
         if (bookingObj) {
           serviceUser.prestations.forEach(p => {
