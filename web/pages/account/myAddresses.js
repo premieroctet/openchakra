@@ -78,16 +78,16 @@ class myAddresses extends React.Component {
 
   }
 
-  componentDidMount() {
-    localStorage.setItem('path', Router.pathname);
+  loadData = () => {
     setAxiosAuthentication()
     axios
       .get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
         this.setState({user: user});
-        if (typeof user.billing_address != 'undefined') {
+        if (user.billing_address) {
           this.setState({
+            billing_address: user.billing_address,
             address: true,
             currentAddress: user.billing_address.address,
             currentCity: user.billing_address.city,
@@ -108,6 +108,11 @@ class myAddresses extends React.Component {
           }
         },
       );
+  }
+
+  componentDidMount() {
+    localStorage.setItem('path', Router.pathname);
+    this.loadData()
   }
 
   handleClickOpen = (id) => {
@@ -175,7 +180,7 @@ class myAddresses extends React.Component {
       .put('/myAlfred/api/users/profile/billingAddress', address)
       .then(res => {
         toast.info('Adresse principale modifiée');
-        Router.push({pathname: '/account/myAddresses'});
+        this.loadData()
       })
       .catch();
   };
@@ -226,7 +231,7 @@ class myAddresses extends React.Component {
       .then(() => {
         toast.error('Adresse supprimée');
         this.setState({clickEdit: false, open: false, id_address: ''});
-        this.componentDidMount();
+        this.loadData()
       })
       .catch();
   };
@@ -258,6 +263,7 @@ class myAddresses extends React.Component {
   };
 
   content = (classes) => {
+    const {billing_address}=this.state
     return(
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
@@ -275,12 +281,17 @@ class myAddresses extends React.Component {
           <Grid>
             <h3>Mon adresse principale</h3>
           </Grid>
+          { billing_address ?
+            `${billing_address.address}, ${billing_address.zip_code} ${billing_address.city}, ${billing_address.country}`
+            :
+            null
+          }
         </Grid>
         <Grid style={{marginTop: '5vh'}}>
           <Grid container spacing={3}>
             <Grid item xs={12} xl={12} lg={12} md={12} sm={12}>
               <AlgoliaPlaces
-                placeholder='Recherchez votre adresse'
+                placeholder='Modifiez votre adresse'
                 options={{
                   appId: 'plKATRG826CP',
                   apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -289,55 +300,6 @@ class myAddresses extends React.Component {
                   type: 'address',
                 }}
                 onChange={(suggestion) => this.onChangeAlgolia3(suggestion)}
-              />
-            </Grid>
-            <Grid item xs={12} xl={12} lg={12} md={12} sm={12}>
-              <TextField
-                value={this.state.currentAddress}
-                name={'currentAddress'}
-                onChange={this.onChange}
-                variant="outlined"
-                placeholder={'Adresse'}
-                label={'Rue'}
-                className={classes.textField}
-                disabled={true}
-              />
-            </Grid>
-            <Grid item xl={6} lg={6} xs={12} md={12} sm={6}>
-              <TextField
-                className={classes.textField}
-                value={this.state.currentZip_code}
-                name={'currentZip_code'}
-                onChange={this.onChange}
-                variant="outlined"
-                placeholder={'Code postal'}
-                label={'Code postal'}
-                disabled={true}
-              />
-            </Grid>
-            <Grid item xl={6} lg={6} xs={12} md={6} sm={6}>
-              <TextField
-                id="outlined-name"
-                value={this.state.currentCity}
-                className={classes.textField}
-                name={'currentCity'}
-                onChange={this.onChange}
-                variant="outlined"
-                placeholder={'Ville'}
-                label={'Ville'}
-                disabled={true}
-              />
-            </Grid>
-            <Grid item xs={12} lg={12} md={6} sm={12} xl={12}>
-              <TextField
-                id="outlined-select-currency"
-                className={classes.textField}
-                value={this.state.currentCountry}
-                onChange={this.onChange}
-                variant="outlined"
-                name={'currentCountry'}
-                label={'Pays'}
-                disabled={true}
               />
             </Grid>
             <Grid item xs={12} lg={12} xl={12} sm={12} md={12} style={{marginTop: '5vh'}}>
@@ -380,9 +342,9 @@ class myAddresses extends React.Component {
                   </Grid>
                 </Grid>
                 <Grid>
-                  <Typography style={{color: 'rgba(39,37,37,35%)'}}>{e.address}</Typography>
-                  <Typography style={{color: 'rgba(39,37,37,35%)'}}>{e.zip_code} {e.city}</Typography>
-                  <Typography style={{color: 'rgba(39,37,37,35%)'}}>France</Typography>
+                  <Typography style={{color: 'rgba(39,37,37,35%)'}}>
+                    {e.address}, {e.zip_code} {e.city}, France
+                  </Typography>
                 </Grid>
               </Grid>
             ))}
