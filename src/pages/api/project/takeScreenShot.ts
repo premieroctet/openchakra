@@ -7,13 +7,12 @@ export default async function TakeScreenshot(
   res: NextApiResponse,
 ) {
   let ts = new Date()
-
-  const params = JSON.parse(req.body)
-  const pageToScreenshot = params.pageToScreenshot
+  const pageToScreenshot = req.body.pageToScreenshot
 
   let result = null
   let browser: any = null
   let screen = null
+  const baseUrl = req ? `https://${req.headers.host}` : ''
 
   const screenShot = async () => {
     try {
@@ -25,7 +24,7 @@ export default async function TakeScreenshot(
         ignoreHTTPSErrors: true,
       })
       let page = await browser.newPage()
-      await page.goto(pageToScreenshot)
+      await page.goto(baseUrl + pageToScreenshot)
       await page.screenshot({
         fullPage: true,
       })
@@ -43,18 +42,24 @@ export default async function TakeScreenshot(
   }
 
   try {
-    const project = await prisma.project.findMany({
-      include: { user: true },
-      where: {
-        id: params.id,
+    let bodyData = {
+      projectId: req.body.id,
+    }
+
+    const response = await fetch(baseUrl + '/api/project/searchById', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify(bodyData),
     })
+    const project = await response.json()
 
     screen = await screenShot()
 
     await prisma.project.update({
       where: {
-        id: project[0].id,
+        id: project.project.id,
       },
       data: {
         thumbnail: `data:image/png;base64, ${screen}`,
@@ -69,11 +74,5 @@ export default async function TakeScreenshot(
     res.json({ error: 'Sorry unable to fetch project by this id' })
   } finally {
     await prisma.$disconnect()
-  }
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: `Complete screenshot of ${pageToScreenshot}`,
-    }),
   }
 }

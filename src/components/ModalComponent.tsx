@@ -66,7 +66,7 @@ const ModalComponent = (props: Props) => {
           'Content-Type': 'application/json; charset=utf-8',
         },
         body: JSON.stringify({
-          pageToScreenshot: `${process.env.DEPLOY_URL}/project/preview/${e.id}-${e.projectName}`,
+          pageToScreenshot: `/project/preview/${e.id}-${e.projectName}`,
           id: e.id,
         }),
       })

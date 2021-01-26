@@ -72,7 +72,7 @@ const EditorPage = (props: {
           'Content-Type': 'application/json; charset=utf-8',
         },
         body: JSON.stringify({
-          pageToScreenshot: `${process.env.DEPLOY_URL}/project/preview/${props.id}-${props.projectName}`,
+          pageToScreenshot: `/project/preview/${props.id}-${props.projectName}`,
           id: props.id,
         }),
       })
