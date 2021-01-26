@@ -102,7 +102,7 @@ class editProfile extends React.Component {
         value = '33' + value.substring(1);
       }
     }
-    if(name === 'name' || 'firstname'){
+    if(name === 'name' || name === 'firstname'){
       value = value.charAt(0).toUpperCase() + value.slice(1)
     }
 
