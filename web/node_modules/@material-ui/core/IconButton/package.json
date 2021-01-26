@@ -1,5 +1,0 @@
-{
-  "sideEffects": false,
-  "module": "../esm/IconButton/index.js",
-  "typings": "./index.d.ts"
-}

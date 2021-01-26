@@ -1,5 +1,0 @@
-{
-  "sideEffects": false,
-  "module": "../esm/Badge/index.js",
-  "typings": "./index.d.ts"
-}

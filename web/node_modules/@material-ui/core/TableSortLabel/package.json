@@ -1,5 +1,0 @@
-{
-  "sideEffects": false,
-  "module": "../esm/TableSortLabel/index.js",
-  "typings": "./index.d.ts"
-}

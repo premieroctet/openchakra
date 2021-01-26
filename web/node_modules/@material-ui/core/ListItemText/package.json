@@ -1,5 +1,0 @@
-{
-  "sideEffects": false,
-  "module": "../esm/ListItemText/index.js",
-  "typings": "./index.d.ts"
-}

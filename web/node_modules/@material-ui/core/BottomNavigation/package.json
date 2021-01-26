@@ -1,5 +1,0 @@
-{
-  "sideEffects": false,
-  "module": "../esm/BottomNavigation/index.js",
-  "typings": "./index.d.ts"
-}
