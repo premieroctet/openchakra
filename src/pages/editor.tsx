@@ -66,7 +66,7 @@ const EditorPage = (props: {
       body: JSON.stringify(bodyData),
     })
     if (props.public) {
-      await fetch('/.netlify/functions/take-screenshot', {
+      await fetch('/api/project/takeScreenShot', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',

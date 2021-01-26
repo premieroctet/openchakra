@@ -1,22 +1,19 @@
-import prisma from '../../src/utils/prisma'
+import { NextApiRequest, NextApiResponse } from 'next'
+import prisma from '~utils/prisma'
 const chromium = require('chrome-aws-lambda')
 
-exports.handler = async (event, context) => {
+export default async function TakeScreenshot(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   let ts = new Date()
 
-  const params = JSON.parse(event.body)
+  const params = JSON.parse(req.body)
   const pageToScreenshot = params.pageToScreenshot
 
   let result = null
   let browser: any = null
   let screen = null
-
-  const project = await prisma.project.findMany({
-    include: { user: true },
-    where: {
-      id: params.id,
-    },
-  })
 
   const screenShot = async () => {
     try {
@@ -44,17 +41,35 @@ exports.handler = async (event, context) => {
     }
     return result
   }
-  screen = await screenShot()
-  await prisma.project.update({
-    where: {
-      id: project[0].id,
-    },
-    data: {
-      thumbnail: `data:image/png;base64, ${screen}`,
-      updatedAt: ts.toISOString(),
-    },
-  })
 
+  try {
+    const project = await prisma.project.findMany({
+      include: { user: true },
+      where: {
+        id: params.id,
+      },
+    })
+
+    screen = await screenShot()
+
+    await prisma.project.update({
+      where: {
+        id: project[0].id,
+      },
+      data: {
+        thumbnail: `data:image/png;base64, ${screen}`,
+        updatedAt: ts.toISOString(),
+      },
+    })
+
+    res.status(201)
+    res.json({ project })
+  } catch (e) {
+    res.status(500)
+    res.json({ error: 'Sorry unable to fetch project by this id' })
+  } finally {
+    await prisma.$disconnect()
+  }
   return {
     statusCode: 200,
     body: JSON.stringify({

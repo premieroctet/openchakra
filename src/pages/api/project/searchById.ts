@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '~utils/prisma'
 
-export default async function PublicProject(
+export default async function SearchById(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
