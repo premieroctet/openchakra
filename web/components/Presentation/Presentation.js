@@ -158,7 +158,7 @@ class Presentation extends React.Component {
                 }
                 <Topic titleTopic={title}
                        titleSummary={user ? `membre depuis ${moment(user.creation_date).format("MMMM YYYY")}` : ''}>
-                    {user ? user.description : ''}
+                    {user ? <Typography style={{wordWrap: 'break-word'}}>{user.description}</Typography> : ''}
                 </Topic>
                 <Grid>
                     {this.modalEditDialog(classes)}

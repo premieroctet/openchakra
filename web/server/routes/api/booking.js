@@ -449,7 +449,7 @@ if (is_production()) {
       .then(booking => {
         booking.forEach(b => {
           console.log('Checking' + b.date);
-          const date = moment(b.date).add(2, 'days');
+          const date = moment(b.date).add(7, 'days');
           const newDate = moment(date, 'DD-MM-YYYY').startOf('day');
           if (moment(currentDate).isSameOrAfter(newDate)) {
             console.log('Expired');
