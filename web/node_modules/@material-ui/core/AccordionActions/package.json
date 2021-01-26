@@ -1,5 +1,0 @@
-{
-  "sideEffects": false,
-  "module": "../esm/AccordionActions/index.js",
-  "typings": "./index.d.ts"
-}

@@ -1,5 +1,0 @@
-{
-  "sideEffects": false,
-  "module": "../esm/FormLabel/index.js",
-  "typings": "./index.d.ts"
-}

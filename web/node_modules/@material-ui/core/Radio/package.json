@@ -1,5 +1,0 @@
-{
-  "sideEffects": false,
-  "module": "../esm/Radio/index.js",
-  "typings": "./index.d.ts"
-}

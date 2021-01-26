@@ -1,5 +1,0 @@
-{
-  "sideEffects": false,
-  "module": "../esm/ClickAwayListener/index.js",
-  "typings": "./index.d.ts"
-}

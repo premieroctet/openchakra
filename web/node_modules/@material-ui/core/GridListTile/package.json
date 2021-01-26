@@ -1,5 +1,0 @@
-{
-  "sideEffects": false,
-  "module": "../esm/GridListTile/index.js",
-  "typings": "./index.d.ts"
-}

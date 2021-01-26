@@ -1,5 +1,0 @@
-{
-  "sideEffects": false,
-  "module": "../esm/Fade/index.js",
-  "typings": "./index.d.ts"
-}

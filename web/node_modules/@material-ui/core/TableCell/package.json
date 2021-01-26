@@ -1,5 +1,0 @@
-{
-  "sideEffects": false,
-  "module": "../esm/TableCell/index.js",
-  "typings": "./index.d.ts"
-}

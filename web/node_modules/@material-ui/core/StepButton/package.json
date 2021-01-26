@@ -1,5 +1,0 @@
-{
-  "sideEffects": false,
-  "module": "../esm/StepButton/index.js",
-  "typings": "./index.d.ts"
-}
