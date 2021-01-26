@@ -1,17 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '~utils/prisma'
 const chromium = require('chrome-aws-lambda')
 
 export default async function TakeScreenshot(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  let ts = new Date()
   const pageToScreenshot = req.body.pageToScreenshot
-
   let result = null
   let browser: any = null
-  let screen = null
   const baseUrl = req ? `https://${req.headers.host}` : ''
 
   const screenShot = async () => {
@@ -53,26 +49,32 @@ export default async function TakeScreenshot(
       },
       body: JSON.stringify(bodyData),
     })
+
     const project = await response.json()
 
-    screen = await screenShot()
+    let screen = await screenShot()
 
-    await prisma.project.update({
-      where: {
-        id: project.project.id,
+    let screenBodyData = {
+      id: project.project.id,
+      screen,
+    }
+
+    const updateResponse = await fetch(
+      baseUrl + '/api/project/updateScreenShot',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(screenBodyData),
       },
-      data: {
-        thumbnail: `data:image/png;base64, ${screen}`,
-        updatedAt: ts.toISOString(),
-      },
-    })
+    )
+    const screenshotReponse = await updateResponse.json()
 
     res.status(201)
-    res.json({ project })
+    res.json({ screenshotReponse })
   } catch (e) {
     res.status(500)
     res.json({ error: 'Sorry unable to fetch project by this id' })
-  } finally {
-    await prisma.$disconnect()
   }
 }
