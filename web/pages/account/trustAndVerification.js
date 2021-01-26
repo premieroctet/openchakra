@@ -726,10 +726,10 @@ class trustAndVerification extends React.Component {
                       company={this.state}
                     />
                   </Grid>
-                  <Grid style={{marginTop: '10vh'}}>
-                    <h3>Document d'immatriculation</h3>
-                  </Grid>
                   <Grid>
+                    <Grid style={{marginTop: '10vh'}}>
+                      <h3>Document d'immatriculation</h3>
+                    </Grid>
                     <Typography style={{color: 'rgba(39,37,37,35%)'}}>
                       Insérez ici le document d'immatriculation de votre entreprise (extrait de K-Bis, document
                       d'immatriculation de micro-entreprise).<br/>

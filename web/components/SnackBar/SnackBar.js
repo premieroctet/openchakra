@@ -17,10 +17,10 @@ class SnackBar extends React.Component{
 
 
   render() {
-    const {message, open} = this.props;
+    const {message, open, severity} = this.props;
     return(
       <Snackbar open={open} autoHideDuration={6000} onClose={this.handleClose}>
-        <Alert style={{backgroundColor: 'rgba(248, 207, 97, 1)', fontWeight: 'bold'}} onClose={this.handleClose}>
+        <Alert severity={severity} style={{fontWeight: 'bold'}} onClose={this.handleClose}>
           {message}
         </Alert>
       </Snackbar>
