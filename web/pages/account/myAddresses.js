@@ -34,48 +34,29 @@ class myAddresses extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: {},
-      address: '',
-      city: '',
-      country: '',
-      zip_code: '',
-      currentAddress: '',
-      currentCity: '',
-      currentZip_code: '',
-      currentCountry: '',
-      currentLat: '',
-      currentLng: '',
-      label_address: '',
-      new_address: '',
-      new_city: '',
-      new_zip_code: '',
-      note: '',
-      phone: '',
-      lat: '',
-      lng: '',
-      service_address: [],
-      clickAdd: false,
-      clickEdit: false,
-      open: false,
-      address_selected: {},
+      user: null,
+      suggestion_current:null,
+      new_label: '',
       edit_label: '',
-      edit_address: '',
-      edit_city: '',
-      edit_zip_code: '',
-      edit_note: '',
-      edit_phone: '',
-      edit_lat: '',
-      edit_lng: '',
-      id_address: '',
+      service_address: [],
+      addNewMode: false,
+      editMode: false,
+      open: false,
+      selected_address: null,
+      delete_address_id: '',
     };
-    this.onChangeAlgolia = this.onChangeAlgolia.bind(this);
-    this.onChangeAlgolia2 = this.onChangeAlgolia2.bind(this);
-
+    this.onMainAddressChange = this.onMainAddressChange.bind(this)
+    this.onSecondaryAddressChange = this.onSecondaryAddressChange.bind(this);
+    this.onNewAddressChange = this.onNewAddressChange.bind(this);
   }
 
   static getInitialProps({query: {indexAccount}}) {
     return {index: indexAccount};
+  }
 
+  setState=(st, cb) => {
+    console.log(`Setting state:${Object.keys(st)}`)
+    super.setState(st, cb)
   }
 
   loadData = () => {
@@ -84,22 +65,16 @@ class myAddresses extends React.Component {
       .get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
-        this.setState({user: user});
-        if (user.billing_address) {
-          this.setState({
-            billing_address: user.billing_address,
-            address: true,
-            currentAddress: user.billing_address.address,
-            currentCity: user.billing_address.city,
-            currentZip_code: user.billing_address.zip_code,
-            currentCountry: user.billing_address.country,
-            currentLat: user.billing_address.gps.lat,
-            currentLng: user.billing_address.gps.lng,
-          });
-        } else {
-          this.setState({address: false});
-        }
-        this.setState({service_address: user.service_address});
+        this.setState({
+          user: user,
+          billing_address: user.billing_address,
+          service_address: user.service_address,
+          new_label: '',
+          edit_label: '',
+          selected_address: null,
+          delete_address_id: '',
+
+        });
       })
       .catch(err => {
           if (err.response.status === 401 || err.response.status === 403) {
@@ -115,66 +90,54 @@ class myAddresses extends React.Component {
     this.loadData()
   }
 
-  handleClickOpen = (id) => {
-    this.setState({id_address: id, open: true});
+  onDeleteClick = (id) => {
+    this.setState({delete_address_id: id, open: true});
   }
 
   handleClose = () => {
-    this.setState({id_address: '', open: false});
+    this.setState({delete_address_id: '', open: false});
   }
 
   onChange = e => {
     this.setState({[e.target.name]: e.target.value});
   };
 
-  onChangeAlgolia({query, rawAnswer, suggestion, suggestionIndex}) {
-    this.setState({
-      new_city: suggestion.city, new_address: suggestion.name, new_zip_code: suggestion.postcode,
-      lat: suggestion.latlng.lat, lng: suggestion.latlng.lng,
-    });
+  onNewAddressChange({query, rawAnswer, suggestion, suggestionIndex}) {
+    this.setState({ suggestion_new: suggestion })
   }
 
-  onChangeAlgolia2({query, rawAnswer, suggestion, suggestionIndex}) {
-    this.setState({
-      edit_city: suggestion.city, edit_address: suggestion.name, edit_zip_code: suggestion.postcode,
-      edit_lat: suggestion.latlng.lat, edit_lng: suggestion.latlng.lng,
-    });
+  onSecondaryAddressChange({query, rawAnswer, suggestion, suggestionIndex}) {
+    this.setState({ suggestion_edit: suggestion })
   }
 
-  onChangeAlgolia3({suggestion}) {
-    this.setState({
-      currentCity: suggestion.city, currentAddress: suggestion.name, currentZip_code: suggestion.postcode,
-      currentLat: suggestion.latlng.lat, currentLng: suggestion.latlng.lng, currentCountry: suggestion.country,
-    });
+  onMainAddressChange({suggestion}) {
+    this.setState({ suggestion_current: suggestion })
   }
 
-  handleClick = (id) => {
-    this.setState({clickAdd: false, clickEdit: true});
+  onEditionClick = (id) => {
+    this.setState({addNewMode: false, editMode: true});
     axios.get('/myAlfred/api/users/profile/address/' + id)
       .then(res => {
         let result = res.data;
         this.setState({
-          address_selected: result,
+          selected_address: result,
           edit_label: result.label,
-          edit_address: result.address,
-          edit_zip_code: result.zip_code,
-          edit_city: result.city,
-          edit_lat: result.lat,
-          edit_lng: result.lng,
         });
       })
       .catch();
   };
 
-  onSubmit = e => {
-    e.preventDefault();
+  onSubmitMain = e => {
+    e.preventDefault()
+    const {suggestion_current}=this.state
+
     const address = {
-      address: this.state.currentAddress,
-      city: this.state.currentCity,
-      zip_code: this.state.currentZip_code,
-      country: this.state.currentCountry,
-      lat: this.state.currentLat,
-      lng: this.state.currentLng,
+      address: suggestion_current.name,
+      city: suggestion_current.city,
+      zip_code: suggestion_current.postcode,
+      country: suggestion_current.country,
+      lat: suggestion_current.latlng.lat,
+      lng: suggestion_current.latlng.lng,
     };
     axios
       .put('/myAlfred/api/users/profile/billingAddress', address)
@@ -185,41 +148,51 @@ class myAddresses extends React.Component {
       .catch();
   };
 
-  onSubmit2 = e => {
+  onSubmitNew = e => {
     e.preventDefault();
+    const {suggestion_new}=this.state
     const newAddress = {
-      address: this.state.new_address,
-      city: this.state.new_city,
-      zip_code: this.state.new_zip_code,
-      lat: this.state.lat,
-      lng: this.state.lng,
-      label: this.state.label_address,
+      address: suggestion_new.name,
+      city: suggestion_new.city,
+      zip_code: suggestion_new.postcode,
+      country: suggestion_new.country,
+      lat: suggestion_new.latlng.lat,
+      lng: suggestion_new.latlng.lng,
+      label: this.state.new_label,
     };
     axios.put('/myAlfred/api/users/profile/serviceAddress', newAddress)
       .then(() => {
         toast.info('Adresse ajoutée');
-        this.setState({clickAdd: false});
+        this.setState({addNewMode: false});
         this.componentDidMount();
       })
       .catch();
 
   };
 
-  onSubmit3 = (e, id) => {
-    e.preventDefault();
+  addressLabel = addr => {
+    if (!addr) {
+      return ''
+    }
+    return `${addr.address}, ${addr.zip_code} ${addr.city}, ${addr.country || 'France'}`
+  }
+
+  onSubmitSecondary = (e, id) => {
+    e.preventDefault()
+    const {suggestion_edit}=this.state
     const editAddress = {
-      address: this.state.edit_address,
-      city: this.state.edit_city,
-      zip_code: this.state.edit_zip_code,
-      lat: this.state.edit_lat,
-      lng: this.state.edit_lng,
+      address: suggestion_edit.name,
+      city: suggestion_edit.city,
+      zip_code: suggestion_edit.postcode,
+      lat: suggestion_edit.latlng.lat,
+      lng: suggestion_edit.latlng.lng,
       label: this.state.edit_label,
     };
 
     axios.put('/myAlfred/api/users/profile/address/' + id, editAddress)
       .then(() => {
         toast.info('Adresse modifiée avec succès');
-        this.setState({clickEdit: false});
+        this.setState({editMode: false});
         this.componentDidMount();
 
       })
@@ -230,7 +203,7 @@ class myAddresses extends React.Component {
     axios.delete('/myAlfred/api/users/profile/address/' + id)
       .then(() => {
         toast.error('Adresse supprimée');
-        this.setState({clickEdit: false, open: false, id_address: ''});
+        this.setState({editMode: false, open: false, delete_address_id: ''});
         this.loadData()
       })
       .catch();
@@ -254,7 +227,7 @@ class myAddresses extends React.Component {
           <Button onClick={() => this.handleClose()} color="primary">
             Annuler
           </Button>
-          <Button onClick={() => this.deleteAddress(this.state.id_address)} color="secondary" autoFocus>
+          <Button onClick={() => this.deleteAddress(this.state.delete_address_id)} color="secondary" autoFocus>
             Supprimer
           </Button>
         </DialogActions>
@@ -281,11 +254,7 @@ class myAddresses extends React.Component {
           <Grid>
             <h3>Mon adresse principale</h3>
           </Grid>
-          { billing_address ?
-            `${billing_address.address}, ${billing_address.zip_code} ${billing_address.city}, ${billing_address.country}`
-            :
-            null
-          }
+          { this.addressLabel(billing_address) }
         </Grid>
         <Grid style={{marginTop: '5vh'}}>
           <Grid container spacing={3}>
@@ -299,11 +268,11 @@ class myAddresses extends React.Component {
                   countries: ['fr'],
                   type: 'address',
                 }}
-                onChange={(suggestion) => this.onChangeAlgolia3(suggestion)}
+                onChange={(suggestion) => this.onMainAddressChange(suggestion)}
               />
             </Grid>
             <Grid item xs={12} lg={12} xl={12} sm={12} md={12} style={{marginTop: '5vh'}}>
-              <Button size={'large'} type={'submit'} variant="contained" className={classes.buttonSave} onClick={this.onSubmit}>
+              <Button disabled={!this.state.suggestion_current} size={'large'} type={'submit'} variant="contained" className={classes.buttonSave} onClick={this.onSubmitMain}>
                 Valider
               </Button>
             </Grid>
@@ -313,7 +282,7 @@ class myAddresses extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <h3>Mon carnet d’adresse</h3>
+              <h3>Mon carnet d'adresses</h3>
             </Grid>
             <Grid>
               <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ajoutez plusieurs adresses et gagnez du temps.</Typography>
@@ -329,12 +298,12 @@ class myAddresses extends React.Component {
                     </Grid>
                     <Grid item xl={2} xs={6} className={classes.editContainer}>
                       <Grid>
-                        <IconButton aria-label="update" onClick={() => this.handleClick(e._id)}>
+                        <IconButton aria-label="update" onClick={() => this.onEditionClick(e._id)}>
                           <EditIcon/>
                         </IconButton>
                       </Grid>
                       <Grid>
-                        <IconButton aria-label="delete" onClick={() => this.handleClickOpen(this.state.address_selected._id)}>
+                        <IconButton aria-label="delete" onClick={() => this.onDeleteClick(e._id)}>
                           <DeleteForeverIcon />
                         </IconButton>
                       </Grid>
@@ -343,11 +312,14 @@ class myAddresses extends React.Component {
                 </Grid>
                 <Grid>
                   <Typography style={{color: 'rgba(39,37,37,35%)'}}>
-                    {e.address}, {e.zip_code} {e.city}, France
+                    { this.addressLabel(e) }
                   </Typography>
                 </Grid>
               </Grid>
             ))}
+            </Grid>
+            <Grid>
+              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
             </Grid>
           <Grid container style={{marginTop: '5vh', marginBottom: '12vh'}}>
             <Button
@@ -355,19 +327,19 @@ class myAddresses extends React.Component {
               type={'submit'}
               variant="contained"
               className={classes.buttonSave}
-              onClick={() => this.setState({clickAdd: !this.state.clickAdd, clickEdit: false})}
+              onClick={() => this.setState({addNewMode: !this.state.addNewMode, editMode: false})}
             >
               Ajouter une adresse
             </Button>
           </Grid>
-          {this.state.clickAdd ?
+          {this.state.addNewMode ?
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <TextField
                   id="standard-name"
-                  value={this.state.label_address}
+                  value={this.state.new_label}
                   onChange={this.onChange}
-                  name={'label_address'}
+                  name={'new_label'}
                   placeholder={'Ecrire ici'}
                   variant={'outlined'}
                   label={'Nom de l\'adresse'}
@@ -384,50 +356,17 @@ class myAddresses extends React.Component {
                     countries: ['fr'],
                     type: 'address',
                   }}
-                  onChange={(suggestion) => this.onChangeAlgolia(suggestion)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  value={this.state.new_address}
-                  onChange={this.onChange}
-                  name={'new_address'}
-                  variant={'outlined'}
-                  className={classes.textField}
-                  label={'Rue'}
-                  disabled={true}
-                />
-              </Grid>
-              <Grid item xl={6} lg={6} xs={12} md={12} sm={6}>
-                <TextField
-                  value={this.state.new_zip_code}
-                  onChange={this.onChange}
-                  name={'new_zip_code'}
-                  variant={'outlined'}
-                  className={classes.textField}
-                  label={'Code postal'}
-                  disabled={true}
-                />
-              </Grid>
-              <Grid item xl={6} lg={6} xs={12} md={12} sm={6}>
-                <TextField
-                  value={this.state.new_city}
-                  onChange={this.onChange}
-                  name={'new_city'}
-                  variant={'outlined'}
-                  className={classes.textField}
-                  label={'Ville'}
-                  disabled={true}
+                  onChange={(suggestion) => this.onNewAddressChange(suggestion)}
                 />
               </Grid>
               <Grid item xs={12} style={{marginBottom: '12vh'}}>
-                <Button variant="contained" className={classes.buttonSave} onClick={this.onSubmit2}>
-                  Enregistrer
+                <Button disabled={!(this.state.suggestion_new&&this.state.new_label)} variant="contained" className={classes.buttonSave} onClick={this.onSubmitNew}>
+                  Enregistrer nouveau
                 </Button>
               </Grid>
             </Grid>
             : null}
-            {this.state.clickEdit ?
+            {this.state.editMode ?
               <Grid container spacing={3} style={{marginBottom: '12vh'}}>
                 <Grid item xs={12}>
                   <TextField
@@ -442,6 +381,9 @@ class myAddresses extends React.Component {
                   />
                 </Grid>
                 <Grid item xs={12}>
+                  {this.addressLabel(this.state.selected_address)}
+                </Grid>
+                <Grid item xs={12}>
                   <AlgoliaPlaces
                     placeholder='Recherchez votre adresse'
                     options={{
@@ -452,48 +394,12 @@ class myAddresses extends React.Component {
                       type: 'address',
 
                     }}
-                    onChange={(suggestion) => this.onChangeAlgolia2(suggestion)}
+                    onChange={(suggestion) => this.onSecondaryAddressChange(suggestion)}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    className={classes.textField}
-                    value={this.state.edit_address}
-                    onChange={this.onChange}
-                    name={'edit_address'}
-                    placeholder={'Ecrire ici'}
-                    variant={'outlined'}
-                    label={'Rue'}
-                    disabled={true}
-                  />
-                </Grid>
-                <Grid item xl={6} lg={6} xs={12} md={12} sm={6}>
-                  <TextField
-                    value={this.state.edit_zip_code}
-                    onChange={this.onChange}
-                    name={'edit_zip_code'}
-                    placeholder={'Ecrire ici'}
-                    variant={'outlined'}
-                    label={'Code postal'}
-                    className={classes.textField}
-                    disabled={true}
-                  />
-                </Grid>
-                <Grid item xl={6} lg={6} xs={12} md={12} sm={6}>
-                  <TextField
-                    value={this.state.edit_city}
-                    onChange={this.onChange}
-                    name={'edit_city'}
-                    placeholder={'Ecrire ici'}
-                    variant={'outlined'}
-                    label={'Ville'}
-                    className={classes.textField}
-                    disabled={true}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Button variant="contained" className={classes.buttonSave}  onClick={(event) => this.onSubmit3(event, this.state.address_selected._id)}>
-                    Enregistrer
+                  <Button variant="contained" className={classes.buttonSave}  onClick={(event) => this.onSubmitSecondary(event, this.state.selected_address._id)}>
+                    Enregistrer edition
                   </Button>
                 </Grid>
               </Grid>
