@@ -49,6 +49,7 @@ const EditorPage = (props: {
   const toast = useToast()
 
   const updateProject = async () => {
+    setLoading(true)
     const markup = JSON.stringify(components)
     let bodyData = {
       project: {
@@ -76,12 +77,15 @@ const EditorPage = (props: {
           id: props.id,
         }),
       })
+      setLoading(false)
     }
     const data = await response.json()
+    setLoading(false)
     return data
   }
 
   const initProject = async () => {
+    setLoading(true)
     if (projectName.length > 0) {
       const markup = JSON.stringify(components)
       let newProject = await createProject(
@@ -117,6 +121,7 @@ const EditorPage = (props: {
         isClosable: true,
       })
     }
+    setLoading(false)
   }
 
   const showUserProjectList = async () => {
@@ -136,6 +141,7 @@ const EditorPage = (props: {
   }
 
   const saveProject = async () => {
+    setLoading(true)
     if (session) {
       if (props.id) {
         const userProject = await checkUser(session.accessToken as string)
@@ -175,6 +181,7 @@ const EditorPage = (props: {
         callbackUrl: process.env.NEXTAUTH_URL as string,
       })
     }
+    setLoading(false)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -201,44 +208,42 @@ const EditorPage = (props: {
 
       <DndProvider backend={Backend}>
         <Flex h="calc(100vh - 3rem)">
-          {props?.id ? (
+          {props?.loading ? (
+            <Spinner m="0 auto" color="white" size="xl" mt="3rem" />
+          ) : props?.id ? (
             props?.projectExist ? (
-              props?.loading ? (
-                <Spinner m="0 auto" color="white" size="xl" mt="3rem" />
-              ) : (
-                <>
-                  <Sidebar />
-                  {/* @ts-ignore */}
-                  <EditorErrorBoundary>
-                    <Box bg="white" flex={1} zIndex={10} position="relative">
-                      <Editor />
-                    </Box>
-                  </EditorErrorBoundary>
-
-                  <ModalComponent
-                    isOpen={isOpen}
-                    onClose={onClose}
-                    newProject={newProject}
-                    handleChange={handleChange}
-                    userProjectList={userProjectList}
-                    initProject={initProject}
-                    loading={loading}
-                  />
-
-                  <Box
-                    maxH="calc(100vh - 3rem)"
-                    flex="0 0 15rem"
-                    bg="#f7fafc"
-                    overflowY="auto"
-                    overflowX="visible"
-                    borderLeft="1px solid #cad5de"
-                  >
-                    <InspectorProvider>
-                      <Inspector />
-                    </InspectorProvider>
+              <>
+                <Sidebar />
+                {/* @ts-ignore */}
+                <EditorErrorBoundary>
+                  <Box bg="white" flex={1} zIndex={10} position="relative">
+                    <Editor />
                   </Box>
-                </>
-              )
+                </EditorErrorBoundary>
+
+                <ModalComponent
+                  isOpen={isOpen}
+                  onClose={onClose}
+                  newProject={newProject}
+                  handleChange={handleChange}
+                  userProjectList={userProjectList}
+                  initProject={initProject}
+                  loading={loading}
+                />
+
+                <Box
+                  maxH="calc(100vh - 3rem)"
+                  flex="0 0 15rem"
+                  bg="#f7fafc"
+                  overflowY="auto"
+                  overflowX="visible"
+                  borderLeft="1px solid #cad5de"
+                >
+                  <InspectorProvider>
+                    <Inspector />
+                  </InspectorProvider>
+                </Box>
+              </>
             ) : (
               <Box m="0 auto" textAlign="center" pt={20}>
                 <Alert status="error" mb={20}>
