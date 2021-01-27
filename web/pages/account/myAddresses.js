@@ -40,7 +40,6 @@ class myAddresses extends React.Component {
       edit_label: '',
       service_address: [],
       addNewMode: false,
-      editMode: false,
       open: false,
       selected_address: null,
       delete_address_id: '',
@@ -122,7 +121,6 @@ class myAddresses extends React.Component {
           selected_address: result,
           edit_label: result.label,
           addNewMode: false,
-          editMode: true,
         });
       })
       .catch();
@@ -180,20 +178,30 @@ class myAddresses extends React.Component {
 
   onSubmitSecondary = (e, id) => {
     e.preventDefault()
-    const {suggestion_edit}=this.state
-    const editAddress = {
+    const {suggestion_edit, selected_address}=this.state
+    const editAddress = suggestion_edit ?
+    {
       address: suggestion_edit.name,
       city: suggestion_edit.city,
       zip_code: suggestion_edit.postcode,
       lat: suggestion_edit.latlng.lat,
       lng: suggestion_edit.latlng.lng,
       label: this.state.edit_label,
+    }
+    :
+    {
+      address: selected_address.address,
+      city: selected_address.city,
+      zip_code: selected_address.zip_code,
+      lat: selected_address.lat,
+      lng: selected_address.lng,
+      label: this.state.edit_label,
     };
 
     axios.put('/myAlfred/api/users/profile/address/' + id, editAddress)
       .then(() => {
         toast.info('Adresse modifiée avec succès');
-        this.setState({editMode: false});
+        this.setState({selected_address: null});
         this.loadData()
 
       })
@@ -204,7 +212,7 @@ class myAddresses extends React.Component {
     axios.delete('/myAlfred/api/users/profile/address/' + id)
       .then(() => {
         toast.error('Adresse supprimée');
-        this.setState({editMode: false, open: false, delete_address_id: ''});
+        this.setState({selected_address:null, open: false, delete_address_id: ''});
         this.loadData()
       })
       .catch();
@@ -237,7 +245,7 @@ class myAddresses extends React.Component {
   };
 
   content = (classes) => {
-    const {billing_address, editMode, selected_address}=this.state
+    const {billing_address, selected_address}=this.state
     return(
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
@@ -295,7 +303,7 @@ class myAddresses extends React.Component {
                 <Grid>
                   <Grid container style={{display: 'flex', alignItems: 'center' }}>
                     <Grid item xl={3} xs={6}>
-                      { editMode && selected_address._id==e._id ?
+                      { selected_address && selected_address._id==e._id ?
                         <TextField
                           id="standard-name"
                           value={this.state.edit_label}
@@ -328,7 +336,7 @@ class myAddresses extends React.Component {
                 <Typography style={{color: 'rgba(39,37,37,35%)'}}>
                   { this.addressLabel(e) }
                 </Typography>
-                { editMode && selected_address._id==e._id ?
+                { selected_address && selected_address._id==e._id ?
                   <AlgoliaPlaces
                     placeholder='Modifiez votre adresse'
                     options={{
@@ -345,7 +353,7 @@ class myAddresses extends React.Component {
                   null
                 }
                 </Grid>
-                { editMode && selected_address._id==e._id ?
+                { selected_address && selected_address._id==e._id ?
                   <Grid item xs={12}>
                     <Button variant="contained" className={classes.buttonSave}  onClick={(event) => this.onSubmitSecondary(event, this.state.selected_address._id)}>
                       Enregistrer
@@ -366,7 +374,7 @@ class myAddresses extends React.Component {
               type={'submit'}
               variant="contained"
               className={classes.buttonSave}
-              onClick={() => this.setState({addNewMode: !this.state.addNewMode, editMode: false})}
+              onClick={() => this.setState({addNewMode: !this.state.addNewMode, selected_address: null})}
             >
               Ajouter une adresse
             </Button>
