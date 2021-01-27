@@ -114,14 +114,15 @@ class myAddresses extends React.Component {
     this.setState({ suggestion_current: suggestion })
   }
 
-  onEditionClick = (id) => {
-    this.setState({addNewMode: false, editMode: true});
+  onEditionClick = id => {
     axios.get('/myAlfred/api/users/profile/address/' + id)
       .then(res => {
         let result = res.data;
         this.setState({
           selected_address: result,
           edit_label: result.label,
+          addNewMode: false,
+          editMode: true,
         });
       })
       .catch();
@@ -164,7 +165,7 @@ class myAddresses extends React.Component {
       .then(() => {
         toast.info('Adresse ajoutée');
         this.setState({addNewMode: false});
-        this.componentDidMount();
+        this.loadData();
       })
       .catch();
 
@@ -193,7 +194,7 @@ class myAddresses extends React.Component {
       .then(() => {
         toast.info('Adresse modifiée avec succès');
         this.setState({editMode: false});
-        this.componentDidMount();
+        this.loadData()
 
       })
       .catch();
@@ -236,7 +237,7 @@ class myAddresses extends React.Component {
   };
 
   content = (classes) => {
-    const {billing_address}=this.state
+    const {billing_address, editMode, selected_address}=this.state
     return(
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
@@ -294,7 +295,20 @@ class myAddresses extends React.Component {
                 <Grid>
                   <Grid container style={{display: 'flex', alignItems: 'center' }}>
                     <Grid item xl={3} xs={6}>
-                      <h4>{e.label}</h4>
+                      { editMode && selected_address._id==e._id ?
+                        <TextField
+                          id="standard-name"
+                          value={this.state.edit_label}
+                          onChange={this.onChange}
+                          name={'edit_label'}
+                          placeholder={'Ecrire ici'}
+                          variant={'outlined'}
+                          label={'Nom de l\'adresse'}
+                          className={classes.textField}
+                        />
+                        :
+                        <h4>{e.label}</h4>
+                      }
                     </Grid>
                     <Grid item xl={2} xs={6} className={classes.editContainer}>
                       <Grid>
@@ -311,17 +325,42 @@ class myAddresses extends React.Component {
                   </Grid>
                 </Grid>
                 <Grid>
-                  <Typography style={{color: 'rgba(39,37,37,35%)'}}>
-                    { this.addressLabel(e) }
-                  </Typography>
+                <Typography style={{color: 'rgba(39,37,37,35%)'}}>
+                  { this.addressLabel(e) }
+                </Typography>
+                { editMode && selected_address._id==e._id ?
+                  <AlgoliaPlaces
+                    placeholder='Modifiez votre adresse'
+                    options={{
+                      appId: 'plKATRG826CP',
+                      apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                      language: 'fr',
+                      countries: ['fr'],
+                      type: 'address',
+
+                    }}
+                    onChange={(suggestion) => this.onSecondaryAddressChange(suggestion)}
+                  />
+                  :
+                  null
+                }
                 </Grid>
+                { editMode && selected_address._id==e._id ?
+                  <Grid item xs={12}>
+                    <Button variant="contained" className={classes.buttonSave}  onClick={(event) => this.onSubmitSecondary(event, this.state.selected_address._id)}>
+                      Enregistrer
+                    </Button>
+                  </Grid>
+                  :
+                  null
+                }
               </Grid>
             ))}
             </Grid>
             <Grid>
               <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
             </Grid>
-          <Grid container style={{marginTop: '5vh', marginBottom: '12vh'}}>
+          <Grid container style={{marginTop: '5vh', marginBottom: '2vh'}}>
             <Button
               size={'large'}
               type={'submit'}
@@ -361,49 +400,11 @@ class myAddresses extends React.Component {
               </Grid>
               <Grid item xs={12} style={{marginBottom: '12vh'}}>
                 <Button disabled={!(this.state.suggestion_new&&this.state.new_label)} variant="contained" className={classes.buttonSave} onClick={this.onSubmitNew}>
-                  Enregistrer nouveau
+                  Ajouter
                 </Button>
               </Grid>
             </Grid>
             : null}
-            {this.state.editMode ?
-              <Grid container spacing={3} style={{marginBottom: '12vh'}}>
-                <Grid item xs={12}>
-                  <TextField
-                    id="standard-name"
-                    value={this.state.edit_label}
-                    onChange={this.onChange}
-                    name={'edit_label'}
-                    placeholder={'Ecrire ici'}
-                    variant={'outlined'}
-                    label={'Nom de l\'adresse'}
-                    className={classes.textField}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  {this.addressLabel(this.state.selected_address)}
-                </Grid>
-                <Grid item xs={12}>
-                  <AlgoliaPlaces
-                    placeholder='Recherchez votre adresse'
-                    options={{
-                      appId: 'plKATRG826CP',
-                      apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                      language: 'fr',
-                      countries: ['fr'],
-                      type: 'address',
-
-                    }}
-                    onChange={(suggestion) => this.onSecondaryAddressChange(suggestion)}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Button variant="contained" className={classes.buttonSave}  onClick={(event) => this.onSubmitSecondary(event, this.state.selected_address._id)}>
-                    Enregistrer edition
-                  </Button>
-                </Grid>
-              </Grid>
-              : null}
           </Grid>
       </Grid>
 
