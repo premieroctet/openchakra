@@ -8,7 +8,7 @@ export default async function UpdateScreenshot(
   let ts = new Date()
 
   try {
-    const actualProject = await prisma.project.update({
+    await prisma.project.update({
       where: {
         id: req.body.id,
       },
@@ -18,7 +18,9 @@ export default async function UpdateScreenshot(
       },
     })
     res.status(201)
-    res.json({ actualProject })
+    res.json({
+      success: 'Update project screenshot to database successfully !',
+    })
   } catch (e) {
     res.status(500)
     res.json({ error: 'Sorry unable to update project screenshot to database' })

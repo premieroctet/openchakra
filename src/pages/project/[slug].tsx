@@ -46,10 +46,10 @@ const ProjectSlug = ({
   validated,
   publicValue,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const [loading, setLoading] = useState(true)
   const [projectExist, setProjectExist] = useState(true)
-  const router = useRouter()
+  const [loading, setLoading] = useState(true)
 
+  const router = useRouter()
   const dispatch = useDispatch()
 
   const checkSession = async () => {
@@ -81,11 +81,11 @@ const ProjectSlug = ({
   ) : (
     <EditorPage
       id={id}
-      loading={loading}
       projectExist={projectExist}
       projectName={projectName}
       validated={validated}
       public={publicValue}
+      loading={loading}
     />
   )
 }

@@ -8,6 +8,7 @@ import {
   Avatar,
   RadioGroup,
   Radio,
+  Spinner,
 } from '@chakra-ui/core'
 import { Global } from '@emotion/core'
 import { HotKeys } from 'react-hotkeys'
@@ -21,15 +22,18 @@ import PreviewProject from '~components/PreviewProject'
 
 const ProjectList = () => {
   const [projects, setProjects] = useState<any | undefined>(undefined)
+  const [loading, setLoading] = useState(false)
   const { handlers } = useShortcuts()
   const [session] = useSession()
   const router = useRouter()
   const [radioValue, setRadioValue] = useState('all')
 
   const fetchProject = async () => {
+    setLoading(true)
     const res = await fetch('/api/project/public')
     const project = await res.json()
     setProjects(project)
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -99,74 +103,72 @@ const ProjectList = () => {
               Layouts
             </Radio>
           </RadioGroup>
+          {loading ? (
+            <Box textAlign="center">
+              <Spinner m="0 auto" color="white" size="xl" mt="3rem" />
+            </Box>
+          ) : projects && projects?.project.length > 0 ? (
+            <SimpleGrid columns={[1, 1, 2, 3]} spacing={6} mt={10}>
+              {projects?.project.map((e: Project & { user: User }, i: number) =>
+                radioValue === 'all' ? (
+                  <PseudoBox
+                    bg="#1A202C"
+                    color="white"
+                    p="1rem"
+                    cursor="pointer"
+                    _hover={{ backgroundColor: '#2d384b' }}
+                    onClick={() => {
+                      setLoading(true)
+                      const href = `/project/public/${e.id}-${e.projectName}`
+                      router.push(href, href)
+                    }}
+                    key={i}
+                  >
+                    <PreviewProject project={e} />
 
-          {projects ? (
-            projects?.project.length > 0 ? (
-              <SimpleGrid columns={[1, 1, 2, 3]} spacing={6} mt={10}>
-                {projects?.project.map(
-                  (e: Project & { user: User }, i: number) =>
-                    radioValue === 'all' ? (
-                      <PseudoBox
-                        bg="#1A202C"
-                        color="white"
-                        p="1rem"
-                        cursor="pointer"
-                        _hover={{ backgroundColor: '#2d384b' }}
-                        onClick={() => {
-                          const href = `/project/public/${e.id}-${e.projectName}`
-                          router.push(href, href, { shallow: true })
-                        }}
-                        key={i}
-                      >
-                        <PreviewProject project={e} />
-
-                        <Text fontSize="xl">{e.projectName}</Text>
-                        <Text fontSize="md" mt={2} textAlign="right">
-                          <Avatar
-                            size="xs"
-                            mr={2}
-                            name={e.user.name || ''}
-                            src={e.user.image || ''}
-                          />
-                          {e.user.name}
-                        </Text>
-                      </PseudoBox>
-                    ) : (
-                      radioValue === e.tag && (
-                        <PseudoBox
-                          bg="#1A202C"
-                          color="white"
-                          p="1rem"
-                          cursor="pointer"
-                          _hover={{ backgroundColor: '#2d384b' }}
-                          onClick={() => {
-                            const href = `/project/public/${e.id}-${e.projectName}`
-                            router.push(href, href, { shallow: true })
-                          }}
-                          key={i}
-                        >
-                          <PreviewProject project={e} />
-                          <Text fontSize="xl">{e.projectName}</Text>
-                          <Text fontSize="md" mt={2} textAlign="right">
-                            <Avatar
-                              size="xs"
-                              mr={2}
-                              name={e.user.name || ''}
-                              src={e.user.image || ''}
-                            />
-                            {e.user.name}
-                          </Text>
-                        </PseudoBox>
-                      )
-                    ),
-                )}
-                )
-              </SimpleGrid>
-            ) : (
-              <Box textAlign="center" mt={30}>
-                <Text color="white">There is no projects</Text>
-              </Box>
-            )
+                    <Text fontSize="xl">{e.projectName}</Text>
+                    <Text fontSize="md" mt={2} textAlign="right">
+                      <Avatar
+                        size="xs"
+                        mr={2}
+                        name={e.user.name || ''}
+                        src={e.user.image || ''}
+                      />
+                      {e.user.name}
+                    </Text>
+                  </PseudoBox>
+                ) : (
+                  radioValue === e.tag && (
+                    <PseudoBox
+                      bg="#1A202C"
+                      color="white"
+                      p="1rem"
+                      cursor="pointer"
+                      _hover={{ backgroundColor: '#2d384b' }}
+                      onClick={() => {
+                        setLoading(true)
+                        const href = `/project/public/${e.id}-${e.projectName}`
+                        router.push(href, href)
+                      }}
+                      key={i}
+                    >
+                      <PreviewProject project={e} />
+                      <Text fontSize="xl">{e.projectName}</Text>
+                      <Text fontSize="md" mt={2} textAlign="right">
+                        <Avatar
+                          size="xs"
+                          mr={2}
+                          name={e.user.name || ''}
+                          src={e.user.image || ''}
+                        />
+                        {e.user.name}
+                      </Text>
+                    </PseudoBox>
+                  )
+                ),
+              )}
+              )
+            </SimpleGrid>
           ) : (
             <Box textAlign="center" mt={30}>
               <Text color="white">There is no projects</Text>

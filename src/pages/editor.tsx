@@ -32,16 +32,17 @@ import { Project } from '@prisma/client'
 const EditorPage = (props: {
   id: number
   projectExist: boolean
-  loading: boolean
   projectName: string
   validated: boolean
   public: boolean
+  loading: boolean
 }) => {
   const { handlers } = useShortcuts()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [projectName, setProjectName] = useState('')
   const [newProject, setNewProject] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [modalLoading, setModalLoading] = useState(false)
   const [userProjectList, setUserProjectList] = useState([])
   const components = useSelector(getComponents)
   const [session] = useSession()
@@ -77,7 +78,6 @@ const EditorPage = (props: {
           id: props.id,
         }),
       })
-      setLoading(false)
     }
     const data = await response.json()
     setLoading(false)
@@ -85,7 +85,6 @@ const EditorPage = (props: {
   }
 
   const initProject = async () => {
-    setLoading(true)
     if (projectName.length > 0) {
       const markup = JSON.stringify(components)
       let newProject = await createProject(
@@ -102,7 +101,7 @@ const EditorPage = (props: {
           isClosable: true,
         })
         const href = `/project/${newProject.id}-${newProject.projectName}`
-        router.push(href, href, { shallow: true })
+        router.push(href, href)
       } else {
         toast({
           title: 'Error when created project',
@@ -121,23 +120,21 @@ const EditorPage = (props: {
         isClosable: true,
       })
     }
-    setLoading(false)
   }
 
   const showUserProjectList = async () => {
-    setLoading(true)
+    setModalLoading(true)
+    onOpen()
     if (session) {
       const userProject = await checkUser(session.accessToken as string)
       setUserProjectList(userProject.project)
-      setLoading(false)
       setNewProject(false)
-      onOpen()
     } else {
-      setLoading(false)
       signIn('github', {
         callbackUrl: process.env.NEXTAUTH_URL as string,
       })
     }
+    setModalLoading(false)
   }
 
   const saveProject = async () => {
@@ -151,8 +148,7 @@ const EditorPage = (props: {
         if (userCanEdit === false) {
           setNewProject(true)
           onOpen()
-        }
-        if (userCanEdit) {
+        } else if (userCanEdit) {
           const projectUpdated = await updateProject()
           if (projectUpdated) {
             toast({
@@ -208,16 +204,42 @@ const EditorPage = (props: {
 
       <DndProvider backend={Backend}>
         <Flex h="calc(100vh - 3rem)">
-          {props?.loading ? (
-            <Spinner m="0 auto" color="white" size="xl" mt="3rem" />
+          {props.loading ? (
+            <Box
+              width="100%"
+              height="100%"
+              position="absolute"
+              zIndex={10000}
+              top="0%"
+              left="0%"
+              backgroundColor="rgba(46, 55, 72, 0.3)"
+              textAlign="center"
+            >
+              <Spinner m="0 auto" color="blue" size="xl" mt="3rem" />
+            </Box>
           ) : props?.id ? (
             props?.projectExist ? (
               <>
                 <Sidebar />
+
                 {/* @ts-ignore */}
                 <EditorErrorBoundary>
                   <Box bg="white" flex={1} zIndex={10} position="relative">
                     <Editor />
+                    {loading && (
+                      <Box
+                        width="100%"
+                        height="100%"
+                        position="absolute"
+                        zIndex={10000}
+                        top="0%"
+                        left="0%"
+                        backgroundColor="rgba(46, 55, 72, 0.3)"
+                        textAlign="center"
+                      >
+                        <Spinner m="0 auto" color="blue" size="xl" mt="3rem" />
+                      </Box>
+                    )}
                   </Box>
                 </EditorErrorBoundary>
 
@@ -228,7 +250,8 @@ const EditorPage = (props: {
                   handleChange={handleChange}
                   userProjectList={userProjectList}
                   initProject={initProject}
-                  loading={loading}
+                  loading={modalLoading}
+                  setModalLoading={setModalLoading}
                 />
 
                 <Box
@@ -258,13 +281,25 @@ const EditorPage = (props: {
           ) : (
             <>
               <Sidebar />
+
               {/* @ts-ignore */}
               <EditorErrorBoundary>
                 <Box bg="white" flex={1} zIndex={10} position="relative">
                   <Editor />
+                  {loading && (
+                    <Box
+                      width="100%"
+                      height="100%"
+                      position="absolute"
+                      zIndex={10000}
+                      backgroundColor="rgba(46, 55, 72, 0.3)"
+                      textAlign="center"
+                    >
+                      <Spinner m="0 auto" color="white" size="xl" mt="3rem" />
+                    </Box>
+                  )}
                 </Box>
               </EditorErrorBoundary>
-
               <ModalComponent
                 isOpen={isOpen}
                 onClose={onClose}
@@ -272,9 +307,9 @@ const EditorPage = (props: {
                 handleChange={handleChange}
                 userProjectList={userProjectList}
                 initProject={initProject}
-                loading={loading}
+                loading={modalLoading}
+                setModalLoading={setModalLoading}
               />
-
               <Box
                 maxH="calc(100vh - 3rem)"
                 flex="0 0 15rem"

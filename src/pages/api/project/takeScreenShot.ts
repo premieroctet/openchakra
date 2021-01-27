@@ -59,20 +59,16 @@ export default async function TakeScreenshot(
       screen,
     }
 
-    const updateResponse = await fetch(
-      baseUrl + '/api/project/updateScreenShot',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(screenBodyData),
+    await fetch(baseUrl + '/api/project/updateScreenShot', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    )
-    const screenshotReponse = await updateResponse.json()
+      body: JSON.stringify(screenBodyData),
+    })
 
     res.status(201)
-    res.json({ screenshotReponse })
+    res.json({ success: 'Screenshot was saved successfully !' })
   } catch (e) {
     res.status(500)
     res.json({ error: 'Sorry unable to fetch project by this id' })

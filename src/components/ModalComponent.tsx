@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Box,
   Modal,
@@ -33,6 +33,7 @@ interface Props {
   userProjectList: Project[]
   initProject: () => void
   loading: boolean
+  setModalLoading: (value: boolean) => void
 }
 
 interface UpdateProject {
@@ -44,8 +45,10 @@ interface UpdateProject {
 const ModalComponent = (props: Props) => {
   const router = useRouter()
   const toast = useToast()
+  const [loadingAdd, setLoadingAdd] = useState(false)
 
   const updateProject = async (e: UpdateProject) => {
+    props.setModalLoading(true)
     let bodyData = {
       project: {
         id: e.id,
@@ -72,10 +75,14 @@ const ModalComponent = (props: Props) => {
       })
     }
     const data = await response.json()
+    props.setModalLoading(false)
+
     return data
   }
 
   const publishPublicProject = async (e: UpdateProject) => {
+    props.setModalLoading(true)
+
     e.public = !e.public
     const data = {
       id: e.id,
@@ -84,6 +91,8 @@ const ModalComponent = (props: Props) => {
     }
 
     const projectUpdated = await updateProject(data)
+
+    props.setModalLoading(false)
 
     if (projectUpdated) {
       toast({
@@ -116,7 +125,11 @@ const ModalComponent = (props: Props) => {
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody overflowY="scroll">
-          {props.newProject ? (
+          {loadingAdd ? (
+            <Box textAlign="center">
+              <Spinner m="0 auto" color="#319795" size="xl" mt="3rem" />
+            </Box>
+          ) : props.newProject ? (
             <FormControl isRequired>
               <FormLabel htmlFor="fname">Project name</FormLabel>
               <Input
@@ -129,7 +142,9 @@ const ModalComponent = (props: Props) => {
               />
             </FormControl>
           ) : props.loading ? (
-            <Spinner m="0 auto" color="#319795" size="xl" mt="3rem" />
+            <Box textAlign="center">
+              <Spinner m="0 auto" color="#319795" size="xl" mt="3rem" />
+            </Box>
           ) : props.userProjectList.length > 0 ? (
             <List spacing={3}>
               {props.userProjectList.map((e: Project, i: number) => {
@@ -151,8 +166,14 @@ const ModalComponent = (props: Props) => {
                       <Flex justify="center" align="center">
                         <Box
                           onClick={() => {
+                            setLoadingAdd(true)
                             const href = `/project/${e.id}-${e.projectName}`
-                            router.push(href, href, { shallow: true })
+                            router.push(
+                              {
+                                pathname: '/project',
+                              },
+                              href,
+                            )
                           }}
                           w="80%"
                           display="inline-block"
@@ -193,7 +214,13 @@ const ModalComponent = (props: Props) => {
             >
               Close
             </Button>
-            <Button variantColor="blue" onClick={() => props.initProject()}>
+            <Button
+              variantColor="blue"
+              onClick={() => {
+                setLoadingAdd(true)
+                props.initProject()
+              }}
+            >
               Create
             </Button>
           </ModalFooter>
