@@ -14,7 +14,7 @@ const {mangoApi, install_hooks} = require('../../../utils/mangopay');
 const {maskIban} = require('../../../utils/text');
 var parse = require('url-parse');
 const {inspect} = require('util');
-
+const {MANGOPAY_ERRORS}=require('../../../utils/mangopay_messages')
 moment.locale('fr');
 
 const {computeUrl} = require('../../../config/config');
@@ -47,6 +47,7 @@ router.get('/hook', (req, res) => {
 // Create credit card
 // @access private
 router.post('/createCard', passport.authenticate('jwt', {session: false}), (req, res) => {
+  console.log(`Creating card for user ${req.user.id}`)
   User.findById(req.user.id)
     .then(user => {
       let id_mangopay = user.id_mangopay;
@@ -79,6 +80,13 @@ router.post('/createCard', passport.authenticate('jwt', {session: false}), (req,
             },
           };
           request.post(options, function (err, data, result) {
+            if (result.includes("errorCode")) {
+              const code=parseInt(result.split('=')[1])
+              console.log(`Card creation error:${code}`)
+              const errMsg = MANGOPAY_ERRORS[code] || `Erreur inconnue #${code}`
+              res.status(404).json({error: errMsg})
+              return
+            }
             cardRegistrationData.RegistrationData = result;
             mangoApi.CardRegistrations.update(cardRegistrationData)
               .then(newCard => {
@@ -87,9 +95,10 @@ router.post('/createCard', passport.authenticate('jwt', {session: false}), (req,
           }, options);
 
         });
-    }).catch(error => {
-    console.error(error);
-    res.status(404).json({error: error});
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(404).json({error: error});
   });
 });
 
