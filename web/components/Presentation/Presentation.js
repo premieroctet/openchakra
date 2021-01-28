@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import {CMP_PRESENTATION} from '../../utils/i18n'
-import {MAX_TEXT_SIZE} from '../../utils/consts'
+import {MAX_DESCRIPTION_LENGTH} from '../../utils/consts'
 import {isEditableUser} from '../../utils/functions'
 
 const {frenchFormat} = require('../../utils/text');
@@ -76,7 +76,7 @@ class Presentation extends React.Component {
 
     onTextChanged = event => {
         var text = event.target.value
-        text = text.slice(0, MAX_TEXT_SIZE)
+        text = text.slice(0, MAX_DESCRIPTION_LENGTH)
         this.setState({newDescription: text})
     }
 
@@ -114,7 +114,7 @@ class Presentation extends React.Component {
                             flexDirection: 'column'
                         }}>
                             <Grid>
-                                <Typography>{`${MAX_TEXT_SIZE} caractères max`}</Typography>
+                                <Typography>{`${MAX_DESCRIPTION_LENGTH} caractères max`}</Typography>
                             </Grid>
                             <Grid style={{width: '100%'}}>
                                 <Button
