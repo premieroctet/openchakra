@@ -20,7 +20,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   let bodyData = {
     projectId,
   }
-  //@ts-ignore
   const baseUrl = req ? `https://${req.headers.host}` : ''
 
   const response = await fetch(baseUrl + '/api/project/searchById', {

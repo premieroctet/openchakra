@@ -19,16 +19,11 @@ export const getServerSideProps: GetServerSideProps = async ({
   req,
 }) => {
   let projectId = (params!.slug as string).split('-')[0]
-  //need to check if the project is public or not
-
   let bodyData = {
     projectId,
   }
-
-  //@ts-ignore
   const baseUrl = req ? `https://${req.headers.host}` : ''
-
-  const response = await fetch(baseUrl + '/api/project/searchById', {
+  const response = await fetch(baseUrl + '/api/project/searchPublic', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -104,9 +99,9 @@ const ProjectPublic = (props: ProjectContainer) => {
               </EditorErrorBoundary>
             )
           ) : (
-            <Box color="white" m="0 auto">
-              <Link href="/" color="teal.100">
-                An error has occurred, click to return
+            <Box color="white" m="0 auto" mt={20}>
+              <Link href="/project/public" color="teal.100">
+                This project is not public, click to return
               </Link>
             </Box>
           )}

@@ -6,7 +6,6 @@ export default async function UpdateProject(
   res: NextApiResponse,
 ) {
   let ts = new Date()
-
   try {
     const { project: projectData } = req.body
     await prisma.project.update({
