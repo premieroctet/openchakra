@@ -109,7 +109,12 @@ class editProfile extends React.Component {
   onChange = e => {
     const state = this.state.user;
     var {name, value} = e.target;
-
+    if (name === 'phone') {
+      const phoneOk = isPhoneOk(value);
+      if (phoneOk && e.target.value.startsWith('0')) {
+        value = '33' + value.substring(1);
+      }
+    }
     if(name === 'description'){
       value = value.slice(0, MAX_DESCRIPTION_LENGTH)
     }
