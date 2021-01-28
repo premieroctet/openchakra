@@ -103,12 +103,21 @@ class editProfile extends React.Component {
         value = '33' + value.substring(1);
       }
     }
-    if(name === 'name' || name === 'firstname'){
-      value = value.charAt(0).toUpperCase() + value.slice(1)
-    }
 
     state[e.target.name] = value;
     this.setState({user: state});
+  };
+
+  onChangeName = event =>{
+    const state = this.state.user;
+    let value = event.target.value;
+
+    if (value.match(/[0-9^@.&²"#{|(`)°=+},?;:/!§*$£µ%*\\<>~¤]/)) {}
+    else {
+      value = value.charAt(0).toUpperCase() + value.slice(1);
+      state[event.target.name] = value;
+      this.setState({user: state});
+    }
   };
 
   onChangeBirthday = e => {
@@ -117,7 +126,6 @@ class editProfile extends React.Component {
 
   handleChangeLanguages = selectedLanguages => {
     this.setState({selectedLanguages});
-
   };
 
   onSubmit = e => {
@@ -164,7 +172,7 @@ class editProfile extends React.Component {
             <TextField
               classes={{root: classes.textField}}
               value={user.firstname || ''}
-              onChange={this.onChange}
+              onChange={this.onChangeName}
               name={'firstname'}
               placeholder={'Prénom'}
               variant={'outlined'}
@@ -176,7 +184,7 @@ class editProfile extends React.Component {
             <TextField
               classes={{root: classes.textField}}
               value={user.name || ''}
-              onChange={this.onChange}
+              onChange={this.onChangeName}
               name={'name'}
               placeholder={'Nom'}
               variant={'outlined'}
