@@ -9,7 +9,7 @@ export default async function UpdateProject(
 
   try {
     const { project: projectData } = req.body
-    const actualProject = await prisma.project.update({
+    await prisma.project.update({
       where: {
         id: projectData.id,
       },
@@ -20,7 +20,9 @@ export default async function UpdateProject(
       },
     })
     res.status(201)
-    res.json({ actualProject })
+    res.json({
+      success: 'Update project to database successfully !',
+    })
   } catch (e) {
     res.status(500)
     res.json({ error: 'Sorry unable to update project to database' })

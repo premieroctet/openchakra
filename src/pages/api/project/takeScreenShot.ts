@@ -38,24 +38,10 @@ export default async function TakeScreenshot(
   }
 
   try {
-    let bodyData = {
-      projectId: req.body.id,
-    }
-
-    const response = await fetch(baseUrl + '/api/project/searchById', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(bodyData),
-    })
-
-    const project = await response.json()
-
     let screen = await screenShot()
 
     let screenBodyData = {
-      id: project.project.id,
+      id: req.body.id,
       screen,
     }
 
