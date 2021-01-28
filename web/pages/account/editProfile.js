@@ -222,16 +222,9 @@ class editProfile extends React.Component {
               label={'A propos de moi'}
             />
           </Grid>
-<<<<<<< HEAD
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{ display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column' }}>
             <Typography>{`${MAX_DESCRIPTION_LENGTH} caractères max`}</Typography>
           </Grid>
-||||||| a07f7bf7
-=======
-          <Grid style={{ display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column' }}>
-              <Typography>{`${MAX_DESCRIPTION_LENGTH} caractères max`}</Typography>
-          </Grid>
->>>>>>> sau-feature-v3/917625-msg-ajout-CB
         </Grid>
         <Grid>
           <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
