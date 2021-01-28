@@ -109,12 +109,6 @@ class editProfile extends React.Component {
   onChange = e => {
     const state = this.state.user;
     var {name, value} = e.target;
-    if (name === 'phone') {
-      const phoneOk = isPhoneOk(value);
-      if (phoneOk && e.target.value.startsWith('0')) {
-        value = '33' + value.substring(1);
-      }
-    }
     if(name === 'description'){
       value = value.slice(0, MAX_DESCRIPTION_LENGTH)
     }
@@ -165,13 +159,7 @@ class editProfile extends React.Component {
     setAxiosAuthentication();
     axios
       .put('/myAlfred/api/users/profile/phone', newPhone)
-      .then(res => {
-        this.setState({
-          checkPhoneState: true,
-          checkPhoneMessage: 'Téléphone ajouté',
-          checkPhoneSeverity: 'success',
-        })
-      })
+      .then()
       .catch(err =>
         console.error(err)
       );
@@ -210,7 +198,7 @@ class editProfile extends React.Component {
             checkPhoneSeverity: 'success',
             smsCodeOpen: false,
             phoneConfirmed: true
-          });
+          }, () => this.onSubmit());
         } else {
           this.setState({
             checkPhoneState: true,
@@ -250,7 +238,7 @@ class editProfile extends React.Component {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.setState({smsCodeOpen: false})} color="primary">
+          <Button onClick={() => this.setState({smsCodeOpen: false}, () => this.onSubmit())} color="primary">
             Confirmer plus tard
           </Button>
           <Button
@@ -275,7 +263,6 @@ class editProfile extends React.Component {
   };
 
   onSubmit = e => {
-    e.preventDefault();
     let arrayLanguages = [];
     if (this.state.selectedLanguages != null) {
       this.state.selectedLanguages.forEach(w => {
@@ -298,7 +285,7 @@ class editProfile extends React.Component {
   };
 
   content = (classes) =>{
-    const {errors, user}=this.state;
+    const {errors, user, phone}=this.state;
     var birthday = moment(this.state.birthday).format('YYYY-MM-DD').toString();
     var today = moment(new Date()).format('YYYY-MM-DD').toString();
 
@@ -420,7 +407,14 @@ class editProfile extends React.Component {
               />
             </Grid>
             <Grid item xs={6} lg={6} md={6} sm={6} xl={6}>
-              <Button variant="outlined" color={'primary'} onClick={this.submitPhone}>Vérifier votre téléphone</Button>
+              <Button
+                variant="outlined"
+                color={'primary'}
+                onClick={this.submitPhone}
+                disabled={phone === user.phone && user.phone_confirmed && user.phone.length === 12 ? true : false}
+              >
+                {phone === user.phone && user.phone_confirmed === true ? 'Votre téléphone est vérifié' : phone !== user.phone  ? 'Enregistrer votre nouveau téléphone' : 'Vérifié votre téléphone'}
+              </Button>
             </Grid>
         </Grid>
       </Grid>
