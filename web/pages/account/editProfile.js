@@ -20,7 +20,8 @@ import Hidden from "@material-ui/core/Hidden";
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import Divider from "@material-ui/core/Divider";
-
+import Typography from '@material-ui/core/Typography';
+const {MAX_DESCRIPTION_LENGTH}=require('../../utils/consts')
 const {isPhoneOk} = require('../../utils/sms');
 const moment = require('moment');
 
@@ -103,7 +104,9 @@ class editProfile extends React.Component {
         value = '33' + value.substring(1);
       }
     }
-
+    if(name === 'description'){
+      value = value.slice(0, MAX_DESCRIPTION_LENGTH)
+    }
     state[e.target.name] = value;
     this.setState({user: state});
   };
@@ -203,6 +206,9 @@ class editProfile extends React.Component {
               name={'description'}
               label={'A propos de moi'}
             />
+          </Grid>
+          <Grid style={{ display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column' }}>
+              <Typography>{`${MAX_DESCRIPTION_LENGTH} caractères max`}</Typography>
           </Grid>
         </Grid>
         <Grid>
