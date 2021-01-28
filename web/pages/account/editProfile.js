@@ -98,12 +98,7 @@ class editProfile extends React.Component {
   onChange = e => {
     const state = this.state.user;
     var {name, value} = e.target;
-    if (name === 'phone') {
-      const phoneOk = isPhoneOk(value);
-      if (phoneOk && e.target.value.startsWith('0')) {
-        value = '33' + value.substring(1);
-      }
-    }
+
     if(name === 'description'){
       value = value.slice(0, MAX_DESCRIPTION_LENGTH)
     }
@@ -115,9 +110,24 @@ class editProfile extends React.Component {
     const state = this.state.user;
     let value = event.target.value;
 
-    if (value.match(/[0-9^@.&²"#{|(`)°=+},?;:/!§*$£µ%*\\<>~¤]/)) {}
+    if (value.match(/[0-9^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤]/)) {}
     else {
       value = value.charAt(0).toUpperCase() + value.slice(1);
+      state[event.target.name] = value;
+      this.setState({user: state});
+    }
+  };
+
+  onChangePhone = event =>{
+    const state = this.state.user;
+    let value = event.target.value;
+
+    if (value.match(/[a-zA-Z^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤]/) || value.length > 12) {}
+    else {
+      const phoneOk = isPhoneOk(value);
+      if (phoneOk && value.startsWith('0')) {
+        value = '33' + value.substring(1);
+      }
       state[event.target.name] = value;
       this.setState({user: state});
     }
@@ -207,8 +217,8 @@ class editProfile extends React.Component {
               label={'A propos de moi'}
             />
           </Grid>
-          <Grid style={{ display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column' }}>
-              <Typography>{`${MAX_DESCRIPTION_LENGTH} caractères max`}</Typography>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{ display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column' }}>
+            <Typography>{`${MAX_DESCRIPTION_LENGTH} caractères max`}</Typography>
           </Grid>
         </Grid>
         <Grid>
@@ -270,7 +280,7 @@ class editProfile extends React.Component {
             <TextField
               classes={{root: classes.textField}}
               value={user.phone || ''}
-              onChange={this.onChange}
+              onChange={this.onChangePhone}
               name={'phone'}
               placeholder={'Téléphone'}
               variant={'outlined'}
