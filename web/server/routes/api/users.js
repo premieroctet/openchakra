@@ -879,7 +879,7 @@ router.post('/forgotPassword', (req, res) => {
     .then(user => {
       if (user === null) {
         console.error(`email ${email} not in database`);
-        res.status(404).json('Email inconnu');
+        res.status(404).json({error: 'Aucun compte avec cet email'});
       } else {
         const token = crypto.randomBytes(20).toString('hex');
         const newToken = new ResetToken({token: token});
