@@ -57,6 +57,6 @@ export default async function TakeScreenshot(
     res.json({ success: 'Screenshot was saved successfully !' })
   } catch (e) {
     res.status(500)
-    res.json({ error: 'Sorry unable to fetch project by this id' })
+    res.json({ error: 'Sorry unable to saved screenshot project' })
   }
 }

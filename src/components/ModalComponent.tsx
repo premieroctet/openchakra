@@ -62,22 +62,43 @@ const ModalComponent = (props: Props) => {
       },
       body: JSON.stringify(bodyData),
     })
-    if (e.public) {
-      await fetch('/api/project/takeScreenShot', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-        },
-        body: JSON.stringify({
-          pageToScreenshot: `/project/preview/${e.id}-${e.projectName}`,
-          id: e.id,
-        }),
-      })
-    }
+
     const data = await response.json()
     props.setModalLoading(false)
 
     return data
+  }
+
+  const saveScreenshot = async (e: UpdateProject) => {
+    props.setModalLoading(true)
+    const response = await fetch('/api/project/takeScreenShot', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: JSON.stringify({
+        pageToScreenshot: `/project/preview/${e.id}-${e.projectName}`,
+        id: e.id,
+      }),
+    })
+    props.setModalLoading(false)
+    if (response) {
+      toast({
+        title: 'The project screenshot has been updated',
+        description: 'The project screenshot has been updated successfully',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: 'Error when updated screenshot project',
+        description: 'An error occured, try again later',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    }
   }
 
   const publishPublicProject = async (e: UpdateProject) => {
@@ -164,31 +185,43 @@ const ModalComponent = (props: Props) => {
                       key={i}
                     >
                       <Flex justify="center" align="center">
-                        <Box
-                          onClick={() => {
-                            setLoadingAdd(true)
-                            const href = `/project/${e.id}-${e.projectName}`
-                            router.push(
-                              {
-                                pathname: '/project',
-                              },
-                              href,
-                            )
-                          }}
-                          w="80%"
-                          display="inline-block"
-                        >
+                        <Box display="inline-block" w="70%">
                           <ListIcon icon={AiFillProject} color="white" />
-                          {e.id} - {e.projectName}
+                          <Text
+                            w="50%"
+                            display="inline-block"
+                            onClick={() => {
+                              setLoadingAdd(true)
+                              const href = `/project/${e.id}-${e.projectName}`
+                              router.push(
+                                {
+                                  pathname: '/project',
+                                },
+                                href,
+                              )
+                            }}
+                          >
+                            {e.id} - {e.projectName}
+                          </Text>
+                          <Switch
+                            color="teal"
+                            id="projectPublic"
+                            size="md"
+                            ml={5}
+                            defaultIsChecked={e.public}
+                            onChange={() => publishPublicProject(e)}
+                          />
                         </Box>
-                        <FormLabel htmlFor="projectPublic">isPublic</FormLabel>
-                        <Switch
-                          color="teal"
-                          id="projectPublic"
-                          size="md"
-                          defaultIsChecked={e.public}
-                          onChange={() => publishPublicProject(e)}
-                        />
+                        {e.public && (
+                          <Button
+                            w="30%"
+                            variantColor="teal"
+                            size="sm"
+                            onClick={() => saveScreenshot(e)}
+                          >
+                            Screenshot
+                          </Button>
+                        )}
                       </Flex>
                     </ListItem>
                   </>

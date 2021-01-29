@@ -67,18 +67,6 @@ const EditorPage = (props: {
       },
       body: JSON.stringify(bodyData),
     })
-    if (props.public) {
-      await fetch('/api/project/takeScreenShot', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-        },
-        body: JSON.stringify({
-          pageToScreenshot: `/project/preview/${props.id}-${props.projectName}`,
-          id: props.id,
-        }),
-      })
-    }
     const data = await response.json()
     setLoading(false)
     return data
