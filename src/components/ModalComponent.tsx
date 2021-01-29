@@ -15,7 +15,6 @@ import {
   Spinner,
   ModalFooter,
   Button,
-  ListIcon,
   Switch,
   useToast,
   Text,
@@ -57,7 +56,6 @@ const ModalComponent = (props: Props) => {
   const router = useRouter()
   const toast = useToast()
   const [loadingAdd, setLoadingAdd] = useState(false)
-  const [editProjectName, setEditProjetName] = useState(false)
 
   const updateProject = async (e: UpdateProject) => {
     props.setModalLoading(true)
@@ -185,7 +183,6 @@ const ModalComponent = (props: Props) => {
         isClosable: true,
       })
     }
-    setEditProjetName(false)
     props.setModalLoading(true)
   }
 
@@ -193,6 +190,7 @@ const ModalComponent = (props: Props) => {
     return isEditing ? (
       <ButtonGroup justifyContent="center" size="sm" ml={2}>
         <IconButton
+          size="xs"
           icon="check"
           color="black"
           onClick={onSubmit}
@@ -200,7 +198,7 @@ const ModalComponent = (props: Props) => {
         />
       </ButtonGroup>
     ) : (
-      <Flex justifyContent="center" ml={5}>
+      <Flex justifyContent="center" align="center" ml={5}>
         <IconButton
           size="xs"
           icon="edit"
@@ -264,49 +262,52 @@ const ModalComponent = (props: Props) => {
                     >
                       <Accordion defaultIndex={[]} allowMultiple>
                         <AccordionItem borderColor="transparent">
-                          <AccordionHeader>
+                          <AccordionHeader
+                            _hover={{ backgroundColor: 'unset' }}
+                            textAlign="center"
+                            justifyItems="center"
+                            alignItems="center"
+                          >
                             <Box
-                              flex="1"
+                              as={AiFillProject}
+                              size="27px"
+                              color="white"
+                              display="inline-block"
+                              mr={5}
+                              width="20%"
+                              onClick={() => {
+                                setLoadingAdd(true)
+                                const href = `/project/${e.id}-${e.projectName}`
+                                router.push(
+                                  {
+                                    pathname: '/project',
+                                  },
+                                  href,
+                                )
+                              }}
+                            />
+                            <Editable
+                              display="inline-block"
+                              width="70%"
                               textAlign="center"
-                              // onClick={() => {
-                              //   setLoadingAdd(true)
-                              //   const href = `/project/${e.id}-${e.projectName}`
-                              //   router.push(
-                              //     {
-                              //       pathname: '/project',
-                              //     },
-                              //     href,
-                              //   )
-                              // }}
+                              backgroundColor="transparent"
+                              defaultValue={e.projectName}
+                              fontSize="lg"
+                              isPreviewFocusable={false}
+                              submitOnBlur={true}
+                              onSubmit={(newValue: string | FormEvent<any>) => {
+                                updateProjectName(e, newValue)
+                              }}
                             >
-                              <ListIcon icon={AiFillProject} color="white" />
-                              {/* <Text w="50%" display="inline-block">
-                                {e.id} - {e.projectName}
-                              </Text> */}
+                              {(props: any) => (
+                                <Flex align="center" justify="center">
+                                  <EditablePreview />
+                                  <EditableInput />
+                                  <EditableControls {...props} />
+                                </Flex>
+                              )}
+                            </Editable>
 
-                              <Editable
-                                display="inline-block"
-                                textAlign="center"
-                                backgroundColor="transparent"
-                                defaultValue={e.projectName}
-                                fontSize="xl"
-                                isPreviewFocusable={true}
-                                submitOnBlur={true}
-                                onSubmit={(
-                                  newValue: string | FormEvent<any>,
-                                ) => {
-                                  updateProjectName(e, newValue)
-                                }}
-                              >
-                                {(props: any) => (
-                                  <Flex>
-                                    <EditablePreview />
-                                    <EditableInput />
-                                    <EditableControls {...props} />
-                                  </Flex>
-                                )}
-                              </Editable>
-                            </Box>
                             <AccordionIcon />
                           </AccordionHeader>
                           <AccordionPanel pb={4}>
