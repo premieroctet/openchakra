@@ -240,6 +240,7 @@ const EditorPage = (props: {
                   initProject={initProject}
                   loading={modalLoading}
                   setModalLoading={setModalLoading}
+                  showUserProjectList={showUserProjectList}
                 />
 
                 <Box
@@ -297,6 +298,7 @@ const EditorPage = (props: {
                 initProject={initProject}
                 loading={modalLoading}
                 setModalLoading={setModalLoading}
+                showUserProjectList={showUserProjectList}
               />
               <Box
                 maxH="calc(100vh - 3rem)"

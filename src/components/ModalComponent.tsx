@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, FormEvent } from 'react'
 import {
   Box,
   Modal,
@@ -19,6 +19,16 @@ import {
   Switch,
   useToast,
   Text,
+  Accordion,
+  AccordionItem,
+  AccordionIcon,
+  AccordionPanel,
+  AccordionHeader,
+  Editable,
+  EditableInput,
+  EditablePreview,
+  IconButton,
+  ButtonGroup,
   Flex,
 } from '@chakra-ui/core'
 import { useRouter } from 'next/router'
@@ -34,6 +44,7 @@ interface Props {
   initProject: () => void
   loading: boolean
   setModalLoading: (value: boolean) => void
+  showUserProjectList: () => void
 }
 
 interface UpdateProject {
@@ -46,6 +57,7 @@ const ModalComponent = (props: Props) => {
   const router = useRouter()
   const toast = useToast()
   const [loadingAdd, setLoadingAdd] = useState(false)
+  const [editProjectName, setEditProjetName] = useState(false)
 
   const updateProject = async (e: UpdateProject) => {
     props.setModalLoading(true)
@@ -134,6 +146,72 @@ const ModalComponent = (props: Props) => {
     }
   }
 
+  const updateProjectName = async (
+    e: Project,
+    text: string | FormEvent<any>,
+  ) => {
+    props.setModalLoading(true)
+
+    const data = {
+      id: e.id,
+      projectName: text as string,
+    }
+
+    const response = await fetch('/api/project/updateProjectName', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+
+    const projectUpdated = await response.json()
+
+    if (projectUpdated) {
+      props.showUserProjectList()
+      toast({
+        title: 'The project name has been updated',
+        description: 'The project has been updated successfully',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: 'Error when updated project name',
+        description: 'An error occured, try again later',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    }
+    setEditProjetName(false)
+    props.setModalLoading(true)
+  }
+
+  const EditableControls = ({ isEditing, onSubmit, onRequestEdit }: any) => {
+    return isEditing ? (
+      <ButtonGroup justifyContent="center" size="sm" ml={2}>
+        <IconButton
+          icon="check"
+          color="black"
+          onClick={onSubmit}
+          aria-label="submit"
+        />
+      </ButtonGroup>
+    ) : (
+      <Flex justifyContent="center" ml={5}>
+        <IconButton
+          size="xs"
+          icon="edit"
+          color="black"
+          onClick={onRequestEdit}
+          aria-label="edit"
+        />
+      </Flex>
+    )
+  }
+
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
       <ModalOverlay />
@@ -184,45 +262,74 @@ const ModalComponent = (props: Props) => {
                       mt={3}
                       key={i}
                     >
-                      <Flex justify="center" align="center">
-                        <Box display="inline-block" w="70%">
-                          <ListIcon icon={AiFillProject} color="white" />
-                          <Text
-                            w="50%"
-                            display="inline-block"
-                            onClick={() => {
-                              setLoadingAdd(true)
-                              const href = `/project/${e.id}-${e.projectName}`
-                              router.push(
-                                {
-                                  pathname: '/project',
-                                },
-                                href,
-                              )
-                            }}
-                          >
-                            {e.id} - {e.projectName}
-                          </Text>
-                          <Switch
-                            color="teal"
-                            id="projectPublic"
-                            size="md"
-                            ml={5}
-                            defaultIsChecked={e.public}
-                            onChange={() => publishPublicProject(e)}
-                          />
-                        </Box>
-                        {e.public && (
-                          <Button
-                            w="30%"
-                            variantColor="teal"
-                            size="sm"
-                            onClick={() => saveScreenshot(e)}
-                          >
-                            Screenshot
-                          </Button>
-                        )}
-                      </Flex>
+                      <Accordion defaultIndex={[]} allowMultiple>
+                        <AccordionItem borderColor="transparent">
+                          <AccordionHeader>
+                            <Box
+                              flex="1"
+                              textAlign="center"
+                              // onClick={() => {
+                              //   setLoadingAdd(true)
+                              //   const href = `/project/${e.id}-${e.projectName}`
+                              //   router.push(
+                              //     {
+                              //       pathname: '/project',
+                              //     },
+                              //     href,
+                              //   )
+                              // }}
+                            >
+                              <ListIcon icon={AiFillProject} color="white" />
+                              {/* <Text w="50%" display="inline-block">
+                                {e.id} - {e.projectName}
+                              </Text> */}
+
+                              <Editable
+                                display="inline-block"
+                                textAlign="center"
+                                backgroundColor="transparent"
+                                defaultValue={e.projectName}
+                                fontSize="xl"
+                                isPreviewFocusable={true}
+                                submitOnBlur={true}
+                                onSubmit={(
+                                  newValue: string | FormEvent<any>,
+                                ) => {
+                                  updateProjectName(e, newValue)
+                                }}
+                              >
+                                {(props: any) => (
+                                  <Flex>
+                                    <EditablePreview />
+                                    <EditableInput />
+                                    <EditableControls {...props} />
+                                  </Flex>
+                                )}
+                              </Editable>
+                            </Box>
+                            <AccordionIcon />
+                          </AccordionHeader>
+                          <AccordionPanel pb={4}>
+                            <Switch
+                              color="teal"
+                              id="projectPublic"
+                              size="md"
+                              defaultIsChecked={e.public}
+                              onChange={() => publishPublicProject(e)}
+                            />
+                            {e.public && (
+                              <Button
+                                variantColor="teal"
+                                size="sm"
+                                ml={5}
+                                onClick={() => saveScreenshot(e)}
+                              >
+                                Take a screenshot
+                              </Button>
+                            )}
+                          </AccordionPanel>
+                        </AccordionItem>
+                      </Accordion>
                     </ListItem>
                   </>
                 )
