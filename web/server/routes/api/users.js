@@ -8,15 +8,16 @@ const mongoose = require('mongoose');
 const path = require('path');
 const axiosCookieJarSupport = require('axios-cookiejar-support').default;
 const tough = require('tough-cookie');
-const {is_production, is_validation}=require('../../../config/config')
+const {is_production, is_validation}=require('../../../config/config');
 const CronJob = require('cron').CronJob;
 
 const validateRegisterInput = require('../../validation/register');
-const validateSimpleRegisterInput = require('../../validation/simpleRegister');
+const {validateSimpleRegisterInput, validateEditProfil} = require('../../validation/simpleRegister');
 const validateLoginInput = require('../../validation/login');
 
 const {sendResetPassword, sendVerificationMail, sendVerificationSMS} = require('../../../utils/mailing');
-
+const moment = require('moment');
+moment.locale('fr');
 const User = require('../../models/User');
 const Album = require('../../models/Albums');
 const ResetToken = require('../../models/ResetToken');
@@ -878,7 +879,7 @@ router.post('/forgotPassword', (req, res) => {
     .then(user => {
       if (user === null) {
         console.error(`email ${email} not in database`);
-        res.status(404).json('Email inconnu');
+        res.status(404).json({error: 'Aucun compte avec cet email'});
       } else {
         const token = crypto.randomBytes(20).toString('hex');
         const newToken = new ResetToken({token: token});
@@ -926,12 +927,16 @@ router.post('/resetPassword', (req, res) => {
 // @Access private
 router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}), (req, res) => {
 
+  const {errors, isValid} = validateEditProfil(req.body);
 
   User.findOne({email: req.body.email})
     .then(user => {
       if (user && req.body.email != req.user.email) {
         return res.status(400).json({errors: {email: 'Adresse mail déjà utilisée'}});
-      } else {
+      }else if(!isValid){
+        return res.status(400).json(errors);
+      }
+      else {
         User.findByIdAndUpdate(req.user.id, {
           email: req.body.email,
           name: req.body.name,
@@ -944,7 +949,6 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
           school: req.body.school,
           job: req.body.job,
           languages: req.body.languages,
-          emergency_phone: req.body.emergency_phone,
         }, {new: true})
           .then(user => {
             res.json({success: 'Profile updated !'});

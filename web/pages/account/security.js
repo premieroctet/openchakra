@@ -29,6 +29,10 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Dialog from "@material-ui/core/Dialog";
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import Input from '@material-ui/core/Input';
 
 
 moment.locale('fr');
@@ -104,6 +108,9 @@ class security extends React.Component {
       alfred: false,
       open: false,
       open2: false,
+      showCurrentPassword: false,
+      showNewPassword: false,
+      showConfirmPassword: false,
     };
   }
 
@@ -324,6 +331,7 @@ class security extends React.Component {
   };
 
   content = (classes) => {
+    const {showCurrentPassword, showNewPassword, showConfirmPassword}=this.state
     const checkButtonValidate = this.state.check && this.state.check1 && this.state.check2;
 
     return(
@@ -353,47 +361,73 @@ class security extends React.Component {
               <form onSubmit={this.onSubmit}>
                 <Grid container spacing={3}>
                   <Grid item xs={12} md={4} xl={12}>
-                    <TextField
-                      label={'Mot de passe actuel'}
-                      type="password"
+                    <Input
+                      placeholder={this.state.wrongPassword ? 'Mot de passe erroné' : 'Mot de passe actuel'}
+                      type={ showCurrentPassword ? "text" : "password"}
                       name="password"
                       value={this.state.password}
                       onChange={this.onChangePassword}
                       variant={'outlined'}
-                      error={this.state.wrongPassword}
-                      helperText={this.state.wrongPassword ? 'Mot de passe erroné' : ''}
                       classes={{root: classes.textfield}}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={() => this.setState({showCurrentPassword: !showCurrentPassword}) }
+                            onMouseDown={ ev => ev.preventDefault()}
+                          >
+                            {showCurrentPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
                     />
+                    <em style={{ color:"red"}}>{this.state.wrongPassword ? "Mot de passe erroné" : ""}</em>
                   </Grid>
                   <Grid item xs={12} md={4}  xl={12}>
-                    <TextField
-                      label={'Nouveau mot de passe'}
-                      type="password"
+                    <Input
+                      placeholder={'Nouveau mot de passe'}
+                      type= {showNewPassword ? "text" : "password" }
                       name="newPassword"
                       value={this.state.newPassword}
                       onChange={this.onChange}
                       variant={'outlined'}
                       onKeyUp={this.onClick1}
-                      error={checkPass1(this.state.newPassword).error}
-                      helperText={checkPass1(this.state.newPassword).error}
                       classes={{root: classes.textfield}}
-
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={() => this.setState({showNewPassword: !showNewPassword}) }
+                          >
+                            {showNewPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
                     />
+                    <em style={{ color:"red"}}>{checkPass1(this.state.newPassword).error}</em>
                   </Grid>
                   <Grid item xs={12} md={4}  xl={12}>
-                    <TextField
-                      label={'Répéter le mot de passe'}
-                      type="password"
+                    <Input
+                      placeholder={'Répéter le mot de passe'}
+                      type={showConfirmPassword ? "text" : "password" }
                       name="newPassword2"
                       value={this.state.newPassword2}
                       onChange={this.onChange}
                       variant={'outlined'}
                       onKeyUp={this.onClick1}
-                      error={checkPass2(this.state.newPassword, this.state.newPassword2).error}
-                      helperText={checkPass2(this.state.newPassword, this.state.newPassword2).error}
                       classes={{root: classes.textfield}}
-
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={() => this.setState({showConfirmPassword: !showConfirmPassword}) }
+                          >
+                            {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
                     />
+                    <em style={{ color:"red"}}>{checkPass2(this.state.newPassword, this.state.newPassword2).error}</em>
                   </Grid>
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'left', marginTop: 30}}>

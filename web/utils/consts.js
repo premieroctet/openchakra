@@ -344,7 +344,7 @@ const LANGUAGES= [
   {value: 'Japonais', label: 'Japonais'},
 ];
 
-const MAX_TEXT_SIZE=300
+const MAX_DESCRIPTION_LENGTH=300
 
 const BOOK_STATUS= {
   CONFIRMED: 'Confirmée',
@@ -361,9 +361,16 @@ const BOOK_STATUS= {
 // Délai d'expiration des réservatins (jours après création de la résa)
 const EXPIRATION_DELAY=7
 
+// Fermeture auto notificaitons nack en secondes
+const CLOSE_NOTIFICATION_DELAY=4
+
+// Fermeture $age minimum inscription
+const ACCOUNT_MIN_AGE = 18
+
 module.exports = {
   ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR,
   generate_id, COMM_ALFRED, COMM_CLIENT, GID_LEN, ENTITES, CESU,
   MODES, GOOGLE_PROVIDER, FACEBOOK_PROVIDER, AMAZON_HOST, LOCAL_HOST,
-  SKILLS, LANGUAGES, MAX_TEXT_SIZE, BOOK_STATUS, EXPIRATION_DELAY
+  SKILLS, LANGUAGES, MAX_DESCRIPTION_LENGTH, BOOK_STATUS, EXPIRATION_DELAY,
+  CLOSE_NOTIFICATION_DELAY, ACCOUNT_MIN_AGE
 };

@@ -9,6 +9,7 @@ import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from 'next/router';
 import {toast} from 'react-toastify';
+import SnackBar from "../components/SnackBar/SnackBar"
 
 const styles = {
   loginContainer: {
@@ -30,7 +31,9 @@ class forgotPassword extends React.Component {
 
     this.state = {
       email: '',
-
+      error: '',
+      message: '',
+      open: false,
     };
   }
 
@@ -40,20 +43,23 @@ class forgotPassword extends React.Component {
 
   onSubmit = e => {
     e.preventDefault();
+    const {email}=this.state
 
     const user = {
-      email: this.state.email,
+      email: email,
 
     };
 
     axios.post('/myAlfred/api/users/forgotPassword', user)
       .then(res => {
-        toast.info(`Un email vous a été envoyé à l'adresse ${this.state.email}`);
-        Router.push({pathname: '/'});
+        this.setState({error: null, message: `Un email de récupération a été envoyé à l'adresse ${email}`})
+        setTimeout(
+          () =>  Router.push({pathname: '/'}),
+          2000
+        )
       })
       .catch(res => {
-        toast.error(res.response.data);
-        console.log(JSON.stringify(res, null, 2));
+        this.setState({error: res.response.data.error, message:null})
       });
 
 
@@ -61,7 +67,7 @@ class forgotPassword extends React.Component {
 
   render() {
     const {classes} = this.props;
-
+    const {message, error}=this.state
 
     return (
       <Layout>
@@ -83,7 +89,6 @@ class forgotPassword extends React.Component {
                     name="email"
                     value={this.state.email}
                     onChange={this.onChange}
-
                   />
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
@@ -95,6 +100,10 @@ class forgotPassword extends React.Component {
             </Grid>
           </Card>
         </Grid>
+        <SnackBar severity={"success"} message={message}
+            open={this.state.message} closeSnackBar={() => this.setState({message: null})}/>
+        <SnackBar severity={"error"} message={error}
+            open={this.state.error} closeSnackBar={() => this.setState({error: null})}/>
       </Layout>
     );
   };

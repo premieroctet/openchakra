@@ -33,6 +33,7 @@ import Select from "@material-ui/core/Select";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
+import SnackBar from '../../components/SnackBar/SnackBar'
 
 var util = require('util');
 const {CESU} = require('../../utils/consts');
@@ -60,8 +61,11 @@ class trustAndVerification extends React.Component {
       registration_proof_file: null,
       registration_proof: null,
       ext: '',
+      ext_upload: '',
       extVerso: '',
+      extVerso_upload: '',
       extRegistrationProof: '',
+      extRegistrationProof_upload: '',
       professional: false,
       alfred: false,
       company: {},
@@ -81,6 +85,7 @@ class trustAndVerification extends React.Component {
       id_card_status: null,
       id_card_error: null,
       deleteConfirmMessage: null,
+      message: null,
     };
     this.editSiret = this.editSiret.bind(this);
     this.callDrawer = this.callDrawer.bind(this);
@@ -199,19 +204,30 @@ class trustAndVerification extends React.Component {
   };
 
   onRectoChange = e => {
-    this.setState({id_recto: e.target.files[0]});
-    this.setState({recto_file: URL.createObjectURL(e.target.files[0])});
-  };
+    console.log('recto changed')
+    console.log(e.target.files[0])
+    this.setState({
+      id_recto: e.target.files[0],
+      recto_file: URL.createObjectURL(e.target.files[0]),
+      ext_upload: e.target.files[0].name.split('.').pop()
+    })
+  }
 
   onVersoChange = e => {
-    this.setState({id_verso: e.target.files[0]});
-    this.setState({verso_file: URL.createObjectURL(e.target.files[0])});
-  };
+    this.setState({
+      id_verso: e.target.files[0],
+      verso_file: URL.createObjectURL(e.target.files[0]),
+      extVerso_upload: e.target.files[0].name.split('.').pop()
+    })
+  }
 
   onRegistrationProofChanged = e => {
-    this.setState({id_registrationproof: e.target.files[0]});
-    this.setState({registration_proof_file: URL.createObjectURL(e.target.files[0])});
-  };
+    this.setState({
+      id_registrationproof: e.target.files[0],
+      registration_proof_file: URL.createObjectURL(e.target.files[0]),
+      extRegistrationProof_upload: e.target.files[0].name.split('.').pop()
+    })
+  }
 
   handleSiret() {
     const code = this.state.siret;
@@ -246,8 +262,8 @@ class trustAndVerification extends React.Component {
     };
     axios.post('/myAlfred/api/users/profile/idCard', formData, config)
       .then((response) => {
-        toast.info('Pièce d\'identité ajoutée');
-        window.location.reload()
+        this.setState({message:'Pièce d\'identité ajoutée'});
+        this.componentDidMount()
       })
       .catch(err => {
         console.log('Ajout nok')
@@ -265,8 +281,9 @@ class trustAndVerification extends React.Component {
     };
     axios.post('/myAlfred/api/users/profile/idCard/addVerso', formData, config)
       .then((response) => {
-        toast.info('Carte d\'identité ajoutée');
-
+        this.setState({message: 'Carte d\'identité ajoutée'})
+        this.componentDidMount
+        ()
       }).catch();
   }
 
@@ -277,7 +294,7 @@ class trustAndVerification extends React.Component {
   sendEmail = () => {
     axios.get('/myAlfred/api/users/sendMailVerification')
       .then(() => {
-        toast.info('Email envoyé');
+        this.setState({message: 'Email envoyé'})
       })
       .catch( err => {toast.error('Impossible d\'envoyer un email')});
   };
@@ -285,8 +302,7 @@ class trustAndVerification extends React.Component {
   sendSms = () => {
     axios.post('/myAlfred/api/users/sendSMSVerification')
       .then(res => {
-        var txt = 'Le SMS a été envoyé';
-        toast.info(txt);
+        this.setState({message: 'Le SMS a été envoyé'})
         this.setState({smsCodeOpen: true});
       })
       .catch(err => {
@@ -309,7 +325,7 @@ class trustAndVerification extends React.Component {
     };
     axios.put('/myAlfred/api/shop/editStatus', newStatus)
       .then(res => {
-        toast.info('Statut modifié');
+        this.setState({message: 'Statut modifié'})
         const data = {status: this.state.professional ? 'Pro' : 'Particulier'};
         return axios.put('/myAlfred/api/serviceUser/editStatus', data);
       })
@@ -320,7 +336,8 @@ class trustAndVerification extends React.Component {
           const config = {headers: {'content-type': 'multipart/form-data'}};
           axios.post('/myAlfred/api/users/profile/registrationProof/add', formData, config)
             .then(response => {
-              toast.info('Document d\'immatriculation ajouté');
+              this.setState({message: 'Document d\'immatriculation ajouté'})
+              this.componentDidMount()
             })
             .catch (err=> console.error(err))
         }
@@ -339,7 +356,7 @@ class trustAndVerification extends React.Component {
       axios.delete('/myAlfred/api/users/profile/idCard/recto')
         .then(() => {
           toast.error('Pièce d\'identité supprimée');
-          setTimeout(() => window.location.reload(), 2000);
+          this.componentDidMount()
         })
         .catch(err => {
           console.error(err);
@@ -357,8 +374,8 @@ class trustAndVerification extends React.Component {
     } else {
       axios.delete('/myAlfred/api/users/profile/registrationProof')
         .then(() => {
-          toast.error('Document d\immatriculation supprimé');
-          setTimeout(() => window.location.reload(), 2000);
+          this.setState({message:  'Document d\immatriculation supprimé' })
+          this.componentDidMount()
         })
         .catch(err => {
           console.error(err);
@@ -371,7 +388,7 @@ class trustAndVerification extends React.Component {
     axios.post('/myAlfred/api/users/checkSMSVerification', {sms_code: sms_code})
       .then(res => {
         if (res.data.sms_code_ok) {
-          toast.info('Votre numéro de téléphone est validé');
+          this.setState({message: 'Votre numéro de téléphone est validé'})
           this.setState({smsCodeOpen: false});
         } else {
           toast.error('Le code est incorrect');
@@ -524,6 +541,7 @@ class trustAndVerification extends React.Component {
               <DocumentEditor
                 confirmed={this.state.user.id_confirmed}
                 ext={this.state.ext}
+                ext_upload={this.state.ext_upload}
                 db_document={this.state.card.recto}
                 uploaded_file={this.state.recto_file}
                 onChange={this.onRectoChange}
@@ -539,6 +557,7 @@ class trustAndVerification extends React.Component {
                 <DocumentEditor
                   confirmed={this.state.user.id_confirmed}
                   ext={this.state.extVerso}
+                  ext_upload={this.state.extVerso_upload}
                   db_document={this.state.card.verso}
                   uploaded_file={this.state.verso_file}
                   onChange={this.onVersoChange}
@@ -726,10 +745,10 @@ class trustAndVerification extends React.Component {
                       company={this.state}
                     />
                   </Grid>
-                  <Grid style={{marginTop: '10vh'}}>
-                    <h3>Document d'immatriculation</h3>
-                  </Grid>
                   <Grid>
+                    <Grid style={{marginTop: '10vh'}}>
+                      <h3>Document d'immatriculation</h3>
+                    </Grid>
                     <Typography style={{color: 'rgba(39,37,37,35%)'}}>
                       Insérez ici le document d'immatriculation de votre entreprise (extrait de K-Bis, document
                       d'immatriculation de micro-entreprise).<br/>
@@ -740,6 +759,7 @@ class trustAndVerification extends React.Component {
                   </Grid>
                   <DocumentEditor
                     ext={this.state.extRegistrationProof}
+                    ext_upload={this.state.extRegistrationProof_upload}
                     db_document={this.state.registration_proof}
                     uploaded_file={this.state.registration_proof_file}
                     onChange={this.onRegistrationProofChanged}
@@ -765,7 +785,7 @@ class trustAndVerification extends React.Component {
 
   render() {
     const {classes, index} = this.props;
-
+    const {message} = this.state
     return (
       <React.Fragment>
         <Helmet>
@@ -785,6 +805,7 @@ class trustAndVerification extends React.Component {
         </Hidden>
         {this.state.open ? this.modalDeleteConfirmMessage() : null}
         {this.state.smsCodeOpen ? this.modalDeleteConfirmMessage() : null}
+        <SnackBar severity={"success"} message={message} open={message} closeSnackBar={() => this.setState({message: null})}/>
       </React.Fragment>
     );
   };

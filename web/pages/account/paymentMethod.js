@@ -68,7 +68,8 @@ class paymentMethod extends React.Component {
       goodside: false,
       deletedial: false,
       Idtempo: '',
-      addCreditCard: false
+      addCreditCard: false,
+      error: null,
     };
   }
 
@@ -146,7 +147,14 @@ class paymentMethod extends React.Component {
     };
 
     axios.post('/myAlfred/api/payment/createCard', obj)
-      .then(this.refreshCards).catch(err => console.error(err));
+      .then(res => {
+        this.setState({error: null})
+        this.refreshCards()
+      })
+      .catch(err => {
+        console.error(err)
+        this.setState({error: err.response.data.error})
+      })
   };
 
   deleteCard = () => {
@@ -184,6 +192,9 @@ class paymentMethod extends React.Component {
             </Grid>
             <Grid>
               <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ajouter une carte en toute sécurité</Typography>
+            </Grid>
+            <Grid>
+              <Typography style={{color: 'red'}}>{this.state.error}</Typography>
             </Grid>
           </Grid>
         </DialogTitle>
