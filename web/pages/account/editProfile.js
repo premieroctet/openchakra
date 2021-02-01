@@ -1,7 +1,7 @@
 import SnackBar from "../../components/SnackBar/SnackBar";
 
-const {clearAuthenticationToken}=require('../../utils/authentication');
-const {setAxiosAuthentication}=require('../../utils/authentication');
+const {clearAuthenticationToken} = require('../../utils/authentication');
+const {setAxiosAuthentication} = require('../../utils/authentication');
 import React from 'react';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
@@ -21,7 +21,8 @@ import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import Divider from "@material-ui/core/Divider";
 import Typography from '@material-ui/core/Typography';
-const {MAX_DESCRIPTION_LENGTH}=require('../../utils/consts')
+
+const {MAX_DESCRIPTION_LENGTH} = require('../../utils/consts')
 const {isPhoneOk} = require('../../utils/sms');
 const moment = require('moment');
 
@@ -53,7 +54,7 @@ class editProfile extends React.Component {
       birthday: null,
       dpDate: moment().toDate(),
       ipDate: moment().format(momentDateFormat),
-      errors:{},
+      errors: {},
       open: false,
       openErrors: false
     };
@@ -104,31 +105,31 @@ class editProfile extends React.Component {
         value = '33' + value.substring(1);
       }
     }
-    if(name === 'description'){
+    if (name === 'description') {
       value = value.slice(0, MAX_DESCRIPTION_LENGTH)
     }
     state[e.target.name] = value;
     this.setState({user: state});
   };
 
-  onChangeName = event =>{
+  onChangeName = event => {
     const state = this.state.user;
     let value = event.target.value;
 
-    if (value.match(/[0-9^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤]/)) {}
-    else {
+    if (value.match(/[0-9^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤]/)) {
+    } else {
       value = value.charAt(0).toUpperCase() + value.slice(1);
       state[event.target.name] = value;
       this.setState({user: state});
     }
   };
 
-  onChangePhone = event =>{
+  onChangePhone = event => {
     const state = this.state.user;
     let value = event.target.value;
 
-    if (value.match(/[a-zA-Z^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤]/) || value.length > 12) {}
-    else {
+    if (value.match(/[a-zA-Z^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤]/) || value.length > 12) {
+    } else {
       const phoneOk = isPhoneOk(value);
       if (phoneOk && value.startsWith('0')) {
         value = '33' + value.substring(1);
@@ -165,17 +166,17 @@ class editProfile extends React.Component {
       .then(res => {
         this.setState({errors: {}, open: true}, () => this.loadUser());
       })
-      .catch( err => {
+      .catch(err => {
         this.setState({openErrors: true, errors: err.response.data});
       });
   };
 
-  content = (classes) =>{
-    const {errors, user}=this.state;
+  content = (classes) => {
+    const {errors, user} = this.state;
     var birthday = moment(this.state.birthday).format('YYYY-MM-DD').toString();
     var today = moment(new Date()).format('YYYY-MM-DD').toString();
 
-    return(
+    return (
       <Grid>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
@@ -183,7 +184,7 @@ class editProfile extends React.Component {
           </Grid>
         </Grid>
         <Grid>
-          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+          <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
         <Grid container spacing={3} style={{marginTop: '5vh'}}>
           <Grid item lg={6} md={12} sm={12} xs={12}>
@@ -222,12 +223,13 @@ class editProfile extends React.Component {
               label={'A propos de moi'}
             />
           </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{ display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column' }}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}
+                style={{display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column'}}>
             <Typography>{`${MAX_DESCRIPTION_LENGTH} caractères max`}</Typography>
           </Grid>
         </Grid>
         <Grid>
-          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+          <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
         <Grid>
           <Grid>
@@ -261,8 +263,8 @@ class editProfile extends React.Component {
                 type="date"
                 value={birthday}
                 onChange={this.onChangeBirthday}
-                InputLabelProps={{ shrink: true }}
-                InputProps={{inputProps: { min: "1900-01-01", max: today} }}
+                InputLabelProps={{shrink: true}}
+                InputProps={{inputProps: {min: "1900-01-01", max: today}}}
                 error={!!(errors && errors.birthday)}
               />
             </Grid>
@@ -281,33 +283,33 @@ class editProfile extends React.Component {
                 error={!!(errors && errors.email)}
               />
             </Grid>
-          <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
-            <TextField
-              classes={{root: classes.textField}}
-              value={user.phone || ''}
-              onChange={this.onChangePhone}
-              name={'phone'}
-              placeholder={'Téléphone'}
-              variant={'outlined'}
-              label={'Téléphone'}
-            />
-          </Grid>
-          <Grid item xs={12} lg={12} md={6} sm={6} xl={12}>
-            <TextField
-              classes={{root: classes.textField}}
-              value={user.emergency_phone || ''}
-              type={'number'}
-              onChange={this.onChange}
-              name={'emergency_phone'}
-              placeholder={'Numéro d\'urgence'}
-              variant={'outlined'}
-              label={'Numéro d\'urgence'}
-            />
+            <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
+              <TextField
+                classes={{root: classes.textField}}
+                value={user.phone || ''}
+                onChange={this.onChangePhone}
+                name={'phone'}
+                placeholder={'Téléphone'}
+                variant={'outlined'}
+                label={'Téléphone'}
+              />
+            </Grid>
+            <Grid item xs={12} lg={12} md={6} sm={6} xl={12}>
+              <TextField
+                classes={{root: classes.textField}}
+                value={user.emergency_phone || ''}
+                type={'number'}
+                onChange={this.onChange}
+                name={'emergency_phone'}
+                placeholder={'Numéro d\'urgence'}
+                variant={'outlined'}
+                label={'Numéro d\'urgence'}
+              />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
         <Grid>
-          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+          <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
         <Grid>
           <Grid>
@@ -350,7 +352,7 @@ class editProfile extends React.Component {
           </Grid>
         </Grid>
         <Grid>
-          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+          <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
         <Grid>
           <Grid>
@@ -382,18 +384,22 @@ class editProfile extends React.Component {
               variant="contained"
               color="primary"
               classes={{root: classes.button}}
-              disabled={user.firstname === "" || user.name === "" || user.email === "" || user.phone === "" }
+              disabled={user.firstname === "" || user.name === "" || user.email === "" || user.phone === ""}
             >
               Enregistrer
             </Button>
           </Grid>
         </Grid>
-        <SnackBar severity={"success"} message={'Profil modifié avec succès'} open={this.state.open} closeSnackBar={() => this.setState({open: false})}/>
+        <SnackBar severity={"success"} message={'Profil modifié avec succès'} open={this.state.open}
+                  closeSnackBar={() => this.setState({open: false})}/>
         {
           this.state.errors ?
             Object.keys(this.state.errors).map(res => {
-              return(
-                <SnackBar severity={"error"} message={this.state.errors[res]} open={this.state.openErrors} closeSnackBar={() => this.setState({openErrors: false})}/>
+              let response = JSON.stringify(this.state.errors[res]);
+              return (
+                <SnackBar severity={"error"} message={response.replace(/"([^"]+)":/g, "")}
+                          open={this.state.openErrors}
+                          closeSnackBar={() => this.setState({openErrors: true})}/>
               )
             }) : null
         }
