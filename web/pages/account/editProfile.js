@@ -1,5 +1,4 @@
 import SnackBar from "../../components/SnackBar/SnackBar";
-
 const {clearAuthenticationToken}=require('../../utils/authentication');
 const {setAxiosAuthentication}=require('../../utils/authentication');
 import React from 'react';
@@ -15,19 +14,17 @@ import {registerLocale} from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
 import {Helmet} from 'react-helmet';
 import styles from '../../static/css/pages/profile/editProfile/editProfile';
-
 import Hidden from "@material-ui/core/Hidden";
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import Divider from "@material-ui/core/Divider";
 import Typography from '@material-ui/core/Typography';
-import {toast} from "react-toastify";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
-const {MAX_DESCRIPTION_LENGTH}=require('../../utils/consts')
+const {MAX_DESCRIPTION_LENGTH}=require('../../utils/consts');
 const {isPhoneOk} = require('../../utils/sms');
 const moment = require('moment');
 
@@ -132,7 +129,7 @@ class editProfile extends React.Component {
     const state = this.state.user;
     let value = event.target.value;
 
-    if (value.match(/[a-zA-Z^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤é¨'èùçà]/) || value.length > 12) {}
+    if (value.match(/[a-zA-Z^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤é¨'èùçà]/) || value.length > 11) {}
     else {
       const phoneOk = isPhoneOk(value);
       if (phoneOk && value.startsWith('0')) {
@@ -348,7 +345,7 @@ class editProfile extends React.Component {
             <h2 style={{whiteSpace: 'nowrap'}}>Informations personnelles</h2>
           </Grid>
           <Grid container spacing={3} style={{marginTop: '10vh'}}>
-            <Grid item xl={6} lg={6} xs={12} sm={5} md={3}>
+            <Grid item xl={6} lg={6} xs={12} sm={6} md={6}>
               <TextField
                 classes={{root: classes.textField}}
                 value={user.gender || ''}
@@ -367,7 +364,7 @@ class editProfile extends React.Component {
                 </MenuItem>
               </TextField>
             </Grid>
-            <Grid item xl={6} lg={6} xs={12} sm={6} md={3}>
+            <Grid item xl={6} lg={6} xs={12} sm={6} md={6}>
               <TextField
                 classes={{root: classes.textFieldDatePicker}}
                 id="filled-with-placeholder"
@@ -395,7 +392,7 @@ class editProfile extends React.Component {
                 error={!!(errors && errors.email)}
               />
             </Grid>
-            <Grid item xs={6} lg={6} md={6} sm={6} xl={6}>
+            <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
               <TextField
                 classes={{root: classes.textField}}
                 value={user.phone || ''}
@@ -406,12 +403,13 @@ class editProfile extends React.Component {
                 label={'Téléphone'}
               />
             </Grid>
-            <Grid item xs={6} lg={6} md={6} sm={6} xl={6}>
+            <Grid item xs={12} lg={6} md={6} sm={6} xl={6} style={{display: 'flex'}}>
               <Button
-                variant="outlined"
+                variant="contained"
                 color={'primary'}
                 onClick={this.submitPhone}
-                disabled={phone === user.phone && user.phone_confirmed && user.phone.length === 12 ? true : false}
+                disabled={user.phone ? !!(phone === user.phone && user.phone_confirmed || user.phone.length !== 11) : true}
+                classes={{root: classes.buttonCheckPhone}}
               >
                 {phone === user.phone && user.phone_confirmed === true ? 'Votre téléphone est vérifié' : phone !== user.phone  ? 'Enregistrer votre nouveau téléphone' : 'Vérifié votre téléphone'}
               </Button>
