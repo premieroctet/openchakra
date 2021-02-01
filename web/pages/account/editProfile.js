@@ -415,21 +415,6 @@ class editProfile extends React.Component {
                 label={'Téléphone'}
               />
             </Grid>
-
-            <Grid item xs={12} lg={12} md={6} sm={6} xl={12}>
-              <TextField
-                classes={{root: classes.textField}}
-                value={user.emergency_phone || ''}
-                type={'number'}
-                onChange={this.onChange}
-                name={'emergency_phone'}
-                placeholder={'Numéro d\'urgence'}
-                variant={'outlined'}
-                label={'Numéro d\'urgence'}
-              />
-            </Grid>
-          </Grid>
-
           <Grid item xs={12} lg={6} md={6} sm={6} xl={6} style={{display: 'flex'}}>
             <Button
               variant="contained"
@@ -440,6 +425,9 @@ class editProfile extends React.Component {
             >
               {phone === user.phone && user.phone_confirmed === true ? 'Votre téléphone est vérifié' : phone !== user.phone ? 'Enregistrer votre nouveau téléphone' : 'Vérifiez votre téléphone'}
             </Button>
+          </Grid>
+
+
           </Grid>
         </Grid>
         <Grid>
