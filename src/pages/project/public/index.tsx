@@ -5,7 +5,6 @@ import {
   Box,
   SimpleGrid,
   PseudoBox,
-  Avatar,
   RadioGroup,
   Radio,
   Spinner,
@@ -108,7 +107,7 @@ const ProjectList = () => {
               <Spinner m="0 auto" color="white" size="xl" mt="3rem" />
             </Box>
           ) : projects && projects?.project.length > 0 ? (
-            <SimpleGrid columns={[1, 1, 2, 3]} spacing={6} mt={10}>
+            <SimpleGrid columns={[1, 1, 2, 3]} spacing={4} mt={10}>
               {projects?.project.map((e: Project & { user: User }, i: number) =>
                 radioValue === 'all' ? (
                   <PseudoBox
@@ -125,17 +124,6 @@ const ProjectList = () => {
                     key={i}
                   >
                     <PreviewProject project={e} />
-
-                    <Text fontSize="xl">{e.projectName}</Text>
-                    <Text fontSize="md" mt={2} textAlign="right">
-                      <Avatar
-                        size="xs"
-                        mr={2}
-                        name={e.user.name || ''}
-                        src={e.user.image || ''}
-                      />
-                      {e.user.name}
-                    </Text>
                   </PseudoBox>
                 ) : (
                   radioValue === e.tag && (
@@ -153,16 +141,6 @@ const ProjectList = () => {
                       key={i}
                     >
                       <PreviewProject project={e} />
-                      <Text fontSize="xl">{e.projectName}</Text>
-                      <Text fontSize="md" mt={2} textAlign="right">
-                        <Avatar
-                          size="xs"
-                          mr={2}
-                          name={e.user.name || ''}
-                          src={e.user.image || ''}
-                        />
-                        {e.user.name}
-                      </Text>
                     </PseudoBox>
                   )
                 ),
