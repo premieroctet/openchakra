@@ -2,6 +2,8 @@ const Validator = require('validator');
 const isEmpty = require('./is-empty');
 const moment = require('moment');
 moment.locale('fr');
+const bcrypt = require('bcryptjs');
+
 
 const validateSimpleRegisterInput = data => {
 
@@ -100,4 +102,25 @@ const validateEditProfil = data =>{
   };
 };
 
-module.exports = {validateSimpleRegisterInput, validateEditProfil};
+const validateEditPassword = (user,newPassword) =>{
+  let errors = {};
+
+  bcrypt.genSalt(10, (err, salt) => {
+    bcrypt.hash(newPassword, salt, (err, hash) => {
+      if (err) {
+        errors.hashErros = err;
+      }
+      user.password = hash;
+      user.save()
+        .then(messages.message = 'Mot de passe mis à jour')
+        .catch(errors = console.error(err));
+    });
+  });
+
+  return {
+    errors,
+    isValid: isEmpty(errors),
+  };
+};
+
+module.exports = {validateSimpleRegisterInput, validateEditProfil, validateEditPassword};

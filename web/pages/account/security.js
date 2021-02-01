@@ -1,23 +1,18 @@
-const {clearAuthenticationToken}=require('../../utils/authentication')
-const {setAxiosAuthentication}=require('../../utils/authentication')
-const {setAuthToken}=require('../../utils/authentication')
+import SnackBar from "../../components/SnackBar/SnackBar";
+const {clearAuthenticationToken}=require('../../utils/authentication');
+const {setAxiosAuthentication}=require('../../utils/authentication');
+const {setAuthToken}=require('../../utils/authentication');
 import React, {Fragment} from 'react';
-import Layout from '../../hoc/Layout/Layout';
 import axios from 'axios';
 import moment from 'moment';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import {toast} from 'react-toastify';
 import {Helmet} from 'react-helmet';
 import styles from '../../static/css/pages/security/security';
-import ResponsiveDrawer from '../../components/ResponsiveDrawer/ResponsiveDrawer';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import {checkPass1, checkPass2} from '../../utils/passwords';
-
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
@@ -111,6 +106,9 @@ class security extends React.Component {
       showCurrentPassword: false,
       showNewPassword: false,
       showConfirmPassword: false,
+      snackBarAccountDesactivate: false,
+      snackBarPassword: false,
+      snackBarAccount: false
     };
   }
 
@@ -125,7 +123,7 @@ class security extends React.Component {
   }
 
   loadData= () => {
-    setAxiosAuthentication()
+    setAxiosAuthentication();
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
@@ -141,16 +139,17 @@ class security extends React.Component {
           check1: false,
           check2: false,
           wrongPassword: false,
+          isAdmin: user.is_admin,
+
         });
       })
       .catch(err => {
         if (err.response.status === 401 || err.response.status === 403) {
-          clearAuthenticationToken()
+          clearAuthenticationToken();
           Router.push({pathname: '/'});
         }
-      })
-      toast.info('hop')
-  }
+      });
+  };
 
   onChange = e => {
     this.setState({[e.target.name]: e.target.value});
@@ -171,7 +170,7 @@ class security extends React.Component {
     const data = {index_google: !this.state.index_google};
     axios.put('/myAlfred/api/users/account/indexGoogle', data)
       .then(() => {
-        toast.info('Compte mis à jour');
+        this.setState({snackBarAccount: true})
       })
       .catch( err => {console.error(err)});
   };
@@ -186,7 +185,7 @@ class security extends React.Component {
                 this.setState({open: false});
                 axios.get('/myAlfred/api/users/token')
                   .then ( res => {
-                    setAuthToken()
+                    setAuthToken();
                     this.loadData()
                   })
               })
@@ -210,9 +209,8 @@ class security extends React.Component {
             .then(() => {
               axios.put('/myAlfred/api/users/current/delete')
                 .then(() => {
-                  this.setState({open2: false});
-                  toast.error('Compte désactivé');
-                  clearAuthenticationToken()
+                  this.setState({open2: false, snackBarAccountDesactivate: true});
+                  clearAuthenticationToken();
                   Router.push('/');
                 })
                 .catch(err => {console.error(err)});
@@ -226,9 +224,8 @@ class security extends React.Component {
     } else {
       axios.put('/myAlfred/api/users/current/delete')
         .then(() => {
-          this.setState({open2: false});
-          toast.error('Compte désactivé');
-          clearAuthenticationToken()
+          this.setState({open2: false, snackBarAccountDesactivate: true});
+          clearAuthenticationToken();
           Router.push('/');
         })
         .catch(err => {console.error(err)});
@@ -244,11 +241,12 @@ class security extends React.Component {
 
   onSubmit = e => {
     e.preventDefault();
-    const data = {password: this.state.password, newPassword: this.state.newPassword};
+    const data = {password: this.state.password, newPassword: this.state.newPassword, isAdmin: this.state.isAdmin};
     axios
       .put('/myAlfred/api/users/profile/editPassword', data)
-      .then(() => {
-        toast.info('Mot de passe modifié')
+      .then((res) => {
+        console.log(res.data, 'data');
+        this.setState({snackBarPassword: true});
         setTimeout(this.loadData, 1000);
       })
       .catch(err => {
@@ -331,8 +329,8 @@ class security extends React.Component {
   };
 
   content = (classes) => {
-    const {showCurrentPassword, showNewPassword, showConfirmPassword}=this.state
-    const checkButtonValidate = this.state.check && this.state.check1 && this.state.check2;
+    const {showCurrentPassword, showNewPassword, showConfirmPassword}=this.state;
+    const checkButtonValidate = this.state.isAdmin ? this.state.check1 && this.state.check2 : this.state.check && this.state.check1 && this.state.check2;
 
     return(
       <Grid  style={{display: 'flex', flexDirection: 'column', width: '100%'}} >
@@ -360,29 +358,32 @@ class security extends React.Component {
             <Grid style={{display: 'flex'}}>
               <form onSubmit={this.onSubmit}>
                 <Grid container spacing={3}>
-                  <Grid item xs={12} md={4} xl={12}>
-                    <Input
-                      placeholder={this.state.wrongPassword ? 'Mot de passe erroné' : 'Mot de passe actuel'}
-                      type={ showCurrentPassword ? "text" : "password"}
-                      name="password"
-                      value={this.state.password}
-                      onChange={this.onChangePassword}
-                      variant={'outlined'}
-                      classes={{root: classes.textfield}}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={() => this.setState({showCurrentPassword: !showCurrentPassword}) }
-                            onMouseDown={ ev => ev.preventDefault()}
-                          >
-                            {showCurrentPassword ? <Visibility /> : <VisibilityOff />}
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                    />
-                    <em style={{ color:"red"}}>{this.state.wrongPassword ? "Mot de passe erroné" : ""}</em>
-                  </Grid>
+                  {
+                    !this.state.isAdmin ?
+                      <Grid item xs={12} md={4} xl={12}>
+                        <Input
+                          placeholder={this.state.wrongPassword ? 'Mot de passe erroné' : 'Mot de passe actuel'}
+                          type={ showCurrentPassword ? "text" : "password"}
+                          name="password"
+                          value={this.state.password}
+                          onChange={this.onChangePassword}
+                          variant={'outlined'}
+                          classes={{root: classes.textfield}}
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={() => this.setState({showCurrentPassword: !showCurrentPassword}) }
+                                onMouseDown={ ev => ev.preventDefault()}
+                              >
+                                {showCurrentPassword ? <Visibility /> : <VisibilityOff />}
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                        />
+                        <em style={{ color:"red"}}>{this.state.wrongPassword ? "Mot de passe erroné" : ""}</em>
+                      </Grid> : null
+                  }
                   <Grid item xs={12} md={4}  xl={12}>
                     <Input
                       placeholder={'Nouveau mot de passe'}
@@ -508,6 +509,9 @@ class security extends React.Component {
             </Grid>
           </Grid>
         </Grid>
+        <SnackBar severity={"success"} message={'Mot de passe modifié'} open={this.state.snackBarPassword} closeSnackBar={() => this.setState({snackBarPassword: false})}/>
+        <SnackBar severity={"success"} message={'Compte mis à jour'} open={this.state.snackBarAccount} closeSnackBar={() => this.setState({snackBarAccount: false})}/>
+        <SnackBar severity={"success"} message={'Compte désactivé'} open={this.state.snackBarAccountDesactivate} closeSnackBar={() => this.setState({snackBarAccountDesactivate: false})}/>
       </Grid>
     )
   };
