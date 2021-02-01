@@ -14,6 +14,8 @@ class DocumentEditor extends React.Component {
     super(props);
     this.state = {
       pageNumber: 1,
+      uploaded_type: null,
+      document_type: null,
     };
   }
 
@@ -22,39 +24,13 @@ class DocumentEditor extends React.Component {
 
   render() {
 
-    const {db_document, uploaded_file, onChange, onDelete, classes, disabled, ext, confirmed, title} = this.props;
+    const {db_document, uploaded_file, onChange, onDelete, classes, disabled, ext, ext_upload, confirmed, title} = this.props;
+
+    const doc=uploaded_file ? uploaded_file : db_document ? `/${db_document}` : null
+    const extension = uploaded_file ? ext_upload : ext
 
     return (
-      uploaded_file ?
-        <Grid container style={{marginTop: 20, alignItems: 'center'}}>
-          <Grid
-            item xs={12}
-            style={{
-              height: 115, border: '0.2px solid lightgrey', display: 'flex', justifyContent: 'center',
-              backgroundImage: `url('${uploaded_file}')`,
-              backgroundPosition: 'center', backgroundSize: 'cover',
-            }}
-          />
-          <Grid item xs={12}>
-            <input
-              id="icon-button-file"
-              style={{display: 'none'}}
-              name="myCardR"
-              type="file"
-              accept=".jpg,.jpeg,.png,.pdf"
-            />
-            <label htmlFor="icon-button-file">
-              <IconButton aria-label="update" component="span">
-                <EditIcon/>
-              </IconButton>
-            </label>
-            <IconButton aria-label="delete" onClick={onDelete}>
-              <DeleteForeverIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-        :
-        db_document ?
+        doc ?
           <Grid item>
             <Grid container style={{alignItems: 'center', flexWrap: 'nowrap'}}>
               <Grid item>
@@ -65,12 +41,12 @@ class DocumentEditor extends React.Component {
                   justifyContent: 'center',
                 }}>
                   <Grid item>
-                    {ext === 'pdf' ?
-                      <Document file={`../${db_document}`} onLoadSuccess={this.onDocumentLoadSuccess}>
+                    {extension === 'pdf' ?
+                      <Document file={doc} onLoadSuccess={this.onDocumentLoadSuccess}>
                         <Page pageNumber={this.state.pageNumber} width={200}/>
                       </Document>
                       :
-                      <img src={`../${db_document}`} alt={'recto'} width={200}/>
+                      <img src={doc} alt={'recto'} width={200}/>
                     }
                   </Grid>
                   <Grid item className={classes.contentIcones}>
