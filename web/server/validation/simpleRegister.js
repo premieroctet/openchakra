@@ -1,6 +1,7 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
 const moment = require('moment');
+const {ACCOUNT_MIN_AGE}=require('../../utils/consts')
 moment.locale('fr');
 
 const validateSimpleRegisterInput = data => {
@@ -86,9 +87,9 @@ const validateEditProfil = data =>{
   if (!moment(data.birthday).isValid()) {
     errors.birthday = 'Date de naissance invalide';
   }
-  if (moment(data.birthday).isValid() && moment(data.birthday).isAfter(moment().subtract(16, 'years'))) {
-    console.warn(`${data.birthday} ${moment(data.birthday)}<${moment().subtract(16, 'years')}`);
-    errors.birthday = 'Vous devez avoir 16 ans au minimum';
+  if (moment(data.birthday).isValid() && moment(data.birthday).isAfter(moment().subtract(ACCOUNT_MIN_AGE, 'years'))) {
+    console.warn(`${data.birthday} ${moment(data.birthday)}<${moment().subtract(ACCOUNT_MIN_AGE, 'years')}`);
+    errors.birthday = `Vous devez avoir ${ACCOUNT_MIN_AGE} ans au minimum`
   }
   if (moment(data.birthday).isValid() && moment(data.birthday).isBefore(moment().subtract(150, 'years'))) {
     errors.birthday = 'Date de naissance invalide, merci de saisir l\'année sur 4 chiffres';

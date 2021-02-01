@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const year = new Date().getFullYear() - 16;
 const {getMangopayMessage} = require('../../utils/i18n');
 const {hideIllegal} = require('../../utils/text')
 const moment = require('moment')
+const {ACCOUNT_MIN_AGE}=require('../../utils/consts')
 
-const maxBirth=new Date(moment().add(-16, 'years'))
+const maxBirth=new Date(moment().add(-ACCOUNT_MIN_AGE, 'years'))
 
 const UserSchema = new Schema({
   name: {

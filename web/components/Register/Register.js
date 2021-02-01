@@ -38,7 +38,7 @@ import Information from '../Information/Information';
 const {getLoggedUserId}=require('../../utils/functions')
 
 var parse = require('url-parse');
-const {PROVIDERS} = require('../../utils/consts');
+const {PROVIDERS, ACCOUNT_MIN_AGE} = require('../../utils/consts');
 const {ENABLE_GF_LOGIN} = require('../../config/config');
 const {isPhoneOk} = require('../../utils/sms');
 
@@ -625,9 +625,9 @@ class Register extends React.Component {
                   <Typography className={classes.subtitle}>Date de naissance</Typography>
                 </Grid>
                 <Grid>
-                  <Typography className={classes.textStyle}>Pour vous inscrire, vous devez être âgé d’au moins 16 ans. Les
-                    autres
-                    utilisateurs ne verront pas votre date de naissance.
+                  <Typography className={classes.textStyle}>
+                  {`Pour vous inscrire, vous devez être âgé d’au moins ${ACCOUNT_MIN_AGE} ans.
+                  Les autres utilisateurs ne verront pas votre date de naissance.`}
                   </Typography>
                 </Grid>
                 <Grid item className={classes.datenaissance} style={{display: 'flex', alignItems: 'center'}}>
