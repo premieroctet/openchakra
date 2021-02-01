@@ -334,5 +334,10 @@ UserSchema.virtual('age').get(function () {
   return age
 });
 
+UserSchema.virtual('shop', {
+   ref: 'shop', //The Model to use
+   localField: '_id', //Find in Model, where localField
+   foreignField: 'alfred', // is equal to foreignField
+});
 
 module.exports = User = mongoose.model('users', UserSchema);

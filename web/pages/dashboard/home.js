@@ -87,6 +87,7 @@ class home extends React.Component {
                   <Grid item style={{display: 'flex', justifyContent: 'center'}}>
                     <Typography style={{fontSize: 30}}>Base de données</Typography>
                   </Grid>
+                  <Link href="/dashboard/users/all"><a>Comptes</a></Link><br/>
                   <Link href="/dashboard/category/all"><a>Catégories</a></Link><br/>
                   <Link href="/dashboard/billing/all"><a>Méthodes de facturation</a></Link><br/>
                   <Link href="/dashboard/calculating/all"><a>Méthodes de calcul</a></Link><br/>
@@ -99,9 +100,6 @@ class home extends React.Component {
                   <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
                   <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
                   <Link href="/dashboard/options/all"><a>Options</a></Link><br/>
-                  <Link href="/dashboard/users/all"><a>Utilisateurs</a></Link><br/>
-                  <Link href="/dashboard/alfred/all"><a>Alfred</a></Link><br/>
-                  <Link href="/dashboard/admin/all"><a>Administrateurs</a></Link><br/>
                   { false ? // Générer boutiques si nécessaire seulement
                     <CSVLink asyncOnClick={true} data={this.state.shopsData} filename="shops.csv" separator={';'}
                              target="_blank">Export boutiques</CSVLink>
