@@ -23,9 +23,11 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import PropTypes from 'prop-types';
 import HomeIcon from '@material-ui/icons/Home';
-const  {BigList}=require('../../../components/List/BigList')
+const  {BigList}=require('../../../components/BigList/BigList')
 const moment = require('moment-timezone');
 moment.locale('fr');
+const {MANGOPAY_CONFIG}=require('../../../config/config')
+
 
 const styles = theme => ({
   signupContainer: {
@@ -61,7 +63,7 @@ class all extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: [],
+      users: [],
     };
 
   this.columnDefs=[
@@ -70,11 +72,13 @@ class all extends React.Component {
       {headerName: "Nom", field: "name"},
       {headerName: "Email", field: "email"},
       {headerName: "Ville", field: "billing_address.city"},
-      {headerName: "Né(e) le", field: "birthday", cellRenderer: 'dateCellRenderer', filter:'agDateColumnFilter',},
-      {headerName: "Inscrit le", field: "creation_date", cellRenderer: 'dateCellRenderer', filter:'agDateColumnFilter', initialSort: 'desc'},
-      {headerName: "Client Mangopay", field: "id_mangopay", cellRenderer:'mangopayCellRenderer'},
-      {headerName: "Alfred Mangopay", field: "mangopay_provider_id", cellRenderer:'mangopayCellRenderer'},
+      {headerName: "Né(e) le", field: "birthday_moment", cellRenderer: 'dateCellRenderer', filter:'agDateColumnFilter',},
+      {headerName: "Inscrit le", field: "creation_date", cellRenderer: 'dateTimeCellRenderer', filter:'agDateColumnFilter', initialSort: 'desc'},
+      {headerName: "Création boutique", field: "shop.creation_date", cellRenderer: 'dateTimeCellRenderer', filter:'agDateColumnFilter'},
+      {headerName: "Client Mangopay", field: "id_mangopay"},
+      {headerName: "Alfred Mangopay", field: "mangopay_provider_id"},
     ]
+
   }
 
   componentDidMount() {
@@ -84,28 +88,50 @@ class all extends React.Component {
     axios.get('/myAlfred/api/admin/users/all')
       .then((response) => {
         let users = response.data;
-        this.setState({users: users.map( u => {
+        users=users.map( u => {
           u.status={'alfred':u.is_alfred, 'admin': u.is_admin}
+          u.birthday_moment = moment(u.birthday)
           return u
-        })});
-      }).catch((error) => {
-      console.log(error);
-      if (error.response.status === 401 || error.response.status === 403) {
-        Router.push({pathname: '/login'});
-      }
-    });
+        })
+        this.setState({users:users});
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.response.status === 401 || error.response.status === 403) {
+          Router.push({pathname: '/login'});
+        }
+      });
   }
 
-  onRowClick = data => {
-    if (data) {
-      window.open(`/dashboard/users/view?id=${data._id}`, '_blank')
+  onCellClicked = event => {
+    // window.open(`/dashboard/users/view?id=${data._id}`, '_blank')
+    const {colDef, rowIndex, data, value}=event
+
+    if (colDef.field=='shop.creation_date') {
+      if (data.shop) {
+        window.open(`/profile/services?user=${data._id}&indexAccount=1`, '_blank')
+      }
+      return
     }
+    if (['id_mangopay', 'mangopay_provider_id'].includes(colDef.field)) {
+      if (value) {
+        const sandbox = MANGOPAY_CONFIG.sandbox
+        const mangopay_base_url = sandbox ? 'https://dashboard.sandbox.mangopay.com' : 'https://dashboard.mangopay.com'
+        window.open(`${mangopay_base_url}/User/${value}/Details`)
+      }
+      return
+    }
+
+    window.open(`/profile/about?user=${data._id}&indexAccount=0`)
   }
 
   render() {
     const {classes} = this.props;
     const {users} = this.state;
 
+    if (users.length==0) {
+      return null
+    }
     return (
       <Layout>
         <Grid container style={{marginTop: 70}}>
@@ -116,8 +142,13 @@ class all extends React.Component {
 	        </Link>
           <Grid style={{width: '90%'}}>
             <Paper style={{width: '100%'}}>
-              <BigList data={users} columnDefs={this.columnDefs} classes={classes}
-                        title={'Utilisateurs'} onRowClick={this.onRowClick} />
+              <BigList
+                data={users}
+                columnDefs={this.columnDefs}
+                classes={classes}
+                title={'Utilisateurs'}
+                onCellClicked={this.onCellClicked}
+              />
             </Paper>
           </Grid>
         </Grid>

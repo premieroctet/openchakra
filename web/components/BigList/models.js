@@ -5,7 +5,6 @@ const moment = require('moment-timezone');
 moment.locale('fr');
 const util = require('util');
 import LockIcon from '@material-ui/icons/Lock';
-const {MANGOPAY_CONFIG}=require('../../config/config')
 
 class StatusCellRenderer extends React.Component {
 
@@ -22,9 +21,7 @@ class StatusCellRenderer extends React.Component {
       <>
       <div>
       {this.state.value.alfred ?
-        <a href={`/shop?id_alfred=${this.state.data._id}`} target={'_blank'}>}
-          <img src="/static/assets/img/userServicePreview/alfred.svg" style={{width: '40px'}} title='Alfred' />
-        </a>
+        <img src="/static/assets/img/userServicePreview/alfred.svg" style={{width: '40px'}} title='Alfred' />
        : null }
       {this.state.value.admin ? <img src="/static/assets/img/userServicePreview/admin.svg" style={{width: '40px'}} title='Admin' /> : null }
       </div>
@@ -86,21 +83,25 @@ class StatusCellFilter extends React.Component {
 class DateCellRenderer extends React.Component {
 
   render = () => {
+    if (!this.props.value) {
+      return ""
+    }
     const m=moment(this.props.value)
     return (
-      <>{m.isValid() ? m.format('L LT') : 'date invalide'}</>
+      <>{m.isValid() ? m.format('L') : 'date invalide'}</>
     )
   }
 }
 
-class MangopayCellRenderer extends React.Component {
+class DateTimeCellRenderer extends React.Component {
 
   render = () => {
-    const sandbox = MANGOPAY_CONFIG.sandbox
-    const mangopay_base_url = sandbox ? 'https://dashboard.sandbox.mangopay.com' : 'https://dashboard.mangopay.com'
+    if (!this.props.value) {
+      return ""
+    }
+    const m=moment(this.props.value)
     return (
-      <a target="_blank"
-         href={`${mangopay_base_url}/User/${this.props.value}/Details`}>{this.props.value}</a>
+      <>{m.isValid() ? m.format('L LT') : 'date invalide'}</>
     )
   }
 }
@@ -117,15 +118,6 @@ class PictureCellRenderer extends React.Component {
   }
 }
 
-class LinkEdit extends React.Component {
-
-    render = () => {
-      return (
-        <Link href={`/dashboard/services/view?id=${this.props.value}`}><a>Modifier</a></Link>
-      )
-    }
-}
-
 class PrivateRenderer extends React.Component {
 
   render = () => {
@@ -139,5 +131,5 @@ class PrivateRenderer extends React.Component {
 }
 
 module.exports= {
-  StatusCellRenderer, DateCellRenderer, MangopayCellRenderer, StatusCellFilter,
-  PictureCellRenderer, LinkEdit, PrivateRenderer}
+  StatusCellRenderer, DateCellRenderer, DateTimeCellRenderer,
+  StatusCellFilter, PictureCellRenderer, PrivateRenderer}

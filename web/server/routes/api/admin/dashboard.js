@@ -229,14 +229,24 @@ router.get('/users/all', passport.authenticate('jwt', {session: false}), (req, r
   const admin = decode.is_admin;
 
   if (admin) {
-    User.find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date id_card birthday billing_address')
+    User.find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address.city')
       .sort({creation_date: -1})
-      .then(user => {
-        if (!user) {
+      .then(users => {
+        if (!users) {
           res.status(400).json({msg: 'No users found'});
         }
-
-        res.json(user);
+        Shop.find({}, { creation_date:1, alfred:1})
+          .then( shops => {
+            users=users.map( u => {
+              if (u.is_alfred) {
+                u = {...u._doc}
+                shop=shops.find(s => s.alfred._id.equals(u._id))
+                u.shop=shop
+              }
+              return u
+            })
+            res.json(users)
+          })
       })
       .catch(err => res.status(404).json({user: 'No users found'}));
   } else {

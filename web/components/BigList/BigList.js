@@ -12,19 +12,18 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 
 import Link from 'next/link';
 import Grid from '@material-ui/core/Grid';
-const {
-  StatusCellRenderer, StatusCellFilter, DateCellRenderer,
-  MangopayCellRenderer, PictureCellRenderer, LinkEdit, PrivateRenderer }=require('../Render/models')
+const models=require('./models')
 
 class BigList extends React.Component {
 
   constructor(props) {
     super(props)
+    this.gridRef=React.createRef()
   }
 
-  onRowClick = event => {
-    if (this.props.onRowClick) {
-      this.props.onRowClick(event.data)
+  fitColumns = () => {
+    if (this.gridRef.current) {
+      this.gridRef.current.api.sizeColumnsToFit()
     }
   }
 
@@ -39,13 +38,13 @@ class BigList extends React.Component {
     const {data, columnDefs, classes, title} = this.props
 
     const frameworkComponents={
-      'statusCellRenderer': StatusCellRenderer,
-      'dateCellRenderer': DateCellRenderer,
-      'mangopayCellRenderer' : MangopayCellRenderer,
-      'statusCellFilter' : StatusCellFilter,
-      'pictureCellRenderer' : PictureCellRenderer,
-      'linkEdit' : LinkEdit,
-      'privateRenderer' : PrivateRenderer,
+      'statusCellRenderer': models.StatusCellRenderer,
+      'dateCellRenderer': models.DateCellRenderer,
+      'mangopayCellRenderer' : models.MangopayCellRenderer,
+      'statusCellFilter' : models.StatusCellFilter,
+      'pictureCellRenderer' : models.PictureCellRenderer,
+      'privateRenderer' : models.PrivateRenderer,
+      'dateTimeCellRenderer': models.DateTimeCellRenderer,
     }
 
     const defaultColDef={
@@ -74,7 +73,10 @@ class BigList extends React.Component {
               frameworkComponents={frameworkComponents}
               {...this.props}
               localeText= {{noRowsToShow: 'Aucun résultat'}}
-              onRowClicked={ this.onRowClick}
+              onRowClicked={ this.props.onRowClicked}
+              onCellClicked={ this.props.onCellClicked}
+              onGridReady={this.fitColumns}
+              ref={this.gridRef}
               />
             </Paper>
         </Grid>
