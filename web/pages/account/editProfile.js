@@ -15,14 +15,19 @@ import {registerLocale} from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
 import {Helmet} from 'react-helmet';
 import styles from '../../static/css/pages/profile/editProfile/editProfile';
-
 import Hidden from "@material-ui/core/Hidden";
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import Divider from "@material-ui/core/Divider";
 import Typography from '@material-ui/core/Typography';
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
 
-const {MAX_DESCRIPTION_LENGTH} = require('../../utils/consts')
+const {MAX_DESCRIPTION_LENGTH} = require('../../utils/consts');
+
 const {isPhoneOk} = require('../../utils/sms');
 const moment = require('moment');
 
@@ -56,7 +61,12 @@ class editProfile extends React.Component {
       ipDate: moment().format(momentDateFormat),
       errors: {},
       open: false,
-      openErrors: false
+      openErrors: false,
+      smsCodeOpen: false,
+      smsCode: '',
+      checkPhoneMessage: '',
+      checkPhoneSeverity: '',
+      checkPhoneState: false,
     };
   }
 
@@ -99,6 +109,7 @@ class editProfile extends React.Component {
   onChange = e => {
     const state = this.state.user;
     var {name, value} = e.target;
+
     if (name === 'phone') {
       const phoneOk = isPhoneOk(value);
       if (phoneOk && e.target.value.startsWith('0')) {
@@ -128,8 +139,9 @@ class editProfile extends React.Component {
     const state = this.state.user;
     let value = event.target.value;
 
-    if (value.match(/[a-zA-Z^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤]/) || value.length > 12) {
+    if (value.match(/[a-zA-Z^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤é¨'èùçà]/) || value.length > 11) {
     } else {
+
       const phoneOk = isPhoneOk(value);
       if (phoneOk && value.startsWith('0')) {
         value = '33' + value.substring(1);
@@ -138,6 +150,116 @@ class editProfile extends React.Component {
       this.setState({user: state});
     }
   };
+
+  submitPhone = () => {
+    if (!this.state.phone) {
+      return
+    }
+    if (!this.state.phoneConfirmed && !this.state.serverError) {
+      this.sendSms();
+    }
+
+    const newPhone = {
+      phone: this.state.phone,
+      phone_confirmed: this.state.phoneConfirmed,
+    };
+
+    setAxiosAuthentication();
+    axios
+      .put('/myAlfred/api/users/profile/phone', newPhone)
+      .then()
+      .catch(err =>
+        console.error(err)
+      );
+  };
+
+  sendSms = () => {
+    setAxiosAuthentication();
+    axios.post('/myAlfred/api/users/sendSMSVerification', {phone: this.state.phone})
+      .then(res => {
+        this.setState({
+          checkPhoneState: true,
+          checkPhoneMessage: 'Le SMS a été envoyé',
+          checkPhoneSeverity: 'success',
+          smsCodeOpen: true
+        })
+      })
+      .catch(err => {
+        this.setState({
+          checkPhoneState: true,
+          checkPhoneMessage: 'Impossible d\'envoyer le SMS',
+          checkPhoneSeverity: 'error',
+          smsCodeOpen: true,
+          serverError: true
+        });
+      });
+  };
+
+  checkSmsCode = () => {
+    setAxiosAuthentication()
+    axios.post('/myAlfred/api/users/checkSMSVerification', {sms_code: this.state.smsCode})
+      .then(res => {
+        if (res.data.sms_code_ok) {
+          this.setState({
+            checkPhoneState: true,
+            checkPhoneMessage: 'Votre numéro de téléphone est validé',
+            checkPhoneSeverity: 'success',
+            smsCodeOpen: false,
+            phoneConfirmed: true
+          }, () => this.onSubmit());
+        } else {
+          this.setState({
+            checkPhoneState: true,
+            checkPhoneMessage: 'Le code est incorrect',
+            checkPhoneSeverity: 'error',
+          });
+        }
+      })
+      .catch(err =>
+        this.setState({
+          checkPhoneState: true,
+          checkPhoneMessage: 'Erreur à la vérification du code',
+          checkPhoneSeverity: 'warning',
+        }));
+  };
+
+  dialogConfirmPhone = (classes) => {
+    return (
+      <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Confirmation du numéro de téléphone</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Saisissez le code reçu par SMS</DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Code"
+            type="number"
+            placeholder="0000"
+            maxLength="4"
+            value={this.state.smsCode}
+            onChange={e => {
+              this.setState({smsCode: e.target.value});
+            }}
+            fullWidth
+            errors={this.state.smsError}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.setState({smsCodeOpen: false}, () => this.onSubmit())} color="primary">
+            Confirmer plus tard
+          </Button>
+          <Button
+            disabled={this.state.smsCode.length !== 4}
+            onClick={() => this.checkSmsCode()}
+            color="primary">
+            Confirmer
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  };
+
 
   onChangeBirthday = e => {
     this.setState({birthday: e.target.value});
@@ -148,7 +270,6 @@ class editProfile extends React.Component {
   };
 
   onSubmit = e => {
-    e.preventDefault();
     let arrayLanguages = [];
     if (this.state.selectedLanguages != null) {
       this.state.selectedLanguages.forEach(w => {
@@ -157,11 +278,10 @@ class editProfile extends React.Component {
     }
     const languages = arrayLanguages;
     const birthday = this.state.birthday;
-    const {email, name, firstname, description, gender, phone, job, diplomes, school, emergency_phone} = this.state.user;
+    const {email, name, firstname, description, gender, phone, job, diplomes, school} = this.state.user;
 
     axios.put('/myAlfred/api/users/profile/editProfile', {
-      email, name, firstname, birthday, description, gender, phone, job, diplomes, school,
-      emergency_phone, languages,
+      email, name, firstname, birthday, description, gender, phone, job, diplomes, school, languages,
     })
       .then(res => {
         this.setState({errors: {}, open: true}, () => this.loadUser());
@@ -172,7 +292,8 @@ class editProfile extends React.Component {
   };
 
   content = (classes) => {
-    const {errors, user} = this.state;
+    const {errors, user, phone} = this.state;
+
     var birthday = moment(this.state.birthday).format('YYYY-MM-DD').toString();
     var today = moment(new Date()).format('YYYY-MM-DD').toString();
 
@@ -236,7 +357,7 @@ class editProfile extends React.Component {
             <h2 style={{whiteSpace: 'nowrap'}}>Informations personnelles</h2>
           </Grid>
           <Grid container spacing={3} style={{marginTop: '10vh'}}>
-            <Grid item xl={6} lg={6} xs={12} sm={5} md={3}>
+            <Grid item xl={6} lg={6} xs={12} sm={6} md={6}>
               <TextField
                 classes={{root: classes.textField}}
                 value={user.gender || ''}
@@ -255,7 +376,7 @@ class editProfile extends React.Component {
                 </MenuItem>
               </TextField>
             </Grid>
-            <Grid item xl={6} lg={6} xs={12} sm={6} md={3}>
+            <Grid item xl={6} lg={6} xs={12} sm={6} md={6}>
               <TextField
                 classes={{root: classes.textFieldDatePicker}}
                 id="filled-with-placeholder"
@@ -270,7 +391,7 @@ class editProfile extends React.Component {
             </Grid>
           </Grid>
           <Grid container spacing={3}>
-            <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
+            <Grid item xs={12} lg={12} md={12} sm={12} xl={12}>
               <TextField
                 classes={{root: classes.textField}}
                 value={user.email || ''}
@@ -294,6 +415,7 @@ class editProfile extends React.Component {
                 label={'Téléphone'}
               />
             </Grid>
+
             <Grid item xs={12} lg={12} md={6} sm={6} xl={12}>
               <TextField
                 classes={{root: classes.textField}}
@@ -306,6 +428,18 @@ class editProfile extends React.Component {
                 label={'Numéro d\'urgence'}
               />
             </Grid>
+          </Grid>
+
+          <Grid item xs={12} lg={6} md={6} sm={6} xl={6} style={{display: 'flex'}}>
+            <Button
+              variant="contained"
+              color={'primary'}
+              onClick={this.submitPhone}
+              disabled={user.phone ? !!(phone === user.phone && user.phone_confirmed || user.phone.length !== 11) : true}
+              classes={{root: classes.buttonCheckPhone}}
+            >
+              {phone === user.phone && user.phone_confirmed === true ? 'Votre téléphone est vérifié' : phone !== user.phone ? 'Enregistrer votre nouveau téléphone' : 'Vérifiez votre téléphone'}
+            </Button>
           </Grid>
         </Grid>
         <Grid>
@@ -390,8 +524,12 @@ class editProfile extends React.Component {
             </Button>
           </Grid>
         </Grid>
+
         <SnackBar severity={"success"} message={'Profil modifié avec succès'} open={this.state.open}
                   closeSnackBar={() => this.setState({open: false})}/>
+        <SnackBar severity={this.state.checkPhoneSeverity} message={this.state.checkPhoneMessage}
+                  open={this.state.checkPhoneState} closeSnackBar={() => this.setState({checkPhoneState: false})}/>
+
         {
           this.state.errors ?
             Object.keys(this.state.errors).map(res => {
@@ -406,7 +544,6 @@ class editProfile extends React.Component {
       </Grid>
     )
   };
-
 
   render() {
     const {classes, index} = this.props;
@@ -427,6 +564,7 @@ class editProfile extends React.Component {
             {this.content(classes)}
           </LayoutMobile>
         </Hidden>
+        {this.dialogConfirmPhone(classes)}
       </React.Fragment>
     );
   };

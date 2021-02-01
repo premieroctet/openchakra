@@ -949,7 +949,6 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
           school: req.body.school,
           job: req.body.job,
           languages: req.body.languages,
-          emergency_phone: req.body.emergency_phone,
         }, {new: true})
           .then(user => {
             res.json({success: 'Profile updated !'});

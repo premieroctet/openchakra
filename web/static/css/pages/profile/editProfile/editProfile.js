@@ -24,5 +24,12 @@ export default theme => ({
     fontWeight: 'bold',
     color:'white',
     textTransform: 'initial'
+  },
+  buttonCheckPhone:{
+    fontWeight: 'bold',
+    textTransform: 'initial',
+    width: '100%',
+    color:'white',
+
   }
 })

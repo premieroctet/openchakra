@@ -6,7 +6,7 @@ import {withStyles} from "@material-ui/core/styles";
 import styles from '../../static/css/pages/footer/becomeAlfred/becomeAlfred';
 import Typography from "@material-ui/core/Typography";
 import Hidden from "@material-ui/core/Hidden";
-
+const {ACCOUNT_MIN_AGE}=require('../../utils/consts')
 
 class BecomeAlfred extends React.Component {
   constructor(props) {
@@ -96,9 +96,10 @@ class BecomeAlfred extends React.Component {
               <h2 style={{textAlign: 'center'}}>Qui peut devenir Alfred ?</h2>
             </Grid>
             <Grid>
-              <Typography style={{textAlign: 'justify'}}>Nous sommes tous des Alfred dès l'âge de 16 ans. Chacun d'entre nous doit pouvoir partager
+              <Typography style={{textAlign: 'justify'}}>
+                {`Nous sommes tous des Alfred dès l'âge de ${ACCOUNT_MIN_AGE} ans. Chacun d'entre nous doit pouvoir partager
                 ses savoir faire, ses compétences, ses passions... Tantôt consommateur d'Alfred, tantôt
-                Alfred, rejoignez la communauté Alfred en quelques clics !</Typography>
+                Alfred, rejoignez la communauté Alfred en quelques clics !`}`</Typography>
             </Grid>
           </Grid>
         </Grid>
