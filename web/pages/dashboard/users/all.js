@@ -91,6 +91,7 @@ class all extends React.Component {
         users=users.map( u => {
           u.status={'alfred':u.is_alfred, 'admin': u.is_admin}
           u.birthday_moment = moment(u.birthday)
+          u.shop = u.shop.pop()
           return u
         })
         this.setState({users:users});

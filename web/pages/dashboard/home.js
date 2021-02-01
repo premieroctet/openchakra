@@ -84,10 +84,10 @@ class home extends React.Component {
                   <Link href="/dashboard/map"><a>Carte des services</a></Link><br/>
                   <Link href="/dashboard/bookings"><a>Réservations</a></Link><br/>
                   <Link href="/dashboard/prospect"><a>Prospection</a></Link><br/>
-                  <Link href="/dashboard/users/all"><a>Comptes</a></Link><br/>
                   <Grid item style={{display: 'flex', justifyContent: 'center'}}>
                     <Typography style={{fontSize: 30}}>Base de données</Typography>
                   </Grid>
+                  <Link href="/dashboard/users/all"><a>Comptes</a></Link><br/>
                   <Link href="/dashboard/category/all"><a>Catégories</a></Link><br/>
                   <Link href="/dashboard/billing/all"><a>Méthodes de facturation</a></Link><br/>
                   <Link href="/dashboard/calculating/all"><a>Méthodes de calcul</a></Link><br/>

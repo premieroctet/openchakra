@@ -230,25 +230,18 @@ router.get('/users/all', passport.authenticate('jwt', {session: false}), (req, r
 
   if (admin) {
     User.find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address.city')
+      .populate({path:'shop', select:'creation_date'})
       .sort({creation_date: -1})
       .then(users => {
         if (!users) {
           res.status(400).json({msg: 'No users found'});
         }
-        Shop.find({}, { creation_date:1, alfred:1})
-          .then( shops => {
-            users=users.map( u => {
-              if (u.is_alfred) {
-                u = {...u._doc}
-                shop=shops.find(s => s.alfred._id.equals(u._id))
-                u.shop=shop
-              }
-              return u
-            })
-            res.json(users)
-          })
+        res.json(users)
       })
-      .catch(err => res.status(404).json({user: 'No users found'}));
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({user: 'No users found'})
+      })
   } else {
     res.status(400).json({msg: 'Access denied'});
   }
