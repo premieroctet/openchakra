@@ -395,9 +395,9 @@ class editProfile extends React.Component {
         {
           this.state.errors ?
             Object.keys(this.state.errors).map(res => {
-              let response = JSON.stringify(this.state.errors[res]);
+              let response = JSON.stringify(this.state.errors[res].email);
               return (
-                <SnackBar severity={"error"} message={response.replace(/"([^"]+)":/g, "")}
+                <SnackBar severity={"error"} message={response.replaceAll("\"", "")}
                           open={this.state.openErrors}
                           closeSnackBar={() => this.setState({openErrors: true})}/>
               )
