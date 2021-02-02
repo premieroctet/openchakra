@@ -58,6 +58,7 @@ const EditorPage = (props: {
         id: props.id,
         projectName: props.projectName,
         validated: props.validated,
+        accessToken: session?.accessToken as string,
       },
     }
     const response = await fetch('/api/project/update', {
@@ -241,6 +242,7 @@ const EditorPage = (props: {
                   loading={modalLoading}
                   setModalLoading={setModalLoading}
                   showUserProjectList={showUserProjectList}
+                  accessToken={session?.accessToken as string}
                 />
 
                 <Box
@@ -299,6 +301,7 @@ const EditorPage = (props: {
                 loading={modalLoading}
                 setModalLoading={setModalLoading}
                 showUserProjectList={showUserProjectList}
+                accessToken={session?.accessToken as string}
               />
               <Box
                 maxH="calc(100vh - 3rem)"

@@ -44,6 +44,7 @@ interface Props {
   loading: boolean
   setModalLoading: (value: boolean) => void
   showUserProjectList: () => void
+  accessToken: string
 }
 
 interface UpdateProject {
@@ -57,12 +58,13 @@ const ModalComponent = (props: Props) => {
   const toast = useToast()
   const [loadingAdd, setLoadingAdd] = useState(false)
 
-  const updateProject = async (e: UpdateProject) => {
+  const updateProject = async (e: UpdateProject, token: string) => {
     props.setModalLoading(true)
     let bodyData = {
       project: {
         id: e.id,
         public: e.public,
+        accessToken: token,
       },
     }
     const response = await fetch('/api/project/update', {
@@ -111,7 +113,7 @@ const ModalComponent = (props: Props) => {
     }
   }
 
-  const publishPublicProject = async (e: UpdateProject) => {
+  const publishPublicProject = async (e: UpdateProject, token: string) => {
     props.setModalLoading(true)
 
     e.public = !e.public
@@ -119,16 +121,18 @@ const ModalComponent = (props: Props) => {
       id: e.id,
       public: e.public,
       projectName: e.projectName,
+      accessToken: token,
     }
 
-    const projectUpdated = await updateProject(data)
+    const projectUpdated = await updateProject(data, token)
 
     props.setModalLoading(false)
 
     if (projectUpdated) {
       toast({
         title: 'The project visibility has been updated',
-        description: 'The project has been updated successfully',
+        description:
+          'The project must now be validated by an admin to publish it in the gallery',
         status: 'success',
         duration: 9000,
         isClosable: true,
@@ -311,23 +315,30 @@ const ModalComponent = (props: Props) => {
                             <AccordionIcon />
                           </AccordionHeader>
                           <AccordionPanel pb={4}>
-                            <Switch
-                              color="teal"
-                              id="projectPublic"
-                              size="md"
-                              defaultIsChecked={e.public}
-                              onChange={() => publishPublicProject(e)}
-                            />
-                            {e.public && (
-                              <Button
-                                variantColor="teal"
-                                size="sm"
-                                ml={5}
-                                onClick={() => saveScreenshot(e)}
-                              >
-                                Take a screenshot
-                              </Button>
-                            )}
+                            <Flex align="center" justify="center">
+                              <Text mr={3}>
+                                {e.public ? 'Public' : 'Private'}
+                              </Text>
+                              <Switch
+                                color="teal"
+                                id="projectPublic"
+                                size="md"
+                                defaultIsChecked={e.public}
+                                onChange={() =>
+                                  publishPublicProject(e, props.accessToken)
+                                }
+                              />
+                              {e.public && (
+                                <Button
+                                  variantColor="teal"
+                                  size="sm"
+                                  ml={5}
+                                  onClick={() => saveScreenshot(e)}
+                                >
+                                  Take a screenshot
+                                </Button>
+                              )}
+                            </Flex>
                           </AccordionPanel>
                         </AccordionItem>
                       </Accordion>
