@@ -1,4 +1,5 @@
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus');
+const {ACCOUNT_MIN_AGE}=require('./consts')
 
 const CESU_NOTICE = 'Quel que soit votre statut, My Alfred est tenu de déclarer aux \
 finances publiques vos revenus générés <b>si les deux conditions suivantes sont \
@@ -128,8 +129,8 @@ const FAQ_ALFRED = {
   "Devenir Alfred": [
     {
       title: 'Qui peut devenir Alfred ?',
-      contents: '<p>Nous sommes tous des Alfred ! Dès l’âge de 16 ans, vous pouvez devenir Alfred en créant votre propre boutique de service(s) sur My Alfred.\
-      Votre inscription et la mise en ligne de votre boutique sont entièrement gratuites et ne demandent aucun frais au préalable ou abonnement vous engageant sur la durée.Vous pouvez proposer immédiatement vos talents, vos compétences sur My Alfred en choisissant la liste des services que vous souhaitez proposer. Nous avons répertorié pour vous plus de 2000 prestations classées dans des services et des catégories. Alors, prêt à rejoindre l’aventure ? Je deviens alfred maintenant !</p>'
+      contents: `<p>Nous sommes tous des Alfred ! Dès l’âge de ${ACCOUNT_MIN_AGE} ans, vous pouvez devenir Alfred en créant votre propre boutique de service(s) sur My Alfred.\
+      Votre inscription et la mise en ligne de votre boutique sont entièrement gratuites et ne demandent aucun frais au préalable ou abonnement vous engageant sur la durée.Vous pouvez proposer immédiatement vos talents, vos compétences sur My Alfred en choisissant la liste des services que vous souhaitez proposer. Nous avons répertorié pour vous plus de 2000 prestations classées dans des services et des catégories. Alors, prêt à rejoindre l’aventure ? Je deviens alfred maintenant !</p>`
     },
     {
       title: 'Comment créer sa boutique de service ?',

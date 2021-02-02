@@ -1,6 +1,7 @@
 import SnackBar from "../../components/SnackBar/SnackBar";
-const {clearAuthenticationToken}=require('../../utils/authentication');
-const {setAxiosAuthentication}=require('../../utils/authentication');
+
+const {clearAuthenticationToken} = require('../../utils/authentication');
+const {setAxiosAuthentication} = require('../../utils/authentication');
 import React from 'react';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
@@ -24,7 +25,9 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
-const {MAX_DESCRIPTION_LENGTH}=require('../../utils/consts');
+
+const {MAX_DESCRIPTION_LENGTH} = require('../../utils/consts');
+
 const {isPhoneOk} = require('../../utils/sms');
 const moment = require('moment');
 
@@ -56,7 +59,7 @@ class editProfile extends React.Component {
       birthday: null,
       dpDate: moment().toDate(),
       ipDate: moment().format(momentDateFormat),
-      errors:{},
+      errors: {},
       open: false,
       openErrors: false,
       smsCodeOpen: false,
@@ -106,31 +109,38 @@ class editProfile extends React.Component {
   onChange = e => {
     const state = this.state.user;
     var {name, value} = e.target;
-    if(name === 'description'){
+
+    if (name === 'phone') {
+      const phoneOk = isPhoneOk(value);
+      if (phoneOk && e.target.value.startsWith('0')) {
+        value = '33' + value.substring(1);
+      }
+    }
+    if (name === 'description') {
       value = value.slice(0, MAX_DESCRIPTION_LENGTH)
     }
     state[e.target.name] = value;
     this.setState({user: state});
   };
 
-  onChangeName = event =>{
+  onChangeName = event => {
     const state = this.state.user;
     let value = event.target.value;
 
-    if (value.match(/[0-9^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤]/)) {}
-    else {
+    if (value.match(/[0-9^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤]/)) {
+    } else {
       value = value.charAt(0).toUpperCase() + value.slice(1);
       state[event.target.name] = value;
       this.setState({user: state});
     }
   };
-
-  onChangePhone = event =>{
+  onChangePhone = event => {
     const state = this.state.user;
     let value = event.target.value;
 
-    if (value.match(/[a-zA-Z^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤é¨'èùçà]/) || value.length > 11) {}
-    else {
+    if (value.match(/[a-zA-Z^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤é¨'èùçà]/) || value.length > 11) {
+    } else {
+
       const phoneOk = isPhoneOk(value);
       if (phoneOk && value.startsWith('0')) {
         value = '33' + value.substring(1);
@@ -206,14 +216,14 @@ class editProfile extends React.Component {
       })
       .catch(err =>
         this.setState({
-        checkPhoneState: true,
-        checkPhoneMessage: 'Erreur à la vérification du code',
-        checkPhoneSeverity: 'warning',
-      }));
+          checkPhoneState: true,
+          checkPhoneMessage: 'Erreur à la vérification du code',
+          checkPhoneSeverity: 'warning',
+        }));
   };
 
-  dialogConfirmPhone = (classes) =>{
-    return(
+  dialogConfirmPhone = (classes) => {
+    return (
       <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Confirmation du numéro de téléphone</DialogTitle>
         <DialogContent>
@@ -250,7 +260,6 @@ class editProfile extends React.Component {
   };
 
 
-
   onChangeBirthday = e => {
     this.setState({birthday: e.target.value});
   };
@@ -276,17 +285,18 @@ class editProfile extends React.Component {
       .then(res => {
         this.setState({errors: {}, open: true}, () => this.loadUser());
       })
-      .catch( err => {
+      .catch(err => {
         this.setState({openErrors: true, errors: err.response.data});
       });
   };
 
-  content = (classes) =>{
-    const {errors, user, phone}=this.state;
+  content = (classes) => {
+    const {errors, user, phone} = this.state;
+
     var birthday = moment(this.state.birthday).format('YYYY-MM-DD').toString();
     var today = moment(new Date()).format('YYYY-MM-DD').toString();
 
-    return(
+    return (
       <Grid>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
@@ -294,7 +304,7 @@ class editProfile extends React.Component {
           </Grid>
         </Grid>
         <Grid>
-          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+          <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
         <Grid container spacing={3} style={{marginTop: '5vh'}}>
           <Grid item lg={6} md={12} sm={12} xs={12}>
@@ -333,12 +343,13 @@ class editProfile extends React.Component {
               label={'A propos de moi'}
             />
           </Grid>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{ display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column' }}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}
+                style={{display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column'}}>
             <Typography>{`${MAX_DESCRIPTION_LENGTH} caractères max`}</Typography>
           </Grid>
         </Grid>
         <Grid>
-          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+          <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
         <Grid>
           <Grid>
@@ -372,8 +383,8 @@ class editProfile extends React.Component {
                 type="date"
                 value={birthday}
                 onChange={this.onChangeBirthday}
-                InputLabelProps={{ shrink: true }}
-                InputProps={{inputProps: { min: "1900-01-01", max: today} }}
+                InputLabelProps={{shrink: true}}
+                InputProps={{inputProps: {min: "1900-01-01", max: today}}}
                 error={!!(errors && errors.birthday)}
               />
             </Grid>
@@ -411,13 +422,15 @@ class editProfile extends React.Component {
                 disabled={user.phone ? !!(phone === user.phone && user.phone_confirmed || user.phone.length !== 11) : true}
                 classes={{root: classes.buttonCheckPhone}}
               >
-                {phone === user.phone && user.phone_confirmed === true ? 'Votre téléphone est vérifié' : phone !== user.phone  ? 'Enregistrer votre nouveau téléphone' : 'Vérifié votre téléphone'}
+                {phone === user.phone && user.phone_confirmed === true ? 'Votre téléphone est vérifié' : phone !== user.phone ? 'Enregistrer votre nouveau téléphone' : 'Vérifiez votre téléphone'}
               </Button>
             </Grid>
+
+
+          </Grid>
         </Grid>
-      </Grid>
         <Grid>
-          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+          <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
         <Grid>
           <Grid>
@@ -428,7 +441,7 @@ class editProfile extends React.Component {
               <TextField
                 classes={{root: classes.textField}}
                 value={user.diplomes || ''}
-                onChange={this.onChange}
+                onChange={this.onChangeName}
                 name={'diplomes'}
                 placeholder={'Diplomes'}
                 variant={'outlined'}
@@ -439,7 +452,7 @@ class editProfile extends React.Component {
               <TextField
                 classes={{root: classes.textField}}
                 value={user.school || ''}
-                onChange={this.onChange}
+                onChange={this.onChangeName}
                 name={'school'}
                 placeholder={'Ecoles'}
                 variant={'outlined'}
@@ -450,7 +463,7 @@ class editProfile extends React.Component {
               <TextField
                 classes={{root: classes.textField}}
                 value={user.job || ''}
-                onChange={this.onChange}
+                onChange={this.onChangeName}
                 name={'job'}
                 placeholder={'Emploi'}
                 variant={'outlined'}
@@ -460,7 +473,7 @@ class editProfile extends React.Component {
           </Grid>
         </Grid>
         <Grid>
-          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+          <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
         <Grid>
           <Grid>
@@ -473,7 +486,7 @@ class editProfile extends React.Component {
                 onChange={this.handleChangeLanguages}
                 options={options}
                 styles={{
-                  menu: provided => ({...provided, zIndex: 2}),
+                  menu: provided => ({...provgided, zIndex: 2}),
                 }}
                 isMulti
                 isSearchable
@@ -492,26 +505,32 @@ class editProfile extends React.Component {
               variant="contained"
               color="primary"
               classes={{root: classes.button}}
-              disabled={user.firstname === "" || user.name === "" || user.email === "" || user.phone === "" }
+              disabled={user.firstname === "" || user.name === "" || user.email === "" || user.phone === ""}
             >
               Enregistrer
             </Button>
           </Grid>
         </Grid>
-        <SnackBar severity={"success"} message={'Profil modifié avec succès'} open={this.state.open} closeSnackBar={() => this.setState({open: false})}/>
-        <SnackBar severity={this.state.checkPhoneSeverity} message={this.state.checkPhoneMessage} open={this.state.checkPhoneState} closeSnackBar={() => this.setState({checkPhoneState: false})}/>
+
+        <SnackBar severity={"success"} message={'Profil modifié avec succès'} open={this.state.open}
+                  closeSnackBar={() => this.setState({open: false})}/>
+        <SnackBar severity={this.state.checkPhoneSeverity} message={this.state.checkPhoneMessage}
+                  open={this.state.checkPhoneState} closeSnackBar={() => this.setState({checkPhoneState: false})}/>
+
         {
           this.state.errors ?
             Object.keys(this.state.errors).map(res => {
-              return(
-                <SnackBar severity={"error"} message={this.state.errors[res]} open={this.state.openErrors} closeSnackBar={() => this.setState({openErrors: false})}/>
+              let response = Object.values(this.state.errors[res])
+              return (
+                < SnackBar severity={"error"} message={response}
+                           open={this.state.openErrors}
+                           closeSnackBar={() => this.setState({openErrors: false})}/>
               )
             }) : null
         }
       </Grid>
     )
   };
-
 
   render() {
     const {classes, index} = this.props;

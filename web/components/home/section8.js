@@ -2,6 +2,7 @@ import React, {Fragment} from 'react';
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+const {ACCOUNT_MIN_AGE}=require('../../utils/consts')
 
 const styles = theme => ({
   container: {
@@ -135,10 +136,10 @@ class section8 extends React.Component {
               </Grid>
               <Grid item xs={12}>
                 <Typography className={classes.contentTextbox}>
-                  Nous sommes tous des Alfred dès l'âge de 16 ans. Chacun d'entre nous doit pouvoir partager ses savoir
+                  {`Nous sommes tous des Alfred dès l'âge de ${ACCOUNT_MIN_AGE} ans. Chacun d'entre nous doit pouvoir partager ses savoir
                   faire,
                   ses compétences, ses passions...
-                  Tantôt consommateur d'Alfred, tantôt Alfred, rejoignez la communauté Alfred en quelques clics !
+                  Tantôt consommateur d'Alfred, tantôt Alfred, rejoignez la communauté Alfred en quelques clics !`}
                 </Typography>
               </Grid>
             </Grid>

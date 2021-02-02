@@ -229,16 +229,19 @@ router.get('/users/all', passport.authenticate('jwt', {session: false}), (req, r
   const admin = decode.is_admin;
 
   if (admin) {
-    User.find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date id_card birthday billing_address')
+    User.find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address.city')
+      .populate({path:'shop', select:'creation_date'})
       .sort({creation_date: -1})
-      .then(user => {
-        if (!user) {
+      .then(users => {
+        if (!users) {
           res.status(400).json({msg: 'No users found'});
         }
-
-        res.json(user);
+        res.json(users)
       })
-      .catch(err => res.status(404).json({user: 'No users found'}));
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({user: 'No users found'})
+      })
   } else {
     res.status(400).json({msg: 'Access denied'});
   }
@@ -455,28 +458,6 @@ router.delete('/users/users/:id', passport.authenticate('jwt', {session: false})
     .catch(err => res.status(404).json({user: 'No user found'}));
 
 });
-
-// @Route GET /myAlfred/api/admmin/shop/all
-// View all shop
-router.get('/shop/all', (req, res) => {
-  Shop.find({}, '_id creation_date')
-    .sort({creation_date: -1})
-    .populate('alfred', '_id firstname name email id_mangopay mangopay_provider_id id_card_status id_card_error id_card')
-    .then(shop => {
-      if (typeof shop !== 'undefined' && shop.length > 0) {
-        res.json(shop);
-      } else {
-        return res.status(400).json({
-          msg: 'No shop found',
-        });
-      }
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(404).json({shop: 'No shop found'});
-    });
-});
-
 
 // @Route GET /myAlfred/api/admin/users/alfred
 // List all alfred

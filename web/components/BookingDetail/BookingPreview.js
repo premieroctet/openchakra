@@ -226,10 +226,10 @@ class BookingPreview extends React.Component {
               'Revenus potentiels'
 
     const momentTitle = [BOOK_STATUS.CONFIRMED, BOOK_STATUS.FINISHED].includes(status) ?
-      `Du ${bookingObj.date_prestation} - ${moment(bookingObj.time_prestation).format('HH:mm')}
+      `du ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}
        au ${moment(bookingObj.end_date).format('DD/MM/YYYY')} à ${bookingObj.end_time}`
        :
-       `Le ${bookingObj.date_prestation} - ${moment(bookingObj.time_prestation).format('HH:mm')}`;
+       `le ${bookingObj.date_prestation} à ${moment(bookingObj.time_prestation).format('HH:mm')}`;
 
     const phone = amIAlfred ? bookingObj.user.phone : bookingObj.alfred.phone;
 
@@ -454,7 +454,10 @@ class BookingPreview extends React.Component {
                             <Grid item>
                               <Typography>
                                 {bookingObj.address ?
-                                  `Au ${bookingObj.address.address}, ${bookingObj.address.zip_code} ${bookingObj.address.city}` : 'En visio'}
+                                  `au ${bookingObj.address.address}, ${bookingObj.address.zip_code} ${bookingObj.address.city}` : 'en visio'}
+                              </Typography>
+                              <Typography>
+                                { `créée le ${moment(bookingObj.date).format('DD/MM/YYYY')} à ${moment(bookingObj.date).format('HH:mm')}` }
                               </Typography>
                             </Grid>
                           </Grid>
