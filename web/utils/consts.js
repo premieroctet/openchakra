@@ -334,6 +334,7 @@ const SKILLS={
 
 const LANGUAGES= [
   {value: 'Français', label: 'Français'},
+  {value: 'LSF', label: 'LSF'},
   {value: 'Anglais', label: 'Anglais'},
   {value: 'Allemand', label: 'Allemand'},
   {value: 'Espagnol', label: 'Espagnol'},

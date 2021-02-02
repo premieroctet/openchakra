@@ -26,6 +26,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 
+import {LANGUAGES} from "../../utils/consts";
 const {MAX_DESCRIPTION_LENGTH} = require('../../utils/consts');
 
 const {isPhoneOk} = require('../../utils/sms');
@@ -33,18 +34,6 @@ const moment = require('moment');
 
 registerLocale('fr', fr);
 moment.locale('fr');
-
-const options = [
-  {value: 'Français', label: 'Français'},
-  {value: 'Anglais', label: 'Anglais'},
-  {value: 'Allemand', label: 'Allemand'},
-  {value: 'Espagnol', label: 'Espagnol'},
-  {value: 'Chinois', label: 'Chinois'},
-  {value: 'Arabe', label: 'Arabe'},
-  {value: 'Portugais', label: 'Portugais'},
-  {value: 'Russe', label: 'Russe'},
-  {value: 'Japonais', label: 'Japonais'},
-];
 
 const momentDateFormat = 'dd/MM/yyyy';
 
@@ -484,9 +473,9 @@ class editProfile extends React.Component {
               <MultipleSelect
                 value={this.state.selectedLanguages}
                 onChange={this.handleChangeLanguages}
-                options={options}
+                options={LANGUAGES}
                 styles={{
-                  menu: provided => ({...provgided, zIndex: 2}),
+                  menu: provided => ({...provided, zIndex: 2}),
                 }}
                 isMulti
                 isSearchable
