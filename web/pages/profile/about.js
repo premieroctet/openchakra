@@ -10,12 +10,10 @@ import Hashtags from '../../components/Hashtags/Hashtags'
 import {withStyles} from '@material-ui/core/styles';
 import styles from '../../static/css/pages/profile/about/about';
 import Hidden from "@material-ui/core/Hidden";
-import LayoutMobile from "../../hoc/Layout/LayoutMobile";
 import AskQuestion from "../../components/AskQuestion/AskQuestion";
 import Box from "../../components/Box/Box";
 import LayoutMobileProfile from "../../hoc/Layout/LayoutMobileProfile";
 import axios from "axios";
-
 import Typography from "@material-ui/core/Typography";
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import IconButton from "@material-ui/core/IconButton";
@@ -98,7 +96,7 @@ class ProfileAbout extends React.Component {
 
   modalEditDialog = (classes) =>{
     const {newAddress, newLanguages, showEdition}=this.state;
-    const enabled = newAddress;
+    const enabled = newLanguages === '' || newAddress === null ? true : false;
     const placeholder = newAddress ? `${newAddress.city}, ${newAddress.country}` : 'Entrez votre adresse';
 
     return(
@@ -151,7 +149,6 @@ class ProfileAbout extends React.Component {
                   closeMenuOnSelect={false}
                   placeholder={'Sélectionnez vos langues'}
                   noOptionsMessage={() => 'Plus d\'options disponibles'}
-
                 />
               </Grid>
             </Grid>
@@ -163,8 +160,9 @@ class ProfileAbout extends React.Component {
                     this.save();
                   }}
                   variant="contained"
+                  color={'primary'}
                   classes={{root: classes.buttonSave}}
-                  disabled={!enabled}
+                  disabled={enabled}
                 >
                   Modifier
                 </Button>

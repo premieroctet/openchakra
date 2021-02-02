@@ -3,5 +3,10 @@ export default theme => ({
     [theme.breakpoints.down('sm')]:{
       marginBottom: '12vh'
     }
-  }
+  },
+  buttonSave: {
+    textTransform: 'initial',
+    color:'white',
+    fontWeight: 'bold'
+  },
 })

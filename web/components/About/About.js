@@ -50,8 +50,12 @@ class About extends React.Component {
     this.state = {
       user: null,
       newAddress: null,
-      newLanguages: null,
+      userLanguages: [],
       showEdition: false,
+      languages: {},
+      billing_address: {},
+      enabledEdition: true
+
     };
     this.save = this.save.bind(this);
     this.loadUser = this.loadUser.bind(this)
@@ -62,28 +66,30 @@ class About extends React.Component {
   };
 
   loadUser() {
-    setAxiosAuthentication()
+    setAxiosAuthentication();
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
-      .then( res => {
-        const user=res.data;
+      .then(res => {
+        const user = res.data;
 
         this.setState({
           user: user,
+          userLanguages:  user.languages.map(l => ({value: l, label: l})),
+          billing_address: user.billing_address
         })
       })
-      .catch (err => console.error(err))
+      .catch(err => console.error(err))
   }
 
-  onAddressChanged= result => {
+  onAddressChanged = result => {
 
     const newAddress = result ?
       {
-          city: result.suggestion.city,
-          address: result.suggestion.name,
-          zip_code: result.suggestion.postcode,
-          country: result.suggestion.country,
-          lat: result.suggestion.latlng.lat,
-          lng: result.suggestion.latlng.lng,
+        city: result.suggestion.city,
+        address: result.suggestion.name,
+        zip_code: result.suggestion.postcode,
+        country: result.suggestion.country,
+        lat: result.suggestion.latlng.lat,
+        lng: result.suggestion.latlng.lng,
       }
       :
       null;
@@ -91,15 +97,15 @@ class About extends React.Component {
   };
 
   onLanguagesChanged = languages => {
-    this.setState({newLanguages: languages})
+    this.setState({languages: languages}, () => this.objectsEqual())
   };
 
   save = () => {
     // TODO: handle errors, remove timeout
-    const {newAddress, newLanguages}=this.state;
+    const {newAddress, newLanguages} = this.state;
     setAxiosAuthentication()
     axios.put('/myAlfred/api/users/profile/billingAddress', newAddress);
-    axios.put('/myAlfred/api/users/profile/languages', {languages: newLanguages.map( l => l.value)});
+    axios.put('/myAlfred/api/users/profile/languages', {languages: newLanguages.map(l => l.value)});
     this.setState({showEdition: false}, () => setTimeout(this.loadUser, 1000))
   };
 
@@ -107,9 +113,19 @@ class About extends React.Component {
     this.setState({showEdition: false, newLanguages: null, newAddress: null})
   };
 
+  objectsEqual = () => {
+    const o1 = this.state.languages;
+    const o2 = this.state.userLanguages;
+
+    if(Object.keys(o1).length === Object.keys(o2).length && Object.keys(o1).every(p => o1[p] === o2[p])){
+      this.setState({enabledEdition: true})
+    }else{
+      this.setState({enabledEdition: false})
+    }
+  };
+
   modalEditDialog = (classes) =>{
-    const {newLabel, newPicture, user, newAddress, newLanguages, showEdition, indexNewAddress}=this.state;
-    const enabled = newAddress;
+    const {newLabel, newPicture, user, newAddress, userLanguages, showEdition, languages, billing_address, enabledEdition}=this.state;
     const placeholder = newAddress ? `${newAddress.city}, ${newAddress.country}` : 'Entrez votre adresse';
 
     return(
@@ -151,7 +167,7 @@ class About extends React.Component {
               <Grid item xs={12} style={{marginTop: '3vh', marginBottom: '3vh'}}>
                 <MultipleSelect
                   key={moment()}
-                  value={newLanguages}
+                  value={languages}
                   onChange={this.onLanguagesChanged}
                   options={LANGUAGES}
                   styles={{
@@ -175,7 +191,8 @@ class About extends React.Component {
                   }}
                   variant="contained"
                   classes={{root: classes.buttonSave}}
-                  disabled={!enabled}
+                  color={'primary'}
+                  disabled={enabledEdition}
                 >
                   Modifier
                 </Button>
@@ -192,7 +209,7 @@ class About extends React.Component {
 
     this.setState({
       showEdition: true,
-      newLanguages: user.languages.map(l => ({value: l, label: l})),
+      languages: user.languages.map(l => ({value: l, label: l})),
       newAddress: user.billing_address
     })
   };
