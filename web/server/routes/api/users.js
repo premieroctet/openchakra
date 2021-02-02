@@ -10,11 +10,9 @@ const axiosCookieJarSupport = require('axios-cookiejar-support').default;
 const tough = require('tough-cookie');
 const {is_production, is_validation}=require('../../../config/config');
 const CronJob = require('cron').CronJob;
-
 const validateRegisterInput = require('../../validation/register');
 const {validateSimpleRegisterInput, validateEditProfil} = require('../../validation/simpleRegister');
 const validateLoginInput = require('../../validation/login');
-
 const {sendResetPassword, sendVerificationMail, sendVerificationSMS} = require('../../../utils/mailing');
 const moment = require('moment');
 moment.locale('fr');
@@ -23,13 +21,13 @@ const Album = require('../../models/Albums');
 const ResetToken = require('../../models/ResetToken');
 const crypto = require('crypto');
 const multer = require('multer');
-const fs = require('fs');
 const axios = require('axios');
-const {is_development, computeUrl} = require('../../../config/config');
+const {computeUrl} = require('../../../config/config');
+const emptyPromise = require('../../../utils/promise.js');
+
 
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient,install_hooks} = require('../../../utils/mangopay');
 
-const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus');
 
 axios.defaults.withCredentials = true;
 
@@ -965,13 +963,15 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
 router.put('/profile/editPassword', passport.authenticate('jwt', {session: false}), (req, res) => {
   const password = req.body.password;
   const newPassword = req.body.newPassword;
+  const admin = req.user.is_admin;
 
   if (!newPassword.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})')) {
     return res.status(400).json({error: 'Le nouveau mot de passe doit contenir au moins :\n\t- 8 caractères\n\t- 1 minuscule\n\t- 1 majuscule\n\t- 1 chiffre'});
-  } else {
+  }else {
     User.findById(req.user.id)
       .then(user => {
-        bcrypt.compare(password, user.password)
+        const promise = admin ? emptyPromise(true) : emptyPromise(bcrypt.compare(password, user.password));
+        promise
           .then(isMatch => {
             if (isMatch) {
               bcrypt.genSalt(10, (err, salt) => {
@@ -985,8 +985,6 @@ router.put('/profile/editPassword', passport.authenticate('jwt', {session: false
                     .catch(err => console.error(err));
                 });
               });
-
-
             } else {
               return res.status(400).json({error: 'Mot de passe incorrect', wrongPassword: true});
             }
