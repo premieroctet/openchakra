@@ -11,7 +11,7 @@ const tough = require('tough-cookie');
 const {is_production, is_validation}=require('../../../config/config');
 const CronJob = require('cron').CronJob;
 const validateRegisterInput = require('../../validation/register');
-const {validateSimpleRegisterInput, validateEditProfil, validateEditPassword} = require('../../validation/simpleRegister');
+const {validateSimpleRegisterInput, validateEditProfil} = require('../../validation/simpleRegister');
 const validateLoginInput = require('../../validation/login');
 const {sendResetPassword, sendVerificationMail, sendVerificationSMS} = require('../../../utils/mailing');
 const moment = require('moment');
@@ -23,6 +23,8 @@ const crypto = require('crypto');
 const multer = require('multer');
 const axios = require('axios');
 const {computeUrl} = require('../../../config/config');
+const emptyPromise = require('../../../utils/promise.js');
+
 
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient,install_hooks} = require('../../../utils/mangopay');
 
@@ -961,7 +963,9 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
 router.put('/profile/editPassword', passport.authenticate('jwt', {session: false}), (req, res) => {
   const password = req.body.password;
   const newPassword = req.body.newPassword;
-  const admin = req.body.isAdmin;
+  const admin = req.user.is_admin;
+  const promise = emptyPromise(bcrypt.compare(password, user.password));
+  console.log(promise,'promise')
 
   if (!newPassword.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})')) {
     return res.status(400).json({error: 'Le nouveau mot de passe doit contenir au moins :\n\t- 8 caractères\n\t- 1 minuscule\n\t- 1 majuscule\n\t- 1 chiffre'});

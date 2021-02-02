@@ -241,7 +241,7 @@ class security extends React.Component {
 
   onSubmit = e => {
     e.preventDefault();
-    const data = {password: this.state.password, newPassword: this.state.newPassword, isAdmin: this.state.isAdmin};
+    const data = {password: this.state.password, newPassword: this.state.newPassword};
     axios
       .put('/myAlfred/api/users/profile/editPassword', data)
       .then((res) => {
