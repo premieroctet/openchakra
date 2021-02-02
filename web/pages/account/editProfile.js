@@ -145,9 +145,10 @@ class editProfile extends React.Component {
       const phoneOk = isPhoneOk(value);
       if (phoneOk && value.startsWith('0')) {
         value = '33' + value.substring(1);
+
+        // state[event.target.name] = value;
+        this.setState({phone: value});
       }
-      // state[event.target.name] = value;
-      this.setState({phone: value});
     }
   };
 
