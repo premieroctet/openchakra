@@ -67,10 +67,10 @@ class all extends React.Component {
     };
 
   this.columnDefs=[
+      {headerName: "Privée", field: "private_alfred", cellRenderer: "privateRenderer"},
       {headerName: "Label", field: "label"},
       {headerName: "Catégorie", field: "service.category.label"},
       {headerName: "Service", field: "service.label"},
-      {headerName: "Privée", field: "private_alfred", cellRenderer: "privateRenderer"},
       {headerName: "Filtre présentation", field: "filter_presentation.label"},
     ]
   }
