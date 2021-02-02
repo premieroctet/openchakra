@@ -964,30 +964,14 @@ router.put('/profile/editPassword', passport.authenticate('jwt', {session: false
   const password = req.body.password;
   const newPassword = req.body.newPassword;
   const admin = req.user.is_admin;
-  const promise = emptyPromise(bcrypt.compare(password, user.password));
-  console.log(promise,'promise')
 
   if (!newPassword.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})')) {
     return res.status(400).json({error: 'Le nouveau mot de passe doit contenir au moins :\n\t- 8 caractères\n\t- 1 minuscule\n\t- 1 majuscule\n\t- 1 chiffre'});
-  }else if (admin){
+  }else {
     User.findById(req.user.id)
       .then(user => {
-        bcrypt.genSalt(10, (err, salt) => {
-          bcrypt.hash(newPassword, salt, (err, hash) => {
-            if (err) {
-              throw err;
-            }
-            user.password = hash;
-            user.save()
-              .then(user => res.json({success: 'Mot de passe mis à jour'}))
-              .catch(err => console.error(err));
-          });
-        });
-      })
-  } else {
-    User.findById(req.user.id)
-      .then(user => {
-        bcrypt.compare(password, user.password)
+        const promise = admin ? emptyPromise(true) : emptyPromise(bcrypt.compare(password, user.password));
+        promise
           .then(isMatch => {
             if (isMatch) {
               bcrypt.genSalt(10, (err, salt) => {
