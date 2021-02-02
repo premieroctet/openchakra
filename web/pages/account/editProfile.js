@@ -123,6 +123,7 @@ class editProfile extends React.Component {
     this.setState({user: state});
   };
 
+
   onChangeName = event => {
     const state = this.state.user;
     let value = event.target.value;
@@ -135,9 +136,9 @@ class editProfile extends React.Component {
     }
   };
   onChangePhone = event => {
-    const state = this.state.user;
+    // const state = this.state.user;
     let value = event.target.value;
-
+    console.log(value);
     if (value.match(/[a-zA-Z^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤é¨'èùçà]/) || value.length > 11) {
     } else {
 
@@ -145,8 +146,8 @@ class editProfile extends React.Component {
       if (phoneOk && value.startsWith('0')) {
         value = '33' + value.substring(1);
       }
-      state[event.target.name] = value;
-      this.setState({user: state});
+      // state[event.target.name] = value;
+      this.setState({phone: value});
     }
   };
 
@@ -406,7 +407,7 @@ class editProfile extends React.Component {
             <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
               <TextField
                 classes={{root: classes.textField}}
-                value={user.phone || ''}
+                value={this.state.phone || ''}
                 onChange={this.onChangePhone}
                 name={'phone'}
                 placeholder={'Téléphone'}

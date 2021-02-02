@@ -24,6 +24,7 @@ const fillSms = (pattern, values) => {
 };
 
 const isPhoneOk = value => {
+
   if (!value) {
     return false;
   }
@@ -32,6 +33,9 @@ const isPhoneOk = value => {
   }
   if (value.length == 11 && value.startsWith('33')) {
     return true;
+  }
+  if (value.match(/^(33|0)\d{9}$/)) {
+    return true
   }
   return false;
 };
