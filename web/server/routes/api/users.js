@@ -287,13 +287,8 @@ router.put('/profile/billingAddress', passport.authenticate('jwt', {session: fal
       user.billing_address.zip_code = req.body.zip_code;
       user.billing_address.city = req.body.city;
       user.billing_address.country = req.body.country;
-
-
-      user.billing_address.gps = {};
-      user.billing_address.gps.lat = req.body.lat;
-      user.billing_address.gps.lng = req.body.lng;
-
-
+      user.billing_address.gps.lat = req.body.gps.lat;
+      user.billing_address.gps.lng = req.body.gps.lng;
       user.save().then(user => res.json(user)).catch(err => console.error(err));
 
     });
@@ -946,7 +941,6 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
           diplomes: req.body.diplomes,
           school: req.body.school,
           job: req.body.job,
-          languages: req.body.languages,
         }, {new: true})
           .then(user => {
             res.json({success: 'Profile updated !'});
