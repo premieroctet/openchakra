@@ -79,26 +79,6 @@ router.get('/allCount', (req, res) => {
     });
 });
 
-// @Route POST /myAlfred/api/service/all/search
-// Search service by label or description
-router.post('/all/search', (req, res) => {
-  const dat = '"' + req.body.label + '"';
-  //const data = dat.replace(new RegExp(/[eéèêaàoôuù]/g), "[eéèêaàoôuù]");
-  Service.find({$text: {$search: dat}})
-    .populate('category')
-    .sort({label: 1})
-    .then(service => {
-      if (typeof service !== 'undefined' && service.length > 0) {
-
-        res.json(service);
-      } else {
-        return res.status(400).json({msg: 'No service found'});
-      }
-
-    })
-    .catch(err => res.status(404).json({service: 'Error'}));
-});
-
 // @Route GET /myAlfred/api/service/random/home
 // View random service homepage
 router.get('/random/home', (req, res) => {
