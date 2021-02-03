@@ -8,6 +8,7 @@ import DisplayPanel from '~components/inspector/panels/styles/DisplayPanel'
 import TextPanel from '~components/inspector/panels/styles/TextPanel'
 import AccordionContainer from '~components/inspector/AccordionContainer'
 import ColorsControl from '~components/inspector/controls/ColorsControl'
+import GradientControl from '~components/inspector/controls/GradientControl'
 import EffectsPanel from './styles/EffectsPanel'
 import ChildrenInspector from '~components/inspector/ChildrenInspector'
 import ParentInspector from '~components/inspector/ParentInspector'
@@ -66,6 +67,30 @@ const StylesPanel: React.FC<Props> = ({
         withFullColor
         label="Color"
         name="backgroundColor"
+        enableHues
+      />
+      <GradientControl
+        withFullColor
+        label="Gradient"
+        name="bgGradient"
+        options={[
+          'to-t',
+          'to-tr',
+          'to-r',
+          'to-br',
+          'to-b',
+          'to-bl',
+          'to-l',
+          'to-tl',
+          'to-t',
+          'to-tr',
+          'to-r',
+          'to-br',
+          'to-b',
+          'to-bl',
+          'to-l',
+          'to-tl',
+        ]}
         enableHues
       />
     </AccordionContainer>
