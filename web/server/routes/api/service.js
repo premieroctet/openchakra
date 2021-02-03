@@ -97,8 +97,6 @@ router.post('/all/search', (req, res) => {
 
     })
     .catch(err => res.status(404).json({service: 'Error'}));
-
-
 });
 
 // @Route GET /myAlfred/api/service/random/home
@@ -225,7 +223,9 @@ router.get('/keyword/:kw', (req, res) => {
   console.log(`Search service keyword:${kw}`);
   var result = {};
   var keywords = {};
-  const query = createQuery(kw);
+  var query = createQuery(kw)
+  // Exclude private prestations
+  query['private_alfred']=null
   Category.find(query)
     .then(categories => {
         Service.find({$or: [{category: {$in: categories.map(c => c._id)}}, query]})
