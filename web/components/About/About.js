@@ -57,15 +57,13 @@ class About extends React.Component {
       enabledEdition: true
 
     };
-    this.save = this.save.bind(this);
-    this.loadUser = this.loadUser.bind(this)
   }
 
   componentDidMount = () => {
     this.loadUser()
   };
 
-  loadUser() {
+  loadUser = () => {
     setAxiosAuthentication();
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then(res => {
@@ -78,22 +76,23 @@ class About extends React.Component {
         })
       })
       .catch(err => console.error(err))
-  }
+  };
 
   onAddressChanged = result => {
-
     const newAddress = result ?
       {
         city: result.suggestion.city,
         address: result.suggestion.name,
         zip_code: result.suggestion.postcode,
         country: result.suggestion.country,
-        lat: result.suggestion.latlng.lat,
-        lng: result.suggestion.latlng.lng,
+        gps:{
+          lat: result.suggestion.latlng.lat,
+          lng: result.suggestion.latlng.lng,
+        }
       }
       :
       null;
-    this.setState({newAddress: newAddress})
+    this.setState({newAddress: newAddress}, () => this.objectsEqual())
   };
 
   onLanguagesChanged = languages => {
@@ -102,10 +101,10 @@ class About extends React.Component {
 
   save = () => {
     // TODO: handle errors, remove timeout
-    const {newAddress, newLanguages} = this.state;
-    setAxiosAuthentication()
+    const {newAddress, languages} = this.state;
+    setAxiosAuthentication();
     axios.put('/myAlfred/api/users/profile/billingAddress', newAddress);
-    axios.put('/myAlfred/api/users/profile/languages', {languages: newLanguages.map(l => l.value)});
+    axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)});
     this.setState({showEdition: false}, () => setTimeout(this.loadUser, 1000))
   };
 
@@ -113,14 +112,33 @@ class About extends React.Component {
     this.setState({showEdition: false, newLanguages: null, newAddress: null})
   };
 
-  objectsEqual = () => {
-    const o1 = this.state.languages;
-    const o2 = this.state.userLanguages;
 
-    if(Object.keys(o1).length === Object.keys(o2).length && Object.keys(o1).every(p => o1[p] === o2[p])){
-      this.setState({enabledEdition: true})
+  openEdition = () => {
+    const {user}=this.state;
+
+    this.setState({
+      showEdition: true,
+      languages: user.languages.map(l => ({value: l, label: l})),
+      newAddress: user.billing_address
+    }, () => this.objectsEqual())
+  };
+
+  objectsEqual = () => {
+    let o1 = this.state.languages;
+    let o2 = this.state.userLanguages;
+    let o3 = this.state.newAddress ? this.state.newAddress.gps : null;
+    let o4 = this.state.billing_address.gps;
+
+    if(o1 && o1.length !== 0 && o3 !== null){
+      if(o1.join('') === o2.join('') && o3.lat === o4.lat && o3.lng === o4.lng){
+        this.setState({enabledEdition: true})
+      }else if(o1.join('') !== o2.join('') || o3.lat !== o4.lat && o3.lng !== o4.lng){
+        this.setState({enabledEdition: false})
+      }else{
+        this.setState({enabledEdition: false})
+      }
     }else{
-      this.setState({enabledEdition: false})
+      this.setState({enabledEdition: true})
     }
   };
 
@@ -204,19 +222,10 @@ class About extends React.Component {
   )
   };
 
-  openEdition = () => {
-    const {user}=this.state;
-
-    this.setState({
-      showEdition: true,
-      languages: user.languages.map(l => ({value: l, label: l})),
-      newAddress: user.billing_address
-    })
-  };
 
   render() {
     const {displayTitlePicture, classes} = this.props;
-    const {user, newLanguages} = this.state;
+    const {user} = this.state;
     var place= user ? user.billing_address.city : "Pas d'adresse";
 
     const editable = isEditableUser(user);
@@ -231,7 +240,7 @@ class About extends React.Component {
         },
         {
           label: 'Langues',
-          summary: user.languages.join(',') || 'Français',
+          summary: user.languages.join(', ') || 'Français',
           IconName:  user.firstname ? <ChatBubbleOutlineOutlinedIcon fontSize="large"/> : ''
         },
         {
