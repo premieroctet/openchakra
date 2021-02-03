@@ -156,8 +156,9 @@ class About extends React.Component {
   };
 
   modalEditDialog = (classes) =>{
-    const {newAddress, showEdition, languages, enabledEdition}=this.state;
-    const placeholder = newAddress ? `${newAddress.city}, ${newAddress.country}` : 'Entrez votre adresse';
+    const {newAddress, showEdition, languages, enabledEdition, user}=this.state;
+    const address = newAddress || (user ? user.billing_address : null)
+    const placeholder =  address ? `${address.city}, ${address.country}` : 'Entrez votre adresse';
 
     return(
       <Dialog
