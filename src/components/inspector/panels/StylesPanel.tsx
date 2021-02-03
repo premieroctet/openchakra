@@ -74,22 +74,14 @@ const StylesPanel: React.FC<Props> = ({
         label="Gradient"
         name="bgGradient"
         options={[
-          'to-t',
-          'to-tr',
-          'to-r',
-          'to-br',
-          'to-b',
-          'to-bl',
-          'to-l',
-          'to-tl',
-          'to-t',
-          'to-tr',
-          'to-r',
-          'to-br',
-          'to-b',
-          'to-bl',
-          'to-l',
-          'to-tl',
+          'to top',
+          'to top right',
+          'to top left',
+          'to bottom right',
+          'to bottom',
+          'to bottom left',
+          'to right',
+          'to left',
         ]}
         enableHues
       />

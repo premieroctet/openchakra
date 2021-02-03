@@ -27,17 +27,16 @@ import FormControl from './FormControl'
 import { useForm } from '~hooks/useForm'
 import omit from 'lodash/omit'
 import ColorPicker from 'coloreact'
-import usePropsSelector from '~hooks/usePropsSelector'
 
 export type Gradient =
-  | 'to-t'
-  | 'to-tr'
-  | 'to-r'
-  | 'to-br'
-  | 'to-b'
-  | 'to-bl'
-  | 'to-l'
-  | 'to-tl'
+  | 'to top'
+  | 'to top right'
+  | 'to right'
+  | 'to bottom right'
+  | 'to bottom'
+  | 'to bottom left'
+  | 'to left'
+  | 'to top left'
 type GradientControlPropsType = {
   name: string
   label: string | ReactNode
@@ -50,9 +49,7 @@ const GradientControl = (props: GradientControlPropsType) => {
   const { setValue, setValueFromEvent } = useForm()
   const [hue, setHue] = useState(500)
   const [gradientColor, setGradientColor] = useState(['green.200', 'blue.500'])
-  const [directionValue, setDirectionValue] = useState('to-r')
-
-  const value = usePropsSelector(props.name)
+  const [directionValue, setDirectionValue] = useState('to right')
 
   const theme = useTheme()
   const choices = props.options
@@ -64,17 +61,17 @@ const GradientControl = (props: GradientControlPropsType) => {
     'white',
   ])
 
-  let propsIconButton: any = { bg: value }
-  if (value && themeColors[value]) {
-    propsIconButton = { colorScheme: value }
-  }
-
-  useEffect(() => {
+  const updateValue = () => {
     setValue(
       props.name,
       `linear(${directionValue}, ${gradientColor.toString()})`,
     )
-  }, [directionValue, gradientColor, props.name, setValue])
+  }
+
+  useEffect(() => {
+    updateValue()
+    //eslint-disable-next-line
+  }, [directionValue, gradientColor])
 
   const updateGradient = (value: string, index: number) => {
     let colorCopy = [...gradientColor]
@@ -145,7 +142,7 @@ const GradientControl = (props: GradientControlPropsType) => {
         </Select>
       </FormControl>
       {gradientColor.map((e, i) => (
-        <FormControl label="">
+        <FormControl label="" key={i}>
           <Popover placement="bottom">
             <PopoverTrigger>
               <IconButton
@@ -155,7 +152,8 @@ const GradientControl = (props: GradientControlPropsType) => {
                 isRound
                 aria-label="Color"
                 size="xs"
-                {...propsIconButton}
+                colorScheme={e}
+                bg={e}
               />
             </PopoverTrigger>
             <Portal>
@@ -204,7 +202,7 @@ const GradientControl = (props: GradientControlPropsType) => {
         <Button
           colorScheme="teal"
           size="xs"
-          onClick={() => setGradientColor([...gradientColor, 'white.500'])}
+          onClick={() => setGradientColor([...gradientColor, 'whiteAlpha.500'])}
         >
           + Add
         </Button>
