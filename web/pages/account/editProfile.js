@@ -25,8 +25,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
-
-import {LANGUAGES} from "../../utils/consts";
 const {MAX_DESCRIPTION_LENGTH} = require('../../utils/consts');
 
 const {isPhoneOk} = require('../../utils/sms');
@@ -44,7 +42,6 @@ class editProfile extends React.Component {
       user: {},
       phone: '',
       languages: [],
-      selectedLanguages: null,
       birthday: null,
       dpDate: moment().toDate(),
       ipDate: moment().format(momentDateFormat),
@@ -79,10 +76,6 @@ class editProfile extends React.Component {
           birthday: user.birthday,
           user: user,
           phone: user.phone,
-          selectedLanguages: user.languages.map(b => ({
-            label: b,
-            value: b,
-          })),
         });
       })
       .catch(err => {
@@ -253,23 +246,12 @@ class editProfile extends React.Component {
     this.setState({birthday: e.target.value});
   };
 
-  handleChangeLanguages = selectedLanguages => {
-    this.setState({selectedLanguages});
-  };
-
   onSubmit = e => {
-    let arrayLanguages = [];
-    if (this.state.selectedLanguages != null) {
-      this.state.selectedLanguages.forEach(w => {
-        arrayLanguages.push(w.value);
-      });
-    }
-    const languages = arrayLanguages;
     const birthday = this.state.birthday;
     const {email, name, firstname, description, gender, phone, job, diplomes, school} = this.state.user;
 
     axios.put('/myAlfred/api/users/profile/editProfile', {
-      email, name, firstname, birthday, description, gender, phone, job, diplomes, school, languages,
+      email, name, firstname, birthday, description, gender, phone, job, diplomes, school,
     })
       .then(res => {
         this.setState({errors: {}, open: true}, () => this.loadUser());
@@ -463,29 +445,6 @@ class editProfile extends React.Component {
         </Grid>
         <Grid>
           <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
-        </Grid>
-        <Grid>
-          <Grid>
-            <h2>Langues</h2>
-          </Grid>
-          <Grid container style={{marginTop: '10vh'}}>
-            <Grid item xs={12}>
-              <MultipleSelect
-                value={this.state.selectedLanguages}
-                onChange={this.handleChangeLanguages}
-                options={LANGUAGES}
-                styles={{
-                  menu: provided => ({...provided, zIndex: 2}),
-                }}
-                isMulti
-                isSearchable
-                closeMenuOnSelect={false}
-                placeholder={'Sélectionnez vos langues'}
-                noOptionsMessage={() => 'Plus d\'options disponibles'}
-
-              />
-            </Grid>
-          </Grid>
         </Grid>
         <Grid style={{marginBottom: '12vh'}}>
           <Grid style={{display: 'flex', justifyContent: 'flex-end', marginTop: '5vh'}}>

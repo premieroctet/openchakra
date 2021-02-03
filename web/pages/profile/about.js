@@ -1,3 +1,5 @@
+import SnackBar from "../../components/SnackBar/SnackBar";
+
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
@@ -54,28 +56,42 @@ class ProfileAbout extends React.Component {
     this.state={
       user: props.user,
       alfred:null,
-      newAddress: null,
-      newLanguages: null,
       showEdition: false,
+      enabledEdition: true,
+      languages: {},
+      billing_address: {},
+      newAddress: null,
+      userLanguages: [],
+      newLanguages: null,
+      open: false
     }
 
   }
+  componentDidMount = () => {
+    this.loadUser();
+  };
 
   openEdition = () => {
     const {alfred}=this.state;
 
     this.setState({
       showEdition: true,
-      newLanguages: alfred.languages.map(l => ({value: l, label: l})),
+      languages: alfred.languages.map(l => ({value: l, label: l})),
       newAddress: alfred.billing_address
-    })
+    }, () => this.objectsEqual())
   };
 
-  componentDidMount = () => {
-    setAxiosAuthentication()
+  loadUser = () => {
+    this.setState({showEdition: false});
+    setAxiosAuthentication();
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then( res => {
-        this.setState( { alfred: res.data})
+        const user = res.data;
+        this.setState( {
+          alfred: user,
+          userLanguages:  user.languages.map(l => ({value: l, label: l})),
+          billing_address: user.billing_address
+        })
       })
       .catch (err => console.error(err))
   };
@@ -84,19 +100,44 @@ class ProfileAbout extends React.Component {
     this.setState({showEdition: false, newLanguages: null, newAddress: null})
   };
 
+  objectsEqual = () => {
+    let o1 = this.state.languages;
+    let o2 = this.state.userLanguages;
+    let o3 = this.state.newAddress ? this.state.newAddress.gps : null;
+    let o4 = this.state.billing_address.gps;
+
+    if(o1 && o1.length !== 0 && o3 !== null){
+      if(o1.join('') === o2.join('') && o3.lat === o4.lat && o3.lng === o4.lng){
+        this.setState({enabledEdition: true})
+      }else if(o1.join('') !== o2.join('') || o3.lat !== o4.lat && o3.lng !== o4.lng){
+        this.setState({enabledEdition: false})
+      }else{
+        this.setState({enabledEdition: false})
+      }
+    }else{
+      this.setState({enabledEdition: true})
+    }
+  };
 
   save = () => {
-    // TODO: handle errors, remove timeout
-    const {newAddress, newLanguages}=this.state;
-    setAxiosAuthentication()
-    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress);
-    axios.put('/myAlfred/api/users/profile/languages', {languages: newLanguages.map( l => l.value)});
-    this.setState({showEdition: false}, () => setTimeout(this.componentDidMount, 1000))
+    const {newAddress, languages} = this.state;
+    setAxiosAuthentication();
+    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then( res =>{
+        axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then( res =>{
+            this.setState({open: true}, () => setTimeout(this.loadUser, 1000))
+          }
+        ).catch(err => {
+          console.error(err)
+        })
+      }
+    ).catch( err => {
+        console.error(err)
+      }
+    );
   };
 
   modalEditDialog = (classes) =>{
-    const {newAddress, newLanguages, showEdition}=this.state;
-    const enabled = newLanguages === '' || newAddress === null ? true : false;
+    const {newAddress, showEdition, enabledEdition, languages}=this.state;
     const placeholder = newAddress ? `${newAddress.city}, ${newAddress.country}` : 'Entrez votre adresse';
 
     return(
@@ -105,6 +146,7 @@ class ProfileAbout extends React.Component {
         onClose={this.closeEditDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        classes={{root: classes.mydialogContainer}}
       >
         <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog}/>
         <DialogContent>
@@ -138,7 +180,7 @@ class ProfileAbout extends React.Component {
               <Grid item xs={12} style={{marginTop: '3vh', marginBottom: '3vh'}}>
                 <MultipleSelect
                   key={moment()}
-                  value={newLanguages}
+                  value={languages}
                   onChange={this.onLanguagesChanged}
                   options={LANGUAGES}
                   styles={{
@@ -162,7 +204,7 @@ class ProfileAbout extends React.Component {
                   variant="contained"
                   color={'primary'}
                   classes={{root: classes.buttonSave}}
-                  disabled={enabled}
+                  disabled={enabledEdition}
                 >
                   Modifier
                 </Button>
@@ -170,6 +212,7 @@ class ProfileAbout extends React.Component {
             </Grid>
           </Grid>
         </DialogContent>
+        <SnackBar severity={"success"} message={'Profil modifié avec succès'} open={this.state.open} closeSnackBar={() => this.setState({open: false})}/>
       </Dialog>
     )
   };
@@ -182,16 +225,18 @@ class ProfileAbout extends React.Component {
         address: result.suggestion.name,
         zip_code: result.suggestion.postcode,
         country: result.suggestion.country,
-        lat: result.suggestion.latlng.lat,
-        lng: result.suggestion.latlng.lng,
+        gps:{
+          lat: result.suggestion.latlng.lat,
+          lng: result.suggestion.latlng.lng,
+        }
       }
       :
       null;
-    this.setState({newAddress: newAddress})
+    this.setState({newAddress: newAddress}, () => this.objectsEqual())
   };
 
   onLanguagesChanged = languages => {
-    this.setState({newLanguages: languages})
+    this.setState({languages: languages}, () => this.objectsEqual())
   };
 
   static getInitialProps({query: {user, indexAccount}}) {
@@ -237,7 +282,7 @@ class ProfileAbout extends React.Component {
               </Grid>
               <Grid style={{margin: 3}}/>
               <Grid>
-                <Typography style={{color:'black'}}>{alfred ? alfred.languages.join(',') || 'Français' : null}</Typography>
+                <Typography style={{color:'black'}}>{alfred ? alfred.languages.join(', ') : null}</Typography>
               </Grid>
             </Grid>
             {

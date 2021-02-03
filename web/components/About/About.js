@@ -1,3 +1,5 @@
+import SnackBar from "../SnackBar/SnackBar";
+
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
@@ -51,6 +53,8 @@ class About extends React.Component {
       user: null,
       newAddress: null,
       userLanguages: [],
+      newLanguages: null,
+      open: false,
       showEdition: false,
       languages: {},
       billing_address: {},
@@ -64,6 +68,7 @@ class About extends React.Component {
   };
 
   loadUser = () => {
+    this.setState({showEdition: false});
     setAxiosAuthentication();
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then(res => {
@@ -100,12 +105,20 @@ class About extends React.Component {
   };
 
   save = () => {
-    // TODO: handle errors, remove timeout
     const {newAddress, languages} = this.state;
     setAxiosAuthentication();
-    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress);
-    axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)});
-    this.setState({showEdition: false}, () => setTimeout(this.loadUser, 1000))
+    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then( res =>{
+      axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then( res =>{
+        this.setState({open: true}, () => setTimeout(this.loadUser, 1000))
+      }
+      ).catch(err => {
+        console.error(err)
+      })
+    }
+    ).catch( err => {
+      console.error(err)
+      }
+    );
   };
 
   closeEditDialog = () => {
@@ -143,7 +156,7 @@ class About extends React.Component {
   };
 
   modalEditDialog = (classes) =>{
-    const {newLabel, newPicture, user, newAddress, userLanguages, showEdition, languages, billing_address, enabledEdition}=this.state;
+    const {newAddress, showEdition, languages, enabledEdition}=this.state;
     const placeholder = newAddress ? `${newAddress.city}, ${newAddress.country}` : 'Entrez votre adresse';
 
     return(
@@ -218,6 +231,7 @@ class About extends React.Component {
             </Grid>
           </Grid>
         </DialogContent>
+        <SnackBar severity={"success"} message={'Profil modifié avec succès'} open={this.state.open} closeSnackBar={() => this.setState({open: false})}/>
       </Dialog>
   )
   };
@@ -240,7 +254,7 @@ class About extends React.Component {
         },
         {
           label: 'Langues',
-          summary: user.languages.join(', ') || 'Français',
+          summary: user.languages.join(', ') || null,
           IconName:  user.firstname ? <ChatBubbleOutlineOutlinedIcon fontSize="large"/> : ''
         },
         {

@@ -279,7 +279,7 @@ router.post('/validateAccount', (req, res) => {
 // Set the main address in the profile
 // @Access private
 router.put('/profile/billingAddress', passport.authenticate('jwt', {session: false}), (req, res) => {
-  
+
   User.findById(req.user.id)
     .then(user => {
       user.billing_address = {};
@@ -941,7 +941,6 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
           diplomes: req.body.diplomes,
           school: req.body.school,
           job: req.body.job,
-          languages: req.body.languages,
         }, {new: true})
           .then(user => {
             res.json({success: 'Profile updated !'});
