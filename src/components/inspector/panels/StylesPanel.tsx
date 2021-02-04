@@ -69,24 +69,22 @@ const StylesPanel: React.FC<Props> = ({
         name="backgroundColor"
         enableHues
       />
-      {!isRoot && (
-        <GradientControl
-          withFullColor
-          label="Gradient"
-          name="bgGradient"
-          options={[
-            'to top',
-            'to top right',
-            'to top left',
-            'to bottom right',
-            'to bottom',
-            'to bottom left',
-            'to right',
-            'to left',
-          ]}
-          enableHues
-        />
-      )}
+      <GradientControl
+        withFullColor
+        label="Gradient"
+        name="bgGradient"
+        options={[
+          'to top',
+          'to top right',
+          'to top left',
+          'to bottom right',
+          'to bottom',
+          'to bottom left',
+          'to right',
+          'to left',
+        ]}
+        enableHues
+      />
     </AccordionContainer>
 
     {!isRoot && (

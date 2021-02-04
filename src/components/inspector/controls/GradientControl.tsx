@@ -51,6 +51,13 @@ const GradientControl = (props: GradientControlPropsType) => {
     setGradientColor(colorCopy)
   }
 
+  const removeGradient = async (index: number) => {
+    let colorCopy = [...gradientColor]
+    colorCopy.splice(index, 1)
+    console.log(colorCopy)
+    setGradientColor(colorCopy)
+  }
+
   return (
     <>
       <FormControl label={props.label}>
@@ -85,8 +92,21 @@ const GradientControl = (props: GradientControlPropsType) => {
           ))}
         </Select>
       </FormControl>
+
       {gradientColor.map((e, i) => (
-        <FormControl label="" key={i}>
+        <Box textAlign="right" mt={3} key={i}>
+          {i >= 2 && (
+            <Button
+              colorScheme="teal"
+              marginRight={2}
+              size="xs"
+              fontWeight="bold"
+              onClick={() => removeGradient(i)}
+            >
+              -
+            </Button>
+          )}
+
           <ColorPickerControl
             withFullColor={props.withFullColor}
             name={props.name}
@@ -95,9 +115,10 @@ const GradientControl = (props: GradientControlPropsType) => {
             gradientColor={e}
             updateGradient={updateGradient}
           />
-        </FormControl>
+        </Box>
       ))}
-      <Box textAlign="right">
+
+      <Box textAlign="right" mt={3}>
         <Button
           colorScheme="teal"
           size="xs"
