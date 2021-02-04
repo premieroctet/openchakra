@@ -4,12 +4,8 @@ import {
   PopoverTrigger,
   PopoverContent,
   PopoverArrow,
-  Grid,
   PopoverBody,
   IconButton,
-  SliderTrack,
-  SliderFilledTrack,
-  SliderThumb,
   Box,
   Tabs,
   TabList,
@@ -18,15 +14,16 @@ import {
   TabPanel,
   Input,
   useTheme,
-  Slider,
   Portal,
   Select,
   Button,
+  Switch,
 } from '@chakra-ui/react'
 import FormControl from './FormControl'
 import { useForm } from '~hooks/useForm'
 import omit from 'lodash/omit'
 import ColorPicker from 'coloreact'
+import HuesPicker from './HuesPickerControl'
 
 export type Gradient =
   | 'to top'
@@ -47,9 +44,9 @@ type GradientControlPropsType = {
 
 const GradientControl = (props: GradientControlPropsType) => {
   const { setValue, setValueFromEvent } = useForm()
-  const [hue, setHue] = useState(500)
   const [gradientColor, setGradientColor] = useState(['green.200', 'blue.500'])
   const [directionValue, setDirectionValue] = useState('to right')
+  const [activate, setActivate] = useState(false)
 
   const theme = useTheme()
   const choices = props.options
@@ -62,79 +59,51 @@ const GradientControl = (props: GradientControlPropsType) => {
   ])
 
   const updateValue = () => {
-    setValue(
-      props.name,
-      `linear(${directionValue}, ${gradientColor.toString()})`,
-    )
+    if (activate) {
+      setValue(
+        props.name,
+        `linear(${directionValue}, ${gradientColor.toString()})`,
+      )
+    }
   }
 
   useEffect(() => {
     updateValue()
     //eslint-disable-next-line
-  }, [directionValue, gradientColor])
+  }, [directionValue, gradientColor, activate])
 
-  const updateGradient = (value: string, index: number) => {
+  const updateGradient = async (value: string, index: number) => {
     let colorCopy = [...gradientColor]
     colorCopy[index] = value
     setGradientColor(colorCopy)
   }
 
-  const huesPicker = (i: number) => (
-    <>
-      <Grid mb={2} templateColumns="repeat(5, 1fr)" gap={0}>
-        {Object.keys(themeColors).map(colorName => (
-          <Box
-            border={colorName.includes('white') ? '1px solid lightgrey' : ''}
-            key={colorName}
-            _hover={{ boxShadow: 'lg' }}
-            cursor="pointer"
-            bg={`${colorName}.${props.enableHues ? hue : 500}`}
-            onClick={() => {
-              updateGradient(`${colorName}.${hue}`, i)
-            }}
-            mt={2}
-            borderRadius="full"
-            height="30px"
-            width="30px"
-          />
-        ))}
-      </Grid>
-
-      {props.enableHues && (
-        <>
-          <Slider
-            onChange={value => {
-              value = value === 0 ? 50 : value
-              setHue(value)
-            }}
-            min={0}
-            max={900}
-            step={100}
-            value={hue}
-          >
-            <SliderTrack>
-              <SliderFilledTrack />
-            </SliderTrack>
-            <SliderThumb boxSize={8}>
-              <Box borderRadius="full" fontSize="xs">
-                {hue}
-              </Box>
-            </SliderThumb>
-          </Slider>
-        </>
-      )}
-    </>
-  )
-
   return (
     <>
       <FormControl label={props.label}>
+        <Switch
+          name="Activate Gradient"
+          id="gradient"
+          size="sm"
+          isChecked={activate || false}
+          onChange={() => setActivate(!activate)}
+        />
+      </FormControl>
+      <FormControl label="">
         <Select
           size="sm"
           id={directionValue || 'direction'}
           name={directionValue || 'direction'}
           value={directionValue || ''}
-          onChange={value => setDirectionValue(value.target.value)}
+          onChange={value => {
+            setDirectionValue(value.target.value)
+            if (activate) {
+              setValue(
+                props.name,
+                `linear(${directionValue}, ${gradientColor.toString()})`,
+              )
+            }
+          }}
         >
           {choices?.map((choice: string) => (
             <option key={choice}>{choice}</option>
@@ -167,15 +136,25 @@ const GradientControl = (props: GradientControlPropsType) => {
                         <Tab>All</Tab>
                       </TabList>
                       <TabPanels mt={4}>
-                        <TabPanel p={0}>{huesPicker(i)}</TabPanel>
+                        <TabPanel p={0}>
+                          <HuesPicker
+                            name={props.name}
+                            themeColors={themeColors}
+                            enableHues
+                            setValue={setValue}
+                            gradient={true}
+                            index={i}
+                            updateGradient={updateGradient}
+                          />
+                        </TabPanel>
 
                         <TabPanel p={0}>
                           <Box position="relative" height="150px">
                             <ColorPicker
                               color={e}
-                              onChange={(color: any) => {
+                              onChange={(color: any) =>
                                 updateGradient(`#${color.hex}`, i)
-                              }}
+                              }
                             />
                             );
                           </Box>
@@ -183,7 +162,15 @@ const GradientControl = (props: GradientControlPropsType) => {
                       </TabPanels>
                     </Tabs>
                   ) : (
-                    huesPicker(i)
+                    <HuesPicker
+                      name={props.name}
+                      themeColors={themeColors}
+                      enableHues
+                      setValue={setValue}
+                      gradient={true}
+                      index={i}
+                      updateGradient={updateGradient}
+                    />
                   )}
                 </PopoverBody>
               </PopoverContent>
