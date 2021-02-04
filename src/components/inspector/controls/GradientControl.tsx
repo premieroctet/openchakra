@@ -3,6 +3,7 @@ import { Box, Select, Button, Switch } from '@chakra-ui/react'
 import FormControl from './FormControl'
 import { useForm } from '~hooks/useForm'
 import ColorPickerControl from './ColorPickerControl'
+import usePropsSelector from '~hooks/usePropsSelector'
 
 export type Gradient =
   | 'to top'
@@ -26,6 +27,7 @@ const GradientControl = (props: GradientControlPropsType) => {
   const [gradientColor, setGradientColor] = useState(['green.200', 'blue.500'])
   const [directionValue, setDirectionValue] = useState('to right')
   const [activate, setActivate] = useState(false)
+  const gradient = usePropsSelector(props.name)
 
   const choices = props.options
 
@@ -56,8 +58,10 @@ const GradientControl = (props: GradientControlPropsType) => {
           name="Activate Gradient"
           id="gradient"
           size="sm"
-          isChecked={activate || false}
-          onChange={() => setActivate(!activate)}
+          isChecked={gradient || false}
+          onChange={() =>
+            setValue(props.name, gradient ? null : setActivate(!activate))
+          }
         />
       </FormControl>
       <FormControl label="">
