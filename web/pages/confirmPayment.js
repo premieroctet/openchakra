@@ -9,8 +9,8 @@ import {withStyles} from '@material-ui/core/styles';
 import styles from '../static/css/pages/confirmPayment/confirmPayment';
 
 import Stepper from "../components/Stepper/Stepper";
-import AddressAndFacturation from "../components/Payement/AddressAndFacturation/AddressAndFacturation";
-import PaymentChoice from "../components/Payement/PaymentChoice/PaymentChoice";
+import AddressAndFacturation from "../components/Payment/AddressAndFacturation/AddressAndFacturation";
+import PaymentChoice from "../components/Payment/PaymentChoice/PaymentChoice";
 import LayoutPayment from "../hoc/Layout/LayoutPayment";
 
 moment.locale('fr');

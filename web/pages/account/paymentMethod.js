@@ -28,7 +28,7 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
-import PaymentCard from "../../components/Payement/PaymentCard/PaymentCard";
+import PaymentCard from "../../components/Payment/PaymentCard/PaymentCard";
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
