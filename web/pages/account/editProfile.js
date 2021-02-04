@@ -67,6 +67,7 @@ class editProfile extends React.Component {
       checkPhoneMessage: '',
       checkPhoneSeverity: '',
       checkPhoneState: false,
+      isPhoneSaved: false
     };
   }
 
@@ -108,7 +109,7 @@ class editProfile extends React.Component {
 
   onChange = e => {
     const state = this.state.user;
-    var {name, value} = e.target;
+    let {name, value} = e.target;
 
     if (name === 'phone') {
       const phoneOk = isPhoneOk(value);
@@ -136,19 +137,14 @@ class editProfile extends React.Component {
     }
   };
   onChangePhone = event => {
-    // const state = this.state.user;
     let value = event.target.value;
-    console.log(value);
     if (value.match(/[a-zA-Z^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤é¨'èùçà]/) || value.length > 11) {
     } else {
-
       const phoneOk = isPhoneOk(value);
       if (phoneOk && value.startsWith('0')) {
         value = '33' + value.substring(1);
-
-        // state[event.target.name] = value;
-        this.setState({phone: value});
       }
+      this.setState({phone: value});
     }
   };
 
@@ -293,11 +289,10 @@ class editProfile extends React.Component {
   };
 
   content = (classes) => {
-    const {errors, user, phone} = this.state;
+    const {errors, user, phone, isPhoneSaved} = this.state;
 
-    var birthday = moment(this.state.birthday).format('YYYY-MM-DD').toString();
-    var today = moment(new Date()).format('YYYY-MM-DD').toString();
-
+    const birthday = moment(this.state.birthday).format('YYYY-MM-DD').toString();
+    const today = moment(new Date()).format('YYYY-MM-DD').toString();
     return (
       <Grid>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
@@ -488,7 +483,7 @@ class editProfile extends React.Component {
                 onChange={this.handleChangeLanguages}
                 options={options}
                 styles={{
-                  menu: provided => ({...provgided, zIndex: 2}),
+                  menu: provided => ({...provided, zIndex: 2}),
                 }}
                 isMulti
                 isSearchable
@@ -507,7 +502,7 @@ class editProfile extends React.Component {
               variant="contained"
               color="primary"
               classes={{root: classes.button}}
-              disabled={user.firstname === "" || user.name === "" || user.email === "" || user.phone === ""}
+              disabled={user.state === "" || user.name === "" || user.email === "" || (!isPhoneOk(phone))}
             >
               Enregistrer
             </Button>
