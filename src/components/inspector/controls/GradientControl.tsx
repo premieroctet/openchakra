@@ -1,29 +1,8 @@
 import React, { ReactNode, useState, memo, useEffect } from 'react'
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverArrow,
-  PopoverBody,
-  IconButton,
-  Box,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanels,
-  TabPanel,
-  Input,
-  useTheme,
-  Portal,
-  Select,
-  Button,
-  Switch,
-} from '@chakra-ui/react'
+import { Box, Select, Button, Switch } from '@chakra-ui/react'
 import FormControl from './FormControl'
 import { useForm } from '~hooks/useForm'
-import omit from 'lodash/omit'
-import ColorPicker from 'coloreact'
-import HuesPicker from './HuesPickerControl'
+import ColorPickerControl from './ColorPickerControl'
 
 export type Gradient =
   | 'to top'
@@ -43,20 +22,12 @@ type GradientControlPropsType = {
 }
 
 const GradientControl = (props: GradientControlPropsType) => {
-  const { setValue, setValueFromEvent } = useForm()
+  const { setValue } = useForm()
   const [gradientColor, setGradientColor] = useState(['green.200', 'blue.500'])
   const [directionValue, setDirectionValue] = useState('to right')
   const [activate, setActivate] = useState(false)
 
-  const theme = useTheme()
   const choices = props.options
-
-  const themeColors: any = omit(theme.colors, [
-    'transparent',
-    'current',
-    'black',
-    'white',
-  ])
 
   const updateValue = () => {
     if (activate) {
@@ -112,76 +83,13 @@ const GradientControl = (props: GradientControlPropsType) => {
       </FormControl>
       {gradientColor.map((e, i) => (
         <FormControl label="" key={i}>
-          <Popover placement="bottom">
-            <PopoverTrigger>
-              <IconButton
-                mr={2}
-                boxShadow="md"
-                border={e ? 'none' : '2px solid grey'}
-                isRound
-                aria-label="Color"
-                size="xs"
-                colorScheme={e}
-                bg={e}
-              />
-            </PopoverTrigger>
-            <Portal>
-              <PopoverContent width="200px">
-                <PopoverArrow />
-                <PopoverBody>
-                  {props.withFullColor ? (
-                    <Tabs size="sm" variant="soft-rounded" colorScheme="green">
-                      <TabList>
-                        <Tab>Theme</Tab>
-                        <Tab>All</Tab>
-                      </TabList>
-                      <TabPanels mt={4}>
-                        <TabPanel p={0}>
-                          <HuesPicker
-                            name={props.name}
-                            themeColors={themeColors}
-                            enableHues
-                            setValue={setValue}
-                            gradient={true}
-                            index={i}
-                            updateGradient={updateGradient}
-                          />
-                        </TabPanel>
-
-                        <TabPanel p={0}>
-                          <Box position="relative" height="150px">
-                            <ColorPicker
-                              color={e}
-                              onChange={(color: any) =>
-                                updateGradient(`#${color.hex}`, i)
-                              }
-                            />
-                            );
-                          </Box>
-                        </TabPanel>
-                      </TabPanels>
-                    </Tabs>
-                  ) : (
-                    <HuesPicker
-                      name={props.name}
-                      themeColors={themeColors}
-                      enableHues
-                      setValue={setValue}
-                      gradient={true}
-                      index={i}
-                      updateGradient={updateGradient}
-                    />
-                  )}
-                </PopoverBody>
-              </PopoverContent>
-            </Portal>
-          </Popover>
-          <Input
-            width="100px"
-            size="sm"
+          <ColorPickerControl
+            withFullColor={props.withFullColor}
             name={props.name}
-            onChange={setValueFromEvent}
-            value={e}
+            gradient={true}
+            index={i}
+            gradientColor={e}
+            updateGradient={updateGradient}
           />
         </FormControl>
       ))}

@@ -18,7 +18,7 @@ type HuesPickerPropType = {
   updateGradient?: (value: string, index: number) => void
 }
 
-const HuesPicker = (props: HuesPickerPropType) => {
+const HuesPickerControl = (props: HuesPickerPropType) => {
   const [hue, setHue] = useState(500)
 
   return (
@@ -91,4 +91,4 @@ const HuesPicker = (props: HuesPickerPropType) => {
   )
 }
 
-export default HuesPicker
+export default HuesPickerControl
