@@ -43,6 +43,7 @@ export default async function TakeScreenshot(
     let screenBodyData = {
       id: req.body.id,
       screen,
+      accessToken: req.body.accessToken,
     }
 
     await fetch(baseUrl + '/api/project/updateScreenShot', {

@@ -91,6 +91,7 @@ const ModalComponent = (props: Props) => {
       body: JSON.stringify({
         pageToScreenshot: `/project/preview/${e.id}-${e.projectName}`,
         id: e.id,
+        accessToken: props.accessToken,
       }),
     })
     props.setModalLoading(false)
@@ -157,6 +158,7 @@ const ModalComponent = (props: Props) => {
     const data = {
       id: e.id,
       projectName: text as string,
+      accessToken: props.accessToken,
     }
 
     const response = await fetch('/api/project/updateProjectName', {
