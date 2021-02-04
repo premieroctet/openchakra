@@ -27,6 +27,7 @@ import PropTypes from 'prop-types';
 import HomeIcon from '@material-ui/icons/Home';
 const  {BigList}=require('../../../components/BigList/BigList')
 const moment = require('moment-timezone');
+const util=require('util')
 moment.locale('fr');
 
 const styles = theme => ({
@@ -92,10 +93,17 @@ class all extends React.Component {
     });
   }
 
-  onRowClick = data => {
-    if (data) {
-      window.open(`/dashboard/prestations/view?id=${data._id}`, '_blank')
+  onCellClicked = event => {
+    // window.open(`/dashboard/users/view?id=${data._id}`, '_blank')
+    const {colDef, rowIndex, data, value}=event
+
+    if (colDef.field=='private_alfred') {
+      if (value) {
+        window.open(`/profile/services?user=${value._id}&indexAccount=1`)
+      }
+      return
     }
+    window.open(`/dashboard/prestations/view?id=${data._id}`, '_blank')
   }
 
   onAddClick = () => {
@@ -118,7 +126,7 @@ class all extends React.Component {
          <Grid style={{width: '90%'}}>
            <Paper style={{width: '100%'}}>
              <BigList data={prestation} columnDefs={this.columnDefs} classes={classes}
-                        title={'Prestations'} onRowClick={this.onRowClick} onAddClick={this.onAddClick}/>
+                        title={'Prestations'} onCellClicked={this.onCellClicked} onAddClick={this.onAddClick}/>
            </Paper>
          </Grid>
        </Grid>

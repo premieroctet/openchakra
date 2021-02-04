@@ -2019,10 +2019,11 @@ router.get('/prestation/all', passport.authenticate('jwt', {session: false}), (r
   const admin = decode.is_admin;
 
   if (admin) {
-    Prestation.find({}, 'label private_alfred cesu_eligible')
+    Prestation.find({}, 'label cesu_eligible')
       .sort({s_label: 1, category: 1})
       .populate({path: 'service', select: 'label', populate: {path: 'category', select: 'label'}})
       .populate('filter_presentation', 'label')
+      .populate('private_alfred', 'firstname name')
       .then(prestation => {
         if (!prestation) {
           return res.status(400).json({msg: 'No prestation found'});

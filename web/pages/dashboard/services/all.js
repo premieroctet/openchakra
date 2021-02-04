@@ -87,9 +87,9 @@ class all extends React.Component {
     });
   }
 
-  onRowClick = data => {
-    if (data) {
-      window.open(`/dashboard/services/view?id=${data._id}`, '_blank')
+  onRowClicked = event => {
+    if (event) {
+      window.open(`/dashboard/services/view?id=${event.data._id}`, '_blank')
     }
   }
 
@@ -112,7 +112,7 @@ class all extends React.Component {
             <Grid style={{width: '90%'}}>
               <Paper style={{width: '100%'}}>
                <BigList data={service} columnDefs={this.columnDefs} classes={classes}
-                        title={'Services'} onRowClick={this.onRowClick} onAddClick={this.onAddClick}/>
+                        title={'Services'} onRowClicked={this.onRowClicked} onAddClick={this.onAddClick}/>
               </Paper>
             </Grid>
         </Grid>

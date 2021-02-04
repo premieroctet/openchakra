@@ -50,8 +50,7 @@ const PrestationSchema = new Schema({
   }],
   private_alfred: {
     type: Schema.Types.ObjectId,
-    ref: 'filterPresentation',
-    default: null,
+    ref: 'users',
   },
   s_label: {
     type: String,
