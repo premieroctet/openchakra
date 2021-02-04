@@ -55,9 +55,6 @@ const PrestationSchema = new Schema({
   },
   s_label: {
     type: String,
-    default: function () {
-      return this.label ? normalize(this.label) : '';
-    },
   },
   cesu_eligible: {
     type: Boolean,

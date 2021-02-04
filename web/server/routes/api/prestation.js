@@ -76,28 +76,6 @@ router.get('/:service', (req, res) => {
     .catch(err => res.status(404).json({prestation: 'No prestation found'}));
 });
 
-// @Route POST /myAlfred/api/prestation/all/search
-// Search prestation by label
-router.post('/all/search', (req, res) => {
-  const dat = req.body.label;
-  Prestation.find({$text: {$search: dat}})
-    .populate('service')
-    .populate('category')
-    .sort({label: 1})
-    .then(prestation => {
-      if (typeof prestation !== 'undefined' && prestation.length > 0) {
-
-        res.json(prestation);
-      } else {
-        return res.status(400).json({msg: 'No prestation found'});
-      }
-
-    })
-    .catch(err => res.status(404).json({prestation: 'Error'}));
-
-
-});
-
 // @Route GET /myAlfred/api/prestation/:service/:filter
 // View all prestations per service and filter
 router.get('/:service/:filter', passport.authenticate('jwt', {session: false}), (req, res) => {

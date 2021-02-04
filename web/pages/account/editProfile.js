@@ -25,7 +25,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
-
 const {MAX_DESCRIPTION_LENGTH} = require('../../utils/consts');
 
 const {isPhoneOk} = require('../../utils/sms');
@@ -33,18 +32,6 @@ const moment = require('moment');
 
 registerLocale('fr', fr);
 moment.locale('fr');
-
-const options = [
-  {value: 'Français', label: 'Français'},
-  {value: 'Anglais', label: 'Anglais'},
-  {value: 'Allemand', label: 'Allemand'},
-  {value: 'Espagnol', label: 'Espagnol'},
-  {value: 'Chinois', label: 'Chinois'},
-  {value: 'Arabe', label: 'Arabe'},
-  {value: 'Portugais', label: 'Portugais'},
-  {value: 'Russe', label: 'Russe'},
-  {value: 'Japonais', label: 'Japonais'},
-];
 
 const momentDateFormat = 'dd/MM/yyyy';
 
@@ -55,7 +42,6 @@ class editProfile extends React.Component {
       user: {},
       phone: '',
       languages: [],
-      selectedLanguages: null,
       birthday: null,
       dpDate: moment().toDate(),
       ipDate: moment().format(momentDateFormat),
@@ -90,10 +76,6 @@ class editProfile extends React.Component {
           birthday: user.birthday,
           user: user,
           phone: user.phone,
-          selectedLanguages: user.languages.map(b => ({
-            label: b,
-            value: b,
-          })),
         });
       })
       .catch(err => {
@@ -134,7 +116,6 @@ class editProfile extends React.Component {
       this.setState({user: state});
     }
   };
-
   onChangePhone = event => {
     const state = this.state.user;
     let value = event.target.value;
@@ -265,23 +246,12 @@ class editProfile extends React.Component {
     this.setState({birthday: e.target.value});
   };
 
-  handleChangeLanguages = selectedLanguages => {
-    this.setState({selectedLanguages});
-  };
-
   onSubmit = e => {
-    let arrayLanguages = [];
-    if (this.state.selectedLanguages != null) {
-      this.state.selectedLanguages.forEach(w => {
-        arrayLanguages.push(w.value);
-      });
-    }
-    const languages = arrayLanguages;
     const birthday = this.state.birthday;
     const {email, name, firstname, description, gender, phone, job, diplomes, school} = this.state.user;
 
     axios.put('/myAlfred/api/users/profile/editProfile', {
-      email, name, firstname, birthday, description, gender, phone, job, diplomes, school, languages,
+      email, name, firstname, birthday, description, gender, phone, job, diplomes, school,
     })
       .then(res => {
         this.setState({errors: {}, open: true}, () => this.loadUser());
@@ -415,17 +385,17 @@ class editProfile extends React.Component {
                 label={'Téléphone'}
               />
             </Grid>
-          <Grid item xs={12} lg={6} md={6} sm={6} xl={6} style={{display: 'flex'}}>
-            <Button
-              variant="contained"
-              color={'primary'}
-              onClick={this.submitPhone}
-              disabled={user.phone ? !!(phone === user.phone && user.phone_confirmed || user.phone.length !== 11) : true}
-              classes={{root: classes.buttonCheckPhone}}
-            >
-              {phone === user.phone && user.phone_confirmed === true ? 'Votre téléphone est vérifié' : phone !== user.phone ? 'Enregistrer votre nouveau téléphone' : 'Vérifiez votre téléphone'}
-            </Button>
-          </Grid>
+            <Grid item xs={12} lg={6} md={6} sm={6} xl={6} style={{display: 'flex'}}>
+              <Button
+                variant="contained"
+                color={'primary'}
+                onClick={this.submitPhone}
+                disabled={user.phone ? !!(phone === user.phone && user.phone_confirmed || user.phone.length !== 11) : true}
+                classes={{root: classes.buttonCheckPhone}}
+              >
+                {phone === user.phone && user.phone_confirmed === true ? 'Votre téléphone est vérifié' : phone !== user.phone ? 'Enregistrer votre nouveau téléphone' : 'Vérifiez votre téléphone'}
+              </Button>
+            </Grid>
 
 
           </Grid>
@@ -442,7 +412,7 @@ class editProfile extends React.Component {
               <TextField
                 classes={{root: classes.textField}}
                 value={user.diplomes || ''}
-                onChange={this.onChange}
+                onChange={this.onChangeName}
                 name={'diplomes'}
                 placeholder={'Diplomes'}
                 variant={'outlined'}
@@ -453,7 +423,7 @@ class editProfile extends React.Component {
               <TextField
                 classes={{root: classes.textField}}
                 value={user.school || ''}
-                onChange={this.onChange}
+                onChange={this.onChangeName}
                 name={'school'}
                 placeholder={'Ecoles'}
                 variant={'outlined'}
@@ -464,7 +434,7 @@ class editProfile extends React.Component {
               <TextField
                 classes={{root: classes.textField}}
                 value={user.job || ''}
-                onChange={this.onChange}
+                onChange={this.onChangeName}
                 name={'job'}
                 placeholder={'Emploi'}
                 variant={'outlined'}
@@ -475,29 +445,6 @@ class editProfile extends React.Component {
         </Grid>
         <Grid>
           <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
-        </Grid>
-        <Grid>
-          <Grid>
-            <h2>Langues</h2>
-          </Grid>
-          <Grid container style={{marginTop: '10vh'}}>
-            <Grid item xs={12}>
-              <MultipleSelect
-                value={this.state.selectedLanguages}
-                onChange={this.handleChangeLanguages}
-                options={options}
-                styles={{
-                  menu: provided => ({...provided, zIndex: 2}),
-                }}
-                isMulti
-                isSearchable
-                closeMenuOnSelect={false}
-                placeholder={'Sélectionnez vos langues'}
-                noOptionsMessage={() => 'Plus d\'options disponibles'}
-
-              />
-            </Grid>
-          </Grid>
         </Grid>
         <Grid style={{marginBottom: '12vh'}}>
           <Grid style={{display: 'flex', justifyContent: 'flex-end', marginTop: '5vh'}}>
@@ -521,11 +468,11 @@ class editProfile extends React.Component {
         {
           this.state.errors ?
             Object.keys(this.state.errors).map(res => {
-              let response = JSON.stringify(this.state.errors[res].email);
+              let response = Object.values(this.state.errors[res])
               return (
-                <SnackBar severity={"error"} message={response.replaceAll("\"", "")}
-                          open={this.state.openErrors}
-                          closeSnackBar={() => this.setState({openErrors: true})}/>
+                < SnackBar severity={"error"} message={response}
+                           open={this.state.openErrors}
+                           closeSnackBar={() => this.setState({openErrors: false})}/>
               )
             }) : null
         }

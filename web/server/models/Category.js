@@ -19,9 +19,6 @@ const CategorySchema = new Schema({
   }],
   s_label: {
     type: String,
-    default: function () {
-      return normalize(this.label);
-    },
   },
 });
 

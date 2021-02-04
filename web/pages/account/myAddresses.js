@@ -135,8 +135,10 @@ class myAddresses extends React.Component {
       city: suggestion_current.city,
       zip_code: suggestion_current.postcode,
       country: suggestion_current.country,
-      lat: suggestion_current.latlng.lat,
-      lng: suggestion_current.latlng.lng,
+      gps: {
+        lat: suggestion_current.latlng.lat,
+        lng: suggestion_current.latlng.lng
+      }
     };
     axios
       .put('/myAlfred/api/users/profile/billingAddress', address)

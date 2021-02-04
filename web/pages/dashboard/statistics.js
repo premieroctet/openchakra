@@ -83,7 +83,12 @@ class statistics extends React.Component {
       });
     axios.get('/myAlfred/api/admin/registrations')
       .then((response) => {
-        this.setState( {registrations: response.data} );
+        var registrations=response.data
+        console.log(`Before:${JSON.stringify(registrations)}`)
+        registrations.unshift({x:parseInt(registrations[0].x)-100, y:0})
+        registrations.push({x:parseInt(registrations.slice(-1)[0].x)+100, y:0})
+        console.log(`After:${JSON.stringify(registrations)}`)
+        this.setState( {registrations: registrations} );
       })
       .catch(error => console.error(error))
     axios.get(`/myAlfred/api/admin/ages?alfred=${this.state.alfred_ages}`)
@@ -135,11 +140,15 @@ class statistics extends React.Component {
         { this.state.registrations ?
           <Grid item>
             <Typography style={{fontSize: 30}}>Inscriptions</Typography>
-            <XYPlot width={400} height={250} key={1} >
+            <XYPlot width={400} height={280} key={1} >
               <VerticalGridLines />
               <HorizontalGridLines />
-              <XAxis tickFormat={d => moment(d).format('MM/YY')} />
-              <YAxis />
+              <XAxis
+                tickFormat={d => moment(d).format('MM/YY')}
+                tickLabelAngle={-45}
+                style={{text: {fontSize: 12}}}
+              />
+              <YAxis/>
               <LineSeries data={this.state.registrations} />
             </XYPlot>
           </Grid>

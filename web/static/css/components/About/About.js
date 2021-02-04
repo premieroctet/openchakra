@@ -41,6 +41,8 @@ export default theme => ({
   },
   buttonSave: {
     textTransform: 'initial',
+    color:'white',
+    fontWeight: 'bold',
     width: '100%'
   },
 })
