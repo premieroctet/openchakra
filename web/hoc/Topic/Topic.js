@@ -16,7 +16,7 @@ class Topic extends React.Component {
     }
 
     componentDidMount() {
-      if(Router.pathname === '/confirmPayement'){
+      if(Router.pathname === '/confirmPayment'){
         this.setState({subTitleColor: 'rgba(248, 207, 97, 1)'})
       }
     }

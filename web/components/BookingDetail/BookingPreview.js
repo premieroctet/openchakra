@@ -542,7 +542,7 @@ class BookingPreview extends React.Component {
                           :
                           bookingObj.status === BOOK_STATUS.TO_PAY && currentUser._id === bookingObj.user._id ? (
                             <Grid className={classes.groupButtonsContainer}>
-                              <Button onClick={()=>Router.push(`/confirmPayement?booking_id=${booking_id}`)}
+                              <Button onClick={()=>Router.push(`/confirmPayment?booking_id=${booking_id}`)}
                                 color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Payer ma réservation</Button>
                             </Grid>
                           )
@@ -554,7 +554,7 @@ class BookingPreview extends React.Component {
                           :
                           bookingObj.status === BOOK_STATUS.PREAPPROVED && currentUser._id === bookingObj.user._id ? (
                             <Grid className={classes.groupButtonsContainer}>
-                              <Button onClick={()=>Router.push(`/confirmPayement?booking_id=${booking_id}`)}
+                              <Button onClick={()=>Router.push(`/confirmPayment?booking_id=${booking_id}`)}
                                 color={'primary'} variant={'contained'} style={{color: 'white', textTransform: 'initial'}}>Payer ma réservation</Button>
                             </Grid>
                           )
