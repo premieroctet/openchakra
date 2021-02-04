@@ -50,14 +50,10 @@ const PrestationSchema = new Schema({
   }],
   private_alfred: {
     type: Schema.Types.ObjectId,
-    ref: 'filterPresentation',
-    default: null,
+    ref: 'users',
   },
   s_label: {
     type: String,
-    default: function () {
-      return this.label ? normalize(this.label) : '';
-    },
   },
   cesu_eligible: {
     type: Boolean,

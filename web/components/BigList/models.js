@@ -123,7 +123,11 @@ class PrivateRenderer extends React.Component {
   render = () => {
     return (
       <>
-      { this.props.value ? <LockIcon/> : null }
+      { this.props.value ?
+        <div><LockIcon/>{this.props.value.full_name}</div>
+        :
+        null
+      }
       </>
     )
   }

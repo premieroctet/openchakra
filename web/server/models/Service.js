@@ -52,10 +52,6 @@ const ServiceSchema = new Schema({
   },
   s_label: {
     type: String,
-    default: function () {
-      console.log('Computing');
-      return normalize(this.label);
-    },
   },
 });
 
