@@ -3,8 +3,11 @@ const stripBom = require('strip-bom')
 const ARTICLES = 'le la les un une de des d l à'.split(/ /g);
 
 const normalize = str => {
-  const normalized = str.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-  return normalized;
+  if (str) {
+    const normalized = str.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    return normalized;
+  }
+  return str
 };
 
 // Escapes special characters for regex
