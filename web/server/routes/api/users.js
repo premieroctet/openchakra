@@ -943,14 +943,15 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
           job: req.body.job,
         }, {new: true})
           .then(user => {
-            res.json({success: 'Profile updated !'});
             if(req.user.email !== req.body.email){
               User.findByIdAndUpdate(req.user.id,{
                 is_confirmed: false
             }).then(()=>{
                 sendVerificationMail(user, req);
-                res.json({email: 'Email envoyé !'});
+                res.json({success: 'Profil mise à jour et e-mail envoyé !'});
               }).catch( err => console.error(err))
+            }else{
+              res.json({success: 'Profil mis à jour !'});
             }
           })
           .catch(err => console.error(err));

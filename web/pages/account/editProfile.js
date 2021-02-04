@@ -409,7 +409,7 @@ class editProfile extends React.Component {
                 disabled={user.email ? !!(userEmail === user.email && user.is_confirmed) : true}
                 classes={{root: classes.buttonCheckPhone}}
               >
-                {userEmail === user.email && user.is_confirmed === true ? 'Votre email est vérifié' : userEmail !== user.email ? 'Enregistrer votre nouvel email' : 'Vérifiez votre email'}
+                {userEmail === user.email && user.is_confirmed === true ? 'Votre email est vérifié' : userEmail !== user.email ? 'Enregistrer votre nouvel email' : 'Vérifier votre email'}
               </Button>
             </Grid>
             <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
