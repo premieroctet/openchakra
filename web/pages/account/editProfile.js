@@ -98,7 +98,7 @@ class editProfile extends React.Component {
 
   onChange = e => {
     const state = this.state.user;
-    var {name, value} = e.target;
+    let {name, value} = e.target;
 
     if (name === 'phone') {
       const phoneOk = isPhoneOk(value);
@@ -113,6 +113,7 @@ class editProfile extends React.Component {
     this.setState({user: state});
   };
 
+
   onChangeName = event => {
     const state = this.state.user;
     let value = event.target.value;
@@ -125,18 +126,14 @@ class editProfile extends React.Component {
     }
   };
   onChangePhone = event => {
-    const state = this.state.user;
     let value = event.target.value;
-
     if (value.match(/[a-zA-Z^@.&²"#{|(`)°=+},?;:/!\]\[§*$£µ%*\\<>~¤é¨'èùçà]/) || value.length > 11) {
     } else {
-
       const phoneOk = isPhoneOk(value);
       if (phoneOk && value.startsWith('0')) {
         value = '33' + value.substring(1);
       }
-      state[event.target.name] = value;
-      this.setState({user: state});
+      this.setState({phone: value});
     }
   };
 
@@ -273,7 +270,8 @@ class editProfile extends React.Component {
 
   onSubmit = e => {
     const birthday = this.state.birthday;
-    const {email, name, firstname, description, gender, phone, job, diplomes, school} = this.state.user;
+    const {email, name, firstname, description, gender, job, diplomes, school} = this.state.user;
+    const {phone} = this.state;
 
     axios.put('/myAlfred/api/users/profile/editProfile', {
       email, name, firstname, birthday, description, gender, phone, job, diplomes, school,
@@ -292,6 +290,8 @@ class editProfile extends React.Component {
     var birthday = moment(this.state.birthday).format('YYYY-MM-DD').toString();
     var today = moment(new Date()).format('YYYY-MM-DD').toString();
 
+    const birthday = moment(this.state.birthday).format('YYYY-MM-DD').toString();
+    const today = moment(new Date()).format('YYYY-MM-DD').toString();
     return (
       <Grid>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
@@ -415,7 +415,7 @@ class editProfile extends React.Component {
             <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
               <TextField
                 classes={{root: classes.textField}}
-                value={user.phone || ''}
+                value={this.state.phone || ''}
                 onChange={this.onChangePhone}
                 name={'phone'}
                 placeholder={'Téléphone'}
@@ -492,7 +492,7 @@ class editProfile extends React.Component {
               variant="contained"
               color="primary"
               classes={{root: classes.button}}
-              disabled={user.firstname === "" || user.name === "" || userEmail === "" || user.phone === ""}
+              disabled={user.state === "" || user.name === "" || user.email === "" || (!isPhoneOk(phone))}
             >
               Enregistrer
             </Button>
