@@ -286,10 +286,6 @@ class editProfile extends React.Component {
 
   content = (classes) => {
     const {errors, user, phone, userEmail} = this.state;
-
-    var birthday = moment(this.state.birthday).format('YYYY-MM-DD').toString();
-    var today = moment(new Date()).format('YYYY-MM-DD').toString();
-
     const birthday = moment(this.state.birthday).format('YYYY-MM-DD').toString();
     const today = moment(new Date()).format('YYYY-MM-DD').toString();
     return (
