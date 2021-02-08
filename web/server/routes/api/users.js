@@ -10,11 +10,9 @@ const axiosCookieJarSupport = require('axios-cookiejar-support').default;
 const tough = require('tough-cookie');
 const {is_production, is_validation}=require('../../../config/config');
 const CronJob = require('cron').CronJob;
-
 const validateRegisterInput = require('../../validation/register');
 const {validateSimpleRegisterInput, validateEditProfil} = require('../../validation/simpleRegister');
 const validateLoginInput = require('../../validation/login');
-
 const {sendResetPassword, sendVerificationMail, sendVerificationSMS} = require('../../../utils/mailing');
 const moment = require('moment');
 moment.locale('fr');
@@ -23,13 +21,13 @@ const Album = require('../../models/Albums');
 const ResetToken = require('../../models/ResetToken');
 const crypto = require('crypto');
 const multer = require('multer');
-const fs = require('fs');
 const axios = require('axios');
-const {is_development, computeUrl} = require('../../../config/config');
+const {computeUrl} = require('../../../config/config');
+const emptyPromise = require('../../../utils/promise.js');
+
 
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient,install_hooks} = require('../../../utils/mangopay');
 
-const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus');
 
 axios.defaults.withCredentials = true;
 
@@ -289,13 +287,8 @@ router.put('/profile/billingAddress', passport.authenticate('jwt', {session: fal
       user.billing_address.zip_code = req.body.zip_code;
       user.billing_address.city = req.body.city;
       user.billing_address.country = req.body.country;
-
-
-      user.billing_address.gps = {};
-      user.billing_address.gps.lat = req.body.lat;
-      user.billing_address.gps.lng = req.body.lng;
-
-
+      user.billing_address.gps.lat = req.body.gps.lat;
+      user.billing_address.gps.lng = req.body.gps.lng;
       user.save().then(user => res.json(user)).catch(err => console.error(err));
 
     });
@@ -948,10 +941,18 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
           diplomes: req.body.diplomes,
           school: req.body.school,
           job: req.body.job,
-          languages: req.body.languages,
         }, {new: true})
           .then(user => {
-            res.json({success: 'Profile updated !'});
+            if(req.user.email !== req.body.email){
+              User.findByIdAndUpdate(req.user.id,{
+                is_confirmed: false
+            }).then(()=>{
+                sendVerificationMail(user, req);
+                res.json({success: 'Profil mise à jour et e-mail envoyé !'});
+              }).catch( err => console.error(err))
+            }else{
+              res.json({success: 'Profil mis à jour !'});
+            }
           })
           .catch(err => console.error(err));
       }
@@ -965,13 +966,15 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
 router.put('/profile/editPassword', passport.authenticate('jwt', {session: false}), (req, res) => {
   const password = req.body.password;
   const newPassword = req.body.newPassword;
+  const admin = req.user.is_admin;
 
   if (!newPassword.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})')) {
     return res.status(400).json({error: 'Le nouveau mot de passe doit contenir au moins :\n\t- 8 caractères\n\t- 1 minuscule\n\t- 1 majuscule\n\t- 1 chiffre'});
-  } else {
+  }else {
     User.findById(req.user.id)
       .then(user => {
-        bcrypt.compare(password, user.password)
+        const promise = admin ? emptyPromise(true) : emptyPromise(bcrypt.compare(password, user.password));
+        promise
           .then(isMatch => {
             if (isMatch) {
               bcrypt.genSalt(10, (err, salt) => {
@@ -985,8 +988,6 @@ router.put('/profile/editPassword', passport.authenticate('jwt', {session: false
                     .catch(err => console.error(err));
                 });
               });
-
-
             } else {
               return res.status(400).json({error: 'Mot de passe incorrect', wrongPassword: true});
             }

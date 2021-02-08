@@ -9,10 +9,6 @@ class LayoutAccount extends React.Component{
     this.state= {
       items: [
         {
-          label: 'Notifications',
-          url: '/notifications'
-        },
-        {
           label: 'Mes Informations',
           url: '/editProfile'
         },
@@ -35,7 +31,12 @@ class LayoutAccount extends React.Component{
         {
           label: 'Sécurité',
           url: '/security'
-        }
+        },
+        {
+          label: 'Notifications',
+          url: '/notifications'
+        },
+
       ]
     }
   }

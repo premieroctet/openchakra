@@ -69,6 +69,7 @@
     "react-csv": "^2.0.3",
     "react-datepicker": "^2.9.4",
     "react-dates": "^21.3.2",
+    "react-device-detect": "^1.15.0",
     "react-dom": "^16.8.6",
     "react-dropdown-select": "^4.4.1",
     "react-helmet": "^5.2.1",

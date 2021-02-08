@@ -29,7 +29,7 @@ const validateServiceInput = require('../../../validation/service');
 const {addIdIfRequired} = require('../../../../utils/mangopay');
 const multer = require('multer')
 const path = require('path')
-const {normalizePhone, bufferToString} = require('../../../../utils/text')
+const {normalizePhone, bufferToString, normalize} = require('../../../../utils/text')
 const {counterArray, counterObjects} = require('../../../../utils/converters')
 const parse = require('url-parse')
 router.get('/billing/test', (req, res) => res.json({msg: 'Billing admin Works!'}));
@@ -1410,6 +1410,7 @@ router.post('/category/all', uploadCat.single('picture'), passport.authenticate(
         } else {
           const newCategory = new Category({
             label: req.body.label,
+            s_label: normalize(req.body.label),
             picture: req.file.path,
             description: req.body.description,
             tags: JSON.parse(req.body.tags),
@@ -1530,6 +1531,7 @@ router.put('/category/all/:id', passport.authenticate('jwt', {session: false}), 
     Category.findOneAndUpdate({_id: req.params.id}, {
       $set: {
         label: req.body.label, tags: req.body.tags,
+        s_label: normalize(req.body.label),
         description: req.body.description,
       },
     }, {new: true})
@@ -1749,6 +1751,7 @@ router.post('/service/all', uploadService.single('picture'), passport.authentica
         } else {
           const newService = new Service({
             label: req.body.label,
+            s_label: normalize(req.body.label),
             category: mongoose.Types.ObjectId(req.body.category),
             equipments: JSON.parse(req.body.equipments),
             tags: JSON.parse(req.body.tags),
@@ -1899,6 +1902,7 @@ router.put('/service/all/:id', passport.authenticate('jwt', {session: false}), (
       {
         $set: {
           label: req.body.label, equipments: req.body.equipments, category: mongoose.Types.ObjectId(req.body.category),
+          s_label: normalize(req.body.label),
           tags: req.body.tags,
           description: req.body.description, majoration: req.body.majoration, location: req.body.location,
           travel_tax: req.body.travel_tax, pick_tax: req.body.pick_tax,
@@ -1957,6 +1961,7 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
           console.log(`Body:${JSON.stringify(req.body)}`);
           const newPrestation = new Prestation({
             label: req.body.label,
+            s_label: normalize(req.body.label),
             price: req.body.price,
             service: mongoose.Types.ObjectId(req.body.service),
             billing: JSON.parse(req.body.billing),
@@ -2014,10 +2019,11 @@ router.get('/prestation/all', passport.authenticate('jwt', {session: false}), (r
   const admin = decode.is_admin;
 
   if (admin) {
-    Prestation.find({}, 'label private_alfred cesu_eligible')
+    Prestation.find({}, 'label cesu_eligible')
       .sort({s_label: 1, category: 1})
       .populate({path: 'service', select: 'label', populate: {path: 'category', select: 'label'}})
       .populate('filter_presentation', 'label')
+      .populate('private_alfred', 'firstname name')
       .then(prestation => {
         if (!prestation) {
           return res.status(400).json({msg: 'No prestation found'});
@@ -2096,6 +2102,7 @@ router.put('/prestation/all/:id', passport.authenticate('jwt', {session: false})
     Prestation.findOneAndUpdate({_id: req.params.id}, {
         $set: {
           label: req.body.label,
+          s_label: normalize(req.body.label),
           price: req.body.price,
           service: mongoose.Types.ObjectId(req.body.service),
           billing: req.body.billing,

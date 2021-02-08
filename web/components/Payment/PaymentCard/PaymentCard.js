@@ -34,14 +34,14 @@ class PaymentCard extends React.Component{
                   {!editable ?
                     <Grid item xl={1} xs={2} sm={1}>
                       <Radio value={e.Id}>
-                        <img src={`/static/assets/icon/payementIcones/${cb}.png`} height={20} width={35} alt={e.CardProvider} title={e.CardProvider}/>
+                        <img src={`/static/assets/icon/paymentIcones/${cb}.png`} height={20} width={35} alt={e.CardProvider} title={e.CardProvider}/>
                       </Radio>
                     </Grid> : null
                   }
                   <Grid item xl={7} xs={7} sm={7} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                     <Hidden only={['xs']}>
                       <Grid item xl={6} sm={4} style={{display: 'flex'}}>
-                        <img src={`/static/assets/icon/payementIcones/${cb.toLowerCase()}.png`} height={20} width={35} alt={e.CardProvider} title={e.CardProvider}/>
+                        <img src={`/static/assets/icon/paymentIcones/${cb.toLowerCase()}.png`} height={20} width={35} alt={e.CardProvider} title={e.CardProvider}/>
                       </Grid>
                     </Hidden>
                     <Grid item xl={6} sm={4} xs={10} style={{display: 'flex', flexDirection:'column'}}>

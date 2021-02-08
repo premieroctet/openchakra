@@ -21,7 +21,7 @@ class Stepper extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      steps: props.isType === 'creaShop' ? this.getStepsCreaShop() : props.isType === 'updateService' ? this.getStepsUpdateService() : props.isType === 'confirmPaiement' ? this.getStepsPayement() :  this.getStepsAddService(),
+      steps: props.isType === 'creaShop' ? this.getStepsCreaShop() : props.isType === 'updateService' ? this.getStepsUpdateService() : props.isType === 'confirmPaiement' ? this.getStepsPayment() :  this.getStepsAddService(),
       urlName : ''
     };
   }
@@ -70,7 +70,7 @@ class Stepper extends React.Component {
     ];
   }
 
-  getStepsPayement() {
+  getStepsPayment() {
     return [
       'ADRESSE & FACTURATION',
       'PAIEMENT'

@@ -75,10 +75,6 @@ class trustAndVerification extends React.Component {
       creation_date: '',
       status: '',
       open: false,
-      // SMS Code setState
-      smsCodeOpen: false, // Show/hide SMS code modal
-      smsCode: '', // Typed SMS code
-      smsError: null,
       cesu: null,
       cis: false,
       notice: false,
@@ -91,7 +87,6 @@ class trustAndVerification extends React.Component {
     this.callDrawer = this.callDrawer.bind(this);
     this.onSiretChange = this.onSiretChange.bind(this);
     this.statusSaveDisabled = this.statusSaveDisabled.bind(this);
-    this.displayInfo = this.displayInfo.bind(this);
     this.deleteRecto = this.deleteRecto.bind(this);
     this.deleteRegistrationProof = this.deleteRegistrationProof.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
@@ -163,17 +158,13 @@ class trustAndVerification extends React.Component {
       });
   }
 
-  handleClickOpen() {
-    this.setState({open: true});
-  }
 
   handleClose() {
-    this.setState({open: false});
-    this.setState({deleteCb: null});
+    this.setState({open: false, deleteCb: null});
   }
 
   handleDelete() {
-    this.state.deleteCb();
+    this.deleteCb();
     this.handleClose();
   }
 
@@ -204,8 +195,6 @@ class trustAndVerification extends React.Component {
   };
 
   onRectoChange = e => {
-    console.log('recto changed')
-    console.log(e.target.files[0])
     this.setState({
       id_recto: e.target.files[0],
       recto_file: URL.createObjectURL(e.target.files[0]),
@@ -266,7 +255,6 @@ class trustAndVerification extends React.Component {
         this.componentDidMount()
       })
       .catch(err => {
-        console.log('Ajout nok')
         console.error(err)
       });
   };
@@ -289,25 +277,6 @@ class trustAndVerification extends React.Component {
 
   onDocumentLoadSuccess = ({numPages}) => {
     this.setState({numPages});
-  };
-
-  sendEmail = () => {
-    axios.get('/myAlfred/api/users/sendMailVerification')
-      .then(() => {
-        this.setState({message: 'Email envoyé'})
-      })
-      .catch( err => {toast.error('Impossible d\'envoyer un email')});
-  };
-
-  sendSms = () => {
-    axios.post('/myAlfred/api/users/sendSMSVerification')
-      .then(res => {
-        this.setState({message: 'Le SMS a été envoyé'})
-        this.setState({smsCodeOpen: true});
-      })
-      .catch(err => {
-        toast.error('Impossible d\'envoyer le SMS');
-      });
   };
 
   editSiret() {
@@ -383,20 +352,6 @@ class trustAndVerification extends React.Component {
     }
   }
 
-  checkSmsCode = () => {
-    const sms_code = this.state.smsCode;
-    axios.post('/myAlfred/api/users/checkSMSVerification', {sms_code: sms_code})
-      .then(res => {
-        if (res.data.sms_code_ok) {
-          this.setState({message: 'Votre numéro de téléphone est validé'})
-          this.setState({smsCodeOpen: false});
-        } else {
-          toast.error('Le code est incorrect');
-        }
-      })
-      .catch(err => toast.error('Erreur à la vérification du code'));
-  };
-
   callDrawer() {
     this.child.current.handleDrawerToggle();
   }
@@ -410,10 +365,6 @@ class trustAndVerification extends React.Component {
       }
     }
     return false;
-  };
-
-  displayInfo = () => {
-    toast.error('test');
   };
 
   modalDeleteConfirmMessage = () =>{
@@ -442,45 +393,6 @@ class trustAndVerification extends React.Component {
     )
   };
 
-  modalConfirmPhone = () =>{
-    return(
-      <Dialog open={this.state.smsCodeOpen} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Confirmation du numéro de téléphone</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Saisissez le code reçu par SMS
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Code"
-            type="number"
-            placeholder="0000"
-            maxLength="4"
-            value={this.state.smsCode}
-            onChange={e => {
-              console.log(e.target.value);
-              this.setState({smsCode: e.target.value});
-            }}
-            fullWidth
-            errors={this.state.smsError}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => this.setState({smsCodeOpen: false})} color="primary">
-            Annuler
-          </Button>
-          <Button
-            disabled={this.state.smsCode.length !== 4}
-            onClick={() => this.checkSmsCode()}
-            color="primary">
-            Confirmer
-          </Button>
-        </DialogActions>
-      </Dialog>
-    )
-  };
 
   content = (classes) => {
     return(
@@ -584,62 +496,9 @@ class trustAndVerification extends React.Component {
           </Grid>
         </Grid>
         <Grid>
-          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
-        </Grid>
-        <Grid>
-          <Grid>
-            <h3>Email & Téléphone</h3>
-          </Grid>
-          <Grid style={{marginTop: '10vh'}}>
-            <Grid container>
-              <Grid item xs={12}>
-                <TextField
-                  value={this.state.user.email || 'Votre email'}
-                  name={'email'}
-                  variant={'outlined'}
-                  disabled={true}
-                  helperText="Vous recevrez un email de verification"
-                  classes={{root: classes.textfield}}
-                />
-                {this.state.user.is_confirmed ? <CheckCircleIcon/> : null }
-              </Grid>
-            </Grid>
-            {this.state.user.is_confirmed ? null :
-              <Grid style={{marginTop: '5vh'}}>
-                <Button variant="contained" className={classes.buttonSave} onClick={() => this.sendEmail()}>
-                  Vérifier
-                </Button>
-              </Grid>
-            }
-            <Grid style={{marginTop: '10vh'}}>
-              <Grid>
-                <TextField
-                  classes={{root: classes.textfield}}
-                  value={this.state.user.phone || 'Votre numéro de téléphone'}
-                  name={'phone'}
-                  variant={'outlined'}
-                  disabled={true}
-                  helperText="Vous recevrez un SMS de verification"
-                />
-                {this.state.user.phone_confirmed  ? <CheckCircleIcon/> : null }
-              </Grid>
-            </Grid>
-            {this.state.user.phone_confirmed ?
-              null
-              :
-              <Grid style={{marginTop: '5vh'}}>
-                <Button variant="contained" className={classes.buttonSave} onClick={() => this.sendSms()}>
-                  Envoyer sms de vérification
-                </Button>
-              </Grid>
-            }
-          </Grid>
-
           <Grid>
             <Divider style={{height : 2, width: '100%', margin :'10vh 0px'}}/>
           </Grid>
-
-
           {this.state.alfred ?
             <Grid style={{marginBottom: '12vh'}}>
               <Grid>
@@ -804,7 +663,6 @@ class trustAndVerification extends React.Component {
           </LayoutMobile>
         </Hidden>
         {this.state.open ? this.modalDeleteConfirmMessage() : null}
-        {this.state.smsCodeOpen ? this.modalDeleteConfirmMessage() : null}
         <SnackBar severity={"success"} message={message} open={message} closeSnackBar={() => this.setState({message: null})}/>
       </React.Fragment>
     );

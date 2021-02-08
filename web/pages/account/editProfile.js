@@ -25,26 +25,16 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
-
 const {MAX_DESCRIPTION_LENGTH} = require('../../utils/consts');
+import Visibility from '@material-ui/icons/Visibility';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import {toast} from "react-toastify";
 
 const {isPhoneOk} = require('../../utils/sms');
 const moment = require('moment');
 
 registerLocale('fr', fr);
 moment.locale('fr');
-
-const options = [
-  {value: 'Français', label: 'Français'},
-  {value: 'Anglais', label: 'Anglais'},
-  {value: 'Allemand', label: 'Allemand'},
-  {value: 'Espagnol', label: 'Espagnol'},
-  {value: 'Chinois', label: 'Chinois'},
-  {value: 'Arabe', label: 'Arabe'},
-  {value: 'Portugais', label: 'Portugais'},
-  {value: 'Russe', label: 'Russe'},
-  {value: 'Japonais', label: 'Japonais'},
-];
 
 const momentDateFormat = 'dd/MM/yyyy';
 
@@ -55,7 +45,6 @@ class editProfile extends React.Component {
       user: {},
       phone: '',
       languages: [],
-      selectedLanguages: null,
       birthday: null,
       dpDate: moment().toDate(),
       ipDate: moment().format(momentDateFormat),
@@ -67,7 +56,10 @@ class editProfile extends React.Component {
       checkPhoneMessage: '',
       checkPhoneSeverity: '',
       checkPhoneState: false,
-      isPhoneSaved: false
+      userEmail: '',
+      checkEmailSeverity: '',
+      checkEmailState: false,
+      checkEmailMessage: ''
     };
   }
 
@@ -91,10 +83,7 @@ class editProfile extends React.Component {
           birthday: user.birthday,
           user: user,
           phone: user.phone,
-          selectedLanguages: user.languages.map(b => ({
-            label: b,
-            value: b,
-          })),
+          userEmail: user.email
         });
       })
       .catch(err => {
@@ -170,6 +159,23 @@ class editProfile extends React.Component {
       );
   };
 
+  sendEmail = () => {
+    axios.get('/myAlfred/api/users/sendMailVerification')
+      .then(() => {
+        this.setState({
+          checkEmailSeverity: 'success',
+          checkEmailState: true,
+          checkEmailMessage: 'Mail envoyé'
+        })
+      })
+      .catch( err => {
+        this.setState({
+        checkEmailSeverity: 'error',
+        checkEmailState: true,
+        checkEmailMessage: 'email non envoyé'
+      })});
+  };
+
   sendSms = () => {
     setAxiosAuthentication();
     axios.post('/myAlfred/api/users/sendSMSVerification', {phone: this.state.phone})
@@ -179,7 +185,7 @@ class editProfile extends React.Component {
           checkPhoneMessage: 'Le SMS a été envoyé',
           checkPhoneSeverity: 'success',
           smsCodeOpen: true
-        })
+        }, () => this.onSubmit())
       })
       .catch(err => {
         this.setState({
@@ -262,24 +268,13 @@ class editProfile extends React.Component {
     this.setState({birthday: e.target.value});
   };
 
-  handleChangeLanguages = selectedLanguages => {
-    this.setState({selectedLanguages});
-  };
-
   onSubmit = e => {
-    let arrayLanguages = [];
-    if (this.state.selectedLanguages != null) {
-      this.state.selectedLanguages.forEach(w => {
-        arrayLanguages.push(w.value);
-      });
-    }
-    const languages = arrayLanguages;
     const birthday = this.state.birthday;
     const {email, name, firstname, description, gender, job, diplomes, school} = this.state.user;
     const {phone} = this.state;
 
     axios.put('/myAlfred/api/users/profile/editProfile', {
-      email, name, firstname, birthday, description, gender, phone, job, diplomes, school, languages,
+      email, name, firstname, birthday, description, gender, phone, job, diplomes, school,
     })
       .then(res => {
         this.setState({errors: {}, open: true}, () => this.loadUser());
@@ -290,7 +285,10 @@ class editProfile extends React.Component {
   };
 
   content = (classes) => {
-    const {errors, user, phone, isPhoneSaved} = this.state;
+    const {errors, user, phone, userEmail} = this.state;
+
+    var birthday = moment(this.state.birthday).format('YYYY-MM-DD').toString();
+    var today = moment(new Date()).format('YYYY-MM-DD').toString();
 
     const birthday = moment(this.state.birthday).format('YYYY-MM-DD').toString();
     const today = moment(new Date()).format('YYYY-MM-DD').toString();
@@ -388,7 +386,7 @@ class editProfile extends React.Component {
             </Grid>
           </Grid>
           <Grid container spacing={3}>
-            <Grid item xs={12} lg={12} md={12} sm={12} xl={12}>
+            <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
               <TextField
                 classes={{root: classes.textField}}
                 value={user.email || ''}
@@ -397,9 +395,22 @@ class editProfile extends React.Component {
                 placeholder={'Email'}
                 variant={'outlined'}
                 label={'Adresse email'}
-                helperText={errors.email}
                 error={!!(errors && errors.email)}
+                InputProps={{
+                  endAdornment: userEmail === user.email && user.is_confirmed === true ? <CheckCircleOutlineIcon /> : null
+                }}
               />
+            </Grid>
+            <Grid item xs={12} lg={6} md={6} sm={6} xl={6} style={{display: 'flex'}}>
+              <Button
+                variant="contained"
+                color={'primary'}
+                onClick={() => user.is_confirmed ? this.onSubmit() : this.sendEmail()}
+                disabled={user.email ? !!(userEmail === user.email && user.is_confirmed) : true}
+                classes={{root: classes.buttonCheckPhone}}
+              >
+                {userEmail === user.email && user.is_confirmed === true ? 'Votre email est vérifié' : userEmail !== user.email ? 'Enregistrer votre nouvel email' : 'Vérifier votre email'}
+              </Button>
             </Grid>
             <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
               <TextField
@@ -410,6 +421,9 @@ class editProfile extends React.Component {
                 placeholder={'Téléphone'}
                 variant={'outlined'}
                 label={'Téléphone'}
+                InputProps={{
+                  endAdornment: phone === user.phone && user.phone_confirmed === true ? <CheckCircleOutlineIcon /> : null
+                }}
               />
             </Grid>
             <Grid item xs={12} lg={6} md={6} sm={6} xl={6} style={{display: 'flex'}}>
@@ -423,8 +437,6 @@ class editProfile extends React.Component {
                 {phone === user.phone && user.phone_confirmed === true ? 'Votre téléphone est vérifié' : phone !== user.phone ? 'Enregistrer votre nouveau téléphone' : 'Vérifiez votre téléphone'}
               </Button>
             </Grid>
-
-
           </Grid>
         </Grid>
         <Grid>
@@ -473,29 +485,6 @@ class editProfile extends React.Component {
         <Grid>
           <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
-        <Grid>
-          <Grid>
-            <h2>Langues</h2>
-          </Grid>
-          <Grid container style={{marginTop: '10vh'}}>
-            <Grid item xs={12}>
-              <MultipleSelect
-                value={this.state.selectedLanguages}
-                onChange={this.handleChangeLanguages}
-                options={options}
-                styles={{
-                  menu: provided => ({...provided, zIndex: 2}),
-                }}
-                isMulti
-                isSearchable
-                closeMenuOnSelect={false}
-                placeholder={'Sélectionnez vos langues'}
-                noOptionsMessage={() => 'Plus d\'options disponibles'}
-
-              />
-            </Grid>
-          </Grid>
-        </Grid>
         <Grid style={{marginBottom: '12vh'}}>
           <Grid style={{display: 'flex', justifyContent: 'flex-end', marginTop: '5vh'}}>
             <Button
@@ -514,6 +503,8 @@ class editProfile extends React.Component {
                   closeSnackBar={() => this.setState({open: false})}/>
         <SnackBar severity={this.state.checkPhoneSeverity} message={this.state.checkPhoneMessage}
                   open={this.state.checkPhoneState} closeSnackBar={() => this.setState({checkPhoneState: false})}/>
+        <SnackBar severity={this.state.checkEmailSeverity} message={this.state.checkEmailMessage}
+                  open={this.state.checkEmailState} closeSnackBar={() => this.setState({checkEmailState: false})}/>
 
         {
           this.state.errors ?
