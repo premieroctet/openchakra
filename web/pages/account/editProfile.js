@@ -1,5 +1,5 @@
 import SnackBar from "../../components/SnackBar/SnackBar";
-
+const {snackBar} = require('../../utils/notifications');
 const {clearAuthenticationToken} = require('../../utils/authentication');
 const {setAxiosAuthentication} = require('../../utils/authentication');
 import React from 'react';
@@ -49,7 +49,6 @@ class editProfile extends React.Component {
       dpDate: moment().toDate(),
       ipDate: moment().format(momentDateFormat),
       errors: {},
-      open: false,
       openErrors: false,
       smsCodeOpen: false,
       smsCode: '',
@@ -274,16 +273,19 @@ class editProfile extends React.Component {
   onSubmit = e => {
     const birthday = this.state.birthday;
     const {email, name, firstname, description, gender, phone, job, diplomes, school} = this.state.user;
+    snackBar("success", "Profil modifié avec succès");
 
-    axios.put('/myAlfred/api/users/profile/editProfile', {
+
+    /*axios.put('/myAlfred/api/users/profile/editProfile', {
       email, name, firstname, birthday, description, gender, phone, job, diplomes, school,
     })
       .then(res => {
-        this.setState({errors: {}, open: true}, () => this.loadUser());
+        snackBar("success", "Profil modifié avec succès");
+        this.setState({errors: {}}, () => this.loadUser());
       })
       .catch(err => {
         this.setState({openErrors: true, errors: err.response.data});
-      });
+      });*/
   };
 
   content = (classes) => {
@@ -498,9 +500,6 @@ class editProfile extends React.Component {
             </Button>
           </Grid>
         </Grid>
-
-        <SnackBar severity={"success"} message={'Profil modifié avec succès'} open={this.state.open}
-                  closeSnackBar={() => this.setState({open: false})}/>
         <SnackBar severity={this.state.checkPhoneSeverity} message={this.state.checkPhoneMessage}
                   open={this.state.checkPhoneState} closeSnackBar={() => this.setState({checkPhoneState: false})}/>
         <SnackBar severity={this.state.checkEmailSeverity} message={this.state.checkEmailMessage}

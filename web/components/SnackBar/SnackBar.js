@@ -18,7 +18,9 @@ class SnackBar extends React.Component{
 
 
   render() {
-    const {message, open, severity} = this.props;
+    const {message, open, severity, closeSnackBar} = this.props;
+    console.log('component');
+
     return(
       <Snackbar open={open} autoHideDuration={CLOSE_NOTIFICATION_DELAY*1000} onClose={this.handleClose}>
         <Alert severity={severity} style={{fontWeight: 'bold'}} onClose={this.handleClose}>
