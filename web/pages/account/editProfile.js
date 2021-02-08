@@ -275,7 +275,8 @@ class editProfile extends React.Component {
     }
     const languages = arrayLanguages;
     const birthday = this.state.birthday;
-    const {email, name, firstname, description, gender, phone, job, diplomes, school} = this.state.user;
+    const {email, name, firstname, description, gender, job, diplomes, school} = this.state.user;
+    const {phone} = this.state;
 
     axios.put('/myAlfred/api/users/profile/editProfile', {
       email, name, firstname, birthday, description, gender, phone, job, diplomes, school, languages,
