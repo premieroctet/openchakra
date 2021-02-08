@@ -140,7 +140,7 @@ const ColorPickerControl = (props: ColorPickerPropType) => {
                 <HuesPickerControl
                   name={props.name}
                   themeColors={themeColors}
-                  enableHues
+                  enableHues={false}
                   setValue={setValue}
                   gradient={props.gradient}
                 />

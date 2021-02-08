@@ -1,5 +1,6 @@
 import React, { ReactNode, useState, memo, useEffect } from 'react'
-import { Box, Select, Button } from '@chakra-ui/react'
+import { Box, Select, Button, IconButton } from '@chakra-ui/react'
+import { SmallCloseIcon } from '@chakra-ui/icons'
 import FormControl from './FormControl'
 import { useForm } from '~hooks/useForm'
 import ColorPickerControl from './ColorPickerControl'
@@ -89,7 +90,7 @@ const GradientControl = (props: GradientControlPropsType) => {
           id={directionValue || 'direction'}
           name={directionValue || 'direction'}
           value={directionValue || ''}
-          onChange={value => {
+          onChange={(value: React.ChangeEvent<HTMLSelectElement>) => {
             setDirectionValue(value.target.value)
             gradientColor.length >= 2 &&
               setValue(
@@ -107,15 +108,14 @@ const GradientControl = (props: GradientControlPropsType) => {
       {gradientColor.map((e, i) => (
         <Box textAlign="right" mt={3} key={i}>
           {i >= 1 && (
-            <Button
-              colorScheme="teal"
+            <IconButton
+              onClick={() => removeGradient(i)}
+              variant="ghost"
               marginRight={2}
               size="xs"
-              fontWeight="bold"
-              onClick={() => removeGradient(i)}
-            >
-              -
-            </Button>
+              aria-label="delete"
+              icon={<SmallCloseIcon path="" />}
+            />
           )}
 
           <ColorPickerControl
@@ -131,7 +131,7 @@ const GradientControl = (props: GradientControlPropsType) => {
 
       <Box textAlign="right" mt={3}>
         <Button
-          colorScheme="teal"
+          variant="ghost"
           size="xs"
           onClick={() => setGradientColor([...gradientColor, 'blue.500'])}
         >
