@@ -339,7 +339,7 @@ UserSchema.virtual('age').get(function () {
   return age
 });
 
-UserSchema.virtual('is_employed').get(function () {
+UserSchema.virtual('is_employee').get(function () {
   return Boolean(this.company)
 });
 
