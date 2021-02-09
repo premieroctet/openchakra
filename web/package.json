@@ -104,6 +104,8 @@
     "socket.io-client": "^2.3.0",
     "strip-bom": "^4.0.0",
     "styled-components": "^4.2.0",
+    "swagger-jsdoc": "^6.0.2",
+    "swagger-ui-express": "^4.1.6",
     "tough-cookie": "^4.0.0",
     "url-parse": "^1.4.7",
     "uuid": "^3.3.3",
