@@ -1,5 +1,5 @@
 import SnackBar from "../../components/SnackBar/SnackBar";
-const {snackBar} = require('../../utils/notifications');
+const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 const {clearAuthenticationToken} = require('../../utils/authentication');
 const {setAxiosAuthentication} = require('../../utils/authentication');
 import React from 'react';
@@ -182,50 +182,33 @@ class editProfile extends React.Component {
     setAxiosAuthentication();
     axios.post('/myAlfred/api/users/sendSMSVerification', {phone: this.state.phone})
       .then(res => {
-        this.setState({
-          checkPhoneState: true,
-          checkPhoneMessage: 'Le SMS a été envoyé',
-          checkPhoneSeverity: 'success',
-          smsCodeOpen: true
-        }, () => this.onSubmit())
+        this.setState({smsCodeOpen: true}, () => (() => this.onSubmit())(() => snackBarSuccess("Le SMS a été envoyé")))
       })
       .catch(err => {
         this.setState({
-          checkPhoneState: true,
-          checkPhoneMessage: 'Impossible d\'envoyer le SMS',
-          checkPhoneSeverity: 'error',
           smsCodeOpen: true,
           serverError: true
-        });
+        }, () => snackBarError('Impossible d\'envoyer le SMS'));
       });
   };
 
   checkSmsCode = () => {
-    setAxiosAuthentication()
+    setAxiosAuthentication();
     axios.post('/myAlfred/api/users/checkSMSVerification', {sms_code: this.state.smsCode})
       .then(res => {
         if (res.data.sms_code_ok) {
           this.setState({
-            checkPhoneState: true,
-            checkPhoneMessage: 'Votre numéro de téléphone est validé',
-            checkPhoneSeverity: 'success',
             smsCodeOpen: false,
             phoneConfirmed: true
           }, () => this.onSubmit());
+          snackBarSuccess("Votre numéro de téléphone est validé")
         } else {
-          this.setState({
-            checkPhoneState: true,
-            checkPhoneMessage: 'Le code est incorrect',
-            checkPhoneSeverity: 'error',
-          });
+          snackBarError('Le code est incorrect');
         }
       })
       .catch(err =>
-        this.setState({
-          checkPhoneState: true,
-          checkPhoneMessage: 'Erreur à la vérification du code',
-          checkPhoneSeverity: 'warning',
-        }));
+        snackBarError('Erreur à la vérification du code')
+       );
   };
 
   dialogConfirmPhone = (classes) => {
@@ -273,19 +256,16 @@ class editProfile extends React.Component {
   onSubmit = e => {
     const birthday = this.state.birthday;
     const {email, name, firstname, description, gender, phone, job, diplomes, school} = this.state.user;
-    snackBar("success", "Profil modifié avec succès");
-
-
-    /*axios.put('/myAlfred/api/users/profile/editProfile', {
+    axios.put('/myAlfred/api/users/profile/editProfile', {
       email, name, firstname, birthday, description, gender, phone, job, diplomes, school,
     })
       .then(res => {
-        snackBar("success", "Profil modifié avec succès");
+        snackBarSuccess("Profil modifié avec succès");
         this.setState({errors: {}}, () => this.loadUser());
       })
       .catch(err => {
-        this.setState({openErrors: true, errors: err.response.data});
-      });*/
+        snackBarError(err.response.data)
+      });
   };
 
   content = (classes) => {
@@ -500,22 +480,9 @@ class editProfile extends React.Component {
             </Button>
           </Grid>
         </Grid>
-        <SnackBar severity={this.state.checkPhoneSeverity} message={this.state.checkPhoneMessage}
-                  open={this.state.checkPhoneState} closeSnackBar={() => this.setState({checkPhoneState: false})}/>
         <SnackBar severity={this.state.checkEmailSeverity} message={this.state.checkEmailMessage}
                   open={this.state.checkEmailState} closeSnackBar={() => this.setState({checkEmailState: false})}/>
 
-        {
-          this.state.errors ?
-            Object.keys(this.state.errors).map(res => {
-              let response = Object.values(this.state.errors[res])
-              return (
-                < SnackBar severity={"error"} message={response}
-                           open={this.state.openErrors}
-                           closeSnackBar={() => this.setState({openErrors: false})}/>
-              )
-            }) : null
-        }
       </Grid>
     )
   };
