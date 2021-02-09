@@ -13,7 +13,7 @@ const CronJob = require('cron').CronJob;
 const {is_production, is_development}=require('../../../config/config')
 const mangopay = require('mangopay2-nodejs-sdk');
 const {
-  sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfos,
+  sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfosRecap,
   sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
   sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual,
   sendLeaveCommentForClient, sendLeaveCommentForAlfred,
@@ -163,7 +163,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
           .populate('user')
           .then(book => {
             if (booking.status == BOOK_STATUS.INFO) {
-              sendBookingInfos(book);
+              sendBookingInfosRecap(book);
               sendAskingInfo(book, req);
             }
             if (booking.status == BOOK_STATUS.TO_CONFIRM) {
@@ -370,6 +370,10 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
         return res.status(404).json({msg: 'no booking found'});
       }
       if (booking) {
+        if (booking.status == BOOK_STATUS.TO_CONFIRM) {
+          sendBookingDetails(booking);
+          sendNewBookingManual(booking, req);
+        }
         if (booking.status == BOOK_STATUS.CONFIRMED) {
           sendBookingConfirmed(booking);
         }

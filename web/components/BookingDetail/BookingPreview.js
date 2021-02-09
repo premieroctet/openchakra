@@ -19,6 +19,7 @@ const {BOOK_STATUS}=require('../../utils/consts')
 import DatePicker, {registerLocale} from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
 import Hidden from "@material-ui/core/Hidden";
+const {BOOKING}=require('../../utils/i18n')
 registerLocale('fr', fr);
 moment.locale('fr');
 
@@ -294,7 +295,7 @@ class BookingPreview extends React.Component {
                             <Grid container>
                               <Grid item md={6} xs={12}>
                                 <Typography>
-                                  BOOKING.MSG_EVALUATE
+                                  {BOOKING.MSG_EVALUATE}
                                 </Typography>
                               </Grid>
                               <Grid item xs={2}/>

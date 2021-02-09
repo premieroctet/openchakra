@@ -26,6 +26,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import SendIcon from "@material-ui/icons/Send";
 import DialogActions from "@material-ui/core/DialogActions";
 import UserAvatar from "../../components/Avatar/UserAvatar";
+import Router from 'next/router';
 
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
@@ -60,13 +61,20 @@ class Messages extends React.Component {
 
   componentDidMount() {
     this.loadChats(true);
-    axios.get('/myAlfred/api/users/current').then(res => {
-      let result = res.data;
-      this.setState({
-        user: result,
-        tabIndex: result.is_alfred ? 0 : 1
-      });
-    })
+    axios.get('/myAlfred/api/users/current')
+      .then(res => {
+        let result = res.data;
+        this.setState({
+          user: result,
+          tabIndex: result.is_alfred ? 0 : 1
+        });
+      })
+      .catch (err => {
+        if (err.response && [401, 403].includes(err.response.status)) {
+          localStorage.setItem('path', Router.asPath)
+          Router.push('/login');
+        }
+      })
   }
 
   loadChats = checkRelative => {
