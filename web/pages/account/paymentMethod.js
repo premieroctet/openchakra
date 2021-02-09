@@ -498,8 +498,6 @@ class paymentMethod extends React.Component {
   };
 
   content = (classes) => {
-    console.log(this.state)
-    console.log(this.state.accounts)
     return (
       <Grid style={{display: 'flex', flexDirection: 'column'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
@@ -631,7 +629,6 @@ class paymentMethod extends React.Component {
   };
 
   render() {
-    // console.log(this.state.accounts)
     const {classes, index} = this.props;
     const {deletedial, addCreditCard, accounts, clickAdd, clickDelete, errors} = this.state;
 
