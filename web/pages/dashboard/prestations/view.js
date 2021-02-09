@@ -18,6 +18,7 @@ import Select from '@material-ui/core/Select';
 import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Link from 'next/link';
 
 import Checkbox from '@material-ui/core/Checkbox';
@@ -50,17 +51,6 @@ const styles = {
   },
 };
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
 class view extends React.Component {
 
   constructor(props) {
@@ -69,7 +59,6 @@ class view extends React.Component {
     this.state = {
       prestation: {},
       current_service: '',
-      current_search_filter: [],
       current_category: '',
       current_billing: [],
       current_filter_presentation: '',
@@ -79,7 +68,6 @@ class view extends React.Component {
       all_service: [],
       all_billing: [],
       all_job: [],
-      all_search_filter: [],
       all_filter_presentation: [],
       all_tags: [],
       category: '',
@@ -87,18 +75,16 @@ class view extends React.Component {
       billing: '',
       cesu_eligible: false,
       filter_presentation: '',
-      search_filter: [],
       job: '',
       description: '',
       tags: [],
       selectedTags: null,
-      selectedFilter: null,
       selectedBilling: null,
+      errors: {},
     };
 
     this.handleClick = this.handleClick.bind(this);
     this.handleChangeTags = this.handleChangeTags.bind(this);
-    this.handleChangeFilter = this.handleChangeFilter.bind(this);
     this.handleChangeBilling = this.handleChangeBilling.bind(this);
   }
 
@@ -118,8 +104,7 @@ class view extends React.Component {
           prestation: prestation, current_service: prestation.service,
           current_billing: prestation.billing, current_category: prestation.category,
           current_job: prestation.job, current_filter_presentation: prestation.filter_presentation,
-          current_search_filter: prestation.search_filter, current_tags: prestation.tags,
-          cesu_eligible: prestation.cesu_eligible,
+          current_tags: prestation.tags, cesu_eligible: prestation.cesu_eligible,
         });
         this.setState({
           service: prestation.service._id,
@@ -132,13 +117,6 @@ class view extends React.Component {
           selectedTags: this.state.current_tags.map(b => ({
             label: b.label,
             value: b._id,
-          })),
-        });
-
-        this.setState({
-          selectedFilter: this.state.current_search_filter.map(p => ({
-            label: p.label,
-            value: p._id,
           })),
         });
 
@@ -191,14 +169,6 @@ class view extends React.Component {
       console.log(error);
     });
 
-    axios.get('/myAlfred/api/admin/searchFilter/all')
-      .then((response) => {
-        let search_filter = response.data;
-        this.setState({all_search_filter: search_filter});
-      }).catch((error) => {
-      console.log(error);
-    });
-
     axios.get('/myAlfred/api/admin/filterPresentation/all')
       .then((response) => {
         let filter_presentation = response.data;
@@ -223,6 +193,13 @@ class view extends React.Component {
     this.setState({prestation: state});
   };
 
+  onChangeBool = e => {
+    const state = this.state.prestation;
+    const {name, checked} = e.target;
+    state[name]=checked
+    this.setState({prestation: state});
+  };
+
   onCesuChange = e => {
     const checked = e.target.checked;
     this.setState({cesu_eligible: checked});
@@ -239,11 +216,6 @@ class view extends React.Component {
     }
   };
 
-  handleChangeFilter = selectedFilter => {
-    this.setState({selectedFilter});
-
-  };
-
   handleChangeTags = selectedTags => {
     this.setState({selectedTags});
 
@@ -256,58 +228,46 @@ class view extends React.Component {
 
   onSubmit = e => {
     e.preventDefault();
-    let arrayFilter = [];
     let arrayTags = [];
     let arrayBilling = [];
-    if (this.state.selectedFilter != null) {
-      this.state.selectedFilter.forEach(c => {
-
-        arrayFilter.push(c.value);
-
-      });
-    }
 
     if (this.state.selectedTags != null) {
       this.state.selectedTags.forEach(w => {
-
         arrayTags.push(w.value);
-
       });
     }
 
     if (this.state.selectedBilling != null) {
       this.state.selectedBilling.forEach(w => {
-
         arrayBilling.push(w.value);
-
       });
     }
     const tags = arrayTags;
     const service = this.state.service;
-    const category = this.state.category;
     const billing = arrayBilling;
-    const search_filter = arrayFilter;
     const job = this.state.job;
     const filter_presentation = this.state.filter_presentation;
-    const {label, price, description} = this.state.prestation;
+    const {label, price, description, professional_access, particular_access} = this.state.prestation;
     const id = this.props.prestation_id;
-    const calculating = null;
     const cesu_eligible = this.state.cesu_eligible;
 
     axios.put(`/myAlfred/api/admin/prestation/all/${id}`, {
-      label, price, billing, category, service, search_filter, filter_presentation,
-      calculating, job, description, tags, cesu_eligible,
+      label, price, billing, service, filter_presentation,
+      job, description, tags, cesu_eligible, particular_access,professional_access
     })
       .then(res => {
         alert('Prestation modifiée avec succès');
-        //Router.push({pathname: '/dashboard/prestations/all'});
-        window.close()
       })
       .catch(err => {
         console.error(err);
+        if (err.response.status === 401 || err.response.status === 403) {
+          clearAuthenticationToken()
+          Router.push({pathname: '/login'});
+        }
+        else {
+          this.setState({errors: err.response.data})
+        }
       });
-
-
   };
 
   handleClick() {
@@ -332,28 +292,19 @@ class view extends React.Component {
     const {current_service} = this.state;
     const {current_billing} = this.state;
     const {current_category} = this.state;
-    const {current_search_filter} = this.state;
     const {current_filter_presentation} = this.state;
     const {current_job} = this.state;
     const {current_tags} = this.state;
     const {all_category} = this.state;
     const {all_service} = this.state;
     const {all_billing} = this.state;
-    const {all_search_filter} = this.state;
     const {all_filter_presentation} = this.state;
     const {all_job} = this.state;
     const {all_tags} = this.state;
 
     const categories = all_category.map(e => (
-
       <MenuItem value={e._id}>{e.label}</MenuItem>
-
     ));
-
-    const options = all_search_filter.map(equipment => ({
-      label: equipment.label,
-      value: equipment._id,
-    }));
 
     const optionsTags = all_tags.map(tag => ({
       label: tag.label,
@@ -369,7 +320,6 @@ class view extends React.Component {
     return (
       <Layout>
         <Grid container className={classes.loginContainer}>
-          <Card className={classes.card}>
             <Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center'}}>
                 <Typography style={{fontSize: 30}}>{prestation.label}</Typography>
@@ -384,7 +334,7 @@ class view extends React.Component {
                     name="label"
                     value={prestation.label}
                     onChange={this.onChange}
-
+                    error={this.state.errors.label}
                   />
                 </Grid>
                 <Grid item style={{marginTop: 20, display: 'flex', 'align-items': 'center'}}>
@@ -408,35 +358,9 @@ class view extends React.Component {
 
                   />
                 </Grid>
-                { /**
-                 <Grid item style={{width: '100%',marginTop:20}}>
-                 <Typography style={{ fontSize: 20 }}>{current_category.label}</Typography>
-                 <FormControl className={classes.formControl} style={{width: '100%'}}>
-                 <InputLabel shrink htmlFor="genre-label-placeholder">
-                 Catégorie
-                 </InputLabel>
-                 <Select
-                 input={<Input name="category" id="genre-label-placeholder" />}
-                 displayEmpty
-                 name="category"
-                 value={this.state.category}
-                 onChange={this.onChange2}
-                 className={classes.selectEmpty}
-                 >
-                 <MenuItem value="">
-                 <em>...</em>
-                 </MenuItem>
-                 {categories}
-                 </Select>
-                 </FormControl>
-                 </Grid>
-                 */}
                 <Grid item style={{width: '100%', marginTop: 20}}>
-                  <Typography style={{fontSize: 20}}>{current_service.label}</Typography>
                   <FormControl className={classes.formControl} style={{width: '100%'}}>
-                    <InputLabel shrink htmlFor="genre-label-placeholder">
-                      Service
-                    </InputLabel>
+                    <Typography style={{fontSize: 20}}>Service</Typography>
                     <Select
                       input={<Input name="service" id="genre-label-placeholder"/>}
                       displayEmpty
@@ -444,6 +368,7 @@ class view extends React.Component {
                       value={this.state.service}
                       onChange={this.onChange2}
                       className={classes.selectEmpty}
+                      error={this.state.errors.service}
                     >
                       <MenuItem value="">
                         <em>...</em>
@@ -458,7 +383,6 @@ class view extends React.Component {
                 </Grid>
                 <Grid item style={{width: '100%', marginTop: 20}}>
                   <Typography style={{fontSize: 20}}>Méthodes de facturations</Typography>
-
                   <FormControl className={classes.formControl} style={{width: '100%'}}>
                     <Select2
                       value={this.state.selectedBilling}
@@ -467,16 +391,12 @@ class view extends React.Component {
                       isMulti
                       isSearchable
                       closeMenuOnSelect={false}
-
                     />
                   </FormControl>
                 </Grid>
                 <Grid item style={{width: '100%', marginTop: 20}}>
-                  <Typography style={{fontSize: 20}}>{current_filter_presentation ? current_filter_presentation.label : 'Aucun'}</Typography>
                   <FormControl className={classes.formControl} style={{width: '100%'}}>
-                    <InputLabel shrink htmlFor="genre-label-placeholder">
-                      Filtre de présentation
-                    </InputLabel>
+                    <Typography style={{fontSize: 20}}>Filtre de présentation</Typography>
                     <Select
                       input={<Input name="filter_presentation" id="genre-label-placeholder"/>}
                       displayEmpty
@@ -498,11 +418,8 @@ class view extends React.Component {
                 </Grid>
 
                 <Grid item style={{width: '100%', marginTop: 20}}>
-                  <Typography style={{fontSize: 20}}>{current_job ? current_job.label : ''}</Typography>
                   <FormControl className={classes.formControl} style={{width: '100%'}}>
-                    <InputLabel shrink htmlFor="genre-label-placeholder">
-                      Métier
-                    </InputLabel>
+                  <Typography style={{fontSize: 20}}>Métier</Typography>
                     <Select
                       input={<Input name="job" id="genre-label-placeholder"/>}
                       displayEmpty
@@ -510,6 +427,7 @@ class view extends React.Component {
                       value={this.state.job}
                       onChange={this.onChange2}
                       className={classes.selectEmpty}
+                      error={this.state.errors.job}
                     >
                       <MenuItem key={''} value="">
                         <em>...</em>
@@ -523,6 +441,7 @@ class view extends React.Component {
                   </FormControl>
                 </Grid>
                 <Grid item style={{marginTop: 20}}>
+                <Typography style={{fontSize: 20}}>Description</Typography>
                   <TextField
                     id="standard-with-placeholder"
                     margin="normal"
@@ -533,9 +452,34 @@ class view extends React.Component {
                     name="description"
                     value={prestation.description}
                     onChange={this.onChange}
-                    helperText={'Description'}
+                    error={this.state.errors.description}
                   />
                 </Grid>
+                <Typography style={{fontSize: 20}}>
+                  Prestation proposée
+                </Typography>
+                <em style={{ color: 'red'}}>{this.state.errors.access}</em><br/>
+                <FormControlLabel
+                  control={
+                    <Checkbox color="primary"
+                              checked={prestation.particular_access ? 'checked' : ''}
+                              name="particular_access" onChange={this.onChangeBool}
+                              />
+                  }
+                  label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux particuliers</p>
+                  </React.Fragment>}
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox color="primary"
+                              checked={prestation.professional_access ? 'checked' : ''}
+                              name="professional_access" onChange={this.onChangeBool}
+                              />
+                  }
+                  label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux professionels</p>
+                  </React.Fragment>}
+                />
+
                 <Grid item style={{width: '100%', marginTop: 20}}>
                   <Typography style={{fontSize: 20}}>Tags</Typography>
                   <FormControl className={classes.formControl} style={{width: '100%'}}>
@@ -568,7 +512,6 @@ class view extends React.Component {
                 </Button>
               </Link>
             </Grid>
-          </Card>
         </Grid>
       </Layout>
     );
