@@ -709,10 +709,22 @@ class NavBar extends Component {
                                  label={NAVBAR_MENU.registerServices}/>
                           </Link>
                         }
-                        <Link href={'/contact'}>
-                          <Tab classes={{root: classes.navbarTabRoot}}
-                               label={NAVBAR_MENU.contactUs}/>
-                        </Link>
+                        {
+                          !!localStorage.getItem('business', true) ?
+
+                            <Link href={'/?business=true'}>
+                              {
+                                localStorage.setItem('business', true)
+                              }
+                              <Tab classes={{root: classes.navbarTabRoot}}
+                                   label={NAVBAR_MENU.businessSide}/>
+                            </Link>
+                              :
+                              <Link href={'/'}>
+                                {localStorage.setItem('business', false)}
+                                <Tab classes={{root: classes.navbarTabRoot}} label={NAVBAR_MENU.classicSide}/>
+                              </Link>
+                        }
                       </Tabs>
                     </Grid> : this.searchBarInput(classes)
                 }
