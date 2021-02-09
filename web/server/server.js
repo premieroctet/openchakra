@@ -1,4 +1,4 @@
-const {is_production, is_validation, is_development, is_development_nossl, displayConfig}=require('../config/config')
+const {is_production, is_validation, is_development, is_development_nossl, displayConfig} = require('../config/config')
 
 const express = require('express');
 const next = require('next');
@@ -42,17 +42,18 @@ const availability = require('./routes/api/availability');
 const performances = require('./routes/api/performances');
 const payment = require('./routes/api/payment');
 const chatRooms = require('./routes/api/chatRooms');
-
 const admin = require('./routes/api/admin/dashboard');
 const path = require('path');
 const app = express();
 const server = require('http').Server(app);
 const SocketIo = require('socket.io');
-
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 require('console-stamp')(console, '[HH:MM:ss.l]');
 // Avoid deprecation warning
 mongoose.set('useUnifiedTopology', true)
 mongoose.set('useFindAndModify', false)
+
 
 nextApp.prepare().then(() => {
 
@@ -112,6 +113,8 @@ nextApp.prepare().then(() => {
   app.use('/myAlfred/api/performances', performances);
   app.use('/myAlfred/api/payment', payment);
   app.use('/myAlfred/api/authentication', authRoutes);
+
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
   //const port = process.env.PORT || 5000;
   const rootPath = require('path').join(__dirname, '/..');
