@@ -5,6 +5,8 @@ module.exports = function validateServiceInput(data) {
 
   let errors = {};
 
+  console.log(`Validation service ${JSON.stringify(data)}`)
+
   data.label = !isEmpty(data.label) ? data.label : '';
   data.category = !isEmpty(data.category) ? data.category : '';
   data.tags = !isEmpty(data.tags) ? data.tags : [];
@@ -20,7 +22,7 @@ module.exports = function validateServiceInput(data) {
     errors.category = 'Veuillez sélectionner une catégorie';
   }
 
-  if (!data.location.alfred && !data.location.home && !data.location.visio) {
+  if (!data.location.alfred && !data.location.client && !data.location.visio) {
     errors.location = 'Sélectionnez au moins un lieu de réalisation';
   }
 
