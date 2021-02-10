@@ -1,4 +1,3 @@
-import SnackBar from "../../components/SnackBar/SnackBar";
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 const {clearAuthenticationToken} = require('../../utils/authentication');
 const {setAxiosAuthentication} = require('../../utils/authentication');
@@ -10,7 +9,6 @@ import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import MultipleSelect from 'react-select';
 import {registerLocale} from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
 import {Helmet} from 'react-helmet';
@@ -26,9 +24,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 const {MAX_DESCRIPTION_LENGTH} = require('../../utils/consts');
-import Visibility from '@material-ui/icons/Visibility';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import {toast} from "react-toastify";
 
 const {isPhoneOk} = require('../../utils/sms');
 const moment = require('moment');
@@ -164,31 +160,26 @@ class editProfile extends React.Component {
   sendEmail = () => {
     axios.get('/myAlfred/api/users/sendMailVerification')
       .then(() => {
-        this.setState({
-          checkEmailSeverity: 'success',
-          checkEmailState: true,
-          checkEmailMessage: 'Mail envoyé'
-        })
+        snackBarSuccess("Mail envoyé")
       })
       .catch( err => {
-        this.setState({
-        checkEmailSeverity: 'error',
-        checkEmailState: true,
-        checkEmailMessage: 'email non envoyé'
-      })});
+        snackBarError('email non envoyé')
+       });
   };
 
   sendSms = () => {
     setAxiosAuthentication();
     axios.post('/myAlfred/api/users/sendSMSVerification', {phone: this.state.phone})
       .then(res => {
-        this.setState({smsCodeOpen: true}, () => (() => this.onSubmit())(() => snackBarSuccess("Le SMS a été envoyé")))
+        this.setState({smsCodeOpen: true}, () => this.onSubmit())
+        snackBarSuccess("Le SMS a été envoyé")
       })
       .catch(err => {
         this.setState({
           smsCodeOpen: true,
           serverError: true
-        }, () => snackBarError('Impossible d\'envoyer le SMS'));
+        });
+        snackBarError('Impossible d\'envoyer le SMS')
       });
   };
 
@@ -264,7 +255,8 @@ class editProfile extends React.Component {
         this.setState({errors: {}}, () => this.loadUser());
       })
       .catch(err => {
-        snackBarError(err.response.data)
+        err.response ?
+        snackBarError(err.response.data) : null
       });
   };
 
@@ -480,9 +472,6 @@ class editProfile extends React.Component {
             </Button>
           </Grid>
         </Grid>
-        <SnackBar severity={this.state.checkEmailSeverity} message={this.state.checkEmailMessage}
-                  open={this.state.checkEmailState} closeSnackBar={() => this.setState({checkEmailState: false})}/>
-
       </Grid>
     )
   };

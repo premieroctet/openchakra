@@ -3,10 +3,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 const snackBarSuccess =  (messages) =>{
-  var mysnacbar = <SnackBar severity={'success'} message={messages}/>;
-  var div = document.createElement('div');
+  let mysnacbar = <SnackBar severity={'success'} message={messages} id={messages}/>;
+  let body = document.getElementById('__next');
+  let div = document.createElement('div');
   div.id = 'id_snackbar';
-  ReactDOM.render(mysnacbar, document.getElementById('__next').appendChild(div));
+  ReactDOM.render(mysnacbar, body.appendChild(div));
 };
 
 const snackBarError=  (errors) =>{
@@ -15,8 +16,8 @@ const snackBarError=  (errors) =>{
       errors = Object.values(errors[res])
     });
   }
-  var mysnacbar = <SnackBar severity={'error'} message={errors}/>;
-  var div = document.createElement('div');
+  let mysnacbar = <SnackBar severity={'error'} message={errors} id={errors}/>;
+  let div = document.createElement('div');
   ReactDOM.render(mysnacbar, document.getElementById('__next').appendChild(div));
 };
 

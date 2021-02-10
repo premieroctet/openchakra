@@ -15,29 +15,35 @@ class SnackBar extends React.Component{
     }
   }
 
-  handleClose = () =>{
-    this.setState({open: false})
+  handleClose = (event, reason) =>{
+    if (reason === 'clickaway') {
+      return;
+    }
+    let body = document.getElementById('__next');
+    let el = document.getElementById('id_snackbar');
+    body.removeChild(el)
+
   };
 
-
   render() {
-    const {message, severity} = this.props;
+    const {message, severity, id} = this.props;
     const {open} = this.state;
     const is_snackbar = document.getElementById('snackbar');
 
     if(is_snackbar){
-        var style = parseFloat(is_snackbar.style.marginBottom);
+        var newMargin = parseFloat(is_snackbar.style.marginBottom);
     }
 
     return(
       <Snackbar
+        key={id}
         autoHideDuration={CLOSE_NOTIFICATION_DELAY*1000}
         open={open}
         onClose={this.handleClose}
         id={'snackbar'}
-        style={{marginBottom: is_snackbar ? style + 80 : 0}}
+        style={{marginBottom: is_snackbar ? newMargin + 80 : 0}}
       >
-        <Alert severity={severity} style={{fontWeight: 'bold'}} onClose={this.handleClose}>
+        <Alert key={id} severity={severity} style={{fontWeight: 'bold'}}>
           {message}
         </Alert>
       </Snackbar>

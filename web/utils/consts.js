@@ -363,7 +363,7 @@ const BOOK_STATUS= {
 const EXPIRATION_DELAY=7
 
 // Fermeture auto notificaitons nack en secondes
-const CLOSE_NOTIFICATION_DELAY=1
+const CLOSE_NOTIFICATION_DELAY=2
 
 // Fermeture $age minimum inscription
 const ACCOUNT_MIN_AGE = 18
