@@ -75,6 +75,7 @@ class BigList extends React.Component {
       'pictureCellRenderer' : models.PictureCellRenderer,
       'privateRenderer' : models.PrivateRenderer,
       'dateTimeCellRenderer': models.DateTimeCellRenderer,
+      'booleanCellRenderer': models.BooleanCellRenderer,
     }
 
     const defaultColDef={
