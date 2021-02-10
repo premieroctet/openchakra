@@ -1,4 +1,4 @@
-const is_b2B_site = () => {
+const is_b2b_site = () => {
   if (typeof localStorage=='undefined') {
     console.log('Pas de localStorage')
     return false
