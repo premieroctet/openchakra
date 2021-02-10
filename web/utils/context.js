@@ -18,5 +18,5 @@ const is_b2b_admin = user => {
 }
 
 module.exports={
-  is_b2B_site, is_b2b_employee, is_b2b_admin
+  is_b2b_site, is_b2b_employee, is_b2b_admin
 }
