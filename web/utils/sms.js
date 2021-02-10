@@ -24,16 +24,7 @@ const fillSms = (pattern, values) => {
 };
 
 const isPhoneOk = value => {
-  if (!value) {
-    return false;
-  }
-  if (value.length == 10 && value.startsWith('0')) {
-    return true;
-  }
-  if (value.length == 11 && value.startsWith('33')) {
-    return true;
-  }
-  return false;
+  return !!value.match(/^(33|0)\d{9}$/);
 };
 
-module.exports = {fillSms, isPhoneOk}
+module.exports = {fillSms, isPhoneOk};

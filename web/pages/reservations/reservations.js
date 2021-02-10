@@ -24,6 +24,7 @@ import LayoutMobileReservations from "../../hoc/Layout/LayoutMobileReservations"
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
 const {BOOK_STATUS}=require('../../utils/consts');
+import Router from 'next/router';
 
 
 const DialogTitle = withStyles(styles)((props) => {
@@ -65,19 +66,35 @@ class AllReservations extends React.Component {
     };
   }
 
+  static getInitialProps({query: {id}}) {
+    return {
+      id: id,
+    };
+  }
+
   componentDidMount() {
     setAxiosAuthentication();
-    axios.get('/myAlfred/api/users/current').then(res => {
-      let result = res.data;
-      this.setState({
-        userInfo: result,
-        user: result._id,
-        isAlfred: result.is_alfred,
-        reservationType: result.is_alfred ? 0 : 1,
-      });
+    axios.get('/myAlfred/api/users/current')
+      .then(res => {
+        let result = res.data;
+        this.setState({
+          userInfo: result,
+          user: result._id,
+          isAlfred: result.is_alfred,
+          reservationType: result.is_alfred ? 0 : 1,
+        });
 
-      this.loadBookings()
-    });
+        this.loadBookings()
+        if (this.props.id) {
+          setTimeout(() => this.setState({bookingPreview: this.props.id}), 1000)
+        }
+      })
+      .catch( err => {
+        if (err.response && [401, 403].includes(err.response.status)) {
+          localStorage.setItem('path', Router.asPath)
+          Router.push('/login');
+        }
+      })
   }
 
   loadBookings = () => {

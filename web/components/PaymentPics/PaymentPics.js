@@ -36,7 +36,7 @@ class PaymentPics extends React.Component{
         {
           pics.map((res,index) => (
             <Grid key={index} style={{marginRight: 15}}>
-              <img src={`../../static/assets/icon/payementIcones/${res.urlName}.png`} height={20} alt={res.urlName} title={res.urlName}/>
+              <img src={`/static/assets/icon/paymentIcones/${res.urlName}.png`} height={20} alt={res.urlName} title={res.urlName}/>
             </Grid>
           ))
         }

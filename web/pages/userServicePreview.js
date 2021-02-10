@@ -538,7 +538,7 @@ class UserServicesPreview extends React.Component {
           axios.put('/myAlfred/api/chatRooms/addBookingId/' + bookingObj.chatroom, {booking: booking._id})
             .then(() => {
               if (actual) {
-                Router.push({pathname: '/confirmPayement',query: {booking_id: booking._id}})
+                Router.push({pathname: '/confirmPayment',query: {booking_id: booking._id}})
               }
               else {
                 Router.push(`/profile/messages?user=${response.data.user}&relative=${response.data.alfred}`)

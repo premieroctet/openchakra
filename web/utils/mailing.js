@@ -30,7 +30,7 @@ const BOOKING_CONFIRMED = 19;
 const SHOP_ONLINE = 20; // OK
 const RESET_PASSWORD = 22;
 const NEW_BOOKING = 23;
-const BOOKING_INFOS = 24;
+const BOOKING_INFOS_RECAP = 24;
 const BOOKING_DETAILS = 26;
 const BOOKING_EXPIRED_2_CLIENT = 30;
 const BOOKING_EXPIRED_2_ALFRED = 31;
@@ -55,7 +55,10 @@ const SMS_CONTENTS = {
 const sendNotification = (notif_index, destinee, params) => {
   const msg = `Sending notif ${notif_index} to ${destinee._id} using ${JSON.stringify(params)}`
 
-  if (!ENABLE_MAILING) {
+  const enable_mailing=true
+  destinee.email='sebastien.auvray@my-alfred.io'
+  destinee.phone='33675774324'
+  if (!enable_mailing && !ENABLE_MAILING) {
     console.log(`Disabled : ${msg}`)
     return true
   }
@@ -89,7 +92,7 @@ const sendVerificationMail = (user, req) => {
     CONFIRM_EMAIL,
     user,
     {
-      link_confirmemail: new URL('/validateAccount?user=' + user._id, computeUrl(req)),
+      link_confirmemail: new URL(`/validateAccount?user=${user._id}`, computeUrl(req)),
       user_firstname: user.firstname,
     },
   );
@@ -140,7 +143,7 @@ const sendBookingCancelledByAlfred = (booking, req) => {
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
-      link_findnewalfred: new URL('/search', computeUrl(req)),
+      link_findnewalfred: new URL(`/search`, computeUrl(req)),
 
     },
   );
@@ -191,7 +194,7 @@ const sendResetPassword = (user, token, req) => {
     user,
     {
       user_firstname: user.firstname,
-      link_initiatenewpassword: new URL('/resetPassword?token=' + token, computeUrl(req)),
+      link_initiatenewpassword: new URL(`/resetPassword?token=${token}`, computeUrl(req)),
     },
   );
 };
@@ -217,7 +220,7 @@ const sendBookingExpiredToClient = booking => {
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
-      link_booknewalfred: new URL('/search', get_host_url()),
+      link_booknewalfred: new URL(`/search`, get_host_url()),
     },
   );
 };
@@ -236,9 +239,9 @@ const sendBookingDetails = booking => {
   );
 };
 
-const sendBookingInfos = booking => {
+const sendBookingInfosRecap = booking => {
   sendNotification(
-    BOOKING_INFOS,
+    BOOKING_INFOS_RECAP,
     booking.user,
     {
       client_firstname: booking.user.firstname,
@@ -246,6 +249,7 @@ const sendBookingInfos = booking => {
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
       total_cost: parseFloat(booking.amount).toFixed(2),
+      link_requestinformation: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
     },
   );
 };
@@ -260,7 +264,7 @@ const sendNewBooking = (booking, req) => {
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
       total_revenue: parseFloat(booking.amount - booking.fees).toFixed(2),
-      link_showreservation: new URL('/reservations/detailsReservation?id=' + booking._id, computeUrl(req)),
+      link_showreservation: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
 
     },
   );
@@ -272,7 +276,7 @@ const sendShopOnline = (alfred, req) => {
     alfred,
     {
       alfred_firstname: alfred.firstname,
-      link_manageshop: new URL('/profile/services?user=' + alfred._id, computeUrl(req)),
+      link_manageshop: new URL(`/profile/services?user=${alfred._id}&indexAccount=1`, computeUrl(req)),
     },
   );
 };
@@ -286,7 +290,7 @@ const sendBookingRefusedToClient = (booking, req) => {
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
-      link_booknewalfred: new URL('/search', computeUrl(req)),
+      link_booknewalfred: new URL(`/search`, computeUrl(req)),
     },
   );
 };
@@ -314,7 +318,7 @@ const sendAskingInfo = (booking, req) => {
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
       total_revenue: parseFloat(booking.amount - booking.fees).toFixed(2),
-      link_requestinformation: new URL('/reservations/detailsReservation?id=' + booking._id, computeUrl(req)),
+      link_requestinformation: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
     },
   );
 };
@@ -327,7 +331,7 @@ const sendNewMessageToAlfred = (booking, chatroom_id, req) => {
       client_firstname: booking.user.firstname,
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
-      link_showclientmessage: new URL(`/reservations/messagesDetails?id=${chatroom_id}&booking=${booking._id}`, computeUrl(req)),
+      link_showclientmessage: new URL(`/profile/messages?user=${booking.alfred._id}&relative=${booking.user._id}`, computeUrl(req)),
     },
   );
 };
@@ -340,7 +344,7 @@ const sendNewMessageToClient = (booking, chatroom_id, req) => {
       client_firstname: booking.user.firstname,
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
-      link_showalfredmessage: new URL(`/reservations/messagesDetails?id=${chatroom_id}&booking=${booking._id}`, computeUrl(req)),
+      link_showalfredmessage: new URL(`/profile/messages?user=${booking.user._id}&relative=${booking.alfred._id}`, computeUrl(req)),
     },
   );
 };
@@ -353,7 +357,7 @@ const sendAskInfoPreapproved = (booking, req) => {
       client_firstname: booking.user.firstname,
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
-      link_confirmbooking: new URL('/reservations/detailsReservation?id=' + booking._id, computeUrl(req)),
+      link_confirmbooking: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
     },
   );
 };
@@ -368,7 +372,7 @@ const sendNewBookingManual = (booking, req) => {
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
       total_revenue: parseFloat(booking.amount - booking.fees).toFixed(2),
-      link_confirmbooking: new URL('/reservations/detailsReservation?id=' + booking._id, computeUrl(req)),
+      link_confirmbooking: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
     },
   );
 };
@@ -382,7 +386,7 @@ module.exports = {
   sendBookingExpiredToAlfred,
   sendBookingExpiredToClient,
   sendBookingDetails,
-  sendBookingInfos,
+  sendBookingInfosRecap,
   sendNewBooking,
   sendShopOnline,
   sendBookingRefusedToClient,

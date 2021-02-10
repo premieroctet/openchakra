@@ -6,16 +6,16 @@ import moment from 'moment';
 import Grid from '@material-ui/core/Grid';
 import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
-import styles from '../static/css/pages/confirmPayement/confirmPayement';
+import styles from '../static/css/pages/confirmPayment/confirmPayment';
 
 import Stepper from "../components/Stepper/Stepper";
-import AddressAndFacturation from "../components/Payement/AddressAndFacturation/AddressAndFacturation";
-import PaymentChoice from "../components/Payement/PaymentChoice/PaymentChoice";
+import AddressAndFacturation from "../components/Payment/AddressAndFacturation/AddressAndFacturation";
+import PaymentChoice from "../components/Payment/PaymentChoice/PaymentChoice";
 import LayoutPayment from "../hoc/Layout/LayoutPayment";
 
 moment.locale('fr');
 
-class ConfirmPayement extends React.Component {
+class ConfirmPayment extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -226,4 +226,4 @@ class ConfirmPayement extends React.Component {
   }
 }
 
-export default withStyles(styles)(ConfirmPayement);
+export default withStyles(styles)(ConfirmPayment);
