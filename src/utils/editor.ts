@@ -5,6 +5,13 @@ const ALERT_COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'AlertTitle',
 ]
 
+const SLIDER_COMPONENTS: (ComponentType | MetaComponentType)[] = [
+  'Slider',
+  'SliderTrack',
+  'SliderFilledTrack',
+  'SliderThumb',
+]
+
 export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   ...ALERT_COMPONENTS,
   'Avatar',
@@ -43,6 +50,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'SimpleGrid',
   'Spinner',
   'Select',
+  ...SLIDER_COMPONENTS,
   'Stack',
   'Switch',
   'Tag',
@@ -70,6 +78,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'ListMeta',
   'InputGroupMeta',
   'BreadcrumbMeta',
+  'SliderMeta',
 ]
 
 export const AccordionWhitelist: (
@@ -89,5 +98,8 @@ export const rootComponents = COMPONENTS
         'AccordionButton',
         'AccordionPanel',
         'AccordionIcon',
+        'SliderTrack',
+        'SliderFilledTrack',
+        'SliderThumb',
       ].includes(name),
   )

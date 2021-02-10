@@ -23,6 +23,7 @@ import IconPreview from './previews/IconPreview'
 import IconButtonPreview from './previews/IconButtonPreview'
 import SelectPreview from '~components/editor/previews/SelectPreview'
 import NumberInputPreview from '~components/editor/previews/NumberInputPreview'
+import SliderTrackPreview from './previews/SliderTrackPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -55,6 +56,8 @@ const ComponentPreview: React.FC<{
     case 'Radio':
     case 'ListItem':
     case 'BreadcrumbLink':
+    case 'SliderThumb':
+    case 'SliderFilledTrack':
       return (
         <PreviewContainer
           component={component}
@@ -95,6 +98,7 @@ const ComponentPreview: React.FC<{
     case 'Grid':
     case 'Center':
     case 'Container':
+    case 'Slider':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -150,6 +154,8 @@ const ComponentPreview: React.FC<{
       return <SelectPreview component={component} />
     case 'NumberInput':
       return <NumberInputPreview component={component} />
+    case 'SliderTrack':
+      return <SliderTrackPreview component={component} />
     default:
       return null
   }
