@@ -55,10 +55,7 @@ const SMS_CONTENTS = {
 const sendNotification = (notif_index, destinee, params) => {
   const msg = `Sending notif ${notif_index} to ${destinee._id} using ${JSON.stringify(params)}`
 
-  const enable_mailing=true
-  destinee.email='sebastien.auvray@my-alfred.io'
-  destinee.phone='33675774324'
-  if (!enable_mailing && !ENABLE_MAILING) {
+  if (!ENABLE_MAILING) {
     console.log(`Disabled : ${msg}`)
     return true
   }
