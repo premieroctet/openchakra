@@ -21,7 +21,10 @@ class SnackBar extends React.Component{
     }
     let body = document.getElementById('__next');
     let el = document.getElementById('id_snackbar');
-    body.removeChild(el)
+    if(typeof el === 'object' && el){
+      body.removeChild(el)
+
+    }
 
   };
 
@@ -29,9 +32,14 @@ class SnackBar extends React.Component{
     const {message, severity, id} = this.props;
     const {open} = this.state;
     const is_snackbar = document.getElementById('snackbar');
+    var newMargin = 0;
+
 
     if(is_snackbar){
-        var newMargin = parseFloat(is_snackbar.style.marginBottom);
+      let allSnackbar =  document.querySelectorAll('#snackbar');
+      allSnackbar.forEach(query => {
+        newMargin = parseFloat(query.style.marginBottom) + 80;
+      });
     }
 
     return(
@@ -41,7 +49,7 @@ class SnackBar extends React.Component{
         open={open}
         onClose={this.handleClose}
         id={'snackbar'}
-        style={{marginBottom: is_snackbar ? newMargin + 80 : 0}}
+        style={{marginBottom: newMargin}}
       >
         <Alert key={id} severity={severity} style={{fontWeight: 'bold'}}>
           {message}
