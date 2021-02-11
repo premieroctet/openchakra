@@ -5,6 +5,7 @@ const moment = require('moment-timezone');
 moment.locale('fr');
 const util = require('util');
 import LockIcon from '@material-ui/icons/Lock';
+import CheckIcon from '@material-ui/icons/Check';
 
 class StatusCellRenderer extends React.Component {
 
@@ -134,6 +135,31 @@ class PrivateRenderer extends React.Component {
 
 }
 
+class BooleanCellRenderer extends React.Component {
+
+  render = () => {
+    if (!this.props.value) {
+      return null
+    }
+    return (
+      <CheckIcon/>
+    )
+  }
+}
+
+class BooleanCellEditor extends React.Component {
+
+  render = () => {
+    if (!this.props.value) {
+      return null
+    }
+    return (
+      <CheckIcon/>
+    )
+  }
+}
+
 module.exports= {
   StatusCellRenderer, DateCellRenderer, DateTimeCellRenderer,
-  StatusCellFilter, PictureCellRenderer, PrivateRenderer}
+  StatusCellFilter, PictureCellRenderer, PrivateRenderer, BooleanCellRenderer
+}

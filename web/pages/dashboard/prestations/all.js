@@ -72,6 +72,8 @@ class all extends React.Component {
       {headerName: "Label", field: "label"},
       {headerName: "Catégorie", field: "service.category.label"},
       {headerName: "Service", field: "service.label"},
+      {headerName: "Pros", field: "professional_access", cellRenderer:'booleanCellRenderer'},
+      {headerName: "Particuliers", field: "particular_access", cellRenderer:'booleanCellRenderer'},
       {headerName: "Filtre présentation", field: "filter_presentation.label"},
     ]
   }
