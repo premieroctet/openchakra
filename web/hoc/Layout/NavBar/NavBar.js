@@ -88,6 +88,7 @@ class NavBar extends Component {
       startDate: null,
       endDate: null,
       focusedInput: null,
+      b2b: false
 
     }
   }
@@ -203,6 +204,11 @@ class NavBar extends Component {
     this.setState({anchorEl: false})
   };
 
+  b2bSide = () => {
+    this.setState({b2b: true})
+    localStorage.setItem('b2b', 'true');
+    Router.push('/?b2b=true')
+  }
   findService = () => {
     var queryParams = {search: 1};
     if (this.state.keyword) {
@@ -508,6 +514,8 @@ class NavBar extends Component {
     )
   };
 
+
+
   searchBarInput = (classes) => {
 
     const logged = this.state.user != null
@@ -657,8 +665,9 @@ class NavBar extends Component {
   };
 
   render() {
-    const {user, setOpenLogin, setOpenRegister, anchorEl, ifHomePage, modalMobileSearchBarInput, ifSearchPage, modalFilters} = this.state;
+    const {user, setOpenLogin, setOpenRegister, anchorEl, ifHomePage, modalMobileSearchBarInput, ifSearchPage, modalFilters, business} = this.state;
     const {classes} = this.props;
+
 
     const logged = user != null
     const modalLogin = () => {
@@ -710,20 +719,12 @@ class NavBar extends Component {
                           </Link>
                         }
                         {
-                          !!localStorage.getItem('business', true) ?
-
-                            <Link href={'/?business=true'}>
-                              {
-                                localStorage.setItem('business', true)
-                              }
+                          localStorage.getItem('b2b') !== 'true' ?
+                            <Link href={'/'} onClick={this.b2bSide}>
                               <Tab classes={{root: classes.navbarTabRoot}}
                                    label={NAVBAR_MENU.businessSide}/>
-                            </Link>
-                              :
-                              <Link href={'/'}>
-                                {localStorage.setItem('business', false)}
-                                <Tab classes={{root: classes.navbarTabRoot}} label={NAVBAR_MENU.classicSide}/>
-                              </Link>
+                            </Link> : null
+
                         }
                       </Tabs>
                     </Grid> : this.searchBarInput(classes)

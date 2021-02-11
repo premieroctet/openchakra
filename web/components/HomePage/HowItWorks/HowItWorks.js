@@ -6,13 +6,13 @@ import Hidden from "@material-ui/core/Hidden";
 import withStyles from "@material-ui/core/styles/withStyles";
 import styles from '../../../static/css/components/HowItWorks/HowItWorks'
 
-class HowItWorks extends React.Component{
+class HowItWorks extends React.Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    const{classes} = this.props;
+    const {classes} = this.props;
     return (
       <Grid className={classes.howItWorksMainStyle}>
         <Grid className={classes.howItWorksMainContainer}>
@@ -35,4 +35,4 @@ class HowItWorks extends React.Component{
 
 }
 
-export default withStyles (styles)(HowItWorks);
+export default withStyles(styles)(HowItWorks);

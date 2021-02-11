@@ -72,6 +72,11 @@ const BANNER_PRESENTATION = {
   text: 'Stressez moins. En quelques clics, trouver la personne et le service dont vous avez besoin.',
   button: 'Découvrir'
 };
+const B2B_BANNER_PRESENTATION = {
+  title: 'Les micro-services qui permette des maxi-économies',
+  text: 'Stressez moins. En quelques clics, trouver la personne et le service dont vous avez besoin.',
+  button: 'Décrouvrir'
+};
 
 const CATEGORY = {
   title: 'Catégories',
@@ -98,6 +103,7 @@ const HOW_IT_WORKS = {
     '#MyAlfred.',
   rightText: 'Vous pouvez consulter des centaines de profils, choisir votre Alfred, réservez et payez en ligne votre service. Notre équipe vous accompagne à chaque étape !'
 };
+
 
 const NEWS_LETTER = {
   title: 'Profitez des bon plans de la communauté avec la Newsletter des Alfred',
@@ -327,9 +333,27 @@ const FAQ = {
   'client': FAQ_CLIENT,
 }
 module.exports = {
-  CESU_NOTICE, OUTSIDE_PERIMETER, SCHEDULE_TITLE, SCHEDULE_SUBTITLE,
-  getMangopayMessage, SHOP_CREATION_SUCCESSFUL, ID_CARD_CONFIRM_DELETION,
-  REGISTRATION_PROOF_CONFIRM_DELETION, INFOBAR_MESSAGE, SHOWMORE, SEARCHBAR, BANNER_PRESENTATION,
-  CATEGORY, BECOME_ALFRED, RESA_SERVICE, HOW_IT_WORKS, NEWS_LETTER, NAVBAR_MENU,
-  SHOP, CMP_PRESENTATION, BOOKING, FAQ
+  CESU_NOTICE,
+  OUTSIDE_PERIMETER,
+  SCHEDULE_TITLE,
+  SCHEDULE_SUBTITLE,
+  getMangopayMessage,
+  SHOP_CREATION_SUCCESSFUL,
+  ID_CARD_CONFIRM_DELETION,
+  REGISTRATION_PROOF_CONFIRM_DELETION,
+  INFOBAR_MESSAGE,
+  SHOWMORE,
+  SEARCHBAR,
+  BANNER_PRESENTATION,
+  B2B_BANNER_PRESENTATION,
+  CATEGORY,
+  BECOME_ALFRED,
+  RESA_SERVICE,
+  HOW_IT_WORKS,
+  NEWS_LETTER,
+  NAVBAR_MENU,
+  SHOP,
+  CMP_PRESENTATION,
+  BOOKING,
+  FAQ
 };
