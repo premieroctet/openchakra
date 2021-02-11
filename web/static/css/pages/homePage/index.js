@@ -44,9 +44,6 @@ export default theme => ({
   },
 
 
-
-
-
   bannerPresentationContainerIllustration: {
     display: 'flex',
     alignItems: 'center',
@@ -56,6 +53,15 @@ export default theme => ({
     justifyContent: 'center',
     height: '85vh',
     backgroundImage: 'url(../../assets/img/homePage/illuHeader.png)',
+    backgroundColor: 'rgba(207,223,252,1)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat'
+  },
+  navbarAndBannerContainerB2b: {
+    justifyContent: 'center',
+    height: '85vh',
+    backgroundImage: 'url(../../assets/img/homePage/illuB2B-02.svg)',
     backgroundColor: 'rgba(207,223,252,1)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
@@ -134,10 +140,11 @@ export default theme => ({
     marginTop: '2%',
     backgroundColor: theme.palette.yellow.main
   },
-
-
-
-
+  howItWorksComponentB2b: {
+    justifyContent: 'center',
+    marginTop: '2%',
+    backgroundColor: '#3C4047'
+  },
   generalWidthFooter: {
     width: '90%'
   },
