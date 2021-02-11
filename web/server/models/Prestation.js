@@ -59,6 +59,16 @@ const PrestationSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  // Particulars can book
+  particular_access: {
+    type: Boolean,
+    required: true,
+  },
+  // Professionals can book
+  professional_access: {
+    type: Boolean,
+    required: true,
+  }
 });
 
 PrestationSchema.index({label: 'text'});

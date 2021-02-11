@@ -66,6 +66,8 @@ class all extends React.Component {
   this.columnDefs=[
       {headerName: "Label", field: "label"},
       {headerName: "Catégorie", field: "category.label"},
+      {headerName: "Pros", field: "professional_access", cellRenderer:'booleanCellRenderer'},
+      {headerName: "Particuliers", field: "particular_access", cellRenderer:'booleanCellRenderer'},
       {headerName: "Illustration", field: "picture", cellRenderer:'pictureCellRenderer'},
     ]
   }

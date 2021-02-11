@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-
+var _ = require('lodash');
 const Category = require('../../models/Category');
 const ServiceUser = require('../../models/ServiceUser');
+const Service = require('../../models/Service');
 
 router.get('/test', (req, res) => res.json({msg: 'Category Works!'}));
 
@@ -52,8 +53,20 @@ router.get('/all', (req, res) => {
 
     })
     .catch(err => res.status(404).json({category: 'No category found'}));
+});
 
+// @Route GET /myAlfred/api/category/pro
+// View all pro categories, i.e. having at least one service with professional_access
+router.get('/pro', (req, res) => {
 
+  Service.find({}, 'professional_access')
+    .populate('category')
+    .then(services => {
+      services = services.filter( s => s.professional_access)
+      const categories=_.uniqBy(services.map(s => s.category), c => c._id)
+      res.json(categories);
+    })
+    .catch(err => res.status(404).json({category: 'No category found'}));
 });
 
 // @Route GET /myAlfred/api/category/all/sort

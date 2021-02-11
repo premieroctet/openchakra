@@ -53,6 +53,16 @@ const ServiceSchema = new Schema({
   s_label: {
     type: String,
   },
+  // Particulars can book
+  particular_access: {
+    type: Boolean,
+    required: true,
+  },
+  // Professionals can book
+  professional_access: {
+    type: Boolean,
+    required: true,
+  }
 });
 
 ServiceSchema.index({label: 'text'});

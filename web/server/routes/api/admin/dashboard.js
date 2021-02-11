@@ -1765,6 +1765,8 @@ router.post('/service/all', uploadService.single('picture'), passport.authentica
             },
             pick_tax: req.body.pick_tax,
             travel_tax: req.body.travel_tax,
+            professional_access: req.body.professional_access,
+            particular_access: req.body.particular_access,
           });
 
           newService.save().then(service => res.json(service)).catch(err => console.error(err));
@@ -1892,12 +1894,17 @@ router.delete('/service/all/:id', passport.authenticate('jwt', {session: false})
 // Update a service
 // @Access private
 router.put('/service/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  console.log('Received:' + JSON.stringify(req.body));
+
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
 
   if (admin) {
+    const {errors, isValid} = validateServiceInput(req.body);
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
     Service.findByIdAndUpdate({_id: req.params.id},
       {
         $set: {
@@ -1906,15 +1913,30 @@ router.put('/service/all/:id', passport.authenticate('jwt', {session: false}), (
           tags: req.body.tags,
           description: req.body.description, majoration: req.body.majoration, location: req.body.location,
           travel_tax: req.body.travel_tax, pick_tax: req.body.pick_tax,
+          professional_access: req.body.professional_access, particular_access: req.body.particular_access
         },
 
-      }, {new: true})
+      }, {new: false})
       .then(service => {
-        res.json(service);
-
-
+        // Update prestations if service access changed
+        updates={}
+        if (service.professional_access!=req.body.professional_access) {
+          updates['professional_access']=req.body.professional_access
+        }
+        if (service.particular_access!=req.body.particular_access) {
+          updates['particular_access']=req.body.particular_access
+        }
+        if (Object.keys(updates).length>0) {
+          Prestation.updateMany({service: service._id}, {$set : updates})
+            .then (res => console.log(`Prestations updated:${JSON.stringify(res)}`))
+            .catch (err => console.error(`Prestations update error:${err}`))
+        }
+        res.json(null);
       })
-      .catch(err => res.status(404).json({servicenotfound: 'No service found'}));
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({servicenotfound: 'No service found'})
+      });
   } else {
     res.status(403).json({msg: 'Access denied'});
   }
@@ -1975,6 +1997,7 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
             picture: req.file.path,
             tags: JSON.parse(req.body.tags),
             cesu_eligible: req.body.cesu_eligible,
+            professional_access: req.body.professional_access, particular_access: req.body.particular_access
           });
           newPrestation.save()
             .then(prestation => res.json(prestation))
@@ -2019,7 +2042,7 @@ router.get('/prestation/all', passport.authenticate('jwt', {session: false}), (r
   const admin = decode.is_admin;
 
   if (admin) {
-    Prestation.find({}, 'label cesu_eligible')
+    Prestation.find({}, 'label cesu_eligible particular_access professional_access')
       .sort({s_label: 1, category: 1})
       .populate({path: 'service', select: 'label', populate: {path: 'category', select: 'label'}})
       .populate('filter_presentation', 'label')
@@ -2099,6 +2122,11 @@ router.put('/prestation/all/:id', passport.authenticate('jwt', {session: false})
   const admin = decode.is_admin;
 
   if (admin) {
+    const {errors, isValid} = validatePrestationInput(req.body);
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
     Prestation.findOneAndUpdate({_id: req.params.id}, {
         $set: {
           label: req.body.label,
@@ -2107,13 +2135,15 @@ router.put('/prestation/all/:id', passport.authenticate('jwt', {session: false})
           service: mongoose.Types.ObjectId(req.body.service),
           billing: req.body.billing,
           filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
-          search_filter: req.body.search_filter,
-          category: null,
-          calculating: mongoose.Types.ObjectId(req.body.calculating),
+          search_filter: null,
+          category: mongoose.Types.ObjectId(req.body.service.category),
+          calculating: null,
           job: req.body.job ? mongoose.Types.ObjectId(req.body.job) : null,
           description: req.body.description,
           tags: req.body.tags,
           cesu_eligible: req.body.cesu_eligible,
+          professional_access: req.body.professional_access,
+          particular_access: req.body.particular_access,
         },
       },
       {new: true})

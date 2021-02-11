@@ -1,4 +1,5 @@
 const is_b2b_site = () => {
+
   if (typeof localStorage == 'undefined') {
     console.log('Pas de localStorage')
     return false
@@ -17,6 +18,7 @@ const is_b2b_admin = user => {
   return is_b2b_admin
 }
 
-module.exports = {
+
+module.exports={
   is_b2b_site, is_b2b_employee, is_b2b_admin
 }
