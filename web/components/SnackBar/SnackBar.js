@@ -31,7 +31,7 @@ class SnackBar extends React.Component{
   render() {
     const {message, severity, id} = this.props;
     const {open} = this.state;
-    const is_snackbar = document.getElementById('snackbar');
+    const is_snackbar = document.getElementById('id_snackbar');
     var newMargin = 0;
 
 
