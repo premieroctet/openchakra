@@ -1,17 +1,18 @@
-const {setAxiosAuthentication}=require('../../../utils/authentication')
+const {setAxiosAuthentication} = require('../../../utils/authentication')
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import styles from '../../../static/css/components/Card/CategoryCard/CategoryCard'
 import withStyles from "@material-ui/core/styles/withStyles";
 import Link from 'next/link';
 import axios from "axios";
+import {is_b2b_site} from "../../../utils/context";
 
 
-class CategoryCard extends React.Component{
+class CategoryCard extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state={
+    this.state = {
       user: {},
       gps: null
     }
@@ -29,7 +30,9 @@ class CategoryCard extends React.Component{
           gps: data.billing_address.gps
         });
       })
-      .catch(err => {console.error((err))})
+      .catch(err => {
+        console.error((err))
+      })
   }
 
   render() {
@@ -39,8 +42,9 @@ class CategoryCard extends React.Component{
     if (!item) {
       return null
     }
-    return(
-      <Link href={'/search?search=1&category=' + item._id + (gps ? '&gps=' + JSON.stringify(gps) : '')}>
+    return (
+      <Link
+        href={'/search?search=1' + is_b2b_site() ? '&category/pro=' : '&category=' + item._id + (gps ? '&gps=' + JSON.stringify(gps) : '')}>
         <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer'}}>
           <Grid className={classes.categoryCardMedia}>
             <Grid
@@ -59,4 +63,4 @@ class CategoryCard extends React.Component{
 
 }
 
-export default withStyles (styles) (CategoryCard);
+export default withStyles(styles)(CategoryCard);
