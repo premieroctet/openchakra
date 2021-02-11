@@ -24,6 +24,7 @@ import IconButtonPreview from './previews/IconButtonPreview'
 import SelectPreview from '~components/editor/previews/SelectPreview'
 import NumberInputPreview from '~components/editor/previews/NumberInputPreview'
 import SliderTrackPreview from './previews/SliderTrackPreview'
+import SliderPreview from './previews/SliderPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -98,7 +99,6 @@ const ComponentPreview: React.FC<{
     case 'Grid':
     case 'Center':
     case 'Container':
-    case 'Slider':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -156,6 +156,8 @@ const ComponentPreview: React.FC<{
       return <NumberInputPreview component={component} />
     case 'SliderTrack':
       return <SliderTrackPreview component={component} />
+    case 'Slider':
+      return <SliderPreview component={component} />
     default:
       return null
   }
