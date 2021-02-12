@@ -7,7 +7,7 @@ import styles from '../../static/css/components/ScrollMenu/ScrollMenu';
 import withStyles from "@material-ui/core/styles/withStyles";
 import querystring from 'querystring';
 import Router from 'next/router';
-
+import _ from 'lodash'
 
 function a11yProps(index, res) {
   return {
@@ -19,9 +19,6 @@ function a11yProps(index, res) {
 class ScrollMenu extends React.Component{
   constructor(props) {
     super(props);
-    this.state={
-      value: props.indexCat ? parseInt(props.indexCat) : 0,
-    }
   }
 
   controllerUrl = (url) =>{
@@ -34,7 +31,21 @@ class ScrollMenu extends React.Component{
 
   render() {
     const{classes, categories, gps, mode, extraParams} = this.props;
-    const{value} = this.state;
+
+    const location=window.location.href
+
+    var tabIndex=0
+    if (['account', 'profile', 'faq'].includes(mode)) {
+      tabIndex = _.findIndex(categories.map(c => c.url), url => location.includes(url))
+      tabIndex = tabIndex == -1 ? 0 : tabIndex
+    }
+    else if (mode=='search') {
+      tabIndex = _.findIndex(categories.map(c => c._id), id => location.includes(`category=${id}`))
+      tabIndex = tabIndex == -1 ? 0 : tabIndex
+    }
+    else {
+      console.error(`ScrollMenu:Mode ${mode} inconnu`)
+    }
 
   return(
     <Grid style={{maxWidth: '100%'}}>
@@ -42,7 +53,7 @@ class ScrollMenu extends React.Component{
         <Tabs
           orientation="horizontal"
           variant="scrollable"
-          value={value}
+          value={tabIndex}
           onChange={this.handleChange}
           aria-label="scrollable force tabs"
           scrollButtons="on"
@@ -53,13 +64,15 @@ class ScrollMenu extends React.Component{
               categories.map((res, index) =>
               {
 
-                let url = mode === 'account' ? '/account' + res.url  + '?' + querystring.stringify({indexAccount: index})
+                let url = mode === 'account' ? '/account' + res.url
                           :
-                          mode === 'profile' ? '/profile' + res.url  + '?' + querystring.stringify({...extraParams, indexAccount: index})
+                          mode === 'profile' ? '/profile' + res.url  + '?' + querystring.stringify({...extraParams})
                           :
-                          mode === 'faq' ? res.url + '?' + 'indexFaq=' + index
+                          mode === 'faq' ? res.url
                           :
-                          '/search?search=1&category=' + res._id + (gps ? '&gps=' + JSON.stringify(gps) : '') + '&indexCat=' + index;
+                          mode === 'search' ? '/search?search=1&category=' + res._id + (gps ? '&gps=' + JSON.stringify(gps) : '') + '&indexCat=' + index
+                          :
+                          ""
                 return(
                   <Tab key={index} label={res.label} className={classes.scrollMenuTab} {...a11yProps(index)} onClick={()=>this.controllerUrl(url)}/>
                 )
