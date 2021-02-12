@@ -1,4 +1,3 @@
-import SnackBar from "../../components/SnackBar/SnackBar";
 const {clearAuthenticationToken}=require('../../utils/authentication');
 const {setAxiosAuthentication}=require('../../utils/authentication');
 const {setAuthToken}=require('../../utils/authentication');
@@ -28,6 +27,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Input from '@material-ui/core/Input';
+const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 
 
 moment.locale('fr');
@@ -106,9 +106,6 @@ class security extends React.Component {
       showCurrentPassword: false,
       showNewPassword: false,
       showConfirmPassword: false,
-      snackBarAccountDesactivate: false,
-      snackBarPassword: false,
-      snackBarAccount: false
     };
   }
 
@@ -170,7 +167,7 @@ class security extends React.Component {
     const data = {index_google: !this.state.index_google};
     axios.put('/myAlfred/api/users/account/indexGoogle', data)
       .then(() => {
-        this.setState({snackBarAccount: true})
+        snackBarSuccess('Compte mis à jour');
       })
       .catch( err => {console.error(err)});
   };
@@ -209,7 +206,8 @@ class security extends React.Component {
             .then(() => {
               axios.put('/myAlfred/api/users/current/delete')
                 .then(() => {
-                  this.setState({open2: false, snackBarAccountDesactivate: true});
+                  snackBarSuccess('Compte désactivé');
+                  this.setState({open2: false});
                   clearAuthenticationToken();
                   Router.push('/');
                 })
@@ -224,7 +222,8 @@ class security extends React.Component {
     } else {
       axios.put('/myAlfred/api/users/current/delete')
         .then(() => {
-          this.setState({open2: false, snackBarAccountDesactivate: true});
+          snackBarSuccess('Compte désactivé');
+          this.setState({open2: false});
           clearAuthenticationToken();
           Router.push('/');
         })
@@ -245,8 +244,7 @@ class security extends React.Component {
     axios
       .put('/myAlfred/api/users/profile/editPassword', data)
       .then((res) => {
-        console.log(res.data, 'data');
-        this.setState({snackBarPassword: true});
+        snackBarSuccess('Mot de passe modifié');
         setTimeout(this.loadData, 1000);
       })
       .catch(err => {
@@ -509,9 +507,6 @@ class security extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        <SnackBar severity={"success"} message={'Mot de passe modifié'} open={this.state.snackBarPassword} closeSnackBar={() => this.setState({snackBarPassword: false})}/>
-        <SnackBar severity={"success"} message={'Compte mis à jour'} open={this.state.snackBarAccount} closeSnackBar={() => this.setState({snackBarAccount: false})}/>
-        <SnackBar severity={"success"} message={'Compte désactivé'} open={this.state.snackBarAccountDesactivate} closeSnackBar={() => this.setState({snackBarAccountDesactivate: false})}/>
       </Grid>
     )
   };

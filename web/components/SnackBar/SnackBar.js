@@ -3,6 +3,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 const {CLOSE_NOTIFICATION_DELAY}=require('../../utils/consts');
 
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }

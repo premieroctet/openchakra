@@ -1,5 +1,6 @@
 const {clearAuthenticationToken}=require('../../utils/authentication')
 const {setAxiosAuthentication}=require('../../utils/authentication')
+const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 import React, {Fragment} from 'react';
 import axios from 'axios';
 import moment from 'moment';
@@ -11,8 +12,6 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import {pdfjs} from 'react-pdf';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import styled from 'styled-components';
-import {toast} from 'react-toastify';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -23,19 +22,14 @@ import styles from '../../static/css/pages/trustAndVerification/trustAndVerifica
 import Siret from '../../components/Siret/Siret';
 import {Radio, RadioGroup} from '@material-ui/core';
 import ButtonSwitch from '../../components/ButtonSwitch/ButtonSwitch';
-
 import DocumentEditor from '../../components/DocumentEditor/DocumentEditor';
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
-import SnackBar from '../../components/SnackBar/SnackBar'
-
-var util = require('util');
 const {CESU} = require('../../utils/consts');
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 const I18N = require('../../utils/i18n');
@@ -81,7 +75,6 @@ class trustAndVerification extends React.Component {
       id_card_status: null,
       id_card_error: null,
       deleteConfirmMessage: null,
-      message: null,
     };
     this.editSiret = this.editSiret.bind(this);
     this.callDrawer = this.callDrawer.bind(this);
@@ -251,7 +244,7 @@ class trustAndVerification extends React.Component {
     };
     axios.post('/myAlfred/api/users/profile/idCard', formData, config)
       .then((response) => {
-        this.setState({message:'Pièce d\'identité ajoutée'});
+        snackBarSuccess('Pièce d\'identité ajoutée');
         this.componentDidMount()
       })
       .catch(err => {
@@ -269,7 +262,7 @@ class trustAndVerification extends React.Component {
     };
     axios.post('/myAlfred/api/users/profile/idCard/addVerso', formData, config)
       .then((response) => {
-        this.setState({message: 'Carte d\'identité ajoutée'})
+        snackBarSuccess('Carte d\'identité ajoutée');
         this.componentDidMount
         ()
       }).catch();
@@ -294,7 +287,7 @@ class trustAndVerification extends React.Component {
     };
     axios.put('/myAlfred/api/shop/editStatus', newStatus)
       .then(res => {
-        this.setState({message: 'Statut modifié'})
+        snackBarSuccess('Statut modifié');
         const data = {status: this.state.professional ? 'Pro' : 'Particulier'};
         return axios.put('/myAlfred/api/serviceUser/editStatus', data);
       })
@@ -305,7 +298,7 @@ class trustAndVerification extends React.Component {
           const config = {headers: {'content-type': 'multipart/form-data'}};
           axios.post('/myAlfred/api/users/profile/registrationProof/add', formData, config)
             .then(response => {
-              this.setState({message: 'Document d\'immatriculation ajouté'})
+              snackBarSuccess('Document d\'immatriculation ajouté');
               this.componentDidMount()
             })
             .catch (err=> console.error(err))
@@ -324,7 +317,7 @@ class trustAndVerification extends React.Component {
     } else {
       axios.delete('/myAlfred/api/users/profile/idCard/recto')
         .then(() => {
-          toast.error('Pièce d\'identité supprimée');
+          snackBarSuccess('Pièce d\'identité supprimée')
           this.componentDidMount()
         })
         .catch(err => {
@@ -343,7 +336,7 @@ class trustAndVerification extends React.Component {
     } else {
       axios.delete('/myAlfred/api/users/profile/registrationProof')
         .then(() => {
-          this.setState({message:  'Document d\immatriculation supprimé' })
+          snackBarSuccess('Document d\immatriculation supprimé');
           this.componentDidMount()
         })
         .catch(err => {
@@ -644,7 +637,7 @@ class trustAndVerification extends React.Component {
 
   render() {
     const {classes, index} = this.props;
-    const {message} = this.state
+
     return (
       <React.Fragment>
         <Helmet>
@@ -663,7 +656,6 @@ class trustAndVerification extends React.Component {
           </LayoutMobile>
         </Hidden>
         {this.state.open ? this.modalDeleteConfirmMessage() : null}
-        <SnackBar severity={"success"} message={message} open={message} closeSnackBar={() => this.setState({message: null})}/>
       </React.Fragment>
     );
   };
