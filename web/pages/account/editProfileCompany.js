@@ -18,6 +18,8 @@ import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
+import AlgoliaPlaces from "algolia-places-react";
+import {COMPANY_ACTIVITY, COMPANY_SIZE} from '../../utils/consts';
 
 
 class editProfileCompany extends React.Component{
@@ -65,6 +67,10 @@ class editProfileCompany extends React.Component{
     this.setState({[event.target.name] : event.target.value});
   };
 
+  handleInvoice = ({suggestion}) =>{
+    this.setState({ invoice_company : suggestion })
+  };
+
   content = (classes) => {
     const{activityArea, sizeCompany} = this.state;
 
@@ -92,15 +98,18 @@ class editProfileCompany extends React.Component{
               classes={{root: classes.textField}}
             />
           </Grid>
-          <Grid item lg={6} md={12} sm={12} xs={12}>
-            <TextField
-              value={''}
-              name={'invoice'}
-              placeholder={'Adresse de facturation'}
-              variant={'outlined'}
-              label={'Adresse de facturation'}
-              classes={{root: classes.textField}}
-
+          <Grid item lg={6} md={12} sm={12} xs={12} className={classes.containerAlgolia}>
+            <AlgoliaPlaces
+              placeholder='Adresse de facturation'
+              options={{
+                appId: 'plKATRG826CP',
+                apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                language: 'fr',
+                countries: ['fr'],
+                type: 'address',
+              }}
+              className={classes.editProfilCompanyAlgoliaPlace}
+              onChange={(suggestion) => this.handleInvoice(suggestion)}
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
@@ -135,11 +144,11 @@ class editProfileCompany extends React.Component{
                 name={'sizeCompany'}
                 placeholder={'Taille de l’entreprise'}
               >
-                <MenuItem value={10}>0 à 100</MenuItem>
-                <MenuItem value={20}>100 à 200</MenuItem>
-                <MenuItem value={30}>200 à 300</MenuItem>
-                <MenuItem value={40}>400 à 500</MenuItem>
-                <MenuItem value={50}>500 +</MenuItem>
+                {
+                  Object.keys(COMPANY_SIZE).map((res, index) =>(
+                    <MenuItem key={index} value={res}>{COMPANY_SIZE[res]}</MenuItem>
+                  ))
+                }
               </Select>
             </FormControl>
           </Grid>
@@ -155,12 +164,11 @@ class editProfileCompany extends React.Component{
                 name={"activityArea"}
                 placeholder={'Secteur d’activité'}
               >
-                <MenuItem value={10}>Informatique</MenuItem>
-                <MenuItem value={20}>Marketing</MenuItem>
-                <MenuItem value={30}>Web</MenuItem>
-                <MenuItem value={40}>Droit</MenuItem>
-                <MenuItem value={50}>Assurance</MenuItem>
-                <MenuItem value={60}>Logement</MenuItem>
+                {
+                  Object.keys(COMPANY_ACTIVITY).map((res,index) =>(
+                    <MenuItem key={index} value={res}>{COMPANY_ACTIVITY[res]}</MenuItem>
+                  ))
+                }
               </Select>
             </FormControl>
           </Grid>
