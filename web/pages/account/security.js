@@ -509,9 +509,9 @@ class security extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        <SnackBar severity={"success"} message={'Mot de passe modifié'} open={this.state.snackBarPassword} closeSnackBar={() => this.setState({snackBarPassword: false})}/>
+        {/*<SnackBar severity={"success"} message={'Mot de passe modifié'} open={this.state.snackBarPassword} closeSnackBar={() => this.setState({snackBarPassword: false})}/>
         <SnackBar severity={"success"} message={'Compte mis à jour'} open={this.state.snackBarAccount} closeSnackBar={() => this.setState({snackBarAccount: false})}/>
-        <SnackBar severity={"success"} message={'Compte désactivé'} open={this.state.snackBarAccountDesactivate} closeSnackBar={() => this.setState({snackBarAccountDesactivate: false})}/>
+        <SnackBar severity={"success"} message={'Compte désactivé'} open={this.state.snackBarAccountDesactivate} closeSnackBar={() => this.setState({snackBarAccountDesactivate: false})}/>*/}
       </Grid>
     )
   };
