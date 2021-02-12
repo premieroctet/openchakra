@@ -28,7 +28,6 @@ class Home extends React.Component {
       category: {},
       alfred: {},
       logged: false,
-      user: null,
     };
   }
 
@@ -37,33 +36,21 @@ class Home extends React.Component {
     if (getLoggedUserId()) {
       this.setState({logged: true})
     }
-    axios.get('/myAlfred/api/category/all')
+    const categoryUrl = is_b2b_site() ? '/myAlfred/api/category/pro' : '/myAlfred/api/category/all';
+    axios.get(categoryUrl)
       .then(res => {
         let category = res.data;
         this.setState({category: category});
       }).catch(err => console.error(err));
 
-    // Is logged user, get sorted alfreds
-    if (getLoggedUserId()) {
-      axios.get('/myAlfred/api/users/current')
-        .then(response => {
-          let user = response.data;
-          this.setState({user: user});
-          axios.get(`/myAlfred/api/serviceUser/home?gps=${JSON.stringify(user.billing_address.gps)}`)
-            .then(response => {
-              let alfred = response.data;
-              this.setState({alfred: alfred});
-            }).catch(err => console.error(err));
-        })
-        .catch(err => console.error(err));
-    }
-    else {
-      axios.get('/myAlfred/api/serviceUser/home')
-        .then(response => {
-          let alfred = response.data;
-          this.setState({alfred: alfred});
-        }).catch(err => console.error(err));
-    }
+    const userUrl = is_b2b_site() ? '/myAlfred/api/serviceUser/home/pro' : '/myAlfred/api/serviceUser/home/';
+    axios.get(userUrl)
+      .then(response => {
+        let alfred = response.data;
+        this.setState({alfred: alfred});
+      }).catch(err => console.error(err));
+
+
   }
 
   render() {
@@ -111,17 +98,21 @@ class Home extends React.Component {
               <OurAlfred alfred={alfred}/>
             </Grid>
           </Grid>
-          <Grid container className={classes.becomeAlfredComponent}>
-            <Grid className={classes.generalWidthContainer}>
-              <ResaService/>
-            </Grid>
-          </Grid>
+          {
+            !is_b2b_site() ?
+              <Grid container className={classes.becomeAlfredComponent}>
+                <Grid className={classes.generalWidthContainer}>
+                  <ResaService/>
+                </Grid>
+              </Grid> : null}
           <Hidden only={['xs', 'sm']}>
-            <Grid container className={classes.mainNewsLetterStyle}>
-              <Grid className={classes.generalWidthContainerNewsLtter}>
-                <NewsLetter/>
-              </Grid>
-            </Grid>
+            {
+              !is_b2b_site() ?
+                <Grid container className={classes.mainNewsLetterStyle}>
+                  <Grid className={classes.generalWidthContainerNewsLtter}>
+                    <NewsLetter/>
+                  </Grid>
+                </Grid> : null}
           </Hidden>
           <Grid>
             <Divider/>

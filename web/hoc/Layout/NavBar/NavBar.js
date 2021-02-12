@@ -44,7 +44,8 @@ import Switch from "@material-ui/core/Switch";
 import {DateRangePicker} from "react-dates";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
-
+import {is_development} from "../../../config/config";
+import {is_b2b_site} from "../../../utils/context";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -205,9 +206,12 @@ class NavBar extends Component {
   };
 
   b2bSide = () => {
-    this.setState({b2b: true})
     localStorage.setItem('b2b', 'true');
-    Router.push('/?b2b=true')
+    window.location.reload();
+  }
+  cleanB2b = () => {
+    localStorage.removeItem('b2b');
+    window.location.reload();
   }
   findService = () => {
     var queryParams = {search: 1};
@@ -515,7 +519,6 @@ class NavBar extends Component {
   };
 
 
-
   searchBarInput = (classes) => {
 
     const logged = this.state.user != null
@@ -719,10 +722,14 @@ class NavBar extends Component {
                           </Link>
                         }
                         {
-                          localStorage.getItem('b2b') !== 'true' ?
+                          !is_b2b_site() ?
                             <Link href={'/'} onClick={this.b2bSide}>
                               <Tab classes={{root: classes.navbarTabRoot}}
                                    label={NAVBAR_MENU.businessSide}/>
+                            </Link> : is_development() ?
+                            <Link href={'/'} onClick={this.cleanB2b}>
+                              <Tab classes={{root: classes.navbarTabRoot}}
+                                   label={'Retour Alfred Particuliers'}/>
                             </Link> : null
 
                         }
