@@ -5,7 +5,6 @@ import styles from '../../../static/css/components/Card/CategoryCard/CategoryCar
 import withStyles from "@material-ui/core/styles/withStyles";
 import Link from 'next/link';
 import axios from "axios";
-import {is_b2b_site} from "../../../utils/context";
 
 
 class CategoryCard extends React.Component {
@@ -44,7 +43,7 @@ class CategoryCard extends React.Component {
     }
     return (
       <Link
-        href={'/search?search=1' + is_b2b_site() ? '&category/pro=' : '&category=' + item._id + (gps ? '&gps=' + JSON.stringify(gps) : '')}>
+        href={'/search?search=1&category=' + item._id + (gps ? '&gps=' + JSON.stringify(gps) : '')}>
         <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer'}}>
           <Grid className={classes.categoryCardMedia}>
             <Grid
