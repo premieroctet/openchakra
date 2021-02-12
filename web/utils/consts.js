@@ -99,7 +99,7 @@ const ENTITES = {
   '5505': 'SA à participation ouvrière à conseil d\'administration',
   '5510': 'SA nationale à conseil d\'administration',
   '5515': 'SA d\'économie mixte à conseil d\'administration',
-  '5520': 'Fonds à forme sociétale à conseil d\'administration',
+  '5520': 'Fonds à forme sociétale à conseil d\'administration',
   '5522': 'SA immobilière pour le commerce et l\'industrie (SICOMI) à conseil d\'administration',
   '5525': 'SA immobilière d\'investissement à conseil d\'administration',
   '5530': 'SA d\'aménagement foncier et d\'équipement rural (SAFER) à conseil d\'administration',
@@ -124,7 +124,7 @@ const ENTITES = {
   '5605': 'SA à participation ouvrière à directoire',
   '5610': 'SA nationale à directoire',
   '5615': 'SA d\'économie mixte à directoire',
-  '5620': 'Fonds à forme sociétale à directoire',
+  '5620': 'Fonds à forme sociétale à directoire',
   '5622': 'SA immobilière pour le commerce et l\'industrie (SICOMI) à directoire',
   '5625': 'SA immobilière d\'investissement à directoire',
   '5630': 'Safer anonyme à directoire',
@@ -158,7 +158,7 @@ const ENTITES = {
   '6317': 'Société coopérative agricole',
   '6318': 'Union de sociétés coopératives agricoles',
   '6411': 'Société d\'assurance à forme mutuelle',
-  '6511': 'Sociétés Interprofessionnelles de Soins Ambulatoires ',
+  '6511': 'Sociétés Interprofessionnelles de Soins Ambulatoires ',
   '6521': 'Société civile de placement collectif immobilier (SCPI)',
   '6532': 'Société civile d\'intérêt collectif agricole (SICA)',
   '6533': 'Groupement agricole d\'exploitation en commun (GAEC)',
@@ -368,10 +368,48 @@ const CLOSE_NOTIFICATION_DELAY=2
 // Fermeture $age minimum inscription
 const ACCOUNT_MIN_AGE = 18
 
+const COMPANY_SIZE= {
+  'MICRO': '<10', // Micro-entreprise
+  'PMEPMI': '>10 <250', // PME/PMI
+  'ETI': '>250 <5000', // Micro-entreprise
+  'GRANDE': '>5000', // Grande entreprise
+}
+
+const COMPANY_ACTIVITY = {
+  'ADM': "Administration, fonction publique",
+  'AGRO': "Agroalimentaire",
+  'ART': "Artisanat d'art",
+  'ASSO': "Associations",
+  'BAN': "Banques, assurances, services financiers",
+  'CHIM': "Chimie, plastique, conditionnement",
+  'DET': "Commerce de détail, grande distribution",
+  'COMM': "Communication, marketing, information",
+  'CONSTR': "Construction, bâtiment, travaux publics",
+  'CULT': "Culture, sports, loisirs",
+  'ENER': "Energie",
+  'ENS': "Enseignement, formation",
+  'ENV': "Environnement, récupération, tri, recyclage, traitement des déchets, matériaux, de l'eau",
+  'EQUIP': "Equipement, matériel pour activités professionnelles",
+  'FAB': "Fabrication, commerce de gros d'articles destinés à la vente",
+  'GESTION': "Gestion, administration des entreprises",
+  'HOTEL': "Hôtellerie, restauration, tourisme",
+  'IMMO': "Immobilier",
+  'TEXT': "Industrie textile",
+  'INFO': "Informatique",
+  'ING': "Ingénieurs d'études et de recherche, chercheurs",
+  'LOGIS': "Logistique, transports",
+  'ELECTRO': "Matériel électrique, électronique, optique",
+  'MECA': "Mécanique, métallurgie",
+  'SIDER': "Minerais, minéraux, sidérurgie",
+  'JURI': "Professions juridiques",
+  'SANTE': "Santé, action sociale",
+  'SERVICE': "Services aux particuliers, collectivités, entreprises",
+}
+
 module.exports = {
   ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR,
   generate_id, COMM_ALFRED, COMM_CLIENT, GID_LEN, ENTITES, CESU,
   MODES, GOOGLE_PROVIDER, FACEBOOK_PROVIDER, AMAZON_HOST, LOCAL_HOST,
   SKILLS, LANGUAGES, MAX_DESCRIPTION_LENGTH, BOOK_STATUS, EXPIRATION_DELAY,
-  CLOSE_NOTIFICATION_DELAY, ACCOUNT_MIN_AGE
+  CLOSE_NOTIFICATION_DELAY, ACCOUNT_MIN_AGE, COMPANY_SIZE, COMPANY_ACTIVITY
 };

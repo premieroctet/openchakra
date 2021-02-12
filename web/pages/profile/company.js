@@ -31,6 +31,7 @@ import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
+import {is_mode_company} from '../../utils/context';
 
 const moment = require('moment');
 moment.locale('fr');
@@ -49,14 +50,12 @@ const DialogTitle = withStyles(styles)((props) => {
   );
 });
 
-
-class ProfileAbout extends React.Component {
-
+class Company extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       user: props.user,
-      alfred: null,
+      company: null,
       showEdition: false,
       enabledEdition: true,
       languages: {},
@@ -66,31 +65,29 @@ class ProfileAbout extends React.Component {
       newLanguages: null,
       open: false
     }
-
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.loadUser();
-  };
+  }
 
   openEdition = () => {
-    const {alfred} = this.state;
-
+    const {company} = this.state;
     this.setState({
       showEdition: true,
-      languages: alfred.languages.map(l => ({value: l, label: l})),
-      newAddress: alfred.billing_address
+      languages: company.languages.map(l => ({value: l, label: l})),
+      newAddress: company.billing_address
     }, () => this.objectsEqual())
-  };
+  }
 
   loadUser = () => {
     this.setState({showEdition: false});
     setAxiosAuthentication();
-    axios.get(`/myAlfred/api/users/users/${this.props.user}`)
+    axios.get(`/myAlfred/api/users/${this.props.user}`)
       .then(res => {
         const user = res.data;
         this.setState({
-          alfred: user,
+          company: user,
           userLanguages: user.languages.map(l => ({value: l, label: l})),
           billing_address: user.billing_address
         })
@@ -120,12 +117,12 @@ class ProfileAbout extends React.Component {
       this.setState({enabledEdition: true})
     }
   };
-
   save = () => {
     const {newAddress, languages} = this.state;
     setAxiosAuthentication();
     axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(res => {
-        axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(res => {
+        axios.put('/myAlfred/api/users/profile/languages',
+          {languages: languages.map(l => l.value)}).then(res => {
             this.setState({open: true}, () => setTimeout(this.loadUser, 1000))
           }
         ).catch(err => {
@@ -152,28 +149,16 @@ class ProfileAbout extends React.Component {
       >
         <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog}/>
         <DialogContent>
-          <Topic titleTopic={'Modifiez vos informations'} titleSummary={'Ici, vous pouvez modifier vos informations'}
+          <Topic titleTopic={'Modifiez les informations de votre entreprise'}
+                 titleSummary={'Ici, vous pouvez modifier les informations de votre entreprise'}
                  underline={true}/>
           <Grid container>
             <Grid container>
               <Grid item xs={12} lg={12} style={{marginTop: '2vh'}}>
-                <Typography style={{fontWeight: 'bold', textTransform: 'initial'}}>Lieu d'habitation</Typography>
+                <Typography style={{fontWeight: 'bold', textTransform: 'initial'}}>Site Web</Typography>
               </Grid>
               <Grid item style={{width: '100%', marginTop: '3vh', marginBottom: '3vh'}}>
-                <AlgoliaPlaces
-                  key={moment()}
-                  placeholder={placeholder}
-                  options={{
-                    appId: 'plKATRG826CP',
-                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                    language: 'fr',
-                    countries: ['fr'],
-                    type: 'address',
-
-                  }}
-                  onChange={this.onAddressChanged}
-                  onClear={() => this.onAddressChanged(null)}
-                />
+                /** TODO **/
               </Grid>
             </Grid>
             <Grid container>
@@ -215,42 +200,18 @@ class ProfileAbout extends React.Component {
             </Grid>
           </Grid>
         </DialogContent>
-        <SnackBar severity={"success"} message={'Profil modifié avec succès'} open={this.state.open}
+        <SnackBar severity={"success"} message={'Profil mis à jour.'} open={this.state.open}
                   closeSnackBar={() => this.setState({open: false})}/>
       </Dialog>
     )
   };
 
-  onAddressChanged = result => {
-
-    const newAddress = result ?
-      {
-        city: result.suggestion.city,
-        address: result.suggestion.name,
-        zip_code: result.suggestion.postcode,
-        country: result.suggestion.country,
-        gps: {
-          lat: result.suggestion.latlng.lat,
-          lng: result.suggestion.latlng.lng,
-        }
-      }
-      :
-      null;
-    this.setState({newAddress: newAddress}, () => this.objectsEqual())
-  };
-
-  onLanguagesChanged = languages => {
-    this.setState({languages: languages}, () => this.objectsEqual())
-  };
-
   static getInitialProps({query: {user, indexAccount}}) {
-    return {user: user, index: indexAccount};
+    return {user: user, index: indexAccount}
   }
 
-  content = (classes, user, alfred) => {
+  content = (classes, user, company) => {
     const editable = isEditableUser(user);
-
-
     return (
       <Grid container spacing={3} style={{marginBottom: '12vh'}}>
         <Hidden only={['xs']}>
@@ -278,7 +239,7 @@ class ProfileAbout extends React.Component {
               <Grid style={{margin: 3}}/>
               <Grid>
                 <Typography
-                  style={{color: 'black'}}>{alfred ? alfred.billing_address.city + ", " + alfred.billing_address.country : null}</Typography>
+                  style={{color: 'black'}}>{company ? company.billing_address.city + ", " + company.billing_address.country : null}</Typography>
               </Grid>
             </Grid>
             <Grid style={{display: 'flex', flexDirection: 'row', marginTop: '4vh'}}>
@@ -287,15 +248,16 @@ class ProfileAbout extends React.Component {
               </Grid>
               <Grid style={{margin: 3}}/>
               <Grid>
-                <Typography style={{color: 'black'}}>{alfred ? alfred.languages.join(', ') : null}</Typography>
+                <Typography style={{color: 'black'}}>{company ? company.languages.join(', ') : null}</Typography>
               </Grid>
             </Grid>
             {
-              alfred ?
-                alfred.id_confirmed ?
+              company ?
+                company.id_confirmed ?
                   <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '4vh'}}>
                     <Grid>
-                      <Typography style={{color: 'rgba(39,37,37,35%)'}}>{alfred ? alfred.firstname : null}</Typography>
+                      <Typography
+                        style={{color: 'rgba(39,37,37,35%)'}}>{company ? company.firstname : null}</Typography>
                     </Grid>
                     <Grid style={{margin: 3}}/>
                     <Grid>
@@ -345,26 +307,24 @@ class ProfileAbout extends React.Component {
 
       </Grid>
     )
-  };
+  }
 
   render() {
     const {classes, index, user} = this.props;
-    const {alfred} = this.state;
-
-    if (!user && alfred) {
+    const {company} = this.state;
+    if (!user && company) {
       return null
     }
-
     return (
       <React.Fragment>
         <Hidden only={['xs']}>
           <ProfileLayout user={user} index={index}>
-            {this.content(classes, user, alfred)}
+            {this.content(classes, user, company)}
           </ProfileLayout>
         </Hidden>
         <Hidden only={['lg', 'xl', 'sm', 'md']}>
           <LayoutMobileProfile user={user} index={index} currentIndex={4}>
-            {this.content(classes, user, alfred)}
+            {this.content(classes, user, company)}
           </LayoutMobileProfile>
         </Hidden>
         {this.modalEditDialog(classes)}
@@ -373,4 +333,4 @@ class ProfileAbout extends React.Component {
   }
 }
 
-export default withStyles(styles)(ProfileAbout)
+export default withStyles(styles)(Company)
