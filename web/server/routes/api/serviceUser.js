@@ -747,7 +747,8 @@ router.get('/home', (req, res) => {
   // Sort according to GPS coordinates
   if (query.gps) {
     gps=JSON.parse(query.gps)
-
+  }
+  
   const shuffleArray = array => {
     let i = array.length - 1;
     for (; i > 0; i--) {
