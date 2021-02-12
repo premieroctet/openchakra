@@ -22,6 +22,8 @@ const emptyPromise = require('../../../utils/promise');
 const {computeUrl} = require('../../../config/config');
 const {filterServicesGPS, filterServicesKeyword} = require('../../../utils/filters');
 const {GID_LEN} = require('../../../utils/consts');
+const parse = require('url-parse')
+const {distanceComparator}=require('../../../utils/filters')
 
 moment.locale('fr');
 const storage = multer.diskStorage({
@@ -735,10 +737,16 @@ router.get('/all/nearOther/:id/:service', passport.authenticate('jwt', {session:
 
 });
 
-// @Route GET /myAlfred/api/serviceUser/home
-// View service for home
-// @Access private
+// @Route GET /myAlfred/api/serviceUser/home(?gps=XXX)
+// View service for home, sorted according to GPS if provided
+// @Access public
 router.get('/home', (req, res) => {
+  const query=parse(req.originalUrl, true).query
+
+  var gps=null
+  // Sort according to GPS coordinates
+  if (query.gps) {
+    gps=JSON.parse(query.gps)
 
   const shuffleArray = array => {
     let i = array.length - 1;
@@ -752,13 +760,19 @@ router.get('/home', (req, res) => {
   };
 
 
-  ServiceUser.find({}, 'user service')
+  ServiceUser.find({}, 'user service service_address')
     // {e.service.picture} title={e.service.label} alfred={e.user.firstname} user={e.user} score={e.user.score} /
     .populate('user', 'picture firstname score billing_address')
     .populate('service', 'label picture')
     .then(services => {
       if (typeof services !== 'undefined' && services.length > 0) {
-        services = shuffleArray(services);
+        if (gps) {
+          services.sort(distanceComparator(gps))
+          services = _.uniqBy(services, su => su.user)
+        }
+        else {
+          services = shuffleArray(services);
+        }
         res.json(services.slice(0, 6));
       } else {
         return res.status(400).json({
