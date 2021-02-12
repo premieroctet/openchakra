@@ -11,8 +11,6 @@ import axios from "axios";
 import Divider from "@material-ui/core/Divider";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import MenuItem from "@material-ui/core/MenuItem";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import Button from "@material-ui/core/Button";
 const {setAxiosAuthentication} = require('../../utils/authentication');
 const {MAX_DESCRIPTION_LENGTH} = require('../../utils/consts');
@@ -224,7 +222,6 @@ class editProfileCompany extends React.Component{
 
   render() {
     const {classes, index} = this.props;
-    const {user} = this.state;
 
     return (
       <React.Fragment>
@@ -234,7 +231,7 @@ class editProfileCompany extends React.Component{
                 content="Plateforme d’échange de services entre particuliers. Services rémunérés à des prix justes ! Profitez des talents de nos Alfred et trouvez un Alfred bricoleur, petsitter, pâtissier, décorateur, près de chez vous dans toute la france ! Des milliers de services proposés, trouvez le vôtre !"/>
         </Helmet>
         <Hidden only={['xs', 'sm', 'md']}>
-          <LayoutAccount index={index} user={user}>
+          <LayoutAccount index={index}>
             {this.content(classes)}
           </LayoutAccount>
         </Hidden>
