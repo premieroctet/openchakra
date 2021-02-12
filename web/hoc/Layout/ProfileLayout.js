@@ -1,16 +1,17 @@
-const {setAxiosAuthentication}=require('../../utils/authentication')
+const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
 import Layout from '../../hoc/Layout/Layout'
 import Grid from "@material-ui/core/Grid";
 import ScrollMenu from '../../components/ScrollMenu/ScrollMenu';
 
 import axios from 'axios'
-const {isEditableUser}=require('../../utils/functions');
+
+const {isEditableUser} = require('../../utils/functions');
 import styles from '../../static/css/components/Layout/ProfileLayout/ProfileLayout'
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
 import UserAvatar from "../../components/Avatar/UserAvatar";
-
+import {is_mode_company} from "../../utils/context";
 
 class ProfileLayout extends React.Component {
 
@@ -19,46 +20,47 @@ class ProfileLayout extends React.Component {
     this.state = {
       user: null,
     };
-    this.nonlogged_items= [
-      { label: 'À propos', url: '/about' },
-      { label: 'Services', url: '/services' },
+    this.nonlogged_items = [
+      {label: 'À propos', url: '/about'},
+      {label: 'Services', url: '/services'},
       //{ label: 'Photos', url: '/pictures' }, TODO : Albums 899538 899547
-      { label: 'Avis', url: '/reviews' },
+      {label: 'Avis', url: '/reviews'},
     ]
-    this.logged_items= [
-      { label: 'À propos', url: '/about' },
-      { label: 'Mes services', url: '/services' },
+    this.logged_items = [
+      {label: 'À propos', url: '/about'},
+      {label: 'Mes services', url: '/services'},
       //{ label: 'Mes photos', url: '/pictures' }, TODO : Albums 899538 899547
-      { label: 'Mes avis', url: '/reviews' },
+      {label: 'Mes avis', url: '/reviews'},
     ];
     this.logged_alfred_items = [
-      { label: 'À propos', url: '/about' },
-      { label: 'Mes services', url: '/services' },
+      {label: 'À propos', url: '/about'},
+      {label: 'Mes services', url: '/services'},
       //{ label: 'Mes photos', url: '/pictures' }, TODO : Albums 899538 899547
-      { label: 'Mes avis', url: '/reviews' },
-      { label: 'Mon calendrier', url: '/calendar' },
-      { label: 'Mes statistiques', url: '/statistics'}
+      {label: 'Mes avis', url: '/reviews'},
+      {label: 'Mon calendrier', url: '/calendar'},
+      {label: 'Mes statistiques', url: '/statistics'}
     ];
   }
 
   componentDidMount = () => {
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/users/users/${this.props.user}`)
-      .then( res => {
-        this.setState( { user: res.data})
+      .then(res => {
+        this.setState({user: res.data})
       })
-      .catch (err => console.error(err))
+      .catch(err => console.error(err))
   };
 
   render() {
-    const {items, user}=this.state;
-    const {children, index, classes}=this.props;
+    const {items, user} = this.state;
+    const {children, index, classes} = this.props;
 
     if (!user) {
       return null
     }
 
-    const menuItems = isEditableUser(this.props.user) ? user.is_alfred ? this.logged_alfred_items : this.logged_items : this.nonlogged_items;
+    const menuItems = isEditableUser(this.props.user) ? user.is_alfred ?
+      this.logged_alfred_items : this.logged_items : this.nonlogged_items;
 
     return (
       <Layout user={user}>
@@ -69,22 +71,30 @@ class ProfileLayout extends React.Component {
                 <Grid className={classes.profilLayoutBox}>
                   <Grid className={classes.profilLayoutBannerImg}>
                     <Grid className={classes.profilLayoutAvatar}>
-                      <UserAvatar alt={user.firstname} user={user} className={classes.cardPreviewLarge} />
+                      <UserAvatar alt={user.firstname} user={user} className={classes.cardPreviewLarge}/>
                     </Grid>
                   </Grid>
-                  <Grid style={{display: 'flex', justifyContent: 'center', height: '40%', alignItems: 'center'}}>
+                  <Grid style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    height: is_mode_company() ? '50%' : '40%',
+                    alignItems: 'center'
+                  }}>
                     <Grid style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                       <Grid>
                         <h3>{`Je m'appelle ${user ? user.firstname : ''}`}</h3>
                       </Grid>
                       <Grid>
-                        <Typography style={{color:'rgba(39,37,37,35%)'}}>et j’ai hâte de vous rencontrer !</Typography>
+                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>et j’ai hâte de vous rencontrer !</Typography>
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid className={classes.profilLayoutScrollMenu}>
-                    <ScrollMenu categories={menuItems} mode={'profile'} indexCat={index} extraParams={{user: this.props.user}}/>
-                  </Grid>
+                  {
+                    !is_mode_company() ?
+                      <Grid className={classes.profilLayoutScrollMenu}>
+                        <ScrollMenu categories={menuItems} mode={'profile'} indexCat={index}
+                                    extraParams={{user: this.props.user}}/>
+                      </Grid> : null}
                 </Grid>
               </Grid>
               <Grid className={classes.profilLayoutChildren}>
@@ -98,4 +108,4 @@ class ProfileLayout extends React.Component {
   }
 }
 
-export default withStyles (styles) (ProfileLayout);
+export default withStyles(styles)(ProfileLayout);

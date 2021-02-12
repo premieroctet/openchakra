@@ -1,5 +1,6 @@
-const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
-const {setAxiosAuthentication}=require('../../utils/authentication')
+import SnackBar from "../../components/SnackBar/SnackBar";
+
+const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
@@ -30,31 +31,31 @@ import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
-const moment=require('moment');
+import {is_mode_company} from '../../utils/context';
+
+const moment = require('moment');
 moment.locale('fr');
 
 const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose, ...other } = props;
+  const {children, classes, onClose, ...other} = props;
   return (
     <MuiDialogTitle disableTypography {...other} className={classes.root}>
       <Typography variant="h6">{children}</Typography>
       {onClose ? (
         <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
-          <CloseIcon />
+          <CloseIcon/>
         </IconButton>
       ) : null}
     </MuiDialogTitle>
   );
 });
 
-
-class ProfileAbout extends React.Component {
-
+class Company extends React.Component {
   constructor(props) {
     super(props);
-    this.state={
+    this.state = {
       user: props.user,
-      alfred:null,
+      company: null,
       showEdition: false,
       enabledEdition: true,
       languages: {},
@@ -62,36 +63,36 @@ class ProfileAbout extends React.Component {
       newAddress: null,
       userLanguages: [],
       newLanguages: null,
+      open: false
     }
-
   }
-  componentDidMount = () => {
+
+  componentDidMount() {
     this.loadUser();
-  };
+  }
 
   openEdition = () => {
-    const {alfred}=this.state;
-
+    const {company} = this.state;
     this.setState({
       showEdition: true,
-      languages: alfred.languages.map(l => ({value: l, label: l})),
-      newAddress: alfred.billing_address
+      languages: company.languages.map(l => ({value: l, label: l})),
+      newAddress: company.billing_address
     }, () => this.objectsEqual())
-  };
+  }
 
   loadUser = () => {
     this.setState({showEdition: false});
     setAxiosAuthentication();
-    axios.get(`/myAlfred/api/users/users/${this.props.user}`)
-      .then( res => {
+    axios.get(`/myAlfred/api/users/${this.props.user}`)
+      .then(res => {
         const user = res.data;
-        this.setState( {
-          alfred: user,
-          userLanguages:  user.languages.map(l => ({value: l, label: l})),
+        this.setState({
+          company: user,
+          userLanguages: user.languages.map(l => ({value: l, label: l})),
           billing_address: user.billing_address
         })
       })
-      .catch (err => console.error(err))
+      .catch(err => console.error(err))
   };
 
   closeEditDialog = () => {
@@ -104,42 +105,41 @@ class ProfileAbout extends React.Component {
     let o3 = this.state.newAddress ? this.state.newAddress.gps : null;
     let o4 = this.state.billing_address.gps;
 
-    if(o1 && o1.length !== 0 && o3 !== null){
-      if(o1.join('') === o2.join('') && o3.lat === o4.lat && o3.lng === o4.lng){
+    if (o1 && o1.length !== 0 && o3 !== null) {
+      if (o1.join('') === o2.join('') && o3.lat === o4.lat && o3.lng === o4.lng) {
         this.setState({enabledEdition: true})
-      }else if(o1.join('') !== o2.join('') || o3.lat !== o4.lat && o3.lng !== o4.lng){
+      } else if (o1.join('') !== o2.join('') || o3.lat !== o4.lat && o3.lng !== o4.lng) {
         this.setState({enabledEdition: false})
-      }else{
+      } else {
         this.setState({enabledEdition: false})
       }
-    }else{
+    } else {
       this.setState({enabledEdition: true})
     }
   };
-
   save = () => {
     const {newAddress, languages} = this.state;
     setAxiosAuthentication();
-    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then( res =>{
-        axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then( res =>{
-            snackBarSuccess('Profil modifié avec succès');
-            setTimeout(this.loadUser, 1000)
+    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(res => {
+        axios.put('/myAlfred/api/users/profile/languages',
+          {languages: languages.map(l => l.value)}).then(res => {
+            this.setState({open: true}, () => setTimeout(this.loadUser, 1000))
           }
         ).catch(err => {
           console.error(err)
         })
       }
-    ).catch( err => {
+    ).catch(err => {
         console.error(err)
       }
     );
   };
 
-  modalEditDialog = (classes) =>{
-    const {newAddress, showEdition, enabledEdition, languages}=this.state;
+  modalEditDialog = (classes) => {
+    const {newAddress, showEdition, enabledEdition, languages} = this.state;
     const placeholder = newAddress ? `${newAddress.city}, ${newAddress.country}` : 'Entrez votre adresse';
 
-    return(
+    return (
       <Dialog
         open={showEdition}
         onClose={this.closeEditDialog}
@@ -149,31 +149,20 @@ class ProfileAbout extends React.Component {
       >
         <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog}/>
         <DialogContent>
-          <Topic titleTopic={'Modifiez vos informations'} titleSummary={'Ici, vous pouvez modifier vos informations'} underline={true} />
+          <Topic titleTopic={'Modifiez les informations de votre entreprise'}
+                 titleSummary={'Ici, vous pouvez modifier les informations de votre entreprise'}
+                 underline={true}/>
           <Grid container>
             <Grid container>
               <Grid item xs={12} lg={12} style={{marginTop: '2vh'}}>
-                <Typography style={{fontWeight: 'bold', textTransform: 'initial'}}>Lieu d'habitation</Typography>
+                <Typography style={{fontWeight: 'bold', textTransform: 'initial'}}>Site Web</Typography>
               </Grid>
-              <Grid item style={{width:'100%', marginTop: '3vh', marginBottom: '3vh'}}>
-                <AlgoliaPlaces
-                  key={moment()}
-                  placeholder={placeholder}
-                  options={{
-                    appId: 'plKATRG826CP',
-                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                    language: 'fr',
-                    countries: ['fr'],
-                    type: 'address',
-
-                  }}
-                  onChange={this.onAddressChanged}
-                  onClear = {() => this.onAddressChanged(null)}
-                />
+              <Grid item style={{width: '100%', marginTop: '3vh', marginBottom: '3vh'}}>
+                /** TODO **/
               </Grid>
             </Grid>
             <Grid container>
-              <Grid item xs={12} lg={12}  style={{marginTop: '2vh'}}>
+              <Grid item xs={12} lg={12} style={{marginTop: '2vh'}}>
                 <Typography style={{fontWeight: 'bold', textTransform: 'initial'}}>Langues parlées</Typography>
               </Grid>
               <Grid item xs={12} style={{marginTop: '3vh', marginBottom: '3vh'}}>
@@ -211,55 +200,33 @@ class ProfileAbout extends React.Component {
             </Grid>
           </Grid>
         </DialogContent>
+        <SnackBar severity={"success"} message={'Profil mis à jour.'} open={this.state.open}
+                  closeSnackBar={() => this.setState({open: false})}/>
       </Dialog>
     )
   };
 
-  onAddressChanged = result => {
-
-    const newAddress = result ?
-      {
-        city: result.suggestion.city,
-        address: result.suggestion.name,
-        zip_code: result.suggestion.postcode,
-        country: result.suggestion.country,
-        gps:{
-          lat: result.suggestion.latlng.lat,
-          lng: result.suggestion.latlng.lng,
-        }
-      }
-      :
-      null;
-    this.setState({newAddress: newAddress}, () => this.objectsEqual())
-  };
-
-  onLanguagesChanged = languages => {
-    this.setState({languages: languages}, () => this.objectsEqual())
-  };
-
   static getInitialProps({query: {user, indexAccount}}) {
-    return {user: user, index: indexAccount};
+    return {user: user, index: indexAccount}
   }
 
-  content = (classes, user, alfred) =>{
+  content = (classes, user, company) => {
     const editable = isEditableUser(user);
-
-
-    return(
+    return (
       <Grid container spacing={3} style={{marginBottom: '12vh'}}>
         <Hidden only={['xs']}>
           <Grid item xl={5} lg={5} md={6} sm={12} xs={12}>
             <Box>
-              <About user={user} />
+              <About user={user}/>
             </Box>
           </Grid>
         </Hidden>
-        <Hidden only={['sm','md','lg','xl']}>
+        <Hidden only={['sm', 'md', 'lg', 'xl']}>
           <Grid item xs={12} style={{marginTop: '5vh', position: 'relative'}}>
-            { editable ?
+            {editable ?
               <Grid style={{position: 'absolute', right: 5}}>
                 <IconButton aria-label="edit" onClick={this.openEdition}>
-                  <CreateIcon />
+                  <CreateIcon/>
                 </IconButton>
               </Grid>
               :
@@ -271,7 +238,8 @@ class ProfileAbout extends React.Component {
               </Grid>
               <Grid style={{margin: 3}}/>
               <Grid>
-                <Typography style={{color:'black'}}>{alfred ? alfred.billing_address.city + ", " + alfred.billing_address.country : null}</Typography>
+                <Typography
+                  style={{color: 'black'}}>{company ? company.billing_address.city + ", " + company.billing_address.country : null}</Typography>
               </Grid>
             </Grid>
             <Grid style={{display: 'flex', flexDirection: 'row', marginTop: '4vh'}}>
@@ -280,19 +248,20 @@ class ProfileAbout extends React.Component {
               </Grid>
               <Grid style={{margin: 3}}/>
               <Grid>
-                <Typography style={{color:'black'}}>{alfred ? alfred.languages.join(', ') : null}</Typography>
+                <Typography style={{color: 'black'}}>{company ? company.languages.join(', ') : null}</Typography>
               </Grid>
             </Grid>
             {
-              alfred ?
-                alfred.id_confirmed ?
+              company ?
+                company.id_confirmed ?
                   <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '4vh'}}>
                     <Grid>
-                      <Typography style={{color: 'rgba(39,37,37,35%)'}}>{alfred ? alfred.firstname : null}</Typography>
+                      <Typography
+                        style={{color: 'rgba(39,37,37,35%)'}}>{company ? company.firstname : null}</Typography>
                     </Grid>
                     <Grid style={{margin: 3}}/>
                     <Grid>
-                      <Typography style={{color:'black'}}>à un profil vérifié</Typography>
+                      <Typography style={{color: 'black'}}>à un profil vérifié</Typography>
                     </Grid>
                     <Grid>
                       <CheckCircleOutlineIcon/>
@@ -308,18 +277,18 @@ class ProfileAbout extends React.Component {
         </Grid>
         <Grid item xl={8} lg={8} md={6} sm={12} xs={12}>
           <Box>
-            <Skills alfred={user} />
+            <Skills alfred={user}/>
           </Box>
         </Grid>
         <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
           <Box>
-            <Badges user={user} />
+            <Badges user={user}/>
           </Box>
         </Grid>
-        { false ?
+        {false ?
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.aboutHastagsContainer}>
             <Box>
-              <Hashtags user={user} />
+              <Hashtags user={user}/>
             </Box>
           </Grid>
           :
@@ -338,32 +307,30 @@ class ProfileAbout extends React.Component {
 
       </Grid>
     )
-  };
+  }
 
   render() {
-    const {classes, index, user}=this.props;
-    const {alfred}=this.state;
-
-    if(!user && alfred){
+    const {classes, index, user} = this.props;
+    const {company} = this.state;
+    if (!user && company) {
       return null
     }
-
     return (
       <React.Fragment>
         <Hidden only={['xs']}>
           <ProfileLayout user={user} index={index}>
-            {this.content(classes, user, alfred)}
+            {this.content(classes, user, company)}
           </ProfileLayout>
         </Hidden>
-        <Hidden only={['lg', 'xl',  'sm', 'md']}>
+        <Hidden only={['lg', 'xl', 'sm', 'md']}>
           <LayoutMobileProfile user={user} index={index} currentIndex={4}>
-            {this.content(classes, user, alfred)}
+            {this.content(classes, user, company)}
           </LayoutMobileProfile>
         </Hidden>
-        {this.modalEditDialog(classes) }
+        {this.modalEditDialog(classes)}
       </React.Fragment>
     )
   }
 }
 
-export default withStyles(styles)(ProfileAbout)
+export default withStyles(styles)(Company)

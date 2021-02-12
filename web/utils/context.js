@@ -18,7 +18,11 @@ const is_b2b_admin = user => {
   return is_b2b_admin
 }
 
+const is_mode_company = user => {
+  const _is_company = user && user.is_company
+  return is_mode_company
+}
 
-module.exports={
-  is_b2b_site, is_b2b_employee, is_b2b_admin
+module.exports = {
+  is_b2b_site, is_b2b_employee, is_b2b_admin, is_mode_company
 }

@@ -1,6 +1,6 @@
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 
-const {setAxiosAuthentication}=require('../../utils/authentication')
+const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios'
@@ -26,19 +26,20 @@ import {isEditableUser} from '../../utils/functions'
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Divider from "@material-ui/core/Divider";
+import {is_mode_company} from "../utils/context";
 
 const {frenchFormat} = require('../../utils/text');
-const moment=require('moment');
+const moment = require('moment');
 moment.locale('fr');
 
 const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose, ...other } = props;
+  const {children, classes, onClose, ...other} = props;
   return (
     <MuiDialogTitle disableTypography {...other} className={classes.root}>
       <Typography variant="h6">{children}</Typography>
       {onClose ? (
         <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
-          <CloseIcon />
+          <CloseIcon/>
         </IconButton>
       ) : null}
     </MuiDialogTitle>
@@ -76,7 +77,7 @@ class About extends React.Component {
 
         this.setState({
           user: user,
-          userLanguages:  user.languages.map(l => ({value: l, label: l})),
+          userLanguages: user.languages.map(l => ({value: l, label: l})),
           billing_address: user.billing_address
         })
       })
@@ -90,7 +91,7 @@ class About extends React.Component {
         address: result.suggestion.name,
         zip_code: result.suggestion.postcode,
         country: result.suggestion.country,
-        gps:{
+        gps: {
           lat: result.suggestion.latlng.lat,
           lng: result.suggestion.latlng.lng,
         }
@@ -107,17 +108,17 @@ class About extends React.Component {
   save = () => {
     const {newAddress, languages} = this.state;
     setAxiosAuthentication();
-    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then( res =>{
-      axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then( res =>{
-        snackBarSuccess('Profil modifié avec succès');
-       setTimeout(this.loadUser, 1000)
+    axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then(res => {
+        axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then(res => {
+            snackBarSuccess('Profil modifié avec succès');
+            setTimeout(this.loadUser, 1000)
+          }
+        ).catch(err => {
+          console.error(err)
+        })
       }
-      ).catch(err => {
+    ).catch(err => {
         console.error(err)
-      })
-    }
-    ).catch( err => {
-      console.error(err)
       }
     );
   };
@@ -128,7 +129,7 @@ class About extends React.Component {
 
 
   openEdition = () => {
-    const {user}=this.state;
+    const {user} = this.state;
 
     this.setState({
       showEdition: true,
@@ -143,59 +144,80 @@ class About extends React.Component {
     let o3 = this.state.newAddress ? this.state.newAddress.gps : null;
     let o4 = this.state.billing_address.gps;
 
-    if(o1 && o1.length !== 0 && o3 !== null){
-      if(o1.join('') === o2.join('') && o3.lat === o4.lat && o3.lng === o4.lng){
+    if (o1 && o1.length !== 0 && o3 !== null) {
+      if (o1.join('') === o2.join('') && o3.lat === o4.lat && o3.lng === o4.lng) {
         this.setState({enabledEdition: true})
-      }else if(o1.join('') !== o2.join('') || o3.lat !== o4.lat && o3.lng !== o4.lng){
+      } else if (o1.join('') !== o2.join('') || o3.lat !== o4.lat && o3.lng !== o4.lng) {
         this.setState({enabledEdition: false})
-      }else{
+      } else {
         this.setState({enabledEdition: false})
       }
-    }else{
+    } else {
       this.setState({enabledEdition: true})
     }
   };
 
-  modalEditDialog = (classes) =>{
-    const {newAddress, showEdition, languages, enabledEdition, user}=this.state;
+  modalEditDialog = (classes) => {
+    const {newAddress, showEdition, languages, enabledEdition, user} = this.state;
     const address = newAddress || (user ? user.billing_address : null)
-    const placeholder =  address ? `${address.city}, ${address.country}` : 'Entrez votre adresse';
+    const placeholder = address ? `${address.city}, ${address.country}` : 'Entrez votre adresse';
 
-    return(
+    return (
       <Dialog
         open={showEdition}
         onClose={this.closeEditDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog} style={{position: 'absolute', right: 0}}/>
+        <DialogTitle id="customized-dialog-title" onClose={this.closeEditDialog}
+                     style={{position: 'absolute', right: 0}}/>
         <DialogContent>
-          <Topic titleTopic={'Modifiez vos informations'} titleSummary={'Ici, vous pouvez modifier vos informations'} underline={true} />
+          <Topic
+            titleTopic={is_mode_company() ? 'Modifiez les informations de votre entreprises' : 'Modifiez vos informations'}
+            titleSummary={is_mode_company() ? 'Ici, vous pouvez modifier les informations de votre entreprise' : 'Ici, vous pouvez modifier vos informations'}
+            underline={true}/>
           <Grid container>
             <Grid container>
               <Grid item xs={12} lg={12} style={{marginTop: '2vh'}}>
-                <h3 style={{fontWeight: 'bold', textTransform: 'initial'}}>Lieu d'habitation</h3>
+                <h3 style={{
+                  fontWeight: 'bold',
+                  textTransform: 'initial'
+                }}>{is_mode_company() ? : 'Site Web' : 'Lieu d\'habitation'}</h3>
               </Grid>
-              <Grid item style={{width:'100%', marginTop: '3vh', marginBottom: '3vh'}}>
-                <AlgoliaPlaces
-                  key={moment()}
-                  placeholder={placeholder}
-                  options={{
-                    appId: 'plKATRG826CP',
-                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                    language: 'fr',
-                    countries: ['fr'],
-                    type: 'address',
+              <Grid item style={{width: '100%', marginTop: '3vh', marginBottom: '3vh'}}>
+                {
+                  is_mode_company() ?
+                    <TextField
+                      classes={{root: classes.textField}}
+                      name={'website'}
+                      placeholder={'Site Web'}
+                      variant={'outlined'}
+                      label={'Site Web'}
+                    />
+                    :
+                    <AlgoliaPlaces
+                      key={moment()}
+                      placeholder={placeholder}
+                      options={{
+                        appId: 'plKATRG826CP',
+                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                        language: 'fr',
+                        countries: ['fr'],
+                        type: 'address',
 
-                  }}
-                  onChange={this.onAddressChanged}
-                  onClear = {() => this.onAddressChanged(null)}
-                />
+                      }}
+                      onChange={this.onAddressChanged}
+                      onClear={() => this.onAddressChanged(null)}
+                    />}
               </Grid>
             </Grid>
             <Grid container>
-              <Grid item xs={12} lg={12}  style={{marginTop: '2vh'}}>
-                <Typography style={{fontWeight: 'bold', textTransform: 'initial'}}>Langues parlées</Typography>
+              <Grid item xs={12} lg={12} style={{marginTop: '2vh'}}>
+                <Typography
+                  style={{
+                    fontWeight: 'bold',
+                    textTransform: 'initial'
+                  }}>{is_mode_company() ? 'Taille de l\'entreprise' : 'Langues parlées'}</Typography>
               </Grid>
               <Grid item xs={12} style={{marginTop: '3vh', marginBottom: '3vh'}}>
                 <MultipleSelect
@@ -234,14 +256,14 @@ class About extends React.Component {
           </Grid>
         </DialogContent>
       </Dialog>
-  )
+    )
   };
 
 
   render() {
     const {displayTitlePicture, classes} = this.props;
     const {user} = this.state;
-    var place= user ? user.billing_address.city : "Pas d'adresse";
+    var place = user ? user.billing_address.city : "Pas d'adresse";
 
     const editable = isEditableUser(user);
 
@@ -256,42 +278,43 @@ class About extends React.Component {
         {
           label: 'Langues',
           summary: user.languages.join(', ') || null,
-          IconName:  user.firstname ? <ChatBubbleOutlineOutlinedIcon fontSize="large"/> : ''
+          IconName: user.firstname ? <ChatBubbleOutlineOutlinedIcon fontSize="large"/> : ''
         },
         {
-          label:  'Vérification',
+          label: 'Vérification',
           summary: user.id_card_status_text,
-          IconName:  user.firstname ? <CheckCircleOutlineIcon fontSize="large"/> : ''
+          IconName: user.firstname ? <CheckCircleOutlineIcon fontSize="large"/> : ''
         },
       ]
       :
       null;
 
     return (
-      <Grid style={{display: 'flex', flexDirection:'column', position: 'relative'}}>
-        { displayTitlePicture ?
+      <Grid style={{display: 'flex', flexDirection: 'column', position: 'relative'}}>
+        {displayTitlePicture ?
           <h3>{frenchFormat(`A propos de ${user ? user.firstname : ''}`)}</h3>
           : null
         }
-        { editable ?
+        {editable ?
           <Grid style={{position: 'absolute', right: 0}}>
             <IconButton aria-label="edit" onClick={this.openEdition}>
-              <CreateIcon />
+              <CreateIcon/>
             </IconButton>
           </Grid>
           :
           null
         }
-        <Grid style={{display: 'flex', flexDirection:'row'}}>
-          { displayTitlePicture ?
-            <Grid style={{ marginLeft: '1%', marginRight: '1%'}}>
-              <UserAvatar user={user} />
+        <Grid style={{display: 'flex', flexDirection: 'row'}}>
+          {displayTitlePicture ?
+            <Grid style={{marginLeft: '1%', marginRight: '1%'}}>
+              <UserAvatar user={user}/>
             </Grid>
             : null
           }
-          <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} columnsXl={12} columnsLG={12} columnsMD={6} columnsSm={6} columnsXS={6} />
+          <ListAlfredConditions wrapperComponentProps={wrapperComponentProps} columnsXl={12} columnsLG={12}
+                                columnsMD={6} columnsSm={6} columnsXS={6}/>
         </Grid>
-        {this.modalEditDialog(classes) }
+        {this.modalEditDialog(classes)}
       </Grid>
     )
   }
