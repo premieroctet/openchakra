@@ -5,7 +5,7 @@ class TestNotification extends React.Component {
 
   componentDidMount() {
     setTimeout(this.testOneMessage, 1000)
-    setTimeout(this.testManyMessages, 3000)
+    setTimeout(this.testManyMessages, 1000)
   }
 
   testOneMessage = () => {
@@ -13,7 +13,7 @@ class TestNotification extends React.Component {
   }
 
   testManyMessages = () => {
-    snackBarSuccess({1: 'Message un', 2 : 'Message deux'})
+    snackBarSuccess({1: 'Message un', 2 : 'Message deux', 3: 'Message trois'})
   }
 
   render() {

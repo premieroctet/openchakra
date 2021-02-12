@@ -1,4 +1,4 @@
-import SnackBar from "../SnackBar/SnackBar";
+const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react';
@@ -109,7 +109,8 @@ class About extends React.Component {
     setAxiosAuthentication();
     axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then( res =>{
       axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then( res =>{
-        this.setState({open: true}, () => setTimeout(this.loadUser, 1000))
+        snackBarSuccess('Profil modifié avec succès');
+       setTimeout(this.loadUser, 1000)
       }
       ).catch(err => {
         console.error(err)
@@ -232,7 +233,6 @@ class About extends React.Component {
             </Grid>
           </Grid>
         </DialogContent>
-        <SnackBar severity={"success"} message={'Profil modifié avec succès'} open={this.state.open} closeSnackBar={() => this.setState({open: false})}/>
       </Dialog>
   )
   };

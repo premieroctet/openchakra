@@ -28,6 +28,7 @@ class Home extends React.Component {
       category: {},
       alfred: {},
       logged: false,
+      user: null,
     };
   }
 
@@ -42,13 +43,27 @@ class Home extends React.Component {
         this.setState({category: category});
       }).catch(err => console.error(err));
 
-    axios.get('/myAlfred/api/serviceUser/home')
-      .then(response => {
-        let alfred = response.data;
-        this.setState({alfred: alfred});
-      }).catch(err => console.error(err));
-
-
+    // Is logged user, get sorted alfreds
+    if (getLoggedUserId()) {
+      axios.get('/myAlfred/api/users/current')
+        .then(response => {
+          let user = response.data;
+          this.setState({user: user});
+          axios.get(`/myAlfred/api/serviceUser/home?gps=${JSON.stringify(user.billing_address.gps)}`)
+            .then(response => {
+              let alfred = response.data;
+              this.setState({alfred: alfred});
+            }).catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+    }
+    else {
+      axios.get('/myAlfred/api/serviceUser/home')
+        .then(response => {
+          let alfred = response.data;
+          this.setState({alfred: alfred});
+        }).catch(err => console.error(err));
+    }
   }
 
   render() {
