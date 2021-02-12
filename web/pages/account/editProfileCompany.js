@@ -1,7 +1,7 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
-import styles from '../../static/css/pages/profile/editProfileCompany/editProfileCompany'
+import styles from '../../static/css/pages/profile/editProfileCompany/editProfileCompany';
 import {Helmet} from "react-helmet";
 import Hidden from "@material-ui/core/Hidden";
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
@@ -14,14 +14,19 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 const {setAxiosAuthentication} = require('../../utils/authentication');
 const {MAX_DESCRIPTION_LENGTH} = require('../../utils/consts');
-
+import FormControl from '@material-ui/core/FormControl';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
 
 
 class editProfileCompany extends React.Component{
   constructor(props) {
     super(props);
     this.state={
-      user: {}
+      user: {},
+      activityArea: '',
+      sizeCompany: ''
     }
 
   }
@@ -56,7 +61,13 @@ class editProfileCompany extends React.Component{
       );
   };
 
+  handleChange = (event) => {
+    this.setState({[event.target.name] : event.target.value});
+  };
+
   content = (classes) => {
+    const{activityArea, sizeCompany} = this.state;
+
     return(
       <Grid>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
@@ -113,24 +124,45 @@ class editProfileCompany extends React.Component{
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <TextField
-              value={''}
-              name={'sizeCompany'}
-              placeholder={'Taille de l’entreprise'}
-              variant={'outlined'}
-              label={'Taille de l’entreprise'}
-              classes={{root: classes.textField}}
-            />
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="demo-simple-select-outlined-label">Taille de l’entreprise</InputLabel>
+              <Select
+                labelId="demo-simple-select-outlined-label"
+                id="demo-simple-select-outlined"
+                value={sizeCompany}
+                onChange={this.handleChange}
+                label={'Taille de l’entreprise'}
+                name={'sizeCompany'}
+                placeholder={'Taille de l’entreprise'}
+              >
+                <MenuItem value={10}>0 à 100</MenuItem>
+                <MenuItem value={20}>100 à 200</MenuItem>
+                <MenuItem value={30}>200 à 300</MenuItem>
+                <MenuItem value={40}>400 à 500</MenuItem>
+                <MenuItem value={50}>500 +</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <TextField
-              value={''}
-              name={'activityArea'}
-              placeholder={'Secteur d’activité'}
-              variant={'outlined'}
-              label={'Secteur d’activité'}
-              classes={{root: classes.textField}}
-            />
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="demo-simple-select-outlined-label">Secteur d’activité</InputLabel>
+              <Select
+                labelId="demo-simple-select-outlined-label"
+                id="demo-simple-select-outlined"
+                value={activityArea}
+                onChange={this.handleChange}
+                label={'Secteur d’activité'}
+                name={"activityArea"}
+                placeholder={'Secteur d’activité'}
+              >
+                <MenuItem value={10}>Informatique</MenuItem>
+                <MenuItem value={20}>Marketing</MenuItem>
+                <MenuItem value={30}>Web</MenuItem>
+                <MenuItem value={40}>Droit</MenuItem>
+                <MenuItem value={50}>Assurance</MenuItem>
+                <MenuItem value={60}>Logement</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <TextField
@@ -192,7 +224,7 @@ class editProfileCompany extends React.Component{
             <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
               <TextField
                 value={''}
-                name={'positionHeld'}
+                name={'position'}
                 placeholder={'Poste occupé'}
                 variant={'outlined'}
                 label={'Poste occupé'}

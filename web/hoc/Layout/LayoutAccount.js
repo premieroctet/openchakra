@@ -2,6 +2,7 @@ import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import ScrollMenu from '../../components/ScrollMenu/ScrollMenu';
 import Layout from "./Layout";
+import {is_b2b_admin} from '../../utils/context';
 
 class LayoutAccount extends React.Component {
   constructor(props) {
@@ -10,14 +11,14 @@ class LayoutAccount extends React.Component {
       items: [
         {
           label: 'Mes Informations',
-          url: '/editProfile'
+          url: is_b2b_admin() ? '/editProfileCompany' : '/editProfile'
         },
         {
           label: 'Modes de paiement',
           url: '/paymentMethod'
         },
         {
-          label: 'Mes adresses',
+          label: is_b2b_admin() ? 'Mes sites' : 'Mes adresses',
           url: '/myAddresses'
         },
         {

@@ -663,7 +663,7 @@ class trustAndVerification extends React.Component {
           </LayoutMobile>
         </Hidden>
         {this.state.open ? this.modalDeleteConfirmMessage() : null}
-        <SnackBar severity={"success"} message={message} open={message} closeSnackBar={() => this.setState({message: null})}/>
+        {/*<SnackBar severity={"success"} message={message} open={message} closeSnackBar={() => this.setState({message: null})}/>*/}
       </React.Fragment>
     );
   };

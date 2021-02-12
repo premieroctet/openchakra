@@ -7,4 +7,7 @@ export default theme => ({
     color:'white',
     textTransform: 'initial'
   },
+  formControl:{
+    width: '100%'
+  }
 })
