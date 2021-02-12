@@ -1,0 +1,86 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "MyAlfred CRUD API",
+    "description": "This is the MyAlfred CRUD API "
+  },
+  "host": "localhost:80",
+  "basePath": "/myAlfred/api/",
+  "tags": [
+    {
+      "name": "Users",
+      "description": "API for users in the system"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get all users",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Users"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Users": {
+      "required": [
+        "name",
+        "_id",
+        "companies"
+      ],
+      "_id": {
+        "type": "integer",
+        "uniqueItems": true
+      },
+      "isPublic": {
+        "type": "boolean"
+      },
+      "name": {
+        "type": "string"
+      },
+      "books": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "companies": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "Users": {
+    "type": "array",
+    "$ref": "#/definitions/Users"
+  }
+}

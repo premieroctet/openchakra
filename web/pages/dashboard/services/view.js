@@ -51,17 +51,6 @@ const styles = {
   },
 };
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
 class view extends React.Component {
 
   constructor(props) {
@@ -78,18 +67,14 @@ class view extends React.Component {
       category: '',
       tags: [],
       equipments: [],
-      majoration: '',
       location: {},
-      home: false,
-      alfred: false,
-      visio: false,
       isChecked: false,
       selectedOption: null,
       selectedTags: null,
+      errors:{}
     };
 
     this.handleClick = this.handleClick.bind(this);
-    this.handleChecked = this.handleChecked.bind(this);
     this.handleChangeSelect = this.handleChangeSelect.bind(this);
     this.handleChangeTags = this.handleChangeTags.bind(this);
     this.onChangeLocation = this.onChangeLocation.bind(this);
@@ -108,7 +93,6 @@ class view extends React.Component {
     axios.get(`/myAlfred/api/admin/service/all/${id}`)
       .then(response => {
         let service = response.data;
-        console.log('Received from API:' + JSON.stringify(service));
         this.setState({
           service: service,
           current_tags: service.tags,
@@ -116,14 +100,7 @@ class view extends React.Component {
           current_category: service.category,
           category: service.category._id,
           location: service.location,
-          home: service.location.home,
-          alfred: service.location.alfred,
-          visio: service.location.visio,
         });
-
-        if (service.majoration != null) {
-          this.setState({isChecked: true});
-        }
 
         this.setState({
           selectedOption: this.state.current_equipments.map(a => ({
@@ -181,8 +158,14 @@ class view extends React.Component {
     this.setState({service: state});
   };
 
+  onChangeBool = e => {
+    const state = this.state.service;
+    const {name, checked} = e.target;
+    state[name]=checked
+    this.setState({service: state});
+  };
+
   onChangeLocation = e => {
-    console.log('onChangeLocation');
     const service = this.state.service;
     service.location[e.target.name] = e.target.checked;
     this.setState({service: service});
@@ -200,8 +183,6 @@ class view extends React.Component {
 
   handleChange2 = e => {
     this.setState({equipments: e.target.value});
-
-
   };
 
   handleChangeSelect = selectedOption => {
@@ -211,27 +192,9 @@ class view extends React.Component {
 
   handleChangeTags = selectedTags => {
     this.setState({selectedTags});
-
   };
 
-  handleChecked() {
-    this.setState({isChecked: !this.state.isChecked});
-  }
-
-  handleChecked2() {
-    this.setState({home: !this.state.home});
-  }
-
-  handleChecked3() {
-    this.setState({alfred: !this.state.alfred});
-  }
-
-  handleChecked4() {
-    this.setState({visio: !this.state.visio});
-  }
-
   onTaxChange = e => {
-    console.log('onTaxChange');
     let service = this.state.service;
     service[e.target.name] = e.target.checked;
     this.setState({service: service});
@@ -241,39 +204,32 @@ class view extends React.Component {
   onSubmit = e => {
     e.preventDefault();
     let arrayEquipments = [];
-    let arrayTags = [];
     if (this.state.selectedOption != null) {
       this.state.selectedOption.forEach(c => {
-
         arrayEquipments.push(c.value);
-
       });
     }
 
+    let tags = [];
     if (this.state.selectedTags != null) {
       this.state.selectedTags.forEach(w => {
-
-        arrayTags.push(w.value);
-
+        tags.push(w.value);
       });
     }
 
-    const tags = arrayTags;
     const category = this.state.category;
     const equipments = arrayEquipments;
     const id = this.props.service_id;
     const service = this.state.service;
-    const {label, description, majoration} = service;
-    const location = service.location;
-    const travel_tax = service.travel_tax;
-    const pick_tax = service.pick_tax;
+    const {label, description, location} = service;
+    const {travel_tax, pick_tax, professional_access, particular_access} = service;
 
     axios.put(`/myAlfred/api/admin/service/all/${id}`,
-      {label, description, tags, category, equipments, majoration, location, travel_tax, pick_tax})
+      {label, description, tags, category, equipments, location, travel_tax, pick_tax,
+      professional_access, particular_access})
       .then(res => {
 
         alert('Service modifié avec succès');
-        Router.push({pathname: '/dashboard/services/all'});
       })
       .catch(err => {
         console.error(err);
@@ -281,9 +237,10 @@ class view extends React.Component {
           clearAuthenticationToken()
           Router.push({pathname: '/login'});
         }
+        else {
+          this.setState({errors: err.response.data})
+        }
       });
-
-
   };
 
   handleClick() {
@@ -317,12 +274,8 @@ class view extends React.Component {
     const {all_equipments} = this.state;
     const {isChecked} = this.state;
 
-    console.log('Render service:' + JSON.stringify(service));
-
     const categories = all_category.map(e => (
-
       <MenuItem value={e._id}>{e.label}</MenuItem>
-
     ));
 
     const options = all_equipments.map(equipment => ({
@@ -339,7 +292,6 @@ class view extends React.Component {
     return (
       <Layout>
         <Grid container className={classes.loginContainer}>
-          <Card className={classes.card}>
             <Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center'}}>
                 <Typography style={{fontSize: 30}}>{service.label}</Typography>
@@ -405,51 +357,76 @@ class view extends React.Component {
                   </FormControl>
                 </Grid>
                 <Grid item style={{marginTop: 20}}>
-                  <Typography style={{fontSize: 20}}>Options possibles</Typography>
+                  <Typography style={{fontSize: 20}}>Lieu du service</Typography>
+                  <em style={{ color: 'red'}}>{this.state.errors.location}</em><br/>
                   <FormControlLabel
                     control={
-                      <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon/>}
+                      <Checkbox color="primary"
                                 checked={service.location ? service.location.alfred : false}
                                 value={service.location ? service.location.alfred : false} name="alfred"
                                 onChange={this.onChangeLocation}/>
                     }
-                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>Chez l'Alfred</p></React.Fragment>}
+                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>chez l'Alfred</p></React.Fragment>}
                   />
                   <FormControlLabel
                     control={
-                      <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon/>}
+                      <Checkbox color="primary"
                                 checked={service.location ? service.location.client : false}
                                 value={service.location ? service.location.client : false} name="client"
                                 onChange={this.onChangeLocation}/>
                     }
-                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>Chez le client</p></React.Fragment>}
+                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>chez le client</p></React.Fragment>}
                   />
                   <FormControlLabel
                     control={
-                      <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon/>}
+                      <Checkbox color="primary"
                                 checked={service.location ? service.location.visio : false}
                                 value={service.location ? service.location.visio : false} name="visio"
                                 onChange={this.onChangeLocation}/>
                     }
-                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>En visioconférence</p></React.Fragment>}
+                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>en visioconférence</p></React.Fragment>}
                   />
                   <Typography style={{fontSize: 20}}>Frais possibles</Typography>
                   <FormControlLabel
                     control={
-                      <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon/>}
+                      <Checkbox color="primary"
                                 checked={service.travel_tax ? 'checked' : ''} value={service.travel_tax}
                                 name="travel_tax" onChange={this.onTaxChange}/>
                     }
-                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>Frais de déplacement</p>
+                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>frais de déplacement</p>
                     </React.Fragment>}
                   />
                   <FormControlLabel
                     control={
-                      <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon/>}
+                      <Checkbox color="primary"
                                 checked={service.pick_tax ? 'checked' : ''} value={service.pick_tax} name="pick_tax"
                                 onChange={this.onTaxChange}/>
                     }
-                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>Frais de retrait&livraison</p>
+                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>frais de retrait&livraison</p>
+                    </React.Fragment>}
+                  />
+                  <Typography style={{fontSize: 20}}>
+                    Service proposé
+                  </Typography>
+                  <em style={{ color: 'red'}}>{this.state.errors.access}</em><br/>
+                  <FormControlLabel
+                    control={
+                      <Checkbox color="primary"
+                                checked={service.particular_access ? 'checked' : ''}
+                                name="particular_access" onChange={this.onChangeBool}
+                                />
+                    }
+                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux particuliers</p>
+                    </React.Fragment>}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox color="primary"
+                                checked={service.professional_access ? 'checked' : ''}
+                                name="professional_access" onChange={this.onChangeBool}
+                                />
+                    }
+                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>aux professionels</p>
                     </React.Fragment>}
                   />
                 </Grid>
@@ -469,76 +446,6 @@ class view extends React.Component {
 
                   />
                 </Grid>
-                <Grid item>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={this.state.isChecked}
-                        onChange={this.handleChecked}
-                        value={this.state.isChecked}
-                        color="primary"
-                        name={'isChecked'}
-                      />
-                    }
-                    label="Majoration ?"
-                  />
-
-                </Grid>
-                <Grid item>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={this.state.home}
-                        onChange={() => this.handleChecked2()}
-                        value={this.state.home}
-                        color="primary"
-                        name={'home'}
-                      />
-                    }
-                    label="Home"
-                  />
-                </Grid>
-                <Grid item>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={this.state.alfred}
-                        onChange={() => this.handleChecked3()}
-                        value={this.state.alfred}
-                        color="primary"
-                        name={'alfred'}
-                      />
-                    }
-                    label="Alfred"
-                  />
-                </Grid>
-                <Grid item>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={this.state.visio}
-                        onChange={() => this.handleChecked4()}
-                        value={this.state.visio}
-                        color="primary"
-                        name={'visio'}
-                      />
-                    }
-                    label="Visio"
-                  />
-                </Grid>
-                {isChecked ?
-                  <Grid item>
-                    <TextField
-                      id="standard-with-placeholder"
-                      margin="normal"
-                      style={{width: '100%'}}
-                      type="text"
-                      name="majoration"
-                      value={service.majoration}
-                      onChange={this.onChange}
-                    />
-                  </Grid>
-                  : ''}
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
                   <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                     Modifier
@@ -555,7 +462,6 @@ class view extends React.Component {
                 </Button>
               </Link>
             </Grid>
-          </Card>
         </Grid>
       </Layout>
     );

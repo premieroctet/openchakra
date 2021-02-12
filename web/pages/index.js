@@ -2,7 +2,6 @@ import axios from 'axios';
 import React from 'react';
 import Footer from '../hoc/Layout/Footer/Footer';
 import {Helmet} from 'react-helmet';
-
 import Grid from '@material-ui/core/Grid';
 import InfoBar from '../components/InfoBar/InfoBar';
 import {withStyles} from '@material-ui/core/styles';
@@ -18,57 +17,50 @@ import Hidden from "@material-ui/core/Hidden";
 import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
 import {Divider} from "@material-ui/core";
 import ResaService from "../components/HomePage/ResaService/ResaService";
-const {getLoggedUserId}=require('../utils/functions');
+import {is_b2b_site} from "../utils/context";
+
+const {getLoggedUserId} = require('../utils/functions');
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      category:{},
-      alfred:{},
+      category: {},
+      alfred: {},
       logged: false,
-      user: null,
     };
   }
+
 
   componentDidMount() {
     if (getLoggedUserId()) {
       this.setState({logged: true})
     }
-    axios.get('/myAlfred/api/category/all')
+    const categoryUrl = is_b2b_site() ? '/myAlfred/api/category/pro' : '/myAlfred/api/category/all';
+    axios.get(categoryUrl)
       .then(res => {
         let category = res.data;
         this.setState({category: category});
       }).catch(err => console.error(err));
 
-    // Is logged user, get sorted alfreds
-    if (getLoggedUserId()) {
-      axios.get('/myAlfred/api/users/current')
-        .then(response => {
-          let user = response.data;
-          this.setState({user: user});
-          axios.get(`/myAlfred/api/serviceUser/home?gps=${JSON.stringify(user.billing_address.gps)}`)
-            .then(response => {
-              let alfred = response.data;
-              this.setState({alfred: alfred});
-            }).catch(err => console.error(err));
-        })
-        .catch(err => console.error(err));
-    }
-    else {
-      axios.get('/myAlfred/api/serviceUser/home')
-        .then(response => {
-          let alfred = response.data;
-          this.setState({alfred: alfred});
-        }).catch(err => console.error(err));
-    }
+    const userUrl = is_b2b_site() ? '/myAlfred/api/serviceUser/home/pro' : '/myAlfred/api/serviceUser/home/';
+    axios.get(userUrl)
+      .then(response => {
+        let alfred = response.data;
+        this.setState({alfred: alfred});
+      }).catch(err => console.error(err));
+
+
   }
 
   render() {
-    const { classes } = this.props;
+    const {classes} = this.props;
     const {category, alfred, logged, user} = this.state;
     return (
+
+
       <React.Fragment>
+
         <Helmet>
           <title>Services rémunérés entre particuliers - My Alfred </title>
           <meta property="description"
@@ -78,11 +70,12 @@ class Home extends React.Component {
           <Grid>
             <InfoBar style={classes}/>
           </Grid>
-          <Grid container className={classes.navbarAndBannerContainer}>
+          <Grid container
+                className={is_b2b_site() ? classes.navbarAndBannerContainerB2b : classes.navbarAndBannerContainer}>
             <Grid className={classes.navbarAndBannerBackground}>
-                <Grid className={classes.navbarComponentPosition}>
-                  <NavBar/>
-                </Grid>
+              <Grid className={classes.navbarComponentPosition}>
+                <NavBar/>
+              </Grid>
               <Grid className={classes.bannerPresentationContainer}>
                 <Grid className={classes.bannerSize}>
                   <BannerPresentation/>
@@ -95,7 +88,7 @@ class Home extends React.Component {
               <CategoryTopic category={category}/>
             </Grid>
           </Grid>
-          <Grid container className={classes.howItWorksComponent}>
+          <Grid container className={is_b2b_site() ? classes.howItWorksComponentB2b : classes.howItWorksComponent}>
             <Grid className={classes.generalWidthContainer}>
               <HowItWorks/>
             </Grid>
@@ -105,17 +98,21 @@ class Home extends React.Component {
               <OurAlfred alfred={alfred}/>
             </Grid>
           </Grid>
-          <Grid container className={classes.becomeAlfredComponent}>
-            <Grid className={classes.generalWidthContainer}>
-              <ResaService/>
-            </Grid>
-          </Grid>
+          {
+            !is_b2b_site() ?
+              <Grid container className={classes.becomeAlfredComponent}>
+                <Grid className={classes.generalWidthContainer}>
+                  <ResaService/>
+                </Grid>
+              </Grid> : null}
           <Hidden only={['xs', 'sm']}>
-            <Grid container className={classes.mainNewsLetterStyle}>
-              <Grid className={classes.generalWidthContainerNewsLtter}>
-                <NewsLetter/>
-              </Grid>
-            </Grid>
+            {
+              !is_b2b_site() ?
+                <Grid container className={classes.mainNewsLetterStyle}>
+                  <Grid className={classes.generalWidthContainerNewsLtter}>
+                    <NewsLetter/>
+                  </Grid>
+                </Grid> : null}
           </Hidden>
           <Grid>
             <Divider/>
@@ -132,8 +129,15 @@ class Home extends React.Component {
               <Footer/>
             </Grid>
           </Grid>
-          <Hidden only={['xl','lg', 'md', 'sm']}>
-            <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 1}}>
+          <Hidden only={['xl', 'lg', 'md', 'sm']}>
+            <Grid style={{
+              position: 'fixed',
+              bottom: '3%',
+              display: 'flex',
+              justifyContent: 'center',
+              width: '100%',
+              zIndex: 1
+            }}>
               <Grid style={{width: '100%'}}>
                 <MobileNavbar currentIndex={0}/>
               </Grid>

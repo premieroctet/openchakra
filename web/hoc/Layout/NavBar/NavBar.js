@@ -1,4 +1,4 @@
-const {setAxiosAuthentication}=require('../../../utils/authentication')
+const {setAxiosAuthentication} = require('../../../utils/authentication')
 import React, {Component} from 'react';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
@@ -6,7 +6,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-const  {clearAuthenticationToken}=require('../../../utils/authentication')
+
+const {clearAuthenticationToken} = require('../../../utils/authentication')
 import Router from 'next/router';
 import Grid from '@material-ui/core/Grid';
 
@@ -43,21 +44,21 @@ import Switch from "@material-ui/core/Switch";
 import {DateRangePicker} from "react-dates";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
-
-
+import {is_development} from "../../../config/config";
+import {is_b2b_site} from "../../../utils/context";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const DialogTitle = withStyles(styles)((props) => {
-    const {children, classes, onClose, ...other} = props;
+  const {children, classes, onClose, ...other} = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
       {onClose ? (
         <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
-                    <CloseIcon/>
+          <CloseIcon/>
         </IconButton>
       ) : null}
     </MuiDialogTitle>
@@ -88,6 +89,7 @@ class NavBar extends Component {
       startDate: null,
       endDate: null,
       focusedInput: null,
+      b2b: false
 
     }
   }
@@ -100,23 +102,25 @@ class NavBar extends Component {
     if (Router.pathname === '/search') {
       this.setState({ifSearchPage: true})
     }
-    if(query.login === 'true'){
+    if (query.login === 'true') {
       this.handleOpenLogin()
     }
 
     setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(res => {
-        var allAddresses={'main':res.data.billing_address};
-        res.data.service_address.forEach( addr => {
-          allAddresses[addr._id]=addr
+        var allAddresses = {'main': res.data.billing_address};
+        res.data.service_address.forEach(addr => {
+          allAddresses[addr._id] = addr
         });
 
         this.setState({
           user: res.data,
           allAddresses: allAddresses
         })
-      }).catch(err =>{console.error(err)});
+      }).catch(err => {
+      console.error(err)
+    });
 
     this.setState({selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || ''});
   }
@@ -126,8 +130,7 @@ class NavBar extends Component {
     localStorage.removeItem('path')
     if (this.state.ifHomePage) {
       window.location.reload(false)
-    }
-    else {
+    } else {
       Router.push('/')
     }
   };
@@ -138,7 +141,7 @@ class NavBar extends Component {
 
   handleOpenLogin = (e) => {
     this.handleMenuClose();
-      this.setState({setOpenLogin: true, setOpenRegister: false});
+    this.setState({setOpenLogin: true, setOpenRegister: false});
   };
 
   handleCloseLogin = () => {
@@ -147,7 +150,7 @@ class NavBar extends Component {
 
   handleOpenRegister = (e) => {
     this.handleMenuClose();
-      this.setState({setOpenRegister: true, setOpenLogin: false});
+    this.setState({setOpenRegister: true, setOpenLogin: false});
   };
 
   handleCloseRegister = () => {
@@ -160,12 +163,11 @@ class NavBar extends Component {
 
   needRefresh = () => {
     this.setState({setOpenLogin: false});
-    const path=localStorage.getItem('path')
+    const path = localStorage.getItem('path')
     if (path) {
       localStorage.removeItem('path');
       Router.push(path)
-    }
-    else {
+    } else {
       Router.push('/search?search=1');
     }
   };
@@ -203,6 +205,14 @@ class NavBar extends Component {
     this.setState({anchorEl: false})
   };
 
+  b2bSide = () => {
+    localStorage.setItem('b2b', 'true');
+    window.location.reload();
+  }
+  cleanB2b = () => {
+    localStorage.removeItem('b2b');
+    window.location.reload();
+  }
   findService = () => {
     var queryParams = {search: 1};
     if (this.state.keyword) {
@@ -228,7 +238,7 @@ class NavBar extends Component {
   };
 
   statusFilterChanged = event => {
-        this.setState({[event.target.name]: event.target.checked, modalFilters: false}, () => this.props.filter());
+    this.setState({[event.target.name]: event.target.checked, modalFilters: false}, () => this.props.filter());
   };
 
   onChangeInterval(startDate, endDate) {
@@ -243,13 +253,14 @@ class NavBar extends Component {
     this.setState({startDate: startDate, endDate: endDate});
   }
 
-    handleModalSearchBarInput = () => {
+  handleModalSearchBarInput = () => {
     this.setState({modalMobileSearchBarInput: true})
   };
 
-    mobileSearchBarInput = (classes) => {
-      return (
-        <Grid className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP} onClick={this.handleModalSearchBarInput}>
+  mobileSearchBarInput = (classes) => {
+    return (
+      <Grid className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}
+            onClick={this.handleModalSearchBarInput}>
         <Paper classes={{root: this.state.ifHomePage ? classes.navbarSearch : classes.navbarSearchP}}>
           <Grid>
             <IconButton classes={{root: classes.iconButton}} aria-label="search">
@@ -296,7 +307,8 @@ class NavBar extends Component {
               </IconButton>
             </Grid>
             <Grid>
-              <h3 style={{margin:0}}>{this.state.mobileStepSearch === 0 ? 'Quel service recherchez-vous ?' : this.state.mobileStepSearch === 1 ? 'Où' : 'Dates'}</h3>
+              <h3
+                style={{margin: 0}}>{this.state.mobileStepSearch === 0 ? 'Quel service recherchez-vous ?' : this.state.mobileStepSearch === 1 ? 'Où' : 'Dates'}</h3>
             </Grid>
           </Grid>
           <Grid item container spacing={3} style={{margin: 0}}>
@@ -394,12 +406,13 @@ class NavBar extends Component {
     )
   };
 
-    mobileSearchBarInputSearchPage = (classes) => {
-        return (
+  mobileSearchBarInputSearchPage = (classes) => {
+    return (
       <Grid className={classes.navbarSearchContainerSearchPage}>
         <Paper classes={{root: classes.navbarSearch}}>
           <Grid>
-            <IconButton classes={{root: classes.iconButton}} aria-label="search" onClick={this.handleModalSearchBarInput}>
+            <IconButton classes={{root: classes.iconButton}} aria-label="search"
+                        onClick={this.handleModalSearchBarInput}>
               <SearchIcon/>
             </IconButton>
           </Grid>
@@ -410,7 +423,8 @@ class NavBar extends Component {
             overflow: 'hidden',
             cursor: 'pointer'
           }} onClick={this.handleModalSearchBarInput}>
-            <Typography style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}}>Commencez votre recherche</Typography>
+            <Typography style={{textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden'}}>Commencez votre
+              recherche</Typography>
           </Grid>
           <Grid style={{height: 30}}>
             <Divider style={{width: 2}} orientation="vertical"/>
@@ -423,14 +437,14 @@ class NavBar extends Component {
     )
   };
 
-    modalMobileFilter = (classes) => {
-      return (
-        <Dialog
-          onClose={() => this.setState({modalFilters: false})}
-          aria-labelledby="customized-dialog-title"
-          open={this.state.modalFilters}
-          classes={{paper: classes.dialogNavbarMobileFilter}}
-        >
+  modalMobileFilter = (classes) => {
+    return (
+      <Dialog
+        onClose={() => this.setState({modalFilters: false})}
+        aria-labelledby="customized-dialog-title"
+        open={this.state.modalFilters}
+        classes={{paper: classes.dialogNavbarMobileFilter}}
+      >
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({modalFilters: false})}>
           Filtres
         </DialogTitle>
@@ -504,156 +518,159 @@ class NavBar extends Component {
     )
   };
 
+
   searchBarInput = (classes) => {
 
-    const logged = this.state.user !=null
+    const logged = this.state.user != null
     return (
       <Grid className={this.state.ifHomePage ? classes.navbarSearchContainer : classes.navbarSearchContainerSearchP}>
-      <Paper classes={{root: this.state.ifHomePage ? classes.navbarSearch : classes.navbarSearchP}}>
-        <Grid className={classes.navbarTextFieldService}>
-          <TextField
-            classes={{root: this.state.ifHomePage ? classes.navbarRootTextField : classes.navbarRootTextFieldP}}
-            placeholder={'Ménage, Jardinage, ...'}
-            value={this.state.keyword}
-            onChange={this.onChange}
-            name={'keyword'}
-            label={this.state.ifHomePage ? SEARCHBAR.labelWhat : null}
-            onKeyPress={(e) => {
-              e.key === 'Enter' && e.preventDefault();
-            }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            InputProps={{disableUnderline: true}}
-            style={{marginLeft: 20}}
-          />
-        </Grid>
-        <Grid>
-          <Divider className={classes.divider} orientation="vertical"/>
-        </Grid>
-        {this.state.user ?
-          <Grid className={classes.navbarAddressContainer}>
-            <FormControl className={classes.navbarFormControlAddress}>
-              {this.state.ifHomePage ?
-                <InputLabel shrink id="demo-simple-select-placeholder-label-label">
-                  L'Adresse
-                </InputLabel> : null
-              }
-              <Select
-                disableUnderline
-                id="outlined-select-currency"
-                value={this.state.selectedAddress || 'main'}
-                name={'selectedAddress'}
-                onChange={(e) => {
-                  this.onChange(e);
-                }}
-                classes={{root: classes.selectRoot}}
-              >
-                <MenuItem value={'main'}>
-                  Adresse
-                  principale, {' ' + this.state.user.billing_address.address} {this.state.user.billing_address.zip_code},{this.state.user.billing_address.city}
-                </MenuItem>
-                {this.state.user.service_address.map((e, index) => (
-                  <MenuItem value={e._id} key={index}>
-                    {e.label + ', '} {' ' + e.address},{e.zip_code} {e.city}
-                  </MenuItem>
-                ))}
-                <MenuItem value={'all'}>
-                  Partout, Rechercher des Alfred partout
-                </MenuItem>
-                <MenuItem value={'addAddress'}>
-                  <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
-                    Ajouter une adresse
-                  </Typography>
-                </MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          :
-          <Grid className={this.state.ifHomePage ? classes.navbarAlgoliaContent : classes.navbarAlgoliaContentP}>
+        <Paper classes={{root: this.state.ifHomePage ? classes.navbarSearch : classes.navbarSearchP}}>
+          <Grid className={classes.navbarTextFieldService}>
             <TextField
-              label={this.state.ifHomePage ? SEARCHBAR.labelWhere : false}
-              classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhere : classes.navbarRootTextFieldWhereP}}
-              InputLabelProps={{ shrink: true }}
-              value={this.state.city}
-              InputProps={{
-                inputComponent: (inputRef) => {
-                  return (
-                    <AlgoliaPlaces
-                      {...inputRef}
-                      placeholder={SEARCHBAR.where}
-                      className={classes.navbarAlgoliaPlace}
-                      options={{
-                        appId: 'plKATRG826CP',
-                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                        language: 'fr',
-                        countries: ['fr'],
-                        type: 'city',
-                      }}
-                      onChange={(suggestion) => this.onChangeCity(suggestion)}
-                      onClear={() => this.setState({city: '', gps: null})}
-                    />)
-                },
-                disableUnderline: true
+              classes={{root: this.state.ifHomePage ? classes.navbarRootTextField : classes.navbarRootTextFieldP}}
+              placeholder={'Ménage, Jardinage, ...'}
+              value={this.state.keyword}
+              onChange={this.onChange}
+              name={'keyword'}
+              label={this.state.ifHomePage ? SEARCHBAR.labelWhat : null}
+              onKeyPress={(e) => {
+                e.key === 'Enter' && e.preventDefault();
               }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              InputProps={{disableUnderline: true}}
+              style={{marginLeft: 20}}
             />
           </Grid>
-        }
-        {
-          logged === false && this.state.ifHomePage ?
-            <Grid className={classes.navbarDatePickerMain}>
-              <Grid>
-                <Divider className={classes.divider} orientation="vertical"/>
-              </Grid>
-              <Grid className={this.state.ifHomePage ? classes.navbarDatePickerContainer : classes.navbarDatePickerContainerP}>
-                <TextField
-                  label={this.state.ifHomePage ? SEARCHBAR.labelWhen : false}
-                  classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhen : classes.navbarRootTextFieldWhenP}}
-                  InputLabelProps={{
-                    shrink: true,
+          <Grid>
+            <Divider className={classes.divider} orientation="vertical"/>
+          </Grid>
+          {this.state.user ?
+            <Grid className={classes.navbarAddressContainer}>
+              <FormControl className={classes.navbarFormControlAddress}>
+                {this.state.ifHomePage ?
+                  <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+                    L'Adresse
+                  </InputLabel> : null
+                }
+                <Select
+                  disableUnderline
+                  id="outlined-select-currency"
+                  value={this.state.selectedAddress || 'main'}
+                  name={'selectedAddress'}
+                  onChange={(e) => {
+                    this.onChange(e);
                   }}
-                  InputProps={{
-                    inputComponent: (inputRef) => {
-                      return (
-                        <DatePicker
-                          {...inputRef}
-                          selected={this.state.dateSelected}
-                          onChange={(date) => {
-                            this.setState({dateSelected: date});
-                            if (date === null) {
-                              this.setState({dateSelected: ''});
-                            }
-                          }}
-                          locale='fr'
-                          showMonthDropdown
-                          dateFormat="dd/MM/yyyy"
-                          placeholderText={SEARCHBAR.when}
-                          minDate={new Date()}
-                          className={this.state.ifHomePage ? classes.inputDatePicker : classes.inputDatePickerP}
-                        />)
-                    },
-                    disableUnderline: true
-                  }}
-                />
-              </Grid>
-            </Grid> : null
-        }
-        <Grid>
-          <IconButton
-            classes={{root: classes.iconButton}}
-            aria-label="search"
-            onClick={() => this.findService()}>
-            <SearchIcon/>
-          </IconButton>
-        </Grid>
-      </Paper>
-    </Grid>
+                  classes={{root: classes.selectRoot}}
+                >
+                  <MenuItem value={'main'}>
+                    Adresse
+                    principale, {' ' + this.state.user.billing_address.address} {this.state.user.billing_address.zip_code},{this.state.user.billing_address.city}
+                  </MenuItem>
+                  {this.state.user.service_address.map((e, index) => (
+                    <MenuItem value={e._id} key={index}>
+                      {e.label + ', '} {' ' + e.address},{e.zip_code} {e.city}
+                    </MenuItem>
+                  ))}
+                  <MenuItem value={'all'}>
+                    Partout, Rechercher des Alfred partout
+                  </MenuItem>
+                  <MenuItem value={'addAddress'}>
+                    <Typography style={{color: '#2FBCD3', cursor: 'pointer'}}>
+                      Ajouter une adresse
+                    </Typography>
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            :
+            <Grid className={this.state.ifHomePage ? classes.navbarAlgoliaContent : classes.navbarAlgoliaContentP}>
+              <TextField
+                label={this.state.ifHomePage ? SEARCHBAR.labelWhere : false}
+                classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhere : classes.navbarRootTextFieldWhereP}}
+                InputLabelProps={{shrink: true}}
+                value={this.state.city}
+                InputProps={{
+                  inputComponent: (inputRef) => {
+                    return (
+                      <AlgoliaPlaces
+                        {...inputRef}
+                        placeholder={SEARCHBAR.where}
+                        className={classes.navbarAlgoliaPlace}
+                        options={{
+                          appId: 'plKATRG826CP',
+                          apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                          language: 'fr',
+                          countries: ['fr'],
+                          type: 'city',
+                        }}
+                        onChange={(suggestion) => this.onChangeCity(suggestion)}
+                        onClear={() => this.setState({city: '', gps: null})}
+                      />)
+                  },
+                  disableUnderline: true
+                }}
+              />
+            </Grid>
+          }
+          {
+            logged === false && this.state.ifHomePage ?
+              <Grid className={classes.navbarDatePickerMain}>
+                <Grid>
+                  <Divider className={classes.divider} orientation="vertical"/>
+                </Grid>
+                <Grid
+                  className={this.state.ifHomePage ? classes.navbarDatePickerContainer : classes.navbarDatePickerContainerP}>
+                  <TextField
+                    label={this.state.ifHomePage ? SEARCHBAR.labelWhen : false}
+                    classes={{root: this.state.ifHomePage ? classes.navbarRootTextFieldWhen : classes.navbarRootTextFieldWhenP}}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    InputProps={{
+                      inputComponent: (inputRef) => {
+                        return (
+                          <DatePicker
+                            {...inputRef}
+                            selected={this.state.dateSelected}
+                            onChange={(date) => {
+                              this.setState({dateSelected: date});
+                              if (date === null) {
+                                this.setState({dateSelected: ''});
+                              }
+                            }}
+                            locale='fr'
+                            showMonthDropdown
+                            dateFormat="dd/MM/yyyy"
+                            placeholderText={SEARCHBAR.when}
+                            minDate={new Date()}
+                            className={this.state.ifHomePage ? classes.inputDatePicker : classes.inputDatePickerP}
+                          />)
+                      },
+                      disableUnderline: true
+                    }}
+                  />
+                </Grid>
+              </Grid> : null
+          }
+          <Grid>
+            <IconButton
+              classes={{root: classes.iconButton}}
+              aria-label="search"
+              onClick={() => this.findService()}>
+              <SearchIcon/>
+            </IconButton>
+          </Grid>
+        </Paper>
+      </Grid>
     )
   };
 
   render() {
-    const {user, setOpenLogin, setOpenRegister, anchorEl, ifHomePage, modalMobileSearchBarInput, ifSearchPage, modalFilters} = this.state;
+    const {user, setOpenLogin, setOpenRegister, anchorEl, ifHomePage, modalMobileSearchBarInput, ifSearchPage, modalFilters, business} = this.state;
     const {classes} = this.props;
+
 
     const logged = user != null
     const modalLogin = () => {
@@ -674,160 +691,177 @@ class NavBar extends Component {
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Hidden only={['xs']}>
               <Grid className={this.state.ifHomePage ? classes.navbarTopContainer : classes.navbarTopContainerP}>
-                <Grid className={ifHomePage ? classes.navbarLogoContainer : classes.navbarLogoContainerP } onClick={() => Router.push('/')}>
-                  <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'} className={classes.logoMyAlfred}  height={64} style={{filter: 'invert(1)'}}/>
-              </Grid>
-              {
-                ifHomePage ?
-                  <Grid className={ifHomePage ? classes.navabarHomepageMenu : classes.navabarHomepageMenuP}>
-                    <Tabs value={false} aria-label="simple tabs example">
-                      <Link href={'/search?search=1'}>
-                        <Tab classes={{root: classes.navbarTabRoot}}
-                               label={NAVBAR_MENU.ourServices}/>
-                      </Link>
-                      { user ?
-                        user.is_alfred ?
-                          <Link href={`/profile/services?user=${user._id}&indexAccount=1`}>
-                            <Tab classes={{root: classes.navbarTabRoot}}
-                                   label={NAVBAR_MENU.myServices}/>
-                          </Link>
-                          :
-                          <Link href={'/creaShop/creaShop'}>
-                            <Tab classes={{root: classes.navbarTabRoot}}
-                                   label={NAVBAR_MENU.registerServices}/>
-                          </Link>
-                        :
-                        <Link onClick={this.handleOpenRegister}>
+                <Grid className={ifHomePage ? classes.navbarLogoContainer : classes.navbarLogoContainerP}
+                      onClick={() => Router.push('/')}>
+                  <img alt={'logo_myAlfred'} title={'logo_myAlfred'} src={'../../../static/assets/icon/logo.svg'}
+                       className={classes.logoMyAlfred} height={64} style={{filter: 'invert(1)'}}/>
+                </Grid>
+                {
+                  ifHomePage ?
+                    <Grid className={ifHomePage ? classes.navabarHomepageMenu : classes.navabarHomepageMenuP}>
+                      <Tabs value={false} aria-label="simple tabs example">
+                        <Link href={'/search?search=1'}>
                           <Tab classes={{root: classes.navbarTabRoot}}
-                                 label={NAVBAR_MENU.registerServices}/>
+                               label={NAVBAR_MENU.ourServices}/>
                         </Link>
-                      }
-                      <Link href={'/contact'}>
-                        <Tab classes={{root: classes.navbarTabRoot}}
-                               label={NAVBAR_MENU.contactUs}/>
-                      </Link>
-                    </Tabs>
-                  </Grid> : this.searchBarInput(classes)
-              }
-              {
-                logged === true ?
-                  <Grid className={ifHomePage ? classes.navbarMenuBurgerContainer : classes.navbarMenuBurgerContainerP}>
-                    <IconButton
-                      aria-label="open drawer"
-                      onClick={this.handleOpenMenuItem}
-                    >
-                      <MenuIcon style={{color: 'white'}}/>
-                    </IconButton>
-                    <Menu
-                      anchorEl={anchorEl}
-                      keepMounted
-                      open={Boolean(anchorEl)}
-                      onClose={this.handleClosenMenuItem}
-                      getContentAnchorEl={null}
-                      anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-                      transformOrigin={{vertical: 'top', horizontal: 'center'}}
-                    >
-                    {user ?
-                      <Grid>
-                        <MenuItem>Bonjour {user.firstname} !</MenuItem>
-                        <Link href={`/profile/about?user=${user._id}`}>
-                          <MenuItem>Mon profil</MenuItem>
-                        </Link>
-                        <Link href={'/account/editProfile'}>
-                          <MenuItem>Mes paramètres</MenuItem>
-                        </Link>
-                        { user.is_alfred ?
-                          <Link href={`/profile/services?user=${user._id}&indexAccount=1`}>
-                            <MenuItem>Mes services</MenuItem>
-                          </Link>
+                        {user ?
+                          user.is_alfred ?
+                            <Link href={`/profile/services?user=${user._id}&indexAccount=1`}>
+                              <Tab classes={{root: classes.navbarTabRoot}}
+                                   label={NAVBAR_MENU.myServices}/>
+                            </Link>
+                            :
+                            <Link href={'/creaShop/creaShop'}>
+                              <Tab classes={{root: classes.navbarTabRoot}}
+                                   label={NAVBAR_MENU.registerServices}/>
+                            </Link>
                           :
-                          <Link href={`/creaShop/creaShop`}>
-                            <MenuItem>Proposer mes services</MenuItem>
+                          <Link onClick={this.handleOpenRegister}>
+                            <Tab classes={{root: classes.navbarTabRoot}}
+                                 label={NAVBAR_MENU.registerServices}/>
                           </Link>
                         }
-                        <Link href={`/profile/messages?user=${user._id}`}>
-                          <MenuItem>Mes messages</MenuItem>
-                        </Link>
-                        <Link href={`/reservations/reservations`}>
-                          <MenuItem>Mes réservations</MenuItem>
-                        </Link>
-                        {user.is_admin ?
-                          <Link href={`/dashboard/home`}>
-                            <MenuItem>Dashboard</MenuItem>
-                          </Link> : null
+                        {
+                          !is_b2b_site() ?
+                            <Link href={'/'} onClick={this.b2bSide}>
+                              <Tab classes={{root: classes.navbarTabRoot}}
+                                   label={NAVBAR_MENU.businessSide}/>
+                            </Link> : is_development() ?
+                            <Link href={'/'} onClick={this.cleanB2b}>
+                              <Tab classes={{root: classes.navbarTabRoot}}
+                                   label={'Retour Alfred Particuliers'}/>
+                            </Link> : null
+
                         }
-                        <MenuItem onClick={this.logout}>Déconnexion</MenuItem>
-                      </Grid>
-                      :
-                      null
-                    }
-                    </Menu>
-                  </Grid>
-                  :
+                      </Tabs>
+                    </Grid> : this.searchBarInput(classes)
+                }
+                {
+                  logged === true ?
+                    <Grid
+                      className={ifHomePage ? classes.navbarMenuBurgerContainer : classes.navbarMenuBurgerContainerP}>
+                      <IconButton
+                        aria-label="open drawer"
+                        onClick={this.handleOpenMenuItem}
+                      >
+                        <MenuIcon style={{color: 'white'}}/>
+                      </IconButton>
+                      <Menu
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={this.handleClosenMenuItem}
+                        getContentAnchorEl={null}
+                        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+                        transformOrigin={{vertical: 'top', horizontal: 'center'}}
+                      >
+                        {user ?
+                          <Grid>
+                            <MenuItem>Bonjour {user.firstname} !</MenuItem>
+                            {
+                              !user.is_employee ?
+
+                                <Link href={`/profile/about?user=${user._id}`}>
+                                  <MenuItem>Mon profil</MenuItem>
+                                </Link> : null}
+                            <Link href={'/account/editProfile'}>
+                              <MenuItem>Mes paramètres</MenuItem>
+                            </Link>
+                            {
+                              !user.is_employee ?
+                                user.is_alfred ?
+                                  <Link href={`/profile/services?user=${user._id}&indexAccount=1`}>
+                                    <MenuItem>Mes services</MenuItem>
+                                  </Link>
+                                  :
+                                  <Link href={`/creaShop/creaShop`}>
+                                    <MenuItem>Proposer mes services</MenuItem>
+                                  </Link> : null
+                            }
+
+                            <Link href={`/profile/messages?user=${user._id}`}>
+                              <MenuItem>Mes messages</MenuItem>
+                            </Link>
+                            <Link href={`/reservations/reservations`}>
+                              <MenuItem>Mes réservations</MenuItem>
+                            </Link>
+                            {user.is_admin ?
+                              <Link href={`/dashboard/home`}>
+                                <MenuItem>Dashboard</MenuItem>
+                              </Link> : null
+                            }
+                            <MenuItem onClick={this.logout}>Déconnexion</MenuItem>
+                          </Grid>
+                          :
+                          null
+                        }
+                      </Menu>
+                    </Grid>
+                    :
                     <Grid className={ifHomePage ? classes.navbarButtonContainer : classes.navbarButtonContainerP}>
-                    <Grid>
-                      <Button
-                        className={classes.navBarlogIn}
-                        onClick={this.handleOpenLogin}>
-                        {NAVBAR_MENU.logIn}
-                      </Button>
-                      <Dialog
-                        scroll={'paper'}
-                        aria-labelledby="scroll-dialog-title"
-                        aria-describedby="scroll-dialog-description"
-                        className={classes.navbarModal}
-                        open={setOpenLogin}
-                        onClose={this.handleCloseLogin}
-                        TransitionComponent={Transition}
-                        classes={{paperWidthSm: classes.navbarPaperWidth}}
-                        disableBackdropClick={true}
-                        disableEscapeKeyDown={true}
-                      >
-                        <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
-                        <DialogContent classes={{root: classes.navbarWidthLoginContent}}>
-                          <div className={classes.navbarPaper}>
-                            {modalLogin()}
-                          </div>
-                        </DialogContent>
-                      </Dialog>
+                      <Grid>
+                        <Button
+                          className={classes.navBarlogIn}
+                          onClick={this.handleOpenLogin}>
+                          {NAVBAR_MENU.logIn}
+                        </Button>
+                        <Dialog
+                          scroll={'paper'}
+                          aria-labelledby="scroll-dialog-title"
+                          aria-describedby="scroll-dialog-description"
+                          className={classes.navbarModal}
+                          open={setOpenLogin}
+                          onClose={this.handleCloseLogin}
+                          TransitionComponent={Transition}
+                          classes={{paperWidthSm: classes.navbarPaperWidth}}
+                          disableBackdropClick={true}
+                          disableEscapeKeyDown={true}
+                        >
+                          <DialogTitle id="customized-dialog-title" onClose={this.handleCloseLogin}/>
+                          <DialogContent classes={{root: classes.navbarWidthLoginContent}}>
+                            <div className={classes.navbarPaper}>
+                              {modalLogin()}
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </Grid>
+                      <Grid className={classes.navbarRegisterContainer}>
+                        <Button
+                          variant="outlined"
+                          classes={{root: classes.navbarSignIn}}
+                          onClick={this.handleOpenRegister}>
+                          {NAVBAR_MENU.signIn}
+                        </Button>
+                        <Dialog
+                          scroll={'paper'}
+                          aria-labelledby="scroll-dialog-title"
+                          aria-describedby="scroll-dialog-description"
+                          className={classes.navbarModal}
+                          open={setOpenRegister}
+                          onClose={this.handleCloseRegister}
+                          TransitionComponent={Transition}
+                          disableBackdropClick={true}
+                          disableEscapeKeyDown={true}
+                        >
+                          <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
+                          <DialogContent dividers={false} className={classes.navbarMuidialogContent}>
+                            <div className={classes.navbarPaper}>
+                              {modalRegister()}
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </Grid>
                     </Grid>
-                    <Grid className={classes.navbarRegisterContainer}>
-                      <Button
-                        variant="outlined"
-                        classes={{root: classes.navbarSignIn}}
-                        onClick={this.handleOpenRegister}>
-                        {NAVBAR_MENU.signIn}
-                      </Button>
-                      <Dialog
-                        scroll={'paper'}
-                        aria-labelledby="scroll-dialog-title"
-                        aria-describedby="scroll-dialog-description"
-                        className={classes.navbarModal}
-                        open={setOpenRegister}
-                        onClose={this.handleCloseRegister}
-                        TransitionComponent={Transition}
-                        disableBackdropClick={true}
-                        disableEscapeKeyDown={true}
-                      >
-                        <DialogTitle id="customized-dialog-title" onClose={this.handleCloseRegister}/>
-                        <DialogContent dividers={false} className={classes.navbarMuidialogContent}>
-                          <div className={classes.navbarPaper}>
-                            {modalRegister()}
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-                    </Grid>
-                  </Grid>
-              }
-            </Grid>
+                }
+              </Grid>
               {
                 ifHomePage ? this.searchBarInput(classes) : null
               }
-          </Hidden>
-          <Hidden only={['sm', 'md', 'lg', 'xl']}>
-            {ifHomePage ? this.mobileSearchBarInput(classes) : null}
-            {ifSearchPage ? this.mobileSearchBarInputSearchPage(classes) : null}
-          </Hidden>
+            </Hidden>
+            <Hidden only={['sm', 'md', 'lg', 'xl']}>
+              {ifHomePage ? this.mobileSearchBarInput(classes) : null}
+              {ifSearchPage ? this.mobileSearchBarInputSearchPage(classes) : null}
+            </Hidden>
           </Toolbar>
         </AppBar>
         {modalMobileSearchBarInput ? this.modalMobileSearchBarInput(classes) : null}

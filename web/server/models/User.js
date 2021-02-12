@@ -306,6 +306,11 @@ const UserSchema = new Schema({
   registration_proof_error: {
     type: String,
   },
+  company: {
+    type: Schema.Types.ObjectId,
+    ref: 'company',
+  },
+
 }, {toJSON: {virtuals: true, getters: true}});
 
 UserSchema.virtual('id_card_error_text').get(function () {
@@ -332,6 +337,10 @@ UserSchema.virtual('age').get(function () {
   }
   const age = moment().diff(moment(this.birthday), 'years')
   return age
+});
+
+UserSchema.virtual('is_employee').get(function () {
+  return Boolean(this.company)
 });
 
 UserSchema.virtual('shop', {
