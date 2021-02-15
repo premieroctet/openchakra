@@ -20,7 +20,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import AlgoliaPlaces from "algolia-places-react";
 import {COMPANY_ACTIVITY, COMPANY_SIZE} from '../../utils/consts';
-
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 class editProfileCompany extends React.Component{
   constructor(props) {
@@ -28,7 +30,12 @@ class editProfileCompany extends React.Component{
     this.state={
       user: {},
       activityArea: '',
-      sizeCompany: ''
+      sizeCompany: '',
+      descriptionCompany: '',
+      companyName: '',
+      siret: '',
+      tva: '',
+      vat_subject: false
     }
 
   }
@@ -64,15 +71,49 @@ class editProfileCompany extends React.Component{
   };
 
   handleChange = (event) => {
-    this.setState({[event.target.name] : event.target.value});
+    let {name, value} = event.target;
+    if (name === 'siret') {
+      if(value.match(/^[0-9]*$/)){
+        value = value.replace(/ /g, '');
+        this.setState({[name] : value});
+      }
+    }else if(name === 'tva'){
+      if(value.match(/^[0-9]*$/)){
+        this.setState({[name] : value});
+      }
+    }
+    else if(name === 'vat_subject') {
+      this.setState({[name]: !this.state.vat_subject})
+    }else{
+      this.setState({[name] : value});
+    }
   };
 
   handleInvoice = ({suggestion}) =>{
     this.setState({ invoice_company : suggestion })
   };
 
+  onSubmitProfilCompany = () =>{
+
+    const profilCompany = {
+      activityArea: this.state.activityArea,
+      sizeCompany: this.state.sizeCompany,
+      descriptionCompany: this.state.descriptionCompany,
+      companyName: this.state.companyName,
+      siret: this.state.siret,
+      tva: this.state.tva
+    };
+
+    console.log(profilCompany, 'profil')
+
+  };
+
+  onSubmitAbout = () =>{
+
+  };
+
   content = (classes) => {
-    const{activityArea, sizeCompany} = this.state;
+    const{activityArea, sizeCompany, descriptionCompany, companyName, siret, tva, vat_subject} = this.state;
 
     return(
       <Grid>
@@ -90,12 +131,13 @@ class editProfileCompany extends React.Component{
         <Grid container spacing={3} style={{marginTop: '5vh'}}>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <TextField
-              value={''}
+              value={companyName}
               name={'companyName'}
               placeholder={'Nom de l’entreprise'}
               variant={'outlined'}
               label={'Nom de l’entreprise'}
               classes={{root: classes.textField}}
+              onChange={this.handleChange}
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12} className={classes.containerAlgolia}>
@@ -114,23 +156,42 @@ class editProfileCompany extends React.Component{
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <TextField
-              value={''}
+              value={siret}
               name={'siret'}
               placeholder={'Siret'}
               variant={'outlined'}
               label={'Siret'}
               classes={{root: classes.textField}}
+              onChange={this.handleChange}
+
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <TextField
-              value={''}
+              value={tva}
               name={'tva'}
               placeholder={'N° TVA'}
               variant={'outlined'}
               label={'N° TVA'}
               classes={{root: classes.textField}}
+              onChange={this.handleChange}
+              disabled={!vat_subject}
             />
+            <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
+              <FormHelperText>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={vat_subject}
+                      name="vat_subject"
+                      onChange={this.handleChange}
+                      color="primary"
+                    />
+                  }
+                  label="Assujetti à la TVA"
+                />
+              </FormHelperText>
+            </Grid>
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <FormControl variant="outlined" className={classes.formControl}>
@@ -174,7 +235,7 @@ class editProfileCompany extends React.Component{
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <TextField
-              value={''}
+              value={descriptionCompany}
               multiline
               rows={5}
               variant={'outlined'}
@@ -182,12 +243,24 @@ class editProfileCompany extends React.Component{
               placeholder={'A propos'}
               label={'A propos'}
               classes={{root: classes.textField}}
-
+              onChange={this.handleChange}
             />
           </Grid>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}
                 style={{display: 'flex', alignItems: 'flex-end', width: '100%', flexDirection: 'column'}}>
             <Typography>{`${MAX_DESCRIPTION_LENGTH} caractères max`}</Typography>
+          </Grid>
+        </Grid>
+        <Grid style={{marginBottom: '12vh'}}>
+          <Grid style={{display: 'flex', justifyContent: 'flex-end', marginTop: '5vh'}}>
+            <Button
+              onClick={this.onSubmitProfilCompany}
+              variant="contained"
+              color="primary"
+              classes={{root: classes.button}}
+            >
+              Enregistrer
+            </Button>
           </Grid>
         </Grid>
         <Grid>
@@ -241,13 +314,10 @@ class editProfileCompany extends React.Component{
             </Grid>
           </Grid>
         </Grid>
-        <Grid>
-          <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
-        </Grid>
         <Grid style={{marginBottom: '12vh'}}>
           <Grid style={{display: 'flex', justifyContent: 'flex-end', marginTop: '5vh'}}>
             <Button
-              onClick={this.onSubmit}
+              onClick={this.onSubmitAbout}
               variant="contained"
               color="primary"
               classes={{root: classes.button}}
@@ -256,7 +326,7 @@ class editProfileCompany extends React.Component{
             </Button>
           </Grid>
         </Grid>
-        </Grid>
+      </Grid>
     )
   };
 
