@@ -14,7 +14,7 @@ const is_b2b_employee = user => {
 }
 
 const is_b2b_admin = user => {
-  const is_admin = user && user.is_b2b_admin
+  const is_admin = user && user.roles && user.roles.includes['ADMIN']
   return is_b2b_admin
 }
 

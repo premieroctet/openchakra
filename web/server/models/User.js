@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const {getMangopayMessage} = require('../../utils/i18n');
 const {hideIllegal} = require('../../utils/text')
 const moment = require('moment')
-const {ACCOUNT_MIN_AGE}=require('../../utils/consts')
+const {ACCOUNT_MIN_AGE, ROLES}=require('../../utils/consts')
 
 const maxBirth=new Date(moment().add(-ACCOUNT_MIN_AGE, 'years'))
 
@@ -310,6 +310,9 @@ const UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'company',
   },
+  position: {
+    type: String,
+  }
 
 }, {toJSON: {virtuals: true, getters: true}});
 
@@ -341,6 +344,10 @@ UserSchema.virtual('age').get(function () {
 
 UserSchema.virtual('is_employee').get(function () {
   return Boolean(this.company)
+});
+
+UserSchema.virtual('roles').get(function () {
+  return Object.keys(ROLES)
 });
 
 UserSchema.virtual('shop', {
