@@ -13,9 +13,6 @@ const CompanySchema = new Schema({
   siret: {
     type: String,
   },
-  size : {
-    enum : Object.keys(COMPANY_SIZE)
-  },
   billing_address: {
     address: {
       type: String,
@@ -54,11 +51,18 @@ const CompanySchema = new Schema({
       type: String,
     },
   }],
+  vat_subject : {
+    type: Boolean,
+    required: true,
+  },
   vat_number : {
     type: String,
   },
   activity: {
     enum : Object.keys(COMPANY_ACTIVITY),
+  },
+  size: {
+    enum : Object.keys(COMPANY_SIZE),
   }
 
 }, {toJSON: {virtuals: true, getters: true}});

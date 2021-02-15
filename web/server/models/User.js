@@ -343,6 +343,10 @@ UserSchema.virtual('is_employee').get(function () {
   return Boolean(this.company)
 });
 
+UserSchema.virtual('roles').get(function () {
+  return ['admin', 'buyer', 'employee']
+});
+
 UserSchema.virtual('shop', {
    ref: 'shop', //The Model to use
    localField: '_id', //Find in Model, where localField
