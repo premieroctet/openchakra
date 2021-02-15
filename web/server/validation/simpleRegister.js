@@ -1,7 +1,7 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
 const moment = require('moment');
-const {ACCOUNT_MIN_AGE}=require('../../utils/consts')
+const {COMPANY_ACTIVITY, COMPANY_SIZE}=require('../../utils/consts')
 moment.locale('fr');
 
 const validateSimpleRegisterInput = data => {
@@ -101,4 +101,36 @@ const validateEditProfil = data =>{
   };
 };
 
-module.exports = {validateSimpleRegisterInput, validateEditProfil};
+const validateCompanyProfile = data =>{
+  let errors = {};
+
+  data.name = !isEmpty(data.name) ? data.name : '';
+  data.activity = !isEmpty(data.activity) ? data.activity : '';
+  data.size = !isEmpty(data.size) ? data.size : '';
+  data.siret = !isEmpty(data.siret) ? data.siret : '';
+  data.vat_number = !isEmpty(data.vat_number) ? data.vat_number : '';
+
+  if (Validator.isEmpty(data.name)) {
+    errors.name = 'Veuillez saisir un nom';
+  }
+
+  if (data.vat_subject && Validator.isEmpty(data.vat_number)) {
+    errors.vat_number = 'Veuillez saisir un n° de TVA';
+  }
+
+  if (data.activity && !Object.keys(COMPANY_ACTIVITY).includes(data.activity)) {
+    errors.activity = "Secteur d'activité incorrect"
+  }
+
+  if (data.size && !Object.keys(COMPANY_SIZE).includes(data.size)) {
+    errors.size = "Effectif de l'entreprise incorrect"
+  }
+
+  return {
+    errors,
+    isValid: isEmpty(errors),
+  };
+};
+
+
+module.exports = {validateSimpleRegisterInput, validateEditProfil, validateCompanyProfile};
