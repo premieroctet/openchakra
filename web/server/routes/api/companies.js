@@ -12,7 +12,7 @@ const {is_production, is_validation}=require('../../../config/config');
 const {validateCompanyProfile} = require('../../validation/simpleRegister');
 const moment = require('moment');
 moment.locale('fr');
-const Comppany = require('../../models/Company');
+const Company = require('../../models/Company');
 const crypto = require('crypto');
 const multer = require('multer');
 const axios = require('axios');
@@ -266,7 +266,7 @@ router.put('/alfredViews/:id', (req, res) => {
 // @Access private
 router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  const {errors, isValid} = validateCompanyProfil(req.body);
+  const {errors, isValid} = validateCompanyProfile(req.body);
 
   Company.findOne({name: req.body.name})
     .then(company => {

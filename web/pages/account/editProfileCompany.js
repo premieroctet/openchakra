@@ -23,6 +23,8 @@ import {COMPANY_ACTIVITY, COMPANY_SIZE} from '../../utils/consts';
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormHelperText from '@material-ui/core/FormHelperText';
+const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
+
 
 class editProfileCompany extends React.Component{
   constructor(props) {
@@ -35,7 +37,11 @@ class editProfileCompany extends React.Component{
       companyName: '',
       siret: '',
       tva: '',
-      vat_subject: false
+      vat_subject: false,
+      position: '',
+      email: '',
+      firstName: '',
+      name: ''
     }
 
   }
@@ -58,6 +64,9 @@ class editProfileCompany extends React.Component{
         let user = res.data;
         this.setState({
           user: user,
+          email: user.email,
+          firstName: user.firstname,
+          name: user.name
         });
       })
       .catch(err => {
@@ -77,10 +86,6 @@ class editProfileCompany extends React.Component{
         value = value.replace(/ /g, '');
         this.setState({[name] : value});
       }
-    }else if(name === 'tva'){
-      if(value.match(/^[0-9]*$/)){
-        this.setState({[name] : value});
-      }
     }
     else if(name === 'vat_subject') {
       this.setState({[name]: !this.state.vat_subject})
@@ -94,26 +99,49 @@ class editProfileCompany extends React.Component{
   };
 
   onSubmitProfilCompany = () =>{
+    const {user} = this.state;
 
     const profilCompany = {
-      activityArea: this.state.activityArea,
-      sizeCompany: this.state.sizeCompany,
-      descriptionCompany: this.state.descriptionCompany,
-      companyName: this.state.companyName,
+      id: user.company,
+      activity: this.state.activityArea,
+      size: this.state.sizeCompany,
+      description: this.state.descriptionCompany,
+      name: this.state.companyName,
       siret: this.state.siret,
-      tva: this.state.tva
+      vat_number: this.state.vat_subject ? null : this.state.tva
     };
 
-    console.log(profilCompany, 'profil')
-
+    axios.put('/myAlfred/api/companies/profile/editProfile', profilCompany
+    ).then( res =>{
+      snackBarSuccess("Profil modifié avec succès");
+    }).catch( err => {
+      err.response ?
+        snackBarError(err.response.data) : null
+    })
   };
 
   onSubmitAbout = () =>{
 
+    const profilUser = {
+      position: this.state.position,
+      email: this.state.email,
+      name: this.state.name,
+      firstname: this.state.firstname,
+    };
+
+    axios.put('/myAlfred/api/users/profile/editProfile', profilUser)
+      .then(res => {
+        snackBarSuccess("Profil modifié avec succès");
+       this.loadUser();
+      })
+      .catch(err => {
+        err.response ?
+          snackBarError(err.response.data) : null
+      });
   };
 
   content = (classes) => {
-    const{activityArea, sizeCompany, descriptionCompany, companyName, siret, tva, vat_subject} = this.state;
+    const{activityArea, sizeCompany, descriptionCompany, companyName, siret, tva, vat_subject, position, email, firstName, name, user} = this.state;
 
     return(
       <Grid>
@@ -273,43 +301,49 @@ class editProfileCompany extends React.Component{
           <Grid container spacing={3} style={{marginTop: '5vh'}}>
             <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
               <TextField
-                value={''}
+                value={name}
                 name={'name'}
                 placeholder={'Nom'}
                 variant={'outlined'}
                 label={'Nom'}
                 classes={{root: classes.textField}}
-              />
-            </Grid>
-            <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
-              <TextField
-                value={''}
-                name={'firstName'}
-                placeholder={'Prénom'}
-                variant={'outlined'}
-                label={'Prénom'}
-                classes={{root: classes.textField}}
-              />
-            </Grid>
-            <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
-              <TextField
-                value={''}
-                name={'email'}
-                placeholder={'Email'}
-                variant={'outlined'}
-                label={'Adresse email'}
-                classes={{root: classes.textField}}
+                onChange={this.handleChange}
 
               />
             </Grid>
             <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
               <TextField
-                value={''}
+                value={firstName}
+                name={'firstName'}
+                placeholder={'Prénom'}
+                variant={'outlined'}
+                label={'Prénom'}
+                classes={{root: classes.textField}}
+                onChange={this.handleChange}
+
+              />
+            </Grid>
+            <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
+              <TextField
+                value={email}
+                name={'email'}
+                placeholder={'Email'}
+                variant={'outlined'}
+                label={'Adresse email'}
+                classes={{root: classes.textField}}
+                onChange={this.handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
+              <TextField
+                value={position}
                 name={'position'}
                 placeholder={'Poste occupé'}
                 variant={'outlined'}
                 label={'Poste occupé'}
                 classes={{root: classes.textField}}
+                onChange={this.handleChange}
+
               />
             </Grid>
           </Grid>

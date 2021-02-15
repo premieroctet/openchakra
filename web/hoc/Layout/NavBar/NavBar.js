@@ -45,7 +45,7 @@ import {DateRangePicker} from "react-dates";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
 import {is_development} from "../../../config/config";
-import {is_b2b_site} from "../../../utils/context";
+import {is_b2b_site, is_b2b_admin} from "../../../utils/context";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -764,7 +764,7 @@ class NavBar extends Component {
                                 <Link href={`/profile/about?user=${user._id}`}>
                                   <MenuItem>Mon profil</MenuItem>
                                 </Link> : null}
-                            <Link href={'/account/editProfile'}>
+                            <Link href={is_b2b_admin(user) ? '/account/editProfileCompany' : '/account/editProfile'}>
                               <MenuItem>Mes paramètres</MenuItem>
                             </Link>
                             {
