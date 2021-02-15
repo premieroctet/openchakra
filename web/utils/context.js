@@ -27,13 +27,6 @@ const is_b2b_admin = user => {
   return token && token.role=='ADMIN'
 }
 
-<<<<<<< Updated upstream
-||||||| constructed merge base
-const is_mode_company = user => {
-  const _is_company = user && user.is_company
-  return is_mode_company
-}
-=======
 const is_mode_company = user => {
   /**
   const _is_company = user && user.is_company
@@ -41,7 +34,6 @@ const is_mode_company = user => {
   */
   return is_b2b_admin(user)
 }
->>>>>>> Stashed changes
 
 module.exports={
   is_b2b_site, is_b2b_employee, is_b2b_admin
