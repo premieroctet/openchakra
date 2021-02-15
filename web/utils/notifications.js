@@ -2,43 +2,40 @@ import SnackBar from "../components/SnackBar/SnackBar";
 import React from "react";
 import ReactDOM from "react-dom";
 
-const snackBarSuccess =  (messages) =>{
-  var mysnacbar = <SnackBar severity={'success'} message={messages} id={messages}/>;
-  let body = document.getElementById('__next');
+const snackBar = (severity, message) => {
+  const body = document.getElementById('__next');
+  var mysnackbar;
 
-  if(typeof messages === "object"){
-    Object.keys(messages).map(val => {
-      mysnacbar = <SnackBar severity={'success'} message={messages[val]} id={messages[val]}/>;
+  if(typeof message === "object"){
+    Object.values(message).map(value => {
+      mysnackbar = <SnackBar severity={severity} message={value} id={value}/>;
       let div = document.createElement('div');
       div.id = 'id_snackbar';
-      ReactDOM.render(mysnacbar, body.appendChild(div));
+      ReactDOM.render(mysnackbar, body.appendChild(div));
     });
-  }else{
+  }
+  else{
+    mysnackbar = <SnackBar severity={severity} message={message} id={message}/>;
     let div = document.createElement('div');
     div.id = 'id_snackbar';
-    ReactDOM.render(mysnacbar, body.appendChild(div));
+    ReactDOM.render(mysnackbar, body.appendChild(div));
   }
+}
+
+const snackBarSuccess =  (message) =>{
+  snackBar('success', message)
 };
 
-const snackBarError=  (errors) =>{
-  let body = document.getElementById('__next');
-  let mysnacbar = <SnackBar severity={'error'} message={errors} id={errors}/>;
+const snackBarError=  (error) =>{
+  snackBar('error', error)
+};
 
-  if(typeof errors === "object"){
-    Object.keys(errors).map(val => {
-      mysnacbar = <SnackBar severity={'error'} message={errors[val]} id={errors[val]}/>;
-      let div = document.createElement('div');
-      div.id = 'id_snackbar';
-      ReactDOM.render(mysnacbar, body.appendChild(div));
-    });
-  }else{
-    let div = document.createElement('div');
-    div.id = 'id_snackbar';
-    ReactDOM.render(mysnacbar, body.appendChild(div));
-  }
+const snackBarWarning= (warning) =>{
+  snackBar('warning', warning)
 };
 
 module.exports = {
   snackBarSuccess,
+  snackBarWarning,
   snackBarError
 };
