@@ -75,7 +75,7 @@ const uploadRegProof = multer({
 // @Access private
 router.put('/profile/billingAddress', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  Company.findById(req.company.id)
+  Company.findById(req.user.company)
     .then(company => {
       company.billing_address = {};
       company.billing_address.address = req.body.address;
@@ -94,7 +94,7 @@ router.put('/profile/billingAddress', passport.authenticate('jwt', {session: fal
 // @Access private
 router.put('/profile/serviceAddress', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  Company.findById(req.company.id)
+  Company.findById(req.user.company)
     .then(company => {
       const address = {
         address: req.body.address,
@@ -120,7 +120,7 @@ router.put('/profile/serviceAddress', passport.authenticate('jwt', {session: fal
 // Get service address by id
 // @Access private
 router.get('/profile/address/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Company.findById(req.company.id)
+  Company.findById(req.user.company)
     .then(company => {
       const index = req.params.id;
       const address = company.service_address;
@@ -136,7 +136,7 @@ router.get('/profile/address/:id', passport.authenticate('jwt', {session: false}
 // Edit service address by id
 // @Access private
 router.put('/profile/address/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Company.findById(req.company.id)
+  Company.findById(req.user.company)
     .then(company => {
       const index = company.service_address
         .map(item => item.id)
@@ -160,7 +160,7 @@ router.put('/profile/address/:id', passport.authenticate('jwt', {session: false}
 // Delete service address by id
 // @Access private
 router.delete('/profile/address/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Company.findById(req.company.id)
+  Company.findById(req.user.company)
     .then(company => {
       const index = company.service_address
         .map(item => item.id)
