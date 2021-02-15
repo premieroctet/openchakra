@@ -7,7 +7,7 @@ moment.locale('fr');
 const validateSimpleRegisterInput = data => {
 
   console.log(`Validating ${JSON.stringify(data)}`)
-  let {errors} = validateEditProfil(data);
+  let {errors} = validateEditProfile(data);
 
   data.password = !isEmpty(data.password) ? data.password : '';
   data.password2 = !isEmpty(data.password2) ? data.password2 : '';
@@ -61,7 +61,7 @@ const validateSimpleRegisterInput = data => {
   };
 };
 
-const validateEditProfil = data =>{
+const validateEditProfile = data =>{
   let errors = {};
 
   data.name = !isEmpty(data.name) ? data.name : '';
@@ -93,6 +93,40 @@ const validateEditProfil = data =>{
   }
   if (moment(data.birthday).isValid() && moment(data.birthday).isBefore(moment().subtract(150, 'years'))) {
     errors.birthday = 'Date de naissance invalide, merci de saisir l\'année sur 4 chiffres';
+  }
+
+  return {
+    errors,
+    isValid: isEmpty(errors),
+  };
+};
+
+const validateEditProProfile = data =>{
+  let errors = {};
+
+  data.name = !isEmpty(data.name) ? data.name : '';
+  data.firstname = !isEmpty(data.firstname) ? data.firstname : '';
+  data.email = !isEmpty(data.email) ? data.email : '';
+  data.position = !isEmpty(data.position) ? data.position : '';
+
+  if (Validator.isEmpty(data.name)) {
+    errors.name = 'Veuillez saisir un nom';
+  }
+
+  if (Validator.isEmpty(data.firstname)) {
+    errors.firstname = 'Veuillez saisir un prénom';
+  }
+
+  if (Validator.isEmpty(data.email)) {
+    errors.email = 'Veuillez saisir un email';
+  }
+
+  if (!Validator.isEmail(data.email)) {
+    errors.email = 'Email invalide';
+  }
+
+  if (Validator.isEmpty(data.position)) {
+    errors.position = 'Veuillez saisir une fonction';
   }
 
   return {
@@ -133,4 +167,7 @@ const validateCompanyProfile = data =>{
 };
 
 
-module.exports = {validateSimpleRegisterInput, validateEditProfil, validateCompanyProfile};
+module.exports = {
+  validateSimpleRegisterInput, validateEditProfile, validateCompanyProfile,
+  validateEditProProfile
+};

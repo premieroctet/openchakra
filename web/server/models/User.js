@@ -310,6 +310,9 @@ const UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'company',
   },
+  position: {
+    type: String,
+  }
 
 }, {toJSON: {virtuals: true, getters: true}});
 

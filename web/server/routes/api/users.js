@@ -11,7 +11,7 @@ const tough = require('tough-cookie');
 const {is_production, is_validation}=require('../../../config/config');
 const CronJob = require('cron').CronJob;
 const validateRegisterInput = require('../../validation/register');
-const {validateSimpleRegisterInput, validateEditProfil} = require('../../validation/simpleRegister');
+const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile} = require('../../validation/simpleRegister');
 const validateLoginInput = require('../../validation/login');
 const {sendResetPassword, sendVerificationMail, sendVerificationSMS} = require('../../../utils/mailing');
 const moment = require('moment');
@@ -751,6 +751,22 @@ router.get('/users', (req, res) => {
     .catch(err => res.status(404).json({users: 'No billing found'}));
 });
 
+// @Route GET /myAlfred/api/users/roles/:email
+// Get roles for an email's user
+router.get('/users/roles/:email', (req, res) => {
+
+  console.log(`Request roles for email ${req.params.email}`)
+  User.find({ email: req.params.email}, 'rroles')
+    .then(users => {
+      if (!users) {
+        return res.status(400).json({msg: 'No user found'});
+      }
+      const user = users[0]
+      res.json(user.roles);
+    })
+    .catch(err => res.status(404).json({user: 'No user found'}));
+})
+
 // @Route GET /myAlfred/api/users/users/:id
 // Get one user
 router.get('/users/:id', (req, res) => {
@@ -949,6 +965,45 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
             }).then(()=>{
                 sendVerificationMail(user, req);
                 res.json({success: 'Profil mise à jour et e-mail envoyé !'});
+              }).catch( err => console.error(err))
+            }else{
+              res.json({success: 'Profil mis à jour !'});
+            }
+          })
+          .catch(err => console.error(err));
+      }
+    })
+    .catch(err => console.error(err));
+});
+
+// @Route PUT /myAlfred/api/users/profile/editProProfile
+// Edit email, job and phone
+// @Access private
+router.put('/profile/editProProfile', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  const {errors, isValid} = validateEditProProfile(req.body);
+
+  User.findOne({email: req.body.email})
+    .then(user => {
+      if (user && req.body.email != req.user.email) {
+        return res.status(400).json({errors: {email: 'Adresse mail déjà utilisée'}});
+      }else if(!isValid){
+        return res.status(400).json(errors);
+      }
+      else {
+        User.findByIdAndUpdate(req.user.id, {
+          email: req.body.email,
+          name: req.body.name,
+          firstname: req.body.firstname,
+          position: req.body.position,
+        }, {new: true})
+          .then(user => {
+            if(req.user.email !== req.body.email){
+              User.findByIdAndUpdate(req.user.id,{
+                is_confirmed: false
+            }).then(()=>{
+                sendVerificationMail(user, req);
+                res.json({success: 'Profil mis à jour et e-mail envoyé !'});
               }).catch( err => console.error(err))
             }else{
               res.json({success: 'Profil mis à jour !'});
