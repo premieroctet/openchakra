@@ -185,7 +185,7 @@ class NavBar extends Component {
     this.setState({[name]: value});
     if (name === 'selectedAddress') {
       if (value === 'addAddress') {
-        Router.push('/account/myAddresses?indexAccount=4');
+        Router.push('/account/myAddresses');
       } else {
         this.setState({
           gps: value === 'all' ? null : value === 'main' ? this.state.allAddresses['main'].gps : {
@@ -706,7 +706,7 @@ class NavBar extends Component {
                         </Link>
                         {user ?
                           user.is_alfred ?
-                            <Link href={`/profile/services?user=${user._id}&indexAccount=1`}>
+                            <Link href={`/profile/services?user=${user._id}`}>
                               <Tab classes={{root: classes.navbarTabRoot}}
                                    label={NAVBAR_MENU.myServices}/>
                             </Link>
@@ -770,7 +770,7 @@ class NavBar extends Component {
                             {
                               !user.is_employee ?
                                 user.is_alfred ?
-                                  <Link href={`/profile/services?user=${user._id}&indexAccount=1`}>
+                                  <Link href={`/profile/services?user=${user._id}`}>
                                     <MenuItem>Mes services</MenuItem>
                                   </Link>
                                   :

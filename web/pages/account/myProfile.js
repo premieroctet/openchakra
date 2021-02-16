@@ -82,7 +82,7 @@ class myProfile extends React.Component{
               <Button
                 className={classes.button}
                 startIcon={<ViewComfyIcon />}
-                onClick={() => user.is_alfred ? Router.push(`/profile/services?user=${user._id}&indexAccount=1`) : Router.push('/creaShop/creaShop')}
+                onClick={() => user.is_alfred ? Router.push(`/profile/services?user=${user._id}`) : Router.push('/creaShop/creaShop')}
 
               >
                 {user.is_alfred ? 'Mes Services' : 'Proposer mes services'}

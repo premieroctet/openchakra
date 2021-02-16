@@ -39,7 +39,7 @@ class LayoutAccount extends React.Component {
 
   render() {
     const {items} = this.state;
-    const {children, index} = this.props;
+    const {children} = this.props;
 
     return (
       <Layout>
@@ -55,7 +55,7 @@ class LayoutAccount extends React.Component {
               <h2>Mes paramètres</h2>
             </Grid>
             <Grid>
-              <ScrollMenu categories={items} mode={'account'} indexCat={index}/>
+              <ScrollMenu categories={items} mode={'account'}/>
             </Grid>
             <Grid style={{backgroundColor: 'rgba(249,249,249, 1)', width: '100%'}}>
               <Grid style={{

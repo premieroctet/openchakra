@@ -239,8 +239,8 @@ class ProfileAbout extends React.Component {
     this.setState({languages: languages}, () => this.objectsEqual())
   };
 
-  static getInitialProps({query: {user, indexAccount}}) {
-    return {user: user, index: indexAccount};
+  static getInitialProps({query: {user}}) {
+    return {user: user};
   }
 
   content = (classes, user, alfred) =>{
@@ -343,7 +343,7 @@ class ProfileAbout extends React.Component {
   };
 
   render() {
-    const {classes, index, user}=this.props;
+    const {classes, user}=this.props;
     const {alfred}=this.state;
 
     if(!user && alfred){
@@ -353,12 +353,12 @@ class ProfileAbout extends React.Component {
     return (
       <React.Fragment>
         <Hidden only={['xs']}>
-          <ProfileLayout user={user} index={index}>
+          <ProfileLayout user={user}>
             {this.content(classes, user, alfred)}
           </ProfileLayout>
         </Hidden>
         <Hidden only={['lg', 'xl',  'sm', 'md']}>
-          <LayoutMobileProfile user={user} index={index} currentIndex={4}>
+          <LayoutMobileProfile user={user} currentIndex={4}>
             {this.content(classes, user, alfred)}
           </LayoutMobileProfile>
         </Hidden>

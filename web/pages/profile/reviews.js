@@ -18,8 +18,8 @@ class ProfileReviews extends React.Component {
     this.state={}
   }
 
-  static getInitialProps({query: {user, indexAccount}}) {
-    return {user: user, index: indexAccount};
+  static getInitialProps({query: {user}}) {
+    return {user: user};
   }
 
   content = (classes, user) => {
@@ -47,7 +47,7 @@ class ProfileReviews extends React.Component {
   };
 
   render() {
-    const {user, classes, index}=this.props;
+    const {user, classes}=this.props;
 
     if (!user) {
       return null
@@ -55,12 +55,12 @@ class ProfileReviews extends React.Component {
     return (
       <React.Fragment>
         <Hidden only={['xs']}>
-          <ProfileLayout user={user} index={index}>
+          <ProfileLayout user={user}>
             {this.content(classes, user)}
           </ProfileLayout>
         </Hidden>
         <Hidden only={['lg', 'xl','sm', 'md']}>
-          <LayoutMobileProfile user={user} index={index} currentIndex={4}>
+          <LayoutMobileProfile user={user} currentIndex={4}>
             {this.content(classes, user)}
           </LayoutMobileProfile>
         </Hidden>

@@ -206,7 +206,7 @@ class all extends React.Component {
                             <Link href={`/dashboard/alfred/view?id=${e.alfred._id}`}><a>Modifier</a></Link>
                           </TableCell>
                           <TableCell>
-                            <Link href={`/profile/services?user=${e.alfred._id}&indexAccount=1`}><a>Consulter</a></Link>
+                            <Link href={`/profile/services?user=${e.alfred._id}`}><a>Consulter</a></Link>
                           </TableCell>
                           <TableCell>
                             <a target="_blank"

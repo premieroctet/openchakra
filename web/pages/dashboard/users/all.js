@@ -110,7 +110,7 @@ class all extends React.Component {
 
     if (colDef.field=='shop.creation_date') {
       if (data.shop) {
-        window.open(`/profile/services?user=${data._id}&indexAccount=1`, '_blank')
+        window.open(`/profile/services?user=${data._id}`, '_blank')
       }
       return
     }
@@ -123,7 +123,7 @@ class all extends React.Component {
       return
     }
 
-    window.open(`/profile/about?user=${data._id}&indexAccount=0`)
+    window.open(`/profile/about?user=${data._id}`)
   }
 
   render() {

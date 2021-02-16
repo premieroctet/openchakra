@@ -94,7 +94,7 @@ class SearchPage extends React.Component {
     this.SCROLL_DELTA=30
   }
 
-  static getInitialProps({query: {keyword, city, gps, selectedAddress, category, service, prestation, search, date, indexCat}}) {
+  static getInitialProps({query: {keyword, city, gps, selectedAddress, category, service, prestation, search, date}}) {
     // FIX : set city nin AlgoPlaces if provided
     var init = {
       keyword: keyword,
@@ -105,7 +105,6 @@ class SearchPage extends React.Component {
       prestation: prestation,
       search: search,
       date: date,
-      indexCat: indexCat
     };
     if (gps) {
       init['gps'] = gps;
@@ -490,13 +489,13 @@ class SearchPage extends React.Component {
 
 
   render() {
-    const {classes, indexCat} = this.props;
+    const {classes} = this.props;
     const {user, gps, selectedAddress, keyword} = this.state;
 
     return (
       <React.Fragment>
         <Hidden only={['xs']}>
-          <Layout key={selectedAddress||gps||indexCat||keyword} user={user} keyword={keyword} selectedAddress={selectedAddress} gps={gps} indexCat={indexCat}>
+          <Layout key={selectedAddress||gps||keyword} user={user} keyword={keyword} selectedAddress={selectedAddress} gps={gps}>
             {this.content(classes)}
           </Layout>
         </Hidden>

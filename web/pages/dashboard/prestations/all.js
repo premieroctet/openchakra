@@ -101,7 +101,7 @@ class all extends React.Component {
 
     if (colDef.field=='private_alfred') {
       if (value) {
-        window.open(`/profile/services?user=${value._id}&indexAccount=1`)
+        window.open(`/profile/services?user=${value._id}`)
       }
       return
     }

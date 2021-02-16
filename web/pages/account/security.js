@@ -112,11 +112,6 @@ class security extends React.Component {
     };
   }
 
-  static getInitialProps({query: {indexAccount}}) {
-    return {index: indexAccount};
-
-  }
-
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     this.loadData()
@@ -518,7 +513,7 @@ class security extends React.Component {
 
 
   render() {
-    const {classes, index} = this.props;
+    const {classes} = this.props;
     const {last_login, open, open2, user} = this.state;
 
     return (
@@ -529,7 +524,7 @@ class security extends React.Component {
                 content="Modifiez votre mot de passe et gérez la sécurité de votre compte My Alfred. Des milliers de particuliers et auto-entrepreneurs proches de chez vous prêts à vous rendre service ! Paiement sécurisé. Inscription 100% gratuite !"/>
         </Helmet>
         <Hidden only={['xs', 'sm', 'md']}>
-          <LayoutAccount index={index}>
+          <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
         </Hidden>

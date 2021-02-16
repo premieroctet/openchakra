@@ -85,11 +85,6 @@ class paymentMethod extends React.Component {
     };
   }
 
-  static getInitialProps({query: {indexAccount}}) {
-    return {index: indexAccount};
-
-  }
-
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     setAxiosAuthentication()
@@ -629,7 +624,7 @@ class paymentMethod extends React.Component {
   };
 
   render() {
-    const {classes, index} = this.props;
+    const {classes} = this.props;
     const {deletedial, addCreditCard, accounts, clickAdd, clickDelete, errors} = this.state;
 
     return (
@@ -640,7 +635,7 @@ class paymentMethod extends React.Component {
                 content="Accédez à votre compte My Alfred, première application d'offres de services entre particuliers. La création de votre compte est gratuite et sécurisée. Créez votre compte sur My Alfred en quelques clics pour trouvez ou offrir vos services !"/>
         </Helmet>
         <Hidden only={['xs', 'sm', 'md']}>
-          <LayoutAccount index={index}>
+          <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
         </Hidden>
