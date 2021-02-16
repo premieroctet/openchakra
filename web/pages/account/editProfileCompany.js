@@ -24,6 +24,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormHelperText from '@material-ui/core/FormHelperText';
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
+const {is_b2b_admin} = require('../../utils/context');
 
 
 class editProfileCompany extends React.Component{
@@ -41,7 +42,8 @@ class editProfileCompany extends React.Component{
       position: '',
       email: '',
       firstName: '',
-      name: ''
+      name: '',
+      company: {}
     }
 
   }
@@ -53,7 +55,11 @@ class editProfileCompany extends React.Component{
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    this.loadUser()
+    if(!is_b2b_admin()){
+      Router.push({pathname: '/'});
+    }else{
+      this.loadUser()
+    }
   }
 
   loadUser = () => {
@@ -77,6 +83,17 @@ class editProfileCompany extends React.Component{
           }
         },
       );
+
+    axios.get('/myAlfred/api/companies/current').then(res =>{
+      console.log(res, 'res')
+      let company = res.data;
+      this.setState({
+        company: company,
+        companyName: company.name
+      })
+    }).catch(err => {
+      console.error(err)
+    })
   };
 
   handleChange = (event) => {
@@ -95,28 +112,37 @@ class editProfileCompany extends React.Component{
   };
 
   handleInvoice = ({suggestion}) =>{
-    this.setState({ invoice_company : suggestion })
+    const newAddress = suggestion ?
+      {
+        city: suggestion.city,
+        address: suggestion.name,
+        zip_code: suggestion.postcode,
+        country: suggestion.country,
+        gps:{
+          lat: suggestion.latlng.lat,
+          lng: suggestion.latlng.lng,
+        }
+      }
+      :
+      null;
+    this.setState({ invoice_company : newAddress })
   };
 
   onSubmitProfilCompany = () =>{
-    const {user} = this.state;
 
-    const profilCompany = {
-      id: user.company,
+    axios.put('/myAlfred/api/companies/profile/editProfile', {
       activity: this.state.activityArea,
       size: this.state.sizeCompany,
       description: this.state.descriptionCompany,
       name: this.state.companyName,
       siret: this.state.siret,
-      vat_number: this.state.vat_subject ? null : this.state.tva
-    };
-
-    axios.put('/myAlfred/api/companies/profile/editProfile', profilCompany
+      vat_number: !this.state.vat_subject ? null : this.state.tva
+      }
     ).then( res =>{
+      console.log(res)
       snackBarSuccess("Profil modifié avec succès");
     }).catch( err => {
-      err.response ?
-        snackBarError(err.response.data) : null
+      snackBarError(err.response.data);
     })
   };
 
@@ -141,7 +167,7 @@ class editProfileCompany extends React.Component{
   };
 
   content = (classes) => {
-    const{activityArea, sizeCompany, descriptionCompany, companyName, siret, tva, vat_subject, position, email, firstName, name, user} = this.state;
+    const{activityArea, sizeCompany, descriptionCompany, companyName, siret, tva, vat_subject, position, email, firstName, name, user, company} = this.state;
 
     return(
       <Grid>

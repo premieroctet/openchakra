@@ -245,7 +245,10 @@ router.get('/current', passport.authenticate('jwt', {session: false}), (req, res
       res.json(company);
 
     })
-    .catch(err => res.status(404).json({company: 'No company found'}));
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({company: 'No company found'
+      })});
 });
 
 // @Route GET /myAlfred/api/companies/companies/:id
@@ -282,17 +285,18 @@ router.put('/alfredViews/:id', (req, res) => {
 router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   const {errors, isValid} = validateCompanyProfile(req.body);
+  const companyId = req.user.company;
 
   Company.findOne({name: req.body.name})
     .then(company => {
-      if (company && req.body.name != req.company.emailname) {
-        return res.status(400).json({errors: {namme: 'Une société de ce nom existe déjà'}});
+      if (company && JSON.stringify(company._id) !== JSON.stringify(companyId)) {
+        return res.status(400).json({name: 'Une société de ce nom existe déjà'});
       }
       else if(!isValid){
         return res.status(400).json(errors);
       }
       else {
-        Company.findByIdAndUpdate(req.company.id, {
+        Company.findByIdAndUpdate(companyId, {
           name: req.body.name,
           description: req.body.description,
           website: req.body.website,
@@ -302,7 +306,11 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
           vat_number: req.body.vat_number,
         }, {new: true})
           .then(company => {
+            if(company){
               res.json({success: 'Entreprise mise à jour !'});
+            }else{
+              res.json({error: 'Entreprise introuvable'});
+            }
           })
           .catch(err => console.error(err));
       }
