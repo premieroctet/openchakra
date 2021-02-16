@@ -652,6 +652,7 @@ router.post('/login', (req, res) => {
 
   const email = req.body.username;
   const password = req.body.password;
+  const role = req.body.role;
 
   // Find user by email
   User.findOne({email})
@@ -659,6 +660,11 @@ router.post('/login', (req, res) => {
       // Check for user
       if (!user) {
         errors.username = 'Mot de passe ou email incorrect';
+        return res.status(400).json(errors);
+      }
+
+      if (user.is_employee && !role) {
+        errors.role = 'Vous devez sélectioner un rôle';
         return res.status(400).json(errors);
       }
 

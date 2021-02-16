@@ -7,6 +7,7 @@ module.exports = function validateLoginInput(data) {
 
   data.username = !isEmpty(data.username) ? data.username : '';
   data.password = !isEmpty(data.password) ? data.password : '';
+  data.role = !isEmpty(data.role) ? data.role : '';
   data.google_id = !isEmpty(data.google_id) ? data.google_id : '';
   data.facebook_id = !isEmpty(data.facebook_id) ? data.facebook_id : '';
 
