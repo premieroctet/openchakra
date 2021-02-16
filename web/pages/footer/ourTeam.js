@@ -11,14 +11,10 @@ class OurTeam extends React.Component {
       super(props);
   }
 
-  static getInitialProps({query: {indexFaq}}) {
-    return {index: indexFaq};
-  }
-
   render() {
-    const {classes, index} = this.props;
+    const {classes} = this.props;
       return (
-        <LayoutFaq index={index}>
+        <LayoutFaq>
           <Grid container spacing={4} style={{margin: 0, width: '100%'}}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerApropos}>
               <Grid>

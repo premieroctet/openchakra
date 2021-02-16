@@ -273,7 +273,7 @@ const sendShopOnline = (alfred, req) => {
     alfred,
     {
       alfred_firstname: alfred.firstname,
-      link_manageshop: new URL(`/profile/services?user=${alfred._id}&indexAccount=1`, computeUrl(req)),
+      link_manageshop: new URL(`/profile/services?user=${alfred._id}`, computeUrl(req)),
     },
   );
 };

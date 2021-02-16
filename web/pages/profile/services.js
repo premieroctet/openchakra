@@ -33,8 +33,8 @@ class ProfileServices extends React.Component {
       }).catch(err => console.error(err))
   }
 
-  static getInitialProps({query: {user, indexAccount}}) {
-    return {user: user, index: indexAccount};
+  static getInitialProps({query: {user}}) {
+    return {user: user};
   }
 
   content = (classes, user, shop) => {
@@ -78,18 +78,18 @@ class ProfileServices extends React.Component {
   };
 
   render() {
-    const {classes, index}=this.props;
+    const {classes}=this.props;
     const {shop, user}=this.state;
 
     return (
       <React.Fragment>
         <Hidden only={['xs']}>
-          <ProfileLayout user={user} index={index}>
+          <ProfileLayout user={user}>
             {this.content(classes, user, shop)}
           </ProfileLayout>
         </Hidden>
         <Hidden only={['lg', 'xl','sm', 'md']}>
-          <LayoutMobileProfile user={user} index={index} currentIndex={4}>
+          <LayoutMobileProfile user={user} currentIndex={4}>
             {this.content(classes, user, shop)}
           </LayoutMobileProfile>
         </Hidden>

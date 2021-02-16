@@ -36,12 +36,12 @@ class LayoutFaq extends React.Component{
 
 
   render(){
-    const{classes, index, children}= this.props;
+    const{classes, children}= this.props;
     const{becomeAlfredPage}= this.state;
 
     return(
       <Grid className={classes.mainContainerLayoutFaq}>
-        <Header ref={this.child} index={index} search={this.sendSearch} clearFuntion={this.callClearFunction}/>
+        <Header ref={this.child} search={this.sendSearch} clearFuntion={this.callClearFunction}/>
         <Grid className={becomeAlfredPage ? classes.becomeAlfredPageContainer : classes.childrenContainer}>
           {children}
         </Grid>

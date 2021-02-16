@@ -48,10 +48,6 @@ class myAddresses extends React.Component {
     this.onNewAddressChange = this.onNewAddressChange.bind(this);
   }
 
-  static getInitialProps({query: {indexAccount}}) {
-    return {index: indexAccount};
-  }
-
   setState=(st, cb) => {
     console.error(`Setting state:${Object.keys(st)}`)
     super.setState(st, cb)
@@ -421,7 +417,7 @@ class myAddresses extends React.Component {
   };
 
   render() {
-    const {classes, index} = this.props;
+    const {classes} = this.props;
 
     return (
       <React.Fragment>
@@ -431,7 +427,7 @@ class myAddresses extends React.Component {
                 content="Renseignez vos adresses de prestation et recherchez des Alfred là où vous le souhaitez ! Des services entre particuliers dans toute la France. Réservez dès maintenant votre Alfred mécanicien, plombier, électricien, coiffeur, coach sportif…"/>
         </Helmet>
         <Hidden only={['xs', 'sm', 'md']}>
-          <LayoutAccount index={index}>
+          <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
         </Hidden>

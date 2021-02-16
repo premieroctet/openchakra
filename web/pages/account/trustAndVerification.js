@@ -86,11 +86,6 @@ class trustAndVerification extends React.Component {
     this.handleClose = this.handleClose.bind(this);
   }
 
-  static getInitialProps({query: {indexAccount}}) {
-    return {index: indexAccount};
-
-  }
-
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     setAxiosAuthentication()
@@ -636,8 +631,8 @@ class trustAndVerification extends React.Component {
   };
 
   render() {
-    const {classes, index} = this.props;
-
+    const {classes} = this.props;
+    const {message} = this.state
     return (
       <React.Fragment>
         <Helmet>
@@ -646,7 +641,7 @@ class trustAndVerification extends React.Component {
                 content="Gérez vos notifications My Alfred depuis votre compte. Choisissez comment vous souhaitez être contacté en cas de réservation, de messages, d'annulation d'un service sur My Alfred. "/>
         </Helmet>
         <Hidden only={['xs', 'sm', 'md']}>
-          <LayoutAccount index={index}>
+          <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
         </Hidden>

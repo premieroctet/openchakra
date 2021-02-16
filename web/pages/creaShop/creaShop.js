@@ -262,7 +262,7 @@ class creaShop extends React.Component {
           axios.get('/myAlfred/api/users/token')
             .then (res => {
               setAuthToken()
-              Router.push(`/profile/services?user=${this.state.user_id}&indexAccount=1`)
+              Router.push(`/profile/services?user=${this.state.user_id}`)
             })
         })
         .catch(err => {

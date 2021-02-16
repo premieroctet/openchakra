@@ -59,7 +59,7 @@ class LayoutMobileProfile extends React.Component{
   };
 
   render() {
-    const{children, classes, index, currentIndex} = this.props;
+    const{children, classes, currentIndex} = this.props;
     const{user, items} = this.state;
 
     if (!user) {
@@ -98,7 +98,7 @@ class LayoutMobileProfile extends React.Component{
           <Divider/>
         </Grid>
         <Grid className={classes.profilLayoutScrollMenu}>
-          <ScrollMenu categories={menuItems} mode={'profile'} indexCat={index} extraParams={{user: this.props.user}}/>
+          <ScrollMenu categories={menuItems} mode={'profile'} extraParams={{user: this.props.user}}/>
         </Grid>
         <Grid style={{padding: '10%'}}>
           {children}

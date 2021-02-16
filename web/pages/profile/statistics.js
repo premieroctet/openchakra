@@ -73,8 +73,8 @@ class ProfileStatistics extends React.Component {
     };
   }
 
-  static getInitialProps({query: {user, indexAccount}}) {
-    return {user: user, index: indexAccount};
+  static getInitialProps({query: {user}}) {
+    return {user: user};
   }
 
   componentDidMount() {
@@ -407,19 +407,19 @@ class ProfileStatistics extends React.Component {
   };
 
   render() {
-    const {classes, user, index}=this.props;
+    const {classes, user}=this.props;
     const {serviceUser} = this.state;
 
     return (
       <React.Fragment>
         <React.Fragment>
           <Hidden only={['xs']}>
-            <ProfileLayout user={user} index={index}>
+            <ProfileLayout user={user}>
               {this.content(classes, user)}
             </ProfileLayout>
           </Hidden>
           <Hidden  only={['lg', 'xl','sm', 'md']}>
-            <LayoutMobileProfile user={user} index={index} currentIndex={4}>
+            <LayoutMobileProfile user={user} currentIndex={4}>
               {this.content(classes, user)}
             </LayoutMobileProfile>
           </Hidden>

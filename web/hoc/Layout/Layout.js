@@ -36,7 +36,7 @@ class Layout extends React.Component {
   }
 
   render() {
-    const {children, selectedAddress, classes, gps, indexCat, keyword} = this.props;
+    const {children, selectedAddress, classes, gps, keyword} = this.props;
     const {logged, categories} = this.state;
 
     return (
@@ -45,7 +45,7 @@ class Layout extends React.Component {
         <NavBar selectedAddress={selectedAddress} keyword={keyword} key={this.logged}/>
         <Grid>
           <Grid className={classes.layoutScrollMenu}>
-            <ScrollMenu categories={categories} gps={gps} indexCat={indexCat} mode={false}/>
+            <ScrollMenu categories={categories} gps={gps} mode={'search'}/>
           </Grid>
           <Grid className={classes.filterMenuDivierContainer}>
             <Divider className={classes.filterMenuDividerStyle}/>

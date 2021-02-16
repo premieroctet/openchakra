@@ -52,7 +52,7 @@ class ProfileLayout extends React.Component {
 
   render() {
     const {items, user}=this.state;
-    const {children, index, classes}=this.props;
+    const {children, classes}=this.props;
 
     if (!user) {
       return null
@@ -83,7 +83,7 @@ class ProfileLayout extends React.Component {
                     </Grid>
                   </Grid>
                   <Grid className={classes.profilLayoutScrollMenu}>
-                    <ScrollMenu categories={menuItems} mode={'profile'} indexCat={index} extraParams={{user: this.props.user}}/>
+                    <ScrollMenu categories={menuItems} mode={'profile'} extraParams={{user: this.props.user}}/>
                   </Grid>
                 </Grid>
               </Grid>

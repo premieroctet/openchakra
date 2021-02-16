@@ -62,11 +62,6 @@ class paymentPreference extends React.Component {
     };
   }
 
-  static getInitialProps({query: {indexAccount}}) {
-    return {index: indexAccount};
-
-  }
-
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     setAxiosAuthentication()
@@ -354,7 +349,7 @@ class paymentPreference extends React.Component {
   };
 
   render() {
-    const {classes, index} = this.props;
+    const {classes} = this.props;
     const {accounts, clickAdd, clickDelete, haveAccount, errors} = this.state;
 
     return (
@@ -365,7 +360,7 @@ class paymentPreference extends React.Component {
                 content="My Alfred, des services entre particuliers et auto-entrepreneurs rémunérés ! Choisissez vos méthodes de versement de vos rémunérations pour chacun des services réalisés. Versement 72h après la prestation."/>
         </Helmet>
         <Hidden only={['xs', 'sm', 'md']}>
-          <LayoutAccount index={index}>
+          <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
         </Hidden>

@@ -60,7 +60,6 @@ class MobileNavbar extends React.Component{
     super(props);
     this.state={
       user: null,
-      indexAccount: props.indexAccount,
       currentIndex:0,
       anchorEl: null,
       setOpenLogin: false,
@@ -186,7 +185,7 @@ class MobileNavbar extends React.Component{
     this.setState({[name]: value});
     if (name === 'selectedAddress') {
       if (value === 'addAddress') {
-        Router.push('/account/myAddresses?indexAccount=4');
+        Router.push('/account/myAddresses');
       } else {
         this.setState({
           gps: value === 'all' ? null : value === 'main' ? this.state.allAddresses['main'].gps : {
