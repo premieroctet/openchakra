@@ -936,7 +936,7 @@ router.post('/resetPassword', (req, res) => {
 // @Access private
 router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  const {errors, isValid} = validateEditProfil(req.body);
+  const {errors, isValid} = validateEditProfile(req.body);
 
   User.findOne({email: req.body.email})
     .then(user => {
