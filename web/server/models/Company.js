@@ -59,9 +59,11 @@ const CompanySchema = new Schema({
     type: String,
   },
   activity: {
+    type : String,
     enum : Object.keys(COMPANY_ACTIVITY),
   },
   size: {
+    type : String,
     enum : Object.keys(COMPANY_SIZE),
   }
 
