@@ -32,7 +32,7 @@ class ScrollMenu extends React.Component{
   render() {
     const{classes, categories, gps, mode, extraParams} = this.props;
 
-    const location=window.location.href
+    const location=typeof window !== 'undefined' ? window.location.href : ''
 
     var tabIndex=0
     if (['account', 'profile', 'faq'].includes(mode)) {
