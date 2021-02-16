@@ -16,8 +16,8 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
-
-
+const {snackBarError}=require('../../utils/notifications')
+const {is_development}=require('../../config/config')
 const {PROVIDERS} = require('../../utils/consts');
 const {ENABLE_GF_LOGIN} = require('../../config/config');
 
@@ -45,6 +45,10 @@ class LogIn extends React.Component {
       password: this.state.password,
     };
 
+    if (is_development()) {
+      user.role = 'ADMIN'
+    }
+
     axios.post('/myAlfred/api/users/login', user)
       .then(res => {
         setAuthToken()
@@ -59,6 +63,7 @@ class LogIn extends React.Component {
       .catch(err => {
         console.error(err);
         if (err.response) {
+	  snackBarError(err.response.data)
           this.setState({errors: err.response.data});
         }
       });
