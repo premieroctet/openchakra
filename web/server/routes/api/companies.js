@@ -235,6 +235,20 @@ router.delete('/profile/registrationProof', passport.authenticate('jwt', {sessio
 
 // @Route GET /myAlfred/api/companies/companies/:id
 // Get one company
+router.get('/companies/current', passport.authenticate('jwt', {session: false}), (req, res) => {
+  Company.findById(req.user.company)
+    .then(company => {
+      if (!company) {
+        return res.status(400).json({msg: 'No company found'});
+      }
+      res.json(company);
+
+    })
+    .catch(err => res.status(404).json({company: 'No company found'}));
+});
+
+// @Route GET /myAlfred/api/companies/companies/:id
+// Get one company
 router.get('/companies/:id', (req, res) => {
   Company.findById(req.params.id)
     .then(company => {
