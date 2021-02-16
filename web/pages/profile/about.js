@@ -1,5 +1,4 @@
-import SnackBar from "../../components/SnackBar/SnackBar";
-
+const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
@@ -63,7 +62,6 @@ class ProfileAbout extends React.Component {
       newAddress: null,
       userLanguages: [],
       newLanguages: null,
-      open: false
     }
 
   }
@@ -124,7 +122,8 @@ class ProfileAbout extends React.Component {
     setAxiosAuthentication();
     axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then( res =>{
         axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then( res =>{
-            this.setState({open: true}, () => setTimeout(this.loadUser, 1000))
+          snackBarSuccess('Profil modifié avec succès');
+           setTimeout(this.loadUser, 1000)
           }
         ).catch(err => {
           console.error(err)
@@ -212,7 +211,6 @@ class ProfileAbout extends React.Component {
             </Grid>
           </Grid>
         </DialogContent>
-        <SnackBar severity={"success"} message={'Profil modifié avec succès'} open={this.state.open} closeSnackBar={() => this.setState({open: false})}/>
       </Dialog>
     )
   };

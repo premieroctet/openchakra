@@ -1,13 +1,13 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
 const moment = require('moment');
-const {ACCOUNT_MIN_AGE}=require('../../utils/consts')
+const {COMPANY_ACTIVITY, COMPANY_SIZE}=require('../../utils/consts')
 moment.locale('fr');
 
 const validateSimpleRegisterInput = data => {
 
   console.log(`Validating ${JSON.stringify(data)}`)
-  let {errors} = validateEditProfil(data);
+  let {errors} = validateEditProfile(data);
 
   data.password = !isEmpty(data.password) ? data.password : '';
   data.password2 = !isEmpty(data.password2) ? data.password2 : '';
@@ -61,7 +61,7 @@ const validateSimpleRegisterInput = data => {
   };
 };
 
-const validateEditProfil = data =>{
+const validateEditProfile = data =>{
   let errors = {};
 
   data.name = !isEmpty(data.name) ? data.name : '';
@@ -101,4 +101,73 @@ const validateEditProfil = data =>{
   };
 };
 
-module.exports = {validateSimpleRegisterInput, validateEditProfil};
+const validateEditProProfile = data =>{
+  let errors = {};
+
+  data.name = !isEmpty(data.name) ? data.name : '';
+  data.firstname = !isEmpty(data.firstname) ? data.firstname : '';
+  data.email = !isEmpty(data.email) ? data.email : '';
+  data.position = !isEmpty(data.position) ? data.position : '';
+
+  if (Validator.isEmpty(data.name)) {
+    errors.name = 'Veuillez saisir un nom';
+  }
+
+  if (Validator.isEmpty(data.firstname)) {
+    errors.firstname = 'Veuillez saisir un prénom';
+  }
+
+  if (Validator.isEmpty(data.email)) {
+    errors.email = 'Veuillez saisir un email';
+  }
+
+  if (!Validator.isEmail(data.email)) {
+    errors.email = 'Email invalide';
+  }
+
+  if (Validator.isEmpty(data.position)) {
+    errors.position = 'Veuillez saisir une fonction';
+  }
+
+  return {
+    errors,
+    isValid: isEmpty(errors),
+  };
+};
+
+const validateCompanyProfile = data =>{
+  let errors = {};
+
+  data.name = !isEmpty(data.name) ? data.name : '';
+  data.activity = !isEmpty(data.activity) ? data.activity : '';
+  data.size = !isEmpty(data.size) ? data.size : '';
+  data.siret = !isEmpty(data.siret) ? data.siret : '';
+  data.vat_number = !isEmpty(data.vat_number) ? data.vat_number : '';
+
+  if (Validator.isEmpty(data.name)) {
+    errors.name = 'Veuillez saisir un nom';
+  }
+
+  if (data.vat_subject && Validator.isEmpty(data.vat_number)) {
+    errors.vat_number = 'Veuillez saisir un n° de TVA';
+  }
+
+  if (data.activity && !Object.keys(COMPANY_ACTIVITY).includes(data.activity)) {
+    errors.activity = "Secteur d'activité incorrect"
+  }
+
+  if (data.size && !Object.keys(COMPANY_SIZE).includes(data.size)) {
+    errors.size = "Effectif de l'entreprise incorrect"
+  }
+
+  return {
+    errors,
+    isValid: isEmpty(errors),
+  };
+};
+
+
+module.exports = {
+  validateSimpleRegisterInput, validateEditProfile, validateCompanyProfile,
+  validateEditProProfile
+};

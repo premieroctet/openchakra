@@ -9,7 +9,6 @@ import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import AlgoliaPlaces from 'algolia-places-react';
-import {toast} from 'react-toastify';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -18,7 +17,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import {Helmet} from 'react-helmet';
 import styles from '../../static/css/pages/myAddresses/myAddresses';
 import IconButton from '@material-ui/core/IconButton';
-
+const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
@@ -50,7 +49,7 @@ class myAddresses extends React.Component {
   }
 
   setState=(st, cb) => {
-    console.log(`Setting state:${Object.keys(st)}`)
+    console.error(`Setting state:${Object.keys(st)}`)
     super.setState(st, cb)
   }
 
@@ -74,7 +73,7 @@ class myAddresses extends React.Component {
       .catch(err => {
           if (err.response.status === 401 || err.response.status === 403) {
             clearAuthenticationToken()
-            Router.push({pathname: '/login'});
+            Router.push({pathname: '/'});
           }
         },
       );
@@ -139,7 +138,7 @@ class myAddresses extends React.Component {
     axios
       .put('/myAlfred/api/users/profile/billingAddress', address)
       .then(res => {
-        toast.info('Adresse principale modifiée');
+        snackBarSuccess('Adresse principale modifiée');
         this.loadData()
       })
       .catch();
@@ -159,7 +158,7 @@ class myAddresses extends React.Component {
     };
     axios.put('/myAlfred/api/users/profile/serviceAddress', newAddress)
       .then(() => {
-        toast.info('Adresse ajoutée');
+        snackBarSuccess('Adresse ajoutée');
         this.setState({addNewMode: false});
         this.loadData();
       })
@@ -198,7 +197,7 @@ class myAddresses extends React.Component {
 
     axios.put('/myAlfred/api/users/profile/address/' + id, editAddress)
       .then(() => {
-        toast.info('Adresse modifiée avec succès');
+        snackBarSuccess('Adresse modifiée avec succès');
         this.setState({selected_address: null});
         this.loadData()
 
@@ -209,7 +208,7 @@ class myAddresses extends React.Component {
   deleteAddress = (id) => {
     axios.delete('/myAlfred/api/users/profile/address/' + id)
       .then(() => {
-        toast.error('Adresse supprimée');
+        snackBarSuccess('Adresse supprimée')
         this.setState({selected_address:null, open: false, delete_address_id: ''});
         this.loadData()
       })
