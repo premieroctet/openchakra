@@ -13,11 +13,15 @@ const setAuthToken = () => {
 
 const getAuthToken = () => {
   if (typeof localStorage=='undefined') {
-    console.error('Can not get auth token, undefined localStorage')
+    console.warn('Can not get auth token, undefined localStorage')
     return null
   }
   const token = localStorage.getItem('token')
-  console.log(`Token is ${JSON.stringify(token)}`)
+  if (!token) {
+    console.warn('No token in storage')
+    return null
+  }
+  console.debug(`Token is ${JSON.stringify(token)}`)
   const decoded = jwt.decode(token.split(' ')[1]);
   return decoded
 }
