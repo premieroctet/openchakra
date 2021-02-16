@@ -245,7 +245,10 @@ router.get('/current', passport.authenticate('jwt', {session: false}), (req, res
       res.json(company);
 
     })
-    .catch(err => res.status(404).json({company: 'No company found'}));
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({company: 'No company found'})
+    });
 });
 
 // @Route GET /myAlfred/api/companies/companies/:id

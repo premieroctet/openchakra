@@ -562,10 +562,11 @@ router.post('/search', (req, res) => {
   const service = req.body.service;
   const prestation = req.body.prestation;
   const restrictPerimeter = req.body.perimeter;
+  const pro_only = req.body.pro_only;
 
   console.log(`Searching ${JSON.stringify(req.body)}`);
 
-  ServiceUser.find({}, 'prestations.prestation service_address location perimeter')
+  ServiceUser.find({}, 'prestations.prestation service_address location perimeter professional_access')
     .populate({path: 'user', select: 'firstname'})
     .populate({
       path: 'service', select: 'label s_label',
@@ -594,6 +595,10 @@ router.post('/search', (req, res) => {
         } catch (err) {
           sus = filterServicesGPS(sus, req.body.gps, restrictPerimeter);
         }
+      }
+      // Filter pro
+      if (pro_only) {
+        sus = sus.filter(su => su.professional_access)
       }
       const elapsed = process.hrtime(start2);
       console.log(`Fast Search found ${sus.length} services in ${elapsed[0]}s ${elapsed[1] / 1e6}ms`);
