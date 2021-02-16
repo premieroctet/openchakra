@@ -6,11 +6,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-
 const {clearAuthenticationToken} = require('../../../utils/authentication')
 import Router from 'next/router';
 import Grid from '@material-ui/core/Grid';
-
 import LogIn from '../../../components/LogIn/LogIn';
 import Register from '../../../components/Register/Register';
 import Dialog from '@material-ui/core/Dialog';
@@ -263,7 +261,9 @@ class NavBar extends Component {
             onClick={this.handleModalSearchBarInput}>
         <Paper classes={{root: this.state.ifHomePage ? classes.navbarSearch : classes.navbarSearchP}}>
           <Grid>
-            <IconButton classes={{root: classes.iconButton}} aria-label="search">
+            <IconButton classes={{root: classes.iconButton}}
+                        style={{backgroundColor: is_b2b_site() || is_b2b_admin(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
+                        aria-label="search">
               <SearchIcon/>
             </IconButton>
           </Grid>
@@ -411,7 +411,9 @@ class NavBar extends Component {
       <Grid className={classes.navbarSearchContainerSearchPage}>
         <Paper classes={{root: classes.navbarSearch}}>
           <Grid>
-            <IconButton classes={{root: classes.iconButton}} aria-label="search"
+            <IconButton classes={{root: classes.iconButton}}
+                        style={{backgroundColor: is_b2b_site() || is_b2b_admin(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
+                        aria-label="search"
                         onClick={this.handleModalSearchBarInput}>
               <SearchIcon/>
             </IconButton>
@@ -657,6 +659,7 @@ class NavBar extends Component {
           <Grid>
             <IconButton
               classes={{root: classes.iconButton}}
+              style={{backgroundColor: is_b2b_site() || is_b2b_admin(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
               aria-label="search"
               onClick={() => this.findService()}>
               <SearchIcon/>
@@ -687,7 +690,7 @@ class NavBar extends Component {
 
     return (
       <Grid className={this.state.ifHomePage ? classes.navbarMainSytle : classes.navbarMainSytleP}>
-        <AppBar position={'static'} className={this.state.ifHomePage ? classes.navbarAppBar : classes.navbarAppBarP}>
+        <AppBar position={'static'} className={this.state.ifHomePage ? classes.navbarAppBar : classes.navbarAppBarP} style={{backgroundColor: is_b2b_admin(user) || is_b2b_site() ? '#3c4047' : null}}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Hidden only={['xs']}>
               <Grid className={this.state.ifHomePage ? classes.navbarTopContainer : classes.navbarTopContainerP}>
