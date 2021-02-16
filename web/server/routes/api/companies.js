@@ -304,6 +304,8 @@ router.put('/profile/editProfile', passport.authenticate('jwt', {session: false}
           size: req.body.size,
           siret: req.body.siret,
           vat_number: req.body.vat_number,
+          billing_address: req.body.billing_address,
+          vat_subject : req.body.vat_subject
         }, {new: true})
           .then(company => {
             if(company){

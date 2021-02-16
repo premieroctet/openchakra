@@ -25,7 +25,8 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormHelperText from '@material-ui/core/FormHelperText';
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 const {is_b2b_admin} = require('../../utils/context');
-
+const moment=require('moment');
+moment.locale('fr');
 
 class editProfileCompany extends React.Component{
   constructor(props) {
@@ -43,7 +44,8 @@ class editProfileCompany extends React.Component{
       email: '',
       firstName: '',
       name: '',
-      company: {}
+      company: {},
+      invoice_company: {},
     }
 
   }
@@ -85,11 +87,18 @@ class editProfileCompany extends React.Component{
       );
 
     axios.get('/myAlfred/api/companies/current').then(res =>{
-      console.log(res, 'res')
       let company = res.data;
       this.setState({
         company: company,
-        companyName: company.name
+        companyName: company.name,
+        activityArea: company.activity,
+        sizeCompany: company.size,
+        siret: company.siret,
+        tva: company.vat_number,
+        descriptionCompany: company.description,
+        invoice_company: company.billing_address,
+        vat_subject: company.vat_subject
+
       })
     }).catch(err => {
       console.error(err)
@@ -136,10 +145,11 @@ class editProfileCompany extends React.Component{
       description: this.state.descriptionCompany,
       name: this.state.companyName,
       siret: this.state.siret,
-      vat_number: !this.state.vat_subject ? null : this.state.tva
+      vat_number: !this.state.vat_subject ? '' : this.state.tva,
+      billing_address: this.state.invoice_company,
+      vat_subject: this.state.vat_subject
       }
     ).then( res =>{
-      console.log(res)
       snackBarSuccess("Profil modifié avec succès");
     }).catch( err => {
       snackBarError(err.response.data);
@@ -167,7 +177,8 @@ class editProfileCompany extends React.Component{
   };
 
   content = (classes) => {
-    const{activityArea, sizeCompany, descriptionCompany, companyName, siret, tva, vat_subject, position, email, firstName, name, user, company} = this.state;
+    const{activityArea, sizeCompany, descriptionCompany, companyName, siret, tva, vat_subject, position, email, firstName, name, user, invoice_company, placeholderAlgolia} = this.state;
+
 
     return(
       <Grid>
@@ -196,7 +207,8 @@ class editProfileCompany extends React.Component{
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12} className={classes.containerAlgolia}>
             <AlgoliaPlaces
-              placeholder='Adresse de facturation'
+              key={moment()}
+              placeholder={invoice_company ? `${invoice_company.address}, ${invoice_company.zip_code}, ${invoice_company.country}` : 'Adresse de facturation'}
               options={{
                 appId: 'plKATRG826CP',
                 apiKey: 'dc50194119e4c4736a7c57350e9f32ec',

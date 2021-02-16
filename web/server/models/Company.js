@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const {COMPANY_SIZE, COMPANY_ACTIVITY}=require('../../utils/consts')
+const {COMPANY_SIZE, COMPANY_ACTIVITY}=require('../../utils/consts');
+const {hideIllegal} = require('../../utils/text');
+
 
 const CompanySchema = new Schema({
   name: {
@@ -65,7 +67,11 @@ const CompanySchema = new Schema({
   size: {
     type : String,
     enum : Object.keys(COMPANY_SIZE),
-  }
+  },
+  description: {
+    type: String,
+    set : text => hideIllegal(text)
+  },
 
 }, {toJSON: {virtuals: true, getters: true}});
 
