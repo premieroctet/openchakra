@@ -11,14 +11,14 @@ class LayoutAccount extends React.Component {
       items: [
         {
           label: 'Mes Informations',
-          url: is_b2b_admin() ? '/editProfileCompany' : '/editProfile'
+          url: is_b2b_admin(this.props.contextUser) ? '/editProfileCompany' : '/editProfile',
         },
         {
           label: 'Modes de paiement',
           url: '/paymentMethod'
         },
         {
-          label: is_b2b_admin() ? 'Mes sites' : 'Mes adresses',
+          label: is_b2b_admin(this.props.contextUser) ? 'Mes sites' : 'Mes adresses',
           url: '/myAddresses'
         },
         {

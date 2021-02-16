@@ -16,6 +16,7 @@ const is_b2b_employee = user => {
 }
 
 const is_b2b_admin = user => {
+  return true
   const token=getAuthToken()
   console.log(`is_b2b_admin:user:${JSON.stringify(user)}`)
   console.log(`is_b2b_admin:user.roles:${JSON.stringify(user ? user.roles.includes('ADMIN') : [])}`)
@@ -24,7 +25,7 @@ const is_b2b_admin = user => {
     console.log(`is_b2b_admin:false`)
     return false
   }
-  return token && token.role=='ADMIN'
+  return token && token.roles == 'ADMIN'
 }
 
 const is_mode_company = user => {
