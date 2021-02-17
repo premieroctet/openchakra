@@ -159,7 +159,20 @@ class BooleanCellEditor extends React.Component {
   }
 }
 
+class EnumCellRenderer extends React.Component {
+
+  render = () => {
+    if (!this.props.value) {
+      return ""
+    }
+    return (
+      <>{this.props.enum[this.props.value]}</>
+    )
+  }
+}
+
 module.exports= {
   StatusCellRenderer, DateCellRenderer, DateTimeCellRenderer,
-  StatusCellFilter, PictureCellRenderer, PrivateRenderer, BooleanCellRenderer
+  StatusCellFilter, PictureCellRenderer, PrivateRenderer, BooleanCellRenderer,
+  EnumCellRenderer,
 }

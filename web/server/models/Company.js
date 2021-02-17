@@ -56,6 +56,7 @@ const CompanySchema = new Schema({
   vat_subject : {
     type: Boolean,
     required: true,
+    default: false,
   },
   vat_number : {
     type: String,
@@ -72,6 +73,7 @@ const CompanySchema = new Schema({
     type: String,
     set : text => hideIllegal(text)
   },
+
 
 }, {toJSON: {virtuals: true, getters: true}});
 

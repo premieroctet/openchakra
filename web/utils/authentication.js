@@ -21,7 +21,7 @@ const getAuthToken = () => {
     console.warn('No token in storage')
     return null
   }
-  console.debug(`Token is ${JSON.stringify(token)}`)
+
   const decoded = jwt.decode(token.split(' ')[1]);
   return decoded
 }

@@ -143,6 +143,7 @@ const validateCompanyProfile = data =>{
   data.size = !isEmpty(data.size) ? data.size : '';
   data.siret = !isEmpty(data.siret) ? data.siret : '';
   data.vat_number = !isEmpty(data.vat_number) ? data.vat_number : '';
+  data.admin_email = !isEmpty(data.admin_email) ? data.admin_email : '';
 
   if (Validator.isEmpty(data.name)) {
     errors.name = 'Veuillez saisir un nom';
@@ -152,12 +153,16 @@ const validateCompanyProfile = data =>{
     errors.vat_number = 'Veuillez saisir un n° de TVA';
   }
 
-  if (data.activity && !Object.keys(COMPANY_ACTIVITY).includes(data.activity)) {
+  if (!Object.keys(COMPANY_ACTIVITY).includes(data.activity)) {
     errors.activity = "Secteur d'activité incorrect"
   }
 
-  if (data.size && !Object.keys(COMPANY_SIZE).includes(data.size)) {
+  if (!Object.keys(COMPANY_SIZE).includes(data.size)) {
     errors.size = "Effectif de l'entreprise incorrect"
+  }
+
+  if (data.admin_email && !Validator.isEmail(data.admin_email)) {
+    errors.admin_email = "Email de l'administrateur incorrect"
   }
 
   return {
