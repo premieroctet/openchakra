@@ -20,5 +20,11 @@ export default theme => ({
     '& .algolia-places':{
       height: '100%'
     }
+  },
+  buttonCheckPhone:{
+    fontWeight: 'bold',
+    textTransform: 'initial',
+    width: '100%',
+    color:'white',
   }
 })

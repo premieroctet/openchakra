@@ -23,6 +23,7 @@ import {COMPANY_ACTIVITY, COMPANY_SIZE} from '../../utils/consts';
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormHelperText from '@material-ui/core/FormHelperText';
+import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 const {is_b2b_admin} = require('../../utils/context');
 const moment=require('moment');
@@ -158,14 +159,13 @@ class editProfileCompany extends React.Component{
 
   onSubmitAbout = () =>{
 
-    const profilUser = {
-      position: this.state.position,
-      email: this.state.email,
-      name: this.state.name,
-      firstname: this.state.firstname,
-    };
-
-    axios.put('/myAlfred/api/users/profile/editProfile', profilUser)
+    axios.put('/myAlfred/api/users/profile/editProProfile',
+      {
+        position: this.state.position,
+        email: this.state.email,
+        name: this.state.name,
+        firstname: this.state.firstName,
+      })
       .then(res => {
         snackBarSuccess("Profil modifié avec succès");
        this.loadUser();
@@ -173,6 +173,16 @@ class editProfileCompany extends React.Component{
       .catch(err => {
         err.response ?
           snackBarError(err.response.data) : null
+      });
+  };
+
+  sendEmail = () => {
+    axios.get('/myAlfred/api/users/sendMailVerification')
+      .then(() => {
+        snackBarSuccess("Mail envoyé")
+      })
+      .catch( err => {
+        snackBarError('email non envoyé')
       });
   };
 
@@ -370,9 +380,23 @@ class editProfileCompany extends React.Component{
                 label={'Adresse email'}
                 classes={{root: classes.textField}}
                 onChange={this.handleChange}
+                InputProps={{
+                  endAdornment: email === user.email && user.is_confirmed === true ? <CheckCircleOutlineIcon /> : null
+                }}
               />
             </Grid>
-            <Grid item xs={12} lg={6} md={6} sm={6} xl={6}>
+            <Grid item xs={12} lg={6} md={6} sm={6} xl={6} style={{display: 'flex'}}>
+              <Button
+                variant="contained"
+                color={'primary'}
+                onClick={() => user.is_confirmed ? this.onSubmitAbout() : this.sendEmail()}
+                disabled={user.email ? !!(email === user.email && user.is_confirmed) : true}
+                classes={{root: classes.buttonCheckPhone}}
+              >
+                {email === user.email && user.is_confirmed === true ? 'Votre email est vérifié' : email !== user.email ? 'Enregistrer votre nouvel email' : 'Vérifier votre email'}
+              </Button>
+            </Grid>
+            <Grid item xs={12} lg={12} md={12} sm={12} xl={12}>
               <TextField
                 value={position}
                 name={'position'}
@@ -381,7 +405,6 @@ class editProfileCompany extends React.Component{
                 label={'Poste occupé'}
                 classes={{root: classes.textField}}
                 onChange={this.handleChange}
-
               />
             </Grid>
           </Grid>

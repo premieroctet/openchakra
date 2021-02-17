@@ -992,7 +992,7 @@ router.put('/profile/editProProfile', passport.authenticate('jwt', {session: fal
   User.findOne({email: req.body.email})
     .then(user => {
       if (user && req.body.email != req.user.email) {
-        return res.status(400).json({errors: {email: 'Adresse mail déjà utilisée'}});
+        return res.status(400).json({email: 'Adresse mail déjà utilisée'});
       }else if(!isValid){
         return res.status(400).json(errors);
       }

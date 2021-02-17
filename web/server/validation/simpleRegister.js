@@ -1,7 +1,7 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
 const moment = require('moment');
-const {COMPANY_ACTIVITY, COMPANY_SIZE}=require('../../utils/consts')
+const {COMPANY_ACTIVITY, COMPANY_SIZE, ACCOUNT_MIN_AGE}=require('../../utils/consts');
 moment.locale('fr');
 
 const validateSimpleRegisterInput = data => {
