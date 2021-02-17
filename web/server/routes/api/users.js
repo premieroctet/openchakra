@@ -25,7 +25,6 @@ const axios = require('axios');
 const {computeUrl} = require('../../../config/config');
 const emptyPromise = require('../../../utils/promise.js');
 
-
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient,install_hooks} = require('../../../utils/mangopay');
 
 
@@ -652,7 +651,7 @@ router.post('/login', (req, res) => {
 
   const email = req.body.username;
   const password = req.body.password;
-  const role = req.body.role;
+  var role = req.body.role;
 
   // Find user by email
   User.findOne({email})
@@ -679,6 +678,7 @@ router.post('/login', (req, res) => {
               firstname: user.firstname,
               is_admin: user.is_admin,
               is_alfred: user.is_alfred,
+              role: role, 
             }; // Create JWT payload
             // Sign token
             jwt.sign(payload, keys.secretOrKey, (err, token) => {

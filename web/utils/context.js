@@ -15,17 +15,19 @@ const is_b2b_employee = user => {
   return is_employee
 }
 
+/** User is b2b admin if all are true :
+ - is not null
+ - has ADMIN role
+ - is logged under ADMIN role
+ */
+
 const is_b2b_admin = user => {
-  return true
-  const token=getAuthToken()
-  console.log(`is_b2b_admin:user:${JSON.stringify(user)}`)
-  console.log(`is_b2b_admin:user.roles:${JSON.stringify(user ? user.roles.includes('ADMIN') : [])}`)
-  const is_admin = user && user.roles && user.roles.includes('ADMIN')
+  const is_admin = Boolean(user) && user.roles && user.roles.includes('ADMIN')
   if (!is_admin) {
-    console.log(`is_b2b_admin:false`)
     return false
   }
-  return token && token.roles == 'ADMIN'
+  const token=getAuthToken()
+  return token && token.role=='ADMIN'
 }
 
 const is_mode_company = user => {
