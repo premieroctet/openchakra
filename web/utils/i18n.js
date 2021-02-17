@@ -69,13 +69,13 @@ const NAVBAR_MENU = {
 
 const BANNER_PRESENTATION = {
   title: 'Et si vous pouviez réserver n\'importe quel service ?',
-  text: 'Stressez moins. En quelques clics, trouver la personne et le service dont vous avez besoin.',
+  text: 'Stressez moins. En quelques clics, trouvez la personne et le service dont vous avez besoin.',
   button: 'Découvrir'
 };
 const B2B_BANNER_PRESENTATION = {
-  title: 'Les micro-services qui permette des maxi-économies',
-  text: 'Stressez moins. En quelques clics, trouver la personne et le service dont vous avez besoin.',
-  button: 'Décrouvrir'
+  title: 'Les micro-services qui permettent des maxi-économies',
+  text: 'Stressez moins. En quelques clics, trouvez la personne et le service dont vous avez besoin.',
+  button: 'Découvrir'
 };
 
 const CATEGORY = {
@@ -98,10 +98,10 @@ const RESA_SERVICE = {
 
 const HOW_IT_WORKS = {
   leftText: 'En quelques clics,\n' +
-    'réserver le service et la\n' +
+    'réservez le service et la\n' +
     'personne dont vous avez besoin.\n' +
     '#MyAlfred.',
-  rightText: 'Vous pouvez consulter des centaines de profils, choisir votre Alfred, réservez et payez en ligne votre service. Notre équipe vous accompagne à chaque étape !'
+  rightText: 'Vous pouvez consulter des centaines de profils, choisir votre Alfred, réserver et payer en ligne votre service. Notre équipe vous accompagne à chaque étape !'
 };
 
 
@@ -117,6 +117,7 @@ const NEWS_LETTER = {
 const CMP_PRESENTATION = {
   placeholder: 'Ici, parlez-nous de vous, de votre personnalité, de vos passions ou encore de votre parcours. Soyez vous-même et montrez-nous votre personnalité !'
 }
+
 const getMangopayMessage = msg_id => {
   if (!msg_id) {
     return null;
