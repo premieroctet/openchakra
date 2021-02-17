@@ -24,10 +24,12 @@ const is_b2b_employee = user => {
 const is_b2b_admin = user => {
   const is_admin = Boolean(user) && user.roles && user.roles.includes('ADMIN')
   if (!is_admin) {
+    console.log(`Not B2B admin`)
     return false
   }
   const token=getAuthToken()
-  return token && token.role=='ADMIN'
+  const result = token && token.role=='ADMIN'
+  return result
 }
 
 const is_mode_company = user => {
