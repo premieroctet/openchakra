@@ -26,9 +26,7 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 import PropTypes from 'prop-types';
 import HomeIcon from '@material-ui/icons/Home';
 const  {BigList}=require('../../../components/BigList/BigList')
-const moment = require('moment-timezone');
-const util=require('util')
-moment.locale('fr');
+const {COMPANY_SIZE, COMPANY_ACTIVITY}=require('../../../utils/consts')
 
 const styles = theme => ({
   signupContainer: {
@@ -64,28 +62,24 @@ class all extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      prestation: [],
+      companies: [],
     };
-
   this.columnDefs=[
-      {headerName: "Privée", field: "private_alfred", cellRenderer: "privateRenderer"},
-      {headerName: "Label", field: "label"},
-      {headerName: "Catégorie", field: "service.category.label"},
-      {headerName: "Service", field: "service.label"},
-      {headerName: "Pros", field: "professional_access", cellRenderer:'booleanCellRenderer'},
-      {headerName: "Particuliers", field: "particular_access", cellRenderer:'booleanCellRenderer'},
-      {headerName: "Filtre présentation", field: "filter_presentation.label"},
+      {headerName: "Nom", field: "name"},
+      {headerName: "Taille", field: "size", cellRenderer: 'enumCellRenderer', cellRendererParams: { enum: COMPANY_SIZE}},
+      {headerName: "Secteur", field: "activity", cellRenderer: 'enumCellRenderer', cellRendererParams: { enum: COMPANY_ACTIVITY}},
+      {headerName: "Comptes", field: "employees", },
     ]
   }
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     setAxiosAuthentication()
-    axios.get('/myAlfred/api/admin/prestation/all')
+
+    axios.get('/myAlfred/api/admin/companies/all')
       .then((response) => {
-        let prestation = response.data;
-        console.log(JSON.stringify(prestation[0],null, 2))
-        this.setState({prestation: prestation});
+        let companies = response.data;
+        this.setState({companies: companies});
       }).catch((error) => {
       console.log(error);
       if (error.response.status === 401 || error.response.status === 403) {
@@ -95,46 +89,39 @@ class all extends React.Component {
     });
   }
 
-  onCellClicked = event => {
-    // window.open(`/dashboard/users/view?id=${data._id}`, '_blank')
-    const {colDef, rowIndex, data, value}=event
-
-    if (colDef.field=='private_alfred') {
-      if (value) {
-        window.open(`/profile/services?user=${value._id}`)
-      }
-      return
+  onRowClicked = event => {
+    if (event) {
+      window.open(`/dashboard/companies/edit?id=${event.data._id}`, '_blank')
     }
-    window.open(`/dashboard/prestations/view?id=${data._id}`, '_blank')
   }
 
   onAddClick = () => {
-    window.open(`/dashboard/prestations/add`, '_blank')
+    window.open(`/dashboard/companies/edit`, '_blank')
   }
-
 
   render() {
     const {classes} = this.props;
-    const {prestation} = this.state;
+    const {companies} = this.state;
 
     return (
       <Layout>
         <Grid container style={{marginTop: 70}}>
         </Grid>
         <Grid container className={classes.signupContainer} style={{width:'100%'}}>
-	       <Link href={'/dashboard/home'}>
-           <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour dashboard</span></Typography>
-	       </Link>
-         <Grid style={{width: '90%'}}>
-           <Paper style={{width: '100%'}}>
-             <BigList data={prestation} columnDefs={this.columnDefs} classes={classes}
-                        title={'Prestations'} onCellClicked={this.onCellClicked} onAddClick={this.onAddClick}/>
-           </Paper>
-         </Grid>
-       </Grid>
-     </Layout>
-     );
-   };
+	  <Link href={'/dashboard/home'}>
+
+            <Typography className="retour"><HomeIcon className="retour2"/> <span>Retour dashboard</span></Typography>
+	  </Link>
+            <Grid style={{width: '90%'}}>
+              <Paper style={{width: '100%'}}>
+               <BigList data={companies} columnDefs={this.columnDefs} classes={classes}
+                        title={'Entreprises'} onRowClicked={this.onRowClicked} onAddClick={this.onAddClick}/>
+              </Paper>
+            </Grid>
+        </Grid>
+      </Layout>
+    );
+  };
 }
 
 export default withStyles(styles)(all);

@@ -1,5 +1,4 @@
-import SnackBar from "../../components/SnackBar/SnackBar";
-
+const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
 import Grid from "@material-ui/core/Grid";
@@ -63,7 +62,6 @@ class ProfileAbout extends React.Component {
       newAddress: null,
       userLanguages: [],
       newLanguages: null,
-      open: false
     }
 
   }
@@ -124,7 +122,8 @@ class ProfileAbout extends React.Component {
     setAxiosAuthentication();
     axios.put('/myAlfred/api/users/profile/billingAddress', newAddress).then( res =>{
         axios.put('/myAlfred/api/users/profile/languages', {languages: languages.map(l => l.value)}).then( res =>{
-            this.setState({open: true}, () => setTimeout(this.loadUser, 1000))
+          snackBarSuccess('Profil modifié avec succès');
+           setTimeout(this.loadUser, 1000)
           }
         ).catch(err => {
           console.error(err)
@@ -212,7 +211,6 @@ class ProfileAbout extends React.Component {
             </Grid>
           </Grid>
         </DialogContent>
-        <SnackBar severity={"success"} message={'Profil modifié avec succès'} open={this.state.open} closeSnackBar={() => this.setState({open: false})}/>
       </Dialog>
     )
   };
@@ -239,8 +237,8 @@ class ProfileAbout extends React.Component {
     this.setState({languages: languages}, () => this.objectsEqual())
   };
 
-  static getInitialProps({query: {user, indexAccount}}) {
-    return {user: user, index: indexAccount};
+  static getInitialProps({query: {user}}) {
+    return {user: user};
   }
 
   content = (classes, user, alfred) =>{
@@ -343,7 +341,7 @@ class ProfileAbout extends React.Component {
   };
 
   render() {
-    const {classes, index, user}=this.props;
+    const {classes, user}=this.props;
     const {alfred}=this.state;
 
     if(!user && alfred){
@@ -353,12 +351,12 @@ class ProfileAbout extends React.Component {
     return (
       <React.Fragment>
         <Hidden only={['xs']}>
-          <ProfileLayout user={user} index={index}>
+          <ProfileLayout user={user}>
             {this.content(classes, user, alfred)}
           </ProfileLayout>
         </Hidden>
         <Hidden only={['lg', 'xl',  'sm', 'md']}>
-          <LayoutMobileProfile user={user} index={index} currentIndex={4}>
+          <LayoutMobileProfile user={user} currentIndex={4}>
             {this.content(classes, user, alfred)}
           </LayoutMobileProfile>
         </Hidden>

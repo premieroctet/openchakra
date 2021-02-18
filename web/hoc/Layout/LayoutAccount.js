@@ -2,45 +2,60 @@ import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import ScrollMenu from '../../components/ScrollMenu/ScrollMenu';
 import Layout from "./Layout";
-import {is_b2b_admin} from "../../utils/context";
+import axios from 'axios'
+const {setAxiosAuthentication}=require('../../utils/authentication')
+import {is_b2b_admin} from '../../utils/context';
 
 class LayoutAccount extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: [
-        {
-          label: 'Mes Informations',
-          url: '/editProfile'
-        },
-        {
-          label: 'Modes de paiement',
-          url: '/paymentMethod'
-        },
-        {
-          label: is_b2b_admin() ? 'Mes sites' : 'Mes adresses',
-          url: '/myAddresses'
-        },
-        {
-          label: 'Vérification',
-          url: '/trustAndVerification'
-        },
-        {
-          label: 'Sécurité',
-          url: '/security'
-        },
-        {
-          label: 'Notifications',
-          url: '/notifications'
-        },
-
-      ]
+      items: [],
     }
+  }
+
+  componentDidMount() {
+    setAxiosAuthentication()
+    axios.get('/myAlfred/api/users/current')
+      .then ( res => {
+        const user = res.data
+        this.setState({
+          items: [
+            {
+              label: 'Mes Informations',
+              url: is_b2b_admin(user) ? '/editProfileCompany' : '/editProfile'
+            },
+            {
+              label: 'Modes de paiement',
+              url: '/paymentMethod'
+            },
+            {
+              label: is_b2b_admin(user) ? 'Mes sites' : 'Mes adresses',
+              url: '/myAddresses'
+            },
+            {
+              label: 'Vérification',
+              url: '/trustAndVerification'
+            },
+            {
+              label: 'Sécurité',
+              url: '/security'
+            },
+            {
+              label: 'Notifications',
+              url: '/notifications'
+            },
+          ],
+        })
+      })
+      .catch (err => {
+        console.error(err)
+      })
   }
 
   render() {
     const {items} = this.state;
-    const {children, index} = this.props;
+    const {children} = this.props;
 
     return (
       <Layout>
@@ -56,7 +71,7 @@ class LayoutAccount extends React.Component {
               <h2>Mes paramètres</h2>
             </Grid>
             <Grid>
-              <ScrollMenu categories={items} mode={'account'} indexCat={index}/>
+              <ScrollMenu categories={items} mode={'account'}/>
             </Grid>
             <Grid style={{backgroundColor: 'rgba(249,249,249, 1)', width: '100%'}}>
               <Grid style={{

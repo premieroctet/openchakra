@@ -18,6 +18,7 @@ const https = require('https');
 const fs = require('fs');
 const authRoutes = require('./routes/api/authentication');
 const users = require('./routes/api/users');
+const companies = require('./routes/api/companies');
 const category = require('./routes/api/category');
 const billing = require('./routes/api/billing');
 const booking = require('./routes/api/booking');
@@ -87,6 +88,7 @@ nextApp.prepare().then(() => {
 
 
   app.use('/myAlfred/api/users', users);
+  app.use('/myAlfred/api/companies', companies);
   app.use('/myAlfred/api/category', category);
   app.use('/myAlfred/api/billing', billing);
   app.use('/myAlfred/api/booking', booking);

@@ -53,7 +53,6 @@ export default theme => ({
   },
   iconButton: {
     padding: 12,
-    backgroundColor: theme.palette.yellow.main,
     color: theme.palette.white.main,
   },
   navbarCloseButton:{

@@ -136,7 +136,16 @@ const ServiceUserSchema = new Schema({
   travel_tax: {
     type: Number,
   },
-
+  // Particulars can book
+  particular_access: {
+    type: Boolean,
+    required: true,
+  },
+  // Professionals can book
+  professional_access: {
+    type: Boolean,
+    required: true,
+  }
 });
 
 module.exports = ServiceUser = mongoose.model('serviceUser', ServiceUserSchema);

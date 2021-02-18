@@ -2,32 +2,40 @@ import SnackBar from "../components/SnackBar/SnackBar";
 import React from "react";
 import ReactDOM from "react-dom";
 
-const snackBarSuccess =  (messages) =>{
-  if(typeof messages === "object"){
-    Object.keys(messages).map(res => {
-      messages = Object.values(messages[res])
+const snackBar = (severity, message) => {
+  const body = document.getElementById('__next');
+  var mysnackbar;
+
+  if(typeof message === "object"){
+    Object.values(message).map(value => {
+      mysnackbar = <SnackBar severity={severity} message={value} id={value}/>;
+      let div = document.createElement('div');
+      div.id = 'id_snackbar';
+      ReactDOM.render(mysnackbar, body.appendChild(div));
     });
   }
-  let mysnacbar = <SnackBar severity={'success'} message={messages} id={messages}/>;
-  let body = document.getElementById('__next');
-  let div = document.createElement('div');
-  div.id = 'id_snackbar';
-  ReactDOM.render(mysnacbar, body.appendChild(div));
+  else{
+    mysnackbar = <SnackBar severity={severity} message={message} id={message}/>;
+    let div = document.createElement('div');
+    div.id = 'id_snackbar';
+    ReactDOM.render(mysnackbar, body.appendChild(div));
+  }
+}
+
+const snackBarSuccess =  (message) =>{
+  snackBar('success', message)
 };
 
-const snackBarError=  (errors) =>{
-  if(typeof errors === "object"){
-    Object.keys(errors).map(res => {
-      errors = Object.values(errors[res])
-    });
-  }
-  let mysnacbar = <SnackBar severity={'error'} message={errors} id={errors}/>;
-  let div = document.createElement('div');
-  div.id = 'id_snackbar';
-  ReactDOM.render(mysnacbar, document.getElementById('__next').appendChild(div));
+const snackBarError=  (error) =>{
+  snackBar('error', error)
+};
+
+const snackBarWarning= (warning) =>{
+  snackBar('warning', warning)
 };
 
 module.exports = {
   snackBarSuccess,
+  snackBarWarning,
   snackBarError
 };

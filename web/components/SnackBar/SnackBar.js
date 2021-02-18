@@ -3,6 +3,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 const {CLOSE_NOTIFICATION_DELAY}=require('../../utils/consts');
 
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -21,17 +22,25 @@ class SnackBar extends React.Component{
     }
     let body = document.getElementById('__next');
     let el = document.getElementById('id_snackbar');
-    body.removeChild(el)
+    if(typeof el === 'object' && el){
+      body.removeChild(el)
+
+    }
 
   };
 
   render() {
     const {message, severity, id} = this.props;
     const {open} = this.state;
-    const is_snackbar = document.getElementById('snackbar');
+    const is_snackbar = document.getElementById('id_snackbar');
+    var newMargin = 0;
+
 
     if(is_snackbar){
-        var newMargin = parseFloat(is_snackbar.style.marginBottom);
+      let allSnackbar =  document.querySelectorAll('#snackbar');
+      allSnackbar.forEach(query => {
+        newMargin = parseFloat(query.style.marginBottom) + 80;
+      });
     }
 
     return(
@@ -41,7 +50,7 @@ class SnackBar extends React.Component{
         open={open}
         onClose={this.handleClose}
         id={'snackbar'}
-        style={{marginBottom: is_snackbar ? newMargin + 80 : 0}}
+        style={{marginBottom: newMargin}}
       >
         <Alert key={id} severity={severity} style={{fontWeight: 'bold'}}>
           {message}

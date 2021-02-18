@@ -59,7 +59,7 @@ class Header extends React.Component {
 
   render() {
 
-    const {classes, index} = this.props;
+    const {classes} = this.props;
     let {title, content, aboutMenu, items, search, aboutSearch} = this.state;
 
     if (process.browser) {
@@ -141,7 +141,7 @@ class Header extends React.Component {
         {
           aboutMenu ?
             <Grid className={classes.layoutScrollMenu}>
-              <ScrollMenu categories={items} indexCat={index} mode={'faq'}/>
+              <ScrollMenu categories={items} mode={'faq'}/>
             </Grid>
             : null
         }

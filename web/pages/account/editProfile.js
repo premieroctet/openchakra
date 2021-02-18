@@ -58,11 +58,6 @@ class editProfile extends React.Component {
     };
   }
 
-  static getInitialProps({query: {indexAccount}}) {
-    return {index: indexAccount};
-
-  }
-
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
     this.loadUser()
@@ -474,7 +469,13 @@ class editProfile extends React.Component {
   };
 
   render() {
-    const {classes, index} = this.props;
+    const {classes} = this.props;
+    const {user} = this.state;
+
+    if (!user) {
+      return null
+    }
+
     return (
       <React.Fragment>
         <Helmet>
@@ -483,7 +484,7 @@ class editProfile extends React.Component {
                 content="Plateforme d’échange de services entre particuliers. Services rémunérés à des prix justes ! Profitez des talents de nos Alfred et trouvez un Alfred bricoleur, petsitter, pâtissier, décorateur, près de chez vous dans toute la france ! Des milliers de services proposés, trouvez le vôtre !"/>
         </Helmet>
         <Hidden only={['xs', 'sm', 'md']}>
-          <LayoutAccount index={index}>
+          <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
         </Hidden>

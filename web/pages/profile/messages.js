@@ -272,6 +272,10 @@ class Messages extends React.Component {
     const {classes}=this.props;
     const {relativeDetails, user}=this.state;
 
+    if (!user) {
+      return null
+    }
+    
     return (
       <React.Fragment>
         <Hidden only={['xs']}>

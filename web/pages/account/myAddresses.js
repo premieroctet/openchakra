@@ -9,7 +9,6 @@ import Router from 'next/router';
 import {withStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import AlgoliaPlaces from 'algolia-places-react';
-import {toast} from 'react-toastify';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -18,7 +17,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import {Helmet} from 'react-helmet';
 import styles from '../../static/css/pages/myAddresses/myAddresses';
 import IconButton from '@material-ui/core/IconButton';
-
+const {snackBarSuccess, snackBarError} = require('../../utils/notifications');
 import LayoutAccount from "../../hoc/Layout/LayoutAccount";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
@@ -26,7 +25,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
-import {is_b2b_admin} from "../../utils/context"
+const {is_b2b_admin}=require('../../utils/context')
 
 moment.locale('fr');
 
@@ -34,8 +33,10 @@ class myAddresses extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      pro_mode: false,
       user: null,
-      suggestion_current: null,
+      company_name : null,
+      suggestion_current:null,
       new_label: '',
       edit_label: '',
       service_address: [],
@@ -53,15 +54,9 @@ class myAddresses extends React.Component {
     return {index: indexAccount};
   }
 
-  setState = (st, cb) => {
-    console.log(`Setting state:${Object.keys(st)}`)
-    super.setState(st, cb)
-  }
-
   loadData = () => {
     setAxiosAuthentication()
-    axios
-      .get('/myAlfred/api/users/current')
+    axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
         this.setState({
@@ -72,16 +67,41 @@ class myAddresses extends React.Component {
           edit_label: '',
           selected_address: null,
           delete_address_id: '',
-
         });
+        this.address_get_url = '/myAlfred/api/users/profile/address/'
+        this.main_address_put_url = '/myAlfred/api/users/profile/billingAddress'
+        this.service_address_put_url = '/myAlfred/api/users/profile/serviceAddress'
+        this.service_address_edit_url = '/myAlfred/api/users/profile/address/'
+        this.service_address_delete_url = '/myAlfred/api/users/profile/address/'
+        if (is_b2b_admin(user)) {
+          axios.get('/myAlfred/api/companies/current')
+            .then(res => {
+              let company = res.data;
+              this.setState({
+                company_name: company.name,
+                billing_address: company.billing_address,
+                service_address: company.service_address,
+                new_label: '',
+                edit_label: '',
+                selected_address: null,
+                delete_address_id: '',
+                pro_mode : true,
+              });
+              this.address_get_url = '/myAlfred/api/companies/profile/address/'
+              this.main_address_put_url = '/myAlfred/api/companies/profile/billingAddress'
+              this.service_address_put_url = '/myAlfred/api/companies/profile/serviceAddress'
+              this.service_address_edit_url = '/myAlfred/api/companies/profile/address/'
+              this.service_address_delete_url = '/myAlfred/api/companies/profile/address/'
+                  })
+        }
       })
       .catch(err => {
-          if (err.response.status === 401 || err.response.status === 403) {
-            clearAuthenticationToken()
-            Router.push({pathname: '/login'});
-          }
-        },
-      );
+        console.error(err)
+        if (err.response.status === 401 || err.response.status === 403) {
+          clearAuthenticationToken()
+          Router.push({pathname: '/'});
+        }
+      });
   }
 
   componentDidMount() {
@@ -114,7 +134,7 @@ class myAddresses extends React.Component {
   }
 
   onEditionClick = id => {
-    axios.get('/myAlfred/api/users/profile/address/' + id)
+    axios.get(this.address_get_url + id)
       .then(res => {
         let result = res.data;
         this.setState({
@@ -123,7 +143,10 @@ class myAddresses extends React.Component {
           addNewMode: false,
         });
       })
-      .catch();
+      .catch( err => {
+        console.error(err)
+        snackBarError(err.response.data)
+      });
   };
 
   onSubmitMain = e => {
@@ -141,12 +164,15 @@ class myAddresses extends React.Component {
       }
     };
     axios
-      .put('/myAlfred/api/users/profile/billingAddress', address)
+      .put(this.main_address_put_url, address)
       .then(res => {
-        toast.info('Adresse principale modifiée');
+        snackBarSuccess('Adresse principale modifiée');
         this.loadData()
       })
-      .catch();
+      .catch( err => {
+        console.error(err)
+        snackBarError(err.response.data)
+      });
   };
 
   onSubmitNew = e => {
@@ -161,14 +187,16 @@ class myAddresses extends React.Component {
       lng: suggestion_new.latlng.lng,
       label: this.state.new_label,
     };
-    axios.put('/myAlfred/api/users/profile/serviceAddress', newAddress)
+    axios.put(this.service_address_put_url, newAddress)
       .then(() => {
-        toast.info('Adresse ajoutée');
+        snackBarSuccess('Adresse ajoutée');
         this.setState({addNewMode: false});
         this.loadData();
       })
-      .catch();
-
+      .catch( err => {
+        console.error(err)
+        snackBarError(err.response.data)
+      });
   };
 
   addressLabel = addr => {
@@ -200,24 +228,30 @@ class myAddresses extends React.Component {
         label: this.state.edit_label,
       };
 
-    axios.put('/myAlfred/api/users/profile/address/' + id, editAddress)
+    axios.put(this.service_address_edit_url + id, editAddress)
       .then(() => {
-        toast.info('Adresse modifiée avec succès');
+        snackBarSuccess('Adresse modifiée avec succès');
         this.setState({selected_address: null});
         this.loadData()
 
       })
-      .catch();
+      .catch( err => {
+        console.error(err)
+        snackBarError(err.response.data)
+      });
   };
 
   deleteAddress = (id) => {
-    axios.delete('/myAlfred/api/users/profile/address/' + id)
+    axios.delete(this.service_address_delete_url + id)
       .then(() => {
-        toast.error('Adresse supprimée');
-        this.setState({selected_address: null, open: false, delete_address_id: ''});
+        snackBarSuccess('Adresse supprimée')
+        this.setState({selected_address:null, open: false, delete_address_id: ''});
         this.loadData()
       })
-      .catch();
+      .catch( err => {
+        console.error(err)
+        snackBarError(err.response.data)
+      });
   };
 
   modalDeleteAddress = () => {
@@ -247,16 +281,15 @@ class myAddresses extends React.Component {
   };
 
   content = (classes) => {
-    const {billing_address, selected_address} = this.state
-    return (
+    const {billing_address, selected_address, pro_mode, company_name}=this.state
+    return(
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2>{is_b2b_admin() ? 'Mes sites' : 'Mes adresses'}</h2>
+            <h2>{ pro_mode ? 'Mes sites' : 'Mes adresses'}</h2>
           </Grid>
           <Grid>
-            <Typography
-              style={{color: 'rgba(39,37,37,35%)'}}>{!is_b2b_admin() ? 'Ici, vous pouvez gérer vos adresses.' : 'Ici, vous pouvez gérer vos sites & établissements.'}</Typography>
+            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ici, vous pouvez gérer {pro_mode ? `les sites de ${company_name}` : 'vos adresses'}.</Typography>
           </Grid>
         </Grid>
         <Grid>
@@ -264,7 +297,7 @@ class myAddresses extends React.Component {
         </Grid>
         <Grid>
           <Grid>
-            <h3>{is_b2b_admin() ? 'Mon siège social' : 'Mon adresse principale'}</h3>
+            <h3>{ pro_mode ? 'Mon siège social' : 'Mon adresse principale'}</h3>
           </Grid>
           {this.addressLabel(billing_address)}
         </Grid>
@@ -295,7 +328,7 @@ class myAddresses extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <h3>{is_b2b_admin() ? 'Mes sites' : 'Mon carnet d\'adresses'}</h3>
+              <h3>{ pro_mode ? 'Autres sites' : "Mon carnet d'adresses"}</h3>
             </Grid>
             <Grid>
               <Typography style={{color: 'rgba(39,37,37,35%)'}}>
@@ -383,10 +416,8 @@ class myAddresses extends React.Component {
               variant="contained"
               className={classes.buttonSave}
               onClick={() => this.setState({addNewMode: !this.state.addNewMode, selected_address: null})}
-            >{
-              is_b2b_admin() ? 'Ajouter un site' : 'Ajouter une adresse'
-            }
-
+            >
+              { pro_mode ? 'Ajouter un site' : 'Ajouter une adresse'}
             </Button>
           </Grid>
           {this.state.addNewMode ?
@@ -399,7 +430,7 @@ class myAddresses extends React.Component {
                   name={'new_label'}
                   placeholder={'Ecrire ici'}
                   variant={'outlined'}
-                  label={'Nom de l\'adresse'}
+                  label={ pro_mode ? 'Nom du site' : "Intitulé de l\'adresse"}
                   className={classes.textField}
                 />
               </Grid>
@@ -431,7 +462,12 @@ class myAddresses extends React.Component {
   };
 
   render() {
-    const {classes, index} = this.props;
+    const {classes} = this.props;
+    const {user} = this.state;
+
+    if (!user) {
+      return null
+    }
 
     return (
       <React.Fragment>
@@ -441,7 +477,7 @@ class myAddresses extends React.Component {
                 content="Renseignez vos adresses de prestation et recherchez des Alfred là où vous le souhaitez ! Des services entre particuliers dans toute la France. Réservez dès maintenant votre Alfred mécanicien, plombier, électricien, coiffeur, coach sportif…"/>
         </Helmet>
         <Hidden only={['xs', 'sm', 'md']}>
-          <LayoutAccount index={index}>
+          <LayoutAccount>
             {this.content(classes)}
           </LayoutAccount>
         </Hidden>

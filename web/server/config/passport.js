@@ -40,13 +40,24 @@ const jwt_opts = {
 };
 
 
-passport.use(new JwtStrategy(jwt_opts, (jwt_payload, done) => {
+passport.use('jwt', new JwtStrategy(jwt_opts, (jwt_payload, done) => {
   User.findById(jwt_payload.id)
     .then(user => {
       if (user) {
         return done(null, user);
       }
-      return done(null, false);
+      return done(null, false, { message: 'Vous devez être connecté' });
+    })
+    .catch(err => console.error(err));
+}));
+
+passport.use('admin', new JwtStrategy(jwt_opts, (jwt_payload, done) => {
+  User.findById(jwt_payload.id)
+    .then(user => {
+      if (user && user.is_admin) {
+        return done(null, user);
+      }
+      return done(null, false, "Vous devez être administrateur");
     })
     .catch(err => console.error(err));
 }));

@@ -17,7 +17,7 @@ import Hidden from "@material-ui/core/Hidden";
 import TrustAndSecurity from "../hoc/Layout/TrustAndSecurity/TrustAndSecurity";
 import {Divider} from "@material-ui/core";
 import ResaService from "../components/HomePage/ResaService/ResaService";
-import {is_b2b_site} from "../utils/context";
+import {is_b2b_style} from "../utils/context";
 
 const {getLoggedUserId} = require('../utils/functions');
 
@@ -36,14 +36,14 @@ class Home extends React.Component {
     if (getLoggedUserId()) {
       this.setState({logged: true})
     }
-    const categoryUrl = is_b2b_site() ? '/myAlfred/api/category/pro' : '/myAlfred/api/category/all';
+    const categoryUrl = is_b2b_style() ? '/myAlfred/api/category/pro' : '/myAlfred/api/category/all';
     axios.get(categoryUrl)
       .then(res => {
         let category = res.data;
         this.setState({category: category});
       }).catch(err => console.error(err));
 
-    const userUrl = is_b2b_site() ? '/myAlfred/api/serviceUser/home/pro' : '/myAlfred/api/serviceUser/home/';
+    const userUrl = is_b2b_style() ? '/myAlfred/api/serviceUser/home/pro' : '/myAlfred/api/serviceUser/home/';
     axios.get(userUrl)
       .then(response => {
         let alfred = response.data;
@@ -71,7 +71,7 @@ class Home extends React.Component {
             <InfoBar style={classes}/>
           </Grid>
           <Grid container
-                className={is_b2b_site() ? classes.navbarAndBannerContainerB2b : classes.navbarAndBannerContainer}>
+                className={is_b2b_style() ? classes.navbarAndBannerContainerB2b : classes.navbarAndBannerContainer}>
             <Grid className={classes.navbarAndBannerBackground}>
               <Grid className={classes.navbarComponentPosition}>
                 <NavBar/>
@@ -88,7 +88,7 @@ class Home extends React.Component {
               <CategoryTopic category={category}/>
             </Grid>
           </Grid>
-          <Grid container className={is_b2b_site() ? classes.howItWorksComponentB2b : classes.howItWorksComponent}>
+          <Grid container className={is_b2b_style() ? classes.howItWorksComponentB2b : classes.howItWorksComponent}>
             <Grid className={classes.generalWidthContainer}>
               <HowItWorks/>
             </Grid>
@@ -99,20 +99,20 @@ class Home extends React.Component {
             </Grid>
           </Grid>
           {
-            !is_b2b_site() ?
+            is_b2b_style() ? null :
               <Grid container className={classes.becomeAlfredComponent}>
                 <Grid className={classes.generalWidthContainer}>
                   <ResaService/>
                 </Grid>
-              </Grid> : null}
+              </Grid>}
           <Hidden only={['xs', 'sm']}>
             {
-              !is_b2b_site() ?
+              is_b2b_style() ? null :
                 <Grid container className={classes.mainNewsLetterStyle}>
                   <Grid className={classes.generalWidthContainerNewsLtter}>
                     <NewsLetter/>
                   </Grid>
-                </Grid> : null}
+                </Grid>}
           </Hidden>
           <Grid>
             <Divider/>

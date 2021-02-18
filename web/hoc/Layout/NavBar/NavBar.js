@@ -6,11 +6,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-
 const {clearAuthenticationToken} = require('../../../utils/authentication')
 import Router from 'next/router';
 import Grid from '@material-ui/core/Grid';
-
 import LogIn from '../../../components/LogIn/LogIn';
 import Register from '../../../components/Register/Register';
 import Dialog from '@material-ui/core/Dialog';
@@ -45,7 +43,7 @@ import {DateRangePicker} from "react-dates";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ClearIcon from "@material-ui/icons/Clear";
 import {is_development} from "../../../config/config";
-import {is_b2b_site} from "../../../utils/context";
+import {is_b2b_style, is_b2b_admin} from "../../../utils/context";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -185,7 +183,7 @@ class NavBar extends Component {
     this.setState({[name]: value});
     if (name === 'selectedAddress') {
       if (value === 'addAddress') {
-        Router.push('/account/myAddresses?indexAccount=4');
+        Router.push('/account/myAddresses');
       } else {
         this.setState({
           gps: value === 'all' ? null : value === 'main' ? this.state.allAddresses['main'].gps : {
@@ -263,7 +261,9 @@ class NavBar extends Component {
             onClick={this.handleModalSearchBarInput}>
         <Paper classes={{root: this.state.ifHomePage ? classes.navbarSearch : classes.navbarSearchP}}>
           <Grid>
-            <IconButton classes={{root: classes.iconButton}} aria-label="search">
+            <IconButton classes={{root: classes.iconButton}}
+                        style={{backgroundColor: is_b2b_style(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
+                        aria-label="search">
               <SearchIcon/>
             </IconButton>
           </Grid>
@@ -411,7 +411,9 @@ class NavBar extends Component {
       <Grid className={classes.navbarSearchContainerSearchPage}>
         <Paper classes={{root: classes.navbarSearch}}>
           <Grid>
-            <IconButton classes={{root: classes.iconButton}} aria-label="search"
+            <IconButton classes={{root: classes.iconButton}}
+                        style={{backgroundColor: is_b2b_style(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
+                        aria-label="search"
                         onClick={this.handleModalSearchBarInput}>
               <SearchIcon/>
             </IconButton>
@@ -657,6 +659,7 @@ class NavBar extends Component {
           <Grid>
             <IconButton
               classes={{root: classes.iconButton}}
+              style={{backgroundColor: is_b2b_style(this.state.user) ? '#b0cdc8' : 'rgba(248, 207, 97, 1)'}}
               aria-label="search"
               onClick={() => this.findService()}>
               <SearchIcon/>
@@ -687,7 +690,7 @@ class NavBar extends Component {
 
     return (
       <Grid className={this.state.ifHomePage ? classes.navbarMainSytle : classes.navbarMainSytleP}>
-        <AppBar position={'static'} className={this.state.ifHomePage ? classes.navbarAppBar : classes.navbarAppBarP}>
+        <AppBar position={'static'} className={this.state.ifHomePage ? classes.navbarAppBar : classes.navbarAppBarP} style={{backgroundColor: is_b2b_style(user) ? '#3c4047' : null}}>
           <Toolbar classes={{root: this.state.ifHomePage ? classes.navBartoolbar : classes.navBartoolbarP}}>
             <Hidden only={['xs']}>
               <Grid className={this.state.ifHomePage ? classes.navbarTopContainer : classes.navbarTopContainerP}>
@@ -706,7 +709,7 @@ class NavBar extends Component {
                         </Link>
                         {user ?
                           user.is_alfred ?
-                            <Link href={`/profile/services?user=${user._id}&indexAccount=1`}>
+                            <Link href={`/profile/services?user=${user._id}`}>
                               <Tab classes={{root: classes.navbarTabRoot}}
                                    label={NAVBAR_MENU.myServices}/>
                             </Link>
@@ -722,7 +725,7 @@ class NavBar extends Component {
                           </Link>
                         }
                         {
-                          !is_b2b_site() ?
+                          !is_b2b_style(user) ?
                             <Link href={'/'} onClick={this.b2bSide}>
                               <Tab classes={{root: classes.navbarTabRoot}}
                                    label={NAVBAR_MENU.businessSide}/>
@@ -764,13 +767,13 @@ class NavBar extends Component {
                                 <Link href={`/profile/about?user=${user._id}`}>
                                   <MenuItem>Mon profil</MenuItem>
                                 </Link> : null}
-                            <Link href={'/account/editProfile'}>
+                            <Link href={is_b2b_admin(user) ? '/account/editProfileCompany' : '/account/editProfile'}>
                               <MenuItem>Mes paramètres</MenuItem>
                             </Link>
                             {
                               !user.is_employee ?
                                 user.is_alfred ?
-                                  <Link href={`/profile/services?user=${user._id}&indexAccount=1`}>
+                                  <Link href={`/profile/services?user=${user._id}`}>
                                     <MenuItem>Mes services</MenuItem>
                                   </Link>
                                   :

@@ -21,8 +21,8 @@ class ProfilePictures extends React.Component {
     this.state={}
   }
 
-  static getInitialProps({query: {user, indexAccount}}) {
-    return {user: user, index : indexAccount};
+  static getInitialProps({query: {user}}) {
+    return {user: user};
   }
 
   getUserId() {
@@ -55,7 +55,7 @@ class ProfilePictures extends React.Component {
 
 
   render() {
-    const {classes, index}=this.props;
+    const {classes}=this.props;
     const user=this.getUserId();
 
     if (!user) {
@@ -65,12 +65,12 @@ class ProfilePictures extends React.Component {
     return (
       <React.Fragment>
         <Hidden only={['xs']}>
-          <ProfileLayout user={user} index={index}>
+          <ProfileLayout user={user}>
             {this.content(classes, user)}
           </ProfileLayout>
         </Hidden>
         <Hidden only={['lg', 'xl','sm', 'md']}>
-          <LayoutMobileProfile user={user} index={index} currentIndex={4}>
+          <LayoutMobileProfile user={user} currentIndex={4}>
             {this.content(classes, user)}
           </LayoutMobileProfile>
         </Hidden>

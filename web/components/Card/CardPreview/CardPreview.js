@@ -13,6 +13,11 @@ class CardPreview extends React.Component {
     super(props);
   }
 
+  openService = () => {
+    const url=`/userServicePreview?id=${this.props.item._id}&address=main`
+    window.open(url, '_blank')
+  }
+
   render() {
     const {item, classes} = this.props;
 
@@ -23,7 +28,8 @@ class CardPreview extends React.Component {
     const city = item.user && item.user.billing_address && item.user.billing_address.city ? item.user.billing_address.city : '';
 
     return(
-      <Grid style={{height: 200, display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+      <Grid style={{height: 200, display: 'flex', alignItems: 'center', flexDirection: 'column'}}
+        onClick={this.openService}>
         <Grid style={{height: '30%', position:'relative'}}>
           <Grid style={{position: 'absolute', bottom: 0, left: '50%', transform:'translate(-50%,50%)',zIndex: 1}}>
             <Grid className={classes.cardPreviewContainerAvatar}>

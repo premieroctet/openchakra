@@ -62,7 +62,7 @@ export default theme => ({
     justifyContent: 'center',
     height: '85vh',
     backgroundImage: 'url(../../assets/img/homePage/illuB2B-02.svg)',
-    backgroundColor: 'rgba(207,223,252,1)',
+    backgroundColor: '#3c4047', //'rgba(207,223,252,1)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat'

@@ -37,24 +37,24 @@ const isServiceAroundGPS = (serviceUser, coordinates) => {
   }
 };
 
-isServiceAtAlfredOrVisio = su => {
+const isServiceAtAlfredOrVisio = su => {
   return su.location.alfred || su.location.visio;
 };
 
 
-const sortfn = gps => {
+const distanceComparator = gps => {
   const sort = (su1, su2) => {
     var d1, d2;
     try {
       d1 = geolib.getDistance(gps, su1.service_address.gps);
     } catch (e) {
-      console.warn(`Warning: GPS incorrect pour serviceUser ${su1._id}`);
+      console.warn(`Warning: GPS incorrect pour serviceUser ${su1._id}:${e}`);
       d1 = 100000;
     }
     try {
       d2 = geolib.getDistance(gps, su2.service_address.gps);
     } catch (e) {
-      console.warn(`Warning: GPS incorrect pour serviceUser ${su2._id}`);
+      console.warn(`Warning: GPS incorrect pour serviceUser ${su2._id}:${e}`);
       d2 = 100000;
     }
     return d1 - d2;
@@ -65,7 +65,7 @@ const sortfn = gps => {
 
 const filterServicesGPS = (serviceUsers, coordinates, restrict) => {
   var filteredServiceUsers = serviceUsers.filter(su => isServiceAtAlfredOrVisio(su) || !restrict || isServiceAroundGPS(su, coordinates));
-  filteredServiceUsers.sort(sortfn(coordinates));
+  filteredServiceUsers.sort(distanceComparator(coordinates));
   return filteredServiceUsers;
 };
 
@@ -91,4 +91,4 @@ const filterServicesKeyword = (serviceUsers, keyword) => {
   return [];
 };
 
-module.exports = {filterServicesGPS, filterServicesKeyword};
+module.exports = {filterServicesGPS, filterServicesKeyword, distanceComparator};

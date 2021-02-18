@@ -8,8 +8,7 @@ import Button from '@material-ui/core/Button';
 import Layout from '../hoc/Layout/Layout';
 import axios from 'axios';
 import Router from 'next/router';
-import {toast} from 'react-toastify';
-import SnackBar from "../components/SnackBar/SnackBar"
+const {snackBarSuccess, snackBarError} = require('../utils/notifications');
 
 const styles = {
   loginContainer: {
@@ -31,9 +30,6 @@ class forgotPassword extends React.Component {
 
     this.state = {
       email: '',
-      error: '',
-      message: '',
-      open: false,
     };
   }
 
@@ -52,14 +48,14 @@ class forgotPassword extends React.Component {
 
     axios.post('/myAlfred/api/users/forgotPassword', user)
       .then(res => {
-        this.setState({error: null, message: `Un email de récupération a été envoyé à l'adresse ${email}`})
+        snackBarSuccess(`Un email de récupération a été envoyé à l\'adresse ${email}`);
         setTimeout(
           () =>  Router.push({pathname: '/'}),
           2000
         )
       })
       .catch(res => {
-        this.setState({error: res.response.data.error, message:null})
+        snackBarError(res.response.data.error)
       });
 
 
@@ -100,10 +96,6 @@ class forgotPassword extends React.Component {
             </Grid>
           </Card>
         </Grid>
-        <SnackBar severity={"success"} message={message}
-            open={this.state.message} closeSnackBar={() => this.setState({message: null})}/>
-        <SnackBar severity={"error"} message={error}
-            open={this.state.error} closeSnackBar={() => this.setState({error: null})}/>
       </Layout>
     );
   };

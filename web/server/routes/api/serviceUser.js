@@ -22,6 +22,8 @@ const emptyPromise = require('../../../utils/promise');
 const {computeUrl} = require('../../../config/config');
 const {filterServicesGPS, filterServicesKeyword} = require('../../../utils/filters');
 const {GID_LEN} = require('../../../utils/consts');
+const parse = require('url-parse')
+const {distanceComparator}=require('../../../utils/filters')
 
 moment.locale('fr');
 const storage = multer.diskStorage({
@@ -560,10 +562,11 @@ router.post('/search', (req, res) => {
   const service = req.body.service;
   const prestation = req.body.prestation;
   const restrictPerimeter = req.body.perimeter;
+  const pro_only = req.body.pro_only;
 
   console.log(`Searching ${JSON.stringify(req.body)}`);
 
-  ServiceUser.find({}, 'prestations.prestation service_address location perimeter')
+  ServiceUser.find({}, 'prestations.prestation service_address location perimeter professional_access')
     .populate({path: 'user', select: 'firstname'})
     .populate({
       path: 'service', select: 'label s_label',
@@ -592,6 +595,10 @@ router.post('/search', (req, res) => {
         } catch (err) {
           sus = filterServicesGPS(sus, req.body.gps, restrictPerimeter);
         }
+      }
+      // Filter pro
+      if (pro_only) {
+        sus = sus.filter(su => su.professional_access)
       }
       const elapsed = process.hrtime(start2);
       console.log(`Fast Search found ${sus.length} services in ${elapsed[0]}s ${elapsed[1] / 1e6}ms`);
@@ -735,11 +742,18 @@ router.get('/all/nearOther/:id/:service', passport.authenticate('jwt', {session:
 
 });
 
-// @Route GET /myAlfred/api/serviceUser/home
-// View service for home
-// @Access private
+// @Route GET /myAlfred/api/serviceUser/home(?gps=XXX)
+// View service for home, sorted according to GPS if provided
+// @Access public
 router.get('/home', (req, res) => {
+  const query=parse(req.originalUrl, true).query
 
+  var gps=null
+  // Sort according to GPS coordinates
+  if (query.gps) {
+    gps=JSON.parse(query.gps)
+  }
+  
   const shuffleArray = array => {
     let i = array.length - 1;
     for (; i > 0; i--) {
@@ -752,13 +766,19 @@ router.get('/home', (req, res) => {
   };
 
 
-  ServiceUser.find({}, 'user service')
+  ServiceUser.find({}, 'user service service_address')
     // {e.service.picture} title={e.service.label} alfred={e.user.firstname} user={e.user} score={e.user.score} /
     .populate('user', 'picture firstname score billing_address')
     .populate('service', 'label picture')
     .then(services => {
       if (typeof services !== 'undefined' && services.length > 0) {
-        services = shuffleArray(services);
+        if (gps) {
+          services.sort(distanceComparator(gps))
+          services = _.uniqBy(services, su => su.user)
+        }
+        else {
+          services = shuffleArray(services);
+        }
         res.json(services.slice(0, 6));
       } else {
         return res.status(400).json({

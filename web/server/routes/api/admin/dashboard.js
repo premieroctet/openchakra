@@ -7,8 +7,9 @@ const bcrypt = require('bcryptjs');
 const moment = require('moment');
 
 const validateBillingInput = require('../../../validation/billing');
-const Billing = require('../../../models/Billing');
+const {validateCompanyProfile} = require('../../../validation/simpleRegister');
 const User = require('../../../models/User');
+const Company = require('../../../models/Company');
 const Calculating = require('../../../models/Calculating');
 const FilterPresentation = require('../../../models/FilterPresentation');
 const Job = require('../../../models/Job');
@@ -37,7 +38,7 @@ router.get('/billing/test', (req, res) => res.json({msg: 'Billing admin Works!'}
 // @Route POST /myAlfred/api/admin/billing/all
 // Add billing for prestation
 // @Access private
-router.post('/billing/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/billing/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const {errors, isValid} = validateBillingInput(req.body);
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -71,7 +72,7 @@ router.post('/billing/all', passport.authenticate('jwt', {session: false}), (req
 // @Route GET /myAlfred/api/admin/billing/all
 // View all billings system
 // @Access private
-router.get('/shops/extract', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/shops/extract', passport.authenticate('admin', {session: false}), (req, res) => {
   var result = [];
   User.find()
     .then(users => {
@@ -132,7 +133,7 @@ router.get('/prospect/tocontact/:category/:keywords?', (req, res) => {
 // @Route GET /myAlfred/api/admin/billing/all
 // View all billings system
 // @Access private
-router.get('/billing/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/billing/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -158,7 +159,7 @@ router.get('/billing/all', passport.authenticate('jwt', {session: false}), (req,
 // @Route GET /myAlfred/api/admin/billing/all/:id
 // View one billings system
 // @Access private
-router.get('/billing/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/billing/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -183,7 +184,7 @@ router.get('/billing/all/:id', passport.authenticate('jwt', {session: false}), (
 // @Route DELETE /myAlfred/api/admin/billing/:id
 // Delete one billing system
 // @Access private
-router.delete('/billing/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/billing/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -202,7 +203,7 @@ router.delete('/billing/all/:id', passport.authenticate('jwt', {session: false})
 // @Route PUT /myAlfred/api/admin/billing/all/:id
 // Update a billing system
 // @Access private
-router.put('/billing/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/billing/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -223,7 +224,7 @@ router.put('/billing/all/:id', passport.authenticate('jwt', {session: false}), (
 
 // @Route GET /myAlfred/api/admin/users/all
 // List all users
-router.get('/users/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/users/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -249,7 +250,7 @@ router.get('/users/all', passport.authenticate('jwt', {session: false}), (req, r
 
 // @Route GET /myAlfred/api/admin/users/all_light
 // List all users (firstname, name, email)
-router.get('/users/all_light', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/users/all_light', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -290,7 +291,7 @@ router.get('/serviceUsersMap', (req, res) => {
 
 // @Route POST /myAlfred/api/admin/loginAs
 // Login as user (for admins only)
-router.post('/loginAs', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/loginAs', passport.authenticate('admin', {session: false}), (req, res) => {
 
   const user = req.user;
   if (!user.is_admin) {
@@ -337,7 +338,7 @@ router.post('/loginAs', passport.authenticate('jwt', {session: false}), (req, re
 
 // @Route GET /myAlfred/api/admin/users/users
 // List all simple users
-router.get('/users/users', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/users/users', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -358,7 +359,7 @@ router.get('/users/users', passport.authenticate('jwt', {session: false}), (req,
 
 // @Route GET /myAlfred/api/admin/users/users/:id
 // Get one user
-router.get('/users/users/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/users/users/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -380,7 +381,7 @@ router.get('/users/users/:id', passport.authenticate('jwt', {session: false}), (
 // @Route PUT /myAlfred/api/admin/users/users/:id
 // Update a user
 // @Access private
-router.put('/users/users/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/users/users/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -400,7 +401,7 @@ router.put('/users/users/:id', passport.authenticate('jwt', {session: false}), (
 // @Route PUT /myAlfred/api/admin/users/users/idCard/:id
 // Validate id card for a user
 // @Access private
-router.put('/users/users/idCard/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/users/users/idCard/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -420,7 +421,7 @@ router.put('/users/users/idCard/:id', passport.authenticate('jwt', {session: fal
 // @Route PUT /myAlfred/api/admin/users/users/idCard/delete:id
 // Delete id card for a user
 // @Access private
-router.put('/users/users/idCard/delete/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/users/users/idCard/delete/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -440,7 +441,7 @@ router.put('/users/users/idCard/delete/:id', passport.authenticate('jwt', {sessi
 // @Route DELETE /myAlfred/api/admin/users/users/:id
 // Delete one user
 // @Access private
-router.delete('/users/users/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/users/users/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -461,7 +462,7 @@ router.delete('/users/users/:id', passport.authenticate('jwt', {session: false})
 
 // @Route GET /myAlfred/api/admin/users/alfred
 // List all alfred
-router.get('/users/alfred', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/users/alfred', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -484,7 +485,7 @@ router.get('/users/alfred', passport.authenticate('jwt', {session: false}), (req
 
 // @Route GET /myAlfred/api/admin/users/alfred/:id
 // Get one alfred
-router.get('/users/alfred/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/users/alfred/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -507,7 +508,7 @@ router.get('/users/alfred/:id', passport.authenticate('jwt', {session: false}), 
 // @Route PUT /myAlfred/api/admin/users/alfred/:id
 // Update an alfred
 // @Access private
-router.put('/users/alfred/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/users/alfred/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -533,7 +534,7 @@ router.put('/users/alfred/:id', passport.authenticate('jwt', {session: false}), 
 // @Route PUT /myAlfred/api/admin/users/alfred/idCard/:id
 // Validate id card for an alfred
 // @Access private
-router.put('/users/alfred/idCard/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/users/alfred/idCard/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -553,7 +554,7 @@ router.put('/users/alfred/idCard/:id', passport.authenticate('jwt', {session: fa
 // @Route PUT /myAlfred/api/admin/users/alfred/idCard/delete:id
 // Delete id card for an alfred
 // @Access private
-router.put('/users/alfred/idCard/delete/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/users/alfred/idCard/delete/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -573,7 +574,7 @@ router.put('/users/alfred/idCard/delete/:id', passport.authenticate('jwt', {sess
 // @Route DELETE /myAlfred/api/admin/users/alfred/:id
 // Delete one alfred
 // @Access private
-router.delete('/users/alfred/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/users/alfred/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -592,7 +593,7 @@ router.delete('/users/alfred/:id', passport.authenticate('jwt', {session: false}
 // @Route GET /myAlfred/api/admin/users/admin
 // List all admin
 // @Access private and for admin only
-router.get('/users/admin', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/users/admin', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -615,7 +616,7 @@ router.get('/users/admin', passport.authenticate('jwt', {session: false}), (req,
 // @Route GET /myAlfred/api/admin/users/admin/:id
 // Get one admin
 // @Access private and for admin only
-router.get('/users/admin/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/users/admin/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -637,7 +638,7 @@ router.get('/users/admin/:id', passport.authenticate('jwt', {session: false}), (
 // @Route POST /myAlfred/api/admin/users/admin
 // Add an admin
 // @Access private and for admin only
-router.post('/users/admin', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/users/admin', passport.authenticate('admin', {session: false}), (req, res) => {
   const {errors, isValid} = validateRegisterAdminInput(req.body);
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -689,7 +690,7 @@ router.post('/users/admin', passport.authenticate('jwt', {session: false}), (req
 // @Route PUT /myAlfred/api/admin/users/admin/:id
 // Update an admin
 // @Access private
-router.put('/users/admin/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/users/admin/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -716,7 +717,7 @@ router.put('/users/admin/:id', passport.authenticate('jwt', {session: false}), (
 // @Route DELETE /myAlfred/api/admin/users/admin/:id
 // Delete one admin
 // @Access private
-router.delete('/users/admin/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/users/admin/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -740,7 +741,7 @@ router.delete('/users/admin/:id', passport.authenticate('jwt', {session: false})
 // @Route POST /myAlfred/calculating/admin/all
 // Add calculating for prestation
 // @Access private
-router.post('/calculating/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/calculating/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const {errors, isValid} = validateBillingInput(req.body);
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -774,7 +775,7 @@ router.post('/calculating/all', passport.authenticate('jwt', {session: false}), 
 // @Route GET /myAlfred/api/admin/calculating/all
 // View all calculating system
 // @Access private
-router.get('/calculating/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/calculating/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -800,7 +801,7 @@ router.get('/calculating/all', passport.authenticate('jwt', {session: false}), (
 // @Route GET /myAlfred/api/admin/calculating/all/:id
 // View one calculating system
 // @Access private
-router.get('/calculating/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/calculating/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -825,7 +826,7 @@ router.get('/calculating/all/:id', passport.authenticate('jwt', {session: false}
 // @Route DELETE /myAlfred/api/admin/calculating/all/:id
 // Delete one calculating system
 // @Access private
-router.delete('/calculating/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/calculating/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -844,7 +845,7 @@ router.delete('/calculating/all/:id', passport.authenticate('jwt', {session: fal
 // @Route PUT /myAlfred/api/admin/calculating/all/:id
 // Update a calculating system
 // @Access private
-router.put('calculating/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('calculating/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -867,7 +868,7 @@ router.put('calculating/all/:id', passport.authenticate('jwt', {session: false})
 // @Route POST /myAlfred/api/admin/filterPresentation/all
 // Add filterPresentation for prestation
 // @Access private
-router.post('/filterPresentation/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/filterPresentation/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const {errors, isValid} = validateBillingInput(req.body);
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -901,7 +902,7 @@ router.post('/filterPresentation/all', passport.authenticate('jwt', {session: fa
 // @Route GET /myAlfred/api/admin/filterPresentation/all
 // View all filterPresentation
 // @Access private
-router.get('/filterPresentation/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/filterPresentation/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -927,7 +928,7 @@ router.get('/filterPresentation/all', passport.authenticate('jwt', {session: fal
 // @Route GET /myAlfred/api/admin/filterPresentation/all/:id
 // View one filterPresentation
 // @Access private
-router.get('/filterPresentation/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/filterPresentation/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -950,7 +951,7 @@ router.get('/filterPresentation/all/:id', passport.authenticate('jwt', {session:
 // @Route DELETE /myAlfred/api/admin/filterPresentation/all/:id
 // Delete one filterPresentation
 // @Access private
-router.delete('/filterPresentation/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/filterPresentation/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -969,7 +970,7 @@ router.delete('/filterPresentation/all/:id', passport.authenticate('jwt', {sessi
 // @Route PUT /myAlfred/api/admin/filterPresentation/all/:id
 // Update a filterPresentation
 // @Access private
-router.put('/filterPresentation/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/filterPresentation/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -991,7 +992,7 @@ router.put('/filterPresentation/all/:id', passport.authenticate('jwt', {session:
 // @Route POST /myAlfred/api/admin/job/all
 // Add job for prestation
 // @Access private
-router.post('/job/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/job/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const {errors, isValid} = validateBillingInput(req.body);
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -1025,7 +1026,7 @@ router.post('/job/all', passport.authenticate('jwt', {session: false}), (req, re
 // @Route GET /myAlfred/api/admin/job/all
 // View all job
 // @Access private
-router.get('/job/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/job/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1049,7 +1050,7 @@ router.get('/job/all', passport.authenticate('jwt', {session: false}), (req, res
 // @Route GET /myAlfred/api/admin/job/all/:id
 // View one job
 // @Access private
-router.get('/job/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/job/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1072,7 +1073,7 @@ router.get('/job/all/:id', passport.authenticate('jwt', {session: false}), (req,
 // @Route DELETE /myAlfred/api/admin/job/all/:id
 // Delete one job
 // @Access private
-router.delete('/job/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/job/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1091,7 +1092,7 @@ router.delete('/job/all/:id', passport.authenticate('jwt', {session: false}), (r
 // @Route PUT /myAlfred/api/admin/job/all/:id
 // Update a job
 // @Access private
-router.put('/job/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/job/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1113,7 +1114,7 @@ router.put('/job/all/:id', passport.authenticate('jwt', {session: false}), (req,
 // @Route POST /myAlfred/api/admin/searchFilter/all
 // Add searchFilter for prestation
 // @Access private
-router.post('/searchFilter/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/searchFilter/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const {errors, isValid} = validateBillingInput(req.body);
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -1147,7 +1148,7 @@ router.post('/searchFilter/all', passport.authenticate('jwt', {session: false}),
 // @Route GET /myAlfred/api/admin/searchFilter/all
 // View all searchFilter
 // @Access private
-router.get('/searchFilter/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/searchFilter/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1172,7 +1173,7 @@ router.get('/searchFilter/all', passport.authenticate('jwt', {session: false}), 
 // @Route GET /myAlfred/api/admin/searchFilter/all/:id
 // View one searchFilter
 // @Access private
-router.get('/searchFilter/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/searchFilter/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1195,7 +1196,7 @@ router.get('/searchFilter/all/:id', passport.authenticate('jwt', {session: false
 // @Route DELETE /myAlfred/api/admin/searchFilter/all/:id
 // Delete one searchFilter
 // @Access private
-router.delete('/searchFilter/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/searchFilter/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1214,7 +1215,7 @@ router.delete('/searchFilter/all/:id', passport.authenticate('jwt', {session: fa
 // @Route PUT /myAlfred/api/admin/searchFilter/all/:id
 // Update a searchFilter
 // @Access private
-router.put('/searchFilter/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/searchFilter/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1236,7 +1237,7 @@ router.put('/searchFilter/all/:id', passport.authenticate('jwt', {session: false
 // @Route POST /myAlfred/api/admin/tags/all
 // Add tags for service
 // @Access private
-router.post('/tags/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/tags/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const {errors, isValid} = validateBillingInput(req.body);
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -1272,7 +1273,7 @@ router.post('/tags/all', passport.authenticate('jwt', {session: false}), (req, r
 // @Route GET /myAlfred/api/admin/tags/all
 // View all tags
 // @Access private
-router.get('/tags/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/tags/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1298,7 +1299,7 @@ router.get('/tags/all', passport.authenticate('jwt', {session: false}), (req, re
 // @Route GET /myAlfred/api/admin/tags/all/:id
 // View one tag
 // @Access private
-router.get('/tags/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/tags/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1321,7 +1322,7 @@ router.get('/tags/all/:id', passport.authenticate('jwt', {session: false}), (req
 // @Route DELETE /myAlfred/api/admin/tags/all/:id
 // Delete one tag
 // @Access private
-router.delete('/tags/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/tags/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1340,7 +1341,7 @@ router.delete('/tags/all/:id', passport.authenticate('jwt', {session: false}), (
 // @Route PUT /myAlfred/api/admin/tags/all/:id
 // Update a tag
 // @Access private
-router.put('/tags/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/tags/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1391,7 +1392,7 @@ const uploadProspect = multer({
 // @Route POST /myAlfred/api/admin/category/all
 // Add category for prestation
 // @Access private
-router.post('/category/all', uploadCat.single('picture'), passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/category/all', uploadCat.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
   const {errors, isValid} = validateCategoryInput(req.body);
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -1429,7 +1430,7 @@ router.post('/category/all', uploadCat.single('picture'), passport.authenticate(
 // @Route POST /myAlfred/api/admin/category/editPicture/:id
 // Edit the picture of a category
 // @Access private
-router.post('/category/editPicture/:id', uploadCat.single('picture'), passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/category/editPicture/:id', uploadCat.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
 
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -1452,7 +1453,7 @@ router.post('/category/editPicture/:id', uploadCat.single('picture'), passport.a
 // @Route GET /myAlfred/api/admin/category/all
 // View all categories
 // @Access private
-router.get('/category/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/category/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1479,7 +1480,7 @@ router.get('/category/all', passport.authenticate('jwt', {session: false}), (req
 // @Route GET /myAlfred/api/admin/category/all/:id
 // View one category
 // @Access private
-router.get('/category/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/category/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1503,7 +1504,7 @@ router.get('/category/all/:id', passport.authenticate('jwt', {session: false}), 
 // @Route DELETE /myAlfred/api/admin/category/all/:id
 // Delete one category
 // @Access private
-router.delete('/category/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/category/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1522,7 +1523,7 @@ router.delete('/category/all/:id', passport.authenticate('jwt', {session: false}
 // @Route PUT /myAlfred/api/admin/category/all/:id
 // Update a category
 // @Access private
-router.put('/category/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/category/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1563,7 +1564,7 @@ const upload = multer({storage: storage});
 router.post('/equipment/all', upload.fields([{name: 'logo', maxCount: 1}, {
   name: 'logo2',
   maxCount: 1,
-}]), passport.authenticate('jwt', {session: false}), (req, res) => {
+}]), passport.authenticate('admin', {session: false}), (req, res) => {
   const {errors, isValid} = validateBillingInput(req.body);
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -1604,7 +1605,7 @@ router.post('/equipment/all', upload.fields([{name: 'logo', maxCount: 1}, {
 router.post('/equipment/editPicture/:id', upload.fields([{name: 'logo', maxCount: 1}, {
   name: 'logo2',
   maxCount: 1,
-}]), passport.authenticate('jwt', {session: false}), (req, res) => {
+}]), passport.authenticate('admin', {session: false}), (req, res) => {
 
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -1629,7 +1630,7 @@ router.post('/equipment/editPicture/:id', upload.fields([{name: 'logo', maxCount
 // @Route GET /myAlfred/api/admin/equipment/all
 // View all equipments
 // @Access private
-router.get('/equipment/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/equipment/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1655,7 +1656,7 @@ router.get('/equipment/all', passport.authenticate('jwt', {session: false}), (re
 // @Route GET /myAlfred/api/admin/equipment/all/:id
 // View one equipments
 // @Access private
-router.get('/equipment/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/equipment/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1678,7 +1679,7 @@ router.get('/equipment/all/:id', passport.authenticate('jwt', {session: false}),
 // @Route DELETE /myAlfred/api/admin/equipment/all/:id
 // Delete one equipment system
 // @Access private
-router.delete('/equipment/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/equipment/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1697,7 +1698,7 @@ router.delete('/equipment/all/:id', passport.authenticate('jwt', {session: false
 // @Route PUT /myAlfred/api/admin/equipment/all/:id
 // Update a equipment system
 // @Access private
-router.put('/equipment/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/equipment/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1731,7 +1732,7 @@ const uploadService = multer({storage: storageService});
 // @Route POST /myAlfred/api/admin/service/all
 // Add service for prestation
 // @Access private
-router.post('/service/all', uploadService.single('picture'), passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/service/all', uploadService.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
   console.log('Req.body is ' + JSON.stringify(req.body));
   const {errors, isValid} = validateServiceInput(req.body);
   const token = req.headers.authorization.split(' ')[1];
@@ -1782,7 +1783,7 @@ router.post('/service/all', uploadService.single('picture'), passport.authentica
 // @Route POST /myAlfred/api/admin/service/editPicture/:id
 // Edit picture
 // @Access private
-router.post('/service/editPicture/:id', uploadService.single('picture'), passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/service/editPicture/:id', uploadService.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
 
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -1803,7 +1804,7 @@ router.post('/service/editPicture/:id', uploadService.single('picture'), passpor
 // @Route GET /myAlfred/api/admin/service/all
 // View all service
 // @Access private
-router.get('/service/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/service/all', passport.authenticate('admin', {session: false}), (req, res) => {
   if (req.query.category != null) {
     let label = req.query.category;
     Service.find({category: mongoose.Types.ObjectId(label)})
@@ -1847,7 +1848,7 @@ router.get('/service/all', passport.authenticate('jwt', {session: false}), (req,
 // @Route GET /myAlfred/api/admin/service/all/:id
 // View one service
 // @Access private
-router.get('/service/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/service/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1874,7 +1875,7 @@ router.get('/service/all/:id', passport.authenticate('jwt', {session: false}), (
 // @Route DELETE /myAlfred/api/admin/service/all/:id
 // Delete one service
 // @Access private
-router.delete('/service/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/service/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -1893,7 +1894,7 @@ router.delete('/service/all/:id', passport.authenticate('jwt', {session: false})
 // @Route PUT /myAlfred/api/admin/service/all/:id
 // Update a service
 // @Access private
-router.put('/service/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/service/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
 
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -1959,7 +1960,7 @@ const uploadPrestation = multer({storage: storagePrestation});
 // @Route POST /myAlfred/api/admin/prestation/all
 // Add a prestation
 // @Access private
-router.post('/prestation/all', uploadPrestation.single('picture'), passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/prestation/all', uploadPrestation.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
   const {errors, isValid} = validatePrestationInput(req.body);
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -2015,7 +2016,7 @@ router.post('/prestation/all', uploadPrestation.single('picture'), passport.auth
 // @Route POST /myAlfred/api/admin/prestation/editPicture/:id
 // Edit picture
 // @Access private
-router.post('/prestation/editPicture/:id', uploadPrestation.single('picture'), passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/prestation/editPicture/:id', uploadPrestation.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
 
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -2036,7 +2037,7 @@ router.post('/prestation/editPicture/:id', uploadPrestation.single('picture'), p
 // @Route GET /myAlfred/api/admin/prestation/all
 // Get all prestations
 // @Access public
-router.get('/prestation/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/prestation/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -2064,7 +2065,7 @@ router.get('/prestation/all', passport.authenticate('jwt', {session: false}), (r
 // @Route GET /myAlfred/api/admin/prestation/all/:id
 // View one prestation
 // @Access public
-router.get('/prestation/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/prestation/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -2097,7 +2098,7 @@ router.get('/prestation/all/:id', passport.authenticate('jwt', {session: false})
 // @Route DELETE /myAlfred/api/admin/prestation/all/:id
 // Delete one prestation
 // @Access private
-router.delete('/prestation/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/prestation/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -2116,7 +2117,7 @@ router.delete('/prestation/all/:id', passport.authenticate('jwt', {session: fals
 // @Route PUT /myAlfred/api/admin/prestation/all/:id
 // Update a prestation
 // @Access private
-router.put('/prestation/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/prestation/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -2175,7 +2176,7 @@ const uploadBanner = multer({storage: storageBanner});
 // @Route POST /myAlfred/api/admin/shopBanner/all
 // Add picture for shop banner
 // @Access private
-router.post('/shopBanner/all', uploadBanner.single('picture'), passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/shopBanner/all', uploadBanner.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
   const {errors, isValid} = validateBillingInput(req.body);
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -2210,7 +2211,7 @@ router.post('/shopBanner/all', uploadBanner.single('picture'), passport.authenti
 // @Route POST /myAlfred/api/admin/shopBanner/editPicture/:id
 // Edit picture
 // @Access private
-router.post('/shopBanner/editPicture/:id', uploadBanner.single('picture'), passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/shopBanner/editPicture/:id', uploadBanner.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
 
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
@@ -2230,7 +2231,7 @@ router.post('/shopBanner/editPicture/:id', uploadBanner.single('picture'), passp
 
 // @Route GET /myAlfred/api/admin/shopBanner/all
 // Get all picture banner
-router.get('/shopBanner/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/shopBanner/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -2253,7 +2254,7 @@ router.get('/shopBanner/all', passport.authenticate('jwt', {session: false}), (r
 
 // @Route GET /myAlfred/api/admin/shopBanner/all/:id
 // View one shop banner
-router.get('/shopBanner/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/shopBanner/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -2278,7 +2279,7 @@ router.get('/shopBanner/all/:id', passport.authenticate('jwt', {session: false})
 // @Route DELETE /myAlfred/api/admin/shopBanner/all/:id
 // Delete one shop banner
 // @Access private
-router.delete('/shopBanner/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/shopBanner/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -2297,7 +2298,7 @@ router.delete('/shopBanner/all/:id', passport.authenticate('jwt', {session: fals
 // @Route PUT /myAlfred/api/admin/shopBanner/all/:id
 // Update a shop banner
 // @Access private
-router.put('/shopBanner/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/shopBanner/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -2319,7 +2320,7 @@ router.put('/shopBanner/all/:id', passport.authenticate('jwt', {session: false})
 // @Route POST /myAlfred/api/admin/options/all
 // Add options
 // @Access private
-router.post('/options/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/options/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -2350,7 +2351,7 @@ router.post('/options/all', passport.authenticate('jwt', {session: false}), (req
 // @Route GET /myAlfred/api/admin/options/all
 // View all options
 // @Access private
-router.get('/options/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/options/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -2373,7 +2374,7 @@ router.get('/options/all', passport.authenticate('jwt', {session: false}), (req,
 // @Route GET /myAlfred/api/admin/options/all/:id
 // View one option
 // @Access private
-router.get('/options/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/options/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -2396,7 +2397,7 @@ router.get('/options/all/:id', passport.authenticate('jwt', {session: false}), (
 // @Route DELETE /myAlfred/api/admin/options/all/:id
 // Delete one option
 // @Access private
-router.delete('/options/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/options/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -2415,7 +2416,7 @@ router.delete('/options/all/:id', passport.authenticate('jwt', {session: false})
 // @Route PUT /myAlfred/api/admin/options/all/:id
 // Update an option
 // @Access private
-router.put('/options/all/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/options/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -2482,7 +2483,7 @@ router.get('/ages', (req, res) => {
 // @Route GET /myAlfred/api/admin/statistics
 // Get satistics (users, shops, services)
 // @Access private
-//router.get('/statistics',passport.authenticate('jwt',{session:false}),(req,res)=> {
+//router.get('/statistics',passport.authenticate('admin',{session:false}),(req,res)=> {
 router.get('/statistics', (req, res) => {
   //
   //const token = req.headers.authorization.split(' ')[1];
@@ -2518,7 +2519,7 @@ router.get('/statistics', (req, res) => {
 // @Route GET /myAlfred/api/admin/booking/all
 // Get all bookings
 // @Access private
-router.get('/booking/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/booking/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -2543,7 +2544,7 @@ router.get('/booking/all', passport.authenticate('jwt', {session: false}), (req,
 // @Route GET /myAlfred/api/admin/prospect/all
 // Get all prospect
 // @Access private
-router.get('/prospect/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/prospect/all', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -2582,16 +2583,140 @@ router.get('/prospect/all', passport.authenticate('jwt', {session: false}), (req
   }
 });
 
-router.get('/prospect/fields', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/prospect/fields', passport.authenticate('admin', {session: false}), (req, res) => {
   const schema_fields = Object.keys(Prospect.schema.obj).sort()
   const schema_required = schema_fields.filter(k => Prospect.schema.obj[k].required && !Prospect.schema.obj[k].default)
   res.json({mandatory: schema_required, fields: schema_fields})
 })
 
+// companies
+
+// @Route GET /myAlfred/api/admin/companies/all
+// View all companies
+// @Access private
+router.get('/companies/all', passport.authenticate('admin', {session: false}), (req, res) => {
+
+      Company.find()
+        .sort({'name': 1})
+        .lean()
+        .then(companies => {
+          if (!companies) {
+            return res.status(400).json({msg: 'No company found'});
+          }
+          User.find({ company : {$exists: true, $ne: null}}, 'company')
+            .then( users => {
+              companies.forEach(company => {
+                company.employees = users.filter( u => u.company.toString() == company._id.toString()).length
+              });
+              res.json(companies);
+            })
+        })
+        .catch(err => res.status(404).json({company: 'No company found'}));
+});
+
+// @Route GET /myAlfred/api/admin/companies/:id
+// View one company
+// @Access private
+router.get('/companies/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+    Company.findById(req.params.id)
+      .then(company => {
+        if (!company) {
+          return res.status(400).json({msg: 'No company found'});
+        }
+        res.json(company);
+
+      })
+});
+
+// @Route POST /myAlfred/api/admin/companies
+// Adds or update a company
+// @Access private
+router.post('/companies', passport.authenticate('admin', {session: false}), (req, res) => {
+
+    const {isValid, errors} = validateCompanyProfile(req.body)
+    if (!isValid) {
+      console.log('Errors:' + JSON.stringify(errors));
+      return res.status(400).json(errors);
+    }
+
+    const promise=req.body._id ? Company.findByIdAndUpdate(req.body._id, req.body, { new: true})
+                  :
+                  new Company(req.body).save()
+    promise
+      .then(company => {
+        if (!company) {
+          return res.status(400).json({msg: 'No company found'});
+        }
+        console.log(JSON.stringify(company))
+        if (req.body.admin_email) {
+          User.findOneAndUpdate({email: req.body.admin_email}, { company:company._id})
+            .then( () => res.json(company))
+            .catch (err => console.error(err))
+        }
+        else {
+          res.json(company);
+        }
+      })
+});
+
+// @Route PUT /myAlfred/api/admin/companies/all/:id
+// Update a company
+// @Access private
+router.put('/companies/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+
+  const token = req.headers.authorization.split(' ')[1];
+  const decode = jwt.decode(token);
+  const admin = decode.is_admin;
+
+  if (admin) {
+    const {errors, isValid} = validateServiceInput(req.body);
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    Service.findByIdAndUpdate({_id: req.params.id},
+      {
+        $set: {
+          label: req.body.label, equipments: req.body.equipments, category: mongoose.Types.ObjectId(req.body.category),
+          s_label: normalize(req.body.label),
+          tags: req.body.tags,
+          description: req.body.description, majoration: req.body.majoration, location: req.body.location,
+          travel_tax: req.body.travel_tax, pick_tax: req.body.pick_tax,
+          professional_access: req.body.professional_access, particular_access: req.body.particular_access
+        },
+
+      }, {new: false})
+      .then(service => {
+        // Update prestations if service access changed
+        updates={}
+        if (service.professional_access!=req.body.professional_access) {
+          updates['professional_access']=req.body.professional_access
+        }
+        if (service.particular_access!=req.body.particular_access) {
+          updates['particular_access']=req.body.particular_access
+        }
+        if (Object.keys(updates).length>0) {
+          Prestation.updateMany({service: service._id}, {$set : updates})
+            .then (res => console.log(`Prestations updated:${JSON.stringify(res)}`))
+            .catch (err => console.error(`Prestations update error:${err}`))
+        }
+        res.json(null);
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(404).json({servicenotfound: 'No service found'})
+      });
+  } else {
+    res.status(403).json({msg: 'Access denied'});
+  }
+
+});
+
+
 // @Route GET /myAlfred/api/admin/prospect/all
 // Get all prospect
 // @Access private
-router.post('/prospect/add', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/prospect/add', passport.authenticate('admin', {session: false}), (req, res) => {
   uploadProspect.single('prospects')(req, res, err => {
     if (err) {
       console.error(err)
@@ -2665,7 +2790,7 @@ router.post('/prospect/add', passport.authenticate('jwt', {session: false}), (re
 // @Route POST /myAlfred/api/admin/kyc_validate/:alfred_id
 // Get all prospect
 // @Access private
-router.post('/kyc_validate/:alfred_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/kyc_validate/:alfred_id', passport.authenticate('admin', {session: false}), (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decode = jwt.decode(token);
   const admin = decode.is_admin;
@@ -2686,5 +2811,5 @@ router.post('/kyc_validate/:alfred_id', passport.authenticate('jwt', {session: f
   }
 });
 
-passport.authenticate('jwt', {session: false}),
+passport.authenticate('admin', {session: false}),
   module.exports = router;

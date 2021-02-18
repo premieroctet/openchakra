@@ -88,6 +88,7 @@ class home extends React.Component {
                     <Typography style={{fontSize: 30}}>Base de données</Typography>
                   </Grid>
                   <Link href="/dashboard/users/all"><a>Comptes</a></Link><br/>
+                  <Link href="/dashboard/companies/all"><a>Entreprises</a></Link><br/>
                   <Link href="/dashboard/category/all"><a>Catégories</a></Link><br/>
                   <Link href="/dashboard/billing/all"><a>Méthodes de facturation</a></Link><br/>
                   <Link href="/dashboard/filterPresentation/all"><a>Filtres de présentation</a></Link><br/>

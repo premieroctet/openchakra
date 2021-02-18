@@ -21,8 +21,8 @@ class ProfileCalendar extends React.Component {
     }
   }
 
-  static getInitialProps({query: {user, indexAccount}}) {
-    return {user: user, index: indexAccount};
+  static getInitialProps({query: {user}}) {
+    return {user: user};
   }
 
   loadAvailabilities = () => {
@@ -65,7 +65,7 @@ class ProfileCalendar extends React.Component {
   };
 
   render() {
-    const {user, classes, index}=this.props;
+    const {user, classes}=this.props;
     const readOnly = this.props.user!==getLoggedUserId();
 
     if (!user) {
@@ -75,12 +75,12 @@ class ProfileCalendar extends React.Component {
     return (
       <React.Fragment>
         <Hidden only={['xs']}>
-          <ProfileLayout user={user} index={index}>
+          <ProfileLayout user={user}>
             {this.content(classes, user, readOnly)}
           </ProfileLayout>
         </Hidden>
         <Hidden  only={['lg', 'xl','sm', 'md']}>
-          <LayoutMobileProfile user={user} index={index} currentIndex={2}>
+          <LayoutMobileProfile user={user} currentIndex={2}>
             {this.content(classes)}
           </LayoutMobileProfile>
         </Hidden>
