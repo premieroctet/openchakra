@@ -26,7 +26,7 @@ const {getLoggedUserId}=require('../utils/functions')
 import withWidth from '@material-ui/core/withWidth';
 import InfiniteScroll from 'react-infinite-scroll-component'
 const SearchResults=withSlide(withGrid(CardService));
-const {is_b2b_site} =require('../utils/context')
+const {is_b2b_style} =require('../utils/context')
 
 moment.locale('fr');
 
@@ -308,7 +308,7 @@ class SearchPage extends React.Component {
       }
     }
 
-    filters.pro_only = is_b2b_site() || (user && user.is_employee)
+    filters.pro_only = is_b2b_style()
 
     axios.post('/myAlfred/api/serviceUser/search', filters)
       .then(res => {

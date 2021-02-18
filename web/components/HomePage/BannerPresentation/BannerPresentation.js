@@ -5,7 +5,7 @@ import {BANNER_PRESENTATION, B2B_BANNER_PRESENTATION} from '../../../utils/i18n'
 import Link from 'next/link';
 import styles from '../../../static/css/components/BannerPresentation/BannerPresentation'
 import withStyles from "@material-ui/core/styles/withStyles";
-import {is_b2b_site} from "../../../utils/context.js";
+import {is_b2b_style} from "../../../utils/context.js";
 
 class BannerPresentation extends React.Component {
   constructor(props) {
@@ -15,40 +15,25 @@ class BannerPresentation extends React.Component {
 
   render() {
     const {classes} = this.props;
-    console.log(is_b2b_site())
+
+    const title = is_b2b_style() ? B2B_BANNER_PRESENTATION.title : BANNER_PRESENTATION.title
+    const text = is_b2b_style() ? B2B_BANNER_PRESENTATION.text : BANNER_PRESENTATION.text
     return (
       <Grid className={classes.bannerPresentationMainStyle}>
-        {
-          is_b2b_site() ?
-            <Grid className={classes.bannerPresentationContainerDescription}>
-              <Grid>
-                <h1 className={classes.bannerPresentationTitle}>{B2B_BANNER_PRESENTATION.title}</h1>
-              </Grid>
-              <Grid className={classes.bannerPresentationContainerText}>
-                <h2 className={classes.bannerPresentationText}>{B2B_BANNER_PRESENTATION.text}</h2>
-              </Grid>
-              <Grid>
-                <Link href={'/search?search=1'}>
-                  <Button variant="contained"
-                          classes={{root: classes.bannerPresentationButton}}>{BANNER_PRESENTATION.button}</Button>
-                </Link>
-              </Grid>
-            </Grid> :
-            <Grid className={classes.bannerPresentationContainerDescription}>
-              <Grid>
-                <h1 className={classes.bannerPresentationTitle}>{BANNER_PRESENTATION.title}</h1>
-              </Grid>
-              <Grid className={classes.bannerPresentationContainerText}>
-                <h2 className={classes.bannerPresentationText}>{BANNER_PRESENTATION.text}</h2>
-              </Grid>
-              <Grid>
-                <Link href={'/search?search=1'}>
-                  <Button variant="contained"
-                          classes={{root: classes.bannerPresentationButton}}>{BANNER_PRESENTATION.button}</Button>
-                </Link>
-              </Grid>
-            </Grid>
-        }
+        <Grid className={classes.bannerPresentationContainerDescription}>
+          <Grid>
+            <h1 className={classes.bannerPresentationTitle}>{title}</h1>
+          </Grid>
+          <Grid className={classes.bannerPresentationContainerText}>
+            <h2 className={classes.bannerPresentationText}>{text}</h2>
+          </Grid>
+          <Grid>
+            <Link href={'/search?search=1'}>
+              <Button variant="contained"
+                      classes={{root: classes.bannerPresentationButton}}>{BANNER_PRESENTATION.button}</Button>
+            </Link>
+          </Grid>
+        </Grid>
       </Grid>
     );
   }

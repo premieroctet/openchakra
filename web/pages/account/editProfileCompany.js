@@ -58,11 +58,7 @@ class editProfileCompany extends React.Component{
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname);
-    if(!is_b2b_admin()){
-      Router.push({pathname: '/'});
-    }else{
-      this.loadUser()
-    }
+    this.loadUser()
   }
 
   loadUser = () => {
@@ -77,6 +73,9 @@ class editProfileCompany extends React.Component{
           firstName: user.firstname,
           name: user.name
         });
+        if(!is_b2b_admin(user)){
+          Router.push({pathname: '/'});
+        }
       })
       .catch(err => {
           console.error(err);
@@ -152,6 +151,7 @@ class editProfileCompany extends React.Component{
       }
     ).then( res =>{
       snackBarSuccess("Profil modifié avec succès");
+      this.loadUser()
     }).catch( err => {
       snackBarError(err.response.data);
     })
