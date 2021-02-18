@@ -25,7 +25,7 @@ const is_b2b_admin = user => {
   /**
   const is_admin = Boolean(user) && user.roles && user.roles.includes('ADMIN')
   if (!is_admin) {
-    console.log(`Not B2B admin : user:${Boolean(user)}, roles:${user ? user.roles : ''}`)
+    console.debug(`Not B2B admin : user:${Boolean(user)}, roles:${user ? user.roles : ''}`)
     return false
   }
   */
@@ -41,7 +41,7 @@ const is_b2b_buyer = user => {
   /**
   const is_admin = Boolean(user) && user.roles && user.roles.includes('BUYER')
   if (!is_admin) {
-    console.log(`Not B2B buyer : user:${Boolean(user)}, roles:${user ? user.roles : ''}`)
+    console.debug(`Not B2B buyer : user:${Boolean(user)}, roles:${user ? user.roles : ''}`)
     return false
   }
   */

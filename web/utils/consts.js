@@ -407,7 +407,7 @@ const COMPANY_ACTIVITY = {
 }
 
 const ROLES={
-  'ADMIN': 'administrateur',
+  'ADMIN': 'Administrateur',
   'BUYER': 'Acheteur',
   'EMPLOYEE': 'Collaborateur',
 }
