@@ -465,5 +465,8 @@ export default theme => ({
   rootIconButton:{
     paddingTop:0,
     paddingBottom: 0
+  },
+  navbarPaperWidth:{
+    width: 600
   }
 })

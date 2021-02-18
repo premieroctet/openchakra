@@ -678,7 +678,7 @@ router.post('/login', (req, res) => {
               firstname: user.firstname,
               is_admin: user.is_admin,
               is_alfred: user.is_alfred,
-              role: role, 
+              role: role,
             }; // Create JWT payload
             // Sign token
             jwt.sign(payload, keys.secretOrKey, (err, token) => {
@@ -762,7 +762,7 @@ router.get('/users', (req, res) => {
 router.get('/users/roles/:email', (req, res) => {
 
   console.log(`Request roles for email ${req.params.email}`)
-  User.find({ email: req.params.email}, 'rroles')
+  User.find({email: req.params.email}, 'roles')
     .then(users => {
       if (!users) {
         return res.status(400).json({msg: 'No user found'});

@@ -87,4 +87,7 @@ export default theme => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
+  formControl:{
+    width: '100%'
+  }
 })

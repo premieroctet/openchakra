@@ -20,6 +20,10 @@ const {snackBarError}=require('../../utils/notifications')
 const {is_development}=require('../../config/config')
 const {PROVIDERS} = require('../../utils/consts');
 const {ENABLE_GF_LOGIN} = require('../../config/config');
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 class LogIn extends React.Component {
   constructor(props) {
@@ -30,11 +34,20 @@ class LogIn extends React.Component {
       password: '',
       errors: {},
       showPassword: false,
+      role: ''
     };
   }
 
   onChange = e => {
-    this.setState({[e.target.name]: e.target.value});
+    const {name, value} = e.target;
+    if(name === 'username'){
+      axios.get(`/myAlfred/api/users/roles/wilfrid.albersdorfer@gmail.com`).then( res =>{
+        console.log(res)
+      }).catch( err => {
+        console.error(err)
+      })
+    }
+    this.setState({[name]: value});
   };
 
   onSubmit = e => {
@@ -79,7 +92,7 @@ class LogIn extends React.Component {
 
   render() {
     const {classes, callRegister, id} = this.props;
-    const {errors, username, password, showPassword} = this.state;
+    const {errors, username, password, showPassword, role} = this.state;
     return (
       <Grid className={classes.fullContainer}>
         <Grid style={{width: '100%'}}>
@@ -115,73 +128,92 @@ class LogIn extends React.Component {
               :
               null
             }
-            <Grid className={classes.containerDialogContent}>
-              <form onSubmit={this.onSubmit} style={{marginBottom: 15}}>
-                <Grid className={classes.margin}>
-                  <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-                    <Grid item>
-                      <MailOutlineIcon className={classes.colorIcon}/>
-                    </Grid>
-                    <Grid item className={classes.widthTextField}>
-                      <Input
-                        label="Email"
-                        placeholder="Email"
-                        style={{width: '100%', marginTop: 16, marginBottom: 8}}
-                        type="email"
-                        name="username"
-                        value={username}
-                        onChange={this.onChange}
-                        error={errors.username}
-                      />
-                      <em>{errors.username}</em>
-                    </Grid>
+            <Grid container spacing={3} className={classes.containerDialogContent}>
+              <Grid item className={classes.margin}>
+                <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
+                  <Grid item>
+                    <MailOutlineIcon className={classes.colorIcon}/>
+                  </Grid>
+                  <Grid item className={classes.widthTextField}>
+                    <Input
+                      label="Email"
+                      placeholder="Email"
+                      style={{width: '100%', marginTop: 16, marginBottom: 8}}
+                      name="username"
+                      value={username}
+                      onChange={this.onChange}
+                      error={errors.username}
+                    />
+                    <em>{errors.username}</em>
                   </Grid>
                 </Grid>
-                <Grid className={classes.margin}>
-                  <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-                    <Grid item>
-                      <LockOpenOutlinedIcon className={classes.colorIcon}/>
-                    </Grid>
-                    <Grid item className={classes.widthTextField}>
-                      <Input
-                        id="standard-with-placeholder"
-                        label="Mot de passe"
-                        placeholder="Mot de passe"
-                        style={{width: '100%', marginTop: 16, marginBottom: 8}}
-                        type={showPassword ? "text" : "password"}
-                        name="password"
-                        value={password}
-                        onChange={this.onChange}
-                        error={errors.password}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={this.handleClickShowPassword}
-                              onMouseDown={this.handleMouseDownPassword}
-                            >
-                              {showPassword ? <Visibility /> : <VisibilityOff />}
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                      />
-                      <em>{errors.password}</em>
-                    </Grid>
+              </Grid>
+              <Grid item className={classes.margin}>
+                <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
+                  <Grid item>
+                    <LockOpenOutlinedIcon className={classes.colorIcon}/>
+                  </Grid>
+                  <Grid item className={classes.widthTextField}>
+                    <Input
+                      id="standard-with-placeholder"
+                      label="Mot de passe"
+                      placeholder="Mot de passe"
+                      style={{width: '100%', marginTop: 16, marginBottom: 8}}
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      value={password}
+                      onChange={this.onChange}
+                      error={errors.password}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={this.handleClickShowPassword}
+                            onMouseDown={this.handleMouseDownPassword}
+                          >
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                    <em>{errors.password}</em>
                   </Grid>
                 </Grid>
-                <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                  <Button type="submit" variant="contained" color="primary" style={{width: '100%', color: 'white'}}>
+              </Grid>
+              <Grid item className={classes.margin}>
+                <Grid container className={classes.genericContainer}>
+                  <Grid item className={classes.widthTextField}>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel id="demo-simple-select-label">Rôle</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={role}
+                        onChange={this.onChange}
+                      >
+                        <MenuItem value={10}>Admin</MenuItem>
+                        <MenuItem value={20}>User</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item className={classes.margin}>
+                <Grid container className={classes.genericContainer}>
+                  <Button onClick={this.onSubmit} variant="contained" color="primary" style={{width: '100%', color: 'white'}}>
                     Connexion
                   </Button>
                 </Grid>
-              </form>
-            </Grid>
-            <Grid item style={{display: 'flex', flexDirection: 'column', marginBottom: '10%'}}>
-              <Link href={'/forgotPassword'}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Mot
-                de passe oublié ?</a></Link>
-              <a color="primary" onClick={callRegister}
-                 style={{textDecoration: 'none', color: '#2FBCD3', cursor: 'pointer'}}>Pas encore inscrit ?
-                Inscrivez-vous !</a>
+              </Grid>
+              <Grid item className={classes.margin}>
+                <Grid container className={classes.genericContainer} style={{flexDirection: 'column'}}>
+                  <Link href={'/forgotPassword'}><a color="primary" style={{textDecoration: 'none', color: '#2FBCD3'}}>Mot
+                    de passe oublié ?</a></Link>
+                  <a color="primary" onClick={callRegister}
+                     style={{textDecoration: 'none', color: '#2FBCD3', cursor: 'pointer'}}>Pas encore inscrit ?
+                    Inscrivez-vous !</a>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
