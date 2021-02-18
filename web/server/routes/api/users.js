@@ -759,7 +759,7 @@ router.get('/users', (req, res) => {
 
 // @Route GET /myAlfred/api/users/roles/:email
 // Get roles for an email's user
-router.get('/users/roles/:email', (req, res) => {
+router.get('/roles/:email', (req, res) => {
 
   console.log(`Request roles for email ${req.params.email}`)
   User.find({ email: req.params.email}, 'roles')
