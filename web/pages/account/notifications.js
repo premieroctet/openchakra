@@ -487,6 +487,11 @@ class notifications extends React.Component {
 
   render() {
     const {classes} = this.props;
+    const {user} = this.state;
+
+    if (!user) {
+      return null
+    }
 
     return (
       <React.Fragment>

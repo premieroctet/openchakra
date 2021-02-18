@@ -46,7 +46,7 @@ class editProfileCompany extends React.Component{
       firstName: '',
       name: '',
       company: {},
-      invoice_company: {},
+      billing_address: {},
     }
 
   }
@@ -80,7 +80,6 @@ class editProfileCompany extends React.Component{
       .catch(err => {
           console.error(err);
           if (err.response.status === 401 || err.response.status === 403) {
-            clearAuthenticationToken();
             Router.push({pathname: '/'});
           }
         },
@@ -96,7 +95,7 @@ class editProfileCompany extends React.Component{
         siret: company.siret,
         tva: company.vat_number,
         descriptionCompany: company.description,
-        invoice_company: company.billing_address,
+        billing_address: company.billing_address,
         vat_subject: company.vat_subject
 
       })
@@ -120,7 +119,7 @@ class editProfileCompany extends React.Component{
     }
   };
 
-  handleInvoice = ({suggestion}) =>{
+  onBillingAdressChange = ({suggestion}) =>{
     const newAddress = suggestion ?
       {
         city: suggestion.city,
@@ -134,7 +133,7 @@ class editProfileCompany extends React.Component{
       }
       :
       null;
-    this.setState({ invoice_company : newAddress })
+    this.setState({ billing_address : newAddress })
   };
 
   onSubmitProfilCompany = () =>{
@@ -145,8 +144,8 @@ class editProfileCompany extends React.Component{
       description: this.state.descriptionCompany,
       name: this.state.companyName,
       siret: this.state.siret,
-      vat_number: !this.state.vat_subject ? '' : this.state.tva,
-      billing_address: this.state.invoice_company,
+      vat_number: this.state.vat_subject ? this.state.tva : '',
+      billing_address: this.state.billing_address,
       vat_subject: this.state.vat_subject
       }
     ).then( res =>{
@@ -187,7 +186,7 @@ class editProfileCompany extends React.Component{
   };
 
   content = (classes) => {
-    const{activityArea, sizeCompany, descriptionCompany, companyName, siret, tva, vat_subject, position, email, firstName, name, user, invoice_company, placeholderAlgolia} = this.state;
+    const{activityArea, sizeCompany, descriptionCompany, companyName, siret, tva, vat_subject, position, email, firstName, name, user, billing_address, placeholderAlgolia} = this.state;
 
 
     return(
@@ -218,7 +217,7 @@ class editProfileCompany extends React.Component{
           <Grid item lg={6} md={12} sm={12} xs={12} className={classes.containerAlgolia}>
             <AlgoliaPlaces
               key={moment()}
-              placeholder={invoice_company ? `${invoice_company.address}, ${invoice_company.zip_code}, ${invoice_company.country}` : 'Adresse de facturation'}
+              placeholder={billing_address ? `${billing_address.address}, ${billing_address.zip_code}, ${billing_address.country}` : 'Adresse de facturation'}
               options={{
                 appId: 'plKATRG826CP',
                 apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
@@ -227,7 +226,7 @@ class editProfileCompany extends React.Component{
                 type: 'address',
               }}
               className={classes.editProfilCompanyAlgoliaPlace}
-              onChange={(suggestion) => this.handleInvoice(suggestion)}
+              onChange={this.onBillingAdressChange}
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
@@ -428,6 +427,10 @@ class editProfileCompany extends React.Component{
   render() {
     const {classes, index} = this.props;
     const {user} = this.state;
+
+    if (!user) {
+      return null
+    }
 
     return (
       <React.Fragment>

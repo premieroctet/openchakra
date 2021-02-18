@@ -632,7 +632,12 @@ class trustAndVerification extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {message} = this.state
+    const {message, user} = this.state
+
+    if (!user) {
+      return null
+    }
+
     return (
       <React.Fragment>
         <Helmet>
