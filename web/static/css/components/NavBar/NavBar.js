@@ -2,7 +2,7 @@ export default theme => ({
   navbarSearchContainer:{
     width: '50%',
     marginTop: '5vh',
-    [theme.breakpoints.down('md')]:{
+    [theme.breakpoints.down('lg')]:{
       width: '70%',
     },
     [theme.breakpoints.down('sm')]:{
