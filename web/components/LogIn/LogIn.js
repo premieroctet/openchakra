@@ -17,7 +17,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 const {snackBarError}=require('../../utils/notifications')
 const {is_development}=require('../../config/config')
-const {PROVIDERS} = require('../../utils/consts');
+const {PROVIDERS, ROLES} = require('../../utils/consts');
 const {ENABLE_GF_LOGIN} = require('../../config/config');
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -25,6 +25,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 const {is_b2b_admin, is_b2b_style, is_b2b_employee, is_b2b_site} = require('../../utils/context');
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined';
+import {COMPANY_ACTIVITY} from "../../utils/consts";
 
 
 class LogIn extends React.Component {
@@ -50,7 +51,7 @@ class LogIn extends React.Component {
         this.setState({roles: result}, () => this.controllerUser());
       }).catch( err => {
         console.error(err);
-        this.setState({showRoles: false, roleSelect: null})
+        this.setState({roleSelect: null, roles: ''})
       })
     }
     this.setState({[name]: value});
@@ -61,7 +62,7 @@ class LogIn extends React.Component {
     if(is_b2b_site()){
       let newRoles = roles.filter(result =>  result !== 'EMPLOYEE');
       if(newRoles.length > 1){
-        this.setState({roles: newRoles, showRoles: true})
+        this.setState({roles: newRoles})
       }else{
         this.setState({roleSelect: newRoles})
       }
@@ -76,10 +77,6 @@ class LogIn extends React.Component {
       password: this.state.password,
       role: this.state.roleSelect
     };
-
-    if (is_development()) {
-      user.role = 'ADMIN'
-    }
 
     axios.post('/myAlfred/api/users/login', user)
       .then(res => {
@@ -110,7 +107,8 @@ class LogIn extends React.Component {
 
   render() {
     const {classes, callRegister, id} = this.props;
-    const {errors, username, password, showPassword, roles, roleSelect, showRoles} = this.state;
+    const {errors, username, password, showPassword, roles, roleSelect} = this.state;
+    const showRoles = is_b2b_site() && roles.length > 1;
 
     return (
       <Grid className={classes.fullContainer}>
@@ -217,8 +215,8 @@ class LogIn extends React.Component {
                             name={'roleSelect'}
                           >
                             {
-                              roles.map((res, index) =>(
-                                  <MenuItem key={index} value={res}>{res}</MenuItem>
+                              Object.keys(roles).map((role,index) =>(
+                                  <MenuItem key={index} value={roles[role]}>{ROLES[roles[role]]}</MenuItem>
                                 ))
                             }
                           </Select>
