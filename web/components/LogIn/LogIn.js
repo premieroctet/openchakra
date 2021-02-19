@@ -10,7 +10,6 @@ import axios from 'axios';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
 import OAuth from '../OAuth/OAuth';
-
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -38,7 +37,7 @@ class LogIn extends React.Component {
       errors: {},
       showPassword: false,
       roles: '',
-      roleSelect: '',
+      roleSelect: null,
       showRoles: false
     };
   }
@@ -50,8 +49,8 @@ class LogIn extends React.Component {
         let result = res.data;
         this.setState({roles: result}, () => this.controllerUser());
       }).catch( err => {
-        console.error(err)
-        this.setState({showRoles: false, roleSelect: ''})
+        console.error(err);
+        this.setState({showRoles: false, roleSelect: null})
       })
     }
     this.setState({[name]: value});
@@ -66,8 +65,6 @@ class LogIn extends React.Component {
       }else{
         this.setState({roleSelect: newRoles})
       }
-    }else{
-      console.log('problem')
     }
   };
 
@@ -77,6 +74,7 @@ class LogIn extends React.Component {
     const user = {
       username: this.state.username,
       password: this.state.password,
+      role: this.state.roleSelect
     };
 
     if (is_development()) {
@@ -97,7 +95,7 @@ class LogIn extends React.Component {
       .catch(err => {
         console.error(err);
         if (err.response) {
-	  snackBarError(err.response.data)
+	        snackBarError(err.response.data)
           this.setState({errors: err.response.data});
         }
       });
@@ -234,7 +232,7 @@ class LogIn extends React.Component {
 
               <Grid item className={classes.margin}>
                 <Grid container className={classes.genericContainer}>
-                  <Button onClick={this.onSubmit} disabled={showRoles && roleSelect === '' || password === ''} variant="contained" color="primary" style={{width: '100%', color: 'white'}}>
+                  <Button onClick={this.onSubmit} disabled={showRoles && roleSelect === null || password === ''} variant="contained" color="primary" style={{width: '100%', color: 'white'}}>
                     Connexion
                   </Button>
                 </Grid>
