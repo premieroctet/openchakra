@@ -35,6 +35,7 @@ router.get('/all', (req, res) => {
 // View all pro service
 router.get('/pro', (req, res) => {
   Service.find({ professional_access: true}, 'label')
+  .sort({'label': 1})
     .then(services => {
       if (typeof services !== 'undefined' && services.length > 0) {
         res.json(services);

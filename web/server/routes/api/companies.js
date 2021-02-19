@@ -296,8 +296,8 @@ router.put('/allowedService', passport.authenticate('jwt', {session: false}), (r
 
 // @Route DELETE /myAlfred/api/companies/allowedService
 // Delete allowed service for current company
-router.delete('/allowedService', passport.authenticate('jwt', {session: false}), (req, res) => {
-  ServiceAccess.deleteOne({service: req.body.service_id, company_allow: req.user.company})
+router.delete('/allowedService/:service_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+  ServiceAccess.deleteOne({service: req.params.service_id, company_allow: req.user.company})
     .then(serviceAccess => {
       if (!serviceAccess) {
         return res.status(400).json({msg: 'No company found'});

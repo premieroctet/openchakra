@@ -4,6 +4,7 @@ import Select2 from 'react-select'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 const {is_b2b_admin}=require('../../utils/context')
 import axios from 'axios';
+var _ = require('lodash')
 
 class CompanyDashboard extends React.Component {
 
@@ -15,7 +16,7 @@ class CompanyDashboard extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     setAxiosAuthentication()
     axios.get('/myAlfred/api/users/current')
       .then(response => {
@@ -32,7 +33,7 @@ class CompanyDashboard extends React.Component {
           .catch(err => { console.error(err) });
         axios.get('/myAlfred/api/companies/allowedServices')
           .then(response => {
-            this.setState({allowed_services: response.data});
+            this.setState({allowed_services: response.data.map( s => { return { value: s._id, label: s.label}})});
           })
           .catch(err => { console.error(err) });
 
@@ -47,14 +48,15 @@ class CompanyDashboard extends React.Component {
 
   onChange = event => {
     event = event || []
-    this.setState({allowed_services: event})
+    this.setState({allowed_services: _.sortBy(event, e => e.label)})
     let removed = this.state.allowed_services.filter(x => !event.includes(x)); // calculates diff
     let added = event.filter(x => !this.state.allowed_services.includes(x)); // calculates diff
     const method=removed.length>0 ? axios.delete : added.length>0 ? axios.put : null
     if (method) {
       const service_id = removed.length>0 ? removed[0].value : added[0].value
       setAxiosAuthentication()
-      method('/myAlfred/api/companies/allowedService', { service_id : service_id})
+      const url= removed.length>0 ? `/myAlfred/api/companies/allowedService/${service_id}`:`/myAlfred/api/companies/allowedService`
+      method(url, { service_id : service_id})
         .then( res => console.log(res))
         .catch( err => console.error(err))
     }
