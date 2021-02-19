@@ -25,7 +25,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 const {is_b2b_admin, is_b2b_style, is_b2b_employee, is_b2b_site} = require('../../utils/context');
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined';
-import {COMPANY_ACTIVITY} from "../../utils/consts";
+import {COMPANY_ACTIVITY, EMPLOYEE} from "../../utils/consts";
 
 
 class LogIn extends React.Component {
@@ -45,7 +45,7 @@ class LogIn extends React.Component {
 
   onChange = e => {
     const {name, value} = e.target;
-    if(name === 'username' && is_b2b_site()){
+    if(name === 'username'){
       axios.get(`/myAlfred/api/users/roles/${e.target.value}`).then( res =>{
         let result = res.data;
         this.setState({roles: result}, () => this.controllerUser());
@@ -59,7 +59,7 @@ class LogIn extends React.Component {
 
   controllerUser = () =>{
     const {roles} = this.state;
-    let newRoles = roles.filter(result =>  result !== ROLES.EMPLOYEE);
+    let newRoles = roles.filter(result =>  result !== EMPLOYEE);
 
     if(is_b2b_site()){
       if(newRoles.length > 1){
@@ -68,8 +68,8 @@ class LogIn extends React.Component {
         this.setState({roleSelect: newRoles})
       }
     }else{
-      if(newRoles.length > 0){
-        this.setState({roleSelect: ROLES.EMPLOYEE})
+      if(roles.length > 0){
+        this.setState({roleSelect: EMPLOYEE})
       }
     }
   };

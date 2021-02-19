@@ -24,7 +24,7 @@ const multer = require('multer');
 const axios = require('axios');
 const {computeUrl} = require('../../../config/config');
 const emptyPromise = require('../../../utils/promise.js');
-
+const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient,install_hooks} = require('../../../utils/mangopay');
 
 
@@ -664,6 +664,11 @@ router.post('/login', (req, res) => {
 
       if (user.is_employee && !role) {
         errors.role = 'Vous devez sélectioner un rôle';
+        return res.status(400).json(errors);
+      }
+
+      if (user.is_employee && !ROLES[role]) {
+        errors.role = `Rôle ${role} inconnu : ${Object.values(ROLES).join(',')} attendu`;
         return res.status(400).json(errors);
       }
 
