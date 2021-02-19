@@ -24,6 +24,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+const {is_b2b_admin, is_b2b_style, is_b2b_employee, is_b2b_site} = require('../../utils/context');
+import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined';
+
 
 class LogIn extends React.Component {
   constructor(props) {
@@ -34,20 +37,38 @@ class LogIn extends React.Component {
       password: '',
       errors: {},
       showPassword: false,
-      role: ''
+      roles: '',
+      roleSelect: '',
+      showRoles: false
     };
   }
 
   onChange = e => {
     const {name, value} = e.target;
     if(name === 'username'){
-      axios.get(`/myAlfred/api/users/roles/wilfrid.albersdorfer@gmail.com`).then( res =>{
-        console.log(res)
+      axios.get(`/myAlfred/api/users/roles/${e.target.value}`).then( res =>{
+        let result = res.data;
+        this.setState({roles: result}, () => this.controllerUser());
       }).catch( err => {
         console.error(err)
+        this.setState({showRoles: false, roleSelect: ''})
       })
     }
     this.setState({[name]: value});
+  };
+
+  controllerUser = () =>{
+    const {roles} = this.state;
+    if(is_b2b_site()){
+      let newRoles = roles.filter(result =>  result !== 'EMPLOYEE');
+      if(newRoles.length > 1){
+        this.setState({roles: newRoles, showRoles: true})
+      }else{
+        this.setState({roleSelect: newRoles})
+      }
+    }else{
+      console.log('problem')
+    }
   };
 
   onSubmit = e => {
@@ -92,7 +113,8 @@ class LogIn extends React.Component {
 
   render() {
     const {classes, callRegister, id} = this.props;
-    const {errors, username, password, showPassword, role} = this.state;
+    const {errors, username, password, showPassword, roles, roleSelect, showRoles} = this.state;
+
     return (
       <Grid className={classes.fullContainer}>
         <Grid style={{width: '100%'}}>
@@ -180,27 +202,39 @@ class LogIn extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item className={classes.margin}>
-                <Grid container className={classes.genericContainer}>
-                  <Grid item className={classes.widthTextField}>
-                    <FormControl className={classes.formControl}>
-                      <InputLabel id="demo-simple-select-label">Rôle</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={role}
-                        onChange={this.onChange}
-                      >
-                        <MenuItem value={10}>Admin</MenuItem>
-                        <MenuItem value={20}>User</MenuItem>
-                      </Select>
-                    </FormControl>
+              {showRoles ?
+                <Grid item className={classes.margin}>
+                  <Grid container className={classes.genericContainer}>
+                    <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
+                      <Grid item>
+                        <GroupOutlinedIcon className={classes.colorIcon}/>
+                      </Grid>
+                      <Grid item className={classes.widthTextField}>
+                        <FormControl className={classes.formControl}>
+                          <InputLabel id="demo-simple-select-label">Rôle</InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={roleSelect}
+                            onChange={this.onChange}
+                            name={'roleSelect'}
+                          >
+                            {
+                              roles.map((res, index) =>(
+                                  <MenuItem key={index} value={res}>{res}</MenuItem>
+                                ))
+                            }
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </Grid>
+                </Grid> : null
+              }
+
               <Grid item className={classes.margin}>
                 <Grid container className={classes.genericContainer}>
-                  <Button onClick={this.onSubmit} variant="contained" color="primary" style={{width: '100%', color: 'white'}}>
+                  <Button onClick={this.onSubmit} disabled={showRoles && roleSelect === '' || password === ''} variant="contained" color="primary" style={{width: '100%', color: 'white'}}>
                     Connexion
                   </Button>
                 </Grid>
