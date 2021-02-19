@@ -366,7 +366,6 @@ class UserServicesPreview extends React.Component {
         totalPrestations += count[p._id] * p.price;
         if (p.prestation.cesu_eligible && this.state.use_cesu) {
           totalCesu += count[p._id] * p.price;
-          totalCesu += count[p._id] * p.price * COMM_CLIENT;
         }
       }
     });
