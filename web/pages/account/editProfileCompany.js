@@ -71,7 +71,8 @@ class editProfileCompany extends React.Component{
           user: user,
           email: user.email,
           firstName: user.firstname,
-          name: user.name
+          name: user.name,
+          position: user.position,
         });
         if(!is_b2b_admin(user)){
           Router.push({pathname: '/'});
