@@ -1,5 +1,5 @@
-const {clearAuthenticationToken}=require('../../utils/authentication')
-const {setAxiosAuthentication}=require('../../utils/authentication')
+const {clearAuthenticationToken} = require('../../utils/authentication')
+const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
@@ -25,15 +25,17 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 import Hidden from "@material-ui/core/Hidden";
 import LayoutMobile from "../../hoc/Layout/LayoutMobile";
+const {is_b2b_admin}=require('../../utils/context')
 
 moment.locale('fr');
-
 
 class myAddresses extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      pro_mode: false,
       user: null,
+      company_name : null,
       suggestion_current:null,
       new_label: '',
       edit_label: '',
@@ -48,15 +50,13 @@ class myAddresses extends React.Component {
     this.onNewAddressChange = this.onNewAddressChange.bind(this);
   }
 
-  setState=(st, cb) => {
-    console.error(`Setting state:${Object.keys(st)}`)
-    super.setState(st, cb)
+  static getInitialProps({query: {indexAccount}}) {
+    return {index: indexAccount};
   }
 
   loadData = () => {
     setAxiosAuthentication()
-    axios
-      .get('/myAlfred/api/users/current')
+    axios.get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data;
         this.setState({
@@ -67,16 +67,41 @@ class myAddresses extends React.Component {
           edit_label: '',
           selected_address: null,
           delete_address_id: '',
-
         });
+        this.address_get_url = '/myAlfred/api/users/profile/address/'
+        this.main_address_put_url = '/myAlfred/api/users/profile/billingAddress'
+        this.service_address_put_url = '/myAlfred/api/users/profile/serviceAddress'
+        this.service_address_edit_url = '/myAlfred/api/users/profile/address/'
+        this.service_address_delete_url = '/myAlfred/api/users/profile/address/'
+        if (is_b2b_admin(user)) {
+          axios.get('/myAlfred/api/companies/current')
+            .then(res => {
+              let company = res.data;
+              this.setState({
+                company_name: company.name,
+                billing_address: company.billing_address,
+                service_address: company.service_address,
+                new_label: '',
+                edit_label: '',
+                selected_address: null,
+                delete_address_id: '',
+                pro_mode : true,
+              });
+              this.address_get_url = '/myAlfred/api/companies/profile/address/'
+              this.main_address_put_url = '/myAlfred/api/companies/profile/billingAddress'
+              this.service_address_put_url = '/myAlfred/api/companies/profile/serviceAddress'
+              this.service_address_edit_url = '/myAlfred/api/companies/profile/address/'
+              this.service_address_delete_url = '/myAlfred/api/companies/profile/address/'
+                  })
+        }
       })
       .catch(err => {
-          if (err.response.status === 401 || err.response.status === 403) {
-            clearAuthenticationToken()
-            Router.push({pathname: '/'});
-          }
-        },
-      );
+        console.error(err)
+        if (err.response.status === 401 || err.response.status === 403) {
+          clearAuthenticationToken()
+          Router.push({pathname: '/'});
+        }
+      });
   }
 
   componentDidMount() {
@@ -97,19 +122,19 @@ class myAddresses extends React.Component {
   };
 
   onNewAddressChange({query, rawAnswer, suggestion, suggestionIndex}) {
-    this.setState({ suggestion_new: suggestion })
+    this.setState({suggestion_new: suggestion})
   }
 
   onSecondaryAddressChange({query, rawAnswer, suggestion, suggestionIndex}) {
-    this.setState({ suggestion_edit: suggestion })
+    this.setState({suggestion_edit: suggestion})
   }
 
   onMainAddressChange({suggestion}) {
-    this.setState({ suggestion_current: suggestion })
+    this.setState({suggestion_current: suggestion})
   }
 
   onEditionClick = id => {
-    axios.get('/myAlfred/api/users/profile/address/' + id)
+    axios.get(this.address_get_url + id)
       .then(res => {
         let result = res.data;
         this.setState({
@@ -118,12 +143,15 @@ class myAddresses extends React.Component {
           addNewMode: false,
         });
       })
-      .catch();
+      .catch( err => {
+        console.error(err)
+        snackBarError(err.response.data)
+      });
   };
 
   onSubmitMain = e => {
     e.preventDefault()
-    const {suggestion_current}=this.state
+    const {suggestion_current} = this.state
 
     const address = {
       address: suggestion_current.name,
@@ -136,17 +164,20 @@ class myAddresses extends React.Component {
       }
     };
     axios
-      .put('/myAlfred/api/users/profile/billingAddress', address)
+      .put(this.main_address_put_url, address)
       .then(res => {
         snackBarSuccess('Adresse principale modifiée');
         this.loadData()
       })
-      .catch();
+      .catch( err => {
+        console.error(err)
+        snackBarError(err.response.data)
+      });
   };
 
   onSubmitNew = e => {
     e.preventDefault();
-    const {suggestion_new}=this.state
+    const {suggestion_new} = this.state
     const newAddress = {
       address: suggestion_new.name,
       city: suggestion_new.city,
@@ -156,14 +187,16 @@ class myAddresses extends React.Component {
       lng: suggestion_new.latlng.lng,
       label: this.state.new_label,
     };
-    axios.put('/myAlfred/api/users/profile/serviceAddress', newAddress)
+    axios.put(this.service_address_put_url, newAddress)
       .then(() => {
         snackBarSuccess('Adresse ajoutée');
         this.setState({addNewMode: false});
         this.loadData();
       })
-      .catch();
-
+      .catch( err => {
+        console.error(err)
+        snackBarError(err.response.data)
+      });
   };
 
   addressLabel = addr => {
@@ -175,48 +208,54 @@ class myAddresses extends React.Component {
 
   onSubmitSecondary = (e, id) => {
     e.preventDefault()
-    const {suggestion_edit, selected_address}=this.state
+    const {suggestion_edit, selected_address} = this.state
     const editAddress = suggestion_edit ?
-    {
-      address: suggestion_edit.name,
-      city: suggestion_edit.city,
-      zip_code: suggestion_edit.postcode,
-      lat: suggestion_edit.latlng.lat,
-      lng: suggestion_edit.latlng.lng,
-      label: this.state.edit_label,
-    }
-    :
-    {
-      address: selected_address.address,
-      city: selected_address.city,
-      zip_code: selected_address.zip_code,
-      lat: selected_address.lat,
-      lng: selected_address.lng,
-      label: this.state.edit_label,
-    };
+      {
+        address: suggestion_edit.name,
+        city: suggestion_edit.city,
+        zip_code: suggestion_edit.postcode,
+        lat: suggestion_edit.latlng.lat,
+        lng: suggestion_edit.latlng.lng,
+        label: this.state.edit_label,
+      }
+      :
+      {
+        address: selected_address.address,
+        city: selected_address.city,
+        zip_code: selected_address.zip_code,
+        lat: selected_address.lat,
+        lng: selected_address.lng,
+        label: this.state.edit_label,
+      };
 
-    axios.put('/myAlfred/api/users/profile/address/' + id, editAddress)
+    axios.put(this.service_address_edit_url + id, editAddress)
       .then(() => {
         snackBarSuccess('Adresse modifiée avec succès');
         this.setState({selected_address: null});
         this.loadData()
 
       })
-      .catch();
+      .catch( err => {
+        console.error(err)
+        snackBarError(err.response.data)
+      });
   };
 
   deleteAddress = (id) => {
-    axios.delete('/myAlfred/api/users/profile/address/' + id)
+    axios.delete(this.service_address_delete_url + id)
       .then(() => {
         snackBarSuccess('Adresse supprimée')
         this.setState({selected_address:null, open: false, delete_address_id: ''});
         this.loadData()
       })
-      .catch();
+      .catch( err => {
+        console.error(err)
+        snackBarError(err.response.data)
+      });
   };
 
-  modalDeleteAddress = () =>{
-    return(
+  modalDeleteAddress = () => {
+    return (
       <Dialog
         open={this.state.open}
         onClose={this.handleClose}
@@ -242,25 +281,25 @@ class myAddresses extends React.Component {
   };
 
   content = (classes) => {
-    const {billing_address, selected_address}=this.state
+    const {billing_address, selected_address, pro_mode, company_name}=this.state
     return(
       <Grid style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
         <Grid style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
           <Grid>
-            <h2>Mes adresses</h2>
+            <h2>{ pro_mode ? 'Mes sites' : 'Mes adresses'}</h2>
           </Grid>
           <Grid>
-            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ici, vous pouvez gérer vos adresses.</Typography>
+            <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ici, vous pouvez gérer {pro_mode ? `les sites de ${company_name}` : 'vos adresses'}.</Typography>
           </Grid>
         </Grid>
         <Grid>
-          <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+          <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
         </Grid>
         <Grid>
           <Grid>
-            <h3>Mon adresse principale</h3>
+            <h3>{ pro_mode ? 'Mon siège social' : 'Mon adresse principale'}</h3>
           </Grid>
-          { this.addressLabel(billing_address) }
+          {this.addressLabel(billing_address)}
         </Grid>
         <Grid style={{marginTop: '5vh'}}>
           <Grid container spacing={3}>
@@ -278,29 +317,33 @@ class myAddresses extends React.Component {
               />
             </Grid>
             <Grid item xs={12} lg={12} xl={12} sm={12} md={12} style={{marginTop: '5vh'}}>
-              <Button disabled={!this.state.suggestion_current} size={'large'} type={'submit'} variant="contained" className={classes.buttonSave} onClick={this.onSubmitMain}>
+              <Button disabled={!this.state.suggestion_current} size={'large'} type={'submit'} variant="contained"
+                      className={classes.buttonSave} onClick={this.onSubmitMain}>
                 Valider
               </Button>
             </Grid>
           </Grid>
           <Grid>
-            <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
+            <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
           </Grid>
           <Grid>
             <Grid>
-              <h3>Mon carnet d'adresses</h3>
+              <h3>{ pro_mode ? 'Autres sites' : "Mon carnet d'adresses"}</h3>
             </Grid>
             <Grid>
-              <Typography style={{color: 'rgba(39,37,37,35%)'}}>Ajoutez plusieurs adresses et gagnez du temps.</Typography>
+              <Typography style={{color: 'rgba(39,37,37,35%)'}}>
+                {is_b2b_admin() ? 'Ajoutez vos sites et gagnez du temps' :
+                  'Ajoutez plusieurs adresses et gagnez du temps.'}
+              </Typography>
             </Grid>
           </Grid>
           <Grid container style={{marginTop: '5vh'}}>
             {this.state.service_address.map((e, index) => (
               <Grid key={index} style={{width: '100%'}}>
                 <Grid>
-                  <Grid container style={{display: 'flex', alignItems: 'center' }}>
+                  <Grid container style={{display: 'flex', alignItems: 'center'}}>
                     <Grid item xl={3} xs={6}>
-                      { selected_address && selected_address._id==e._id ?
+                      {selected_address && selected_address._id == e._id ?
                         <TextField
                           id="standard-name"
                           value={this.state.edit_label}
@@ -323,36 +366,37 @@ class myAddresses extends React.Component {
                       </Grid>
                       <Grid>
                         <IconButton aria-label="delete" onClick={() => this.onDeleteClick(e._id)}>
-                          <DeleteForeverIcon />
+                          <DeleteForeverIcon/>
                         </IconButton>
                       </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>
-                  { this.addressLabel(e) }
-                </Typography>
-                { selected_address && selected_address._id==e._id ?
-                  <AlgoliaPlaces
-                    placeholder='Modifiez votre adresse'
-                    options={{
-                      appId: 'plKATRG826CP',
-                      apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                      language: 'fr',
-                      countries: ['fr'],
-                      type: 'address',
+                  <Typography style={{color: 'rgba(39,37,37,35%)'}}>
+                    {this.addressLabel(e)}
+                  </Typography>
+                  {selected_address && selected_address._id == e._id ?
+                    <AlgoliaPlaces
+                      placeholder='Modifiez votre adresse'
+                      options={{
+                        appId: 'plKATRG826CP',
+                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
+                        language: 'fr',
+                        countries: ['fr'],
+                        type: 'address',
 
-                    }}
-                    onChange={(suggestion) => this.onSecondaryAddressChange(suggestion)}
-                  />
-                  :
-                  null
-                }
+                      }}
+                      onChange={(suggestion) => this.onSecondaryAddressChange(suggestion)}
+                    />
+                    :
+                    null
+                  }
                 </Grid>
-                { selected_address && selected_address._id==e._id ?
+                {selected_address && selected_address._id == e._id ?
                   <Grid item xs={12}>
-                    <Button variant="contained" className={classes.buttonSave}  onClick={(event) => this.onSubmitSecondary(event, this.state.selected_address._id)}>
+                    <Button variant="contained" className={classes.buttonSave}
+                            onClick={(event) => this.onSubmitSecondary(event, this.state.selected_address._id)}>
                       Enregistrer
                     </Button>
                   </Grid>
@@ -361,10 +405,10 @@ class myAddresses extends React.Component {
                 }
               </Grid>
             ))}
-            </Grid>
-            <Grid>
-              <Divider style={{height : 2, width: '100%', margin :'5vh 0px'}}/>
-            </Grid>
+          </Grid>
+          <Grid>
+            <Divider style={{height: 2, width: '100%', margin: '5vh 0px'}}/>
+          </Grid>
           <Grid container style={{marginTop: '5vh', marginBottom: '2vh'}}>
             <Button
               size={'large'}
@@ -373,7 +417,7 @@ class myAddresses extends React.Component {
               className={classes.buttonSave}
               onClick={() => this.setState({addNewMode: !this.state.addNewMode, selected_address: null})}
             >
-              Ajouter une adresse
+              { pro_mode ? 'Ajouter un site' : 'Ajouter une adresse'}
             </Button>
           </Grid>
           {this.state.addNewMode ?
@@ -386,7 +430,7 @@ class myAddresses extends React.Component {
                   name={'new_label'}
                   placeholder={'Ecrire ici'}
                   variant={'outlined'}
-                  label={'Nom de l\'adresse'}
+                  label={ pro_mode ? 'Nom du site' : "Intitulé de l\'adresse"}
                   className={classes.textField}
                 />
               </Grid>
@@ -404,13 +448,14 @@ class myAddresses extends React.Component {
                 />
               </Grid>
               <Grid item xs={12} style={{marginBottom: '12vh'}}>
-                <Button disabled={!(this.state.suggestion_new&&this.state.new_label)} variant="contained" className={classes.buttonSave} onClick={this.onSubmitNew}>
+                <Button disabled={!(this.state.suggestion_new && this.state.new_label)} variant="contained"
+                        className={classes.buttonSave} onClick={this.onSubmitNew}>
                   Ajouter
                 </Button>
               </Grid>
             </Grid>
             : null}
-          </Grid>
+        </Grid>
       </Grid>
 
     )
@@ -418,6 +463,11 @@ class myAddresses extends React.Component {
 
   render() {
     const {classes} = this.props;
+    const {user} = this.state;
+
+    if (!user) {
+      return null
+    }
 
     return (
       <React.Fragment>
@@ -436,7 +486,7 @@ class myAddresses extends React.Component {
             {this.content(classes)}
           </LayoutMobile>
         </Hidden>
-          {this.state.open ? this.modalDeleteAddress() : null}
+        {this.state.open ? this.modalDeleteAddress() : null}
       </React.Fragment>
     );
   };

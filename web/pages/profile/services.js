@@ -81,6 +81,10 @@ class ProfileServices extends React.Component {
     const {classes}=this.props;
     const {shop, user}=this.state;
 
+    if (!user) {
+      return null
+    }
+    
     return (
       <React.Fragment>
         <Hidden only={['xs']}>

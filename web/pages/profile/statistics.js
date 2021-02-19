@@ -410,6 +410,10 @@ class ProfileStatistics extends React.Component {
     const {classes, user}=this.props;
     const {serviceUser} = this.state;
 
+    if (!user) {
+      return null
+    }
+    
     return (
       <React.Fragment>
         <React.Fragment>

@@ -625,7 +625,11 @@ class paymentMethod extends React.Component {
 
   render() {
     const {classes} = this.props;
-    const {deletedial, addCreditCard, accounts, clickAdd, clickDelete, errors} = this.state;
+    const {deletedial, addCreditCard, accounts, clickAdd, clickDelete, errors, user} = this.state;
+
+    if (!user) {
+      return null
+    }
 
     return (
       <React.Fragment>

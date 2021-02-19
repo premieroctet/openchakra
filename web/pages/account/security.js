@@ -511,6 +511,10 @@ class security extends React.Component {
     const {classes} = this.props;
     const {last_login, open, open2, user} = this.state;
 
+    if (!user) {
+      return null
+    }
+
     return (
       <Fragment>
         <Helmet>
