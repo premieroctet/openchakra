@@ -792,6 +792,29 @@ router.get('/users/:id', (req, res) => {
     .catch(err => res.status(404).json({user: 'No user found'}));
 });
 
+// @Route DELETE /myAlfred/api/users/:id/role/:role
+// Get one user
+router.delete('/:id/role/:role', passport.authenticate('jwt', {session: false}), (req, res) => {
+  User.findById(req.params.id)
+    .then(user => {
+      if (!user) {
+        return res.status(400).json({msg: 'No user found'});
+      }
+      user.roles=(user.roles||[]).filter( r => r!=req.params.role)
+      if (user.roles.length==0) {
+        user.roles = null
+        user.company = null
+      }
+      user.save()
+        .then(() => res.json(user))
+        .catch( err => {
+          console.log(err);
+          res.status(404).json({user: 'Erreur à la suppression du rôle'})
+        })
+    })
+    .catch(err => res.status(404).json({user: 'No user found'}));
+});
+
 // @Route PUT /myAlfred/api/users/users/becomeAlfred
 // Update one user is_alfred's status
 router.put('/users/becomeAlfred', passport.authenticate('jwt', {session: false}), (req, res) => {
