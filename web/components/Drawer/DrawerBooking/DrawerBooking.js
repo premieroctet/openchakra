@@ -162,7 +162,7 @@ class DrawerBooking extends React.Component{
                         shrink: true,
                       }}
                       InputProps={{
-                        inputComponent:(inputRef) => {
+                        inputComponent:(inputref) => {
                           return (
                             <DatePicker
                               selected={date}
@@ -187,7 +187,7 @@ class DrawerBooking extends React.Component{
                         shrink: true,
                       }}
                       InputProps={{
-                        inputComponent:(inputRef) => {
+                        inputComponent:(inputref) => {
                           return (
                             <DatePicker
                               selected={time}

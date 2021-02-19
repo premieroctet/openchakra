@@ -313,10 +313,10 @@ class MobileNavbar extends React.Component{
                       label={SEARCHBAR.where}
                       variant={'outlined'}
                       InputProps={{
-                        inputComponent: (inputRef) => {
+                        inputComponent: (inputref) => {
                           return (
                             <AlgoliaPlaces
-                              {...inputRef}
+                              {...inputref}
                               placeholder={''}
                               className={classes.navbarAlgoliaPlace}
                               options={{
