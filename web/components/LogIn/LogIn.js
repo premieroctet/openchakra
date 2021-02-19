@@ -59,12 +59,17 @@ class LogIn extends React.Component {
 
   controllerUser = () =>{
     const {roles} = this.state;
+    let newRoles = roles.filter(result =>  result !== ROLES.EMPLOYEE);
+
     if(is_b2b_site()){
-      let newRoles = roles.filter(result =>  result !== 'EMPLOYEE');
       if(newRoles.length > 1){
         this.setState({roles: newRoles})
       }else{
         this.setState({roleSelect: newRoles})
+      }
+    }else{
+      if(newRoles.length > 0){
+        this.setState({roleSelect: ROLES.EMPLOYEE})
       }
     }
   };
