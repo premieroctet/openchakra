@@ -44,7 +44,7 @@ class LogIn extends React.Component {
 
   onChange = e => {
     const {name, value} = e.target;
-    if(name === 'username'){
+    if(name === 'username' && is_b2b_site()){
       axios.get(`/myAlfred/api/users/roles/${e.target.value}`).then( res =>{
         let result = res.data;
         this.setState({roles: result}, () => this.controllerUser());
