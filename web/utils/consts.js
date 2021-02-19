@@ -406,10 +406,14 @@ const COMPANY_ACTIVITY = {
    'SERVICE': "Services aux particuliers, collectivités, entreprises",
 }
 
-const ROLES={
-  'ADMIN': 'Administrateur',
-  'BUYER': 'Acheteur',
-  'EMPLOYEE': 'Collaborateur',
+const ADMIN='ADMIN'
+const BUYER='BUYER'
+const EMPLOYEE='EMPLOYEE'
+
+const ROLES = {
+  ADMIN: 'Administrateur',
+  BUYER: 'Acheteur',
+  EMPLOYEE: 'Collaborateur',
 }
 
 module.exports = {
@@ -418,5 +422,5 @@ module.exports = {
   MODES, GOOGLE_PROVIDER, FACEBOOK_PROVIDER, AMAZON_HOST, LOCAL_HOST,
   SKILLS, LANGUAGES, MAX_DESCRIPTION_LENGTH, BOOK_STATUS, EXPIRATION_DELAY,
   CLOSE_NOTIFICATION_DELAY, ACCOUNT_MIN_AGE, COMPANY_SIZE, COMPANY_ACTIVITY,
-  ROLES
+  ADMIN, BUYER, EMPLOYEE, ROLES
 };
