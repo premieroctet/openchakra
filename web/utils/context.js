@@ -1,6 +1,12 @@
 const {getAuthToken} = require('./authentication')
+<<<<<<< HEAD
 const {ADMIN, BUYER} = require('./consts')
 
+||||||| 2cc30d73
+
+=======
+const {ADMIN, BUYER} = require('./consts')
+>>>>>>> e85001d3c229c8a3a4e92d7748209de5bf00a001
 const is_b2b_site = () => {
 
   if (typeof localStorage == 'undefined') {
@@ -22,8 +28,8 @@ const is_b2b_employee = user => {
  - is logged under ADMIN role
  */
 
+ /**
 const is_b2b_admin = user => {
-  /**
   const is_admin = Boolean(user) && user.roles && user.roles.includes(ADMIN)
   if (!is_admin) {
     console.debug(`Not B2B admin : user:${Boolean(user)}, roles:${user ? user.roles : ''}`)
