@@ -87,7 +87,6 @@ class LogIn extends React.Component {
         setAxiosAuthentication()
         axios.put('/myAlfred/api/users/account/lastLogin')
           .then(data => {
-            let path = localStorage.getItem('path');
             this.props.login();
           })
           .catch(err => console.error(err));
@@ -95,7 +94,7 @@ class LogIn extends React.Component {
       .catch(err => {
         console.error(err);
         if (err.response) {
-	        snackBarError(err.response.data)
+	        snackBarError(err.response.data);
           this.setState({errors: err.response.data});
         }
       });
@@ -229,7 +228,6 @@ class LogIn extends React.Component {
                   </Grid>
                 </Grid> : null
               }
-
               <Grid item className={classes.margin}>
                 <Grid container className={classes.genericContainer}>
                   <Button onClick={this.onSubmit} disabled={showRoles && roleSelect === null || password === ''} variant="contained" color="primary" style={{width: '100%', color: 'white'}}>
