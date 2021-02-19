@@ -1,5 +1,5 @@
 const {getAuthToken} = require('./authentication')
-
+const {ADMIN, BUYER} = require('./consts')
 const is_b2b_site = () => {
 
   if (typeof localStorage == 'undefined') {
@@ -21,16 +21,16 @@ const is_b2b_employee = user => {
  - is logged under ADMIN role
  */
 
+ /**
 const is_b2b_admin = user => {
-  /**
-  const is_admin = Boolean(user) && user.roles && user.roles.includes('ADMIN')
+  const is_admin = Boolean(user) && user.roles && user.roles.includes(ADMIN)
   if (!is_admin) {
     console.debug(`Not B2B admin : user:${Boolean(user)}, roles:${user ? user.roles : ''}`)
     return false
   }
   */
   const token=getAuthToken()
-  const result = token && token.role=='ADMIN'
+  const result = token && token.role==ADMIN
   if (!result) {
     console.debug(`Not B2B admin : role:${token ? token.role : 'no token'}`)
   }
@@ -39,14 +39,14 @@ const is_b2b_admin = user => {
 
 const is_b2b_buyer = user => {
   /**
-  const is_admin = Boolean(user) && user.roles && user.roles.includes('BUYER')
+  const is_admin = Boolean(user) && user.roles && user.roles.includes(BUYER)
   if (!is_admin) {
     console.debug(`Not B2B buyer : user:${Boolean(user)}, roles:${user ? user.roles : ''}`)
     return false
   }
   */
   const token=getAuthToken()
-  const result = token && token.role=='BUYER'
+  const result = token && token.role==BUYER
   if (!result) {
     console.debug(`Not B2B buyer : role:${token ? token.role : 'no token'}`)
   }
