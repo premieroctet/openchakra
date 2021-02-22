@@ -3,6 +3,8 @@ const drawerWidth = 240;
 export default theme =>({
   root: {
     display: 'flex',
+    paddingTop: 15,
+    paddingBottom:15
   },
   drawer: {
     [theme.breakpoints.up('sm')]: {
