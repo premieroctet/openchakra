@@ -11,6 +11,7 @@ export default theme =>({
     },
   },
   appBar: {
+    top: 'inherit',
     [theme.breakpoints.up('sm')]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
@@ -23,10 +24,14 @@ export default theme =>({
     },
   },
   // necessary for content to be below app bar
-
+  toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
-    position: 'inherit'
+    position: 'inherit',
+    backgroundColor: theme.palette.yellow.main,
+    borderTopRightRadius: '80px 80px',
+    borderBottomRightRadius: '80px 80px',
+    border:0
   },
   content: {
     flexGrow: 1,
@@ -34,5 +39,40 @@ export default theme =>({
   },
   AppBarPosition:{
     top: 'inherit'
+  },
+  paddingList:{
+    marginBottom: '20vh',
+
+  },
+  helpButton:{
+    borderRadius: theme.border.button.borderRadius,
+    textTransform: theme.typography.textTransform,
+    fontWeight: theme.typography.fontWeight,
+    border: '3px solid rgba(255, 255, 255, 1)',
+    color: theme.palette.white.main,
+    padding: '10px 50px'
+  },
+  listItemText:{
+    '& span':{
+      fontWeight: 'bold'
+    }
+  },
+  activeButton:{
+    backgroundColor: 'white',
+    borderTopLeftRadius: '80px',
+    borderBottomLeftRadius: '80px',
+    transition: 'inherit'
+  },
+  standartButton:{
+    transition: 'inherit'
+  },
+  hoverButton:{
+    borderTopLeftRadius: '80px',
+    borderBottomLeftRadius: '80px',
+    '& :hover':{
+      backgroundColor: 'white',
+      borderTopLeftRadius: '80px',
+      borderBottomLeftRadius: '80px',
+    }
   }
 })
