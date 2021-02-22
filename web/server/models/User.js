@@ -312,8 +312,11 @@ const UserSchema = new Schema({
   },
   position: {
     type: String,
-  }
-
+  },
+  roles: [{
+    type: String,
+    enum: Object.keys(ROLES),
+  }],
 }, {toJSON: {virtuals: true, getters: true}});
 
 UserSchema.virtual('id_card_error_text').get(function () {
@@ -346,9 +349,11 @@ UserSchema.virtual('is_employee').get(function () {
   return Boolean(this.company)
 });
 
+/**
 UserSchema.virtual('roles').get(function () {
   return Object.keys(ROLES)
 });
+*/
 
 UserSchema.virtual('shop', {
    ref: 'shop', //The Model to use

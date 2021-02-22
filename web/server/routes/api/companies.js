@@ -13,6 +13,7 @@ const {validateCompanyProfile} = require('../../validation/simpleRegister');
 const moment = require('moment');
 moment.locale('fr');
 const Company = require('../../models/Company');
+const ServiceAccess = require('../../models/ServiceAccess');
 const crypto = require('crypto');
 const multer = require('multer');
 const axios = require('axios');
@@ -236,7 +237,6 @@ router.delete('/profile/registrationProof', passport.authenticate('jwt', {sessio
 // @Route GET /myAlfred/api/companies/current
 // Get the company for the current logged user
 router.get('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
-  console.log(`companies/current:${req.user}`)
   Company.findById(req.user.company)
     .then(company => {
       if (!company) {
@@ -260,6 +260,49 @@ router.get('/companies/:id', (req, res) => {
         return res.status(400).json({msg: 'No company found'});
       }
       res.json(company);
+
+    })
+    .catch(err => res.status(404).json({company: 'No company found'}));
+});
+
+// @Route GET /myAlfred/api/companies/allowedServices
+// Get allowed services for current company
+router.get('/allowedServices', passport.authenticate('jwt', {session: false}), (req, res) => {
+  ServiceAccess.find({company_allow: req.user.company})
+    .populate('service', 'label')
+    .then(serviceAccesses => {
+      if (!serviceAccesses) {
+        return res.status(400).json({msg: 'No company found'});
+      }
+      res.json(serviceAccesses.map( sa => sa.service));
+
+    })
+    .catch(err => res.status(404).json({company: 'No company found'}));
+});
+
+// @Route PUT /myAlfred/api/companies/allowedService
+// Put allowed service for current company
+router.put('/allowedService', passport.authenticate('jwt', {session: false}), (req, res) => {
+  ServiceAccess.create({service: req.body.service_id, company_allow: req.user.company})
+    .then(serviceAccess => {
+      if (!serviceAccess) {
+        return res.status(400).json({msg: 'No company found'});
+      }
+      res.json(serviceAccess);
+
+    })
+    .catch(err => res.status(404).json({company: 'No company found'}));
+});
+
+// @Route DELETE /myAlfred/api/companies/allowedService
+// Delete allowed service for current company
+router.delete('/allowedService/:service_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+  ServiceAccess.deleteOne({service: req.params.service_id, company_allow: req.user.company})
+    .then(serviceAccess => {
+      if (!serviceAccess) {
+        return res.status(400).json({msg: 'No company found'});
+      }
+      res.json(serviceAccess);
 
     })
     .catch(err => res.status(404).json({company: 'No company found'}));

@@ -22,9 +22,11 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Link from 'next/link';
 const util=require('util')
 const {Siret}=require('../../../components/Siret/Siret')
+import IconButton from "@material-ui/core/IconButton";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
-const {COMPANY_SIZE, COMPANY_ACTIVITY}=require('../../../utils/consts')
+const {COMPANY_SIZE, COMPANY_ACTIVITY, ADMIN, BUYER, EMPLOYEE}=require('../../../utils/consts')
 const {SIRET}=require('../../../config/config')
 
 const styles = theme => ({
@@ -63,6 +65,7 @@ class view extends React.Component {
 
     this.state = {
       company: null,
+      users: [],
       errors:{},
     };
     this.onChange = this.onChange.bind(this);
@@ -89,9 +92,20 @@ class view extends React.Component {
     axios.get(`/myAlfred/api/admin/companies/${id}`)
       .then(response => {
         let company = response.data;
-        console.log(`Got company:${JSON.stringify(company)}`)
+        this.setState({ company: company });
+      })
+      .catch(err => {
+        console.error(err);
+        if (err.response.status === 401 || err.response.status === 403) {
+          clearAuthenticationToken()
+          Router.push({pathname: '/login'});
+        }
+      });
+    axios.get(`/myAlfred/api/admin/companies/${id}/users`)
+      .then(response => {
+        let users = response.data;
         this.setState({
-          company: company,
+          users: users,
         });
       })
       .catch(err => {
@@ -147,9 +161,10 @@ class view extends React.Component {
         if (company._id) {
           this.setState({errors:{}})
           snackBarSuccess('Entreprise modifiée')
+          this.componentDidMount()
         }
         else {
-          snackBarSuccess('Entreprise ajoutée')
+          snackBarSuccess('Entreprise créée')
           Router.push(`/dashboard/companies/edit?id=${res.data._id}`)
         }
       })
@@ -160,13 +175,27 @@ class view extends React.Component {
       })
   };
 
+  removeRole = (user_id, role) => {
+    setAxiosAuthentication()
+    axios.delete(`/myAlfred/api/users/${user_id}/role/${role}`)
+      .then(() => {
+        snackBarSuccess('Rôle supprimé')
+        this.componentDidMount()
+      })
+      .catch(err => console.error(err))
+  }
+
   render() {
     const {classes} = this.props;
-    const {company, errors} = this.state;
+    const {company, users, errors} = this.state;
 
     if (!company) {
       return null
     }
+
+    const admins=users.filter(u => u.roles && u.roles.includes(ADMIN))
+    const buyers=users.filter(u => u.roles && u.roles.includes(BUYER))
+    const employees=users
 
     return (
       <Layout>
@@ -276,6 +305,7 @@ class view extends React.Component {
                 </Grid>
                 <Grid item>
                   <TextField
+                    id={1}
                     margin="normal"
                     style={{width: '100%'}}
                     type="text"
@@ -284,8 +314,60 @@ class view extends React.Component {
                     onChange={this.onChange}
                     error={errors.admin_email}
                   />
+                  { admins.map( a => {
+                    return (<div>
+                      {a.full_name} {a.email}
+                      <IconButton aria-label="delete" onClick={() => this.removeRole(a._id, ADMIN)}>
+                        <DeleteForeverIcon />
+                      </IconButton>
+                    </div>)
+                  })}
                 </Grid>
+                <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+                  <Typography style={{fontSize: 20}}>Ajouter un acheteur par son email</Typography>
+                </Grid>
+                <Grid item>
+                  <TextField
+                    id={2}
+                    margin="normal"
+                    style={{width: '100%'}}
+                    type="text"
+                    name="buyer_email"
+                    value={company.buyer_email}
+                    onChange={this.onChange}
+                    error={errors.buyer_email}
+                  />
+                  { buyers.map( a => {
+                    return (<div>{a.full_name} {a.email}
+                      <IconButton aria-label="delete" onClick={() => this.removeRole(a._id, BUYER)}>
+                        <DeleteForeverIcon />
+                      </IconButton>
+                      </div>)
+                  })}
+                </Grid>
+                <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+                  <Typography style={{fontSize: 20}}>Ajouter un employé par son email</Typography>
+                </Grid>
+                <Grid item>
+                  <TextField
+                    id={3}
+                    margin="normal"
+                    style={{width: '100%'}}
+                    type="text"
+                    name="employee_email"
+                    value={company.employee_email}
+                    onChange={this.onChange}
+                    error={errors.employee_email}
+                  />
+                  { employees.map( a => {
+                    return (<div>{a.full_name} {a.email}
+                      <IconButton aria-label="delete" onClick={() => this.removeRole(a._id, EMPLOYEE)}>
+                        <DeleteForeverIcon />
+                      </IconButton>
+                      </div>)
+                  })}
 
+                </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
                   <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
                     Enregistrer

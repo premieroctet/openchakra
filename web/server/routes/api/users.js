@@ -24,7 +24,7 @@ const multer = require('multer');
 const axios = require('axios');
 const {computeUrl} = require('../../../config/config');
 const emptyPromise = require('../../../utils/promise.js');
-
+const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient,install_hooks} = require('../../../utils/mangopay');
 
 
@@ -667,6 +667,11 @@ router.post('/login', (req, res) => {
         return res.status(400).json(errors);
       }
 
+      if (user.is_employee && !ROLES[role]) {
+        errors.role = `Rôle ${role} inconnu : ${Object.values(ROLES).join(',')} attendu`;
+        return res.status(400).json(errors);
+      }
+
       // Check password
       bcrypt.compare(password, user.password)
         .then(isMatch => {
@@ -783,6 +788,29 @@ router.get('/users/:id', (req, res) => {
       }
       res.json(user);
 
+    })
+    .catch(err => res.status(404).json({user: 'No user found'}));
+});
+
+// @Route DELETE /myAlfred/api/users/:id/role/:role
+// Get one user
+router.delete('/:id/role/:role', passport.authenticate('jwt', {session: false}), (req, res) => {
+  User.findById(req.params.id)
+    .then(user => {
+      if (!user) {
+        return res.status(400).json({msg: 'No user found'});
+      }
+      user.roles=(user.roles||[]).filter( r => r!=req.params.role)
+      if (user.roles.length==0) {
+        user.roles = null
+        user.company = null
+      }
+      user.save()
+        .then(() => res.json(user))
+        .catch( err => {
+          console.log(err);
+          res.status(404).json({user: 'Erreur à la suppression du rôle'})
+        })
     })
     .catch(err => res.status(404).json({user: 'No user found'}));
 });

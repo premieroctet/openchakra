@@ -47,12 +47,12 @@ registerLocale('fr', fr);
 
 
 function NumberFormatCustom(props) {
-  const {inputRef, onChange, ...other} = props;
+  const {inputref, onChange, ...other} = props;
 
   return (
     <NumberFormat
       {...other}
-      getInputRef={inputRef}
+      getInputRef={inputref}
       onValueChange={(values) => {
         onChange({
           target: {

@@ -368,10 +368,10 @@ class NavBar extends Component {
                       label={SEARCHBAR.where}
                       variant={'outlined'}
                       InputProps={{
-                        inputComponent: (inputRef) => {
+                        inputComponent: (inputref) => {
                           return (
                             <AlgoliaPlaces
-                              {...inputRef}
+                              {...inputref}
                               placeholder={''}
                               className={classes.navbarAlgoliaPlace}
                               options={{
@@ -594,10 +594,10 @@ class NavBar extends Component {
                 InputLabelProps={{shrink: true}}
                 value={this.state.city}
                 InputProps={{
-                  inputComponent: (inputRef) => {
+                  inputComponent: (inputref) => {
                     return (
                       <AlgoliaPlaces
-                        {...inputRef}
+                        {...inputref}
                         placeholder={SEARCHBAR.where}
                         className={classes.navbarAlgoliaPlace}
                         options={{
@@ -609,6 +609,7 @@ class NavBar extends Component {
                         }}
                         onChange={(suggestion) => this.onChangeCity(suggestion)}
                         onClear={() => this.setState({city: '', gps: null})}
+
                       />)
                   },
                   disableUnderline: true
@@ -631,10 +632,10 @@ class NavBar extends Component {
                       shrink: true,
                     }}
                     InputProps={{
-                      inputComponent: (inputRef) => {
+                      inputComponent: (inputref) => {
                         return (
                           <DatePicker
-                            {...inputRef}
+                            {...inputref}
                             selected={this.state.dateSelected}
                             onChange={(date) => {
                               this.setState({dateSelected: date});

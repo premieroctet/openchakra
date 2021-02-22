@@ -31,6 +31,21 @@ router.get('/all', (req, res) => {
     .catch(err => res.status(404).json({service: 'No service found'}));
 });
 
+// @Route GET /myAlfred/api/service/pro
+// View all pro service
+router.get('/pro', (req, res) => {
+  Service.find({ professional_access: true}, 'label')
+  .sort({'label': 1})
+    .then(services => {
+      if (typeof services !== 'undefined' && services.length > 0) {
+        res.json(services);
+      } else {
+        return res.status(400).json({msg: 'No service found'});
+      }
+    })
+    .catch(err => res.status(404).json({service: 'No service found'}));
+});
+
 // @Route GET /myAlfred/api/service/allCount
 // View all service with count of serviceUser
 router.get('/allCount', (req, res) => {

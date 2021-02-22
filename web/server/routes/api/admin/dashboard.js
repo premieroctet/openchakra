@@ -32,9 +32,10 @@ const multer = require('multer')
 const path = require('path')
 const {normalizePhone, bufferToString, normalize} = require('../../../../utils/text')
 const {counterArray, counterObjects} = require('../../../../utils/converters')
+const {ADMIN, BUYER, EMPLOYEE} = require('../../../../utils/consts')
 const parse = require('url-parse')
 router.get('/billing/test', (req, res) => res.json({msg: 'Billing admin Works!'}));
-
+var _ = require('lodash')
 // @Route POST /myAlfred/api/admin/billing/all
 // Add billing for prestation
 // @Access private
@@ -2628,6 +2629,20 @@ router.get('/companies/:id', passport.authenticate('admin', {session: false}), (
       })
 });
 
+// @Route GET /myAlfred/api/admin/companies/:id
+// View one company
+// @Access private
+router.get('/companies/:id/users', passport.authenticate('admin', {session: false}), (req, res) => {
+    User.find({ company: req.params.id}, 'firstname name email roles')
+      .then(users => {
+        if (!users) {
+          return res.status(400).json({msg: 'No company found'});
+        }
+        res.json(users);
+
+      })
+});
+
 // @Route POST /myAlfred/api/admin/companies
 // Adds or update a company
 // @Access private
@@ -2647,15 +2662,49 @@ router.post('/companies', passport.authenticate('admin', {session: false}), (req
         if (!company) {
           return res.status(400).json({msg: 'No company found'});
         }
-        console.log(JSON.stringify(company))
         if (req.body.admin_email) {
-          User.findOneAndUpdate({email: req.body.admin_email}, { company:company._id})
-            .then( () => res.json(company))
+          User.findOne({email: req.body.admin_email})
+            .then( user => {
+              if (!user) {
+                console.error('no user found')
+              }
+              else {
+                user.company=company
+                user.roles = _.uniq([...(user.roles||[]), ADMIN, EMPLOYEE])
+                user.save().then().catch(err => console.error(err))
+              }
+            })
             .catch (err => console.error(err))
         }
-        else {
-          res.json(company);
+        if (req.body.buyer_email) {
+          User.findOne({email: req.body.buyer_email})
+            .then( user => {
+              if (!user) {
+                console.error('no user found')
+              }
+              else {
+                user.company=company
+                user.roles = _.uniq([...(user.roles||[]), BUYER, EMPLOYEE])
+                user.save().then().catch(err => console.error(err))
+              }
+            })
+            .catch (err => console.error(err))
         }
+        if (req.body.employee_email) {
+          User.findOne({email: req.body.employee_email})
+            .then( user => {
+              if (!user) {
+                console.error('no user found')
+              }
+              else {
+                user.company=company
+                user.roles = _.uniq([...(user.roles||[]), EMPLOYEE])
+                user.save().then().catch(err => console.error(err))
+              }
+            })
+            .catch (err => console.error(err))
+        }
+        res.json(company);
       })
 });
 

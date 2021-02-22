@@ -50,7 +50,7 @@ const server = require('http').Server(app);
 const SocketIo = require('socket.io');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
-require('console-stamp')(console, '[HH:MM:ss.l]');
+require('console-stamp')(console, '[dd/mm/yy HH:MM:ss.l]');
 // Avoid deprecation warning
 mongoose.set('useUnifiedTopology', true)
 mongoose.set('useFindAndModify', false)
