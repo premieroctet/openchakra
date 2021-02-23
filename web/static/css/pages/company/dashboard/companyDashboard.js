@@ -4,7 +4,8 @@ export default theme =>({
   root: {
     display: 'flex',
     paddingTop: 15,
-    paddingBottom:15
+    paddingBottom:15,
+    backgroundColor: 'rgba(249,249,249, 1)',
   },
   drawer: {
     [theme.breakpoints.up('sm')]: {
@@ -63,10 +64,14 @@ export default theme =>({
     backgroundColor: 'white',
     borderTopLeftRadius: '80px',
     borderBottomLeftRadius: '80px',
-    transition: 'inherit'
+    transition: 'inherit',
+    paddingTop: 16,
+    paddingBottom: 16,
   },
   standartButton:{
-    transition: 'inherit'
+    transition: 'inherit',
+    paddingTop: 16,
+    paddingBottom: 16,
   },
   hoverButton:{
     borderTopLeftRadius: '80px',
