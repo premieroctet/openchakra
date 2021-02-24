@@ -9,20 +9,17 @@ class IndexDashboard extends React.Component{
 
   render() {
     return(
-      <Grid>
-        <Grid>
+      <Grid container spacing={3} style={{marginTop: '3vh', width: '100%', margin: 0}}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <h3>Tableau de bord</h3>
         </Grid>
-        <Grid container spacing={3} style={{marginTop: '3vh'}}>
-          <Grid item xl={7} lg={7} md={6} sm={12} xs={12}>
-            <Box/>
-          </Grid>
-          <Grid item xl={5} lg={5} md={6} sm={12} xs={12}>
-            <Box/>
-          </Grid>
+        <Grid item xl={7} lg={7} md={6} sm={12} xs={12}>
+          <Box/>
+        </Grid>
+        <Grid item xl={5} lg={5} md={6} sm={12} xs={12}>
+          <Box/>
         </Grid>
       </Grid>
-
     );
   }
 

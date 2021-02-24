@@ -31,6 +31,8 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import MenuIcon from '@material-ui/icons/Menu';
 import Button from "@material-ui/core/Button";
+import NavBar from "../../../hoc/Layout/NavBar/NavBar";
+import MobileNavbar from "../../../hoc/Layout/NavBar/MobileNavbar";
 
 
 class companyDashboard extends React.Component{
@@ -80,22 +82,22 @@ class companyDashboard extends React.Component{
  drawer = (classes) => {
    const {sideBarLabels, activeStep} = this.state;
    return (
-     <Grid>
-       <div className={classes.toolbar}/>
-       <List classes={{root: classes.paddingList}}>
-         {sideBarLabels.map((item, index) => (
-           <div className={classes.hoverButton}>
-             <ListItem button key={item.label} onClick={() => this.handleStep(index)} classes={{root: activeStep === index ? classes.activeButton : classes.standartButton}}>
-               <ListItemIcon>{item.icon}</ListItemIcon>
-               <ListItemText primary={item.label} classes={{root: classes.listItemText}}/>
-             </ListItem>
-           </div>
-         ))}
-       </List>
-       <Grid container style={{display:'flex', justifyContent:'center'}}>
-         <Button variant="outlined" classes={{root: classes.helpButton}}>Aide</Button>
+     <Grid style={{height: '100%'}}>
+       <Grid className={classes.appBarContainer}>
+         <List classes={{root: classes.paddingList}}>
+           {sideBarLabels.map((item, index) => (
+             <div className={classes.hoverButton}>
+               <ListItem button key={item.label} onClick={() => this.handleStep(index)} classes={{root: activeStep === index ? classes.activeButton : classes.standartButton}}>
+                 <ListItemIcon style={{color: 'white'}}>{item.icon}</ListItemIcon>
+                 <ListItemText primary={item.label} classes={{root: classes.listItemText}}/>
+               </ListItem>
+             </div>
+           ))}
+         </List>
+         <Grid container style={{display:'flex', justifyContent:'center'}}>
+           <Button variant="outlined" classes={{root: classes.helpButton}}>Aide</Button>
+         </Grid>
        </Grid>
-       <div className={classes.toolbar} />
      </Grid>
    )
  };
@@ -119,16 +121,17 @@ class companyDashboard extends React.Component{
     }
   }
 
-  content = (classes) => {
+  render() {
+    const{classes} = this.props;
     const { window } = this.props;
     const {mobileOpen, activeStep} = this.state;
 
     const container = window !== undefined ? () => window().document.body : undefined;
 
-
     return(
       <Grid className={classes.root}>
         <CssBaseline />
+        <Grid>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -138,6 +141,7 @@ class companyDashboard extends React.Component{
           >
             <MenuIcon />
           </IconButton>
+        </Grid>
         <nav className={classes.drawer} aria-label="mailbox folders">
           {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
           <Hidden smUp implementation="css">
@@ -170,31 +174,20 @@ class companyDashboard extends React.Component{
           </Hidden>
         </nav>
         <main className={classes.content}>
+          <Hidden only={['xs']}>
+            <NavBar/>
+          </Hidden>
           <Grid>
             {this.renderSwitch(activeStep)}
           </Grid>
+          <Hidden only={['lg', 'xl', 'md', 'sm']}>
+            <Grid style={{position: 'fixed', bottom: '3%', display: 'flex', justifyContent: 'center', width: '100%', zIndex: 4}}>
+              <Grid style={{width: '100%'}}>
+                <MobileNavbar currentIndex={0}/>
+              </Grid>
+            </Grid>
+          </Hidden>
         </main>
-      </Grid>
-    )
-  };
-
-  render() {
-    const{classes} = this.props;
-
-    return(
-      <Grid>
-        <React.Fragment>
-          <Hidden only={['xs']}>
-            <Layout>
-              {this.content(classes)}
-            </Layout>
-          </Hidden>
-          <Hidden only={['sm', 'md', 'lg', 'xl']}>
-            <LayoutMobileSearch >
-              {this.content(classes)}
-            </LayoutMobileSearch>
-          </Hidden>
-        </React.Fragment>
       </Grid>
     );
   }

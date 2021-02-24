@@ -3,9 +3,10 @@ const drawerWidth = 240;
 export default theme =>({
   root: {
     display: 'flex',
-    paddingTop: 15,
-    paddingBottom:15,
     backgroundColor: 'rgba(249,249,249, 1)',
+    [theme.breakpoints.down('sm')]:{
+      flexDirection : 'column'
+    }
   },
   drawer: {
     [theme.breakpoints.up('sm')]: {
@@ -13,15 +14,8 @@ export default theme =>({
       flexShrink: 0,
     },
   },
-  appBar: {
-    top: 'inherit',
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
-    },
-  },
   menuButton: {
-    marginRight: theme.spacing(2),
+    margin: theme.spacing(2),
     [theme.breakpoints.up('sm')]: {
       display: 'none',
     },
@@ -31,20 +25,26 @@ export default theme =>({
   drawerPaper: {
     width: drawerWidth,
     position: 'inherit',
-    backgroundColor: theme.palette.yellow.main,
-    borderTopRightRadius: '80px 80px',
-    borderBottomRightRadius: '80px 80px',
-    border:0
+    backgroundColor: '#353A51',
+    borderTopRightRadius: '30px 40px',
+    border:0,
+    height: '100vh'
   },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+    [theme.breakpoints.down('sm')]:{
+      padding: 0
+    }
   },
-  AppBarPosition:{
-    top: 'inherit'
+  appBar: {
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: drawerWidth,
+    },
   },
   paddingList:{
-    marginBottom: '20vh',
+    paddingLeft: 8,
 
   },
   helpButton:{
@@ -67,19 +67,33 @@ export default theme =>({
     transition: 'inherit',
     paddingTop: 16,
     paddingBottom: 16,
+    '& .MuiSvgIcon-root':{
+      color:'black'
+    }
   },
   standartButton:{
     transition: 'inherit',
     paddingTop: 16,
     paddingBottom: 16,
+    color: 'white'
   },
   hoverButton:{
     borderTopLeftRadius: '80px',
     borderBottomLeftRadius: '80px',
     '& :hover':{
+      color:'black',
       backgroundColor: 'white',
       borderTopLeftRadius: '80px',
       borderBottomLeftRadius: '80px',
+      '& .MuiSvgIcon-root':{
+        color:'black'
+      }
     }
+  },
+  appBarContainer:{
+    display:'flex',
+    flexDirection: 'column',
+    justifyContent:'space-around',
+    height: '100%'
   }
 })

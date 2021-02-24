@@ -28,6 +28,11 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 class ServicesCompany extends React.Component{
   constructor(props) {
@@ -267,8 +272,8 @@ class ServicesCompany extends React.Component{
     const{items} = this.state;
     const{classes} = this.props;
     return(
-      <Grid>
-        <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+      <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
           <Grid>
             <h3>Mes services</h3>
           </Grid>
@@ -280,34 +285,40 @@ class ServicesCompany extends React.Component{
             </Grid>
           </Grid>
         </Grid>
-        <Grid container spacing={3} style={{marginTop: '3vh'}}>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <Box>
-              <Grid>
-                <List>
-                  {items.map( (res) =>(
-                    <Grid>
-                      <ListItem classes={{root: classes.listIstemPadding}}>
-                        <ListItemText
-                          primary={res}
-                        />
-                        <ListItemSecondaryAction>
-                          <IconButton edge="end" aria-label="SettingsIcon" onClick={() => this.handleClickOpen('dialogConfigService', res)}>
-                            <SettingsIcon />
-                          </IconButton>
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                      <Divider/>
-                    </Grid>
-                  ))}
-                </List>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Box>
+            {items.map( (res, index) =>(
+              <Grid container spacing={3} style={{margin: 0, width: '100%'}}>
+                <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
+                  <Accordion key={index} classes={{root: classes.accordionStyle}}>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1a-content"
+                      id={index}
+                    >
+                      <Typography className={classes.heading}>{res}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Typography>
+                        <em> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+                          sit amet blandit leo lobortis eget.
+                        </em>
+                      </Typography>
+                    </AccordionDetails>
+                  </Accordion>
+                </Grid>
+                <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
+                  <IconButton edge="end" aria-label="SettingsIcon" onClick={() => this.handleClickOpen('dialogConfigService', res)}>
+                    <SettingsIcon />
+                  </IconButton>
+                </Grid>
               </Grid>
-            </Box>
-          </Grid>
+            ))}
+          </Box>
         </Grid>
         {this.dialogAddService(classes)}
         {this.dialogConfigService(classes)}
-      </Grid>
+        </Grid>
     );
   }
 }

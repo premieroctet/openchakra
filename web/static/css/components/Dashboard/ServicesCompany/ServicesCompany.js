@@ -17,5 +17,12 @@ export default theme => ({
   },
   textField:{
     width: '100%'
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular,
+  },
+  accordionStyle:{
+    boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2)'
   }
 })
