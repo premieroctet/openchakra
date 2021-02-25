@@ -22,13 +22,14 @@ class TestPdf extends React.Component {
     const {loading} = this.state;
     return (
       // <LayoutPdf/>
-      <NoSSR>{
+      <NoSSR>
+        {
         loading ? "Chargement en cours..." :
           <Grid onClick={this.setLoading}>
             <PDFDownloadLink
               document={<LayoutPdf/>}
-              fileName="faceture.pdf">
-              Télécharger mon récépissé
+              fileName="facture.pdf">
+              Télécharger ma facture
             </PDFDownloadLink>
           </Grid>
       }

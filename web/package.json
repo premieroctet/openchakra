@@ -52,6 +52,7 @@
     "mongoose": "^5.11.17",
     "multer": "^1.4.1",
     "next": "^8.1.0",
+    "next-fonts": "^1.5.1",
     "next-routes": "^1.4.2",
     "node-csv": "^0.1.2",
     "nodemailer": "^6.4.18",
