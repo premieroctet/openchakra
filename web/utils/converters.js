@@ -159,8 +159,8 @@ const bookings2events = bookings => {
 };
 
 const counterArray = (data, xlabel, ylabel) => {
-  const summed=Object.entries(data.reduce((acc, value) => {
-    if(value in acc) {
+  const summed = Object.entries(data.reduce((acc, value) => {
+    if (value in acc) {
       acc[value] = acc[value] + 1
     } else {
       acc[value] = 1
@@ -171,9 +171,9 @@ const counterArray = (data, xlabel, ylabel) => {
 }
 
 const counterObjects = (data, attribute) => {
-  const summed=Object.entries(data.reduce((acc, value) => {
-    const age=value[attribute]
-    if(age in acc) {
+  const summed = Object.entries(data.reduce((acc, value) => {
+    const age = value[attribute]
+    if (age in acc) {
       acc[age] = acc[age] + 1
     } else {
       acc[age] = 1
@@ -183,9 +183,13 @@ const counterObjects = (data, attribute) => {
   return summed
 }
 
+const moneyFormat = (value) => {
+  return value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+}
+
 module.exports = {
   availabilities2events, eventUI2availability, availability2eventUI,
   DAYS, LONG_DAYS,
   bookings2events,
-  counterArray, counterObjects
+  counterArray, counterObjects, moneyFormat
 };

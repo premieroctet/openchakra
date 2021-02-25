@@ -1,0 +1,205 @@
+{
+  "BookingObj": {
+    "equipments": [],
+    "fileUpload": [],
+    "alfred_evaluated": false,
+    "user_evaluated": false,
+    "paid": false,
+    "travel_tax": 0,
+    "pick_tax": 0,
+    "cesu_amount": 0,
+    "_id": "60379fe0f073561d7c07b45e",
+    "reference": "AAFB_25022021_96207",
+    "service": "Création de site web",
+    "amount": 696.2,
+    "alfred": {
+      "billing_address": {
+        "gps": {
+          "lat": 49.447127,
+          "lng": 1.09194
+        },
+        "address": "42 Rampe Bouvreuil",
+        "zip_code": "76000",
+        "city": "ROUEN",
+        "country": "France"
+      },
+      "notifications_message": {
+        "email": true,
+        "push": true,
+        "sms": false
+      },
+      "notifications_rappel": {
+        "email": true,
+        "push": true,
+        "sms": false
+      },
+      "notifications_promotions": {
+        "email": true,
+        "push": true,
+        "phone": true,
+        "sms": false
+      },
+      "notifications_community": {
+        "email": true,
+        "push": true,
+        "sms": false
+      },
+      "notifications_assistance": {
+        "email": true,
+        "push": true,
+        "sms": false
+      },
+      "languages": [
+        "Français",
+        "Anglais",
+        "Espagnol",
+        "Arabe"
+      ],
+      "score": 0,
+      "score_client": 0,
+      "number_of_reviews": 0,
+      "number_of_reviews_client": 0,
+      "number_of_views": 0,
+      "active": true,
+      "is_confirmed": false,
+      "id_confirmed": false,
+      "phone_confirmed": false,
+      "last_login": [
+        "2020-12-17T14:19:50.606Z",
+        "2020-12-17T14:15:08.375Z"
+      ],
+      "is_alfred": true,
+      "index_google": false,
+      "super_alfred": false,
+      "is_admin": false,
+      "id_mangopay": null,
+      "mangopay_provider_id": "99270091",
+      "roles": [],
+      "_id": "5e6528db1bee64541cfc089e",
+      "name": "Benjoudar",
+      "firstname": "Fouad",
+      "email": "fouadb@ucx-digital.com",
+      "password": "$2a$10$y5dLciRLzDp4RgIibVzvOenaIqFUcRTFNdQFF9CW.ult8m0gBPVEC",
+      "birthday": "1970-04-02T23:00:00.000Z",
+      "service_address": [],
+      "creation_date": "2020-03-08T17:18:19.982Z",
+      "__v": 4,
+      "phone": "33977218108",
+      "resetToken": "5ea05682f6e27550c661fed9",
+      "mangopay_provider_status": "NATURAL",
+      "picture": "static/profile/1604485769682_09e7661a01_logo-2-3d-trns-min.png",
+      "emergency_phone": null,
+      "job": "Consultant",
+      "school": null,
+      "diplomes": null,
+      "description": "27 ans d'expérience en France & à l'International dans le domaine du numérique et digital. ",
+      "gender": "Homme",
+      "id_card_status": "REFUSED",
+      "identity_proof_id": "1228956072",
+      "id_card_error": "DOCUMENT_UNREADABLE",
+      "id_card_error_text": "Pièce d'identité illisible",
+      "id_card_status_text": "Pièce d'identité refusée, merci d'en fournir une valide",
+      "avatar_letters": "FB",
+      "full_name": "Fouad Benjoudar",
+      "age": 50,
+      "is_employee": false,
+      "id": "5e6528db1bee64541cfc089e"
+    },
+    "user": {
+      "billing_address": {
+        "gps": {
+          "lat": 49.4466,
+          "lng": 1.0955
+        },
+        "address": "5 Rue de la Glacière",
+        "zip_code": "76000",
+        "city": "Rouen",
+        "country": "France"
+      },
+      "notifications_message": {
+        "email": true,
+        "push": true,
+        "sms": true
+      },
+      "notifications_rappel": {
+        "email": true,
+        "push": true,
+        "sms": true
+      },
+      "notifications_promotions": {
+        "email": true,
+        "push": true,
+        "phone": true,
+        "sms": true
+      },
+      "notifications_community": {
+        "email": true,
+        "push": true,
+        "sms": true
+      },
+      "notifications_assistance": {
+        "email": true,
+        "push": true,
+        "sms": true
+      },
+      "languages": [],
+      "score": 0,
+      "score_client": 0,
+      "number_of_reviews": 0,
+      "number_of_reviews_client": 0,
+      "number_of_views": 0,
+      "active": true,
+      "is_confirmed": false,
+      "id_confirmed": false,
+      "phone_confirmed": false,
+      "last_login": [
+        "2021-02-25T13:00:41.091Z",
+        "2021-02-12T15:15:14.350Z"
+      ],
+      "is_alfred": false,
+      "index_google": true,
+      "super_alfred": false,
+      "is_admin": true,
+      "id_mangopay": "100888901",
+      "mangopay_provider_id": null,
+      "roles": [],
+      "_id": "60264cd27029b749241f38a2",
+      "name": "Admin",
+      "firstname": "Armand",
+      "email": "armand.admin@test.fr",
+      "password": "$2a$10$nzNHDyvDtCrycbZpdXv4ve4/p63Ylq0vk6jQrzg56P87xp8K4wyjK",
+      "birthday": "1995-08-22T08:38:58.151Z",
+      "service_address": [],
+      "creation_date": "2021-02-12T09:39:30.960Z",
+      "__v": 7,
+      "picture": "",
+      "id_card_error_text": null,
+      "id_card_status_text": null,
+      "avatar_letters": "AA",
+      "full_name": "Armand Admin",
+      "age": 25,
+      "is_employee": false,
+      "id": "60264cd27029b749241f38a2"
+    },
+    "chatroom": "60379fe0f073561d7c07b45d",
+    "date_prestation": "07/04/2021",
+    "time_prestation": "2021-04-07T12:30:00.000Z",
+    "prestations": [
+      {
+        "_id": "60379fe0f073561d7c07b45f",
+        "price": 590,
+        "value": 1,
+        "name": "Site Web E-Commerce"
+      }
+    ],
+    "fees": 106.2,
+    "status": "En attente de paiement",
+    "serviceUserId": "5fa2751e5a565501f403ce8f",
+    "date": "2021-02-25T13:02:24.362Z",
+    "__v": 0,
+    "alfred_amount": 590,
+    "date_prestation_moment": 1617798600000,
+    "calendar_display": true,
+    "id": "60379fe0f073561d7c07b45e"
+  }
+}

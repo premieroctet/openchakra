@@ -23,16 +23,27 @@ class TestPdf extends React.Component {
     return (
       // <LayoutPdf/>
       <NoSSR>
-        {
-        loading ? "Chargement en cours..." :
-          <Grid onClick={this.setLoading}>
-            <PDFDownloadLink
-              document={<LayoutPdf/>}
-              fileName="facture.pdf">
-              Télécharger ma facture
-            </PDFDownloadLink>
-          </Grid>
-      }
+        <Grid style={{
+          textAlign: 'center',
+          fontSize: '35px'
+        }}>
+          {
+            loading ? "Chargement en cours..." :
+              <Grid onClick={this.setLoading}
+              >
+                <PDFDownloadLink
+                  document={<LayoutPdf/>}
+                  fileName="facture.pdf"
+                  style={{
+                    textDecoration: 'none',
+                    color: '#CCDCFB'
+                  }}
+                >
+                  Télécharger ma facture
+                </PDFDownloadLink>
+              </Grid>
+          }
+        </Grid>
       </NoSSR>
     );
   }

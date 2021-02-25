@@ -52,7 +52,7 @@ class AddressAndFacturation extends React.Component{
                 <Divider style={{height: 2, borderRadius: 10, width: '50%', backgroundColor: 'rgba(210, 210, 210, 0.5)'}}/>
               </Grid>
               <Topic
-                titleTopic={'Material fourni'}
+                titleTopic={'Matériel fourni'}
                 titleSummary={equipments.length === 0 ? 'Aucun matériel fourni' : false}
                 underline={false}
               >
