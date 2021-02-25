@@ -12,12 +12,63 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Typography from "@material-ui/core/Typography";
 import InputLabel from "@material-ui/core/InputLabel";
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
+import Dialog from "@material-ui/core/Dialog";
+import MuiDialogTitle  from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import TextField from "@material-ui/core/TextField";
+import DialogActions from "@material-ui/core/DialogActions";
+import DeleteIcon from '@material-ui/icons/Delete';
+import Chip from '@material-ui/core/Chip';
+import CloseIcon from '@material-ui/icons/Close';
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, onClick, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Grid style={{display: 'flex', alignItems:'center'}}>
+        <Grid>
+          <Typography variant="h6">{children}</Typography>
+        </Grid>
+        <Grid>
+          <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={onClick}>
+            <AddCircleOutlineOutlinedIcon/>
+          </IconButton>
+        </Grid>
+      </Grid>
+      {onClose ? (
+        <IconButton aria-label="closeButton" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon  />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
+
+
 
 class Team extends React.Component{
   constructor(props) {
     super(props);
     this.state={
-      filters: 10
+      filters: 10,
+      roles: '',
+      listOfRoles:['Admin', 'Alternant', 'Stagiaire'],
+      dialogState: false,
+      dialogChip: false,
+      firstname: '',
+      name: '',
+      newChipField: '',
+      email: '',
+      nbNewUser: 1,
+      nbChip: 1,
+      listOfCollab: [{name: 'Solene', email: 'solene@email.fr'},{name: 'Edwin', email: 'edwin@email.fr'},{name: 'wilfrid', email: 'wilfrid@email.fr'}, {name: 'armand', email:'armand@email.fr'},{name: 'sebastien', email: 'sebastien@email.fr'}]
     }
   }
 
@@ -26,68 +77,286 @@ class Team extends React.Component{
     this.setState({[name]: value})
   };
 
-  render() {
-    const{classes} = this.props;
-    const{filters} = this.state;
+  addService = () => {
+    const{nameService, items} = this.state;
+    this.setState({ items: [...items, nameService],  dialogState: false});
+  };
+
+  handleDeleteChip = (chip) =>{
+    const{listOfRoles} = this.state;
+    let newArray = listOfRoles.filter(word => word !== chip);
+    this.setState({listOfRoles : newArray})
+  };
+
+  addNewLine = () =>{
+    this.setState({nbNewUser: this.state.nbNewUser + 1})
+  };
+
+  removeUser = () =>{
+    this.setState({nbNewUser: this.state.nbNewUser - 1})
+
+  };
+
+  addNewLineChip = () =>{
+    this.setState({nbChip: this.state.nbChip + 1})
+  };
+
+  removeChip = () =>{
+    this.setState({nbChip: this.state.nbChip - 1})
+  };
+
+  handleOnchangeListOfRoles = (event) =>{
+
+    this.setState({ listOfRoles: [...listOfRoles, value]});
+
+  };
+
+
+  handleClickOpen = (name) =>{
+    this.setState({[name]: true})
+  };
+
+  dialogChip = (classes)=>{
+    const{dialogChip, newChipField, nbChip} = this.state;
 
     return(
-      <Grid>
-        <Grid>
-          <Grid>
-            <h3>Administrateurs</h3>
-          </Grid>
-          <Grid container spacing={3} style={{marginTop: '3vh'}}>
-            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <Box/>
+      <Dialog open={dialogChip} onClose={() => this.setState({dialogChip: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
+        <DialogTitle id="customized-dialog-title" onClick={this.addNewLineChip} onClose={() => this.setState({dialogChip: false})} >Ajouter un role</DialogTitle>
+        <DialogContent dividers>
+          {
+            [...Array(nbChip)].map((res, index) => (
+              <Grid container spacing={2} style={{width: '100%', margin: 0}}>
+                <Grid item xl={11} lg={11} sm={11} md={11} xs={11}>
+                  <TextField
+                    label="Role"
+                    name={'newChipField'}
+                    onChange={this.handleOnchangeListOfRoles}
+                    value={newChipField[index]}
+                    variant={'outlined'}
+                    classes={{root: classes.textField}}
+                  />
+                </Grid>
+                <Grid item xl={1} lg={1} sm={1} md={1} xs={1}>
+                  <IconButton edge="end" aria-label="delete" onClick={this.removeChip}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            ))
+          }
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.setState({dialogChip: false})} color="secondary">
+            Annuler
+          </Button>
+          <Button onClick={this.addService} color="primary">
+            Confirmé
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  };
+
+  dialogAddService = (classes) => {
+    const{dialogState, email, name, firstname, roles, nbNewUser} = this.state;
+
+    return(
+      <Dialog open={dialogState} onClose={() => this.setState({dialogState: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
+        <DialogTitle id="customized-dialog-title" onClick={this.addNewLine} onClose={() => this.setState({dialogState: false})}>Ajouter un collaborateur</DialogTitle>
+        <DialogContent dividers>
+          {
+            [...Array(nbNewUser)].map((res, index) => (
+              <Grid style={{display:'flex', alignItems: 'center'}}>
+                <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
+                  <Grid item xl={3} lg={3} md={6} sm={6} xs={6}>
+                    <TextField
+                      label="Nom"
+                      name={'name'}
+                      onChange={this.handleOnchange}
+                      value={name}
+                      variant={'outlined'}
+                      classes={{root: classes.textField}}
+                    />
+                  </Grid>
+                  <Grid item xl={3} lg={3} md={6} sm={6} xs={6}>
+                    <TextField
+                      label="Prénom"
+                      name={'firstname'}
+                      onChange={this.handleOnchange}
+                      value={firstname}
+                      variant={'outlined'}
+                      classes={{root: classes.textField}}
+
+                    />
+                  </Grid>
+                  <Grid item xl={3} lg={3} md={6} sm={6} xs={6}>
+                    <TextField
+                      label="email"
+                      name={'email'}
+                      onChange={this.handleOnchange}
+                      value={email}
+                      variant={'outlined'}
+                      classes={{root: classes.textField}}
+                    />
+                  </Grid>
+                  <Grid item xl={3} lg={3} md={6} sm={6} xs={6}>
+                    <FormControl variant="outlined" style={{width: '100%'}}>
+                      <InputLabel id="demo-simple-select-outlined-label">Roles</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        value={roles}
+                        onChange={this.handleChange}
+                        label="Roles"
+                        name={"roles"}
+                        classes={{root: classes.textField}}
+
+                      >
+                        <MenuItem value={10}>Admin</MenuItem>
+                        <MenuItem value={20}>Alternant</MenuItem>
+                        <MenuItem value={30}>Collaborateur de niv 1</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <IconButton edge="end" aria-label="delete" onClick={this.removeUser}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            ))
+          }
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.setState({dialogState: false})} color="secondary">
+            Annuler
+          </Button>
+          <Button onClick={this.addService} color="primary">
+            Confirmé
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  };
+
+  render() {
+    const{classes} = this.props;
+    const{filters, listOfCollab, roles, listOfRoles} = this.state;
+
+    return(
+      <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <h3>Administrateurs</h3>
+        </Grid>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Box/>
+        </Grid>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Grid  style={{display: 'flex', alignItems: 'center'}}>
+            <Grid>
+              <h3>Roles</h3>
+            </Grid>
+            <Grid>
+              <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogChip')}>
+                <AddCircleOutlineOutlinedIcon />
+              </IconButton>
             </Grid>
           </Grid>
         </Grid>
-        <Grid style={{marginTop: '5vh'}}>
-          <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
-            <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-              <Grid>
-                <h3>Collaborateurs</h3>
-              </Grid>
-              <Grid container style={{marginLeft: '1vh'}}>
-                <Grid>
-                  <IconButton aria-label="AddCircleOutlineOutlinedIcon">
-                    <AddCircleOutlineOutlinedIcon />
-                  </IconButton>
-                </Grid>
-                <Grid>
-                  <IconButton aria-label="GetAppOutlinedIcon">
-                    <GetAppOutlinedIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Box>
+            <Grid className={classes.listChipContainer}>
+              {
+                listOfRoles.map(res =>(
+                  <Chip
+                    label={res}
+                    onDelete={() => this.handleDeleteChip(res)}
+                    variant="outlined"
+                  />
+                ))
+              }
             </Grid>
-            <Grid className={classes.searchFilterRightContainer}>
-              <Grid className={classes.searchFilterRightLabel}>
-                <Typography>Trier par</Typography>
+          </Box>
+        </Grid>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+          <Grid style={{display: 'flex', alignItems: 'center'}}>
+            <Grid>
+              <h3>Collaborateurs</h3>
+            </Grid>
+            <Grid container style={{marginLeft: '1vh'}}>
+              <Grid>
+                <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogState')}>
+                  <AddCircleOutlineOutlinedIcon />
+                </IconButton>
               </Grid>
               <Grid>
-                <FormControl>
-                  <Select
-                    labelId="simple-select-placeholder-label-label"
-                    id="simple-select-placeholder-label"
-                    value={filters}
-                    name={'filters'}
-                    onChange={this.handleChange}
-                    displayEmpty
-                    disableUnderline
-                    classes={{select: classes.searchSelectPadding}}
-                  >
-                    <MenuItem value={10}><strong>Ordre alphabétique</strong></MenuItem>
-                    <MenuItem value={20}><strong>Test</strong></MenuItem>
-                  </Select>
-                </FormControl>
+                <IconButton aria-label="GetAppOutlinedIcon">
+                  <GetAppOutlinedIcon />
+                </IconButton>
               </Grid>
             </Grid>
           </Grid>
-          <Grid container spacing={3} style={{marginTop: '3vh'}}>
+          <Grid className={classes.searchFilterRightContainer}>
+            <Grid className={classes.searchFilterRightLabel}>
+              <Typography>Trier par</Typography>
+            </Grid>
+            <Grid>
+              <FormControl>
+                <Select
+                  labelId="simple-select-placeholder-label-label"
+                  id="simple-select-placeholder-label"
+                  value={filters}
+                  name={'filters'}
+                  onChange={this.handleChange}
+                  displayEmpty
+                  disableUnderline
+                  classes={{select: classes.searchSelectPadding}}
+                >
+                  <MenuItem value={10}><strong>Ordre alphabétique</strong></MenuItem>
+                  <MenuItem value={20}><strong>Test</strong></MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Grid container spacing={3}>
             <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
               <Box>
-                <Grid style={{display: 'flex', flexDirection: 'row-reverse'}}>
+                <Grid>
+                  <List>
+                    {listOfCollab.map( (res,index) =>(
+                      <Grid key={index}>
+                        <ListItem key={index}>
+                          <ListItemText
+                            primary={res.name}
+                            secondary={res.email}
+                          />
+                          <ListItemSecondaryAction>
+                            <FormControl className={classes.formControl}>
+                              <InputLabel id="demo-simple-select-label">Roles</InputLabel>
+                              <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={roles}
+                                onChange={this.handleChange}
+                                name={'roles'}
+                              >
+                                <MenuItem value={10}>Admin</MenuItem>
+                                <MenuItem value={20}>Alternant</MenuItem>
+                                <MenuItem value={30}>Collaborateur de niv 1</MenuItem>
+                              </Select>
+                            </FormControl>
+                          </ListItemSecondaryAction>
+                        </ListItem>
+                        <Divider/>
+                      </Grid>
+                      )
+                    )}
+                  </List>
+                </Grid>
+                <Grid style={{display: 'flex', flexDirection: 'row-reverse', marginTop: '3vh'}}>
                   <Button variant={'contained'} style={{textTransform: 'initial', color: 'white', fontWeight: 'bold'}} color={'primary'}>
                     Enregistrer
                   </Button>
@@ -96,6 +365,8 @@ class Team extends React.Component{
             </Grid>
           </Grid>
         </Grid>
+        {this.dialogAddService(classes)}
+        {this.dialogChip(classes)}
       </Grid>
     );
   }

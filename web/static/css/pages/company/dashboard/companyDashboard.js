@@ -4,6 +4,7 @@ export default theme =>({
   root: {
     display: 'flex',
     backgroundColor: 'rgba(249,249,249, 1)',
+    minHeight: '100vh',
     [theme.breakpoints.down('sm')]:{
       flexDirection : 'column'
     }
@@ -24,7 +25,7 @@ export default theme =>({
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
-    position: 'inherit',
+    position: 'fixed',
     backgroundColor: '#353A51',
     borderTopRightRadius: '30px 40px',
     border:0,

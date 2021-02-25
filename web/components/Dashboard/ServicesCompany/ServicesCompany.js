@@ -59,9 +59,7 @@ class ServicesCompany extends React.Component{
         'Service I',
         'Service J',
       ],
-      dialogState: false,
       dialogConfigService: false,
-      nameService: '',
       serviceSelected: '',
       availableService: [],
       listOfServices: [{label: 'service A - service B - service C'}, {label: 'service D'}, {label: 'service E'}],
@@ -92,43 +90,6 @@ class ServicesCompany extends React.Component{
     }else{
       this.setState({[name]: value})
     }
-  };
-
-  addService = () => {
-    const{nameService, items} = this.state;
-    this.setState({ items: [...items, nameService],  dialogState: false});
-  };
-
-  dialogAddService = () => {
-    const{dialogState, nameService} = this.state;
-
-    return(
-      <Dialog open={dialogState} onClose={() => this.setState({dialogState: false})} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Ajouter une catégorie de collaborateurs</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Mettre un descriptif.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            id="nameService"
-            label="catégorie de collaborateurs"
-            name={'nameService'}
-            fullWidth
-            onChange={this.handleOnchange}
-            value={nameService}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => this.setState({dialogState: false})} color="secondary">
-            Annuler
-          </Button>
-          <Button onClick={this.addService} color="primary">
-            Confirmé
-          </Button>
-        </DialogActions>
-      </Dialog>
-    )
   };
 
   dialogConfigService = (classes) => {
@@ -327,7 +288,6 @@ class ServicesCompany extends React.Component{
             ))}
           </Box>
         </Grid>
-        {this.dialogAddService(classes)}
         {this.dialogConfigService(classes)}
         </Grid>
     );
