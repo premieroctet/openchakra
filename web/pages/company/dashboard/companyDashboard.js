@@ -95,7 +95,17 @@ class companyDashboard extends React.Component{
            ))}
          </List>
          <Grid container style={{display:'flex', justifyContent:'center'}}>
-           <Button variant="outlined" classes={{root: classes.helpButton}}>Aide</Button>
+           <Grid>
+             <Button variant="outlined" classes={{root: classes.helpButton}}>Aide</Button>
+           </Grid>
+           <Grid style={{height: '100%', display : 'flex', flexDirection: 'column-reverse'}}>
+             <img
+               alt={'logo_myAlfred'}
+               title={'logo_myAlfred'}
+               src={'../../../static/assets/icon/logo.svg'}
+               height={64}
+               style={{filter: 'invert(1)'}}/>
+           </Grid>
          </Grid>
        </Grid>
      </Grid>

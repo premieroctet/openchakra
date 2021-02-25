@@ -33,6 +33,8 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 
 class ServicesCompany extends React.Component{
   constructor(props) {
@@ -46,22 +48,23 @@ class ServicesCompany extends React.Component{
         'Paramètrez les services des alternants'
       ],
       serviceNames:[
-        'Oliver Hansen',
-        'Van Henry',
-        'April Tucker',
-        'Ralph Hubbard',
-        'Omar Alexander',
-        'Carlos Abbott',
-        'Miriam Wagner',
-        'Bradley Wilkerson',
-        'Virginia Andrews',
-        'Kelly Snyder',
+        'Service A',
+        'Service B',
+        'Service C',
+        'Service D',
+        'Service E',
+        'Service F',
+        'Service G',
+        'Service H',
+        'Service I',
+        'Service J',
       ],
       dialogState: false,
       dialogConfigService: false,
       nameService: '',
       serviceSelected: '',
       availableService: [],
+      listOfServices: [{label: 'service A - service B - service C'}, {label: 'service D'}, {label: 'service E'}],
       valueInvoice: '',
       rib: '',
       takeInCharge: false,
@@ -141,7 +144,7 @@ class ServicesCompany extends React.Component{
               </Grid>
               <Grid>
                 <FormControl className={classes.formControl}>
-                  <InputLabel id="demo-mutiple-chip-label">Selectioner</InputLabel>
+                  <InputLabel id="demo-mutiple-chip-label">Selectioner ou retirer</InputLabel>
                   <Select
                     labelId="demo-mutiple-chip-label"
                     id="demo-mutiple-chip"
@@ -269,20 +272,13 @@ class ServicesCompany extends React.Component{
   };
 
   render() {
-    const{items} = this.state;
+    const{items, listOfServices} = this.state;
     const{classes} = this.props;
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
           <Grid>
             <h3>Mes services</h3>
-          </Grid>
-          <Grid style={{marginLeft: '1vh'}}>
-            <Grid>
-              <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogState')}>
-                <AddCircleOutlineOutlinedIcon />
-              </IconButton>
-            </Grid>
           </Grid>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -299,17 +295,32 @@ class ServicesCompany extends React.Component{
                       <Typography className={classes.heading}>{res}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                      <Typography>
-                        <em> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                          sit amet blandit leo lobortis eget.
-                        </em>
-                      </Typography>
+                      <Grid style={{width: '100%'}}>
+                        <List>
+                          {listOfServices.map( (res, index) =>(
+                            <ListItem key={index}>
+                              <ListItemText
+                                primary={res.label}
+                                secondary={'100% 100€/mois'}
+                              />
+                              <ListItemSecondaryAction>
+                                <IconButton edge="end" aria-label="SettingsIcon" onClick={() => this.handleClickOpen('dialogConfigService', res.label)}>
+                                  <SettingsIcon />
+                                </IconButton>
+                                <IconButton edge="end" aria-label="delete">
+                                  <DeleteIcon />
+                                </IconButton>
+                              </ListItemSecondaryAction>
+                            </ListItem> )
+                          )}
+                        </List>
+                      </Grid>
                     </AccordionDetails>
                   </Accordion>
                 </Grid>
                 <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
-                  <IconButton edge="end" aria-label="SettingsIcon" onClick={() => this.handleClickOpen('dialogConfigService', res)}>
-                    <SettingsIcon />
+                  <IconButton edge="end" aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogState')}>
+                    <AddCircleOutlineOutlinedIcon />
                   </IconButton>
                 </Grid>
               </Grid>
