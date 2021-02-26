@@ -61,7 +61,11 @@ class Team extends React.Component{
       filters: 10,
       roles: '',
       listOfRoles:['Admin', 'Alternant', 'Stagiaire'],
-      listOfNewAdmin:[],
+      listOfNewAdmin:[{
+        nameAdmin: '',
+        firstNameAdmin: '',
+        emailAdmin: ''
+      }],
       dialogState: false,
       dialogChip: false,
       firstname: '',
@@ -105,8 +109,20 @@ class Team extends React.Component{
 
   addNewLine = (name) =>{
     if(name === 'nbAdmin'){
-      this.setState({[name]: this.state.nbAdmin + 1})
+      let updatedObj = {nameAdmin: '',firstNameAdmin: '', emailAdmin: ''};
+      this.setState({
+        listOfNewAdmin: [
+          ...this.state.listOfNewAdmin, updatedObj
+        ]
+      })
+    }
+  };
 
+  removeLine = (name, index, event) =>{
+    if(name === 'nbAdmin'){
+      let array = [...this.state.listOfNewAdmin];
+      array.splice(index, 1);
+      this.setState({listOfNewAdmin: array})
     }
   };
 
@@ -127,19 +143,20 @@ class Team extends React.Component{
   };
 
   dialogAdmin = (classes)=>{
-    const{dialogAdmin, newChipField, nbAdmin} = this.state;
+    const{dialogAdmin, listOfNewAdmin, nbAdmin} = this.state;
 
     return(
       <Dialog open={dialogAdmin} onClose={() => this.setState({dialogAdmin: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
         <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdmin: false})} onClick={() => this.addNewLine('nbAdmin')} >Ajouter un Administrateurs</DialogTitle>
         <DialogContent dividers>
           {
-            [...Array(nbAdmin)].map((res, index) => (
-              <Grid container spacing={2} style={{width: '100%', margin: 0}}>
+            listOfNewAdmin.map((res, index) => (
+              <Grid container spacing={2} style={{width: '100%', margin: 0}} key={index} id={index}>
                 <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
                   <TextField
                     label="Nom"
                     name={'nameAdmin'}
+                    value={res.nameAdmin || ''}
                     onChange={(e) => this.handleChange(index, e)}
                     variant={'outlined'}
                     classes={{root: classes.textField}}
@@ -148,6 +165,7 @@ class Team extends React.Component{
                 <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
                   <TextField
                     label="Prénom"
+                    value={res.firstNameAdmin || ''}
                     name={'firstNameAdmin'}
                     onChange={(e) => this.handleChange(index, e)}
                     variant={'outlined'}
@@ -158,13 +176,14 @@ class Team extends React.Component{
                   <TextField
                     label="Email"
                     name={'emailAdmin'}
+                    value={res.emailAdmin || ''}
                     onChange={(e) => this.handleChange(index, e)}
                     variant={'outlined'}
                     classes={{root: classes.textField}}
                   />
                 </Grid>
                 <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
-                  <IconButton edge="end" aria-label="delete">
+                  <IconButton edge="end" aria-label="delete" onClick={(e) => this.removeLine('nbAdmin',index, e)}>
                     <DeleteIcon />
                   </IconButton>
                 </Grid>
