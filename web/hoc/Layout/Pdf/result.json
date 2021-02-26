@@ -11,7 +11,7 @@
     "_id": "60379fe0f073561d7c07b45e",
     "reference": "AAFB_25022021_96207",
     "service": "Création de site web",
-    "amount": 696.2,
+    "amount": 991.2,
     "alfred": {
       "billing_address": {
         "gps": {
@@ -190,6 +190,12 @@
         "price": 590,
         "value": 1,
         "name": "Site Web E-Commerce"
+      },
+      {
+        "_id": "bc113cc2780f11eb94390242",
+        "price": 125,
+        "value": 2,
+        "name": "Backup serveurs"
       }
     ],
     "fees": 106.2,
@@ -197,7 +203,7 @@
     "serviceUserId": "5fa2751e5a565501f403ce8f",
     "date": "2021-02-25T13:02:24.362Z",
     "__v": 0,
-    "alfred_amount": 590,
+    "alfred_amount": 840,
     "date_prestation_moment": 1617798600000,
     "calendar_display": true,
     "id": "60379fe0f073561d7c07b45e"

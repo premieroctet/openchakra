@@ -161,12 +161,7 @@ class LayoutPdf extends React.Component {
       datePayment: null,
       paymentMethod: '',
       paymentId: '',
-      prestations: {
-        id: '',
-        value: '',
-        price: '',
-        name: ''
-      },
+      prestations: [],
       amount: '',
       fees: '',
       isIndividual: true,
@@ -191,12 +186,7 @@ class LayoutPdf extends React.Component {
       datePayment: '',
       paymentMethod: 'Carte bancaire',
       paymentId: resBooking.BookingObj.id,
-      prestations: {
-        id: resBooking.BookingObj.prestations._id,
-        value: resBooking.BookingObj.prestations[0].value,
-        price: moneyFormat(resBooking.BookingObj.prestations[0].price),
-        name: resBooking.BookingObj.prestations[0].name
-      },
+      prestations: resBooking.BookingObj.prestations,
       amount: moneyFormat(resBooking.BookingObj.amount),
       fees: resBooking.BookingObj.fees,
     });
@@ -349,20 +339,32 @@ class LayoutPdf extends React.Component {
                 <Text style={styles.tableCellHeaderNum}>Total</Text>
               </View>
             </View>
-            <View style={styles.tableRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>1</Text>
-              </View>
-              <View style={styles.tableColDescription}>
-                <Text style={styles.tableCell}>{prestations.name}</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCellNum}>{prestations.value}</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCellNum}>{amount} €</Text>
-              </View>
-            </View>
+            {
+              Object.keys(prestations).map(presta => {
+                return (
+                  <View style={styles.tableRow}>
+                    <View style={styles.tableCol}>
+                      <Text style={styles.tableCell}>{Number(presta) + 1}</Text>
+                    </View>
+                    <View style={styles.tableColDescription}>
+                      <Text style={styles.tableCell}>{prestations[presta].name}</Text>
+                    </View>
+                    <View style={styles.tableCol}>
+                      <Text style={styles.tableCellNum}>{prestations[presta].value}</Text>
+                    </View>
+                    <View style={styles.tableCol}>
+                      <Text
+                        style={styles.tableCellNum}>{(moneyFormat(
+                        (Number(prestations[presta].price) * 1.18) * prestations[presta].value))} €
+                      </Text>
+                    </View>
+                  </View>
+                )
+
+              })
+            }
+
+
             <View style={styles.resultRow}>
               <View style={styles.tableCol}>
                 <Text style={styles.tableCellTTC}>TOTAL TTC</Text>
@@ -414,7 +416,8 @@ class LayoutPdf extends React.Component {
               }, veuillez <Link
               src={'https://www.my-alfred.io/contact'}>nous contacter.</Link></Text>
           </View>
-          {/*Footer*/}
+          {/*Footer*/
+          }
           <View fixed style={styles.footer}>
             <Text>Page 1</Text>
           </View>
