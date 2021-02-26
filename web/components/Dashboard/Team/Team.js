@@ -66,6 +66,7 @@ class Team extends React.Component{
         firstNameAdmin: '',
         emailAdmin: ''
       }],
+      listOfAdmin:[],
       dialogState: false,
       dialogChip: false,
       firstname: '',
@@ -100,6 +101,8 @@ class Team extends React.Component{
     const{nameService, items} = this.state;
     this.setState({ items: [...items, nameService],  dialogState: false});
   };
+
+
 
   handleDeleteChip = (chip) =>{
     const{listOfRoles} = this.state;
@@ -140,6 +143,10 @@ class Team extends React.Component{
 
   handleClickOpen = (name) =>{
     this.setState({[name]: true})
+  };
+
+  addAdmin = () =>{
+    this.setState({listOfAdmin: this.state.listOfNewAdmin, dialogAdmin: false})
   };
 
   dialogAdmin = (classes)=>{
@@ -195,7 +202,7 @@ class Team extends React.Component{
           <Button onClick={() => this.setState({dialogAdmin: false})} color="secondary">
             Annuler
           </Button>
-          <Button onClick={this.addService} color="primary">
+          <Button onClick={this.addAdmin} color="primary">
             Confirmé
           </Button>
         </DialogActions>
@@ -329,7 +336,7 @@ class Team extends React.Component{
 
   render() {
     const{classes} = this.props;
-    const{filters, listOfCollab, roles, listOfRoles, isMicroService} = this.state;
+    const{filters, listOfCollab, roles, listOfRoles, isMicroService, listOfAdmin} = this.state;
 
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
@@ -346,7 +353,19 @@ class Team extends React.Component{
           </Grid>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <Box/>
+          <Box>
+            {
+              listOfAdmin.length > 0 ?
+                listOfAdmin.map((res) =>(
+                  <Grid>
+                    <Grid>{res.nameAdmin},{res.firstNameAdmin} - {res.emailAdmin}</Grid>
+                  </Grid>
+                )) :
+                <Grid>
+                  <Typography>Pas d'admin</Typography>
+                </Grid>
+            }
+          </Box>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid  style={{display: 'flex', alignItems: 'center'}}>
