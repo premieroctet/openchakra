@@ -33,6 +33,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Button from "@material-ui/core/Button";
 import NavBar from "../../../hoc/Layout/NavBar/NavBar";
 import MobileNavbar from "../../../hoc/Layout/NavBar/MobileNavbar";
+import axios from "axios";
+import Router from "next/router";
+const {setAxiosAuthentication} = require('../../../utils/authentication');
+const {is_b2b_admin} = require('../../../utils/context');
 
 
 class companyDashboard extends React.Component{
@@ -40,7 +44,8 @@ class companyDashboard extends React.Component{
     super(props);
     this.state={
       mobileOpen: false,
-      activeStep: 0,
+      activeStep: 1,
+      isMicroService: true,
       sideBarLabels:[
         {
           label: 'Tableau de bord',
@@ -67,9 +72,34 @@ class companyDashboard extends React.Component{
           icon: <WorkOutlineOutlinedIcon />
         },
       ]
-
     }
   }
+
+  componentDidMount(){
+    setAxiosAuthentication();
+    axios
+      .get('/myAlfred/api/users/current')
+      .then(res => {
+        let user = res.data;
+        this.setState({
+          user: user,
+          email: user.email,
+          firstName: user.firstname,
+          name: user.name,
+          position: user.position,
+        });
+        if(!is_b2b_admin(user)){
+          Router.push({pathname: '/'});
+        }
+      })
+      .catch(err => {
+          console.error(err);
+          if (err.response.status === 401 || err.response.status === 403) {
+            //Router.push({pathname: '/'});
+          }
+        },
+      );
+  };
 
   handleDrawerToggle = () => {
     this.setState({mobileOpen: !this.state.mobileOpen})

@@ -57,9 +57,11 @@ class Team extends React.Component{
   constructor(props) {
     super(props);
     this.state={
+      isMicroService: true,
       filters: 10,
       roles: '',
       listOfRoles:['Admin', 'Alternant', 'Stagiaire'],
+      listOfNewAdmin:[],
       dialogState: false,
       dialogChip: false,
       firstname: '',
@@ -67,14 +69,27 @@ class Team extends React.Component{
       newChipField: '',
       email: '',
       nbNewUser: 1,
+      nbAdmin:1,
       nbChip: 1,
+      dialogAdmin:false,
       listOfCollab: [{name: 'Solene', email: 'solene@email.fr'},{name: 'Edwin', email: 'edwin@email.fr'},{name: 'wilfrid', email: 'wilfrid@email.fr'}, {name: 'armand', email:'armand@email.fr'},{name: 'sebastien', email: 'sebastien@email.fr'}]
     }
   }
 
-  handleChange = (event) =>{
+  handleChange = (index, event) =>{
     const {value, name} = event.target;
-    this.setState({[name]: value})
+    if(name === 'nameAdmin' || name === 'firstNameAdmin' || name === 'emailAdmin'){
+      let updatedObj = Object.assign({}, this.state.listOfNewAdmin[index],{[name]: value});
+      this.setState({
+        listOfNewAdmin: [
+          ...this.state.listOfNewAdmin.slice(0, index),
+          updatedObj,
+          ...this.state.listOfNewAdmin.slice(index + 1)
+        ]
+      })
+    }else{
+      this.setState({[name]: value})
+    }
   };
 
   addService = () => {
@@ -88,21 +103,16 @@ class Team extends React.Component{
     this.setState({listOfRoles : newArray})
   };
 
-  addNewLine = () =>{
-    this.setState({nbNewUser: this.state.nbNewUser + 1})
+  addNewLine = (name) =>{
+    if(name === 'nbAdmin'){
+      this.setState({[name]: this.state.nbAdmin + 1})
+
+    }
   };
 
   removeUser = () =>{
     this.setState({nbNewUser: this.state.nbNewUser - 1})
 
-  };
-
-  addNewLineChip = () =>{
-    this.setState({nbChip: this.state.nbChip + 1})
-  };
-
-  removeChip = () =>{
-    this.setState({nbChip: this.state.nbChip - 1})
   };
 
   handleOnchangeListOfRoles = (event) =>{
@@ -116,12 +126,70 @@ class Team extends React.Component{
     this.setState({[name]: true})
   };
 
+  dialogAdmin = (classes)=>{
+    const{dialogAdmin, newChipField, nbAdmin} = this.state;
+
+    return(
+      <Dialog open={dialogAdmin} onClose={() => this.setState({dialogAdmin: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogAdmin: false})} onClick={() => this.addNewLine('nbAdmin')} >Ajouter un Administrateurs</DialogTitle>
+        <DialogContent dividers>
+          {
+            [...Array(nbAdmin)].map((res, index) => (
+              <Grid container spacing={2} style={{width: '100%', margin: 0}}>
+                <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
+                  <TextField
+                    label="Nom"
+                    name={'nameAdmin'}
+                    onChange={(e) => this.handleChange(index, e)}
+                    variant={'outlined'}
+                    classes={{root: classes.textField}}
+                  />
+                </Grid>
+                <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
+                  <TextField
+                    label="Prénom"
+                    name={'firstNameAdmin'}
+                    onChange={(e) => this.handleChange(index, e)}
+                    variant={'outlined'}
+                    classes={{root: classes.textField}}
+                  />
+                </Grid>
+                <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
+                  <TextField
+                    label="Email"
+                    name={'emailAdmin'}
+                    onChange={(e) => this.handleChange(index, e)}
+                    variant={'outlined'}
+                    classes={{root: classes.textField}}
+                  />
+                </Grid>
+                <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
+                  <IconButton edge="end" aria-label="delete">
+                    <DeleteIcon />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            ))
+          }
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.setState({dialogAdmin: false})} color="secondary">
+            Annuler
+          </Button>
+          <Button onClick={this.addService} color="primary">
+            Confirmé
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  };
+
   dialogChip = (classes)=>{
     const{dialogChip, newChipField, nbChip} = this.state;
 
     return(
       <Dialog open={dialogChip} onClose={() => this.setState({dialogChip: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
-        <DialogTitle id="customized-dialog-title" onClick={this.addNewLineChip} onClose={() => this.setState({dialogChip: false})} >Ajouter un role</DialogTitle>
+        <DialogTitle id="customized-dialog-title" onClick={this.addNewLine} onClose={() => this.setState({dialogChip: false})} >Ajouter un role</DialogTitle>
         <DialogContent dividers>
           {
             [...Array(nbChip)].map((res, index) => (
@@ -242,12 +310,21 @@ class Team extends React.Component{
 
   render() {
     const{classes} = this.props;
-    const{filters, listOfCollab, roles, listOfRoles} = this.state;
+    const{filters, listOfCollab, roles, listOfRoles, isMicroService} = this.state;
 
     return(
       <Grid container spacing={3} style={{marginTop: '3vh', width: '100%' , margin : 0}}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <h3>Administrateurs</h3>
+          <Grid style={{display: 'flex', alignItems: 'center'}}>
+            <Grid>
+              <h3>Administrateurs</h3>
+            </Grid>
+            <Grid>
+              <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogAdmin')}>
+                <AddCircleOutlineOutlinedIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Box/>
@@ -255,7 +332,7 @@ class Team extends React.Component{
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Grid  style={{display: 'flex', alignItems: 'center'}}>
             <Grid>
-              <h3>Roles</h3>
+              <h3>Classification</h3>
             </Grid>
             <Grid>
               <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogChip')}>
@@ -282,7 +359,7 @@ class Team extends React.Component{
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
           <Grid style={{display: 'flex', alignItems: 'center'}}>
             <Grid>
-              <h3>Collaborateurs</h3>
+              <h3>{isMicroService ? 'Managers' : 'Collaborateurs'}</h3>
             </Grid>
             <Grid container style={{marginLeft: '1vh'}}>
               <Grid>
@@ -367,6 +444,7 @@ class Team extends React.Component{
         </Grid>
         {this.dialogAddService(classes)}
         {this.dialogChip(classes)}
+        {this.dialogAdmin(classes)}
       </Grid>
     );
   }
