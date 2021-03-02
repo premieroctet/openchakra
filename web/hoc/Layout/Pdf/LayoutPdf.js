@@ -11,6 +11,7 @@ import {Page, Text, View, Document, StyleSheet, Image, Link, Font} from '@react-
 import moment from 'moment';
 import {moneyFormat} from '../../../utils/converters';
 
+
 moment.locale('fr');
 const BORDER_COLOR = 'white'
 const BORDER_STYLE = 'solid'
@@ -166,7 +167,10 @@ class LayoutPdf extends React.Component {
       fees: '',
       isIndividual: true,
       isCesu: false,
-      isContractor: false
+      isContractor: false,
+      numPages: null,
+      setNumPages: null,
+      charges: false
     };
   }
 
@@ -189,6 +193,7 @@ class LayoutPdf extends React.Component {
       prestations: resBooking.BookingObj.prestations,
       amount: moneyFormat(resBooking.BookingObj.amount),
       fees: resBooking.BookingObj.fees,
+
     });
     if (resBooking.BookingObj.cesu_amount > 0) {
       this.setState({
@@ -198,230 +203,237 @@ class LayoutPdf extends React.Component {
     }
   }
 
+
   render() {
     const {
       bookingId, client, clientAddress, clientZipCode, clientCity, clientCountry,
       alfred, documentDate, paymentId, paymentMethod, prestations, amount, fees, isIndividual,
-      isCesu, isContractor
+      isCesu, isContractor, numPages, setNumPages, charges
     } = this.state
+
     return (
-      <Document>
-        <Page pageNumber={1} size="A4" style={styles.body}>
-          <View style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            flexDirection: 'row'
-          }}>
-            <View style={{
-              backgroundColor: 'black'
-            }}>
-              <Image src={"../../../static/assets/icon/logo.svg"}
-                     alt={'logo_myAlfred'}
-                     style={{
-                       height: 64
-                     }}/>
-            </View>
-            <View>
+      <Document
+        onLoadSuccess={({numPages}) => setNumPages(numPages)}
+      >
+        {Array.apply(null, Array(numPages))
+          .map((x, i) => i + 1)
+          .map(page =>
+            <Page pageNumber={page} size="A4" style={styles.body}>
               <View style={{
                 display: 'flex',
-                flexDirection: 'column',
-                textAlign: 'left'
+                justifyContent: 'space-between',
+                flexDirection: 'row'
               }}>
-                <View>
-                  <Text>
-                    MY-ALFRED
-                  </Text>
+                <View style={{
+                  backgroundColor: 'black'
+                }}>
+                  <Image src={"https://www.my-alfred.io/static/assets/icon/logo.svg"}
+                         alt={'logo_myAlfred'}
+                         style={{
+                           height: 64
+                         }}/>
                 </View>
                 <View>
-                  <Text>
-                    42 Rampe Bouvreuil
-                  </Text>
-                </View>
-                <View>
-                  <Text>
-                    76000 ROUEN
-                  </Text>
-                </View>
-                <View>
-                  <Text>
-                    France
-                  </Text>
-                </View>
-                <View>
-                  <Text>
-                    RCS : 850 148 867
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          <View>
-
-            <Text style={styles.title}>{isContractor ? 'Facture' :
-              'Récépissé'} vendeur n° 2021-0000380519</Text>
-          </View>
-
-          <View style={{display: 'flex', flexDirection: 'row'}}>
-            <View>
-              <Text style={styles.objectHead}>Objet :</Text>
-            </View>
-            <View>
-              <Text>Réservation {bookingId}</Text>
-            </View>
-          </View>
-
-          <View style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginBottom: '3vh'
-
-          }}>
-            <View style={{
-              display: 'flex',
-              flexDirection: 'row'
-            }}>
-              <View>
-                <Text style={styles.objectHead}>Pour : </Text>
-              </View>
-              <View style={{
-                display: 'flex',
-                flexDirection: 'column'
-              }}>
-                <View>
-                  <Text>{client}</Text>
-                </View>
-                <View>
-                  <Text>{clientAddress}</Text>
-                </View>
-                <View>
-                  <Text>{clientZipCode}</Text>
-                </View>
-                <View>
-                  <Text>{clientCity}</Text>
-                </View>
-                <View>
-                  <Text>{clientCountry}</Text>
-                </View>
-              </View>
-            </View>
-            <View style={{
-              display: 'flex',
-              flexDirection: 'row'
-            }}>
-              <View>
-                <Text style={styles.object}>De : </Text>
-              </View>
-              <View>
-                <Text>{alfred}</Text>
-              </View>
-            </View>
-          </View>
-
-          <View style={styles.table}>
-            <View style={styles.tableRow}>
-              <View style={styles.tableColHeader}>
-                <Text style={{
-                  margin: '5 2 5 0',
-                  fontSize: 12,
-                  fontWeight: 600,
-                  textAlign: 'center'
-                }}>#</Text>
-              </View>
-              <View style={styles.tableColHeaderDescription}>
-                <Text style={styles.tableCellHeader}>Description</Text>
-              </View>
-              <View style={styles.tableColHeader}>
-                <Text style={styles.tableCellHeaderNum}>Quantité</Text>
-              </View>
-              <View style={styles.tableColHeader}>
-                <Text style={styles.tableCellHeaderNum}>Total</Text>
-              </View>
-            </View>
-            {
-              Object.keys(prestations).map(presta => {
-                return (
-                  <View style={styles.tableRow}>
-                    <View style={styles.tableCol}>
-                      <Text style={styles.tableCell}>{Number(presta) + 1}</Text>
+                  <View style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    textAlign: 'left'
+                  }}>
+                    <View>
+                      <Text>
+                        MY-ALFRED
+                      </Text>
                     </View>
-                    <View style={styles.tableColDescription}>
-                      <Text style={styles.tableCell}>{prestations[presta].name}</Text>
+                    <View>
+                      <Text>
+                        42 Rampe Bouvreuil
+                      </Text>
                     </View>
-                    <View style={styles.tableCol}>
-                      <Text style={styles.tableCellNum}>{prestations[presta].value}</Text>
+                    <View>
+                      <Text>
+                        76000 ROUEN
+                      </Text>
                     </View>
-                    <View style={styles.tableCol}>
-                      <Text
-                        style={styles.tableCellNum}>{(moneyFormat(
-                        (Number(prestations[presta].price) * 1.18) * prestations[presta].value))} €
+                    <View>
+                      <Text>
+                        France
+                      </Text>
+                    </View>
+                    <View>
+                      <Text>
+                        RCS : 850 148 867
                       </Text>
                     </View>
                   </View>
-                )
+                </View>
+              </View>
 
-              })
-            }
+              <View>
+
+                <Text style={styles.title}>{isContractor ? 'Facture' :
+                  'Récépissé'} vendeur n° 2021-0000380519</Text>
+              </View>
+
+              <View style={{display: 'flex', flexDirection: 'row'}}>
+                <View>
+                  <Text style={styles.objectHead}>Objet :</Text>
+                </View>
+                <View>
+                  <Text>Réservation {bookingId}</Text>
+                </View>
+              </View>
+
+              <View style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginBottom: '3vh'
+
+              }}>
+                <View style={{
+                  display: 'flex',
+                  flexDirection: 'row'
+                }}>
+                  <View>
+                    <Text style={styles.objectHead}>Pour : </Text>
+                  </View>
+                  <View style={{
+                    display: 'flex',
+                    flexDirection: 'column'
+                  }}>
+                    <View>
+                      <Text>{client}</Text>
+                    </View>
+                    <View>
+                      <Text>{clientAddress}</Text>
+                    </View>
+                    <View>
+                      <Text>{clientZipCode}</Text>
+                    </View>
+                    <View>
+                      <Text>{clientCity}</Text>
+                    </View>
+                    <View>
+                      <Text>{clientCountry}</Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={{
+                  display: 'flex',
+                  flexDirection: 'row'
+                }}>
+                  <View>
+                    <Text style={styles.object}>De : </Text>
+                  </View>
+                  <View>
+                    <Text>{alfred}</Text>
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.table}>
+                <View style={styles.tableRow}>
+                  <View style={styles.tableColHeader}>
+                    <Text style={{
+                      margin: '5 2 5 0',
+                      fontSize: 12,
+                      fontWeight: 600,
+                      textAlign: 'center'
+                    }}>#</Text>
+                  </View>
+                  <View style={styles.tableColHeaderDescription}>
+                    <Text style={styles.tableCellHeader}>Description</Text>
+                  </View>
+                  <View style={styles.tableColHeader}>
+                    <Text style={styles.tableCellHeaderNum}>Quantité</Text>
+                  </View>
+                  <View style={styles.tableColHeader}>
+                    <Text style={styles.tableCellHeaderNum}>Total</Text>
+                  </View>
+                </View>
+                {
+                  Object.keys(prestations).map(presta => {
+                    return (
+                      <View style={styles.tableRow}>
+                        <View style={styles.tableCol}>
+                          <Text style={styles.tableCell}>{Number(presta) + 1}</Text>
+                        </View>
+                        <View style={styles.tableColDescription}>
+                          <Text style={styles.tableCell}>{prestations[presta].name}</Text>
+                        </View>
+                        <View style={styles.tableCol}>
+                          <Text style={styles.tableCellNum}>{prestations[presta].value}</Text>
+                        </View>
+                        <View style={styles.tableCol}>
+                          <Text
+                            style={styles.tableCellNum}>{(moneyFormat(
+                            (Number(prestations[presta].price) * 1.18) * prestations[presta].value))} €
+                          </Text>
+                        </View>
+                      </View>
+                    )
+                  })
+                }
 
 
-            <View style={styles.resultRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCellTTC}>TOTAL TTC</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.TableCellResult}>{amount} €</Text>
-              </View>
-            </View>
-          </View>
-          <View>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
-              <View>
-                <Text style={styles.object}>Date {isContractor ? 'de la facture'
-                  : 'du récépissé'} : </Text>
+                <View style={styles.resultRow}>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCellTTC}>TOTAL TTC</Text>
+                  </View>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.TableCellResult}>{amount} €</Text>
+                  </View>
+                </View>
               </View>
               <View>
-                <Text>{documentDate}</Text>
+                <View style={{display: 'flex', flexDirection: 'row'}}>
+                  <View>
+                    <Text style={styles.object}>Date {isContractor ? 'de la facture'
+                      : 'du récépissé'} : </Text>
+                  </View>
+                  <View>
+                    <Text>{documentDate}</Text>
+                  </View>
+                </View>
+                <View style={{display: 'flex', flexDirection: 'row'}}>
+                  <View>
+                    <Text style={styles.object}>Date de paiement : </Text>
+                  </View>
+                  <View>
+                    <Text>12 octobre 2020</Text>
+                  </View>
+                </View>
+                <View style={{display: 'flex', flexDirection: 'row'}}>
+                  <View>
+                    <Text style={styles.object}>Méthode de paiement : </Text>
+                  </View>
+                  <View>
+                    <Text>{paymentMethod}</Text>
+                  </View>
+                </View>
               </View>
-            </View>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
-              <View>
-                <Text style={styles.object}>Date de paiement : </Text>
+              <View style={{display: 'flex', flexDirection: 'row'}}>
+                <View>
+                  <Text style={styles.object}>Référence de transaction : </Text>
+                </View>
+                <View>
+                  <Text>{paymentId}</Text>
+                </View>
               </View>
-              <View>
-                <Text>12 octobre 2020</Text>
+              <View style={styles.infos}>
+                <Text>
+                  {isContractor ? 'Pour toute question concernant cette facture' :
+                    'Ceci n\'est pas une facture. Pour toute question concernant ce récépissé'
+                  }, veuillez <Link
+                  src={'https://www.my-alfred.io/contact'}>nous contacter.</Link></Text>
               </View>
-            </View>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
-              <View>
-                <Text style={styles.object}>Méthode de paiement : </Text>
+              {/*Footer*/
+              }
+              <View fixed style={styles.footer}>
+                <Text>Page {page}</Text>
               </View>
-              <View>
-                <Text>{paymentMethod}</Text>
-              </View>
-            </View>
-          </View>
-          <View style={{display: 'flex', flexDirection: 'row'}}>
-            <View>
-              <Text style={styles.object}>Référence de transaction : </Text>
-            </View>
-            <View>
-              <Text>{paymentId}</Text>
-            </View>
-          </View>
-          <View style={styles.infos}>
-            <Text>
-              {isContractor ? 'Pour toute question concernant cette facture' :
-                'Ceci n\'est pas une facture. Pour toute question concernant ce récépissé'
-              }, veuillez <Link
-              src={'https://www.my-alfred.io/contact'}>nous contacter.</Link></Text>
-          </View>
-          {/*Footer*/
-          }
-          <View fixed style={styles.footer}>
-            <Text>Page 1</Text>
-          </View>
-        </Page>
+            </Page>
+          )}
       </Document>
     )
   }

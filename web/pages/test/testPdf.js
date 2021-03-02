@@ -3,7 +3,7 @@ import React from "react";
 import {PDFDownloadLink} from "@react-pdf/renderer";
 import NoSSR from 'react-no-ssr';
 import Grid from "@material-ui/core/Grid";
-
+import PdfGeneration from "../../components/PdfGeneration/PdfGeneration";
 
 class TestPdf extends React.Component {
   constructor(props) {
@@ -32,7 +32,7 @@ class TestPdf extends React.Component {
               <Grid onClick={this.setLoading}
               >
                 <PDFDownloadLink
-                  document={<LayoutPdf/>}
+                  document={<PdfGeneration/>}
                   fileName="facture.pdf"
                   style={{
                     textDecoration: 'none',
