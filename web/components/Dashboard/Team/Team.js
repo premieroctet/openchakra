@@ -26,6 +26,14 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DeleteIcon from '@material-ui/icons/Delete';
 import Chip from '@material-ui/core/Chip';
 import CloseIcon from '@material-ui/icons/Close';
+import SettingsIcon from '@material-ui/icons/Settings';
+import axios from 'axios';
+import Router from 'next/router';
+const {setAxiosAuthentication}=require('../../../utils/authentication');
+import InputAdornment from '@material-ui/core/InputAdornment';
+import OutlinedInput from "@material-ui/core/OutlinedInput";
+import Input from '@material-ui/core/Input';
+
 
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, onClick, ...other } = props;
@@ -35,11 +43,15 @@ const DialogTitle = withStyles(styles)((props) => {
         <Grid>
           <Typography variant="h6">{children}</Typography>
         </Grid>
-        <Grid>
-          <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={onClick}>
-            <AddCircleOutlineOutlinedIcon/>
-          </IconButton>
-        </Grid>
+        {
+          onClick ? (
+            <Grid>
+              <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={onClick}>
+                <AddCircleOutlineOutlinedIcon/>
+              </IconButton>
+            </Grid>
+          ) : null
+        }
       </Grid>
       {onClose ? (
         <IconButton aria-label="closeButton" className={classes.closeButton} onClick={onClose}>
@@ -50,8 +62,17 @@ const DialogTitle = withStyles(styles)((props) => {
   );
 });
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
 
-
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 class Team extends React.Component{
   constructor(props) {
@@ -66,9 +87,15 @@ class Team extends React.Component{
         firstNameAdmin: '',
         emailAdmin: ''
       }],
+      listOfNewGroupes:[{
+        nameGroupe: '',
+        tarifGroupe: '',
+        modeTarif: '',
+        roleOfGroupe: ''
+      }],
       listOfAdmin:[],
       dialogState: false,
-      dialogChip: false,
+      dialogGroupe: false,
       firstname: '',
       name: '',
       newChipField: '',
@@ -77,25 +104,14 @@ class Team extends React.Component{
       nbAdmin:1,
       nbChip: 1,
       dialogAdmin:false,
+      dialogRemoveAdmin: false,
+      dialogUpdateAdmin: false,
+      adminSelected: '',
       listOfCollab: [{name: 'Solene', email: 'solene@email.fr'},{name: 'Edwin', email: 'edwin@email.fr'},{name: 'wilfrid', email: 'wilfrid@email.fr'}, {name: 'armand', email:'armand@email.fr'},{name: 'sebastien', email: 'sebastien@email.fr'}]
     }
   }
 
-  handleChange = (index, event) =>{
-    const {value, name} = event.target;
-    if(name === 'nameAdmin' || name === 'firstNameAdmin' || name === 'emailAdmin'){
-      let updatedObj = Object.assign({}, this.state.listOfNewAdmin[index],{[name]: value});
-      this.setState({
-        listOfNewAdmin: [
-          ...this.state.listOfNewAdmin.slice(0, index),
-          updatedObj,
-          ...this.state.listOfNewAdmin.slice(index + 1)
-        ]
-      })
-    }else{
-      this.setState({[name]: value})
-    }
-  };
+
 
   addService = () => {
     const{nameService, items} = this.state;
@@ -110,9 +126,23 @@ class Team extends React.Component{
     this.setState({listOfRoles : newArray})
   };
 
-  addAdmin = () =>{
-    this.setState({listOfAdmin: this.state.listOfNewAdmin, dialogAdmin: false})
+  handleChange = (index, event) =>{
+    const {value, name} = event.target;
+    if(name === 'nameAdmin' || name === 'firstNameAdmin' || name === 'emailAdmin'){
+    let updatedObj = Object.assign({}, this.state.listOfNewAdmin[index],{[name]: value});
+      this.setState({
+        listOfNewAdmin: [
+          ...this.state.listOfNewAdmin.slice(0, index),
+          updatedObj,
+          ...this.state.listOfNewAdmin.slice(index + 1)
+        ]
+      })
+    }else{
+      this.setState({[name]: value})
+    }
   };
+
+
 
   addNewLine = (name) =>{
     if(name === 'nbAdmin'){
@@ -145,11 +175,32 @@ class Team extends React.Component{
   };
 
 
-  handleClickOpen = (name) =>{
+  handleClickOpen = (name, email) =>{
+    if(name === 'dialogRemoveAdmin' || name === 'dialogUpdateAdmin'){
+      this.setState({adminSelected: email})
+    }
     this.setState({[name]: true})
   };
 
 
+  addAdmin = () =>{
+    const{listOfAdmin, listOfNewAdmin} = this.state;
+    const newArray = listOfAdmin.concat(listOfNewAdmin);
+    this.setState({listOfAdmin: newArray, dialogAdmin: false});
+    setAxiosAuthentication();
+
+   /* axios.post('/myAlfred/api/companies/admin', listOfNewAdmin).then( res =>{
+      console.log(res,'res')
+    }).catch(err =>{
+      console.error(err)
+    })*/
+  };
+
+  removeAdmin = () =>{
+    const{listOfAdmin, adminSelected} = this.state;
+    const items = listOfAdmin.filter(item => item.emailAdmin !== adminSelected);
+    this.setState({listOfAdmin: items , dialogRemoveAdmin: false})
+  };
 
   dialogAdmin = (classes)=>{
     const{dialogAdmin, listOfNewAdmin} = this.state;
@@ -191,7 +242,7 @@ class Team extends React.Component{
                     classes={{root: classes.textField}}
                   />
                 </Grid>
-                <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
+                <Grid item xl={3} lg={3} sm={3} md={3} xs={3} style={{display: 'flex', justifyContent: 'center'}}>
                   <IconButton edge="end" aria-label="delete" onClick={(e) => this.removeLine('nbAdmin',index, e)}>
                     <DeleteIcon />
                   </IconButton>
@@ -212,37 +263,197 @@ class Team extends React.Component{
     )
   };
 
-  dialogChip = (classes)=>{
-    const{dialogChip, newChipField, nbChip} = this.state;
+  dialogRemoveAdmin = (classes) => {
+    const{dialogRemoveAdmin, adminSelected} = this.state;
 
     return(
-      <Dialog open={dialogChip} onClose={() => this.setState({dialogChip: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
-        <DialogTitle id="customized-dialog-title" onClick={this.addNewLine} onClose={() => this.setState({dialogChip: false})} >Ajouter un role</DialogTitle>
-        <DialogContent dividers>
-          {
-            [...Array(nbChip)].map((res, index) => (
-              <Grid container spacing={2} style={{width: '100%', margin: 0}}>
-                <Grid item xl={11} lg={11} sm={11} md={11} xs={11}>
-                  <TextField
-                    label="Role"
-                    name={'newChipField'}
-                    onChange={this.handleOnchangeListOfRoles}
-                    value={newChipField[index]}
-                    variant={'outlined'}
-                    classes={{root: classes.textField}}
-                  />
-                </Grid>
-                <Grid item xl={1} lg={1} sm={1} md={1} xs={1}>
-                  <IconButton edge="end" aria-label="delete" onClick={this.removeChip}>
-                    <DeleteIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
-            ))
-          }
+      <Dialog
+        open={dialogRemoveAdmin}
+        onClose={() => this.setState({dialogRemoveAdmin: false})}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        classes={{paper: classes.dialogPaper}}
+      >
+        <MuiDialogTitle id="alert-dialog-title">{"Supprimer"}</MuiDialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Voulez vous supprimer {adminSelected} ?
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.setState({dialogChip: false})} color="secondary">
+          <Button onClick={() => this.setState({dialogRemoveAdmin: false})} color="primary">
+            Annuler
+          </Button>
+          <Button onClick={this.removeAdmin} color="primary">
+            Supprimer
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  };
+
+  dialogUpdateAdmin = (classes) => {
+    const{dialogUpdateAdmin, adminSelected, listOfAdmin} = this.state;
+    let res = listOfAdmin.find(obj => (obj.emailAdmin === adminSelected)) || '';
+
+    return(
+      <Dialog
+        open={dialogUpdateAdmin}
+        onClose={() => this.setState({dialogUpdateAdmin: false})}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        classes={{paper: classes.dialogPaper}}
+      >
+        <MuiDialogTitle id="alert-dialog-title">{"Update admin"}</MuiDialogTitle>
+        <DialogContent>
+          <Grid container spacing={2} style={{width: '100%', margin: 0}}>
+            <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
+              <TextField
+                label="Nom"
+                name={'nameAdmin'}
+                value={res.nameAdmin || ''}
+                onChange={(e) => this.handleChange(e)}
+                variant={'outlined'}
+                classes={{root: classes.textField}}
+              />
+            </Grid>
+            <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
+              <TextField
+                label="Prénom"
+                value={res.firstNameAdmin || ''}
+                name={'firstNameAdmin'}
+                onChange={(e) => this.handleChange(e)}
+                variant={'outlined'}
+                classes={{root: classes.textField}}
+              />
+            </Grid>
+            <Grid item xl={3} lg={3} sm={3} md={3} xs={3}>
+              <TextField
+                label="Email"
+                name={'emailAdmin'}
+                value={res.emailAdmin || ''}
+                onChange={(e) => this.handleChange(e)}
+                variant={'outlined'}
+                classes={{root: classes.textField}}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.setState({dialogUpdateAdmin: false})} color="primary">
+            Annuler
+          </Button>
+          <Button onClick={() => this.setState({dialogUpdateAdmin: false})} color="primary">
+            Mettre à jour
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  };
+
+  dialogGroupe = (classes)=>{
+    const{dialogGroupe, newChipField, listOfNewGroupes} = this.state;
+
+    return(
+      <Dialog open={dialogGroupe} onClose={() => this.setState({dialogGroupe: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
+        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({dialogGroupe: false})} >Ajouter un groupe</DialogTitle>
+        <DialogContent dividers>
+          <Grid container spacing={2} style={{width: '100%', margin: 0}}>
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <h3>Configuration groupe</h3>
+            </Grid>
+            {
+              listOfNewGroupes.map((res, index) => (
+                <Grid item xl={12} lg={12} md={12} sm={12} xs={12} container spacing={2} style={{width: '100%', margin: 0}}>
+                  <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
+                    <TextField
+                      label="Nom"
+                      name={'nameGroup'}
+                      value={newChipField[index]}
+                      variant={'outlined'}
+                      classes={{root: classes.textField}}
+                    />
+                  </Grid>
+                  <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
+                    <TextField
+                      label="Prix"
+                      name={'tarifGroupe'}
+                      value={newChipField[index]}
+                      variant={'outlined'}
+                      classes={{root: classes.textField}}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">€</InputAdornment>,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
+                    <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
+                      <InputLabel id="demo-simple-select-outlined-label">Mode</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        value={newChipField[index]}
+                        name={'modeTarif'}
+                      >
+                        <MenuItem value={10}>Month</MenuItem>
+                        <MenuItem value={20}>Year</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
+                    <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
+                      <InputLabel id="demo-simple-select-outlined-label">Equipe/Manager</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        value={newChipField[index]}
+                        name={'roleOfGroupe'}
+                      >
+                        <MenuItem value={10}>Equipe</MenuItem>
+                        <MenuItem value={20}>Manager</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+              ))
+            }
+            <Grid item spacing={2} style={{width: '100%', margin: 0}}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+                <h3>Facturation</h3>
+              </Grid>
+              <Grid item container spacing={3} style={{width: '100%', margin: 0}}>
+                <Grid item xl={12} lg={12}>
+                  <FormControl className={classes.formControl}>
+                    <InputLabel id="demo-mutiple-chip-label">RIB</InputLabel>
+                    <Select
+                      labelId="demo-mutiple-chip-label"
+                      id="demo-mutiple-chip"
+                      multiple
+                      onChange={this.handleOnchange}
+                      name={'chip'}
+                      value={[]}
+                      input={<Input id="select-multiple-chip" />}
+                      renderValue={(selected) => (
+                        <div className={classes.chips}>
+                          {selected.map((value) => (
+                            <Chip key={value} label={value} className={classes.chip} />
+                          ))}
+                        </div>
+                      )}
+                      MenuProps={MenuProps}
+                    >
+                      <MenuItem value={10}>Rib A</MenuItem>
+                      <MenuItem value={10}>Rib B</MenuItem>
+                      <MenuItem value={10}>Rib C</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.setState({dialogGroupe: false})} color="secondary">
             Annuler
           </Button>
           <Button onClick={this.addService} color="primary">
@@ -360,13 +571,16 @@ class Team extends React.Component{
               listOfAdmin.length > 0 ?
                 <Grid>
                   <List>
-                    {listOfAdmin.map((res) =>(
-                      <ListItem>
+                    {listOfAdmin.map((res, index) =>(
+                      <ListItem key={index}>
                         <ListItemText
                           primary={`${res.nameAdmin},${res.firstNameAdmin} - ${res.emailAdmin}`}
                         />
                         <ListItemSecondaryAction>
-                          <IconButton edge="end" aria-label="delete">
+                          <IconButton edge="end" aria-label="update" onClick={() => this.handleClickOpen('dialogUpdateAdmin', res.emailAdmin)}>
+                            <SettingsIcon />
+                          </IconButton>
+                          <IconButton edge="end" aria-label="delete" onClick={() => this.handleClickOpen('dialogRemoveAdmin', res.emailAdmin)}>
                             <DeleteIcon />
                           </IconButton>
                         </ListItemSecondaryAction>
@@ -386,7 +600,7 @@ class Team extends React.Component{
               <h3>Classification</h3>
             </Grid>
             <Grid>
-              <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogChip')}>
+              <IconButton aria-label="AddCircleOutlineOutlinedIcon" onClick={() => this.handleClickOpen('dialogGroupe')}>
                 <AddCircleOutlineOutlinedIcon />
               </IconButton>
             </Grid>
@@ -494,8 +708,10 @@ class Team extends React.Component{
           </Grid>
         </Grid>
         {this.dialogAddService(classes)}
-        {this.dialogChip(classes)}
+        {this.dialogGroupe(classes)}
         {this.dialogAdmin(classes)}
+        {this.dialogRemoveAdmin(classes)}
+        {this.dialogUpdateAdmin(classes)}
       </Grid>
     );
   }
