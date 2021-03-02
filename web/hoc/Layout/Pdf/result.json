@@ -7,7 +7,7 @@
     "paid": false,
     "travel_tax": 0,
     "pick_tax": 0,
-    "cesu_amount": 0,
+    "cesu_amount": 5,
     "_id": "60379fe0f073561d7c07b45e",
     "reference": "AAFB_25022021_96207",
     "service": "Création de site web",

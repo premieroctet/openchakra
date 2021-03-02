@@ -1,3 +1,5 @@
+
+
 const {RRule, RRuleSet, rrulestr} = require('rrule');
 const {ALL_SERVICES, generate_id} = require('./consts.js');
 const moment = require('moment-timezone');
@@ -5,6 +7,7 @@ const EV_AVAIL_DAY_MAPPING = 'monday tuesday wednesday thursday friday saturday 
 
 const DAYS = 'Lundi Mardi Mercredi Jeudi Vendredi Samedi Dimanche'.split(' ');
 const LONG_DAYS = 'lundis mardis mercredis jeudis vendredis samedis dimanches'.split(' ');
+moment.locale('fr');
 
 const DAY_MAPPING = {
   'monday': RRule.MO,
@@ -185,11 +188,17 @@ const counterObjects = (data, attribute) => {
 
 const moneyFormat = (value) => {
   return value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+  // return parseFloat(value).toFixed(2)
+}
+
+
+const todayDate = () => {
+  return moment().format('L')
 }
 
 module.exports = {
   availabilities2events, eventUI2availability, availability2eventUI,
   DAYS, LONG_DAYS,
   bookings2events,
-  counterArray, counterObjects, moneyFormat
+  counterArray, counterObjects, moneyFormat, todayDate
 };

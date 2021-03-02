@@ -8,11 +8,9 @@
 
 import React from "react";
 import {Page, Text, View, Document, StyleSheet, Image, Link, Font} from '@react-pdf/renderer';
-import moment from 'moment';
-import {moneyFormat} from '../../../utils/converters';
+import {moneyFormat, todayDate} from '../../../utils/converters';
+import axios from 'axios';
 
-
-moment.locale('fr');
 const BORDER_COLOR = 'white'
 const BORDER_STYLE = 'solid'
 const COLDESCRIPTION_WIDTH = 40
@@ -147,6 +145,7 @@ const styles = StyleSheet.create({
   }
 })
 
+
 class LayoutPdf extends React.Component {
   constructor(props) {
     super(props)
@@ -174,9 +173,7 @@ class LayoutPdf extends React.Component {
     };
   }
 
-
   componentDidMount() {
-    let dateNow = moment().format('L');
 
     this.setState({
       bookingId: resBooking.BookingObj.reference,
@@ -186,7 +183,7 @@ class LayoutPdf extends React.Component {
       clientCity: resBooking.BookingObj.user.billing_address.city,
       clientCountry: resBooking.BookingObj.user.billing_address.country,
       alfred: resBooking.BookingObj.alfred.full_name,
-      documentDate: dateNow,
+      documentDate: todayDate(),
       datePayment: '',
       paymentMethod: 'Carte bancaire',
       paymentId: resBooking.BookingObj.id,
@@ -201,8 +198,17 @@ class LayoutPdf extends React.Component {
         isCesu: true
       })
     }
+    axios.get('/myAlfred/api/shop/alfred/:alfred_id')
+      .then(res => {
+          const is_pro = res.data.is_professional
+          if (is_pro) {
+            this.setState({isContractor: true})
+          }
+        }
+      ).catch(err => {
+      console.error(err)
+    })
   }
-
 
   render() {
     const {
