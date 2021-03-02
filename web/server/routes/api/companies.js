@@ -9,7 +9,7 @@ const path = require('path');
 const axiosCookieJarSupport = require('axios-cookiejar-support').default;
 const tough = require('tough-cookie');
 const {is_production, is_validation}=require('../../../config/config');
-const {validateCompanyProfile} = require('../../validation/simpleRegister');
+const {validateCompanyProfile, validateCompanyAdmin} = require('../../validation/simpleRegister');
 const moment = require('moment');
 moment.locale('fr');
 const Company = require('../../models/Company');
@@ -18,9 +18,9 @@ const crypto = require('crypto');
 const multer = require('multer');
 const axios = require('axios');
 const {computeUrl} = require('../../../config/config');
-const emptyPromise = require('../../../utils/promise.js');
-
-
+const emptyPromise = require('../../../utils/promise');
+const {ADMIN, EMPLOYEE} = require('../../../utils/consts')
+var _ = require('lodash')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient,install_hooks} = require('../../../utils/mangopay');
 
 
@@ -383,5 +383,92 @@ router.put('/account/rib', passport.authenticate('jwt', {session: false}), (req,
     })
     .catch(err => console.error(err));
 });
+
+// @Route POST /myAlfred/api/companies/admin
+// Creates an admin for this company
+// @Access private
+router.post('/admin', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  const {errors, isValid} = validateCompanyAdmin(req.body);
+
+  if (!isValid) {
+    return res.status(400).json({error: errors});
+  }
+
+  User.findOne({email: req.body.email})
+    .then(user => {
+      if (user) {
+        return res.status(400).json({error: "L'email existe déjà"});
+      }
+      else {
+        const company_id = req.user.company
+        const newUser= new User({
+          firstname : req.body.firstname,
+          name : req.body.name,
+          email : req.body.email,
+          company : company_id,
+          password: crypto.randomBytes(10).toString('hex'),
+          roles: [ADMIN, EMPLOYEE]
+        })
+        newUser.save()
+          .then( newUser => {
+            res.json(newUser)
+          })
+          .catch( err => {
+            console.error(err)
+            res.status(500).json({error: err})
+          })
+      }
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json({error: err})
+    });
+});
+
+// @Route PUT /myAlfred/api/companies/admin
+// Sets admin role for a user
+// @Access private
+router.put('/admin', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  User.findById(req.body.user_id)
+    .then(user => {
+
+      if (user.company.toString() != req.user.company.toString()) {
+        res.status(404).json({error: 'Cet utilisateur ne fait pas partie de cette société'})
+        return
+      }
+
+      user.roles = _.uniq([...(user.roles||[]), ADMIN, EMPLOYEE])
+      user.save()
+        .then( newUser => {
+          res.json(newUser)
+        })
+        .catch( err => {
+          console.error(err)
+          res.status(500).json({error: err})
+        })
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json({error: err})
+    });
+});
+
+// @Route GET /myAlfred/api/companies/users
+// Returns all employees from current company
+// @Access private
+router.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const company_id = req.user.company
+
+  User.find({company : company_id}, 'firstname name email company roles')
+    .then (users => {
+      res.json(users)
+    })
+    .catch( err => {
+      console.error(err)
+      res.status(500).json({error: err})
+    })
+})
 
 module.exports = router;
