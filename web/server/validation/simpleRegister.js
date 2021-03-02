@@ -171,8 +171,52 @@ const validateCompanyProfile = data =>{
   };
 };
 
+const validateCompanyAdmin = data =>{
+  let errors = {};
+
+  data.name = !isEmpty(data.name) ? data.name : '';
+  data.firstname = !isEmpty(data.firstname) ? data.firstname : '';
+  data.email = !isEmpty(data.email) ? data.email : '';
+
+  if (Validator.isEmpty(data.name)) {
+    errors.name = 'Veuillez saisir un nom';
+  }
+
+  if (Validator.isEmpty(data.firstname)) {
+    errors.firstname = 'Veuillez saisir un prénom';
+  }
+
+  if (Validator.isEmpty(data.email)) {
+    errors.email = 'Veuillez saisir un email';
+  }
+
+  if (!Validator.isEmail(data.email)) {
+    errors.email = 'Email invalide';
+  }
+
+  return {
+    errors,
+    isValid: isEmpty(errors),
+  };
+};
+
+const validateCompanyGroup = data =>{
+  let errors = {};
+
+  data.name = !isEmpty(data.name) ? data.name : '';
+
+  if (Validator.isEmpty(data.name)) {
+    errors.name = 'Veuillez saisir un nom';
+  }
+
+  return {
+    errors,
+    isValid: isEmpty(errors),
+  };
+};
+
 
 module.exports = {
   validateSimpleRegisterInput, validateEditProfile, validateCompanyProfile,
-  validateEditProProfile
+  validateEditProProfile, validateCompanyAdmin, validateCompanyGroup,
 };
