@@ -110,6 +110,10 @@ class Team extends React.Component{
     this.setState({listOfRoles : newArray})
   };
 
+  addAdmin = () =>{
+    this.setState({listOfAdmin: this.state.listOfNewAdmin, dialogAdmin: false})
+  };
+
   addNewLine = (name) =>{
     if(name === 'nbAdmin'){
       let updatedObj = {nameAdmin: '',firstNameAdmin: '', emailAdmin: ''};
@@ -145,12 +149,10 @@ class Team extends React.Component{
     this.setState({[name]: true})
   };
 
-  addAdmin = () =>{
-    this.setState({listOfAdmin: this.state.listOfNewAdmin, dialogAdmin: false})
-  };
+
 
   dialogAdmin = (classes)=>{
-    const{dialogAdmin, listOfNewAdmin, nbAdmin} = this.state;
+    const{dialogAdmin, listOfNewAdmin} = this.state;
 
     return(
       <Dialog open={dialogAdmin} onClose={() => this.setState({dialogAdmin: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
@@ -356,11 +358,22 @@ class Team extends React.Component{
           <Box>
             {
               listOfAdmin.length > 0 ?
-                listOfAdmin.map((res) =>(
-                  <Grid>
-                    <Grid>{res.nameAdmin},{res.firstNameAdmin} - {res.emailAdmin}</Grid>
-                  </Grid>
-                )) :
+                <Grid>
+                  <List>
+                    {listOfAdmin.map((res) =>(
+                      <ListItem>
+                        <ListItemText
+                          primary={`${res.nameAdmin},${res.firstNameAdmin} - ${res.emailAdmin}`}
+                        />
+                        <ListItemSecondaryAction>
+                          <IconButton edge="end" aria-label="delete">
+                            <DeleteIcon />
+                          </IconButton>
+                        </ListItemSecondaryAction>
+                      </ListItem>
+                    ))}
+                  </List>
+                </Grid> :
                 <Grid>
                   <Typography>Pas d'admin</Typography>
                 </Grid>
