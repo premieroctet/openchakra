@@ -14,8 +14,7 @@ export default theme => ({
     width: 250
   },
   dialogPaper:{
-    minWidth: 600,
-    maxWidth: 'inherit'
+    width: 600,
   },
   textField: {
     width: '100%'
@@ -29,6 +28,13 @@ export default theme => ({
     top: theme.spacing(1),
     right: theme.spacing(1),
     color: theme.palette.grey[500],
+  },
+  chips: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  chip: {
+    margin: 2,
   },
   listChipContainer:{
     display: 'flex',

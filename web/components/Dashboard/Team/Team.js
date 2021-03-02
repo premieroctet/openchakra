@@ -33,7 +33,7 @@ const {setAxiosAuthentication}=require('../../../utils/authentication');
 import InputAdornment from '@material-ui/core/InputAdornment';
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import Input from '@material-ui/core/Input';
-
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, onClick, ...other } = props;
@@ -89,7 +89,7 @@ class Team extends React.Component{
       }],
       listOfNewGroupes:[{
         nameGroupe: '',
-        tarifGroupe: '',
+        plafondGroupe: '',
         modeTarif: '',
         roleOfGroupe: ''
       }],
@@ -99,10 +99,17 @@ class Team extends React.Component{
       firstname: '',
       name: '',
       newChipField: '',
+      ribNames:[
+        'ribNames A',
+        'ribNames B',
+        'ribNames C',
+        'ribNames D',
+        'ribNames E',
+      ],
       email: '',
       nbNewUser: 1,
       nbAdmin:1,
-      nbChip: 1,
+      chipRibs: [],
       dialogAdmin:false,
       dialogRemoveAdmin: false,
       dialogUpdateAdmin: false,
@@ -126,7 +133,7 @@ class Team extends React.Component{
     this.setState({listOfRoles : newArray})
   };
 
-  handleChange = (index, event) =>{
+  handleChange = (event, index) =>{
     const {value, name} = event.target;
     if(name === 'nameAdmin' || name === 'firstNameAdmin' || name === 'emailAdmin'){
     let updatedObj = Object.assign({}, this.state.listOfNewAdmin[index],{[name]: value});
@@ -143,6 +150,14 @@ class Team extends React.Component{
   };
 
 
+  getStyles = (name, personName) => {
+    return {
+      fontWeight:
+        personName.indexOf(name) === -1
+          ? 'regular'
+          : 'bold',
+    };
+  };
 
   addNewLine = (name) =>{
     if(name === 'nbAdmin'){
@@ -217,7 +232,7 @@ class Team extends React.Component{
                     label="Nom"
                     name={'nameAdmin'}
                     value={res.nameAdmin || ''}
-                    onChange={(e) => this.handleChange(index, e)}
+                    onChange={(e) => this.handleChange(e, index)}
                     variant={'outlined'}
                     classes={{root: classes.textField}}
                   />
@@ -227,7 +242,7 @@ class Team extends React.Component{
                     label="Prénom"
                     value={res.firstNameAdmin || ''}
                     name={'firstNameAdmin'}
-                    onChange={(e) => this.handleChange(index, e)}
+                    onChange={(e) => this.handleChange(e, index)}
                     variant={'outlined'}
                     classes={{root: classes.textField}}
                   />
@@ -237,7 +252,7 @@ class Team extends React.Component{
                     label="Email"
                     name={'emailAdmin'}
                     value={res.emailAdmin || ''}
-                    onChange={(e) => this.handleChange(index, e)}
+                    onChange={(e) => this.handleChange(e, index)}
                     variant={'outlined'}
                     classes={{root: classes.textField}}
                   />
@@ -352,7 +367,7 @@ class Team extends React.Component{
   };
 
   dialogGroupe = (classes)=>{
-    const{dialogGroupe, newChipField, listOfNewGroupes} = this.state;
+    const{dialogGroupe, newChipField, listOfNewGroupes, chipRibs, ribNames} = this.state;
 
     return(
       <Dialog open={dialogGroupe} onClose={() => this.setState({dialogGroupe: false})} aria-labelledby="form-dialog-title" classes={{paper: classes.dialogPaper}}>
@@ -376,8 +391,8 @@ class Team extends React.Component{
                   </Grid>
                   <Grid item xl={6} lg={6} sm={6} md={6} xs={6}>
                     <TextField
-                      label="Prix"
-                      name={'tarifGroupe'}
+                      label="Plafond"
+                      name={'plafondGroupe'}
                       value={newChipField[index]}
                       variant={'outlined'}
                       classes={{root: classes.textField}}
@@ -394,6 +409,7 @@ class Team extends React.Component{
                         id="demo-simple-select-outlined"
                         value={newChipField[index]}
                         name={'modeTarif'}
+                        label={'Mode'}
                       >
                         <MenuItem value={10}>Month</MenuItem>
                         <MenuItem value={20}>Year</MenuItem>
@@ -408,6 +424,7 @@ class Team extends React.Component{
                         id="demo-simple-select-outlined"
                         value={newChipField[index]}
                         name={'roleOfGroupe'}
+                        label={'Equipe/Manager'}
                       >
                         <MenuItem value={10}>Equipe</MenuItem>
                         <MenuItem value={20}>Manager</MenuItem>
@@ -423,16 +440,16 @@ class Team extends React.Component{
               </Grid>
               <Grid item container spacing={3} style={{width: '100%', margin: 0}}>
                 <Grid item xl={12} lg={12}>
-                  <FormControl className={classes.formControl}>
+                  <FormControl variant="outlined" className={classes.formControl} style={{width: '100%'}}>
                     <InputLabel id="demo-mutiple-chip-label">RIB</InputLabel>
                     <Select
                       labelId="demo-mutiple-chip-label"
                       id="demo-mutiple-chip"
                       multiple
-                      onChange={this.handleOnchange}
-                      name={'chip'}
-                      value={[]}
-                      input={<Input id="select-multiple-chip" />}
+                      onChange={(e) => this.handleChange(e)}
+                      name={'chipRibs'}
+                      value={chipRibs}
+                      input={<OutlinedInput label={'RIB'}  id="select-multiple-chip" />}
                       renderValue={(selected) => (
                         <div className={classes.chips}>
                           {selected.map((value) => (
@@ -442,9 +459,11 @@ class Team extends React.Component{
                       )}
                       MenuProps={MenuProps}
                     >
-                      <MenuItem value={10}>Rib A</MenuItem>
-                      <MenuItem value={10}>Rib B</MenuItem>
-                      <MenuItem value={10}>Rib C</MenuItem>
+                      {ribNames.map((name) => (
+                        <MenuItem key={name} value={name} style={this.getStyles(name, chipRibs)}>
+                          {name}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 </Grid>
