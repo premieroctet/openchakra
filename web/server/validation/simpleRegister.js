@@ -200,8 +200,23 @@ const validateCompanyAdmin = data =>{
   };
 };
 
+const validateCompanyGroup = data =>{
+  let errors = {};
+
+  data.name = !isEmpty(data.name) ? data.name : '';
+
+  if (Validator.isEmpty(data.name)) {
+    errors.name = 'Veuillez saisir un nom';
+  }
+
+  return {
+    errors,
+    isValid: isEmpty(errors),
+  };
+};
+
 
 module.exports = {
   validateSimpleRegisterInput, validateEditProfile, validateCompanyProfile,
-  validateEditProProfile, validateCompanyAdmin,
+  validateEditProProfile, validateCompanyAdmin, validateCompanyGroup,
 };
