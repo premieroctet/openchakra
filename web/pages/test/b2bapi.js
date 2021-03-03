@@ -16,6 +16,7 @@ class B2BApiTest extends React.Component {
       employees : [],
       groups : [],
       group_name : '',
+      group_action : 'add',
     }
   }
 
@@ -43,10 +44,12 @@ class B2BApiTest extends React.Component {
     const {firstname, name, email} = this.state
     axios.post('/myAlfred/api/companies/admin', { firstname, name, email})
       .then ( response => {
-        snackBarSuccess(`Création ok, password à changer : ${response.user.password}`)
+        console.log(`Received ${JSON.stringify(response)}`)
+        snackBarSuccess(`Création ok, password à changer : ${response.data.password}`)
         this.componentDidMount()
       })
       .catch ( err => {
+        console.error(err)
         snackBarError(err.response.data.error)
       })
   }
@@ -86,6 +89,16 @@ class B2BApiTest extends React.Component {
       })
   }
 
+  updateMember = () => {
+    const {group_action} = this.state
+    if (group_action == 'add') {
+      this.addMember()
+    }
+    else {
+      this.deleteMember()
+    }
+  }
+
   addMember = () => {
     const {member_id, group_id} = this.state
     axios.put(`/myAlfred/api/companies/groups/${group_id}/member`, { member_id: member_id})
@@ -100,9 +113,10 @@ class B2BApiTest extends React.Component {
 
   }
 
-  deleteMember = (group_id, user_id) => {
+  deleteMember = () => {
+    const {member_id, group_id} = this.state
     setAxiosAuthentication()
-    axios.delete(`/myAlfred/api/companies/groups/${group_id}/member/${user_id}`)
+    axios.delete(`/myAlfred/api/companies/groups/${group_id}/member/${member_id}`)
       .then ( () => {
         snackBarSuccess(`Membre supprimé du groupe`)
         this.componentDidMount()
@@ -163,7 +177,7 @@ class B2BApiTest extends React.Component {
               {g.members.map( m => {
                 return (
                   <li>
-                    {m.email} <DeleteForeverIcon onClick={()=>this.deleteMember(g._id, m._id)} />
+                    {m.full_name} ({m.email})
                   </li>
                 )
               })}
@@ -176,19 +190,11 @@ class B2BApiTest extends React.Component {
       </ul>
      </div>
      <div>
-      <TextField name="group_name" onChange={this.onChange}/>
       <Button onClick={this.createGroup}>Créer le groupe</Button>
+      <TextField placeholder={'nom du groupe'} name="group_name" onChange={this.onChange}/>
      </div>
      <div>
-       Affecter
-       <Select
-         name="member_id"
-         onChange={this.onChange}
-         multi={false}
-       >
-         { employees.map( e => <MenuItem value={e._id}>{e.email}</MenuItem>)}
-       </Select>
-       au groupe
+       Groupe
        <Select
          name="group_id"
          onChange={this.onChange}
@@ -196,8 +202,24 @@ class B2BApiTest extends React.Component {
        >
         { groups.map( e => <MenuItem value={e._id}>{e.name}</MenuItem>)}
        </Select>
-       <Button onClick={this.addMember}>Affecter</Button>
-
+       :
+       <Select
+         name="group_action"
+         onChange={this.onChange}
+         multi={false}
+         value={this.state.group_action}
+       >
+        <MenuItem value={'add'}>ajouter</MenuItem>
+        <MenuItem value={'remove'}>supprimer</MenuItem>
+       </Select>
+       <Select
+         name="member_id"
+         onChange={this.onChange}
+         multi={false}
+       >
+         { employees.map( e => <MenuItem value={e._id}>{e.email}</MenuItem>)}
+       </Select>
+       <Button onClick={this.updateMember}>GO !</Button>
      </div>
      </>
    );

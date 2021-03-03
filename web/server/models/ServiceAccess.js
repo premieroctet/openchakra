@@ -7,15 +7,10 @@ const ServiceAccessSchema = new Schema({
     ref: 'service',
     required : true,
   },
-  // Service allowed to company
-  company_allow: {
+  // Service allowed to group
+  group: {
     type: Schema.Types.ObjectId,
-    ref: 'company',
-  },
-  // Service forbdidden to buyer
-  buyer_forbid: {
-    type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'group',
   },
 }, {toJSON: {virtuals: true, getters: true}});
 

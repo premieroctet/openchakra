@@ -16,6 +16,9 @@ const GroupSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'users',
   }],
+  budget : {
+    type : Number,
+  }
 });
 
 const Group = mongoose.model('group', GroupSchema);

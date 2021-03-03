@@ -5,6 +5,7 @@ const User = mongoose.model('users');
 const keys = require('../config/keys');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
+const {ADMIN} = require('../../utils/consts')
 
 const {ENABLE_GF_LOGIN} = require('../../config/config');
 
@@ -58,6 +59,19 @@ passport.use('admin', new JwtStrategy(jwt_opts, (jwt_payload, done) => {
         return done(null, user);
       }
       return done(null, false, "Vous devez être administrateur");
+    })
+    .catch(err => console.error(err));
+}));
+
+passport.use('b2badmin', new JwtStrategy(jwt_opts, (jwt_payload, done) => {
+  User.findById(jwt_payload.id)
+    .then(user => {
+      if (user && user.roles && user.roles.includes(ADMIN)) {
+        console.log(`Passport : is admin B2B`)
+        return done(null, user);
+      }
+      console.log(`Passport : is NOT admin B2B`)
+      return done(null, false, "Vous devez être administrateur de l'entreprise");
     })
     .catch(err => console.error(err));
 }));
