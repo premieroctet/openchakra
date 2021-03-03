@@ -81,7 +81,7 @@ class Team extends React.Component{
       isMicroService: true,
       filters: 10,
       roles: '',
-      listOfRoles:['Admin', 'Alternant', 'Stagiaire'],
+      listOfRoles:[],
       listOfNewAdmin:[{
         nameAdmin: '',
         firstNameAdmin: '',
@@ -118,14 +118,33 @@ class Team extends React.Component{
     }
   }
 
+  componentDidMount(){
+    setAxiosAuthentication();
+    axios.get('/myAlfred/api/companies/users').then(res =>{
+      let data = res.data;
+      data.map((res) =>{
+        if(res.roles.includes('ADMIN')){
+          this.setState({listOfAdmin:data})
+        }
+      });
+      this.setState({user: data})
+    }).catch(err =>{
+      console.error(err)
+    });
 
-
-  addService = () => {
-    const{nameService, items} = this.state;
-    this.setState({ items: [...items, nameService],  dialogState: false});
+    axios.get('/myAlfred/api/companies/groups').then(res =>{
+      let data = res.data;
+      this.setState({listOfRoles: data})
+    }).catch(err =>{
+      console.error(err)
+    })
   };
 
 
+  addGroupe = () => {
+    const{nameService, items} = this.state;
+    this.setState({ items: [...items, nameService],  dialogState: false});
+  };
 
   handleDeleteChip = (chip) =>{
     const{listOfRoles} = this.state;
@@ -204,11 +223,19 @@ class Team extends React.Component{
     this.setState({listOfAdmin: newArray, dialogAdmin: false});
     setAxiosAuthentication();
 
-   /* axios.post('/myAlfred/api/companies/admin', listOfNewAdmin).then( res =>{
-      console.log(res,'res')
-    }).catch(err =>{
-      console.error(err)
-    })*/
+
+    listOfNewAdmin.map((res,index) =>{
+      const data = {
+        firstname: res.firstNameAdmin,
+        name: res.nameAdmin,
+        email: res.emailAdmin
+      };
+      axios.post('/myAlfred/api/companies/admin', data).then( res =>{
+        console.log(res,'res')
+      }).catch(err =>{
+        console.error(err)
+      })
+    });
   };
 
   removeAdmin = () =>{
@@ -475,7 +502,7 @@ class Team extends React.Component{
           <Button onClick={() => this.setState({dialogGroupe: false})} color="secondary">
             Annuler
           </Button>
-          <Button onClick={this.addService} color="primary">
+          <Button onClick={this.addGroupe} color="primary">
             Confirmé
           </Button>
         </DialogActions>
@@ -593,13 +620,13 @@ class Team extends React.Component{
                     {listOfAdmin.map((res, index) =>(
                       <ListItem key={index}>
                         <ListItemText
-                          primary={`${res.nameAdmin},${res.firstNameAdmin} - ${res.emailAdmin}`}
+                          primary={`${res.name},${res.firstname} - ${res.email}`}
                         />
                         <ListItemSecondaryAction>
-                          <IconButton edge="end" aria-label="update" onClick={() => this.handleClickOpen('dialogUpdateAdmin', res.emailAdmin)}>
+                          <IconButton edge="end" aria-label="update" onClick={() => this.handleClickOpen('dialogUpdateAdmin', res.email)}>
                             <SettingsIcon />
                           </IconButton>
-                          <IconButton edge="end" aria-label="delete" onClick={() => this.handleClickOpen('dialogRemoveAdmin', res.emailAdmin)}>
+                          <IconButton edge="end" aria-label="delete" onClick={() => this.handleClickOpen('dialogRemoveAdmin', res.email)}>
                             <DeleteIcon />
                           </IconButton>
                         </ListItemSecondaryAction>
@@ -629,12 +656,21 @@ class Team extends React.Component{
           <Box>
             <Grid className={classes.listChipContainer}>
               {
-                listOfRoles.map(res =>(
-                  <Chip
-                    label={res}
-                    onDelete={() => this.handleDeleteChip(res)}
-                    variant="outlined"
-                  />
+                listOfRoles.map((res,index) =>(
+                  <>
+                    <ListItem key={index}>
+                      <ListItemText
+                        primary={res.name}
+                        secondary={res.email}
+                      />
+                      <ListItemSecondaryAction>
+                        <Grid>
+
+                        </Grid>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                    <Divider/>
+                  </>
                 ))
               }
             </Grid>

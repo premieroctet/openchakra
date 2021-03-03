@@ -45,7 +45,7 @@ export default theme =>({
     },
   },
   paddingList:{
-    paddingLeft: 8,
+    paddingLeft: 15,
 
   },
   helpButton:{
