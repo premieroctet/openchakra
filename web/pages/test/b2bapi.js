@@ -34,7 +34,7 @@ class B2BApiTest extends React.Component {
         this.setState({groups: response.data})
       })
       .catch (err => console.error(err))
-    axios.get('/myAlfred/api/service/all')
+    axios.get('/myAlfred/api/service/pro')
       .then (response => {
         this.setState({services: response.data})
       })
@@ -236,24 +236,16 @@ class B2BApiTest extends React.Component {
      </div>
      <div>
        <h2>Membres des groupes</h2>
-       Groupe
-       <Select
-         name="group_id"
-         onChange={this.onChange}
-         multi={false}
-       >
-        { groups.map( e => <MenuItem value={e._id}>{e.name}</MenuItem>)}
-       </Select>
-       :
        <Select
          name="group_action"
          onChange={this.onChange}
          multi={false}
          value={this.state.group_action}
        >
-        <MenuItem value={'add'}>ajouter</MenuItem>
-        <MenuItem value={'remove'}>supprimer</MenuItem>
+        <MenuItem value={'add'}>Ajouter</MenuItem>
+        <MenuItem value={'remove'}>Supprimer</MenuItem>
        </Select>
+       le membre
        <Select
          name="member_id"
          onChange={this.onChange}
@@ -261,34 +253,42 @@ class B2BApiTest extends React.Component {
        >
          { employees.map( e => <MenuItem value={e._id}>{e.email}</MenuItem>)}
        </Select>
-       <Button onClick={this.updateMember}>GO !</Button>
-     </div>
-     <div>
-       <h2>Services autorisés par groupes</h2>
-       Groupe
+       dans le groupe
        <Select
-         name="group_service_id"
+         name="group_id"
          onChange={this.onChange}
          multi={false}
        >
         { groups.map( e => <MenuItem value={e._id}>{e.name}</MenuItem>)}
        </Select>
-       :
+       <Button onClick={this.updateMember}>GO !</Button>
+     </div>
+     <div>
+       <h2>Services autorisés par groupes</h2>
        <Select
          name="group_service_action"
          onChange={this.onChange}
          multi={false}
          value={this.state.group_action}
        >
-        <MenuItem value={'add'}>ajouter</MenuItem>
-        <MenuItem value={'remove'}>supprimer</MenuItem>
+        <MenuItem value={'add'}>Ajouter</MenuItem>
+        <MenuItem value={'remove'}>Supprimer</MenuItem>
        </Select>
+       le membre
        <Select
          name="service_id"
          onChange={this.onChange}
          multi={false}
        >
          { services.map( e => <MenuItem value={e._id}>{e.label}</MenuItem>)}
+       </Select>
+       dans le groupe
+       <Select
+         name="group_service_id"
+         onChange={this.onChange}
+         multi={false}
+       >
+        { groups.map( e => <MenuItem value={e._id}>{e.name}</MenuItem>)}
        </Select>
        <Button onClick={this.updateService}>GO !</Button>
      </div>
