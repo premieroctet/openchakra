@@ -767,12 +767,11 @@ router.get('/users', (req, res) => {
 router.get('/roles/:email', (req, res) => {
 
   console.log(`Request roles for email ${req.params.email}`)
-  User.find({ email: req.params.email}, 'roles')
-    .then(users => {
-      if (!users) {
-        return res.status(400).json({msg: 'No user found'});
+  User.findOne({ email: req.params.email}, 'roles')
+    .then(user => {
+      if (!user) {
+        return res.json([]);
       }
-      const user = users[0]
       res.json(user.roles);
     })
     .catch(err => res.status(404).json({user: 'No user found'}));

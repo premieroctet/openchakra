@@ -37,41 +37,28 @@ class LogIn extends React.Component {
       password: '',
       errors: {},
       showPassword: false,
-      roles: '',
-      roleSelect: null,
-      showRoles: false
+      roles: [],
+      selectedRole: null,
     };
   }
 
   onChange = e => {
     const {name, value} = e.target;
     if(name === 'username'){
-      axios.get(`/myAlfred/api/users/roles/${e.target.value}`).then( res =>{
-        let result = res.data;
-        this.setState({roles: result}, () => this.controllerUser());
-      }).catch( err => {
-        console.error(err);
-        this.setState({roleSelect: null, roles: ''})
+      axios.get(`/myAlfred/api/users/roles/${e.target.value}`)
+        .then( res =>{
+          const roles = res.data;
+          const filteredRoles = roles.filter( r => is_b2b_site() ? r != EMPLOYEE : r == EMPLOYEE)
+          const selectedRole = filteredRoles.length == 1 ? filteredRoles[0] : null
+          console.log({roles: filteredRoles, selectedRole : selectedRole})
+          this.setState({roles: filteredRoles, selectedRole : selectedRole} )
+        })
+        .catch( err => {
+          console.error(err);
+          this.setState({selectedRole: null, roles: ''})
       })
     }
     this.setState({[name]: value});
-  };
-
-  controllerUser = () =>{
-    const {roles} = this.state;
-    let newRoles = roles.filter(result =>  result !== EMPLOYEE);
-
-    if(is_b2b_site()){
-      if(newRoles.length > 1){
-        this.setState({roles: newRoles})
-      }else{
-        this.setState({roleSelect: newRoles})
-      }
-    }else{
-      if(roles.length > 0){
-        this.setState({roleSelect: EMPLOYEE})
-      }
-    }
   };
 
   onSubmit = e => {
@@ -80,7 +67,7 @@ class LogIn extends React.Component {
     const user = {
       username: this.state.username,
       password: this.state.password,
-      role: this.state.roleSelect
+      role: this.state.selectedRole
     };
 
     axios.post('/myAlfred/api/users/login', user)
@@ -112,8 +99,10 @@ class LogIn extends React.Component {
 
   render() {
     const {classes, callRegister, id} = this.props;
-    const {errors, username, password, showPassword, roles, roleSelect} = this.state;
-    const showRoles = is_b2b_site() && roles.length > 1;
+    const {errors, username, password, showPassword, roles, selectedRole} = this.state;
+    const showRoles = is_b2b_site() && roles.length >= 1;
+
+    const loginDisabled = ((roles.length>0 || is_b2b_site()) && !selectedRole) || !password
 
     return (
       <Grid className={classes.fullContainer}>
@@ -215,9 +204,9 @@ class LogIn extends React.Component {
                           <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
-                            value={roleSelect}
+                            value={selectedRole}
                             onChange={this.onChange}
-                            name={'roleSelect'}
+                            name={'selectedRole'}
                           >
                             {
                               Object.keys(roles).map((role,index) =>(
@@ -233,7 +222,7 @@ class LogIn extends React.Component {
               }
               <Grid item className={classes.margin}>
                 <Grid container className={classes.genericContainer}>
-                  <Button onClick={this.onSubmit} disabled={showRoles && roleSelect === null || password === ''} variant="contained" color="primary" style={{width: '100%', color: 'white'}}>
+                  <Button onClick={this.onSubmit} disabled={loginDisabled} variant="contained" color="primary" style={{width: '100%', color: 'white'}}>
                     Connexion
                   </Button>
                 </Grid>
