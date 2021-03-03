@@ -13,8 +13,8 @@ const {validateCompanyProfile, validateCompanyAdmin, validateCompanyGroup} = req
 const moment = require('moment');
 moment.locale('fr');
 const Company = require('../../models/Company');
-const Group  = require('../../models/Group');
-const ServiceAccess = require('../../models/ServiceAccess');
+const Group = require('../../models/Group');
+const Service = require('../../models/Service');
 const crypto = require('crypto');
 const multer = require('multer');
 const axios = require('axios');
@@ -266,47 +266,53 @@ router.get('/companies/:id', (req, res) => {
     .catch(err => res.status(404).json({company: 'No company found'}));
 });
 
-// @Route GET /myAlfred/api/companies/allowedServices
-// Get allowed services for current company
-router.get('/allowedServices', passport.authenticate('b2badmin', {session: false}), (req, res) => {
-  ServiceAccess.find({company_allow: req.user.company})
-    .populate('service', 'label')
-    .then(serviceAccesses => {
-      if (!serviceAccesses) {
-        return res.status(400).json({msg: 'No company found'});
-      }
-      res.json(serviceAccesses.map( sa => sa.service));
-
-    })
-    .catch(err => res.status(404).json({company: 'No company found'}));
-});
-
-// @Route PUT /myAlfred/api/companies/allowedService
+// @Route PUT /myAlfred/api/companies/groups/:group_id/allowedServices
+// Data : service_id
 // Put allowed service for current company
-router.put('/allowedService', passport.authenticate('b2badmin', {session: false}), (req, res) => {
-  ServiceAccess.create({service: req.body.service_id, company_allow: req.user.company})
-    .then(serviceAccess => {
-      if (!serviceAccess) {
-        return res.status(400).json({msg: 'No company found'});
-      }
-      res.json(serviceAccess);
+router.put('/groups/:group_id/allowedServices', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
+  const group_id = req.params.group_id
+  const service_id = req.body.service_id
+
+  Service.findById(service_id, 'label professional_access')
+    .then ( service => {
+      if (!service) {
+        return res.status(404).json({error : `Service ${service._id} introuvable`})
+      }
+      if (!service.professional_access) {
+        return res.status(400).json({error : `Le service ${service.label} n'est pas destiné aux professionnels`})
+      }
+      Group.findByIdAndUpdate(group_id, {  $addToSet : { allowed_services : service_id}})
+        .then(group => {
+          if (!group) {
+            return res.status(400).json({msg: 'No group found'});
+          }
+          res.json(group);
+
+        })
+        .catch(err => res.status(404).json({company: 'No group found'}));
     })
-    .catch(err => res.status(404).json({company: 'No company found'}));
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({company: 'No group found'})
+    })
 });
 
-// @Route DELETE /myAlfred/api/companies/allowedService
+// @Route DELETE /myAlfred/api/companies/groups/:group_id/allowedServices/:service_id
 // Delete allowed service for current company
-router.delete('/allowedService/:service_id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
-  ServiceAccess.deleteOne({service: req.params.service_id, company_allow: req.user.company})
-    .then(serviceAccess => {
-      if (!serviceAccess) {
-        return res.status(400).json({msg: 'No company found'});
+router.delete('/groups/:group_id/allowedServices/:service_id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+  const group_id = req.params.group_id
+  const service_id = req.params.service_id
+
+  Group.findByIdAndUpdate(group_id, {  $pull : { allowed_services : service_id}})
+    .then(group => {
+      if (!group) {
+        return res.status(400).json({msg: 'No group found'});
       }
-      res.json(serviceAccess);
+      res.json(group);
 
     })
-    .catch(err => res.status(404).json({company: 'No company found'}));
+    .catch(err => res.status(404).json({company: 'No group found'}));
 });
 
 // @Route PUT /myAlfred/api/companies/alfredViews/:id
@@ -533,7 +539,8 @@ router.get('/groups', passport.authenticate('b2badmin', {session: false}), (req,
   const company_id = req.user.company
 
   Group.find({company : company_id})
-    .populate('members', 'firstname name email roles')
+    .populate('members', 'firstname name email roles company')
+    .populate('allowed_services', 'label')
     .then ( groups => {
       res.json(groups)
     })

@@ -16,6 +16,10 @@ const GroupSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'users',
   }],
+  allowed_services: [{
+    type: Schema.Types.ObjectId,
+    ref: 'service',
+  }],
   budget : {
     type : Number,
   }
