@@ -1,5 +1,5 @@
 const {getAuthToken} = require('./authentication')
-const {ADMIN, BUYER} = require('./consts')
+const {ADMIN, MANAGER} = require('./consts')
 
 const is_b2b_site = () => {
   if (typeof localStorage == 'undefined') {
@@ -37,17 +37,17 @@ const is_b2b_employee = user => {
   return result
 }
 
-const is_b2b_buyer = user => {
-  const is_admin = Boolean(user) && user.roles && user.roles.includes(BUYER)
-  if (!is_admin) {
-    console.debug(`Not B2B buyer : user:${Boolean(user)}, roles:${user ? user.roles : ''}`)
+const is_b2b_manager = user => {
+  const is_manager = Boolean(user) && user.roles && user.roles.includes(MANAGER)
+  if (!is_manager) {
+    console.debug(`Not B2B manager : user:${Boolean(user)}, roles:${user ? user.roles : ''}`)
     return false
   }
 
   const token=getAuthToken()
-  const result = token && token.role==BUYER
+  const result = token && token.role==MANAGER
   if (!result) {
-    console.debug(`Not B2B buyer : role:${token ? token.role : 'no token'}`)
+    console.debug(`Not B2B manager : role:${token ? token.role : 'no token'}`)
   }
   return result
 }
@@ -61,7 +61,7 @@ const is_mode_company = user => {
 }
 
 const is_b2b_style = (user) => {
-  return is_b2b_site() || is_b2b_admin() || is_b2b_buyer()
+  return is_b2b_site() || is_b2b_admin() || is_b2b_manager()
 }
 module.exports={
   is_b2b_style, is_b2b_employee, is_b2b_admin, is_b2b_site

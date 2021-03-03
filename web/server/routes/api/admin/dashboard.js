@@ -32,7 +32,7 @@ const multer = require('multer')
 const path = require('path')
 const {normalizePhone, bufferToString, normalize} = require('../../../../utils/text')
 const {counterArray, counterObjects} = require('../../../../utils/converters')
-const {ADMIN, BUYER, EMPLOYEE} = require('../../../../utils/consts')
+const {ADMIN, MANAGER, EMPLOYEE} = require('../../../../utils/consts')
 const parse = require('url-parse')
 router.get('/billing/test', (req, res) => res.json({msg: 'Billing admin Works!'}));
 var _ = require('lodash')
@@ -2676,15 +2676,15 @@ router.post('/companies', passport.authenticate('admin', {session: false}), (req
             })
             .catch (err => console.error(err))
         }
-        if (req.body.buyer_email) {
-          User.findOne({email: req.body.buyer_email})
+        if (req.body.manager_email) {
+          User.findOne({email: req.body.manager_email})
             .then( user => {
               if (!user) {
                 console.error('no user found')
               }
               else {
                 user.company=company
-                user.roles = _.uniq([...(user.roles||[]), BUYER, EMPLOYEE])
+                user.roles = _.uniq([...(user.roles||[]), MANAGER, EMPLOYEE])
                 user.save().then().catch(err => console.error(err))
               }
             })
