@@ -483,25 +483,30 @@ router.delete('/admin/:admin_id', passport.authenticate('b2badmin', {session: fa
 
   const admin_id = req.params.admin_id
 
-  /**
   const company_id = req.user.company
   User.find({company: company_id, roles: { "$in" : [ADMIN]}, _id : { $ne : admin_id } })
     .then( users => {
-      console.log(users)
-      return res.json(users)
-    })
-    */
-  User.findByIdAndUpdate(admin_id, { $pull : { roles : ADMIN}}, { new : true })
-    .then(user => {
-      if (!user) {
-        return res.status(404).json({error : 'Utilisateur inconnu'})
+      if (users.length==0) {
+        return res.status(400).json({error: 'Il doit rester au moins un administrateur'})
       }
-      return res.json(user)
+      else {
+        User.findByIdAndUpdate(admin_id, { $pull : { roles : ADMIN}}, { new : true })
+          .then(user => {
+            if (!user) {
+              return res.status(404).json({error : 'Utilisateur inconnu'})
+            }
+            return res.json(user)
+          })
+          .catch(err => {
+            console.error(err)
+            res.status(500).json({error: err})
+          })
+      }
     })
     .catch(err => {
       console.error(err)
       res.status(500).json({error: err})
-    });
+    })
 });
 
 // @Route GET /myAlfred/api/companies/users
