@@ -26,7 +26,7 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
-const {COMPANY_SIZE, COMPANY_ACTIVITY, ADMIN, BUYER, EMPLOYEE}=require('../../../utils/consts')
+const {COMPANY_SIZE, COMPANY_ACTIVITY, ADMIN, MANAGER, EMPLOYEE}=require('../../../utils/consts')
 const {SIRET}=require('../../../config/config')
 
 const styles = theme => ({
@@ -194,7 +194,7 @@ class view extends React.Component {
     }
 
     const admins=users.filter(u => u.roles && u.roles.includes(ADMIN))
-    const buyers=users.filter(u => u.roles && u.roles.includes(BUYER))
+    const managers=users.filter(u => u.roles && u.roles.includes(MANAGER))
     const employees=users
 
     return (
@@ -324,7 +324,7 @@ class view extends React.Component {
                   })}
                 </Grid>
                 <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                  <Typography style={{fontSize: 20}}>Ajouter un acheteur par son email</Typography>
+                  <Typography style={{fontSize: 20}}>Ajouter un manager par son email</Typography>
                 </Grid>
                 <Grid item>
                   <TextField
@@ -332,14 +332,14 @@ class view extends React.Component {
                     margin="normal"
                     style={{width: '100%'}}
                     type="text"
-                    name="buyer_email"
-                    value={company.buyer_email}
+                    name="manager_email"
+                    value={company.manager_email}
                     onChange={this.onChange}
-                    error={errors.buyer_email}
+                    error={errors.manager_email}
                   />
-                  { buyers.map( a => {
+                  { managers.map( a => {
                     return (<div>{a.full_name} {a.email}
-                      <IconButton aria-label="delete" onClick={() => this.removeRole(a._id, BUYER)}>
+                      <IconButton aria-label="delete" onClick={() => this.removeRole(a._id, MANAGER)}>
                         <DeleteForeverIcon />
                       </IconButton>
                       </div>)

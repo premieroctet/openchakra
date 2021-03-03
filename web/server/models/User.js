@@ -30,7 +30,7 @@ const UserSchema = new Schema({
   birthday: {
     type: Date,
     max: maxBirth,
-    required: true,
+    //required: true,
   },
   phone: {
     type: String,
