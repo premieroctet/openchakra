@@ -34,6 +34,8 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import Input from '@material-ui/core/Input';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+const {snackBarSuccess, snackBarError} = require('../../../utils/notifications');
+
 
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, onClick, ...other } = props;
@@ -209,9 +211,9 @@ class Team extends React.Component{
   };
 
 
-  handleClickOpen = (name, email) =>{
+  handleClickOpen = (name, user) =>{
     if(name === 'dialogRemoveAdmin' || name === 'dialogUpdateAdmin'){
-      this.setState({adminSelected: email})
+      this.setState({adminSelected: user})
     }
     this.setState({[name]: true})
   };
@@ -240,8 +242,16 @@ class Team extends React.Component{
 
   removeAdmin = () =>{
     const{listOfAdmin, adminSelected} = this.state;
-    const items = listOfAdmin.filter(item => item.emailAdmin !== adminSelected);
-    this.setState({listOfAdmin: items , dialogRemoveAdmin: false})
+    setAxiosAuthentication();
+
+    axios.delete(`/myAlfred/api/companies/admin/${adminSelected._id}`).then( res =>{
+      snackBarSuccess('admin add');
+      this.setState({ dialogRemoveAdmin: false})
+    }).catch(err =>{
+      snackBarError(err.data);
+      console.error(err)
+    })
+
   };
 
   dialogAdmin = (classes)=>{
@@ -319,7 +329,7 @@ class Team extends React.Component{
         <MuiDialogTitle id="alert-dialog-title">{"Supprimer"}</MuiDialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Voulez vous supprimer {adminSelected} ?
+            Voulez vous supprimer {adminSelected.email} ?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -623,10 +633,10 @@ class Team extends React.Component{
                           primary={`${res.name},${res.firstname} - ${res.email}`}
                         />
                         <ListItemSecondaryAction>
-                          <IconButton edge="end" aria-label="update" onClick={() => this.handleClickOpen('dialogUpdateAdmin', res.email)}>
+                          <IconButton edge="end" aria-label="update" onClick={() => this.handleClickOpen('dialogUpdateAdmin', res)}>
                             <SettingsIcon />
                           </IconButton>
-                          <IconButton edge="end" aria-label="delete" onClick={() => this.handleClickOpen('dialogRemoveAdmin', res.email)}>
+                          <IconButton edge="end" aria-label="delete" onClick={() => this.handleClickOpen('dialogRemoveAdmin', res)}>
                             <DeleteIcon />
                           </IconButton>
                         </ListItemSecondaryAction>
