@@ -65,6 +65,17 @@ class B2BApiTest extends React.Component {
       .catch ( err => snackBarError(err.response.data.error))
   }
 
+  removeAdmin = () => {
+    setAxiosAuthentication()
+    const {admin_id} = this.state
+    axios.delete(`/myAlfred/api/companies/admin/${admin_id}`)
+      .then ( () => {
+        snackBarSuccess('Statut admin retiré')
+        this.componentDidMount()
+      })
+      .catch ( err => snackBarError(err.response.data.error))
+  }
+
   createGroup = () => {
     setAxiosAuthentication()
     const {group_name} = this.state
@@ -163,6 +174,7 @@ class B2BApiTest extends React.Component {
 
       </Select>
       <Button onClick={this.setAdmin}>Rendre administrateur</Button>
+      <Button onClick={this.removeAdmin}>Supprimer administrateur</Button>
      </div>
 
      <div>

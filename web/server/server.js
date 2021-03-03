@@ -1,5 +1,6 @@
-const {is_production, is_validation, is_development, is_development_nossl, displayConfig} = require('../config/config')
+require('console-stamp')(console, '[dd/mm/yy HH:MM:ss.l]');
 
+const {is_production, is_validation, is_development, is_development_nossl, displayConfig} = require('../config/config')
 const express = require('express');
 const next = require('next');
 const mongoose = require('mongoose');
@@ -50,7 +51,7 @@ const server = require('http').Server(app);
 const SocketIo = require('socket.io');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
-require('console-stamp')(console, '[dd/mm/yy HH:MM:ss.l]');
+
 // Avoid deprecation warning
 mongoose.set('useUnifiedTopology', true)
 mongoose.set('useFindAndModify', false)
