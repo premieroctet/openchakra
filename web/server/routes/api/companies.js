@@ -481,7 +481,17 @@ router.put('/admin', passport.authenticate('b2badmin', {session: false}), (req, 
 // @Access private
 router.delete('/admin/:admin_id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
 
-  User.findByIdAndUpdate(req.params.user_id, { $pull : { roles : ADMIN}}, { new : true })
+  const admin_id = req.params.admin_id
+
+  /**
+  const company_id = req.user.company
+  User.find({company: company_id, roles: { "$in" : [ADMIN]}, _id : { $ne : admin_id } })
+    .then( users => {
+      console.log(users)
+      return res.json(users)
+    })
+    */
+  User.findByIdAndUpdate(admin_id, { $pull : { roles : ADMIN}}, { new : true })
     .then(user => {
       if (!user) {
         return res.status(404).json({error : 'Utilisateur inconnu'})
