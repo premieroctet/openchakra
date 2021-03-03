@@ -476,6 +476,24 @@ router.put('/admin', passport.authenticate('b2badmin', {session: false}), (req, 
     });
 });
 
+// @Route DELETE /myAlfred/api/companies/admin/:admin_id
+// removes admin role for a user
+// @Access private
+router.delete('/admin/:admin_id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+
+  User.findByIdAndUpdate(req.body.user_id, { $pull : { roles : ADMIN}}, { new : true })
+    .then(user => {
+      if (!user) {
+        return res.status(404).json({error : 'Utilisateur inconnu'})
+      }
+      return res.json(user)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json({error: err})
+    });
+});
+
 // @Route GET /myAlfred/api/companies/users
 // Returns all employees from current company
 // @Access private
@@ -535,6 +553,31 @@ router.post('/groups', passport.authenticate('b2badmin', {session: false}), (req
           res.status(500).json({error : JSON.stringify(err)})
         })
 
+    })
+    .catch( err => {
+      console.error(err)
+      res.status(500).json({error: err})
+    })
+})
+
+// @Route PUT /myAlfred/api/companies/groups/:group_id
+// Updates a group (name, budget)
+// @Access private
+router.put('/groups/:group_id', passport.authenticate('b2badmin', {session: false}), (req, res) => {
+
+  const group_id = req.params.group_id
+
+  const {errors, isValid} = validateCompanyGroup(req.body);
+  if (!isValid) {
+    return res.status(400).json({error: errors});
+  }
+
+  Group.findOneAndUpdate({ _id : group_id}, req.body, { new : true})
+    .then (group => {
+      if (!group) {
+        return res.status(404).json({error: 'Groupe introuvable'})
+      }
+      res.json(group)
     })
     .catch( err => {
       console.error(err)

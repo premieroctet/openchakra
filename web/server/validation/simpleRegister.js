@@ -204,9 +204,14 @@ const validateCompanyGroup = data =>{
   let errors = {};
 
   data.name = !isEmpty(data.name) ? data.name : '';
+  data.budget = 'budget' in data ? data.budget : null
 
   if (Validator.isEmpty(data.name)) {
     errors.name = 'Veuillez saisir un nom';
+  }
+
+  if (data.budget != null && data.budget < 0 ) {
+    errors.budget = 'Le budget doit être > 0';
   }
 
   return {
